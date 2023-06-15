@@ -1,4 +1,9 @@
-function enviarAutorizacion(idCliente) {
+$(document).on('click', '#enviar-autorizacion-link', function (e) {
+    e.preventDefault();
+
+    const $itself = $(this);
+    const idCliente = $itself.attr('data-idCliente');
+
     const params = new Proxy(new URLSearchParams(window.location.search), {
         get: (searchParams, prop) => searchParams.get(prop),
     });
@@ -36,4 +41,4 @@ function enviarAutorizacion(idCliente) {
             $('#spiner-loader').addClass('hide');
         }
     });
-}
+});
