@@ -520,8 +520,10 @@ function getStatusMktdPreventa(){
             else
                 $where = "pr.id_asesor = $id_usuario";
         }
-        else if ($id_rol == 1 || $id_rol == 4) // MJ: DIRECCIÓN COMERCIAL / ASISTENTES DIRECCIÓN COMERCIAL
+        else if ($id_rol == 1 || $id_rol == 4) { // MJ: DIRECCIÓN COMERCIAL / ASISTENTES DIRECCIÓN COMERCIAL
             $where = "";
+            $lugar_prospeccion = "((pr.lugar_prospeccion != 6) OR (pr.lugar_prospeccion = 6 AND pr.fecha_creacion < '2022-01-20 23:59:59.999'))";
+        }
         else if ($id_rol == 2 || $id_rol == 5) // MJ: SUBDIRECCIÓN / ASISTENTES SUBDIRECCIÓN
             $where = "pr.id_sede IN ($id_sede)";
 
