@@ -2,14 +2,8 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
     <div class="wrapper ">
-        <?php
-            $datos = array();
-            $datos = $datos4;
-            $datos = $datos2;
-            $datos = $datos3;  
-            $this->load->view('template/sidebar', $datos);
-            ?>
-    <!--MODALS-->
+        <?php $this->load->view('template/sidebar'); ?>
+        <!--MODALS-->
         <div class="modal fade modal-alertas" id="modal_NEODATA" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -88,8 +82,7 @@
                                     <div class="row">
                                         <div class="col-12 col-sm-6 col-md-6 col-lg-6">
                                             <div class="form-group d-flex">
-                                                <input type="number" class="form-control idLote" id="idLote"
-                                                    placeholder="ID lote"/>
+                                                <input type="number" class="form-control idLote" id="idLote" placeholder="ID lote"/>
                                                 <button class="btn btn-success btn-round btn-fab btn-fab-mini"id="searchByLote">
                                                     <span class="material-icons">search</span>
                                                 </button>
@@ -100,8 +93,7 @@
                                                 <div class="row">
                                                     <div class="col-md-12 p-r">
                                                         <div class="form-group d-flex">
-                                                            <input type="text" class="form-control datepicker"
-                                                                id="beginDate"/>
+                                                            <input type="text" class="form-control datepicker" id="beginDate"/>
                                                             <input type="text" class="form-control datepicker" id="endDate"/>
                                                             <button class="btn btn-success btn-round btn-fab btn-fab-mini"
                                                                     id="searchByDateRange">

@@ -3,7 +3,7 @@
 
 <body class="">
     <div class="wrapper ">
-        <?php $this->load->view('template/sidebar', ''); ?>
+        <?php $this->load->view('template/sidebar'); ?>
 
         <!-- Modals -->
         <div class="modal fade" id="modal_registrar_11" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"

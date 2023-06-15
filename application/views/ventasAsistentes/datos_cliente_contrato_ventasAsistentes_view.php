@@ -2,20 +2,11 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body class="">
 <div class="wrapper ">
-	<?php
-	/*-------------------------------------------------------*/
-	$datos = array();
-	$datos = $datos4;
-	$datos = $datos2;
-	$datos = $datos3;  
-	$this->load->view('template/sidebar', $datos);
- 	/*--------------------------------------------------------*/
-	?>
+	<?php $this->load->view('template/sidebar'); ?>
 
 	<div class="modal fade" id="fileViewer">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
-				<!-- Modal body -->
 				<div class="modal-body">
 					<a style="position: absolute;top:3%;right:3%; cursor:pointer;" data-dismiss="modal">
 						<span class="material-icons">

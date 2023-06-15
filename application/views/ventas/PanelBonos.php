@@ -2,12 +2,7 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
     <div class="wrapper">
-        <?php
-        $datos = array();
-        $datos = $datos4;
-        $datos = $datos2;
-        $datos = $datos3;
-        $this->load->view('template/sidebar', $datos);
+        <?php $this->load->view('template/sidebar');
         ?>
         <div class="modal fade modal-alertas" id="modal_bonos" role="dialog">
             <div class="modal-dialog modal-lg">

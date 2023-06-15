@@ -15,7 +15,10 @@ class Corrida extends CI_Controller {
         $this->load->library(array('session','form_validation', 'get_menu', 'pdf'));
         $this->load->model('asesor/Asesor_model');
         $this->validateSession();
-	}
+
+        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+    }
 
 	public function index()
 	{
@@ -41,7 +44,6 @@ class Corrida extends CI_Controller {
 
 
 	public function cf(){
-        //$this->load->view("corrida/cf_view");
         $this->load->view("corrida/cf_cxl");
 	}
 
@@ -2707,15 +2709,8 @@ legend {
     }
 
     function listado_cf(){
-        //print_r(phpversion());
-        //exit;
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
-        //$datos["registrosLoteContratacion"] = $this->registrolote_modelo->registroLote();
         $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
         $this->load->view('template/header');
-
         $this->load->view("corrida/corridas_generadas", $datos);
     }
     function editacf($id_corrida){
@@ -3075,10 +3070,6 @@ legend {
     }
 
     public function listado_corridaspc(){
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
-        //$datos["registrosLoteContratacion"] = $this->registrolote_modelo->registroLote();
         $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
         $this->load->view('template/header');
         $this->load->view("corrida/corridas_pagosc", $datos);

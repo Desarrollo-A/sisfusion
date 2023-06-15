@@ -1,61 +1,30 @@
 
 <body class="">
 <div class="wrapper ">
-    <?php
-$dato= array(
-        'home' => 0,
-        'listaCliente' => 0,
-        'expediente' => 0,
-        'corrida' => 0,
-        'documentacion' => 0,
-    'documentacion_ds' => 0,
-        'historialpagos' => 0,
-        'inventario' => 0,
-        'estatus20' => 0,
-        'estatus2' => 0,
-        'estatus5' => 0,
-        'estatus6' => 0,
-        'estatus9' => 0,
-        'estatus10' => 0,
-        'estatus13' => 0,
-        'estatus15' => 0,
-        'enviosRL' => 0,
-        'estatus12' => 0,
-        'acuserecibidos' => 0,
-        'tablaPorcentajes' => 0,
-        'asignarVentas' => 0,
-        'comnuevas' => 1,
-        'comhistorial' => 0
-    );
-    $this->load->view('template/contraloria/sidebar', $dato);
-    ?>
+    <?php $this->load->view('template/contraloria/sidebar'); ?>
     <!--Contenido de la página-->
 
     <style type="text/css">
         ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-  color: white;
- opacity: 0.4;
+            color: white;
+            opacity: 0.4;
 
-  ::-moz-placeholder { /* Firefox 19+ */
-  color: white;
-  opacity: 0.4;
-}
-:-ms-input-placeholder { /* IE 10+ */
-  color: white;
-  opacity: 0.4;
-}
-:-moz-placeholder { /* Firefox 18- */
-  color: white;
-  opacity: 0.4;
-}
-
-
-}
-
-
+            ::-moz-placeholder { /* Firefox 19+ */
+                color: white;
+                opacity: 0.4;
+            }
+            :-ms-input-placeholder { /* IE 10+ */
+                color: white;
+                opacity: 0.4;
+            }
+            :-moz-placeholder { /* Firefox 18- */
+                color: white;
+                opacity: 0.4;
+            }
+        }
     </style>
 
-<div class="modal fade modal-alertas" id="modal_comisiones" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal fade modal-alertas" id="modal_comisiones" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

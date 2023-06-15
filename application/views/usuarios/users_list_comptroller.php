@@ -40,36 +40,30 @@
     }
 
     .scroll-styles::-webkit-scrollbar-track {
-    border-radius: 10px;
-    background-color: transparent;
+        border-radius: 10px;
+        background-color: transparent;
     }
 
     /* El background del scroll (border)*/
     .scroll-styles::-webkit-scrollbar {
-    width: 9px;
-    background-color: transparent;
+        width: 9px;
+        background-color: transparent;
     }
 
     /* Color de la barra de desplazamiento */
     .scroll-styles::-webkit-scrollbar-thumb {
-    background-color: #c1c1c1;
+        background-color: #c1c1c1;
     }
 
     /* Color del HOVER de barra de desplazamiento */
     .scroll-styles::-webkit-scrollbar-thumb:hover {
-    background-color: #929292;
+        background-color: #929292;
     }
 
 </style>
 <div>
     <div class="wrapper">
-        <?php
-        $datos = array();
-        $datos = $datos4;
-        $datos = $datos2;
-        $datos = $datos3;
-        $this->load->view('template/sidebar', $datos);
-        ?>
+        <?php $this->load->view('template/sidebar'); ?>
 
 
         <style>

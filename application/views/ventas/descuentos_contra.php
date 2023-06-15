@@ -6,12 +6,7 @@
 
   if($this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="17" || $this->session->userdata('id_rol')=="32")//contraloria
     {
-        /*-------------------------------------------------------*/
-$datos = array();
-    $datos = $datos4;
-    $datos = $datos2;
-    $datos = $datos3;
-    $this->load->view('template/sidebar', $datos);
+    $this->load->view('template/sidebar');
     }
     else
     {

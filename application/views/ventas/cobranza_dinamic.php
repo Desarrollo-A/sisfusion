@@ -3,17 +3,11 @@
 <body>
     <div class="wrapper">
         <?php
-            if($this->session->userdata('id_rol')=="28" ||$this->session->userdata('id_rol')=="18"||$this->session->userdata('id_rol')=="19"||$this->session->userdata('id_rol')=="63")//contraloria
-
-        {/*-------------------------------------------------------*/
-            $datos = array();
-            $datos = $datos4;
-            $datos = $datos2;
-            $datos = $datos3;
-            $this->load->view('template/sidebar', $datos);
-        }else{
-            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
-        }
+            if($this->session->userdata('id_rol')=="28" ||$this->session->userdata('id_rol')=="18"||$this->session->userdata('id_rol')=="19"||$this->session->userdata('id_rol')=="63"){
+                $this->load->view('template/sidebar');
+            }else{
+                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
+            }
         ?>
 
         <div class="content boxContent">

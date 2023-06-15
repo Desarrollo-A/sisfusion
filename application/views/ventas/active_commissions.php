@@ -3,13 +3,8 @@
 <body class="">
     <div class="wrapper ">
         <?php
-        if ($this->session->userdata('id_rol') == "13" || $this->session->userdata('id_rol') == "17" || $this->session->userdata('id_rol') == "32"
-            || $this->session->userdata('id_rol') == "8" || $this->session->userdata('id_rol')=="70"){
-            $datos = array();
-            $datos = $datos4;
-            $datos = $datos2;
-            $datos = $datos3;
-            $this->load->view('template/sidebar', $datos);
+        if ($this->session->userdata('id_rol') == "13" || $this->session->userdata('id_rol') == "17" || $this->session->userdata('id_rol') == "32" || $this->session->userdata('id_rol') == "8" || $this->session->userdata('id_rol')=="70"){
+            $this->load->view('template/sidebar');
         }
         else {
             echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
@@ -28,32 +23,22 @@
                         <div class="modal-body">
                             <input type="hidden" name="id_pagoc" id="id-lote-detenido">
                             <input type="hidden" name="statusLote" id="statusLote">
-                            
-                            <!-- <div class="col-lg-12">
-                                <div class="form-group is-empty">
-                                    <input id="motivo" name="motivo" type="text" class="form-control input-gral" placeholder="Escriba un motivo corto." minlength="3" maxlength="50" required />
-                                </div>
-                            </div> -->
+                    
                             <div class="col-lg-12" >
                                 <div class="form-group">
                                 <label for="motivo" class="control-label label-gral">Motivo</label>
-                                    <select class="selectpicker select-gral"
-                                            id="motivo"
-                                            name="motivo"
-                                            data-style="btn"
-                                            required>
-                                            <option disabled default >SELECCIONA UNA OPCIÓN</option>
-                                            <?php foreach($controversias as $controversia){ ?>
-
-                                                <option value="<?= $controversia['id_opcion']; ?>"><?= $controversia['nombre'] ?> </option>
-                                            <?php } ?>
+                                    <select class="selectpicker select-gral" id="motivo" name="motivo" data-style="btn" required>
+                                        <option disabled default >SELECCIONA UNA OPCIÓN</option>
+                                        <?php foreach($controversias as $controversia){ ?>
+                                            <option value="<?= $controversia['id_opcion']; ?>"><?= $controversia['nombre'] ?> </option>
+                                        <?php } ?>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="col-lg-12">
                                 <div class="form-group label-floating">
-                                    <textarea class="form-control" id="descripcion" name="descripcion" rows="3" placeholder="Escriba detalles de la controversia." required></textarea>
+                                    <textarea class="text-modal" id="descripcion" name="descripcion" rows="3" placeholder="Escriba detalles de la controversia." required></textarea>
                                 </div>
                             </div>
                         </div>
@@ -68,26 +53,19 @@
                 </div>
             </div>
         </div>
+
         <div class="modal fade" id="myUpdateBanderaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form id="my_updatebandera_form" name="my_updatebandera_form" method="post">
-                    <div class="modal-header">
-                        <button type="button"class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title"><b>Modificar estatus</b></h4>
-                    </div>
-                        <div class="modal-body" style="text-align: center;">
+                        <div class="modal-header">
+                            <button type="button"class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title"><b>Modificar estatus</b></h4>
                         </div>
-                        <div class="modal-footer">
-                        <button type="submit"
-                                    class="btn btn-primary">
-                                Aceptar
-                            </button>
-                            <button type="button"
-                                    class="btn btn-danger btn-simple"
-                                    data-dismiss="modal">
-                                Cancelar
-                            </button>
+                        <div class="modal-body" style="text-align: center;"></div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-primary">Aceptar</button>
                         </div>
                     </form>
                 </div>
@@ -139,26 +117,16 @@
         <div class="modal fade" id="myUpdateBanderaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    
                     <form id="my_updatebandera_form" name="my_updatebandera_form" method="post">
                     <div class="modal-header">
                         <button type="button"class="close" data-dismiss="modal">&times;</button>
                         <h4 class="modal-title"><b>Modificar estatus</b></h4>
                     </div>
-                        <div class="modal-body" style="text-align: center;">
-                            
-                        </div>
+                        <div class="modal-body" style="text-align: center;"></div>
                         <div class="modal-footer">
                         <div class="col-md-3"></div>
-                            <button type="submit"
-                                    class="btn btn-primary">
-                                Aceptar
-                            </button>
-                            <button type="button"
-                                    class="btn btn-danger btn-simple"
-                                    data-dismiss="modal">
-                                Cancelar
-                            </button>
+                            <button type="submit" class="btn btn-primary">Aceptar</button>
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                         </div>
                     </form>
                 </div>
@@ -171,58 +139,29 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
-                        <button type="button"
-                                class="close"
-                                data-dismiss="modal"
-                                aria-hidden="true">
-                            <i class="material-icons">clear</i>
-                        </button>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons">clear</i></button>
                     </div>
 
-                    <form method="post"
-                          class="row"
-                          id="detenidos-form"
-                          autocomplete="off">
+                    <form method="post" class="row" id="detenidos-form" autocomplete="off">
                         <div class="modal-body">
-                            <input type="hidden"
-                                   name="id_pagoc"
-                                   id="id-lote-detenido">
-
+                            <input type="hidden" name="id_pagoc" id="id-lote-detenido">
                             <div class="col-lg-12">
                                 <div class="form-group is-empty">
                                     <label for="motivo" class="control-label label-gral">Motivo</label>
-                                    <input id="motivo"
-                                           name="motivo"
-                                           type="text"
-                                           class="form-control input-gral"
-                                           placeholder="Escriba un motivo corto..."
-                                           minlength="3"
-                                           maxlength="50"
-                                           required />
+                                    <input id="motivo" name="motivo" type="text" class="form-control input-gral" placeholder="Escriba un motivo corto..." minlength="3" maxlength="50" required />
                                 </div>
                             </div>
 
                             <div class="col-lg-12">
                                 <div class="form-group label-floating">
-                                    <textarea class="form-control"
-                                              name="descripcion"
-                                              rows="3"
-                                              placeholder="Escriba la descripción de la controversia..."
-                                              required></textarea>
+                                    <textarea class="form-control" name="descripcion" rows="3" placeholder="Escriba la descripción de la controversia..." required></textarea>
                                 </div>
                             </div>
                         </div>
 
                         <div class="modal-footer">
-                            <button type="submit"
-                                    class="btn btn-primary">
-                                Aceptar
-                            </button>
-                            <button type="button"
-                                    class="btn btn-danger btn-simple"
-                                    data-dismiss="modal">
-                                Cancelar
-                            </button>
+                            <button type="submit" class="btn btn-primary">Aceptar</button>
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                         </div>
                     </form>
                 </div>
@@ -245,27 +184,25 @@
                                 </div>          
                                 <div class="material-datatables">
                                     <div class="form-group">
-                                        <div class="table-responsive">
-                                            <table class="table-striped table-hover" id="tabla_ingresar_9" name="tabla_ingresar_9">
-                                                <thead>
-                                                    <tr>
-                                                        <th></th>
-                                                        <th>ID</th>
-                                                        <th>PROYECTO</th>
-                                                        <th>CONDOMINIO</th>
-                                                        <th>LOTE</th>
-                                                        <th>CLIENTE</th>
-                                                        <th>TIPO VENTA</th>
-                                                        <th>MODALIDAD</th>
-                                                        <th>CONTRATACIÓN</th>
-                                                        <th>PLAN VENTA</th>
-                                                        <th>FECHA SISTEMA</th>
-                                                        <th>FECHA NEODATA</th>
-                                                        <th>MÁS</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
-                                        </div>
+                                        <table class="table-striped table-hover" id="tabla_ingresar_9" name="tabla_ingresar_9">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>ID</th>
+                                                    <th>PROYECTO</th>
+                                                    <th>CONDOMINIO</th>
+                                                    <th>LOTE</th>
+                                                    <th>CLIENTE</th>
+                                                    <th>TIPO VENTA</th>
+                                                    <th>MODALIDAD</th>
+                                                    <th>CONTRATACIÓN</th>
+                                                    <th>PLAN VENTA</th>
+                                                    <th>FECHA SISTEMA</th>
+                                                    <th>FECHA NEODATA</th>
+                                                    <th>MÁS</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
                                     </div>
                                 </div>
                             </div>

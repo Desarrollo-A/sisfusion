@@ -42,26 +42,31 @@ function selectOpcion(){
             $('#miModalInventario .invent').append(`
             <h5>Usuarios titulares registrados</h5>
             <div class="row">
-            <div class="col-md-4" id="ase2">
-            <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data.asesor}" style="font-size:12px;">
+            <div class="col-md-6" id="ase2">
             <b><label class="control-label" >Asesor</b></label>
+            <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data.asesor}" style="font-size:12px;">
+        
             </div>
-            <div class="col-md-4" id="coor2">
-            <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data.coordinador == '' || data.coordinador == ' ' || data.coordinador == '  ' ? 'NO REGISTRADO' : data.coordinador}" style="font-size:12px;">
+            <div class="col-md-6" id="coor2">
             <b><label class="control-label" >Coordinador</b></label>
+            <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data.coordinador == '' || data.coordinador == ' ' || data.coordinador == '  ' ? 'NO REGISTRADO' : data.coordinador}" style="font-size:12px;">
+         
             </div>
-            <div class="col-md-4" id="ger2">
-            <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data.gerente}" style="font-size:12px;">
+            <div class="col-md-6" id="ger2">
             <b><label class="control-label" >Gerente</b></label>
+            <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data.gerente}" style="font-size:12px;">
+ 
             </div>
             
-            <div class="col-md-4" id="sub">
-            <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data.subdirector}" style="font-size:12px;">
+            <div class="col-md-6" id="sub">
             <b><label class="control-label" >Sub-director</b></label>
+            <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data.subdirector}" style="font-size:12px;">
+          
             </div>
-            <div class="col-md-4" id="regio">
-            <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data.regional}" style="font-size:12px;">
+            <div class="col-md-6" id="regio">
             <b><label class="control-label" >Regional</b></label>
+            <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data.regional}" style="font-size:12px;">
+         
             </div>
 
             </div>
@@ -293,6 +298,7 @@ $("#roles3").change(function() {
         $('#coor').addClass('coor');
         $('#ase').removeClass('ase');
         $('#ger').removeClass('ger');
+        document.getElementById('UserSelectDirec').innerHTML = '';
     }
     else if(parent == 3){
         user = $('#gerente').val();
@@ -300,6 +306,7 @@ $("#roles3").change(function() {
         $('#ger').addClass('ger');
         $('#ase').removeClass('ase');
         $('#coor').removeClass('coor');
+        document.getElementById('UserSelectDirec').innerHTML = '';
 
     }else if(parent == 2){
         user = $('#subdirector').val();
@@ -643,8 +650,15 @@ function SaveAjusteRegre(i,por,total){
             $("#btnReload_"+i).hide(1500); 
             // document.getElementById('porcentaje_'+i).disabled = false;
             $('#modal_avisos .modal-body').html('');
-            $('#modal_avisos').modal('toggle');
+            $('#modal_avisos').modal('toggle')
             alerts.showNotification("top", "right", "Modificación almancenada con éxito.", "success");
+            setTimeout(function(){ 
+                $('#modal_NEODATA .modal-body').html('');
+                $('#modal_NEODATA').modal('toggle')
+         
+             } ,2000);
+                
+          
         }
     });
 }
@@ -1716,7 +1730,7 @@ function AgregarPago(i,pendiente,colab,rol){
     $("#modal_add .modal-header").append('<h4 class="card-title"><b>Agregar Pago</b></h4>');
     $("#modal_add .modal-body").append(`
     <div id="inputhidden"><p>El monto no puede ser mayor a <b>$${formatMoney(pendiente)}</b> para el <b>
-     ${rol} - ${colab} </b> , en caso de ser mayor valida si hay algun pago en <b>NUEVAS</b> que puedas quitar.</p>
+     ${rol} - ${colab} </b> , en caso de ser mayor válida si hay algún pago en <b>NUEVAS</b> que puedas quitar.</p>
         <div class="form-group">
             <input id="monotAdd" name="monotAdd" min="1" class="form-control input-gral"  type="number" onblur="verifica_pago(${pendiente})" placeholder="Monto a abonar" maxlength="6"/>
              <p id="msj2" style="color:red;"></p>
@@ -1877,7 +1891,7 @@ function GuardarPago(i){
                 
                 $('#modal_add').modal('hide');
                 $('#modal_NEODATA').modal('hide');
-                alerts.showNotification("top", "right", "Pago registrado con exito.", "success");
+                alerts.showNotification("top", "right", "Pago registrado con éxito.", "success");
                 document.getElementById("form_add").reset();
 
             }
@@ -1911,7 +1925,7 @@ function QuitarPago(i){
                 
                 $('#modal_quitar').modal('hide');
                 $('#modal_NEODATA').modal('hide');
-                alerts.showNotification("top", "right", "Pago eliminado con exito.", "success");
+                alerts.showNotification("top", "right", "Pago eliminado con éxito.", "success");
                 document.getElementById("form_add").reset();
 
             }
@@ -2083,7 +2097,7 @@ function SaveAjuste(i){
         method: 'POST',
         type: 'POST', // For jQuery < 1.9
         success:function(response){
-            alerts.showNotification("top", "right", "Modificación almancenada con éxito.", "success");
+            alerts.showNotification("top", "right", "Modificación almacenada con éxito.", "success");
         }
     });
 }

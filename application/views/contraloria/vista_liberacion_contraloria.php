@@ -1,16 +1,10 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+<link href="<?= base_url() ?>dist/css/liberaciones-styles.css" rel="stylesheet"/>
 
 <body class="">
 <div class="wrapper ">
-    <?php
-    $datos = array();
-    $datos = $datos4;
-    $datos = $datos2;
-    $datos = $datos3;
-    $this->load->view('template/sidebar', $datos);
-    ?>
-    <link href="<?= base_url() ?>dist/css/liberaciones-styles.css" rel="stylesheet"/>
+    <?php $this->load->view('template/sidebar'); ?>
 
     <div class="modal fade " id="modalConfirmRequest" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-sm">

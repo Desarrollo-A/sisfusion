@@ -2,19 +2,9 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <body class="">
 <div class="wrapper ">
-    <?php
-    /*-------------------------------------------------------*/
-    $datos = array();
-    $datos = $datos4;
-    $datos = $datos2;
-    $datos = $datos3;
-    $this->load->view('template/sidebar', $datos);
-    /*--------------------------------------------------------*/
-    ?>
-
+    <?php $this->load->view('template/sidebar'); ?>
+    
     <!-- modal para revision status 5 100% -->
-
-
     <div class="modal fade " id="envARevCE" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content" >
@@ -90,7 +80,7 @@
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <label>Comentario:</label>
-                            <input type="text" class="form-control" name="comentario" id="comentarioDirSt7">
+                            <input type="text" class="form-control" name="comentario" id="comentarioDirSt7" autocomplete="off">
                             <br>
                         </div>
 

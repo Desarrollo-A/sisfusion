@@ -10,11 +10,7 @@
     <div class="wrapper ">
         <?php
             if(!isset($external)){
-                $datos = array();
-                $datos = $datos4;
-                $datos = $datos2;
-                $datos = $datos3;
-                $this->load->view('template/sidebar', $datos);
+                $this->load->view('template/sidebar');
             }
         ?>
 

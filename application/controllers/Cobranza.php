@@ -12,6 +12,9 @@ class Cobranza extends CI_Controller
         $this->load->database('default');
         date_default_timezone_set('America/Mexico_City');
         $this->validateSession();
+
+        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
     }
 
     public function index()
@@ -26,11 +29,12 @@ class Cobranza extends CI_Controller
     }
 
     public function masterCobranza() {
-        if ($this->session->userdata('id_rol') == FALSE)
+        if ($this->session->userdata('id_rol') == FALSE) {
             redirect(base_url());
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        }
+
         $this->load->view('template/header');
-        $this->load->view("cobranza/masterCobranza", $datos);
+        $this->load->view("cobranza/masterCobranza");
     }
 
     public function getInformation()
@@ -62,9 +66,8 @@ class Cobranza extends CI_Controller
         if ($this->session->userdata('id_rol') == FALSE) {
             redirect(base_url());
         }
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view("cobranza/report_prospects", $datos);
+        $this->load->view("cobranza/report_prospects");
     }
     public function getClientsByAsesor(){
         $asesor = $_POST['asesor'];
@@ -166,9 +169,8 @@ class Cobranza extends CI_Controller
         if ($this->session->userdata('id_rol') == FALSE) {
             redirect(base_url());
         }
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view("cobranza/reporteLiberaciones", $datos);
+        $this->load->view("cobranza/reporteLiberaciones");
     }
 
     public function getReporteLiberaciones() {
@@ -177,12 +179,12 @@ class Cobranza extends CI_Controller
     }
 
     public function masterCobranzaHistorial() {
-        if ($this->session->userdata('id_rol') == FALSE)
+        if ($this->session->userdata('id_rol') == FALSE) {
             redirect(base_url());
-        
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        }
+
         $this->load->view('template/header');
-        $this->load->view("cobranza/cobranza_reporte_master_historico", $datos);
+        $this->load->view("cobranza/cobranza_reporte_master_historico");
     }
 
     public function informationMasterCobranzaHistorial() {
@@ -207,11 +209,11 @@ class Cobranza extends CI_Controller
     }
     
     public function reporteLotesPorComisionista() {
-        if ($this->session->userdata('id_rol') == FALSE)
+        if ($this->session->userdata('id_rol') == FALSE) {
             redirect(base_url());
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        }
         $this->load->view('template/header');
-        $this->load->view("comisiones/reporteLotesPorComisionista_view", $datos);
+        $this->load->view("comisiones/reporteLotesPorComisionista_view");
     }
 
     public function getReporteLotesPorComisionista() {

@@ -4,34 +4,11 @@
     <div class="wrapper">
 
         <?php
-        switch ($this->session->userdata('id_rol')) {
-            case '1': // DIRECTOR
-            case '2': // SUBDIRECTOR VENTAS
-            case '3': // GERENTE
-            case '7': // ASESOR
-            case '9': // COORDINADORmultiple
-            case '13': // CONTRALORÍA
-            case '18': // DIRECTOR MKTD
-            case '19': // SUBDIRECTOR MKTD
-            case '20': // GERENTE MKTD
-            case '22': // EJECUTIVO CLUB MADERAS
-            case '23': // SUBDIRECTOR CLUB MADERAS
-            case '25': // ASESOR DE CONTENIDO RRSS
-            case '26': // MERCADOLÓGO
-            case '27': // COMMUNITY MANAGER
-            case '28': // EJECUTIVO ADMINISTRATIVO
-            case '30': // DESARROLLADOR WEB
-            case '32': // CONTRALORÍA CORPORATIVA
-            case '36': // asistente mktd
-                $datos = array();
-                $datos = $datos4;
-                $datos = $datos2;
-                $datos = $datos3;
-                $this->load->view('template/sidebar', $datos);
-            break;
-            default: // NO ACCESS
-                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-            break;
+        if (in_array($this->session->userdata('id_rol'), array(1,2,3,7,9,13,18,19,20,22,23,25,26,27,28,30,32,36))){
+            $this->load->view('template/sidebar');
+        }
+        else{
+            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
         }
         ?>
         

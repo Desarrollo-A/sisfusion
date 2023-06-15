@@ -2,14 +2,18 @@
 class Clientes extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
-        $this->load->model(array('Clientes_model', 'Statistics_model', 'asesor/Asesor_model', 'Caja_model_outside')); 
+        $this->load->model(array('Clientes_model', 'Statistics_model', 'asesor/Asesor_model', 'Caja_model_outside',
+            'General_model'));
         $this->load->library(array('session','form_validation'));
         $this->load->library(array('session','form_validation', 'get_menu'));
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
         date_default_timezone_set('America/Mexico_City');
         $this->validateSession();
-	}
+
+        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+    }
 
 	public function index()
 	{
@@ -22,13 +26,10 @@ class Clientes extends CI_Controller {
 		$this->load->view('template/footer');
 	}
 /**Reporte clientes  */
-public function RpClientes(){
-  /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-  $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-  /*-------------------------------------------------------------------------------*/
-    $this->load->view('template/header');
-    $this->load->view("clientes/RpClientes", $datos);
-}
+    public function RpClientes(){
+        $this->load->view('template/header');
+        $this->load->view("clientes/RpClientes");
+    }
 public function getRpClientes()
     {
         $data['data'] = $this->Clientes_model->getRpClientes();
@@ -41,11 +42,8 @@ public function getRpClientes()
     }
 /** */
     public function marketingDigitalReport(){
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("clientes/mktd_report", $datos);
+        $this->load->view("clientes/mktd_report");
     }
 
     public function getMKTDReport(){
@@ -54,31 +52,22 @@ public function getRpClientes()
     }
 
     public function recommendedReport(){
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("clientes/recommended_report", $datos);
+        $this->load->view("clientes/recommended_report");
     }
 
     public function newProspect(){
-       /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-       $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-       /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
         if ($this->session->userdata('id_rol') == '22') {
-            $this->load->view("clientes/prospectos_mktd", $datos);
+            $this->load->view("clientes/prospectos_mktd");
         } else {
-            $this->load->view("clientes/prospectos", $datos);
+            $this->load->view("clientes/prospectos");
         }
     }
 
     public function newProspectMktd(){
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("clientes/prospectos_mktd", $datos);
+        $this->load->view("clientes/prospectos_mktd");
     }
 
     public function getCMReport(){
@@ -92,54 +81,34 @@ public function getRpClientes()
     }
     
     public function originatingFromReport(){
-      /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-      $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-      /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("clientes/of_report", $datos);
+        $this->load->view("clientes/of_report");
     }
     
     public function clubMaderasReport(){
-       /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-       $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-       /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("clientes/cm_report", $datos);
+        $this->load->view("clientes/cm_report");
     }
 
     public function statusByProspect(){
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        // $this->load->view("clientes/status_by_prospect_report", $datos);
-        $this->load->view("clientes/dm_report", $datos);
+        $this->load->view("clientes/dm_report");
 
     }
 
     public function digitalMarketingReport(){
-    /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-    $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-    /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("clientes/dm_report", $datos);
+        $this->load->view("clientes/dm_report");
     }
 
     public function authorizations(){
-       /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-       $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-       /*-------------------------------------------------------------------------------*/
-
         $this->load->view('template/header');
-        $this->load->view("clientes/authorizations_report", $datos);
+        $this->load->view("clientes/authorizations_report");
     }
 
     public function cmReport(){
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("clientes/clubmaderas_report", $datos);
+        $this->load->view("clientes/clubmaderas_report");
     }
 
 /*---------------------------------------------------------------PREVENTA------------------------------------------------*/
@@ -173,109 +142,77 @@ public function getStatusMktdPreventa(){
         echo json_encode($this->Clientes_model->getStatusMktdPreventa()->result_array());
     }
     public function consultPreventa(){
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/   
         $this->load->view('template/header');
-        $this->load->view("clientes/consulta_prospecto_preventa", $datos);
+        $this->load->view("clientes/consulta_prospecto_preventa");
     }
 /*-------------------------------------------------------------------------------------------------------------------------------*/
 
     public function bonuses(){
-        $datos=array();
         $this->load->view('template/header');
-        $this->load->view("clientes/bonuses", $datos);
+        $this->load->view("clientes/bonuses");
     }
 	public function verificarBonificaciones(){
-		$datos=array();
 		$this->load->view('template/header');
-		$this->load->view("clientes/verificarBonificaciones", $datos);
+		$this->load->view("clientes/verificarBonificaciones");
 	}
 
     public function consultProspects(){
-      /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-      $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-      /*-------------------------------------------------------------------------------*/  
         $this->load->view('template/header');
-        $this->load->view("clientes/consulta_prospectos", $datos);
+        $this->load->view("clientes/consulta_prospectos");
     }
  
         public function consultProspects_dir()
     {
-     /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-     $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-     /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("clientes/consulta_prospecto_dir.php",$datos);
+        $this->load->view("clientes/consulta_prospecto_dir.php");
     }
     public function consultProspects_sbdir()
     {
-    /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-    $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-    /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("clientes/consulta_prospecto_sbdir",$datos);
+        $this->load->view("clientes/consulta_prospecto_sbdir");
     }
     public function busquedaDetallada()
     {
-      /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-      $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-      /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("clientes/busDet_prospectos",$datos);
+        $this->load->view("clientes/busDet_prospectos");
     }
 
     public function consultClients(){
-      /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-      $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-      /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
         if($this->session->userdata('id_rol') == 26)
-            $this->load->view("clientes/consulta_clientes_mercadologo", $datos);
+            $this->load->view("clientes/consulta_clientes_mercadologo");
         else
-        $this->load->view("clientes/consulta_clientes", $datos);
+        $this->load->view("clientes/consulta_clientes");
     }
 
     public function consultProspectsMktd(){
-       /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-       $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-       /*-------------------------------------------------------------------------------*/  
         $this->load->view('template/header');
-        $this->load->view("clientes/consulta_prospectos_mktd", $datos);
+        $this->load->view("clientes/consulta_prospectos_mktd");
     }
 
     public function consultProspectsGteMktd(){
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("clientes/consulta_prospectos_gtemktd", $datos);
+        $this->load->view("clientes/consulta_prospectos_gtemktd");
     }
 
     public function consultProspectsGteVentas(){
-       /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-       $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-       /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("clientes/consulta_prospectos_gteventas", $datos);
+        $this->load->view("clientes/consulta_prospectos_gteventas");
     }
 
     public function sharedSales(){
-        $datos=array();
         $this->load->view('template/header');
-        $this->load->view("clientes/shared_sales", $datos);
+        $this->load->view("clientes/shared_sales");
     }
 
     public function coOwners(){
-        $datos=array();
         $this->load->view('template/header');
-        $this->load->view("clientes/co_owners", $datos);
+        $this->load->view("clientes/co_owners");
     }
 
     public function references(){
-        $datos=array();
         $this->load->view('template/header');
-        $this->load->view("clientes/references", $datos);
+        $this->load->view("clientes/references");
     }
 
     public function getRecommendedReport(){
@@ -288,19 +225,13 @@ public function getStatusMktdPreventa(){
     }
 
     public function bulkload(){
-      /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-      $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-      /*-------------------------------------------------------------------------------*/ 
         $this->load->view('template/header');
-        $this->load->view("clientes/bulkload", $datos);
+        $this->load->view("clientes/bulkload");
     }
     public function listaClientes()
     {
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view('clientes/lista_cliente_sdmktd',$datos);
+        $this->load->view('clientes/lista_cliente_sdmktd');
     }
 
     public function uploadData() {
@@ -792,8 +723,10 @@ public function getStatusMktdPreventa(){
     public function getProspectsReport() {
         if (isset($_POST) && !empty($_POST)) {
             $typeTransaction = $this->input->post("typeTransaction");
-            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+            $fechaInicio = explode('/', $this->input->post("beginDate"));
+            $fechaFin = explode('/', $this->input->post("endDate"));
+            $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+            $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
             $where = $this->input->post("where");
             $data['data'] = $this->Clientes_model->getProspectsReport($typeTransaction, $beginDate, $endDate, $where)->result_array();
             echo json_encode($data);
@@ -2278,21 +2211,15 @@ public function getStatusMktdPreventa(){
     }
 
     public function toFixedValidation(){
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("clientes/toFixedValidation", $datos);
+        $this->load->view("clientes/toFixedValidation");
     }
 	
 	
 	
     public function consultProspectsAll(){
-     /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-     $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-     /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("clientes/consulta_prospectos_mktd_all", $datos);
+        $this->load->view("clientes/consulta_prospectos_mktd_all");
     }
 
 
@@ -2477,13 +2404,10 @@ public function getStatusMktdPreventa(){
     }
 	
 	
-        public function changeProspectingPlace()
+    public function changeProspectingPlace()
     {
-      /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-      $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-      /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("clientes/change_lp.php",$datos);
+        $this->load->view("clientes/change_lp.php");
     }
 	
     public function getSedes()
@@ -2517,34 +2441,21 @@ public function getStatusMktdPreventa(){
 
 
     public function addEvidencesGte(){
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("clientes/addEvidenciaCB", $datos);
+        $this->load->view("clientes/addEvidenciaCB");
     }
     public function autorizarEvidenciasCB(){
-       /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-       $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-       /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        //$this->load->view("clientes/autorizarEvidenciaCB", $datos);
-        $this->load->view("clientes/addEvidenciaCB", $datos);
+        $this->load->view("clientes/addEvidenciaCB");
     }
     public function autorizarEvidenciasCN(){
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("clientes/autorizarEvidenciaCN", $datos);
+        $this->load->view("clientes/autorizarEvidenciaCN");
     }
 
     public function verifyAllMktClients(){
-      /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-      $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-      /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("clientes/verifyAllMktClients", $datos);
+        $this->load->view("clientes/verifyAllMktClients");
     }
 
     public function getClientsListByManager(){
@@ -2555,17 +2466,11 @@ public function getStatusMktdPreventa(){
 
     public function deletedFromEvidence()
     {
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("clientes/registrosEliminadosEV", $datos);
+        $this->load->view("clientes/registrosEliminadosEV");
     }
 
     public function clientsReport(){
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
         switch ($this->session->userdata('id_rol')) {
 
@@ -2573,7 +2478,7 @@ public function getStatusMktdPreventa(){
             case '19': // SUBDIRECTOR MKTD
             case '20': // GERENTE MKTD
             case '28': // GERENTE MKTD
-                $this->load->view("clientes/clients_report", $datos);
+                $this->load->view("clientes/clients_report");
             break;
             case '4': // ASISTENTE GERENTE
             case '53': // ANALISTA COMISIONES
@@ -2581,7 +2486,7 @@ public function getStatusMktdPreventa(){
             case '13': // CONTRALORÍA
             case '17': // CONTROL INTERNO
             case '70': // EJECUTIVO CONTRALORIA JR
-                $this->load->view("clientes/clients_report_ventas", $datos);
+                $this->load->view("clientes/clients_report_ventas");
             break;
         }
     }
@@ -2601,11 +2506,8 @@ public function getStatusMktdPreventa(){
     }
 
     public function prospectsAssigned(){
-       /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-       $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-       /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("clientes/prospects_assigned", $datos);
+        $this->load->view("clientes/prospects_assigned");
     }
 
     public function getProspectsAssignedList()
@@ -2630,11 +2532,8 @@ public function getStatusMktdPreventa(){
     }
 
     public function getGeneralProspectsList(){
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("clientes/prospects_general_list", $datos);
+        $this->load->view("clientes/prospects_general_list");
     }
 
     public function getGeneralProspectsListInformation()
@@ -2683,11 +2582,8 @@ public function getStatusMktdPreventa(){
     }
 
     public function registros_landing(){
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("clientes/registros_lp", $datos);
+        $this->load->view("clientes/registros_lp");
     }
 
     public function registrosLP(){
@@ -2707,11 +2603,8 @@ public function getStatusMktdPreventa(){
 
     public function coincidenciasProspectos()
     {
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
-        /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("clientes/coincidencias_prospectos", $datos);
+        $this->load->view("clientes/coincidencias_prospectos");
     }
 
     public function filterProspectos()
@@ -2911,9 +2804,8 @@ public function getStatusMktdPreventa(){
     }
 
     public function prospectsReport(){
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view("marketing/prospectsReportMarketing", $datos);
+        $this->load->view("marketing/prospectsReportMarketing");
     }
 
     public function getProspectsReportInformation(){
@@ -2961,21 +2853,18 @@ public function getStatusMktdPreventa(){
 
 
     public function documentacionDR(){//vista documentos DRAGON POPEA
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view("clientes/documentacionDR",$datos);
+        $this->load->view("clientes/documentacionDR");
     }
 
     public function prospectosDR(){//vista prospectos DRAGON POPEA
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view("clientes/prospectosDR",$datos);
+        $this->load->view("clientes/prospectosDR");
     }
 
     public function dragonsClientsList() {
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view("marketing/dragonsClientsList", $datos);
+        $this->load->view("marketing/dragonsClientsList");
     }
 
     public function getDragonsClientsList() {
@@ -2987,9 +2876,8 @@ public function getStatusMktdPreventa(){
     *                             NUEVA FUNCIÓN PARA EL MENÚ                              *
     ***************************************************************************************/
     public function consultaClientesProyecto(){
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
         $this->load->view('template/header');
-        $this->load->view('clientes/consulta_clientes_proyecto_view', $datos);
+        $this->load->view('clientes/consulta_clientes_proyecto_view');
     }
 
     public function getClientsByProyect() {
@@ -2998,6 +2886,57 @@ public function getStatusMktdPreventa(){
             echo json_encode($data);
         else
             echo json_encode(array());
+    }
+
+    public function cancelacionesProceso()
+    {
+        $this->load->view('template/header');
+        $this->load->view('clientes/cancelaciones_proceso');
+    }
+
+    public function infoCancelacionesProceso()
+    {
+        if (!isset($_POST) || empty($_POST)) {
+            echo json_encode([]);
+            return;
+        }
+
+        $idRol = $this->session->userdata('id_rol');
+        $idUsuario = $this->session->userdata('id_lider');
+        $fechaInicio = date("Y-m-d", strtotime($this->input->post("beginDate")));
+        $fechaFin = date("Y-m-d", strtotime($this->input->post("endDate")));
+
+        $data = $this->Clientes_model->getCancelacionesProceso($idUsuario, $idRol, $fechaInicio, $fechaFin);
+        echo json_encode($data);
+    }
+
+    public function updateCancelacionProceso()
+    {
+        $idCliente = $this->input->post('idCliente');
+
+        if (!isset($idCliente)) {
+            echo json_encode(['code' => 400, 'message' => 'Información requerida.']);
+            return;
+        }
+
+        $result = $this->General_model->updateRecord('clientes', ['cancelacion_proceso' => 1], 'id_cliente', $idCliente);
+        $code = ($result) ? 200 : 500;
+        echo json_encode(['code' => $code]);
+    }
+
+    public function lotesApartReubicacion()
+    {
+        $this->load->view('template/header');
+        $this->load->view('clientes/lotes_apart_reubicacion');
+    }
+
+    public function getLotesApartadosReubicacion()
+    {
+        $fechaInicio = date("Y-m-d", strtotime($this->input->post("beginDate")));
+        $fechaFin = date("Y-m-d", strtotime($this->input->post("endDate")));
+
+        $data = $this->Clientes_model->getLotesApartadosReubicacion($fechaInicio, $fechaFin);
+        echo json_encode($data);
     }
 }
 

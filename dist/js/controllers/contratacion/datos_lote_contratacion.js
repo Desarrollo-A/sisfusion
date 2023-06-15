@@ -72,7 +72,7 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
                 titleAttr: 'Descargar archivo de Excel',
                 title: 'MADERAS_CRM_INVENTARIO',
                 exportOptions: {
-                    columns: coordinador = id_rol_general == 11 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 26, 27, 28, 29, 30],
+                    columns: coordinador = id_rol_general == 11 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 26, 27, 28, 29, 30, 31],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + titulosInventario[columnIdx] + ' ';
@@ -135,17 +135,17 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
             },
             {
                 data: function (d) {
-                    return formatMoney(d.precio * d.sup);
+                    return '$' + formatMoney(d.precio * d.sup);
                 }
             },
             {
                 data: function (d) {
-                    return formatMoney(d.totalNeto2);
+                    return '$' + formatMoney(d.totalNeto2);
                 }
             },
             {
                 data: function (d) {
-                    return formatMoney(d.precio);
+                    return '$' + formatMoney(d.precio);
                 }
             },
             { data: 'referencia' },
@@ -226,7 +226,7 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
             { data: 'fecha_validacion' }, // VALIDAR FECHA NULL DESDE LA QUERY
             {
                 data: function (d) {
-                    return formatMoney(d.cantidad_enganche);
+                    return '$' + formatMoney(d.cantidad_enganche);
                 }
             },
             {
@@ -269,13 +269,21 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
                     if(d.apartadoXReubicacion == 1)
                         return d.fechaAlta;
                     else
-                       return 'NO APLICA';                   
+                        return `<center><span class="label" style="background:#ABB2B9; color:#17202A;">NO APLICA</span> <center>`;                
                 }         
             },
             {
                 data: function(d){
                     if(d.venta_compartida != 0)
                         return `<center><span class="label" style="background:#A3E4D7; color:#0E6251;">COMPARTIDA</span> <center>`;
+                    else
+                       return `<center><span class="label" style="background:#ABB2B9; color:#17202A;">NO APLICA</span> <center>`;                   
+                }         
+            },
+            {
+                data: function(d) {
+                    if(d.ubicacion != null)
+                        return `<center><span class="label" style="background:#ABEBC6; color:#186A3B;">${d.ubicacion}</span> <center>`;
                     else
                        return `<center><span class="label" style="background:#ABB2B9; color:#17202A;">NO APLICA</span> <center>`;                   
                 }         

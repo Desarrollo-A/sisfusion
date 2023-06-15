@@ -3,28 +3,8 @@
 
 <body class="">
 <div class="wrapper ">
-	<?php
-	/*-------------------------------------------------------*/
-$datos = array();
-	$datos = $datos4;
-	$datos = $datos2;
-	$datos = $datos3;  
-			$this->load->view('template/sidebar', $datos);
- /*--------------------------------------------------------*/
-	/*$dato= array(
-		'home' => 0,
-		'listaCliente' => 0,
-		'documentacion' => 0,
-		'contrato' => 0,
-		'inventario' => 0,
-		'status3' => 0,
-		'status7' => 0,
-		'documentacion_ds' => 0,
-		'lotesContratados' => 1,
-	);
-	//$this->load->view('template/juridico/sidebar', $dato);
-	$this->load->view('template/sidebar', $dato);*/
-	?>
+<?php $this->load->view('template/sidebar'); ?>
+
 
 
     <div class="content boxContent">

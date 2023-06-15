@@ -1,14 +1,8 @@
 <body>
 <div class="wrapper">
 
-    <?php
+<?php $this->load->view('template/sidebar'); ?>
 
-    $datos = array();
-    $datos = $datos4;
-    $datos = $datos2;
-    $datos = $datos3;
-    $this->load->view('template/sidebar', $datos);
-    ?>
 
     <style>
         .label-inf {

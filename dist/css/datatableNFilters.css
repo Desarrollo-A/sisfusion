@@ -1074,6 +1074,30 @@
   background-color: #F9F87118;
 }
 
+.lbl-lightBlue {
+  color: #1B4F72;
+  border: none;
+  background: #AED6F1;
+}
+
+.lbl-peach {
+  color: #78281F;
+  border: none;
+  background: #F5B7B1;
+}
+
+.lbl-purple {
+  color: #512E5F;
+  border: none;
+  background: #D7BDE2;
+}
+
+.lbl-aqua {
+  color: #ffffff;
+  border: none;
+  background: #11DFC6;
+}
+
 /* END Etiquetas */
 /* Estilo del scroll en DIVS */
 /* El background del scroll */
@@ -1990,4 +2014,24 @@ table .boxSBtns {
 
 .form-group.is-focused select.form-control {
   background-color: #eaeaea;
+}
+
+.radio-with-icon-autorizacones input[type="radio"]:checked ~ label .iAccepted {
+  color: #4caf50;
+}
+
+.radio-with-icon-autorizacones input[type="radio"]:checked ~ label .iDenied {
+  color: #929292;
+}
+
+.radio-with-icon-autorizacones input[type="radio"]:checked ~ label .iSend {
+  color: #103f75;
+}
+
+.radio-with-icon-autorizacones i {
+  color: #eaeaea;
+}
+
+.radio-with-icon-autorizacones i:hover {
+  color: #929292;
 }

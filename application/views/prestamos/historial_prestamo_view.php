@@ -7,17 +7,10 @@
     .modal-backdrop{
         z-index:9;
     }
-
 </style>
 <body>
 	<div class="wrapper">
-		<?php
-		$datos = array();
-		$datos = $datos4;
-		$datos = $datos2;
-		$datos = $datos3;
-		$this->load->view('template/sidebar', $datos);
-		?>
+		<?php $this->load->view('template/sidebar'); ?>
 	
 		<!-- Modals -->
 		<div class="modal fade modal-alertas" id="myModalEspera" role="dialog">

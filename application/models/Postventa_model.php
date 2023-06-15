@@ -24,7 +24,7 @@ class Postventa_model extends CI_Model
     function getLotes($idCondominio)
     {
         return $this->db->query("SELECT * FROM lotes l
-        WHERE idCondominio = $idCondominio /*AND idStatusContratacion = 15 AND idMovimiento = 45*/ AND idStatusLote = 2 
+        WHERE idCondominio = $idCondominio /*AND idStatusContratacion = 15 AND idMovimiento = 45*/ AND idStatusLote in (2,9) 
         AND idLote NOT IN(SELECT idLote FROM clientes WHERE id_cliente IN (SELECT id_cliente FROM solicitudes_escrituracion))");
     }
 
@@ -81,6 +81,8 @@ class Postventa_model extends CI_Model
 
     function setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa, $data, $idJuridico, $valor_contrato)
     {
+        $replace = ["$", ","];
+        $valor_contrato = str_replace($replace,"",$valor_contrato);
         if(is_object($data)){
             $data = (array)$data;
         }
@@ -145,8 +147,8 @@ class Postventa_model extends CI_Model
         $WhereFechas = " AND se.fecha_creacion >= '$begin' AND se.fecha_creacion <= '$end' ";
         }
         
-        return $this->db->query("SELECT distinct(se.id_solicitud),se.id_cliente,se.id_lote,c.banderaEscrituracion,se.id_titulacion, FORMAT(TRY_CAST(se.valor_contrato AS float),'C') valor_contrato, se.id_estatus, CONVERT(varchar, se.fecha_creacion, 20) fecha_creacion, l.nombreLote, cond.nombre nombreCondominio, r.nombreResidencial, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) as cliente, n.pertenece, se.bandera_notaria, se.descuento, se.aportacion, ar.id_opcion as id_area, (CASE WHEN se.id_estatus IN (4,2,3) AND (se.bandera_admin IS NULL OR se.bandera_comite IS NULL) THEN 'Administración / Comité técnico' ELSE ar.nombre END) area, cp.area_actual, dc.expediente, dc.tipo_documento, dc.idDocumento, cr.area_sig, CONCAT(cp.clave_actividad ,' - ', ae.nombre) AS nombre_estatus, cr.estatus_siguiente, cr.nombre_estatus_siguiente, cr.tipo_permiso, se.bandera_comite, se.bandera_admin, se.estatus_construccion, se.nombre_a_escriturar, se.cliente_anterior, (CASE when cp.tipo_permiso = 3 THEN 'RECHAZO' ELSE '' END ) rechazo, concat((select[dbo].[DiasLaborales]( (dateadd(day,1,se.fecha_modificacion)) ,GETDATE())), ' día(s) de ',ae.dias_vencimiento) vencimiento, de4.contrato,pr.banderaPresupuesto,presup2.presupuestoAprobado,se.id_notaria, se.fecha_firma, a.descripcion ultimo_comentario,CONCAT(userAsig.nombre, ' ', userAsig.apellido_paterno, ' ', userAsig.apellido_materno) asignada_a,de2.documentosCargados, 
-        de2.estatusValidacion,de2.no_rechazos,doc22.documentosCargados22, doc22.estatusValidacion22,doc22.no_rechazos22,doc22.no_editados22
+        return $this->db->query("SELECT distinct(se.id_solicitud),se.id_cliente,se.id_lote,c.banderaEscrituracion,se.id_titulacion, se.valor_contrato, se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre nombreCondominio, r.nombreResidencial, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) as cliente, n.pertenece, se.bandera_notaria, se.descuento, se.aportacion, ar.id_opcion as id_area, (CASE WHEN se.id_estatus IN (4,2,3) AND (se.bandera_admin IS NULL OR se.bandera_comite IS NULL) THEN 'Administración / Comité técnico' ELSE ar.nombre END) area, cp.area_actual, dc.expediente, dc.tipo_documento, dc.idDocumento, cr.area_sig, CONCAT(cp.clave_actividad ,' - ', ae.nombre) AS nombre_estatus, cr.estatus_siguiente, cr.nombre_estatus_siguiente, cr.tipo_permiso, se.bandera_comite, se.bandera_admin, se.estatus_construccion, se.nombre_a_escriturar, se.cliente_anterior, (CASE when cp.tipo_permiso = 3 THEN 'RECHAZO' ELSE '' END ) rechazo, concat((select[dbo].[DiasLaborales]( (dateadd(day,1,se.fecha_modificacion)) ,GETDATE())), ' día(s) de ',ae.dias_vencimiento) vencimiento, de4.contrato,pr.banderaPresupuesto,presup2.presupuestoAprobado,se.id_notaria, se.fecha_firma, a.descripcion ultimo_comentario,CONCAT(userAsig.nombre, ' ', userAsig.apellido_paterno, ' ', userAsig.apellido_materno) asignada_a,de2.documentosCargados, 
+        de2.estatusValidacion,de2.no_rechazos,doc22.documentosCargados22, doc22.estatusValidacion22,doc22.no_rechazos22,doc22.no_editados22,de5.formasPago
         FROM solicitudes_escrituracion se 
         INNER JOIN lotes l ON se.id_lote = l.idLote 
         INNER JOIN clientes c ON c.id_cliente = l.idCliente 
@@ -269,7 +271,7 @@ class Postventa_model extends CI_Model
             $estatus = $estatus->id_estatus;
             $estatus_sig =  $rol == 56 ? 4 : 3;
             $clave =  $rol == 56 ? 'APE0003' : 'APE0002';
-            $actividades_x_estatus = (object)array("estatus_siguiente" => $estatus_sig ,"estatus_actual" => 2, "clave_actividad" => $clave);
+            $actividades_x_estatus = $type == 3 ? (object)array("estatus_siguiente" => 58 ,"estatus_actual" => 2, "clave_actividad" => "APE0002") : (object)array("estatus_siguiente" => $estatus_sig ,"estatus_actual" => 2, "clave_actividad" => $clave);
         }
         else {
             $estatus = $estatus->id_estatus;
@@ -564,7 +566,7 @@ class Postventa_model extends CI_Model
     }
 
 function checkBudgetInfo($idSolicitud){
-        return $this->db->query("SELECT se.*, hl.modificado, l.nombreLote, 
+        return $this->db->query("SELECT se.*, hl.modificado, l.nombreLote,oxc4.nombre as tipoContrato,
         cond.nombre nombreCond, r.nombreResidencial, n.correo correoN, v.correo correoV, oxc2.nombre nombreConst, oxc.nombre nombrePago, oxc3.nombre tipoEscritura, n.nombre_notaria, 
         n.nombre_notario, n.direccion, n.correo, n.telefono, n.pertenece,CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre
                 FROM solicitudes_escrituracion se 
@@ -578,6 +580,7 @@ function checkBudgetInfo($idSolicitud){
                 LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = se.estatus_pago AND oxc.id_catalogo = 63
 		        LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = se.estatus_construccion AND oxc2.id_catalogo = 62
                 LEFT JOIN opcs_x_cats oxc3 ON oxc3.id_opcion = se.tipo_escritura AND oxc3.id_catalogo = 70
+                LEFT JOIN opcs_x_cats oxc4 ON oxc4.id_opcion = se.tipo_contrato_ant AND oxc4.id_catalogo = 93
                 WHERE se.id_solicitud =$idSolicitud");
     }
 
@@ -761,8 +764,8 @@ function checkBudgetInfo($idSolicitud){
     }
 
     function getBudgetInformacion($idSolicitud){
-        return $this->db->query("SELECT se.*, hl.modificado,
-        cond.nombre nombreCondominio, r.nombreResidencial, l.nombreLote, oxc2.nombre nombreConst, oxc.id_opcion idEstatusPago, oxc3.nombre tipoEscritura,
+        return $this->db->query("SELECT se.*, hl.modificado,se.fecha_contrato,oxc4.nombre as tipoContrato,
+        cond.nombre nombreCondominio, r.nombreResidencial, l.nombreLote, oxc2.nombre nombreConst,oxc.id_opcion idEstatusPago,oxc3.nombre tipoEscritura,
         CASE se.cliente_anterior WHEN 1 THEN 'SÍ' ELSE 'NO' END cli_anterior
         FROM solicitudes_escrituracion se 
         INNER JOIN clientes c ON c.id_cliente = se.id_cliente
@@ -773,6 +776,7 @@ function checkBudgetInfo($idSolicitud){
 		LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = se.estatus_pago AND oxc.id_catalogo = 63
 		LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = se.estatus_construccion AND oxc2.id_catalogo = 62
         LEFT JOIN opcs_x_cats oxc3 ON oxc3.id_opcion = se.tipo_escritura AND oxc3.id_catalogo = 70
+        LEFT JOIN opcs_x_cats oxc4 ON oxc4.id_opcion = se.tipo_contrato_ant AND oxc4.id_catalogo = 93
         WHERE se.id_solicitud = $idSolicitud");
     }
 

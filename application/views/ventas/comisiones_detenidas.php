@@ -3,7 +3,7 @@
 
 <body>
     <div class="wrapper">
-        <?php $this->load->view('template/sidebar', ""); ?>
+        <?php $this->load->view('template/sidebar'); ?>
 
         <div class="content boxContent">
             <div class="container-fluid">
@@ -24,29 +24,26 @@
 
                                 <div class="material-datatables">
                                     <div class="form-group">
-                                        <div class="table-responsive">
-                                            <table class="table-striped table-hover"
-                                                   id="comisiones-detenidas-table">
-                                                <thead>
-                                                    <tr>
-                                                        <th></th>
-                                                        <th>PROYECTO</th>
-                                                        <th>CONDOMINIO</th>
-                                                        <th>LOTE</th>
-                                                        <th>ID LOTE</th>
-                                                        <!-- <th>CLIENTE</th> -->
-                                                        <th>TIPO VENTA</th>
-                                                        <th>MODALIDAD</th>
-                                                        <th>CONTRATACIÓN</th>
-                                                        <th>PLAN VENTA</th>
-                                                        <th>FEC. SISTEMA</th> 
-                                                        <th>FEC. NEODATA</th>
-                                                        <th>MOTIVO</th>
-                                                        <th>ACCIONES</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
-                                        </div>
+                                        <table class="table-striped table-hover"
+                                                id="comisiones-detenidas-table">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>PROYECTO</th>
+                                                    <th>CONDOMINIO</th>
+                                                    <th>LOTE</th>
+                                                    <th>ID LOTE</th>
+                                                    <th>TIPO VENTA</th>
+                                                    <th>MODALIDAD</th>
+                                                    <th>CONTRATACIÓN</th>
+                                                    <th>PLAN VENTA</th>
+                                                    <th>FECHA DE SISTEMA</th> 
+                                                    <th>FECHA DE NEODATA</th>
+                                                    <th>MOTIVO</th>
+                                                    <th>ACCIONES</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
                                     </div>
                                 </div>
                             </div>

@@ -13,6 +13,9 @@ class PaquetesCorrida extends CI_Controller
     $this->load->database('default');
     $this->programacion = $this->load->database('default', TRUE);
     $this->id_rol = $this->session->userdata('id_rol');
+
+    $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+    $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
   }
 
 
@@ -24,10 +27,8 @@ class PaquetesCorrida extends CI_Controller
  
   public function Planes()
   {
-    /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/  
-    $datos = $this->get_menu->get_menu_data($this->id_rol);
     $this->load->view('template/header');
-    $this->load->view("ventas/Planes", $datos);
+    $this->load->view("ventas/Planes");
   }
   function getResidencialesList($id_sede)
   {
@@ -364,11 +365,11 @@ class PaquetesCorrida extends CI_Controller
   public function Autorizaciones()
     {
         /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/     
-        if ($this->id_rol == FALSE)
-            redirect(base_url());      
-        $datos = $this->get_menu->get_menu_data($this->id_rol);
+        if ($this->id_rol == FALSE) {
+            redirect(base_url());
+        }
         $this->load->view('template/header');
-        $this->load->view("ventas/autorizacionesPVentas", $datos);
+        $this->load->view("ventas/autorizacionesPVentas");
     }
     public function getAutorizaciones()
     {

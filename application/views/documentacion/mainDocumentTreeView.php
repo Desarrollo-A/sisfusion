@@ -4,13 +4,8 @@
 <body id="mainBody">
     <div class="wrapper ">
         
-        <?php
-        $datos = array();
-        $datos = $datos4;
-        $datos = $datos2;
-        $datos = $datos3;
-        $this->load->view('template/sidebar', $datos);
-        ?>
+    <?php $this->load->view('template/sidebar'); ?>
+
 
         <div class="modal fade" id="modalInfo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm" role="document">

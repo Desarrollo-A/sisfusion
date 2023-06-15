@@ -2,7 +2,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <body class="">
 <div class="wrapper ">
-    <?php $this->load->view('template/sidebar', ''); ?>
+    <?php $this->load->view('template/sidebar'); ?>
 
 	<!-- modal para revision status 5 100% -->
 	<div class="modal fade " id="envARevCE" data-backdrop="static" data-keyboard="false">
@@ -15,7 +15,7 @@
 					<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
 						<div class="col col-xs-12 col-sm-12 col-md-6 col-lg-12">
 							<label>Comentario</label>
-							<input class="text-modal mb-1" name="comentario" id="comentarioenvARevCE">
+							<input class="text-modal mb-1" name="comentario" id="comentarioenvARevCE" autocomplete="off">
                              <br>
 						</div>
 

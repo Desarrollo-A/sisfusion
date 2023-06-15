@@ -2,14 +2,8 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
     <div class="wrapper">
-        <?php
-        $datos = array();
-        $datos = $datos4;
-        $datos = $datos2;
-        $datos = $datos3;
-        $this->load->view('template/sidebar', $datos);
-        ?>
-        <!-- Modals -->
+        <?php $this->load->view('template/sidebar'); ?>
+
         <div class="modal fade modal-alertas" id="miModal" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">

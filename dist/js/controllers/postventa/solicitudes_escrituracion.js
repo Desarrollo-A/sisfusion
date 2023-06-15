@@ -2,7 +2,7 @@
 let headersTable = ['ID SOLICITUD','PROYECTO','LOTE','CLIENTE','VALOR DE OPEACIÓN','FECHA CREACIÓN','ESTATUS','ÁREA','ASIGANADA A','COMENTARIOS','OBSERVACIONES','ACCIONES'];
 $('#escrituracion-datatable thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
-    let width = i == 0 || i == 1 || i == 7 || i == 4 || i == 10 || i==2 || i == 5 || i == 8 ? 'head_escrituracion' : '';     
+    let width = i == 0 || i == 1 || i == 7 || i == 4 || i == 10 || i==2 || i == 5 || i == 8 ? '' : '';     
     $(this).html(`<input class="${width}" id="head_${i}" data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${headersTable[i]}"/>` );
     $( 'input', this ).on('keyup change', function () {
         if ($('#escrituracion-datatable').DataTable().column(i).search() !== this.value ) {
@@ -11,12 +11,7 @@ $('#escrituracion-datatable thead tr:eq(0) th').each( function (i) {
     });
     $('[data-toggle="tooltip"]').tooltip();
 });
-function borrarClase() {
-    const indices = [0, 1, 2, 4, 5, 7, 8, 10];
-    for (let index = 0; index < indices.length; index++) {
-      $(`#head_${indices[index]}`).removeClass("head_escrituracion");
-    }
-  }
+
 
 $("#carga-datatable thead tr:eq(0) th").each(function (i) {
   var title = $(this).text();
@@ -151,10 +146,6 @@ $(document).ready(function () {
     function (data) {
         arrayEstatusLote = data;
       var len = data.length;
-      /*for (var i = 0; i < len; i++) {
-          arrayEstatusLote[i].id=data[i]["id_opcion"];
-          arrayEstatusLote[i].nombre=data[i]["nombre"];
-      }*/
     },
     "json"
   );
@@ -230,9 +221,7 @@ $(document).on("submit", "#approveForm", function (e) {
   let id_solicitud = $("#id_solicitud").val();
   let observations = $("#observations").val();
   let id_estatus = $("#status").val();
-  // alert(id_estatus)
-  let type = $("#type").val(); // id_estatus == 2 ? 2 : (id_estatus == 12 ? 4 : id_estatus); //$('#type').val();
-  // alert(type)
+  let type = $("#type").val(); 
   if (id_estatus == 30) {
     changeStatus(id_solicitud, 1, observations, 5, 0, 29);
   } else {
@@ -249,7 +238,6 @@ $(document).on("click", "#searchByDateRange", function () {
     let finalEndDate = $("#endDate").val();
     let fDate = formatDate(finalBeginDate);
     let fEDate = formatDate(finalEndDate);
-    //fillTable(fDate, fEDate, $('#estatusE').val());
     arrayTables[0].data = {
         "beginDate": fDate,
         "endDate": fEDate,
@@ -270,7 +258,6 @@ $(document).on("click", "#createDate", function () {
 });
 $(document).on("click", "#newDate", function () {
   var data = escrituracionTable.row($(this).parents("tr")).data();
-  // $('#id_solicitud3').val(data.idSolicitud);
   let idNotaria = $(this).attr("data-idNotaria");
   let signDate = getSignDate(idNotaria);
   $("#signDate").val(signDate);
@@ -284,7 +271,6 @@ $(document).on("click", "#searchByDateTest", function (){
     let finalEndDate = $("#finalDate").val();
     let fDate = formatDate(finalBeginDate);
     let fEDate = formatDate(finalEndDate);
-    //fillTableCarga(fDate, fEDate,$('#estatusE').val());
     arrayTables[1].data = {
         "beginDate": fDate,
         "endDate": fEDate,
@@ -478,9 +464,7 @@ if(id_estatus == 12){
             type: 'POST',
             success: function (response) {
                 $("#sendRequestButton").prop("disabled", false);
-              //  alert(details)
                 if (response == 1) {
-                    // getDocumentsInformation(idSolicitud);
                     alerts.showNotification("top", "right", action == 1 ? "El documento se ha cargado con éxito." : action == 2 ? "El documento se ha eliminado con éxito." : action == 4 ? "Los motivos de rechazo se han asociado de manera exitosa para el documento." : "El documento ha sido validado correctamente.", "success");
                     if(details == 1){
                         var tr = $(`#trees${idSolicitud}`).closest('tr');
@@ -513,9 +497,6 @@ if(id_estatus == 12){
                     }else if(details == 2){
                         let idNxS = $("#idNxS").val();
                         buildUploadCards(idNxS);
-                        // var tr = $(`#treePresupuesto${idSolicitud}`).closest('tr');
-                        // var row = escrituracionTable.row(tr);
-                        // createDocRowPresupuesto(row, tr, $(`#treePresupuesto${idSolicitud}`));
                     }else if(details == 3){
                         var tr = $(`#docs${idSolicitud}`).closest('tr');
                         var row = escrituracionTable.row(tr);
@@ -619,9 +600,7 @@ $(document).on("click", "#request", function () {
       : num_table == 2
       ? escrituracionTableTest.row($(this).parents("tr")).data()
       : escrituracionPausadas.row($(this).parents("tr")).data();
-  //var data = escrituracionTable.row($(this).parents('tr')).data();
   document.getElementById("actividad_siguiente").innerHTML = "";
-  // document.getElementById('notariaVo').innerHTML = '';
 
   $("#id_solicitud").val(data.id_solicitud);
   $("#status").val(data.id_estatus);
@@ -656,7 +635,6 @@ $(document).on("click", "#pausarSolicitud", function () {
 $(document).on("click", "#borrarSolicitud", function () {
   var data = escrituracionTable.row($(this).parents("tr")).data();
   document.getElementById("labelmodal").innerHTML = "Borrar solicitud";
-  //document.getElementById('comentarioPausa')[0].placeholder = 'Descripción del por que se elimina la solicitud';
   $("#comentarioPausa").attr(
     "placeholder",
     "Descripción del por que se elimina la solicitud"
@@ -739,7 +717,6 @@ $("#observations").keydown(function () {
   var max = 250;
   var len = $(this).val().length;
   if (len >= max) {
-    //alerts.showNotification("top", "right", "Limite de caracteres superado", "warning");
     document.getElementById("text-observations").innerHTML =
       "Limite de caracteres superado";
     $("#ApproveF").addClass("disabled");
@@ -757,7 +734,6 @@ $(document).on("click", "#reject", function () {
   $("#id_solicitud2").val(data.id_solicitud);
   $("#status2").val(data.id_estatus);
   $("#estatus").val(data.idEstatus);
-  //data.tipo_documento=0;
   getMotivosRechazos(
     data.tipo_documento == null || data.tipo_documento == 0
       ? 0
@@ -778,22 +754,16 @@ $(document).on("click", "#presupuesto", function () {
       data.id_estatus == 36 ||
       data.id_estatus == 59)
   ) {
-    /*document.getElementById('RequestPresupuesto').style.display = "none";
-       document.getElementById('nombrePresupuesto2').disabled = true;
-       document.getElementById('tipoE').disabled = true;
-       document.getElementById('estatusPago').disabled = true;
-       document.getElementById('superficie').disabled = true;
-       document.getElementById('catastral').disabled = true;*/
     document.getElementById("cliente").disabled = true;
+    document.getElementById("liquidado").disabled = true;
+    document.getElementById("tipoContratoAnt").disabled = true;
     document.getElementById("nombreT").disabled = true;
-    document.getElementById("fechaCA").disabled = true;
+    document.getElementById("fechaCA").disabled = false;
     document.getElementById("rfcDatos").disabled = true;
     document.getElementById("aportaciones").disabled = true;
     document.getElementById("descuentos").disabled = true;
     document.getElementById("motivo").disabled = true;
   }
-  // $('#id_solicitud3').val(data.idSolicitud);
-  //alert(data.id_solicitud)
   getBudgetInfo(data.id_solicitud);
   $("#id_solicitud3").val(data.id_solicitud);
   $("#presupuestoModal").modal();
@@ -801,7 +771,6 @@ $(document).on("click", "#presupuesto", function () {
 
 $(document).on("click", "#checkPresupuesto", function () {
   var data = escrituracionTable.row($(this).parents("tr")).data();
-  // $('#id_solicitud3').val(data.idSolicitud);
   checkBudgetInfo(data.idSolicitud);
   $("#id_solicitud4").val(data.idSolicitud);
 
@@ -844,7 +813,6 @@ $(document).on("click", "#tree", function () {
 });
 
 $(document).on("click", "#asignarNotariaButton", function () {
-  //$('#asignarNotaria')[0].reset();
 
   var data = escrituracionTable.row($(this).parents("tr")).data();
   let informacion_lote = $(this).attr("data-lote");
@@ -853,12 +821,6 @@ $(document).on("click", "#asignarNotariaButton", function () {
   document.getElementById("informacion_lote").innerHTML =
     "Lote: " + informacion_lote;
   $("#id_solicitud").val(solicitud);
-  //$('#div_notaria').hide();
-  /*$('#divnombre_notaria').hide();
-    $('#divnombre_notario').hide();
-    $('#divdireccion').hide();
-    $('#divcorreo').hide();
-    $('#divtelefono').hide();*/
 
   $("#altaNotario").modal();
 });
@@ -868,8 +830,6 @@ $(document).on("change", "#tipoNotaria", function (e) {
     $("#tipo_notaria").val($(this).val());
     if ($(this).val() == 2) {
       $("#div_notaria").show();
-      // $('#asignarNotaria')[0].reset();
-
       $("#nombre_notaria").attr("required", true);
       $("#nombre_notario").attr("required", true);
       $("#direccion").attr("required", true);
@@ -929,7 +889,6 @@ $(document).on("click", "#sendRequestButton2", function (e) {
       success: function (response) {
         $("#sendRequestButton2").prop("disabled", false);
         if (response == 1) {
-          // getDocumentsInformation(idSolicitud);
           alerts.showNotification(
             "top",
             "right",
@@ -942,8 +901,6 @@ $(document).on("click", "#sendRequestButton2", function (e) {
               : "El documento ha sido validado correctamente.",
             "success"
           );
-          // escrituracionTable.ajax.reload();
-          // $("#uploadModal").modal("hide");
         } else if (response == 0)
           alerts.showNotification(
             "top",
@@ -1073,7 +1030,7 @@ $(document).on("click", "#estatusL", function () {
   getEstatusConstruccion(estatus_construccion);
   $("#estatusLModal").modal();
 });
-
+ 
 $(document).on("submit", "#formEstatusLote", function (e) {
   e.preventDefault();
   let id_solicitud = $("#id_solicitudEstatus").val();
@@ -1098,7 +1055,6 @@ $(document).on("click", ".treePresupuesto", function () {
     //DESPLEGAR EL ROW DETAILS
     $("#spiner-loader").removeClass("hide");
     tr.addClass("details");
-    // createDocRowPresupuesto(row, tr, $(this));
     createRowNotarias(
       row,
       tr,
@@ -1133,7 +1089,6 @@ $(document).on("click", ".approve", function () {
     success: function (response) {
       $("#sendRequestButton").prop("disabled", false);
       if (response == 1) {
-        // getDocumentsInformation(idSolicitud);
         alerts.showNotification(
           "top",
           "right",
@@ -1156,13 +1111,11 @@ $(document).on("click", ".approve", function () {
             //SI LA ACCIÓN ES DELETE Y FALTA UN ARCHIVO AL MENOS RECARGAR
             if (index < 0) {
               escrituracionTable.ajax.reload(null, false);
-              // createDocRow(integracionExpediente.row,integracionExpediente.tr,integracionExpediente.this);
             }
           }
         } else {
           escrituracionTable.ajax.reload(null, false);
         }
-        // $("#uploadModal").modal("hide");
       } else if (response == 0)
         alerts.showNotification(
           "top",
@@ -1232,17 +1185,7 @@ $(document).on("click", ".modalPresupuestos", function () {
   $('[data-toggle="tooltip"]').tooltip();
 });
 
-  
-$(document).on('change', '.selectpicker.notaria-select', async function(e){
-    if ($(this).val()) {
-        let descripcion = {};
-        let iconSave = $(this).parent().next().find('.icon-save');
-        iconSave.removeClass('inactive');
-        iconSave.addClass('active');
-        descripcion = await getDescriptionNotaria($(this).val());
-        $(this).parent().parent().next().text(descripcion.direccion);
-    }
-})
+
 
 $(document).on('click', '.saveNotaria', function() {
     let tr = $(this).closest('tr');
@@ -1252,14 +1195,6 @@ $(document).on('click', '.saveNotaria', function() {
     }else{
         alerts.showNotification("top", "right", "Debe seleccionar una notaría", "warning");
     }
-})
-
-$(document).on('click', '.modalPresupuestos', function(){
-    let idNxS = $(this).attr('data-idNxS');
-    $("#idNxS").val(idNxS);
-    buildUploadCards(idNxS);
-    $('#loadPresupuestos').modal();
-    $('[data-toggle="tooltip"]').tooltip();
 })
 
 $(document).on('click', '.modalCopiaCertificada', function(){
@@ -1356,6 +1291,7 @@ function crearTablas(datosTablas){
                     let bandera_request=0;
                     let bandera_reject = 0;
                     let banderaAdmin=0;
+                    let numTable =1;
                     var datosEstatus = {
                         area_sig: d.area_sig,
                         nombre_estatus_siguiente: d.nombre_estatus_siguiente,
@@ -1381,7 +1317,9 @@ function crearTablas(datosTablas){
                             break;
                             case 58:
                                 bandera_request = userType == 55 ? 1 : 0;
-                                group_buttons +=`<button id="btnValorOper" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Valor de operación"><i class="fa fa-file"></i></button>`;
+                                if (userType == 55) { 
+                                    group_buttons +=`<button id="btnValorOper" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Valor de operación"><i class="fa fa-file"></i></button>`;
+                                }
                             break;
                             case 3:
                                 //ADMINISTRACIÓN Y COMITÉ TÉCNICO YA DIERON SU ESTATUS
@@ -1457,7 +1395,6 @@ function crearTablas(datosTablas){
                                    bandera_reject = 1;  
                                    bandera_request = d.estatusValidacion == 1 ? 1 : 0;                                        
                                    group_buttons += `<button id="trees${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
-                                  // group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 2, btnsAdicionales,datosEstatus);
                                   group_buttons += `<button id="viewInfoClient" data-area-actual="${userType}" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información del cliente"><i class="fas fa-user-circle"></i></i></button>`; 
                                 }
                             break;
@@ -1519,7 +1456,6 @@ function crearTablas(datosTablas){
                             case 25:
                                     if (userType == 57 && d.id_titulacion == idUser) { 
                                         
-                                   //     group_buttons += d.pertenece == 2 ? `<button id="notaria" data-idSolicitud=${d.id_solicitud} class="btn-data btn-green" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Información de Notaría"><i class="fas fa-user-tie"></i></button>` : '';
                                         group_buttons += `<button id="trees${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
                                         bandera_request = d.estatusValidacion == 1 ? 1 : 0;                                        
                                         bandera_reject = 1;
@@ -1527,7 +1463,6 @@ function crearTablas(datosTablas){
                             break;
                             case 34:
                                 if (userType == 57 && d.id_titulacion == idUser) { 
-                                    //group_buttons += d.pertenece == 2 ? `<button id="notaria" data-idSolicitud=${d.id_solicitud} class="btn-data btn-green" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Información de Notaría"><i class="fas fa-user-tie"></i></button>` : '';
                                     group_buttons += `<button id="trees${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
                                    bandera_request = 1;
                                 }
@@ -1542,10 +1477,7 @@ function crearTablas(datosTablas){
                             case 26:
                                 if (userType == 57 && d.id_titulacion == idUser) {
                                     group_buttons += `<button id="trees${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
-                                    //group_buttons += d.fecha_firma != null  ? '' : `<button id="createDate" data-idSolicitud=${d.id_solicitud} data-action="3" data-idNotaria=${d.id_notaria} class="btn-data btn-green" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Fecha para firma"><i class="far fa-calendar-alt"></i></button>`;
                                     group_buttons += d.documentosCargados22 == 0  ? '' : `<button id="createDate" data-idSolicitud=${d.id_solicitud} data-action="3" data-idNotaria=${d.id_notaria} class="btn-data btn-green" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Fecha para firma"><i class="far fa-calendar-alt"></i></button>`;
-                                    //bandera_request = d.fecha_firma != null && d.documentosCargados22 != null ? 1 : 0;
-
                                 }
                             break;
                             case 27:
@@ -1630,6 +1562,7 @@ function crearTablas(datosTablas){
                                 if (userType == 57 && d.id_titulacion == idUser) { 
                                     bandera_request = d.expediente != null ? 1 : 0;
                                     permiso = 1;
+                                    numTable=2;
                                     group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, btnsAdicionales,datosEstatus);
                                 }
                             break;
@@ -1656,6 +1589,7 @@ function crearTablas(datosTablas){
                             case 47:
                             case 50: 
                                 if (userType == 57 && d.id_titulacion == idUser) { 
+                                    numTable=2;
                                     bandera_request = d.expediente != null ? 1 : 0;
                                     permiso = 1;
                                     group_buttons += permisos(permiso,  d.expediente, d.idDocumento, d.tipo_documento, d.id_solicitud, 1, btnsAdicionales,datosEstatus);
@@ -1663,6 +1597,7 @@ function crearTablas(datosTablas){
                             break;
                             case 54: 
                                 if (userType == 55 ) { 
+                                    numTable=3;
                                     bandera_request = 1;
                                 }
                             break;
@@ -1674,7 +1609,7 @@ function crearTablas(datosTablas){
                     if(bandera_request == 1){
                        d.area_sig = banderaAdmin == 1 ? 'Postventa' : d.area_sig;
                        d.nombre_estatus_siguiente = banderaAdmin == 1 ? 'APE0004 - RECEPCIÓN DE ESTATUS DE CONSTRUCCIÓN - POSTVENTA' : d.nombre_estatus_siguiente;
-                        group_buttons += `<button id="request" data-num-table="1" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
+                       group_buttons += `<button id="request" data-num-table="${numTable} data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
                     }
                     if(bandera_reject == 1){
                         group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-reply"></i></button>`;
@@ -1726,8 +1661,6 @@ function email(idSolicitud, action, notaria = null, valuador= null) {
             break;
     }
     $.post(action == 1 ? 'mailPresupuesto': action == 2 ? 'presupuestoCliente': action  == 3 ? 'mailNotaria': action  == 4 ? 'mailFecha':'mailPresupuesto', obj, function (data) {
-        // if(data == true){//cambiar a true
-        // }
         changeStatus(idSolicitud, action == 1 ? 4:0, 'correo enviado', 1);
 
         $('#spiner-loader').addClass('hide');
@@ -1781,10 +1714,6 @@ function setInitialValues() {
         };
             crearTablas(arrayTables[z]);
     }
-   // fillTable(0, 0, $('#estatusE').val());
-   // fillTableCarga(0, 0, $('#estatusE').val());
-   // tablaSolicitudesPausadas(); // SE EJECUTA FUNCIÓN QUE LLENA TABLA DE SOLICITUDES PAUSADAS
-
 
 }
 
@@ -1797,7 +1726,6 @@ function getMotivosRechazos(tipo_documento,estatus) {
     $("#area_rechazo").append($('<option disabled>').val("0").text("Seleccione una opción"));
     let showSelect = estatus == 3 || estatus == 4 && userType != 11 ? 'show' : estatus == 29 || estatus == 48 ? 'show' : 'none';
 
-    //estatus = estatus == 3 || estatus == 4 ? '3,4' : estatus;
     if(estatus != 3 && estatus != 4){
         $('#area_rechazo').prop('required', false);
     }
@@ -1875,9 +1803,7 @@ function getDocumentsClient(idEscritura) {
 
 function getNotarias(datos = null) {
   $("#spiner-loader").removeClass("hide");
-  // $("#notaria").find("option").remove();
   $(".notaria-select").find("option").remove();
-  // $("#notaria").append($('<option disabled>').val("0").text("Seleccione una opción"));
   $(".notaria-select").append(
     $("<option disabled>").val("0").text("Seleccione una opción")
   );
@@ -1890,16 +1816,13 @@ function getNotarias(datos = null) {
       for (var i = 0; i < len; i++) {
         var id = data[i]["idNotaria"];
         var name = data[i]["nombre_notaria"];
-        // $("#notaria").append($('<option>').val(id).text(name));
         $(".notaria-select").append($("<option>").val(id).text(name));
       }
       if (len <= 0) {
-        // $("#notaria").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
         $(".notaria-select").append(
           '<option selected="selected" disabled>No se han encontrado registros que mostrar</option>'
         );
       }
-      // $("#notaria").selectpicker('refresh');
       $(".notaria-select").selectpicker("refresh");
       if (datos != null) {
         let selects = $(`#notarias-${datos.id_solicitud}`).find(
@@ -1972,6 +1895,8 @@ function getBudgetInfo(idSolicitud) {
       var str =
         data.modificado != null ? data.modificado.split(" ")[0].split("-") : "";
       var strM = data.modificado != null ? `${str[2]}-${str[1]}-${str[0]}` : "";
+      var fechaContrato =data.fecha_contrato != null ? data.fecha_contrato.split("-") : null;
+      strM = data.fecha_contrato == null ? strM : `${fechaContrato[2]}-${fechaContrato[1]}-${fechaContrato[0]}`;
       $("#fContrato").val(strM);
       $("#catastral").val(data.clave_catastral);
       $("#construccionInfo").val(data.nombreConst);
@@ -2175,8 +2100,6 @@ function permisos(
         //VISTA PREVIA DOCUEMENTOS
         botones += `<button id="preview" data-doc="${expediente}" data-documentType="${tipo_documento}" class="btn-data btn-details-grey" data-toggle="tooltip" data-placement="left" title="Vista previa"><i class="fas fa-eye"></i></button>`;
         //SI YA SE CARGO LA COPIA CERTIFICADA AGREGAR BOTON PARA CARGAR OTRO ARCHIVO Y BLOQUEAR LA ACCIÓN DE ENVIAR
-        //botones += `<button data-idDocumento="${idDocumento}" data-documentType="${tipo_documento}" data-idSolicitud=${idSolicitud} data-action="1" class="btn-data btn-sky upload" data-toggle="tooltip" data-placement="left" title="Cargar"><i class="fas fa-trash"></i></button>`;
-        //PENDIENTE  botones += `<button id="request" data-siguiente-area="${datosEstatus.area_sig}" data-siguiente_actividad="${datosEstatus.nombre_estatus_siguiente}" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Enviar"><i class="fas fa-paper-plane"></i></button>`;
       }
       break;
     case 2: //lectura
@@ -2220,7 +2143,6 @@ function permisos(
 }
 let documentosObligatorios = [];
 function buildTableDetail(data, permisos,proceso = 0) {
-   // alert(proceso);
     documentosObligatorios = [];
     var filtered = data.filter(function(value){ 
         if((value.tipo_documento == 12 && (value.estatus_solicitud == 20 || value.estatus_solicitud == 25 || value.estatus_solicitud == 34) && value.estatusPresupuesto != 1) || (value.tipo_documento == 12 && (value.estatus_solicitud == 48 || value.estatus_solicitud == 51 || value.estatus_solicitud == 53))){
@@ -2250,8 +2172,6 @@ function buildTableDetail(data, permisos,proceso = 0) {
         solicitudes += '<td> ' + v.motivos_rechazo + ' </td>';
         solicitudes += '<td> ' + v.validado_por + ' </td>';
         solicitudes += `<td> <span class="label" style="background:${v.colour}">${v.estatus_validacion}</span></span>${v.editado == 1 ? `<br><span class="label" style="background:#C0952B">EDITADO</span>`:``} </td>`;
-        /*data-action = 1 (UPLOAD FILE)
-        data-action = 2 (DELETE FILE)*/
 
         solicitudes += '<td><div class="d-flex justify-center">';
         // PERMISO DE ESCRITURA TIENE PERMISOS (ESCRITURA) DOCUMENTOS: CONTRATO, PRESUPUESTOS, FORMAS DE PAGO, SOLO SE VALIDAN LOS PRESUPUESTOS LOS OTROS SOLO LECTURA
@@ -2284,7 +2204,7 @@ function buildTableDetail(data, permisos,proceso = 0) {
         } //PERMISO DE ESCRITURA SUBIR NUEVO ARCHIVO FORMAS DE PAGO FECHA FIRMA
         else if(permisos == 1 && (v.ev == null || v.ev == 2) && (v.estatus_solicitud == 26 || v.estatus_solicitud == 30) && (v.tipo_documento == 22) ) {
             solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action=${v.expediente == null || v.expediente == '' ? 1 : 2} class="btn-data btn-${v.expediente == null || v.expediente == '' ? 'blueMaderas' : 'warning'} upload" data-id-estatus="${v.estatus_solicitud}" data-toggle="tooltip" data-placement="left" title=${v.expediente == null || v.expediente == '' ? 'Cargar' : 'Eliminar'}>${v.expediente == null || v.expediente == '' ? '<i class="fas fa-upload"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
-        } else if(permisos == 1 && (v.ev == null || v.ev == 2) && (v.estatus_solicitud == 59) && (v.tipo_documento == 11 || v.tipo_documento == 17 || v.tipo_documento == 18) ) {
+        } else if(permisos == 1 && (v.ev == null || v.ev == 2) && (v.estatus_solicitud == 59) && (v.tipo_documento == 17 || v.tipo_documento == 18) ) {
             solicitudes += `<button data-idDocumento="${v.idDocumento}" data-documentType="${v.tipo_documento}" data-idSolicitud=${v.idSolicitud} data-details ="1" data-action=${v.expediente == null || v.expediente == '' ? 1 : 2} class="btn-data btn-${v.expediente == null || v.expediente == '' ? 'blueMaderas' : 'warning'} upload" data-id-estatus="${v.estatus_solicitud}" data-toggle="tooltip" data-placement="left" title=${v.expediente == null || v.expediente == '' ? 'Cargar' : 'Eliminar'}>${v.expediente == null || v.expediente == '' ? '<i class="fas fa-upload"></i>' : '<i class="far fa-trash-alt"></i>'}</button>`;
         }
         else if (permisos == 2 && v.estatus_solicitud == 5) {
@@ -2663,10 +2583,7 @@ function getEstatusConstruccion(estatus_construccion) {
       }
       if (estatus_construccion != null && estatus_construccion != 0) {
         $(`#construccion`).val(estatus_construccion);
-        //$(`#construccion`).selectpicker('val',estatus_construccion);
         $(`#construccion`).trigger("change");
-        //$('#construccion').val(estatus_construccion).trigger('change');
-        //$("#construccion").selectpicker('refresh');
       }
       $("#spiner-loader").addClass("hide");
     },
@@ -2877,7 +2794,6 @@ function createRowNotarias(row, tr, thisVar, idSolicitud, id_estatus = 0) {
         )
       )
       .show();
-    // selectedNotarias(row.data());
     tr.addClass("shown");
     thisVar
       .parent()
@@ -3033,6 +2949,8 @@ function getBudgetInformacion(idSolicitud, actividad = 0) {
           $("#RequestInformacion").addClass("hide");
           $("#information_campos").addClass("hide");
           document.getElementById("construccionI").disabled = true;
+          document.getElementById("liquidado").disabled = true;
+          document.getElementById("tipoContratoAnt").disabled = true;
           document.getElementById("clienteI").disabled = true;
           document.getElementById('nombreI').disabled = true;
           document.getElementById('fechaCAI').disabled = true;
@@ -3088,6 +3006,7 @@ $(document).on("submit", "#formInformacion", function (e) {
     let idSolicitud = $("#idSolicitud").val();
     let data = new FormData($(this)[0]);
     data.append("idSolicitud", idSolicitud);
+    data.append("tipoContratoAnt", $("#tipoContratoAnt").val());
     if( $("#clienteI").val() == "uno" ){
       if( $("#tipoContratoAnt").val() != '' ){
         setNewInformacion(data);
@@ -3329,9 +3248,7 @@ function createDocRowPago(row, tr, thisVar) {
     $("#spiner-loader").addClass("hide");
   });
 }
-////////////////////////////////////////////////////////////////////
-// ---------------------------------------------------------------
-// ------------------------------------------------------------------
+
 // ----------------------------------------------------------------------
 
 $(document).on("click", "#bajarConMotivo", function () {
@@ -3492,11 +3409,24 @@ $(document).on("click", "#bajarConMotivo", function () {
         default:
             break;
     }
-    Shadowbox.open({
-        content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;z-index:999999!important;" src="${general_base_url}static/documentos/postventa/escrituracion/${folder}/${itself.attr('data-doc')}"></iframe></div>`,
-        player: "html",
-        title: `Visualizando archivo: ${itself.attr('data-doc')} `,
-        width: 985,
-        height: 660
-    });
-});  
+            Shadowbox.open({
+                content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;z-index:999999!important;" src="${general_base_url}static/documentos/postventa/escrituracion/${folder}/${itself.attr('data-doc')}"></iframe></div>`,
+                player: "html",
+                title: `Visualizando archivo: ${itself.attr('data-doc')} `,
+                width: 985,
+                height: 660
+            });
+        });  
+
+        
+
+
+
+    
+        
+
+        $(window).resize(function(){
+            escrituracion-datatable.columns.adjust();
+            carga-datatable.columns.adjust();
+            pausadas_tabla.columns.adjust();
+        });

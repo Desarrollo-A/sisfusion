@@ -8,11 +8,7 @@
             case '28': // EJECUTIVO ADMINISTRATIVO MKTD
             case '50': // GENERALISTA MKTD
             case '63': // CONTROL INTERNO AUDITORIA 
-                $datos = array();
-                $datos = $datos4;
-                $datos = $datos2;
-                $datos = $datos3;
-                $this->load->view('template/sidebar', $datos);
+                $this->load->view('template/sidebar');
             break;
 
             default:

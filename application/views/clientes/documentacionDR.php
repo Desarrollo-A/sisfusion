@@ -26,11 +26,7 @@
         case '40': // COBRANZA
         case '53': // analista comisisones
         case '58': // ANALISTA DE DATOS
-            $datos = array();
-            $datos = $datos4;
-            $datos = $datos2;
-            $datos = $datos3;
-            $this->load->view('template/sidebar', $datos);
+            $this->load->view('template/sidebar');
             break;
 
         default:
