@@ -45,16 +45,9 @@
                                                 <div class="row">
                                                     <div class="col-md-12 p-r">
                                                         <div class="form-group d-flex">
-                                                            <input type="text" class="form-control datepicker"
-                                                                id="beginDate" value="01/01/2021" />
-                                                            <input type="text" class="form-control datepicker"
-                                                                id="endDate" value="01/01/2021" />
-                                                            <button
-                                                                class="btn btn-success btn-round btn-fab btn-fab-mini"
-                                                                id="searchByDateRange">
-                                                                <span
-                                                                    class="material-icons update-dataTable">search</span>
-                                                            </button>
+                                                            <input type="text" class="form-control datepicker" id="beginDate"/>
+                                                            <input type="text" class="form-control datepicker" id="endDate"/>
+                                                            <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange"><span class="material-icons update-dataTable">search</span></button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -63,27 +56,24 @@
                                     </div>
                                 </div>
                                 <div class="material-datatables">
-                                    <div class="table-responsive">
-                                        <table id="estatusNueveTable" name="estatusNueveTable"
-                                            class="table-striped table-hover" style="text-align:center;">
-                                            <thead>
-                                                <tr>
-                                                    <th>PROYECTO</th>
-                                                    <th>CONDOMINIO</th>
-                                                    <th>LOTE</th>
-                                                    <th>REFERENCIA</th>
-                                                    <th>GERENTE</th>
-                                                    <th>ENGANCHE</th>
-                                                    <th>TOTAL</th>
-                                                    <th>FECHA ESTATUS 9</th>
-                                                    <th>USUARIO</th>
-                                                    <th>FECHA APARTADO</th>
-                                                    <th>REUBICACIÓN</th>
-                                                    <th>FECHA REUBICACIÓN</th>
-                                                </tr>
-                                            </thead>
-                                        </table>
-                                    </div>
+                                    <table id="estatusNueveTable" name="estatusNueveTable" class="table-striped table-hover hide">
+                                        <thead>
+                                            <tr>
+                                                <th>PROYECTO</th>
+                                                <th>CONDOMINIO</th>
+                                                <th>LOTE</th>
+                                                <th>REFERENCIA</th>
+                                                <th>GERENTE</th>
+                                                <th>ENGANCHE</th>
+                                                <th>TOTAL</th>
+                                                <th>FECHA ESTATUS 9</th>
+                                                <th>USUARIO</th>
+                                                <th>FECHA APARTADO</th>
+                                                <th>REUBICACIÓN</th>
+                                                <th>FECHA REUBICACIÓN</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
                                 </div>
                             </div>
                         </div>

@@ -123,11 +123,13 @@ $('#formFilters').on('submit', function(event){
         dataType: 'json',
         data: data,
         beforeSend:function(){
+			$('#spiner-loader').removeClass('hide');
             $('#addExp').addClass('hide');
             
         },
         success:function(response){
             dataTable(response);
+			$('#spiner-loader').addClass('hide');
             $('#addExp').removeClass('hide');
         }
     })

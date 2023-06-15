@@ -8,7 +8,7 @@ $(document).ready(function () {
         var title = $(this).text();
         titulos_intxt.push(title);
         if (i != 0) {
-            $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
+            $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
             $('input', this).on('keyup change', function () {
                 if ($('#tabla_dispersar_comisiones').DataTable().column(i).search() !== this.value) {
                     $('#tabla_dispersar_comisiones').DataTable().column(i).search(this.value).draw();
@@ -21,6 +21,31 @@ $(document).ready(function () {
             });
         }
     });
+
+    $(document).ready(function(){
+        sp.initFormExtendedDatetimepickers();
+        $('.datepicker').datetimepicker({locale: 'es'});
+    });
+
+    sp = { //  SELECT PICKER
+        initFormExtendedDatetimepickers: function () {
+            $('.datepicker').datetimepicker({
+                format: 'DD/MM/YYYY',
+                icons: {
+                    time: "fa fa-clock-o",
+                    date: "fa fa-calendar",
+                    up: "fa fa-chevron-up",
+                    down: "fa fa-chevron-down",
+                    previous: 'fa fa-chevron-left',
+                    next: 'fa fa-chevron-right',
+                    today: 'fa fa-screenshot',
+                    clear: 'fa fa-trash',
+                    close: 'fa fa-remove',
+                    inline: true
+                }
+            });
+        }
+    }
 
     dispersionDataTable = $('#tabla_dispersar_comisiones').dataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -151,14 +176,10 @@ $(document).ready(function () {
                     var RegresaActiva = '';
 
                     if (d.penalizacion == 1 && d.bandera_penalizacion == 0 && d.id_porcentaje_penalizacion != '4') {
-                        BtnStats += `
-                            <button href="#" value="${d.idLote}" data-value="${d.nombreLote}" data-cliente="${d.id_cliente}" 
-                                class="btn-data btn-blueMaderas btn-penalizacion btn-success" title="Aprobar Penalización"> 
-                                <i class="material-icons">check</i>
-                            </button> 
-                            <button href="#" value="${d.idLote}" data-value="${d.nombreLote}" data-cliente="${d.id_cliente}" class="btn-data btn-blueMaderas btn-Nopenalizacion btn-warning" title="Rechazar Penalización"> <i class="material-icons">close</i> </button>`;
+                        BtnStats += `<button href="#" value="${d.idLote}" data-value="${d.nombreLote}" data-cliente="${d.id_cliente}" class="btn-data btn-blueMaderas btn-penalizacion btn-success" data-toggle="tooltip" data-placement="top" title="APROBAR PENALIZACIÓN"><i class="material-icons">check</i></button> 
+                        <button href="#" value="${d.idLote}" data-value="${d.nombreLote}" data-cliente="${d.id_cliente}" class="btn-data btn-blueMaderas btn-Nopenalizacion btn-warning" data-toggle="tooltip" data-placement="top" title="RECHAZAR PENALIZACIÓN"> <i class="material-icons">close</i> </button>`;
                     } else if (d.penalizacion == 1 && d.bandera_penalizacion == 0 && d.id_porcentaje_penalizacion == '4') {
-                        BtnStats += `<button href="#" value="${d.idLote}" data-value="${d.nombreLote}" data-cliente="${d.id_cliente}" class="btn-data btn-blueMaderas btn-penalizacion4 btn-info" title="Rechazar Penalización"> <i class="material-icons">check</i> </button><button href="#" value="${d.idLote}" data-value="${d.nombreLote}" data-cliente="${d.id_cliente}" class="btn-data btn-blueMaderas btn-Nopenalizacion btn-warning" title="Rechazar Penalización"><i class="material-icons">close</i></button>`;
+                        BtnStats += `<button href="#" value="${d.idLote}" data-value="${d.nombreLote}" data-cliente="${d.id_cliente}" class="btn-data btn-blueMaderas btn-penalizacion4 btn-info" data-toggle="tooltip" data-placement="top" title="RECHAZAR PENALIZACIÓN"> <i class="material-icons">check</i> </button><button href="#" value="${d.idLote}" data-value="${d.nombreLote}" data-cliente="${d.id_cliente}" class="btn-data btn-blueMaderas btn-Nopenalizacion btn-warning" data-toggle="tooltip" data-placement="top" title="RECHAZAR PENALIZACIÓN"><i class="material-icons">close</i></button>`;
                     } else {
                         if (d.totalNeto2 == null || d.totalNeto2 == '' || d.totalNeto2 == 0) {
                             BtnStats = 'Asignar Precio';
@@ -181,10 +202,10 @@ $(document).ready(function () {
                                 varColor = 'btn-green';
                             }
                             if (d.fecha_modificacion != null && d.registro_comision != 8) {
-                                RegresaActiva = '<button href="#" data-param="1" data-idpagoc="' + d.idLote + '" data-nombreLote="' + d.nombreLote + '"  ' + 'class="btn-data btn-violetChin update_bandera" title="Regresar a activas">' + '<i class="fas fa-undo-alt"></i></button>';
+                                RegresaActiva = '<button href="#" data-param="1" data-idpagoc="' + d.idLote + '" data-nombreLote="' + d.nombreLote + '"  ' + 'class="btn-data btn-violetChin update_bandera" data-toggle="tooltip" data-placement="top" title="REGRESAR A ACTIVAS">' + '<i class="fas fa-undo-alt"></i></button>';
                             }
-                            BtnStats = '<button href="#" value="' + d.idLote + '" data-value="' + d.registro_comision + '" data-totalNeto2 = "' + d.totalNeto2 + '" data-estatus="' + d.idStatusContratacion + '"  data-penalizacion="' + d.penalizacion + '" data-cliente="' + d.id_cliente + '" data-plan="' + d.plan_comision + '"  data-tipov="' + d.tipo_venta + '"data-descplan="' + d.plan_descripcion + '" data-code="' + d.cbbtton + '" ' + 'class="btn-data ' + varColor + ' verify_neodata" title="Verificar en NEODATA">' + '<span class="material-icons">verified_user</span></button> ' + RegresaActiva + '';
-                            BtnStats += `<button href="#" value="${d.idLote}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas btn-detener btn-warning" title="Detener"> <i class="material-icons">block</i> </button>`;
+                            BtnStats = '<button href="#" value="' + d.idLote + '" data-value="' + d.registro_comision + '" data-totalNeto2 = "' + d.totalNeto2 + '" data-estatus="' + d.idStatusContratacion + '"  data-penalizacion="' + d.penalizacion + '" data-cliente="' + d.id_cliente + '" data-plan="' + d.plan_comision + '"  data-tipov="' + d.tipo_venta + '"data-descplan="' + d.plan_descripcion + '" data-code="' + d.cbbtton + '" ' + 'class="btn-data ' + varColor + ' verify_neodata" data-toggle="tooltip" data-placement="top" title="VERIFICAR EN NEODATA">' + '<span class="material-icons">verified_user</span></button> ' + RegresaActiva + '';
+                            BtnStats += `<button href="#" value="${d.idLote}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas btn-detener btn-warning" data-toggle="tooltip" data-placement="top" title="DETENER"> <i class="material-icons">block</i> </button>`;
                         }
                     }
                     return '<div class="d-flex justify-center">' + BtnStats + '</div>';
@@ -223,6 +244,12 @@ $(document).ready(function () {
             tr.addClass('shown');
             $(this).parent().find('.animacion').removeClass("fas fa-chevron-down").addClass("fas fa-chevron-up");
         }
+    });
+
+    $('#tabla_dispersar_comisiones').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
     });
 
     $("#tabla_dispersar_comisiones tbody").on('click', '.btn-detener', function () {

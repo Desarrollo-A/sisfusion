@@ -58,6 +58,11 @@
 	$(document).ready(function() {
 		demo.initDashboardPageCharts();
 		demo.initVectorMap();
+<?php
+        if ($this->session->userdata('no_show_modal_info')==0) {
+        echo '$("#avisoNovedades").modal("toggle");';
+    }
+    ?>
 	});
 
     function validaCheckSession(){
@@ -72,7 +77,11 @@
     var id_rol_global = <?= (empty($this->session->userdata('id_rol')) ? 0 : $this->session->userdata('id_rol')) ?>;
 </script>
 
-<?php if($this->session->userdata('id_rol') == 7 && $this->session->userdata('asesor_guardia')==1){?>
+<?php
+
+
+
+if($this->session->userdata('id_rol') == 7 && $this->session->userdata('asesor_guardia')==1){?>
 
 
 <script src="<?=base_url()?>dist/js/socket.io.js"></script>

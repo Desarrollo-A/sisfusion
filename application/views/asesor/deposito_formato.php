@@ -252,7 +252,7 @@
                         <h4 class="label-on-left m-0">RESIDENCIA (<small style="color: red;">*</small>)</h4>
                         <div class="radio_container">
                             <input type="radio" name="tipoNc_valor" id="tipoNc_valor1" required="true" onchange="checkResidencia()" value="0" <?php echo $statsInput; ?> <?php if ($cliente[0]->tipo_nc == 0) { echo "checked=true"; } ?>>
-                            <label for="tipoNc_valor1">HABITACIONAL</label>
+                            <label for="tipoNc_valor1">NACIONAL</label>
 
                             <input type="radio" name="tipoNc_valor" id="tipoNc_valor2" required="true" onchange="checkResidencia()" value="1" <?php echo $statsInput; ?> <?php if ($cliente[0]->tipo_nc == 1) { echo "checked=true"; } ?>> 
                             <label for="tipoNc_valor2">EXTRANJERO</label>
