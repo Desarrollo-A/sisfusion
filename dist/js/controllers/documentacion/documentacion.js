@@ -409,7 +409,8 @@ $(document).on('click', '.seeAuts', function (e) {
 
             $('#auts-loads').append('<h4>Solicitud de autorización:  ' + statusProceso + '</h4><br>');
             $('#auts-loads').append('<h4>Autoriza: ' + item['nombreAUT'] + '</h4><br>');
-            $('#auts-loads').append('<p style="text-align: justify;"><i>' + item['autorizacion'] + '</i></p><br><hr>');
+            $('#auts-loads').append('<textarea class="form-control pr-2 pl-2 espaciosOff scroll-styles" value="autorizacion" ></textarea><br><hr>');
+            
         });
 
         $('#verAutorizacionesAsesor').modal('show');

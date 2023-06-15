@@ -26,6 +26,7 @@ $('#filtro33').change(function(ruta){
 $('#filtro44').change(function(ruta){
     proyecto = $('#filtro33').val();
     condominio = $('#filtro44').val();
+    $('#tabla_historialGral').removeClass('hide');
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
@@ -61,6 +62,7 @@ $('#filtro35').change(function(ruta){
 $('#filtro45').change(function(ruta){
     proyecto = $('#filtro35').val();
     condominio = $('#filtro45').val();
+    $('#tabla_comisiones_canceladas').removeClass('hide');
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
@@ -915,10 +917,12 @@ $("#anio").ready( function(){
         yearBegin++;
     }
     $("#anio").selectpicker('refresh');
+    
 });
 
 $("#anio").on("change", function(){
     tableComisionesSuma(this.value);
+    $('#tabla_comisiones_suma').removeClass('hide');
 })
 
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {

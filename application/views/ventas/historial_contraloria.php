@@ -105,7 +105,7 @@
                                 <a href="#solicitudesCRM" role="tab" data-toggle="tab">CRM por lotes</a>
                             </li>
 
-                            <li><a href="#solicitudesCanceladas" role="tab" data-toggle="tab">CRM por lotes</a>
+                            <li><a href="#solicitudesCanceladas" role="tab" data-toggle="tab">Historial Canceladas</a>
                             </li>
 
                             <?php if ($this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9) { ?>
@@ -126,7 +126,7 @@
                                             <div class="toolbar">
                                                 <div class="row">
                                                     <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-                                                        <div class="form-group label-floating select-is-empty">
+                                                        <div class="form-group  select-is-empty">
                                                             <label class="control-label">
                                                                 AÑO
                                                             </label>
@@ -150,7 +150,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-                                                        <div class="form-group label-floating select-is-empty">
+                                                        <div class="form-group  select-is-empty">
                                                             <label for="proyecto" class="control-label">PROYECTO</label>
                                                             <select name="filtro44"
                                                                     id="filtro44"
@@ -169,7 +169,7 @@
                                             <div class="material-datatables">
                                                 <div class="form-group">
                                                     <div class="table-responsive">
-                                                        <table class="table-striped table-hover" id="tabla_historialGral" name="tabla_historialGral">
+                                                        <table class="table-striped table-hover hide " id="tabla_historialGral" name="tabla_historialGral">
                                                             <thead>
                                                                 <tr>
                                                                     <th>ID</th>
@@ -233,7 +233,7 @@
                                             <div class="material-datatables">
                                                 <div class="form-group">
                                                     <div class="table-responsive">
-                                                        <table class="table-striped table-hover" id="tabla_comisiones_canceladas" name="tabla_comisiones_canceladas">
+                                                        <table class="table-striped table-hover hide " id="tabla_comisiones_canceladas" name="tabla_comisiones_canceladas">
                                                             <thead>
                                                                 <tr>
                                                                     <th>ID</th>
@@ -269,7 +269,7 @@
                                                 <div class="toolbar">
                                                     <div class="row">
                                                         <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-                                                            <div class="form-group label-floating select-is-empty">
+                                                            <div class="form-group  select-is-empty">
                                                                 <label for="anio" class="control-label">
                                                                     AÑO
                                                                 </label>
@@ -290,7 +290,7 @@
                                                 <div class="material-datatables">
                                                     <div class="form-group">
                                                         <div class="table-responsive">
-                                                            <table class="table-striped table-hover" id="tabla_comisiones_suma" name="tabla_comisiones_suma">
+                                                            <table class="table-striped table-hover hide" id="tabla_comisiones_suma" name="tabla_comisiones_suma">
                                                                 <thead>
                                                                     <tr>
                                                                         <th>ID PAGO</th>

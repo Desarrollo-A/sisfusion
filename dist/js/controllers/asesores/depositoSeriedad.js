@@ -70,6 +70,8 @@ $('#tabla_deposito_seriedad thead tr:eq(0) th').each( function (i) {
     });
 });
 
+
+
 $("#tabla_deposito_seriedad").ready( function(){
     $(document).on('click', '.abrir_prospectos', function () {
         $('#nom_cliente').html('');
@@ -79,10 +81,11 @@ $("#tabla_deposito_seriedad").ready( function(){
         var nombre_cliente = $itself.attr('data-nomCliente');
         $('#nom_cliente').append(nombre_cliente);
         $('#id_cliente_asignar').val(id_cliente);
-
+        
         tabla_valores_ds = $("#table_prospectos").DataTable({
-            width: 'auto',
-            "dom": "Bfrtip",
+            width: '100%',
+            dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+            scrollX: true,
             buttons: [{
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
@@ -90,7 +93,7 @@ $("#tabla_deposito_seriedad").ready( function(){
                 titleAttr: 'Prospectos',
                 title:"Prospectos",
                 exportOptions: {
-                    columns: [0,1,2,3],
+                    columns: [0,1,2,3,4,5,6],
                     format: {
                         header: function (d, columnIdx) {
                             return ' '+titulos_encabezado[columnIdx] +' ';
@@ -107,7 +110,7 @@ $("#tabla_deposito_seriedad").ready( function(){
                 orientation: 'landscape',
                 pageSize: 'LEGAL',
                 exportOptions: {
-                    columns: [0,1,2,3],
+                    columns: [0,1,2,3,4,5,6],
                     format: {
                         header: function (d, columnIdx) {
                             return ' '+titulos_encabezado[columnIdx] +' ';
@@ -149,13 +152,23 @@ $("#tabla_deposito_seriedad").ready( function(){
                 {
                     "data": function(d){
                         var info = '';
-                        info = '<b>Observación:</b> '+myFunctions.validateEmptyField(d.observaciones)+'<br>';
-                        info += '<b>Lugar prospección:</b> '+d.lugar_prospeccion+'<br>';
-                        info += '<b>Plaza venta:</b> '+d.plaza_venta+'<br>';
-                        info += '<b>Nacionalidad:</b> '+d.nacionalidad+'<br>';
-
-
+                        info = myFunctions.validateEmptyField(d.observaciones)
                         return info;
+                    }
+                },
+                {
+                    "data": function(d){
+                        return d.lugar_prospeccion;
+                    }
+                },
+                {
+                    "data": function(d){
+                        return d.plaza_venta;
+                    }
+                },
+                {
+                    "data": function(d){
+                        return d.nacionalidad;
                     }
                 },
                 {
@@ -206,9 +219,10 @@ $("#tabla_deposito_seriedad").ready( function(){
         var id_cliente = $itself.attr('data-id_cliente');
         var id_prospecto = $itself.attr('data-id_prospecto');
         $('#modal_pregunta').modal();
-
+        
         $(document).on('click', '#asignar_prospecto', function () {
             //ajax con el post de update prospecto a cliente
+            
             $.ajax({
                 type: 'POST',
                 url: general_base_url+'asesor/prospecto_a_cliente',
@@ -239,6 +253,10 @@ $("#tabla_deposito_seriedad").ready( function(){
                 }
             });
         });
+    });
+
+    $(document).on('click', '#cancelar', function(){
+        $('#asignar_prospecto_a_cliente').css({overflow:'auto'});
     });
 
     $(document).on('click', '.pdfLink2', function () {
@@ -500,30 +518,30 @@ function fillDataTable(id_condominio) {
             },
             {
                 "data" : function(d){
-                    var action='';
-                    if (d.dsType == 1) {
-                        if (d.idMovimiento == 31 && d.idStatusContratacion == 1) {
-                            if (d.id_prospecto == 0)/*APARTADO DESDE LA PAGINA DE CIUDAD MADERAS*/
-                            {
-                                if (d.id_coordinador == 10807 || d.id_coordinador == 10806 || d.id_gerente == 10807 || d.id_gerente == 10806)
-                                    action = 'Asignado correctamente';
-                                else {
+                    // var action='';
+                    // if (d.dsType == 1) {
+                    //     if (d.idMovimiento == 31 && d.idStatusContratacion == 1) {
+                    //         if (d.id_prospecto == 0)/*APARTADO DESDE LA PAGINA DE CIUDAD MADERAS*/
+                    //         {
+                    //             if (d.id_coordinador == 10807 || d.id_coordinador == 10806 || d.id_gerente == 10807 || d.id_gerente == 10806)
+                    //                 action = 'Asignado correctamente';
+                    //             else {
                                     var nombre_cliente = '';
                                     nombre_cliente = d.nombre + ' ' + d.apellido_paterno + ' ' + d.apellido_materno;
                                     action = '<center><button class="btn-data btn-green abrir_prospectos ' +
                                     'btn-fab btn-fab-mini" data-idCliente="'+d.id_cliente+'" data-nomCliente="'+nombre_cliente+'" data-toggle="tooltip" data-placement="left" title="NUEVO PROSPECTO">' +
                                     '<i class="fas fa-user-check"></i></button></center><br>';
                                     action += 'Debes asignar el prospecto al cliente para poder acceder al depósito de seriedad o integrar el expediente';
-                                }
-                            } 
-                            else {
-                                action = 'Asignado correctamente';
-                            }
-                        }
-                        else {
-                            action = 'Asignado correctamente';
-                        }
-                    }
+                    //             }
+                    //         } 
+                    //         else {
+                    //             action = 'Asignado correctamente';
+                    //         }
+                    //     }
+                    //     else {
+                    //         action = 'Asignado correctamente';
+                    //     }
+                    // }
                     return action;
                 }
             },

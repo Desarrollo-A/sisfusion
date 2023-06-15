@@ -49,9 +49,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <center>
                             <h3 class="modal-title">Autorizaciones <span class="material-icons">vpn_key</span></h3>
-                        </center>
                     </div>
                     <div class="modal-body">
                         <div class="container-fluid">
@@ -65,7 +63,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> Aceptar </button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> Cerrar </button>
                     </div>
                 </div>
             </div>
@@ -121,30 +119,28 @@
                                     </div>
                                     <!--        Here you can write extra buttons/accions for the toolbar              -->
                                 </div>
-                                <div class="table-responsive">
-                                    <table id="tableDoct" class="table-striped table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>PROYECTO</th>
-                                                <th>CONDOMINIO</th>
-                                                <th>LOTE</th>
-                                                <th>ID LOTE</th>
-                                                <th>CLIENTE</th>
-                                                <th>ASESOR</th>
-                                                <th>COORDINADOR</th>
-                                                <th>GERENTE</th>
-                                                <th>SUBDIRECTOR</th>
-                                                <th>DIRECTOR REGIONAL</th>
-                                                <th>DIRECTOR REGIONAL 2</th>
-                                                <th>NOMBRE DE DOCUMENTO</th>
-                                                <th>HORA/FECHA</th>
-                                                <th>RESPONSABLE</th>
-                                                <th>UBICACIÓN</th>
-                                                <th>ACCIONES</th>
-                                            </tr>
-                                        </thead>
-                                    </table>
-                                </div>
+                                <table id="tableDoct" class="table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>PROYECTO</th>
+                                            <th>CONDOMINIO</th>
+                                            <th>LOTE</th>
+                                            <th>ID LOTE</th>
+                                            <th>CLIENTE</th>
+                                            <th>ASESOR</th>
+                                            <th>COORDINADOR</th>
+                                            <th>GERENTE</th>
+                                            <th>SUBDIRECTOR</th>
+                                            <th>DIRECTOR REGIONAL</th>
+                                            <th>DIRECTOR REGIONAL 2</th>
+                                            <th>NOMBRE DE DOCUMENTO</th>
+                                            <th>HORA/FECHA</th>
+                                            <th>RESPONSABLE</th>
+                                            <th>UBICACIÓN</th>
+                                            <th>ACCIONES</th>
+                                        </tr>
+                                    </thead>
+                                </table>
                             </div>
                         </div>
                     </div>
