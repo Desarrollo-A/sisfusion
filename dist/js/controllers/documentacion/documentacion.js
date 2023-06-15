@@ -118,7 +118,7 @@ $('#idLote').change(function () {
         const title = $(this).text();
         titulos.push(title);
         
-        $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
+        $(this).html('<input type="text" data-toggle="tooltip" data-placement="top" title="' + title + '" class="textoshead"  placeholder="' + title + '"/>');
         $('input', this).on('keyup change', function () {
             if ($('#tableDoct').DataTable().column(i).search() !== this.value) {
                 $('#tableDoct').DataTable().column(i).search(this.value).draw();
