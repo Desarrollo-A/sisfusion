@@ -4427,37 +4427,32 @@ function getStatusMktdPreventa(){
         return $query->row();
     }
 
-    public function getCancelacionesProceso($idUsuario, $idRol, $fechaInicio, $fechaFin)
-    {
+    public function getCancelacionesProceso($idUsuario, $idRol, $fechaInicio, $fechaFin) {
         $condicion = ($idRol == 6)
-            ? "AND (SELECT id_lider FROM usuarios WHERE id_usuario = $idUsuario) = ge.id_usuario"
+            ? "AND cl.id_gerente = $idUsuario"
             : 'AND cl.cancelacion_proceso = 1';
 
-        $query = $this->db->query("SELECT l.idLote, l.nombreLote, l.idCliente,
-                UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado,
-                cond.nombre AS nombreCondominio, 
-                res.nombreResidencial,
-                CASE WHEN ase.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(ase.nombre, ' ', ase.apellido_paterno, ' ', ase.apellido_materno)) END asesor,
-                CASE WHEN coord.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(coord.nombre, ' ', coord.apellido_paterno, ' ', coord.apellido_materno)) END coordinador,
-                CASE WHEN ge.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno)) END gerente,
-                CASE WHEN sub.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(sub.nombre, ' ', sub.apellido_paterno, ' ', sub.apellido_materno)) END subdirector,
-                CASE WHEN reg.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(reg.nombre, ' ', reg.apellido_paterno, ' ', reg.apellido_materno)) END regional,
-                CASE WHEN reg2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(reg2.nombre, ' ', reg2.apellido_paterno, ' ', reg2.apellido_materno)) END regional2,
-                cl.cancelacion_proceso, cp.nombre AS nombreCancelacion, cp.color
-            FROM lotes l 
-            LEFT JOIN clientes cl ON l.idLote = cl.idLote
-            LEFT JOIN condominios cond ON l.idCondominio = cond.idCondominio
-            LEFT JOIN residenciales as res ON cond.idResidencial = res.idResidencial
-            LEFT JOIN usuarios ase ON ase.id_usuario = cl.id_asesor
-            LEFT JOIN usuarios coord ON coord.id_usuario = cl.id_coordinador
-            LEFT JOIN usuarios ge ON ge.id_usuario = cl.id_gerente
-            LEFT JOIN usuarios sub ON sub.id_usuario = cl.id_subdirector
-            LEFT JOIN usuarios reg ON reg.id_usuario = cl.id_regional
-            LEFT JOIN usuarios reg2 ON reg2.id_usuario = cl.id_regional_2
-            LEFT JOIN opcs_x_cats cp ON cp.id_opcion = cl.cancelacion_proceso AND cp.id_catalogo = 94
-            WHERE l.idStatusLote IN (2,3) AND cl.fechaApartado BETWEEN '$fechaInicio 00:00:00' AND '$fechaFin 23:59:59' 
-            $condicion
-        ");
+        $query = $this->db->query("SELECT lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, 
+        CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, co.nombre AS nombreCondominio, re.nombreResidencial,
+        CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
+        CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
+        CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
+        CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
+        CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
+        CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2,
+        cl.cancelacion_proceso, cp.nombre AS nombreCancelacion, cp.color
+        FROM lotes lo
+        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.fechaApartado BETWEEN '2022-01-01 00:00:00' AND '2022-12-31 23:59:59'
+        INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
+        INNER JOIN residenciales re ON co.idResidencial = re.idResidencial
+        INNER JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+        LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+        LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+        LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
+        LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
+        LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
+        INNER JOIN opcs_x_cats cp ON cp.id_opcion = cl.cancelacion_proceso AND cp.id_catalogo = 94
+        WHERE lo.idStatusLote IN (2, 3) $condicion");
 
         return $query->result_array();
     }

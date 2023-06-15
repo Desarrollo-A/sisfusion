@@ -2902,7 +2902,7 @@ public function getStatusMktdPreventa(){
         }
 
         $idRol = $this->session->userdata('id_rol');
-        $idUsuario = $this->session->userdata('id_usuario');
+        $idUsuario = $this->session->userdata('id_lider');
         $fechaInicio = date("Y-m-d", strtotime($this->input->post("beginDate")));
         $fechaFin = date("Y-m-d", strtotime($this->input->post("endDate")));
 
