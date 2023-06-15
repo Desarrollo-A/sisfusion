@@ -100,8 +100,12 @@
                                 <a href="#solicitudesCRM" role="tab" data-toggle="tab">CRM por lotes</a>
                             </li>
 
+<<<<<<< HEAD
+                            <li><a href="#solicitudesCanceladas" role="tab" data-toggle="tab">Historial Canceladas</a>
+=======
                             <li>
                                 <a href="#solicitudesCanceladas" role="tab" data-toggle="tab">CRM por lotes</a>
+>>>>>>> ff689f3fe4e968e59d364cb441ab472f7e3aad44
                             </li>
 
                             <?php if ($this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9) { ?>
@@ -122,9 +126,25 @@
                                             <div class="toolbar">
                                                 <div class="row">
                                                     <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+<<<<<<< HEAD
+                                                        <div class="form-group  select-is-empty">
+                                                            <label class="control-label">
+                                                                AÑO
+                                                            </label>
+                                                            <select name="filtro33" 
+                                                                    id="filtro33" 
+                                                                    class="selectpicker select-gral"
+                                                                    data-style="btn" 
+                                                                    data-show-subtext="true" 
+                                                                    data-live-search="true" 
+                                                                    title="Selecciona una opción"
+                                                                    data-size="7"
+                                                                    required>
+=======
                                                         <div class="form-group label-floating select-is-empty">
                                                             <label class="control-label">AÑO</label>
                                                             <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required>
+>>>>>>> ff689f3fe4e968e59d364cb441ab472f7e3aad44
                                                                 <?php
                                                                 setlocale(LC_ALL, 'es_ES');
                                                                 for ($i = 2019; $i <= 2023; $i++) {
@@ -136,7 +156,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-                                                        <div class="form-group label-floating select-is-empty">
+                                                        <div class="form-group  select-is-empty">
                                                             <label for="proyecto" class="control-label">PROYECTO</label>
                                                             <select name="filtro44" id="filtro44" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
                                                         </div>
@@ -145,6 +165,32 @@
                                             </div>
                                             <div class="material-datatables">
                                                 <div class="form-group">
+<<<<<<< HEAD
+                                                    <div class="table-responsive">
+                                                        <table class="table-striped table-hover hide " id="tabla_historialGral" name="tabla_historialGral">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>ID</th>
+                                                                    <th>PROYECTO</th>
+                                                                    <th>CONDOMINIO</th>
+                                                                    <th>LOTE</th>
+                                                                    <th>REFERENCIA</th>
+                                                                    <th>PRECIO LOTE</th>
+                                                                    <th>TOTAL COMISIÓN</th>
+                                                                    <th>PAGO CLIENTE</th>
+                                                                    <th>DISPERSADO</th>
+                                                                    <th>PAGADO</th>
+                                                                    <th>PENDIENTE</th>
+                                                                    <th>USUARIO</th>
+                                                                    <th>PUESTO</th>
+                                                                    <th>DETALLE</th>
+                                                                    <th>ESTATUS</th>
+                                                                    <th>MÁS</th>
+                                                                </tr>
+                                                            </thead>
+                                                        </table>
+                                                    </div>
+=======
                                                     <table class="table-striped table-hover" id="tabla_historialGral" name="tabla_historialGral">
                                                         <thead>
                                                             <tr>
@@ -167,6 +213,7 @@
                                                             </tr>
                                                         </thead>
                                                     </table>
+>>>>>>> ff689f3fe4e968e59d364cb441ab472f7e3aad44
                                                 </div>
                                             </div>
                                         </div>
@@ -206,6 +253,32 @@
                                             </div>
                                             <div class="material-datatables">
                                                 <div class="form-group">
+<<<<<<< HEAD
+                                                    <div class="table-responsive">
+                                                        <table class="table-striped table-hover hide " id="tabla_comisiones_canceladas" name="tabla_comisiones_canceladas">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>ID</th>
+                                                                    <th>PROYECTO</th>
+                                                                    <th>CONDOMINIO</th>
+                                                                    <th>LOTE</th>
+                                                                    <th>REFERENCIA</th>
+                                                                    <th>PRECIO LOTE</th>
+                                                                    <th>TOTAL COMISIÓN</th>
+                                                                    <th>PAGO CLIENTE</th>
+                                                                    <th>DISPERSADO</th>
+                                                                    <th>PAGADO</th>
+                                                                    <th>PENDIENTE</th>
+                                                                    <th>USUARIO</th>
+                                                                    <th>PUESTO</th>
+                                                                    <th>DETALLE</th>
+                                                                    <th>ESTATUS</th>
+                                                                    <th>MÁS</th>
+                                                                </tr>
+                                                            </thead>
+                                                        </table>
+                                                    </div>
+=======
                                                     <table class="table-striped table-hover" id="tabla_comisiones_canceladas" name="tabla_comisiones_canceladas">
                                                         <thead>
                                                             <tr>
@@ -228,6 +301,7 @@
                                                             </tr>
                                                         </thead>
                                                     </table>
+>>>>>>> ff689f3fe4e968e59d364cb441ab472f7e3aad44
                                                 </div>
                                             </div>
                                         </div><!-- End tab CANCELADAS validado -->
@@ -241,15 +315,52 @@
                                                 <div class="toolbar">
                                                     <div class="row">
                                                         <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+<<<<<<< HEAD
+                                                            <div class="form-group  select-is-empty">
+                                                                <label for="anio" class="control-label">
+                                                                    AÑO
+                                                                </label>
+                                                                <select name="anio"
+                                                                        id="anio"
+                                                                        class="selectpicker select-gral"
+                                                                        data-style="btn"
+                                                                        data-show-subtext="true" 
+                                                                        data-live-search="true"
+                                                                        title="Selecciona una opción"
+                                                                        data-size="7"
+                                                                        required>
+                                                                </select>
+=======
                                                             <div class="form-group label-floating select-is-empty">
                                                                 <label for="anio" class="control-label">AÑO</label>
                                                                 <select name="anio" id="anio" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
+>>>>>>> ff689f3fe4e968e59d364cb441ab472f7e3aad44
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="material-datatables">
                                                     <div class="form-group">
+<<<<<<< HEAD
+                                                        <div class="table-responsive">
+                                                            <table class="table-striped table-hover hide" id="tabla_comisiones_suma" name="tabla_comisiones_suma">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>ID PAGO</th>
+                                                                        <th>REFERENCIA</th>
+                                                                        <th>NOMBRE</th>
+                                                                        <th>SEDE</th>
+                                                                        <th>FORMA PAGO</th>
+                                                                        <th>TOTAL COMISION</th>
+                                                                        <th>IMPUESTO</th>
+                                                                        <th>% COMISION</th>
+                                                                        <th>ESTATUS</th>
+                                                                        <th>MÁS</th>
+                                                                    </tr>
+                                                                </thead>
+                                                            </table>
+                                                        </div>
+=======
                                                         <table class="table-striped table-hover" id="tabla_comisiones_suma" name="tabla_comisiones_suma">
                                                             <thead>
                                                                 <tr>
@@ -266,6 +377,7 @@
                                                                 </tr>
                                                             </thead>
                                                         </table>
+>>>>>>> ff689f3fe4e968e59d364cb441ab472f7e3aad44
                                                     </div>
                                                 </div>
                                             </div><!-- End tab SUMA  validado solo para ventas-->
