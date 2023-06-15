@@ -1,5 +1,5 @@
 <?php
-use application\helpers\email\contraloria\Elementos_Correos_Contraloria;
+//use application\helpers\email\contraloria\Elementos_Correos_Contraloria;
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Contraloria extends CI_Controller {
     public function __construct() {
@@ -10,7 +10,7 @@ class Contraloria extends CI_Controller {
         $this->load->model('asesor/Asesor_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
         $this->load->model('General_model');
         $this->load->library(array('session','form_validation', 'get_menu', 'Formatter'));
-        $this->load->helper(array('url','form', 'email/contraloria/elementos_correo', 'email/plantilla_dinamica_correo'));
+        $this->load->helper(array('url','form'));
         $this->load->database('default');
         $this->load->library('phpmailer_lib');
         $this->validateSession();
@@ -2614,14 +2614,13 @@ class Contraloria extends CI_Controller {
             default:
                 echo '<script>alert("ACCESO DENEGADO"); window.location.href="' . base_url() . '";</script>';
                 break;
-        }
+        } 
     }
 
-    /**al día de hoy**/
+    /**al día de hoy**/ 
     public function backExp() {
         $this->load->view('template/header');
-        $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
-        $this->load->view("contraloria/checarExpediente", $datos);
+        $this->load->view("contraloria/checarExpediente");
     }
 
 
