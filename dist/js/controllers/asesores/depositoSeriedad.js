@@ -123,6 +123,14 @@ $("#tabla_deposito_seriedad").ready( function(){
                 className: 'btn buttons-excel',
                 titleAttr: 'Prospectos',
                 title:"Prospectos",
+                exportOptions: {
+                    columns: [0,1,2,3],
+                    format: {
+                        header: function (d, columnIdx) {
+                            return ' '+titulos_encabezado[columnIdx] +' ';
+                        }
+                    }
+                }
             },
             {
                 extend: 'pdfHtml5',
@@ -132,6 +140,14 @@ $("#tabla_deposito_seriedad").ready( function(){
                 title:"Prospectos",
                 orientation: 'landscape',
                 pageSize: 'LEGAL',
+                exportOptions: {
+                    columns: [0,1,2,3],
+                    format: {
+                        header: function (d, columnIdx) {
+                            return ' '+titulos_encabezado[columnIdx] +' ';
+                        }
+                    }
+                }
             }],
             columnDefs: [{
                 defaultContent: "",
@@ -180,7 +196,7 @@ $("#tabla_deposito_seriedad").ready( function(){
                 {
                     "data": function(d){
                         return '<center><button class="btn-data btn-green became_prospect_to_cliente"' +
-                            'data-id_prospecto="'+d.id_prospecto+'" data-id_cliente="'+id_cliente+'">' +
+                            'data-id_prospecto="'+d.id_prospecto+'" data-id_cliente="'+id_cliente+'" data-toggle="tooltip" data-placement="top" title="NUEVO PROSPECTO">' +
                             '<i class="fas fa-user-check"></i></button></center>';
                     }
                 },
@@ -194,21 +210,30 @@ $("#tabla_deposito_seriedad").ready( function(){
                 "data": function( d ){
                 }
             },
+            initComplete: function () {
+                $('[data-toggle="tooltip"]').tooltip("destroy");
+                $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
+            }
+            
 
         });
 
         $('#asignar_prospecto_a_cliente').modal();
     });
 
+    let titulos_encabezado = [];
     $('#table_prospectos thead tr:eq(0) th').each( function (i) {
-        const title = $(this).text();
-        $(this).html('<input type="text" style="width:100%; background:#003D82; color:white; border: 0; font-weight: 300;" class="textoshead"  placeholder="'+title+'"/>' );
-
-        $('input', this).on('keyup change', function () {
+        var title = $(this).text();
+        $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
+        $( 'input', this ).on('keyup change', function () {
             if ($('#table_prospectos').DataTable().column(i).search() !== this.value ) {
                 $('#table_prospectos').DataTable().column(i).search(this.value).draw();
             }
         });
+        titulos_encabezado.push(title);
+        $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
+    });
     });
 
     $(document).on('click', '.became_prospect_to_cliente', function() {
@@ -682,7 +707,9 @@ function fillDataTable(idCondominio) {
                     }
 
                     if (d.dsType == 1){
-                        buttons += '<a class="btn-data btn-blueMaderas btn_ds'+d.id_cliente+'" '+atributoButton+' id="btn_ds'+d.id_cliente+'" href="'+urlToGo+'" data-toggle="tooltip" data-placement="left" title="Depósito de seriedad" target=”_blank”><i class="fas fa-print"></i></a>';
+                        buttonst += '<a class="btn-data btn-blueMaderas btn_ds'+d.id_cliente+'" '+atributo_button+' id="btn_ds'+d.id_cliente+'" href="'+url_to_go+'" data-toggle="tooltip" data-placement="left" title="DEPÓSITO DE SERIEDAD" target=”_blank”><i class="fas fa-print"></i></a>';
+                    } else if(d.dsType == 2) { // DATA FROM DEPOSITO_SERIEDAD_CONSULTA OLD VERSION
+                        buttonst += '<a class="btn-data btn-blueMaderas" href="'+general_base_url+'Asesor/deposito_seriedad_ds/'+d.id_cliente+'/0" title= "DEPÓSITO DE SERIEDAD" target=”_blank”><i class="fas fa-print"></i></a>';
                     }
                     if(d.dsType == 2) { // DATA FROM DEPOSITO_SERIEDAD_CONSULTA OLD VERSION
                         buttons += '<a class="btn-data btn-blueMaderas" href="'+general_base_url+'Asesor/deposito_seriedad_ds/'+d.id_cliente+'/0" title= "Depósito de seriedad" target=”_blank”><i class="fas fa-print"></i></a>';
@@ -702,7 +729,8 @@ function fillDataTable(idCondominio) {
             }
         },
         initComplete: function () {
-            $('[data-toggle="tooltip"]').tooltip();
+            $('[data-toggle="tooltip"]').tooltip("destroy");
+            $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
         }
     });
 }

@@ -486,24 +486,6 @@ function ClearAll(){
     $("#btn_save").addClass('d-none');
 }
 
-// async function llenarSelects(indexNext, id_paquete, nombreCondicion, indexCondicion, idCondicion, lenDesCon, indexPaquetes){
-//     let params = { 'id_paquete': id_paquete, 'id_tcondicion': idCondicion }
-//     $.ajax({
-//         async: true,
-//         url: 'getDescuentosByPlan',
-//         type: 'POST',
-//         data: params,
-//         success: function (data) {
-//             dataDescuentosByPlan = JSON.parse(data);
-//             if(dataDescuentosByPlan.length > 0){
-//                 const check =  document.getElementById(`inlineCheckbox1_${indexNext}_${indexCondicion}`);
-//                 check.checked = true;
-//                 PrintSelectDesc(check, nombreCondicion, idCondicion, indexCondicion, indexNext, dataDescuentosByPlan, lenDesCon, indexPaquetes);
-//             }
-//         },
-//     })
-// }
-
 function ValidarOrden(indexN,i){
     let seleccionado = $(`#orden_${indexN}_${i}`).val();	
     for (let m = 0; m < 4; m++) {

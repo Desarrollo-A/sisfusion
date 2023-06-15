@@ -40,7 +40,7 @@
 									<div class="row">
 										<form id="formFilters">
 											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 overflow-hidden">
-												<div class="form-group   ">
+												<div class="form-group">
 													<label class="control-label">Proyecto</label>
 													<select name="residenciales"
 															id="residenciales" 
@@ -72,7 +72,7 @@
 												</div>
 											</div>
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 overflow-hidden">
-												<div class="form-group  ">
+												<div class="form-group">
 													<label class="control-label">Grupo</label>
 													<select name="filtro5"
 															id="filtro5"

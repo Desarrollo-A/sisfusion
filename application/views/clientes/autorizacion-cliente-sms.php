@@ -1,4 +1,5 @@
 <link href="<?= base_url() ?>dist/css/notFound.css" rel="stylesheet"/>
+
 <body class="m-0">
     <div class="wrapper">
         <div class="container-fluid vh-100 boxContent">
@@ -14,7 +15,9 @@
                                 </div>
                                 <h3 class="m-0" id="mensaje-success">
                                     Verifica tu número telefónico a través del siguiente
-                                    <span class="cursor-point" onclick="enviarAutorizacion(<?=$idCliente?>)"><u>enlace</u></span>.
+                                    <a href="#" id="enviar-autorizacion-link" data-idCliente="<?=$idCliente?>">
+                                        <u>enlace.</u>
+                                    </a>
                                 </h3>
                             <?php } else { ?>
 
