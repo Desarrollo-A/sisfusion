@@ -1572,3 +1572,20 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
 .boxContent p {
   font-family: "Montserrat-Light";
 }
+
+#enviar-autorizacion-link {
+  color: white;
+}
+
+#enviar-autorizacion-link :link {
+  text-decoration: none;
+}
+
+#enviar-autorizacion-link :visited {
+  text-decoration: none;
+}
+
+#enviar-autorizacion-link :hover {
+  text-decoration: none;
+  color: white;
+}
