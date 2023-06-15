@@ -113,12 +113,12 @@ function fillTable(fechaInicio, fechaFin) {
             { "data": "nombreLote" },
             { "data": "idLote" },
             { "data": "cliente" },
-            { "data": "asesor" },
-            { "data": "coordinador" },
-            { "data": "gerente" },
-            { "data": "subdirector" },
-            { "data": "regional" },
-            { "data": "regional2" },
+            { "data": "nombreAsesor" },
+            { "data": "nombreCoordinador" },
+            { "data": "nombreGerente" },
+            { "data": "nombreSubdirector" },
+            { "data": "nombreRegional" },
+            { "data": "nombreRegional2" },
             { "data": "fechaApartado" },
             {
                 "data": function (d) {
