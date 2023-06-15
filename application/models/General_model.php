@@ -8,13 +8,13 @@ class General_model extends CI_Model
         parent::__construct();
     }
 
-    function get_menu($id_rol,$id_usuario)
+    function get_menu($id_rol,$id_usuario,$estatus)
     {
         $idUsuario = $id_usuario;
         if ($this->existeUsuarioMenuEspecial($idUsuario)) {
             return $this->getMenuPadreEspecial($idUsuario);
         }
-        if ($this->session->userdata('estatus') == 3){ // USUARIOS BAJA COMISIONANDO 
+        if ($estatus == 3){ // USUARIOS BAJA COMISIONANDO 
         $complemento='';
             return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $id_rol . " AND nombre IN ('Inicio', 'Comisiones'  ".$complemento.") AND estatus = 1 order by orden asc");
          } else { 
@@ -22,7 +22,7 @@ class General_model extends CI_Model
         }
     }
 
-    public function get_children_menu($id_rol,$id_usuario)
+    public function get_children_menu($id_rol,$id_usuario,$estatus)
     {
         $idUsuario = $id_usuario;
         if ($this->existeUsuarioMenuEspecial($idUsuario)) {

@@ -52,10 +52,12 @@
                         <img src="<?=base_url()?>static/images/bell-cdm.gif" style="width: 10%"><br>
                     </div>
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0 50px">
-                        <h4><b>Próximamente</b></h4>
-                        <p>A partir del 11 de mayo se implementará un nuevo diseño para el uso del depósito de seriedad. A continuación, conoce como lucirá esta versión.
+                        <h4><b>Aviso</b></h4>
+                        <p>
+                        Estimado colaborador el día de hoy, 14 de junio, estaremos aplicando una mejora en nuestro sistema. Esta actualización tiene como objetivo optimizar el rendimiento y la eficiencia de algunas operaciones.
+<br>
+Será necesario realizar una breve interrupción del servicio. Dicha interrupción está programada para comenzar a las <b>8:00 p.m.</b> y se espera que tenga una duración de aproximadamente una hora.<br><br> Durante este período, será posible que se vean intermitencias en el sistema, agradeceremos tu apoyo y comprensión en el transcurso de la implementación. 
                         </p>
-                        <img class="w-100" src="<?=base_url()?>dist/img/DepositoSeriedadNew.gif" style="border-radius:10px">
                         <div class="d-flex justify-center align-center mt-1">
                             <input type="checkbox" name="no_mostrar_session" id="no_mostrar_session" style="margin: -1px 0 0;line-height: normal;">
                             <label for="no_mostrar_session" style="color: #5a5a5a;font-size: 1.2rem " class="m-0"><b>No volver a mostrar aviso durante la sesión</b></label>
