@@ -7307,7 +7307,7 @@ public function getDataDispersionPagoEspecial($val = '') {
         LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
         LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision
         LEFT JOIN pago_comision pc ON pc.id_lote = l.idLote AND pc.bandera in (0)
-        LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 88 and oxc.id_opcion = TRY_CAST( hl.motivo AS BIGINT)
+        LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 95 and oxc.id_opcion = TRY_CAST( hl.motivo AS BIGINT)
         WHERE l.idStatusContratacion BETWEEN 9 AND 15 
         AND l.status = 1 
         AND l.registro_comision in (10,11,18)
@@ -8141,7 +8141,7 @@ public function getDataDispersionPagoEspecial($val = '') {
     public function getMotivosControversia()
     {
         $cmd = "SELECT * FROM opcs_x_cats wh
-        WHere id_catalogo = 88";
+        WHere id_catalogo = 95  and id_opcion NOT IN (0,1,5,7)";
         $query = $this->db->query($cmd);
         return $query->result_array();   
     }

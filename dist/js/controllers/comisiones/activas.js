@@ -2,25 +2,25 @@ $(document).ready(function () {
     
     let titulos_intxt = [];
 
-    $('#tabla_ingresar_9 thead tr:eq(0) th').each( function (i) {
+    $('#tabla_comisiones_activas thead tr:eq(0) th').each( function (i) {
         $(this).css('text-align', 'center');
         var title = $(this).text();
         titulos_intxt.push(title);
         if (i != 0 ) {
             $(this).html('<input type="text" class="textoshead"  placeholder="'+title+'"/>' );
             $( 'input', this ).on('keyup change', function () {
-                if ($('#tabla_ingresar_9').DataTable().column(i).search() !== this.value ) {
-                    $('#tabla_ingresar_9').DataTable().column(i).search(this.value).draw();
+                if ($('#tabla_comisiones_activas').DataTable().column(i).search() !== this.value ) {
+                    $('#tabla_comisiones_activas').DataTable().column(i).search(this.value).draw();
                 }
-                var index = $('#tabla_ingresar_9').DataTable().rows({
+                var index = $('#tabla_comisiones_activas').DataTable().rows({
                 selected: true,
                 search: 'applied'
             }).indexes();
-            var data = $('#tabla_ingresar_9').DataTable().rows(index).data();
+            var data = $('#tabla_comisiones_activas').DataTable().rows(index).data();
         });
     }});
     
-    activasDataTable = $('#tabla_ingresar_9').dataTable({
+    activasDataTable = $('#tabla_comisiones_activas').dataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
@@ -185,9 +185,9 @@ $(document).ready(function () {
         }
     }) 
  
-    $('#tabla_ingresar_9 tbody').on('click', 'td.details-control', function () {
+    $('#tabla_comisiones_activas tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
-        var row = $('#tabla_ingresar_9').DataTable().row(tr);
+        var row = $('#tabla_comisiones_activas').DataTable().row(tr);
 
         if (row.child.isShown()) {
             row.child.hide();
@@ -207,7 +207,7 @@ $(document).ready(function () {
         }
     });
 
-    $("#tabla_ingresar_9 tbody").on('click', '.btn-detener', function () {
+    $("#tabla_comisiones_activas tbody").on('click', '.btn-detener', function () {
             $("#motivo").val("");
             $("#descripcion").val("");
             const idLote = $(this).val();
@@ -220,12 +220,12 @@ $(document).ready(function () {
             $("#detenciones-modal").modal();
         });
 
-    $("#tabla_ingresar_9 tbody").on("click", ".verify_neodata", async function(){ 
+    $("#tabla_comisiones_activas tbody").on("click", ".verify_neodata", async function(){ 
         $("#modal_NEODATA .modal-header").html("");
         $("#modal_NEODATA .modal-body").html("");
         $("#modal_NEODATA .modal-footer").html("");
         var tr = $(this).closest('tr');
-        var row = $('#tabla_ingresar_9').DataTable().row(tr);
+        var row = $('#tabla_comisiones_activas').DataTable().row(tr);
         let cadena = '';
         idLote = $(this).val();
         registro_comision = $(this).attr("data-value");
@@ -531,7 +531,7 @@ $('#detenidos-form').on('submit', function (e) {
                 $('#detenciones-modal').modal("hide");
                 $("#id-lote-detenido").val("");
                 alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
-                $('#tabla_ingresar_9').DataTable().ajax.reload();
+                $('#tabla_comisiones_activas').DataTable().ajax.reload();
             } else {
                 alerts.showNotification("top", "right", "Ocurrió un problema, vuelva a intentarlo más tarde.", "warning");
             }
@@ -561,7 +561,7 @@ $("#form_NEODATA").submit( function(e) {
                 if( data == 1 ){
                     $('#spiner-loader').addClass('hidden');
                     alerts.showNotification("top", "right", "Dispersión guardada con éxito", "success");
-                    $('#tabla_ingresar_9').DataTable().ajax.reload();
+                    $('#tabla_comisiones_activas').DataTable().ajax.reload();
                     $("#modal_NEODATA").modal( 'hide' );
                     function_totales();
                     $('#dispersar').prop('disabled', false);
@@ -569,7 +569,7 @@ $("#form_NEODATA").submit( function(e) {
                 }else if (data == 2) {
                     $('#spiner-loader').addClass('hidden');
                     alerts.showNotification("top", "right", "Ya se dispersó por otra persona o es una recisión", "warning");
-                    $('#tabla_ingresar_9').DataTable().ajax.reload();
+                    $('#tabla_comisiones_activas').DataTable().ajax.reload();
                     $("#modal_NEODATA").modal( 'hide' );
                     $('#dispersar').prop('disabled', false);
                     document.getElementById('dispersar').disabled = false;
@@ -664,7 +664,7 @@ $("#my_updatebandera_form").on('submit', function(e){
                 $('#myUpdateBanderaModal').modal("hide");
                 $("#id_pagoc").val("");
                 alerts.showNotification("top", "right", "Lote actualizado exitosamente", "success");
-                $('#tabla_ingresar_9').DataTable().ajax.reload();
+                $('#tabla_comisiones_activas').DataTable().ajax.reload();
             } else {
                 alerts.showNotification("top", "right", "Oops, algo salió mal. Error al intentar actualizar.", "warning");
             }
@@ -755,7 +755,7 @@ $(document).on('click', '.update_bandera', function(e){
 });
 
 
-$("#tabla_ingresar_9 tbody").on('click', '.btn-detener', function () {
+$("#tabla_comisiones_activas tbody").on('click', '.btn-detener', function () {
     $("#motivo").val("");
     $("#descripcion").val("");
     const idLote = $(this).val();
