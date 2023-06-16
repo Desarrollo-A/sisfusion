@@ -1,7 +1,7 @@
 <body>
 <div class="wrapper">
 
-	<?php $this->load->view('template/sidebar', $datos);	?>
+	<?php $this->load->view('template/sidebar'); ?>
 
 	<div class="content">
 		<div class="container-fluid">

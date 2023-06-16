@@ -684,20 +684,6 @@ public function getStatusMktdPreventa(){
         echo json_encode($this->Clientes_model->getState()->result_array());
     }
 
-    // public function getProspectsList($typeTransaction){
-	//     /*
-	//      *  0  MKTD
-	//      *  1   VETNAS
-	//      */
-	//     if ($typeTransaction == 1) {
-    //         $data['data'] = $this->Clientes_model->getProspectsList()->result_array();
-    //     } elseif ($typeTransaction == 0) {
-    //         $data['data'] = $this->Clientes_model->getProspectsListMktd()->result_array();
-
-    //     }
-    //     echo json_encode($data);
-    // }
-
     public function getProspectsList($typeTransaction){
 	    /*
 	     *  0  MKTD
