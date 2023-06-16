@@ -108,6 +108,7 @@ $('#idCondominio').change(function () {
 });
 
 $('#idLote').change(function () {
+    $('#tableDoct').removeClass('hide');
     const seleccion = $(this).val();
     const datos = seleccion.split(',');
     const valorSeleccionado = datos[0];
@@ -582,20 +583,32 @@ function abrirModalAutorizaciones(idLote) {
 
         $.each(JSON.parse(data), function (i, item) {
             if (item['estatus'] == 0) {
-                statusProceso = "<small class='label bg-green' style='background-color: #00a65a'>ACEPTADA</small>";
+                statusProceso = "<small class='label lbl-green'>ACEPTADA</small>";
             } else if (item['estatus'] == 1) {
-                statusProceso = "<small class='label bg-orange' style='background-color: #FF8C00'>En proceso</small>";
+                statusProceso = "<small class='label lbl-orangeYellow'>En proceso</small>";
             } else if (item['estatus'] == 2) {
-                statusProceso = "<small class='label bg-red' style='background-color: #8B0000'>DENEGADA</small>";
+                statusProceso = "<small class='label lbl-warning'>DENEGADA</small>";
             } else if (item['estatus'] == 3) {
-                statusProceso = "<small class='label bg-blue' style='background-color: #00008B'>En DC</small>";
+                statusProceso = "<small class='label lbl-sky'>En DC</small>";
             } else {
-                statusProceso = "<small class='label bg-gray' style='background-color: #2F4F4F'>N/A</small>";
+                statusProceso = "<small class='label lbl-gray'>N/A</small>";
             }
 
-            $('#auts-loads').append('<h4>Solicitud de autorización:  ' + statusProceso + '</h4><br>');
-            $('#auts-loads').append('<h4>Autoriza: ' + item['nombreAUT'] + '</h4><br>');
-            $('#auts-loads').append('<p style="text-align: justify;"><i>' + item['autorizacion'] + '</i></p><br><hr>');
+            $('#auts-loads').append(`
+            <div class="container-fluid" style="background-color: #f7f7f7; border-radius: 15px; padding: 15px; margin-bottom: 15px">
+                <div class="row">
+                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-7">
+                        <span style="font-weight:100; font-size: 12px">Solicitud de autorización: <b>${statusProceso}</b></span>
+                        <span style="font-weight:100; font-size: 12px">Autoriza:${item['nombreAUT'].split(":").shift()}</span>
+                    </div>
+                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <p style="text-align: justify;">
+                            <span class="font-weight:400">${item['autorizacion']}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        `);
         });
 
         $('#verAutorizacionesAsesor').modal('show');

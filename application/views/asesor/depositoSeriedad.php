@@ -4,9 +4,7 @@
 <body>
 <div class="wrapper">
     <?php  $this->load->view('template/sidebar');   ?>
-    <style>
-        .textoshead::placeholder { color: white; }    
-    </style>
+    
     <div class="modal fade" id="modal_pregunta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"data-backdrop="static" data-keyboard="false" style="z-index: 1600;" >
         <div class="modal-dialog">
             <div class="modal-content" >
@@ -30,9 +28,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <form id="my-edit-form" name="my-edit-form" method="post">
-                    <div class="modal-body">
-                    </div>
-
+                    <div class="modal-body"></div>
                     <div class="modal-footer"></div>
                 </form>
             </div>
@@ -53,14 +49,14 @@
                         <div class="material-datatables">
                             <table class=" table-striped table-hover" id="table_prospectos">
                                 <thead>
-                                <th>NOMBRE</th>
-                                <th>CORREO</th>
-                                <th>TELÉFONO</th>
-                                <th>OBSERVACIÓN</th>
-                                <th>LUGAR DE PROSPECCIÓN </th>
-                                <th>PLAZA DE VENTA</th>
-                                <th>NACIONALIDAD</th>
-                                <th>ASIGNAR</th>
+                                    <th>NOMBRE</th>
+                                    <th>CORREO</th>
+                                    <th>TELÉFONO</th>
+                                    <th>OBSERVACIÓN</th>
+                                    <th>LUGAR DE PROSPECCIÓN </th>
+                                    <th>PLAZA DE VENTA</th>
+                                    <th>NACIONALIDAD</th>
+                                    <th>ASIGNAR</th>
                                 </thead>
                             </table>
                         </div>
@@ -77,12 +73,12 @@
                 <div class="modal-header">
                     <h4 class="modal-title">Asignando prospecto al cliente</h4>
                     <div class="modal-body" style="text-align: center">
-                            <img src="<?=base_url()?>static/images/asignando.gif" width="100%">
+                        <img src="<?=base_url()?>static/images/asignando.gif" width="100%">
                     </div>
-
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar
-                            <div class="ripple-container"></div></button>
+                            <div class="ripple-container"></div>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -103,7 +99,6 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                     <button type="button" id="save1" class="btn btn-primary">ACEPTAR</button>
-
                 </div>
             </div>
         </div>
@@ -125,7 +120,6 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                     <button type="button" id="guardar_re3pv" class="btn btn-primary"> Registrar</button>
-
                 </div>
             </div>
         </div>
