@@ -118,7 +118,7 @@ $('#idLote').change(function () {
         const title = $(this).text();
         titulos.push(title);
         
-        $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
+        $(this).html('<input type="text" data-toggle="tooltip" data-placement="top" title="' + title + '" class="textoshead"  placeholder="' + title + '"/>');
         $('input', this).on('keyup change', function () {
             if ($('#tableDoct').DataTable().column(i).search() !== this.value) {
                 $('#tableDoct').DataTable().column(i).search(this.value).draw();
@@ -353,7 +353,12 @@ $('#idLote').change(function () {
                     return `<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`;
                 }
             }
-        ]
+        ],
+        initComplete: function () {
+            $('[data-toggle="tooltip"]').tooltip({
+                trigger: "hover"
+            });
+        },
     });
 });
 
@@ -669,7 +674,7 @@ function getAtributos(type) {
     let buttonTipoAccion = '';
 
     if (type === AccionDoc.DOC_NO_CARGADO) {
-        buttonTitulo = 'Documento no cargado';
+        buttonTitulo = 'DOCUMENTO NO CARGADO';
         buttonEstatus = 'disabled';
         buttonClassColor = 'btn-data btn-orangeYellow';
         buttonClassAccion = '';
@@ -677,7 +682,7 @@ function getAtributos(type) {
         buttonTipoAccion = '';
     }
     if (type === AccionDoc.DOC_CARGADO) {
-        buttonTitulo = 'Ver documento';
+        buttonTitulo = 'VER DOCUMENTO';
         buttonEstatus = '';
         buttonClassColor = 'btn-data btn-blueMaderas';
         buttonClassAccion = 'verDocumento';
@@ -685,7 +690,7 @@ function getAtributos(type) {
         buttonTipoAccion = '3';
     }
     if (type === AccionDoc.SUBIR_DOC) {
-        buttonTitulo = 'Subir documento';
+        buttonTitulo = 'SUBIR DOCUMENTO';
         buttonEstatus = '';
         buttonClassColor = 'btn-data btn-green';
         buttonClassAccion = 'addRemoveFile';
@@ -693,7 +698,7 @@ function getAtributos(type) {
         buttonTipoAccion = '1';
     }
     if (type === AccionDoc.ELIMINAR_DOC) {
-        buttonTitulo = 'Eliminar documento';
+        buttonTitulo = 'ELIMINAR DOCUMENTO';
         buttonEstatus = '';
         buttonClassColor = 'btn-data btn-warning';
         buttonClassAccion = 'addRemoveFile';

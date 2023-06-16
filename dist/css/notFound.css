@@ -899,13 +899,13 @@
 }
 
 .btn-sky {
-  color: #00bcd4;
+  color: #0067d4;
   border: none;
-  background-color: #00bcd418;
+  background-color: #0067d418;
 }
 
 .btn-sky:hover {
-  background-color: #00bcd4;
+  background-color: #0067d4;
   color: #ffffff !important;
 }
 
@@ -976,7 +976,7 @@
 .lbl-cerulean {
   color: #00A0FF;
   border: none;
-  background-color: #00A0FF;
+  background-color: #00A0FF18;
 }
 
 .lbl-deepGray {
@@ -991,8 +991,9 @@
 }
 
 .lbl-gray {
-  background-color: #4e4e4e;
-  color: #ffffff;
+  color: #4e4e4e;
+  border: none;
+  background-color: #4e4e4e18;
 }
 
 .lbl-grayDark {
@@ -1016,7 +1017,7 @@
 .lbl-oceanGreen {
   color: #4BBC8E;
   border: none;
-  background-color: #4BBC8E;
+  background-color: #4BBC8E18;
 }
 
 .lbl-orangeYellow {
@@ -1032,9 +1033,9 @@
 }
 
 .lbl-sky {
-  color: #00bcd4;
+  color: #0067d4;
   border: none;
-  background-color: #00bcd418;
+  background-color: #0067d418;
 }
 
 .lbl-violetBoots {
@@ -1571,4 +1572,21 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
 
 .boxContent p {
   font-family: "Montserrat-Light";
+}
+
+#enviar-autorizacion-link {
+  color: white;
+}
+
+#enviar-autorizacion-link :link {
+  text-decoration: none;
+}
+
+#enviar-autorizacion-link :visited {
+  text-decoration: none;
+}
+
+#enviar-autorizacion-link :hover {
+  text-decoration: none;
+  color: white;
 }

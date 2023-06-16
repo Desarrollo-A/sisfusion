@@ -44,7 +44,7 @@ $(document).on("click", ".individualCheck", function() {
         if(this.checked){
             tr = this.closest('tr');
             row = tabla_remanente.row(tr).data();
-            totaPen += row.impuesto; 
+            totaPen += parseFloat(row.impuesto); 
         }
         // Al marcar todos los CheckBox Marca CB total
         if( totalChecados.length == totalCheckbox.length )
@@ -63,7 +63,7 @@ function selectAll(e) {
         $(tabla_remanente.$('input[type="checkbox"]')).each(function (i, v) {
             tr = this.closest('tr');
             row = tabla_remanente.row(tr).data();
-            tota2 += row.impuesto;
+            tota2 += parseFloat(row.impuesto);
 
             if(v.checked == false){
                 $(v).prop("checked", true);

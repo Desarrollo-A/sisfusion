@@ -3,7 +3,7 @@
 
 <body>
     <div class="wrapper">
-        <?php  $this->load->view('template/sidebar');   ?>
+        <?php  $this->load->view('template/sidebar'); ?>
 
         <div class="content boxContent">
             <div class="container-fluid">
@@ -42,25 +42,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!--<div class="encabezadoBox">
-                                    <div class="col-12 col-sm-6 col-md-8 col-lg-7">
-                                        <h3 class="card-title center-align">Lotes cancelados</h3>
-                                        <p class="card-title pl-1"></p>
-                                    </div>
-
-                                    <div class="col-12 col-sm-6 col-md-4 col-lg-5">
-                                        <div class="form-group d-flex m-0">
-                                            <input type="text" class="form-control datepicker"
-                                                   id="beginDate"/>
-                                            <input type="text" class="form-control datepicker"
-                                                   id="endDate"/>
-                                            <button class="btn btn-success btn-round btn-fab btn-fab-mini"
-                                                    id="filtrarPorFecha">
-                                                <span class="material-icons update-dataTable">search</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>-->
 
                                 <div class="material-datatables">
                                     <table id="cancelacionesTabla" class="table-striped table-hover" style="text-align:center;">
