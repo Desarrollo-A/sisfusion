@@ -922,13 +922,13 @@ class Asesor_model extends CI_Model {
     public function get_info_tabla($datos)
     {
         for ($x = 0; $x < count($datos); $x++) {
-            if (isset($datos[$x]['residenciales'])) {
-                $datos[$x]['res.idResidencial'] = $datos[$x]['residenciales'];
-                unset($datos[$x]['residenciales']);
+            if (isset($datos[$x]['filtro3'])) {
+                $datos[$x]['res.idResidencial'] = $datos[$x]['filtro3'];
+                unset($datos[$x]['filtro3']);
             }
-            if (isset($datos[$x]['condominios'])) {
-                $datos[$x]['co.idCondominio'] = $datos[$x]['condominios'];
-                unset($datos[$x]['condominios']);
+            if (isset($datos[$x]['filtro4'])) {
+                $datos[$x]['co.idCondominio'] = $datos[$x]['filtro4'];
+                unset($datos[$x]['filtro4']);
             }
             if (isset($datos[$x]['filtro5'])) {
                 $datos[$x]['lo.sup2'] = $datos[$x]['filtro5'];

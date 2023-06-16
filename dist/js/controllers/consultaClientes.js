@@ -1,5 +1,4 @@
-$(document).ready(function() 
-{
+$(document).ready(function() {
     let titulos_encabezado = [];
     let num_colum_encabezado = [];
     $('#clients-datatable thead tr:eq(0) th').each( function (i) {
@@ -13,6 +12,7 @@ $(document).ready(function()
             }
         });
     });
+
     //Eliminamos la ultima columna "ACCIONES" donde se encuentra un elemento de tipo boton (para omitir en excel o pdf).
     num_colum_encabezado.pop();
     $usersTable = $('#clients-datatable').DataTable({
@@ -50,7 +50,7 @@ $(document).ready(function()
         ordering: false,
         columns: [{
                 data: function(d) {
-                    return d.nombre + '<br>' +'<span class="label lbl-blueNCS">'+ d.id_prospecto +'</span>';
+                    return d.nombre + '<br>' +'<span class="label lbl-blueMaderas">'+ d.id_prospecto +'</span>';
                 }
             },
             {
@@ -214,8 +214,7 @@ function fillFields(v, type) {
         $("#phone-number-lbl").val(v.telefono);
         $("#phone-number2-lbl").val(v.telefono_2);
         $("#prospecting-place-lbl").val(v.lugar_prospeccion);
-        $("#specify-lbl").html(v.otro_lugar);
-        //$("#advertising-lbl").val(v.medio_publicitario);
+        $("#specify-lbl").html(v.otro_lugar);        
         $("#sales-plaza-lbl").val(v.plaza_venta);
         $("#comments-lbl").val(v.observaciones);
         $("#asesor-lbl").val(v.asesor);
@@ -276,7 +275,6 @@ function fillTimeline(v, counter) {
 }
 
 $(document).on('click', '.see-information', function(e) {
-
     id_prospecto = $(this).attr("data-id-prospecto");
     $("#seeInformationModal").modal();
     $("#prospecto_lbl").val(id_prospecto);
@@ -304,5 +302,4 @@ $(document).on('click', '.see-information', function(e) {
             fillChangelog(v);
         });
     });
-
 });
