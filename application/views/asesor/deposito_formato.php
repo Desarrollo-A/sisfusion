@@ -61,26 +61,10 @@
 
     </style>
     <?php
-        if (
-                $this->session->userdata('id_rol') == 7 ||
-                $this->session->userdata('id_rol') == 9 ||
-                $this->session->userdata('id_rol') == 3 ||
-                $this->session->userdata('id_rol') == 6 ||
-                $this->session->userdata('id_rol') == 2 ||
-                $this->session->userdata('id_usuario') == 2752 ||
-                $this->session->userdata('id_usuario') == 2826 ||
-                $this->session->userdata('id_usuario') == 2810 ||
-                $this->session->userdata('id_usuario') == 2855 ||
-                $this->session->userdata('id_usuario') == 2815 ||
-                $this->session->userdata('id_usuario') == 5957 ||
-                $this->session->userdata('id_usuario') == 6390 ||
-                $this->session->userdata('id_usuario') == 4857 ||
-                $this->session->userdata('id_usuario') == 2834 ||
-                $this->session->userdata('id_usuario') == 9775 ||
-                $this->session->userdata('id_usuario') == 12377 ||
-                $this->session->userdata('id_usuario') == 2799 &&
-                $onlyView == 0
-        ) {
+
+    ?>
+    <?php
+        if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_usuario') == 2752 || $this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2810 || $this->session->userdata('id_usuario') == 2855 || $this->session->userdata('id_usuario') == 2815 || $this->session->userdata('id_usuario') == 5957 || $this->session->userdata('id_usuario') == 6390 || $this->session->userdata('id_usuario') == 4857 || $this->session->userdata('id_usuario') == 2834 || $this->session->userdata('id_usuario') == 9775 || $this->session->userdata('id_usuario') == 12377 || $this->session->userdata('id_usuario') == 2799 AND $onlyView==0){
             $readOnly = '';
             $statsInput = '';
             $html_action = '<form method="post" class="form-horizontal" action="'.base_url().'index.php/Asesor/editar_ds/" enctype="multipart/form-data">';
@@ -92,71 +76,37 @@
             $html_action = '';
             $html_action_end = '';
         }
-
-        $readonlyNameToAsesor = (
-                $this->session->userdata('id_rol') == 7 ||
-                $this->session->userdata('id_rol') == 9 ||
-                $this->session->userdata('id_rol') == 3 ||
-                $this->session->userdata('id_rol') == 6 ||
-                $this->session->userdata('id_rol') == 2 ||
-                $this->session->userdata('id_usuario') == 2752 ||
-                $this->session->userdata('id_usuario') == 2826 ||
-                $this->session->userdata('id_usuario') == 2810 ||
-                $this->session->userdata('id_usuario') == 5957 ||
-                $this->session->userdata('id_usuario') == 6390 ||
-                $this->session->userdata('id_usuario') == 4857 ||
-                $this->session->userdata('id_usuario') == 2834
-        ) ? 'readonly' : '';
+        
+        if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_usuario') == 2752 || $this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2810 || $this->session->userdata('id_usuario') == 5957 || $this->session->userdata('id_usuario') == 6390 || $this->session->userdata('id_usuario') == 4857 || $this->session->userdata('id_usuario') == 2834){
+            $readonlyNameToAsesor = 'readonly';
+        }
+        else{
+            $readonlyNameToAsesor='';
+        }    
     ?>
     <div class="container" id="mainBoxDS">
         <div class="card">
 			<?php echo $html_action;?> 
-            <?php if(
-                    $this->session->userdata('id_rol') == 7 ||
-                    $this->session->userdata('id_rol') == 9 ||
-                    $this->session->userdata('id_rol') == 3 ||
-                    $this->session->userdata('id_rol') == 6 ||
-                    $this->session->userdata('id_rol') == 2 ||
-                    $this->session->userdata('id_usuario') == 2752 ||
-                    $this->session->userdata('id_usuario') == 2826 ||
-                    $this->session->userdata('id_usuario') == 2810 ||
-                    $this->session->userdata('id_usuario') == 2855 ||
-                    $this->session->userdata('id_usuario') == 2815 ||
-                    $this->session->userdata('id_usuario') == 5957 ||
-                    $this->session->userdata('id_usuario') == 6390 ||
-                    $this->session->userdata('id_usuario') == 4857 ||
-                    $this->session->userdata('id_usuario') == 2834 ||
-                    $this->session->userdata('id_usuario') == 9775 ||
-                    $this->session->userdata('id_usuario') == 12377 ||
-                    $this->session->userdata('id_usuario') == 2799 &&
-                    $onlyView==0
-            ) {
-            ?>
+            <?php if( $this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_usuario') == 2752 || $this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2810 || $this->session->userdata('id_usuario') == 2855 || $this->session->userdata('id_usuario') == 2815 || $this->session->userdata('id_usuario') == 5957 || $this->session->userdata('id_usuario') == 6390 || $this->session->userdata('id_usuario') == 4857 || $this->session->userdata('id_usuario') == 2834 || $this->session->userdata('id_usuario') == 9775 || $this->session->userdata('id_usuario') == 12377 || $this->session->userdata('id_usuario') == 2799 AND $onlyView==0){?>
                 <section id="sectionBtns">
                     <button type="submit" name="guardarC" class="btn btnAction" onclick="validaTipoVivienda()">GUARDAR CAMBIOS</button>
                 </section>
             <?php } else { ?>
                 <section id="sectionBtns">
-                    <a href="<?=base_url()?>index.php/Asesor/imprimir_ds/<?=$cliente[0]->id_cliente?>"
-                       target="_blank"
-                       class="btn btnAction">
-                        IMPRIMIR DEPÓSITO
-                    </a>
+                    <a href="<?=base_url()?>index.php/Asesor/imprimir_ds/<?=$cliente[0]->id_cliente?>" target="_blank" class="btn btnAction">IMPRIMIR DEPÓSITO</a>
                 </section>
             <?php }?>
             <div class="container-fluid" id="mainContainer">
                 <div class="row" id="encabezadoDS">
                     <div class="col-12 col-sm-6 col-md-5 col-lg-5">
-                        <img class="w-100"
-                             src="<?=base_url()?>static/images/Logo_CM&TP_1.png"
-                             alt="Servicios Condominales"
-                             title="Servicios Condominales"/>
+                        <img  class="w-100" src="<?=base_url()?>static/images/Logo_CM&TP_1.png" alt="Servicios Condominales" title="Servicios Condominales"/>
                     </div>
                     <div class="col-12 col-sm-6 col-md-7 col-lg-7">
-                        <h3 class="m-0 mb-1">
-                            DEPÓSITO DE SERIEDAD<i class="fas fa-info-circle" style="cursor: pointer;" onclick="historial()"></i>
-                        </h3>
-
+                        <h3 class="m-0 mb-1">DEPÓSITO DE SERIEDAD
+                            
+                                <i class="fas fa-info-circle" style="cursor: pointer;" onclick="historial()"></i>
+                           
+                        </h3>  
                         <h6 class="m-0">Modificación: <?php echo $cliente[0]->fecha_modificacion;?></h6>
                         <h6 class="m-0">Folio: <span><?php echo $cliente[0]->clave; ?></span></h6>
                         <input type="hidden" name="clavevalor" id="clavevalor"  value="<?php echo $cliente[0]->clave; ?>">
@@ -302,7 +252,7 @@
                         <h4 class="label-on-left m-0">RESIDENCIA (<small style="color: red;">*</small>)</h4>
                         <div class="radio_container">
                             <input type="radio" name="tipoNc_valor" id="tipoNc_valor1" required="true" onchange="checkResidencia()" value="0" <?php echo $statsInput; ?> <?php if ($cliente[0]->tipo_nc == 0) { echo "checked=true"; } ?>>
-                            <label for="tipoNc_valor1">HABITACIONAL</label>
+                            <label for="tipoNc_valor1">NACIONAL</label>
 
                             <input type="radio" name="tipoNc_valor" id="tipoNc_valor2" required="true" onchange="checkResidencia()" value="1" <?php echo $statsInput; ?> <?php if ($cliente[0]->tipo_nc == 1) { echo "checked=true"; } ?>> 
                             <label for="tipoNc_valor2">EXTRANJERO</label>

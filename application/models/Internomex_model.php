@@ -115,22 +115,22 @@ class Internomex_model extends CI_Model {
     
             }else{
                 return $this->db->query("SELECT pci1.id_pago_i, re.nombreResidencial as proyecto, lo.nombreLote, lo.totalNeto2 precio_lote, pci1.abono_neodata a_pagar, pci1.estatus, pci1.fecha_abono fecha_creacion, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) comisionista, oprol.nombre as puesto, u.forma_pago, oxcest.nombre as estatus_actual, oxcest.id_opcion id_estatus_actual, re.empresa, oxformap.nombre AS regimen 
-                 FROM pago_comision_ind pci1 
-                 INNER JOIN comisiones com ON pci1.id_comision = com.id_comision
-                 INNER JOIN lotes lo ON lo.idLote = com.id_lote
-                 INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
-                 INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-                 INNER JOIN clientes cl ON cl.idLote = lo.idLote
-                 INNER JOIN usuarios u ON u.id_usuario = com.id_usuario
-                 INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado
-                 INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
-                 INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus 
-                 INNER JOIN opcs_x_cats oxformap ON oxformap.id_opcion = u.forma_pago 
-                 WHERE pci1.estatus IN (8,9,10,11) AND pci1.descuento_aplicado = 0 AND co.idCondominio = $condominio AND oxformap.id_catalogo = 16
-                 AND com.estatus in (1) AND oprol.id_catalogo = 1 AND oxcest.id_catalogo = 23 AND lo.status = 1 AND cl.status = 1
-                 GROUP BY pci1.id_pago_i, re.nombreResidencial, lo.nombreLote, lo.totalNeto2, pci1.abono_neodata, pci1.estatus, pci1.fecha_abono, u.nombre, u.apellido_paterno, u.apellido_materno, oprol.nombre, u.forma_pago, oxcest.nombre, oxcest.id_opcion, re.empresa, oxformap.nombre
-                 ORDER BY lo.nombreLote");
-         }
+                FROM pago_comision_ind pci1 
+                INNER JOIN comisiones com ON pci1.id_comision = com.id_comision
+                INNER JOIN lotes lo ON lo.idLote = com.id_lote
+                INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+                INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+                INNER JOIN clientes cl ON cl.idLote = lo.idLote
+                INNER JOIN usuarios u ON u.id_usuario = com.id_usuario
+                INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado
+                INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
+                INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus 
+                INNER JOIN opcs_x_cats oxformap ON oxformap.id_opcion = u.forma_pago 
+                WHERE pci1.estatus IN (8,9,10,11) AND pci1.descuento_aplicado = 0 AND co.idCondominio = $condominio AND oxformap.id_catalogo = 16
+                AND com.estatus in (1) AND oprol.id_catalogo = 1 AND oxcest.id_catalogo = 23 AND lo.status = 1 AND cl.status = 1
+                GROUP BY pci1.id_pago_i, re.nombreResidencial, lo.nombreLote, lo.totalNeto2, pci1.abono_neodata, pci1.estatus, pci1.fecha_abono, u.nombre, u.apellido_paterno, u.apellido_materno, oprol.nombre, u.forma_pago, oxcest.nombre, oxcest.id_opcion, re.empresa, oxformap.nombre
+                ORDER BY lo.nombreLote");
+            }
         }
 
 
@@ -139,27 +139,26 @@ class Internomex_model extends CI_Model {
             return $this->db->query("UPDATE pago_comision_ind SET estatus = 9 WHERE id_pago_i IN (".$idsol.")");
     }
 
-    public function getPagosFinal($beginDate, $endDate){
+    public function getPagosFinal($beginDate, $endDate) {
         $condicion = '';
         if (!in_array($this->session->userdata('id_rol'), array(31, 17, 70, 71, 73))) { // INTERNOMEX & CONTRALORÍA
             $idUsuario = $this->session->userdata('id_usuario');
-            $condicion = " AND p.id_usuario = $idUsuario";
+            $condicion = " AND pt.id_usuario = $idUsuario";
         }
-        return $this->db->query("SELECT p.id_pagoi, p.id_usuario,
-        FORMAT(p.monto_con_descuento,'C','En-Us') 'monto_con_descuento',
-		FORMAT(p.monto_sin_descuento,'C','En-Us') 'monto_sin_descuento',
-		FORMAT(p.monto_internomex,'C','En-Us') 'monto_internomex'
-        ,c.nombre sede, g.nombre forma_pago, CONVERT(varchar, p.fecha_creacion, 20) fecha_creacion,
-        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, 
-        CASE WHEN (p.comentario IS NULL OR CAST(p.comentario AS VARCHAR(250)) = '') THEN '--' ELSE p.comentario END comentario,
-        u.id_rol, d.nombre rol, tp.nombre as tipo_pago
-        FROM  pagos_internomex p
-        INNER JOIN usuarios u on u.id_usuario = p.id_usuario
-        INNER JOIN sedes c on c.id_sede = p.forma_pago 
-        INNER JOIN opcs_x_cats g on g.id_catalogo = 16 and g.id_opcion = p.forma_pago
-        INNER JOIN opcs_x_cats d on d.id_catalogo = 1 and d.id_opcion = u.id_rol
-        INNER JOIN opcs_x_cats tp ON tp.id_catalogo = 86 AND tp.id_opcion = p.tipo_pago
-        WHERE p.fecha_creacion BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000' $condicion");
+        return $this->db->query("SELECT pt.id_pagoi, pt.id_usuario,
+        FORMAT(pt.monto_con_descuento,'C','En-Us') 'monto_con_descuento',
+        FORMAT(pt.monto_sin_descuento,'C','En-Us') 'monto_sin_descuento',
+        FORMAT(pt.monto_internomex,'C','En-Us') 'monto_internomex',
+        se.nombre sede, oxc0.nombre forma_pago, CONVERT(varchar, pt.fecha_creacion, 20) fecha_creacion,
+        CONCAT (u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno) nombre, 
+        CASE WHEN (pt.comentario IS NULL OR CAST(pt.comentario AS VARCHAR(250)) = '') THEN '--' ELSE pt.comentario END comentario,
+        u0.id_rol, oxc1.nombre rol 
+        FROM  pagos_internomex pt
+        INNER JOIN usuarios u0 ON u0.id_usuario = pt.id_usuario
+        INNER JOIN sedes se ON CAST(se.id_sede AS VARCHAR(15)) = CAST(u0.id_sede AS VARCHAR(15))
+        INNER JOIN opcs_x_cats oxc0 ON oxc0.id_catalogo = 16 AND oxc0.id_opcion = pt.forma_pago
+        INNER JOIN opcs_x_cats oxc1 ON oxc1.id_catalogo = 1 AND oxc1.id_opcion = u0.id_rol
+        WHERE pt.fecha_creacion BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000' $condicion");
     }
 
     public function getCommissions($tipo_pago) {

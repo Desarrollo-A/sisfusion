@@ -1,6 +1,6 @@
 <?php
 
-use application\helpers\email\registro_cliente\Elementos_Correo_Registro_Cliente;
+//use application\helpers\email\registro_cliente\Elementos_Correo_Registro_Cliente;
 
 class RegistroCliente extends CI_Controller {
 	public function __construct()
@@ -16,9 +16,9 @@ class RegistroCliente extends CI_Controller {
 		$this->load->library(array('session','form_validation'));
       //LIBRERIA PARA LLAMAR OBTENER LrAS CONSULTAS DE LAS  DEL MENÚ
       $this->load->library(array('session','form_validation', 'get_menu'));
-		$this->load->library('Pdf');
+		$this->load->library('Pdf'); 
 		$this->load->library('phpmailer_lib');
-		$this->load->helper(array('url','form', 'email/registro_cliente/elementos_correo', 'email/plantilla_dinamica_correo'));
+		$this->load->helper(array('url','form'));
 		$this->load->database('default');
 		date_default_timezone_set('America/Mexico_City');
         $this->validateSession();
@@ -1970,7 +1970,7 @@ class RegistroCliente extends CI_Controller {
         } else {
             echo json_encode(array());
         }
-        exit;
+       
     }
 
     public function query_ds(){
@@ -7867,12 +7867,12 @@ class RegistroCliente extends CI_Controller {
                 // print_r(json_encode($data['lotes']));
                 // echo '<br>';
                 // // print_r($data2);
-                // exit;
+                //
 
                 $data2 = array_values($data2);
                 $longitud = count($data['lotes']);
                 // print_r($longitud);
-                // exit;
+                //
                 $falgRepeat=0;
                 for($k=0; $k < $longitud; $k++)
                 {
@@ -7931,7 +7931,7 @@ class RegistroCliente extends CI_Controller {
                     }
                 }
                 // print_r(json_encode($array_filtrado));
-                // exit;
+                //
 
                 $data['lotes'] = array_values($array_filtrado);
                 echo json_encode($data['lotes']);
@@ -7964,7 +7964,7 @@ class RegistroCliente extends CI_Controller {
         if(count($data)>=1){
             $data['message'] = 'OBSERVACION_CONTRATO';
             echo json_encode($data);
-            exit;
+           
         }
         else{
             $proyecto = str_replace(' ', '',$nombreResidencial);
@@ -8188,7 +8188,7 @@ class RegistroCliente extends CI_Controller {
         } else {
             echo json_encode(array());
         }
-        exit;
+       
 	}
 
 	function getSelectedLotes($idCondominio, $idResidencial){
@@ -8198,27 +8198,29 @@ class RegistroCliente extends CI_Controller {
         } else {
             echo json_encode(array());
         }
-        exit;
+       
     }
 
-    function getClientsByLote($idLote){
+    function getClientsByLote(){
+      $idLote = $this->input->post('idLote');
         $data = $this->registrolote_modelo->getClientsByLote($idLote);
         if($data != null) {
             echo json_encode($data);
         } else {
             echo json_encode(array());
         }
-        exit;
     }
 
-    function getClientByID($idCliente){
-        $data = $this->registrolote_modelo->getClientByID($idCliente);
+    function getClientByID(){
+        $idLote = $this->input->post('idLote');
+        $idCliente = $this->input->post('idCliente');
+        $data = $this->registrolote_modelo->getClientByID($idLote == '' ? '' : $idLote,$idCliente == '' ? '' : $idCliente);
         if($data != null) {
-            echo json_encode($data);
+          echo json_encode(array("data" => $data));
         } else {
             echo json_encode(array());
         }
-        exit;
+       
     }
 
     function autorizacionesClienteCodigo()
