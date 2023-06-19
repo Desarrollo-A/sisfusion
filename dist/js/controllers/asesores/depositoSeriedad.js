@@ -574,15 +574,15 @@ function fillDataTable(idCondominio) {
                     }
 
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_2) {
-                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloria estatus 2</span>`;
+                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloría estatus 2</span>`;
                     }
 
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_5) {
-                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloria estatus 5</span>`;
+                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloría estatus 5</span>`;
                     }
 
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_6) {
-                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloria estatus 6</span>`;
+                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloría estatus 6</span>`;
                     }
 
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_VENTAS_ESTATUS_8) {
@@ -594,7 +594,7 @@ function fillDataTable(idCondominio) {
                     }
 
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_5_II) {
-                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloria estatus 5</span>`;
+                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloría estatus 5</span>`;
                     }
 
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_JURIDICO_ESTATUS_7_II) {
@@ -606,11 +606,11 @@ function fillDataTable(idCondominio) {
                     }
 
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_2_II) {
-                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloria estatus 2</span>`;
+                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloría estatus 2</span>`;
                     }
 
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_6_II) {
-                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloria estatus 6</span>`;
+                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloría estatus 6</span>`;
                     }
 
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_POSTVENTA_ESTATUS_3_II) {
@@ -618,7 +618,7 @@ function fillDataTable(idCondominio) {
                     }
 
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_JURIDICO_ESTATUS_7_III) {
-                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Juridico estatus 7</span>`;
+                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Jurídico estatus 7</span>`;
                     }
 
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_POSTVENTA_3) {
@@ -626,7 +626,7 @@ function fillDataTable(idCondominio) {
                     }
 
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_6_III) {
-                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo de Contraloria estatus 6</span>`;
+                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo de Contraloría estatus 6</span>`;
                     }
 
                     return d.comentario;
