@@ -189,12 +189,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">
-                            <span class="glyphicon glyphicon-remove"></span> Cerrar
-                        </button>
-                        <button type="submit" id="guardar-autorizacion" class="btn btn-primary">
-                            <span class="material-icons" >send</span> Enviar
-                        </button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" id="guardar-autorizacion" class="btn btn-primary">Enviar</button>
                     </div>
                 </form>
             </div>
@@ -234,12 +230,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">
-                            <span class="glyphicon glyphicon-remove"></span> Cerrar
-                        </button>
-                        <button type="submit" class="btn btn-primary">
-                            <span class="material-icons" >send</span> Reenviar
-                        </button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Reenviar</button>
                     </div>
                 </form>
             </div>
@@ -291,12 +283,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">
-                            <span class="glyphicon glyphicon-remove"></span> Cerrar
-                        </button>
-                        <button type="submit" class="btn btn-primary">
-                            <span class="material-icons" >send</span> Solicitar
-                        </button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Enviar</button>
                     </div>
                 </form>
             </div>
@@ -360,6 +348,8 @@
                                             <th>FECHA DE VENCIMIENTO</th>
                                             <th>COMENTARIO</th>
                                             <th>PROSPECTO</th>
+                                            <th>VERIFICACIÓN DE CORREO</th>
+                                            <th>VERIFICACIÓN DE SMS</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>
