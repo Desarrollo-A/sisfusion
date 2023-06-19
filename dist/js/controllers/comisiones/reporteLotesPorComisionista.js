@@ -309,11 +309,11 @@ $(document).on("click", "#detailComisionistaBtn", function () {
                 }
             }
         }
-
+        console.log(orderedArray);
         for (let i = 0; i < orderedArray.length; i++) {
             let htmlRol = '';
             for (let j = 0; j < orderedArray[i].datos.length; j++) {
-                htmlRol += `<div class="tl-date mt-1"><b>${orderedArray[i].datos[j].total}</b> comisiones como ${(orderedArray[i].datos[j].rol).replace('id_', '')}<ul class="m-0" style="list-style:none"><li><b>${orderedArray[i].datos[j].activas}</b> Activos</li><li><b>${orderedArray[i].datos[j].canceladas}</b>  Cancelados</li></ul></div>`;
+                htmlRol += `<div class="tl-date mt-1"><b>${orderedArray[i].datos[j].total}</b> comisiones como ${(orderedArray[i].datos[j].rol).replace('id_', '')}<ul class="m-0" style="list-style:none"><li><b>${orderedArray[i].datos[j].activas}</b> activos</li><li><b>${orderedArray[i].datos[j].canceladas}</b> cancelados</li></ul></div>`;
             }
             html += `<div class="tl-item">
                         <div class="tl-dot b-warning"></div>

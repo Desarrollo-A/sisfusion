@@ -1,6 +1,6 @@
 $('[data-toggle="tooltip"]').tooltip();
 
-const movimientosPermitidosContrato = [36, 6, 23, 76, 83, 95, 97, 41];
+const movimientosPermitidosContrato = [36, 6, 23, 76, 83, 95, 97, 112];
 const rolesPermitidosContrato = [15];
 
 const movimientosPermitidosContratoFirmado = [45];
@@ -10,7 +10,7 @@ const rolesPermitidosContraloria = [17, 70];
 const movimientosPermitidosCartaDomicilio = [37, 7, 64, 66, 77, 41];
 const rolesPermitidosCartaDomicilio = [5, 2, 6];
 
-const movimientosPermitidosEstatus2 = [31, 85, 20, 63, 73, 82, 92, 96, 99, 104];
+const movimientosPermitidosEstatus2 = [31, 85, 20, 63, 73, 82, 92, 96, 99, 102, 104, 107, 108, 109, 111];
 const rolesPermitidosEstatus2 = [7, 9, 3, 2];
 
 const AccionDoc = {
