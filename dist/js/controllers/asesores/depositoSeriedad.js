@@ -638,7 +638,7 @@ function fillDataTable(idCondominio) {
                         return '';
                     }
 
-                    if (parseInt(d.idMovimiento) !== MOVIMIENTOS.NUEVO_APARTADO || parseInt(d.idStatusContratacion) !== STATUS_CONTRATACION) {
+                    if (parseInt(d.idMovimiento) !== MOVIMIENTOS.NUEVO_APARTADO && parseInt(d.idStatusContratacion) !== STATUS_CONTRATACION) {
                         return 'Asignado correctamente';
                     }
 
@@ -650,18 +650,7 @@ function fillDataTable(idCondominio) {
                         return 'Asignado correctamente';
                     }
 
-                    const nombreCliente = `${d.nombre} ${d.apellido_paterno} ${d.apellido_materno}`;
-                    return `
-                        <center>
-                            <button class="btn-data btn-green abrir_prospectos btn-fab btn-fab-mini" 
-                                    data-idCliente="${d.id_cliente}"
-                                    data-nomCliente="${nombreCliente}">
-                                <i class="fas fa-user-check"></i>
-                            </button>
-                        </center>
-                        <br>
-                        <p>Debes asignar el prospecto al cliente para poder acceder al depósito de seriedad o integrar el expediente</p>
-                    `;
+                    return '<p>Debes asignar el prospecto al cliente para poder acceder al depósito de seriedad o integrar el expediente</p>';
                 }
             },
             {
@@ -725,12 +714,22 @@ function fillDataTable(idCondominio) {
                     }
 
                     if (d.dsType == 1){
-                        buttonst += '<a class="btn-data btn-blueMaderas btn_ds'+d.id_cliente+'" '+atributo_button+' id="btn_ds'+d.id_cliente+'" href="'+url_to_go+'" data-toggle="tooltip" data-placement="left" title="DEPÓSITO DE SERIEDAD" target=”_blank”><i class="fas fa-print"></i></a>';
+                        buttons += '<a class="btn-data btn-blueMaderas btn_ds'+d.id_cliente+'" '+atributoButton+' id="btn_ds'+d.id_cliente+'" href="'+urlToGo+'" data-toggle="tooltip" data-placement="left" title="DEPÓSITO DE SERIEDAD" target=”_blank”><i class="fas fa-print"></i></a>';
                     } else if(d.dsType == 2) { // DATA FROM DEPOSITO_SERIEDAD_CONSULTA OLD VERSION
-                        buttonst += '<a class="btn-data btn-blueMaderas" href="'+general_base_url+'Asesor/deposito_seriedad_ds/'+d.id_cliente+'/0" title= "DEPÓSITO DE SERIEDAD" target=”_blank”><i class="fas fa-print"></i></a>';
+                        buttons += '<a class="btn-data btn-blueMaderas" href="'+general_base_url+'Asesor/deposito_seriedad_ds/'+d.id_cliente+'/0" title= "DEPÓSITO DE SERIEDAD" target=”_blank”><i class="fas fa-print"></i></a>';
                     }
                     if(d.dsType == 2) { // DATA FROM DEPOSITO_SERIEDAD_CONSULTA OLD VERSION
                         buttons += '<a class="btn-data btn-blueMaderas" href="'+general_base_url+'Asesor/deposito_seriedad_ds/'+d.id_cliente+'/0" title= "Depósito de seriedad" target=”_blank”><i class="fas fa-print"></i></a>';
+                    }
+
+                    if (
+                        d.dsType == 1 &&
+                        (parseInt(d.idMovimiento) !== MOVIMIENTOS.NUEVO_APARTADO && parseInt(d.idStatusContratacion) !== STATUS_CONTRATACION) &&
+                        d.id_prospecto == 0 &&
+                        (d.id_coordinador != 10807 && d.id_coordinador != 10806 && d.id_gerente != 10807 && d.id_gerente == 10806)
+                    ) {
+                        const nombreCliente = `${d.nombre} ${d.apellido_paterno} ${d.apellido_materno}`;
+                        buttons += `<button class="btn-data btn-green abrir_prospectos btn-fab btn-fab-mini" data-idCliente="${d.id_cliente}" data-nomCliente="${nombreCliente}"> <i class="fas fa-user-check"></i></button>`;
                     }
 
                     return '<div class="d-flex justify-center">'+buttons+'</div>';

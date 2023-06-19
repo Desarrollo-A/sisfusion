@@ -1,52 +1,36 @@
-function cargarInputs() {
-    console.log('Si entra a la función cargarInputs DS');
-}
+let copropietarioCollapse = false;
 
 $(document).ready(function() {
     const e = new Event("change");
     const element = document.querySelector('#rfc_check')
     element.dispatchEvent(e);
+
+    personaFisicaMoralOnChange();
 });
 
-function validaTipoVivienda(){
-    if (!$("input[name='tipo_vivienda']").is(':checked')) {
-        alerts.showNotification('top', 'right', 'Debes seleccionar un tipo de vivienda', 'danger');
-    } else {
-        if (!$("input[name='tipoNc_valor']").is(':checked')) {
-            alerts.showNotification('top', 'right', 'Debes seleccionar el tipo de residencia', 'danger');
-            $('#tipoNc_valor').focus();
-            $('#label1').addClass('hover_focus');
-            $('#label2').addClass('hover_focus');
-            setTimeout(()=>{
-                $('#label1').removeClass('hover_focus');
-                $('#label2').removeClass('hover_focus');
-            },1500)
-        }
-        else{
-            if(!$("input[name='imprimePagare']").is(':checked')  && ($('input[name=tipoNc_valor]:checked').val() == 1)) {
-                alerts.showNotification('top', 'right', 'Debes seleccionar la opción de pagares', 'danger');
-                $('.imprimePagare').focus();
-                $('#labelSi1').addClass('hover_focus');
-                $('#labelNo1').addClass('hover_focus');
-                setTimeout(() => {
-                    $('#labelSi1').removeClass('hover_focus');
-                    $('#labelNo1').removeClass('hover_focus');
-                }, 1500)
-            }
-            else{
-                if(!$("input[name='tipo_comprobante']").is(':checked') && ($('input[name=tipoNc_valor]:checked').val() == 1)) {
-                    alerts.showNotification('top', 'right', 'Debes seleccionar si requieres la carta de domicilio', 'danger');
-                    $('.tipo_comprobante').focus();
-                    $('#labelSi2').addClass('hover_focus');
-                    $('#labelNo2').addClass('hover_focus');
-                    setTimeout(() => {
-                        $('#labelSi2').removeClass('hover_focus');
-                        $('#labelNo2').removeClass('hover_focus');
-                    }, 1500)
-                }
-            }
-        }
+function personaFisicaMoralOnChange() {
+    personaFisicaMoralShowOrHide();
+}
+
+function personaFisicaMoralShowOrHide() {
+    if (!esPersonaFisicaDocs() && !esPersonaMoralDocs()) {
+        $('.persona-fisica-div').show();
+        $('.persona-moral-div').show();
+    } else if (esPersonaFisicaDocs()) {
+        $('.persona-fisica-div').show();
+        $('.persona-moral-div').hide();
+    } else if (esPersonaMoralDocs()) {
+        $('.persona-moral-div').show();
+        $('.persona-fisica-div').hide();
     }
+}
+
+function esPersonaFisicaDocs() {
+    return $('#idOficial_pf').is(':checked') || $('#idDomicilio_pf').is(':checked') || $('#actaMatrimonio_pf').is(':checked');
+}
+
+function esPersonaMoralDocs() {
+    return $('#poder_pm').is(':checked') || $('#actaConstitutiva_pm').is(':checked') || $('#checks').is(':checked');
 }
 
 function resizeInput() {
@@ -109,10 +93,13 @@ function checkResidencia(){
     if(valor == 1){
         //si es de residencia extranjera se debe de preguntar si imprime pagares
         $('#pagarePart').removeClass('hide');
-        $('#domicilioCarta').removeClass('hide');
         document.getElementsByName("imprimePagare")[0].setAttribute('required', true);
-        document.getElementsByName("tipo_comprobante")[0].setAttribute('required', true);
-    }else{
+
+        if ($('input[name="imprimePagare"]:checked').val() == 1) {
+            $('#domicilioCarta').removeClass('hide');
+            document.getElementsByName("tipo_comprobante")[0].setAttribute('required', true);
+        }
+    } else {
         //se vuelve a quitar el apartado de pagares
         $('#pagarePart').addClass('hide');
         $('#domicilioCarta').addClass('hide');
@@ -120,6 +107,17 @@ function checkResidencia(){
         document.getElementsByName("tipo_comprobante")[0].removeAttribute('required');
     }
 }
+
+$('input[type=radio][name=imprimePagare]').change(function () {
+    if (this.value == '1') {
+        $('#domicilioCarta').removeClass('hide');
+        document.getElementsByName("tipo_comprobante")[0].setAttribute('required', true);
+    }
+    if (this.value == '0') {
+        $('#domicilioCarta').addClass('hide');
+        document.getElementsByName("tipo_comprobante")[0].removeAttribute('required');
+    }
+});
 
 function historial() {
     $.get(`${general_base_url}Asesor/getHistorialDS/${cliente}`, function (data) {
@@ -134,16 +132,6 @@ function historial() {
         appendFooterModal(`<button type="button" class="btn btn-danger" onclick="hideModal()">Cerrar</button>`);
         showModal();
     });
-}
-
-function guardarInputs() {
-    const button = document.getElementsByTagName("button");
-    const inputs = document.getElementsByTagName("input");
-    for (let i = 0; i < inputs.length; i++) {
-        if (button[i].type === "submit") {
-            inputs[i].value = inputs[i].value.replace(/\,/g, "");
-        }
-    }
 }
 
 $( ".letrasCaracteres" ).on( "focusout", function(){
@@ -172,45 +160,6 @@ $( ".espaciosOff" ).on( "focusout", function(){
     const input = event.target;
     input.value = input.value.trim();
 });
-
-function formatCurrency(input, blur) {
-    let input_val = input.val();
-    if (input_val === "") { return; }
-    // original length
-    let original_len = input_val.length;
-
-    // initial caret position
-    let caret_pos = input.prop("selectionStart");
-
-    // check for decimal
-    if (input_val.indexOf(".") >= 0) {
-        let decimal_pos = input_val.indexOf(".");
-        let left_side = input_val.substring(0, decimal_pos);
-        let right_side = input_val.substring(decimal_pos);
-        left_side = formatNumber(left_side);
-        right_side = formatNumber(right_side);
-        if (blur === "blur") {
-            right_side += "00";
-        }
-        right_side = right_side.substring(0, 2);
-        input_val = "$" + left_side + "." + right_side;
-
-    } else {
-        input_val = formatNumber(input_val);
-        input_val = "$" + input_val;
-        if (blur === "blur") {
-            input_val += ".00";
-        }
-    }
-    input.val(input_val);
-    let updated_len = input_val.length;
-    caret_pos = updated_len - original_len + caret_pos;
-    input[0].setSelectionRange(caret_pos, caret_pos);
-}
-
-function formatNumber(n) {
-    return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-}
 
 function historialCampoHtml(data) {
     let dataTable = '<h5>HISTORIAL DE MOVIMIENTOS</h5>';
@@ -244,6 +193,7 @@ function historialCampoHtml(data) {
     return dataTable;
 
 }
+
 if(id_rol_general == 7 || id_usuario_general == 2752 || id_usuario_general == 2826 || id_usuario_general == 2810 || id_usuario_general == 5957 || id_usuario_general == 6390 || id_usuario_general == 4857 || id_usuario_general == 2834 || onlyView == 0){
     $("#nacionalidad").change(function(){
         let valor_nacionalidad = $('select[name="nacionalidad"] option:selected').text();
@@ -305,4 +255,140 @@ if(id_rol_general == 7 || id_usuario_general == 2752 || id_usuario_general == 28
         const nav = document.querySelector('#sectionBtns');
         if(this.scrollY <= 10) nav.className = ''; else nav.className = 'scroll';
     };
+}
+
+$(document).on('click', '#copropietario-collapse', function () {
+    if (copropietarioCollapse) {
+        $('#copropietario-icono').removeClass('fa-arrow-up');
+        $('#copropietario-icono').addClass('fa-arrow-down');
+        copropietarioCollapse = !copropietarioCollapse;
+    } else {
+        $('#copropietario-icono').removeClass('fa-arrow-down');
+        $('#copropietario-icono').addClass('fa-arrow-up');
+        copropietarioCollapse = !copropietarioCollapse;
+    }
+});
+
+$(document).on('submit', '#deposito-seriedad-form', function (e) {
+    e.preventDefault();
+
+    if (!$("input[name='tipo_vivienda']").is(':checked')) {
+        alerts.showNotification('top', 'right', 'Debes seleccionar un tipo de vivienda', 'danger');
+        return;
+    }
+
+    if (!$("input[name='tipoNc_valor']").is(':checked')) {
+        alerts.showNotification('top', 'right', 'Debes seleccionar el tipo de residencia', 'danger');
+        $('#tipoNc_valor').focus();
+        $('#label1').addClass('hover_focus');
+        $('#label2').addClass('hover_focus');
+        setTimeout(()=>{
+            $('#label1').removeClass('hover_focus');
+            $('#label2').removeClass('hover_focus');
+        },1500);
+        return;
+    }
+
+    if (!$("input[name='imprimePagare']").is(':checked')  && ($('input[name=tipoNc_valor]:checked').val() == 1)) {
+            alerts.showNotification('top', 'right', 'Debes seleccionar la opción de pagares', 'danger');
+            $('.imprimePagare').focus();
+            $('#labelSi1').addClass('hover_focus');
+            $('#labelNo1').addClass('hover_focus');
+            setTimeout(() => {
+                $('#labelSi1').removeClass('hover_focus');
+                $('#labelNo1').removeClass('hover_focus');
+            }, 1500);
+            return;
+    }
+
+    if (!$("input[name='tipo_comprobante']").is(':checked') && ($('input[name=tipoNc_valor]:checked').val() == 1)) {
+        alerts.showNotification('top', 'right', 'Debes seleccionar si requieres la carta de domicilio', 'danger');
+        $('.tipo_comprobante').focus();
+        $('#labelSi2').addClass('hover_focus');
+        $('#labelNo2').addClass('hover_focus');
+        setTimeout(() => {
+            $('#labelSi2').removeClass('hover_focus');
+            $('#labelNo2').removeClass('hover_focus');
+        }, 1500);
+        return;
+    }
+
+    const costoListaM2 = parseFloat($('#costoM2').val().replace('$', '').replace(',', ''));
+    const costoFinalM2 = parseFloat($('#costom2f').val().replace('$', '').replace(',', ''));
+
+    if (costoFinalM2 > costoListaM2 || costoFinalM2 < ((costoListaM2 * .80))) {
+        alerts.showNotification('top', 'right', 'El COSTO POR M2 FINAL no debe ser superior al M2 LISTA ni debe ser inferior al 20% de desc. del M2 LISTA.', 'danger');
+        return;
+    }
+
+    if (!validateInputArray('telefono2_cop[]', 'Celular')) {
+        return;
+    }
+    if (!validateInputArray('email_cop[]', 'Correo eletrónico')) {
+        return;
+    }
+    if (!validateInputArray('id_particular_cop[]', 'Domicilio particular')) {
+        return;
+    }
+    if (!validateInputArray('originario_cop[]', 'Originario de')) {
+        return;
+    }
+    if (!validateInputArray('ocupacion_cop[]', 'Ocupación')) {
+        return;
+    }
+    if (!validateInputArray('puesto_cop[]', 'Puesto')) {
+        return;
+    }
+    if (!validateInputArray('edadFirma_cop[]', 'Edad firma')) {
+        return;
+    }
+
+    const data = new FormData(this);
+
+    $.ajax({
+        url: `${general_base_url}Asesor/editar_ds`,
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        success: function (response) {
+            const res = JSON.parse(response);
+
+            if (res.code === 200) {
+                alerts.showNotification("top", "right", 'Datos guardados con éxito', "success");
+                setTimeout(() => {
+                    location.reload();
+                }, 1500);
+            }
+
+            if (res.code === 400) {
+                alerts.showNotification("top", "right", res.message, "warning");
+            }
+
+            if (res.code === 500) {
+                alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
+            }
+        }, error: function () {
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+});
+
+/**
+ * @param {string} input
+ * @param {string} campo
+ * @return {boolean}
+ */
+function validateInputArray(input, campo) {
+    let result = true;
+    const inputArr = document.getElementsByName(input);
+    for (let i = 0; i < inputArr.length; i++) {
+        if (inputArr[i].value.length === 0) {
+            alerts.showNotification('top', 'right', `El campo ${campo} del coopropietario ${i+1} es requerido`, 'danger');
+            result = false;
+        }
+    }
+
+    return result;
 }
