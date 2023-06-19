@@ -65,7 +65,6 @@
             </div>
         </div>
     </div>
-</div>
 
     <div class="modal fade" id="modal_loader_assign" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
          data-backdrop="static" data-keyboard="false">
@@ -513,7 +512,6 @@
     <?php $this->load->view('template/footer_legend');?>
 </div>
 </div>
-</div><!--main-panel close-->
 </body>
 <?php $this->load->view('template/footer');?>
 <!--DATATABLE BUTTONS DATA EXPORT-->
