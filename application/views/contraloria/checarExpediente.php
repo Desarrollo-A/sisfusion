@@ -22,6 +22,7 @@
                         <h3>¿Estás seguro que desea regresar el expediente <b id="loteName"></b> ?</h3>
                         <p><small>El cambio no podrá ser revertido.</small></p>
                         <input type="hidden" value="" id="tempIDC">
+                        <input type="hidden" value="" id="idLote">
                     </div>
                 </div>
                 <div class="modal-footer">

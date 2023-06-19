@@ -3708,7 +3708,7 @@
         CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nomCliente,
         c.nombre as nombreCondominio, cl.status as estatus_cliente, oxc.nombre as lp,st.nombreStatus,tv.tipo_venta tventa, 
 		(CASE WHEN l.status8Flag = 1 THEN 'Estatus 8 validado' ELSE 'Estatus 8 sin validar' END) bandera8,oxcRG.nombre registroComision,
-		(CASE WHEN l.validacionEnganche = 'VALIDADO' THEN l.validacionEnganche ELSE 'SIN VALIDAR' END) validacionEng,
+		(CASE WHEN l.validacionEnganche = 'VALIDADO' THEN l.validacionEnganche ELSE 'SIN VALIDAR' END) validacionEng,l.idLote,
         sl.nombre as estatus_lote, CONCAT('#',sl.color) as statusLoteColor, cl.nombre as nombreCliente, * 
         FROM lotes l
         INNER JOIN clientes cl ON cl.idLote=l.idLote $fragmento

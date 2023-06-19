@@ -73,18 +73,18 @@ class Restore_model extends CI_Model {
             }
         }
 
-        $query5 = $this->db->query("UPDATE lotes SET idStatusContratacion = '$idstatus', idMovimiento = '$idmovimiento', perfil = '$perfil', usuario = 1,
+        $this->db->query("UPDATE lotes SET idStatusContratacion = '$idstatus', idMovimiento = '$idmovimiento', perfil = '$perfil', usuario = 1,
 									modificado = '$modificado', fechaVenc = '$fechaVenc',
 									status=1, idCliente='$idCliente', comentario = '$comentario', idStatusLote = 3 $AND WHERE idLote = '$idlote';");
-        $query6 = $this->db->query("UPDATE clientes SET status=0 WHERE idLote='$idlote';");
-        $query10 = $this->db->query("UPDATE clientes SET status=1, modificado_por=1 WHERE id_cliente='$idCliente' AND idLote='$idlote';");
+        $this->db->query("UPDATE clientes SET status=0 WHERE idLote='$idlote';");
+        $this->db->query("UPDATE clientes SET status=1, modificado_por=1 WHERE id_cliente='$idCliente' AND idLote='$idlote';");
 
-        /*---------COMISIONES---------- */
+        /*---------REGRESAR COMISIONES EN CASO DE TENER---------- */
         $queryComisiones = $this->db->query("SELECT c.*,pci.pagado,pc.porcentaje_abono
             FROM comisiones c
             INNER JOIN (SELECT SUM(abono_neodata) pagado,id_comision FROM pago_comision_ind GROUP BY id_comision) pci ON pci.id_comision=c.id_comision
             INNER JOIN pago_comision pc ON pc.id_lote=c.id_lote 
-            WHERE id_lote = $idlote AND idCliente = $idCliente;")->result_array();
+            WHERE c.id_lote = $idlote AND c.idCliente = $idCliente;")->result_array();
 
         if(count($queryComisiones) > 0){
             $sumaTotalComision= ($queryComisiones[0]['pagado'] / 100) * $totalNeto2;
@@ -92,7 +92,7 @@ class Restore_model extends CI_Model {
             $this->db->query("UPDATE comisiones set comision_total=((porcentaje_decimal / 100) * $totalNeto2),estatus=1,modificado_por=$modificado_por WHERE id_lote = $idlote AND idCliente = $idCliente;");
                 $pendiente = $sumaTotalComision - $queryComisiones[0]['pagado'];
                 $this->db->query("UPDATE pago_comision SET 
-                            total_comision=$sumaTotalComision,pagado=".$queryComisiones[0]['pagado'].",bandera=$registroComision,modificado_por='$modificado_por',pendiente=$pendiente 
+                            total_comision=$sumaTotalComision,abonado=".$queryComisiones[0]['pagado'].",bandera=$registroComision,modificado_por='$modificado_por',pendiente=$pendiente 
                             WHERE id_lote=$idlote;");
         }
         /**-------FIN COMISIONES-------- */

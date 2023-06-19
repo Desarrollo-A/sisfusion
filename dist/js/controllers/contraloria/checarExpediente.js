@@ -56,10 +56,9 @@ $('#condominio').change(function(){
 });
 
 var datosTable;
-
-$('#lotes').change(function(){
+function llenarClientes(idLote){
     datosTable = [];
-    var lote = $(this).val();
+    var lote = idLote;
     $("#clientes").empty().selectpicker('refresh');
     $.ajax({
         url:`${general_base_url}RegistroCliente/getClientByID`,
@@ -82,7 +81,11 @@ $('#lotes').change(function(){
                  },
         async:   false
    }); 
-    construirTableClient('','',datosTable); 
+    construirTableClient('','',datosTable);
+}
+$('#lotes').change(function(){
+    var lote = $(this).val();
+    llenarClientes(lote);
 });
 
 
@@ -306,9 +309,9 @@ function construirTableClient(idCliente = '',idLote = '',datos = ''){
                 {
                     let button_action='';
                     if(data.estatus_cliente==0){
-                        button_action = '<center><a class="backButton btn-data btn-warning" title= "Regresar expediente" style="cursor:pointer;" data-nomLote="'+data.nombreLote+'" data-nombreCliente="'+data.nomCliente+'" data-idCliente="'+data.id_cliente+'"><i class="fas fa-history"></i></a></center>';
+                        button_action = `<center><a class="backButton btn-data btn-warning" title= "Regresar expediente" style="cursor:pointer;" data-idLote="${data.idLote}" data-nomLote="${data.nombreLote}" data-nombreCliente="${data.nomCliente}" data-idCliente="${data.id_cliente}"><i class="fas fa-history"></i></a></center>`;
                     }else{
-                        button_action = 'NA';
+                        button_action = `<center><a class="editButton btn-data btn-warning" title= "Editar expediente" style="cursor:pointer;" data-idLote="${data.idLote}" data-nomLote="${data.nombreLote}" data-nombreCliente="${data.nomCliente}" data-idCliente="${data.id_cliente}"><i class="fa-solid fa-pencil"></i></a></center>`;
                     }
                     return button_action;
                 }
@@ -328,20 +331,22 @@ var $itself = $(this);
 let nombreLote = $itself.attr('data-nomLote');
 let cliente = $itself.attr('data-nombreCliente');
 let idCliente = $itself.attr('data-idCliente');
+let idLote = $itself.attr('data-idLote');
 console.log("nombreLote: ", nombreLote);
 console.log("cliente: ", cliente);
 console.log("idCliente: ", idCliente);
 $('#tempIDC').val(idCliente);
 $('#loteName').text(nombreLote);
+$('#idLote').text(idLote);
 $('#modalConfirmRegExp').modal();
 });
 
-$(document).on('click', '.acepta_regreso', function(){
-console.log('olv si acepto jejee');
+$(document).on('click', '.acepta_regreso', function(e){
 let id_cliente = $('#tempIDC').val();
+let idLote = $('#lotes').val();
 $.ajax({
     type: "POST",
-    url:  `${base_url}Restore/return_status_uno/`,//https://maderascrm.gphsis.com/index.php/Restore/return_status_uno/idCliente
+    url:  `${general_base_url}Restore/return_status_uno/`,//https://maderascrm.gphsis.com/index.php/Restore/return_status_uno/idCliente
     data: {idCliente: id_cliente},
     dataType: 'json',
     cache: false,
@@ -350,14 +355,16 @@ $.ajax({
     },
     success: function(data){
         $('#spiner-loader').addClass('hide');
+        $('#tempIDC').val(0);
+        $('#idLote').val(0);
         console.log(data.data);
         if(data.data==true){
+            llenarClientes(idLote);
             alerts.showNotification("top", "right", "Se ha regresado el expediente correctamente.", "success");
         }else{
             alerts.showNotification("top", "right", "Ha ocurrido un error intentalo nuevamente.", "danger");
         }
         $('#modalConfirmRegExp').modal('hide');
-        $("#tableClient").DataTable().ajax.reload();
     },
     error: function() {
         $('#modalConfirmRegExp').modal('hide');
@@ -365,6 +372,6 @@ $.ajax({
         $('#spiner-loader').addClass('hide');
         alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
     }
-}); /* */
+});
 });
 
