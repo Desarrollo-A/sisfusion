@@ -7,7 +7,7 @@ class Contratacion_model extends CI_Model {
     }
 
    function get_proyecto_lista() {
-      return $this->db->query("SELECT idResidencial, CONCAT(nombreResidencial, ' - '  ,descripcion) descripcion, ciudad, status, empresa, clave_residencial, abreviatura, active_comission, sede_residencial, sede FROM [residenciales] WHERE status = 1");
+      return $this->db->query("SELECT idResidencial, UPPER(CONCAT(nombreResidencial, ' - '  ,descripcion)) descripcion, ciudad, status, empresa, clave_residencial, abreviatura, active_comission, sede_residencial, sede FROM [residenciales] WHERE status = 1");
    }
    
    function get_condominio_lista($proyecto) {
@@ -88,7 +88,7 @@ class Contratacion_model extends CI_Model {
       CASE u11.id_rol WHEN 3 THEN CASE WHEN u33.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u33.nombre, ' ', u33.apellido_paterno, ' ', u33.apellido_materno)) END ELSE CASE WHEN u44.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u44.nombre, ' ', u44.apellido_paterno, ' ', u44.apellido_materno)) END END regional22,
       lot.precio, ISNULL(CONVERT(varchar, lot.fecha_modst, 20), '') fecha_modst,  ISNULL(CONVERT(varchar, cl.fechaApartado, 20), '') AS fechaApartado, ISNULL (cl.apartadoXReubicacion, 0) AS apartadoXReubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 21), '') AS fechaAlta, lot.observacionContratoUrgente,
       CASE WHEN cl.id_cliente IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) END as nombreCliente, lot.motivo_change_status,
-      $prospectingPlaceDetail lugar_prospeccion, 
+      UPPER($prospectingPlaceDetail) AS lugar_prospeccion, 
       lot.fecha_creacion, lot.totalValidado as cantidad_enganche, ISNULL(CONVERT(varchar, fechaSolicitudValidacion, 20), '') as fecha_validacion,
       lot.idStatusContratacion, ISNULL(co.nombreCopropietario, 'SIN ESPECIFICAR') nombreCopropietario,
       sl.background_sl, ISNULL(cl.tipo_casa, 0) tipo_casa, ISNULL(oxc2.nombre, 'SIN ESPECIFICAR') nombre_tipo_casa, lot.casa,

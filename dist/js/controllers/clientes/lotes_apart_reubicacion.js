@@ -1,10 +1,5 @@
 let titulosTabla = [];
-let tablaCancelaciones;
-
-const ESTATUS_CANCELACIONES = Object.freeze({
-    CANCELACION: 1,
-    LIBRE: 2
-});
+let tablaReubicaciones;
 
 const sp = {
     initFormExtendedDatetimepickers: function () {
@@ -35,14 +30,14 @@ $(document).ready(function () {
     fillTable(convertDateDDMMYYYYToYYYYMMDD($('#beginDate').val()), convertDateDDMMYYYYToYYYYMMDD($('#endDate').val()));
 });
 
-$('#cancelacionesTabla thead tr:eq(0) th').each(function (i) {
+$('#lotesReubicacion thead tr:eq(0) th').each(function (i) {
     const title = $(this).text();
     titulosTabla.push(title);
 
     $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
     $('input', this).on('keyup change', function () {
-        if ($('#cancelacionesTabla').DataTable().column(i).search() !== this.value) {
-            $('#cancelacionesTabla').DataTable().column(i).search(this.value).draw();
+        if ($('#lotesReubicacion').DataTable().column(i).search() !== this.value) {
+            $('#lotesReubicacion').DataTable().column(i).search(this.value).draw();
         }
     });
 
@@ -50,7 +45,7 @@ $('#cancelacionesTabla thead tr:eq(0) th').each(function (i) {
 });
 
 function fillTable(fechaInicio, fechaFin) {
-    tablaCancelaciones = $('#cancelacionesTabla').DataTable({
+    tablaReubicaciones = $('#lotesReubicacion').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
@@ -59,8 +54,8 @@ function fillTable(fechaInicio, fechaFin) {
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
-                titleAttr: 'Lotes cancelados en proceso',
-                title:"Lotes cancelados en proceso",
+                titleAttr: 'Lotes apartados reubicación',
+                title:"Lotes apartados reubicación",
                 exportOptions: {
                     columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                     format: {
@@ -74,8 +69,8 @@ function fillTable(fechaInicio, fechaFin) {
                 extend: 'pdfHtml5',
                 text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
                 className: 'btn buttons-pdf',
-                titleAttr: 'Lotes cancelados en proceso',
-                title:"Lotes cancelados en proceso",
+                titleAttr: 'Lotes apartados reubicación',
+                title:"Lotes apartados reubicación",
                 orientation: 'landscape',
                 pageSize: 'LEGAL',
                 exportOptions: {
@@ -113,37 +108,16 @@ function fillTable(fechaInicio, fechaFin) {
             { "data": "nombreLote" },
             { "data": "idLote" },
             { "data": "cliente" },
-            { "data": "nombreAsesor" },
-            { "data": "nombreCoordinador" },
-            { "data": "nombreGerente" },
-            { "data": "nombreSubdirector" },
-            { "data": "nombreRegional" },
-            { "data": "nombreRegional2" },
-            { "data": "fechaApartado" },
-            {
-                "data": function (d) {
-                    if (id_rol_general == 17) {
-                        return `<span class='label' style='background: ${d.color}18; color: ${d.color}'>${d.nombreCancelacion}</span>`;
-                    }
-
-                    if (parseInt(d.cancelacion_proceso) === ESTATUS_CANCELACIONES.CANCELACION) {
-                        return `<span class='label' style='background: ${d.color}18; color: ${d.color}'>${d.nombreCancelacion}</span>`;
-                    }
-
-                    return `<div class="d-flex justify-center">
-                        <button class="btn-data btn-warning btn-cancelar"
-                                data-toggle="tooltip" 
-                                data-placement="left"
-                                title="CANCELAR LOTE"
-                                data-idCliente="${d.idCliente}">
-                            <i class="fa fa-close"></i>
-                        </button>
-                    </div>`;
-                }
-            }
+            { "data": "asesor" },
+            { "data": "coordinador" },
+            { "data": "gerente" },
+            { "data": "subdirector" },
+            { "data": "regional" },
+            { "data": "regional2" },
+            { "data": "fechaApartado" }
         ],
         ajax: {
-            url: `${general_base_url}clientes/infoCancelacionesProceso`,
+            url: `${general_base_url}clientes/getLotesApartadosReubicacion`,
             dataSrc: "",
             type: "POST",
             cache: false,
@@ -165,62 +139,3 @@ $(document).on('click', '#filtrarPorFecha', function () {
     const fechaFin = convertDateDDMMYYYYToYYYYMMDD($('#endDate').val());
     fillTable(fechaInicio, fechaFin);
 });
-
-$(document).on('click', '.btn-cancelar', function () {
-    const $itself = $(this);
-    const idCliente = $itself.attr('data-idCliente');
-
-    changeSizeModal('modal-sm');
-    appendBodyModal(`
-        <div class="row">
-            <div class="col-12 text-center">
-                <h3>Cancelación de lote</h3>
-            </div>
-            <div class="col-12 text-center">
-                <p>¿Está seguro de cambiar el estatus de este lote?</p>
-            </div>
-        </div>
-    `);
-
-    appendFooterModal(`
-        <button type="button" class="btn btn-simple btn-danger" onclick="hideModal()">Cancelar</button>
-        <button type="button" class="btn btn-primary" onclick="guardarCancelacion(${idCliente})">Aceptar</button>
-    `);
-
-    showModal();
-});
-
-function guardarCancelacion(idCliente) {
-    let data = new FormData();
-    data.append('idCliente', idCliente);
-
-    $('#spiner-loader').removeClass('hide');
-
-    $.ajax({
-        url: `${general_base_url}Clientes/updateCancelacionProceso`,
-        data: data,
-        cache: false,
-        contentType: false,
-        processData: false,
-        type: 'POST',
-        success: function (response) {
-            const res = JSON.parse(response);
-
-            hideModal();
-            $('#spiner-loader').addClass('hide');
-
-            if (res.code === 200) {
-                alerts.showNotification("top", "right", `El registro se ha actualizado con éxito.`, "success");
-                tablaCancelaciones.ajax.reload();
-            }
-
-            if (res.code === 400) {
-                alerts.showNotification("top", "right", res.message, "warning");
-            }
-
-            if (res.code === 500) {
-                alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
-            }
-        }
-    });
-}

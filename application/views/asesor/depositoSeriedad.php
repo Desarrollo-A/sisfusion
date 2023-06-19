@@ -4,19 +4,16 @@
 <body>
 <div class="wrapper">
     <?php  $this->load->view('template/sidebar');   ?>
-    <style>
-        .textoshead::placeholder { color: white; }    
-    </style>
-    <div class="modal fade" id="modal_pregunta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
-         data-backdrop="static" data-keyboard="false" style="z-index: 1600;top: 30%;" >
-        <div class="modal-dialog modal-sm" role="document">
-            <div class="modal-content" style="box-shadow: 0 27px 24px 0 rgb(0 0 0 / 57%), 0 40px 77px 0 rgb(0 0 0 / 90%);
-            border-radius: 6px;border: 1px solid #ccc;">
+    
+    <div class="modal fade" id="modal_pregunta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"data-backdrop="static" data-keyboard="false" style="z-index: 1600;" >
+        <div class="modal-dialog">
+            <div class="modal-content" >
                 <div class="modal-header">
                     <h4 class="modal-title">¿Realmente desea asignar este prospecto al cliente?</h4>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-simple" data-dismiss="modal">CANCELAR<div class="ripple-container"></div></button>
-                        <button type="button" class="btn btn-primary" id="asignar_prospecto" data-dismiss="modal">ASIGNAR<div class="ripple-container"></div></button>
+                    <button type="button" class="btn btn-danger btn-simple" id="cancelar" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="asignar_prospecto" data-dismiss="modal">ASIGNAR
+                            <div class="ripple-container"></div></button>
                     </div>
                 </div>
             </div>
@@ -38,8 +35,8 @@
         </div>
     </div>
 
-    <div class="modal fade" id="asignar_prospecto_a_cliente" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
-         data-backdrop="static" data-keyboard="false">
+    <div class="modal fade overflow-hiden " id="asignar_prospecto_a_cliente" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+        data-backdrop="static" data-keyboard="false" >
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -50,18 +47,21 @@
                     <input type="hidden" id="id_cliente_asignar" name="id_cliente_asignar">
                     <div class="modal-body">
                         <div class="material-datatables">
-                            <table class="table table-responsive table-bordered table-striped table-hover" id="table_prospectos" width="100%">
+                            <table class=" table-striped table-hover" id="table_prospectos">
                                 <thead>
-                                <th>Nombre</th>
-                                <th>Correo</th>
-                                <th>Teléfono</th>
-                                <th>Información prospecto</th>
-                                <th>Asignar</th>
+                                    <th>NOMBRE</th>
+                                    <th>CORREO</th>
+                                    <th>TELÉFONO</th>
+                                    <th>OBSERVACIÓN</th>
+                                    <th>LUGAR DE PROSPECCIÓN </th>
+                                    <th>PLAZA DE VENTA</th>
+                                    <th>NACIONALIDAD</th>
+                                    <th>ASIGNAR</th>
                                 </thead>
                             </table>
                         </div>
                     </div>
-                <div class="modal-footer"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -69,15 +69,17 @@
 
     <div class="modal fade" id="modal_loader_assign" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
          data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Asignando prospecto al cliente</h4>
                     <div class="modal-body" style="text-align: center">
-                            <img src="<?=base_url()?>static/images/asignando.gif" width="100%">
+                        <img src="<?=base_url()?>static/images/asignando.gif" width="100%">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar<div class="ripple-container"></div></button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar
+                            <div class="ripple-container"></div>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -109,7 +111,7 @@
         <div class="modal-dialog">
             <div class="modal-content" >
                 <div class="modal-header">
-                    <h4 class="modal-title text-center"><label>Enviar nuevamente a postventa (despúes de un rechazo de postventa) - <b><span class="lote"></span></b></label></h4>
+                    <h4 class="modal-title"><label>Enviar nuevamente a postventa (despúes de un rechazo de postventa) - <b><span class="lote"></span></b></label></h4>
                 </div>
                 <div class="modal-body">
                     <label>Comentario:</label>
@@ -342,7 +344,7 @@
                             }
                             ?>
                             <div class="material-datatables">
-                                <table id="tabla_deposito_seriedad" name="tabla_deposito_seriedad" class="table-striped table-hover" style="text-align:center;">
+                                <table id="tabla_deposito_seriedad" name="tabla_deposito_seriedad" class="table-striped table-hover">
                                     <thead>
                                         <tr>
                                             <th>PROYECTO</th>

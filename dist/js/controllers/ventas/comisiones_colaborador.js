@@ -387,7 +387,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
             },
             // /**************************************************************************************************************************************************************/
             {
-                text: '<i class="fa fa-video-camera" aria-hidden="true"></i>',
+                text: '<i class="fas fa-play"></i>',
                 className: `btn btn-dt-youtube buttons-youtube ${boton_youtube}`,
                 titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de comisiones podrás visualizarlo en el siguiente tutorial',
                 action: function (e, dt, button, config) {

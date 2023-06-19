@@ -101,6 +101,8 @@ $('#tabla_deposito_seriedad thead tr:eq(0) th').each( function (i) {
     });
 });
 
+
+
 $("#tabla_deposito_seriedad").ready( function(){
     $(document).on('click', '.abrir_prospectos', function () {
         $('#nom_cliente').html('');
@@ -110,16 +112,25 @@ $("#tabla_deposito_seriedad").ready( function(){
         const nombre_cliente = $itself.attr('data-nomCliente');
         $('#nom_cliente').append(nombre_cliente);
         $('#id_cliente_asignar').val(id_cliente);
-
+        
         tabla_valores_ds = $("#table_prospectos").DataTable({
             width: '100%',
-            "dom": "Bfrtip",
+            dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+            scrollX: true,
             buttons: [{
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
                 titleAttr: 'Prospectos',
                 title:"Prospectos",
+                exportOptions: {
+                    columns: [0,1,2,3,4,5,6],
+                    format: {
+                        header: function (d, columnIdx) {
+                            return ' '+titulos_encabezado[columnIdx] +' ';
+                        }
+                    }
+                }
             },
             {
                 extend: 'pdfHtml5',
@@ -129,6 +140,14 @@ $("#tabla_deposito_seriedad").ready( function(){
                 title:"Prospectos",
                 orientation: 'landscape',
                 pageSize: 'LEGAL',
+                exportOptions: {
+                    columns: [0,1,2,3,4,5,6],
+                    format: {
+                        header: function (d, columnIdx) {
+                            return ' '+titulos_encabezado[columnIdx] +' ';
+                        }
+                    }
+                }
             }],
             columnDefs: [{
                 defaultContent: "",
@@ -164,20 +183,30 @@ $("#tabla_deposito_seriedad").ready( function(){
                 },
                 {
                     "data": function(d){
-                        let info = '';
-                        info = '<b>Observación:</b> '+myFunctions.validateEmptyField(d.observaciones)+'<br>';
-                        info += '<b>Lugar prospección:</b> '+d.lugar_prospeccion+'<br>';
-                        info += '<b>Plaza venta:</b> '+d.plaza_venta+'<br>';
-                        info += '<b>Nacionalidad:</b> '+d.nacionalidad+'<br>';
-
-
+                        var info = '';
+                        info = myFunctions.validateEmptyField(d.observaciones)
                         return info;
                     }
                 },
                 {
                     "data": function(d){
+                        return d.lugar_prospeccion;
+                    }
+                },
+                {
+                    "data": function(d){
+                        return d.plaza_venta;
+                    }
+                },
+                {
+                    "data": function(d){
+                        return d.nacionalidad;
+                    }
+                },
+                {
+                    "data": function(d){
                         return '<center><button class="btn-data btn-green became_prospect_to_cliente"' +
-                            'data-id_prospecto="'+d.id_prospecto+'" data-id_cliente="'+id_cliente+'">' +
+                            'data-id_prospecto="'+d.id_prospecto+'" data-id_cliente="'+id_cliente+'" data-toggle="tooltip" data-placement="top" title="NUEVO PROSPECTO">' +
                             '<i class="fas fa-user-check"></i></button></center>';
                     }
                 },
@@ -191,21 +220,30 @@ $("#tabla_deposito_seriedad").ready( function(){
                 "data": function( d ){
                 }
             },
+            initComplete: function () {
+                $('[data-toggle="tooltip"]').tooltip("destroy");
+                $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
+            }
+            
 
         });
 
         $('#asignar_prospecto_a_cliente').modal();
     });
 
+    let titulos_encabezado = [];
     $('#table_prospectos thead tr:eq(0) th').each( function (i) {
-        const title = $(this).text();
-        $(this).html('<input type="text" style="width:100%; background:#003D82; color:white; border: 0; font-weight: 300;" class="textoshead"  placeholder="'+title+'"/>' );
-
-        $('input', this).on('keyup change', function () {
+        var title = $(this).text();
+        $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
+        $( 'input', this ).on('keyup change', function () {
             if ($('#table_prospectos').DataTable().column(i).search() !== this.value ) {
                 $('#table_prospectos').DataTable().column(i).search(this.value).draw();
             }
         });
+        titulos_encabezado.push(title);
+        $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
+    });
     });
 
     $(document).on('click', '.became_prospect_to_cliente', function() {
@@ -213,9 +251,10 @@ $("#tabla_deposito_seriedad").ready( function(){
         const id_cliente = $itself.attr('data-id_cliente');
         const id_prospecto = $itself.attr('data-id_prospecto');
         $('#modal_pregunta').modal();
-
+        
         $(document).on('click', '#asignar_prospecto', function () {
             //ajax con el post de update prospecto a cliente
+            
             $.ajax({
                 type: 'POST',
                 url: general_base_url+'asesor/prospecto_a_cliente',
@@ -245,6 +284,10 @@ $("#tabla_deposito_seriedad").ready( function(){
                 }
             });
         });
+    });
+
+    $(document).on('click', '#cancelar', function(){
+        $('#asignar_prospecto_a_cliente').css({overflow:'auto'});
     });
 
     $(document).on('click', '.pdfLink2', function () {
@@ -620,6 +663,7 @@ function fillDataTable(idCondominio) {
                 "data": function( d ){
                     let atributoButton = '';
                     let buttons = '';
+                    
                     const idMovimiento = parseInt(d.idMovimiento);
                     const idStatusContratacion = parseInt(d.idStatusContratacion);
 
@@ -677,10 +721,12 @@ function fillDataTable(idCondominio) {
                     }
 
                     if (d.dsType == 1){
-                        buttons += '<a class="btn-data btn-blueMaderas btn_ds'+d.id_cliente+'" '+atributoButton+' id="btn_ds'+d.id_cliente+'" href="'+urlToGo+'" data-toggle="tooltip" data-placement="left" title="Depósito de seriedad" target=”_blank”><i class="fas fa-print"></i></a>';
+                        buttons += '<a class="btn-data btn-blueMaderas btn_ds'+d.id_cliente+'" '+atributoButton+' id="btn_ds'+d.id_cliente+'" href="'+urlToGo+'" data-toggle="tooltip" data-placement="top" title="DEPÓSITO DE SERIEDAD" target=”_blank”><i class="fas fa-print"></i></a>';
+                    } else if(d.dsType == 2) { // DATA FROM DEPOSITO_SERIEDAD_CONSULTA OLD VERSION
+                        buttons += '<a class="btn-data btn-blueMaderas" href="'+general_base_url+'Asesor/deposito_seriedad_ds/'+d.id_cliente+'/0" title= "DEPÓSITO DE SERIEDAD" target=”_blank”><i class="fas fa-print"></i></a>';
                     }
                     if(d.dsType == 2) { // DATA FROM DEPOSITO_SERIEDAD_CONSULTA OLD VERSION
-                        buttons += '<a class="btn-data btn-blueMaderas" href="'+general_base_url+'Asesor/deposito_seriedad_ds/'+d.id_cliente+'/0" title= "Depósito de seriedad" target=”_blank”><i class="fas fa-print"></i></a>';
+                        buttons += '<a class="btn-data btn-blueMaderas" href="'+general_base_url+'Asesor/deposito_seriedad_ds/'+d.id_cliente+'/0" title= "DEPÓSITO DE SERIEDAD" target=”_blank”><i class="fas fa-print"></i></a>';
                     }
 
                     return '<div class="d-flex justify-center">'+buttons+'</div>';
@@ -697,9 +743,8 @@ function fillDataTable(idCondominio) {
             }
         },
         initComplete: function () {
-            $('[data-toggle="tooltip"]').tooltip({
-                trigger: "hover"
-            });
+            $('[data-toggle="tooltip"]').tooltip("destroy");
+            $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
         }
     });
 }
@@ -1732,22 +1777,22 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
 });
 
-function construirBotonEstatus(data, fechaVenc, classButton, atributoButton = '', titulo = 'Enviar Estatus') {
+function construirBotonEstatus(data, fechaVenc, classButton, atributoButton = '', titulo = 'ENVIAR ESTATUS') {
     return `<a href='#' 
-               ${atributoButton}
-               data-tiComp='${data.tipo_comprobanteD}'
-               data-nomLote='${data.nombreLote}'
-               data-idCliente='${data.id_cliente}'
-               data-nombreResidencial='${data.nombreResidencial}'
-               data-nombreCondominio='${data.nombreCondominio}'
-               data-nombreLote='${data.nombreLote}'
-               data-idCondominio='${data.idCondominio}'
-               data-idLote='${data.idLote}'
-               data-fechavenc='${fechaVenc}'
-               class="btn-data btn-green ${classButton}"
-               data-toggle="tooltip"
-               data-placement="left"
-               title="${titulo}">
+                ${atributoButton}
+                data-tiComp='${data.tipo_comprobanteD}'
+                data-nomLote='${data.nombreLote}'
+                data-idCliente='${data.id_cliente}'
+                data-nombreResidencial='${data.nombreResidencial}'
+                data-nombreCondominio='${data.nombreCondominio}'
+                data-nombreLote='${data.nombreLote}'
+                data-idCondominio='${data.idCondominio}'
+                data-idLote='${data.idLote}'
+                data-fechavenc='${fechaVenc}'
+                class="btn-data btn-green ${classButton}"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="${titulo}">
         <i class="fas fa-check"></i>
     </a>`;
 }
@@ -1758,6 +1803,8 @@ function generarBotonesAutorizacion(clienteData) {
     if (clienteData.autorizacion_correo === null || clienteData.autorizacion_sms === null) {
         botones += `
             <button class="btn-data btn-green btn-rounded btn-autorizacion" 
+                    data-toggle="tooltip"
+                    data-placement="top"
                     title="ENVIAR AUTORIZACIÓN"
                     data-idCliente='${clienteData.id_cliente}'>
                 <i class="fas fa-send"></i>
@@ -1768,6 +1815,8 @@ function generarBotonesAutorizacion(clienteData) {
     if (clienteData.autorizacion_correo !== null || clienteData.autorizacion_sms !== null) {
         botones += `
             <button class="btn-data btn-azure btn-rounded btn-reenvio" 
+                    data-toggle="tooltip"
+                    data-placement="top"
                     title="REENVÍO DE VERIFICACIÓN"
                     data-idCliente='${clienteData.id_cliente}'>
                 <i class="fas fa-rotate-right"></i>
@@ -1783,6 +1832,8 @@ function generarBotonesAutorizacion(clienteData) {
     ) {
         botones += `
             <button class="btn-data btn-violetDeep btn-rounded btn-solicitar"
+                    data-toggle="tooltip"
+                    data-placement="top"
                     title="SOLICITAR EDICIÓN DEL REGISTRO" 
                     data-idCliente='${clienteData.id_cliente}'>
                 <i class="fas fa-hand-paper-o"></i>

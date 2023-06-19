@@ -32,7 +32,7 @@
                             <h4 class="modal-title">¿Qué estatus asignarás a este prospecto?</h4>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0 overflow-hidden">
-                            <select class="selectpicker select-gral m-0" name="estatus_particular" id="estatus_particular" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body"></select>
+                            <select class="selectpicker select-gral m-0" name="estatus_particular" id="estatus_particular" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body"></select>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end pt-1">
                             <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanSelects()">Cancelar</button>
@@ -60,7 +60,7 @@
             <form id="my_update_status_form_preventa" name="my_update_status_form_preventa" method="post">
                 <div class="col-lg-12 form-group overflow-hidden">
                     <label>Estatus</label>
-                    <select class="selectpicker" name="estatus_particular2" id="estatus_particular2" data-style="select-with-transition" title="Selecciona una opción" data-size="7"></select>
+                    <select class="selectpicker" name="estatus_particular2" id="estatus_particular2" data-style="select-with-transition" title="SELECCIONA UNA OPCIÓN" data-size="7"></select>
                 </div>
                 <input type="hidden" name="id_prospecto_estatus_particular2" id="id_prospecto_estatus_particular2">
                 <div class="modal-footer">
@@ -101,11 +101,11 @@
             <form id="my_reasign_form_sm" name="my_reasign_form_sm" method="post">
                 <div class="col-lg-12 form-group">
                     <label>Gerente</label>
-                    <select class="selectpicker" name="id_gerente" id="myselectgerente" data-live-search="true" data-style="select-with-transition" onchange="getAdvisers(this)" title="Selecciona una opción" data-size="7" required></select>
+                    <select class="selectpicker" name="id_gerente" id="myselectgerente" data-live-search="true" data-style="select-with-transition" onchange="getAdvisers(this)" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                 </div>
                 <div class="col-lg-12 form-group">
                     <label>Asesor</label>
-                    <select class="selectpicker" name="id_asesor" id="myselectasesor" data-live-search="true" data-style="select-with-transition" title="Selecciona una opción" data-size="7" required></select>
+                    <select class="selectpicker" name="id_asesor" id="myselectasesor" data-live-search="true" data-style="select-with-transition" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                 </div>
                 <input type="hidden" name="id_prospecto_re_asign" id="id_prospecto_re_asign_sm">
                 <input type="hidden" name="request_type" id="request_type_sm" value="1"> 
@@ -130,7 +130,7 @@
             <form id="my_reasign_form_gm" name="my_reasign_form_gm" method="post">
                 <div class="col-lg-12 form-group">
                     <label>Asesor</label>
-                    <select class="selectpicker" name="id_asesor" id="myselectasesor2" data-live-search="true" data-style="select-with-transition" title="Selecciona una opción" data-size="7" required></select>
+                    <select class="selectpicker" name="id_asesor" id="myselectasesor2" data-live-search="true" data-style="select-with-transition" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                 </div>
                 <input type="hidden" name="id_prospecto_re_asign" id="id_prospecto_re_asign_gm">
                 <input type="hidden" name="request_type" id="request_type_gm" value="2">
@@ -225,7 +225,7 @@
                                             data-style="btn" 
                                             data-show-subtext="true"
                                             data-live-search="true"
-                                            title="Selecciona una opción"
+                                            title="SELECCIONA UNA OPCIÓN"
                                             data-size="7"
                                             data-container="body"
                                             required>
@@ -307,7 +307,7 @@
                                             data-style="btn" 
                                             data-show-subtext="true"
                                             data-live-search="true"
-                                            title="Selecciona una opción"
+                                            title="SELECCIONA UNA OPCIÓN"
                                             data-size="7"
                                             data-container="body"
                                             onchange="validateCivilStatus(2)">
@@ -323,7 +323,7 @@
                                             data-style="btn" 
                                             data-show-subtext="true"
                                             data-live-search="true"
-                                            title="Selecciona una opción"
+                                            title="SELECCIONA UNA OPCIÓN"
                                             data-size="7"
                                             data-container="body"
                                             onchange="validateMatrimonialRegime(2)">
@@ -417,7 +417,7 @@
                                             data-style="btn" 
                                             data-show-subtext="true"
                                             data-live-search="true"
-                                            title="Selecciona una opción"
+                                            title="SELECCIONA UNA OPCIÓN"
                                             data-size="7"
                                             data-container="body"
                                             disabled>
@@ -443,7 +443,7 @@
                                                 data-style="btn"
                                                 data-show-subtext="true"
                                                 data-live-search="true"
-                                                title="Selecciona una opción"
+                                                title="SELECCIONA UNA OPCIÓN"
                                                 data-size="7"
                                                 style="display: none;"
                                                 disabled>
@@ -465,7 +465,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-3">
-                                <div class="form-group label-floating select-is-empty ">
+                                <div class="form-group label-floating select-is-empty overflow-hidden">
                                     <label class="control-label">Plaza de venta<small> (requerido)</small></label>
                                     <select id="sales_plaza"
                                             name="sales_plaza"
@@ -473,7 +473,7 @@
                                             data-style="btn" 
                                             data-show-subtext="true"
                                             data-live-search="true"
-                                            title="Selecciona una opción"
+                                            title="SELECCIONA UNA OPCIÓN"
                                             data-size="7"
                                             data-container="body"
                                             required>
@@ -847,7 +847,7 @@
                     </div>
                     <div class="col-lg-12 form-group m-0" id="select">
                         <label class="label-gral">Tipo de cita</label>
-                        <select class="selectpicker select-gral m-0" name="estatus_recordatorio" id="estatus_recordatorio" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
+                        <select class="selectpicker select-gral m-0" name="estatus_recordatorio" id="estatus_recordatorio" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                     </div>
                     <div class="col-lg-12 form-group m-0 hide" id="comodinDIV"></div>
                     <div class="col-lg-12 form-group m-0">
