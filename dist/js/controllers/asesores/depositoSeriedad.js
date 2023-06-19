@@ -726,12 +726,12 @@ function fillDataTable(idCondominio) {
                     }
 
                     if (d.dsType == 1){
-                        buttons += '<a class="btn-data btn-blueMaderas btn_ds'+d.id_cliente+'" '+atributoButton+' id="btn_ds'+d.id_cliente+'" href="'+urlToGo+'" data-toggle="tooltip" data-placement="left" title="DEPÓSITO DE SERIEDAD" target=”_blank”><i class="fas fa-print"></i></a>';
+                        buttons += '<a class="btn-data btn-blueMaderas btn_ds'+d.id_cliente+'" '+atributoButton+' id="btn_ds'+d.id_cliente+'" href="'+urlToGo+'" data-toggle="tooltip" data-placement="top" title="DEPÓSITO DE SERIEDAD" target=”_blank”><i class="fas fa-print"></i></a>';
                     } else if(d.dsType == 2) { // DATA FROM DEPOSITO_SERIEDAD_CONSULTA OLD VERSION
                         buttons += '<a class="btn-data btn-blueMaderas" href="'+general_base_url+'Asesor/deposito_seriedad_ds/'+d.id_cliente+'/0" title= "DEPÓSITO DE SERIEDAD" target=”_blank”><i class="fas fa-print"></i></a>';
                     }
                     if(d.dsType == 2) { // DATA FROM DEPOSITO_SERIEDAD_CONSULTA OLD VERSION
-                        buttons += '<a class="btn-data btn-blueMaderas" href="'+general_base_url+'Asesor/deposito_seriedad_ds/'+d.id_cliente+'/0" title= "Depósito de seriedad" target=”_blank”><i class="fas fa-print"></i></a>';
+                        buttons += '<a class="btn-data btn-blueMaderas" href="'+general_base_url+'Asesor/deposito_seriedad_ds/'+d.id_cliente+'/0" title= "DEPÓSITO DE SERIEDAD" target=”_blank”><i class="fas fa-print"></i></a>';
                     }
 
                     return '<div class="d-flex justify-center">'+buttons+'</div>';
@@ -1782,22 +1782,22 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
 });
 
-function construirBotonEstatus(data, fechaVenc, classButton, atributoButton = '', titulo = 'Enviar Estatus') {
+function construirBotonEstatus(data, fechaVenc, classButton, atributoButton = '', titulo = 'ENVIAR ESTATUS') {
     return `<a href='#' 
-               ${atributoButton}
-               data-tiComp='${data.tipo_comprobanteD}'
-               data-nomLote='${data.nombreLote}'
-               data-idCliente='${data.id_cliente}'
-               data-nombreResidencial='${data.nombreResidencial}'
-               data-nombreCondominio='${data.nombreCondominio}'
-               data-nombreLote='${data.nombreLote}'
-               data-idCondominio='${data.idCondominio}'
-               data-idLote='${data.idLote}'
-               data-fechavenc='${fechaVenc}'
-               class="btn-data btn-green ${classButton}"
-               data-toggle="tooltip"
-               data-placement="left"
-               title="${titulo}">
+                ${atributoButton}
+                data-tiComp='${data.tipo_comprobanteD}'
+                data-nomLote='${data.nombreLote}'
+                data-idCliente='${data.id_cliente}'
+                data-nombreResidencial='${data.nombreResidencial}'
+                data-nombreCondominio='${data.nombreCondominio}'
+                data-nombreLote='${data.nombreLote}'
+                data-idCondominio='${data.idCondominio}'
+                data-idLote='${data.idLote}'
+                data-fechavenc='${fechaVenc}'
+                class="btn-data btn-green ${classButton}"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="${titulo}">
         <i class="fas fa-check"></i>
     </a>`;
 }
@@ -1808,6 +1808,8 @@ function generarBotonesAutorizacion(clienteData) {
     if (clienteData.autorizacion_correo === null || clienteData.autorizacion_sms === null) {
         botones += `
             <button class="btn-data btn-green btn-rounded btn-autorizacion" 
+                    data-toggle="tooltip"
+                    data-placement="top"
                     title="ENVIAR AUTORIZACIÓN"
                     data-idCliente='${clienteData.id_cliente}'>
                 <i class="fas fa-send"></i>
@@ -1818,6 +1820,8 @@ function generarBotonesAutorizacion(clienteData) {
     if (clienteData.autorizacion_correo !== null || clienteData.autorizacion_sms !== null) {
         botones += `
             <button class="btn-data btn-azure btn-rounded btn-reenvio" 
+                    data-toggle="tooltip"
+                    data-placement="top"
                     title="REENVÍO DE VERIFICACIÓN"
                     data-idCliente='${clienteData.id_cliente}'>
                 <i class="fas fa-rotate-right"></i>
@@ -1833,6 +1837,8 @@ function generarBotonesAutorizacion(clienteData) {
     ) {
         botones += `
             <button class="btn-data btn-violetDeep btn-rounded btn-solicitar"
+                    data-toggle="tooltip"
+                    data-placement="top"
                     title="SOLICITAR EDICIÓN DEL REGISTRO" 
                     data-idCliente='${clienteData.id_cliente}'>
                 <i class="fas fa-hand-paper-o"></i>
