@@ -601,7 +601,7 @@ function closeModalEng() {
     $("#tipo").selectpicker("refresh");
     $("#roles").selectpicker("refresh");
     document.getElementById("users").innerHTML = '';
-    $("#miModal").modal('toggle');
+    $("#modalPrestamosPenalizaciones").modal('toggle');
 }
 
 function replaceAll(text, busca, reemplaza) {
@@ -626,21 +626,21 @@ $("#form_prestamos").on('submit', function (e) {
             if (data == 1) {
                 $('#tabla_prestamos').DataTable().ajax.reload(null, false);
                 closeModalEng();
-                $('#miModal').modal('hide');
+                $('#modalPrestamosPenalizaciones').modal('hide');
                 alerts.showNotification("top", "right", "Préstamo registrado con éxito.", "success");
             } else if (data == 2) {
                 $('#tabla_prestamos').DataTable().ajax.reload(null, false);
                 closeModalEng();
-                $('#miModal').modal('hide');
+                $('#modalPrestamosPenalizaciones').modal('hide');
                 alerts.showNotification("top", "right", "Pago liquidado.", "warning");
             } else if (data == 3) {
                 closeModalEng();
-                $('#miModal').modal('hide');
+                $('#modalPrestamosPenalizaciones').modal('hide');
                 alerts.showNotification("top", "right", "El usuario seleccionado ya tiene un préstamo activo.", "warning");
             }
             else if (data == 4) {
                 closeModalEng();
-                $('#miModal').modal('hide');
+                $('#modalPrestamosPenalizaciones').modal('hide');
                 alerts.showNotification("top", "right", "Erro al subir el archivo activo.", "warning");
             }
         },

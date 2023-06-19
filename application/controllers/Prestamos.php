@@ -33,7 +33,7 @@ class Prestamos extends CI_Controller
   public function activos() {
     if ($this->session->userdata('id_rol') == FALSE)
         redirect(base_url());
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
         $this->load->view('template/header');
         $this->load->view("prestamos/activos-view", $datos);
   }
