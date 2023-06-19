@@ -2,7 +2,7 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
     <div class="wrapper ">
-        <?php $this->load->view('template/sidebar', $datos); ?>
+        <?php $this->load->view('template/sidebar'); ?>
         <!--MODALS-->
         <div class="modal fade modal-alertas" id="modal_NEODATA" role="dialog">
             <div class="modal-dialog modal-lg">
@@ -82,10 +82,8 @@
                                     <div class="row">
                                         <div class="col-12 col-sm-6 col-md-6 col-lg-6">
                                             <div class="form-group d-flex">
-                                                <input type="number" class="form-control idLote" id="idLote"
-                                                    placeholder="ID lote"/>
-                                                <button class="btn btn-success btn-round btn-fab btn-fab-mini"
-                                                        id="searchByLote">
+                                                <input type="number" class="form-control idLote" id="idLote" placeholder="ID lote"/>
+                                                <button class="btn btn-success btn-round btn-fab btn-fab-mini"id="searchByLote">
                                                     <span class="material-icons">search</span>
                                                 </button>
                                             </div>
@@ -95,10 +93,8 @@
                                                 <div class="row">
                                                     <div class="col-md-12 p-r">
                                                         <div class="form-group d-flex">
-                                                            <input type="text" class="form-control datepicker"
-                                                                id="beginDate" value="01/10/2022"/>
-                                                            <input type="text" class="form-control datepicker" id="endDate"
-                                                                value="31/10/2022"/>
+                                                            <input type="text" class="form-control datepicker" id="beginDate"/>
+                                                            <input type="text" class="form-control datepicker" id="endDate"/>
                                                             <button class="btn btn-success btn-round btn-fab btn-fab-mini"
                                                                     id="searchByDateRange">
                                                                 <span class="material-icons update-dataTable">search</span>
@@ -134,7 +130,7 @@
                                                     <th>USUARIO</th>
                                                     <th>PUESTO</th>
                                                     <th>PLAZA</th>
-                                                    <th>LUGAR DE PROSPECCION</th>
+                                                    <th>LUGAR DE PROSPECCIÓN</th>
                                                     <th>DETALLE</th>
                                                     <th>MÁS</th>
                                                 </tr>

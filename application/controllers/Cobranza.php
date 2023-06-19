@@ -6,7 +6,7 @@ class Cobranza extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(array('Cobranza_model'));
+        $this->load->model(array('Cobranza_model','Contraloria_model'));
         $this->load->library(array('session', 'form_validation', 'get_menu'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
@@ -41,8 +41,10 @@ class Cobranza extends CI_Controller
     {
         if (isset($_POST) && !empty($_POST)) {
             $typeTransaction = $this->input->post("typeTransaction");       
-            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+            $fechaInicio = explode('/', $this->input->post("beginDate"));
+            $fechaFin = explode('/', $this->input->post("endDate"));
+            $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+            $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
             $where = $this->input->post("where");
             $data['data'] = $this->Cobranza_model->getInformation($typeTransaction, $beginDate, $endDate, $where)->result_array();
             echo json_encode($data);
@@ -186,10 +188,13 @@ class Cobranza extends CI_Controller
     }
 
     public function informationMasterCobranzaHistorial() {
+        $fechaInicio = explode('/', $this->input->post("beginDate"));
+        $fechaFin = explode('/', $this->input->post("endDate"));
+        $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+        $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
+        $data['data'] = $this->Contraloria_model->getInformation($beginDate, $endDate)->result_array();
         $idLote = $this->input->post("idLote");
         $bandera = $this->input->post("bandera");
-        $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-        $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
         if($bandera == 1) {
             $endDate = '';
             $beginDate = '';

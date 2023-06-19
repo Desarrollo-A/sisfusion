@@ -160,34 +160,34 @@ table tfoot tr th {
                                 <h3 class="card-title center-align">Inventario Lotes</h3>
                                 <div class="toolbar">
                                     <div class="row">
-                                        <div class="col-md-4 form-group">
+                                        <div class="col-md-4 form-group overflow-hidden">
                                             <div class="form-group">
                                                 <label class="m-0" for="idResidencial">Proyecto</label>
                                                 <select id="idResidencial" name="idResidencial"
                                                     class="selectpicker select-gral" data-style="btn"
                                                     data-show-subtext="true" data-live-search="true"
-                                                    title="Selecciona una opción" data-size="7" size="5" required>
+                                                    title="Selecciona una opción" data-size="7" size="5" data-container="body" required>
                                                 </select>
                                             </div>
                                         </div>
 
-                                        <div class="col-md-4 form-group">
+                                        <div class="col-md-4 form-group overflow-hidden">
                                             <div class="form-group">
                                                 <label class="m-0" for="idCondominioInventario">Condominio</label>
                                                 <select name="idCondominioInventario" id="idCondominioInventario"
                                                     class="selectpicker select-gral" data-style="btn"
                                                     data-show-subtext="true" data-live-search="true"
-                                                    title="Selecciona una opción" data-size="7" required>
+                                                    title="Selecciona una opción" data-size="7" data-container="body" required>
                                                 </select>
                                             </div>
                                         </div>
 
-                                        <div class="col-md-4 form-group">
+                                        <div class="col-md-4 form-group overflow-hidden">
                                             <div class="form-group">
                                                 <label class="m-0" for="idEstatus">Estatus</label>
                                                 <select name="idEstatus" id="idEstatus" class="selectpicker select-gral"
                                                     data-style="btn" data-show-subtext="true" data-live-search="true"
-                                                    title="Selecciona una opción" data-size="7" required>
+                                                    title="Selecciona una opción" data-size="7" data-container="body" required>
                                                 </select>
                                             </div>
                                         </div>

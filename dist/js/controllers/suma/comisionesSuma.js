@@ -1,28 +1,57 @@
-var totaPen = 0;
 let noDia = moment().weekday();
 let hora = moment().hour();
 const excluir_column = ['MÁS', ''];
 let titulos_encabezado = [];
 let num_colum_encabezado = [];
+
+// Selección de CheckBox
+$(document).on("click", ".individualCheck", function() {
+    var totaPen = 0;
+    tabla_nuevas.$('input[type="checkbox"]').each(function () {
+        let totalChecados = tabla_nuevas.$('input[type="checkbox"]:checked') ;
+        let totalCheckbox = tabla_nuevas.$('input[type="checkbox"]');
+        if(this.checked){
+            tr = this.closest('tr');
+            row = tabla_nuevas.row(tr).data();
+            totaPen += row.impuesto; 
+        }
+        // Al marcar todos los CheckBox Marca CB total
+        if( totalChecados.length == totalCheckbox.length )
+            $("#all").prop("checked", true);
+        else 
+            $("#all").prop("checked", false); // si se desmarca un CB se desmarca CB total
+    });
+    $("#totpagarPen").html('$ ' + formatMoney(totaPen));
+});
+    // Función de selección total
 function selectAll(e) {
     tota2 = 0;
-    $(tabla_nuevas.$('input[type="checkbox"]')).each(function (i, v) {
-        if (!$(this).prop("checked")) {
-            $(this).prop("checked", true);
-            tota2 += parseFloat(tabla_nuevas.row($(this).closest('tr')).data().impuesto);
-        } else {
-            $(this).prop("checked", false);
-        }
-        $("#totpagarPen").html('$' + formatMoney(tota2));
-    });
+    if(e.checked == true){
+        $(tabla_nuevas.$('input[type="checkbox"]')).each(function (i, v) {
+            tr = this.closest('tr');
+            row = tabla_nuevas.row(tr).data();
+            tota2 += row.impuesto;
+            if(v.checked == false){
+                $(v).prop("checked", true);
+            }
+        }); 
+        $("#totpagarPen").html('$ ' + formatMoney(tota2));
+    }
+    if(e.checked == false){
+        $(tabla_nuevas.$('input[type="checkbox"]')).each(function (i, v) {
+            if(v.checked == true){
+                $(v).prop("checked", false);
+            }
+        }); 
+        $("#totpagarPen").html('$ ' + formatMoney(0));
+    }
 }
+
 
 $("#file-upload-extranjero").on('change', function () {
     $('#archivo-extranjero').val('');
-
     v2 = document.getElementById("file-upload-extranjero").files[0].name;
     document.getElementById("archivo-extranjero").innerHTML = v2;
-
     const src = URL.createObjectURL(document.getElementById("file-upload-extranjero").files[0]);
     $('#preview-div').html("");
     $('#preview-div').append(`<embed src="${src}" width="500" height="200">`);
@@ -31,7 +60,6 @@ $("#file-upload-extranjero").on('change', function () {
 $(document).on("click", ".subir-archivo", function (e) {
     e.preventDefault();
     $('#archivo-extranjero').val('');
-
     $.ajax({
         url: 'getTotalComisionAsesor',
         type: 'GET',
@@ -48,10 +76,8 @@ $("#EditarPerfilExtranjeroForm").one('submit', function (e) {
     document.getElementById('sendFileExtranjero').disabled = true;
     $("#sendFileExtranjero").prop("disabled", true);
     e.preventDefault();
-
     const formData = new FormData(document.getElementById("EditarPerfilExtranjeroForm"));
     formData.append("dato", "valor");
-
     $.ajax({
         type: 'POST',
         url: general_base_url + 'Suma/SubirPDFExtranjero',
@@ -127,24 +153,16 @@ $("#tabla_nuevas_comisiones").ready(function () {
         }
         let readOnly = excluir_column.includes(title) ? 'readOnly' : '';
         if (title !== '') {
-            $(this).html(`<input    type="text"
-                                    class="textoshead"
-                                    data-toggle="tooltip_nuevas" 
-                                    data-placement="top"
-                                    title="${title}"
-                                    placeholder="${title}"
-                                    ${readOnly}/>`);
+            $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip_nuevas" data-placement="top" title="${title}" placeholder="${title}"${readOnly}/>`);
             $('input', this).on('keyup change', function () {
                 if (tabla_nuevas.column(i).search() !== this.value) {
                     tabla_nuevas.column(i).search(this.value).draw();
-
                     var total = 0;
                     var index = tabla_nuevas.rows({
                         selected: true,
                         search: 'applied'
                     }).indexes();
                     var data = tabla_nuevas.rows(index).data();
-
                     $.each(data, function (i, v) {
                         total += parseFloat(v.total_comision);
                     });
@@ -154,12 +172,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
             });
         }
         else {
-            $(this).html(`<input id="all" 
-                                 type="checkbox" 
-                                 onchange="selectAll(this)"
-                                 data-toggle="tooltip_nuevas" 
-                                 data-placement="top"
-                                 title="SELECCIONAR"/>`);
+            $(this).html(`<input id="all" type="checkbox" onchange="selectAll(this)"data-toggle="tooltip_nuevas" data-placement="top" title="SELECCIONAR"/>`);
         }
     });
 
@@ -173,7 +186,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
     });
 
     tabla_nuevas = $("#tabla_nuevas_comisiones").DataTable({
-        dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
         buttons: [
@@ -183,14 +196,11 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     if (noDia == 1 || (noDia == 2 && hora <= 14)) {
                         if ($('input[name="idT[]"]:checked').length > 0) {
                             $('#spiner-loader').removeClass('hide');
-
                             var idcomision = $('#tabla_nuevas_comisiones input[name="idT[]"]:checked').map(function () {
                                 return this.value;
                             }).get();
-
                             var com2 = new FormData();
                             com2.append("idcomision", idcomision);
-
                             $.ajax({
                                 url: general_base_url + 'Suma/acepto_comisiones_user/',
                                 data: com2,
@@ -205,9 +215,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                                         $("#totpagarPen").html(formatMoney(0));
                                         $("#all").prop('checked', false);
                                         var fecha = new Date();
-
                                         alerts.showNotification("top", "right", "Las comisiones se han enviado exitosamente a revisión.", "success");
-
                                         tabla_nuevas.ajax.reload();
                                         tabla_revision.ajax.reload();
                                     } else {
@@ -239,10 +247,10 @@ $("#tabla_nuevas_comisiones").ready(function () {
                 titleAttr: 'Descargar archivo de Excel',
                 title: 'REPORTE COMISIONES SUMA NUEVAS',
                 exportOptions: {
-                    columns: num_colum_encabezado,
+                    columns: [1,2,3,4,5,6,7,8,9],
                     format: {
                         header: function (d, columnIdx) {
-                            return ' ' + titulos_encabezado[columnIdx - 1] + ' ';
+                            return ' ' + titulos_encabezado[columnIdx  -1] + ' ';
                         }
                     }
                 },
@@ -260,58 +268,48 @@ $("#tabla_nuevas_comisiones").ready(function () {
         ordering: false,
         columns: [
             {
-                "width": "5%"
             },
             {
-                "width": "5%",
                 "data": function (d) {
                     return '<p class="m-0">' + d.id_pago_suma + '</p>';
                 }
             },
             {
-                "width": "5%",
                 "data": function (d) {
                     return '<p class="m-0">' + d.referencia + '</p>';
                 }
             },
             {
-                "width": "9%",
                 "data": function (d) {
                     return '<p class="m-0"><b>' + d.nombre_comisionista + '</b></p>';
                 }
             },
             {
-                "width": "5%",
                 "data": function (d) {
                     return '<p class="m-0"><b>' + d.sede + '</b></p>';
                 }
             },
             {
-                "width": "5%",
                 "data": function (d) {
                     return '<p class="m-0"><b>' + d.forma_pago + '</b></p>';
                 }
             },
             {
-                "width": "9%",
                 "data": function (d) {
                     return '<p class="m-0">$ ' + formatMoney(d.total_comision) + '</p>';
                 }
             },
             {
-                "width": "9%",
                 "data": function (d) {
                     return '<p class="m-0">$ ' + formatMoney(d.impuesto) + '</p>';
                 }
             },
             {
-                "width": "5%",
                 "data": function (d) {
                     return '<p class="m-0"><b>' + d.porcentaje_comision + '%</b></p>';
                 }
             },
             {
-                "width": "9%",
                 "data": function (d) {
                     switch (d.id_forma_pago) {
                         case '1': //SIN DEFINIR
@@ -343,19 +341,17 @@ $("#tabla_nuevas_comisiones").ready(function () {
                 }
             },
             {
-                "width": "5%",
                 "orderable": false,
                 "data": function (data) {
                     return `<button href="#"
                                     value="${data.id_pago_suma}"
                                     data-referencia="${data.referencia}"
                                     class="btn-data btn-blueMaderas consultar_history m-auto"
-                                    title="Detalles"
+                                    title="DETALLES"
                                     data-toggle="tooltip_nuevas" 
                                     data-placement="top">
                                 <i class="fas fa-info"></i>
                             </button>`;
-
                 }
             }
         ],
@@ -497,7 +493,7 @@ $("#tabla_revision_comisiones").ready(function () {
     });
 
     tabla_revision = $("#tabla_revision_comisiones").DataTable({
-        dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
         buttons: [{
@@ -507,10 +503,10 @@ $("#tabla_revision_comisiones").ready(function () {
             titleAttr: 'Descargar archivo de Excel',
             title: 'REPORTE COMISIONES SUMA EN REVISIÓN',
             exportOptions: {
-                columns: num_colum_encabezado,
+                columns: [0,1,2,3,4,5,6,7,8],
                 format: {
                     header: function (d, columnIdx) {
-                        return ' ' + titulos_encabezado[columnIdx] + ' ';
+                        return ' ' + titulos_encabezado[columnIdx ] + ' ';
                     }
                 }
             },
@@ -527,55 +523,46 @@ $("#tabla_revision_comisiones").ready(function () {
         destroy: true,
         ordering: false,
         columns: [{
-            "width": "5%",
             "data": function (d) {
                 return '<p class="m-0">' + d.id_pago_suma + '</p>';
             }
         },
         {
-            "width": "5%",
             "data": function (d) {
                 return '<p class="m-0">' + d.referencia + '</p>';
             }
         },
         {
-            "width": "9%",
             "data": function (d) {
                 return '<p class="m-0"><b>' + d.nombre_comisionista + '</b></p>';
             }
         },
         {
-            "width": "5%",
             "data": function (d) {
                 return '<p class="m-0"><b>' + d.sede + '</b></p>';
             }
         },
         {
-            "width": "5%",
             "data": function (d) {
                 return '<p class="m-0"><b>' + d.forma_pago + '</b></p>';
             }
         },
         {
-            "width": "9%",
             "data": function (d) {
                 return '<p class="m-0">$ ' + formatMoney(d.total_comision) + '</p>';
             }
         },
         {
-            "width": "9%",
             "data": function (d) {
                 return '<p class="m-0">$ ' + formatMoney(d.impuesto) + '</p>';
             }
         },
         {
-            "width": "5%",
             "data": function (d) {
                 return '<p class="m-0"><b>' + d.porcentaje_comision + '%</b></p>';
             }
         },
         {
-            "width": "9%",
             "data": function (d) {
                 switch (d.id_forma_pago) {
                     case '1': //SIN DEFINIR
@@ -607,14 +594,13 @@ $("#tabla_revision_comisiones").ready(function () {
             }
         },
         {
-            "width": "5%",
             "orderable": false,
             "data": function (data) {
                 return `<button href="#"
                                 value="${data.id_pago_suma}"
                                 data-referencia="${data.referencia}"
                                 class="btn-data btn-blueMaderas consultar_history m-auto"
-                                title="Detalles"
+                                title="DETALLES"
                                 data-toggle="tooltip_revision" 
                                 data-placement="top">
                             <i class="fas fa-info"></i>
@@ -702,7 +688,7 @@ $("#tabla_pagadas_comisiones").ready(function () {
     });
 
     tabla_pagadas = $("#tabla_pagadas_comisiones").DataTable({
-        dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
         buttons: [{
@@ -712,10 +698,10 @@ $("#tabla_pagadas_comisiones").ready(function () {
             titleAttr: 'Descargar archivo de Excel',
             title: 'REPORTE COMISIONES SUMA PAGADAS',
             exportOptions: {
-                columns: num_colum_encabezado,
+                columns: [0,1,2,3,4,5,6,7,8],
                 format: {
                     header: function (d, columnIdx) {
-                        return ' ' + titulos_encabezado[columnIdx] + ' ';
+                        return ' ' + titulos_encabezado[columnIdx ] + ' ';
                     }
                 }
             },
@@ -732,55 +718,46 @@ $("#tabla_pagadas_comisiones").ready(function () {
         destroy: true,
         ordering: false,
         columns: [{
-            "width": "5%",
             "data": function (d) {
                 return '<p class="m-0">' + d.id_pago_suma + '</p>';
             }
         },
         {
-            "width": "5%",
             "data": function (d) {
                 return '<p class="m-0">' + d.referencia + '</p>';
             }
         },
         {
-            "width": "9%",
             "data": function (d) {
                 return '<p class="m-0"><b>' + d.nombre_comisionista + '</b></p>';
             }
         },
         {
-            "width": "5%",
             "data": function (d) {
                 return '<p class="m-0"><b>' + d.sede + '</b></p>';
             }
         },
         {
-            "width": "5%",
             "data": function (d) {
                 return '<p class="m-0"><b>' + d.forma_pago + '</b></p>';
             }
         },
         {
-            "width": "9%",
             "data": function (d) {
                 return '<p class="m-0">$' + formatMoney(d.total_comision) + '</p>';
             }
         },
         {
-            "width": "9%",
             "data": function (d) {
                 return '<p class="m-0">$' + formatMoney(d.impuesto) + '</p>';
             }
         },
         {
-            "width": "5%",
             "data": function (d) {
                 return '<p class="m-0"><b>' + d.porcentaje_comision + '%</b></p>';
             }
         },
         {
-            "width": "9%",
             "data": function (d) {
                 switch (d.id_forma_pago) {
                     case '1': //SIN DEFINIR
@@ -812,14 +789,13 @@ $("#tabla_pagadas_comisiones").ready(function () {
             }
         },
         {
-            "width": "5%",
             "orderable": false,
             "data": function (data) {
                 return `<button href="#"
                                 value="${data.id_pago_suma}"
                                 data-referencia="${data.referencia}"
                                 class="btn-data btn-blueMaderas consultar_history m-auto"
-                                title="Detalles"
+                                title="DETALLES"
                                 data-toggle="tooltip_pagadas" 
                                 data-placement="top">
                             <i class="fas fa-info"></i>
@@ -907,7 +883,7 @@ $("#tabla_pausadas_comisiones").ready(function () {
     });
 
     tabla_pausadas = $("#tabla_pausadas_comisiones").DataTable({
-        dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
         buttons: [{
@@ -917,7 +893,7 @@ $("#tabla_pausadas_comisiones").ready(function () {
             titleAttr: 'Descargar archivo de Excel',
             title: 'REPORTE COMISIONES SUMA EN PAUSA',
             exportOptions: {
-                columns: num_colum_encabezado,
+                columns: [0,1,2,3,4,5,6,7,8],
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulos_encabezado[columnIdx] + ' ';
@@ -937,55 +913,46 @@ $("#tabla_pausadas_comisiones").ready(function () {
         destroy: true,
         ordering: false,
         columns: [{
-            "width": "5%",
             "data": function (d) {
                 return '<p class="m-0">' + d.id_pago_suma + '</p>';
             }
         },
         {
-            "width": "5%",
             "data": function (d) {
                 return '<p class="m-0">' + d.referencia + '</p>';
             }
         },
         {
-            "width": "9%",
             "data": function (d) {
                 return '<p class="m-0"><b>' + d.nombre_comisionista + '</b></p>';
             }
         },
         {
-            "width": "5%",
             "data": function (d) {
                 return '<p class="m-0"><b>' + d.sede + '</b></p>';
             }
         },
         {
-            "width": "5%",
             "data": function (d) {
                 return '<p class="m-0"><b>' + d.forma_pago + '</b></p>';
             }
         },
         {
-            "width": "9%",
             "data": function (d) {
                 return '<p class="m-0">$' + formatMoney(d.total_comision) + '</p>';
             }
         },
         {
-            "width": "9%",
             "data": function (d) {
                 return '<p class="m-0">$' + formatMoney(d.impuesto) + '</p>';
             }
         },
         {
-            "width": "5%",
             "data": function (d) {
                 return '<p class="m-0"><b>' + d.porcentaje_comision + '%</b></p>';
             }
         },
         {
-            "width": "9%",
             "data": function (d) {
                 switch (d.id_forma_pago) {
                     case '1': //SIN DEFINIR
@@ -1017,14 +984,13 @@ $("#tabla_pausadas_comisiones").ready(function () {
             }
         },
         {
-            "width": "5%",
             "orderable": false,
             "data": function (data) {
                 return `<button href="#"
                                 value="${data.id_pago_suma}"
                                 data-referencia="${data.referencia}"
                                 class="btn-data btn-blueMaderas consultar_history m-auto"
-                                title="Detalles"
+                                title="DETALLES"
                                 data-toggle="tooltip_pausadas" 
                                 data-placement="top">
                             <i class="fas fa-info"></i>

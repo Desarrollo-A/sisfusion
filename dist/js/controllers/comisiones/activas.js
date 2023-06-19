@@ -2,25 +2,25 @@ $(document).ready(function () {
     
     let titulos_intxt = [];
 
-    $('#tabla_ingresar_9 thead tr:eq(0) th').each( function (i) {
+    $('#tabla_comisiones_activas thead tr:eq(0) th').each( function (i) {
         $(this).css('text-align', 'center');
         var title = $(this).text();
         titulos_intxt.push(title);
         if (i != 0 ) {
-            $(this).html('<input type="text" class="textoshead"  placeholder="'+title+'"/>' );
+            $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="'+title+'"/>' );
             $( 'input', this ).on('keyup change', function () {
-                if ($('#tabla_ingresar_9').DataTable().column(i).search() !== this.value ) {
-                    $('#tabla_ingresar_9').DataTable().column(i).search(this.value).draw();
+                if ($('#tabla_comisiones_activas').DataTable().column(i).search() !== this.value ) {
+                    $('#tabla_comisiones_activas').DataTable().column(i).search(this.value).draw();
                 }
-                var index = $('#tabla_ingresar_9').DataTable().rows({
+                var index = $('#tabla_comisiones_activas').DataTable().rows({
                 selected: true,
                 search: 'applied'
             }).indexes();
-            var data = $('#tabla_ingresar_9').DataTable().rows(index).data();
+            var data = $('#tabla_comisiones_activas').DataTable().rows(index).data();
         });
     }});
     
-    activasDataTable = $('#tabla_ingresar_9').dataTable({
+    activasDataTable = $('#tabla_comisiones_activas').dataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
@@ -32,10 +32,10 @@ $(document).ready(function () {
                 titleAttr: 'Descargar archivo de Excel',
                 title: 'Reporte Comisiones Activas',
                 exportOptions: {
-                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                     format: {
                         header:  function (d, columnIdx) {
-                            return ' ' + titulos_intxt[columnIdx] + ' ';
+                            return ' ' + titulos_intxt[columnIdx]  + ' ';
                             }
                         }
                 }
@@ -105,7 +105,7 @@ $(document).ready(function () {
                 if(d.totalNeto2 == null) {
                     labelEstatus ='<p class="m-0"><b>Sin Precio Lote</b></p>';
                 }else if(d.registro_comision == 2){
-                    labelEstatus ='<span class="label" style="background:#11DFC6;">SOLICITADO MKT</span>'+' '+d.plan_descripcion;
+                    labelEstatus ='<span class="label lbl-sky">SOLICITADO MKT</span>'+' '+d.plan_descripcion;
                 }else {
                     labelEstatus =`<span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span>`;
                 }
@@ -114,22 +114,22 @@ $(document).ready(function () {
             { data: function (d) {
                 var fechaSistema;
                 if(d.fecha_sistema <= '01 OCT 20' || d.fecha_sistema == null ) {
-                    fechaSistema ='<span class="label" style="color:#626567;background:#E5E7E9;">Sin Definir</span>';
+                    fechaSistema ='<span class="label lbl-deepGray">Sin Definir</span>';
                 }else {
-                    fechaSistema = '<br><span class="label" style="color:#1B4F72;background:#AED6F1;">'+d.fecha_sistema+'</span>';
+                    fechaSistema = '<br><span class="label lbl-lightBlue">'+d.fecha_sistema+'</span>';
                 }
                 return fechaSistema;
             }},
             { data: function (d) {
                 var fechaNeodata;
                 var rescisionLote;
-                fechaNeodata = '<br><span class="label" style="color:#1B4F72;background:#AED6F1;">'+d.fecha_neodata+'</span>';
+                fechaNeodata = '<br><span class="label lbl-lightBlue">'+d.fecha_neodata+'</span>';
                 rescisionLote = '';
                 if(d.fecha_neodata <= '01 OCT 20' || d.fecha_neodata == null ) {
-                    fechaNeodata = '<span class="label" style="color:#626567;background:#E5E7E9;">Sin Definir</span>';
+                    fechaNeodata = '<span class="label lbl-deepGray">Sin Definir</span>';
                 } 
                 if (d.registro_comision == 8){
-                    rescisionLote = '<br><span class="label" style="color:#78281F;background:#F5B7B1;">Recisión Nueva Venta</span>';
+                    rescisionLote = '<br><span class="label lbl-peach">Recisión Nueva Venta</span>';
                 }
                 return fechaNeodata+rescisionLote;
             }},
@@ -158,13 +158,7 @@ $(document).ready(function () {
                             }
             
                             BtnStats += `
-                                    <button href="#"
-                                        value="${d.idLote}"
-                                        data-value="${d.nombreLote}"
-                                        class="btn-data btn-blueMaderas btn-detener btn-warning"
-                                        title="Detener">
-                                        <i class="material-icons">block</i>
-                                    </button>
+                                    <button href="#" value="${d.idLote}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas btn-detener btn-warning" title="Detener"><i class="material-icons">block</i></button>
                                 `;
                             BtnStats += '<button href="#" value="'+d.idLote+'" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata" title="Verificar en NEODATA">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
                         }
@@ -184,10 +178,16 @@ $(document).ready(function () {
             data: function( d ){}
         }
     }) 
+
+    $('#tabla_ingresar_9').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
+    });
  
-    $('#tabla_ingresar_9 tbody').on('click', 'td.details-control', function () {
+    $('#tabla_comisiones_activas tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
-        var row = $('#tabla_ingresar_9').DataTable().row(tr);
+        var row = $('#tabla_comisiones_activas').DataTable().row(tr);
 
         if (row.child.isShown()) {
             row.child.hide();
@@ -195,10 +195,10 @@ $(document).ready(function () {
             $(this).parent().find('.animacion').removeClass("fas fa-chevron-up").addClass("fas fa-chevron-down");
         } else {
             var informacion_adicional = `<div class="container subBoxDetail"><div class="row"><div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>Información colaboradores</b></label></div>
-            <div class="col-2 col-sm-2 col-md-2 col-lg-2"><label><b>Director: </b>` + row.data().director + `</label></div>
-            <div class="col-2 col-sm-2 col-md-2 col-lg-2"><label><b>Regional: </b>` + row.data().regional + `</label></div>
-            <div class="col-2 col-sm-2 col-md-2 col-lg-2"><label><b>Subdirector: </b>` + row.data().subdirector + `</label></div><div class="col-2 col-sm-2 col-md-2 col-lg-2"><label><b>Gerente: </b>` + row.data().gerente + `</label></div>
-            <div class="col-2 col-sm-2 col-md-2 col-lg-2"><label><b>Coordinador: </b>` + row.data().coordinador + `</label></div><div class="col-2 col-sm-2 col-md-2 col-lg-2"><label><b>Asesor: </b>` + row.data().asesor + `</label></div>
+            <div class="text-center"><label><b>Director: </b>` + row.data().director + `</label></div>
+            <div class="text-center"><label><b>Regional: </b>` + row.data().regional + `</label></div>
+            <div class="text-center"><label><b>Subdirector: </b>` + row.data().subdirector + `</label></div><div class="text-center"><label><b>Gerente: </b>` + row.data().gerente + `</label></div>
+            <div class="text-center"><label><b>Coordinador: </b>` + row.data().coordinador + `</label></div><div class="text-center"><label><b>Asesor: </b>` + row.data().asesor + `</label></div>
             </div></div>`;
 
             row.child(informacion_adicional).show();
@@ -207,7 +207,7 @@ $(document).ready(function () {
         }
     });
 
-    $("#tabla_ingresar_9 tbody").on('click', '.btn-detener', function () {
+    $("#tabla_comisiones_activas tbody").on('click', '.btn-detener', function () {
             $("#motivo").val("");
             $("#descripcion").val("");
             const idLote = $(this).val();
@@ -220,12 +220,12 @@ $(document).ready(function () {
             $("#detenciones-modal").modal();
         });
 
-    $("#tabla_ingresar_9 tbody").on("click", ".verify_neodata", async function(){ 
+    $("#tabla_comisiones_activas tbody").on("click", ".verify_neodata", async function(){ 
         $("#modal_NEODATA .modal-header").html("");
         $("#modal_NEODATA .modal-body").html("");
         $("#modal_NEODATA .modal-footer").html("");
         var tr = $(this).closest('tr');
-        var row = $('#tabla_ingresar_9').DataTable().row(tr);
+        var row = $('#tabla_comisiones_activas').DataTable().row(tr);
         let cadena = '';
         idLote = $(this).val();
         registro_comision = $(this).attr("data-value");
@@ -531,7 +531,7 @@ $('#detenidos-form').on('submit', function (e) {
                 $('#detenciones-modal').modal("hide");
                 $("#id-lote-detenido").val("");
                 alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
-                $('#tabla_ingresar_9').DataTable().ajax.reload();
+                $('#tabla_comisiones_activas').DataTable().ajax.reload();
             } else {
                 alerts.showNotification("top", "right", "Ocurrió un problema, vuelva a intentarlo más tarde.", "warning");
             }
@@ -561,7 +561,7 @@ $("#form_NEODATA").submit( function(e) {
                 if( data == 1 ){
                     $('#spiner-loader').addClass('hidden');
                     alerts.showNotification("top", "right", "Dispersión guardada con éxito", "success");
-                    $('#tabla_ingresar_9').DataTable().ajax.reload();
+                    $('#tabla_comisiones_activas').DataTable().ajax.reload();
                     $("#modal_NEODATA").modal( 'hide' );
                     function_totales();
                     $('#dispersar').prop('disabled', false);
@@ -569,7 +569,7 @@ $("#form_NEODATA").submit( function(e) {
                 }else if (data == 2) {
                     $('#spiner-loader').addClass('hidden');
                     alerts.showNotification("top", "right", "Ya se dispersó por otra persona o es una recisión", "warning");
-                    $('#tabla_ingresar_9').DataTable().ajax.reload();
+                    $('#tabla_comisiones_activas').DataTable().ajax.reload();
                     $("#modal_NEODATA").modal( 'hide' );
                     $('#dispersar').prop('disabled', false);
                     document.getElementById('dispersar').disabled = false;
@@ -664,7 +664,7 @@ $("#my_updatebandera_form").on('submit', function(e){
                 $('#myUpdateBanderaModal').modal("hide");
                 $("#id_pagoc").val("");
                 alerts.showNotification("top", "right", "Lote actualizado exitosamente", "success");
-                $('#tabla_ingresar_9').DataTable().ajax.reload();
+                $('#tabla_comisiones_activas').DataTable().ajax.reload();
             } else {
                 alerts.showNotification("top", "right", "Oops, algo salió mal. Error al intentar actualizar.", "warning");
             }
@@ -755,7 +755,7 @@ $(document).on('click', '.update_bandera', function(e){
 });
 
 
-$("#tabla_ingresar_9 tbody").on('click', '.btn-detener', function () {
+$("#tabla_comisiones_activas tbody").on('click', '.btn-detener', function () {
     $("#motivo").val("");
     $("#descripcion").val("");
     const idLote = $(this).val();

@@ -1,7 +1,7 @@
 $(document).ready(function () {
     $.post(`${general_base_url}Contratacion/lista_proyecto`, function (data) {
         for (var i = 0; i < data.length; i++) {
-            $("#idResidencial").append($('<option>').val(data[i]['idResidencial']).text(data[i]['nombreResidencial'] + ' - ' + data[i]['descripcion']));
+            $("#idResidencial").append($('<option>').val(data[i]['idResidencial']).text(data[i]['descripcion']));
         }
         $("#idResidencial").selectpicker('refresh');
     }, 'json');
@@ -32,11 +32,11 @@ $('#tablaInventario thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
     titulosInventario.push(title);
     $(this).html(`<input type="text"
-                         class="textoshead"
-                         data-toggle="tooltip" 
-                         data-placement="top"
-                         title="${title}"
-                         placeholder="${title}"/>`);                       
+                        class="textoshead"
+                        data-toggle="tooltip" 
+                        data-placement="top"
+                        title="${title}"
+                        placeholder="${title}"/>`);                       
     $('input', this).on('keyup change', function () {
         if ($('#tablaInventario').DataTable().column(i).search() !== this.value) {
             $('#tablaInventario').DataTable().column(i).search(this.value).draw();

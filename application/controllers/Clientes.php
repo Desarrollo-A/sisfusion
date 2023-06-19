@@ -684,20 +684,6 @@ public function getStatusMktdPreventa(){
         echo json_encode($this->Clientes_model->getState()->result_array());
     }
 
-    // public function getProspectsList($typeTransaction){
-	//     /*
-	//      *  0  MKTD
-	//      *  1   VETNAS
-	//      */
-	//     if ($typeTransaction == 1) {
-    //         $data['data'] = $this->Clientes_model->getProspectsList()->result_array();
-    //     } elseif ($typeTransaction == 0) {
-    //         $data['data'] = $this->Clientes_model->getProspectsListMktd()->result_array();
-
-    //     }
-    //     echo json_encode($data);
-    // }
-
     public function getProspectsList($typeTransaction){
 	    /*
 	     *  0  MKTD
@@ -723,8 +709,10 @@ public function getStatusMktdPreventa(){
     public function getProspectsReport() {
         if (isset($_POST) && !empty($_POST)) {
             $typeTransaction = $this->input->post("typeTransaction");
-            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+            $fechaInicio = explode('/', $this->input->post("beginDate"));
+            $fechaFin = explode('/', $this->input->post("endDate"));
+            $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+            $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
             $where = $this->input->post("where");
             $data['data'] = $this->Clientes_model->getProspectsReport($typeTransaction, $beginDate, $endDate, $where)->result_array();
             echo json_encode($data);
@@ -2900,7 +2888,7 @@ public function getStatusMktdPreventa(){
         }
 
         $idRol = $this->session->userdata('id_rol');
-        $idUsuario = $this->session->userdata('id_usuario');
+        $idUsuario = $this->session->userdata('id_lider');
         $fechaInicio = date("Y-m-d", strtotime($this->input->post("beginDate")));
         $fechaFin = date("Y-m-d", strtotime($this->input->post("endDate")));
 
@@ -2920,6 +2908,21 @@ public function getStatusMktdPreventa(){
         $result = $this->General_model->updateRecord('clientes', ['cancelacion_proceso' => 1], 'id_cliente', $idCliente);
         $code = ($result) ? 200 : 500;
         echo json_encode(['code' => $code]);
+    }
+
+    public function lotesApartReubicacion()
+    {
+        $this->load->view('template/header');
+        $this->load->view('clientes/lotes_apart_reubicacion');
+    }
+
+    public function getLotesApartadosReubicacion()
+    {
+        $fechaInicio = date("Y-m-d", strtotime($this->input->post("beginDate")));
+        $fechaFin = date("Y-m-d", strtotime($this->input->post("endDate")));
+
+        $data = $this->Clientes_model->getLotesApartadosReubicacion($fechaInicio, $fechaFin);
+        echo json_encode($data);
     }
 }
 

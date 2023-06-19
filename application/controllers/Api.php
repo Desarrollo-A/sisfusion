@@ -509,13 +509,14 @@ class Api extends CI_Controller
         ]);
     }
 
-    public function validarAutorizacionSms(int $idCliente)
+    public function autorizacionSms(int $idCliente)
     {
         $codigo = $this->input->get('codigo');
 
         if (!isset($codigo)) {
             $this->load->view('template/header');
-            $this->load->view('clientes/autorizacion-cliente', [
+            $this->load->view('clientes/autorizacion-cliente-sms', [
+                'code' => 400,
                 'titulo' => 'ERROR',
                 'mensaje' => 'No hay un código de verificación.'
             ]);
@@ -526,7 +527,8 @@ class Api extends CI_Controller
 
         if (!isset($cliente)) {
             $this->load->view('template/header');
-            $this->load->view('clientes/autorizacion-cliente', [
+            $this->load->view('clientes/autorizacion-cliente-sms', [
+                'code' => 400,
                 'titulo' => 'ERROR',
                 'mensaje' => 'No existe el cliente.'
             ]);
@@ -535,7 +537,8 @@ class Api extends CI_Controller
 
         if (is_null($cliente->autorizacion_sms) && is_null($cliente->codigo_sms)) {
             $this->load->view('template/header');
-            $this->load->view('clientes/autorizacion-cliente', [
+            $this->load->view('clientes/autorizacion-cliente-sms', [
+                'code' => 400,
                 'titulo' => 'INFORMACIÓN',
                 'mensaje' => 'El link ya no está activo.'
             ]);
@@ -544,7 +547,8 @@ class Api extends CI_Controller
 
         if ($cliente->autorizacion_sms == AutorizacionClienteOpcs::VALIDADO) {
             $this->load->view('template/header');
-            $this->load->view('clientes/autorizacion-cliente', [
+            $this->load->view('clientes/autorizacion-cliente-sms', [
+                'code' => 400,
                 'titulo' => 'INFORMACIÓN',
                 'mensaje' => 'El registro ya fue anteriormente validado.'
             ]);
@@ -553,10 +557,47 @@ class Api extends CI_Controller
 
         if ($cliente->codigo_sms !== $codigo) {
             $this->load->view('template/header');
-            $this->load->view('clientes/autorizacion-cliente', [
+            $this->load->view('clientes/autorizacion-cliente-sms', [
+                'code' => 400,
                 'titulo' => 'ERROR',
                 'mensaje' => 'El código no coincide con el registro.'
             ]);
+            return;
+        }
+
+        $this->load->view('template/header');
+        $this->load->view('clientes/autorizacion-cliente-sms', ['code' => 200, 'idCliente' => $idCliente]);
+    }
+
+    public function validarAutorizacionSms()
+    {
+        $codigo = $this->input->post('codigo');
+        $idCliente = $this->input->post('idCliente');
+
+        if (!isset($codigo)) {
+            echo json_encode(['code' => 400, 'mensaje' => 'No hay un código de verificación.']);
+            return;
+        }
+
+        $cliente = $this->Clientes_model->clienteAutorizacion($idCliente);
+
+        if (!isset($cliente)) {
+            echo json_encode(['code' => 400, 'mensaje' => 'No existe el cliente.']);
+            return;
+        }
+
+        if (is_null($cliente->autorizacion_sms) && is_null($cliente->codigo_sms)) {
+            echo json_encode(['code' => 400, 'mensaje' => 'El link ya no está activo.']);
+            return;
+        }
+
+        if ($cliente->autorizacion_sms == AutorizacionClienteOpcs::VALIDADO) {
+            echo json_encode(['code' => 400, 'mensaje' => 'El registro ya fue anteriormente validado.']);
+            return;
+        }
+
+        if ($cliente->codigo_sms !== $codigo) {
+            echo json_encode(['code' => 400, 'mensaje' => 'El código no coincide con el registro.']);
             return;
         }
 
@@ -566,10 +607,6 @@ class Api extends CI_Controller
             'id_cliente', $idCliente
         );
 
-        $this->load->view('template/header');
-        $this->load->view('clientes/autorizacion-cliente', [
-            'titulo' => 'PROCESO EXITOSO',
-            'mensaje' => 'Gracias por autorizar y verificar la información.'
-        ]);
+        echo json_encode(['code' => 200, 'mensaje' => 'Gracias por autorizar y verificar la información.']);
     }
 }

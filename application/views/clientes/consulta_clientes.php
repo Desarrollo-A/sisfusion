@@ -163,18 +163,17 @@
                                                     <th>CLIENTE</th>
                                                     <th>CORREO</th>
                                                     <th>TELÉFONO</th>
-                                                    <th>LUGAR PROSPECCIÓN</th>
+                                                    <th>LUGAR DE PROSPECCIÓN</th>
                                                     <th>ASESOR</th>
                                                     <th>COORDINADOR</th>
                                                     <th>GERENTE</th>
                                                     <th>SUBDIRECTOR</th>
                                                     <th>DIRECTOR REGIONAL</th>
-                                                    <th>CREACIÓN</th>
+                                                    <th>FECHA DE CREACIÓN</th>
                                                     <th>FECHA CLIENTE</th>
                                                     <th>ACCIONES</th>
                                                 </tr>
                                             </thead>
-                                            <tbody></tbody>
                                         </table>
                                     </div>
                                 </div>

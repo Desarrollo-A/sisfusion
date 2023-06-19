@@ -293,8 +293,8 @@ $(document).on("click", "#detailComisionistaBtn", function () {
                             datos: [{
                                 rol: data[i].columna,
                                 total: data[i].datos[j].total,
-                                activos: data[i].datos[j].activos,
-                                cancelados: data[i].datos[j].cancelados
+                                activas: data[i].datos[j].activas,
+                                canceladas: data[i].datos[j].canceladas
                             }]
                         });
                     }
@@ -302,8 +302,8 @@ $(document).on("click", "#detailComisionistaBtn", function () {
                         found.datos.push({
                             rol: data[i].columna,
                             total: data[i].datos[j].total,
-                            activos: data[i].datos[j].activos,
-                            cancelados: data[i].datos[j].cancelados
+                            activas: data[i].datos[j].activas,
+                            canceladas: data[i].datos[j].canceladas
                         })
                     }
                 }
@@ -313,7 +313,7 @@ $(document).on("click", "#detailComisionistaBtn", function () {
         for (let i = 0; i < orderedArray.length; i++) {
             let htmlRol = '';
             for (let j = 0; j < orderedArray[i].datos.length; j++) {
-                htmlRol += `<div class="tl-date mt-1"><b>${orderedArray[i].datos[j].total}</b> comisiones como ${(orderedArray[i].datos[j].rol).replace('id_', '')}<ul class="m-0" style="list-style:none"><li><b>${orderedArray[i].datos[j].activos}</b> activos</li><li><b>${orderedArray[i].datos[j].cancelados}</b> cancelados</li></ul></div>`;
+                htmlRol += `<div class="tl-date mt-1"><b>${orderedArray[i].datos[j].total}</b> comisiones como ${(orderedArray[i].datos[j].rol).replace('id_', '')}<ul class="m-0" style="list-style:none"><li><b>${orderedArray[i].datos[j].activas}</b> Activos</li><li><b>${orderedArray[i].datos[j].canceladas}</b>  Cancelados</li></ul></div>`;
             }
             html += `<div class="tl-item">
                         <div class="tl-dot b-warning"></div>

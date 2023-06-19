@@ -134,7 +134,6 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-						<button type="button" class="btn btn-primary finishS" data-dismiss="modal">Aceptar</button>
 					</div>
 				</div>
 			</div>

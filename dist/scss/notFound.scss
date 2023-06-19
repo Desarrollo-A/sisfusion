@@ -148,3 +148,20 @@ $montserratThinItalic      : 'Montserrat-ThinItalic';
         font-family: $montserratLight;
     }
 }
+
+#enviar-autorizacion-link {
+    color: white;
+
+    :link {
+        text-decoration: none;
+    }
+
+    :visited {
+        text-decoration: none;
+    }
+
+    :hover {
+        text-decoration: none;
+        color: white;
+    }
+}

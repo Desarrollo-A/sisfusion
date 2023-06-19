@@ -16,7 +16,7 @@
         && $this->session->userdata('id_rol') != '6' && $this->session->userdata('id_rol') != '2' && $this->session->userdata('id_rol') != '5'
         && $this->session->userdata('id_rol') != '33' && $this->session->userdata('id_rol') != '17' && $this->session->userdata('id_rol') != '19'
         && $this->session->userdata('id_rol') != '20' && $this->session->userdata('id_rol') != '13' && $this->session->userdata('id_rol') != '32'
-        && $this->session->userdata('id_rol') != '70')
+        && $this->session->userdata('id_rol') != '70' && $this->session->userdata('id_rol') != '4')
     {
         redirect(base_url().'login');
     }

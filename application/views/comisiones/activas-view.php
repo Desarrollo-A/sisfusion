@@ -34,11 +34,22 @@
                             <input type="hidden" name="id_pagoc" id="id-lote-detenido">
                             <input type="hidden" name="statusLote" id="statusLote">
                             
-                            <div class="col-lg-12">
-                                <div class="form-group is-empty">
-                                    <input id="motivo" name="motivo" type="text" class="form-control input-gral" placeholder="Escriba un motivo corto." minlength="3" maxlength="50" required />
+                            <div class="col-lg-12" >
+                                <div class="form-group">
+                                <label for="motivo" class="control-label label-gral">Motivo</label>
+                                    <select class="selectpicker select-gral"
+                                            id="motivo"
+                                            name="motivo"
+                                            data-style="btn"
+                                            required>
+                                            <option disabled default >SELECCIONA UNA OPCIÓN</option>
+                                            <?php foreach($controversias as $controversia){ ?>
+
+                                                <option value="<?= $controversia['id_opcion']; ?>"><?= $controversia['nombre'] ?> </option>
+                                            <?php } ?>
+                                    </select>
                                 </div>
-                            </div>
+                            </div> 
 
                             <div class="col-lg-12">
                                 <div class="form-group label-floating">
@@ -146,12 +157,7 @@
     </div><!--main-panel close-->
     <?php $this->load->view('template/footer');?>
     <!--DATATABLE BUTTONS DATA EXPORT-->
-    <script > 
-    var url = "<?=base_url()?>";
-    var url2 = "<?=base_url()?>index.php/";
-
-    </script>
-    <script src="<?= base_url() ?>dist/js/controllers/comisiones/activas.js"></script>
+    
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
@@ -159,5 +165,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/comisiones/activas.js"></script>
 
 </body>
