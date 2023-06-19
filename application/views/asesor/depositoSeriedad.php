@@ -4,7 +4,7 @@
 <body>
 <div class="wrapper">
     <?php  $this->load->view('template/sidebar');   ?>
-    
+
     <div class="modal fade" id="modal_pregunta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"data-backdrop="static" data-keyboard="false" style="z-index: 1600;" >
         <div class="modal-dialog">
             <div class="modal-content" >
@@ -569,8 +569,6 @@
     <?php $this->load->view('template/footer_legend');?>
 </div>
 </div>
-
-</div><!--main-panel close-->
 </body>
 <?php $this->load->view('template/footer');?>
 <!--DATATABLE BUTTONS DATA EXPORT-->
