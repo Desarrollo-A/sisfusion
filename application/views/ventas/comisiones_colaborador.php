@@ -4,12 +4,16 @@
 <body>
     <div class="wrapper">
         <?php
-        if (in_array($this->session->userdata('id_rol'), array(3,7,9))){
-            $this->load->view('template/sidebar');
+        switch ($this->session->userdata('id_rol')) {
 
-        }
-        else{
-            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
+            case '3': // GERENTE
+            case '7': // ASESOR
+            case '9': // COORDINADORmultiple
+                $this->load->view('template/sidebar', '');
+            break;
+            default: // NO ACCESS
+                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
+            break;
         }
 
         $usuarioid =  $this->session->userdata('id_usuario');

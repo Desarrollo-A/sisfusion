@@ -187,7 +187,7 @@ $(document).ready (function() {
                                         data-idLote="${d.idLote}"
                                         data-toggle="tooltip" 
                                         data-placement="top"
-                                        title="Visualizar">
+                                        title="VISUALIZAR">
                                         <i class='fas fa-eye'></i>
                                     </a>
                                 </center>`;
@@ -200,6 +200,12 @@ $(document).ready (function() {
             type: "POST",
             cache: false
         },
+    });
+});
+
+$('#addExp').on('draw.dt', function() {
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
     });
 });
 
@@ -356,6 +362,12 @@ $(document).ready (function() {
     });
 });
 
+$('#sol_aut').on('draw.dt', function() {
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
+    });
+});
+
 var contador=1;
 $(document).on('click', '.addAutorizacionAsesor', function(e) {
     contador=1;
@@ -393,19 +405,19 @@ $(document).on('click', '.seeAuts', function (e) {
         var statusProceso;
         $.each(JSON.parse(data), function(i, item) {
             if(item['estatus'] == 0){
-                statusProceso="<span style='color: #00a65a'>ACEPTADA</span>";
+                statusProceso="<span class='label lbl-green'>ACEPTADA</span>";
             }
             else if(item['estatus'] == 1){
-                statusProceso="<span style='color: #ffaa00'>En proceso</span>";
+                statusProceso="<span class='label lbl-orangeYellow'>En proceso</span>";
             }
             else if(item['estatus'] == 2){
-                statusProceso="<span style='color: #ff0000'>DENEGADA</span>";
+                statusProceso="<span class='label lbl-warning'>DENEGADA</span>";
             }
             else if(item['estatus'] == 3){
-                statusProceso="<span style='color: #002a80'>En DC</span>";
+                statusProceso="<span class='label lbl-sky'>En DC</span>";
             }
             else{
-                statusProceso="<span style='color: #a0a0a0'>N/A</span>";
+                statusProceso="<span class='label lbl-gray'>N/A</span>";
             }
             $('#auts-loads').append(`
                 <div class="container-fluid" style="background-color: #f7f7f7; border-radius: 15px; padding: 15px; margin-bottom: 15px">
@@ -432,11 +444,11 @@ $(document).on('click', '.seeAuts', function (e) {
 
 contador = 1;
 function agregarAutorizacion (){
-    $("#autorizacionesExtra").append('<div id="cnt-'+contador+'"><hr><label>Observación: </label><br>' +
-        '<a onclick="eliminaAutorizacion('+contador+')" style="float: right; color: red; cursor:pointer" title="Eliminar observación"><span class="material-icons">delete</span></a><br>' +
+    $("#autorizacionesExtra").append('<div class="mt-2" id="cnt-'+contador+'"><label>Observación: (<span class="isRequired">*</span>) </label>' +
+        '<button class="fl-r" onclick="eliminaAutorizacion('+contador+')" style="color: gray; background-color:transparent; border:none;" title="Eliminar observación"><i class="fas fa-trash"></i></button>' +
         '<textarea  type="text" name="comentario_' + contador + '" placeholder="Ingresa tu comentario" ' +
-        '           class="form-control input-gral" id="comentario_'+ contador +'" rows="3" '+
-        '           style="width:100%;" maxlength="100" '+
+        '           class="text-modal" id="comentario_'+ contador +'" rows="3" '+
+        '            '+
         '           oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">'+
         '</textarea></div>');
     contador = contador + 1;

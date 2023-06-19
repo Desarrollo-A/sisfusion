@@ -660,7 +660,7 @@ function crearBotonAccion(type, data) {
                 data-accion="${buttonTipoAccion}" 
                 data-tipoDocumento="${data.tipo_doc}" ${buttonEstatus} 
                 data-toggle="tooltip" 
-                data-placement="left" 
+                data-placement="top" 
                 data-nombre="${data.movimiento}" 
                 data-idDocumento="${data.idDocumento}" 
                 data-idLote="${data.idLote}" 
