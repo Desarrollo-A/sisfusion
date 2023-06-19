@@ -17,11 +17,7 @@ let titulosEvidence = [];
 $('#evidenceTable thead tr:eq(0) th').each(function (i) {
     let title = $(this).text();
     titulosEvidence.push(title);
-    $(this).html(`<input class="textoshead"
-                        data-toggle="tooltip" 
-                        data-placement="top"
-                        title="${title}"
-                        placeholder="${title}"/>`);                       
+    $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
     $( 'input', this).on('keyup change', function () {
         if ($('#evidenceTable').DataTable().column(i).search() !== this.value) {
             $('#evidenceTable').DataTable().column(i).search(this.value).draw();

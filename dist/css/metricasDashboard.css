@@ -1074,6 +1074,30 @@
   background-color: #F9F87118;
 }
 
+.lbl-lightBlue {
+  color: #1B4F72;
+  border: none;
+  background: #AED6F1;
+}
+
+.lbl-peach {
+  color: #78281F;
+  border: none;
+  background: #F5B7B1;
+}
+
+.lbl-purple {
+  color: #512E5F;
+  border: none;
+  background: #D7BDE2;
+}
+
+.lbl-aqua {
+  color: #ffffff;
+  border: none;
+  background: #11DFC6;
+}
+
 /* END Etiquetas */
 /* Estilo del scroll en DIVS */
 /* El background del scroll */
@@ -1114,10 +1138,17 @@
   color: #929292;
   box-shadow: 0px 4px 4px RGB(0, 0, 0, 0.1);
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .file-gph .upload-btn:hover {
   box-shadow: none;
+}
+
+.file-gph .upload-btn span {
+  margin: 5px;
 }
 
 .file-gph .file-name {
