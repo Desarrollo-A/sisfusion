@@ -729,8 +729,10 @@ class Asesor extends CI_Controller
             $data[$i]['autorizacion_sms'] = $query[0]->autorizacion_sms;
             $data[$i]['total_sol_correo_aut'] = $query[0]->total_sol_correo_aut;
             $data[$i]['total_sol_correo_pend'] = $query[0]->total_sol_correo_pend;
+            $data[$i]['total_sol_correo_rech'] = $query[0]->total_sol_correo_rech;
             $data[$i]['total_sol_sms_aut'] = $query[0]->total_sol_sms_aut;
             $data[$i]['total_sol_sms_pend'] = $query[0]->total_sol_sms_pend;
+            $data[$i]['total_sol_sms_rech'] = $query[0]->total_sol_sms_rech;
         }
         if ($data != null) {
             echo json_encode($data);
@@ -4686,7 +4688,8 @@ class Asesor extends CI_Controller
         $this->General_model->updateRecord('clientes', $banderaCorreoData, 'id_cliente', $idCliente);
 
         $url = base_url()."Api/validarAutorizacionCorreo/$idCliente?codigo=$codigo";
-        $this->correoAut($url, $correoCliente);
+        $nombreCliente = "$cliente->nombre $cliente->apellido_paterno $cliente->apellido_materno";
+        $this->correoAut($url, $correoCliente, $nombreCliente);
 
         return true;
     }
@@ -4804,7 +4807,8 @@ class Asesor extends CI_Controller
 
             $urlCorreo = base_url()."Api/validarAutorizacionCorreo/$idCliente?codigo=$cliente->codigo_correo";
 
-            $this->correoAut($urlCorreo, $cliente->correo);
+            $nombreCliente = "$cliente->nombre $cliente->apellido_paterno $cliente->apellido_materno";
+            $this->correoAut($urlCorreo, $cliente->correo, $nombreCliente);
         }
 
         if (isset($reenviarSms)) {
@@ -4911,15 +4915,14 @@ class Asesor extends CI_Controller
             'autorizacion' => $comentario,
             'estatus_particular' => 1
         ];
-        $this->Asesor_model->insertAutorizacion($autorizacionData);
-        $autorizacionId = $this->db->insert_id();
+        $autorizacionId = $this->Asesor_model->insertAutorizacion($autorizacionData);
         $this->General_model->addRecord('autorizaciones_clientes', [
             'id_autorizacion' => $autorizacionId,
             'tipo' => $tipo
         ]);
     }
 
-    public function correoAut(string $url, string $correo): void
+    public function correoAut(string $url, string $correo, string $nombreCliente): void
     {
         $mail = $this->phpmailer_lib->load();
         $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
@@ -4977,19 +4980,27 @@ class Asesor extends CI_Controller
                             </table>
                         </tr>
                         <tr>
-                            Estimado/a 'cliente' <br>
-                            Gracias por iniciar el registro de la compra de tu terreno en Ciudad Maderas. Para garantizar la precisión de la información y asegurarnos de que podemos comunicarnos correctamente con usted, requerimos que verifique su dirección de correo electrónico.<br>
-                            Por favor, siga los pasos a continuación para completar el proceso de verificación:<br>
-                            1.	Haga clic en el siguiente <a href='$url' target='_blank'>enlace.</a><br>
-                            2.	Será redirigido una página de verificación en nuestro sitio web.<br><br>
-                            
-                            Una vez que haya completado estos pasos, su dirección de correo electrónico quedará verificada. Si no ha iniciado este proceso o ha recibido este correo electrónico por error, le pedimos que ignore este mensaje. No se realizará ninguna acción en su nombre.<br>
-                            
-                            Si tiene alguna pregunta o necesita ayuda adicional, no dude en ponerse en contacto con nuestro equipo de atención al cliente.<br><br>
-                            
-                            ¡Gracias por su colaboración!<br>
-                            Atentamente,<br>
-                            Equipo de Ventas de Ciudad Maderas
+                            <p class='text-justify'>
+                                Estimado/a $nombreCliente <br><br>
+                                Gracias por iniciar el registro de la compra de tu terreno en Ciudad Maderas. Para garantizar la precisión de la información y asegurarnos de que podemos comunicarnos correctamente con usted, requerimos que verifique su dirección de correo electrónico.<br>
+                                Por favor, siga los pasos a continuación para completar el proceso de verificación:<br>
+                                <ul>
+                                    <li>
+                                        1.	Haga clic en el siguiente <a href='$url' target='_blank'>enlace.</a><br>
+                                    </li>
+                                    <li>
+                                        2.	Será redirigido una página de verificación en nuestro sitio web.<br><br>
+                                    </li>
+                                </ul>
+                                
+                                Una vez que haya completado estos pasos, su dirección de correo electrónico quedará verificada. Si no ha iniciado este proceso o ha recibido este correo electrónico por error, le pedimos que ignore este mensaje. No se realizará ninguna acción en su nombre.<br>
+                                
+                                Si tiene alguna pregunta o necesita ayuda adicional, no dude en ponerse en contacto con nuestro equipo de atención al cliente.<br><br>
+                                
+                                ¡Gracias por su colaboración!<br>
+                                Atentamente,<br>
+                                Equipo de Ventas de Ciudad Maderas
+                            </p>
                         </tr>
                     </table>
                 </body>      
