@@ -46,13 +46,14 @@ $('#tabla_asimilados').on('xhr.dt', function(e, settings, json, xhr) {
 // Selección de CheckBox
 $(document).on("click", ".individualCheck", function() {
     var totaPen = 0;
+    let totalChecados = tabla_asimilados.$('input[type="checkbox"]:checked') ;
+    let totalCheckbox = tabla_asimilados.$('input[type="checkbox"]');
     tabla_asimilados.$('input[type="checkbox"]').each(function () {
-        let totalChecados = tabla_asimilados.$('input[type="checkbox"]:checked') ;
-        let totalCheckbox = tabla_asimilados.$('input[type="checkbox"]');
+        
         if(this.checked){
             tr = this.closest('tr');
             row = tabla_asimilados.row(tr).data();
-            totaPen += row.impuesto; 
+            totaPen += row.impuesto;
         }
         // Al marcar todos los CheckBox Marca CB total
         if( totalChecados.length == totalCheckbox.length )
@@ -69,7 +70,7 @@ function selectAll(e) {
         $(tabla_asimilados.$('input[type="checkbox"]')).each(function (i, v) {
             tr = this.closest('tr');
             row = tabla_asimilados.row(tr).data();
-            tota2 += row.impuesto;
+            tota2 += parseFloat(row.impuesto);
             if(v.checked == false){
                 $(v).prop("checked", true);
             }

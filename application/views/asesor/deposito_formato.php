@@ -252,7 +252,7 @@
                         <h4 class="label-on-left m-0">RESIDENCIA (<small style="color: red;">*</small>)</h4>
                         <div class="radio_container">
                             <input type="radio" name="tipoNc_valor" id="tipoNc_valor1" required="true" onchange="checkResidencia()" value="0" <?php echo $statsInput; ?> <?php if ($cliente[0]->tipo_nc == 0) { echo "checked=true"; } ?>>
-                            <label for="tipoNc_valor1">HABITACIONAL</label>
+                            <label for="tipoNc_valor1">NACIONAL</label>
 
                             <input type="radio" name="tipoNc_valor" id="tipoNc_valor2" required="true" onchange="checkResidencia()" value="1" <?php echo $statsInput; ?> <?php if ($cliente[0]->tipo_nc == 1) { echo "checked=true"; } ?>> 
                             <label for="tipoNc_valor2">EXTRANJERO</label>
@@ -1259,7 +1259,7 @@ function historial() {
         changeSizeModal('modal-md');
         appendBodyModal(historialCampoHtml(info));
         
-        appendFooterModal(`<button type="button" class="btn btn-danger" onclick="hideModal()">Cerrar</button>`);
+        appendFooterModal(`<button type="button" class="btn btn-danger btn-simple" onclick="hideModal()">Cerrar</button>`);
         showModal();
     });
 }
@@ -1339,10 +1339,9 @@ $( ".espaciosOff" ).on( "focusout", function(){
     function formatNumber(n) {
     return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
     }
-        
+
     function historialCampoHtml(data) {
     let dataTable = '<h5>HISTORIAL DE MOVIMIENTOS</h5>';
-    
     dataTable += `
     <div class="container-fluid">
         <div class="row p-0">
@@ -1352,26 +1351,29 @@ $( ".espaciosOff" ).on( "focusout", function(){
             `;
 
     data.forEach(columna => {
-        dataTable += `<li><div class="container-fluid">
-        <div class="row">
-        <div class="col-md-6"><a><small>Campo:</small><b> ${columna.columna}</b></a></div>`;
         columna.detalle.forEach(cambio => {
-            dataTable += `<div class="col-md-6 text-right"><a class="float-end">${cambio.fecha}</a></div>
-            </div>
-            </div>
-            <p class="m-0">USUARIO: <b>${(cambio.usuario) ? cambio.usuario : ''} </b></p>
-            <p class="m-0">CAMPO ANTERIOR:<b> ${(cambio.anterior != '') ? cambio.anterior : 'VACIO'} </b></p> 
-            <p class="m-0">CAMPO NUEVO:<b> ${cambio.nuevo}</b></p>
-            
-          </li>
-       `;
+            dataTable += `
+            <li>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <a><small>Campo:</small><b> ${columna.columna}</b></a>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <a class="float-end">${cambio.fecha}</a>
+                        </div>
+                        <p class="m-0">USUARIO: <b>${(cambio.usuario) ? cambio.usuario : ''} </b></p>
+                        <p class="m-0">CAMPO ANTERIOR:<b> ${(cambio.anterior != '') ? cambio.anterior : 'VACIO'} </b></p> 
+                        <p class="m-0">CAMPO NUEVO:<b> ${cambio.nuevo}</b></p>
+                    </div>
+                </div>
+            </li>`;
         });
-
     });
     dataTable += '</ul></div></div></div>';
     return dataTable;
-
-}
+    }
+    
  if(id_rol_general == 7 || id_usuario_general == 2752 || id_usuario_general == 2826 || id_usuario_general == 2810 || id_usuario_general == 5957 || id_usuario_general == 6390 || id_usuario_general == 4857 || id_usuario_general == 2834 || onlyView == 0){
     $("#nacionalidad").change(function(){
         var valor_nacionalidad = $('select[name="nacionalidad"] option:selected').text();

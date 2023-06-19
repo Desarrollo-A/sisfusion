@@ -6,7 +6,7 @@
         <?php
 		    //se debe validar que tipo de perfil esta sesionado para poder asignarle el tipo de sidebar
 		    if(in_array($this->session->userdata('id_rol'), array(2, 3, 4, 5, 6, 7, 9, 11, 12, 13, 15, 16, 28, 32, 33, 34, 39, 50, 40, 53, 58, 65, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 55, 17, 73)))
-             $this->load->view('template/sidebar');
+                $this->load->view('template/sidebar');
             else
                 echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
 		?>
@@ -49,9 +49,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <center>
-                            <h3 class="modal-title">Autorizaciones <span class="material-icons">vpn_key</span></h3>
-                        </center>
+                        <h3 class="modal-title text-center">Autorizaciones</h3>
                     </div>
                     <div class="modal-body">
                         <div class="container-fluid">
@@ -65,7 +63,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> Aceptar </button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> Cerrar </button>
                     </div>
                 </div>
             </div>
@@ -84,7 +82,7 @@
                                     <h3 class="card-title center-align">Documentación por lote</h3>
                                     <div class="row">
                                         <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                            <div class="form-group label-floating select-is-empty">
+                                            <div class="form-group select-is-empty">
                                                 <label class="control-label">Proyecto</label>
                                                 <select name="idResidencial" id="idResidencial" class="selectpicker select-gral m-0"
                                                     data-style="btn" data-show-subtext="true" data-live-search="true"
@@ -101,7 +99,7 @@
                                             </div>
                                         </div>
                                         <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                            <div class="form-group label-floating select-is-empty">
+                                            <div class="form-group select-is-empty">
                                                 <label class="control-label">Condominio</label>
                                                 <select id="idCondominio" name="idCondominio" class="selectpicker select-gral m-0"
                                                     data-style="btn" data-show-subtext="true" data-live-search="true"
@@ -110,7 +108,7 @@
                                             </div>
                                         </div>
                                         <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                            <div class="form-group label-floating select-is-empty">
+                                            <div class="form-group select-is-empty">
                                                 <label class="control-label">Lote</label>
                                                 <select id="idLote" name="idLote" class="selectpicker select-gral m-0"
                                                     data-style="btn" data-show-subtext="true" data-live-search="true"
@@ -121,30 +119,28 @@
                                     </div>
                                     <!--        Here you can write extra buttons/accions for the toolbar              -->
                                 </div>
-                                <div class="table-responsive">
-                                    <table id="tableDoct" class="table-striped table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>PROYECTO</th>
-                                                <th>CONDOMINIO</th>
-                                                <th>LOTE</th>
-                                                <th>ID LOTE</th>
-                                                <th>CLIENTE</th>
-                                                <th>ASESOR</th>
-                                                <th>COORDINADOR</th>
-                                                <th>GERENTE</th>
-                                                <th>SUBDIRECTOR</th>
-                                                <th>DIRECTOR REGIONAL</th>
-                                                <th>DIRECTOR REGIONAL 2</th>
-                                                <th>NOMBRE DE DOCUMENTO</th>
-                                                <th>HORA/FECHA</th>
-                                                <th>RESPONSABLE</th>
-                                                <th>UBICACIÓN</th>
-                                                <th>ACCIONES</th>
-                                            </tr>
-                                        </thead>
-                                    </table>
-                                </div>
+                                <table id="tableDoct" class="table-striped table-hover hide">
+                                    <thead>
+                                        <tr>
+                                            <th>PROYECTO</th>
+                                            <th>CONDOMINIO</th>
+                                            <th>LOTE</th>
+                                            <th>ID LOTE</th>
+                                            <th>CLIENTE</th>
+                                            <th>ASESOR</th>
+                                            <th>COORDINADOR</th>
+                                            <th>GERENTE</th>
+                                            <th>SUBDIRECTOR</th>
+                                            <th>DIRECTOR REGIONAL</th>
+                                            <th>DIRECTOR REGIONAL 2</th>
+                                            <th>NOMBRE DE DOCUMENTO</th>
+                                            <th>HORA/FECHA</th>
+                                            <th>RESPONSABLE</th>
+                                            <th>UBICACIÓN</th>
+                                            <th>ACCIONES</th>
+                                        </tr>
+                                    </thead>
+                                </table>
                             </div>
                         </div>
                     </div>

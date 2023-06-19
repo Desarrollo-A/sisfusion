@@ -40,10 +40,10 @@
 									<div class="row">
 										<form id="formFilters">
 											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 overflow-hidden">
-												<div class="form-group   ">
+												<div class="form-group">
 													<label class="control-label">Proyecto</label>
-													<select name="residenciales"
-															id="residenciales" 
+													<select name="filtro3"
+															id="filtro3" 
 															class="selectpicker select-gral m-0" 
 															data-style="btn"
 															data-show-subtext="true" 
@@ -51,14 +51,15 @@
 															title="Selecciona una opción" 
 															data-size="7"
 															data-container="body" required>
+																<option value="0"> SELECCIONA TODO</option>
 													</select>
 												</div>
 											</div>
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 overflow-hidden">
 												<div class="form-group  ">
 													<label class="control-label">Condominio</label>
-													<select id="condominios"
-															name="condominios[]"
+													<select id="filtro4"
+															name="filtro4[]"
 															class="selectpicker select-gral m-0"
 															data-style="btn"
 															data-show-subtext="true"
@@ -72,7 +73,7 @@
 												</div>
 											</div>
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 overflow-hidden">
-												<div class="form-group  ">
+												<div class="form-group">
 													<label class="control-label">Grupo</label>
 													<select name="filtro5"
 															id="filtro5"
