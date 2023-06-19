@@ -137,19 +137,19 @@ $('#comisiones-detenidas-table').ready(function () {
                     return fechaNeodata + rescisionLote;
                 }
             },
-            {
-                data: function (d) {
-                    let motivo;
-                    let color;
-                    if (d.motivo == 1 || d.motivo == 2 || d.motivo == 3) {
-                        if (d.motivo == 1) { color = 'lbl-azure'; } else if (d.motivo == 2) { color = 'lbl-brown'; }
-                        motivo = d.motivoOpc;
-                    } else {
-                        color = 'lbl-azure';
-                        motivo = d.motivo;
-                    }
-                    return '<span class="label ' + color + '">' + motivo + '</span>';
+            {   
+            data: function (d) {
+                let motivo;
+                let color;
+                if (d.motivo == 4 || d.motivo == 5 || d.motivo == 3 || d.motivo == 6 || d.motivo == 8) {
+           
+                    motivo = d.motivoOpc;
+                } else {
+                    color = 'lbl-azure';
+                    motivo = d.motivo;
                 }
+                return '<span class="label lbl-gray">' + motivo + '</span>';
+                    }        
             },
             {
                 data: function (d) {
