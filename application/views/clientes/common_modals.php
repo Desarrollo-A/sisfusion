@@ -155,15 +155,15 @@
             <form id="my_reasign_form_ve" name="my_reasign_form_ve" method="post">
                 <div class="col-lg-12 form-group">
                     <label>Gerente</label>
-                    <select class="selectpicker" name="id_gerente" id="myselectgerente2" data-live-search="true" data-style="select-with-transition" onchange="getCoordinatorsByManager(this)" title="Selecciona una opción" data-size="7" required></select>
+                    <select class="selectpicker select-gral m-0" name="id_gerente" id="myselectgerente2" data-style="btn" data-live-search="true" data-style="select-with-transition" onchange="getCoordinatorsByManager(this)" title="Selecciona una opción" data-size="7" required></select>
                 </div>
                 <div class="col-lg-12 form-group">
                     <label>Coordinador</label>
-                    <select class="selectpicker" name="id_coordinador" id="myselectcoordinador" data-live-search="true" data-style="select-with-transition" onchange="getAdvisersByCoordinator(this)" title="Selecciona una opción" data-size="7" required></select>
+                    <select class="selectpicker select-gral m-0" name="id_coordinador" id="myselectcoordinador" data-style="btn" data-live-search="true" data-style="select-with-transition" onchange="getAdvisersByCoordinator(this)" title="Selecciona una opción" data-size="7" required></select>
                 </div>
                 <div class="col-lg-12 form-group">
                     <label>Asesor</label>
-                    <select class="selectpicker" name="id_asesor" id="myselectasesor3" data-live-search="true" data-style="select-with-transition" title="Selecciona una opción" data-size="7" required></select>
+                    <select class="selectpicker select-gral m-0" name="id_asesor" id="myselectasesor3" data-style="btn" data-live-search="true" data-style="select-with-transition" title="Selecciona una opción" data-size="7" required></select>
                 </div>
                 <input type="hidden" name="id_prospecto_re_asign" id="id_prospecto_re_asign_ve">
                 <input type="hidden" name="request_type" id="request_type_ve" value="3">
@@ -212,18 +212,8 @@
                             <div class="col-sm-3 ">
                                 <div class="form-group label-floating select-is-empty overflow-hidden">
                                     <label class="control-label">Nacionalidad<small> (requerido)</small></label>
-                                    <select id="nationality"
-                                            name="nationality" 
-                                            class="selectpicker select-gral m-0"
-                                            data-style="btn" 
-                                            data-show-subtext="true"
-                                            data-live-search="true"
-                                            title="Selecciona una opción"
-                                            data-size="7"
-                                            data-container="body"
-                                            required>
+                                    <select id="nationality" name="nationality" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required>
                                     </select>
-                                    <!-- <input id="name" name="name" type="text" class="form-control input-gral" required> -->
                                 </div>
                             </div>
                             <div class="col-sm-3">

@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    $('#spiner-loader').removeClass('hide');
     $.post(general_base_url + "Contratacion/lista_proyecto", function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
@@ -6,8 +7,8 @@ $(document).ready(function () {
             var name = data[i]['descripcion'];
             $("#proyecto").append($('<option>').val(id).text(name.toUpperCase()));
         }
-
         $("#proyecto").selectpicker('refresh');
+        $('#spiner-loader').addClass('hide');
     }, 'json');
 });
 
@@ -15,6 +16,7 @@ $('#proyecto').change(function () {
     let index_proyecto = $(this).val();
     $("#condominio").html("");
     $("#tabla_clientes").removeClass('hide');
+    $('#spiner-loader').removeClass('hide');
     $(document).ready(function () {
         $.post(general_base_url + "Contratacion/lista_condominio/" + index_proyecto, function (data) {
             var len = data.length;
@@ -24,15 +26,18 @@ $('#proyecto').change(function () {
                 $("#condominio").append($('<option>').val(id).text(name.toUpperCase()));
             }
             $("#condominio").selectpicker('refresh');
+            $('#spiner-loader').addClass('hide');
         }, 'json');
     });
     fillTable(index_proyecto, 0);
 });
 
 $('#condominio').change(function () {
+    $('#spiner-loader').removeClass('hide');
     let index_proyecto = $("#proyecto").val();
     let index_condominio = $(this).val();
     fillTable(index_proyecto, index_condominio);
+    $('#spiner-loader').addClass('hide');
 });
 
 let titulos_encabezado = [];

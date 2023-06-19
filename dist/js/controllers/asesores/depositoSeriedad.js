@@ -96,10 +96,7 @@ $('#tabla_deposito_seriedad thead tr:eq(0) th').each( function (i) {
 
     $('input', this).on('keyup change', function () {
         if ($('#tabla_deposito_seriedad').DataTable().column(i).search() !== this.value ) {
-            $('#tabla_deposito_seriedad').DataTable()
-                .column(i)
-                .search(this.value)
-                .draw();
+            $('#tabla_deposito_seriedad').DataTable().column(i).search(this.value).draw();
         }
     });
 });
@@ -115,7 +112,7 @@ $("#tabla_deposito_seriedad").ready( function(){
         $('#id_cliente_asignar').val(id_cliente);
 
         tabla_valores_ds = $("#table_prospectos").DataTable({
-            width: 'auto',
+            width: '100%',
             "dom": "Bfrtip",
             buttons: [{
                 extend: 'excelHtml5',
@@ -610,9 +607,7 @@ function fillDataTable(idCondominio) {
                     const nombreCliente = `${d.nombre} ${d.apellido_paterno} ${d.apellido_materno}`;
                     return `
                         <center>
-                            <button class="btn-data btn-green abrir_prospectos btn-fab btn-fab-mini" 
-                                    data-idCliente="${d.id_cliente}"
-                                    data-nomCliente="${nombreCliente}">
+                            <button class="btn-data btn-green abrir_prospectos btn-fab btn-fab-mini" data-idCliente="${d.id_cliente}" data-nomCliente="${nombreCliente}">
                                 <i class="fas fa-user-check"></i>
                             </button>
                         </center>
@@ -702,7 +697,9 @@ function fillDataTable(idCondominio) {
             }
         },
         initComplete: function () {
-            $('[data-toggle="tooltip"]').tooltip();
+            $('[data-toggle="tooltip"]').tooltip({
+                trigger: "hover"
+            });
         }
     });
 }
