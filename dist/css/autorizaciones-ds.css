@@ -899,13 +899,13 @@
 }
 
 .btn-sky {
-  color: #00bcd4;
+  color: #0067d4;
   border: none;
-  background-color: #00bcd418;
+  background-color: #0067d418;
 }
 
 .btn-sky:hover {
-  background-color: #00bcd4;
+  background-color: #0067d4;
   color: #ffffff !important;
 }
 
@@ -976,7 +976,7 @@
 .lbl-cerulean {
   color: #00A0FF;
   border: none;
-  background-color: #00A0FF;
+  background-color: #00A0FF18;
 }
 
 .lbl-deepGray {
@@ -991,8 +991,9 @@
 }
 
 .lbl-gray {
-  background-color: #4e4e4e;
-  color: #ffffff;
+  color: #4e4e4e;
+  border: none;
+  background-color: #4e4e4e18;
 }
 
 .lbl-grayDark {
@@ -1016,7 +1017,7 @@
 .lbl-oceanGreen {
   color: #4BBC8E;
   border: none;
-  background-color: #4BBC8E;
+  background-color: #4BBC8E18;
 }
 
 .lbl-orangeYellow {
@@ -1032,9 +1033,9 @@
 }
 
 .lbl-sky {
-  color: #00bcd4;
+  color: #0067d4;
   border: none;
-  background-color: #00bcd418;
+  background-color: #0067d418;
 }
 
 .lbl-violetBoots {
@@ -1071,6 +1072,30 @@
   color: #B7950B;
   border: none;
   background-color: #F9F87118;
+}
+
+.lbl-lightBlue {
+  color: #1B4F72;
+  border: none;
+  background: #AED6F1;
+}
+
+.lbl-peach {
+  color: #78281F;
+  border: none;
+  background: #F5B7B1;
+}
+
+.lbl-purple {
+  color: #512E5F;
+  border: none;
+  background: #D7BDE2;
+}
+
+.lbl-aqua {
+  color: #ffffff;
+  border: none;
+  background: #11DFC6;
 }
 
 /* END Etiquetas */
@@ -1357,9 +1382,9 @@
 }
 
 .input-gral {
-  background-color: #eaeaea !important;
+  background-color: #ffffff !important;
   color: #929292 !important;
-  border-radius: 27px !important;
+  border-radius: 15px !important;
   background-image: none !important;
   padding-left: 20px;
   border: none;
