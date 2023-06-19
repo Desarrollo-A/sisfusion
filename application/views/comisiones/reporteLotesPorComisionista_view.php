@@ -133,7 +133,6 @@
                                                         <span class="lblRolActual"></span>
                                                     </label>
                                                     <label>
-                                                        
                                                         <span id="detailComisionistaBtn"><i class="fas fa-info"></i></span>
                                                     </label>
                                                 </div>

@@ -17,7 +17,7 @@ class Administracion_model extends CI_Model {
         concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
         concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
-		cond.idCondominio, cl.expediente, mo.descripcion
+		cond.idCondominio, cl.expediente, mo.descripcion, se.nombre nombreSede
 	    FROM lotes l
         INNER JOIN clientes cl ON l.idLote=cl.idLote
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
@@ -26,6 +26,7 @@ class Administracion_model extends CI_Model {
 		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
 		LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
 		LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
+        INNER JOIN sedes se ON se.id_sede = l.ubicacion
 	    LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
         WHERE ((l.idStatusContratacion IN (8, 10) AND l.idMovimiento IN (40, 10, 67) AND (l.validacionEnganche = 'NULL' OR l.validacionEnganche IS NULL)) OR
         (l.idStatusContratacion = 12 AND l.idMovimiento = 42 AND (l.validacionEnganche = 'NULL' OR l.validacionEnganche IS NULL)) OR
@@ -39,7 +40,7 @@ class Administracion_model extends CI_Model {
         concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
         concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-        cond.idCondominio, cl.expediente, mo.descripcion
+        cond.idCondominio, cl.expediente, mo.descripcion, se.nombre
         ORDER BY l.nombreLote");
 		return $query->result();
 	}

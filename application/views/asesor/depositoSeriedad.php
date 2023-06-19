@@ -41,8 +41,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title"><b>Asignar</b> prospecto al cliente
-                        <b><span id="nom_cliente" style="text-transform: uppercase"></span></b>.</h4>
-                        <a type="button" class="close" data-dismiss="modal" aria-label="Close" style="position: absolute;top: 2%;right: 5%;"><span class="material-icons">close</span></a>
+                    <b><span id="nom_cliente" style="text-transform: uppercase"></span></b>.</h4>
+                    <a type="button" class="close" data-dismiss="modal" aria-label="Close" style="position: absolute;top: 2%;right: 5%;"><span class="material-icons">close</span></a>
                     <h5 class=""></h5>
                     <input type="hidden" id="id_cliente_asignar" name="id_cliente_asignar">
                     <div class="modal-body">
@@ -65,6 +65,7 @@
             </div>
         </div>
     </div>
+</div>
 
     <div class="modal fade" id="modal_loader_assign" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
          data-backdrop="static" data-keyboard="false">
@@ -131,9 +132,7 @@
         <div class="modal-dialog">
             <div class="modal-content" >
                 <div class="modal-header">
-                    <h4 class="modal-title">
-                        Envío de verificaciones al cliente
-                    </h4>
+                    <h4 class="modal-title">Envío de verificaciones al cliente</h4>
                 </div>
                 <form id="autorizacion-form">
                     <div class="modal-body">
@@ -144,21 +143,13 @@
                                 <div class="container boxChecks p-0">
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 p-0" id="chk-correo-aut-div">
                                         <label class="m-0 checkstyleAut">
-                                            <input type="checkbox"
-                                                   name="chkCorreoAut"
-                                                   id="chkCorreoAut"
-                                                   onchange="chkCorreoAutOnChange()"
-                                                   checked>
+                                            <input type="checkbox" name="chkCorreoAut" id="chkCorreoAut" onchange="chkCorreoAutOnChange()" checked>
                                             <span>CORREO ELECTRÓNICO</span>
                                         </label>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 p-0" id="chk-sms-aut-div">
                                         <label class="m-0 checkstyleAut">
-                                            <input type="checkbox"
-                                                   name="chkSmsAut"
-                                                   id="chkSmsAut"
-                                                   onchange="chkSmsAutOnChange()"
-                                                   checked>
+                                            <input type="checkbox" name="chkSmsAut" id="chkSmsAut" onchange="chkSmsAutOnChange()"checked>
                                             <span>MENSAJE DE TEXTO SMS</span>
                                         </label>
                                     </div>
@@ -172,12 +163,7 @@
                                     <label class="label-on-left m-0">
                                         CORREO ELECTRÓNICO (<small style="color: red;">*</small>)
                                     </label>
-                                    <input class="form-control input-gral"
-                                           name="correoAut"
-                                           id="correoAut"
-                                           type="email"
-                                           required
-                                           placeholder="Ej. ejemplo@gmail.com"/>
+                                    <input class="form-control input-gral" name="correoAut" id="correoAut" type="email" placeholder="Ej. ejemplo@gmail.com" required/>
                                 </div>
                             </div>
                         </div>
@@ -186,14 +172,7 @@
                             <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
                                 <div class="form-group m-0">
                                     <h4 class="label-on-left m-0">LADA (<small style="color: red;">*</small>)</h4>
-                                    <select name="ladaAut"
-                                            title="SELECCIONA UNA OPCIÓN"
-                                            id="ladaAut"
-                                            class="selectpicker m-0 select-gral"
-                                            data-live-search="true"
-                                            data-container="body"
-                                            data-width="100%"
-                                            required>
+                                    <select name="ladaAut" title="SELECCIONA UNA OPCIÓN" id="ladaAut" class="selectpicker m-0 select-gral" data-live-search="true" data-container="body" data-width="100%" required>
                                         <option value="52">+52</option>
                                         <option value="1">+1</option>
                                     </select>
@@ -204,25 +183,14 @@
                                     <label class="label-on-left m-0">
                                         CELULAR (<small style="color: red;">*</small>)
                                     </label>
-                                    <input class="form-control input-gral"
-                                           required
-                                           name="smsAut"
-                                           id="smsAut"
-                                           type="number"
-                                           step="any"
-                                           onKeyPress="if(this.value.length==10) return false;"
-                                           placeholder="Ej. 4422010101"/>
+                                    <input class="form-control input-gral" name="smsAut" id="smsAut" type="number" step="any" onKeyPress="if(this.value.length==10) return false;" placeholder="Ej. 4422010101" required/>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">
-                            <span class="glyphicon glyphicon-remove"></span> Cerrar
-                        </button>
-                        <button type="submit" id="guardar-autorizacion" class="btn btn-primary">
-                            <span class="material-icons" >send</span> Enviar
-                        </button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" id="guardar-autorizacion" class="btn btn-primary">Enviar</button>
                     </div>
                 </form>
             </div>
@@ -247,19 +215,13 @@
                                 <div class="container boxChecks p-0">
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 p-0" id="chk-correo-reenvio-div">
                                         <label class="m-0 checkstyleAut">
-                                            <input type="checkbox"
-                                                   name="chkCorreoReenvio"
-                                                   id="chkCorreoReenvio"
-                                                   checked>
+                                            <input type="checkbox" name="chkCorreoReenvio" id="chkCorreoReenvio" checked>
                                             <span>CORREO ELECTRÓNICO</span>
                                         </label>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 p-0" id="chk-sms-reenvio-div">
                                         <label class="m-0 checkstyleAut">
-                                            <input type="checkbox"
-                                                   name="chkSmsReenvio"
-                                                   id="chkSmsReenvio"
-                                                   checked>
+                                            <input type="checkbox" name="chkSmsReenvio" id="chkSmsReenvio" checked>
                                             <span>MENSAJE DE TEXTO SMS</span>
                                         </label>
                                     </div>
@@ -268,12 +230,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">
-                            <span class="glyphicon glyphicon-remove"></span> Cerrar
-                        </button>
-                        <button type="submit" class="btn btn-primary">
-                            <span class="material-icons" >send</span> Reenviar
-                        </button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Reenviar</button>
                     </div>
                 </form>
             </div>
@@ -297,20 +255,14 @@
                                 <div class="container boxChecks p-0">
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 p-0" id="chk-correo-sol-div">
                                         <label class="m-0 checkstyleAut">
-                                            <input type="checkbox"
-                                                   name="chkCorreoSol"
-                                                   id="chkCorreoSol"
-                                                   checked>
+                                            <input type="checkbox" name="chkCorreoSol" id="chkCorreoSol" checked>
                                             <span>CORREO ELECTRÓNICO</span>
                                         </label>
                                     </div>
 
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 p-0" id="chk-sms-sol-div">
                                         <label class="m-0 checkstyleAut">
-                                            <input type="checkbox"
-                                                   name="chkSmsSol"
-                                                   id="chkSmsSol"
-                                                   checked>
+                                            <input type="checkbox" name="chkSmsSol" id="chkSmsSol" checked>
                                             <span>MENSAJE DE TEXTO SMS</span>
                                         </label>
                                     </div>
@@ -319,18 +271,8 @@
 
                             <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mt-3">
                                 <div class="form-group label-floating select-is-empty overflow-hidden">
-                                    <h4 class="label-on-left m-0">SUBDIRECTOR (<small style="color: red;">*</small>)</h4>
-                                    <select id="subdirector"
-                                            name="subdirector"
-                                            class="selectpicker select-gral m-0"
-                                            data-style="btn"
-                                            data-show-subtext="true"
-                                            data-live-search="true"
-                                            title="Selecciona un subdirector"
-                                            data-size="7"
-                                            data-container="body"
-                                            required>
-                                    </select>
+                                    <label class="control-label">Subdirector (<small style="color: red;">*</small>)</label>
+                                    <select id="subdirector" name="subdirector" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un subdirector" data-size="7" data-container="body" required></select>
                                 </div>
                             </div>
 
@@ -341,12 +283,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">
-                            <span class="glyphicon glyphicon-remove"></span> Cerrar
-                        </button>
-                        <button type="submit" class="btn btn-primary">
-                            <span class="material-icons" >send</span> Solicitar
-                        </button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Enviar</button>
                     </div>
                 </form>
             </div>
@@ -375,18 +313,14 @@
                                             <div class="col-md-4 form-group">
                                                 <div class="form-group label-floating select-is-empty">
                                                     <label class="control-label">Proyecto</label>
-                                                    <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0"
-                                                            data-style="btn" data-show-subtext="true"  title="Selecciona un proyecto"
-                                                            data-size="7" data-live-search="true" required>
+                                                    <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="Selecciona un proyecto" data-size="7" data-live-search="true" required>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="col-md-4 form-group">
                                                 <div class="form-group label-floating select-is-empty">
                                                     <label class="control-label">Condominio</label>
-                                                    <select name="condominio" id="condominio" class="selectpicker select-gral m-0"
-                                                            data-style="btn" data-show-subtext="true"  title="Selecciona condominio"
-                                                            data-size="7" data-live-search="true" required>
+                                                    <select name="condominio" id="condominio" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="Selecciona condominio" data-size="7" data-live-search="true" required>
                                                         <option disabled selected>Selecciona un condominio</option>
                                                     </select>
                                                 </div>
@@ -397,7 +331,6 @@
                             <?php
                             }
                             ?>
-
                             <div class="material-datatables">
                                 <table id="tabla_deposito_seriedad" name="tabla_deposito_seriedad" class="table-striped table-hover">
                                     <thead>
@@ -415,6 +348,8 @@
                                             <th>FECHA DE VENCIMIENTO</th>
                                             <th>COMENTARIO</th>
                                             <th>PROSPECTO</th>
+                                            <th>VERIFICACIÓN DE CORREO</th>
+                                            <th>VERIFICACIÓN DE SMS</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>
@@ -433,7 +368,7 @@
             <div class="modal-dialog">
                 <div class="modal-content" >
                     <div class="modal-header">
-                        <center><h4 class="modal-title"><label>Integración de Expediente (Rechazo estatus 5 Contraloría) - <b><span class="lote"></span></b></label></h4></center>
+                        <h4 class="modal-title text-center"><label>Integración de Expediente (Rechazo estatus 5 Contraloría) - <b><span class="lote"></span></b></label></h4>
                     </div>
                     <div class="modal-body">
                         <label>Comentario:</label>
@@ -454,7 +389,7 @@
             <div class="modal-dialog">
                 <div class="modal-content" >
                     <div class="modal-header">
-                        <center><h4 class="modal-title"><label>Integración de expediente (Rechazo estatus 5 Contraloría) - <b><span class="lote"></span></b></label></h4></center>
+                        <h4 class="modal-title text-center"><label>Integración de expediente (Rechazo estatus 5 Contraloría) - <b><span class="lote"></span></b></label></h4>
                     </div>
                     <div class="modal-body">
                         <label>Comentario:</label>
@@ -475,7 +410,7 @@
             <div class="modal-dialog">
                 <div class="modal-content" >
                     <div class="modal-header">
-                        <center><h4 class="modal-title"><label>Integración de Expediente (Rechazo estatus 6 Contraloría) - <b><span class="lote"></span></b></label></h4></center>
+                        <h4 class="modal-title text-center"><label>Integración de Expediente (Rechazo estatus 6 Contraloría) - <b><span class="lote"></span></b></label></h4>
                     </div>
                     <div class="modal-body">
                         <label>Comentario:</label>
@@ -496,7 +431,7 @@
             <div class="modal-dialog">
                 <div class="modal-content" >
                     <div class="modal-header">
-                        <center><h4 class="modal-title"><label>Integración de Expediente (Rechazo estatus 8 Ventas) - <b><span class="lote"></span></b></label></h4></center>
+                        <h4 class="modal-title text-center"><label>Integración de Expediente (Rechazo estatus 8 Ventas) - <b><span class="lote"></span></b></label></h4>
                     </div>
                     <div class="modal-body">
                         <label>Comentario:</label>
@@ -517,7 +452,7 @@
             <div class="modal-dialog">
                 <div class="modal-content" >
                     <div class="modal-header">
-                        <center><h4 class="modal-title"><label>Integración de Expediente (Rechazo estatus 7 Jurídico) - <b><span class="lote"></span></b></label></h4></center>
+                        <h4 class="modal-title text-center"><label>Integración de Expediente (Rechazo estatus 7 Jurídico) - <b><span class="lote"></span></b></label></h4>
                     </div>
                     <div class="modal-body">
                         <label>Comentario:</label>
@@ -538,7 +473,7 @@
             <div class="modal-dialog">
                 <div class="modal-content" >
                     <div class="modal-header">
-                        <center><h4 class="modal-title"><label>Integración de Expediente (Rechazo estatus 5 Contraloría) - <b><span class="lote"></span></b></label></h4></center>
+                        <h4 class="modal-title"><label>Integración de Expediente (Rechazo estatus 5 Contraloría) - <b><span class="lote"></span></b></label></h4>
                     </div>
                     <div class="modal-body">
                         <label>Comentario:</label>
@@ -559,7 +494,7 @@
             <div class="modal-dialog">
                 <div class="modal-content" >
                     <div class="modal-header">
-                        <center><h4 class="modal-title"><label>Integración de Expediente (Rechazo estatus 7 Jurídico) - <b><span class="lote"></span></b></label></h4></center>
+                        <h4 class="modal-title text-center"><label>Integración de Expediente (Rechazo estatus 7 Jurídico) - <b><span class="lote"></span></b></label></h4>
                     </div>
                     <div class="modal-body">
                         <label>Comentario:</label>
@@ -574,12 +509,10 @@
             </div>
         </div>
         <!-- modal -->
-
     </div>
     <?php $this->load->view('template/footer_legend');?>
 </div>
 </div>
-
 </div><!--main-panel close-->
 </body>
 <?php $this->load->view('template/footer');?>

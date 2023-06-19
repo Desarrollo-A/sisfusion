@@ -7,7 +7,7 @@ class VentasAsistentes_model extends CI_Model {
         parent::__construct();
     }
     function get_proyecto_lista(){
-        return $this->db->query("SELECT * FROM [residenciales] WHERE status = 1");
+        return $this->db->query("SELECT CONCAT(nombreResidencial,' - ', descripcion) AS descripcionConcat,* FROM [residenciales] WHERE status = 1");
     }
     function get_condominio_lista($proyecto){
         return $this->db->query("SELECT * FROM [condominios] WHERE status = 1 AND idResidencial = ".$proyecto."");
