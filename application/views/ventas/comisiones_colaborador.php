@@ -671,7 +671,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <table class="table-striped table-hover" id="tabla_comisiones_sin_pago" name="tabla_comisiones_sin_pago">
+                                            <table class="table-striped table-hover hide" id="tabla_comisiones_sin_pago" name="tabla_comisiones_sin_pago">
                                                 <thead>
                                                     <tr>
                                                         <th>ID</th>

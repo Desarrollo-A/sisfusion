@@ -163,6 +163,7 @@ $(document).ready(function () {
 });
 
 $('#proyecto_wp').change(function () {
+    $('tabla_comisiones_sin_pago').removeClass('hide');
     index_proyecto = $(this).val();
     index_condominio = 0
     $("#condominio_wp").html("");
@@ -197,10 +198,10 @@ $("#tabla_nuevas_comisiones").ready(function () {
     asignarValorColumnasDT("tabla_nuevas_comisiones");
     $('#tabla_nuevas_comisiones thead tr:eq(0) th').each(function (i) {
         var title = $(this).text();
-        if (!excluir_column.includes(title)) {
+        // if (!excluir_column.includes(title)) {
             columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados.push(title);
             columnas_datatable.tabla_nuevas_comisiones.num_encabezados.push(columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados.length-1);
-        }
+        // }
         let readOnly = excluir_column.includes(title) ? 'readOnly' : '';
         if (title !== '') {
             $(this).html(`<input    type="text"
@@ -263,7 +264,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                 titleAttr: 'Descargar archivo de Excel',
                 title: 'REPORTE COMISIONES NUEVAS',
                 exportOptions: {
-                    columns: columnas_datatable.tabla_nuevas_comisiones.num_encabezados,
+                    columns: [1,2,3,4,5,6,7,8,9,10,11],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados[columnIdx] + ' ';
@@ -1241,16 +1242,16 @@ $("#tabla_otras_comisiones").ready(function () {
     });
 });
 // FIN TABLA PAGADAS
+let titulos = [];
 $('#tabla_comisiones_sin_pago thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
+    titulos.push(title);
     let readOnly = excluir_column.includes(title) ? 'readOnly' : '';
-    $(this).html(`<input 	type="text"
-                            class="textoshead"
-                            data-toggle="tooltip" 
-                            data-placement="top"
-                            title="${title}"
-                            placeholder="${title}"
-                            ${readOnly}/>`);
+    $(this).html(`<input class="textoshead"
+                    data-toggle="tooltip" 
+                    data-placement="top"
+                    title="${title}"
+                    placeholder="${title}"/>`);   
     $('input', this).on('keyup change', function () {
         if ($('#tabla_comisiones_sin_pago').DataTable().column(i).search() !== this.value) {
             $('#tabla_comisiones_sin_pago').DataTable()
@@ -1266,6 +1267,21 @@ function fillCommissionTableWithoutPayment(proyecto, condominio) {
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX:true,
+        buttons: [{
+            extend: 'excelHtml5',
+            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+            className: 'btn buttons-excel',
+            titleAttr: 'Descargar archivo de Excel',
+            title: 'REPORTE DE COMISIONES PAUSADAS POR CONTRALORÍA',
+            exportOptions: {
+                columns: [0,1,2,3,4,5,6,7,8],
+                format: {
+                    header: function (d, columnIdx) {
+                        return ' ' + titulos[columnIdx] + ' ';
+                    }
+                }
+            },
+        }],
         pagingType: "full_numbers",
         fixedHeader: true,
         language: {
