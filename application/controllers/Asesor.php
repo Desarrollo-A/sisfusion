@@ -4742,11 +4742,6 @@ class Asesor extends CI_Controller
             return false;
         }
 
-        if (intval($cliente->total_sol_correo_aut) > 0) {
-            echo json_encode(['code' => 400, 'message' => 'La solicitud ya tuvo una autorización previamente.']);
-            return false;
-        }
-
         $codigo = md5(microtime());
         $codigoCorreoData = [
             'id_cliente' => $idCliente,
@@ -4799,11 +4794,6 @@ class Asesor extends CI_Controller
 
         if (intval($cliente->total_sol_sms_pend) > 0) {
             echo json_encode(['code' => 400, 'message' => 'Hay una solicitud de sms en transcurso.']);
-            return false;
-        }
-
-        if (intval($cliente->total_sol_sms_aut) > 0) {
-            echo json_encode(['code' => 400, 'message' => 'La solicitud ya tuvo una autorización previamente.']);
             return false;
         }
 
@@ -4946,11 +4936,6 @@ class Asesor extends CI_Controller
                 return;
             }
 
-            if (intval($cliente->total_sol_correo_aut) > 0) {
-                echo json_encode(['code' => 400, 'message' => 'La solicitud ya tuvo una autorización previamente.']);
-                return;
-            }
-
             $this->crearRegistroAclaracion($idCliente, $lote->idLote, $this->session->userdata('id_usuario'),
                 $idSubdirector, $comentario, TipoAutorizacionClienteOpcs::CORREO);
         }
@@ -4963,11 +4948,6 @@ class Asesor extends CI_Controller
 
             if (intval($cliente->total_sol_sms_pend) > 0) {
                 echo json_encode(['code' => 400, 'message' => 'Hay una solicitud de sms en transcurso.']);
-                return;
-            }
-
-            if (intval($cliente->total_sol_sms_aut) > 0) {
-                echo json_encode(['code' => 400, 'message' => 'La solicitud ya tuvo una autorización previamente.']);
                 return;
             }
 
@@ -4987,13 +4967,10 @@ class Asesor extends CI_Controller
             'id_aut' => $idSubdirector,
             'estatus' => 1,
             'autorizacion' => $comentario,
-            'estatus_particular' => 1
+            'estatus_particular' => 1,
+            'id_tipo' => $tipo
         ];
-        $autorizacionId = $this->Asesor_model->insertAutorizacion($autorizacionData);
-        $this->General_model->addRecord('autorizaciones_clientes', [
-            'id_autorizacion' => $autorizacionId,
-            'tipo' => $tipo
-        ]);
+        $this->Asesor_model->insertAutorizacion($autorizacionData);
     }
 
     public function correoAut(string $url, string $correo, string $nombreCliente): void
@@ -5031,10 +5008,6 @@ class Asesor extends CI_Controller
                             text-align: center;
                         }
 
-                        p {
-                            text-align: right;
-                        }
-
                         strong {
                             color: #234e7f;
                         }
@@ -5057,19 +5030,17 @@ class Asesor extends CI_Controller
                             <p class='text-justify'>
                                 Estimado/a $nombreCliente <br><br>
                                 Gracias por iniciar el registro de la compra de tu terreno en Ciudad Maderas. Para garantizar la precisión de la información y asegurarnos de que podemos comunicarnos correctamente con usted, requerimos que verifique su dirección de correo electrónico.<br>
-                                Por favor, siga los pasos a continuación para completar el proceso de verificación:<br>
+                                Por favor, siga los pasos a continuación para completar el proceso de verificación:<br><br>
                                 <ul>
                                     <li>
-                                        1.	Haga clic en el siguiente <a href='$url' target='_blank'>enlace.</a><br>
+                                        Haga clic en el siguiente <a href='$url' target='_blank'>enlace.</a><br>
                                     </li>
                                     <li>
-                                        2.	Será redirigido una página de verificación en nuestro sitio web.<br><br>
+                                        Será redirigido una página de verificación en nuestro sitio web.<br><br>
                                     </li>
                                 </ul>
                                 
-                                Una vez que haya completado estos pasos, su dirección de correo electrónico quedará verificada. Si no ha iniciado este proceso o ha recibido este correo electrónico por error, le pedimos que ignore este mensaje. No se realizará ninguna acción en su nombre.<br>
-                                
-                                Si tiene alguna pregunta o necesita ayuda adicional, no dude en ponerse en contacto con nuestro equipo de atención al cliente.<br><br>
+                                Una vez que haya completado estos pasos, su dirección de correo electrónico quedará verificada. Si no ha iniciado este proceso o ha recibido este correo electrónico por error, le pedimos que ignore este mensaje. No se realizará ninguna acción en su nombre. Si tiene alguna pregunta o necesita ayuda adicional, no dude en ponerse en contacto con nuestro equipo de atención al cliente.<br><br>
                                 
                                 ¡Gracias por su colaboración!<br>
                                 Atentamente,<br>
