@@ -514,7 +514,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div id="accordion">
-                            <div class="card">
+                            <div class="card" id="divCopropietario">
                                 <div class="card-header collapsed cursor-point" id="copropietario-collapse" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                                     <div class="d-flex justify-between mb-1">
                                         <span class="fs-2">COPROPIETARIO (S)</span>
@@ -724,7 +724,7 @@
 
                                             echo '</div>';
                                         } else {
-                                            echo '<div class="col-xs-10 col-sm-10 col-md-10 col-lg-10"><b><label style="color:#0A548B;">SIN DATOS A MOSTRAR<br></label></b></div>';
+                                            echo '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center"><b><label style="color:#0A548B;">SIN DATOS A MOSTRAR<br></label></b></div>';
                                         }
                                         ?>
                                     </div>
