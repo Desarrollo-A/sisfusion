@@ -11,7 +11,6 @@ $(document).ready(function () {
                 $("#tipoUsuario").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
         }
         if (id_rol_general != 1 && id_rol_general != 4 && id_rol_general != 18 && id_rol_general != 63) {
-            console.log(id_rol_general);
             $("#comisionista").val(id_usuario_general);
             let estatusComisionista = $('#comisionista option:selected').data('estatus');
             let rolComisionista = $('#comisionista option:selected').data('rol');
@@ -71,6 +70,7 @@ $("#comisionista").on('change', function () {
         htmlEstatus = `( <span>Activo</span> / `;
     $(".lblEstatus").append(htmlEstatus);
     $(".lblRolActual").append(htmlRol);
+    
 });
 
 let titulos_intxt = [];
@@ -78,7 +78,7 @@ $('#reporteLotesPorComisionista thead tr:eq(0) th').each(function (i) {
     $(this).css('text-align', 'center');
     var title = $(this).text();
     titulos_intxt.push(title);
-    $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
+    $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
     $('input', this).on('keyup change', function () {
         if ($('#reporteLotesPorComisionista').DataTable().column(i).search() !== this.value)
             $('#reporteLotesPorComisionista').DataTable().column(i).search(this.value).draw();
@@ -95,6 +95,7 @@ $('#reporteLotesPorComisionista thead tr:eq(0) th').each(function (i) {
         });
         colocarValoresTotales(total, totalAbonado, totalPagado);
     });
+    $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
 });
 
 $('#reporteLotesPorComisionista').on('xhr.dt', function (e, settings, json, xhr) {
@@ -119,6 +120,7 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
+                title:'Reporte de lostes por comisionista',
                 exportOptions: {
                     columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
                     format: {
@@ -183,9 +185,9 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
                 data: function (d) {
                     let labelStatus;
                     if (d.rec == 8)
-                        labelStatus = `<span class="label" style="background:#E6B0AA; color:#641E16">VENTA CANCELADA</span>`;
+                        labelStatus = `<span class="label lbl-warning">VENTA CANCELADA</span>`;
                     else
-                        labelStatus = `<span class="label" style="background:#${d.background_sl}; color:#${d.color}">${d.nombreEstatusLote}</span>`;
+                        labelStatus = `<span class="label lbl-yellow">${d.nombreEstatusLote}</span>`;
                     return labelStatus;
                 }
             },
@@ -193,16 +195,16 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
                 data: function (d) {
                     let labelStatus;
                     if (d.rec == 8)
-                        labelStatus = `<span class="label" style="background:#E6B0AA; color:#641E16">RESCISIÓN DE CONTRATO</span>`;
+                        labelStatus = `<span class="label lbl-warning">RESCISIÓN DE CONTRATO</span>`;
                     else {
                         if (d.registroComision == 2 || d.registroComision == 8 || d.registroComision == 88 || d.registroComision == 0)
-                            labelStatus = `<span class="label" style="background:#ABB2B9; color:#17202A">SIN DISPERSAR</span>`;
+                        labelStatus = `<span class="label lbl-gray">SIN DISPERSAR</span>`;
                         else if (d.registroComision == 7)
-                            labelStatus = `<span class="label" style="background:#A9DFBF; color:#145A32">LIQUIDADA</span>`;
+                            labelStatus = `<span class="label lbl-green">LIQUIDADA</span>`;
                         else if (d.registroComision == 1)
-                            labelStatus = `<span class="label" style="background:#D7BDE2; color:#512E5F">EN PROCESO DE DISPERSIÓN</span></span>`;
+                            labelStatus = `<span class="label lbl-violetDeep">EN PROCESO DE DISPERSIÓN</span></span>`;
                         else
-                            labelStatus = `<span class="label" style="background:#ABB2B9; color:#17202A">SIN DEFINIR ESTATUS</span>`;
+                            labelStatus = `<span class="label lbl-grayDark">SIN DEFINIR ESTATUS</span>`;
                     }
                     return labelStatus;
                 }
@@ -264,6 +266,7 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
 }
 
 $(document).on("click", "#searchByDateRange", function () {
+    $('#reporteLotesPorComisionista').removeClass('hide');
     if ($("#comisionista").val() != '' && $("#tipoUsuario").val() != '') {
         colocarValoresTotales('0.00', '0.00', '0.00');
         let finalBeginDate = $("#beginDate").val();
@@ -306,14 +309,22 @@ $(document).on("click", "#detailComisionistaBtn", function () {
                             canceladas: data[i].datos[j].canceladas
                         })
                     }
+                    orderedArray.sort(function(a,b){
+                        if(a.anio> b.anio){
+                            return 1;
+                        }
+                        if(a.anio< b.anio){
+                            return -1;
+                        }
+                    });
                 }
             }
         }
-
+        console.log(orderedArray);
         for (let i = 0; i < orderedArray.length; i++) {
             let htmlRol = '';
             for (let j = 0; j < orderedArray[i].datos.length; j++) {
-                htmlRol += `<div class="tl-date mt-1"><b>${orderedArray[i].datos[j].total}</b> comisiones como ${(orderedArray[i].datos[j].rol).replace('id_', '')}<ul class="m-0" style="list-style:none"><li><b>${orderedArray[i].datos[j].activas}</b> Activos</li><li><b>${orderedArray[i].datos[j].canceladas}</b>  Cancelados</li></ul></div>`;
+                htmlRol += `<div class="tl-date mt-1"><b>${orderedArray[i].datos[j].total}</b> comisiones como ${(orderedArray[i].datos[j].rol).replace('id_', '')}<ul class="m-0" style="list-style:none"><li><b>${orderedArray[i].datos[j].activas}</b> activos</li><li><b>${orderedArray[i].datos[j].canceladas}</b> cancelados</li></ul></div>`;
             }
             html += `<div class="tl-item">
                         <div class="tl-dot b-warning"></div>
@@ -332,6 +343,8 @@ $(document).on("click", "#detailComisionistaBtn", function () {
         $("#detailComisionistaModal").modal();
     }, 'json');
 });
+
+
 
 function setInitialValuesReporte() {
     // BEGIN DATE

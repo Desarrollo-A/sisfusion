@@ -1389,9 +1389,9 @@
 }
 
 .input-gral {
-  background-color: #ffffff !important;
+  background-color: #eaeaea !important;
   color: #929292 !important;
-  border-radius: 15px !important;
+  border-radius: 27px !important;
   background-image: none !important;
   padding-left: 20px;
   border: none;
@@ -1446,13 +1446,13 @@ Etiqueta para etiquetas dentro de la DataTable en vistas:
 .lbl-dark-blue {
   color: #1B4F72;
   border: none;
-  background-color: #1B4F7250;
+  background-color: #1B4F7218;
 }
 
 .lbl-dark-cyan {
   color: #008c76;
   border: none;
-  background-color: #008c7650;
+  background-color: #008c7618;
 }
 
 /************************************************************/

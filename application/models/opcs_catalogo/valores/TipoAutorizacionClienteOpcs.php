@@ -2,6 +2,7 @@
 
 class TipoAutorizacionClienteOpcs extends CI_Model
 {
-    const CORREO = 1;
-    const SMS = 2;
+    CONST NORMAL = 1;
+    const CORREO = 2;
+    const SMS = 3;
 }

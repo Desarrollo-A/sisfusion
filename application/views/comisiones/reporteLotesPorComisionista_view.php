@@ -183,37 +183,34 @@
                                 <br>
                                 <div class="material-datatables" id="box-reporteLotesPorComisionista">
                                     <div class="form-group">
-                                        <div class="table-responsive">
-                                            <table class="table-striped table-hover"
-                                                id="reporteLotesPorComisionista" name="reporteLotesPorComisionista">
-                                                <thead>
-                                                    <tr>
-                                                        <th>PROYECTO</th>
-                                                        <th>CONDOMINIO</th>
-                                                        <th>LOTE</th>
-                                                        <th>ID LOTE</th>
-                                                        <th>CLIENTE</th>
-                                                        <th>FECHA APARTADO</th>
-                                                        <th>SEDE</th>
-                                                        <th>ASESOR</th>
-                                                        <th>COORDINADOR</th>
-                                                        <th>GERENTE</th>
-                                                        <th>SUBDIRECTOR</th>
-                                                        <th>DIRECTOR REGIONAL</th>
-                                                        <th>ESTATUS CONTRATACIÓN</th>
-                                                        <th>ESTATUS VENTA</th>
-                                                        <th>ESTATUS COMISIÓN</th>
-                                                        <th>PRECIO FINAL</th>
-                                                        <th>PORCENTAJE COMISIÓN</th>
-                                                        <th>PAGO CLIENTE</th>
-                                                        <th>TOTAL COMISIÓN</th>
-                                                        <th>TOTAL ABONADO</th>
-                                                        <th>TOTAL PAGADO</th>
-                                                        <th>LUGAR PROSPECCIÓN</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
-                                        </div>
+                                        <table class="table-striped table-hover hide" id="reporteLotesPorComisionista" name="reporteLotesPorComisionista">
+                                            <thead>
+                                                <tr>
+                                                    <th>PROYECTO</th>
+                                                    <th>CONDOMINIO</th>
+                                                    <th>LOTE</th>
+                                                    <th>ID DEL LOTE</th>
+                                                    <th>CLIENTE</th>
+                                                    <th>FECHA DE APARTADO</th>
+                                                    <th>SEDE</th>
+                                                    <th>ASESOR</th>
+                                                    <th>COORDINADOR</th>
+                                                    <th>GERENTE</th>
+                                                    <th>SUBDIRECTOR</th>
+                                                    <th>DIRECTOR REGIONAL</th>
+                                                    <th>ESTATUS DE LA CONTRATACIÓN</th>
+                                                    <th>ESTATUS DE LA VENTA</th>
+                                                    <th>ESTATUS DE LA COMISIÓN</th>
+                                                    <th>PRECIO FINAL</th>
+                                                    <th>PORCENTAJE DE LA COMISIÓN</th>
+                                                    <th>PAGO DEL CLIENTE</th>
+                                                    <th>TOTAL DE LA COMISIÓN</th>
+                                                    <th>TOTAL ABONADO</th>
+                                                    <th>TOTAL PAGADO</th>
+                                                    <th>LUGAR DE PROSPECCIÓN</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
                                     </div>
                                 </div>
                             </div>

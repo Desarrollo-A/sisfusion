@@ -862,8 +862,8 @@
                         <textarea class="text-modal" type="text" name="description" id="description" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary finishS">Aceptar</button>
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanSelects()">Cancelar</button>
+                        <button type="submit" class="btn btn-primary finishS">Aceptar</button>
                     </div>
                 </form>
             </div>
