@@ -5,7 +5,7 @@
     <div class="wrapper">
         <?php
 		    //se debe validar que tipo de perfil esta sesionado para poder asignarle el tipo de sidebar
-		    if(in_array($this->session->userdata('id_rol'), array(2, 3, 4, 5, 6, 7, 9, 11, 12, 13, 15, 16, 28, 32, 33, 34, 39, 50, 40, 53, 58, 65, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 55, 17, 73)))
+		    if(in_array($this->session->userdata('id_rol'), array(2, 3, 4, 5, 6, 7, 9, 11, 12, 13, 15, 16, 28, 32, 33, 34, 39, 50, 40, 53, 58, 65, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 55, 17, 73, 70, 71, 47)))
                 $this->load->view('template/sidebar');
             else
                 echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
@@ -59,6 +59,7 @@
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -81,11 +82,9 @@
                                     <h3 class="card-title center-align">Documentación por lote</h3>
                                     <div class="row">
                                         <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                            <div class="form-group select-is-empty">
+                                            <div class="form-group select-is-empty overflow-hidden">
                                                 <label class="control-label">Proyecto</label>
-                                                <select name="idResidencial" id="idResidencial" class="selectpicker select-gral m-0"
-                                                    data-style="btn" data-show-subtext="true" data-live-search="true"
-                                                    title="Selecciona un proyecto" data-size="7" required>
+                                                <select name="idResidencial" id="idResidencial" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container='body' required>
                                                     <?php
 													if ($residencial != NULL) :
 														foreach ($residencial as $fila) : ?>
@@ -98,25 +97,24 @@
                                             </div>
                                         </div>
                                         <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                            <div class="form-group select-is-empty">
+                                            <div class="form-group select-is-empty overflow-hidden">
                                                 <label class="control-label">Condominio</label>
                                                 <select id="idCondominio" name="idCondominio" class="selectpicker select-gral m-0"
                                                     data-style="btn" data-show-subtext="true" data-live-search="true"
-                                                    title="Selecciona un condominio" data-size="7" required>
+                                                    title="SELECCIONA UNA OPCIÓN" data-size="7" data-container='body' required>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                            <div class="form-group select-is-empty">
+                                            <div class="form-group select-is-empty overflow-hidden">
                                                 <label class="control-label">Lote</label>
                                                 <select id="idLote" name="idLote" class="selectpicker select-gral m-0"
                                                     data-style="btn" data-show-subtext="true" data-live-search="true"
-                                                    title="Selecciona un lote" data-size="7" required>
+                                                    title="SELECCIONA UNA OPCIÓN" data-size="7" data-container='body' required>
                                                 </select>
                                             </div>
                                         </div>
                                     </div>
-                                    <!--        Here you can write extra buttons/accions for the toolbar              -->
                                 </div>
                                 <table id="tableDoct" class="table-striped table-hover hide">
                                     <thead>
