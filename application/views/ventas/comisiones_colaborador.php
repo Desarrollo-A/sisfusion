@@ -222,9 +222,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-lg-7">
-                                                <center>
-                                                    <button class="btn btn-warning" type="button" id="cargar_xml"><i class="fa fa-upload"></i> CARGAR</button>
-                                                </center>
+                                                    <button class="btn btn-warning justify-center" type="button" id="cargar_xml"><i class="fa fa-upload"></i> CARGAR</button>
                                             </div>
                                         </div>
                                         <form id="frmnewsol" method="post" action="#">
@@ -304,8 +302,8 @@
                         <h4 class="card-title"><b>Cargar documento fiscal</b></h4>
                     </div>
                     <form id="EditarPerfilExtranjeroForm"
-                          name="EditarPerfilExtranjeroForm"
-                          method="post">
+                        name="EditarPerfilExtranjeroForm"
+                        method="post">
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-lg-12 text-center">
@@ -325,7 +323,7 @@
                                             <h3 id="total-comision"></h3>
                                         </div>
                                         <div class="col-lg-12"
-                                             id="preview-div">
+                                            id="preview-div">
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -357,15 +355,15 @@
                             <b>II.</b> Número de identificación fiscal, o su equivalente, de quien lo expide.
                         </p>
                         <p>
-                              USA se llama Tax Id o ITIN (Taxpayer Identification Number).
+                            USA se llama Tax Id o ITIN (Taxpayer Identification Number).
                             <br>
-                              Canadá: Tax Id o Business Number.
+                            Canadá: Tax Id o Business Number.
                             <br>
-                              Ecuador: RUC (Registro Único de Contribuyentes).
+                            Ecuador: RUC (Registro Único de Contribuyentes).
                             <br>
-                              Colombia: RUT (Registro Único Tributario).
+                            Colombia: RUT (Registro Único Tributario).
                             <br>
-                              Otros países: el número de registro que se utiliza en su país para el pago de impuesto.
+                            Otros países: el número de registro que se utiliza en su país para el pago de impuesto.
                         </p>
                         <p>
                             <b>III.</b> Lugar y fecha de expedición.
@@ -421,7 +419,6 @@
                                                         <b>Da clic aquí para ir al historial</b>
                                                     </a>
                                                 </p>
-                                                
                                                 <?php
                                                     if($this->session->userdata('forma_pago') == 3){
                                                 ?>
@@ -430,11 +427,8 @@
                                                     Al monto mostrado habrá que descontar el
                                                     <b>impuesto estatal</b> del
                                                 <?php
-
                                                 $sede = $this->session->userdata('id_sede');
-                                                      
                                                 $query = $this->db->query("SELECT * FROM sedes WHERE estatus in (1) AND id_sede = ".$sede."");
-
                                                 foreach ($query->result() as $row){
                                                     $number = $row->impuesto;
                                                     echo '<b>' .number_format($number,2).'%</b> e ISR de acuerdo a las tablas publicadas en el SAT.';
@@ -446,7 +440,6 @@
                                                     ?>
                                                 <p style="color:#0a548b;"><i class="fa fa-info-circle" aria-hidden="true"></i> La cantidad mostrada es menos las deducciones aplicables para el régimen de <b>Remanente Distribuible.</b>
                                                 <?php }?>
-                                    
                                                 <?php if ($this->session->userdata('forma_pago') == 5) { ?>
                                                     <p class="card-title pl-2">Comprobantes fiscales emitidos por residentes en el <b>extranjero</b>
                                                         sin establecimiento permanente en México.
@@ -463,13 +456,10 @@
                                                         </a>
                                                     </p> -->
                                                 <?php } ?>
-
-
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
                                                     <div class="row">
-                                                       
                                                         <div class="col-12 col-sm-12 col-md-4 col-lg-4">
                                                             <div class="form-group text-center">
                                                                 <h4 class="title-tot center-align m-0">Saldo sin impuestos:</h4>
@@ -492,27 +482,25 @@
                                             </div>
                                             <div class="material-datatables">
                                                 <div class="form-group">
-                                                    <div class="table-responsive">
-                                                        <table class="table-striped table-hover" id="tabla_nuevas_comisiones" name="tabla_nuevas_comisiones">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th></th>
-                                                                    <th>ID PAGO</th>
-                                                                    <th>PROYECTO</th>
-                                                                    <th>LOTE</th>
-                                                                    <th>PRECIO LOTE</th>
-                                                                    <th>TOTAL COMISIÓN</th>
-                                                                    <th>PAGADO CLIENTE</th>
-                                                                    <th>DISPERSADO</th>
-                                                                    <th>SALDO A COBRAR</th>
-                                                                    <th>% COMISIÓN</th>
-                                                                    <th>DETALLE</th>
-                                                                    <th>ESTATUS</th>
-                                                                    <th>MÁS</th>
-                                                                </tr>
-                                                            </thead>
-                                                        </table>
-                                                    </div>
+                                                    <table class="table-striped table-hover" id="tabla_nuevas_comisiones" name="tabla_nuevas_comisiones">
+                                                        <thead>
+                                                            <tr>
+                                                                <th></th>
+                                                                <th>ID PAGO</th>
+                                                                <th>PROYECTO</th>
+                                                                <th>LOTE</th>
+                                                                <th>PRECIO DEL LOTE</th>
+                                                                <th>TOTAL DE LA COMISIÓN</th>
+                                                                <th>PAGADO DEL CLIENTE</th>
+                                                                <th>DISPERSADO</th>
+                                                                <th>SALDO A COBRAR</th>
+                                                                <th>% COMISIÓN</th>
+                                                                <th>DETALLE</th>
+                                                                <th>ESTATUS</th>
+                                                                <th>MÁS</th>
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
                                                 </div>
                                             </div>
                                         </div>
@@ -539,26 +527,24 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="table-responsive">
-                                                <table class="table-striped table-hover" id="tabla_revision_comisiones" name="tabla_revision_comisiones">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>ID PAGO</th>
-                                                            <th>PROYECTO</th>
-                                                            <th>LOTE</th>
-                                                            <th>PRECIO LOTE</th>
-                                                            <th>TOTAL COMISIÓN</th>
-                                                            <th>PAGADO CLIENTE</th>
-                                                            <th>DISPERSADO</th>
-                                                            <th>SALDO A COBRAR</th>
-                                                            <th>% COMISIÓN</th>
-                                                            <th>DETALLE</th>
-                                                            <th>ESTATUS</th>
-                                                            <th>MÁS</th>
-                                                        </tr>
-                                                    </thead>
-                                                </table>
-                                            </div>
+                                            <table class="table-striped table-hover" id="tabla_revision_comisiones" name="tabla_revision_comisiones">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID PAGO</th>
+                                                        <th>PROYECTO</th>
+                                                        <th>LOTE</th>
+                                                        <th>PRECIO DEL LOTE</th>
+                                                        <th>TOTAL DE LA COMISIÓN</th>
+                                                        <th>PAGADO DEL CLIENTE</th>
+                                                        <th>DISPERSADO</th>
+                                                        <th>SALDO A COBRAR</th>
+                                                        <th>% COMISIÓN</th>
+                                                        <th>DETALLE</th>
+                                                        <th>ESTATUS</th>
+                                                        <th>MÁS</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
                                         </div>
                                         <div class="tab-pane" id="proceso-2">
                                             <div class="encabezadoBox">
@@ -574,7 +560,6 @@
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
                                                     <div class="row">
-                                                         
                                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                             <div class="form-group d-flex justify-center align-center">
                                                                 <h4 class="title-tot center-align m-0">Por pagar sin impuestos:</h4>
@@ -584,26 +569,24 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="table-responsive">
-                                                <table class="table-striped table-hover" id="tabla_pagadas_comisiones" name="tabla_pagadas_comisiones">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>ID PAGO</th>
-                                                            <th>PROYECTO</th>
-                                                            <th>LOTE</th>
-                                                            <th>PRECIO LOTE</th>
-                                                            <th>TOTAL COMISIÓN</th>
-                                                            <th>PAGADO CLIENTE</th>
-                                                            <th>DISPERSADO</th>
-                                                            <th>SALDO A COBRAR</th>
-                                                            <th>% COMISIÓN</th>
-                                                            <th>DETALLE</th>
-                                                            <th>ESTATUS</th>
-                                                            <th>MÁS</th>
-                                                        </tr>
-                                                    </thead>
-                                                </table>
-                                            </div>
+                                            <table class="table-striped table-hover" id="tabla_pagadas_comisiones" name="tabla_pagadas_comisiones">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID PAGO</th>
+                                                        <th>PROYECTO</th>
+                                                        <th>LOTE</th>
+                                                        <th>PRECIO DEL LOTE</th>
+                                                        <th>TOTAL DE LA COMISIÓN</th>
+                                                        <th>PAGADO DEL CLIENTE</th>
+                                                        <th>DISPERSADO</th>
+                                                        <th>SALDO A COBRAR</th>
+                                                        <th>% COMISIÓN</th>
+                                                        <th>DETALLE</th>
+                                                        <th>ESTATUS</th>
+                                                        <th>MÁS</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
                                         </div>
                                         <div class="tab-pane" id="otras-1">
                                             <div class="encabezadoBox">
@@ -619,7 +602,6 @@
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
                                                     <div class="row">
-                                                     
                                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                             <div class="form-group d-flex justify-center align-center">
                                                                 <h4 class="title-tot center-align m-0">Total pausado:</h4>
@@ -629,32 +611,26 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="table-responsive">
-                                                <table class="table-striped table-hover" id="tabla_otras_comisiones" name="tabla_otras_comisiones">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>ID PAGO</th>
-                                                            <th>PROYECTO</th>
-                                                            <th>LOTE</th>
-                                                            <th>PRECIO LOTE</th>
-                                                            <th>TOTAL COMISIÓN</th>
-                                                            <th>PAGADO CLIENTE</th>
-                                                            <th>DISPERSADO</th>
-                                                            <th>SALDO A COBRAR</th>
-                                                            <th>% COMISIÓN</th>
-                                                            <th>DETALLE</th>
-                                                            <th>ESTATUS</th>
-                                                            <th>MÁS</th>
-                                                        </tr>
-                                                    </thead>
-                                                </table>
-                                            </div>
+                                            <table class="table-striped table-hover" id="tabla_otras_comisiones" name="tabla_otras_comisiones">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID PAGO</th>
+                                                        <th>PROYECTO</th>
+                                                        <th>LOTE</th>
+                                                        <th>PRECIO DEL LOTE</th>
+                                                        <th>TOTAL DE LA COMISIÓN</th>
+                                                        <th>PAGADO DEL CLIENTE</th>
+                                                        <th>DISPERSADO</th>
+                                                        <th>SALDO A COBRAR</th>
+                                                        <th>% COMISIÓN</th>
+                                                        <th>DETALLE</th>
+                                                        <th>ESTATUS</th>
+                                                        <th>MÁS</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
                                         </div>
                                         <div class="tab-pane" id="sin_pago_neodata">
-                                            <!-- <div class="encabezadoBox">
-                                                <h3 class="card-title center-align">Estatus comisiones</h3>
-                                                <p class="card-title pl-1">(Comisiones sin pago reflejado en NEODATA)</p>
-                                            </div> -->
                                             <div class="encabezadoBox">
                                                 <p class="card-title pl-1">Comisiones sin pago reflejado en NEODATA y que por ello no se han dispersado ciertos lotes con tus comisiones.</p>
                                             </div>
@@ -695,23 +671,21 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="table-responsive">
-                                                <table class="table-striped table-hover" id="tabla_comisiones_sin_pago" name="tabla_comisiones_sin_pago">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>ID</th>
-                                                            <th>PROYECTO</th>
-                                                            <th>CONDOMINIO</th>
-                                                            <th>LOTE</th>
-                                                            <th>CLIENTE</th>
-                                                            <th>ASESOR</th>
-                                                            <th>COORDINADOR</th>
-                                                            <th>GERENTE</th>
-                                                            <th>ESTATUS</th>
-                                                        </tr>
-                                                    </thead>
-                                                </table>
-                                            </div>
+                                            <table class="table-striped table-hover hide" id="tabla_comisiones_sin_pago" name="tabla_comisiones_sin_pago">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>PROYECTO</th>
+                                                        <th>CONDOMINIO</th>
+                                                        <th>LOTE</th>
+                                                        <th>CLIENTE</th>
+                                                        <th>ASESOR</th>
+                                                        <th>COORDINADOR</th>
+                                                        <th>GERENTE</th>
+                                                        <th>ESTATUS</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
