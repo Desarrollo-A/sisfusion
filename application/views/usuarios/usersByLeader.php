@@ -17,22 +17,20 @@
                                 <h3 class="card-title center-align">Plantilla activa.</h3>
                                 <div class="material-datatables">
                                     <div class="form-group">
-                                        <div class="table-responsive">
-                                            <table class="table-striped table-hover" id="users_datatable"name="users_datatable">
-                                                <thead>
-                                                    <tr>
-                                                        <th class="disabled-sorting text-right">Estatus</th>
-                                                        <th>ID</th>
-                                                        <th class="disabled-sorting text-right">Nombre</th>
-                                                        <th>Correo</th>
-                                                        <th>Teléfono</th>
-                                                        <th>Tipo</th>
-                                                        <th>Jefe directo</th>
-                                                        <th>Sede</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
-                                        </div>
+                                        <table class="table-striped table-hover" id="users_datatable"name="users_datatable">
+                                            <thead>
+                                                <tr>
+                                                    <th class="disabled-sorting text-right">Estatus</th>
+                                                    <th>ID</th>
+                                                    <th class="disabled-sorting text-right">Nombre</th>
+                                                    <th>Correo</th>
+                                                    <th>Teléfono</th>
+                                                    <th>Tipo</th>
+                                                    <th>Jefe directo</th>
+                                                    <th>Sede</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
                                     </div>
                                 </div>
                             </div>

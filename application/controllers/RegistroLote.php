@@ -6709,9 +6709,11 @@ class RegistroLote extends CI_Controller
 	{
 		if (isset($_POST) && !empty($_POST)) {
 			$typeTransaction = $this->input->post("typeTransaction");
-			$beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-			$endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
-			$where = $this->input->post("where");
+            $fechaInicio = explode('/', $this->input->post("beginDate"));
+            $fechaFin = explode('/', $this->input->post("endDate"));
+            $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+            $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
+            $where = $this->input->post("where");
 			$data['data'] = $this->registrolote_modelo->report($typeTransaction, $beginDate, $endDate, $where)->result_array();
 			echo json_encode($data);
 		} else {
