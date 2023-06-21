@@ -757,8 +757,14 @@ $tv                 : "(min-width: 1280px)";
         color: $deepGray;
         box-shadow: 0px 4px 4px RGB(0, 0, 0, 0.1);
         text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         &:hover{
             box-shadow: none;
+        }
+        span{
+            margin: 5px;
         }
     }
     .file-name{

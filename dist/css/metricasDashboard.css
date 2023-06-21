@@ -1138,10 +1138,17 @@
   color: #929292;
   box-shadow: 0px 4px 4px RGB(0, 0, 0, 0.1);
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .file-gph .upload-btn:hover {
   box-shadow: none;
+}
+
+.file-gph .upload-btn span {
+  margin: 5px;
 }
 
 .file-gph .file-name {
