@@ -4,8 +4,9 @@ let tablaAut = null;
 let tablaAutClientes = null;
 
 const TIPO_AUTORIZACION = Object.freeze({
-    CORREO: 1,
-    SMS: 2
+    NORMAL: 1,
+    CORREO: 2,
+    SMS: 3
 });
 
 $(document).ready(function() {
@@ -388,7 +389,7 @@ $(document).ready (function() {
                             <div class="w-80">
                                 <small>
                                     <label class="m-0" style="font-size: 11px; font-weight: 100;">
-                                        Solicitud de <b>${getTipoAutorizacion(item.tipo)}</b> ( ${ item['fecha_creacion'].substr(0,10) })
+                                        Solicitud de <b>${getTipoAutorizacion(item.id_tipo)}</b> ( ${ item['fecha_creacion'].substr(0,10) })
                                     </label>
                                 </small>
                             </div>
@@ -417,7 +418,7 @@ $(document).ready (function() {
                             <input type="text" name="observaciones${i}" class="form-control" style="border-radius:27px; border: 1px solid #cdcdcd; background-image: none; padding: 0 20px;">
                         </div>
                         <input type="hidden" name="idAutorizacion${i}"  value="${item['id_autorizacion']}">
-                        <input type="hidden" name="tipo${i}" value="${item.tipo}">
+                        <input type="hidden" name="tipo${i}" value="${item.id_tipo}">
                     </div>
                 `;
                 $('#loadAutsCliente').append(ctn);
