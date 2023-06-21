@@ -1447,16 +1447,14 @@ $(document).on('click', '.btn-solicitar', function () {
     $.get(`${general_base_url}Asesor/clienteAutorizacion/${idCliente}`, function (data) {
         cliente = JSON.parse(data);
 
-        console.log(cliente);
-
-        if ((parseInt(cliente.total_sol_correo_pend) > 0 && cliente.autorizacion_correo === null) || parseInt(cliente.total_sol_correo_aut) > 0) {
+        if (parseInt(cliente.total_sol_correo_pend) > 0 || parseInt(cliente.total_sol_correo_aut) > 0 || cliente.autorizacion_correo === null) {
             $('#chk-correo-sol-div').hide();
             $('#chk-sms-sol-div').removeAttr('class');
             $('#chk-sms-sol-div').attr('class', 'col-12 col-sm-12 col-md-12 col-lg-12 p-0');
             $('#chkCorreoSol').prop('checked', false);
         }
 
-        if ((parseInt(cliente.total_sol_sms_pend) > 0 && cliente.autorizacion_sms === null) || parseInt(cliente.total_sol_sms_aut) > 0) {
+        if (parseInt(cliente.total_sol_sms_pend) > 0 || parseInt(cliente.total_sol_sms_aut) > 0 || cliente.autorizacion_sms === null) {
             $('#chk-sms-sol-div').hide();
             $('#chk-correo-sol-div').removeAttr('class');
             $('#chk-correo-sol-div').attr('class', 'col-12 col-sm-12 col-md-12 col-lg-12 p-0');
