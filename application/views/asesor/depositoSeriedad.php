@@ -65,7 +65,6 @@
             </div>
         </div>
     </div>
-</div>
 
     <div class="modal fade" id="modal_loader_assign" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
          data-backdrop="static" data-keyboard="false">
@@ -127,7 +126,7 @@
     </div>
     <!-- modal -->
 
-    <!-- modal ENVÍO DE AUTORIZACIONES-->
+    <!-- modal ENVÍO DE VERIFICACIONES -->
     <div class="modal fade" id="autorizaciones-modal" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content" >
@@ -189,12 +188,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">
-                            <span class="glyphicon glyphicon-remove"></span> Cerrar
-                        </button>
-                        <button type="submit" id="guardar-autorizacion" class="btn btn-primary">
-                            <span class="material-icons" >send</span> Enviar
-                        </button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" id="guardar-autorizacion" class="btn btn-primary">Enviar</button>
                     </div>
                 </form>
             </div>
@@ -207,7 +202,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">
-                        Reenvío de autorizaciones al cliente
+                        Reenvío de verificaciones al cliente
                     </h4>
                 </div>
                 <form id="reenvio-form">
@@ -234,12 +229,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">
-                            <span class="glyphicon glyphicon-remove"></span> Cerrar
-                        </button>
-                        <button type="submit" class="btn btn-primary">
-                            <span class="material-icons" >send</span> Reenviar
-                        </button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Reenviar</button>
                     </div>
                 </form>
             </div>
@@ -251,7 +242,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">
-                        Solicitar edición de autorización
+                        Solicitar edición de verificación
                     </h4>
                 </div>
                 <form id="solicitar-form">
@@ -291,12 +282,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">
-                            <span class="glyphicon glyphicon-remove"></span> Cerrar
-                        </button>
-                        <button type="submit" class="btn btn-primary">
-                            <span class="material-icons" >send</span> Solicitar
-                        </button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Enviar</button>
                     </div>
                 </form>
             </div>
@@ -360,6 +347,8 @@
                                             <th>FECHA DE VENCIMIENTO</th>
                                             <th>COMENTARIO</th>
                                             <th>PROSPECTO</th>
+                                            <th>VERIFICACIÓN DE CORREO</th>
+                                            <th>VERIFICACIÓN DE SMS</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>
@@ -523,7 +512,6 @@
     <?php $this->load->view('template/footer_legend');?>
 </div>
 </div>
-</div><!--main-panel close-->
 </body>
 <?php $this->load->view('template/footer');?>
 <!--DATATABLE BUTTONS DATA EXPORT-->
