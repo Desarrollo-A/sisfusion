@@ -62,7 +62,7 @@
                                     <?php }?>
 
                                     <div class="row aligned-row">
-                                        <div class="form-group col col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                        <div class="form-group col col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                             <div class="radio_container w-100">
                                                 <?php if ($this->session->userdata('id_rol') == 31) { ?>
                                                     <input class="d-none generate" type="radio" disabled="true" id="one" checked>
@@ -77,7 +77,14 @@
                                                 <?php } ?>
                                             </div>
                                         </div>
-                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4 d-flex align-center justify-evenly  row-load hide ">
+                                        <div class=" form-group d-flex col col-xs-12 col-sm-6 col-md-6 col-lg-6 align-center justify-evenly  box-table hide">
+                                            <input type="text" class="form-control datepicker text-center pl-1 beginDate box-table hide" id="beginDate" />
+                                            <input type="text" class="form-control datepicker text-center pl-1 endDate box-table hide" id="endDate" />
+                                            <button class="btn btn-success btn-round btn-fab btn-fab-mini searchByDateRange box-table hide" name="searchByDateRange" id="searchByDateRange">
+                                                <span class="material-icons update-dataTable">search</span>
+                                            </button>
+                                        </div>
+                                        <div class="col col-xs-12 col-sm-6 col-md-4 col-lg-4 d-flex align-center justify-evenly  row-load hide ">
                                             <button class="btn-rounded btn-s-greenLight row-load hide " id="downloadFile" name="downloadFile" title="Download">
                                                 <i class="fas fa-download"></i>
                                             </button> <!-- DOWNLOAD -->
@@ -85,13 +92,7 @@
                                                 <i class="fas fa-upload"></i>
                                             </button> <!-- UPLOAD -->
                                         </div>
-                                        <div class=" form-group d-flex col col-xs-12 col-sm-12 col-md-4 col-lg-4 align-center justify-evenly  box-table hide">
-                                            <input type="text" class="form-control datepicker text-center pl-1 beginDate box-table hide" id="beginDate" />
-                                            <input type="text" class="form-control datepicker text-center pl-1 endDate box-table hide" id="endDate" />
-                                            <button class="btn btn-success btn-round btn-fab btn-fab-mini searchByDateRange box-table hide" name="searchByDateRange" id="searchByDateRange">
-                                                <span class="material-icons update-dataTable">search</span>
-                                            </button>
-                                        </div>
+                                        
                                     </div>
                                     <div class="row pt-2 hide">
                                         <div class="col col-xs-12 col-sm-12 col-md-10 col-lg-10">
@@ -106,16 +107,15 @@
                                     <table id="tableLotificacion" name="tableLotificacion" class="table-striped table-hover">
                                         <thead>
                                             <tr>
-                                                <th>ID REGISTRO</th>
+                                                <th>ID DEL REGISTRO</th>
                                                 <th>NOMBRE</th>
                                                 <th>ROL</th>
                                                 <th>FORMA DE PAGO</th>
                                                 <th>SEDE</th>
                                                 <th>MONTO SIN DESCUENTO</th>
                                                 <th>MONTO CON DESCUENTO</th>
-                                                <th>MONTO INTERNOMEX</th>
-                                                <th>FECHA CAPTURA REGISTRO</th>
-                                                <th>TIPO PAGO</th>
+                                                <th>MONTO DE INTERNOMEX</th>
+                                                <th>FECHA DE CAPTURA DEL REGISTRO</th>
                                                 <th>COMENTARIO</th>
                                                 <th>ACCIONES</th>
                                             </tr>
