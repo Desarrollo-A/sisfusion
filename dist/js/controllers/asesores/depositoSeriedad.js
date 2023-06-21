@@ -35,6 +35,20 @@ const ESTATUS_AUTORIZACION = Object.freeze({
 });
 const STATUS_CONTRATACION = 1;
 
+$('#tabla_deposito_seriedad thead tr:eq(0) th').each(function (i) {
+    const title = $(this).text();
+    titulos_intxt.push(title);
+    $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>`);
+
+    $('input', this).on('keyup change', function () {
+        if ($('#tabla_deposito_seriedad').DataTable().column(i).search() !== this.value) {
+            $('#tabla_deposito_seriedad').DataTable().column(i).search(this.value).draw();
+        }
+    });
+
+    $('[data-toggle="tooltip"]').tooltip();
+});
+
 $(document).ready(function() {
     if (id_usuario_general == 9651) { // MJ: ERNESTO DEL PINO SILVA
         $.post(`${general_base_url}Contratacion/lista_proyecto`, function(data) {
@@ -85,20 +99,6 @@ $('#proyecto').change( function(){
 
 $('#condominio').change( function(){
     fillDataTable($(this).val());
-});
-
-$('#tabla_deposito_seriedad thead tr:eq(0) th').each( function (i) {
-    const title = $(this).text();
-
-    $(this).css('text-align', 'center');
-    titulos_intxt.push(title);
-    $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="'+title+'"/>' );
-
-    $('input', this).on('keyup change', function () {
-        if ($('#tabla_deposito_seriedad').DataTable().column(i).search() !== this.value ) {
-            $('#tabla_deposito_seriedad').DataTable().column(i).search(this.value).draw();
-        }
-    });
 });
 
 
@@ -463,6 +463,9 @@ function fillDataTable(idCondominio) {
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
+        pageLength: 10,
+        ordering: false,
+        destroy: true,
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
@@ -501,10 +504,6 @@ function fillDataTable(idCondominio) {
             searchable: true,
             orderable: false
         }],
-        pageLength: 10,
-        bAutoWidth: false,
-        fixedColumns: true,
-        ordering: false,
         language: {
             url: general_base_url+"static/spanishLoader_v2.json",
             paginate: {
@@ -512,8 +511,6 @@ function fillDataTable(idCondominio) {
                 next: "<i class='fa fa-angle-right'>"
             }
         },
-        order: [[4, "desc"]],
-        destroy: true,
         columns: [
             { "data": "nombreResidencial" },
             { "data": "nombreCondominio" },
@@ -790,10 +787,6 @@ function fillDataTable(idCondominio) {
             data: {
                 "idCondominio": idCondominio,
             }
-        },
-        initComplete: function () {
-            $('[data-toggle="tooltip"]').tooltip("destroy");
-            $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
         }
     });
 }
