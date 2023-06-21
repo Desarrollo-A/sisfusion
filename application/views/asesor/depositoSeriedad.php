@@ -126,7 +126,7 @@
     </div>
     <!-- modal -->
 
-    <!-- modal ENVÍO DE AUTORIZACIONES-->
+    <!-- modal ENVÍO DE VERIFICACIONES -->
     <div class="modal fade" id="autorizaciones-modal" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content" >
@@ -202,7 +202,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">
-                        Reenvío de autorizaciones al cliente
+                        Reenvío de verificaciones al cliente
                     </h4>
                 </div>
                 <form id="reenvio-form">
@@ -242,7 +242,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">
-                        Solicitar edición de autorización
+                        Solicitar edición de verificación
                     </h4>
                 </div>
                 <form id="solicitar-form">

@@ -106,41 +106,35 @@ class Asesor_model extends CI_Model {
         LEFT JOIN autorizaciones AS aut ON cl.id_cliente = aut.idCliente AND lotes.idLote = aut.idLote
         LEFT JOIN codigo_autorizaciones acc ON cl.id_cliente = acc.id_cliente AND acc.tipo = 1
         LEFT JOIN codigo_autorizaciones acs ON cl.id_cliente = acs.id_cliente AND acs.tipo = 2
-        LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
-            FROM autorizaciones a
-            INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
-            WHERE ac.tipo = 1 AND estatus = 0
-            GROUP BY a.idCliente, a.idLote) tipo_correo_aut ON tipo_correo_aut.idCliente = $id_cliente AND tipo_correo_aut.idLote = lotes.idLote
+        LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 2 AND estatus = 0
+            GROUP BY idCliente, idLote) tipo_correo_aut ON tipo_correo_aut.idCliente = $id_cliente AND tipo_correo_aut.idLote = lotes.idLote
         
-        LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
-            FROM autorizaciones a
-            INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
-            WHERE ac.tipo = 1 AND estatus = 1
-            GROUP BY a.idCliente, a.idLote) tipo_correo_pend ON tipo_correo_pend.idCliente = $id_cliente AND tipo_correo_pend.idLote = lotes.idLote
+        LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 2 AND estatus = 1
+            GROUP BY idCliente, idLote) tipo_correo_pend ON tipo_correo_pend.idCliente = $id_cliente AND tipo_correo_pend.idLote = lotes.idLote
 		    
-        LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
-            FROM autorizaciones a
-            INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
-            WHERE ac.tipo = 1 AND estatus = 2
-            GROUP BY a.idCliente, a.idLote) tipo_correo_rech ON tipo_correo_rech.idCliente = $id_cliente AND tipo_correo_rech.idLote = lotes.idLote
+        LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 2 AND estatus = 2
+            GROUP BY idCliente, idLote) tipo_correo_rech ON tipo_correo_rech.idCliente = $id_cliente AND tipo_correo_rech.idLote = lotes.idLote
         
-        LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
-            FROM autorizaciones a
-            INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
-            WHERE ac.tipo = 2 AND estatus = 0
-            GROUP BY a.idCliente, a.idLote) tipo_sms_aut ON tipo_sms_aut.idCliente = $id_cliente AND tipo_sms_aut.idLote = lotes.idLote
+        LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 3 AND estatus = 0
+            GROUP BY idCliente, idLote) tipo_sms_aut ON tipo_sms_aut.idCliente = $id_cliente AND tipo_sms_aut.idLote = lotes.idLote
         
-        LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
-            FROM autorizaciones a
-            INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
-            WHERE ac.tipo = 2 AND estatus = 1
-            GROUP BY a.idCliente, a.idLote) tipo_sms_pend ON tipo_sms_pend.idCliente = $id_cliente AND tipo_sms_pend.idLote = lotes.idLote
+        LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 3 AND estatus = 1
+            GROUP BY idCliente, idLote) tipo_sms_pend ON tipo_sms_pend.idCliente = $id_cliente AND tipo_sms_pend.idLote = lotes.idLote
 		    
-        LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
-            FROM autorizaciones a
-            INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
-            WHERE ac.tipo = 2 AND estatus = 2
-            GROUP BY a.idCliente, a.idLote) tipo_sms_rech ON tipo_sms_rech.idCliente = $id_cliente AND tipo_sms_rech.idLote = lotes.idLote
+        LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 3 AND estatus = 2
+            GROUP BY idCliente, idLote) tipo_sms_rech ON tipo_sms_rech.idCliente = $id_cliente AND tipo_sms_rech.idLote = lotes.idLote
         INNER JOIN deposito_seriedad as ds ON ds.id_cliente = cl.id_cliente
         WHERE lotes.idStatusLote = 3 AND cl.status = 1 AND cl.id_cliente = $id_cliente AND ds.desarrollo IS NOT NULL");
         return $query->result();
@@ -168,41 +162,35 @@ class Asesor_model extends CI_Model {
         LEFT JOIN autorizaciones AS aut ON cl.idCliente = aut.idCliente AND lotes.idLote = aut.idLote
 		LEFT JOIN codigo_autorizaciones acc ON cl.idCliente = acc.id_cliente AND acc.tipo = 1
         LEFT JOIN codigo_autorizaciones acs ON cl.idCliente = acs.id_cliente AND acs.tipo = 2
-		LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
-            FROM autorizaciones a
-            INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
-            WHERE ac.tipo = 1 AND estatus = 0
-            GROUP BY a.idCliente, a.idLote) tipo_correo_aut ON tipo_correo_aut.idCliente = $id_cliente AND tipo_correo_aut.idLote = lotes.idLote
+		LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 2 AND estatus = 0
+            GROUP BY idCliente, idLote) tipo_correo_aut ON tipo_correo_aut.idCliente = $id_cliente AND tipo_correo_aut.idLote = lotes.idLote
         
-        LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
-            FROM autorizaciones a
-            INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
-            WHERE ac.tipo = 1 AND estatus = 1
-            GROUP BY a.idCliente, a.idLote) tipo_correo_pend ON tipo_correo_pend.idCliente = $id_cliente AND tipo_correo_pend.idLote = lotes.idLote
+        LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 2 AND estatus = 1
+            GROUP BY idCliente, idLote) tipo_correo_pend ON tipo_correo_pend.idCliente = $id_cliente AND tipo_correo_pend.idLote = lotes.idLote
 		    
-        LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
-            FROM autorizaciones a
-            INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
-            WHERE ac.tipo = 1 AND estatus = 2
-            GROUP BY a.idCliente, a.idLote) tipo_correo_rech ON tipo_correo_rech.idCliente = $id_cliente AND tipo_correo_rech.idLote = lotes.idLote
+        LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 2 AND estatus = 2
+            GROUP BY idCliente, idLote) tipo_correo_rech ON tipo_correo_rech.idCliente = $id_cliente AND tipo_correo_rech.idLote = lotes.idLote
         
-        LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
-            FROM autorizaciones a
-            INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
-            WHERE ac.tipo = 2 AND estatus = 0
-            GROUP BY a.idCliente, a.idLote) tipo_sms_aut ON tipo_sms_aut.idCliente = $id_cliente AND tipo_sms_aut.idLote = lotes.idLote
+        LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 3 AND estatus = 0
+            GROUP BY idCliente, idLote) tipo_sms_aut ON tipo_sms_aut.idCliente = $id_cliente AND tipo_sms_aut.idLote = lotes.idLote
         
-        LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
-            FROM autorizaciones a
-            INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
-            WHERE ac.tipo = 2 AND estatus = 1
-            GROUP BY a.idCliente, a.idLote) tipo_sms_pend ON tipo_sms_pend.idCliente = $id_cliente AND tipo_sms_pend.idLote = lotes.idLote
+        LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 3 AND estatus = 1
+            GROUP BY idCliente, idLote) tipo_sms_pend ON tipo_sms_pend.idCliente = $id_cliente AND tipo_sms_pend.idLote = lotes.idLote
 		    
-        LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
-            FROM autorizaciones a
-            INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
-            WHERE ac.tipo = 2 AND estatus = 2
-            GROUP BY a.idCliente, a.idLote) tipo_sms_rech ON tipo_sms_rech.idCliente = $id_cliente AND tipo_sms_rech.idLote = lotes.idLote
+        LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 3 AND estatus = 2
+            GROUP BY idCliente, idLote) tipo_sms_rech ON tipo_sms_rech.idCliente = $id_cliente AND tipo_sms_rech.idLote = lotes.idLote
         WHERE lotes.idStatusLote = 3 AND cl.status = 1 AND cl.idCliente = $id_cliente");
         return $query->result();
     }
@@ -240,41 +228,35 @@ class Asesor_model extends CI_Model {
         LEFT JOIN autorizaciones AS aut ON cl.id_cliente = aut.idCliente AND lotes.idLote = aut.idLote
 		LEFT JOIN codigo_autorizaciones acc ON cl.id_cliente = acc.id_cliente AND acc.tipo = 1
         LEFT JOIN codigo_autorizaciones acs ON cl.id_cliente = acs.id_cliente AND acs.tipo = 2
-		LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
-            FROM autorizaciones a
-            INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
-            WHERE ac.tipo = 1 AND estatus = 0
-            GROUP BY a.idCliente, a.idLote) tipo_correo_aut ON tipo_correo_aut.idCliente = $id_cliente AND tipo_correo_aut.idLote = lotes.idLote
+		LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 2 AND estatus = 0
+            GROUP BY idCliente, idLote) tipo_correo_aut ON tipo_correo_aut.idCliente = $id_cliente AND tipo_correo_aut.idLote = lotes.idLote
         
-        LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
-            FROM autorizaciones a
-            INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
-            WHERE ac.tipo = 1 AND estatus = 1
-            GROUP BY a.idCliente, a.idLote) tipo_correo_pend ON tipo_correo_pend.idCliente = $id_cliente AND tipo_correo_pend.idLote = lotes.idLote
+        LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 2 AND estatus = 1
+            GROUP BY idCliente, idLote) tipo_correo_pend ON tipo_correo_pend.idCliente = $id_cliente AND tipo_correo_pend.idLote = lotes.idLote
 		    
-        LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
-            FROM autorizaciones a
-            INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
-            WHERE ac.tipo = 1 AND estatus = 2
-            GROUP BY a.idCliente, a.idLote) tipo_correo_rech ON tipo_correo_rech.idCliente = $id_cliente AND tipo_correo_rech.idLote = lotes.idLote
+        LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 2 AND estatus = 2
+            GROUP BY idCliente, idLote) tipo_correo_rech ON tipo_correo_rech.idCliente = $id_cliente AND tipo_correo_rech.idLote = lotes.idLote
         
-        LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
-            FROM autorizaciones a
-            INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
-            WHERE ac.tipo = 2 AND estatus = 0
-            GROUP BY a.idCliente, a.idLote) tipo_sms_aut ON tipo_sms_aut.idCliente = $id_cliente AND tipo_sms_aut.idLote = lotes.idLote
+        LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 3 AND estatus = 0
+            GROUP BY idCliente, idLote) tipo_sms_aut ON tipo_sms_aut.idCliente = $id_cliente AND tipo_sms_aut.idLote = lotes.idLote
         
-        LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
-            FROM autorizaciones a
-            INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
-            WHERE ac.tipo = 2 AND estatus = 1
-            GROUP BY a.idCliente, a.idLote) tipo_sms_pend ON tipo_sms_pend.idCliente = $id_cliente AND tipo_sms_pend.idLote = lotes.idLote
+        LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 3 AND estatus = 1
+            GROUP BY idCliente, idLote) tipo_sms_pend ON tipo_sms_pend.idCliente = $id_cliente AND tipo_sms_pend.idLote = lotes.idLote
     
-		LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
-            FROM autorizaciones a
-            INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
-            WHERE ac.tipo = 2 AND estatus = 2
-            GROUP BY a.idCliente, a.idLote) tipo_sms_rech ON tipo_sms_rech.idCliente = $id_cliente AND tipo_sms_rech.idLote = lotes.idLote
+		LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 3 AND estatus = 2
+            GROUP BY idCliente, idLote) tipo_sms_rech ON tipo_sms_rech.idCliente = $id_cliente AND tipo_sms_rech.idLote = lotes.idLote
         WHERE lotes.idStatusLote = 3 AND cl.status = 1 AND cl.id_cliente = $id_cliente");
         return $query->result();
     }
@@ -846,9 +828,7 @@ class Asesor_model extends CI_Model {
     }
     public function insertAutorizacion($data)
     {
-        $this->db->query("INSERT INTO autorizaciones(idCliente, idLote, id_sol, id_aut, estatus, autorizacion, estatus_particular) 
-            VALUES({$data['idCliente']}, {$data['idLote']}, {$data['id_sol']}, {$data['id_aut']}, {$data['estatus']}, '{$data['autorizacion']}', {$data['estatus_particular']})");
-        return $this->db->insert_id();
+        $this->db->insert('autorizaciones', $data);
     }
     public function registroClienteDS($id_condominio) {
         ini_set('max_execution_time', 300);
