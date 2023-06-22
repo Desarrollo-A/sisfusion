@@ -92,5 +92,9 @@ class Documentacion_model extends CI_Model {
         return $this->db->query("SELECT id_documento as id_opcion,descripcion as nombre,id_documento as id_catalago FROM documentacion_escrituracion");
     }
 
-
+    public function getClientesPorLote($idLote) {
+		$result = $this->db->query("SELECT id_cliente, UPPER(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno)) nombreCliente, status FROM clientes WHERE idLote = $idLote ORDER BY status DESC")->result_array();
+		return count($result) > 0 ? $result: array();
+	}
+    
 }

@@ -3305,7 +3305,7 @@
         $extraWhere = '';
         if($id_rol == 54) {
             $extraInner = 'INNER JOIN prospectos pr ON cl.id_prospecto=pr.id_prospecto';
-            $extraWhere = " AND pr.source='DragonCEM'";
+            $extraWhere = " AND pr.lugar_prospeccion = 42";
         }
 		$where = '';
 		if($cliente != '')
@@ -3346,7 +3346,7 @@
         $extraWhere = '';
 	    if($id_rol==54){
             $extraInner = 'INNER JOIN prospectos pr ON cl.id_prospecto=pr.id_prospecto';
-            $extraWhere = " AND pr.source='DragonCEM'";
+            $extraWhere = " AND pr.lugar_prospeccion = 42";
         }
 		$where = '';
 		if($cliente != '')
@@ -3384,7 +3384,7 @@
         $extraWhere = '';
         if($id_rol == 54) {
             $extraInner = 'INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto';
-            $extraWhere = " AND pr.source='DragonCEM'";
+            $extraWhere = " AND pr.lugar_prospeccion = 42";
         }
 		$where = '';
 		if($cliente != '')
@@ -3427,7 +3427,7 @@
         $extraWhere = '';
         if($id_rol == 54) {
             $extraInner = 'INNER JOIN prospectos pr ON cl.id_prospecto=pr.id_prospecto';
-            $extraWhere = " AND pr.source='DragonCEM'";
+            $extraWhere = " AND pr.lugar_prospeccion = 42";
         }
 		$where = '';
 		if($cliente != '')
@@ -3469,7 +3469,7 @@
         $extraWhere = '';
         if($id_rol == 54) {
             $extraInner = 'INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto';
-            $extraWhere = " AND pr.source='DragonCEM'";
+            $extraWhere = " AND pr.lugar_prospeccion = 42";
         }
 		$complemento = '';
 		if($cliente != '')
