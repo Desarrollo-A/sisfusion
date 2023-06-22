@@ -4400,8 +4400,8 @@ function getStatusMktdPreventa(){
 	            ISNULL(tipo_sms_aut.total, 0) AS total_sol_sms_aut, ISNULL(tipo_sms_pend.total, 0) AS total_sol_sms_pend
             FROM clientes c
             INNER JOIN lotes l ON l.idCliente = c.id_cliente
-            LEFT JOIN codigo_autorizaciones acc ON c.id_cliente = acc.id_cliente AND acc.tipo = 1
-            LEFT JOIN codigo_autorizaciones acs ON c.id_cliente = acs.id_cliente AND acs.tipo = 2
+            LEFT JOIN codigo_autorizaciones acc ON c.id_cliente = acc.id_cliente AND acc.tipo = 2
+            LEFT JOIN codigo_autorizaciones acs ON c.id_cliente = acs.id_cliente AND acs.tipo = 3
             LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
                 FROM autorizaciones
                 WHERE id_tipo = 2 AND estatus = 0

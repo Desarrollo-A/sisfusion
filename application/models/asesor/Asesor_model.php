@@ -104,8 +104,8 @@ class Asesor_model extends CI_Model {
         LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
         LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
         LEFT JOIN autorizaciones AS aut ON cl.id_cliente = aut.idCliente AND lotes.idLote = aut.idLote
-        LEFT JOIN codigo_autorizaciones acc ON cl.id_cliente = acc.id_cliente AND acc.tipo = 1
-        LEFT JOIN codigo_autorizaciones acs ON cl.id_cliente = acs.id_cliente AND acs.tipo = 2
+        LEFT JOIN codigo_autorizaciones acc ON cl.id_cliente = acc.id_cliente AND acc.tipo = 2
+        LEFT JOIN codigo_autorizaciones acs ON cl.id_cliente = acs.id_cliente AND acs.tipo = 3
         LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
             FROM autorizaciones
             WHERE id_tipo = 2 AND estatus = 0
@@ -160,8 +160,8 @@ class Asesor_model extends CI_Model {
         LEFT JOIN residenciales as residencial ON cond.idResidencial=residencial.idResidencial
         INNER JOIN deposito_seriedad_consulta as ds ON ds.idCliente = cl.idCliente
         LEFT JOIN autorizaciones AS aut ON cl.idCliente = aut.idCliente AND lotes.idLote = aut.idLote
-		LEFT JOIN codigo_autorizaciones acc ON cl.idCliente = acc.id_cliente AND acc.tipo = 1
-        LEFT JOIN codigo_autorizaciones acs ON cl.idCliente = acs.id_cliente AND acs.tipo = 2
+		LEFT JOIN codigo_autorizaciones acc ON cl.idCliente = acc.id_cliente AND acc.tipo = 2
+        LEFT JOIN codigo_autorizaciones acs ON cl.idCliente = acs.id_cliente AND acs.tipo = 3
 		LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
             FROM autorizaciones
             WHERE id_tipo = 2 AND estatus = 0
@@ -226,8 +226,8 @@ class Asesor_model extends CI_Model {
         LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
         LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
         LEFT JOIN autorizaciones AS aut ON cl.id_cliente = aut.idCliente AND lotes.idLote = aut.idLote
-		LEFT JOIN codigo_autorizaciones acc ON cl.id_cliente = acc.id_cliente AND acc.tipo = 1
-        LEFT JOIN codigo_autorizaciones acs ON cl.id_cliente = acs.id_cliente AND acs.tipo = 2
+		LEFT JOIN codigo_autorizaciones acc ON cl.id_cliente = acc.id_cliente AND acc.tipo = 2
+        LEFT JOIN codigo_autorizaciones acs ON cl.id_cliente = acs.id_cliente AND acs.tipo = 3
 		LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
             FROM autorizaciones
             WHERE id_tipo = 2 AND estatus = 0

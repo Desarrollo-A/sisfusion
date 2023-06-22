@@ -655,17 +655,17 @@ function fillDataTable(idCondominio) {
                     if (d.autorizacion_correo === null) {
                         return "<span class='label lbl-gray'>Sin envío de verificación</span>";
                     }
-                    if (parseInt(d.autorizacion_correo) === 1) {
-                        let estatusLbl =  "<span class='label lbl-yellow'>Verificación pendiente</span>";
-                        if (
-                            parseInt(d.total_sol_correo_rech) > 0 &&
-                            parseInt(d.total_sol_correo_aut) === 0 &&
-                            parseInt(d.total_sol_correo_pend) === 0
-                        ) {
-                            estatusLbl += "<br><span class='label lbl-warning'>RECHAZADO</span>";
-                        }
 
-                        return estatusLbl;
+                    if (parseInt(d.total_sol_correo_pend) > 0) {
+                        return "<span class='label lbl-azure'>Solicitud de autorización</span>";
+                    }
+
+                    if (parseInt(d.total_sol_correo_rech) > 0 && parseInt(d.total_sol_correo_aut) === 0 && parseInt(d.total_sol_correo_pend) === 0) {
+                        return "<span class='label lbl-warning'>Solicitud rechazada</span>";
+                    }
+
+                    if (parseInt(d.autorizacion_correo) === 1) {
+                        return "<span class='label lbl-yellow'>Verificación pendiente</span>";
                     }
                     if (parseInt(d.autorizacion_correo) === 2) {
                         return "<span class='label lbl-green'>Verificado</span>";
@@ -679,18 +679,19 @@ function fillDataTable(idCondominio) {
                     if (d.autorizacion_sms === null) {
                         return "<span class='label lbl-gray'>Sin envío de verificación</span>";
                     }
-                    if (parseInt(d.autorizacion_sms) === 1) {
-                        let estatusLbl =  "<span class='label lbl-yellow'>Verificación pendiente</span>";
-                        if (
-                            parseInt(d.total_sol_sms_rech) > 0 &&
-                            parseInt(d.total_sol_sms_aut) === 0 &&
-                            parseInt(d.total_sol_sms_pend) === 0
-                        ) {
-                            estatusLbl += "<br><span class='label lbl-warning'>RECHAZADO</span>";
-                        }
 
-                        return estatusLbl;
+                    if (parseInt(d.total_sol_sms_pend) > 0) {
+                        return "<span class='label lbl-azure'>Solicitud de autorización</span>";
                     }
+
+                    if (parseInt(d.total_sol_sms_rech) > 0 && parseInt(d.total_sol_sms_aut) === 0 && parseInt(d.total_sol_sms_pend) === 0) {
+                        return "<span class='label lbl-warning'>Rechazado</span>";
+                    }
+
+                    if (parseInt(d.autorizacion_sms) === 1) {
+                        return "<span class='label lbl-yellow'>Verificación pendiente</span>";
+                    }
+
                     if (parseInt(d.autorizacion_sms) === 2) {
                         return "<span class='label lbl-green'>Verificado</span>";
                     }
@@ -790,13 +791,15 @@ function fillDataTable(idCondominio) {
             data: {
                 "idCondominio": idCondominio,
             }
-        },
-        initComplete: function () {
-            $('[data-toggle="tooltip"]').tooltip("destroy");
-            $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
         }
     });
 }
+
+$('#tabla_deposito_seriedad').on('draw.dt', function() {
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
+    });
+});
 
 $(document).on('click', '#save1', function(e) {
     e.preventDefault();
@@ -860,6 +863,11 @@ $(document).on('click', '#save1', function(e) {
                     $('#modal1').modal('hide');
                     $('#tabla_deposito_seriedad').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "EN PROCESO DE LIBERACIÓN. No podrás avanzar la solicitud hasta que el proceso de liberación haya concluido", "danger");
+                } else if (response.message == 'VERIFICACION CORREO/SMS') {
+                    $('#save1').prop('disabled', false);
+                    $('#modal1').modal('hide');
+                    $('#tabla_deposito_seriedad').DataTable().ajax.reload();
+                    alerts.showNotification("top", "right", "El correo electrónico y/o número telefónico no están verificados.", "danger");
                 }
             },
             error: function(){
@@ -1447,14 +1455,14 @@ $(document).on('click', '.btn-solicitar', function () {
     $.get(`${general_base_url}Asesor/clienteAutorizacion/${idCliente}`, function (data) {
         cliente = JSON.parse(data);
 
-        if (parseInt(cliente.total_sol_correo_pend) > 0 || parseInt(cliente.total_sol_correo_aut) > 0 || cliente.autorizacion_correo === null) {
+        if (parseInt(cliente.total_sol_correo_pend) > 0 || parseInt(cliente.total_sol_correo_aut) > 0 || cliente.autorizacion_correo === null || parseInt(cliente.autorizacion_correo) === ESTATUS_AUTORIZACION.AUTORIZADO) {
             $('#chk-correo-sol-div').hide();
             $('#chk-sms-sol-div').removeAttr('class');
             $('#chk-sms-sol-div').attr('class', 'col-12 col-sm-12 col-md-12 col-lg-12 p-0');
             $('#chkCorreoSol').prop('checked', false);
         }
 
-        if (parseInt(cliente.total_sol_sms_pend) > 0 || parseInt(cliente.total_sol_sms_aut) > 0 || cliente.autorizacion_sms === null) {
+        if (parseInt(cliente.total_sol_sms_pend) > 0 || parseInt(cliente.total_sol_sms_aut) > 0 || cliente.autorizacion_sms === null || parseInt(cliente.autorizacion_sms) === ESTATUS_AUTORIZACION.AUTORIZADO) {
             $('#chk-sms-sol-div').hide();
             $('#chk-correo-sol-div').removeAttr('class');
             $('#chk-correo-sol-div').attr('class', 'col-12 col-sm-12 col-md-12 col-lg-12 p-0');
@@ -1592,8 +1600,8 @@ $(document).on('submit', '#autorizacion-form', function (e) {
             const response = JSON.parse(data);
 
             if (response.code === 200) {
-                alerts.showNotification("top", "right", 'Autorización enviada con éxito', "success");
-                tabla_valores_ds.ajax.reload();
+                alerts.showNotification("top", "right", 'Verificación enviada con éxito', "success");
+                $('#tabla_deposito_seriedad').DataTable().ajax.reload();
                 $('#autorizaciones-modal').modal('hide');
             }
 
@@ -1665,7 +1673,7 @@ $(document).on('submit', '#reenvio-form', function (e) {
 
             if (response.code === 200) {
                 alerts.showNotification("top", "right", 'Autorización reenviada con éxito', "success");
-                tabla_valores_ds.ajax.reload();
+                $('#tabla_deposito_seriedad').DataTable().ajax.reload();
                 $('#reenvio-modal').modal('hide');
             }
 
@@ -1737,7 +1745,7 @@ $(document).on('submit', '#solicitar-form', function (e) {
 
             if (response.code === 200) {
                 alerts.showNotification("top", "right", 'Solicitud enviada con éxito', "success");
-                tabla_valores_ds.ajax.reload();
+                $('#tabla_deposito_seriedad').DataTable().ajax.reload();
                 $('#solicitar-modal').modal('hide');
             }
 
@@ -1854,17 +1862,17 @@ function generarBotonesAutorizacion(clienteData) {
 
     if (clienteData.autorizacion_correo === null || clienteData.autorizacion_sms === null) {
         botones += `
-            <button class="btn-data btn-green btn-rounded btn-autorizacion"
+            <button class="btn-data btn-violetDeep btn-rounded btn-autorizacion"
                     data-toggle="tooltip" 
                     data-placement="left" 
-                    title="ENVIAR AUTORIZACIÓN"
+                    title="ENVÍO DE VERIFICACIONES"
                     data-idCliente='${clienteData.id_cliente}'>
                 <i class="fas fa-send"></i>
             </button>
         `;
     }
 
-    if (clienteData.autorizacion_correo !== null || clienteData.autorizacion_sms !== null) {
+    if (parseInt(clienteData.autorizacion_correo) === ESTATUS_AUTORIZACION.ENVIADO || parseInt(clienteData.autorizacion_sms) === ESTATUS_AUTORIZACION.ENVIADO) {
         botones += `
             <button class="btn-data btn-azure btn-rounded btn-reenvio"
                     data-toggle="tooltip" 
@@ -1877,13 +1885,13 @@ function generarBotonesAutorizacion(clienteData) {
     }
 
     if (
-        ((parseInt(clienteData.total_sol_correo_pend) === 0 && parseInt(clienteData.total_sol_correo_aut) === 0) &&
-            (parseInt(clienteData.autorizacion_correo) === ESTATUS_AUTORIZACION.ENVIADO || parseInt(clienteData.autorizacion_correo) === ESTATUS_AUTORIZACION.AUTORIZADO)) ||
-        ((parseInt(clienteData.total_sol_sms_pend) === 0 && parseInt(clienteData.total_sol_sms_aut) === 0) &&
-            (parseInt(clienteData.autorizacion_sms) === ESTATUS_AUTORIZACION.ENVIADO || parseInt(clienteData.autorizacion_sms) === ESTATUS_AUTORIZACION.AUTORIZADO))
+        (parseInt(clienteData.total_sol_correo_pend) === 0 && parseInt(clienteData.total_sol_correo_aut) === 0) &&
+            parseInt(clienteData.autorizacion_correo) === ESTATUS_AUTORIZACION.ENVIADO ||
+        (parseInt(clienteData.total_sol_sms_pend) === 0 && parseInt(clienteData.total_sol_sms_aut) === 0) &&
+            parseInt(clienteData.autorizacion_sms) === ESTATUS_AUTORIZACION.ENVIADO
     ) {
         botones += `
-            <button class="btn-data btn-violetDeep btn-rounded btn-solicitar"
+            <button class="btn-data btn-yellow btn-rounded btn-solicitar"
                     data-toggle="tooltip" 
                     data-placement="left"
                     title="SOLICITAR EDICIÓN DEL REGISTRO" 
