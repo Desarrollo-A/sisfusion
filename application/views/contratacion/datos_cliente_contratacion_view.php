@@ -119,7 +119,7 @@
                                                     <th>CONDOMINIO</th>
                                                     <th>LOTE</th>
                                                     <th>CLIENTE</th>
-                                                    <th>NO. RECIBO</th>
+                                                    <th>NÚMERO DE RECIBO</th>
                                                     <th>REFERENCIA</th>
                                                     <th>TIPO DE PAGO</th>
                                                     <th>FECHA DE APARTADO</th>
