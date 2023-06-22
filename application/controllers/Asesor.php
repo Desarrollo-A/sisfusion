@@ -897,25 +897,25 @@ class Asesor extends CI_Controller
 
         $catalogs = $this->Asesor_model->getCatalogs()->result_array();
 
-        $nacionalidades = array_filter($catalogs, function ($item) {
+        $nacionalidades = array_merge(array_filter($catalogs, function ($item) {
             // NACIONALIDAD
             return $item['id_catalogo'] == 11;
-        });
+        }));
 
-        $edoCivil = array_filter($catalogs, function ($item) {
+        $edoCivil = array_merge(array_filter($catalogs, function ($item) {
             // ESTADO CIVIL
             return $item['id_catalogo'] == 18;
-        });
+        }));
 
-        $regMat = array_filter($catalogs, function ($item) {
+        $regMat = array_merge(array_filter($catalogs, function ($item) {
             // REGIMEN MATRIMONIAL
             return $item['id_catalogo'] == 19;
-        });
+        }));
 
-        $regFiscal = array_filter($catalogs, function ($item) {
+        $regFiscal = array_merge(array_filter($catalogs, function ($item) {
             // REGIMEN FISCAL
             return $item['id_catalogo'] == 92;
-        });
+        }));
 
 
         $asesor = $this->Asesor_model->selectDSAsesor($id_cliente);
@@ -1685,9 +1685,6 @@ class Asesor extends CI_Controller
 
     public function editar_ds()
     {
-        echo json_encode(['code' => 200]);
-        return;
-
         setlocale(LC_MONETARY, 'en_US');
         $emailCopArray = $this->input->post("email_cop[]");
         $telefono1CopArray = $this->input->post("telefono1_cop[]");
@@ -1705,7 +1702,7 @@ class Asesor extends CI_Controller
         $antiguedadCopArray = $this->input->post("antiguedad_cop[]");
         $edadFirmaCopArray = $this->input->post("edadFirma_cop[]");
         $domEmpCopArray = $this->input->post("dom_emp_cop[]");
-        $idCopArray = $this->input->post("id_cop[]");
+        $idCopArray = $this->input->post("id_cop[]") ?? [];
         $rfcCopArray = $this->input->post("rfc_cop[]");
         $regimenFacArray = $this->input->post("regimen_fac[]");
         $numOfCoprops = $this->input->post('numOfCoprops');
@@ -1740,25 +1737,25 @@ class Asesor extends CI_Controller
 
         $catalogs = $this->Asesor_model->getCatalogs()->result_array();
 
-        $nacionalidades = array_filter($catalogs, function ($item) {
+        $nacionalidades = array_merge(array_filter($catalogs, function ($item) {
             // NACIONALIDAD
             return $item['id_catalogo'] == 11;
-        });
+        }));
 
-        $edoCivil = array_filter($catalogs, function ($item) {
+        $edoCivil = array_merge(array_filter($catalogs, function ($item) {
             // ESTADO CIVIL
             return $item['id_catalogo'] == 18;
-        });
+        }));
 
-        $regMat = array_filter($catalogs, function ($item) {
+        $regMat = array_merge(array_filter($catalogs, function ($item) {
             // REGIMEN MATRIMONIAL
             return $item['id_catalogo'] == 19;
-        });
+        }));
 
-        $regFiscal2 = array_filter($catalogs, function ($item) {
+        $regFiscal2 = array_merge(array_filter($catalogs, function ($item) {
             // REGIMEN FISCAL
             return $item['id_catalogo'] == 92;
-        });
+        }));
 
         for ($n = 0; $n < count($nacionalidades); $n++) {
             if ($nacionalidades[$n]['id_opcion'] == $nac_select) {
