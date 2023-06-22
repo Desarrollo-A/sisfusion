@@ -733,6 +733,8 @@ class Asesor extends CI_Controller
             $data[$i]['total_sol_sms_aut'] = $query[0]->total_sol_sms_aut;
             $data[$i]['total_sol_sms_pend'] = $query[0]->total_sol_sms_pend;
             $data[$i]['total_sol_sms_rech'] = $query[0]->total_sol_sms_rech;
+            $data[$i]['correo'] = $query[0]->correo;
+            $data[$i]['telefono'] = $query[0]->telefono1;
         }
         if ($data != null) {
             echo json_encode($data);
