@@ -93,7 +93,7 @@ class Documentacion_model extends CI_Model {
     }
 
     public function getClientesPorLote($idLote) {
-		$result = $this->db->query("SELECT id_cliente, UPPER(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno)) nombreCliente, status FROM clientes WHERE idLote = $idLote ORDER BY status DESC")->result_array();
+		$result = $this->db->query("SELECT id_cliente, UPPER(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno)) nombreCliente, status FROM clientes WHERE idLote = $idLote AND isNULL(noRecibo, '') != 'CANCELADO' ORDER BY status DESC")->result_array();
 		return count($result) > 0 ? $result: array();
 	}
     
