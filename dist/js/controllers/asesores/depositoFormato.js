@@ -129,7 +129,7 @@ function historial() {
         changeSizeModal('modal-md');
         appendBodyModal(historialCampoHtml(info));
 
-        appendFooterModal(`<button type="button" class="btn btn-danger" onclick="hideModal()">Cerrar</button>`);
+        appendFooterModal(`<button type="button" class="btn btn-danger btn-simple" onclick="hideModal()">Cerrar</button>`);
         showModal();
     });
 }
