@@ -341,4 +341,22 @@ class Documentacion extends CI_Controller {
         else
             echo json_encode(array());
     }
+
+    public function documentacionPorClienteLote() {
+		$datos["residencial"]= $this->Registrolote_modelo->getResidencialQro();
+        $this->load->view('template/header');
+        $this->load->view("documentacion/documentacionClienteLote_view", $datos);
+    }
+
+    public function getLotesAll($condominio, $residencial) {
+        $datos = array();
+        $data = $this->Registrolote_modelo->getLotesGral($condominio, $residencial);
+        echo json_encode($data);
+    }
+    
+    public function getClientesPorLote($idLote) {
+        $datos = array();
+        $datos = $this->Documentacion_model->getClientesPorLote($idLote);
+        echo json_encode($datos);
+    }
 }
