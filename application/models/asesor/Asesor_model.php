@@ -7,23 +7,22 @@ class Asesor_model extends CI_Model {
     function getinfoCliente($id_cliente)
 {
         return $this->db->query("SELECT cl.correo, cl.nombre, cl.apellido_paterno, oc3.nombre as regimen_valor, oc2.nombre as estado_valor, cl.domicilio_particular, oc.nombre as 
-                                nacionalidad_valor, cl.apellido_materno, cl.rfc, cl.personalidad_juridica, cl.fecha_nacimiento, cl.telefono_empresa, cl.tipo_vivienda, cl.telefono1, cl.telefono2, cl.telefono3, 
-                                cl.correo, lot.idLote, lot.nombreLote, lot.sup, lot.precio, res.nombreResidencial, con.nombre as nombreCondominio, con.idCondominio, ds.id as idDeposito, ds.clave,res.idResidencial as desarrollo, 
-                                con.tipo_lote as tipoLote, ds.idOficial_pf, ds.idDomicilio_pf, ds.actaConstitutiva_pm, ds.idOficialApoderado_pm, ds.poder_pm, ds.actaMatrimonio_pf, ds.idDomicilio_pm, cl.nombre_conyuge, 
-                                cl.nacionalidad, cl.originario_de as originario, cl.estado_civil, cl.regimen_matrimonial, cl.ocupacion, cl.empresa, cl.puesto, cl.antiguedad, cl.edadFirma, cl.domicilio_empresa, ds.noRefPago, 
-                                ds.costoM2, ds.costoM2_casas, ds.proyecto, ds.municipio as municipioDS, ds.importOferta, ds.letraImport, ds.cantidad, ds.letraCantidad, ds.saldoDeposito, aportMensualOfer, ds.fecha1erAport, 
-                                ds.plazo, ds.fechaLiquidaDepo, ds.fecha2daAport, ds.municipio2, ds.dia, ds.mes, ds.anio, ds.observacion, ds.nombreFirmaAsesor, ds.fechaCrate, ds.id_cliente, lot.referencia, 
-                                ds.costom2f, oc4.nombre AS reg_nom, cl.cp_fac FROM clientes cl  
-                                INNER JOIN lotes lot ON cl.idLote = lot.idLote 
-                                INNER JOIN condominios con ON con.idCondominio = lot.idCondominio  
-                                INNER JOIN residenciales res ON res.idResidencial = con.idResidencial  
-                                INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
-                                LEFT JOIN opcs_x_cats oc ON oc.id_opcion = cl.nacionalidad 
-                                LEFT JOIN opcs_x_cats oc2 ON oc2.id_opcion = cl.estado_civil 
-                                LEFT JOIN opcs_x_cats oc3 ON oc3.id_opcion = cl.regimen_matrimonial
-                                LEFT JOIN opcs_x_cats oc4 ON oc4.id_opcion = cl.regimen_fac AND oc4.id_catalogo = 92  
-                                WHERE cl.id_cliente = " . $id_cliente . " 
-                                AND oc.id_catalogo = 11 AND oc2.id_catalogo = 18 AND oc3.id_catalogo = 19");
+            nacionalidad_valor, cl.apellido_materno, cl.rfc, cl.personalidad_juridica, cl.fecha_nacimiento, cl.telefono_empresa, cl.tipo_vivienda, cl.telefono1, cl.telefono2, cl.telefono3, 
+            cl.correo, lot.idLote, lot.nombreLote, lot.sup, lot.precio, res.nombreResidencial, con.nombre as nombreCondominio, con.idCondominio, ds.id as idDeposito, ds.clave,res.idResidencial as desarrollo, 
+            con.tipo_lote as tipoLote, ds.idOficial_pf, ds.idDomicilio_pf, ds.actaConstitutiva_pm, ds.idOficialApoderado_pm, ds.poder_pm, ds.actaMatrimonio_pf, ds.idDomicilio_pm, cl.nombre_conyuge, 
+            cl.nacionalidad, cl.originario_de as originario, cl.estado_civil, cl.regimen_matrimonial, cl.ocupacion, cl.empresa, cl.puesto, cl.antiguedad, cl.edadFirma, cl.domicilio_empresa, ds.noRefPago, 
+            ds.costoM2, ds.costoM2_casas, ds.proyecto, ds.municipio as municipioDS, ds.importOferta, ds.letraImport, ds.cantidad, ds.letraCantidad, ds.saldoDeposito, aportMensualOfer, ds.fecha1erAport, 
+            ds.plazo, ds.fechaLiquidaDepo, ds.fecha2daAport, ds.municipio2, ds.dia, ds.mes, ds.anio, ds.observacion, ds.nombreFirmaAsesor, ds.fechaCrate, ds.id_cliente, lot.referencia, 
+            ds.costom2f, oc4.nombre AS reg_nom, cl.cp_fac FROM clientes cl  
+        INNER JOIN lotes lot ON cl.idLote = lot.idLote 
+        INNER JOIN condominios con ON con.idCondominio = lot.idCondominio  
+        INNER JOIN residenciales res ON res.idResidencial = con.idResidencial  
+        INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
+        LEFT JOIN opcs_x_cats oc ON oc.id_opcion = cl.nacionalidad AND oc.id_catalogo = 11
+        LEFT JOIN opcs_x_cats oc2 ON oc2.id_opcion = cl.estado_civil AND oc2.id_catalogo = 18
+        LEFT JOIN opcs_x_cats oc3 ON oc3.id_opcion = cl.regimen_matrimonial AND oc3.id_catalogo = 19
+        LEFT JOIN opcs_x_cats oc4 ON oc4.id_opcion = cl.regimen_fac AND oc4.id_catalogo = 92  
+        WHERE cl.id_cliente = $id_cliente");
     }
     function getinfoCopropietario($id_cliente){
         return $this->db->query("SELECT id_copropietario, id_cliente, regimen_matrimonial as regimen_valor, estado_civil as estado_valor, co.nacionalidad as nacionalidad_valor, co.nombre as nombre_cop, apellido_paterno, apellido_materno, telefono, telefono_2, correo, fecha_nacimiento, originario_de, conyuge, domicilio_particular, personalidad_juridica, ocupacion, empresa, posicion,  antiguedad, edadFirma, direccion, tipo_vivienda, rfc
