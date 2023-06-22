@@ -89,7 +89,7 @@
 			<?php echo $html_action;?> 
             <?php if( $this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_usuario') == 2752 || $this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2810 || $this->session->userdata('id_usuario') == 2855 || $this->session->userdata('id_usuario') == 2815 || $this->session->userdata('id_usuario') == 5957 || $this->session->userdata('id_usuario') == 6390 || $this->session->userdata('id_usuario') == 4857 || $this->session->userdata('id_usuario') == 2834 || $this->session->userdata('id_usuario') == 9775 || $this->session->userdata('id_usuario') == 12377 || $this->session->userdata('id_usuario') == 2799 AND $onlyView==0){?>
                 <section id="sectionBtns">
-                    <button type="submit" name="guardarC" class="btn btnAction">GUARDAR CAMBIOS</button>
+                    <button type="submit" id="depositoSeriedadGuardar" name="guardarC" class="btn btnAction">GUARDAR CAMBIOS</button>
                 </section>
             <?php } else { ?>
                 <section id="sectionBtns">
@@ -514,12 +514,17 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div id="accordion">
-                            <div class="card">
+                            <div class="card" id="divCopropietario">
                                 <div class="card-header collapsed cursor-point" id="copropietario-collapse" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                    <div class="d-flex justify-between mb-1">
-                                        <span class="fs-2">COPROPIETARIO (S)</span>
-
-                                        <span class="fs-2"><i id="copropietario-icono" class="fa fa-arrow-down"></i></span>
+                                    <div class="mb-1">
+                                        <div class="row">
+                                            <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 text-center">
+                                                <span class="fs-2">COPROPIETARIO (S)</span>
+                                            </div>
+                                            <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-right">
+                                                <span class="fs-2"><i id="copropietario-icono" class="fa fa-arrow-down"></i></span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div id="collapseTwo" class="collapse" aria-labelledby="copropietario-collapse" data-parent="#accordion">
@@ -724,7 +729,7 @@
 
                                             echo '</div>';
                                         } else {
-                                            echo '<div class="col-xs-10 col-sm-10 col-md-10 col-lg-10"><b><label style="color:#0A548B;">SIN DATOS A MOSTRAR<br></label></b></div>';
+                                            echo '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center"><b><label style="color:#0A548B;">SIN DATOS A MOSTRAR<br></label></b></div>';
                                         }
                                         ?>
                                     </div>

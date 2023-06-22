@@ -115,6 +115,7 @@ $('#idLote').change(function () {
     let titulos = [];
 
     $('#tableDoct thead tr:eq(0) th').each(function (i) {
+
         $(this).css('text-align', 'center');
         const title = $(this).text();
         titulos.push(title);
