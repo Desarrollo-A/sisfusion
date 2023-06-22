@@ -516,10 +516,15 @@
                         <div id="accordion">
                             <div class="card" id="divCopropietario">
                                 <div class="card-header collapsed cursor-point" id="copropietario-collapse" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                    <div class="d-flex justify-between mb-1">
-                                        <span class="fs-2">COPROPIETARIO (S)</span>
-
-                                        <span class="fs-2"><i id="copropietario-icono" class="fa fa-arrow-down"></i></span>
+                                    <div class="mb-1">
+                                        <div class="row">
+                                            <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 text-center">
+                                                <span class="fs-2">COPROPIETARIO (S)</span>
+                                            </div>
+                                            <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-right">
+                                                <span class="fs-2"><i id="copropietario-icono" class="fa fa-arrow-down"></i></span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div id="collapseTwo" class="collapse" aria-labelledby="copropietario-collapse" data-parent="#accordion">
