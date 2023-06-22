@@ -61,7 +61,7 @@
 	public function getdp_DS($lotes) {
         return $this->db-> query("SELECT TOP(1)  'Depósito de seriedad versión anterior' expediente, 'DEPÓSITO DE SERIEDAD' movimiento,
             'VENTAS-ASESOR' primerNom, 'VENTAS' ubic, lo.nombreLote, UPPER(CONCAT(cl.primerNombre, ' ', cl.segundoNombre, ' ', cl.apellidoPaterno, ' ', cl.apellidoMaterno)) nombreCliente,
-            cl.rfc, co.nombre, re.nombreResidencial, cl.fechaApartado, cl.idCliente id_cliente, cl.idCliente idDocumento, CONVERT(VARCHAR,ds.fechaCrate,20) AS modificado,
+            cl.rfc, co.nombre, re.nombreResidencial, cl.fechaApartado, cl.idCliente id_cliente, cl.idCliente idDocumento, CONVERT(VARCHAR,ds.fechaCrate,120) AS modificado,
             lo.idLote, lo.observacionContratoUrgente, '' nombreAsesor, '' nombreCoordinador, '' nombreGerente, '' nombreSubdirector, '' nombreRegional, '' nombreRegional2,
             'ds_old' tipo_doc, l.status8Flag
             FROM cliente_consulta cl
@@ -3312,7 +3312,7 @@
 			$where= "hd.idLote = $lotes AND cl.id_cliente = $cliente";
 		else
 			$where = "hd.status = 1 AND hd.idLote = $lotes";
-		return $this->db-> query("SELECT hd.expediente, hd.idDocumento, hd.modificado, hd.status, hd.idCliente, hd.idLote, lo.nombreLote, 
+		return $this->db-> query("SELECT hd.expediente, hd.idDocumento, CONVERT(VARCHAR,hd.modificado,20) AS modificado, hd.status, hd.idCliente, hd.idLote, lo.nombreLote, 
 		UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, cl.rfc, co.nombre, re.nombreResidencial, 
 		u.nombre as primerNom, u.apellido_paterno as apellidoPa, u.apellido_materno as apellidoMa, se.abreviacion as ubic, 
 		hd.movimiento, hd.movimiento, co.idCondominio, hd.tipo_doc, lo.idMovimiento, cl.id_asesor, cl.flag_compartida, lo.observacionContratoUrgente,
@@ -3355,7 +3355,7 @@
 			$where = "cl.status = 1 AND lo.status = 1 AND ds.desarrollo IS NOT NULL AND cl.idLote = $lotes";
 		return $this->db-> query("SELECT TOP(1)  'Depósito de seriedad' expediente, 'DEPÓSITO DE SERIEDAD' movimiento,
 		'VENTAS-ASESOR' primerNom, 'VENTAS' ubic, lo.nombreLote, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, 
-		cl.rfc, co.nombre, re.nombreResidencial, cl.fechaApartado, cl.id_cliente, cl.id_cliente idDocumento, ds.fechaCrate modificado, 
+		cl.rfc, co.nombre, re.nombreResidencial, cl.fechaApartado, cl.id_cliente, cl.id_cliente idDocumento, CONVERT(VARCHAR, ds.fechaCrate, 20) AS modificado, 
 		lo.idLote, cl.flag_compartida,	lo.observacionContratoUrgente,
 		CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
         CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
@@ -3393,7 +3393,7 @@
 			$where = "cl.status = 1 AND lo.idLote = $idLote";
 		return $this->db-> query("SELECT  TOP(1) 'Autorizaciones' as expediente, 'AUTORIZACIONES' as movimiento, 'VENTAS-ASESOR' as primerNom, 'VENTAS' as ubic, lo.nombreLote,
 		UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
-		cl.rfc, cl.fechaApartado, cl.id_cliente, cl.id_cliente as idDocumento, cl.fechaApartado as modificado,
+		cl.rfc, cl.fechaApartado, cl.id_cliente, cl.id_cliente as idDocumento, CONVERT(VARCHAR,cl.fechaApartado,20) as modificado,
 		re.nombreResidencial, co.nombre, lo.nombreLote, aut.estatus, aut.autorizacion, aut.fecha_creacion, 
 		CONCAT(users1.nombre,' ', users1.apellido_paterno,' ', users1.apellido_materno) as aut, id_autorizacion, aut.idLote, 
 		cl.id_asesor, cl.flag_compartida, lo.observacionContratoUrgente,
@@ -3437,7 +3437,7 @@
 		
 		$query = $this->db->query("SELECT 'Prospecto' as expediente, 'PROSPECTO' as movimiento,
 		'VENTAS-ASESOR' AS primerNom, 'VENTAS' AS ubic, l.nombreLote, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, cl.rfc,
-		cond.nombre, res.nombreResidencial, cl.fechaApartado, cl.id_cliente, cl.id_cliente as idDocumento, ps.fecha_creacion as modificado,
+		cond.nombre, res.nombreResidencial, cl.fechaApartado, cl.id_cliente, cl.id_cliente as idDocumento, CONVERT(VARCHAR,ps.fecha_creacion,20) as modificado,
 		ps.id_prospecto, cl.id_asesor, l.idLote, cl.lugar_prospeccion, cl.flag_compartida, 
 		l.observacionContratoUrgente, 'prospecto' tipo_doc,
 		CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
@@ -3477,7 +3477,7 @@
         $query = $this->db->query("SELECT ec.evidencia as expediente, 'EVIDENCIA MKTD' as movimiento,
         UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) primerNom, 
         sedes.abreviacion as ubic, lo.nombreLote, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
-		cl.rfc, co.nombre, re.nombreResidencial, cl.fechaApartado, cl.id_cliente, cl.id_cliente as idDocumento, ec.fecha_creacion as modificado,
+		cl.rfc, co.nombre, re.nombreResidencial, cl.fechaApartado, cl.id_cliente, cl.id_cliente as idDocumento, CONVERT(VARCHAR,ec.fecha_creacion,20) as modificado,
         cl.id_prospecto, cl.id_asesor, lo.idLote, cl.lugar_prospeccion, 66 as tipo_doc, cl.flag_compartida, lo.observacionContratoUrgente,
 		CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
         CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,

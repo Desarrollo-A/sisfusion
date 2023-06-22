@@ -56,7 +56,7 @@
                         </b>
                         <div class="material-datatables">
                             <div class="form-group">
-                                <table id="tabla_clientes_detalles" name="tabla_clientes_detalles" class="table-striped table-hover" width="100%" style="text-align:center;">
+                                <table id="tabla_clientes_detalles" name="tabla_clientes_detalles" class="table-striped table-hover" >
                                     <thead>
                                         <tr>
                                             <th>ASESOR</th>
@@ -65,7 +65,7 @@
                                             <th>SUBDIRECTOR</th>
                                             <th>DIRECTOR REGIONAL</th>
                                             <th>DIRECTOR REGIONAL 2</th>
-                                            <th>FECHA ALTA</th>
+                                            <th>FECHA DE ALTA</th>
                                             <th>USUARIO</th>
                                         </tr>
                                     </thead>
@@ -76,7 +76,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> CERRAR</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CERRAR</button>
                     </div>
                 </div>
             </div>

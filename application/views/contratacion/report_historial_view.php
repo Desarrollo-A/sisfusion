@@ -24,8 +24,8 @@
 												<div class="row">
 													<div class="col-md-12 p-r">
 														<div class="form-group d-flex">
-															<input type="text" class="form-control datepicker" id="beginDate" />
-															<input type="text" class="form-control datepicker" id="endDate" />
+															<input type="text" class="form-control datepicker" id="beginDate"/>
+                                                            <input type="text" class="form-control datepicker" id="endDate"/>
 															<button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
 																<span class="material-icons update-dataTable">search</span>
 															</button>
@@ -41,8 +41,8 @@
 										<thead>
 											<tr>
 												<th>LOTE</th>
-												<th>GERENTE(s)</th>
-												<th>ASESOR(es)</th>
+												<th>GERENTE(S)</th>
+												<th>ASESOR(ES)</th>
 												<th>ESTATUS</th>
 												<th>DETALLES</th>
 												<th>COMENTARIO</th>
@@ -51,8 +51,6 @@
 												<th>FECHA</th>
 											</tr>
 										</thead>
-										<tbody>
-										</tbody>
 									</table>
 								</div>
 							</div>
@@ -62,7 +60,6 @@
 			</div>
 			<?php $this->load->view('template/footer_legend');?>
 		</div>
-	</div>
 	</div><!--main-panel close-->
 
 	<?php $this->load->view('template/footer');?>

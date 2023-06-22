@@ -898,7 +898,7 @@ function getStatusMktdPreventa(){
     function getAuthorizationsBySubdirector(){
         $query = $this->db-> query("SELECT  residencial.nombreResidencial, condominio.nombre as nombreCondominio, 
                                     lotes.nombreLote, autorizaciones.estatus,  autorizaciones.id_autorizacion, autorizaciones.fecha_creacion,
-                                    autorizaciones.autorizacion, id_aut, cl.id_cliente, condominio.idCondominio,
+                                    UPPER(autorizaciones.autorizacion) AS autorizacion, id_aut, cl.id_cliente, condominio.idCondominio,
                                     users.usuario as sol,   autorizaciones.idLote,
                                     CONCAT(cl.nombre,' ', cl.apellido_paterno,' ', cl.apellido_materno) as cliente,
                                     CONCAT(asesor.nombre,' ', asesor.apellido_paterno,' ', asesor.apellido_materno) as asesor, ha.autorizacion comentario
