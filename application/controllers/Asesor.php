@@ -2969,6 +2969,14 @@ class Asesor extends CI_Controller
         $nombreLote = $this->input->post('nombreLote');
         $id_cliente = $this->input->post('idCliente');
         $tipo_comprobante = $this->input->post('tipo_comprobante');
+
+        $cliente = $this->Clientes_model->clienteAutorizacion($id_cliente);
+        if (intval($cliente->autorizacion_correo) !== AutorizacionClienteOpcs::VALIDADO || intval($cliente->autorizacion_sms) !== AutorizacionClienteOpcs::VALIDADO) {
+            $data['message'] = 'VERIFICACION CORREO/SMS';
+            echo json_encode($data);
+            return;
+        }
+
         $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
         if($valida_tventa[0]['tipo_venta'] == 1 ){
             if($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 104 || $valida_tventa[0]['idStatusContratacion'] == 2 && $valida_tventa[0]['idMovimiento'] == 108){
@@ -4758,7 +4766,7 @@ class Asesor extends CI_Controller
 
         $url = base_url()."Api/validarAutorizacionCorreo/$idCliente?codigo=$codigo";
         $nombreCliente = "$cliente->nombre $cliente->apellido_paterno $cliente->apellido_materno";
-        $this->correoAut($url, $correoCliente, $nombreCliente);
+        // $this->correoAut($url, $correoCliente, $nombreCliente);
 
         return true;
     }
@@ -4799,12 +4807,12 @@ class Asesor extends CI_Controller
 
         $codigo = md5(microtime());
         $url = base_url()."Api/autorizacionSms/$idCliente?codigo=$codigo";
-        $resultadoSms = $this->smsAut($url, "00$lada$telefonoCliente");
-
-        if (!$resultadoSms) {
-            echo json_encode(['code' => 400, 'message' => 'Ocurrió un error al enviar el SMS. Favor de intentarlo más tarde.']);
-            return false;
-        }
+//        $resultadoSms = $this->smsAut($url, "00$lada$telefonoCliente");
+//
+//        if (!$resultadoSms) {
+//            echo json_encode(['code' => 400, 'message' => 'Ocurrió un error al enviar el SMS. Favor de intentarlo más tarde.']);
+//            return false;
+//        }
 
         $codigoSmsData = [
             'id_cliente' => $idCliente,
@@ -4872,7 +4880,7 @@ class Asesor extends CI_Controller
             $urlCorreo = base_url()."Api/validarAutorizacionCorreo/$idCliente?codigo=$cliente->codigo_correo";
 
             $nombreCliente = "$cliente->nombre $cliente->apellido_paterno $cliente->apellido_materno";
-            $this->correoAut($urlCorreo, $cliente->correo, $nombreCliente);
+            // $this->correoAut($urlCorreo, $cliente->correo, $nombreCliente);
         }
 
         if (isset($reenviarSms)) {
@@ -4888,12 +4896,12 @@ class Asesor extends CI_Controller
 
             $url = base_url()."Api/autorizacionSms/$idCliente?codigo=$cliente->codigo_sms";
 
-            $resultadoSms = $this->smsAut($url, "00$cliente->lada_tel$cliente->telefono1");
-
-            if (!$resultadoSms) {
-                echo json_encode(['code' => 400, 'message' => 'Ocurrió un error al enviar el SMS. Favor de intentarlo más tarde.']);
-                return;
-            }
+//            $resultadoSms = $this->smsAut($url, "00$cliente->lada_tel$cliente->telefono1");
+//
+//            if (!$resultadoSms) {
+//                echo json_encode(['code' => 400, 'message' => 'Ocurrió un error al enviar el SMS. Favor de intentarlo más tarde.']);
+//                return;
+//            }
         }
 
         echo json_encode(['code' => 200]);
