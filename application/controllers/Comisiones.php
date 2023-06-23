@@ -245,12 +245,6 @@ class Comisiones extends CI_Controller
 
     }
   
-  
-    // ------------------------------------------------------****************----------------------------------------
-
-
-  
-    // ------------------------------------------------------LUCERO MARIELA CONTRALORIA----------------------------------------
     // public function revision_asimilados()
     // {
     //   $datos = array();
@@ -677,13 +671,9 @@ function update_estatus(){
     $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
     $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE mes=$mesActual")->result_array();
     $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;
-    //echo "FechaSQL: ".$obtenerFechaSql;
-    //echo "<br>";
-    //echo "Fecha Actual: ".$fecha_actual;
       if( $consulta_comisiones->num_rows() > 0 ){
 
-       // $validar_sede = $this->session->userdata('id_sede');
-       // date_default_timezone_set('America/Mexico_City');       
+       $validar_sede = $this->session->userdata('id_sede');
         $fecha_actual = strtotime($obtenerFechaSql);
         $fechaInicio = strtotime($consultaFechasCorte[0]['fechaInicio']);
         $fechaFin = $id_rol == 8 ? strtotime($consultaFechasCorte[0]['fechaFinTijuana']) : ($consultaFechasCorte[0]['fechaFinGeneral']) ;
@@ -2732,7 +2722,6 @@ public function LiquidarLote(){
  
     public function revision_especial()
     {
-      //Moficiaciones para revisiones especiales
       switch($this->session->userdata('id_rol')){
         case '31':
         $this->load->view('template/header');
@@ -3974,8 +3963,6 @@ echo json_encode($respuesta);
 
       }
   
-
-
       public function getGeneralStatusFromNeodata($proyecto, $condominio)
       {
   
@@ -4544,17 +4531,7 @@ public function getDesarrolloSelectINTMEX($a = ''){
 
 
 
-// public function getUserInventario($id_cliente){
 
-//   $datos = $this->Comisiones_model->getUserInventario($id_cliente)->result_array();
-//   echo json_encode($datos[0]);
-// }
-
-// public function getUserVC($id_cliente){
-
-//   $datos = $this->Comisiones_model->getUserVC($id_cliente)->result_array();
-//   echo json_encode($datos);
-// }
 function getDatosAbonadoDispersion3($idlote){
   echo json_encode($this->Comisiones_model->getDatosAbonadoDispersion3($idlote)->result_array());
 }
@@ -4574,7 +4551,6 @@ function getDatosAbonadoDispersion3($idlote){
     $respuesta = array($this->Comisiones_model->AddVentaCompartida($datosAse[0],$coor,$ger,$sub,$id_cliente,$id_lote));
     echo json_encode($respuesta[0]);
   }
-
 
 
   public function CancelarDescuento(){
