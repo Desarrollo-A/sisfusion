@@ -56,6 +56,7 @@ $('#aut-verificacion thead tr:eq(0) th').each( function (i) {
             $('#aut-verificacion').DataTable().column(i).search(this.value).draw();
         }
     });
+    $('[data-toggle="tooltip"]').tooltip();
 });
 
 $(document).ready (function() {

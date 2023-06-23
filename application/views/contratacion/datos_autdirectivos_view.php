@@ -60,8 +60,8 @@
                             <input hidden name="autorizacionesCliente" id="autorizacionesCliente">
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">Enviar autorización</button>
                             <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Enviar</button>
                         </div>
                     </form>
                 </div>
