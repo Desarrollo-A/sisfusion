@@ -124,23 +124,7 @@ function construirTableClient(idCliente = '',idLote = '',datos = ''){
                 }
             },
         },
-        {
-            extend: 'pdfHtml5',
-            text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
-            className: 'btn buttons-pdf',
-            titleAttr: 'Regreso de expediente',
-            title: "Regreso de expediente",
-            orientation: 'landscape',
-            pageSize: 'LEGAL',
-            exportOptions: {
-                columns: [0,1,2,3,4,5,7,8,9,10,11,12,13,14,15,16,17,18,19],
-                format: {
-                          header:  function (d, columnIdx) {
-                          return titulos[columnIdx];
-                    }
-                }
-            }
-        } ],
+        ],
         pagingType: "full_numbers",
         fixedHeader: true,
         language: {
