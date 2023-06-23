@@ -70,6 +70,7 @@ $("#tabla_ingresar_15").ready(function () {
         scrollX:true,
         columns: [
             {
+                width: "3%",
                 className: 'details-control',
                 orderable: false,
                 data: null,
@@ -121,7 +122,6 @@ $("#tabla_ingresar_15").ready(function () {
                         if (data.idStatusContratacion == 14 && data.idMovimiento == 44 ||
                             data.idStatusContratacion == 14 && data.idMovimiento == 69 ||
                             data.idStatusContratacion == 14 && data.idMovimiento == 80) {
-
                             cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' +
                                 'class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
@@ -159,7 +159,6 @@ $("#tabla_ingresar_15").ready(function () {
     $('#tabla_ingresar_15 tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
         var row = tabla_15.row(tr);
-
         if (row.child.isShown()) {
             row.child.hide();
             tr.removeClass('shown');
@@ -351,4 +350,8 @@ jQuery(document).ready(function () {
         jQuery(this).removeData('bs.modal');
         jQuery(this).find('#comentario3').val('');
     })
+});
+
+$(window).resize(function(){
+    tabla_15.columns.adjust();
 });

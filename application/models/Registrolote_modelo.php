@@ -2948,13 +2948,15 @@
 		fclose($fp) or die("can't close file");
 		return true;
 	}
-	function getRevision2() {
- 
-		$this->db->select(" max(hd.modificado) modificado, hd.idHistorialLote, hd.nombreLote, hd.idStatusContratacion, hd.idMovimiento, hd.fechaVenc, l.idLote, cl.fechaApartado, cond.nombre as nombreCondominio, res.nombreResidencial,   
+	function getRevision2($fechaInicio, $fechaFinal) {
+		$filter = " AND hd.modificado BETWEEN '$fechaInicio 00:00:00' AND '$fechaFinal 23:59:59'";
+
+
+		$this->db->select(" CONVERT(VARCHAR,hd.modificado,20) AS modificado, hd.idHistorialLote, hd.nombreLote, hd.idStatusContratacion, hd.idMovimiento, CONVERT(VARCHAR,hd.fechaVenc,20) AS fechaVenc, l.idLote, CONVERT(VARCHAR,cl.fechaApartado, 20) AS fechaApartado, cond.nombre as nombreCondominio, res.nombreResidencial,   
 		CONCAT(ase.nombre, ' ', ase.apellido_paterno, ' ', ase.apellido_materno) as asesor,
 		CONCAT(ger.nombre, ' ', ger.apellido_paterno, ' ', ger.apellido_materno) as gerente, 
 		CONCAT(coo.nombre, ' ', coo.apellido_paterno, ' ', coo.apellido_materno) as coordinador, hd.usuario, CAST(hd.comentario AS NVARCHAR(100)) comentario, 
-		(CASE WHEN mov.id_usuario IS NOT null THEN CONCAT(mov.nombre, ' ', mov.apellido_paterno, ' ', mov.apellido_materno) WHEN mov2.id_usuario IS NOT null THEN CONCAT(mov2.nombre, ' ', mov2.apellido_paterno, ' ', mov2.apellido_materno) ELSE hd.usuario END) result");
+		UPPER((CASE WHEN mov.id_usuario IS NOT null THEN CONCAT(mov.nombre, ' ', mov.apellido_paterno, ' ', mov.apellido_materno) WHEN mov2.id_usuario IS NOT null THEN CONCAT(mov2.nombre, ' ', mov2.apellido_paterno, ' ', mov2.apellido_materno) ELSE hd.usuario END)) result");
 		$this->db->join('clientes cl', 'hd.idCliente = cl.id_cliente');
 		$this->db->join('lotes l', 'hd.idLote = l.idLote');
 		$this->db->join('condominios cond', 'cond.idCondominio = l.idCondominio');
@@ -2964,8 +2966,8 @@
 		$this->db->join('usuarios ger', 'cl.id_gerente = ger.id_usuario', 'LEFT');
 		$this->db->join('usuarios mov', 'CAST(hd.usuario AS VARCHAR(45)) = CAST(mov.id_usuario AS VARCHAR(45))', 'LEFT');
 		$this->db->join('usuarios mov2', 'SUBSTRING(mov2.usuario, 1, 20) = SUBSTRING(hd.usuario, 1, 20)', 'LEFT');
-		$this->db->where('(hd.idStatusContratacion = 2 AND hd.idMovimiento in (4,74,84,93) AND cl.status = 1 AND hd.status = 1 AND l.status = 1)');
-		$this->db->group_by('hd.idHistorialLote, hd.nombreLote, hd.idStatusContratacion, hd.idMovimiento, hd.fechaVenc, l.idLote, cl.fechaApartado, cond.nombre, res.nombreResidencial, ase.nombre, ase.apellido_paterno, ase.apellido_materno, ger.nombre, ger.apellido_paterno, ger.apellido_materno, coo.nombre, coo.apellido_paterno, coo.apellido_materno, mov.nombre, mov.apellido_paterno, mov.apellido_materno, mov2.nombre, mov2.apellido_paterno, mov2.apellido_materno,mov2.usuario, hd.usuario, mov.id_usuario, mov2.id_usuario, CAST(hd.comentario AS NVARCHAR(100)),hd.modificado');
+		$this->db->where('(hd.idStatusContratacion = 2 AND hd.idMovimiento in (4,74,84,93) AND cl.status = 1 AND hd.status = 1 AND l.status = 1)'.$filter);
+		$this->db->group_by('hd.idHistorialLote, hd.nombreLote, hd.idStatusContratacion, hd.idMovimiento, hd.fechaVenc, l.idLote, fechaApartado, cond.nombre, res.nombreResidencial, ase.nombre, ase.apellido_paterno, ase.apellido_materno, ger.nombre, ger.apellido_paterno, ger.apellido_materno, coo.nombre, coo.apellido_paterno, coo.apellido_materno, mov.nombre, mov.apellido_paterno, mov.apellido_materno, mov2.nombre, mov2.apellido_paterno, mov2.apellido_materno,mov2.usuario, hd.usuario, mov.id_usuario, mov2.id_usuario, CAST(hd.comentario AS NVARCHAR(100)),hd.modificado');
 		$this->db->order_by('hd.modificado','ASC');
 		$query = $this->db->get('historial_lotes hd');
 		return $query->result();
