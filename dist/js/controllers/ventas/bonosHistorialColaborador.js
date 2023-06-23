@@ -1,37 +1,3 @@
-$("#form_bonos").on('submit', function(e) {
-    e.preventDefault();
-    let formData = new FormData(document.getElementById("form_bonos"));
-    formData.append("dato", "valor");
-    $.ajax({
-        url: 'saveBono',
-        data: formData,
-        method: 'POST',
-        contentType: false,
-        cache: false,
-        processData: false,
-        success: function(data) {
-            console.log(data);
-            if (data == 1) {
-                $('#miModal').modal('hide');
-                alerts.showNotification("top", "right", "Abono registrado con exito.", "success");
-                tabla_nuevas.ajax.reload();
-                document.getElementById("form_bonos").reset();
-
-            } else if (data == 2) {
-                $('#miModal').modal('hide');
-                alerts.showNotification("top", "right", "Ocurrio un error.", "warning");
-            } else if (data == 3) {
-                $('#miModal').modal('hide');
-                alerts.showNotification("top", "right", "El usuario seleccionado ya tiene un pago activo.", "warning");
-            }
-        },
-        error: function() {
-            $('#miModal').modal('hide');
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    });
-});
-
 $("#tabla_prestamos").ready(function() {
     let titulos = [];
     $('#tabla_prestamos thead tr:eq(0) th').each( function (i) {
@@ -202,7 +168,7 @@ $("#tabla_prestamos").ready(function() {
         {
             "orderable": false,
             "data": function(d) {
-                return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas consulta_abonos " value="' + d.id_pago_bono + ','+d.nombre+'" data-impuesto="'+d.impuesto1+'" title="HISTORIAL"><i class="fas fa-info"></i></button></div>';
+                return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas consulta_abonos" value="' + d.id_pago_bono + ','+d.nombre+'" data-impuesto="'+d.impuesto1+'" title="HISTORIAL"><i class="fas fa-info"></i></button></div>';
             }
         }],
         ajax: {
@@ -282,9 +248,6 @@ $("#tabla_prestamos").ready(function() {
             }
             
             $("#modal_bonos").modal();
-
         });
     });
-
-    
 });

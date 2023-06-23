@@ -320,7 +320,7 @@ $(document).on("click", "#detailComisionistaBtn", function () {
                 }
             }
         }
-        console.log(orderedArray);
+        
         for (let i = 0; i < orderedArray.length; i++) {
             let htmlRol = '';
             for (let j = 0; j < orderedArray[i].datos.length; j++) {
@@ -343,8 +343,6 @@ $(document).on("click", "#detailComisionistaBtn", function () {
         $("#detailComisionistaModal").modal();
     }, 'json');
 });
-
-
 
 function setInitialValuesReporte() {
     // BEGIN DATE

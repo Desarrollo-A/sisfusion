@@ -28,6 +28,89 @@
                 </div>
             </div>
         </div>
+
+        <!-- INICIO Modal editar monto internomex -->
+        <div class="modal fade" id="editMontoInternomex" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <i class="material-icons">clear</i>
+                        </button>
+                        <h4 class="modal-title">Monto internomex</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group label-floating div_name">
+                                        <input id="monto" name="monto"  onchange="validateInputs(this);" type="text" class="form-control input-gral" required>
+                                    </div>
+                                    <div class="form-group label-floating div_name" hidden>
+                                        <input id="id_pago" name="id_pago"  onchange="validateInputs(this);" type="text" class="form-control input-gral" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 d-flex justify-end">
+                                    <button type="button" class="btn btn-danger btn-simple mt-1" data-dismiss="modal">Cancelar
+                                    </button>
+                                    <button id="aceptarMonto" name="aceptarMonto" class="btn btn-primary mt-1">Aceptar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- FIN Modal editar monto internomex -->
+
+
+        <!-- INICIO Modal para bitácora -->
+        <div class="modal fade" id="changesBitacora" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-hidden="true">
+                            <i class="material-icons" onclick="cleanComments()">clear</i>
+                        </button>
+                        <h4 class="modal-title">Consulta información</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div role="tabpanel">
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs" role="tablist"
+                                style="background: #003d82;">
+                                <li role="presentation" class="active">
+                                    <a href="#changelogUsersTab" aria-controls="changelogUsersTab" role="tab" data-toggle="tab">Bitácora de cambios</a>
+                                </li>
+                            </ul>
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active"
+                                    id="changelogUsersTab">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="card card-plain">
+                                                <div class="card-content">
+                                                    <ul class="timeline timeline-simple" id="changelogUsers"></ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">
+                            Aceptar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- END Modals -->
 
         <div class="content boxContent">
@@ -128,98 +211,8 @@
                 </div>
             </div>
         </div>
-
-        <!-- INICIO Modal editar monto internomex -->
-        <div class="modal fade" id="editMontoInternomex" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            <i class="material-icons">clear</i>
-                        </button>
-                        <h4 class="modal-title">Monto internomex</h4>
-                    </div>
-                    <!-- <form id="editMontoForm" name="editMontoForm" method="post"> -->
-                        <div class="modal-body">
-                            <div class="container-fluid">
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                    <!-- <label class="control-label"><span class="isRequired">*</span>Monto: </label> -->
-                                        <div class="form-group label-floating div_name">
-                                            <input id="monto" name="monto"  onchange="validateInputs(this);" type="text" class="form-control input-gral" required>
-                                        </div>
-                                        <div class="form-group label-floating div_name" hidden>
-                                            <input id="id_pago" name="id_pago"  onchange="validateInputs(this);" type="text" class="form-control input-gral" required>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12 d-flex justify-end">
-                                        <button type="button" class="btn btn-danger btn-simple mt-1" data-dismiss="modal">Cancelar
-                                        </button>
-                                        <button id="aceptarMonto" name="aceptarMonto" class="btn btn-primary mt-1">Aceptar</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    <!-- </form> -->
-                </div>
-            </div>
-        </div>
-        <!-- FIN Modal editar monto internomex -->
-
-
-        <!-- INICIO Modal para bitácora -->
-        <div class="modal fade" id="changesBitacora" tabindex="-1" role="dialog"
-                                        aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static"
-                                        data-keyboard="false">
-                                        <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                            aria-hidden="true">
-                                                        <i class="material-icons" onclick="cleanComments()">clear</i>
-                                                    </button>
-                                                    <h4 class="modal-title">Consulta información</h4>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div role="tabpanel">
-                                                        <!-- Nav tabs -->
-                                                        <ul class="nav nav-tabs" role="tablist"
-                                                            style="background: #003d82;">
-                                                            <li role="presentation" class="active">
-                                                                <a href="#changelogUsersTab" aria-controls="changelogUsersTab" role="tab" data-toggle="tab">Bitácora de cambios</a>
-                                                            </li>
-                                                        </ul>
-                                                        <!-- Tab panes -->
-                                                        <div class="tab-content">
-                                                            <div role="tabpanel" class="tab-pane active"
-                                                                id="changelogUsersTab">
-                                                                <div class="row">
-                                                                    <div class="col-md-12">
-                                                                        <div class="card card-plain">
-                                                                            <div class="card-content">
-                                                                                <ul class="timeline timeline-simple" id="changelogUsers"></ul>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-primary" data-dismiss="modal">
-                                                        Aceptar
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-        <!-- INICIO Modal para bitácora -->
         <?php $this->load->view('template/footer_legend'); ?>
     </div>
-
     </div>
     </div>
 
@@ -232,7 +225,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-    <!--<script type="text/javascript" src="//unpkg.com/xlsx/dist/xlsx.full.min.js"></script>-->
     <script type="text/javascript" src="<?= base_url() ?>dist/js/xlsx/xlsx.full.min.js"></script>
     <script src="<?= base_url() ?>dist/js/es.js"></script>
     <!-- DateTimePicker Plugin -->

@@ -87,8 +87,8 @@
         <?php $this->load->view('template/footer_legend'); ?>
     </div>
     </div>
-    <!--main-panel close-->
 </body>
+
 <?php $this->load->view('template/footer'); ?>
 <!--DATATABLE BUTTONS DATA EXPORT-->
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
@@ -100,11 +100,8 @@
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/mktd-1.1.0.js"></script>
 <script src="<?= base_url() ?>dist/js/es.js"></script>
-<!-- DateTimePicker Plugin -->
 <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
-<!--  Full Calendar Plugin    -->
 <script src="<?= base_url() ?>dist/js/fullcalendar.min.js"></script>
 <script type="text/javascript" src="<?=base_url()?>dist/js/controllers/clientes/dm_report.js"></script>
 <script src="<?= base_url() ?>static/yadcf/jquery.dataTables.yadcf.js"></script>
-
 </html>

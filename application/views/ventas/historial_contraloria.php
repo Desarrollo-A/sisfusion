@@ -52,7 +52,6 @@
         <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
-
                     <form method="post" id="form_interes">
                         <div class="modal-body"></div>
                     </form>
@@ -99,8 +98,8 @@
                             <li class="active">
                                 <a href="#solicitudesCRM" role="tab" data-toggle="tab">CRM por lotes</a>
                             </li>
-
-                            <li><a href="#solicitudesCanceladas" role="tab" data-toggle="tab">Historial Canceladas</a>
+                            <li>
+                                <a href="#solicitudesCanceladas" role="tab" data-toggle="tab">Historial Canceladas</a>
                             </li>
 
                             <?php if ($this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9) { ?>
@@ -116,8 +115,8 @@
                                         <div class="tab-pane active" id="solicitudesCRM">
                                             <div class="encabezadoBox">
                                                 <div class="row">
-                                                <h3 class="card-title center-align">Historial activos</h3>
-                                                <p class="card-title pl-1">(Listado de todos los pagos aplicados, en proceso de lotes contratados y activos)</p>
+                                                    <h3 class="card-title center-align">Historial activos</h3>
+                                                    <p class="card-title pl-1">(Listado de todos los pagos aplicados, en proceso de lotes contratados y activos)</p>
                                                 </div>
                                             </div>
                                             <div class="toolbar">
@@ -137,7 +136,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0 overflow-hidden">
-                                                        <div class="form-group  select-is-empty">
+                                                        <div class="form-group select-is-empty">
                                                             <label for="proyecto" class="control-label">PROYECTO</label>
                                                             <select name="filtro44" id="filtro44" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                                         </div>
@@ -173,7 +172,6 @@
                                         </div>
 
                                         <!-- INICIO tab CANCELADAS validado -->
-
                                         <div class="tab-pane" id="solicitudesCanceladas">
                                             <div class="encabezadoBox">
                                                 <div class="row">
@@ -235,7 +233,6 @@
                                             </div>
                                         </div><!-- End tab CANCELADAS validado -->
 
-
                                         <?php if ($this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9) { ?>
                                             <div class="tab-pane" id="solicitudesSUMA">
                                                 <div class="encabezadoBox">
@@ -283,7 +280,7 @@
         </div>
         <?php $this->load->view('template/footer_legend'); ?>
     </div>
-    </div><!--main-panel close-->
+    </div>
 
     <?php $this->load->view('template/footer'); ?>
     <!--DATATABLE BUTTONS DATA EXPORT-->
@@ -296,5 +293,4 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-
 </body>

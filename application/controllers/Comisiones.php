@@ -2332,55 +2332,38 @@ public function getDatosNuevasFContraloria($proyecto,$condominio){
 }
 
 public function getDatosHistorialPagoRP($id_usuario){
-    ini_set('max_execution_time', 900);
-    set_time_limit(900);
-    ini_set('memory_limit','2048M');
+  ini_set('max_execution_time', 900);
+  set_time_limit(900);
+  ini_set('memory_limit','2048M');
 
-
-    $dat =  $this->Comisiones_model->getDatosHistorialPagoRP($id_usuario)->result_array();
-    for( $i = 0; $i < count($dat); $i++ ){
-        $dat[$i]['pa'] = 0;
-    }
-    echo json_encode( array( "data" => $dat));
+  $dat =  $this->Comisiones_model->getDatosHistorialPagoRP($id_usuario)->result_array();
+  for( $i = 0; $i < count($dat); $i++ ){
+      $dat[$i]['pa'] = 0;
+  }
+  echo json_encode( array( "data" => $dat));
 }
 
-public function getDatosHistorialPago($proyecto = null,$condominio = null ) {
-
-    // ini_set('max_execution_time', 99999);
-    // set_time_limit(999999);
-    // ini_set('memory_limit','8192M');
-
-      
+public function getDatosHistorialPago($proyecto = null,$condominio = null ) {      
   $dat =  $this->Comisiones_model->getDatosHistorialPago($proyecto,$condominio)->result_array();
- 
- echo json_encode( array( "data" => $dat));
+  echo json_encode( array( "data" => $dat));
 }
 
 public function getDatosHistorialCancelacion($proyecto,$condominio){
-
-  // ini_set('max_execution_time', 99999);
-  // set_time_limit(999999);
-  // ini_set('memory_limit','8192M');
-
-    
-$dat =  $this->Comisiones_model->getDatosHistorialCancelacion($proyecto,$condominio)->result_array();
-
-echo json_encode( array( "data" => $dat));
+  $dat =  $this->Comisiones_model->getDatosHistorialCancelacion($proyecto,$condominio)->result_array();
+  echo json_encode( array( "data" => $dat));
 }
-
 
 public function getDatosHistorialPagoM($proyecto,$condominio){
   ini_set('max_execution_time', 900);
-      set_time_limit(900);
-      ini_set('memory_limit','2048M');
+  set_time_limit(900);
+  ini_set('memory_limit','2048M');
   $dat =  $this->Comisiones_model->getDatosHistorialPagoM($proyecto,$condominio)->result_array();
- for( $i = 0; $i < count($dat); $i++ ){
-     $dat[$i]['pa'] = 0;
- }
- echo json_encode( array( "data" => $dat));
+  for( $i = 0; $i < count($dat); $i++ ){
+    $dat[$i]['pa'] = 0;
+  }
+  
+  echo json_encode( array( "data" => $dat));
 }
- 
- 
 
 public function getDatosHistorialPagado($proyecto,$condominio){
   $dat =  $this->Comisiones_model->getDatosHistorialPagado($proyecto,$condominio)->result_array();

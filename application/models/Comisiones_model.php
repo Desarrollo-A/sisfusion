@@ -4454,7 +4454,7 @@ function getBonosX_User($usuario){
                  WHEN 7092 THEN 4
                 WHEN 9629 THEN 2
                  ELSE u.id_sede END) and sed.estatus = 1
-    WHERE x.id_catalogo=46  and opcx.id_catalogo=1 AND b.id_usuario=$usuario");
+    WHERE x.id_catalogo=46  and opcx.id_catalogo=1");
 }
 /**--------------------------------------------------- */
 

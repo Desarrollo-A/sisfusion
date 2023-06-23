@@ -10,7 +10,7 @@ $(document).ready(function () {
         $('.generate').trigger('click');
     else
         $('.find-results').trigger('click');
-   sp.initFormExtendedDatetimepickers();
+    sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
 });
 
@@ -44,10 +44,7 @@ function setInitialDates() {
 
 function formatDate(date) {
     var dateParts = date.split("/");
-    var d = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
-        year = d.getFullYear();
+    var d = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]), month = '' + (d.getMonth() + 1), day = '' + d.getDate(), year = d.getFullYear();
     if (month.length < 2)
         month = '0' + month;
     if (day.length < 2)
@@ -61,12 +58,12 @@ $('#tableLotificacion thead tr:eq(0) th').each(function (i) {
     titulos.push(title);
     $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
     $( 'input', this).on('keyup change', function () {
-    if ($('#tableLotificacion').DataTable().column(i).search() !== this.value) {
-        $('#tableLotificacion').DataTable().column(i).search(this.value).draw();
-    }
-        });
-        $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
+        if ($('#tableLotificacion').DataTable().column(i).search() !== this.value) {
+            $('#tableLotificacion').DataTable().column(i).search(this.value).draw();
+        }
     });
+    $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
+});
 
 function fillTableLotificacion(fechaInicio, fechaFin) {
     $(".box-table").removeClass('hide');
@@ -188,30 +185,27 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
 
 $(document).on('click', '.edit-monto-internomex', function(e){
     id_pago = $(this).attr("data-id-pago");
-    monto = $(this).attr("data_monto_internomex")
-        $("#editMontoInternomex").modal();
-        $("#monto").val(monto);
-        $("#id_pago").val(id_pago);
-
+    monto = $(this).attr("data_monto_internomex");
+    $("#editMontoInternomex").modal();
+    $("#monto").val(monto);
+    $("#id_pago").val(id_pago);
 });
 
 $(document).on('click', '.see-bitacora', function(e){
     id_pago = $(this).attr("data-id-pago");
-       $.post("getBitacora/"+id_pago).done( function( data ){
-            $("#changesBitacora").modal();
-            $.each( JSON.parse(data), function(i, v){
-                fillChangelogUsers(v);
-            });
+    $.post("getBitacora/"+id_pago).done( function( data ){
+        $("#changesBitacora").modal();
+        $.each( JSON.parse(data), function(i, v){
+            fillChangelogUsers(v);
         });
-
-
+    });
 });
 
 function fillChangelogUsers(v) {
     var nombreMovimiento;
     var dataMovimiento;
-           nombreMovimiento = v.col_afect;
-            dataMovimiento = '<b>Valor anterior:</b> ' + v.anterior + '\n' +
+    nombreMovimiento = v.col_afect;
+    dataMovimiento = '<b>Valor anterior:</b> ' + v.anterior + '\n' +
         '            <br>\n' +
         '            <b>Valor nuevo:</b> ' + v.nuevo + '\n';
    $("#changelogUsers").append('<li class="timeline-inverted">\n' +
@@ -252,10 +246,7 @@ $(document).on('click', '#aceptarMonto', function(e){
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
-
 });
-
-
 
 $(document).on('click', '.searchByDateRange', function(){
     let fechaInicio = formatDate( $(".beginDate").val());
@@ -402,7 +393,6 @@ $(document).on('click', '#uploadFile', function () {
     document.getElementById("fileElm").value = "";
     document.getElementById("file-name").value = "";
 });
-
 
 function generateJWT(excelData) {
     // Defining our token parts
