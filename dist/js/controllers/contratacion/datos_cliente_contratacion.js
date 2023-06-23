@@ -342,20 +342,18 @@ $(document).on('click', '.cop', function (e) {
 
 let titulos_encabezado_detalle= [];
 let num_colum_encabezado_detalle = [];
-$("#tabla_clientes_detalles").ready(function () {
-    $('#tabla_clientes_detalles thead tr:eq(0) th').each(function (i) {
-        var title = $(this).text();
-        titulos_encabezado_detalle.push(title);
-        num_colum_encabezado_detalle.push(i);
-        $(this).html(`<input    type="text"
-                                class="textoshead"
-                                data-toggle="tooltip_details" 
-                                data-placement="top"
-                                title="${title}"
-                                placeholder="${title}"
-                                readOnly/>`);
+$('#tabla_clientes_detalles thead tr:eq(0) th').each(function (i) {
+    var title = $(this).text();
+    titulos_encabezado_detalle.push(title);
+    num_colum_encabezado_detalle.push(i);
+    $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
+    $('input', this).on('keyup change', function () {
+        if ($('#tabla_clientes_detalles').DataTable().column(i).search() !== this.value)
+            $('#tabla_clientes_detalles').DataTable().column(i).search(this.value).draw();
     });
+    $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
 });
+
 $(document).ready(function () {
     tableHistorial = $('#tabla_clientes_detalles').DataTable({
         responsive: true,

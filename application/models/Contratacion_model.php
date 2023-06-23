@@ -282,7 +282,7 @@ class Contratacion_model extends CI_Model {
       CASE u11.id_rol WHEN 3 THEN CASE WHEN u33.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u33.nombre, ' ', u33.apellido_paterno, ' ', u33.apellido_materno)) END ELSE CASE WHEN u44.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u44.nombre, ' ', u44.apellido_paterno, ' ', u44.apellido_materno)) END END regional22,
       lot.precio, ISNULL(CONVERT(varchar, lot.fecha_modst, 20), '') fecha_modst, ISNULL(CONVERT(varchar, cl.fechaApartado, 20), '') fechaApartado, lot.observacionContratoUrgente,
       CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente,lot.motivo_change_status,
-      $prospectingPlaceDetail lugar_prospeccion, 
+      UPPER($prospectingPlaceDetail) AS lugar_prospeccion, 
       ISNULL(CONVERT(varchar, lot.fecha_creacion, 20), '') fecha_creacion,sl.background_sl,
       lot.totalValidado as cantidad_enganche, ISNULL(CONVERT(varchar, fechaSolicitudValidacion, 20), '') fecha_validacion,
       cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta

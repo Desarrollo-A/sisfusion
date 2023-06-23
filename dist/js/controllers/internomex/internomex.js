@@ -10,7 +10,6 @@ $(document).ready(function () {
         $('.generate').trigger('click');
     else
         $('.find-results').trigger('click');
-
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
 });
@@ -45,10 +44,7 @@ function setInitialDates() {
 
 function formatDate(date) {
     var dateParts = date.split("/");
-    var d = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
-        year = d.getFullYear();
+    var d = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]), month = '' + (d.getMonth() + 1), day = '' + d.getDate(), year = d.getFullYear();
     if (month.length < 2)
         month = '0' + month;
     if (day.length < 2)
@@ -56,68 +52,37 @@ function formatDate(date) {
     return [year, month, day].join('-');
 }
 
+let titulos = [];
 $('#tableLotificacion thead tr:eq(0) th').each(function (i) {
-    const title = $(this).text();
-    if (i != 13) {
-        $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
-        $('input', this).on('keyup change', function () {
-            if ($("#tableLotificacion").DataTable().column(i).search() !== this.value) {
-                $("#tableLotificacion").DataTable()
-                    .column(i)
-                    .search(this.value)
-                    .draw();
-            }
-        });
-    }
+    title = $(this).text();
+    titulos.push(title);
+    $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
+    $( 'input', this).on('keyup change', function () {
+        if ($('#tableLotificacion').DataTable().column(i).search() !== this.value) {
+            $('#tableLotificacion').DataTable().column(i).search(this.value).draw();
+        }
+    });
+    $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
 });
 
 function fillTableLotificacion(fechaInicio, fechaFin) {
     $(".box-table").removeClass('hide');
     generalDataTable = $('#tableLotificacion').dataTable({
-        dom: 'Brt' + "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
-        width: "auto",
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: "100%",
+        scrollX:true,
         buttons: [
             {
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
+                title:'Consulta pago final' ,
                 exportOptions: {
                     columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
                     format: {
                         header: function (d, columnIdx) {
-                            switch (columnIdx) {
-                                case 0:
-                                    return "ID REGISTRO";
-                                    break;
-                                case 1:
-                                    return "NOMBRE";
-                                    break;
-                                case 2:
-                                    return "ROL";
-                                    break;
-                                case 3:
-                                    return "FORMA DE PAGO"
-                                case 4:
-                                    return "SEDE";
-                                    break;
-                                case 5:
-                                    return "MONTO SIN DESCUENTO";
-                                break;
-                                case 6:
-                                    return "MONTO CON DESCUENTO";
-                                break;
-                                case 7:
-                                    return "MONTO INTERNOMEX";
-                                break;
-                                case 8:
-                                    return "FECHA CAPTURA REGISTRO";
-                                break;
-                                case 9:
-                                    return "COMENTARIO";
-                                    break;
-                             
-                            }
+                            return ' ' + titulos[columnIdx] + ' ';
                         }
                     }
                 }
@@ -141,22 +106,20 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
         columns: [
             {
                 data: function (d) {
-               
                     return d.id_pagoi;
                 }
             },
             {
                 data: function (d) {
-               
                     return d.nombre;
                 }
             },
-            { 
+            {
                 data: function (d) {
                     return d.rol;
                 }
             },
-            { 
+            {
                 data: function (d) {
                     return d.forma_pago;
                 }
@@ -188,18 +151,6 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
             },
             {
                 data: function (d) {
-                    let tipo_pago = d.tipo_pago;
-                    let bkgd = '';
-                    if(tipo_pago=='Pago lote'){
-                        bkgd = 'background:#D7BDE2; color:#512E5F';
-                    }else if(tipo_pago=='Pago suma'){
-                        bkgd = 'background:#9ae3ff; color:#004887';
-                    }
-                    return '<span class="label" style="'+bkgd+'">'+tipo_pago+'</span>';
-                }
-            },
-            {
-                data: function (d) {
                     return d.comentario;
                 }
             },
@@ -213,9 +164,7 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
                     else{
                         return '<div class="d-flex justify-center"><button class="btn-data btn-sky see-bitacora" data-estatus="0" data-id-pago="' + d.id_pagoi +'" data-toggle="tooltip" data-placement="right" title="Bitácora"><i class="fas fa-eye"></i></button></div>';
                     }
-                    
                 }
-                
             }
         ],
         columnDefs: [{
@@ -236,38 +185,30 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
 
 $(document).on('click', '.edit-monto-internomex', function(e){
     id_pago = $(this).attr("data-id-pago");
-    monto = $(this).attr("data_monto_internomex")
-        $("#editMontoInternomex").modal();
-        $("#monto").val(monto);
-        $("#id_pago").val(id_pago);
-
+    monto = $(this).attr("data_monto_internomex");
+    $("#editMontoInternomex").modal();
+    $("#monto").val(monto);
+    $("#id_pago").val(id_pago);
 });
 
 $(document).on('click', '.see-bitacora', function(e){
     id_pago = $(this).attr("data-id-pago");
-        
-        $.post("getBitacora/"+id_pago).done( function( data ){
-            $("#changesBitacora").modal();
-            $.each( JSON.parse(data), function(i, v){
-                fillChangelogUsers(v);
-            });
+    $.post("getBitacora/"+id_pago).done( function( data ){
+        $("#changesBitacora").modal();
+        $.each( JSON.parse(data), function(i, v){
+            fillChangelogUsers(v);
         });
-
-
+    });
 });
 
 function fillChangelogUsers(v) {
     var nombreMovimiento;
     var dataMovimiento;
-
-            nombreMovimiento = v.col_afect;
-            dataMovimiento = '<b>Valor anterior:</b> ' + v.anterior + '\n' +
+    nombreMovimiento = v.col_afect;
+    dataMovimiento = '<b>Valor anterior:</b> ' + v.anterior + '\n' +
         '            <br>\n' +
         '            <b>Valor nuevo:</b> ' + v.nuevo + '\n';
- 
-   
-
-    $("#changelogUsers").append('<li class="timeline-inverted">\n' +
+   $("#changelogUsers").append('<li class="timeline-inverted">\n' +
         '    <div class="timeline-badge success"><span class="material-icons">done</span></div>\n' +
         '    <div class="timeline-panel">\n' +
         '            <label><h6 style="text-transform:uppercase">' + nombreMovimiento + '</h6></label><br>\n' +
@@ -291,7 +232,6 @@ $(document).on('click', '#aceptarMonto', function(e){
         },
         dataType: 'json',
         success: function (data) {
-            console.log(data)
             if (data.status == 200) {
                 $("#editMontoInternomex").modal("hide");
                 alerts.showNotification("top", "right", "El registro ha sido actualizado de manera éxitosa.", "success");
@@ -302,14 +242,11 @@ $(document).on('click', '#aceptarMonto', function(e){
                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
             }
         },
-         error: function () {
+        error: function () {
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
-
 });
-
-
 
 $(document).on('click', '.searchByDateRange', function(){
     let fechaInicio = formatDate( $(".beginDate").val());
@@ -338,15 +275,13 @@ $(document).on('click', '.generate', function () {
 
 $(document).on('click', '#downloadFile', function () {
     let tipo_pago = $('#tipo_accion').val();
-    console.log('tipo_pago:', tipo_pago);
-
     $.ajax({
         url: 'getPaymentsListByCommissionAgent/'+tipo_pago,
         type: 'post',
         dataType: 'json',
         beforeSend: function() {
             $('#spiner-loader').removeClass('hide');
-          },
+        },
         success: function (response) {
             var len = response.length;
             var createXLSLFormatObj = [];
@@ -385,8 +320,8 @@ $(document).on('click', '#downloadFile', function () {
             $('#spiner-loader').addClass('hide');
         },
         error: function() {
-          $('#spiner-loader').addClass('hide');
-          alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            $('#spiner-loader').addClass('hide');
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
 });
@@ -441,7 +376,6 @@ $(document).on('click', '#cargaCoincidencias', function () {
                         $('#uploadModal').modal('toggle');
                     },
                     error: function(XMLHttpRequest, textStatus, errorThrown){
-                        console.log(XMLHttpRequest.status);
                         alerts.showNotification("top", "right", XMLHttpRequest.status == 500 ? 'Error en los datos ingresados':'Oops, algo salió mal. Inténtalo de nuevo.', "danger");
                         if (XMLHttpRequest.status == 301){
                             alerts.showNotification("top", "right", 'intentas subir uno o varios regitros.' , "warning");
@@ -460,42 +394,34 @@ $(document).on('click', '#uploadFile', function () {
     document.getElementById("file-name").value = "";
 });
 
-
 function generateJWT(excelData) {
     // Defining our token parts
     var header = {"alg": "HS256", "typ": "JWT"};
     var data = excelData;
     var secret = "thisismysecretkeytest";
-    
     var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header));
     var encodedHeader = base64url(stringifiedHeader);
     //document.getElementById("header").innerText = encodedHeader;
-    
     var stringifiedData = CryptoJS.enc.Utf8.parse(JSON.stringify(data));
     var encodedData = base64url(stringifiedData);
     //document.getElementById("payload").innerText = encodedData;
-    
     var signature = encodedHeader + "." + encodedData;
     signature = CryptoJS.HmacSHA256(signature, secret);
     signature = base64url(signature);
     //document.getElementById("signature").innerText = signature;
-    
     return encodedHeader + '.' + encodedData +  '.' + signature;
 }
 
 function base64url(source) {
     // Encode in classical base64
     encodedSource = CryptoJS.enc.Base64.stringify(source);
-    
-    // Remove padding equal characters
+   // Remove padding equal characters
     encodedSource = encodedSource.replace(/=+$/, '');
-    
-    // Replace characters according to base64url specifications
+   // Replace characters according to base64url specifications
     encodedSource = encodedSource.replace(/\+/g, '-');
     encodedSource = encodedSource.replace(/\//g, '_');
-    
     return encodedSource;
-  }
+}
 
 function validaTipoPago(tipo_pago){
     let one = $('#one');
@@ -511,6 +437,4 @@ function validaTipoPago(tipo_pago){
         $(".row-load").removeClass("hide");
         $(".box-table").addClass("hide");
     }
-
-    // name="radio"
 }

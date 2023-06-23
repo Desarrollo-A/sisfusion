@@ -23,6 +23,7 @@ $("#tabla_reporte_11").ready( function(){
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
+            filename: 'Reporte rechazos',
             exportOptions: {
                 columns: [0,1,2,3,4,5,6,7,8,9,10,11],
                 format: {

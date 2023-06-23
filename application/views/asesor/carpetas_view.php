@@ -5,9 +5,8 @@
 	<div class="wrapper">
 
 		<?php
-		if ($this->session->userdata('id_rol') == "7" || $this->session->userdata('id_rol') == "9") //contratacion
-		{
-		$this->load->view('template/sidebar');
+		if ($this->session->userdata('id_rol') == "7" || $this->session->userdata('id_rol') == "9"){
+			$this->load->view('template/sidebar');
 		}
 		else {
 			echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
@@ -17,7 +16,7 @@
 		<div class="content boxContent">
 			<div class="container-fluid">
 				<div class="row">
-					<div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 						<div class="card">
 							<div class="card-header card-header-icon" data-background-color="goldMaderas">
 								<i class="fas fa-folder-open fa-2x"></i>
@@ -25,7 +24,7 @@
 							<div class="card-content">
 								<h4 class="card-title">Carpetas</h4><br><br>
 								<div class="row">
-									<div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
+									<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 										<div id="msg"></div>
 										<div class="toolbar">
 											<div role="tablist" id="navbartabs">
@@ -55,6 +54,4 @@
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/asesores/carpetas.js"></script>
-
-	
 </body>

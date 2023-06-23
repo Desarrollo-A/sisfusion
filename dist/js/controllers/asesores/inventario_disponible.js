@@ -35,14 +35,12 @@ $('#filtro3').change(function(){
             dataType: 'json',
             success:function(response){
                 var len = response.length;
-                for( var i = 0; i<len; i++)
-                {
+                for( var i = 0; i<len; i++) {
                     var id = response[i]['idCondominio'];
                     var name = response[i]['nombre'];
                     $("#filtro4").append($('<option>').val(id).text(name));
                 }
                 $("#filtro4").selectpicker('refresh');
-
             }
         });
 
@@ -53,14 +51,12 @@ $('#filtro3').change(function(){
             dataType: 'json',
             success:function(response){
                 var len = response.length;
-                for( var i = 0; i<len; i++)
-                {
+                for( var i = 0; i<len; i++){
                     var id = response[i]['sup'];
                     var name = response[i]['sup'];
                     $("#filtro6").append($('<option>').val(id).text(name+" m2"));
                 }
                 $("#filtro6").selectpicker('refresh');
-
             }
         });
         $("#filtro7").empty().selectpicker('refresh');
@@ -70,14 +66,12 @@ $('#filtro3').change(function(){
             dataType: 'json',
             success:function(response){
                 var len = response.length;
-                for( var i = 0; i<len; i++)
-                {
+                for( var i = 0; i<len; i++){
                     var id = response[i]['precio'];
                     var name = response[i]['precio'];
                     $("#filtro7").append($('<option>').val(id).text("$ "+ alerts.number_format(name, '2', '.', ',')));
                 }
                 $("#filtro7").selectpicker('refresh');
-
             }
         });
         $("#filtro8").empty().selectpicker('refresh');
@@ -87,14 +81,12 @@ $('#filtro3').change(function(){
             dataType: 'json',
             success:function(response){
                 var len = response.length;
-                for( var i = 0; i<len; i++)
-                {
+                for( var i = 0; i<len; i++){
                     var id = response[i]['total'];
                     var name = response[i]['total'];
                     $("#filtro8").append($('<option>').val(id).text("$ "+ alerts.number_format(name, '2', '.', ',')));
                 }
                 $("#filtro8").selectpicker('refresh');
-
             }
         });
         $("#filtro9").empty().selectpicker('refresh');
@@ -104,14 +96,12 @@ $('#filtro3').change(function(){
             dataType: 'json',
             success:function(response){
                 var len = response.length;
-                for( var i = 0; i<len; i++)
-                {
+                for( var i = 0; i<len; i++){
                     var id = response[i]['msni'];
                     var name = response[i]['msni'];
                     $("#filtro9").append($('<option>').val(id).text(name + " MSI"));
                 }
                 $("#filtro9").selectpicker('refresh');
-
             }
         });
     }
@@ -123,14 +113,12 @@ $('#filtro3').change(function(){
             dataType: 'json',
             success:function(response){
                 var len = response.length;
-                for( var i = 0; i<len; i++)
-                {
+                for( var i = 0; i<len; i++){
                     var id = response[i]['idCondominio'];
                     var name = response[i]['nombre'];
                     $("#filtro4").append($('<option>').val(id).text(name));
                 }
                 $("#filtro4").selectpicker('refresh');
-
             }
         });
         $("#filtro6").empty().selectpicker('refresh');
@@ -140,14 +128,12 @@ $('#filtro3').change(function(){
             dataType: 'json',
             success:function(response){
                 var len = response.length;
-                for( var i = 0; i<len; i++)
-                {
+                for( var i = 0; i<len; i++){
                     var id = response[i]['sup'];
                     var name = response[i]['sup'];
                     $("#filtro6").append($('<option>').val(id).text(name+" m2"));
                 }
                 $("#filtro6").selectpicker('refresh');
-
             }
         });
         $("#filtro7").empty().selectpicker('refresh');
@@ -157,14 +143,12 @@ $('#filtro3').change(function(){
             dataType: 'json',
             success:function(response){
                 var len = response.length;
-                for( var i = 0; i<len; i++)
-                {
+                for( var i = 0; i<len; i++){
                     var id = response[i]['precio'];
                     var name = response[i]['precio'];
                     $("#filtro7").append($('<option>').val(id).text("$ "+ alerts.number_format(name, '2', '.', ',')));
                 }
                 $("#filtro7").selectpicker('refresh');
-
             }
         });
         $("#filtro8").empty().selectpicker('refresh');
@@ -174,14 +158,12 @@ $('#filtro3').change(function(){
             dataType: 'json',
             success:function(response){
                 var len = response.length;
-                for( var i = 0; i<len; i++)
-                {
+                for( var i = 0; i<len; i++){
                     var id = response[i]['total'];
                     var name = response[i]['total'];
                     $("#filtro8").append($('<option>').val(id).text("$ "+ alerts.number_format(name, '2', '.', ',')));
                 }
                 $("#filtro8").selectpicker('refresh');
-
             }
         });
         $("#filtro9").empty().selectpicker('refresh');
@@ -191,17 +173,14 @@ $('#filtro3').change(function(){
             dataType: 'json',
             success:function(response){
                 var len = response.length;
-                for( var i = 0; i<len; i++)
-                {
+                for( var i = 0; i<len; i++){
                     var id = response[i]['msni'];
                     var name = response[i]['msni'];
                     $("#filtro9").append($('<option>').val(id).text(name + " MSI"));
                 }
                 $("#filtro9").selectpicker('refresh');
-
             }
         });
-
     }
 });
 
@@ -215,8 +194,7 @@ $('#filtro4').change(function(){
             dataType: 'json',
             success:function(response){
                 var len = response.length;
-                for( var i = 0; i<len; i++)
-                {
+                for( var i = 0; i<len; i++){
                     var id = response[i]['msni'];
                     var name = response[i]['msni'];
                     $("#filtro9").append($('<option>').val(id).text(name + " MSI"));
@@ -243,7 +221,6 @@ $('#formFilters').on('submit', function(event){
         beforeSend:function(){
 			$('#spiner-loader').removeClass('hide');
             $('#addExp').addClass('hide');
-            
         },
         success:function(response){
             dataTable(response);
@@ -288,40 +265,38 @@ function dataTable(ruta) {
                 next: "<i class='fa fa-angle-right'>"
             }
         },
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                className: 'btn buttons-excel',
-                titleAttr: 'Descargar archivo de Excel',
-                title: 'Reporte Inventario Disponible',
-                exportOptions: {
-                    columns: num_colum_encabezado,
-                    format: {
-                        header: function (d, columnIdx) {
-                            return ' '+titulos_encabezado[columnIdx] +' ';
-                        }
+        buttons: [{
+            extend: 'excelHtml5',
+            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+            className: 'btn buttons-excel',
+            titleAttr: 'Descargar archivo de Excel',
+            title: 'Reporte Inventario Disponible',
+            exportOptions: {
+                columns: num_colum_encabezado,
+                format: {
+                    header: function (d, columnIdx) {
+                        return ' '+titulos_encabezado[columnIdx] +' ';
                     }
-                },
-            } ,
-            {
-                extend: 'pdfHtml5',
-                text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i>',
-                className: 'btn buttons-pdf',
-                titleAttr: 'Descargar archivo PDF',
-                title: 'Reporte Inventario Disponible',
-                orientation: 'landscape',
-                pageSize: 'LEGAL',
-                exportOptions: {
-                    columns: num_colum_encabezado,
-                    format: {
-                        header: function (d, columnIdx) {
-                            return ' '+titulos_encabezado[columnIdx] +' ';
-                        }
+                }
+            },
+        } ,
+        {
+            extend: 'pdfHtml5',
+            text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i>',
+            className: 'btn buttons-pdf',
+            titleAttr: 'Descargar archivo PDF',
+            title: 'Reporte Inventario Disponible',
+            orientation: 'landscape',
+            pageSize: 'LEGAL',
+            exportOptions: {
+                columns: num_colum_encabezado,
+                format: {
+                    header: function (d, columnIdx) {
+                        return ' '+titulos_encabezado[columnIdx] +' ';
                     }
                 }
             }
-        ],
+        }],
         destroy: true,
         columnDefs: [{
             defaultContent: "",

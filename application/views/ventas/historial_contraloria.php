@@ -52,7 +52,6 @@
         <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
-
                     <form method="post" id="form_interes">
                         <div class="modal-body"></div>
                     </form>
@@ -78,7 +77,7 @@
                                             <th>ID PAGO</th>
                                             <th>LOTE</th>
                                             <th>MONTO</th>
-                                            <th>FECHA APLICADO</th>
+                                            <th>FECHA DE APLICADO</th>
                                             <th>MONTO ANTERIOR</th>
                                             <th>ESTATUS</th>
                                         </tr>
@@ -99,13 +98,8 @@
                             <li class="active">
                                 <a href="#solicitudesCRM" role="tab" data-toggle="tab">CRM por lotes</a>
                             </li>
-
-<<<<<<< HEAD
-                            <li><a href="#solicitudesCanceladas" role="tab" data-toggle="tab">Historial Canceladas</a>
-=======
                             <li>
-                                <a href="#solicitudesCanceladas" role="tab" data-toggle="tab">CRM por lotes</a>
->>>>>>> ff689f3fe4e968e59d364cb441ab472f7e3aad44
+                                <a href="#solicitudesCanceladas" role="tab" data-toggle="tab">Historial Canceladas</a>
                             </li>
 
                             <?php if ($this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9) { ?>
@@ -120,31 +114,17 @@
                                     <div class="tab-content p-2">
                                         <div class="tab-pane active" id="solicitudesCRM">
                                             <div class="encabezadoBox">
-                                                <h3 class="card-title center-align">Historial Activos</h3>
-                                                <p class="card-title pl-1">(Listado de todos los pagos aplicados, en proceso de lotes contratados y activos)</p>
+                                                <div class="row">
+                                                    <h3 class="card-title center-align">Historial activos</h3>
+                                                    <p class="card-title pl-1">(Listado de todos los pagos aplicados, en proceso de lotes contratados y activos)</p>
+                                                </div>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="row">
-                                                    <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-<<<<<<< HEAD
-                                                        <div class="form-group  select-is-empty">
-                                                            <label class="control-label">
-                                                                AÑO
-                                                            </label>
-                                                            <select name="filtro33" 
-                                                                    id="filtro33" 
-                                                                    class="selectpicker select-gral"
-                                                                    data-style="btn" 
-                                                                    data-show-subtext="true" 
-                                                                    data-live-search="true" 
-                                                                    title="Selecciona una opción"
-                                                                    data-size="7"
-                                                                    required>
-=======
-                                                        <div class="form-group label-floating select-is-empty">
+                                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0">
+                                                        <div class="form-group select-is-empty">
                                                             <label class="control-label">AÑO</label>
-                                                            <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required>
->>>>>>> ff689f3fe4e968e59d364cb441ab472f7e3aad44
+                                                            <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
                                                                 <?php
                                                                 setlocale(LC_ALL, 'es_ES');
                                                                 for ($i = 2019; $i <= 2023; $i++) {
@@ -155,43 +135,17 @@
                                                             </select>
                                                         </div>
                                                     </div>
-                                                    <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-                                                        <div class="form-group  select-is-empty">
+                                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0 overflow-hidden">
+                                                        <div class="form-group select-is-empty">
                                                             <label for="proyecto" class="control-label">PROYECTO</label>
-                                                            <select name="filtro44" id="filtro44" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
+                                                            <select name="filtro44" id="filtro44" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="material-datatables">
                                                 <div class="form-group">
-<<<<<<< HEAD
-                                                    <div class="table-responsive">
-                                                        <table class="table-striped table-hover hide " id="tabla_historialGral" name="tabla_historialGral">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>ID</th>
-                                                                    <th>PROYECTO</th>
-                                                                    <th>CONDOMINIO</th>
-                                                                    <th>LOTE</th>
-                                                                    <th>REFERENCIA</th>
-                                                                    <th>PRECIO LOTE</th>
-                                                                    <th>TOTAL COMISIÓN</th>
-                                                                    <th>PAGO CLIENTE</th>
-                                                                    <th>DISPERSADO</th>
-                                                                    <th>PAGADO</th>
-                                                                    <th>PENDIENTE</th>
-                                                                    <th>USUARIO</th>
-                                                                    <th>PUESTO</th>
-                                                                    <th>DETALLE</th>
-                                                                    <th>ESTATUS</th>
-                                                                    <th>MÁS</th>
-                                                                </tr>
-                                                            </thead>
-                                                        </table>
-                                                    </div>
-=======
-                                                    <table class="table-striped table-hover" id="tabla_historialGral" name="tabla_historialGral">
+                                                    <table class="table-striped table-hover hide" id="tabla_historialGral" name="tabla_historialGral">
                                                         <thead>
                                                             <tr>
                                                                 <th>ID</th>
@@ -199,9 +153,9 @@
                                                                 <th>CONDOMINIO</th>
                                                                 <th>LOTE</th>
                                                                 <th>REFERENCIA</th>
-                                                                <th>PRECIO LOTE</th>
-                                                                <th>TOTAL COMISIÓN</th>
-                                                                <th>PAGO CLIENTE</th>
+                                                                <th>PRECIO DEL LOTE</th>
+                                                                <th>TOTAL DE LA COMISIÓN</th>
+                                                                <th>PAGO DEL CLIENTE</th>
                                                                 <th>DISPERSADO</th>
                                                                 <th>PAGADO</th>
                                                                 <th>PENDIENTE</th>
@@ -213,24 +167,24 @@
                                                             </tr>
                                                         </thead>
                                                     </table>
->>>>>>> ff689f3fe4e968e59d364cb441ab472f7e3aad44
                                                 </div>
                                             </div>
                                         </div>
 
                                         <!-- INICIO tab CANCELADAS validado -->
-
                                         <div class="tab-pane" id="solicitudesCanceladas">
                                             <div class="encabezadoBox">
-                                                <h3 class="card-title center-align">Historial Canceladas</h3>
-                                                <p class="card-title pl-1">(Listado de todos los pagos aplicados, en proceso de lotes cancelados con recisión)</p>
+                                                <div class="row">
+                                                    <h3 class="card-title center-align">Historial canceladas</h3>
+                                                    <p class="card-title pl-1">(Listado de todos los pagos aplicados, en proceso de lotes cancelados con recisión)</p>
+                                                </div>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="row">
-                                                    <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0">
                                                         <div class="form-group">
                                                             <label for="proyecto">Año</label>
-                                                            <select name="filtro35" id="filtro35" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona año" data-size="7" required>
+                                                            <select name="filtro35" id="filtro35" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
                                                                 <?php
                                                                 setlocale(LC_ALL, 'es_ES');
                                                                 for ($i = 2019; $i <= 2023; $i++) {
@@ -241,10 +195,10 @@
                                                             </select>
                                                         </div>
                                                     </div>
-                                                    <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
                                                         <div class="form-group">
                                                             <label for="proyecto">Proyecto</label>
-                                                            <select name="filtro45" id="filtro45" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona un proyecto" data-size="7" required>
+                                                            <select name="filtro45" id="filtro45" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-container="body" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
                                                                 <option value="0">Seleccione todo</option>
                                                             </select>
                                                         </div>
@@ -253,33 +207,7 @@
                                             </div>
                                             <div class="material-datatables">
                                                 <div class="form-group">
-<<<<<<< HEAD
-                                                    <div class="table-responsive">
-                                                        <table class="table-striped table-hover hide " id="tabla_comisiones_canceladas" name="tabla_comisiones_canceladas">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>ID</th>
-                                                                    <th>PROYECTO</th>
-                                                                    <th>CONDOMINIO</th>
-                                                                    <th>LOTE</th>
-                                                                    <th>REFERENCIA</th>
-                                                                    <th>PRECIO LOTE</th>
-                                                                    <th>TOTAL COMISIÓN</th>
-                                                                    <th>PAGO CLIENTE</th>
-                                                                    <th>DISPERSADO</th>
-                                                                    <th>PAGADO</th>
-                                                                    <th>PENDIENTE</th>
-                                                                    <th>USUARIO</th>
-                                                                    <th>PUESTO</th>
-                                                                    <th>DETALLE</th>
-                                                                    <th>ESTATUS</th>
-                                                                    <th>MÁS</th>
-                                                                </tr>
-                                                            </thead>
-                                                        </table>
-                                                    </div>
-=======
-                                                    <table class="table-striped table-hover" id="tabla_comisiones_canceladas" name="tabla_comisiones_canceladas">
+                                                    <table class="table-striped table-hover hide" id="tabla_comisiones_canceladas" name="tabla_comisiones_canceladas">
                                                         <thead>
                                                             <tr>
                                                                 <th>ID</th>
@@ -287,9 +215,9 @@
                                                                 <th>CONDOMINIO</th>
                                                                 <th>LOTE</th>
                                                                 <th>REFERENCIA</th>
-                                                                <th>PRECIO LOTE</th>
-                                                                <th>TOTAL COMISIÓN</th>
-                                                                <th>PAGO CLIENTE</th>
+                                                                <th>PRECIO DEL LOTE</th>
+                                                                <th>TOTAL DE LA COMISIÓN</th>
+                                                                <th>PAGO DEL CLIENTE</th>
                                                                 <th>DISPERSADO</th>
                                                                 <th>PAGADO</th>
                                                                 <th>PENDIENTE</th>
@@ -301,11 +229,9 @@
                                                             </tr>
                                                         </thead>
                                                     </table>
->>>>>>> ff689f3fe4e968e59d364cb441ab472f7e3aad44
                                                 </div>
                                             </div>
                                         </div><!-- End tab CANCELADAS validado -->
-
 
                                         <?php if ($this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9) { ?>
                                             <div class="tab-pane" id="solicitudesSUMA">
@@ -314,70 +240,32 @@
                                                 </div>
                                                 <div class="toolbar">
                                                     <div class="row">
-                                                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-<<<<<<< HEAD
-                                                            <div class="form-group  select-is-empty">
-                                                                <label for="anio" class="control-label">
-                                                                    AÑO
-                                                                </label>
-                                                                <select name="anio"
-                                                                        id="anio"
-                                                                        class="selectpicker select-gral"
-                                                                        data-style="btn"
-                                                                        data-show-subtext="true" 
-                                                                        data-live-search="true"
-                                                                        title="Selecciona una opción"
-                                                                        data-size="7"
-                                                                        required>
-                                                                </select>
-=======
-                                                            <div class="form-group label-floating select-is-empty">
+                                                        <div class="col-12 col-sm-12 col-md-12 col-lg-6 overflow-hidden">
+                                                            <div class="form-group select-is-empty">
                                                                 <label for="anio" class="control-label">AÑO</label>
-                                                                <select name="anio" id="anio" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
->>>>>>> ff689f3fe4e968e59d364cb441ab472f7e3aad44
+                                                                <select name="anio" id="anio" class="selectpicker select-gral" data-style="btn" data-container="body" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="material-datatables">
                                                     <div class="form-group">
-<<<<<<< HEAD
-                                                        <div class="table-responsive">
-                                                            <table class="table-striped table-hover hide" id="tabla_comisiones_suma" name="tabla_comisiones_suma">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th>ID PAGO</th>
-                                                                        <th>REFERENCIA</th>
-                                                                        <th>NOMBRE</th>
-                                                                        <th>SEDE</th>
-                                                                        <th>FORMA PAGO</th>
-                                                                        <th>TOTAL COMISION</th>
-                                                                        <th>IMPUESTO</th>
-                                                                        <th>% COMISION</th>
-                                                                        <th>ESTATUS</th>
-                                                                        <th>MÁS</th>
-                                                                    </tr>
-                                                                </thead>
-                                                            </table>
-                                                        </div>
-=======
-                                                        <table class="table-striped table-hover" id="tabla_comisiones_suma" name="tabla_comisiones_suma">
+                                                        <table class="table-striped table-hover hide" id="tabla_comisiones_suma" name="tabla_comisiones_suma">
                                                             <thead>
                                                                 <tr>
                                                                     <th>ID PAGO</th>
                                                                     <th>REFERENCIA</th>
                                                                     <th>NOMBRE</th>
                                                                     <th>SEDE</th>
-                                                                    <th>FORMA PAGO</th>
-                                                                    <th>TOTAL COMISION</th>
+                                                                    <th>FORMA DE PAGO</th>
+                                                                    <th>TOTAL DE LA COMISIÓN</th>
                                                                     <th>IMPUESTO</th>
-                                                                    <th>% COMISION</th>
+                                                                    <th>% COMISÓN</th>
                                                                     <th>ESTATUS</th>
                                                                     <th>MÁS</th>
                                                                 </tr>
                                                             </thead>
                                                         </table>
->>>>>>> ff689f3fe4e968e59d364cb441ab472f7e3aad44
                                                     </div>
                                                 </div>
                                             </div><!-- End tab SUMA  validado solo para ventas-->
@@ -392,7 +280,7 @@
         </div>
         <?php $this->load->view('template/footer_legend'); ?>
     </div>
-    </div><!--main-panel close-->
+    </div>
 
     <?php $this->load->view('template/footer'); ?>
     <!--DATATABLE BUTTONS DATA EXPORT-->
@@ -405,5 +293,4 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-
 </body>

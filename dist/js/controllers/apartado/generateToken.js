@@ -17,17 +17,12 @@ let titulosEvidence = [];
 $('#evidenceTable thead tr:eq(0) th').each(function (i) {
     let title = $(this).text();
     titulosEvidence.push(title);
-    $(this).html(`<input class="textoshead"
-                        data-toggle="tooltip" 
-                        data-placement="top"
-                        title="${title}"
-                        placeholder="${title}"/>`);                       
+    $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
     $( 'input', this).on('keyup change', function () {
         if ($('#evidenceTable').DataTable().column(i).search() !== this.value) {
             $('#evidenceTable').DataTable().column(i).search(this.value).draw();
         }   
     });
-    $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
 });
 
 function fillevidenceTable() {
@@ -155,7 +150,7 @@ function fillevidenceTable() {
                     let btns = `<div class="d-flex align-center justify-center">`;
                     btns += `<button class="btn-data btn-gray reviewEvidence" data-lote ="${d.nombreLote}" data-type="${d.type}" data-nombre-archivo="${d.nombre_archivo}" data-toggle="tooltip"  data-placement="top" title="VER EVIDENCIA"></body><i class="fas fa-eye"></i></button>`;
                     if (d.currentRol == 3 && d.type == 1)
-                        btns += `<button class="btn-data btn-green setToken" data-token-name="${d.token}" data-toggle="tooltip"  data-placement="top" title="Copiar token"><i class="fas fa-copy"></i></button>`;
+                        btns += `<button class="btn-data btn-green setToken" data-token-name="${d.token}" data-toggle="tooltip"  data-placement="top" title="COPIAR TOKEN"><i class="fas fa-copy"></i></button>`;
                     if (d.currentRol != 3){
                         if (d.estatus == 1 || d.estatus == 0)
                             btns += `<button class="btn-data btn-warning validateEvidence" data-type="${d.type}" data-action="2" data-id="${d.id}" data-toggle="tooltip"  data-placement="top" title="RECHAZAR"><i class="fas fa-minus"></i></button>`;
@@ -182,6 +177,12 @@ function fillevidenceTable() {
 
    
 }
+
+$('#evidenceTable').on('draw.dt', function() {
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
+    });
+});
 
 $(document).on("click", "#generateToken", function () {
     document.getElementById("fileElm").value = "";
