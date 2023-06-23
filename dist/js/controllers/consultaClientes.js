@@ -234,7 +234,7 @@ function fillChangelog(v) {
     $("#changelog").append('<li>\n' +
         '    <div class="container-fluid">\n' +
         '       <div class="row">\n' +
-        '           <div class="col-md-6">\n' +
+        '           <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">\n' +
         '               <a><small>Campo: </small><b>' + v.parametro_modificado + '</b></a><br>\n' +
         '           </div>\n' +
         '           <div class="float-end text-right">\n' +

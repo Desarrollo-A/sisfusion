@@ -29,10 +29,14 @@ $(document).ready(function () {
         $('#tipoUsuario').selectpicker('refresh');
     }, 'json');
 
-    setInitialValuesReporte();
     sp.initFormExtendedDatetimepickers();
-    $('.datepicker').datetimepicker({ locale: 'es' });
+    $('.datepicker').datetimepicker({locale: 'es'});
+    setIniDatesXMonth("#beginDate", "#endDate");
+    let finalBeginDate = $("#beginDate").val();
+    let finalEndDate = $("#endDate").val();
+    fillTable(finalBeginDate, finalEndDate, id_usuario_general,id_rol_general );
 });
+
 
 sp = { // MJ: DATE PICKER
     initFormExtendedDatetimepickers: function () {
@@ -110,6 +114,10 @@ $('#reporteLotesPorComisionista').on('xhr.dt', function (e, settings, json, xhr)
 });
 
 function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
+    console.log(beginDate);
+    console.log(endDate);
+    console.log(comisionista);
+    console.log(tipoUsuario);
     generalDataTable = $('#reporteLotesPorComisionista').dataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
@@ -343,24 +351,6 @@ $(document).on("click", "#detailComisionistaBtn", function () {
         $("#detailComisionistaModal").modal();
     }, 'json');
 });
-
-function setInitialValuesReporte() {
-    // BEGIN DATE
-    // BEGIN DATE
-    const fechaInicio = new Date();
-    // Iniciar en este año, este mes, en el día 1
-    const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
-    // END DATE
-    const fechaFin = new Date();
-    // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
-    const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
-    finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
-    finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
-    finalBeginDate2 = ['01', '01', beginDate.getFullYear()].join('/');
-    finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
-    $('#beginDate').val(finalBeginDate2);
-    $('#endDate').val(finalEndDate2);
-}
 
 function colocarValoresTotales(total, totalAbonado, totalPagado) {
     document.getElementById("txt_totalComision").textContent = '$' + formatMoney(total);
