@@ -456,9 +456,11 @@ function getStatusMktdPreventa(){
             $where = "pr.id_gerente = $id_usuario";
         else if ($id_rol == 6) { // MJ: ASISTENTE DE GERENTE
             if ($id_usuario == 10795) // ALMA GALICIA ACEVEDO QUEZADA
-                $where = "pr.id_gerente IN($id_lider, 671) AND pr.id_sede = 12";
+                $where = "pr.id_gerente IN ($id_lider, 671) AND pr.id_sede = 12";
             else if ($id_usuario == 12449) // MARCELA CUELLAR MORON
-                $where = "pr.id_gerente IN($id_lider, 654) AND pr.id_sede = 12";
+                $where = "pr.id_gerente IN ($id_lider, 654) AND pr.id_sede = 12";
+            else if ($id_usuario == 10270) // ANDRES BARRERA VENEGAS
+                $where = "pr.id_gerente IN ($id_lider, 113) AND pr.id_sede IN (4, 13)";
             else
                 $where = "pr.id_gerente = $id_lider";
         }
@@ -4393,38 +4395,34 @@ function getStatusMktdPreventa(){
 
     function clienteAutorizacion(int $id)
     {
-        $query = $this->db->query("SELECT c.id_cliente, c.correo, c.telefono1, c.lada_tel,
+        $query = $this->db->query("SELECT c.id_cliente, c.nombre, c.apellido_paterno, c.apellido_materno, c.correo, c.telefono1, c.lada_tel,
                 acc.id_aut_clientes AS id_aut_correo, c.autorizacion_correo, acc.codigo AS codigo_correo, 
                 acs.id_aut_clientes AS id_aut_sms, c.autorizacion_sms, acs.codigo AS codigo_sms,
                 ISNULL(tipo_correo_aut.total, 0) AS total_sol_correo_aut, ISNULL(tipo_correo_pend.total, 0) AS total_sol_correo_pend, 
 	            ISNULL(tipo_sms_aut.total, 0) AS total_sol_sms_aut, ISNULL(tipo_sms_pend.total, 0) AS total_sol_sms_pend
             FROM clientes c
             INNER JOIN lotes l ON l.idCliente = c.id_cliente
-            LEFT JOIN codigo_autorizaciones acc ON c.id_cliente = acc.id_cliente AND acc.tipo = 1
-            LEFT JOIN codigo_autorizaciones acs ON c.id_cliente = acs.id_cliente AND acs.tipo = 2
-            LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
-                FROM autorizaciones a
-                INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
-                WHERE ac.tipo = 1 AND estatus = 0
-                GROUP BY a.idCliente, a.idLote) tipo_correo_aut ON tipo_correo_aut.idCliente = $id AND tipo_correo_aut.idLote = l.idLote
+            LEFT JOIN codigo_autorizaciones acc ON c.id_cliente = acc.id_cliente AND acc.tipo = 2
+            LEFT JOIN codigo_autorizaciones acs ON c.id_cliente = acs.id_cliente AND acs.tipo = 3
+            LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+                FROM autorizaciones
+                WHERE id_tipo = 1 AND estatus = 0
+                GROUP BY idCliente, idLote) tipo_correo_aut ON tipo_correo_aut.idCliente = $id AND tipo_correo_aut.idLote = l.idLote
             
-            LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
-                FROM autorizaciones a
-                INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
-                WHERE ac.tipo = 1 AND estatus = 1
-                GROUP BY a.idCliente, a.idLote) tipo_correo_pend ON tipo_correo_pend.idCliente = $id AND tipo_correo_pend.idLote = l.idLote
+            LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+                FROM autorizaciones
+                WHERE id_tipo = 2 AND estatus = 1
+                GROUP BY idCliente, idLote) tipo_correo_pend ON tipo_correo_pend.idCliente = $id AND tipo_correo_pend.idLote = l.idLote
             
-            LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
-                FROM autorizaciones a
-                INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
-                WHERE ac.tipo = 2 AND estatus = 0
-                GROUP BY a.idCliente, a.idLote) tipo_sms_aut ON tipo_sms_aut.idCliente = $id AND tipo_sms_aut.idLote = l.idLote
+            LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+                FROM autorizaciones
+                WHERE id_tipo = 3 AND estatus = 0
+                GROUP BY idCliente, idLote) tipo_sms_aut ON tipo_sms_aut.idCliente = $id AND tipo_sms_aut.idLote = l.idLote
             
-            LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
-                FROM autorizaciones a
-                INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
-                WHERE ac.tipo = 2 AND estatus = 1
-                GROUP BY a.idCliente, a.idLote) tipo_sms_pend ON tipo_sms_pend.idCliente = $id AND tipo_sms_pend.idLote = l.idLote
+            LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+                FROM autorizaciones
+                WHERE id_tipo = 3 AND estatus = 1
+                GROUP BY idCliente, idLote) tipo_sms_pend ON tipo_sms_pend.idCliente = $id AND tipo_sms_pend.idLote = l.idLote
             WHERE c.id_cliente = $id");
         return $query->row();
     }
@@ -4462,7 +4460,7 @@ function getStatusMktdPreventa(){
     public function getLotesApartadosReubicacion($fechaInicio, $fechaFin)
     {
         $query = $this->db->query("SELECT l.idLote, l.nombreLote,
-            UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado,
+            UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, cl.fechaAlta
             cond.nombre AS nombreCondominio, 
             res.nombreResidencial, cl.apartadoXReubicacion,
             CASE WHEN ase.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(ase.nombre, ' ', ase.apellido_paterno, ' ', ase.apellido_materno)) END asesor,

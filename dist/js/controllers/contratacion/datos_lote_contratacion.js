@@ -15,6 +15,7 @@ $(document).ready(function () {
 });
 
 $('#idResidencial').change(function () {
+    $("#tablaInventario").removeClass('hide');
     index_idResidencial = $(this).val();
     $("#idCondominioInventario").html("");
     $(document).ready(function () {
@@ -122,7 +123,7 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
             {
                 data: function (d) {
                     if (d.casa == 1)
-                        return `${d.nombreLote} <br><span class="label" style="background:#D7BDE2; color:#512E5F;">${d.nombre_tipo_casa}</span>`
+                        return `${d.nombreLote} <br><span class="label lbl-violetDeep">${d.nombre_tipo_casa}</span>`
                     else
                         return d.nombreLote;
                 }
@@ -135,17 +136,17 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
             },
             {
                 data: function (d) {
-                    return '$' + formatMoney(d.precio * d.sup);
+                    return formatMoney(d.precio * d.sup);
                 }
             },
             {
                 data: function (d) {
-                    return '$' + formatMoney(d.totalNeto2);
+                    return formatMoney(d.totalNeto2);
                 }
             },
             {
                 data: function (d) {
-                    return '$' + formatMoney(d.precio);
+                    return formatMoney(d.precio);
                 }
             },
             { data: 'referencia' },
@@ -202,8 +203,8 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
                 data: function (d) {
                     let libContraloria = (d.observacionContratoUrgente == '1') ? '<center><span class="label" style="background:#E6B0AA; color:#641E16">Lib. Contraloría</span> <center><p><p>' : '';
                     return d.tipo_venta == null ?
-                        `<center><span class="label" style="background:#${d.background_sl}; color:#${d.color};">${d.descripcion_estatus}</span> ${libContraloria} <center>` :
-                        `<center><span class="label" style="background:#${d.background_sl}; color:#${d.color};">${d.descripcion_estatus}</span> <p><p> <span class="label" style="background:#A5D6A7; color:#1B5E20;">${d.tipo_venta}</span> ${libContraloria} <center>`;
+                        `<center><span class="label" style="background:#${d.background_sl}18; color:#${d.color};">${d.descripcion_estatus}</span> ${libContraloria} <center>` :
+                        `<center><span class="label" style="background:#${d.background_sl}18; color:#${d.color};">${d.descripcion_estatus}</span> <p><p> <span class="label" style="background:#A5D6A7; color:#1B5E20;">${d.tipo_venta}</span> ${libContraloria} <center>`;
                 }
             },
             {
@@ -259,9 +260,9 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
             {
                 data: function(d){
                     if(d.apartadoXReubicacion == 1)
-                        return `<center><span class="label" style="background:#D7BDE2; color:#512E5F;">REUBICACIÓN</span> <center>`;
+                        return `<center><span class="label lbl-violetBoots">REUBICACIÓN</span> <center>`;
                     else
-                       return `<center><span class="label" style="background:#ABB2B9; color:#17202A;">NO APLICA</span> <center>`;                   
+                        return `<center><span class="label lbl-gray">NO APLICA</span> <center>`;                   
                 }         
             },
             {
@@ -269,28 +270,28 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
                     if(d.apartadoXReubicacion == 1)
                         return d.fechaAlta;
                     else
-                        return `<center><span class="label" style="background:#ABB2B9; color:#17202A;">NO APLICA</span> <center>`;                
+                        return `<center><span class="label lbl-gray">NO APLICA</span> <center>`;                
                 }         
             },
             {
                 data: function(d){
                     if(d.venta_compartida != 0)
-                        return `<center><span class="label" style="background:#A3E4D7; color:#0E6251;">COMPARTIDA</span> <center>`;
+                        return `<center><span class="label lbl-green">COMPARTIDA</span> <center>`;
                     else
-                       return `<center><span class="label" style="background:#ABB2B9; color:#17202A;">NO APLICA</span> <center>`;                   
+                        return `<center><span class="label lbl-gray">NO APLICA</span> <center>`;                   
                 }         
             },
             {
                 data: function(d) {
                     if(d.ubicacion != null)
-                        return `<center><span class="label" style="background:#ABEBC6; color:#186A3B;">${d.ubicacion}</span> <center>`;
+                        return `<center><span class="label lbl-oceanGreen">${d.ubicacion}</span> <center>`;
                     else
-                       return `<center><span class="label" style="background:#ABB2B9; color:#17202A;">NO APLICA</span> <center>`;                   
+                        return `<center><span class="label lbl-gray">NO APLICA</span> <center>`;                   
                 }         
             },
             {
                 data: function (d) {
-                    return `<center><button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-tipo-venta="${d.tipo_venta}" data-toggle="tooltip" data-placement="left" title="Ver más información"><i class="fas fa-history"></i></button></center>`;
+                    return `<center><button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-tipo-venta="${d.tipo_venta}" data-toggle="tooltip" data-placement="left" title="VER MÁS INFORMACIÓN"><i class="fas fa-history"></i></button></center>`;
                 }
             }
         ],

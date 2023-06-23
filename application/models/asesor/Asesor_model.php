@@ -7,23 +7,22 @@ class Asesor_model extends CI_Model {
     function getinfoCliente($id_cliente)
 {
         return $this->db->query("SELECT cl.correo, cl.nombre, cl.apellido_paterno, oc3.nombre as regimen_valor, oc2.nombre as estado_valor, cl.domicilio_particular, oc.nombre as 
-                                nacionalidad_valor, cl.apellido_materno, cl.rfc, cl.personalidad_juridica, cl.fecha_nacimiento, cl.telefono_empresa, cl.tipo_vivienda, cl.telefono1, cl.telefono2, cl.telefono3, 
-                                cl.correo, lot.idLote, lot.nombreLote, lot.sup, lot.precio, res.nombreResidencial, con.nombre as nombreCondominio, con.idCondominio, ds.id as idDeposito, ds.clave,res.idResidencial as desarrollo, 
-                                con.tipo_lote as tipoLote, ds.idOficial_pf, ds.idDomicilio_pf, ds.actaConstitutiva_pm, ds.idOficialApoderado_pm, ds.poder_pm, ds.actaMatrimonio_pf, ds.idDomicilio_pm, cl.nombre_conyuge, 
-                                cl.nacionalidad, cl.originario_de as originario, cl.estado_civil, cl.regimen_matrimonial, cl.ocupacion, cl.empresa, cl.puesto, cl.antiguedad, cl.edadFirma, cl.domicilio_empresa, ds.noRefPago, 
-                                ds.costoM2, ds.costoM2_casas, ds.proyecto, ds.municipio as municipioDS, ds.importOferta, ds.letraImport, ds.cantidad, ds.letraCantidad, ds.saldoDeposito, aportMensualOfer, ds.fecha1erAport, 
-                                ds.plazo, ds.fechaLiquidaDepo, ds.fecha2daAport, ds.municipio2, ds.dia, ds.mes, ds.anio, ds.observacion, ds.nombreFirmaAsesor, ds.fechaCrate, ds.id_cliente, lot.referencia, 
-                                ds.costom2f, oc4.nombre AS reg_nom, cl.cp_fac FROM clientes cl  
-                                INNER JOIN lotes lot ON cl.idLote = lot.idLote 
-                                INNER JOIN condominios con ON con.idCondominio = lot.idCondominio  
-                                INNER JOIN residenciales res ON res.idResidencial = con.idResidencial  
-                                INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
-                                LEFT JOIN opcs_x_cats oc ON oc.id_opcion = cl.nacionalidad 
-                                LEFT JOIN opcs_x_cats oc2 ON oc2.id_opcion = cl.estado_civil 
-                                LEFT JOIN opcs_x_cats oc3 ON oc3.id_opcion = cl.regimen_matrimonial
-                                LEFT JOIN opcs_x_cats oc4 ON oc4.id_opcion = cl.regimen_fac AND oc4.id_catalogo = 92  
-                                WHERE cl.id_cliente = " . $id_cliente . " 
-                                AND oc.id_catalogo = 11 AND oc2.id_catalogo = 18 AND oc3.id_catalogo = 19");
+            nacionalidad_valor, cl.apellido_materno, cl.rfc, cl.personalidad_juridica, cl.fecha_nacimiento, cl.telefono_empresa, cl.tipo_vivienda, cl.telefono1, cl.telefono2, cl.telefono3, 
+            cl.correo, lot.idLote, lot.nombreLote, lot.sup, lot.precio, res.nombreResidencial, con.nombre as nombreCondominio, con.idCondominio, ds.id as idDeposito, ds.clave,res.idResidencial as desarrollo, 
+            con.tipo_lote as tipoLote, ds.idOficial_pf, ds.idDomicilio_pf, ds.actaConstitutiva_pm, ds.idOficialApoderado_pm, ds.poder_pm, ds.actaMatrimonio_pf, ds.idDomicilio_pm, cl.nombre_conyuge, 
+            cl.nacionalidad, cl.originario_de as originario, cl.estado_civil, cl.regimen_matrimonial, cl.ocupacion, cl.empresa, cl.puesto, cl.antiguedad, cl.edadFirma, cl.domicilio_empresa, ds.noRefPago, 
+            ds.costoM2, ds.costoM2_casas, ds.proyecto, ds.municipio as municipioDS, ds.importOferta, ds.letraImport, ds.cantidad, ds.letraCantidad, ds.saldoDeposito, aportMensualOfer, ds.fecha1erAport, 
+            ds.plazo, ds.fechaLiquidaDepo, ds.fecha2daAport, ds.municipio2, ds.dia, ds.mes, ds.anio, ds.observacion, ds.nombreFirmaAsesor, ds.fechaCrate, ds.id_cliente, lot.referencia, 
+            ds.costom2f, oc4.nombre AS reg_nom, cl.cp_fac FROM clientes cl  
+        INNER JOIN lotes lot ON cl.idLote = lot.idLote 
+        INNER JOIN condominios con ON con.idCondominio = lot.idCondominio  
+        INNER JOIN residenciales res ON res.idResidencial = con.idResidencial  
+        INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
+        LEFT JOIN opcs_x_cats oc ON oc.id_opcion = cl.nacionalidad AND oc.id_catalogo = 11
+        LEFT JOIN opcs_x_cats oc2 ON oc2.id_opcion = cl.estado_civil AND oc2.id_catalogo = 18
+        LEFT JOIN opcs_x_cats oc3 ON oc3.id_opcion = cl.regimen_matrimonial AND oc3.id_catalogo = 19
+        LEFT JOIN opcs_x_cats oc4 ON oc4.id_opcion = cl.regimen_fac AND oc4.id_catalogo = 92  
+        WHERE cl.id_cliente = $id_cliente");
     }
     function getinfoCopropietario($id_cliente){
         return $this->db->query("SELECT id_copropietario, id_cliente, regimen_matrimonial as regimen_valor, estado_civil as estado_valor, co.nacionalidad as nacionalidad_valor, co.nombre as nombre_cop, apellido_paterno, apellido_materno, telefono, telefono_2, correo, fecha_nacimiento, originario_de, conyuge, domicilio_particular, personalidad_juridica, ocupacion, empresa, posicion,  antiguedad, edadFirma, direccion, tipo_vivienda, rfc
@@ -77,7 +76,7 @@ class Asesor_model extends CI_Model {
     public function getDataDs1($id_cliente) { // DATA FROM DEPOSITO_SERIEDAD
         ini_set('max_execution_time', 300);
         set_time_limit(300);
-        $query = $this->db->query("SELECT '1' qry, '1' dsType, cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, 
+        $query = $this->db->query("SELECT '1' qry, '1' dsType, cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.correo, cl.telefono1,
         UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, cl.status ,cl.idLote, convert(varchar,fechaApartado,20) as fechaApartado, fechaVencimiento, cl.usuario, cond.idCondominio, cl.fecha_creacion, 
         cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial,
         cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, convert(varchar,lotes.fechaVenc,20) as fechaVenc, lotes.modificado, lotes.observacionContratoUrgente as vl, lotes.idStatusContratacion, cl.concepto, cl.id_prospecto,
@@ -90,7 +89,9 @@ class Asesor_model extends CI_Model {
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END regional2,
         cl.tipo_comprobanteD, cl.autorizacion_correo, cl.autorizacion_sms,
         ISNULL(tipo_correo_aut.total, 0) AS total_sol_correo_aut, ISNULL(tipo_correo_pend.total, 0) AS total_sol_correo_pend, 
-	    ISNULL(tipo_sms_aut.total, 0) AS total_sol_sms_aut, ISNULL(tipo_sms_pend.total, 0) AS total_sol_sms_pend
+        ISNULL(tipo_correo_rech.total, 0) AS total_sol_correo_rech,
+	    ISNULL(tipo_sms_aut.total, 0) AS total_sol_sms_aut, ISNULL(tipo_sms_pend.total, 0) AS total_sol_sms_pend,
+	    ISNULL(tipo_sms_rech.total, 0) AS total_sol_sms_rech
 		FROM clientes as cl
         LEFT JOIN lotes as lotes ON lotes.idLote=cl.idLote
         LEFT JOIN condominios as cond ON lotes.idCondominio=cond.idCondominio
@@ -102,31 +103,37 @@ class Asesor_model extends CI_Model {
         LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
         LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
         LEFT JOIN autorizaciones AS aut ON cl.id_cliente = aut.idCliente AND lotes.idLote = aut.idLote
-        LEFT JOIN codigo_autorizaciones acc ON cl.id_cliente = acc.id_cliente AND acc.tipo = 1
-        LEFT JOIN codigo_autorizaciones acs ON cl.id_cliente = acs.id_cliente AND acs.tipo = 2
-        LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
-            FROM autorizaciones a
-            INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
-            WHERE ac.tipo = 1 AND estatus = 0
-            GROUP BY a.idCliente, a.idLote) tipo_correo_aut ON tipo_correo_aut.idCliente = $id_cliente AND tipo_correo_aut.idLote = lotes.idLote
+        LEFT JOIN codigo_autorizaciones acc ON cl.id_cliente = acc.id_cliente AND acc.tipo = 2
+        LEFT JOIN codigo_autorizaciones acs ON cl.id_cliente = acs.id_cliente AND acs.tipo = 3
+        LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 1 AND estatus = 0
+            GROUP BY idCliente, idLote) tipo_correo_aut ON tipo_correo_aut.idCliente = $id_cliente AND tipo_correo_aut.idLote = lotes.idLote
         
-        LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
-            FROM autorizaciones a
-            INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
-            WHERE ac.tipo = 1 AND estatus = 1
-            GROUP BY a.idCliente, a.idLote) tipo_correo_pend ON tipo_correo_pend.idCliente = $id_cliente AND tipo_correo_pend.idLote = lotes.idLote
+        LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 2 AND estatus = 1
+            GROUP BY idCliente, idLote) tipo_correo_pend ON tipo_correo_pend.idCliente = $id_cliente AND tipo_correo_pend.idLote = lotes.idLote
+		    
+        LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 2 AND estatus = 2
+            GROUP BY idCliente, idLote) tipo_correo_rech ON tipo_correo_rech.idCliente = $id_cliente AND tipo_correo_rech.idLote = lotes.idLote
         
-        LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
-            FROM autorizaciones a
-            INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
-            WHERE ac.tipo = 2 AND estatus = 0
-            GROUP BY a.idCliente, a.idLote) tipo_sms_aut ON tipo_sms_aut.idCliente = $id_cliente AND tipo_sms_aut.idLote = lotes.idLote
+        LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 3 AND estatus = 0
+            GROUP BY idCliente, idLote) tipo_sms_aut ON tipo_sms_aut.idCliente = $id_cliente AND tipo_sms_aut.idLote = lotes.idLote
         
-        LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
-            FROM autorizaciones a
-            INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
-            WHERE ac.tipo = 2 AND estatus = 1
-            GROUP BY a.idCliente, a.idLote) tipo_sms_pend ON tipo_sms_pend.idCliente = $id_cliente AND tipo_sms_pend.idLote = lotes.idLote
+        LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 3 AND estatus = 1
+            GROUP BY idCliente, idLote) tipo_sms_pend ON tipo_sms_pend.idCliente = $id_cliente AND tipo_sms_pend.idLote = lotes.idLote
+		    
+        LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 3 AND estatus = 2
+            GROUP BY idCliente, idLote) tipo_sms_rech ON tipo_sms_rech.idCliente = $id_cliente AND tipo_sms_rech.idLote = lotes.idLote
         INNER JOIN deposito_seriedad as ds ON ds.id_cliente = cl.id_cliente
         WHERE lotes.idStatusLote = 3 AND cl.status = 1 AND cl.id_cliente = $id_cliente AND ds.desarrollo IS NOT NULL");
         return $query->result();
@@ -135,14 +142,16 @@ class Asesor_model extends CI_Model {
     { // DATA FROM DEPOSITO_SERIEDAD_CONSULTA
         ini_set('max_execution_time', 300);
         set_time_limit(300);
-        $query = $this->db->query("SELECT '2' qry, '2' dsType, cl.idCliente as id_cliente, cl.idAsesor id_asesor, '0' id_coordinador,cl.idGerente id_gerente, '0' id_sede, CONCAT(cl.primerNombre, ' ', cl.segundoNombre) nombre, cl.apellidoPaterno apellido_paterno, 
+        $query = $this->db->query("SELECT '2' qry, '2' dsType, cl.idCliente as id_cliente, cl.idAsesor id_asesor, '0' id_coordinador,cl.idGerente id_gerente, '0' id_sede, CONCAT(cl.primerNombre, ' ', cl.segundoNombre) nombre, cl.apellidoPaterno apellido_paterno, cl.correo, cl.telefono1, 
         cl.apellidoMaterno apellido_materno, cl.status ,cl.idLote, convert(varchar,cl.fechaApartado,20) as fechaApartado, convert(varchar,cl.fechaVencimiento,20) as fechaVencimiento, cl.usuario, cond.idCondominio, cl.fechaApartado fecha_creacion, 
         cl.creado_por, cl.fechaApartado fecha_modificacion, cl.usuario modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial,
         cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, convert(varchar,lotes.fechaVenc,20) as fechaVenc, lotes.modificado, lotes.observacionContratoUrgente as vl, lotes.idStatusContratacion, cl.concepto, '666' as id_prospecto,
         cl.flag_compartida, 'SIN ESPECIFICAR' asesor, 'SIN ESPECIFICAR' coordinador, 'SIN ESPECIFICAR' gerente, 'SIN ESPECIFICAR' subdirector, 'SIN ESPECIFICAR' regional, 'SIN ESPECIFICAR' regional2, 
         aut.estatus as estatus, 'NULL' as tipo_comprobanteD, c.autorizacion_correo, c.autorizacion_sms,
         ISNULL(tipo_correo_aut.total, 0) AS total_sol_correo_aut, ISNULL(tipo_correo_pend.total, 0) AS total_sol_correo_pend, 
-	    ISNULL(tipo_sms_aut.total, 0) AS total_sol_sms_aut, ISNULL(tipo_sms_pend.total, 0) AS total_sol_sms_pend
+        ISNULL(tipo_correo_rech.total, 0) AS total_sol_correo_rech,
+	    ISNULL(tipo_sms_aut.total, 0) AS total_sol_sms_aut, ISNULL(tipo_sms_pend.total, 0) AS total_sol_sms_pend,
+	    ISNULL(tipo_sms_rech.total, 0) AS total_sol_sms_rech
 		FROM cliente_consulta as cl
         INNER JOIN clientes c ON cl.idCliente = c.id_cliente 
         LEFT JOIN lotes as lotes ON lotes.idLote=cl.idLote
@@ -150,31 +159,37 @@ class Asesor_model extends CI_Model {
         LEFT JOIN residenciales as residencial ON cond.idResidencial=residencial.idResidencial
         INNER JOIN deposito_seriedad_consulta as ds ON ds.idCliente = cl.idCliente
         LEFT JOIN autorizaciones AS aut ON cl.idCliente = aut.idCliente AND lotes.idLote = aut.idLote
-		LEFT JOIN codigo_autorizaciones acc ON cl.idCliente = acc.id_cliente AND acc.tipo = 1
-        LEFT JOIN codigo_autorizaciones acs ON cl.idCliente = acs.id_cliente AND acs.tipo = 2
-		LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
-            FROM autorizaciones a
-            INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
-            WHERE ac.tipo = 1 AND estatus = 0
-            GROUP BY a.idCliente, a.idLote) tipo_correo_aut ON tipo_correo_aut.idCliente = $id_cliente AND tipo_correo_aut.idLote = lotes.idLote
+		LEFT JOIN codigo_autorizaciones acc ON cl.idCliente = acc.id_cliente AND acc.tipo = 2
+        LEFT JOIN codigo_autorizaciones acs ON cl.idCliente = acs.id_cliente AND acs.tipo = 3
+		LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 1 AND estatus = 0
+            GROUP BY idCliente, idLote) tipo_correo_aut ON tipo_correo_aut.idCliente = $id_cliente AND tipo_correo_aut.idLote = lotes.idLote
         
-        LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
-            FROM autorizaciones a
-            INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
-            WHERE ac.tipo = 1 AND estatus = 1
-            GROUP BY a.idCliente, a.idLote) tipo_correo_pend ON tipo_correo_pend.idCliente = $id_cliente AND tipo_correo_pend.idLote = lotes.idLote
+        LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 2 AND estatus = 1
+            GROUP BY idCliente, idLote) tipo_correo_pend ON tipo_correo_pend.idCliente = $id_cliente AND tipo_correo_pend.idLote = lotes.idLote
+		    
+        LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 2 AND estatus = 2
+            GROUP BY idCliente, idLote) tipo_correo_rech ON tipo_correo_rech.idCliente = $id_cliente AND tipo_correo_rech.idLote = lotes.idLote
         
-        LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
-            FROM autorizaciones a
-            INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
-            WHERE ac.tipo = 2 AND estatus = 0
-            GROUP BY a.idCliente, a.idLote) tipo_sms_aut ON tipo_sms_aut.idCliente = $id_cliente AND tipo_sms_aut.idLote = lotes.idLote
+        LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 3 AND estatus = 0
+            GROUP BY idCliente, idLote) tipo_sms_aut ON tipo_sms_aut.idCliente = $id_cliente AND tipo_sms_aut.idLote = lotes.idLote
         
-        LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
-            FROM autorizaciones a
-            INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
-            WHERE ac.tipo = 2 AND estatus = 1
-            GROUP BY a.idCliente, a.idLote) tipo_sms_pend ON tipo_sms_pend.idCliente = $id_cliente AND tipo_sms_pend.idLote = lotes.idLote
+        LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 3 AND estatus = 1
+            GROUP BY idCliente, idLote) tipo_sms_pend ON tipo_sms_pend.idCliente = $id_cliente AND tipo_sms_pend.idLote = lotes.idLote
+		    
+        LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 3 AND estatus = 2
+            GROUP BY idCliente, idLote) tipo_sms_rech ON tipo_sms_rech.idCliente = $id_cliente AND tipo_sms_rech.idLote = lotes.idLote
         WHERE lotes.idStatusLote = 3 AND cl.status = 1 AND cl.idCliente = $id_cliente");
         return $query->result();
     }
@@ -182,7 +197,7 @@ class Asesor_model extends CI_Model {
     { // DATA FROM DEPOSITO_SERIEDAD WHEN NO ENCONTRÓ NOTHING IN getDataDs1 & getDataDs2
         ini_set('max_execution_time', 300);
         set_time_limit(300);
-        $query = $this->db->query("SELECT '3' qry, '1' dsType, cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, 
+        $query = $this->db->query("SELECT '3' qry, '1' dsType, cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.correo, cl.telefono1,
         UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
         cl.status ,cl.idLote, convert(varchar,fechaApartado,20) as fechaApartado , convert(varchar,fechaVencimiento,20) as fechaVencimiento, cl.usuario, cond.idCondominio, convert(varchar,cl.fecha_creacion,20) as fecha_creacion, 
         cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, convert(varchar,lotes.fechaVenc,20) as fechaVenc , lotes.modificado, lotes.observacionContratoUrgente as vl, lotes.idStatusContratacion, cl.concepto, cl.id_prospecto,
@@ -194,8 +209,10 @@ class Asesor_model extends CI_Model {
         CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END regional,
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END regional2,
         cl.tipo_comprobanteD, cl.autorizacion_correo, cl.autorizacion_sms, 
-        ISNULL(tipo_correo_aut.total, 0) AS total_sol_correo_aut, ISNULL(tipo_correo_pend.total, 0) AS total_sol_correo_pend, 
-	    ISNULL(tipo_sms_aut.total, 0) AS total_sol_sms_aut, ISNULL(tipo_sms_pend.total, 0) AS total_sol_sms_pend
+	    ISNULL(tipo_correo_aut.total, 0) AS total_sol_correo_aut, ISNULL(tipo_correo_pend.total, 0) AS total_sol_correo_pend, 
+        ISNULL(tipo_correo_rech.total, 0) AS total_sol_correo_rech,
+	    ISNULL(tipo_sms_aut.total, 0) AS total_sol_sms_aut, ISNULL(tipo_sms_pend.total, 0) AS total_sol_sms_pend,
+	    ISNULL(tipo_sms_rech.total, 0) AS total_sol_sms_rech 
 		FROM clientes as cl
         LEFT JOIN lotes as lotes ON lotes.idLote=cl.idLote
         LEFT JOIN condominios as cond ON lotes.idCondominio=cond.idCondominio
@@ -208,31 +225,37 @@ class Asesor_model extends CI_Model {
         LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
         LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
         LEFT JOIN autorizaciones AS aut ON cl.id_cliente = aut.idCliente AND lotes.idLote = aut.idLote
-		LEFT JOIN codigo_autorizaciones acc ON cl.id_cliente = acc.id_cliente AND acc.tipo = 1
-        LEFT JOIN codigo_autorizaciones acs ON cl.id_cliente = acs.id_cliente AND acs.tipo = 2
-		LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
-            FROM autorizaciones a
-            INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
-            WHERE ac.tipo = 1 AND estatus = 0
-            GROUP BY a.idCliente, a.idLote) tipo_correo_aut ON tipo_correo_aut.idCliente = $id_cliente AND tipo_correo_aut.idLote = lotes.idLote
+		LEFT JOIN codigo_autorizaciones acc ON cl.id_cliente = acc.id_cliente AND acc.tipo = 2
+        LEFT JOIN codigo_autorizaciones acs ON cl.id_cliente = acs.id_cliente AND acs.tipo = 3
+		LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 1 AND estatus = 0
+            GROUP BY idCliente, idLote) tipo_correo_aut ON tipo_correo_aut.idCliente = $id_cliente AND tipo_correo_aut.idLote = lotes.idLote
         
-        LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
-            FROM autorizaciones a
-            INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
-            WHERE ac.tipo = 1 AND estatus = 1
-            GROUP BY a.idCliente, a.idLote) tipo_correo_pend ON tipo_correo_pend.idCliente = $id_cliente AND tipo_correo_pend.idLote = lotes.idLote
+        LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 2 AND estatus = 1
+            GROUP BY idCliente, idLote) tipo_correo_pend ON tipo_correo_pend.idCliente = $id_cliente AND tipo_correo_pend.idLote = lotes.idLote
+		    
+        LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 2 AND estatus = 2
+            GROUP BY idCliente, idLote) tipo_correo_rech ON tipo_correo_rech.idCliente = $id_cliente AND tipo_correo_rech.idLote = lotes.idLote
         
-        LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
-            FROM autorizaciones a
-            INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
-            WHERE ac.tipo = 2 AND estatus = 0
-            GROUP BY a.idCliente, a.idLote) tipo_sms_aut ON tipo_sms_aut.idCliente = $id_cliente AND tipo_sms_aut.idLote = lotes.idLote
+        LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 3 AND estatus = 0
+            GROUP BY idCliente, idLote) tipo_sms_aut ON tipo_sms_aut.idCliente = $id_cliente AND tipo_sms_aut.idLote = lotes.idLote
         
-        LEFT JOIN (SELECT COUNT(*) AS total, a.idCliente, a.idLote
-            FROM autorizaciones a
-            INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = a.id_autorizacion
-            WHERE ac.tipo = 2 AND estatus = 1
-            GROUP BY a.idCliente, a.idLote) tipo_sms_pend ON tipo_sms_pend.idCliente = $id_cliente AND tipo_sms_pend.idLote = lotes.idLote
+        LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 3 AND estatus = 1
+            GROUP BY idCliente, idLote) tipo_sms_pend ON tipo_sms_pend.idCliente = $id_cliente AND tipo_sms_pend.idLote = lotes.idLote
+    
+		LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
+            FROM autorizaciones
+            WHERE id_tipo = 3 AND estatus = 2
+            GROUP BY idCliente, idLote) tipo_sms_rech ON tipo_sms_rech.idCliente = $id_cliente AND tipo_sms_rech.idLote = lotes.idLote
         WHERE lotes.idStatusLote = 3 AND cl.status = 1 AND cl.id_cliente = $id_cliente");
         return $query->result();
     }
@@ -804,8 +827,7 @@ class Asesor_model extends CI_Model {
     }
     public function insertAutorizacion($data)
     {
-        $this->db->insert('autorizaciones',$data);
-        return $this->db->affected_rows();
+        $this->db->insert('autorizaciones', $data);
     }
     public function registroClienteDS($id_condominio) {
         ini_set('max_execution_time', 300);

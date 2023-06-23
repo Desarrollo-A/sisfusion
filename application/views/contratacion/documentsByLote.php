@@ -177,13 +177,7 @@
                                 {data: 'nombre'},
                                 {data: 'nombreLote'},
                                 {data: 'idLote'},
-                                {
-                                    data: null,
-                                    render: function ( data, type, row )
-                                    {
-                                        return data.nomCliente +' ' +data.apellido_paterno+' '+data.apellido_materno;
-                                    },
-                                },
+								{data: 'nombreCliente'},
                                 {data: 'movimiento'},
                                 {data: 'modificado'},
                                 {

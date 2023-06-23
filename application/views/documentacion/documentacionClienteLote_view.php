@@ -5,45 +5,12 @@
     <div class="wrapper">
         <?php
 		    //se debe validar que tipo de perfil esta sesionado para poder asignarle el tipo de sidebar
-		    if(in_array($this->session->userdata('id_rol'), array(2, 3, 4, 5, 6, 7, 9, 11, 12, 13, 15, 16, 28, 32, 33, 34, 39, 50, 40, 53, 58, 65, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 55, 17, 73, 70, 71, 47)))
+		    if(in_array($this->session->userdata('id_rol'), array(17, 70, 71, 73)) || ($this->session->userdata('id_rol') == 11 && $this->session->userdata('id_usuario') == 2755) || $this->session->userdata('id_usuario') == 2748)
                 $this->load->view('template/sidebar');
             else
                 echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
 		?>
         <!-- Modals -->
-        <div class="modal fade" id="addDeleteFileModal" data-keyboard="false" data-backdrop="static">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header"></div>
-                    <div class="modal-body text-center">
-                        <h5 id="mainLabelText"></h5>
-                        <p id="secondaryLabelDetail"></p>
-                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2">
-                            <div class="hide" id="selectFileSection">
-                                <div class="file-gph">
-                                    <input class="d-none" type="file" id="fileElm">
-                                    <input class="file-name" id="file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
-                                    <label class="upload-btn m-0" for="fileElm">
-                                        <span>Seleccionar</span>
-                                        <i class="fas fa-folder-open"></i>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <input type="text" class="hide" id="idLoteValue">
-                        <input type="text" class="hide" id="idDocumento">
-                        <input type="text" class="hide" id="tipoDocumento">
-                        <input type="text" class="hide" id="nombreDocumento">
-                        <input type="text" class="hide" id="tituloDocumento">
-                        <input type="text" class="hide" id="accion">
-                    </div>
-                    <div class="modal-footer mt-2">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="button" id="sendRequestButton" class="btn btn-primary">Guardar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
         <!-- autorizaciones-->
         <div class="modal fade" id="verAutorizacionesAsesor">
             <div class="modal-dialog">
@@ -80,7 +47,7 @@
                                 <div class="toolbar">
                                     <h3 class="card-title center-align">Documentación por lote</h3>
                                     <div class="row">
-                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                        <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                             <div class="form-group select-is-empty">
                                                 <label class="control-label">Proyecto</label>
                                                 <select name="idResidencial" id="idResidencial" class="selectpicker select-gral m-0"
@@ -97,7 +64,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                        <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                             <div class="form-group select-is-empty">
                                                 <label class="control-label">Condominio</label>
                                                 <select id="idCondominio" name="idCondominio" class="selectpicker select-gral m-0"
@@ -106,12 +73,21 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                        <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                             <div class="form-group select-is-empty">
                                                 <label class="control-label">Lote</label>
                                                 <select id="idLote" name="idLote" class="selectpicker select-gral m-0"
                                                     data-style="btn" data-show-subtext="true" data-live-search="true"
                                                     title="Selecciona un lote" data-size="7" required>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                            <div class="form-group select-is-empty">
+                                                <label class="control-label">Cliente</label>
+                                                <select id="idCliente" name="idCliente" class="selectpicker select-gral m-0"
+                                                    data-style="btn" data-show-subtext="true" data-live-search="true"
+                                                    title="Selecciona un cliente" data-size="7" required>
                                                 </select>
                                             </div>
                                         </div>
@@ -163,5 +139,5 @@
     <link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
     <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
-    <script src="<?= base_url() ?>dist/js/controllers/documentacion/documentacion.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/documentacion/documentacionClienteLote.js"></script>
 </body>

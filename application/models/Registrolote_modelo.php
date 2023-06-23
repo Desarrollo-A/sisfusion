@@ -61,7 +61,7 @@
 	public function getdp_DS($lotes) {
         return $this->db-> query("SELECT TOP(1)  'Depósito de seriedad versión anterior' expediente, 'DEPÓSITO DE SERIEDAD' movimiento,
             'VENTAS-ASESOR' primerNom, 'VENTAS' ubic, lo.nombreLote, UPPER(CONCAT(cl.primerNombre, ' ', cl.segundoNombre, ' ', cl.apellidoPaterno, ' ', cl.apellidoMaterno)) nombreCliente,
-            cl.rfc, co.nombre, re.nombreResidencial, cl.fechaApartado, cl.idCliente id_cliente, cl.idCliente idDocumento, ds.fechaCrate modificado,
+            cl.rfc, co.nombre, re.nombreResidencial, cl.fechaApartado, cl.idCliente id_cliente, cl.idCliente idDocumento, CONVERT(VARCHAR,ds.fechaCrate,20) AS modificado,
             lo.idLote, lo.observacionContratoUrgente, '' nombreAsesor, '' nombreCoordinador, '' nombreGerente, '' nombreSubdirector, '' nombreRegional, '' nombreRegional2,
             'ds_old' tipo_doc, l.status8Flag
             FROM cliente_consulta cl
@@ -2739,8 +2739,8 @@
         INNER JOIN clientes as cl ON autorizaciones.idCliente=cl.id_cliente
         INNER JOIN usuarios as asesor ON cl.id_asesor=asesor.id_usuario
         INNER JOIN usuarios gerente ON gerente.id_usuario = cl.id_gerente
-        LEFT JOIN autorizaciones_clientes ac ON ac.id_autorizacion = autorizaciones.id_autorizacion
-        where autorizaciones.id_aut = {$this->session->userdata('id_usuario')} AND autorizaciones.estatus = 1 AND ac.id_autorizacion IS NULL
+        where autorizaciones.id_aut = {$this->session->userdata('id_usuario')} AND autorizaciones.estatus = 1 
+            AND autorizaciones.id_tipo = 1
         GROUP BY residencial.nombreResidencial, condominio.nombre, 
         lotes.nombreLote, id_aut, cl.id_cliente, condominio.idCondominio,
         users.usuario,  autorizaciones.idLote, CONCAT(cl.nombre,' ', cl.apellido_paterno,' ', cl.apellido_materno),
@@ -3075,8 +3075,7 @@
                 inner join residenciales res on res.idResidencial = cond.idResidencial 
                 inner join usuarios as users on aut.id_sol = users.id_usuario 
                 inner join usuarios as users1 on aut.id_aut = users1.id_usuario
-                LEFT JOIN autorizaciones_clientes ac ON ac.id_autorizacion = aut.id_autorizacion
-                WHERE aut.estatus = 3 and lotes.idLote = $idLote AND ac.id_autorizacion IS NULL");
+                WHERE aut.estatus = 3 and lotes.idLote = $idLote AND aut.id_tipo = 1");
 		} else {
 			$query = $this->db->query("SELECT residencial.nombreResidencial, condominio.nombre as nombreCondominio, 
                 lotes.nombreLote, autorizaciones.estatus, lotes.idLote, condominio.idCondominio,
@@ -3089,9 +3088,8 @@
                 inner join residenciales residencial on residencial.idResidencial = condominio.idResidencial 
                 inner join usuarios as asesor on autorizaciones.id_sol = asesor.id_usuario 
                 inner join usuarios as autorizador on autorizaciones.id_aut = autorizador.id_usuario
-                LEFT JOIN autorizaciones_clientes ac ON ac.id_autorizacion = autorizaciones.id_autorizacion
                 where autorizaciones.estatus = 1 and autorizaciones.id_aut = {$this->session->userdata('id_usuario')} AND 
-                    lotes.idLote = $idLote AND ac.id_autorizacion IS NULL");
+                    lotes.idLote = $idLote AND autorizaciones.id_tipo = 1");
 		}
 
 		return $query->result_array();
@@ -3129,8 +3127,7 @@
 				INNER JOIN autorizaciones aut ON aut.idLote = lotes.idLote
 				INNER JOIN usuarios asesor ON asesor.id_usuario = aut.id_sol
                 INNER JOIN usuarios gerente ON gerente.id_usuario = cl.id_gerente
-				LEFT JOIN autorizaciones_clientes ac ON ac.id_autorizacion = aut.id_autorizacion
-				WHERE cl.status = 1 AND aut.estatus = 3 AND ac.id_autorizacion IS NULL
+				WHERE cl.status = 1 AND aut.estatus = 3 AND aut.id_tipo = 1
 				GROUP BY cl.id_cliente, nombreLote, cl.rfc, res.nombreResidencial,
 				cond.nombre, cl.status, cl.id_asesor, cond.idCondominio,
 				lotes.idLote, cl.fechaApartado, 
@@ -3220,10 +3217,12 @@
 				else if ($this->session->userdata('id_usuario') == 10795) { // ALMA GALICIA ACEVEDO QUEZADA
 					$id_lider = $id_lider . ', 671';
 					$sede = "AND clientes.id_sede = 12";
-				}
-				else if ($this->session->userdata('id_usuario') == 10795) { // MARCELA CUELLAR MORON
+				} else if ($this->session->userdata('id_usuario') == 12449) { // MARCELA CUELLAR MORON
 					$id_lider = $id_lider . ', 654';
 					$sede = "AND clientes.id_sede = 12";
+				} else if ($this->session->userdata('id_usuario') == 10270) { // ANDRES BARRERA VENEGAS
+					$id_lider = $id_lider . ', 113';
+					$sede = "AND clientes.id_sede IN (4, 13)";
 				}
                 $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor, '1' venta_compartida  FROM lotes
                 INNER JOIN clientes ON clientes.idLote = lotes.idLote $sede
@@ -3306,7 +3305,7 @@
         $extraWhere = '';
         if($id_rol == 54) {
             $extraInner = 'INNER JOIN prospectos pr ON cl.id_prospecto=pr.id_prospecto';
-            $extraWhere = " AND pr.source='DragonCEM'";
+            $extraWhere = " AND pr.lugar_prospeccion = 42";
         }
 		$where = '';
 		if($cliente != '')
@@ -3347,7 +3346,7 @@
         $extraWhere = '';
 	    if($id_rol==54){
             $extraInner = 'INNER JOIN prospectos pr ON cl.id_prospecto=pr.id_prospecto';
-            $extraWhere = " AND pr.source='DragonCEM'";
+            $extraWhere = " AND pr.lugar_prospeccion = 42";
         }
 		$where = '';
 		if($cliente != '')
@@ -3385,7 +3384,7 @@
         $extraWhere = '';
         if($id_rol == 54) {
             $extraInner = 'INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto';
-            $extraWhere = " AND pr.source='DragonCEM'";
+            $extraWhere = " AND pr.lugar_prospeccion = 42";
         }
 		$where = '';
 		if($cliente != '')
@@ -3428,7 +3427,7 @@
         $extraWhere = '';
         if($id_rol == 54) {
             $extraInner = 'INNER JOIN prospectos pr ON cl.id_prospecto=pr.id_prospecto';
-            $extraWhere = " AND pr.source='DragonCEM'";
+            $extraWhere = " AND pr.lugar_prospeccion = 42";
         }
 		$where = '';
 		if($cliente != '')
@@ -3470,7 +3469,7 @@
         $extraWhere = '';
         if($id_rol == 54) {
             $extraInner = 'INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto';
-            $extraWhere = " AND pr.source='DragonCEM'";
+            $extraWhere = " AND pr.lugar_prospeccion = 42";
         }
 		$complemento = '';
 		if($cliente != '')
@@ -3997,8 +3996,7 @@
         INNER JOIN clientes as cl ON autorizaciones.idCliente=cl.id_cliente
         INNER JOIN usuarios as asesor ON cl.id_asesor=asesor.id_usuario
         INNER JOIN usuarios gerente ON gerente.id_usuario = cl.id_gerente
-        INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = autorizaciones.id_autorizacion
-        where autorizaciones.id_aut = $idUsuario AND autorizaciones.estatus = 1
+        where autorizaciones.id_aut = $idUsuario AND autorizaciones.estatus = 1 AND autorizaciones.id_tipo IN (2,3)
         GROUP BY residencial.nombreResidencial, condominio.nombre, 
         lotes.nombreLote, id_aut, cl.id_cliente, condominio.idCondominio,
         users.usuario,  autorizaciones.idLote, CONCAT(cl.nombre,' ', cl.apellido_paterno,' ', cl.apellido_materno),
@@ -4015,16 +4013,15 @@
                 autorizaciones.autorizacion, autorizaciones.fecha_creacion, autorizaciones.id_autorizacion, autorizaciones.idLote,
                 CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as sol, 
                 CONCAT(autorizador.nombre,' ', autorizador.apellido_paterno, ' ', autorizador.apellido_materno) as aut,
-                ac.tipo
+                autorizaciones.id_tipo
                 FROM autorizaciones 
                 inner join lotes on lotes.idLote = autorizaciones.idLote 
                 inner join condominios condominio on condominio.idCondominio = lotes.idCondominio 
                 inner join residenciales residencial on residencial.idResidencial = condominio.idResidencial 
                 inner join usuarios as asesor on autorizaciones.id_sol = asesor.id_usuario 
                 inner join usuarios as autorizador on autorizaciones.id_aut = autorizador.id_usuario
-                INNER JOIN autorizaciones_clientes ac ON ac.id_autorizacion = autorizaciones.id_autorizacion
                 where autorizaciones.estatus = 1 and autorizaciones.id_aut = {$this->session->userdata('id_usuario')} AND 
-                    lotes.idLote = $idLote");
+                    lotes.idLote = $idLote AND autorizaciones.id_tipo IN (2,3)");
 
         return $query->result_array();
     }
