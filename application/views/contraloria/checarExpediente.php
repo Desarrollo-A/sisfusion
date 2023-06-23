@@ -3,7 +3,7 @@
 <body class="">
 <div class="wrapper ">
     <?php
-    if($this->session->userdata('id_rol')=="17")//contratacion
+    if($this->session->userdata('id_rol')=="17")//contraloría
     {
         $this->load->view('template/sidebar');
     }
@@ -11,15 +11,6 @@
     {
         echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
     }
-
-    /*$dias = [1,2,3];
-    // date("j");
-     $d = in_array(date("j"),$dias);
-    $date = new DateTime('now');
-    $date->modify('-1 month');
-    $date->format('Y-m-t');
-   echo $fechaApartado =  in_array(date("j"),$dias) ? $date->format('Y-m-t H:i:s') : date('Y-m-d H:i:s') ;*/ 
-
     ?>
  <style>
      .col-lg-6 select:required + label {
@@ -57,7 +48,6 @@
                             <p><small>El cambio no podrá ser revertido.</small></p>
                         </div>
                         <input type="hidden" name="idCliente" id="idCliente">
-                        <input type="hidden" name="accion" id="accion" value="0">
                         <div id="camposEditar">
 
                         </div>
@@ -86,7 +76,7 @@
                             </div>
                             <div class="toolbar">
                                 <div class="row">
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-3">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
                                         <div class="form-group label-floating select-is-empty overflow-hidden">
                                             <label class="control-label">Proyecto</label>
                                             <select name="residencial" id="residencial"
@@ -99,9 +89,10 @@
                                                     data-container="body" 
                                                     required>
                                             </select>
+                                            <input type="hidden" name="accion" id="accion" value="0">
                                         </div>
                                     </div>
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-3">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
                                         <div class="form-group label-floating select-is-empty overflow-hidden">
                                             <label class="control-label">Condominio</label>
                                             <select id="condominio" name="condominio"
@@ -116,7 +107,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-3">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
                                         <div class="form-group label-floating select-is-empty overflow-hidden">
                                             <label class="control-label">Lote</label>
                                             <select id="lotes" name="lotes"

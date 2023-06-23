@@ -15,20 +15,17 @@ $(document).ready(function(){ /**FUNCIÓN PARA LLENAR EL SELECT DE PROYECTOS(RES
         $('#spiner-loader').addClass('hide');
     }, 'json'); 
 
-
-    $.post("get_tventa", function (data) {
-        tipos_venta = data;
-    }, 'json');
-
-    $.post("get_sede", function (data) {
-        sedes = data;
-    }, 'json');
+            $.post("get_tventa", function (data) {
+                tipos_venta = data;
+            }, 'json');
+            $.post("get_sede", function (data) {
+                sedes = data;
+            }, 'json');
 
 });
 
 $('#residencial').change(function(){
     var residencial = $(this).val();
-    //$('#tableClient').DataTable().clear();
     $("#condominio").empty().selectpicker('refresh');
     $("#lotes").empty().selectpicker('refresh');
     $.post(`${general_base_url}General/getCondominiosList`,{idResidencial:residencial}, function (data) {  
@@ -64,7 +61,6 @@ $('#condominio').change(function(){
 var contador=0;
 var datosTable;
 function llenarClientes(idLote){
-
     datosTable = [];
     var lote = idLote;
     $.ajax({
@@ -77,11 +73,10 @@ function llenarClientes(idLote){
                     data = JSON.parse(data);
                     datosTable = data;
                     let datosSelect = data.data;
-                    console.log(data)
                     let len = datosSelect.length;
 
                     $('#spiner-loader').addClass('hide');  
-                 },
+        },
         async:   false
    }); 
     construirTableClient('','',datosTable);
@@ -107,26 +102,7 @@ $('#tableClient thead tr:eq(0) th').each(function (i) {
         });
     $('[data-toggle="tooltip"]').tooltip();
 });
-
-/*$('#clientes').change(function(){
-    datosTable = [];
-    var idCliente = $(this).val();
-    $.ajax({
-        url:`${general_base_url}RegistroCliente/getClientByID`,
-        type: 'POST',
-        data:{idLote:'',idCliente:idCliente},
-        success: function(data) {
-                    data = JSON.parse(data);
-                    datosTable = data;
-                 },
-        async:   false
-   });
-    construirTableClient('',idCliente,datosTable);
-});*/
-
 function construirTableClient(idCliente = '',idLote = '',datos = ''){
-
-    console.log(datos.data)
     let opcionConsulta = 'getClientsByLote'
     tableClient = $("#tableClient").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -147,7 +123,8 @@ function construirTableClient(idCliente = '',idLote = '',datos = ''){
                     }
                 }
             },
-        },{
+        },
+        {
             extend: 'pdfHtml5',
             text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
             className: 'btn buttons-pdf',
@@ -158,8 +135,8 @@ function construirTableClient(idCliente = '',idLote = '',datos = ''){
             exportOptions: {
                 columns: [0,1,2,3,4,5,7,8,9,10,11,12,13,14,15,16,17,18,19],
                 format: {
-                    header:  function (d, columnIdx) {
-                        return titulos[columnIdx];
+                          header:  function (d, columnIdx) {
+                          return titulos[columnIdx];
                     }
                 }
             }
@@ -308,15 +285,17 @@ function construirTableClient(idCliente = '',idLote = '',datos = ''){
                 data: null,
                 render: function ( data, type, row )
                 {
+                    let tipoVenta = data.tipo_ventaId == 0 || data.tipo_ventaId == null ? 0 : data.tipo_ventaId;
+                    let ubicacion = data.ubicacion == 0 || data.ubicacion == null ? 0 : data.ubicacion;
                     let button_action='';
                     if(data.estatus_cliente==0){
                         
-                        button_action = data.hlidStatus < 5 ? `<center><a class="backButton btn-data btn-warning" title= "Regresar expediente" style="cursor:pointer;" data-idLote="${data.idLote}" data-nomLote="${data.nombreLote}" data-nombreCliente="${data.nomCliente}" data-idCliente="${data.id_cliente}"><i class="fas fa-history"></i></a></center>` : 
-                        `<center><a class="editButton btn-data btn-warning" title= "Regresar expediente" data-accion="1" style="cursor:pointer;" data-idStatusConstruccion="${data.hlidStatus}" data-idLote="${data.idLote}" data-nomLote="${data.nombreLote}" data-nombreCliente="${data.nomCliente}" data-idCliente="${data.id_cliente}"><i class="fas fa-history"></i></a></center>`;
+                        button_action = data.hlidStatus < 5 ? `<center><a class="backButton btn-data btn-warning" data-accion="3" title= "Regresar expediente" style="cursor:pointer;" data-idLote="${data.idLote}" data-nomLote="${data.nombreLote}" data-nombreCliente="${data.nomCliente}" data-idCliente="${data.id_cliente}"><i class="fas fa-history"></i></a></center>` : 
+                        `<center><a class="editButton btn-data btn-warning" title= "Regresar expediente" data-tipoVenta="${tipoVenta}" data-ubicacion="${ubicacion}" data-accion="1" style="cursor:pointer;" data-idStatusConstruccion="${data.hlidStatus}" data-idLote="${data.idLote}" data-nomLote="${data.nombreLote}" data-nombreCliente="${data.nomCliente}" data-idCliente="${data.id_cliente}"><i class="fas fa-history"></i></a></center>`;
                     }else{
 
                         if(data.hlidStatus >= 5){
-                            button_action = `<center><a class="editButton btn-data btn-warning" data-accion="2" title= "Regresar expediente" style="cursor:pointer;" data-idStatusConstruccion="${data.hlidStatus}" data-idLote="${data.idLote}" data-nomLote="${data.nombreLote}" data-nombreCliente="${data.nomCliente}" data-idCliente="${data.id_cliente}"><i class="fas fa-history"></i></a></center>`;
+                            button_action = `<center><a class="editButton btn-data btn-sky" data-tipoVenta="${tipoVenta}" data-ubicacion="${ubicacion}" data-accion="2" title= "Regresar expediente" style="cursor:pointer;" data-idStatusConstruccion="${data.hlidStatus}" data-idLote="${data.idLote}" data-nomLote="${data.nombreLote}" data-nombreCliente="${data.nomCliente}" data-idCliente="${data.id_cliente}"><i class="fas fa-edit"></i></a></center>`;
                         }
                     }
                     return button_action;
@@ -339,15 +318,15 @@ const permisosEstatus = [
         title: ['Ubicacion','Tipo venta']
     },
     {
-        idStatusContratacion : [8,9,10],
-        campos: ['totalNeto','totalNeto2','comentario','ubicacion','tipo_venta'],
-        title: ['Total Neto','Precio final con descuento','Comentario','Ubicación' ,'Tipo venta']
+        idStatusContratacion : [8,11],
+        campos: ['totalValidado','totalNeto','totalNeto2','comentario','ubicacion','tipo_venta'],
+        title: ['Total validado (Enganche Administración)','Total Neto (Enganche contraloría)','Precio final con descuento','Comentario','Ubicación' ,'Tipo venta']
 
     },
     {
-        idStatusContratacion : [11,12,13,14,15], // idStatusContratacion >= 11
+        idStatusContratacion : [9,10,12,13,14,15], // idStatusContratacion >= 11
         campos:  ['totalValidado','totalNeto','totalNeto2','comentario','ubicacion','tipo_venta'],          
-        title: ['Total validado','Total Neto','Precio final con descuento','Comentario','Ubicación' ,'Tipo venta']
+        title: ['Total validado (Enganche Administración)','Total Neto (Enganche contraloría)','Precio final con descuento','Comentario','Ubicación' ,'Tipo venta']
 
     },
 ];
@@ -355,9 +334,11 @@ const permisosEstatus = [
 $(document).on('click', '.editButton', function(){
     var $itself = $(this);
     var datosPorTr = tableClient.row($(this).parents('tr')).data();
-    console.log(datosPorTr);
     let cliente = $itself.attr('data-nombreCliente');
     let accion = $itself.attr('data-accion');
+    let tipoVenta = $itself.attr('data-tipoVenta');
+    let ubicacion = $itself.attr('data-ubicacion');
+    
     $('#idCliente').val(datosPorTr.id_cliente);
     $('#accion').val(accion);
     let idStatusConstrataccion = $itself.attr('data-idStatusConstruccion');
@@ -367,7 +348,6 @@ $(document).on('click', '.editButton', function(){
         //OBTENERMOS LOS CAMPOS A EDITAR DEPENDIENDO DEL ULTIMO idStatusContruccion REGISTRADO
         document.getElementById('camposEditar').innerHTML = '';
         const permisos = permisosEstatus.filter(element => element.idStatusContratacion.find(element2 => element2 == idStatusConstrataccion));
-        console.log(permisos[0].campos);
         for (let m = 0; m < permisos[0].campos.length; m++) {
             if(permisos[0].campos[m] == 'comentario'){
                 $('#camposEditar').append(`
@@ -407,6 +387,15 @@ $(document).on('click', '.editButton', function(){
             var name = tipos_venta[i]['tipo_venta'];
             $("#tipo_venta").append($('<option>').val(id).text(name.toUpperCase()));
         }
+        if(ubicacion != 0){
+            $("#ubicacion").selectpicker();
+            $('#ubicacion').val(parseInt(ubicacion)).trigger('change');
+        }
+        if(tipoVenta != 0){
+            $("#tipo_venta").selectpicker();
+            $('#tipo_venta').val(parseInt(tipoVenta)).trigger('change');
+        }
+        
         $("#tipo_venta").selectpicker('refresh');
         $("#ubicacion").selectpicker('refresh');
     }
@@ -419,7 +408,8 @@ function RegresarExpo(datos){
 
     let idLote = $('#lotes').val();
     let accion = $('#accion').val();
-    let ruta = accion = 2 ? 'updateLote' : 'return_status_uno';
+    datos.append("idLote",idLote);
+    let ruta = accion == 1 || accion == 3 ? 'return_status_uno' : 'updateLote';
     $.ajax({
         type: "POST",
         url:  `${general_base_url}Restore/${ruta}/`,
@@ -427,13 +417,14 @@ function RegresarExpo(datos){
         processData: false,
         contentType: false, 
         success: function(data){
+            data = JSON.parse(data);
             $('#spiner-loader').addClass('hide');
             $('#tempIDC').val(0);
             $('#idLote').val(0);
             $('#accion').val(0);
-            console.log(data.data);
             if(data.data==true){
                 llenarClientes(idLote);
+                accion == 1 || accion == 2  ? $('#modalEditExp').modal('hide')  : $('#modalConfirmRegExp').modal('hide');
                 alerts.showNotification("top", "right", "Se ha regresado el expediente correctamente.", "success");
             }else{
                 alerts.showNotification("top", "right", "Ha ocurrido un error intentalo nuevamente.", "danger");
@@ -463,9 +454,8 @@ let nombreLote = $itself.attr('data-nomLote');
 let cliente = $itself.attr('data-nombreCliente');
 let idCliente = $itself.attr('data-idCliente');
 let idLote = $itself.attr('data-idLote');
-console.log("nombreLote: ", nombreLote);
-console.log("cliente: ", cliente);
-console.log("idCliente: ", idCliente);
+let accion = $itself.attr('data-accion');
+$('#accion').val(accion);
 $('#tempIDC').val(idCliente);
 $('#loteName').text(nombreLote);
 $('#idLote').text(idLote);
@@ -475,12 +465,6 @@ $('#modalConfirmRegExp').modal();
 $(document).on('click', '.acepta_regreso', function(e){
         let idCliente = $('#tempIDC').val();
         datos = new FormData();
-        datos.append("totalValidado","N/A");
-        datos.append("totalNeto","N/A");
-        datos.append("totalNeto2","N/A");
-        datos.append("comentario", "N/A")
-        datos.append("tipo_venta","N/A");
-        datos.append("ubicacion","N/A");
         datos.append("idCliente", idCliente);
     RegresarExpo(datos);
 });
