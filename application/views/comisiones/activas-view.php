@@ -31,9 +31,9 @@
                     </div>
                     <form method="post" class="row" id="detenidos-form" autocomplete="off">
                         <div class="modal-body">
-                            <input type="hidden" name="id_pagoc" id="id-lote-detenido">
-                            <input type="hidden" name="statusLote" id="statusLote">
-                            
+                            <input type="hidden" name="id_pagoc" id="id-lote-detenido"></input>
+                            <input type="hidden" name="statusLote" id="statusLote"></input>
+                            <input type="hidden"  id="idLote" name="idLote"></input>
                             <div class="col-lg-12" >
                                 <div class="form-group">
                                 <label for="motivo" class="control-label label-gral">Motivo</label>
@@ -50,7 +50,6 @@
                                     </select>
                                 </div>
                             </div> 
-
                             <div class="col-lg-12">
                                 <div class="form-group label-floating">
                                     <textarea class="form-control input-gral" id="descripcion" name="descripcion" rows="3" placeholder="Escriba detalles de la controversia." required></textarea>

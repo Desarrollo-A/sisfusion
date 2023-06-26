@@ -67,10 +67,7 @@ class Comisiones extends CI_Controller
       }
     }
     
-  public function updateBandera(){
-    $response = $this->Comisiones_model->updateBandera( $_POST['id_pagoc'], $_POST['param']);
-    echo json_encode($response);
-  }
+
 
   public function activas() {
     if ($this->session->userdata('id_rol') == FALSE)
@@ -100,8 +97,9 @@ class Comisiones extends CI_Controller
   public function especiales() {
     if ($this->session->userdata('id_rol') == FALSE)
     redirect(base_url());
+    $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
     $this->load->view('template/header');
-    $this->load->view("comisiones/especiales-view");
+    $this->load->view("comisiones/especiales-view",$datos);
   }
 
   public function getDataDispersionPagoEspecial() {
@@ -5541,18 +5539,42 @@ for ($d=0; $d <count($dos) ; $d++) {
             'detalle' => $detalle
         ));
     }
+    public function updateBandera(){
+      $id_pagoc     = $this->input->post('id_pagoc');
+      $param   = $this->session->userdata('param');
 
-    public function updateBanderaDetenida() {
-      $response = $this->Comisiones_model->updateBanderaDetenida($_POST['idLote'], true);
+      $response = $this->Comisiones_model->updateBandera( $param, $id_pagoc);
       echo json_encode($response);
+    }
+    public function updateBanderaDetenida() {
+      $idLote     = $this->input->post('idLote');
+      $bandera     = true;
+      
+      $datosRegistro = $this->Comisiones_model->ultimoRegistro($idLote);
+      $nuevoRegistroComision = $datosRegistro->anterior;
+     $response = $this->Comisiones_model->updateBanderaDetenida($idLote , $bandera, $nuevoRegistroComision);
+     echo json_encode($response);
     }
 
     public function changeLoteToStopped()
     {
-        $response = $this->Comisiones_model->insertHistorialLog($_POST['id_pagoc'], $this->session->userdata('id_usuario'), 1, $_POST['descripcion'],
-                'pago_comision', $_POST['motivo']);
+      $id_pagoc     = $this->input->post('id_pagoc');
+      $id_usuario   = $this->session->userdata('id_usuario');
+      $idLote       = $this->input->post('idLote');
+      $estatus      = 1;
+      $descripcion  = $this->input->post('descripcion'); 
+      $tabla        = 'pago_comision';
+      $motivo       =  $this->input->post('motivo'); 
+
+      //se cambio a esta forma para limpiar el insert y teneer claro los datos que se envian
+      // $datosRegistro = $this->Comisiones_model->ultimoRegistro(intval($id_pagoc));
+
+      // var_dump($datosRegistro);
+      $response = $this->Comisiones_model->insertHistorialLog(   $id_pagoc,  $id_usuario, $estatus, $descripcion, $tabla, $motivo);
         if ($response) {
-          $response = $this->Comisiones_model->updateBanderaDetenida( $_POST['id_pagoc']);
+          $bandera = false;
+
+          $response = $this->Comisiones_model->updateBanderaDetenida( $id_pagoc, $bandera, $motivo);
         }
 
          echo json_encode($response);
@@ -5940,5 +5962,11 @@ public function descuentosCapitalHumano(){
            $this->load->view("pagos/bonos_solicitados_view");
          }
          //  se cambio la vista 
+    }
+    public function ultimoRegistro (){
+
+      $idLote   = $this->input->post('idLote');
+      $respusta = $this->comisiones_model->ultimoRegistro($idLote);
+      var_dump($respusta);
     }
 }

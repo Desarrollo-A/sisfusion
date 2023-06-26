@@ -3392,20 +3392,6 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
         return $this->db->query("UPDATE lotes SET ubicacion_dos = ".$plaza." WHERE idLote IN (".$idLote.")");
     }
 
-    function updateBandera($id_pagoc, $param) {
-        // $response = $this->db->update("pago_comision", $data, "id_pagoc = $id_pagoc");
-        $response = $this->db->query("UPDATE pago_comision SET bandera = ".$param." WHERE id_lote IN (".$id_pagoc.")");
-
-        if($param == 55){
-          $response = $this->db->query("UPDATE lotes SET registro_comision = 1 WHERE idLote IN (".$id_pagoc.")");
-        }
-
-        if (! $response ) {
-            return $finalAnswer = 0;
-        } else {
-            return $finalAnswer = 1;
-        }
-    }
 
  
 
@@ -7310,7 +7296,7 @@ public function getDataDispersionPagoEspecial($val = '') {
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 95 and oxc.id_opcion = TRY_CAST( hl.motivo AS BIGINT)
         WHERE l.idStatusContratacion BETWEEN 9 AND 15 
         AND l.status = 1 
-        AND l.registro_comision in (10,11,18)
+        AND l.registro_comision in (10,11,18,5,3,4,5,6)
         AND l.tipo_venta IS NOT NULL 
         AND l.tipo_venta IN (1,2,7)
         ORDER BY l.idLote");
@@ -7664,31 +7650,45 @@ public function getDataDispersionPagoEspecial($val = '') {
         return $query->result_array();
     }
 
-    public function updateBanderaDetenida($idLote, $updateHistorial = false)
-    {
-        if ($updateHistorial) {
+    function updateBandera($id_pagoc, $param) {
+        // $response = $this->db->update("pago_comision", $data, "id_pagoc = $id_pagoc");
+        $response = $this->db->query("UPDATE pago_comision SET bandera = ".$param." WHERE id_lote IN (".$id_pagoc.")");
 
-            $this->db->where('id_prestamo', $clave);
-            if($this->db->update('lotes', $data))
-            {
-                return TRUE;
-            }else{
-                return FALSE;
-            }  
-
-            $this->db->query("UPDATE lotes SET registro_comision = registro_comision - 10, 
-                 modificado=".$this->session->userdata('id_usuario')." WHERE idLote = $idLote");
-            return (bool)($this->db->query("UPDATE historial_log SET estatus = 0 WHERE tabla = 
-                                           'pago_comision' AND estatus = 1 AND identificador = $idLote"));
-        } else {
-            return (bool)($this->db->query("UPDATE lotes SET registro_comision = registro_comision + 10, 
-                 modificado=".$this->session->userdata('id_usuario')." WHERE idLote = $idLote"));
+        if($param == 55){
+          $response = $this->db->query("UPDATE lotes SET registro_comision = 1 WHERE idLote IN (".$id_pagoc.")");
         }
+
+        if (! $response ) {
+            return $finalAnswer = 0;
+        } else {
+            return $finalAnswer = 1;
+        }
+    }
+
+    public function updateBanderaDetenida($idLote, $updateHistorial, $nuevoRegistroComision  = false  )
+    {
+        if($nuevoRegistroComision != false ) {
+            if ($updateHistorial) {
+        
+                $this->db->query("UPDATE lotes SET registro_comision = $nuevoRegistroComision , 
+                     modificado=".$this->session->userdata('id_usuario')." WHERE idLote = $idLote");
+                return (bool)($this->db->query("UPDATE historial_log SET estatus = 0 WHERE tabla = 
+                                               'pago_comision' AND estatus = 1 AND identificador = $idLote"));
+            } else {
+                return (bool)($this->db->query("UPDATE lotes SET registro_comision = $nuevoRegistroComision ,  
+                     modificado=".$this->session->userdata('id_usuario')." WHERE idLote = $idLote"));
+            }
+        }else {
+            return  'error';
+        }
+       
     }
 
     public function insertHistorialLog($idLote, $idUsuario, $estatus, $comentario, $tabla, $motivo)
     {
-        return (bool)($this->db->query("INSERT INTO historial_log ". "VALUES ($idLote, $idUsuario, GETDATE(), $estatus, '$comentario', '$tabla', '$motivo')"));
+        $cmd = "INSERT INTO historial_log ". "VALUES ($idLote, $idUsuario, GETDATE(), $estatus, '$comentario', '$tabla', '$motivo')";
+     
+        return (bool)($this->db->query($cmd));
     }
 
     public function getFormasPago()
@@ -8142,15 +8142,14 @@ public function getDataDispersionPagoEspecial($val = '') {
     public function getCertificaciones()
     {
         $cmd = "SELECT * FROM opcs_x_cats where id_catalogo = 79";
-        $query = $this->db->query($cmd);
+        $query = $this->db->query($cmd); 
         return $query->result();
     }
 
 
     public function getMotivosControversia()
     {
-        $cmd = "SELECT * FROM opcs_x_cats wh
-        WHere id_catalogo = 95  and id_opcion NOT IN (0,1,7)";
+        $cmd = "SELECT * FROM opcs_x_cats where id_catalogo = 95  and id_opcion NOT IN (0,1,7)";
         $query = $this->db->query($cmd);
         return $query->result_array();   
     }
@@ -8231,7 +8230,15 @@ public function getDataDispersionPagoEspecial($val = '') {
     }
 
 
+    public function ultimoRegistro($idLote){
+        $cmd = "SELECT TOP 1 * from auditoria 
+                WHERE tabla = 'lotes'  
+                AND col_afect = 'registro_comision' AND id_parametro = $idLote    
+                ORDER BY fecha_creacion DESC ";
+        $query = $this->db->query($cmd);
+        return $query->row();
 
+    }
     //
     // Fin CMD dispersion
     //  

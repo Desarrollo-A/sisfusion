@@ -155,9 +155,14 @@ $('#comisiones-detenidas-table').ready(function () {
                 data: function (d) {
                     let botton = '';
                     if (id_rol_general != 63 && id_rol_general != 4) {
-                        if(d.motivo == 1){
-                            botton = ` <div class="d-flex justify-center">
-                            <button value="${d.idLote}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas btn-cambiar-estatus" data-toggle="tooltip" data-placement="top" title="Detener"><i class="material-icons">undo</i></button>
+                        if(d.motivo == 5){
+                            botton = ` 
+                        <div class="d-flex justify-center">
+                            <button value="${d.idLote}" data-value="${d.nombreLote}" 
+                                class="btn-data btn-blueMaderas btn-cambiar-estatus" 
+                                data-toggle="tooltip" data-placement="top">
+                                <i class="material-icons">undo</i>
+                            </button>
                         </div>`;
                         }else{
                             botton = ``;
