@@ -112,6 +112,7 @@ public function getDataActivasPago($val = '') {
           return $this->db->query("SELECT id_usuario,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as name_user FROM usuarios WHERE estatus in (0,1,3) $complemento AND id_rol=$rol");
         }
       }
+      
     function getUsuariosRol2($rol){
         return $this->db->query("SELECT SUM(d.monto) as monto, u.id_usuario,CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) as name_user 
         FROM usuarios u inner join descuentos_universidad d on d.id_usuario=u.id_usuario
@@ -3738,47 +3739,7 @@ function getDatosEnviadasADirectorMK($filtro){
 
 
  
- 
 
-function getLotesOrigen($user,$valor){
-
-  if($user == 1988){//fernanda
-    $cadena = " AND cl.id_asesor in (select id_usuario from usuarios where id_rol in (7,9) and 
-    id_sede like '%1%' or id_sede like '%5%')";
-    $user_vobo = 4394;
-
-  }else if($user == 1981){//maricela
-    $cadena = " AND cl.id_asesor in (select id_usuario from usuarios where id_rol in (7,9) and 
-    id_sede like '%2%' or id_sede like '%3%' or id_sede like '%4%' or id_sede like '%6%')";
-    $user_vobo = 4394;
-
-
-  }else{
-    $cadena = '';
-    $user_vobo = $user;
-
-  }
-
-    if($valor == 1){
-        return $this->db->query(" SELECT l.idLote, l.nombreLote, pci.id_pago_i, pci.abono_neodata as comision_total, 0 abono_pagado,pci.pago_neodata 
-        FROM comisiones com 
-        INNER JOIN lotes l ON l.idLote = com.id_lote
-        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
-
-        INNER JOIN pago_comision_ind pci ON pci.id_comision = com.id_comision
-        WHERE com.estatus = 1 AND pci.estatus IN (1, 41, 42, 51, 52, 61, 62, 12) AND pci.id_usuario = $user_vobo $cadena ORDER BY pci.abono_neodata DESC");
-
-    }else if($valor == 2){
-        return $this->db->query(" SELECT l.idLote, l.nombreLote, pci.id_pago_i, pci.abono_neodata as comision_total, 0 abono_pagado,pci.pago_neodata 
-        FROM comisiones com 
-        INNER JOIN lotes l ON l.idLote = com.id_lote
-        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
-
-        INNER JOIN pago_comision_ind pci ON pci.id_comision = com.id_comision
-        WHERE com.estatus = 1 AND pci.estatus IN (4) AND pci.id_usuario = $user_vobo ORDER BY pci.abono_neodata DESC ");
-    }
-   
-}
 
 // function getLotesOrigen($user,$valor){
 
@@ -4621,16 +4582,7 @@ function TieneAbonos($id){
             
             
             }
-             public function BorrarPrestamo($id_prestamo){
-                    $respuesta = $this->db->query("UPDATE prestamos_aut SET estatus=0,modificado_por=".$this->session->userdata('id_usuario')." WHERE id_prestamo=$id_prestamo ");
-                    $respuesta = $this->db->query("INSERT INTO historial_log VALUES($id_prestamo,".$this->session->userdata('id_usuario').",GETDATE(),1,'SE CANCELÓ EL PRÉSTAMO','prestamos_aut',NULL)");
-
-                    if (! $respuesta ) {
-                    return 0;
-                    } else {
-                    return 1;
-                    }
-                }
+           
             
 
                 function insertar_prestamos($insertArray){
@@ -8255,20 +8207,6 @@ public function getDataDispersionPagoEspecial($val = '') {
         return $query->result_array();   
     }
 
-    public function updatePrestamosEdit($clave, $data){
-            try {
-                $this->db->where('id_prestamo', $clave);
-                if($this->db->update('prestamos_aut', $data))
-                {
-                    return TRUE;
-                }else{
-                    return FALSE;
-                }               
-            }
-            catch(Exception $e) {
-                return $e->getMessage();
-            }     
-    }
 
 
     // 
