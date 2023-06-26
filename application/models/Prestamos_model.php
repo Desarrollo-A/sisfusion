@@ -14,7 +14,7 @@ class Prestamos_model extends CI_Model {
         LEFT JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = p.id_prestamo
         LEFT JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus in (18,19,20,21,22,23,24,25,26,29) AND pci.descuento_aplicado = 1
         left join opcs_x_cats opc on opc.id_opcion=p.tipo and opc.id_catalogo=23
-        WHERE p.estatus in(1,2,3,0)
+        WHERE p.estatus in(1)
         GROUP BY rpp.id_prestamo, u.nombre,u.apellido_paterno,u.apellido_materno,p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,opc.nombre,opc.id_opcion");
         return $query;
     }
@@ -123,6 +123,69 @@ class Prestamos_model extends CI_Model {
             return 1;
         }
     }
-                
+
+     
+
+function getLotesOrigen($user,$valor){
+
+    if($user == 1988){//fernanda
+      $cadena = " AND cl.id_asesor in (select id_usuario from usuarios where id_rol in (7,9) and 
+      id_sede like '%1%' or id_sede like '%5%')";
+      $user_vobo = 4394;
+  
+    }else if($user == 1981){//maricela
+      $cadena = " AND cl.id_asesor in (select id_usuario from usuarios where id_rol in (7,9) and 
+      id_sede like '%2%' or id_sede like '%3%' or id_sede like '%4%' or id_sede like '%6%')";
+      $user_vobo = 4394;
+  
+  
+    }else{
+      $cadena = '';
+      $user_vobo = $user;
+  
+    }
+  
+      if($valor == 1){
+          return $this->db->query(" SELECT l.idLote, l.nombreLote, pci.id_pago_i, pci.abono_neodata as comision_total, 0 abono_pagado,pci.pago_neodata 
+          FROM comisiones com 
+          INNER JOIN lotes l ON l.idLote = com.id_lote
+          INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
+  
+          INNER JOIN pago_comision_ind pci ON pci.id_comision = com.id_comision
+          WHERE com.estatus = 1 AND pci.estatus IN (1, 41, 42, 51, 52, 61, 62, 12) AND pci.id_usuario = $user_vobo $cadena ORDER BY pci.abono_neodata DESC");
+  
+      }else if($valor == 2){
+          return $this->db->query(" SELECT l.idLote, l.nombreLote, pci.id_pago_i, pci.abono_neodata as comision_total, 0 abono_pagado,pci.pago_neodata 
+          FROM comisiones com 
+          INNER JOIN lotes l ON l.idLote = com.id_lote
+          INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
+  
+          INNER JOIN pago_comision_ind pci ON pci.id_comision = com.id_comision
+          WHERE com.estatus = 1 AND pci.estatus IN (4) AND pci.id_usuario = $user_vobo ORDER BY pci.abono_neodata DESC ");
+      }
+     
+  }
+
+  function getRoles($catalogo,$roles){
+    return $this->db->query("SELECT id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo = $catalogo AND id_opcion in ($roles)");
+}
+
+
+
+public function editarPrestamo($clave, $data){
+    try {
+        $this->db->where('id_prestamo', $clave);
+        if($this->db->update('prestamos_aut', $data))
+        {
+            return TRUE;
+        }else{
+            return FALSE;
+        }               
+    }
+    catch(Exception $e) {
+        return $e->getMessage();
+    }     
+}
+ 
 
 }

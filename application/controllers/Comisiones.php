@@ -2834,11 +2834,6 @@ public function LiquidarLote(){
   
   }
 
-  public function BorrarPrestamo(){
-    $respuesta =  $this->Comisiones_model->BorrarPrestamo($this->input->post("idPrestamo"));
-  echo json_encode($respuesta);
-  
-  }
 
   public function InsertPago()
   { 
@@ -5823,38 +5818,7 @@ for ($d=0; $d <count($dos) ; $d++) {
         $this->load->view("ventas/historial_prestamo_view");    
     }
    
-    public function updatePrestamos (){
-      $pagoEdit       = $this->input->post('pagoEdit');
-      $Numero_pagos   = $this->input->post('numeroPagos');
-      $montoPagos     = $this->input->post('montoPagos');
-      $comentario     = $this->input->post('comentario');
-      $id_prestamo    = $this->input->post('prestamoId');
-      $tipoD          = $this->input->post('tipoD');
 
-          $arr_update = array( 
-                  "monto"                 =>  $pagoEdit,
-                  "num_pagos"             =>  $Numero_pagos,
-                  "pago_individual"       =>  $montoPagos,
-                  "comentario"            =>  $comentario,
-                  "modificado_por"        => 1,
-                  "tipo"                  => $tipoD, 
-                  );
-
-        $update = $this->Comisiones_model->updatePrestamosEdit($id_prestamo  , $arr_update);
-        if($update){
-          $respuesta =  array(
-            "response_code" => 200, 
-            "response_type" => 'success',
-            "message" => "Préstamo actualizado");
-        }else{
-          $respuesta =  array(
-            "response_code" => 400, 
-            "response_type" => 'error',
-            "message" => "Préstamo no actualizado, inténtalo más tarde ");
-          }
-        echo json_encode ($respuesta);
-
-}
 
 public function lista_usuarios($rol,$forma_pago){
   echo json_encode($this->Comisiones_model->get_lista_usuarios($rol,$forma_pago)->result_array());
