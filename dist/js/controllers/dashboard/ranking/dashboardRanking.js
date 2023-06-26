@@ -793,7 +793,7 @@ function buildSelectSedes(dataSedes, selectsSede){
     for ( var i = 0; i<boxSedes.length; i++ ){
         var id = boxSedes[i].id;
         var html = `
-                    <select  id="sedes`+(id.replace(/\D/g, ""))+`" name="sedes" class="selectMini sedes w-100 m-0 ">Sedes</select>
+                    <select  id="sedes`+(id.replace(/\D/g, ""))+`" name="sedes" class="selectMini sedes m-0 " data-container="body">Sedes</select>
                     `;
         $('#'+id).append(html);
     }
