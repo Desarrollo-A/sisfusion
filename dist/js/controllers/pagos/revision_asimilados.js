@@ -1,4 +1,3 @@
-var url = " <?=base_url()?>";
 
 var totalLeon = 0;
 var totalQro = 0;

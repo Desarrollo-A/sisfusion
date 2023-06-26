@@ -86,7 +86,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="btn" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="left" title="Más detalle" onclick="chartDetail(this, 'vt')" data-name ="ventas_totales">
+                        <button type="btn" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="left" title="MÁS DETALLE" onclick="chartDetail(this, 'vt')" data-name ="ventas_totales">
                             <i class="fas fa-expand-alt"></i>
                         </button>
                     </div>
@@ -116,7 +116,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="btn" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="left" title="Más detalle" onclick="chartDetail(this, 'vc')" data-name ="ventas_contratadas">
+                        <button type="btn" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="left" title="MÁS DETALLE" onclick="chartDetail(this, 'vc')" data-name ="ventas_contratadas">
                             <i class="fas fa-expand-alt"></i>
                         </button>
 
@@ -147,7 +147,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="btn" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="left" title="Más detalle" onclick="chartDetail(this, 'va')" data-name ="ventas_apartadas">
+                        <button type="btn" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="left" title="MÁS DETALLE" onclick="chartDetail(this, 'va')" data-name ="ventas_apartadas">
                             <i class="fas fa-expand-alt"></i>
                         </button>
                     </div>
@@ -177,7 +177,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="btn" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="left" title="Más detalle" onclick="chartDetail(this, 'cc')" data-name ="canceladas_contratadas">
+                        <button type="btn" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="left" title="MÁS DETALLE" onclick="chartDetail(this, 'cc')" data-name ="canceladas_contratadas">
                             <i class="fas fa-expand-alt"></i>
                         </button>
                     </div>
@@ -207,7 +207,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="btn" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="left" title="Más detalle" onclick="chartDetail(this, 'ca')" data-name ="canceladas_apartadas">
+                        <button type="btn" class="moreMiniChart d-flex justify-center align-center" data-toggle="tooltip" data-placement="left" title="MÁS DETALLE" onclick="chartDetail(this, 'ca')" data-name ="canceladas_apartadas">
                             <i class="fas fa-expand-alt"></i>
                         </button>
                     </div>

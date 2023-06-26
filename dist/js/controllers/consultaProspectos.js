@@ -72,7 +72,7 @@ $(document).ready(function() {
                         return 'SIN ESPECIFICAR';
                     }else{
                         if (d.nombre_lp == 'MKTD Dragon')
-                            id_dragon = '<br><span class="label lbl-veryDarkBlue">'+ d.id_dragon +'</span>';
+                            id_dragon = '<br><span class="label lbl-blueMaderas">'+ d.id_dragon +'</span>';
                         else
                             id_dragon = '';
                         return d.nombre_lp + id_dragon;

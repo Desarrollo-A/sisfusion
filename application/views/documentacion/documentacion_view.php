@@ -1,3 +1,4 @@
+
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet" />
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 
@@ -59,6 +60,7 @@
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -81,11 +83,9 @@
                                     <h3 class="card-title center-align">Documentación por lote</h3>
                                     <div class="row">
                                         <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                            <div class="form-group select-is-empty">
+                                            <div class="form-group select-is-empty overflow-hidden">
                                                 <label class="control-label">Proyecto</label>
-                                                <select name="idResidencial" id="idResidencial" class="selectpicker select-gral m-0"
-                                                    data-style="btn" data-show-subtext="true" data-live-search="true"
-                                                    title="Selecciona un proyecto" data-size="7" required>
+                                                <select name="idResidencial" id="idResidencial" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container='body' required>
                                                     <?php
 													if ($residencial != NULL) :
 														foreach ($residencial as $fila) : ?>
@@ -98,25 +98,24 @@
                                             </div>
                                         </div>
                                         <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                            <div class="form-group select-is-empty">
+                                            <div class="form-group select-is-empty overflow-hidden">
                                                 <label class="control-label">Condominio</label>
                                                 <select id="idCondominio" name="idCondominio" class="selectpicker select-gral m-0"
                                                     data-style="btn" data-show-subtext="true" data-live-search="true"
-                                                    title="Selecciona un condominio" data-size="7" required>
+                                                    title="SELECCIONA UNA OPCIÓN" data-size="7" data-container='body' required>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                            <div class="form-group select-is-empty">
+                                            <div class="form-group select-is-empty overflow-hidden">
                                                 <label class="control-label">Lote</label>
                                                 <select id="idLote" name="idLote" class="selectpicker select-gral m-0"
                                                     data-style="btn" data-show-subtext="true" data-live-search="true"
-                                                    title="Selecciona un lote" data-size="7" required>
+                                                    title="SELECCIONA UNA OPCIÓN" data-size="7" data-container='body' required>
                                                 </select>
                                             </div>
                                         </div>
                                     </div>
-                                    <!--        Here you can write extra buttons/accions for the toolbar              -->
                                 </div>
                                 <table id="tableDoct" class="table-striped table-hover hide">
                                     <thead>

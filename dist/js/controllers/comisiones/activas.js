@@ -158,7 +158,7 @@ $(document).ready(function () {
                             }
             
                             BtnStats += `
-                                    <button href="#" value="${d.idLote}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas btn-detener btn-warning" title="Detener"><i class="material-icons">block</i></button>
+                                    <button href="#" value="${d.idLote}" data-value="${d.nombreLote}" data-idLote="${d.idLote}" class="btn-data btn-blueMaderas btn-detener btn-warning" title="Detener"><i class="material-icons">block</i></button>
                                 `;
                             BtnStats += '<button href="#" value="'+d.idLote+'" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata" title="Verificar en NEODATA">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
                         }
@@ -213,6 +213,8 @@ $(document).ready(function () {
             const idLote = $(this).val();
             const nombreLote = $(this).attr("data-value");
             const statusLote = $(this).attr("data-statusLote");
+  
+            $('#idLote').val(idLote);
             $('#id-lote-detenido').val(idLote);
             $('#statusLote').val(statusLote);
             $("#detenciones-modal .modal-header").html("");
