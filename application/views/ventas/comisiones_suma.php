@@ -74,8 +74,7 @@
                                         <div class="col-lg-12 text-center">
                                             <h3 id="total-comision"></h3>
                                         </div>
-                                        <div class="col-lg-12" id="preview-div">
-                                        </div>
+                                        <div class="col-lg-12" id="preview-div"></div>
                                     </div>
                                     <div class="form-group">
                                         <button type="submit" id="sendFileExtranjero" class="btn btn-primary">GUARDAR</button>
@@ -294,7 +293,6 @@
                                                     <?php if ($this->session->userdata('forma_pago') == 3) { ?>
                                                         <div class="col-md-6">
                                                             <p style="color:#0a548b;"><i class="fa fa-info-circle" aria-hidden="true"></i> Al monto mostrado habrá que descontar el <b>impuesto estatal</b> del
-
                                                                 <?php
                                                                 $sede = $this->session->userdata('id_sede');
                                                                 $query = $this->db->query("SELECT * FROM sedes WHERE estatus in (1) AND id_sede = " . $sede . "");
@@ -320,11 +318,9 @@
                                                             $this->session->userdata('id_rol') == 9)
                                                     ) { ?>
 
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-12">
                                                             <p class="card-title m-1">
-                                                                Para consultar más detalles sobre el uso y funcionalidad del apartado
-                                                                de comisiones podrás visualizarlo en el siguiente tutorial
-
+                                                                Para consultar más detalles sobre el uso y funcionalidad del apartado de comisiones podrás visualizarlo en el siguiente tutorial
                                                                 <?php if ($this->session->userdata('forma_pago') == 2) { ?>
                                                                     <a href="https://youtu.be/YuZNsPk8-gY" target="_blank"><u>clic aquí</u></a>
                                                                 <?php } ?>
@@ -439,10 +435,8 @@
                                         </div>
                                         <div class="tab-pane" id="porPagar">
                                             <div class="encabezadoBox">
-                                                <p class="card-title pl-1">
-                                                    Comisiones en proceso de pago por parte de INTERNOMEX. Si requieres ver más detalles
-                                                    como lo pagado y lo pendiente, podrás consultarlo en el historial 
-                                                    <a href="<?= base_url() ?>Comisiones/historial_colaborador"><b>Da clic para ir al historial</b></a>.</p>
+                                                <p class="card-title pl-1">Comisiones en proceso de pago por parte de INTERNOMEX. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el historial 
+                                                <a href="<?= base_url() ?>Comisiones/historial_colaborador"><b>Da clic para ir al historial</b></a>.</p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
@@ -476,8 +470,7 @@
                                         <div class="tab-pane" id="pausadas">
                                             <div class="encabezadoBox">
                                                 <p class="card-title pl-1">
-                                                    Comisiones pausadas, para ver el motivo da clic el botón de información. Si requieres ver 
-                                                    más detalles como lo pagado y lo pendiente, podrás consultarlo en el historial 
+                                                    Comisiones pausadas, para ver el motivo da clic el botón de información. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el historial 
                                                     <a href="<?= base_url() ?>Comisiones/historial_colaborador">
                                                         <b>Da clic para ir al historial</b>
                                                     </a>
@@ -511,7 +504,7 @@
                                                     </tr>
                                                 </thead>
                                             </table>
-                                        </div><!-- Panes -->
+                                        </div>
                                     </div>
                                 </div>
                             </div>

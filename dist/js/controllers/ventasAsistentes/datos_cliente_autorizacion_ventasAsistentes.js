@@ -161,8 +161,7 @@ idautopago = $(this).val();
     $('#nombreCondominio').val($(this).attr("data-nomCondominio"));
 
     $("#modal_autorizacion .modal-body").html("");
-    $("#modal_autorizacion .modal-body").append('<div class="file-gph"><input class="d-none" type="file" id="expediente${i}" name="expediente${i}" onchange="changeName(this)"><input class="file-name" type="text" placeholder="No has seleccionada nada aún" readonly><label class="upload-btn m-0" for="expediente${i}" readonly><span>Buscar</span><i class="fas fa-search text-right"></i></label></div>');
-    // $("#modal_autorizacion .modal-body").append('<div class="row"><div class="col-lg-12"><br></div><div class="col-lg-4"></div><div class="col-lg-4"><button class="btn btn-primary btn-fill"><i class="fa fa-google-square"></i>SUBIR</button></div></div>');
+    $("#modal_autorizacion .modal-body").append('<div class="file-gph"><input class="d-none" type="file" id="expediente${i}" name="expediente${i}" onchange="changeName(this)"><input class="file-name" type="text" placeholder="No has seleccionada nada aún" readonly required><label class="upload-btn m-0" for="expediente${i}" readonly><span>Buscar</span><i class="fas fa-search text-right"></i></label></div>');
     $("#modal_autorizacion").modal();
 });
 

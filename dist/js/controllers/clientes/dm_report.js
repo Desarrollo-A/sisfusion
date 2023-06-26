@@ -4,10 +4,10 @@ $('#mktdProspectsTable thead tr:eq(0) th').each(function (i) {
     titulos_intxt.push(title);
     $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
     $( 'input', this ).on('keyup change', function () {
-            if ($('#mktdProspectsTable').DataTable().column(i).search() !== this.value ) {
-                $('#mktdProspectsTable').DataTable().column(i).search(this.value).draw();
-            }
-        });
+        if ($('#mktdProspectsTable').DataTable().column(i).search() !== this.value ) {
+            $('#mktdProspectsTable').DataTable().column(i).search(this.value).draw();
+        }
+    });
 });
 
 $(document).ready(function(){
@@ -87,74 +87,71 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
         }],
         destroy: true,
         ordering: false,
-        columns:
-            [
-                {
-                    data: function(d) {
-                        if (d.estatus == 1) {
-                            return '<center><span class="label lbl-green">VIGENTE</span><center>';
-                        } else {
-                            return '<center><span class="label lbl-warning">SIN VIGENCIA</span><center>';
-                        }
-                    }
-                },
-                {
-                    data: function(d) {
-                        if (d.estatus_particular == 1) { // DESCARTADO
-                            b = '<center><span class="label lbl-warning">DESCARTADO</span><center>';
-                        } else if (d.estatus_particular == 2) { // INTERESADO SIN CITA
-                            b = '<center><span class="label lbl-yellow">INTERESADO EN CITA</span><center>';
-                        } else if (d.estatus_particular == 3) { // CON CITA
-                            b = '<center><span class="label lbl-green">CON CITA</span><center>';
-                        } else if (d.estatus_particular == 5) { // PAUSADO
-                            b = '<center><span class="label lbl-sky">PAUSADO</span><center>';
-                        } else if (d.estatus_particular == 6) { // PREVENTA
-                            b = '<center><span class="label lbl-violetChin">PREVENTA</span><center>';
-                        }
-                        return b;
-                    }
-                },
-                {
-                    data: function(d) {
-                        return d.nombre;
-                    }
-                },
-                {
-                    data: function(d) {
-                        return d.otro_lugar;
-                    }
-                },
-                {
-                    data: function(d) {
-                        return d.asesor;
-                    }
-                },
-                {
-                    data: function(d) {
-                        return d.gerente;
-                    }
-                },
-                {
-                    data: function(d) {
-                        return d.fecha_creacion;
-                    }
-                },
-                {
-                    data: function(d) {
-                        return d.fecha_vencimiento;
-                    }
-                },
-                {
-                    data: function(d) {
-                        return d.fecha_modificacion;
-                    }
-                },
-                {
-                    data: function(d) {
-                        return '<center><button class="btn-data btn-details-grey see-comments" data-toggle="tooltip" data-placement="top" title="CONSULTA INFORMACIÓN" data-id-prospecto="' + d.id_prospecto + '"><i class="fas fa-ellipsis-h"></i></button></center>';
-                    }
+        columns:[{
+            data: function(d) {
+                if (d.estatus == 1) {
+                    return '<center><span class="label lbl-green">VIGENTE</span><center>';
+                } else {
+                    return '<center><span class="label lbl-warning">SIN VIGENCIA</span><center>';
                 }
-            ],
+            }
+        },
+        {
+            data: function(d) {
+                if (d.estatus_particular == 1) { // DESCARTADO
+                    b = '<center><span class="label lbl-warning">DESCARTADO</span><center>';
+                } else if (d.estatus_particular == 2) { // INTERESADO SIN CITA
+                    b = '<center><span class="label lbl-yellow">INTERESADO EN CITA</span><center>';
+                } else if (d.estatus_particular == 3) { // CON CITA
+                    b = '<center><span class="label lbl-green">CON CITA</span><center>';
+                } else if (d.estatus_particular == 5) { // PAUSADO
+                    b = '<center><span class="label lbl-sky">PAUSADO</span><center>';
+                } else if (d.estatus_particular == 6) { // PREVENTA
+                    b = '<center><span class="label lbl-violetChin">PREVENTA</span><center>';
+                }
+                return b;
+            }
+        },
+        {
+            data: function(d) {
+                return d.nombre;
+            }
+        },
+        {
+            data: function(d) {
+                return d.otro_lugar;
+            }
+        },
+        {
+            data: function(d) {
+                return d.asesor;
+            }
+        },
+        {
+            data: function(d) {
+                return d.gerente;
+            }
+        },
+        {
+            data: function(d) {
+                return d.fecha_creacion;
+            }
+        },
+        {
+            data: function(d) {
+                return d.fecha_vencimiento;
+            }
+        },
+        {
+            data: function(d) {
+                return d.fecha_modificacion;
+            }
+        },
+        {
+            data: function(d) {
+                return '<center><button class="btn-data btn-details-grey see-comments" data-toggle="tooltip" data-placement="top" title="CONSULTA INFORMACIÓN" data-id-prospecto="' + d.id_prospecto + '"><i class="fas fa-ellipsis-h"></i></button></center>';
+            }
+        }],
         "ajax": {
             "url" : 'getProspectsReport',
             "type": "POST",
