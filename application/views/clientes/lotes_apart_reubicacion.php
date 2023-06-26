@@ -12,7 +12,7 @@
                     <div class="card">
                         <div class="card-content">
                             <div class="encabezadoBox">
-                                <h3 class="card-title center-align">Lotes apartados con concepto de reubicación</h3>
+                                <h3 class="card-title center-align">Lotes apartados por concepto de reubicación</h3>
                                 <p class="card-title pl-1"></p>
                             </div>
 
@@ -44,7 +44,7 @@
                             </div>
 
                             <div class="material-datatables">
-                                <table id="lotesReubicacion" class="table-striped table-hover" style="text-align:center;">
+                                <table id="lotesReubicacion" class="table-striped table-hover text-center">
                                     <thead>
                                         <tr>
                                             <th>PROYECTO</th>
@@ -59,6 +59,7 @@
                                             <th>DIRECTOR REGIONAL</th>
                                             <th>DIRECTOR REGIONAL 2</th>
                                             <th>FECHA DE APARTADO</th>
+                                            <th>FECHA DE REUBICACIÓN</th>
                                         </tr>
                                     </thead>
                                 </table>

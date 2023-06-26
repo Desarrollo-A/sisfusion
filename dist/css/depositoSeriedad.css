@@ -1074,9 +1074,32 @@
   background-color: #F9F87118;
 }
 
+.lbl-lightBlue {
+  color: #1B4F72;
+  border: none;
+  background: #AED6F1;
+}
+
+.lbl-peach {
+  color: #78281F;
+  border: none;
+  background: #F5B7B1;
+}
+
+.lbl-purple {
+  color: #512E5F;
+  border: none;
+  background: #D7BDE2;
+}
+
+.lbl-aqua {
+  color: #ffffff;
+  border: none;
+  background: #11DFC6;
+}
+
 /* END Etiquetas */
 /* Estilo del scroll en DIVS */
-
 /* El background del scroll */
 .scroll-styles::-webkit-scrollbar-track {
   border-radius: 10px;
@@ -1666,7 +1689,7 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
   color: #0a548b;
 }
 
-#mainBoxDS #mainContainer #containerCopropietario, #mainBoxDS #mainContainer #containerReferencia {
+#mainBoxDS #mainContainer #containerCopropietario, #mainBoxDS #mainContainer #containerReferencia, #mainBoxDS #mainContainer #divCopropietario {
   background-color: #f0f8ff9e;
   border-radius: 15px;
   padding: 0 18px !important;
@@ -1685,7 +1708,6 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
   border-radius: 12px;
   border: 1px solid #eee;
   background-color: #eee;
-  height: 200px;
 }
 
 #mainBoxDS #mainContainer #checkDS .boxChecks {

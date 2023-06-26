@@ -9,9 +9,7 @@
 			<div class="modal-content">
 				<div class="modal-body">
 					<a style="position: absolute;top:3%;right:3%; cursor:pointer;" data-dismiss="modal">
-						<span class="material-icons">
-							close
-						</span>
+						<span class="material-icons">close</span>
 					</a>
 					<div id="cnt-file">
 					</div>
@@ -19,8 +17,6 @@
 			</div>
 		</div>
 	</div>
-
-
 
     <div class="content boxContent">
         <div class="container-fluid">
@@ -37,66 +33,37 @@
                                     <div class="col-md-4 form-group">
                                         <div class="form-group label-floating select-is-empty">
                                             <label class="control-label">Proyecto</label>
-                                            <select name="proyecto"
-													id="proyecto"
-													class="selectpicker select-gral m-0"
-                                                    data-style="btn" 
-													data-show-subtext="true"
-													data-live-search="true"
-													title="Selecciona una opción"
-													data-size="7" 
-													required>
-                                            </select>
+                                            <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
                                         </div>
                                     </div>
                                     <div class="col-md-4 form-group">
                                         <div class="form-group label-floating select-is-empty">
                                             <label class="control-label">Condominio</label>
-                                            <select name="condominio"
-													id="condominio"
-													class="selectpicker select-gral m-0"
-                                                    data-style="btn"
-													data-show-subtext="true"
-													data-live-search="true"
-													title="Selecciona una opción"
-													data-size="7"
-													required>
-                                            </select>
+                                            <select name="condominio" id="condominio" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
                                         </div>
                                     </div>
                                     <div class="col-md-4 form-group">
                                         <div class="form-group label-floating select-is-empty">
                                             <label class="control-label">Lote</label>
-                                            <select name="lote"
-													id="lote"
-													class="selectpicker select-gral m-0"
-                                                    data-style="btn"
-													data-show-subtext="true"
-													data-live-search="true"
-													title="Selecciona una opción"
-													data-size="7" 
-													required>
-                                            </select>
+                                            <select name="lote" id="lote" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="material-datatables">
                                 <div class="form-group">
-                                    <div class="table-responsive">
-                                        <table class="table-striped table-hover" id="tabla_contrato_ventas" name="tabla_contrato_ventas">
-                                            <thead>
-												<tr>
-													<th>PROYECTO</th>
-													<th>CONDOMINIO</th>
-													<th>LOTE</th>
-													<th>CLIENTE</th>
-													<th>NOMBRE CONTRATO</th>
-													<th>CONTRATO</th>
-												</tr>
-                                            </thead>
-                                        </table>
-                                    </div>
+									<table class="table-striped table-hover hide" id="tabla_contrato_ventas" name="tabla_contrato_ventas">
+										<thead>
+											<tr>
+												<th>PROYECTO</th>
+												<th>CONDOMINIO</th>
+												<th>LOTE</th>
+												<th>CLIENTE</th>
+												<th>NOMBRE DEL CONTRATO</th>
+												<th>CONTRATO</th>
+											</tr>
+										</thead>
+									</table>
                                 </div>
                             </div>
                         </div>
@@ -105,108 +72,9 @@
             </div>
         </div>
     </div>
-
-
-	<!--Contenido de la página-->
-	<div class="content hide">
-		<div class="container-fluid">
-			 
-			<div class="row">
-				<div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
-					<center>
-						<h4>CONTRATO</h4>
-					</center>
-					<div class="card">
-						<div class="container-fluid" style="padding: 50px 50px;">
-							<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-								 
-								 <div class="row">
-
-									<div class="col-md-4 form-group">
-										<label for="proyecto">Proyecto: </label>
-										<select name="proyecto"
-												id="proyecto"
-												class="selectpicker select-gral m-0"
-												data-style="btn"
-												data-show-subtext="true"
-                                                data-live-search="true"
-												title="Selecciona una opción"
-												data-size="7"
-												required>
-									</div>
-
-									<div class="col-md-4 form-group">
-										<label for="condominio">Condominio: </label>
-										<select name="condominio"
-												id="condominio"
-												class="selectpicker select-gral m-0"
-												data-style="btn"
-												data-show-subtext="true"
-												data-live-search="true"
-												title="Selecciona una opción"
-												data-size="7"
-												required>
-									</div>
-
-									<div class="col-md-4 form-group">
-										<label for="lote">Lote: </label>
-										<select name="lote"
-												id="lote"
-												class="selectpicker select-gral m-0"
-												data-style="btn"
-												data-show-subtext="true"
-												data-live-search="true"
-												title="Selecciona una opción"
-												data-size="7"
-												required>
-									</div>
-								</div>
-						</div>
-
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
-					<div class="card">
-						<div class="card-header card-header-icon" data-background-color="goldMaderas">
-							<i class="material-icons">reorder</i>
-						</div>
-						<div class="card-content" style="padding: 50px 20px;">
-							<h4 class="card-title"></h4>
-							<div class="toolbar">
-								<!--        Here you can write extra buttons/actions for the toolbar              -->
-							</div>
-							<div class="material-datatables">
-								<div class="form-group">
-									<div class="table-responsive">
-										<table class="table table-responsive table-bordered table-striped table-hover" id="tabla_contrato_ventas" name="tabla_contrato_ventas">
-                                        <thead>
-                                            <tr>
-                                                <!-- <th></th> -->
-                                                <th>LOTE</th>
-                                                <th>CONDOMINIO</th>
-                                                <th>PROYECTO</th>
-                                                <th>CLIENTE</th>
-                                                <th>NOMBRE CONTRATO</th>
-                                                <th>CONTRATO</th>
-                                            </tr>
-                                        </thead>
-                                    </table>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
 	<?php $this->load->view('template/footer_legend');?>
 </div>
 </div>
-
 </div><!--main-panel close-->
 </body>
 <?php $this->load->view('template/footer');?>

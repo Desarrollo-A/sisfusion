@@ -9,9 +9,10 @@ $(document).ready(function () {
                 $('#navbartabs').find('#test').append(html_code);
             }
             $('#navbartabs').find('#test').selectpicker('refresh');
+
             $('select').on('change', function() {
+                $('#spiner-loader').removeClass('hide');
                 var value = this.value;
-                console.log(value);
                 //codigo embebido del PDF
                 var url_file = `${general_base_url}/static/documentos/carpetas/${value}`
                 var embebed_code = '<embed src="'+url_file+'#toolbar=0" frameborder="0" width="100%" height="770em">';
@@ -27,6 +28,9 @@ $(document).ready(function () {
                 html_contenedor_tabs += '		</div>';
                 html_contenedor_tabs += '	</div>';
                 $('#paneles-tabs').html(html_contenedor_tabs);
+                setTimeout(function(){
+                    $('#spiner-loader').addClass('hide');
+                },1500);
                 });
         }
         else
@@ -34,4 +38,5 @@ $(document).ready(function () {
             $('#msg').append('<center><h2 style="color: #a0a0a0;font-weight: 100">No hay Carpetas disponibles</h2></center>');
         }
     }, 'json');
+    
 });
