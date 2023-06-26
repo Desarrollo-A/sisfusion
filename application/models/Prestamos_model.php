@@ -63,7 +63,7 @@ class Prestamos_model extends CI_Model {
                  WHEN 5 THEN 3
                  WHEN 607 THEN 1 
                  WHEN 7092 THEN 4
-                     WHEN 9629 THEN 2
+                 WHEN 9629 THEN 2
                  ELSE u.id_sede END) and sed.estatus = 1
                 INNER JOIN opcs_x_cats pcs ON pcs.id_opcion=pa.tipo AND pcs.id_catalogo=23
                 INNER JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo

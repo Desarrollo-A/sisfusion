@@ -11,9 +11,7 @@
 	<div class="wrapper">
 		<?php $this->load->view('template/sidebar'); ?>
 		
-		<!-- Modal Delete prestamo-->
-		<!-- <div class="modal fade modal-alertas" id="myModalDelete" role="dialog">
-			 -->
+		<!-- Modal DELETE prestamo-->
 		<div class="modal fade" id="myModalDelete" tabindex="-1" role="dialog" aria-labelledby="myModalDelete" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -31,8 +29,9 @@
 				</div>
 			</div>
 		</div>
-		<!-- Modal Delete END-->
+		<!-- Modal DELETE END-->
 		
+		<!-- modal EDITAR prestamo -->
 		<div class="modal fade" id="ModalEdit" tabindex="-1" role="dialog" aria-labelledby="ModalEdit" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -76,8 +75,9 @@
 				</div>
 			</div>
 		</div>
+		<!-- Modal EDIT END-->
 
-
+		<!-- Modal ALTA PRESTAMOS-->
 		<div class="modal fade modal-alertas" name="prestamosModal" id="prestamosModal" role="dialog">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -127,8 +127,58 @@
 				</div>
 			</div>
 		</div>
+		<!-- Modal ALTA PRESTAMOS END-->
 
-        <div class="modal fade modal-alertas" id="detalle-prestamo-modal" role="dialog">
+				<!-- Modal ALTA NUEVOS-->
+			<div class="modal fade modal-alertas" name="descuentosNuevosModal" id="descuentosNuevosModal" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header bg-red">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h3 class="modal-title"><b>Descuentos en pagos nuevos</b></h3>
+					</div>
+					<form method="post" id="form_prestamos">
+						<div class="modal-body">
+							<div class="form-group col-md-12"> 
+								<label class="control-label">Puesto del usuario(<b class="text-danger">*</b>)</label>
+								<select class="selectpicker select-gral rolesPrestamos" name="rolesPrestamos" id="rolesPrestamos" required></select>
+							</div>
+							
+							<div class="form-group col-md-12" id="usuarioSelectPrestamos"></div>
+								
+							<div class="form-group row">
+								<div class="col-md-4">
+									<label class="control-label">Monto prestado (<b class="text-danger">*</b>)</label>
+									<input class="form-control input-gral" type="number" step="any" required onblur="verificar();" id="monto"  min="1" name="monto">
+								</div>
+								<div class="col-md-4">
+									<label class="control-label">Número de pagos (<b class="text-danger">*</b>)</label>
+									<input class="form-control input-gral" id="numeroP" required onblur="verificar();" type="number"  min="1" name="numeroP">
+								</div>
+								<div class="col-md-4">
+									<label class="control-label">Pago</label>
+									<input class="form-control input-gral" id="pago" required type="text"  min="1" name="pago" readonly>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<p></label><b id="texto" style="font-size:12px;"></b></p>
+								<label class="control-label">Comentario(<b class="text-danger">*</b>)</label>
+								<textarea id="comentario" name="comentario" required  class="form-control input-gral" rows="3"></textarea>
+							</div>
+							<div class="modal-footer">
+								<button type="button"  class="btn btn-danger btn-simple" data-dismiss="modal" >Cancelar</button>	
+								<button  type="submit" id="btn_abonar" class="btn btn-gral-data ">Guardar</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<!-- Modal ALTA NUEVOS END-->
+
+        <!-- Modal DETALLE PRESTAMOS-->
+		<div class="modal fade modal-alertas" id="detalle-prestamo-modal" role="dialog">
             <div class="modal-dialog modal-lg" style="width:70% !important;height:70% !important;">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
@@ -139,6 +189,8 @@
                 </div>
             </div>
         </div>
+		 <!-- Modal DETALLE PRESTAMOS END -->
+
 
 		<div class="content boxContent">
 			<div class="container-fluid">
@@ -178,12 +230,12 @@
 											</div>
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-2">
 												<div class="form-group d-flex justify-center align-center">
-											    	<button ype="button" class="btn-gral-data btn-s-orangeLight" data-toggle="modal" data-target="#modalDescuentosNuevos">Descuento Nuevos Pagos</button>
+											    	<button ype="button" class="btn-gral-data btn-s-orangeLight" data-toggle="modal" data-target="#descuentosNuevosModal">Descuento Nuevos Pagos</button>
 												</div>
 											</div>
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-2">
 												<div class="form-group d-flex justify-center align-center">
-											    	<button ype="button" class="btn-gral-data btn-s-acidGreen" data-toggle="modal" data-target="#asas">Descuento Pagos en Revisión</button>
+											    	<button ype="button" class="btn-gral-data btn-s-acidGreen" data-toggle="modal" data-target="#descuentosRevisionModal">Descuento Pagos en Revisión</button>
 												</div>
 											</div>
                                         </div>

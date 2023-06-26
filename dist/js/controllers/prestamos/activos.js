@@ -23,7 +23,7 @@ $(document).ready(function () {
         $("#tipoD").selectpicker('refresh');
     }, 'json');
 
-    $.post("getRoles",{catalogo:1,roles:"1,2,3,7,9,38"}, function (data) {
+    $.post("getRoles",{catalogo:1,roles:"1,2,3,7,9"}, function (data) {
         var len = data.length;
         $("#rolesPrestamos").append($('<option disabled selected>').val("").text("SELECCIONA UNA OPCIÓN"));
         for (var i = 0; i < len; i++) {
@@ -40,6 +40,27 @@ $(document).ready(function () {
         }
         $("#rolesPrestamos").selectpicker('refresh');
     }, 'json'); 
+//OBTENER ROLES PRESTAMOS
+
+$.post("getRoles",{catalogo:1,roles:"1,2,3,7,9,38"}, function (data) {
+    var len = data.length;
+    $("#rolesDescNuevos").append($('<option disabled selected>').val("").text("SELECCIONA UNA OPCIÓN"));
+    for (var i = 0; i < len; i++) {
+        var id = data[i]['id_opcion'];
+        var name = data[i]['nombre'];
+        ObjRoles = {
+            "id":data[i]['id_opcion'],
+            "rol":data[i]['nombre']
+        }
+        $("#rolesDescNuevos").append($('<option>').val(id).text(name.toUpperCase()));
+    }
+    if(len<=0){
+        $("#rolesDescNuevos").append('<option selected="selected" disabled>NO SE HAN ENCONTRADOS REGISTROS</option>');
+    }
+    $("#rolesDescNuevos").selectpicker('refresh');
+}, 'json'); 
+//OBTENER ROLES DESCUENTOS NUEVOS
+
 });
 
 $('#tipo').change(function (ruta) {
