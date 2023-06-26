@@ -245,30 +245,6 @@ class Comisiones extends CI_Controller
 
     }
   
-    // public function revision_asimilados()
-    // {
-    //   $datos = array();
-    //   $datos["datos2"] = $this->Asesor_model->getMenu($this->session->userdata('id_rol'))->result();
-    //   $datos["datos3"] = $this->Asesor_model->getMenuHijos($this->session->userdata('id_rol'))->result();
-    //   $val = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    //   $salida = str_replace('' . base_url() . '', '', $val);
-    //   $datos["datos4"] = $this->Asesor_model->getActiveBtn($salida, $this->session->userdata('id_rol'))->result();
-    //   // $this->load->view('template/header');
-    //   // $this->load->view("ventas/revision_asimilados", $datos);
-
-    //   switch($this->session->userdata('id_rol')){
-    //     case '31':
-    //     $this->load->view('template/header');
-    //     $this->load->view("ventas/revision_INTMEXasimilados", $datos);
-    //     break;
-
-    //     default:
-    //     $this->load->view('template/header');
-    //     $this->load->view("ventas/revision_asimilados", $datos);
-    //     break;
-    //   }
-
-    // }
     public function getDatosRevisionAsimilados($proyecto,$condominio){
       $dat =  $this->Comisiones_model->getDatosRevisionAsimilados($proyecto,$condominio)->result_array();
      for( $i = 0; $i < count($dat); $i++ ){

@@ -180,9 +180,9 @@
                                     </div>
                                 </div>
                                 <br>
-                                <div class="material-datatables" id="box-reporteLotesPorComisionista">
+                                <div class="material-datatables hide" id="box-reporteLotesPorComisionista">
                                     <div class="form-group">
-                                        <table class="table-striped table-hover hide" id="reporteLotesPorComisionista" name="reporteLotesPorComisionista">
+                                        <table class="table-striped table-hover" id="reporteLotesPorComisionista" name="reporteLotesPorComisionista">
                                             <thead>
                                                 <tr>
                                                     <th>PROYECTO</th>
