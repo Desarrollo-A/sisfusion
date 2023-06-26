@@ -73,7 +73,7 @@
                             <div class="container-fluid h-100">
                                 <div class="row h-100">
                                     <div class="col-md-12 h-30 pl-2 pt-2 pr-2 d-flex justify-between align-center cursor-point"
-                                         onClick="prospectsTable()" data-toggle="tooltip" data-placement="top" title="Más detalle">
+                                         onClick="prospectsTable()" data-toggle="tooltip" data-placement="top" title="MÁS DETALLE">
                                         <div class="w-40 d-flex align-center" >
                                             <span class="boxIcoProsp"><i class="fas fa-user"></i></span>
                                             <p class="m-0 overflow-text numberGraphic" id="numberGraphic" rel="tooltip" data-placement="left" title="">

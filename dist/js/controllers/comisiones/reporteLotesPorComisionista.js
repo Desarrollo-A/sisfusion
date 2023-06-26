@@ -285,6 +285,7 @@ $(document).on("click", "#searchByDateRange", function () {
 });
 
 $(document).on("click", "#detailComisionistaBtn", function () {
+    $('#spiner-loader').removeClass('hide');
     $(".timelineR").html('');
     var idComisionista = `${$("#comisionista").val() == '' ? id_usuario_general : $("#comisionista").val()}`;
     let orderedArray = [];
@@ -345,6 +346,7 @@ $(document).on("click", "#detailComisionistaBtn", function () {
                 </div>`;
         $(".timelineR").append(html);
         $("#detailComisionistaModal").modal();
+        $('#spiner-loader').addClass('hide');
     }, 'json');
 });
 

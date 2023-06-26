@@ -1511,6 +1511,30 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
   z-index: 400;
 }
 
+/* CHANGE ICONO*/
+.wrapper p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wrapper.active p {
+  white-space: normal;
+  overflow: visible;
+}
+
+.wrapper .less {
+  display: none;
+}
+
+.wrapper.active .less {
+  display: inline;
+}
+
+.wrapper.active .more {
+  display: none;
+}
+
 #mainBoxDS {
   padding: 50px !important;
 }
