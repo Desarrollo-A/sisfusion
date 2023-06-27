@@ -4383,26 +4383,24 @@ class Asesor extends CI_Controller
                     break;
             }
             if (count($data_eviRec) > 0) {
-                /***********************************************************************************
-                *   Armado de parámetros a mandar a plantilla para creación de correo electrónico  *
-                ***********************************************************************************/
-                $correo = 'programador.analista18@ciudadmaderas.com';
-                array_push($correos_entregar, $correo);
-                $elementos_correo = array('setFrom'  =>  Elementos_Correos_Asesor::SET_FROM_EMAIL,
-                                        'Subject'  =>  '['.strtoupper($sedes_array[$i]['abreviacion']).']'.
-                                                        Elementos_Correos_Asesor::ASUNTO_CORREO_TABLA_EVIDENCIAS_RECHAZADAS_ASESOR . $correo);
-                $datos_correo = $data_eviRec;
-                $datos_encabezados_tabla = Elementos_Correos_Asesor::ETIQUETAS_ENCABEZADO_TABLA_EVIDENCIAS_RECHAZADAS_ASESOR;
+                $encabezados = [
+                    'nombreSolicitante' => 'SOLICITANTE',
+                    'nombreLote' => 'LOTE',
+                    'comentario_autorizacion' => 'COMENTARIO',
+                    'fecha_creacion' => 'FECHA/HORA'
+                ];
 
-                $comentario_general = Elementos_Correos_Asesor::EMAIL_EVIDENCIAS_RECHAZADAS_ASESOR . '<br>' . (!isset($comentario) ? '' : '<br>'. $comentario);
-                $plantilla_correo = new plantilla_dinamica_correo;
+                $this->email
+                    ->initialize()
+                    ->from('Ciudad Maderas')
+                    ->to('programador.analista24@ciudadmaderas.com') // TODO: reemplazar el correo de producción
+                    ->subject("[REPORTE] EVIDENCIAS RECHAZADAS PARA: $correo")
+                    ->view($this->load->view('mail/asesor/reporte-er', ['encabezados' => $encabezados, 'contenido' => $data_eviRec], true));
 
-                $envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, 
-                                                                        $datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
-                if ($envio_correo > 0) {
+                if ($this->email->send()) {
                     $data_request['msg'] = 'Correo enviado correctamente [' . $sedes_array[$i]['abreviacion'] . ']';
                 } else {
-                    $data_request['msg'] = 'Correo no enviado [' . $sedes_array[$i]['abreviacion'] . '] : [' . $envio_correo . ']';
+                    $data_request['msg'] = 'Correo no enviado [' . $sedes_array[$i]['abreviacion'] . ']';
                 }
             }else {
                 $data_request['msg'] = 'No hay registros para enviar un correo en [' . $sedes_array[$i]['abreviacion'] . ']';
