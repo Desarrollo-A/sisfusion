@@ -181,7 +181,7 @@ class ScheduleTasks_Prestamos extends CI_Controller
             ->from('Ciudad Maderas')
             ->to('programador.analista24@ciudadmaderas.com') // TODO: Cambiar el correo por el de producción
             ->subject('PRÉSTAMOS NO APLICADOS EL DÍA '.date('Y-m-d'))
-            ->view($this->load->view('mail/asesor/codigo-verificacion', [
+            ->view($this->load->view('mail/schedule-tasks-prestamos/prestamos', [
                 'encabezados' => $encabezados,
                 'contenido' => $data
             ], true));
