@@ -2470,7 +2470,7 @@ public function getStatusMktdPreventa(){
             case '53': // ANALISTA COMISIONES
             case '13': // CONTRALORÍA
             case '13': // CONTRALORÍA
-            case '17': // CONTROL INTERNO
+            case '63': // CONTROL INTERNO
             case '70': // EJECUTIVO CONTRALORIA JR
                 $this->load->view("clientes/clients_report_ventas");
             break;

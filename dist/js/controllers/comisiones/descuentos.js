@@ -131,30 +131,26 @@ $("#form_descuentos2").on('submit', function(e){
         }
     });
 });
-
+let titulos = [];
 $("#tabla_descuentos").ready( function(){
-    let titulos = [];
     $('#tabla_descuentos thead tr:eq(0) th').each( function (i) {
-        if(i!=8){
-            var title = $(this).text();
-            titulos.push(title);
-            $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
-            $( 'input', this ).on('keyup change', function () {
-
-                if (tabla_nuevas.column(i).search() !== this.value ) {
-                    tabla_nuevas.column(i).search(this.value).draw();
-
-                    var total = 0;
-                    var index = tabla_nuevas.rows({ selected: true, search: 'applied' }).indexes();
-                    var data = tabla_nuevas.rows( index ).data();
-                    $.each(data, function(i, v){
-                        total += parseFloat(v.monto);
-                    });
-                    var to1 = formatMoney(total);
-                    document.getElementById("totalp").textContent = to1;
-                }
-            });
-        }
+        var title = $(this).text();
+        titulos.push(title);
+        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
+        $( 'input', this ).on('keyup change', function () {
+            if (tabla_nuevas.column(i).search() !== this.value ) {
+                tabla_nuevas.column(i).search(this.value).draw();
+                var total = 0;
+                var index = tabla_nuevas.rows({ selected: true, search: 'applied' }).indexes();
+                var data = tabla_nuevas.rows( index ).data();
+                $.each(data, function(i, v){
+                    total += parseFloat(v.monto);
+                });
+                var to1 = formatMoney(total);
+                document.getElementById("totalp").textContent = to1;
+            }
+        });
+        $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
     });
 
     $('#tabla_descuentos').on('xhr.dt', function ( e, settings, json, xhr ) {
@@ -166,15 +162,17 @@ $("#tabla_descuentos").ready( function(){
         document.getElementById("totalp").textContent = '$' + to;
     });
 
+
     tabla_nuevas = $("#tabla_descuentos").DataTable({
-        dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
-        width: 'auto',
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        scrollX: true,
+        width:'100%',
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
-            title: 'DESCUENTOS_SIN_APPLICAR',
+            title: 'DESCUENTOS SIN APLICAR',
             exportOptions: {
                 columns: [0,1,2,3,4,5,6,7],
                 format: {
@@ -187,7 +185,7 @@ $("#tabla_descuentos").ready( function(){
         pagingType: "full_numbers",
         fixedHeader: true,
         language: {
-            url: "<?=base_url()?>/static/spanishLoader_v2.json",
+            url: `${general_base_url}/static/spanishLoader_v2.json`,
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -196,70 +194,59 @@ $("#tabla_descuentos").ready( function(){
         destroy: true,
         ordering: false,
         columns: [{
-            "width": "5%",
-            "data": function( d ){
-                return '<p class="m-0">'+d.id_pago_i+'</p>';
+            data: function( d ){
+                return d.id_pago_i
             }
         },
         {
-            "width": "13%",
-            "data": function( d ){
-                return '<p class="m-0">'+d.usuario+'</p>';
+            data: function( d ){
+                return d.usuario
             }
         },
 
         {
-            "width": "10%",
-            "data": function( d ){
-                return '<p class="m-0">$'+formatMoney(d.monto)+'</p>';
+            data: function( d ){
+                return '$' +formatMoney(d.monto)
             }
         },
         {
-            "width": "11%",
-            "data": function( d ){
-                return '<p class="m-0">'+d.nombreLote+'</p>';
+            data: function( d ){
+                return d.nombreLote
             }
         },
         {
-            "width": "13%",
-            "data": function( d ){
-                return '<p class="m-0">'+d.motivo+'</p>';
+            data: function( d ){
+                return d.motivo
             }
         },
         {
-            "width": "10%",
-            "data": function( d ){
+            data: function( d ){
                 if(d.estatus == 16 || d.estatus == '16'){
-                    return '<span class="label label-success">APLICADO</span>'; 
+                    return '<span class="label lbl-oceanGreen">APLICADO</span>'; 
                 }else{
-                    return '<span class="label label-warning">INACTIVO</span>'; 
+                    return '<span class="label lbl-warning">INACTIVO</span>'; 
                 }
                 
             }
         },
         {
-            "width": "10%",
-            "data": function( d ){
-                return '<p class="m-0">'+d.modificado_por+'</p>';
+            data: function( d ){
+                return d.modificado_por
             }
         },
         {
-            "width": "10%",
-            "data": function( d ){
-                return '<p class="m-0">'+d.fecha_abono+'</p>';
+            data: function( d ){
+                return d.fecha_abono
             }
         },
         {
-            "width": "8%",
             "orderable": false,
-            "data": function( d ){
-
-                
+            data: function( d ){
                 if((d.estatus != 16 || d.estatus != '16') && (id_rol_general != 63)){
-                    return '<div class="d-flex justify-center"><button class="btn-data btn-green btn-update" value="'+d.id_pago_i+','+d.monto+','+d.usuario+','+d.nombreLote+'"><i class="material-icons" data-toggle="tooltip" data-placement="right" title="APROBAR DESCUENTO">check</i></button></div>';
+                    return '<div class="d-flex justify-center"><button class="btn-data btn-green btn-update"  data-toggle="tooltip" data-placement="top" title="APROBAR DESCUENTO" value="'+d.id_pago_i+','+d.monto+','+d.usuario+','+d.nombreLote+'"><i class="material-icons">check</i></button></div>';
                 }
                 else{
-                    return '';
+                    return 'N/A';
                 }
             }
         }],
@@ -276,6 +263,10 @@ $("#tabla_descuentos").ready( function(){
             cache: false,
             data: function( d ){}
         },
+        initComplete: function () {
+            $('[data-toggle="tooltip"]').tooltip({ 
+        });       
+        }
     });
 
     /**------------------------------------------- */
@@ -321,7 +312,17 @@ $("#tabla_descuentos").ready( function(){
         id_pago_i = $(this).val();
 
         $("#modal_nuevas .modal-body").html("");
-        $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><p><h5>¿Seguro que desea descontar a <b>'+row.data().usuario+'</b> la cantidad de <b style="color:red;">$'+formatMoney(row.data().monto)+'</b> correspondiente al lote <b>'+row.data().nombreLote+'</b> ?</h5><input type="hidden" name="id_descuento" id="id_descuento" value="'+row.data().id_pago_i+'"><br><input type="submit" class="btn btn-success" value="Aceptar"><button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button></p></div></div>');
+        $("#modal_nuevas .modal-body").append(`
+            <div class="row">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    <p><h5>¿Seguro que desea descontar a <b>'+row.data().usuario+'</b> la cantidad de <b style="color:red;">$'+formatMoney(row.data().monto)+'</b> correspondiente al lote <b>'+row.data().nombreLote+'</b> ?</h5></p>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-12 text-right">
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">ACEPTAR</button>
+                </div>
+            </div>
+            `);
         $("#modal_nuevas").modal();
     });
 });

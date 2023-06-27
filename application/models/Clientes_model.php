@@ -3830,8 +3830,8 @@ function getStatusMktdPreventa(){
             case '70': // EJECUTIVO CONTRALORIA JR
                 $query = $this->db->query("SELECT r.descripcion nombreResidencial, cn.nombre nombreCondominio, l.nombreLote, l.idLote,
                 CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombreCliente,
-                ISNULL(c.telefono1, '') telefono, ISNULL(c.otro_lugar, '') medioProspeccion, oxc2.nombre lp, l.totalNeto2,
-                s.nombre plaza, CONVERT(VARCHAR(10), c.fechaApartado, 111) fechaApartado, 
+                ISNULL(c.telefono1, '') telefono, ISNULL(UPPER(c.otro_lugar), '') medioProspeccion, UPPER(oxc2.nombre) lp, l.totalNeto2,
+                UPPER(s.nombre) plaza, CONVERT(VARCHAR(10), c.fechaApartado, 111) fechaApartado, 
                 CONVERT(VARCHAR(10), hl.modificado, 111) fechaEstatusQuince, l.enganche, ISNULL(oxc.nombre, 'SIN ESPECIFICAR') planEnganche,
                 CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreAsesor,
                 CONCAT(uu.nombre, ' ', uu.apellido_paterno, ' ', uu.apellido_materno) nombreGerente,

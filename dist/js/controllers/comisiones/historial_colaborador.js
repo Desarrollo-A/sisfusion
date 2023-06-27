@@ -90,7 +90,7 @@ var tabla_historialGral2 ;
 var tabla_historialGral3 ;
 var totaPen = 0;
 
-//INICIO TABLA QUERETARO ACTIVOS****************************************************************************************
+//INICIO TABLA HISTORIAL ACTIVOS
 function getAssimilatedCommissions(proyecto, condominio){
     asignarValorColumnasDT("tabla_historialGral");
     $('#tabla_historialGral thead tr:eq(0) th').each( function (i) {
@@ -311,9 +311,9 @@ function getAssimilatedCommissions(proyecto, condominio){
         });
     });
 }
-//FIN TABLA  ****************************************************************************************
+//FIN TABLA  
 
-//INICIO TABLA QUERETARO CANCELACIONES****************************************************************************************
+//INICIO TABLA CANCELACIONES
 function getAssimilatedCancelacion(proyecto, condominio){
     asignarValorColumnasDT("tabla_comisiones_canceladas");
     $('#tabla_comisiones_canceladas thead tr:eq(0) th').each( function (i) {
@@ -544,7 +544,7 @@ function getAssimilatedCancelacion(proyecto, condominio){
         });
     });
 }
-//FIN TABLA  ****************************************************************************************
+//FIN TABLA  
 
 
 $('a[data-toggle="tooltip"]').on('shown.bs.tab', function (e) {
