@@ -27,24 +27,14 @@
                 } 
                 else{
                     if($opn_cumplimiento[0]['estatus'] == 1){
-                        $cadena = '<button  type="button" 
-                                            class="btn btn-sky subir_factura_multiple"
-                                            style="box-shadow: none; padding: 7px 25px; border: 1px solid #4382EF; border-radius: 27px; margin: 0;">
-                                        <i class="fa fa-upload" aria-hidden="true"></i> 
-                                        SUBIR FACTURAS
-                                    </button>';
+                        $cadena = '<button type="button" class="btn btn-info subir_factura_multiple" >SUBIR FACTURAS</button>';
                     }
                     else if($opn_cumplimiento[0]['estatus'] == 0){
                         $cadena ='<a href="https://maderascrm.gphsis.com/index.php/Usuarios/configureProfile"> <span class="label label-danger" style="background:orange;">  SIN OPINIÓN DE CUMPLIMIENTO, CLIC AQUI PARA SUBIRLA</span> </a>';
 
                     }
                     else if($opn_cumplimiento[0]['estatus'] == 2){
-                        $cadena = '<button  type="button" 
-                                            class="btn btn-sky subir_factura_multiple"
-                                            style="box-shadow: none; padding: 7px 25px; border: 1px solid #4382EF18; border-radius: 27px; margin: 0;">
-                                        <i class="fa fa-upload" aria-hidden="true"></i> 
-                                        SUBIR FACTURAS
-                                    </button>';
+                        $cadena = '<button type="button" class="btn btn-info subir_factura_multiple" >SUBIR FACTURAS</button>';
                     }
                 }
             } else if ($forma_pago == 5) {
@@ -89,16 +79,14 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel"><b>Verifica tu información</b></h5>
-                        <p style = "padding: 1rem">
-                            Para poder realizar tu pago, Internomex requiere mantener tu información actualizada, favor de verificar o ingresar tu Código Postal.
-                        </p>
+                        <p style = "padding: 1rem">Para poder realizar tu pago, Internomex requiere mantener tu información actualizada. Por favor verifica o ingresa tu Código Postal. El valor que ingreses debe ser el mismo que venga en tu constancia de situación fiscal.</p>
                     </div>
                     <form id="codigoForm">
                     <div class="modal-body">
-                        <input type="text" id="dato_solicitudcp" name="dato_solicitudcp" class="form-control input-gral" minlength="5" maxlength="5" placeholder="Captura tu Código Postal" required>
+                        <input type="number" id="dato_solicitudcp" name="dato_solicitudcp" class="form-control" min="5"
+                         placeholder="Captura tu Código Postal" required>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="codigopostalCancel" class="btn btn-danger btn-simple" data-dismiss="modal" style="display:none" >Close</button>
                         <button type="submit" id="codigopostalSubmit" class="btn btn-primary">Aceptar</button>
                     </div>
                     </form>
