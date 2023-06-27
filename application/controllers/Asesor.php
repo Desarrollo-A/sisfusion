@@ -4416,100 +4416,25 @@ class Asesor extends CI_Controller
     }
     public function notifyRejEv($correo, $data_eviRec, $sede)
     {
-        // $correo_new = 'programador.analista8@ciudadmaderas.com';/*se coloca el correo de testeo para desarrollo*/
-        $correoDir = $dataUser[0]->correo;
-        $mail = $this->phpmailer_lib->load();
-        $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-        $mail->addAddress($correo_new);
-        // $mail->addCC('erick_eternal@live.com.mx');
-        //$mail->addBCC('copia_oculta@outlook.com');
-        $mail->Subject = utf8_decode('[' . strtoupper($sede) . '][REPORTE] EVIDENCIAS RECHAZADAS PARA:' . $correo);
-        $mail->isHTML(true);
-        $mailContent = "<html><head>
-        <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-        <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>
-        <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'> 
-        <style media='all' type='text/css'>
-            .encabezados{
-                text-align: center;
-                padding-top:  1.5%;
-                padding-bottom: 1.5%;
-            }
-            .encabezados a{
-                color: #234e7f;
-                font-weight: bold;
-            }
-            
-            .fondo{
-                background-color: #234e7f;
-                color: #fff;
-            }
-            
-            h4{
-                text-align: center;
-            }
-            p{
-                text-align: right;
-            }
-            strong{
-                color: #234e7f;
-            }
-        </style>
-        </head>
-        <body>
-        <img src='" . base_url() . "static/images/mailER/header9@4x.png' width='100%'>
-        <table align='center' cellspacing='0' cellpadding='0' border='0' width='100%'>
-            <tr colspan='3'>
-            <td class='navbar navbar-inverse' align='center'>
-                <table width='750px' cellspacing='0' cellpadding='3' class='container'>
-                    <tr class='navbar navbar-inverse encabezados'><td>
-                        <p><a href='#'>SISTEMA DE CONTRATACIÓN</a></p>
-                    </td></tr>
-                </table>
-            </td>
-            </tr>
-            <tr>
-                <td border=1 bgcolor='#FFFFFF' align='center'> 
-                    <h3>¡ Buenos días estimad@ !</h3><br> <br>
-                    
-                    <p style='padding: 10px 90px;text-align: justify;'>¿Cómo estás?, espero que bien, te adjunto el reporte semanal de las evidencias rechazadas por
-                        <b>cobranza/contraloria</b>, te invito a leer las observaciones. Recuerda que deben ser corregidas a más
-                        tardar los jueves a las 12:00 PM, con esto ayudas a que el proceso en cobranza sea en tiempo y forma,
-                        dando como resultado el cobro a tiempo de las comisiones.
-                    </p><br><br>
-                    
-                    
-                </td>
-            </tr>
-            <tr>
-                <td border=1 bgcolor='#FFFFFF' align='center'>  
-                <center><table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='100%' style class='darkheader'>
-                    <tr class='active' style='text-align: center'>
-                    <th>Solicitante</th>   
-                    <th>Lote</th>   
-                    <th>comentario</th>   
-                    <th>Fecha/Hora</th>   
-                    </tr>";
-        for ($p = 0; $p < count($data_eviRec); $p++) {
-            $mailContent .= '<tr>';
-            $mailContent .= '    <td><center>' . $data_eviRec[$p]['nombreSolicitante'] . '</center></td>';
-            $mailContent .= '    <td><center>' . $data_eviRec[$p]['nombreLote'] . '</center></td>';
-            $mailContent .= '    <td><center>' . $data_eviRec[$p]['comentario_autorizacion'] . '</center></td>';
-            $mailContent .= '    <td><center>' . $data_eviRec[$p]['fecha_creacion'] . '</center></td>';
-            $mailContent .= '</tr>';
-        }
-        $mailContent .= "</table></center>
-                    <br><br>
-                </td>
-            </tr>
-        </table>
-        <img src='" . base_url() . "static/images/mailER/footer@4x.png' width='100%'>
-        </body></html>";
-        $mail->Body = utf8_decode($mailContent);
-        if ($mail->send()) {
+        $encabezados = [
+            'nombreSolicitante' => 'SOLICITANTE',
+            'nombreLote' => 'LOTE',
+            'comentario_autorizacion' => 'COMENTARIO',
+            'fecha_creacion' => 'FECHA/HORA'
+        ];
+
+        $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to('programador.analista24@ciudadmaderas.com') // TODO: reemplazar el correo de producción
+            ->subject('[' . strtoupper($sede) . '][REPORTE] EVIDENCIAS RECHAZADAS PARA:' . $correo)
+            ->view($this->load->view('mail/asesor/notify-rej-ev', ['encabezados' => $encabezados, 'contenido' => $data_eviRec], true));
+
+
+        if ($this->email->send()) {
             return 1;
         } else {
-            return $mail->ErrorInfo;
+            return $this->email->print_debugger();
         }
     }
     function getSedes()
