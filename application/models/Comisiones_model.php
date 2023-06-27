@@ -112,6 +112,7 @@ public function getDataActivasPago($val = '') {
           return $this->db->query("SELECT id_usuario,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as name_user FROM usuarios WHERE estatus in (0,1,3) $complemento AND id_rol=$rol");
         }
       }
+      
     function getUsuariosRol2($rol){
         return $this->db->query("SELECT SUM(d.monto) as monto, u.id_usuario,CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) as name_user 
         FROM usuarios u inner join descuentos_universidad d on d.id_usuario=u.id_usuario
@@ -3393,20 +3394,6 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
         return $this->db->query("UPDATE lotes SET ubicacion_dos = ".$plaza." WHERE idLote IN (".$idLote.")");
     }
 
-    function updateBandera($id_pagoc, $param) {
-        // $response = $this->db->update("pago_comision", $data, "id_pagoc = $id_pagoc");
-        $response = $this->db->query("UPDATE pago_comision SET bandera = ".$param." WHERE id_lote IN (".$id_pagoc.")");
-
-        if($param == 55){
-          $response = $this->db->query("UPDATE lotes SET registro_comision = 1 WHERE idLote IN (".$id_pagoc.")");
-        }
-
-        if (! $response ) {
-            return $finalAnswer = 0;
-        } else {
-            return $finalAnswer = 1;
-        }
-    }
 
  
 
@@ -3739,47 +3726,7 @@ function getDatosEnviadasADirectorMK($filtro){
 
 
  
- 
 
-function getLotesOrigen($user,$valor){
-
-  if($user == 1988){//fernanda
-    $cadena = " AND cl.id_asesor in (select id_usuario from usuarios where id_rol in (7,9) and 
-    id_sede like '%1%' or id_sede like '%5%')";
-    $user_vobo = 4394;
-
-  }else if($user == 1981){//maricela
-    $cadena = " AND cl.id_asesor in (select id_usuario from usuarios where id_rol in (7,9) and 
-    id_sede like '%2%' or id_sede like '%3%' or id_sede like '%4%' or id_sede like '%6%')";
-    $user_vobo = 4394;
-
-
-  }else{
-    $cadena = '';
-    $user_vobo = $user;
-
-  }
-
-    if($valor == 1){
-        return $this->db->query(" SELECT l.idLote, l.nombreLote, pci.id_pago_i, pci.abono_neodata as comision_total, 0 abono_pagado,pci.pago_neodata 
-        FROM comisiones com 
-        INNER JOIN lotes l ON l.idLote = com.id_lote
-        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
-
-        INNER JOIN pago_comision_ind pci ON pci.id_comision = com.id_comision
-        WHERE com.estatus = 1 AND pci.estatus IN (1, 41, 42, 51, 52, 61, 62, 12) AND pci.id_usuario = $user_vobo $cadena ORDER BY pci.abono_neodata DESC");
-
-    }else if($valor == 2){
-        return $this->db->query(" SELECT l.idLote, l.nombreLote, pci.id_pago_i, pci.abono_neodata as comision_total, 0 abono_pagado,pci.pago_neodata 
-        FROM comisiones com 
-        INNER JOIN lotes l ON l.idLote = com.id_lote
-        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
-
-        INNER JOIN pago_comision_ind pci ON pci.id_comision = com.id_comision
-        WHERE com.estatus = 1 AND pci.estatus IN (4) AND pci.id_usuario = $user_vobo ORDER BY pci.abono_neodata DESC ");
-    }
-   
-}
 
 // function getLotesOrigen($user,$valor){
 
@@ -4613,25 +4560,13 @@ function TieneAbonos($id){
 
      /**-----------NUEVO PROCESO DE PRESTAMOS AUTOMATICOS---------------------- */
 
-     function getPrestamoxUser($id,$tipo){
-        return $this->db->query("SELECT id_usuario FROM prestamos_aut WHERE id_usuario=$id AND estatus=1 and tipo=$tipo");
-    }
 
         function TienePago($id){
             return $this->db->query("SELECT * FROM pagos_prestamos_ind WHERE id_prestamo=$id");
             
             
             }
-             public function BorrarPrestamo($id_prestamo){
-                    $respuesta = $this->db->query("UPDATE prestamos_aut SET estatus=0,modificado_por=".$this->session->userdata('id_usuario')." WHERE id_prestamo=$id_prestamo ");
-                    $respuesta = $this->db->query("INSERT INTO historial_log VALUES($id_prestamo,".$this->session->userdata('id_usuario').",GETDATE(),1,'SE CANCELÓ EL PRÉSTAMO','prestamos_aut',NULL)");
-
-                    if (! $respuesta ) {
-                    return 0;
-                    } else {
-                    return 1;
-                    }
-                }
+           
             
 
                 function insertar_prestamos($insertArray){
@@ -7328,7 +7263,7 @@ public function getDataDispersionPagoEspecial($val = '') {
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 95 and oxc.id_opcion = TRY_CAST( hl.motivo AS BIGINT)
         WHERE l.idStatusContratacion BETWEEN 9 AND 15 
         AND l.status = 1 
-        AND l.registro_comision in (10,11,18)
+        AND l.registro_comision in (10,11,18,5,3,4,5,6)
         AND l.tipo_venta IS NOT NULL 
         AND l.tipo_venta IN (1,2,7)
         ORDER BY l.idLote");
@@ -7353,53 +7288,7 @@ public function getDataDispersionPagoEspecial($val = '') {
             ->result_array();
     }
 
-    public function getGeneralDataPrestamo($idPrestamo)
-    {
-        $result = $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u .apellido_materno) AS nombre_completo, 
-            pa.monto as monto_prestado, pa.pago_individual, pa.num_pagos, pa.n_p as num_pago_act, SUM(pci.abono_neodata) as total_pagado, 
-            (pa.monto - SUM(pci.abono_neodata)) as pendiente
-            FROM prestamos_aut pa
-            JOIN usuarios u ON u.id_usuario = pa.id_usuario
-            JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
-            JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i 
-            AND pci.estatus IN(18,19,20,21,22,23,24,25,26,29) AND pci.descuento_aplicado = 1
-            WHERE pa.id_prestamo = $idPrestamo
-            GROUP BY u.nombre, u.apellido_paterno, u.apellido_materno, pa.monto, pa.pago_individual, pa.num_pagos, pa.n_p");
-        return $result->row();
-    }
-    public function getDetailPrestamo($idPrestamo)
-    {
-        $this->db->query("SET LANGUAGE Español;");
-        $result = $this->db->query("SELECT pci.id_pago_i,hc.comentario, l.nombreLote, CONVERT(NVARCHAR, rpp.fecha_creacion, 6) as fecha_pago, pci.abono_neodata, rpp.np,pcs.nombre as tipo,re.nombreResidencial,
-        CASE WHEN pa.estatus=1 THEN 'Activo' WHEN pa.estatus=2 THEN 'Liquidado' WHEN pa.estatus=3 THEN 'Liquidado' END AS estatus,sed.nombre as sede
-                FROM prestamos_aut pa
-                INNER JOIN usuarios u ON u.id_usuario = pa.id_usuario
-                INNER JOIN sedes sed ON sed.id_sede = (CASE u.id_usuario 
-                 WHEN 2 THEN 2 
-                 WHEN 3 THEN 2 
-                 WHEN 1980 THEN 2 
-                 WHEN 1981 THEN 2 
-                 WHEN 1982 THEN 2 
-                 WHEN 1988 THEN 2 
-                 WHEN 4 THEN 5
-                 WHEN 5 THEN 3
-                 WHEN 607 THEN 1 
-                 WHEN 7092 THEN 4
-                     WHEN 9629 THEN 2
-                 ELSE u.id_sede END) and sed.estatus = 1
-                INNER JOIN opcs_x_cats pcs ON pcs.id_opcion=pa.tipo AND pcs.id_catalogo=23
-                INNER JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
-                INNER JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus IN(18,19,20,21,22,23,24,25,26,29) AND pci.descuento_aplicado = 1
-                INNER JOIN comisiones c ON c.id_comision = pci.id_comision
-                INNER JOIN lotes l ON l.idLote = c.id_lote
-                INNER JOIN condominios con ON con.idCondominio=l.idCondominio
-                INNER JOIN residenciales re ON re.idResidencial=con.idResidencial
-                INNER JOIN historial_comisiones hc ON hc.id_pago_i = rpp.id_pago_i 
-                and (hc.comentario like 'DESCUENTO POR%' or hc.comentario like '%, POR MOTIVO DE PRESTAMO' or hc.comentario like '%CONFERENCIA%' or hc.comentario like '%NOMINA%') and hc.estatus=1
-                WHERE pa.id_prestamo = $idPrestamo
-                ORDER BY np ASC");
-        return $result->result_array();
-    }
+    
 
     public function getPrestamosTable($mes=0, $anio=0)
     {
@@ -7727,22 +7616,45 @@ public function getDataDispersionPagoEspecial($val = '') {
         return $query->result_array();
     }
 
-    public function updateBanderaDetenida($idLote, $updateHistorial = false)
-    {
-        if ($updateHistorial) {
-            $this->db->query("UPDATE lotes SET registro_comision = registro_comision - 10, 
-                 modificado=".$this->session->userdata('id_usuario')." WHERE idLote = $idLote");
-            return (bool)($this->db->query("UPDATE historial_log SET estatus = 0 WHERE tabla = 
-                                           'pago_comision' AND estatus = 1 AND identificador = $idLote"));
-        } else {
-            return (bool)($this->db->query("UPDATE lotes SET registro_comision = registro_comision + 10, 
-                 modificado=".$this->session->userdata('id_usuario')." WHERE idLote = $idLote"));
+    function updateBandera($id_pagoc, $param) {
+        // $response = $this->db->update("pago_comision", $data, "id_pagoc = $id_pagoc");
+        $response = $this->db->query("UPDATE pago_comision SET bandera = ".$param." WHERE id_lote IN (".$id_pagoc.")");
+
+        if($param == 55){
+          $response = $this->db->query("UPDATE lotes SET registro_comision = 1 WHERE idLote IN (".$id_pagoc.")");
         }
+
+        if (! $response ) {
+            return $finalAnswer = 0;
+        } else {
+            return $finalAnswer = 1;
+        }
+    }
+
+    public function updateBanderaDetenida($idLote, $updateHistorial, $nuevoRegistroComision  = false  )
+    {
+        if($nuevoRegistroComision != false ) {
+            if ($updateHistorial) {
+        
+                $this->db->query("UPDATE lotes SET registro_comision = $nuevoRegistroComision , 
+                     modificado=".$this->session->userdata('id_usuario')." WHERE idLote = $idLote");
+                return (bool)($this->db->query("UPDATE historial_log SET estatus = 0 WHERE tabla = 
+                                               'pago_comision' AND estatus = 1 AND identificador = $idLote"));
+            } else {
+                return (bool)($this->db->query("UPDATE lotes SET registro_comision = $nuevoRegistroComision ,  
+                     modificado=".$this->session->userdata('id_usuario')." WHERE idLote = $idLote"));
+            }
+        }else {
+            return  'error';
+        }
+       
     }
 
     public function insertHistorialLog($idLote, $idUsuario, $estatus, $comentario, $tabla, $motivo)
     {
-        return (bool)($this->db->query("INSERT INTO historial_log ". "VALUES ($idLote, $idUsuario, GETDATE(), $estatus, '$comentario', '$tabla', '$motivo')"));
+        $cmd = "INSERT INTO historial_log ". "VALUES ($idLote, $idUsuario, GETDATE(), $estatus, '$comentario', '$tabla', '$motivo')";
+     
+        return (bool)($this->db->query($cmd));
     }
 
     public function getFormasPago()
@@ -8196,33 +8108,18 @@ public function getDataDispersionPagoEspecial($val = '') {
     public function getCertificaciones()
     {
         $cmd = "SELECT * FROM opcs_x_cats where id_catalogo = 79";
-        $query = $this->db->query($cmd);
+        $query = $this->db->query($cmd); 
         return $query->result();
     }
 
 
     public function getMotivosControversia()
     {
-        $cmd = "SELECT * FROM opcs_x_cats wh
-        WHere id_catalogo = 95  and id_opcion NOT IN (0,1,5,7)";
+        $cmd = "SELECT * FROM opcs_x_cats where id_catalogo = 95  and id_opcion NOT IN (0,1,7)";
         $query = $this->db->query($cmd);
         return $query->result_array();   
     }
 
-    public function updatePrestamosEdit($clave, $data){
-            try {
-                $this->db->where('id_prestamo', $clave);
-                if($this->db->update('prestamos_aut', $data))
-                {
-                    return TRUE;
-                }else{
-                    return FALSE;
-                }               
-            }
-            catch(Exception $e) {
-                return $e->getMessage();
-            }     
-    }
 
 
     // 
@@ -8285,5 +8182,12 @@ public function getDataDispersionPagoEspecial($val = '') {
     }
 
 
+    public function ultimoRegistro($idLote){
+        $cmd = "SELECT TOP 1 * from auditoria 
+                WHERE tabla = 'lotes'  
+                AND col_afect = 'registro_comision' AND id_parametro = $idLote    
+                ORDER BY fecha_creacion DESC ";
+        $query = $this->db->query($cmd);
+        return $query->row();
 
 }

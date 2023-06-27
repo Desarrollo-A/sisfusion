@@ -3,14 +3,12 @@
 <body>
     <div class="wrapper">
         <?php
-        $rolesPermitidos = [13,17,32,63,70];
-        if(in_array($this->session->userdata('id_rol'), $rolesPermitidos)){
-            $this->load->view('template/sidebar');
-        }
-        else{
-            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
-        }
+            if($this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="17" || $this->session->userdata('id_rol')=="32"|| $this->session->userdata('id_rol')=="63" || $this->session->userdata('id_rol')=="70")
+                $this->load->view('template/sidebar');
+            else
+                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
         ?>
+
         <style type="text/css">
             .msj{
                 z-index: 9999999;
@@ -62,7 +60,16 @@
                         <div class="modal-body">
                             <div class="form-group">
                                 <label class="label">Puesto del usuario</label>
-                                <select class="selectpicker roles" name="roles" id="roles" required></select>
+                                <select class="selectpicker roles" name="roles" id="roles" required>
+                                    <option value="">----Seleccionar-----</option>
+                                    <option value="7">Asesor</option>
+                                    <option value="38">MKTD</option>
+                                    <option value="9">Coordinador</option>
+                                    <option value="3">Gerente</option>
+                                    <option value="2">Sub director</option>  
+                                    <option value="1">Director</option> 
+
+                                </select>
                             </div>
                             <div class="form-group" id="users">
                                 <label class="label">Usuario</label>
@@ -116,7 +123,15 @@
                         <div class="modal-body">
                             <div class="form-group">
                                 <label class="label">Puesto del usuario</label>
-                                <select class="selectpicker roles2" name="roles2" id="roles2" required></select>
+                                <select class="selectpicker roles2" name="roles2" id="roles2" required>
+                                    <option value="">----Seleccionar-----</option>
+                                    <option value="7">Asesor</option>
+                                    <option value="38">MKTD</option>
+                                    <option value="9">Coordinador</option>
+                                    <option value="3">Gerente</option>
+                                    <option value="2">Sub director</option>  
+                                    <option value="1">Director</option> 
+                                </select>
                             </div>
                             <div class="form-group" id="users">
                                 <label class="label">Usuario</label>

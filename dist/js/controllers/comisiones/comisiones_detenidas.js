@@ -137,27 +137,32 @@ $('#comisiones-detenidas-table').ready(function () {
                     return fechaNeodata + rescisionLote;
                 }
             },
-            {
-                data: function (d) {
-                    let motivo;
-                    let color;
-                    if (d.motivo == 1 || d.motivo == 2 || d.motivo == 3) {
-                        if (d.motivo == 1) { color = 'lbl-azure'; } else if (d.motivo == 2) { color = 'lbl-brown'; }
-                        motivo = d.motivoOpc;
-                    } else {
-                        color = 'lbl-azure';
-                        motivo = d.motivo;
-                    }
-                    return '<span class="label ' + color + '">' + motivo + '</span>';
+            {   
+            data: function (d) {
+                let motivo;
+                let color;
+                if (d.motivo == 4 || d.motivo == 5 || d.motivo == 3 || d.motivo == 6 || d.motivo == 8) {
+           
+                    motivo = d.motivoOpc;
+                } else {
+                    color = 'lbl-azure';
+                    motivo = d.motivo;
                 }
+                return '<span class="label lbl-gray">' + motivo + '</span>';
+                    }        
             },
             {
                 data: function (d) {
                     let botton = '';
                     if (id_rol_general != 63 && id_rol_general != 4) {
-                        if(d.motivo == 1){
-                            botton = ` <div class="d-flex justify-center">
-                            <button value="${d.idLote}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas btn-cambiar-estatus" data-toggle="tooltip" data-placement="top" title="Detener"><i class="material-icons">undo</i></button>
+                        if(d.motivo == 5){
+                            botton = ` 
+                        <div class="d-flex justify-center">
+                            <button value="${d.idLote}" data-value="${d.nombreLote}" 
+                                class="btn-data btn-blueMaderas btn-cambiar-estatus" 
+                                data-toggle="tooltip" data-placement="top">
+                                <i class="material-icons">undo</i>
+                            </button>
                         </div>`;
                         }else{
                             botton = ``;

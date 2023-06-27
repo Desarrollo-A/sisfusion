@@ -114,10 +114,6 @@ $('#reporteLotesPorComisionista').on('xhr.dt', function (e, settings, json, xhr)
 });
 
 function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
-    console.log(beginDate);
-    console.log(endDate);
-    console.log(comisionista);
-    console.log(tipoUsuario);
     generalDataTable = $('#reporteLotesPorComisionista').dataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
@@ -274,7 +270,7 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
 }
 
 $(document).on("click", "#searchByDateRange", function () {
-    $('#reporteLotesPorComisionista').removeClass('hide');
+    $('#box-reporteLotesPorComisionista').removeClass('hide');
     if ($("#comisionista").val() != '' && $("#tipoUsuario").val() != '') {
         colocarValoresTotales('0.00', '0.00', '0.00');
         let finalBeginDate = $("#beginDate").val();

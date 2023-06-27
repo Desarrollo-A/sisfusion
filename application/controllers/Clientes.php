@@ -1701,9 +1701,6 @@ public function getStatusMktdPreventa(){
         }
     }
 
-
-
-
     public function getEmpty()
     {
         $data = array();
@@ -1724,9 +1721,6 @@ public function getStatusMktdPreventa(){
             $porciones = explode(",", $data[$i]->id_sede);
             $data[$i]->id_sede = $porciones[0];
         }
-
-
-
 
         if($data != null) {
             echo json_encode($data);
@@ -1808,22 +1802,6 @@ public function getStatusMktdPreventa(){
         exit;
     }
 
-   /* public function getProspectsListByGerente($id_gerente)
-    {
-        if ($this->session->userdata('id_rol') == 19) { // IS SUBDIRECTOR MKTD
-            $dato = $this->Clientes_model->getSedeByUser($id_gerente);
-            $data['data'] = $this->Clientes_model->getProspectsListByGerente($dato[0]['id_sede']);
-        } else {
-            $data['data'] = $this->Clientes_model->getProspectsListByGerente($id_gerente);
-        }
-
-        if($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }
-        exit;
-    }*/
     public function getProspectsListByGerente($id_gerente)
     {
         if ($this->session->userdata('id_rol') == 19) { // IS SUBDIRECTOR MKTD
@@ -1839,23 +1817,6 @@ public function getStatusMktdPreventa(){
             $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
             $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
             $where = $this->input->post("where");
-//            print_r($this->input->post("endDate"));
-//            echo'<br>';
-//            print_r(strtotime($this->input->post("endDate")));
-//            echo'<br>';
-//            exit;
-
-//
-//            print_r($typeTransaction);
-//            echo'<br>';
-//            print_r($beginDate);
-//            echo'<br>';
-//            print_r($endDate);
-//            echo'<br>';
-//            print_r($where);
-//            echo'<br>';
-//            exit;
-
             $data = $this->Clientes_model->getProspectsListByGerente($id_gerente, $typeTransaction, $beginDate, $endDate, $where);
         }
 
@@ -1867,22 +1828,6 @@ public function getStatusMktdPreventa(){
         exit;
     }
 
-    /*public function getProspectsListByCoord($id_coord)
-    {
-        if ($this->session->userdata('id_rol') == 19) {
-            $dato = $this->Clientes_model->getSedeByUser($id_coord);
-            $data['data'] = $this->Clientes_model->getProspectsListByCoord($dato[0]['id_sede']);
-        } else {
-            $data['data'] = $this->Clientes_model->getProspectsListByCoord($id_coord);
-        }
-        
-        if($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }
-        exit;
-    }*/
     public function getProspectsListByCoord($id_coord)
     {
         if ($this->session->userdata('id_rol') == 19) {
@@ -1908,16 +1853,6 @@ public function getStatusMktdPreventa(){
         exit;
     }
 
-    /*public function getProspectsListByAsesor($id_asesor)
-    {
-        $data['data'] = $this->Clientes_model->getProspectsListByAsesor($id_asesor);
-        if($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }
-        exit;
-    }*/
     public function getProspectsListByAsesor($id_asesor)
     {
         $typeTransaction = $this->input->post("typeTransaction");
@@ -2135,8 +2070,6 @@ public function getStatusMktdPreventa(){
         {
             $data['data'] = $this->Clientes_model->getProspByApMaternoTelApPaterno($ap_materno_prospect, $ap_paterno_prospect, $telefono_prospect);
         }
-        /***********************************************/
-
 
         if($data != null) {
             echo json_encode($data);
@@ -2145,9 +2078,6 @@ public function getStatusMktdPreventa(){
         }
         exit;
     }
-    /*******************/
-
-
 
     public function getResidencialDisponible() {
         $recidenciales = $this->Caja_model_outside->getResidencialDis();
@@ -2227,14 +2157,6 @@ public function getStatusMktdPreventa(){
         }
     }
 
-    /*public function getProspectsListByGte($lugar_p,$id_gte){
-        $data['data'] = $this->Clientes_model->getProspectsListByGte($lugar_p,$id_gte);
-        if($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }
-    }*/
     public function getProspectsListByGte($lugar_p,$id_gte){
         if (isset($_POST) && !empty($_POST)) {
             $typeTransaction = $this->input->post("typeTransaction");
@@ -2247,24 +2169,8 @@ public function getStatusMktdPreventa(){
             json_encode(array());
         }
 
-
-        /*$data['data'] = $this->Clientes_model->getProspectsListByGte($lugar_p,$id_gte);
-        if($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }*/
     }
 
-
-    /*public function getProspectsListByCoord_v2($lugar_p,$id_sub,$id_gte,$id_coord){
-        $data['data'] = $this->Clientes_model->getProspectsListByCoord_v2($lugar_p,$id_sub,$id_gte,$id_coord);
-        if($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }
-    }*/
     public function getProspectsListByCoord_v2($lugar_p,$id_sub,$id_gte,$id_coord){
         if (isset($_POST) && !empty($_POST)) {
             $typeTransaction = $this->input->post("typeTransaction");
@@ -2277,23 +2183,8 @@ public function getStatusMktdPreventa(){
             json_encode(array());
         }
 
-        /*$data['data'] = $this->Clientes_model->getProspectsListByCoord_v2($lugar_p,$id_sub,$id_gte,$id_coord);
-        if($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }*/
     }
 
-
-    /*public function getProspectsListByAs($lugar_p,$id_sub,$id_gte,$id_coord,$id_as){
-        $data['data'] = $this->Clientes_model->getProspectsListByAs($lugar_p,$id_sub,$id_gte,$id_coord,$id_as);
-        if($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }
-    }*/
     public function getProspectsListByAs($lugar_p,$id_sub,$id_gte,$id_coord,$id_as){
 
         if (isset($_POST) && !empty($_POST)) {
@@ -2306,12 +2197,6 @@ public function getStatusMktdPreventa(){
         } else {
             json_encode(array());
         }
-        /*$data['data'] = $this->Clientes_model->getProspectsListByAs($lugar_p,$id_sub,$id_gte,$id_coord,$id_as);
-        if($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }*/
     }
 
 
@@ -2320,14 +2205,6 @@ public function getStatusMktdPreventa(){
         echo json_encode($this->Clientes_model->getGerentesAll()->result_array());
     }
 
-    /*public function getProspectsListByGteAll($id_gte){
-        $data['data'] = $this->Clientes_model->getProspectsListByGteAll($id_gte);
-        if($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }
-    }*/
     public function getProspectsListByGteAll($id_gte){
         if (isset($_POST) && !empty($_POST)) {
             $typeTransaction = $this->input->post("typeTransaction");
@@ -2339,12 +2216,6 @@ public function getStatusMktdPreventa(){
         } else {
             json_encode(array());
         }
-        /*$data['data'] = $this->Clientes_model->getProspectsListByGteAll($id_gte);
-        if($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }*/
     }
 
     public function getProspectsListByCoordByGte($id_gte,$id_coord){
@@ -2358,13 +2229,6 @@ public function getStatusMktdPreventa(){
         } else {
             json_encode(array());
         }
-
-        /*$data['data'] = $this->Clientes_model->getProspectsListByCoordByGte($id_gte,$id_coord);
-        if($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }*/
     }
 
     public function getProspectsListByAsByCoord($id_gte,$id_coord,$id_as){
@@ -2381,12 +2245,6 @@ public function getStatusMktdPreventa(){
             json_encode(array());
         }
 
-        /*$data['data'] = $this->Clientes_model->getProspectsListByAsByCoord($id_gte,$id_coord,$id_as);
-        if($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }*/
     }
 	
 	
@@ -2469,7 +2327,7 @@ public function getStatusMktdPreventa(){
             case '4': // ASISTENTE GERENTE
             case '53': // ANALISTA COMISIONES
             case '13': // CONTRALORÍA
-            case '13': // CONTRALORÍA
+            case '17': // CONTRALORÍA
             case '63': // CONTROL INTERNO
             case '70': // EJECUTIVO CONTRALORIA JR
                 $this->load->view("clientes/clients_report_ventas");
@@ -2498,13 +2356,6 @@ public function getStatusMktdPreventa(){
 
     public function getProspectsAssignedList()
     {
-        // $data['data'] = $this->Clientes_model->getProspectsAssignedList();
-        // if($data != null) {
-        //     echo json_encode($data);
-        // } else {
-        //     echo json_encode(array());
-        // }
-        // exit;
         if (isset($_POST) && !empty($_POST)) {
             $typeTransaction = $this->input->post("typeTransaction");
             $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
@@ -2524,8 +2375,6 @@ public function getStatusMktdPreventa(){
 
     public function getGeneralProspectsListInformation()
     {
-        /*print_r($this->input->post("typeTransaction"));
-        exit;*/
         if (isset($_POST) && !empty($_POST)) {
             $typeTransaction = $this->input->post("typeTransaction");
         }
@@ -2858,9 +2707,6 @@ public function getStatusMktdPreventa(){
         echo json_encode($result, JSON_NUMERIC_CHECK);    
     }
 
-    /**************************************************************************************
-    *                             NUEVA FUNCIÓN PARA EL MENÚ                              *
-    ***************************************************************************************/
     public function consultaClientesProyecto(){
         $this->load->view('template/header');
         $this->load->view('clientes/consulta_clientes_proyecto_view');
@@ -2925,4 +2771,3 @@ public function getStatusMktdPreventa(){
         echo json_encode($data);
     }
 }
-

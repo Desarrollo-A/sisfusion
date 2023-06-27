@@ -83,7 +83,7 @@
                             </div>
                             <div class="col-lg-12">
                                 <div class="form-group label-floating">
-                                    <textarea class="text-modal" id="descripcion" name="descripcion" rows="3" placeholder="Escriba detalles de la controversia." required></textarea>
+                                    <textarea class="form-control input-gral" id="descripcion" name="descripcion" rows="3" placeholder="Escriba detalles de la controversia." required></textarea>
                                 </div>
                             </div>
                         </div>

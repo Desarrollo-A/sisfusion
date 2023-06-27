@@ -267,7 +267,7 @@ class Suma_model extends CI_Model
         ORDER BY u.nombre");
     }
     function get_solicitudes_factura($usuario){
-        return $this->db->query("SELECTT ps.total_comision, cm.referencia, ps.id_pago_suma
+        return $this->db->query("SELECT ps.total_comision, cm.referencia, ps.id_pago_suma
         FROM pagos_suma ps 
         INNER JOIN comisiones_suma cm ON ps.referencia = cm.referencia  
         INNER JOIN usuarios u ON u.id_usuario = ps.id_usuario AND u.id_usuario = $usuario

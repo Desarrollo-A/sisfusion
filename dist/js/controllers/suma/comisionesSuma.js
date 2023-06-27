@@ -6,14 +6,14 @@ let num_colum_encabezado = [];
 
 // Selección de CheckBox
 $(document).on("click", ".individualCheck", function() {
-    var totaPen = 0;
+    totaPen = 0;
     tabla_nuevas.$('input[type="checkbox"]').each(function () {
         let totalChecados = tabla_nuevas.$('input[type="checkbox"]:checked') ;
         let totalCheckbox = tabla_nuevas.$('input[type="checkbox"]');
         if(this.checked){
             tr = this.closest('tr');
             row = tabla_nuevas.row(tr).data();
-            totaPen += row.impuesto; 
+            totaPen += parseFloat(row.impuesto); 
         }
         // Al marcar todos los CheckBox Marca CB total
         if( totalChecados.length == totalCheckbox.length )
@@ -30,7 +30,7 @@ function selectAll(e) {
         $(tabla_nuevas.$('input[type="checkbox"]')).each(function (i, v) {
             tr = this.closest('tr');
             row = tabla_nuevas.row(tr).data();
-            tota2 += row.impuesto;
+            tota2 += parseFloat(row.impuesto);
             if(v.checked == false){
                 $(v).prop("checked", true);
             }
@@ -211,11 +211,15 @@ $("#tabla_nuevas_comisiones").ready(function () {
                                     $('#spiner-loader').addClass('hide');
                                     $("#totpagarPen").html(formatMoney(0));
                                     $("#all").prop('checked', false);
-                                    var fecha = new Date();
                                     alerts.showNotification("top", "right", "Las comisiones se han enviado exitosamente a revisión.", "success");
                                     tabla_nuevas.ajax.reload();
                                     tabla_revision.ajax.reload();
-                                } else {
+                                } 
+                                else if (data == 2){
+                                    $('#spiner-loader').addClass('hide');
+                                    alerts.showNotification("top", "right", "No ha agregado un documento fiscal antes de solicitar su pago", "warning");
+                                }
+                                else{
                                     $('#spiner-loader').addClass('hide');
                                     alerts.showNotification("top", "right", "Error al enviar comisiones, intentalo más tarde", "danger");
                                 }
@@ -426,17 +430,6 @@ $("#tabla_nuevas_comisiones").ready(function () {
     });
 });
 
-$(document).on("click", ".individualCheck", function () {
-    tr = $(this).closest('tr');
-    var row = tabla_nuevas.row(tr).data();
-
-    if ($(this).prop('checked')) totaPen += parseFloat(row.impuesto);
-    else totaPen -= parseFloat(row.impuesto);
-
-    $("#totpagarPen").html('$ ' + formatMoney(totaPen));
-});
-/* End table nuevas */
-
 /* Table revisión */
 $("#tabla_revision_comisiones").ready(function () {
     titulos_encabezado.length = 0;
@@ -626,7 +619,6 @@ $("#tabla_pagadas_comisiones").ready(function () {
                 $.each(data, function (i, v) {
                     total += parseFloat(v.total_comision);
                 });
-                var to1 = formatMoney(total);
                 document.getElementById("myText_pagadas").textContent = '$' + formatMoney(total);
             }
         });
