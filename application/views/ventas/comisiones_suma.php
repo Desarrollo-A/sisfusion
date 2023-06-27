@@ -151,7 +151,7 @@
                                                     <input type="text" class="form-control" id="total" name="total" placeholder="Total" value="" required>
                                                 </div>
                                                 <div class="col-lg-3 form-group">
-                                                    <label for="formaPago">Forma de Pago:</label>
+                                                    <label for="formaPago">Forma de pago:</label>
                                                     <input type="text" class="form-control" placeholder="Forma de Pago" id="formaPago" name="formaPago" value="">
                                                 </div>
                                                 <div class="col-lg-3 form-group">
