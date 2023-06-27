@@ -19,9 +19,12 @@ class Asesor extends CI_Controller
             'opcs_catalogo/valores/AutorizacionClienteOpcs',
             'opcs_catalogo/valores/TipoAutorizacionClienteOpcs'
         ]);
+
         $this->load->library(array('session', 'form_validation'));
         //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
         $this->load->library(array('session', 'form_validation', 'get_menu'));
+        $this->load->library('email');
+
         $this->load->helper(array('url', 'form', 'email/asesor/elementos_correo', 'email/plantilla_dinamica_correo'));
         $this->load->database('default');
         $this->load->library('Pdf');
@@ -4980,85 +4983,16 @@ class Asesor extends CI_Controller
         $this->Asesor_model->insertAutorizacion($autorizacionData);
     }
 
-    public function correoAut(string $url, string $correo, string $nombreCliente): void
+    public function correoAut(string $url, string $correo, string $nombreCliente): bool
     {
-        $mail = $this->phpmailer_lib->load();
-        $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-        $mail->addAddress($correo);
-        $mail->Subject = utf8_decode('PROCESO DE VERIFICACIÓN DE CLIENTE');
-        $mail->isHTML(true);
-        $mail->Body = utf8_decode("
-            <html>
-                <head>
-                    <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-                    <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>
-                    <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css'
-                        integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'>
-                    <style media='all' type='text/css'>
-                        .encabezados {
-                            text-align: center;
-                            padding-top:  1.5%;
-                            padding-bottom: 1.5%;
-                        }
+        $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to($correo)
+            ->subject('PROCESO DE VERIFICACIÓN DE CLIENTE')
+            ->view($this->load->view('mail/asesor/codigo-verificacion', ['url' => $url], true));
 
-                        .encabezados a {
-                            color: #234e7f;
-                            font-weight: bold;
-                        }
-
-                        .fondo {
-                            background-color: #234e7f;
-                            color: #fff;
-                        }
-
-                        h4 {
-                            text-align: center;
-                        }
-
-                        strong {
-                            color: #234e7f;
-                        }
-                    </style>
-                </head>      
-                <body>
-                    <table align='center' cellspacing='0' cellpadding='0' border='0' width='100%'>
-                        <tr colspan='3'><td class='navbar navbar-inverse' align='center'>
-                            <table width='750px' cellspacing='0' cellpadding='3' class='container'>
-                                <tr class='navbar navbar-inverse encabezados'>
-                                    <td>
-                                        <img src='https://www.ciudadmaderas.com/assets/img/logo.png'
-                                             width='100%'
-                                             class='img-fluid'/>
-                                    </td>
-                                </tr>
-                            </table>
-                        </tr>
-                        <tr>
-                            <p class='text-justify'>
-                                Estimado/a $nombreCliente <br><br>
-                                Gracias por iniciar el registro de la compra de tu terreno en Ciudad Maderas. Para garantizar la precisión de la información y asegurarnos de que podemos comunicarnos correctamente con usted, requerimos que verifique su dirección de correo electrónico.<br>
-                                Por favor, siga los pasos a continuación para completar el proceso de verificación:<br><br>
-                                <ul>
-                                    <li>
-                                        Haga clic en el siguiente <a href='$url' target='_blank'>enlace.</a><br>
-                                    </li>
-                                    <li>
-                                        Será redirigido una página de verificación en nuestro sitio web.<br><br>
-                                    </li>
-                                </ul>
-                                
-                                Una vez que haya completado estos pasos, su dirección de correo electrónico quedará verificada. Si no ha iniciado este proceso o ha recibido este correo electrónico por error, le pedimos que ignore este mensaje. No se realizará ninguna acción en su nombre. Si tiene alguna pregunta o necesita ayuda adicional, no dude en ponerse en contacto con nuestro equipo de atención al cliente.<br><br>
-                                
-                                ¡Gracias por su colaboración!<br>
-                                Atentamente,<br>
-                                Equipo de Ventas de Ciudad Maderas
-                            </p>
-                        </tr>
-                    </table>
-                </body>      
-            </html>
-        ");
-        $mail->send();
+        return $this->email->send();
     }
 
     /**
