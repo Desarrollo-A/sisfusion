@@ -2934,32 +2934,35 @@ class Asesor extends CI_Controller
         }
         if ($dataInsert == 1) {
             $correos_entregar = array();
-            //funcion aterior -> notifyUsers 
-            /************************************************************************************
-		    * Armado de parámetros a mandar a plantilla para creación de correo electrónico     *
-		    ************************************************************************************/
-            $dataUser = $this->Asesor_model->getInfoUserById($id_aut);
-            $datos_correo[0] = array('nombreResidencial'   =>  $nombreResidencial,
-                                'nombreCondominio'    =>  $nombreCondominio,
-                                'nombreLote'          =>  $nombreLote,
-                                'motivoAut'           =>  $autorizacionComent,
-                                'fecgaHora'           =>  date("Y-m-d H:i:s"));
-            $datos_etiquetas = null; 
-            $elementos_correo = array("setFrom" => Elementos_Correos_Asesor::SET_FROM_EMAIL,
-							        "Subject" => Elementos_Correos_Asesor::ASUNTO_CORREO_TABLA_NUEVA_AUTORIZACION_SBMT);
-            $comentario_general = Elementos_Correos_Asesor::EMAIL_NUEVA_AUTORIZACION_SBMT.'<br><br>'. $comentario;
-            $datos_encabezados_tabla = Elementos_Correos_Asesor::ETIQUETAS_ENCABEZADO_TABLA_NUEVA_AUTORIZACION_SBMT;
-            $plantilla_correo = new plantilla_dinamica_correo;
-            /***************
-            *CORREO TESTING* 
-            ****************/
-            array_push($correos_entregar, 'programador.analista18@ciudadmaderas.com');
-            if(count($correos_entregar) > 0){
-                /*envia un correo cuando se solicita una nueva autorizacion*/
-                $plantilla_correo
-                    ->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, 
-                                            $datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
-            }
+
+            $encabezados = [
+                'nombreResidencial' => 'PROYECTO',
+                'nombreCondominio'  => 'CONDOMINIO',
+                'nombreLote'        => 'LOTE',
+                'motivoAut'         => 'AUTORIZACIÓN',
+                'fechaHora'         => 'FECHA/HORA'
+            ];
+            $data[0] = [
+                'nombreResidencial'   =>  $nombreResidencial,
+                'nombreCondominio'    =>  $nombreCondominio,
+                'nombreLote'          =>  $nombreLote,
+                'motivoAut'           =>  $autorizacionComent,
+                'fechaHora'           =>  date("Y-m-d H:i:s")
+            ];
+
+            $this->email
+                ->initialize()
+                ->from('Ciudad Maderas')
+                ->to('programador.analista24@ciudadmaderas.com') // TODO: reemplazar el correo de producción
+                ->subject('SOLICITUD DE AUTORIZACIÓN - CONTRATACIÓN')
+                ->view($this->load->view('mail/asesor/add-autorizacion-sbmt', [
+                    'encabezados' => $encabezados,
+                    'contenido' => $data,
+                    'comentario' => $comentario
+                ], true));
+
+            $this->email->send();
+
             echo json_encode($dataInsert);
         } else {
             echo json_encode($dataInsert);
