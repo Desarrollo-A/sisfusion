@@ -118,6 +118,10 @@ body {
   text-align: center;
 }
 
+.text-justify {
+  text-align: justify !important;
+}
+
 .d-flex {
   display: flex !important;
 }
