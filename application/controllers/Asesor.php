@@ -2687,26 +2687,18 @@ class Asesor extends CI_Controller
             ob_end_clean();
             $pdf->Output(utf8_decode($namePDF), 'I');
             $attachment = $pdf->Output(utf8_decode($namePDF), 'S');
-            // PHPMailer object
+
+            $this->email
+                ->initialize()
+                ->from('Ciudad Maderas')
+                ->to('programador.analista24@ciudadmaderas.com') // TODO: reemplazar el correo de producción
+                ->subject('DEPÓSITO DE SERIEDAD - CIUDAD MADERAS')
+                ->attach($attachment, '', $namePDF)
+                ->view('<h3>A continuación se adjunta el archivo correspondiente a Depósito de seriedad.</h3>');
+
             /************************************************************************************
             * Armado de parámetros a mandar a plantilla para creación de correo electrónico     *
             ************************************************************************************/
-            $correos_entregar = array();
-            $datos_etiquetas = null;
-            $archivo_adjunto = array('adjunto' => $attachment, 'nombre_pdf' => $namePDF);
-            $datos_correo[0] = array();
-            #PROVICIONAL TESTING
-            array_push($correos_entregar, 'programador.analista18@ciudadmaderas.com');
-            //$correos_entregar[0] = 'programador.analista18@ciudadmaderas.com';
-            //$correos_entregar[1] = 'mariadejesus.garduno@ciudadmaderas.com';
-            $elementos_correo = array(
-                "setFrom" => Elementos_Correos_Asesor::SET_FROM_EMAIL,
-                "Subject" => Elementos_Correos_Asesor::ASUNTO_CORREO_TABLA_DEPOSITOS_SERIEDAD_ASESOR
-            );
-
-            $comentario_general = Elementos_Correos_Asesor::EMAIL_DEPOSITO_SERIEDAD_ASESOR;
-            $datos_encabezados_tabla = Elementos_Correos_Asesor::ETIQUETAS_ENCABEZADO_TABLA_DEPOSITOS_SERIEDAD_ASESOR;
-            $plantilla_correo = new plantilla_dinamica_correo;
             $checkIfRefExist = $this->Asesor_model->checkExistRefrencias($id_cliente);
 
             if (count($checkIfRefExist) >= 1) {
@@ -2751,9 +2743,7 @@ class Asesor extends CI_Controller
                         }
                     }
 
-                    $datos_correo_enviar = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo,
-                                                                                $datos_encabezados_tabla, $datos_etiquetas, $comentario_general, $archivo_adjunto);
-                    if ($datos_correo_enviar > 0) {
+                    if ($this->email->send()) {
                         echo json_encode(['code' => 200]);
                     } else {
                         echo json_encode(['code' => 400, 'message' => 'Correo no enviado']);
@@ -2801,9 +2791,8 @@ class Asesor extends CI_Controller
                     $arreglo_referencia1["id_cliente"] = $id_cliente;
                     $this->Asesor_model->insertnewRef($arreglo_referencia1);
                     $this->Asesor_model->insertnewRef($arreglo_referencia2);
-                    $datos_correo_enviar = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo,
-                                                                                    $datos_encabezados_tabla, $datos_etiquetas, $comentario_general, $archivo_adjunto);
-                    if ($datos_correo_enviar > 0) {
+
+                    if ($this->email->send()) {
                         echo json_encode(['code' => 200]);
                     } else {
                         echo json_encode(['code' => 400, 'message' => 'Correo no enviado']);
