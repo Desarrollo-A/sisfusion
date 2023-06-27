@@ -197,30 +197,33 @@ class RegistroLote extends CI_Controller
 			$data["user"] = $this->session->userdata('username');
 			$data["idAsesor"] = $idAsesor;
 			$data["idAsesor2"] = $idAsesor2;
-			/********************************************************************************
-			 * Armado de parámetros a mandar a plantilla para creación de correo electrónico	*
-			 ********************************************************************************/
-			$datos_correo[0] = json_decode(json_encode($datos["lote"]), true);
-			$datos_correo[0] += ["create_at" => date("Y-m-d H:i:s")];
-			$datos_etiquetas = null;
-			//Correos establecidos estaticamente.
-			$correos_entregar = array('programador.analista18@ciudadmaderas.com');
-			//$correos_entregar = array("lucero.velazquez@ciudadmaderas.com", "coord.contraloria2@ciudadmaderas.com", "subdirector.contraloria@ciudadmaderas.com");
-			$elementos_correo = array(
-				"setFrom" => Elementos_Correo_Registro_Lote::SET_FROM_EMAIL,
-				"Subject" => Elementos_Correo_Registro_Lote::ASUNTO_CORREO_TABLA_EDITAR_REGISTRO_LOTE_BLOQUEO_CAJA
-			);
-			$comentario_general = Elementos_Correo_Registro_Lote::EMAIL_EDITAR_REGISTRO_LOTE_BLOQUEO_CAJA . '<br><br>' . (!isset($comentario) ? '' : $comentario);
-			$datos_encabezados_tabla = Elementos_Correo_Registro_Lote::ETIQUETAS_ENCABEZADO_TABLA_EDITAR_REGISTRO_LOTE_BLOQUEO_CAJA;
-			//Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
-			$plantilla_correo = new plantilla_dinamica_correo;
+
+            $encabezados = [
+                'nombreResidencial' =>  'Proyecto',
+                'nombreCondominio'  =>  'Condominio',
+                'nombreLote'        =>  'Lote',
+                'create_at'         =>  'Fecha/Hora'
+            ];
+            $data = array_merge($datos['lote'], ["create_at" => date("Y-m-d H:i:s")]);
+
+            $this->email
+                ->initialize()
+                ->from('Ciudad Maderas')
+                ->to('programador.analista24@ciudadmaderas.com')
+                //->to("lucero.velazquez@ciudadmaderas.com", "coord.contraloria2@ciudadmaderas.com", "subdirector.contraloria@ciudadmaderas.com")
+                ->subject('LOTE BLOQUEADO-CIUDAD MADERAS')
+                ->view($this->load->view('mail/registro-lote/editar-registro-lote-caja', [
+                    'encabezados' => $encabezados,
+                    'contenido' => $data
+                ], true));
+
 			if ($this->registrolote_modelo->editaRegistroLoteCaja($idLote, $arreglo)) {
 				$this->registrolote_modelo->insert_bloqueos($data);
-				$envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, $datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
-				if ($envio_correo) {
+
+				if ($this->email->send()) {
 					$data['message_email'] = 'OK';
 				} else {
-					$data['message_email'] = $envio_correo;
+					$data['message_email'] = $this->email->print_debugger();
 				}
 				redirect(base_url() . "index.php/registroLote/registrosLoteCaja");
 			} else {
