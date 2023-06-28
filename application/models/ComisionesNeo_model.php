@@ -245,11 +245,13 @@ class ComisionesNeo_model extends CI_Model {
             INNER JOIN lotes l ON l.idLote = p.id_lote
             INNER JOIN condominios c ON c.idCondominio = l.idCondominio
             INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
-            WHERE p.bandera = 1 AND l.registro_comision = 1 AND l.idStatusContratacion = 15 AND p.ultimo_pago > 0 AND r.idResidencial = $res");
+            WHERE p.bandera = 1 AND l.registro_comision IN (1,5) AND l.idStatusContratacion = 15 AND p.ultimo_pago > 0 AND r.idResidencial = $res");
     }
 
     public function UpdateBanderaPagoComision($idLote, $bonificacion, $FechaAplicado){
         return $this->db->query("UPDATE pago_comision SET bandera = 0, fecha_modificacion = GETDATE(), bonificacion = ".$bonificacion.", fecha_neodata = '".$FechaAplicado."', modificado_por = 'NEO' WHERE id_lote = ".$idLote."");
+        $this->db->query("UPDATE lotes SET registro_comision = 1 WHERE registro_comision = 5 AND idLote = ".$idLote."");
+
     }
 
     public function UpdateBanderaPagoComisionNO($idLote){

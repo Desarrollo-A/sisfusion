@@ -33,7 +33,7 @@ class Prestamos extends CI_Controller
   public function activos() {
     if ($this->session->userdata('id_rol') == FALSE)
         redirect(base_url());
-        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+        $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'), $this->session->userdata('estatus'));
         $this->load->view('template/header');
         $this->load->view("prestamos/activos-view", $datos);
   }
@@ -52,11 +52,6 @@ class Prestamos extends CI_Controller
     echo json_encode($data);
   }
 
-  // public function getListaRetiros($id)
-  // {
-  //     echo json_encode($this->Prestamos_model->getListaRetiros($id)->result_array());
-  // }
-
   public function getDetallePrestamo($idPrestamo)
   {
       $general = $this->Prestamos_model->getGeneralDataPrestamo($idPrestamo);
@@ -70,6 +65,13 @@ class Prestamos extends CI_Controller
   public function lista_estatus_descuentos()
   {
     echo json_encode($this->Prestamos_model->lista_estatus_descuentos()->result_array());
+  }
+ 
+  public function getRoles()
+  {
+    $catalogo = $this->input->post("catalogo");
+    $roles = $this->input->post("roles");
+    echo json_encode($this->Prestamos_model->getRoles($catalogo,$roles)->result_array());
   }
 
   public function getUsuariosRol($rol,$opc = '')
@@ -88,7 +90,7 @@ class Prestamos extends CI_Controller
     $this->input->post("pago");
     $monto = $this->input->post("monto");
     $NumeroPagos = $this->input->post("numeroP");
-    $IdUsuario = $this->input->post("usuarioid");
+    $IdUsuario = $this->input->post("usuarioPrestamos");
     $comentario = $this->input->post("comentario");
     $tipo = $this->input->post("tipo");
     $idUsu = intval($this->session->userdata('id_usuario')); 
@@ -123,5 +125,52 @@ class Prestamos extends CI_Controller
             echo json_encode($respuesta);
     }
   }
+
+  public function getLotesOrigen($user,$valor)
+  {
+    echo json_encode($this->Prestamos_model->getLotesOrigen($user,$valor)->result_array());
+  }
+
+
+  public function editarPrestamo (){
+    $pagoEdit       = $this->input->post('pagoEdit');
+    $Numero_pagos   = $this->input->post('numeroPagos');
+    $montoPagos     = $this->input->post('montoPagos');
+    $comentario     = $this->input->post('comentario');
+    $id_prestamo    = $this->input->post('prestamoId');
+    $tipoD          = $this->input->post('tipoD');
+
+        $arr_update = array( 
+                "monto"                 =>  $pagoEdit,
+                "num_pagos"             =>  $Numero_pagos,
+                "pago_individual"       =>  $montoPagos,
+                "comentario"            =>  $comentario,
+                "modificado_por"        => 1,
+                "tipo"                  => $tipoD, 
+                );
+
+      $update = $this->Prestamos_model->editarPrestamo($id_prestamo  , $arr_update);
+      if($update){
+        $respuesta =  array(
+          "response_code" => 200, 
+          "response_type" => 'success',
+          "message" => "Préstamo actualizado");
+      }else{
+        $respuesta =  array(
+          "response_code" => 400, 
+          "response_type" => 'error',
+          "message" => "Préstamo no actualizado, inténtalo más tarde ");
+        }
+      echo json_encode ($respuesta);
+
+}
+
+
+
+public function BorrarPrestamo(){
+  $respuesta =  $this->Prestamos_model->BorrarPrestamo($this->input->post("idPrestamo"));
+echo json_encode($respuesta);
+
+}
 
 }

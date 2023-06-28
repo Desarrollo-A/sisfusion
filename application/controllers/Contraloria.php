@@ -1,5 +1,5 @@
 <?php
-use application\helpers\email\contraloria\Elementos_Correos_Contraloria;
+//use application\helpers\email\contraloria\Elementos_Correos_Contraloria;
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Contraloria extends CI_Controller {
     public function __construct() {
@@ -10,7 +10,7 @@ class Contraloria extends CI_Controller {
         $this->load->model('asesor/Asesor_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
         $this->load->model('General_model');
         $this->load->library(array('session','form_validation', 'get_menu', 'Formatter'));
-        $this->load->helper(array('url','form', 'email/contraloria/elementos_correo', 'email/plantilla_dinamica_correo'));
+        $this->load->helper(array('url','form'));
         $this->load->database('default');
         $this->load->library('phpmailer_lib');
         $this->validateSession();
@@ -622,9 +622,15 @@ class Contraloria extends CI_Controller {
         $this->load->view("contraloria/integracionExpediente");
     }
 
-    public function getRevision2() {
+    public function getRevision2(){
+        ini_set('max_execution_time', 900);
+        set_time_limit(900);
+        ini_set('memory_limit','2048M');
+
+        $fechaInicio = $this->input->post('beginDate');
+        $fechaFinal = $this->input->post('endDate');
         $data=array();
-        $data = $this->registrolote_modelo->getRevision2();
+        $data = $this->registrolote_modelo->getRevision2($fechaInicio, $fechaFinal);
         if ($data != null) {
             echo json_encode($data);
         } else {
@@ -2614,14 +2620,13 @@ class Contraloria extends CI_Controller {
             default:
                 echo '<script>alert("ACCESO DENEGADO"); window.location.href="' . base_url() . '";</script>';
                 break;
-        }
+        } 
     }
 
-    /**al día de hoy**/
+    /**al día de hoy**/ 
     public function backExp() {
         $this->load->view('template/header');
-        $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
-        $this->load->view("contraloria/checarExpediente", $datos);
+        $this->load->view("contraloria/checarExpediente");
     }
 
 

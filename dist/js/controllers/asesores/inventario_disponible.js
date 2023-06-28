@@ -1,4 +1,14 @@
-getResidenciales();
+$(document).ready(function() {
+    $.post(`${general_base_url}index.php/Contratacion/lista_proyecto`, function (data) {
+        var len = data.length;
+        for (var i = 0; i < len; i++) {
+            var id = data[i]['idResidencial'];
+            var name = data[i]['descripcion'];
+            $("#filtro3").append($('<option>').val(id).text(name.toUpperCase()));
+        }
+        $("#filtro3").selectpicker('refresh');
+    }, 'json');
+});
 
 var idResidencial;
 var grupo;
@@ -13,82 +23,169 @@ var totalSelect2;
 var mesesSelect;
 var mesesSelect2;
 
-$('#residenciales').change(function(){
-    idResidencial = $('#residenciales').val();
+$('#filtro3').change(function(){
+    residencial = $('#filtro3').val();
     grupo = $('#filtro5').val();
-    
-    getCondominios(idResidencial);
-    $("#filtro6").empty().selectpicker('refresh');
-    $.ajax({
-        url: `${general_base_url}Asesor/getSupOne/${idResidencial}`,
-        type: 'post',
-        dataType: 'json',
-        success:function(response){
-            var len = response.length;
-            for( var i = 0; i<len; i++)
-            {
-                var id = response[i]['sup'];
-                var name = response[i]['sup'];
-                $("#filtro6").append($('<option>').val(id).text(name+" m2"));
-            }
-            $("#filtro6").selectpicker('refresh');
-        }
-    });
 
-    $("#filtro7").empty().selectpicker('refresh');
-    $.ajax({
-        url: `${general_base_url}Asesor/getPrecio/${idResidencial}`,
-        type: 'post',
-        dataType: 'json',
-        success:function(response){
-            var len = response.length;
-            for( var i = 0; i<len; i++)
-            {
-                var id = response[i]['precio'];
-                var name = response[i]['precio'];
-                $("#filtro7").append($('<option>').val(id).text("$ "+ alerts.number_format(name, '2', '.', ',')));
+    if(residencial == 0){
+        $("#filtro4").empty().selectpicker('refresh');
+        $.ajax({
+            url: `${general_base_url}Asesor/getCondominioDescTodos/`,
+            type: 'post',
+            dataType: 'json',
+            success:function(response){
+                var len = response.length;
+                for( var i = 0; i<len; i++) {
+                    var id = response[i]['idCondominio'];
+                    var name = response[i]['nombre'];
+                    $("#filtro4").append($('<option>').val(id).text(name));
+                }
+                $("#filtro4").selectpicker('refresh');
             }
-            $("#filtro7").selectpicker('refresh');
-        }
-    });
+        });
 
-    $("#filtro8").empty().selectpicker('refresh');
-    $.ajax({
-        url: `${general_base_url}Asesor/getTotalTodos/`,
-        type: 'post',
-        dataType: 'json',
-        success:function(response){
-            var len = response.length;
-            for( var i = 0; i<len; i++)
-            {
-                var id = response[i]['total'];
-                var name = response[i]['total'];
-                $("#filtro8").append($('<option>').val(id).text("$ "+ alerts.number_format(name, '2', '.', ',')));
+        $("#filtro6").empty().selectpicker('refresh');
+        $.ajax({
+            url: `${general_base_url}Asesor/getSupOneTodos/`,
+            type: 'post',
+            dataType: 'json',
+            success:function(response){
+                var len = response.length;
+                for( var i = 0; i<len; i++){
+                    var id = response[i]['sup'];
+                    var name = response[i]['sup'];
+                    $("#filtro6").append($('<option>').val(id).text(name+" m2"));
+                }
+                $("#filtro6").selectpicker('refresh');
             }
-            $("#filtro8").selectpicker('refresh');
-        }
-    });
-
-    $("#filtro9").empty().selectpicker('refresh');
-    $.ajax({
-        url: general_base_url + 'Asesor/getMeses/'+idResidencial+'/'+1,
-        type: 'post',
-        dataType: 'json',
-        success:function(response){
-            var len = response.length;
-            for( var i = 0; i<len; i++)
-            {
-                var id = response[i]['msni'];
-                var name = response[i]['msni'];
-                $("#filtro9").append($('<option>').val(id).text(name + " MSI"));
+        });
+        $("#filtro7").empty().selectpicker('refresh');
+        $.ajax({
+            url: `${general_base_url}Asesor/getPrecioTodos/`,
+            type: 'post',
+            dataType: 'json',
+            success:function(response){
+                var len = response.length;
+                for( var i = 0; i<len; i++){
+                    var id = response[i]['precio'];
+                    var name = response[i]['precio'];
+                    $("#filtro7").append($('<option>').val(id).text("$ "+ alerts.number_format(name, '2', '.', ',')));
+                }
+                $("#filtro7").selectpicker('refresh');
             }
-            $("#filtro9").selectpicker('refresh');
-        }
-    });
+        });
+        $("#filtro8").empty().selectpicker('refresh');
+        $.ajax({
+            url: `${general_base_url}Asesor/getTotalTodos/`,
+            type: 'post',
+            dataType: 'json',
+            success:function(response){
+                var len = response.length;
+                for( var i = 0; i<len; i++){
+                    var id = response[i]['total'];
+                    var name = response[i]['total'];
+                    $("#filtro8").append($('<option>').val(id).text("$ "+ alerts.number_format(name, '2', '.', ',')));
+                }
+                $("#filtro8").selectpicker('refresh');
+            }
+        });
+        $("#filtro9").empty().selectpicker('refresh');
+        $.ajax({
+            url: `${general_base_url}Asesor/getMesesTodos/`,
+            type: 'post',
+            dataType: 'json',
+            success:function(response){
+                var len = response.length;
+                for( var i = 0; i<len; i++){
+                    var id = response[i]['msni'];
+                    var name = response[i]['msni'];
+                    $("#filtro9").append($('<option>').val(id).text(name + " MSI"));
+                }
+                $("#filtro9").selectpicker('refresh');
+            }
+        });
+    }
+    else if (residencial > 0){
+        $("#filtro4").empty().selectpicker('refresh');
+        $.ajax({
+            url: `${general_base_url}Asesor/getCondominioDesc/${residencial}`,
+            type: 'post',
+            dataType: 'json',
+            success:function(response){
+                var len = response.length;
+                for( var i = 0; i<len; i++){
+                    var id = response[i]['idCondominio'];
+                    var name = response[i]['nombre'];
+                    $("#filtro4").append($('<option>').val(id).text(name));
+                }
+                $("#filtro4").selectpicker('refresh');
+            }
+        });
+        $("#filtro6").empty().selectpicker('refresh');
+        $.ajax({
+            url: `${general_base_url}Asesor/getSupOne/${residencial}`,
+            type: 'post',
+            dataType: 'json',
+            success:function(response){
+                var len = response.length;
+                for( var i = 0; i<len; i++){
+                    var id = response[i]['sup'];
+                    var name = response[i]['sup'];
+                    $("#filtro6").append($('<option>').val(id).text(name+" m2"));
+                }
+                $("#filtro6").selectpicker('refresh');
+            }
+        });
+        $("#filtro7").empty().selectpicker('refresh');
+        $.ajax({
+            url: `${general_base_url}Asesor/getPrecio/${residencial}`,
+            type: 'post',
+            dataType: 'json',
+            success:function(response){
+                var len = response.length;
+                for( var i = 0; i<len; i++){
+                    var id = response[i]['precio'];
+                    var name = response[i]['precio'];
+                    $("#filtro7").append($('<option>').val(id).text("$ "+ alerts.number_format(name, '2', '.', ',')));
+                }
+                $("#filtro7").selectpicker('refresh');
+            }
+        });
+        $("#filtro8").empty().selectpicker('refresh');
+        $.ajax({
+            url: `${general_base_url}Asesor/getTotal/${residencial}`,
+            type: 'post',
+            dataType: 'json',
+            success:function(response){
+                var len = response.length;
+                for( var i = 0; i<len; i++){
+                    var id = response[i]['total'];
+                    var name = response[i]['total'];
+                    $("#filtro8").append($('<option>').val(id).text("$ "+ alerts.number_format(name, '2', '.', ',')));
+                }
+                $("#filtro8").selectpicker('refresh');
+            }
+        });
+        $("#filtro9").empty().selectpicker('refresh');
+        $.ajax({
+            url: general_base_url + 'Asesor/getMeses/'+residencial+'/'+1,
+            type: 'post',
+            dataType: 'json',
+            success:function(response){
+                var len = response.length;
+                for( var i = 0; i<len; i++){
+                    var id = response[i]['msni'];
+                    var name = response[i]['msni'];
+                    $("#filtro9").append($('<option>').val(id).text(name + " MSI"));
+                }
+                $("#filtro9").selectpicker('refresh');
+            }
+        });
+    }
 });
 
-$('#condominios').change(function(){
-    let condominio = $('#condominios').val();
+$('#filtro4').change(function(){
+    let condominio = $('#filtro4').val();
     $("#filtro9").empty().selectpicker('refresh');
     if(condominio.length>0){
         $.ajax({
@@ -97,8 +194,7 @@ $('#condominios').change(function(){
             dataType: 'json',
             success:function(response){
                 var len = response.length;
-                for( var i = 0; i<len; i++)
-                {
+                for( var i = 0; i<len; i++){
                     var id = response[i]['msni'];
                     var name = response[i]['msni'];
                     $("#filtro9").append($('<option>').val(id).text(name + " MSI"));
@@ -125,7 +221,6 @@ $('#formFilters').on('submit', function(event){
         beforeSend:function(){
 			$('#spiner-loader').removeClass('hide');
             $('#addExp').addClass('hide');
-            
         },
         success:function(response){
             dataTable(response);
@@ -170,40 +265,38 @@ function dataTable(ruta) {
                 next: "<i class='fa fa-angle-right'>"
             }
         },
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                className: 'btn buttons-excel',
-                titleAttr: 'Descargar archivo de Excel',
-                title: 'Reporte Inventario Disponible',
-                exportOptions: {
-                    columns: num_colum_encabezado,
-                    format: {
-                        header: function (d, columnIdx) {
-                            return ' '+titulos_encabezado[columnIdx] +' ';
-                        }
+        buttons: [{
+            extend: 'excelHtml5',
+            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+            className: 'btn buttons-excel',
+            titleAttr: 'Descargar archivo de Excel',
+            title: 'Reporte Inventario Disponible',
+            exportOptions: {
+                columns: num_colum_encabezado,
+                format: {
+                    header: function (d, columnIdx) {
+                        return ' '+titulos_encabezado[columnIdx] +' ';
                     }
-                },
-            } ,
-            {
-                extend: 'pdfHtml5',
-                text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i>',
-                className: 'btn buttons-pdf',
-                titleAttr: 'Descargar archivo PDF',
-                title: 'Reporte Inventario Disponible',
-                orientation: 'landscape',
-                pageSize: 'LEGAL',
-                exportOptions: {
-                    columns: num_colum_encabezado,
-                    format: {
-                        header: function (d, columnIdx) {
-                            return ' '+titulos_encabezado[columnIdx] +' ';
-                        }
+                }
+            },
+        } ,
+        {
+            extend: 'pdfHtml5',
+            text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i>',
+            className: 'btn buttons-pdf',
+            titleAttr: 'Descargar archivo PDF',
+            title: 'Reporte Inventario Disponible',
+            orientation: 'landscape',
+            pageSize: 'LEGAL',
+            exportOptions: {
+                columns: num_colum_encabezado,
+                format: {
+                    header: function (d, columnIdx) {
+                        return ' '+titulos_encabezado[columnIdx] +' ';
                     }
                 }
             }
-        ],
+        }],
         destroy: true,
         columnDefs: [{
             defaultContent: "",

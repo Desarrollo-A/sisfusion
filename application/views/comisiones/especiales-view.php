@@ -112,13 +112,25 @@
                             
                             <div class="col-lg-12">
                                 <div class="form-group is-empty">
-                                    <input id="motivo" name="motivo" type="text" class="form-control input-gral" placeholder="Escriba un motivo corto." minlength="3" maxlength="50" required />
+                                    <label for="motivo" class="control-label label-gral">Motivo</label>
+                                    <select class="selectpicker select-gral"
+                                            id="motivo"
+                                            name="motivo"
+                                            data-style="btn"
+                                            required>
+                                            <option disabled default >SELECCIONA UNA OPCIÓN</option>
+                                            <?php foreach($controversias as $controversia){ ?>
+
+                                                <option value="<?= $controversia['id_opcion']; ?>"><?= $controversia['nombre'] ?> </option>
+                                            <?php } ?>
+                                    </select>
+                                   
                                 </div>
                             </div>
 
                             <div class="col-lg-12">
                                 <div class="form-group label-floating">
-                                    <textarea class="form-control" id="descripcion" name="descripcion" rows="3" placeholder="Escriba detalles de la controversia." required></textarea>
+                                    <textarea class="form-control input-gral" id="descripcion" name="descripcion" rows="3" placeholder="Escriba detalles de la controversia." required></textarea>
                                 </div>
                             </div>
                         </div>

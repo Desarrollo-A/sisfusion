@@ -42,48 +42,22 @@
 											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 overflow-hidden">
 												<div class="form-group">
 													<label class="control-label">Proyecto</label>
-													<select name="residenciales"
-															id="residenciales" 
-															class="selectpicker select-gral m-0" 
-															data-style="btn"
-															data-show-subtext="true" 
-															data-live-search="true" 
-															title="Selecciona una opción" 
-															data-size="7"
-															data-container="body" required>
+													<select name="filtro3" id="filtro3" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required>
+														<option value="0"> SELECCIONA TODO</option>
 													</select>
 												</div>
 											</div>
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 overflow-hidden">
 												<div class="form-group  ">
 													<label class="control-label">Condominio</label>
-													<select id="condominios"
-															name="condominios[]"
-															class="selectpicker select-gral m-0"
-															data-style="btn"
-															data-show-subtext="true"
-															data-live-search="true"
-															multiple
-															title="Selecciona una opción" 
-															data-size="7"
-															data-container="body"
-															required>
+													<select id="filtro4" name="filtro4[]" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" multiple title="Selecciona una opción" data-size="7" data-container="body" required>
 													</select>
 												</div>
 											</div>
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 overflow-hidden">
 												<div class="form-group">
 													<label class="control-label">Grupo</label>
-													<select name="filtro5"
-															id="filtro5"
-															class="selectpicker select-gral m-0"
-															data-style="btn"
-															data-show-subtext="true"
-															data-live-search="true"
-															title="Selecciona una opción"
-															data-size="7"
-															data-container="body"
-															required>
+													<select name="filtro5" id="filtro5" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required>
 														<option value="1"> < 200m2 </option>
 														<option value="2"> >= 200 y < 300 </option>
 														<option value="3"> >= 300m2 </option>
@@ -93,66 +67,29 @@
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 overflow-hidden">
 												<div class="form-group ">
 													<label class="control-label">Superficie</label>
-														<select class="selectpicker select-gral m-0"
-																id="filtro6"
-																name="filtro6[]"
-																data-style="btn btn-primary"
-																data-show-subtext="true"
-																data-live-search="true"
-																title="Selecciona una opción"
-																data-size="7"
-																data-container="body"
-																required multiple>
-														</select>
+													<select class="selectpicker select-gral m-0" id="filtro6" name="filtro6[]" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required multiple>
+													</select>
 												</div>
 											</div>
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 overflow-hidden">
 												<div class="form-group ">
 													<label class="control-label">Precio por m<sup>2</sup></label>
-													<select	class="selectpicker select-gral m-0" 
-															id="filtro7"
-															name="filtro7[]"
-															data-style="btn btn-primary"
-															data-show-subtext="true"
-															data-live-search="true"
-															title="Selecciona una opción"
-															data-size="7"
-															data-container="body"
-															required
-															multiple>
+													<select	class="selectpicker select-gral m-0"  id="filtro7" name="filtro7[]" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required multiple>
 													</select>
 												</div>
 											</div>
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 overflow-hidden">
 												<div class="form-group ">
 													<label class="control-label">Precio total</label>
-													<select	class="selectpicker select-gral m-0" 
-															id="filtro8"
-															name="filtro8[]"
-															data-style="btn btn-primary"
-															data-show-subtext="true"
-															data-live-search="true"
-															title="Selecciona una opción"
-															data-size="7"
-															data-container="body"
-															required
-															multiple></select>
+													<select	class="selectpicker select-gral m-0"  id="filtro8" name="filtro8[]" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required multiple>
+													</select>
 												</div>
 											</div>
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 overflow-hidden">
 												<div class="form-group ">
 													<label class="control-label">Meses S/N</label>
-													<select	class="selectpicker select-gral m-0" 
-															id="filtro9"
-															name="filtro9[]"
-															data-style="btn btn-primary "
-															data-show-subtext="true"
-															data-live-search="true"
-															title="Selecciona una opción"
-															data-size="7"
-															data-container="body"
-															required
-															multiple></select>
+													<select	class="selectpicker select-gral m-0" id="filtro9" name="filtro9[]" data-style="btn btn-primary " data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required multiple>
+													</select>
 												</div>
 											</div>
 										</form>
@@ -192,6 +129,5 @@
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 	<script src="<?=base_url()?>dist/js/controllers/general/main_services.js"></script>
-	<!--script of the page-->
 	<script src="<?=base_url()?>dist/js/controllers/asesores/inventario_disponible.js"></script>
 </body>

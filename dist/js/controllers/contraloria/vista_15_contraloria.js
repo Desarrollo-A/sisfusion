@@ -70,6 +70,7 @@ $("#tabla_ingresar_15").ready(function () {
         scrollX:true,
         columns: [
             {
+                width: "3%",
                 className: 'details-control',
                 orderable: false,
                 data: null,
@@ -174,7 +175,6 @@ $("#tabla_ingresar_15").ready(function () {
     $('#tabla_ingresar_15 tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
         var row = tabla_15.row(tr);
-
         if (row.child.isShown()) {
             row.child.hide();
             tr.removeClass('shown');
@@ -455,3 +455,6 @@ async function sendInfoArcus(dataArcus) {
         throw new Error('Error en la solicitud: ' + error.message);
     }
 }
+$(window).resize(function(){
+    tabla_15.columns.adjust();
+});

@@ -47,6 +47,40 @@
             </div>
         </div>
 
+        <div class="modal fade" id="verDetalles" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <b>
+                            <h4 class="card-title text-center">Ventas compartidas</h4>
+                        </b>
+                        <div class="material-datatables">
+                            <div class="form-group">
+                                <table id="tabla_clientes_detalles" name="tabla_clientes_detalles" class="table-striped table-hover" >
+                                    <thead>
+                                        <tr>
+                                            <th>ASESOR</th>
+                                            <th>COORDINADOR</th>
+                                            <th>GERENTE</th>
+                                            <th>SUBDIRECTOR</th>
+                                            <th>DIRECTOR REGIONAL</th>
+                                            <th>DIRECTOR REGIONAL 2</th>
+                                            <th>FECHA DE ALTA</th>
+                                            <th>USUARIO</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CERRAR</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="content boxContent">
             <div class="container-fluid">
@@ -85,7 +119,7 @@
                                                     <th>CONDOMINIO</th>
                                                     <th>LOTE</th>
                                                     <th>CLIENTE</th>
-                                                    <th>NO. RECIBO</th>
+                                                    <th>NÚMERO DE RECIBO</th>
                                                     <th>REFERENCIA</th>
                                                     <th>TIPO DE PAGO</th>
                                                     <th>FECHA DE APARTADO</th>
@@ -99,43 +133,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="verDetalles" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <center>
-                            <b>
-                                <h4 class="card-title ">Ventas compartidas</h4>
-                            </b>
-                        </center>
-                        <div class="material-datatables">
-                            <div class="form-group">
-                                <table id="tabla_clientes_detalles" name="tabla_clientes_detalles" class="table-striped table-hover" width="100%" style="text-align:center;">
-                                    <thead>
-                                        <tr>
-                                            <th>ASESOR</th>
-                                            <th>COORDINADOR</th>
-                                            <th>GERENTE</th>
-                                            <th>SUBDIRECTOR</th>
-                                            <th>DIRECTOR REGIONAL</th>
-                                            <th>DIRECTOR REGIONAL 2</th>
-                                            <th>FECHA ALTA</th>
-                                            <th>USUARIO</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> CERRAR</button>
                     </div>
                 </div>
             </div>
