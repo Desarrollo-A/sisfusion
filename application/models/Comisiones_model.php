@@ -8190,4 +8190,5 @@ public function getDataDispersionPagoEspecial($val = '') {
         $query = $this->db->query($cmd);
         return $query->row();
 
+    }
 }
