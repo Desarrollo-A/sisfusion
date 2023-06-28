@@ -4804,8 +4804,8 @@ class Asesor extends CI_Controller
             return false;
         }
 
-        $codigo = md5(microtime());
-        $url = base_url()."Api/autorizacionSms/$idCliente?codigo=$codigo";
+        $codigo = $this->getCodigoVerificacion(6);
+        $url = base_url()."Api/autSms/$idCliente?cod=$codigo";
 //        $resultadoSms = $this->smsAut($url, "00$lada$telefonoCliente");
 //
 //        if (!$resultadoSms) {
@@ -4893,7 +4893,7 @@ class Asesor extends CI_Controller
                 return;
             }
 
-            $url = base_url()."Api/autorizacionSms/$idCliente?codigo=$cliente->codigo_sms";
+            $url = base_url()."Api/autSms/$idCliente?cod=$cliente->codigo_sms";
 
 //            $resultadoSms = $this->smsAut($url, "00$cliente->lada_tel$cliente->telefono1");
 //
@@ -5067,7 +5067,7 @@ class Asesor extends CI_Controller
     public function smsAut(string $url, string $telefono): bool
     {
         $camposSms = [
-            'Content' => "Gracias por iniciar el registro de la compra de tu terreno en Ciudad Maderas. Se ha iniciado un proceso de autentificacion, requerimos que verifique su numero telefonico.\nHaga clic en el siguiente enlace: [URL]\nUna vez que haya completado estos pasos, su numero quedara verificado. Si no ha iniciado este proceso o ha recibido este SMS por error, le pedimos que ignore este mensaje. No se realizara ninguna accion en su nombre.\nSi tiene alguna pregunta o necesita ayuda adicional, no dude en ponerse en contacto con nuestro equipo de atencion al cliente.\nGracias por su colaboracion\nAtentamente,\nEquipo de Ventas de Ciudad Maderas",
+            'Content' => "Verifique su numero telefonico en el siguiente enlace: [URL]\nAtentamente,\nCiudad Maderas",
             'ListGuid' => 'c4bcd75f-1ec5-4af1-9449-6e077892e424',
             'ListSecret' => 'fd0ca54e-4155-46c9-b0c9-c2a8b33e200e',
             'Sender' => 'aut_clientes',
@@ -5114,6 +5114,12 @@ class Asesor extends CI_Controller
         curl_close($curl);
 
         return $response;
+    }
+
+    function getCodigoVerificacion(int $longitud): string
+    {
+        $caracteres_permitidos = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        return substr(str_shuffle($caracteres_permitidos), 0, $longitud);
     }
 }
 ?>

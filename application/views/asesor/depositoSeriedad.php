@@ -185,6 +185,9 @@
                                     <input class="form-control input-gral" name="smsAut" id="smsAut" type="number" step="any" onKeyPress="if(this.value.length==10) return false;" placeholder="Ej. 4422010101" required/>
                                 </div>
                             </div>
+                            <div class="col-xs-12 col-sm-12 col-sm-12 col-md-12 col-lg-12 mt-1">
+                                <p>Nota: El mensaje SMS tarda de 2 a 3 minutos en llegar al teléfono del cliente.</p>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -225,6 +228,10 @@
                                         </label>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="col-xs-12 col-sm-12 col-sm-12 col-md-12 col-lg-12 mt-2">
+                                <p>Nota: El mensaje SMS tarda de 2 a 3 minutos en llegar al teléfono del cliente.</p>
                             </div>
                         </div>
                     </div>

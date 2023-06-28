@@ -662,7 +662,7 @@ function fillDataTable(idCondominio) {
                     }
 
                     if (parseInt(d.autorizacion_correo) === 1) {
-                        return "<span class='label lbl-yellow'>Verificación pendiente</span>";
+                        return `<span class='label lbl-yellow'>Verificación pendiente</span><br><span class='label lbl-yellow'>${d.correo}</span>`;
                     }
                     if (parseInt(d.autorizacion_correo) === 2) {
                         return `<span class='label lbl-green'>Verificado</span><br><span class='label lbl-green'>${d.correo}</span>`;
@@ -686,7 +686,7 @@ function fillDataTable(idCondominio) {
                     }
 
                     if (parseInt(d.autorizacion_sms) === 1) {
-                        return "<span class='label lbl-yellow'>Verificación pendiente</span>";
+                        return `<span class='label lbl-yellow'>Verificación pendiente</span><br><span class='label lbl-yellow'>${d.telefono}</span>`;
                     }
 
                     if (parseInt(d.autorizacion_sms) === 2) {

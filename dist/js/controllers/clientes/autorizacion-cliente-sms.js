@@ -8,11 +8,11 @@ $(document).on('click', '#enviar-autorizacion-link', function (e) {
         get: (searchParams, prop) => searchParams.get(prop),
     });
 
-    const { codigo } = params;
+    const { cod } = params;
 
     let data = new FormData();
     data.append('idCliente', idCliente);
-    data.append('codigo', codigo);
+    data.append('codigo', cod);
 
     $('#spiner-loader').removeClass('hide');
 

@@ -150,7 +150,7 @@ $montserratThinItalic      : 'Montserrat-ThinItalic';
 }
 
 #enviar-autorizacion-link {
-    color: white;
+    color: $goldMaderas;
 
     :link {
         text-decoration: none;
@@ -162,6 +162,6 @@ $montserratThinItalic      : 'Montserrat-ThinItalic';
 
     :hover {
         text-decoration: none;
-        color: white;
+        color: $goldMaderas;
     }
 }
