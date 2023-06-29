@@ -682,7 +682,7 @@ function fillDataTable(idCondominio) {
                     }
 
                     if (parseInt(d.total_sol_sms_rech) > 0 && parseInt(d.total_sol_sms_aut) === 0 && parseInt(d.total_sol_sms_pend) === 0) {
-                        return "<span class='label lbl-warning'>Rechazado</span>";
+                        return "<span class='label lbl-warning'>Solicitud rechazada</span>";
                     }
 
                     if (parseInt(d.autorizacion_sms) === 1) {
