@@ -52,7 +52,8 @@
                                 <h3 class="card-title center-align">Reporte por lotes (NeoData)</h3>
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
-                                        <div class="form-group label-floating select-is-empty p-0">
+                                        <div class="form-group select-is-empty">
+                                            <label class="control-label">Empresa:</label>
                                             <select id="empresas"
                                                     name="empresas"
                                                     class="selectpicker select-gral m-0"
@@ -65,7 +66,8 @@
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
-                                        <div class="form-group d-flex p-0">
+                                        <div class="form-group select-is-empty">
+                                            <label class="control-label">Proyecto:</label>
                                             <select id="proyectos"
                                                     name="proyectos"
                                                     class="selectpicker select-gral m-0"
@@ -78,7 +80,8 @@
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
-                                        <div class="form-group d-flex p-0">
+                                        <div class="form-group select-is-empty">
+                                            <label class="control-label">Cliente:</label>
                                             <select id="clientes"
                                                     name="clientes" 
                                                     class="selectpicker select-gral m-0"
@@ -91,7 +94,7 @@
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
-                                        <div class="form-group p-0">
+                                        <div class="form-group" style="margin-top: 50px;">
                                             <button class="btn-gral-data mb-3" id="searchInfo">Buscar</button>
                                         </div>
                                     </div>
