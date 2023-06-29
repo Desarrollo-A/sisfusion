@@ -53,23 +53,41 @@
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                         <div class="form-group label-floating select-is-empty p-0">
-                                            <select id="empresas" name="empresas" class="selectpicker select-gral m-0"
-                                                    data-style="btn" data-show-subtext="true" data-live-search="true"
-                                                    title="Selecciona una empresa" data-size="7" required></select>
+                                            <select id="empresas"
+                                                    name="empresas"
+                                                    class="selectpicker select-gral m-0"
+                                                    data-style="btn"
+                                                    data-show-subtext="true"
+                                                    data-live-search="true"
+                                                    title="Selecciona una opción"
+                                                    data-size="7"
+                                                    required></select>
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                         <div class="form-group d-flex p-0">
-                                            <select id="proyectos" name="proyectos" class="selectpicker select-gral m-0"
-                                                    data-style="btn" data-show-subtext="true" data-live-search="true"
-                                                    title="Selecciona un proyecto" data-size="7" required></select>
+                                            <select id="proyectos"
+                                                    name="proyectos"
+                                                    class="selectpicker select-gral m-0"
+                                                    data-style="btn"
+                                                    data-show-subtext="true"
+                                                    data-live-search="true"
+                                                    title="Selecciona una opción"
+                                                    data-size="7"
+                                                    required></select>
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                         <div class="form-group d-flex p-0">
-                                            <select id="clientes" name="clientes" class="selectpicker select-gral m-0"
-                                                    data-style="btn" data-show-subtext="true" data-live-search="true"
-                                                    title="Selecciona un cliente" data-size="7" required></select>
+                                            <select id="clientes"
+                                                    name="clientes" 
+                                                    class="selectpicker select-gral m-0"
+                                                    data-style="btn"
+                                                    data-show-subtext="true"
+                                                    data-live-search="true"
+                                                    title="Selecciona una opción"
+                                                    data-size="7"
+                                                    required></select>
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
@@ -87,10 +105,13 @@
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
                                         <div class="form-group d-flex m-0">
-                                            <input type="text" class="form-control datepicker hide"
-                                                   id="beginDate" value="01/01/2022"/>
-                                            <input type="text" class="form-control datepicker hide" id="endDate"
-                                                   value="01/01/2022" style="border-radius: 0 27px 27px 0!important;"/>
+                                            <input  type="text"
+                                                    class="form-control datepicker hide"
+                                                    id="beginDate"/>
+                                            <input  type="text"
+                                                    class="form-control datepicker hide"
+                                                    id="endDate"
+                                                    style="border-radius: 0 27px 27px 0!important;"/>
                                         </div>
                                     </div>
                                 </div>
@@ -115,8 +136,8 @@
                                         <th>INTERMEDIARIO</th>
                                         <th>PAGO A CAPITAL 2170</th>
                                         <th>PAGO A CAPITAL 1150</th>
-                                        <th>BONIFICACION</th>
-                                        <th>ESCRITURA INDIVIDUIL</th>
+                                        <th>BONIFICACIÓN</th>
+                                        <th>ESCRITURA INDIVIDUAL</th>
                                         <th>FECHA ESCRITURA</th>
                                         <th>SIN INTERESES</th>
                                         <th>CON INTERESES</th>
@@ -147,6 +168,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
+
+<script src="<?= base_url() ?>dist/js/es.js"></script>
+<!-- DateTimePicker Plugin -->
+<script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
+<!--  Full Calendar Plugin    -->
+<script src="<?= base_url() ?>dist/js/fullcalendar.min.js"></script>
+<script src="<?=base_url()?>dist/js/moment.min.js"></script>
+
 <script type="text/javascript" src="//unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
 <script src="<?= base_url() ?>dist/js/funciones-generales.js"></script>

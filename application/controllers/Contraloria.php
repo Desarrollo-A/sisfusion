@@ -1192,8 +1192,8 @@ class Contraloria extends CI_Controller {
             $id_asig = $data_asig->contador;
 
             if ($id_asig == 11097)
-                $assigned_user = 2825;
-            else if ($id_asig == 2825)
+                $assigned_user = 12842;
+            else if ($id_asig == 12842)
                 $assigned_user = 11097;
 
             $arreglo["asig_jur"] = $assigned_user;
