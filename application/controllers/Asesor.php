@@ -737,7 +737,7 @@ class Asesor extends CI_Controller
             $data[$i]['total_sol_sms_pend'] = $query[0]->total_sol_sms_pend;
             $data[$i]['total_sol_sms_rech'] = $query[0]->total_sol_sms_rech;
             $data[$i]['correo'] = $query[0]->correo;
-            $data[$i]['telefono'] = $query[0]->telefono1;
+            $data[$i]['telefono'] = $query[0]->telefono2;
         }
         if ($data != null) {
             echo json_encode($data);
@@ -4739,7 +4739,7 @@ class Asesor extends CI_Controller
         $this->General_model->addRecord('codigo_autorizaciones', $codigoSmsData, $this->session->userdata('id_usuario'));
 
         $banderaSmsData = [
-            'telefono1' => $telefonoCliente,
+            'telefono2' => $telefonoCliente,
             'lada_tel' => $lada,
             'autorizacion_sms' => AutorizacionClienteOpcs::ENVIADO
         ];
@@ -4813,7 +4813,7 @@ class Asesor extends CI_Controller
 
             $url = base_url()."Api/autSms/$idCliente?cod=$cliente->codigo_sms";
 
-//            $resultadoSms = $this->smsAut($url, "00$cliente->lada_tel$cliente->telefono1");
+//            $resultadoSms = $this->smsAut($url, "00$cliente->lada_tel$cliente->telefono2");
 //
 //            if (!$resultadoSms) {
 //                echo json_encode(['code' => 400, 'message' => 'Ocurrió un error al enviar el SMS. Favor de intentarlo más tarde.']);
