@@ -1206,7 +1206,6 @@ class Contraloria extends CI_Controller {
     }
 
     public function editar_registro_loteRechazo_contraloria_proceceso6() {
-        //phpmailer_lib
         $idLote=$this->input->post('idLote');
         $idCondominio=$this->input->post('idCondominio');
         $nombreLote=$this->input->post('nombreLote');
@@ -1269,38 +1268,35 @@ class Contraloria extends CI_Controller {
 
         $infoLote = $this->Contraloria_model->getNameLote($idLote);
 
-        /*************************************************************************************
-         * Armado de parámetros a mandar a plantilla para creación de correo electrónico	 *
-         ************************************************************************************/
-        $datos_correo[0] = json_decode(json_encode($infoLote), true);
-        $datos_correo[0] += ["motivoRechazo" => $comentario];
-        $datos_correo[0] += ["fechaHora" => date("Y-m-d H:i:s")];
+        $encabezados = [
+            'nombreResidencial'   => 'PROYECTO',
+            'nombre'              => 'CONDOMINIO',
+            'nombreLote'          => 'LOTE',
+            'motivoRechazo'       => 'MOTIVO DE RECHAZO',
+            'fechaHora'           => 'FECHA/HORA'
+        ];
 
-        $datos_etiquetas = null;
+        $contenido = array_merge($infoLote, ["motivoRechazo" => $comentario, "fechaHora" => date("Y-m-d H:i:s")]);
 
-        $correos_entregar = array();
-        array_push($correos_entregar, 'programador.analista18@ciudadmaderas.com');
+        $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to('programador.analista24@ciudadmaderas.com')
+            ->subject('EXPEDIENTE RECHAZADO-CONTRALORÍA (6. CORRIDA ELABORADA)')
+            ->view($this->load->view('mail/contraloria/', [
+                'encabezados' => $encabezados,
+                'contenido' => $contenido,
+                'comentario' => $comentario
+            ], true));
 
-        $elementos_correo = array("setFrom" => Elementos_Correos_Contraloria::SET_FROM_EMAIL,
-            "Subject" => Elementos_Correos_Contraloria::ASUNTO_CORREO_TABLA_RECHAZO_STATUS_6);
-
-        $comentario_general = Elementos_Correos_Contraloria::EMAIL_RECHAZO_STATUS_6.'<br><br>'.$comentario;
-        $datos_encabezados_tabla = Elementos_Correos_Contraloria::ETIQUETAS_ENCABEZADO_TABLA_RECHAZO_STATUS_6;
-
-        //Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
-        //<title>AVISO DE BAJA </title>
-        $plantilla_correo = new plantilla_dinamica_correo;
-        /************************************************************************************************************************/
         $validate = $this->Contraloria_model->validateSt6($idLote);
 
         if($validate == 1){
             if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){
-                $envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo,
-                    $datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
-                if($envio_correo){
+                if($this->email->send()){
                     $data['message_email'] = 'OK';
                 }else{
-                    $data['message_email'] = $envio_correo;
+                    $data['message_email'] = $this->email->print_debugger();
                 }
                 $data['message'] = 'OK';
                 echo json_encode($data);
