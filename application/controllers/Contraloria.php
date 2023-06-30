@@ -337,10 +337,10 @@ class Contraloria extends CI_Controller {
         $array=explode(",",$correosClean);
 
         $encabezados = [
-            'nombreResidencial'    => 'Proyecto',
-            'nombreCondominio'     => 'Condominio',
-            'nombreLote'           => 'Lote',
-            'fechaHora'            => 'Fecha/Hora'
+            'nombreResidencial'    => 'PROYECTO',
+            'nombreCondominio'     => 'CONDOMINIO',
+            'nombreLote'           => 'LOTE',
+            'fechaHora'            => 'FECHA/HORA'
         ];
 
         $contenido = array_merge($datos, ['fechaHora' => date("Y-m-d H:i:s")]);
@@ -544,29 +544,25 @@ class Contraloria extends CI_Controller {
         $correosClean = implode(', ', $listCheckVacio);
         $array=explode(",",$correosClean);
 
-        /*************************************************************************************
-         * Armado de parámetros a mandar a plantilla para creación de correo electrónico	 *
-         ************************************************************************************/
-        $datos_correo[0] = json_decode(json_encode($datos), true);
-        $datos_correo[0] += ["motivoRechazo" => $motivoRechazo];
-        $datos_correo[0] += ["fechaHora" => date("Y-m-d H:i:s")];
+        $encabezados = [
+            'nombreResidencial' => 'PROYECTO',
+            'nombreCondominio'  => 'CONDOMINIO',
+            'nombreLote'        => 'LOTE',
+            'motivoRechazo'     => 'MOTIVO DE RECHAZO',
+            'fechaHora'         => 'FECHA/HORA'
+        ];
 
-        $datos_etiquetas = null;
+        $contenido = array_merge($datos, ['motivoRechazo' => $motivoRechazo, 'fechaHora' => date("Y-m-d H:i:s")]);
 
-        $correos_entregar = array('programador.analista18@ciudadmaderas.com');
-        // foreach($array as $email)
-        // {
-        // 	array_push($correos_entregar, $email);
-        // }
-        // <title>AVISO DE BAJA </title>
-        $elementos_correo = array("setFrom" => Elementos_Correos_Contraloria::SET_FROM_EMAIL,
-            "Subject" => Elementos_Correos_Contraloria::ASUNTO_CORREO_TABLA_SEND_MAIL_RECHAZO_ESTATUS_2_0);
-
-        $comentario_general = Elementos_Correos_Contraloria::EMAIL_SEND_MAIL_RECHAZO_ESTATUS_2_0.'<br><br>'. (!isset($motivoRechazo) ? '' : $motivoRechazo);
-        $datos_encabezados_tabla = Elementos_Correos_Contraloria::ETIQUETAS_ENCABEZADO_TABLA_SEND_MAIL_RECHAZO_ESTATUS_2_0;
-
-        //Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
-        $plantilla_correo = new plantilla_dinamica_correo;
+        $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to('programador.analista24@ciudadmaderas.com')
+            ->subject('EXPEDIENTE RECHAZADO-CONTRALORÍA (2. Integración de Expediente)')
+            ->view($this->load->view('mail/contraloria/rechazo-est2-0', [
+                'encabezados' => $encabezados,
+                'contenido' => $contenido
+            ], true));
 
         $arreglo=array();
         $arreglo["idStatusContratacion"]=2;
@@ -592,12 +588,10 @@ class Contraloria extends CI_Controller {
         $arreglo2["idCliente"]= $datos["idCliente"];
 
         if ($this->registrolote_modelo->editaRegistroLoteCaja($idLote,$arreglo) && $this->registrolote_modelo->insertHistorialLotes($arreglo2)){
-            $envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo,
-                $datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
-            if($envio_correo){
+            if($this->email->send()){
                 echo 1;
             }else{
-                echo $envio_correo;
+                echo $this->email->print_debugger();
             }
         }
         else
