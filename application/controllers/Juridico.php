@@ -792,7 +792,7 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
     $this->email
       ->initialize()
       ->from('Ciudad Maderas')
-      ->to('')
+      ->to('programador.analista24@ciudadmaderas.com')
       ->subject('EXPEDIENTE RECHAZADO-JURÍDICO (7. ELABORACIÓN DE CONTRATO)')
       ->view($this->load->view('mail/juridico/rechazo-est3', [
           'encabezados' => $encabezados,
@@ -1023,16 +1023,27 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
 	// }
 	$infoLote = $this->Juridico_model->getNameLote($idLote);
 
-	/********************************************************************************
-	* Armado de parámetros a mandar a plantilla para creación de correo electrónico	*
-	********************************************************************************/
-	$datos_correo[0] = json_decode(json_encode($infoLote), true);
-	$datos_correo[0] += ["motivoRechazo" => $comentario];
-	$datos_correo[0] += ["fechaHora" => date("Y-m-d H:i:s")];
+    $encabezados = [
+      'nombreResidencial' =>  'PROYECTO',
+      'nombre'            =>  'CONDOMINIO',
+      'nombreLote'        =>  'LOTE',
+      'motivoRechazo'     =>  'MOTIVO DE RECHAZO',
+      'fechaHora'         =>  'FECHA/HORA'
+    ];
 
-	$datos_etiquetas = null;
-	
-	$correos_entregar = array('programador.analista18@ciudadmaderas.com');
+    $contenido = array_merge($infoLote, ['motivoRechazo' => $comentario, 'fechaHora' => date("Y-m-d H:i:s")]);
+
+    $this->email
+      ->initialize()
+      ->from('Ciudad Maderas')
+      ->to('programador.analista24@ciudadmaderas.com')
+      ->subject('EXPEDIENTE RECHAZADO-JURÍDICO (7. ELABORACIÓN DE CONTRATO)')
+      ->view($this->load->view('mail/juridico/return1-jaa', [
+          'encabezados' => $encabezados,
+          'contenido' => $contenido,
+          'comentario' => $comentario
+      ], true));
+
 	// foreach($array as $email)
 	// {
 	// 	if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
@@ -1046,26 +1057,14 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
 	// 	}
 	// }
 
-	$elementos_correo = array(	"setFrom" => Elementos_Correo_Juridico::SET_FROM_EMAIL,
-								"Subject" => Elementos_Correo_Juridico::ASUNTO_CORREO_TABLA_ENVIO_CORREO_RECHAZO_ESTATUS_3);
-
-	$comentario_general = Elementos_Correo_Juridico::EMAIL_ENVIO_CORREO_RECHAZO_ESTATUS_3.'<br><br>'. (!isset($comentario) ? '' : $comentario);
-	$datos_encabezados_tabla = Elementos_Correo_Juridico::ETIQUETAS_ENCABEZADO_TABLA_ENVIO_CORREO_RECHAZO_ESTATUS_3;
-
-	//Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
-	$plantilla_correo = new plantilla_dinamica_correo;
-	/********************************************************************************************/
-
 	$validate = $this->Juridico_model->validateSt7($idLote);
 
 	if($validate == 1){
-		if ($this->Juridico_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
-			$envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo,
-																	$datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
-			if($envio_correo){
+		if ($this->Juridico_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){
+			if($this->email->send()){
 				$data['message_email'] = 'OK';
 			}else{
-				$data['message_email'] = $envio_correo;
+				$data['message_email'] = $this->email->print_debugger();
 			}
 			$data['message'] = 'OK';
 			echo json_encode($data);
