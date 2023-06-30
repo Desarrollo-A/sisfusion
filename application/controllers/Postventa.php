@@ -992,15 +992,15 @@ class Postventa extends CI_Controller
     {
         $idSolicitud = $_POST['idSolicitud'];
         $data = $this->Postventa_model->getInfoSolicitud($idSolicitud)->row();
-        $this->load->library('email');
-        $mail = $this->email;
-        $mail->from('noreply@ciudadmaderas.com', 'Ciudad Maderas');
-        $mail->to('programador.analista18@ciudadmaderas.com');
-        $mail->Subject(utf8_decode("Fecha Propuesta"));
-        $mail->message('buenas tardes la fecha propuesta es: ' . $data->fechaFirma);
-        $response = $mail->send();
 
-        echo json_encode($response);
+        $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to('programador.analista24@ciudadmaderas.com')
+            ->subject('Fecha propuesta')
+            ->view("<h3>Buen día.</h3><p>La fecha propuesta es: $data->fechaFirma</p>");
+
+        echo json_encode($this->email->send());
     }
 
     public function presupuestoPDF($data)
