@@ -43,11 +43,10 @@ $("#form_bonos").on('submit', function(e) {
 /**-------------------------  TABLA NUEVOS BONOS --------------------------- */
 $("#tabla_prestamos").ready(function() {
     let titulos = [];
-
     $('#tabla_prestamos thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
         titulos.push(title);
-        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top"title="${title}" placeholder="${title}"/>`); 
+        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`); 
         $( 'input', this).on('keyup change', function () {
             if ($('#tabla_prestamos').DataTable().column(i).search() !== this.value) {
                 $('#tabla_prestamos').DataTable().column(i).search(this.value).draw();

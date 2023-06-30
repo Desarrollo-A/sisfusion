@@ -1808,22 +1808,6 @@ public function getStatusMktdPreventa(){
         exit;
     }
 
-   /* public function getProspectsListByGerente($id_gerente)
-    {
-        if ($this->session->userdata('id_rol') == 19) { // IS SUBDIRECTOR MKTD
-            $dato = $this->Clientes_model->getSedeByUser($id_gerente);
-            $data['data'] = $this->Clientes_model->getProspectsListByGerente($dato[0]['id_sede']);
-        } else {
-            $data['data'] = $this->Clientes_model->getProspectsListByGerente($id_gerente);
-        }
-
-        if($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }
-        exit;
-    }*/
     public function getProspectsListByGerente($id_gerente)
     {
         if ($this->session->userdata('id_rol') == 19) { // IS SUBDIRECTOR MKTD
@@ -1836,26 +1820,11 @@ public function getStatusMktdPreventa(){
         } else {
 
             $typeTransaction = $this->input->post("typeTransaction");
-            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+            $fechaInicio = explode('/', $this->input->post("beginDate"));
+            $fechaFin = explode('/', $this->input->post("endDate"));
+            $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+            $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
             $where = $this->input->post("where");
-//            print_r($this->input->post("endDate"));
-//            echo'<br>';
-//            print_r(strtotime($this->input->post("endDate")));
-//            echo'<br>';
-//            exit;
-
-//
-//            print_r($typeTransaction);
-//            echo'<br>';
-//            print_r($beginDate);
-//            echo'<br>';
-//            print_r($endDate);
-//            echo'<br>';
-//            print_r($where);
-//            echo'<br>';
-//            exit;
-
             $data = $this->Clientes_model->getProspectsListByGerente($id_gerente, $typeTransaction, $beginDate, $endDate, $where);
         }
 
@@ -1867,35 +1836,23 @@ public function getStatusMktdPreventa(){
         exit;
     }
 
-    /*public function getProspectsListByCoord($id_coord)
-    {
-        if ($this->session->userdata('id_rol') == 19) {
-            $dato = $this->Clientes_model->getSedeByUser($id_coord);
-            $data['data'] = $this->Clientes_model->getProspectsListByCoord($dato[0]['id_sede']);
-        } else {
-            $data['data'] = $this->Clientes_model->getProspectsListByCoord($id_coord);
-        }
-        
-        if($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }
-        exit;
-    }*/
     public function getProspectsListByCoord($id_coord)
     {
         if ($this->session->userdata('id_rol') == 19) {
             $dato = $this->Clientes_model->getSedeByUser($id_coord);
             $typeTransaction = $this->input->post("typeTransaction");
-            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+            $fechaInicio = explode('/', $this->input->post("beginDate"));
+            $fechaFin = explode('/', $this->input->post("endDate"));
+            $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+            $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
             $where = $this->input->post("where");
             $data = $this->Clientes_model->getProspectsListByCoord($dato[0]['id_sede'], $typeTransaction, $beginDate, $endDate, $where);
         } else {
             $typeTransaction = $this->input->post("typeTransaction");
-            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+            $fechaInicio = explode('/', $this->input->post("beginDate"));
+            $fechaFin = explode('/', $this->input->post("endDate"));
+            $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+            $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
             $where = $this->input->post("where");
             $data = $this->Clientes_model->getProspectsListByCoord($id_coord, $typeTransaction, $beginDate, $endDate, $where);
         }
@@ -1908,21 +1865,13 @@ public function getStatusMktdPreventa(){
         exit;
     }
 
-    /*public function getProspectsListByAsesor($id_asesor)
-    {
-        $data['data'] = $this->Clientes_model->getProspectsListByAsesor($id_asesor);
-        if($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }
-        exit;
-    }*/
     public function getProspectsListByAsesor($id_asesor)
     {
         $typeTransaction = $this->input->post("typeTransaction");
-        $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-        $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+        $fechaInicio = explode('/', $this->input->post("beginDate"));
+        $fechaFin = explode('/', $this->input->post("endDate"));
+        $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+        $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
         $where = $this->input->post("where");
 
 

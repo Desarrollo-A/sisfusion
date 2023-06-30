@@ -598,9 +598,6 @@ function update_estatus(){
 
     switch($this->session->userdata('id_rol')){
       case '1':
-      $this->load->view('template/header');
-      $this->load->view("ventas/comisiones_colaboradorRigel", $datos);
-      break;
       case '2':
       $this->load->view('template/header');
       $this->load->view("ventas/comisiones_colaboradorRigel", $datos);

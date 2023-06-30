@@ -16,8 +16,8 @@
                     <div class="modal-body">
                         <div class="conteiner-fluid">
                             <div class="row">
-                                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                    <ul class="timeline timeline-simple" id="changelog"></ul>
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                    <ul class="timeline-3" id="changelog"></ul>
                                 </div>
                             </div>
                         </div>
@@ -48,9 +48,7 @@
                                                         <div class="form-group d-flex">
                                                             <input type="text" class="form-control datepicker" id="beginDate"/>
                                                             <input type="text" class="form-control datepicker" id="endDate"/>
-                                                            <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
-                                                                <span class="material-icons update-dataTable">search</span>
-                                                            </button>
+                                                            <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange"><span class="material-icons update-dataTable">search</span></button>
                                                         </div>
                                                     </div>
                                                 </div>
