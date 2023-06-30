@@ -8,7 +8,7 @@ class Postventa extends CI_Controller
     {
         parent::__construct();
         $this->load->model(array('Postventa_model', 'General_model', 'Contraloria_model', 'asesor/Asesor_model'));
-        $this->load->library(array('session', 'form_validation', 'Jwt_actions','formatter', 'phpmailer_lib'));
+        $this->load->library(array('session', 'form_validation', 'Jwt_actions','formatter', 'email'));
         $this->jwt_actions->authorize('2278',$_SERVER['HTTP_HOST']);
         $this->validateSession();
         date_default_timezone_set('America/Mexico_City');
@@ -2345,105 +2345,49 @@ function saveNotaria(){
             $array = array_unique($correosClean);
         }
 
-        $infoLote = $this->Contraloria_model->getNameLote($idLote);
-
-
-        $mail = $this->phpmailer_lib->load();
-
-
-        $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-
-
+        $emails = [];
         foreach($array as $email)
         {
             if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
                 if (trim($email) != ''){
-                    $mail->addAddress($email);//$email
+                    $emails[] = $email;
                 }
             }
 
             if(trim($email) == 'diego.perez@ciudadmaderas.com'){
-                $mail->addAddress('analista.comercial@ciudadmaderas.com');//analista.comercial@ciudadmaderas.com
+                $emails[] = 'analista.comercial@ciudadmaderas.com';
             }
         }
 
+        $infoLote = $this->Contraloria_model->getNameLote($idLote);
 
+        $encabezados = [
+            'nombreResidencial' => 'Proyecto',
+            'nombre' => 'Condominio',
+            'nombreLote' => 'Lote',
+            'comentario' => 'Motivo de rechazo',
+            'fechaHora' => 'Fecha/Hora'
+        ];
 
-        $mail->Subject = utf8_decode('EXPEDIENTE RECHAZADO-POSTVENTA (3. REVISIÓN POSTVENTA)');
-        $mail->isHTML(true);
+        $contenido = array_merge($infoLote, ['comentario' => $comentario, 'fechaHora' => date("Y-m-d H:i:s")]);
 
-        $mailContent = utf8_decode( "<html><head>
-  <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-  <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>
-  <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'>	
-  <title>RECHAZO DE STATUS 3 POST VENTA </title>
-  <style media='all' type='text/css'>
-	  .encabezados{
-		  text-align: center;
-		  padding-top:  1.5%;
-		  padding-bottom: 1.5%;
-	  }
-	  .encabezados a{
-		  color: #234e7f;
-		  font-weight: bold;
-	  }
-	  
-	  .fondo{
-		  background-color: #234e7f;
-		  color: #fff;
-	  }
-	  
-	  h4{
-		  text-align: center;
-	  }
-	  p{
-		  text-align: right;
-	  }
-	  strong{
-		  color: #234e7f;
-	  }
-  </style>
-</head>
-                    <body>
-  <table align='center' cellspacing='0' cellpadding='0' border='0' width='100%'>
-	  <tr colspan='3'><td class='navbar navbar-inverse' align='center'>
-		  <table width='750px' cellspacing='0' cellpadding='3' class='container'>
-			  <tr class='navbar navbar-inverse encabezados'><td>
-				  <img src='https://www.ciudadmaderas.com/assets/img/logo.png' width='100%' class='img-fluid'/><p><a href='#'>SISTEMA DE CONTRATACIÓN</a></p>
-			  </td></tr>
-		  </table>
-	  </td></tr>
-	  <tr><td border=1 bgcolor='#FFFFFF' align='center'>  
-	  <center><table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='50%' style class='darkheader'>
-		<tr class='active'>
-		  <th>Proyecto</th>
-		  <th>Condominio</th> 
-		  <th>Lote</th>   
-		  <th>Motivo de rechazo</th>   
-		  <th>Fecha/Hora</th>   
-		</tr> 
-		<tr>   
-               <td><center>".$infoLote->nombreResidencial."</center></td>
-               <td><center>".$infoLote->nombre."</center></td>
-               <td><center>".$infoLote->nombreLote."</center></td>
-               <td><center>".$comentario."</center></td>
-               <td><center>".date("Y-m-d H:i:s")."</center></td>
-		</tr>
-		</table></center>
-	  
-	  
-	  </td></tr>
-  </table></body></html>");
-
-        $mail->Body = $mailContent;
+        $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to('programador.analista24@ciudadmaderas.com') // TODO: cambiar por producción
+            ->subject('EXPEDIENTE RECHAZADO-POSTVENTA (3. REVISIÓN POSTVENTA)')
+            ->view($this->load->view('template/mail/componentes/tabla', [
+                'encabezados' => $encabezados,
+                'contenido' => $contenido
+            ], true));
 
 
         $validate = $this->Postventa_model->validateSt3($idLote);
 
 
         if($validate == 1){
-            if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){
-                $mail->send();
+            if ($this->Contraloria_model->updateSt($idLote, $arreglo, $arreglo2)){
+                $this->email->send();
                 $data['message'] = 'OK';
                 echo json_encode($data);
             }else{
