@@ -927,29 +927,30 @@ class Contraloria extends CI_Controller {
             $array = array_unique($correosClean);
         }
 
-        /*************************************************************************************
-         * Armado de parámetros a mandar a plantilla para creación de correo electrónico	 *
-         ************************************************************************************/
         $infoLote = $this->Contraloria_model->getNameLote($idLote);
-        $datos_correo[0] = json_decode(json_encode($infoLote), true);
-        $datos_correo[0] += ["motivoRechazo" => $comentario];
-        $datos_correo[0] += ["fechaHora" => date("Y-m-d H:i:s")];
 
-        $datos_etiquetas = null;
+        $encabezados = [
+            'nombreResidencial' => 'PROYECTO',
+            'nombre' => 'CONDOMINIO',
+            'nombreLote' => 'LOTE',
+            'motivoRechazo' => 'MOTIVO DE RECHAZO',
+            'fechaHora' => 'FECHA/HORA'
+        ];
 
-        $correos_entregar = array('programador.analista18@ciudadmaderas.com', 'programador.analista8@ciudadmaderas.com');
+        $contenido = array_merge($infoLote, ["motivoRechazo" => $comentario, "fechaHora" => date("Y-m-d H:i:s")]);
 
-        $elementos_correo = array(	"setFrom" => Elementos_Correos_Contraloria::SET_FROM_EMAIL,
-            "Subject" => Elementos_Correos_Contraloria::ASUNTO_CORREO_TABLA_RECHAZO_STATUS_5);
+        $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to('programador.analista24@ciudadmaderas.com')
+            ->subject('EXPEDIENTE RECHAZADO-CONTRALORÍA (5. REVISIÓN 100%)')
+            ->view($this->load->view('mail/contraloria/editar-registro-lote-rechazo-proceso5', [
+                'encabezados' => $encabezados,
+                'contenido' => $contenido,
+                'comentario' => $comentario
+            ], true));
 
-        $comentario_general = Elementos_Correos_Contraloria::EMAIL_RECHAZO_STATUS_5.'<br><br>'.$comentario;
-        $datos_encabezados_tabla = Elementos_Correos_Contraloria::ETIQUETAS_ENCABEZADO_TABLA_RECHAZO_STATUS_5;
-
-        //Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
-        $plantilla_correo = new plantilla_dinamica_correo;
-        $envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo,
-            $datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
-        /****************************************************************************************************/
+        $this->email->send();
 
         $validate = $this->Contraloria_model->validateSt5($idLote);
 
