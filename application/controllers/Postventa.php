@@ -1195,8 +1195,6 @@ class Postventa extends CI_Controller
         $idNotaria = $_POST['notaria'];
         $idValuador = $_POST['valuador'];
 
-        $this->load->library('email');
-        $mail = $this->email;
         $insert = $this->Postventa_model->insertNotariaValuador($idNotaria, $idValuador, $idSolicitud);
         $data = $this->Postventa_model->checkBudgetInfo($idSolicitud)->row();
 
@@ -1206,14 +1204,15 @@ class Postventa extends CI_Controller
         //$data->correoV correos del valuador
         $this->presupuestoPDF($data);
 
-        $mail->from('noreply@ciudadmaderas.com', 'Ciudad Maderas');
-        $mail->to('programador.analista18@ciudadmaderas.com');
-        $mail->Subject(utf8_decode("Solicitud de presupuesto y valores"));
-        $mail->message('Buen dia me apoyan con el pre-avaluo con valor actual y referido  del lote que se menciona en la tabla que se anexa ?');
-        $this->email->attach(__DIR__ . "/../../static/documentos/postventa/escrituracion/SOLICITUD_PRESUPUESTO/".$documentName->expediente);
+        $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to('programador.analista18@ciudadmaderas.com')
+            ->subject('Solicitud de presupuesto y valores')
+            ->attach(__DIR__ . "/../../static/documentos/postventa/escrituracion/SOLICITUD_PRESUPUESTO/".$documentName->expediente)
+            ->view('<h3>Buen dia</h3><p>Me apoyan con el pre-avaluo con valor actual y referido  del lote que se menciona en la tabla que se anexa</p>');
 
-        $response = $mail->send();
-        // echo $this->email->print_debugger();
+        $response = $this->email->send();
 
         echo json_encode($response);
     }
