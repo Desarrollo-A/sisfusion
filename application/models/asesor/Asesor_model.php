@@ -4,8 +4,7 @@ class Asesor_model extends CI_Model {
     {
         parent::__construct();
     }
-    function getinfoCliente($id_cliente)
-{
+    function getinfoCliente($id_cliente) {
         return $this->db->query("SELECT cl.correo, cl.nombre, cl.apellido_paterno, oc3.nombre as regimen_valor, oc2.nombre as estado_valor, cl.domicilio_particular, oc.nombre as 
             nacionalidad_valor, cl.apellido_materno, cl.rfc, cl.personalidad_juridica, cl.fecha_nacimiento, cl.telefono_empresa, cl.tipo_vivienda, cl.telefono1, cl.telefono2, cl.telefono3, 
             cl.correo, lot.idLote, lot.nombreLote, lot.sup, lot.precio, res.nombreResidencial, con.nombre as nombreCondominio, con.idCondominio, ds.id as idDeposito, ds.clave,res.idResidencial as desarrollo, 
@@ -24,14 +23,14 @@ class Asesor_model extends CI_Model {
         LEFT JOIN opcs_x_cats oc4 ON oc4.id_opcion = cl.regimen_fac AND oc4.id_catalogo = 92  
         WHERE cl.id_cliente = $id_cliente");
     }
+
     function getinfoCopropietario($id_cliente){
         return $this->db->query("SELECT id_copropietario, id_cliente, regimen_matrimonial as regimen_valor, estado_civil as estado_valor, co.nacionalidad as nacionalidad_valor, co.nombre as nombre_cop, apellido_paterno, apellido_materno, telefono, telefono_2, correo, fecha_nacimiento, originario_de, conyuge, domicilio_particular, personalidad_juridica, ocupacion, empresa, posicion,  antiguedad, edadFirma, direccion, tipo_vivienda, rfc
         FROM copropietarios co 
         WHERE co.estatus = 1 AND co.id_cliente =" . $id_cliente);
     }
-/*----------------------------------CONSULTAS PARA OBTENER EL MENU------------------------*/
-	function getMenu($rol)
-	{
+
+	function getMenu($rol) {
         $idUsuario = $this->session->userdata('id_usuario');
         if ($this->existeUsuarioMenuEspecial($idUsuario)) {
             return $this->getMenuPadreEspecial($idUsuario);
@@ -43,6 +42,7 @@ class Asesor_model extends CI_Model {
                         return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $rol . " AND estatus = 1 ORDER BY orden ASC");           
         }
     }
+
     function getMenuHijos($rol)
     {
         $idUsuario = $this->session->userdata('id_usuario');
@@ -51,8 +51,8 @@ class Asesor_model extends CI_Model {
         }
         return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $rol . " AND padre > 0 AND estatus = 1  order by orden asc");
     }
-    function getActiveBtn($var, $rol)
-    {
+
+    function getActiveBtn($var, $rol) {
         return $this->db->query("SELECT padre FROM Menu2 WHERE pagina='" . $var . "' AND rol=" . $rol . " ");
     }
     public function existeUsuarioMenuEspecial($idUsuario)

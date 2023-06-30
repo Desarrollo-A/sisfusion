@@ -628,13 +628,13 @@ class Usuarios_modelo extends CI_Model
     }
 
     public function getChangeLogUsers($id_usuario)
-    {
-        /*return "MODEL: ".$id_usuario;*/
-
-        $query =  $this->db->query("SELECT fecha_creacion, creador, col_afect,(
+        {
+            /*return "MODEL: ".$id_usuario;*/
+            
+                $query =  $this->db->query("SELECT fecha_creacion, creador, col_afect,(
                                 CASE 
-                                    WHEN col_afect = 'usuario' THEN (SELECT CONCAT( apellido_paterno,' ',apellido_materno,' ',nombre) as nombre FROM usuarios WHERE id_usuario = nuevo)
-                                    WHEN col_afect = 'id_lider' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 10)
+                                    WHEN col_afect = 'usuario' OR col_afect = 'id_lider' THEN (SELECT CONCAT( apellido_paterno,' ',apellido_materno,' ',nombre) as nombre FROM usuarios WHERE id_usuario = nuevo)
+                                    WHEN col_afect = 'personalidad_juridica' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 10)
                                     WHEN col_afect = 'forma_pago' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 16)
                                     WHEN col_afect = 'id_sede' THEN (SELECT nombre FROM sedes WHERE CAST(id_sede AS VARCHAR(45)) = CAST(nuevo AS VARCHAR(45)))
                                     WHEN col_afect = 'id_rol' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 1)
@@ -642,8 +642,8 @@ class Usuarios_modelo extends CI_Model
                                     ELSE nuevo  
                                 END) AS nuevo,(
                                 CASE 
-                                    WHEN col_afect = 'usuario' THEN (SELECT CONCAT( apellido_paterno,' ',apellido_materno,' ',nombre) as nombre FROM usuarios WHERE id_usuario = anterior)
-                                    WHEN col_afect = 'id_lider' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 10)
+                                    WHEN col_afect = 'usuario' OR col_afect = 'id_lider' THEN (SELECT CONCAT( apellido_paterno,' ',apellido_materno,' ',nombre) as nombre FROM usuarios WHERE id_usuario = anterior)
+                                    WHEN col_afect = 'personalidad_juridica' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 10)
                                     WHEN col_afect = 'forma_pago' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 16)
                                     WHEN col_afect = 'id_sede' THEN (SELECT nombre FROM sedes WHERE CAST(id_sede AS VARCHAR(45)) = CAST(anterior AS VARCHAR(45)))
                                     WHEN col_afect = 'id_rol' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 1)
@@ -656,6 +656,7 @@ class Usuarios_modelo extends CI_Model
                                 WHERE id_parametro = $id_usuario AND tabla = 'usuarios' ORDER BY fecha_creacion DESC");
         return $query->result_array();
     }
+
 
     function getCatalogs()
     {
@@ -911,22 +912,20 @@ class Usuarios_modelo extends CI_Model
             $where = "u.gerente_id = $idUsuario ";
         else if ($id_rol == 9) // MJ: COORDINADOR
             $where = "u.id_lider = $idUsuario ";
-        return $this->db->query("SELECT u.id_usuario, u.id_rol, opcs_x_cats.nombre AS puesto, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, 
-            UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) coordinador, 
-            UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) gerente, 
-            UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
-            UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional, 
-            u.telefono, u.correo, u.estatus, 
-            u.id_lider, 0 nuevo, u.fecha_creacion, s.nombre sede 
-            FROM usuarios u
-            INNER JOIN opcs_x_cats ON u.id_rol = opcs_x_cats.id_opcion and id_catalogo = 1
-            INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(u.id_sede AS VARCHAR(45))
-            LEFT JOIN usuarios u1 ON u1.id_usuario = u.id_lider
-            LEFT JOIN usuarios u2 ON u2.id_usuario = u.gerente_id
-            LEFT JOIN usuarios u3 ON u3.id_usuario = u.subdirector_id
-            LEFT JOIN usuarios u4 ON u4.id_usuario = u.regional_id
-            WHERE $where
-            ORDER BY u.id_rol");
+        return $this->db->query("DECLARE @user INT 
+        SELECT @user = $idUsuario
+        SELECT u.id_usuario, u.id_rol, UPPER(opcs_x_cats.nombre) AS puesto, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)
+        AS nombre, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) AS jefe_directo, u.telefono, UPPER(u.correo) AS correo, u.estatus, 
+        u.id_lider, 0 nuevo, u.fecha_creacion, UPPER(s.nombre) AS sede 
+        FROM usuarios u
+        INNER JOIN opcs_x_cats ON u.id_rol = opcs_x_cats.id_opcion and id_catalogo = 1
+        INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(u.id_sede AS VARCHAR(45))
+        INNER JOIN usuarios us ON us.id_usuario= u.id_lider
+        where u.id_rol in(1,2,3,7,9) and u.rfc NOT LIKE '%TSTDD%' AND u.correo NOT LIKE '%test_%'
+        AND (u.id_lider = @user  
+        OR u.id_lider in (select u2.id_usuario from usuarios u2 where id_lider = @user )
+        OR u.id_lider in (select u2.id_usuario from usuarios u2 where id_lider in (select u2.id_usuario from usuarios u2 where id_lider = @user )))
+        ORDER BY u.id_rol");
     }
 
     function VerificarComision($idUsuario)

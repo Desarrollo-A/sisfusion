@@ -622,9 +622,15 @@ class Contraloria extends CI_Controller {
         $this->load->view("contraloria/integracionExpediente");
     }
 
-    public function getRevision2() {
+    public function getRevision2(){
+        ini_set('max_execution_time', 900);
+        set_time_limit(900);
+        ini_set('memory_limit','2048M');
+
+        $fechaInicio = $this->input->post('beginDate');
+        $fechaFinal = $this->input->post('endDate');
         $data=array();
-        $data = $this->registrolote_modelo->getRevision2();
+        $data = $this->registrolote_modelo->getRevision2($fechaInicio, $fechaFinal);
         if ($data != null) {
             echo json_encode($data);
         } else {
@@ -1186,8 +1192,8 @@ class Contraloria extends CI_Controller {
             $id_asig = $data_asig->contador;
 
             if ($id_asig == 11097)
-                $assigned_user = 2825;
-            else if ($id_asig == 2825)
+                $assigned_user = 12842;
+            else if ($id_asig == 12842)
                 $assigned_user = 11097;
 
             $arreglo["asig_jur"] = $assigned_user;

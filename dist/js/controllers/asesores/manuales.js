@@ -1,9 +1,7 @@
 $(document).ready(function () {
     $.post(`${general_base_url}index.php/asesor/getAllFoldersManual`,  function(data) {
-        if(data.length > 0)
-        {
-            for(var i=0; i < data.length; i++)
-            {
+        if(data.length > 0) {
+            for(var i=0; i < data.length; i++) {
                 var classActive = (data[i]['id_archivo'] == 1) ? 'active' : '';
                 //construte las tabs para navegar en tabs
                 var html_code = '<li class="'+classActive+' "style="margin-right: 50px;">';
@@ -30,13 +28,10 @@ $(document).ready(function () {
                 html_contenedor_tabs += '	</div>';
                 html_contenedor_tabs += '</div>';
 
-
                 $('#paneles-tabs').append(html_contenedor_tabs);
-
             }
         }
-        else
-        {
+        else {
             $('#msg').append('<center><h2 style="color: #a0a0a0;font-weight: 100">No hay Carpetas disponibles</h2></center>');
         }
     }, 'json');

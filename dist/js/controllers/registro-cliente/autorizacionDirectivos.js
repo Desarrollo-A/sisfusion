@@ -64,12 +64,14 @@ $(document).ready (function() {
 
     tablaAut = $('#addExp').DataTable( {
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',
         buttons: [
             {
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
+                title: 'Tus autorizaciones',
                 exportOptions: {
                     columns: [0,1,2,3,4],
                     format: {
@@ -88,6 +90,7 @@ $(document).ready (function() {
                 titleAttr: 'Descargar archivo PDF',
                 orientation: 'landscape',
                 pageSize: 'LEGAL',
+                title:'Tus autorizaciones',
                 exportOptions: {
                     columns: [0,1,2,3,4],
                     format: {
@@ -135,19 +138,8 @@ $(document).ready (function() {
                 "data": function( d ){
                     return `
                         <div class="d-flex justify-center">
-                            <a href="" 
-                               class="btn-data btn-blueMaderas getInfo" 
-                               data-id_autorizacion="${d.id_autorizacion}" 
-                               data-idCliente="${d.id_cliente}" 
-                               data-nombreResidencial="${d.nombreResidencial}" 
-                               data-nombreCondominio="${d.nombreCondominio}" 
-                               data-nombreLote="${d.nombreLote}" 
-                               data-idCondominio="${d.idCondominio}" 
-                               data-idLote="${d.idLote}"
-                               data-toggle="tooltip" 
-                               data-placement="top" 
-                               title="VER AUTORIZACIONES">
-                               <i class="fas fa-key"></i>
+                            <a href="" class="btn-data btn-blueMaderas getInfo" data-id_autorizacion="${d.id_autorizacion}" data-idCliente="${d.id_cliente}" data-nombreResidencial="${d.nombreResidencial}" data-nombreCondominio="${d.nombreCondominio}" data-nombreLote="${d.nombreLote}" data-idCondominio="${d.idCondominio}" data-idLote="${d.idLote}"data-toggle="tooltip" data-placement="top" title="VER AUTORIZACIONES">
+                            <i class="fas fa-key"></i>
                             </a>
                         </div>
                     `;
@@ -163,12 +155,14 @@ $(document).ready (function() {
 
     tablaAutClientes = $('#aut-verificacion').DataTable( {
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width:'100%',
         buttons: [
             {
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
+                title: ' Tus autorizaciones de verificación',
                 exportOptions: {
                     columns: [0,1,2,3,4],
                     format: {
@@ -185,6 +179,7 @@ $(document).ready (function() {
                 text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
                 className: 'btn buttons-pdf',
                 titleAttr: 'Descargar archivo PDF',
+                title: ' Tus autorizaciones de verificación',
                 orientation: 'landscape',
                 pageSize: 'LEGAL',
                 exportOptions: {
@@ -234,19 +229,8 @@ $(document).ready (function() {
                 "data": function( d ){
                     return `
                         <div class="d-flex justify-center">
-                            <a href="" 
-                               class="btn-data btn-blueMaderas infoAut" 
-                               data-id_autorizacion="${d.id_autorizacion}" 
-                               data-idCliente="${d.id_cliente}" 
-                               data-nombreResidencial="${d.nombreResidencial}" 
-                               data-nombreCondominio="${d.nombreCondominio}" 
-                               data-nombreLote="${d.nombreLote}" 
-                               data-idCondominio="${d.idCondominio}" 
-                               data-idLote="${d.idLote}"
-                               data-toggle="tooltip" 
-                               data-placement="top" 
-                               title="VER AUTORIZACIONES">
-                               <i class="fas fa-key"></i>
+                            <a href="" class="btn-data btn-blueMaderas infoAut" data-id_autorizacion="${d.id_autorizacion}" data-idCliente="${d.id_cliente}" data-nombreResidencial="${d.nombreResidencial}" data-nombreCondominio="${d.nombreCondominio}" data-nombreLote="${d.nombreLote}" data-idCondominio="${d.idCondominio}" data-idLote="${d.idLote}"data-toggle="tooltip" data-placement="top" title="VER AUTORIZACIONES">
+                            <i class="fas fa-key"></i>
                             </a>
                         </div>
                     `;
@@ -397,7 +381,7 @@ $(document).ready (function() {
                             <div class="w-20">
                                 <div class="radio-with-icon-autorizacones d-flex justify-end">
                                     <p class="radioOption-Item m-0">
-                                        <input type="radio" name="accion${i}" id="acceptAut${i}" value="0" class="d-none" aria-invalid="false" checked>
+                                        <input type="radio" name="accion${i}" id="acceptAut${i}" value="0" class="d-none" aria-invalid="false">
                                         <label for="acceptAut${i}" class="cursor-point m-0">
                                             <i class="fas fa-thumbs-up iAccepted" style="font-size:15px" data-toggle="tooltip" 
                                                 data-placement="bottom" title="Aceptar"></i>
@@ -472,6 +456,11 @@ $("#sendAutsFromD").on('submit', function(e){
 
 $('#autClienteForm').on('submit', function (e) {
     e.preventDefault();
+
+    if (parseInt($('#numeroDeRowAut').val()) !== $('#autClienteForm input:radio:checked').length) {
+        alerts.showNotification("top", "right", "Debe APROBAR o RECHAZAR todas las solicitudes.", "warning");
+        return;
+    }
 
     $.ajax({
         type: 'POST',

@@ -149,10 +149,10 @@ class Internomex_model extends CI_Model {
         FORMAT(pt.monto_con_descuento,'C','En-Us') 'monto_con_descuento',
         FORMAT(pt.monto_sin_descuento,'C','En-Us') 'monto_sin_descuento',
         FORMAT(pt.monto_internomex,'C','En-Us') 'monto_internomex',
-        se.nombre sede, oxc0.nombre forma_pago, CONVERT(varchar, pt.fecha_creacion, 20) fecha_creacion,
+        UPPER(se.nombre) AS sede, UPPER(oxc0.nombre) AS forma_pago, CONVERT(varchar, pt.fecha_creacion, 20) fecha_creacion,
         CONCAT (u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno) nombre, 
-        CASE WHEN (pt.comentario IS NULL OR CAST(pt.comentario AS VARCHAR(250)) = '') THEN '--' ELSE pt.comentario END comentario,
-        u0.id_rol, oxc1.nombre rol 
+        CASE WHEN (pt.comentario IS NULL OR CAST(pt.comentario AS VARCHAR(250)) = '') THEN 'SIN COMENTARIOS' ELSE pt.comentario END comentario,
+        u0.id_rol, UPPER(oxc1.nombre) AS rol 
         FROM  pagos_internomex pt
         INNER JOIN usuarios u0 ON u0.id_usuario = pt.id_usuario
         INNER JOIN sedes se ON CAST(se.id_sede AS VARCHAR(15)) = CAST(u0.id_sede AS VARCHAR(15))

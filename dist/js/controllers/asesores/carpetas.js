@@ -3,7 +3,6 @@ $(document).ready(function () {
         if(data.length > 0){
             $('#navbartabs').find('#test').empty().selectpicker('refresh');
             for(var i=0; i < data.length; i++){
-                var classActive = (data[i]['id_archivo'] == 1) ? 'active' : '';
                 var html_code = '';
                 html_code += '<option value="'+data[i]['archivo']+'"> <strong>' + data[i]['nombre'] + '</strong></option>'
                 $('#navbartabs').find('#test').append(html_code);
@@ -31,12 +30,10 @@ $(document).ready(function () {
                 setTimeout(function(){
                     $('#spiner-loader').addClass('hide');
                 },1500);
-                });
+            });
         }
-        else
-        {
+        else{
             $('#msg').append('<center><h2 style="color: #a0a0a0;font-weight: 100">No hay Carpetas disponibles</h2></center>');
         }
-    }, 'json');
-    
+    }, 'json');    
 });

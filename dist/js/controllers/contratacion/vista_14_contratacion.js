@@ -3,11 +3,10 @@ var getInfo1 = new Array(6);
 let titulos = [];
 $("#tabla_ingresar_14").ready(function () {
     $('#tabla_ingresar_14 thead tr:eq(0) th').each(function (i) {
-
         if (i != 0) {
             var title = $(this).text();
             titulos.push(title);
-            $(this).html('<input type="text" class="textoshead" placeholder="' + title + '"/>');
+            $(this).html('<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
             $('input', this).on('keyup change', function () {
                 if (tabla_14.column(i).search() !== this.value) {
                     tabla_14.column(i).search(this.value).draw();
@@ -17,12 +16,14 @@ $("#tabla_ingresar_14").ready(function () {
     });
 
     tabla_14 = $("#tabla_ingresar_14").DataTable({
-        dom: 'Brt' + "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
-        width: 'auto',
+        dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',
+        scrollX: true,
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
+            filename:'Registro Estatus 14',
             titleAttr: 'Descargar archivo de Excel',
             exportOptions: {
                 columns: [1, 2, 3, 4, 5, 6, 7],
@@ -48,7 +49,6 @@ $("#tabla_ingresar_14").ready(function () {
         destroy: true,
         ordering: false,
         columns: [{
-            width: "3%",
             className: 'details-control',
             orderable: false,
             data: null,
@@ -56,7 +56,7 @@ $("#tabla_ingresar_14").ready(function () {
         },
         {
             data: function (d) {
-                return `<span class="label" style="background: #A3E4D7; color: #0E6251">${d.tipo_venta}</span>`;
+                return `<span class="label lbl-green">${d.tipo_venta}</span>`;
             }
         },
         {
@@ -87,7 +87,7 @@ $("#tabla_ingresar_14").ready(function () {
         },
         {
             data: function (d) {
-                return `<span class="label" style="background: #A9CCE3; color: #154360">${d.nombreSede}</span>`;
+                return `<span class="label lbl-grayDark">${d.nombreSede}</span>`;
             }
         },
         {
@@ -96,20 +96,20 @@ $("#tabla_ingresar_14").ready(function () {
                 if (id_rol_global != 53 && id_rol_global != 54 && id_rol_global != 63) { // ANALISTA DE COMISIONES Y SUBDIRECTOR CONSULTA (POPEA)
                     var cntActions;
                     if (data.vl == '1') {
-                        cntActions = 'En proceso de Liberación';
+                        cntActions = 'EN PROCESO DE LIBERACIÓN';
                     }
                     else {
                         if (data.idStatusContratacion == 13 && data.idMovimiento == 43 && (data.perfil == 32 || data.perfil == 13 || data.perfil == 17 || data.perfil == 70)) {
                             cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' +
-                                'class="btn-data btn-green editReg" title="Registrar estatus">' +
+                                'class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="REGISTRAR STATUS">' +
                                 '<i class="far fa-thumbs-up"></i></button>';
 
                         }
                         else if (data.idStatusContratacion == 13 && data.idMovimiento == 68 && (data.perfil == 32 || data.perfil == 13 || data.perfil == 17 || data.perfil == 70)) {
                             cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" ' +
-                                'class="revCont btn-data btn-orangeYellow" title= "Registrar Status">' +
+                                'class="revCont btn-data btn-orangeYellow" data-toggle="tooltip" data-placement="top" title= "REGISTRAR STATUS">' +
                                 '<i class="far fa-thumbs-up"></i></button>';
 
                         }
@@ -140,6 +140,12 @@ $("#tabla_ingresar_14").ready(function () {
         },
     });
 
+    $('#tabla_ingresar_14').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
+    });
+
     $('#tabla_ingresar_14 tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
         var row = tabla_14.row(tr);
@@ -152,9 +158,9 @@ $("#tabla_ingresar_14").ready(function () {
             var status;
             var fechaVenc;
             if (row.data().idStatusContratacion == 13 && row.data().idMovimiento == 43)
-                status = "Status 13 listo (Contraloría)";
+                status = "STATUS 13 LISTO (CONTRALORÍA)";
             else if (row.data().idStatusContratacion == 13 && row.data().idMovimiento == 68)
-                status = "Status 14 Rechazado (Contraloría)";
+                status = "STATUS 14 RECHAZADO (CONTRALORÍA)";
             else
                 status = "N/A";
 
