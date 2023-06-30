@@ -11,9 +11,7 @@
 	<div class="wrapper">
 		<?php $this->load->view('template/sidebar'); ?>
 		
-		<!-- Modal Delete prestamo-->
-		<!-- <div class="modal fade modal-alertas" id="myModalDelete" role="dialog">
-			 -->
+		<!-- Modal DELETE prestamo-->
 		<div class="modal fade" id="myModalDelete" tabindex="-1" role="dialog" aria-labelledby="myModalDelete" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -31,8 +29,9 @@
 				</div>
 			</div>
 		</div>
-		<!-- Modal Delete END-->
+		<!-- Modal DELETE END-->
 		
+		<!-- modal EDITAR prestamo -->
 		<div class="modal fade" id="ModalEdit" tabindex="-1" role="dialog" aria-labelledby="ModalEdit" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -65,7 +64,7 @@
 							</div>
 							<div class="col-md-12">
 								<label class="control-label">Comentario(<b class="text-danger">*</b>)</label>
-								<textarea id="informacionText" name="informacionText" class="form-control input-gral" rows="3"></textarea>
+								<textarea id="comentario" name="comentario" class="form-control input-gral" rows="3"></textarea>
 							</div>	
 						</div>
 						<div class="modal-footer">
@@ -76,8 +75,9 @@
 				</div>
 			</div>
 		</div>
+		<!-- Modal EDIT END-->
 
-
+		<!-- Modal ALTA PRESTAMOS-->
 		<div class="modal fade modal-alertas" name="prestamosModal" id="prestamosModal" role="dialog">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -127,8 +127,79 @@
 				</div>
 			</div>
 		</div>
+		<!-- Modal ALTA PRESTAMOS END-->
 
-        <div class="modal fade modal-alertas" id="detalle-prestamo-modal" role="dialog">
+		<!-- Modal ALTA DESCUENTOS NUEVOS-->
+			<div class="modal fade modal-alertas" name="descuentosNuevosModal" id="descuentosNuevosModal" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header bg-red">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h3 class="modal-title"><b>Descuentos en pagos nuevos</b></h3>
+					</div>
+					<form method="post" id="form_descuentos">
+						<div class="modal-body">
+
+						<div class="form-group row">
+						    <div class="form-group col-md-12"> 
+								<label class="control-label">Puesto del usuario(<b class="text-danger">*</b>)</label>
+								<select class="selectpicker select-gral rolesDescuentos" name="rolesDescuentos" id="rolesDescuentos" required></select>
+							</div>
+							
+							<div class="form-group col-md-12"> 
+								<label class="control-label">Usuario(<b class="text-danger">*</b>)</label>
+								<select class="selectpicker select-gral usuarioNuevos" name="usuarioNuevos" id="usuarioNuevos" required></select>
+							</div>
+
+							<!-- <div class="form-group col-md-12" id="usuarioSelectNuevos"></div> -->
+
+							<div class="form-group" id="loteorigen">
+                                <label class="label">Lote origen</label>
+                                <select id="idloteorigen"  name="idloteorigen[]" multiple="multiple" class="form-control directorSelect2 select-gral js-example-theme-multiple" style="width: 100%;height:200px !important;"  required data-live-search="true"></select>
+                            </div>
+
+							<b id="msj2" style="color: red;"></b>
+                            <b id="sumaReal"></b>
+								
+							
+								<div class="col-md-6">
+									<label class="control-label">Monto disponible (<b class="text-danger">*</b>)</label>
+									<!-- <input class="form-control input-gral" readonly value='' type="number" step="any" id="idmontodisponible"  min="1" name="idmontodisponible"> -->
+
+									<input class="form-control" type="text" id="idmontodisponible" readonly name="idmontodisponible" value="">
+
+								</div>
+
+								<div id="montodisponible"></div>
+								
+								<div class="col-md-6">
+									<label class="control-label">Monto a descontar (<b class="text-danger">*</b>)</label>
+									<input class="form-control input-gral" id="montoNuevo" required onblur="verificarNuevo();" type="number"  min="1" name="montoNuevo">
+									<!-- <inputinput class="form-control" type="text" id="montoNuevo" onblur="verificarNuevo();" name="montoNuevo" value="" > -->
+								</div>
+								 
+							</div>
+
+							<div class="form-group">
+								<p></label><b id="texto" style="font-size:12px;"></b></p>
+								<label class="control-label">Mótivo descuento(<b class="text-danger">*</b>)</label>
+								<textarea id="comentario" name="comentario" required  class="form-control input-gral" rows="3"></textarea>
+							</div>
+							<div class="modal-footer">
+								<button type="button"  class="btn btn-danger btn-simple" data-dismiss="modal" >Cancelar</button>	
+								<!-- <button  type="submit" class="btn btn-gral-data btn_abonarNuevos">Guardar</button> -->
+								<button type="submit" id="btn_abonarNuevos" class="btn btn-success ">GUARDAR</button>
+
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<!-- Modal ALTA NUEVOS END-->
+
+        <!-- Modal DETALLE PRESTAMOS-->
+		<div class="modal fade modal-alertas" id="detalle-prestamo-modal" role="dialog">
             <div class="modal-dialog modal-lg" style="width:70% !important;height:70% !important;">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
@@ -139,6 +210,8 @@
                 </div>
             </div>
         </div>
+		 <!-- Modal DETALLE PRESTAMOS END -->
+
 
 		<div class="content boxContent">
 			<div class="container-fluid">
@@ -178,12 +251,12 @@
 											</div>
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-2">
 												<div class="form-group d-flex justify-center align-center">
-											    	<button ype="button" class="btn-gral-data btn-s-orangeLight" data-toggle="modal" data-target="#modalDescuentosNuevos">Descuento Nuevos Pagos</button>
+											    	<button ype="button" class="btn-gral-data btn-s-orangeLight" data-toggle="modal" data-target="#descuentosNuevosModal">Descuento Nuevos Pagos</button>
 												</div>
 											</div>
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-2">
 												<div class="form-group d-flex justify-center align-center">
-											    	<button ype="button" class="btn-gral-data btn-s-acidGreen" data-toggle="modal" data-target="#asas">Descuento Pagos en Revisión</button>
+											    	<button ype="button" class="btn-gral-data btn-s-acidGreen" data-toggle="modal" data-target="#descuentosRevisionModal">Descuento Pagos en Revisión</button>
 												</div>
 											</div>
                                         </div>
@@ -236,6 +309,8 @@
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 	<script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
+	<!-- <script type="text/javascript" src="<?=base_url()?>dist/js/funciones-generales.js"></script> -->
+
 	<script>
 
 </script>

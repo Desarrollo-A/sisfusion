@@ -4450,7 +4450,7 @@ function getStatusMktdPreventa(){
     public function getLotesApartadosReubicacion($fechaInicio, $fechaFin)
     {
         $query = $this->db->query("SELECT l.idLote, l.nombreLote,
-            UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, cl.fechaAlta
+            UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, CONVERT(VARCHAR, cl.fechaAlta, 20) AS fechaAlta,
             cond.nombre AS nombreCondominio, 
             res.nombreResidencial, cl.apartadoXReubicacion,
             CASE WHEN ase.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(ase.nombre, ' ', ase.apellido_paterno, ' ', ase.apellido_materno)) END asesor,
