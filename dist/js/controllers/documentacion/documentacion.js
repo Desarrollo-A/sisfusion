@@ -1,6 +1,6 @@
 $('[data-toggle="tooltip"]').tooltip();
 
-const movimientosPermitidosContrato = [36, 6, 23, 76, 83, 95, 97, 41];
+const movimientosPermitidosContrato = [36, 6, 23, 76, 83, 95, 97, 112];
 const rolesPermitidosContrato = [15];
 
 const movimientosPermitidosContratoFirmado = [45];
@@ -10,7 +10,7 @@ const rolesPermitidosContraloria = [17, 70];
 const movimientosPermitidosCartaDomicilio = [37, 7, 64, 66, 77, 41];
 const rolesPermitidosCartaDomicilio = [5, 2, 6];
 
-const movimientosPermitidosEstatus2 = [31, 85, 20, 63, 73, 82, 92, 96, 99, 104];
+const movimientosPermitidosEstatus2 = [31, 85, 20, 63, 73, 82, 92, 96, 99, 102, 104, 107, 108, 109, 111];
 const rolesPermitidosEstatus2 = [7, 9, 3, 2];
 
 const AccionDoc = {
@@ -115,6 +115,7 @@ $('#idLote').change(function () {
     let titulos = [];
 
     $('#tableDoct thead tr:eq(0) th').each(function (i) {
+
         $(this).css('text-align', 'center');
         const title = $(this).text();
         titulos.push(title);
@@ -366,16 +367,16 @@ $('#idLote').change(function () {
 $(document).on('click', '.verDocumento', function () {
     const $itself = $(this);
 
-    let pathUrl = `${general_base_url}static/documentos/cliente/${obtenerPathDoc($itself.attr('data-tipoDocumento'))}`+
-        $itself.attr('data-expediente');
-        if ($itself.attr('data-tipoDocumento') === TipoDoc.DS_NEW) {
-            const idCliente = $itself.attr('data-idCliente');
-            const urlDs = ($itself.attr('data-expediente') === 'Depósito de seriedad')
-                ? 'deposito_seriedad' : 'deposito_seriedad_ds';
-    
-            pathUrl = `${general_base_url}asesor/${urlDs}/${idCliente}/1`;
-        }
-        if (parseInt($itself.attr('data-tipoDocumento')) === TipoDoc.CORRIDA) {
+    let pathUrl = `${general_base_url}static/documentos/cliente/${obtenerPathDoc($itself.attr('data-tipoDocumento'))}`+$itself.attr('data-expediente');
+
+    if ($itself.attr('data-tipoDocumento') === TipoDoc.DS_NEW) {
+        const idCliente = $itself.attr('data-idCliente');
+        const urlDs = ($itself.attr('data-expediente') === 'Depósito de seriedad')
+            ? 'deposito_seriedad' : 'deposito_seriedad_ds';
+
+        pathUrl = `${general_base_url}asesor/${urlDs}/${idCliente}/1`;
+    }
+    if (parseInt($itself.attr('data-tipoDocumento')) === TipoDoc.CORRIDA) {
         descargarArchivo(pathUrl, $itself.attr('data-expediente'));
 
         alerts.showNotification('top', 'right', 'El documento <b>' + $itself.attr('data-expediente') + '</b> se ha descargado con éxito.', 'success');
@@ -402,7 +403,7 @@ $(document).on('click', '.verDocumento', function () {
     }
 
     Shadowbox.open({
-        content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src=${pathUrl}></iframe></div>`,
+        content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="${pathUrl}"></iframe></div>`,
         player: "html",
         title: `Visualizando archivo: ${$itself.attr('data-expediente')}`,
         width: 985,
@@ -660,7 +661,7 @@ function crearBotonAccion(type, data) {
                 data-accion="${buttonTipoAccion}" 
                 data-tipoDocumento="${data.tipo_doc}" ${buttonEstatus} 
                 data-toggle="tooltip" 
-                data-placement="left" 
+                data-placement="top" 
                 data-nombre="${data.movimiento}" 
                 data-idDocumento="${data.idDocumento}" 
                 data-idLote="${data.idLote}" 

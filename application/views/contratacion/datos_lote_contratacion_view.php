@@ -1,24 +1,6 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet" />
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
-<style>
-table thead tr th {
-    padding: 0px !important;
-    color: #fff;
-    font-weight: lighter;
-    font-size: 0.8em;
-    text-align: center;
-}
-tfoot tr {
-    background: #143860;
-}
-table tfoot tr th {
-    padding: 0px !important;
-    color: #fff;
-    font-weight: lighter;
-    font-size: 1.3em;
-    text-align: center;
-}
-</style>
+
 <body>
     <div class="wrapper">
         <?php
@@ -34,30 +16,25 @@ table tfoot tr th {
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">&times;</span></button>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title">Consulta de historial <b id="nomLoteHistorial"></b></h4>
                     </div>
                     <div class="modal-body">
                         <div role="tabpanel">
                             <ul class="nav nav-tabs" role="tablist" style="background: #003d82;">
-                                <li role="presentation" class="active"><a href="#tabHistoriaContratacion"
-                                        aria-controls="tabHistoriaContratacion" role="tab" data-toggle="tab">Historial
-                                        contratación</a>
+                                <li role="presentation" class="active">
+                                    <a href="#tabHistoriaContratacion" aria-controls="tabHistoriaContratacion" role="tab" data-toggle="tab">Historial contratación</a>
                                 </li>
-                                <li role="presentation"><a href="#tabHistoriaLiberacion"
-                                        aria-controls="tabHistoriaLiberacion" role="tab" data-toggle="tab">Historial
-                                        liberación</a>
+                                <li role="presentation">
+                                    <a href="#tabHistoriaLiberacion" aria-controls="tabHistoriaLiberacion" role="tab" data-toggle="tab">Historial liberación</a>
                                 </li>
-                                <li role="presentation"><a href="#tabVentasCompartidas"
-                                        aria-controls="tabVentasCompartidas" role="tab" data-toggle="tab">Ventas
-                                        compartidas</a>
+                                <li role="presentation">
+                                    <a href="#tabVentasCompartidas" aria-controls="tabVentasCompartidas" role="tab" data-toggle="tab">Ventas compartidas</a>
                                 </li>
-                                <li role="presentation" id="divTabClausulas"><a href="#tabClausulas" aria-controls="tabClausulas" role="tab"
-                                        data-toggle="tab">Cláusulas</a>
+                                <li role="presentation" id="divTabClausulas">
+                                    <a href="#tabClausulas" aria-controls="tabClausulas" role="tab" data-toggle="tab">Cláusulas</a>
                                 </li>
                             </ul>
-                            <!-- Tab panes -->
                             <div class="tab-content">
                                 <div role="tabpanel" class="tab-pane active" id="tabHistoriaContratacion">
                                     <div class="row">
@@ -71,7 +48,7 @@ table tfoot tr th {
                                                                 <th>ESTATUS</th>
                                                                 <th>DETALLES</th>
                                                                 <th>COMENTARIO</th>
-                                                                <th>FECHA ESTATUS</th>
+                                                                <th>FECHA DE ESTATUS</th>
                                                                 <th>USUARIO</th>
                                                             </tr>
                                                         </thead>
@@ -91,7 +68,7 @@ table tfoot tr th {
                                                             <tr>
                                                                 <th>LOTE</th>
                                                                 <th>PRECIO</th>
-                                                                <th>FECHA LIBERACIÓN</th>
+                                                                <th>FECHA DE LIBERACIÓN</th>
                                                                 <th>COMENTARIO</th>
                                                                 <th>USUARIO</th>
                                                             </tr>
@@ -116,7 +93,7 @@ table tfoot tr th {
                                                                 <th>SUBDIRECTOR</th>
                                                                 <th>DIRECTOR REGIONAL</th>
                                                                 <th>DIRECTOR REGIONAL 2</th>
-                                                                <th>FECHA ALTA</th>
+                                                                <th>FECHA DE ALTA</th>
                                                                 <th>USUARIO</th>
                                                             </tr>
                                                         </thead>
@@ -157,82 +134,70 @@ table tfoot tr th {
                                 <i class="fas fa-box"></i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Inventario Lotes</h3>
+                                <h3 class="card-title center-align">Inventario lotes</h3>
                                 <div class="toolbar">
                                     <div class="row">
                                         <div class="col-md-4 form-group overflow-hidden">
                                             <div class="form-group">
                                                 <label class="m-0" for="idResidencial">Proyecto</label>
-                                                <select id="idResidencial" name="idResidencial"
-                                                    class="selectpicker select-gral" data-style="btn"
-                                                    data-show-subtext="true" data-live-search="true"
-                                                    title="Selecciona una opción" data-size="7" size="5" data-container="body" required>
-                                                </select>
+                                                <select id="idResidencial" name="idResidencial" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" size="5" data-container="body" required></select>
                                             </div>
                                         </div>
-
                                         <div class="col-md-4 form-group overflow-hidden">
                                             <div class="form-group">
                                                 <label class="m-0" for="idCondominioInventario">Condominio</label>
-                                                <select name="idCondominioInventario" id="idCondominioInventario"
-                                                    class="selectpicker select-gral" data-style="btn"
-                                                    data-show-subtext="true" data-live-search="true"
-                                                    title="Selecciona una opción" data-size="7" data-container="body" required>
-                                                </select>
+                                                <select name="idCondominioInventario" id="idCondominioInventario" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
                                             </div>
                                         </div>
-
                                         <div class="col-md-4 form-group overflow-hidden">
                                             <div class="form-group">
                                                 <label class="m-0" for="idEstatus">Estatus</label>
-                                                <select name="idEstatus" id="idEstatus" class="selectpicker select-gral"
-                                                    data-style="btn" data-show-subtext="true" data-live-search="true"
-                                                    title="Selecciona una opción" data-size="7" data-container="body" required>
-                                                </select>
+                                                <select name="idEstatus" id="idEstatus" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="table-responsive">
-                                    <table class="table-striped table-hover" id="tablaInventario"
-                                        name="tablaInventario">
-                                        <thead>
-                                            <tr>
-                                                <th>PROYECTO</th>
-                                                <th>CONDOMINIO</th>
-                                                <th>LOTE</th>
-                                                <th>ID LOTE</th>
-                                                <th>SUPERFICIE</th>
-                                                <th>PRECIO DE LISTA</th>
-                                                <th>TOTAL CON DESCUENTOS</th>
-                                                <th>M2</th>
-                                                <th>REFERENCIA</th>
-                                                <th>MSI</th>
-                                                <th>ASESOR</th>
-                                                <th>COORDINADOR</th>
-                                                <th>GERENTE</th>
-                                                <th>SUBDIRECTOR</th>
-                                                <th>DIRECTOR REGIONAL</th>
-                                                <th>DIRECTOR REGIONAL 2</th>
-                                                <th>ESTATUS</th>
-                                                <th>APARTADO</th>
-                                                <th>COMENTARIO</th>
-                                                <th>LUGAR PROSPECCIÓN</th>
-                                                <th>FECHA VALIDACIÓN ENGANCHE</th>
-                                                <th>CANTIDAD ENGANCHE PAGADO</th>
-                                                <th>ESTATUS CONTRATACIÓN</th>
-                                                <th>CLIENTE</th>
-                                                <th>COPROPIETARIO (S)</th>
-                                                <th>COMENTARIO NEODATA</th>
-                                                <th>FECHA APERTURA</th>
-                                                <th>APARTADO REUBICACIÓN</th>
-                                                <th>FECHA ALTA</th>
-                                                <th>VENTA COMPARTIDA</th>
-                                                <th>UBICACIÓN VENTA</th>
-                                                <th>ACCIONES</th>
-                                            </tr>
-                                        </thead>
-                                    </table>
+                                <div class="material-datatables">
+                                    <div class="form-group">
+                                        <table class="table-striped table-hover hide" id="tablaInventario" name="tablaInventario">
+                                            <thead>
+                                                <tr>
+                                                    <th>PROYECTO</th>
+                                                    <th>CONDOMINIO</th>
+                                                    <th>LOTE</th>
+                                                    <th>ID LOTE</th>
+                                                    <th>SUPERFICIE</th>
+                                                    <th>PRECIO DE LISTA</th>
+                                                    <th>TOTAL CON DESCUENTOS</th>
+                                                    <th>M2</th>
+                                                    <th>REFERENCIA</th>
+                                                    <th>MSI</th>
+                                                    <th>ASESOR</th>
+                                                    <th>COORDINADOR</th>
+                                                    <th>GERENTE</th>
+                                                    <th>SUBDIRECTOR</th>
+                                                    <th>DIRECTOR REGIONAL</th>
+                                                    <th>DIRECTOR REGIONAL 2</th>
+                                                    <th>ESTATUS</th>
+                                                    <th>APARTADO</th>
+                                                    <th>COMENTARIO</th>
+                                                    <th>LUGAR DE PROSPECCIÓN</th>
+                                                    <th>FECHA DE VALIDACIÓN ENGANCHE</th>
+                                                    <th>CANTIDAD DE ENGANCHE PAGADO</th>
+                                                    <th>ESTATUS DE LA CONTRATACIÓN</th>
+                                                    <th>CLIENTE</th>
+                                                    <th>COPROPIETARIO (S)</th>
+                                                    <th>COMENTARIO DE NEODATA</th>
+                                                    <th>FECHA DE APERTURA</th>
+                                                    <th>APARTADO DE REUBICACIÓN</th>
+                                                    <th>FECHA DE ALTA</th>
+                                                    <th>VENTA COMPARTIDA</th>
+                                                    <th>UBICACIÓN DE LA VENTA</th>
+                                                    <th>ACCIONES</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>

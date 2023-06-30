@@ -64,53 +64,6 @@
             </div>
         </div>
     </div>
-
-    <div class="content hide">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="block full">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="card">
-                                    <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                        <i class="material-icons">list</i>
-                                    </div>
-                                    <div class="card-content">
-                                        <div class="row">
-                                            <h4 class="card-title">Listado general de clientes</h4>
-                                            <div class="table-responsive">
-                                                <div class="material-datatables">
-                                                    <table id="clients-datatable" class="table table-striped table-no-bordered table-hover" style="text-align:center;"><!--table table-bordered table-hover -->
-                                                        <thead>
-                                                            <tr>
-                                                                <th class="disabled-sorting text-right"><center>Proyecto</center></th>
-                                                                <th class="disabled-sorting text-right"><center>Condominio</center></th>
-                                                                <th class="disabled-sorting text-right"><center>Lote</center></th>
-                                                                <th class="disabled-sorting text-right"><center>Cliente</center></th>
-                                                                <th class="disabled-sorting text-right"><center>Sede</center></th>
-                                                                <th class="disabled-sorting text-right"><center>Teléfono</center></th>
-                                                                <th class="disabled-sorting text-right"><center>Lugar prospección</center></th>
-                                                                <th class="disabled-sorting text-right"><center>Asesor</center></th>
-                                                                <th class="disabled-sorting text-right"><center>Fecha apartado</center></th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        </tbody>
-                                                    </table>
-                                                    <?php include 'common_modals.php' ?>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <?php $this->load->view('template/footer_legend');?>
 </div>
 </div><!--main-panel close-->

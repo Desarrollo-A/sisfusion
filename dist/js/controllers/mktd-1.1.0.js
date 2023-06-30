@@ -46,6 +46,7 @@ $(document).on('click', '.see-comments', function(e){
 
     $.getJSON("getComments/"+id_prospecto).done( function( data ){
         counter = 0;
+        data.length > 0 ? data = data : data[0] = {creador:'', fecha_creacion: '', observacion: '<b>SIN COMENTARIOS</b>'};
         $.each( data, function(i, v){
             counter ++;
             fillTimeline(v, counter);
@@ -62,41 +63,49 @@ $(document).on('click', '.see-comments', function(e){
 
 function cleanComments() {
     var myCommentsList = document.getElementById('comments-list');
-    myCommentsList.innerHTML = '';
+    if( myCommentsList != null )
+        myCommentsList.innerHTML = '';
 
     var myChangelog = document.getElementById('changelog');
-    myChangelog.innerHTML = '';
+    if( myChangelog != null )
+        myChangelog.innerHTML = '';
 }
 
 function fillTimeline (v) {
-    $("#comments-list").append('<li class="timeline-inverted">\n' +
-        '    <div class="timeline-badge success"></div>\n' +
-        '    <div class="timeline-panel">\n' +
-        '            <label><h6>'+v.creador+'</h6></label>\n' +
-        '            <br>'+v.observacion+'\n' +
-        '        <h6>\n' +
-        '            <span class="small text-gray"><i class="fa fa-clock-o mr-1"></i> '+v.fecha_creacion+'</span>\n' +
-        '        </h6>\n' +
-        '    </div>\n' +
-        '</li>');
+    let etiqueta_creador = v.creador !== '' 
+                            ?`<label><h6>${v.creador}</h6></label><br>`
+                            : '';
+
+    let etiqueta_fecha = v.fecha_creacion !== '' 
+                        ? `<h6><span class="small text-gray"><i class="fa fa-clock-o mr-1"></i>${v.fecha_creacion}</span></h6>`
+                        : '';
+    $("#comments-list")
+        .append(`<li class="timeline-inverted">
+                    <div class="timeline-badge success"></div>
+                    <div class="timeline-panel">
+                        ${etiqueta_creador}
+                        ${v.observacion}
+                        ${etiqueta_fecha}
+                    </div>
+                </li>`);
 }
 
 function fillChangelog (v) {
-    $("#changelog").append('<li class="timeline-inverted">\n' +
-        '    <div class="timeline-badge success"></div>\n' +
-        '    <div class="timeline-panel">\n' +
-        '            <label><h6>'+v.parametro_modificado+'</h6></label><br>\n' +
-        '            <b>Valor anterior:</b> '+v.anterior+'\n' +
-        '            <br>\n' +
-        '            <b>Valor nuevo:</b> '+v.nuevo+'\n' +
-        '        <h6>\n' +
-        '            <span class="small text-gray"><i class="fa fa-clock-o mr-1"></i> '+v.fecha_creacion+' - '+v.creador+'</span>\n' +
-        '        </h6>\n' +
-        '    </div>\n' +
+    $("#changelog").append(
+        '<li class="timeline-inverted">\n' +
+            '<div class="container-fluid">'+
+                '<div class="row>'+
+                    '<div class="timeline-panel">\n' +
+                        '<div class="col-sm-6 col-md-6 col-lg-6 p-0"><a>Campo: '+v.parametro_modificado+'</a><br></div>\n' +
+                        '<div class="col-sm-6 col-md-6 col-lg-6 text-right"><a class="float-end"> '+v.fecha_creacion+'</a></div>\n' +
+                        '<p class="m-0">USUARIO: <b>'+v.creador+' </b></p>'+
+                        '<p class="m-0">CAMPO ANTERIOR:<b> '+v.anterior+'</b></p>'+                       
+                        '<p class="m-0">CAMPO NUEVO:<b> '+v.nuevo+'</b></p>'+
+                    '</div>'+
+                '</div>'+
+            '</div>'+
         '</li>');
 }
-
-
 
     $(document).on('click', '.to-comment', function(e){
     id_prospecto = $(this).attr("data-id-prospecto");
@@ -399,14 +408,6 @@ function printProspectInfoMktd() {
 function printProspectInfo() {
     id_prospecto =  $("#prospecto_lbl").val();
     window.open( "printProspectInfo/"+id_prospecto, "_blank")
-}
-
-function cleanComments() {
-    var myCommentsList = document.getElementById('comments-list');
-    myCommentsList.innerHTML = '';
-
-    var myChangelog = document.getElementById('changelog');
-    myChangelog.innerHTML = '';
 }
 
 $(document).on('click', '.re-asign', function(e){

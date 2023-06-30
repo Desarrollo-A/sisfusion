@@ -87,6 +87,7 @@
             cursor: pointer;
         }
     </style>
+
     <div class="wrapper ">
         <?php
             if (in_array($this->session->userdata('id_rol'), array(18, 63, 8, 7, 9, 3, 2, 1, 4)))
@@ -133,7 +134,6 @@
                                                         <span class="lblRolActual"></span>
                                                     </label>
                                                     <label>
-                                                        
                                                         <span id="detailComisionistaBtn"><i class="fas fa-info"></i></span>
                                                     </label>
                                                 </div>
@@ -148,10 +148,8 @@
                                                     <div class="row">
                                                         <div class="col-md-12 p-r">
                                                             <div class="form-group d-flex">
-                                                                <input type="text" class="form-control datepicker"
-                                                                    id="beginDate" value="01/01/2022"/>
-                                                                <input type="text" class="form-control datepicker" id="endDate"
-                                                                    value="01/01/2022"/>
+                                                                <input type="text" class="form-control datepicker" id="beginDate" />
+                                                                <input type="text" class="form-control datepicker" id="endDate"/>
                                                                 <button class="btn btn-success btn-round btn-fab btn-fab-mini"
                                                                         id="searchByDateRange">
                                                                     <span class="material-icons update-dataTable">search</span>
@@ -182,39 +180,36 @@
                                     </div>
                                 </div>
                                 <br>
-                                <div class="material-datatables" id="box-reporteLotesPorComisionista">
+                                <div class="material-datatables hide" id="box-reporteLotesPorComisionista">
                                     <div class="form-group">
-                                        <div class="table-responsive">
-                                            <table class="table-striped table-hover"
-                                                id="reporteLotesPorComisionista" name="reporteLotesPorComisionista">
-                                                <thead>
-                                                    <tr>
-                                                        <th>PROYECTO</th>
-                                                        <th>CONDOMINIO</th>
-                                                        <th>LOTE</th>
-                                                        <th>ID LOTE</th>
-                                                        <th>CLIENTE</th>
-                                                        <th>FECHA APARTADO</th>
-                                                        <th>SEDE</th>
-                                                        <th>ASESOR</th>
-                                                        <th>COORDINADOR</th>
-                                                        <th>GERENTE</th>
-                                                        <th>SUBDIRECTOR</th>
-                                                        <th>DIRECTOR REGIONAL</th>
-                                                        <th>ESTATUS CONTRATACIÓN</th>
-                                                        <th>ESTATUS VENTA</th>
-                                                        <th>ESTATUS COMISIÓN</th>
-                                                        <th>PRECIO FINAL</th>
-                                                        <th>PORCENTAJE COMISIÓN</th>
-                                                        <th>PAGO CLIENTE</th>
-                                                        <th>TOTAL COMISIÓN</th>
-                                                        <th>TOTAL ABONADO</th>
-                                                        <th>TOTAL PAGADO</th>
-                                                        <th>LUGAR PROSPECCIÓN</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
-                                        </div>
+                                        <table class="table-striped table-hover" id="reporteLotesPorComisionista" name="reporteLotesPorComisionista">
+                                            <thead>
+                                                <tr>
+                                                    <th>PROYECTO</th>
+                                                    <th>CONDOMINIO</th>
+                                                    <th>LOTE</th>
+                                                    <th>ID DEL LOTE</th>
+                                                    <th>CLIENTE</th>
+                                                    <th>FECHA DE APARTADO</th>
+                                                    <th>SEDE</th>
+                                                    <th>ASESOR</th>
+                                                    <th>COORDINADOR</th>
+                                                    <th>GERENTE</th>
+                                                    <th>SUBDIRECTOR</th>
+                                                    <th>DIRECTOR REGIONAL</th>
+                                                    <th>ESTATUS DE LA CONTRATACIÓN</th>
+                                                    <th>ESTATUS DE LA VENTA</th>
+                                                    <th>ESTATUS DE LA COMISIÓN</th>
+                                                    <th>PRECIO FINAL</th>
+                                                    <th>PORCENTAJE DE LA COMISIÓN</th>
+                                                    <th>PAGO DEL CLIENTE</th>
+                                                    <th>TOTAL DE LA COMISIÓN</th>
+                                                    <th>TOTAL ABONADO</th>
+                                                    <th>TOTAL PAGADO</th>
+                                                    <th>LUGAR DE PROSPECCIÓN</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -225,7 +220,7 @@
         </div>
         <?php $this->load->view('template/footer_legend'); ?>
     </div>
-    </div><!--main-panel close-->
+    </div>
 
     <?php $this->load->view('template/footer');?>
     <!--DATATABLE BUTTONS DATA EXPORT-->
@@ -236,14 +231,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-    <!--  Plugin for Date Time Picker and Full Calendar Plugin-->
     <script src="<?= base_url() ?>dist/js/moment.min.js"></script>
     <script src="<?= base_url() ?>dist/js/es.js"></script>
-    <!-- DateTimePicker Plugin -->
     <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
-    <!-- Sliders Plugin -->
     <script src="<?= base_url() ?>dist/js/nouislider.min.js"></script>
-    <!--  Full Calendar Plugin    -->
     <script src="<?= base_url() ?>dist/js/fullcalendar.min.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/reporteLotesPorComisionista.js"></script>
 </body>

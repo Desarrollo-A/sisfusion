@@ -51,18 +51,17 @@
 
                         echo $liVideo;
                     } ?>
-                           
                 </ul>
                 <div class="tab-content">
 
                 <?php 
-                     $div = '';
-                     foreach($sub_menu as $menu){
-                         $activeClass = $menu->active == 1 ? 'tab-pane active':'tab-pane';
-                         $div .= "<div class='$activeClass' id='$menu->id_content'>";
-                         $div .= "</div>";
-                     }      
-                     echo $div;
+                    $div = '';
+                    foreach($sub_menu as $menu){
+                        $activeClass = $menu->active == 1 ? 'tab-pane active':'tab-pane';
+                        $div .= "<div class='$activeClass' id='$menu->id_content'>";
+                        $div .= "</div>";
+                    }      
+                    echo $div;
                 ?>
                 </div>
             </div>

@@ -58,11 +58,6 @@
 	$(document).ready(function() {
 		demo.initDashboardPageCharts();
 		demo.initVectorMap();
-<?php
-        if ($this->session->userdata('no_show_modal_info')==0) {
-        echo '$("#avisoNovedades").modal("toggle");';
-    }
-    ?>
 	});
 
     function validaCheckSession(){

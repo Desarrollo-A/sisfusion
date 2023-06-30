@@ -145,7 +145,17 @@ $(document).ready(function () {
                             if(d.fecha_modificacion != null ) {
                                 RegresaActiva = '<button href="#" data-param="1" data-idpagoc="' + d.idLote + '" data-nombreLote="' + d.nombreLote + '"  ' +'class="btn-data btn-violetChin update_bandera" title="Enviar a activas">' +'<i class="fas fa-undo-alt"></i></button>';
                             }
-    
+                      
+                            BtnStats += `
+                                    <button href="#"
+                                        value="${d.idLote}"
+                                        data-value="${d.nombreLote}"
+                                        class="btn-data btn-blueMaderas btn-detener btn-warning"
+                                        title="Detener">
+                                        <i class="material-icons">block</i>
+                                    </button>
+                                `;
+
                             BtnStats += '<button href="#" value="'+d.idLote+'" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata" title="Verificar en NEODATA">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
                         }
                         return '<div class="d-flex justify-center">'+BtnStats+'</div>';
@@ -186,6 +196,18 @@ $(document).ready(function () {
             $(this).parent().find('.animacion').removeClass("fas fa-chevron-down").addClass("fas fa-chevron-up");
         }
     });
+    $("#tabla_dispersar_especiales tbody").on('click', '.btn-detener', function () {
+            $("#motivo").val("");
+            $("#descripcion").val("");
+            const idLote = $(this).val();
+            const nombreLote = $(this).attr("data-value");
+            const statusLote = $(this).attr("data-statusLote");
+            $('#id-lote-detenido').val(idLote);
+            $('#statusLote').val(statusLote);
+            $("#detenciones-modal .modal-header").html("");
+            $("#detenciones-modal .modal-header").append('<h4 class="modal-title">Enviar a controversia: <b>'+nombreLote+'</b></h4>');
+            $("#detenciones-modal").modal();
+        });
 
     $("#tabla_dispersar_especiales tbody").on('click', '.btn-penalizacion', function () {
             const idLote = $(this).val();
@@ -411,8 +433,7 @@ $(document).ready(function () {
                                             
                                             $.getJSON( url + "Comisiones/getDatosAbonadoDispersion/"+idLote).done( function( data ){
                                                 $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-3"><p style="font-zise:10px;"><b>USUARIOS</b></p></div><div class="col-md-1"><b>%</b></div><div class="col-md-2"><b>TOT. COMISIÓN</b></div><div class="col-md-2"><b><b>ABONADO</b></div><div class="col-md-2"><b>PENDIENTE</b></div><div class="col-md-2"><b>DISPONIBLE</b></div></div>');
-                                                //  console.log('gree:'+data.length);
- 
+                        
                                                 $.each( data, function( i, v){
                                                     saldo =0;
                                                     saldo =  ((10 *(v.porcentaje_decimal / 100)) * total);
@@ -760,10 +781,7 @@ function Editar(i,precio,id_usuario,lengt){
       }
   }
   function Abonar(i,precioLote,Neodata,len){
-      /*console.log(i);
-      console.log(precioLote);
-      console.log(Neodata);*/
-    //   console.log(len);
+ 
       let comision_actual = parseFloat(replaceAll($('#abono_nuevo_'+i).val(), ',',''));
       let pagado = parseFloat(replaceAll($('#pagado_'+i).val(), ',',''));
       let total_comision = parseFloat(replaceAll($('#comision_total_'+i).val(), ',',''));
@@ -772,9 +790,7 @@ function Editar(i,precio,id_usuario,lengt){
       let disponible = 0;
 
       for (let m = 0; m < len; m++) {
-        //   console.log($('#comision_total_'+m).val());
-        //   console.log($('#pagado_'+m).val());
-        //   console.log($('#abono_nuevo_'+m).val());
+ 
           comision_total =  comision_total + parseFloat(replaceAll($('#comision_total_'+m).val(), ',',''));
        abonado = abonado + parseFloat(replaceAll($('#pagado_'+m).val(), ',',''));
        disponible = disponible + parseFloat(replaceAll($('#abono_nuevo_'+m).val(), ',',''));
@@ -981,7 +997,6 @@ $("#tabla_dispersar_especiales tbody").on('click', '.btn-detener', function () {
 var getInfo1 = new Array(6);
 var getInfo3 = new Array(6);
 
- 
  function showDetailModal(idPlan) {
     $('#planes-div').hide();
     $.ajax({

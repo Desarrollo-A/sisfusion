@@ -70,6 +70,7 @@ $("#tabla_ingresar_15").ready(function () {
         scrollX:true,
         columns: [
             {
+                width: "3%",
                 className: 'details-control',
                 orderable: false,
                 data: null,
@@ -122,10 +123,25 @@ $("#tabla_ingresar_15").ready(function () {
                             data.idStatusContratacion == 14 && data.idMovimiento == 69 ||
                             data.idStatusContratacion == 14 && data.idMovimiento == 80) {
 
-                            cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
-                                'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' +
-                                'class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
-                                '<i class="fas fa-thumbs-up"></i></button>';
+                            cntActions =
+                                `<button    href="#"
+                                            data-idLote="${data.idLote}" 
+                                            data-nomLote="${data.nombreLote}"
+                                            data-idCond="${data.idCondominio}"
+                                            data-idCliente="${data.id_cliente}"
+                                            data-fecVen="${data.fechaVenc}"
+                                            data-ubic="${data.ubicacion}"
+                                            data-code="${data.cbbtton}" 
+                                            data-fechaArcus="${data.fecha_arcus}"
+                                            data-idProspecto="${data.id_prospecto}"
+                                            data-idArcus="${data.id_arcus}"
+                                            data-totalNeto2="${data.totalNeto2}"
+                                            class="btn-data btn-green editReg" 
+                                            data-toggle="tooltip"
+                                            data-placement="top"
+                                            title="REGISTRAR ESTATUS">
+                                    <i class="fas fa-thumbs-up"></i>
+                                </button>`;
                         }
                         else
                             cntActions = 'N/A';
@@ -159,7 +175,6 @@ $("#tabla_ingresar_15").ready(function () {
     $('#tabla_ingresar_15 tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
         var row = tabla_15.row(tr);
-
         if (row.child.isShown()) {
             row.child.hide();
             tr.removeClass('shown');
@@ -212,6 +227,10 @@ $("#tabla_ingresar_15").ready(function () {
         getInfo1[5] = $(this).attr("data-idLote");
         getInfo1[6] = $(this).attr("data-fecven");
         getInfo1[7] = $(this).attr("data-code");
+        getInfo1[8] = $(this).attr("data-fechaArcus");
+        getInfo1[9] = $(this).attr("data-idProspecto");
+        getInfo1[10] = $(this).attr("data-idArcus");
+        getInfo1[11] = $(this).attr("data-totalNeto2");
         nombreLote = $(this).data("nomlote");
         $(".lote").html(nombreLote);
         $('#editReg').modal('show');
@@ -238,6 +257,7 @@ $(document).on('click', '#save1', function (e) {
     var comentario = $("#comentario").val();
     var validaComent = ($("#comentario").val().length == 0) ? 0 : 1;
     var dataExp1 = new FormData();
+    var dataArcus = {};
     dataExp1.append("idCliente", getInfo1[0]);
     dataExp1.append("nombreResidencial", getInfo1[1]);
     dataExp1.append("nombreCondominio", getInfo1[2]);
@@ -246,45 +266,106 @@ $(document).on('click', '#save1', function (e) {
     dataExp1.append("idLote", getInfo1[5]);
     dataExp1.append("comentario", comentario);
     dataExp1.append("fechaVenc", getInfo1[6]);
-    if (validaComent == 0)
-        alerts.showNotification('top', 'right', 'Ingresa un comentario.', 'danger')
 
-    if (validaComent == 1) {
-        $('#save1').prop('disabled', true);
-        $.ajax({
-            url: `${general_base_url}Contraloria/editar_registro_lote_contraloria_proceceso15/`,
-            data: dataExp1,
-            cache: false,
-            contentType: false,
-            processData: false,
-            type: 'POST',
-            success: function (data) {
-                response = JSON.parse(data);
-                if (response.message == 'OK') {
-                    $('#save1').prop('disabled', false);
-                    $('#editReg').modal('hide');
-                    $('#tabla_ingresar_15').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Estatus enviado.", "success");
-                } else if (response.message == 'FALSE') {
-                    $('#save1').prop('disabled', false);
-                    $('#editReg').modal('hide');
-                    $('#tabla_ingresar_15').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
-                } else if (response.message == 'ERROR') {
+    if(getInfo1[10] > 0 && getInfo1[10] !== 0){
+        dataArcus = {
+            "idLote": getInfo1[5],
+            "fechaArcus": getInfo1[8],
+            "idProspecto": getInfo1[9],
+            "idArcus": getInfo1[10],
+            "totalNeto2": getInfo1[11]
+        };
+        (async function () {
+            try {
+                const res = await sendInfoArcus(dataArcus)
+                if (res.status === 200){
+                    if (validaComent == 0)
+                        alerts.showNotification('top', 'right', 'Ingresa un comentario.', 'danger')
+
+                    if (validaComent == 1) {
+                        $('#save1').prop('disabled', true);
+                        $.ajax({
+                            url: `${general_base_url}Contraloria/editar_registro_lote_contraloria_proceceso15/`,
+                            data: dataExp1,
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            type: 'POST',
+                            success: function (data) {
+                                response = JSON.parse(data);
+                                if (response.message == 'OK') {
+                                    $('#save1').prop('disabled', false);
+                                    $('#editReg').modal('hide');
+                                    $('#tabla_ingresar_15').DataTable().ajax.reload();
+                                    alerts.showNotification("top", "right", "Estatus enviado.", "success");
+                                } else if (response.message == 'FALSE') {
+                                    $('#save1').prop('disabled', false);
+                                    $('#editReg').modal('hide');
+                                    $('#tabla_ingresar_15').DataTable().ajax.reload();
+                                    alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
+                                } else if (response.message == 'ERROR') {
+                                    $('#save1').prop('disabled', false);
+                                    $('#editReg').modal('hide');
+                                    $('#tabla_ingresar_15').DataTable().ajax.reload();
+                                    alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                                }
+                            },
+                            error: function (data) {
+                                $('#save1').prop('disabled', false);
+                                $('#editReg').modal('hide');
+                                $('#tabla_ingresar_15').DataTable().ajax.reload();
+                                alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                            }
+                        });
+                    }
+                }else{
+                    alerts.showNotification('top', 'right', "Error en proceso de servicio externo: Arcus" , 'danger')
+                }
+            } catch (error) {
+                alerts.showNotification('top', 'right', "Error en servicio externo: Arcus" , 'danger')
+            }
+        })();
+    }else{
+        if (validaComent == 0)
+            alerts.showNotification('top', 'right', 'Ingresa un comentario.', 'danger')
+
+        if (validaComent == 1) {
+            $('#save1').prop('disabled', true);
+            $.ajax({
+                url: `${general_base_url}Contraloria/editar_registro_lote_contraloria_proceceso15/`,
+                data: dataExp1,
+                cache: false,
+                contentType: false,
+                processData: false,
+                type: 'POST',
+                success: function (data) {
+                    response = JSON.parse(data);
+                    if (response.message == 'OK') {
+                        $('#save1').prop('disabled', false);
+                        $('#editReg').modal('hide');
+                        $('#tabla_ingresar_15').DataTable().ajax.reload();
+                        alerts.showNotification("top", "right", "Estatus enviado.", "success");
+                    } else if (response.message == 'FALSE') {
+                        $('#save1').prop('disabled', false);
+                        $('#editReg').modal('hide');
+                        $('#tabla_ingresar_15').DataTable().ajax.reload();
+                        alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
+                    } else if (response.message == 'ERROR') {
+                        $('#save1').prop('disabled', false);
+                        $('#editReg').modal('hide');
+                        $('#tabla_ingresar_15').DataTable().ajax.reload();
+                        alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                    }
+                },
+                error: function (data) {
                     $('#save1').prop('disabled', false);
                     $('#editReg').modal('hide');
                     $('#tabla_ingresar_15').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
                 }
-            },
-            error: function (data) {
-                $('#save1').prop('disabled', false);
-                $('#editReg').modal('hide');
-                $('#tabla_ingresar_15').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
-            }
-        });
-    }
+            });
+        }
+    }    
 });
 
 $(document).on('click', '#save3', function (e) {
@@ -351,4 +432,29 @@ jQuery(document).ready(function () {
         jQuery(this).removeData('bs.modal');
         jQuery(this).find('#comentario3').val('');
     })
+});
+
+async function sendInfoArcus(dataArcus) {
+    try {
+        const headers = {
+            'Content-Type': 'application/json'
+        };
+        const requestArcus = {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(dataArcus)
+        }
+        const response = await fetch(`${general_base_url}Api/sendLeadInfoRecord`, requestArcus);
+        console.log(response);
+        if (response.ok) {
+            return response.json();
+        }else{
+            throw new Error('Error en la solicitud: ' + response.statusText);
+        }
+    } catch (error) {
+        throw new Error('Error en la solicitud: ' + error.message);
+    }
+}
+$(window).resize(function(){
+    tabla_15.columns.adjust();
 });

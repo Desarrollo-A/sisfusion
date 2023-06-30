@@ -40,6 +40,7 @@ $("#form_bonos").on('submit', function(e) {
         }
     });
 });
+
 /**-------------------------  TABLA NUEVOS BONOS --------------------------- */
 $("#tabla_prestamos").ready(function() {
     let titulos = [];
@@ -53,7 +54,6 @@ $("#tabla_prestamos").ready(function() {
                 $('#tabla_prestamos').DataTable().column(i).search(this.value).draw();
             }   
         });
-        $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
     });
 
     tabla_nuevas = $("#tabla_prestamos").DataTable({
@@ -135,7 +135,7 @@ $("#tabla_prestamos").ready(function() {
         },
         {
             "data": function(d) {
-                return '<p class="m-0"><b>$' + formatMoney(d.pago) + '</b></p>';
+                return '<p class="m-0"><b> $' + formatMoney(d.pago) + '</b></p>';
             }
         },
         {
@@ -181,8 +181,8 @@ $("#tabla_prestamos").ready(function() {
             "data": function(d) {
 
                 if (d.estado == 1) {
-                    return  '<div class="d-flex justify-center"><button class="btn btn-success btn-round btn-fab btn-fab-mini abonar" value="' + d.id_pago_bono + ',' + d.abono + '"   data-toggle="tooltip" data-placement="left" title="AUTORIZAR"><i class="material-icons "   >done</i></button>' +
-                    '<button class="btn btn-default btn-round btn-fab btn-fab-mini consulta_abonos" value="' + d.id_pago_bono + ','+d.nombre+'  "  data-impuesto="'+d.impuesto1+'"   data-toggle="tooltip" data-placement="left" title="HISTORIAL" ><i class="material-icons" >bar_chart</i></button></div>';
+                    return  '<div class="d-flex justify-center"><button class="btn btn-success btn-round btn-fab btn-fab-mini abonar" value="' + d.id_pago_bono + ',' + d.abono + '" data-toggle="tooltip" data-placement="top" title="AUTORIZAR"><i class="material-icons "   >done</i></button>' +
+                    '<button class="btn btn-default btn-round btn-fab btn-fab-mini consulta_abonos" value="' + d.id_pago_bono + ','+d.nombre+'  "  data-impuesto="'+d.impuesto1+'" data-toggle="tooltip" data-placement="top" title="HISTORIAL" ><i class="material-icons" >bar_chart</i></button></div>';
                             }
             }
         }],
@@ -193,14 +193,16 @@ $("#tabla_prestamos").ready(function() {
             "data": function(d) {
             }
         },
-        initComplete: function () {
-            $('[data-toggle="tooltip_details"]').tooltip("destroy");
-            $('[data-toggle="tooltip_details"]').tooltip({trigger: "hover"});
-        }
     });
-    $('[data-toggle="tooltip_details"]').tooltip({trigger: "hover"});
+
+    $('#tabla_prestamos').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
+    });
 
     $("#tabla_prestamos tbody").on("click", ".consulta_abonos", function() {
+        $('#spiner-loader').removeClass('hide');
         valores = $(this).val();
         let nuevos = valores.split(',');
         impuesto = $(this).attr("data-impuesto");
@@ -258,7 +260,7 @@ $("#tabla_prestamos").ready(function() {
             for (let index = 0; index < data.length; index++) {
                 $("#comments-list-asimilados").append('<div class="col-lg-12"><p><b style="color:#896597">'+data[index].fecha_movimiento+'</b><b style="color:gray;"> - '+data[index].nombre_usuario+'</b><br><i style="color:gray;">'+data[index].comentario+'</i></p><br></div>');   
             }
-            
+            $('#spiner-loader').addClass('hide');
             $("#modal_bonos").modal();
         });
     });
@@ -266,14 +268,12 @@ $("#tabla_prestamos").ready(function() {
     $("#tabla_prestamos tbody").on("click", ".abonar", function() {
         bono = $(this).val();
         var dat = bono.split(",");
-        
         $("#modal_abono .modal-body").append(`<div id="inputhidden">
         <h6>¿Seguro que deseas autorizar el bono seleccionado de <b style="color:green;">$${formatMoney(dat[1])}</b> ?</h6>
         <input type='hidden' name="id_abono" id="id_abono" value="${dat[0]}"><input type='hidden' name="pago" id="pago" value="${dat[1]}">
         <div class=" modal-footer">
         <button type="button" class="btn btn-danger btn-simple" onclick="closeModalEng()" > CANCELAR</button>
         <button type="submit" class="btn btn-primary" onclick=".abonar"> AUTORIZAR</button>
-        
         </div>
         </div>`);
 
@@ -300,7 +300,6 @@ $("#tabla_bono_revision").ready(function() {
                 $('#tabla_bono_revision').DataTable().column(i).search(this.value).draw();
             }   
         });
-        $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
     });
 
     tabla_nuevas2 = $("#tabla_bono_revision").DataTable({
@@ -429,7 +428,7 @@ $("#tabla_bono_revision").ready(function() {
             "orderable": false,
             "data": function(d) {
                 if (d.estado == 2) {
-                    return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas consulta_abonos" value="' + d.id_pago_bono + ','+d.nombre+ '" data-impuesto="'+d.impuesto1+'" title="HISTORIAL"><i class="fas fa-info"></i></button></div>';
+                    return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas consulta_abonos" value="' + d.id_pago_bono + ','+d.nombre+ '" data-impuesto="'+d.impuesto1+'" data-toggle="tooltip" data-placement="top" title="HISTORIAL"><i class="fas fa-info"></i></button></div>';
                 }
             }
         }],
@@ -439,14 +438,17 @@ $("#tabla_bono_revision").ready(function() {
             cache: false,
             data: function(d) {
             }
-        },
-        initComplete: function () {
-            $('[data-toggle="tooltip_details"]').tooltip("destroy");
-            $('[data-toggle="tooltip_details"]').tooltip({trigger: "hover"});
         }
     });
 
+    $('#tabla_bono_revision').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
+    });
+
     $("#tabla_bono_revision tbody").on("click", ".consulta_abonos", function() {
+        $('#spiner-loader').removeClass('hide');
         valores = $(this).val();
         let nuevos = valores.split(',');
         impuesto = $(this).attr("data-impuesto");
@@ -509,7 +511,8 @@ $("#tabla_bono_revision").ready(function() {
                 $("#comments-list-asimilados").append('<div class="col-lg-12"><p><b style="color:#896597">'+data[index].fecha_movimiento+'</b><b style="color:gray;"> - '+data[index].nombre_usuario+'</b><br><i style="color:gray;">'+data[index].comentario+'</i></p><br></div>');  
             }
 
-            $("#modal_bonos").modal();
+            $("#modal_bonos").modal();   
+            $('#spiner-loader').addClass('hide');
         });
     });
 
@@ -532,7 +535,6 @@ $("#tabla_bono_pagado").ready(function() {
                 $('#tabla_bono_pagado').DataTable().column(i).search(this.value).draw();
             }   
         });
-        $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
     });
 
     $('#tabla_bono_pagado').on('xhr.dt', function ( e, settings, json, xhr ) {
@@ -611,7 +613,7 @@ $("#tabla_bono_pagado").ready(function() {
         },
         {
             "data": function(d) {
-                return '<p class="m-0">' + formatMoney(d.pago) + '</p>';
+                return '<p class="m-0">$' + formatMoney(d.pago) + '</p>';
             }
         },
         {
@@ -662,7 +664,7 @@ $("#tabla_bono_pagado").ready(function() {
             "orderable": false,
             "data": function(d) {
                 if (d.estado == 4) {
-                    return '<div class="d-flex justify-center"><button class="btn btn-default btn-round btn-fab btn-fab-mini consulta_abonos" value="' + d.id_pago_bono + ','+d.nombre+ ' " data-impuesto="'+d.impuesto1+'"  ><i class="material-icons" data-toggle="tooltip" data-placement="right" title="HISTORIAL">bar_chart</i></button></div>';
+                    return '<div class="d-flex justify-center"><button class="btn btn-default btn-round btn-fab btn-fab-mini consulta_abonos" value="' + d.id_pago_bono + ','+d.nombre+ ' " data-impuesto="'+d.impuesto1+'" data-toggle="tooltip" data-placement="top" title="HISTORIAL" ><i class="material-icons">bar_chart</i></button></div>';
                 }
             }
         }],
@@ -674,6 +676,7 @@ $("#tabla_bono_pagado").ready(function() {
     });
 
     $("#tabla_bono_pagado tbody").on("click", ".consulta_abonos", function() {
+        $('#spiner-loader').removeClass('hide');
         valores = $(this).val();
         let nuevos = valores.split(',');
         impuesto = $(this).attr("data-impuesto");
@@ -702,12 +705,18 @@ $("#tabla_bono_pagado").ready(function() {
             </div>  `);
 
             $("#modal_bonos").modal();
-            
+            $('#spiner-loader').addClass('hide'); 
         });
     });
 
     $(window).resize(function () {
         tabla_bono_pagado.columns.adjust();
+    });
+
+    $('#tabla_bono_pagado').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
     });
 });
 /**----------------- FIN TABLA PAGADOS-------------------------------- */
@@ -725,7 +734,6 @@ $("#tabla_bono_otros").ready(function() {
                 $('#tabla_bono_otros').DataTable().column(i).search(this.value).draw();
             }   
         });
-        $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
     });
 
     $('#tabla_bono_otros').on('xhr.dt', function ( e, settings, json, xhr ) {
@@ -804,7 +812,7 @@ $("#tabla_bono_otros").ready(function() {
         },
         {
             "data": function(d) {
-                return '<p class="m-0">' + formatMoney(d.pago) + '</p>';
+                return '<p class="m-0">$' + formatMoney(d.pago) + '</p>';
             }
         },
         {
@@ -855,7 +863,7 @@ $("#tabla_bono_otros").ready(function() {
             "orderable": false,
             "data": function(d) {
                 if (d.estado == 5) {
-                    return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas consulta_abonos" value="' + d.id_pago_bono + ','+d.nombre+ '" data-impuesto="'+d.impuesto1+'" title="Historial"><i class="fas fa-info"></i></button></div>';
+                    return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas consulta_abonos" value="' + d.id_pago_bono + ','+d.nombre+ '" data-impuesto="'+d.impuesto1+'" data-toggle="tooltip" data-placement="top" title="HISTORIAL"><i class="fas fa-info"></i></button></div>';
                 }
             }
         }],
@@ -869,6 +877,7 @@ $("#tabla_bono_otros").ready(function() {
     });
 
     $("#tabla_bono_otros tbody").on("click", ".consulta_abonos", function() {
+        $('#spiner-loader').removeClass('hide');
         valores = $(this).val();
         let nuevos = valores.split(',');
         impuesto = $(this).attr("data-impuesto");
@@ -897,6 +906,8 @@ $("#tabla_bono_otros").ready(function() {
             </div>`);
 
             $("#modal_bonos").modal();
+            $('#spiner-loader').addClass('hide');
+
         });
     });
 
@@ -904,10 +915,16 @@ $("#tabla_bono_otros").ready(function() {
         tabla_bono_otros.columns.adjust();
     });
 
+    $('#tabla_bono_otros').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
+    });
+
 });
 /**------------------------ FIN TABLA OTROS-------------------------------- */
 
-    $("#form_abono").on('submit', function(e) {
+$("#form_abono").on('submit', function(e) {
     e.preventDefault();
     var formData = new FormData(document.getElementById("form_abono"));
     formData.append("dato", "valor");
@@ -927,7 +944,7 @@ $("#tabla_bono_otros").ready(function() {
                 tabla_nuevas2.ajax.reload();
                 closeModalEng();
 
-                alerts.showNotification("top", "right", "Abono autorizado con exito.", "success");                    
+                alerts.showNotification("top", "right", "Abono autorizado con éxito.", "success");                    
                 document.getElementById("form_abono").reset();
 
             } else if (data == 2) {
@@ -952,5 +969,3 @@ $("#tabla_bono_otros").ready(function() {
         }
     });
 });
-
-

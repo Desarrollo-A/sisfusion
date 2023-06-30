@@ -729,8 +729,12 @@ class Asesor extends CI_Controller
             $data[$i]['autorizacion_sms'] = $query[0]->autorizacion_sms;
             $data[$i]['total_sol_correo_aut'] = $query[0]->total_sol_correo_aut;
             $data[$i]['total_sol_correo_pend'] = $query[0]->total_sol_correo_pend;
+            $data[$i]['total_sol_correo_rech'] = $query[0]->total_sol_correo_rech;
             $data[$i]['total_sol_sms_aut'] = $query[0]->total_sol_sms_aut;
             $data[$i]['total_sol_sms_pend'] = $query[0]->total_sol_sms_pend;
+            $data[$i]['total_sol_sms_rech'] = $query[0]->total_sol_sms_rech;
+            $data[$i]['correo'] = $query[0]->correo;
+            $data[$i]['telefono'] = $query[0]->telefono1;
         }
         if ($data != null) {
             echo json_encode($data);
@@ -803,63 +807,76 @@ class Asesor extends CI_Controller
 
     public function deposito_seriedad($id_cliente, $onlyView) {
         $datos["cliente"] = $this->Asesor_model->selectDS($id_cliente);
-        $datos["cliente"][0]->tipo_nc = ( $datos["cliente"][0]->tipo_nc === null || $datos["cliente"][0]->tipo_nc === '' ) ? 3 : $datos["cliente"][0]->tipo_nc;
+        $datos["cliente"][0]->tipo_nc = ( is_null($datos["cliente"][0]->tipo_nc) || $datos["cliente"][0]->tipo_nc === '' )
+            ? 3
+            : $datos["cliente"][0]->tipo_nc;
+
         $datos["referencias"] = $this->Asesor_model->selectDSR($id_cliente);
         if (count($datos["referencias"]) < 1) {
-            $aray1 = array(
+            $emptyReferencias = [
                 'id_referencia' => '',
                 'nombre' => '',
                 'parentesco' => '',
-                'telefono' => '');
-            /**/
-            $datos["referencias"][0] = (object)$aray1;
-            $datos["referencias"][1] = (object)$aray1;
+                'telefono' => ''
+            ];
+            $datos["referencias"][0] = (object)$emptyReferencias;
+            $datos["referencias"][1] = (object)$emptyReferencias;
         }
+
         $datos["asesor"] = $this->Asesor_model->selectDSAsesor($id_cliente);
         if (count($datos["asesor"]) < 1) {
-            $aray1 = array(
+            $datos["asesor"][0] = (object)[
                 'id_usuario' => '',
                 'nombreAsesor' => '',
                 'id_lider' => '',
                 'nombreGerente' => '',
                 'nombreCoordinador' => '',
-                'correo' => '');
-            /**/
-            $datos["asesor"][0] = (object)$aray1;
+                'correo' => ''
+            ];
         }
+
         $datos["asesor2"] = $this->Asesor_model->selectDSAsesorCompartido($id_cliente);
         $datos["copropiedad"] = $this->Asesor_model->selectDSCopropiedad($id_cliente);
         $datos["copropiedadTotal"] = $this->Asesor_model->selectDSCopropiedadCount($id_cliente);
         $catalogs = $this->Asesor_model->getCatalogs()->result_array();
-        $arrayobj1 = new ArrayObject();
-        $arrayobj2 = new ArrayObject();
-        $arrayobj3 = new ArrayObject();
-        $arrayobj4 = new ArrayObject();
-        $arrayobj5 = new ArrayObject();
-        for ($i = 0; $i < count($catalogs); $i++) {
-            if ($catalogs[$i]["id_catalogo"] == 11)  // MJ: NACIONALIDAD
-                $arrayobj1->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
-            else if ($catalogs[$i]["id_catalogo"] == 18) // MJ: ESTADO CIVIL
-                $arrayobj2->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
-            else if ($catalogs[$i]["id_catalogo"] == 19) // MJ: REGIMEN MATRIMONIAL
-                $arrayobj3->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
-            else if ($catalogs[$i]["id_catalogo"] == 26) // MJ: PARENTESCO
-                $arrayobj4->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
-            else if ($catalogs[$i]["id_catalogo"] == 92) // UR: REGIMEN FISCAL
-                $arrayobj5->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
-        }
-        $datos["nacionalidades"] = $arrayobj1;
-        $datos["edoCivil"] = $arrayobj2;
-        $datos["regMat"] = $arrayobj3;
-        $datos["parentescos"] = $arrayobj4;
-        $datos["regFis"] = $arrayobj5;
+
+        $nacionalidades = array_merge(array_filter($catalogs, function ($item) {
+            // NACIONALIDAD
+            return $item['id_catalogo'] == 11;
+        }));
+
+        $estadosCiviles = array_merge(array_filter($catalogs, function ($item) {
+            // ESTADO CIVIL
+            return $item['id_catalogo'] == 18;
+        }));
+
+        $regimenMatrimonial = array_merge(array_filter($catalogs, function ($item) {
+            // REGIMEN MATRIMONIAL
+            return $item['id_catalogo'] == 19;
+        }));
+
+        $parentesto = array_merge(array_filter($catalogs, function ($item) {
+            // PARENTESCO
+            return $item['id_catalogo'] == 26;
+        }));
+
+        $regimenFiscal = array_merge(array_filter($catalogs, function ($item) {
+            // REGIMEN FISCAL
+            return $item['id_catalogo'] == 92;
+        }));
+
+        $datos["nacionalidades"] = $nacionalidades;
+        $datos["edoCivil"] = $estadosCiviles;
+        $datos["regMat"] = $regimenMatrimonial;
+        $datos["parentescos"] = $parentesto;
+        $datos["regFis"] = $regimenFiscal;
         $datos['onlyView'] = $onlyView;
+
         $datos['corrida_financiera'] = $this->Asesor_model->getInfoCFByCl($id_cliente);
-        if(isset($datos['corrida_financiera']->id_corrida)){
-            $datos['descuentos_aplicados'] = $this->Asesor_model->getDescsByCF($datos['corrida_financiera']->id_corrida);
-        }else{
-            $datos['descuentos_aplicados'] = array();
-        }
+        $datos['descuentos_aplicados'] = (isset($datos['corrida_financiera']->id_corrida))
+            ? $this->Asesor_model->getDescsByCF($datos['corrida_financiera']->id_corrida)
+            : [];
+
         $this->load->view('template/header');
         $this->load->view('asesor/deposito_formato', $datos);
     }
@@ -879,28 +896,34 @@ class Asesor extends CI_Controller
         $informacion_copropietarios = $this->Asesor_model->getinfoCopropietario($id_cliente);
         $informacion_asesor = $this->Asesor_model->selectDSAsesor1($id_cliente);
         $informacion_asesor2 = $this->Asesor_model->selectDSAsesorCompartido1($id_cliente);
+
         $catalogs = $this->Asesor_model->getCatalogs()->result_array();
-        $arrayobj1 = new ArrayObject();
-        $arrayobj2 = new ArrayObject();
-        $arrayobj3 = new ArrayObject();
-        $arrayobj5 = new ArrayObject();
-        for ($i = 0; $i < count($catalogs); $i++) {
-            if ($catalogs[$i]["id_catalogo"] == 11)  // MJ: NACIONALIDAD
-                $arrayobj1->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
-            else if ($catalogs[$i]["id_catalogo"] == 18) // MJ: ESTADO CIVIL
-                $arrayobj2->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
-            else if ($catalogs[$i]["id_catalogo"] == 19) // MJ: REGIMEN MATRIMONIAL
-                $arrayobj3->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
-            else if ($catalogs[$i]["id_catalogo"] == 92) // UR: REGIMEN FISCAL
-                $arrayobj5->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
-        }
-        $nacionalidades = $arrayobj1;
-        $edoCivil = $arrayobj2;
-        $regMat = $arrayobj3;
-        $regFiscal = $arrayobj4;
+
+        $nacionalidades = array_merge(array_filter($catalogs, function ($item) {
+            // NACIONALIDAD
+            return $item['id_catalogo'] == 11;
+        }));
+
+        $edoCivil = array_merge(array_filter($catalogs, function ($item) {
+            // ESTADO CIVIL
+            return $item['id_catalogo'] == 18;
+        }));
+
+        $regMat = array_merge(array_filter($catalogs, function ($item) {
+            // REGIMEN MATRIMONIAL
+            return $item['id_catalogo'] == 19;
+        }));
+
+        $regFiscal = array_merge(array_filter($catalogs, function ($item) {
+            // REGIMEN FISCAL
+            return $item['id_catalogo'] == 92;
+        }));
+
+
         $asesor = $this->Asesor_model->selectDSAsesor($id_cliente);
         $asesor2 = $this->Asesor_model->selectDSAsesorCompartido($id_cliente);
         $costoM2 = ($informacion_cliente->row()->desarrollo == 17) ? $informacion_cliente->row()->costoM2_casas : $informacion_cliente->row()->costoM2;
+
         if ($informacion_cliente->row()->tipoLote != '' || $informacion_cliente->row()->tipoLote != null) {
             if ($informacion_cliente->row()->tipoLote == 0) {
                 $tpl1 = '<input type="radio" name="tipoLote" id="tipoLote" value="1" checked="checked" readonly> Lote';
@@ -916,8 +939,8 @@ class Asesor extends CI_Controller
             $tpl1 = '<input type="radio" name="tipoLote" id="tipoLote" value="1" readonly> Lote';
             $tpl2 = '<input type="radio" name="tipoLote" id="tipoLote" value="2" readonly> Lote Comercial';
         }
+
         if ($informacion_cliente->row()->desarrollo) {
-            // $arreglo_ds["desarrollo"]= $desarrollo;
             if ($informacion_cliente->row()->desarrollo == 1 || $informacion_cliente->row()->desarrollo == 2 ||
                 $informacion_cliente->row()->desarrollo == 5 || $informacion_cliente->row()->desarrollo == 6 ||
                 $informacion_cliente->row()->desarrollo == 7 || $informacion_cliente->row()->desarrollo == 8 ||
@@ -958,39 +981,44 @@ class Asesor extends CI_Controller
                 $d4 = '<input type="radio" name="desarrollo" id="desarrollo" value="4" readonly> San Luis Potosí';
                 $d5 = '<input type="radio" name="desarrollo" id="desarrollo" value="5" readonly> Mérida';
             }
-        } else if (!$informacion_cliente->row()->desarrollo) {
-            // $arreglo_ds["desarrollo"]= '0';
         }
+
         if ($informacion_cliente->row()->idOficial_pf) {
             $id_identificacion = '<input type="checkbox" readonly name="idOficial_pf" id="idOficial_pf" value="1" checked="checked"> Identificación&nbsp;Oficial';
         } else if (!$informacion_cliente->row()->idOficial_pf) {
             $id_identificacion = '<input type="checkbox" readonly name="idOficial_pf" id="idOficial_pf" value="1"> Identificación&nbsp;Oficial';
         }
+
         if ($informacion_cliente->row()->idDomicilio_pf) {
             $id_domicilio = '<input type="checkbox" readonly name="idDomicilio_pf" id="idDomicilio_pf" value="1" checked="checked"> Comprobante&nbsp;de&nbsp;Domicilio';
         } else if (!$informacion_cliente->row()->idDomicilio_pf) {
             $id_domicilio = '<input type="checkbox" readonly name="idDomicilio_pf" id="idDomicilio_pf" value="1"> Comprobante&nbsp;de&nbsp;Domicilio';
         }
+
         if ($informacion_cliente->row()->actaMatrimonio_pf) {
             $id_acta_m = '<input type="checkbox" readonly name="actaMatrimonio_pf" id="actaMatrimonio_pf" value="1" checked="checked"> Acta&nbsp;de&nbsp;Matrimonio';
         } else if (!$informacion_cliente->row()->actaMatrimonio_pf) {
             $id_acta_m = '<input type="checkbox" readonly name="actaMatrimonio_pf" id="actaMatrimonio_pf" value="1"> Acta&nbsp;de&nbsp;Matrimonio';
         }
+
         if ($informacion_cliente->row()->actaConstitutiva_pm) {
             $id_acta_c = '<input type="checkbox" readonly name="actaConstitutiva_pm" id="actaConstitutiva_pm" value="1" checked="checked"> Acta&nbsp;Constitutiva';
         } else if (!$informacion_cliente->row()->actaConstitutiva_pm) {
             $id_acta_c = '<input type="checkbox" readonly name="actaConstitutiva_pm" id="actaConstitutiva_pm" value="1"> Acta&nbsp;Constitutiva';
         }
+
         if ($informacion_cliente->row()->poder_pm) {
             $id_poder = '<input type="checkbox" readonly name="poder_pm" id="poder_pm" value="1" checked="checked"> Poder';
         } else if (!$informacion_cliente->row()->poder_pm) {
             $id_poder = '<input type="checkbox" readonly name="poder_pm" id="poder_pm" value="1"> Poder';
         }
+
         if ($informacion_cliente->row()->idOficialApoderado_pm) {
             $id_apoderado = '<input type="checkbox" readonly name="idOficialApoderado_pm" id="idOficialApoderado_pm" value="1" checked="checked"> Identificación&nbsp;Oficial&nbsp;Apoderado';
         } else if (!$informacion_cliente->row()->idOficialApoderado_pm) {
             $id_apoderado = '<input type="checkbox" readonly name="idOficialApoderado_pm" id="idOficialApoderado_pm" value="1"> Identificación&nbsp;Oficial&nbsp;Apoderado';
         }
+
         if ($informacion_cliente->row()->tipo_vivienda != '' || $informacion_cliente->row()->tipo_vivienda != null) {
             if ($informacion_cliente->row()->tipo_vivienda == 1) {
                 $tv1 = '<input type="radio" name="tipo_vivienda" id="tipo_vivienda" value="1" checked="checked" readonly> PROPIA';
@@ -1047,11 +1075,10 @@ class Asesor extends CI_Controller
                 $tv5 = '<input type="radio" name="tipo_vivienda" id="tipo_vivienda" value="5"  readonly> OTRO';
                 $tv6 = '<input type="radio" name="tipo_vivienda" id="tipo_vivienda" value="6" readonly> SIN ESPECIFICAR';
             }
-        } else if (!$informacion_cliente->row()->tipo_vivienda) {
-            // $arreglo_cliente["tipo_vivienda"]= '0';
         }
+
         //CONVERTIMOS A ARREGLO TANTO LOS DESCUENTOS ACTUALES COMO EL NUEVO A AGREGAR
-        $arrayCorreo = explode(",", 'kelyn.rodriguez23@gmail.com');
+        $arrayCorreo = explode(",", 'programador.analista24@ciudadmaderas.com');
         // CHECAMOS SI EN EL ARREGLO NO HAY POSICIONES VACIAS Y LAS ELIMINAMOS
         $listCheckVacio = array_filter($arrayCorreo, "strlen");
         //VERIFICAMOS QUE NUESTRO ARREGLO NO TENGA DATOS REPETIDOS
@@ -1191,8 +1218,8 @@ class Asesor extends CI_Controller
             <td width="29%" colspan="2">' . $id_apoderado . '</td>
             </tr>
             ';
-            
-            if ($informacion_cliente->row()->rfc != '' && $informacion_cliente->row()->rfc != null){
+
+        if ($informacion_cliente->row()->rfc != '' && $informacion_cliente->row()->rfc != null) {
             $html .= '<tr>
                     <th colspan="3">
                         <h5><p style="font-size:9px;"><strong>DATOS FACTURACIÓN:</strong></p></h5>
@@ -1200,16 +1227,19 @@ class Asesor extends CI_Controller
                 </tr>
                 <tr>
                 <td width="20%"><b>RFC:</b> ' . $informacion_cliente->row()->rfc . '</td>';
-                if( $informacion_cliente->row()->reg_nom != 0 ){
-                    $html .= '<td width="50%"><b>RÉGIMEN FISCAL:</b> ' . $informacion_cliente->row()->reg_nom . '</td>';
-                }
-                if( $informacion_cliente->row()->cp_fac != 0 ){
-                    $html = '<td width="30%"><b>CÓDIGO POSTAL:</b> ' . $informacion_cliente->row()->cp_fac . '</td><td width="29%" colspan="2">';
-                }
-                $html = '</td></tr>' ;   
+
+            if ($informacion_cliente->row()->reg_nom != 0) {
+                $html .= '<td width="50%"><b>RÉGIMEN FISCAL:</b> ' . $informacion_cliente->row()->reg_nom . '</td>';
             }
-            
-            $html .= '</table>
+
+            if ($informacion_cliente->row()->cp_fac != 0) {
+                $html = '<td width="30%"><b>CÓDIGO POSTAL:</b> ' . $informacion_cliente->row()->cp_fac . '</td><td width="29%" colspan="2">';
+            }
+
+            $html = '</td></tr>';
+        }
+
+        $html .= '</table>
             </td>
             </tr>
             <tr>
@@ -1326,12 +1356,14 @@ class Asesor extends CI_Controller
             <td width="10%">' . $tv6 . '</td>
             </tr>
             <tr><td><br></td></tr>
-            ';
+        ';
+
         if ($informacion_copropietarios->num_rows() > 0) {
             $html .= '<tr><td width="100%" colspan="2" style="background-color:#BECFDC;"><b style="font-size:1.7em;">DATOS COOPROPIETARIOS:</b><br></td></tr>';
         } else {
             $html .= '';
         }
+
         if ($informacion_copropietarios->num_rows() > 0) {
             foreach ($informacion_copropietarios->result() as $row) {
                 $html .= '<tr style="background-color:#BECFDC;">
@@ -1345,33 +1377,40 @@ class Asesor extends CI_Controller
                     <tr style="background-color:#BECFDC;">
                     <td width="22%"><b>FECHA NACIMIENTO: </b>' . $row->fecha_nacimiento . '</td>
                     <td width="26%"><b>NACIONALIDAD: </b>';
+
                 for ($n = 0; $n < count($nacionalidades); $n++) {
                     if ($nacionalidades[$n]['id_opcion'] == $row->nacionalidad_valor) {
                         $html .= $nacionalidades[$n]['nombre'];
                     }
                 }
+
                 $html .= '</td>
                     <td width="12%"><b>EDAD FIRMA: </b>' . $row->edadFirma . '</td>
                     <td width="16%"><b>ESTADO CIVIL: </b>';
+
                 for ($n = 0; $n < count($edoCivil); $n++) {
                     if ($edoCivil[$n]['id_opcion'] == $row->estado_valor) {
                         $html .= $edoCivil[$n]['nombre'];
                     }
                 }
+
                 $html .= '</td>
                     <td width="24%"><b>CONYUGE: </b>' . $row->conyuge . '</td>
                     </tr>
                     <tr style="background-color:#BECFDC;">
                     <td width="22%"><b>REGIMEN: </b>';
+
                 for ($n = 0; $n < count($regMat); $n++) {
                     if ($regMat[$n]['id_opcion'] == $row->regimen_valor) {
                         $html .= $regMat[$n]['nombre'];
                     }
                 }
+
                 $html .= '</td>
                     <td width="26%"><b>DOMICILIO: </b>' . $row->domicilio_particular . '</td>
                     <td width="28%"><b>ORIGINARIO DE: </b>' . $row->originario_de . '</td>
                     <td width="24%"><b>TIPO VIVIENDA: </b>';
+
                 if ($row->tipo_vivienda == 1) {
                     $html .= 'PROPIA';
                 }
@@ -1390,6 +1429,7 @@ class Asesor extends CI_Controller
                 if ($row->tipo_vivienda == '' || $row->tipo_vivienda == null) {
                     $html .= 'SIN ESPECIFICAR';
                 }
+
                 $html .= '</td>
                     </tr>
                     
@@ -1409,6 +1449,7 @@ class Asesor extends CI_Controller
         } else {
             $html .= '<tr><center><td>No hay co - propietarios</center></td></tr>';
         }
+
         $html .= '<tr>
             <td width="100%" colspan="2"></td>
             </tr>
@@ -1417,12 +1458,14 @@ class Asesor extends CI_Controller
             </tr>
             <tr>
             <td width="100%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>El Sr.(a):';
+
         $nomCopops = '';
         if ($informacion_copropietarios->num_rows() > 0) {
             foreach ($informacion_copropietarios->result() as $row) {
                 $nomCopops .= '/ ' . $row->nombre_cop . ' ' . $row->apellido_paterno . ' ' . $row->apellido_materno;
             }
         }
+
         $html .= '</label><br><br><b style="padding-left: 250px">&nbsp;' . $informacion_cliente->row()->nombre . ' ' . $informacion_cliente->row()->apellido_paterno . ' ' . $informacion_cliente->row()->apellido_materno . ' ' . $nomCopops . '</b><br>
             </td>
             </tr>
@@ -1525,17 +1568,20 @@ class Asesor extends CI_Controller
             </tr>
             <tr>
             <br><br><br><br><br> ';
+
         $nomCopops = '';
         if ($informacion_copropietarios->num_rows() > 0) {
             foreach ($informacion_copropietarios->result() as $row) {
                 $nomCopops .= '/ ' . $row->nombre_cop . ' ' . $row->apellido_paterno . ' ' . $row->apellido_materno;
             }
         }
+
         $html .= '<td width="70%" align="center">' . $informacion_cliente->row()->nombre . ' ' . $informacion_cliente->row()->apellido_paterno . ' ' . $informacion_cliente->row()->apellido_materno . ' ' . $nomCopops . '
             <BR> ______________________________________________________________________________<p>Nombre y Firma / Ofertante</p><p>Acepto que se realice una verificación de mis datos, en los teléfonos<br> y correos que proporciono para el otorgamiento del crédito.</p>
             </td>
             <td width="30%" align="center"><label><b>REFERENCIAS PERSONALES</b>.</label>
             ';
+
         if ($informacion_referencias->num_rows() > 0) {
             foreach ($informacion_referencias->result() as $row) {
                 $html .= '<br><p align="left">' . $row->nombre . ' - ' . $row->parentezco . ' - ' . $row->telefono . '</p>';
@@ -1543,6 +1589,7 @@ class Asesor extends CI_Controller
         } else {
             $html .= '<br><p align="left">SIN REFERENCIAS PERSONALES</p>';
         }
+
         $html .= '</td></tr>
             <tr>
             <td width="100%" colspan="2"></td>
@@ -1558,6 +1605,7 @@ class Asesor extends CI_Controller
             <tr>
             <td width="100%" colspan="2"></td>
             </tr>';
+
         if (count($asesor2) > 0) {
             $asesoresVC = '';
             $coordGerVC = '';
@@ -1578,17 +1626,20 @@ class Asesor extends CI_Controller
             $asesoresVC = '';
             $coordGerVC = '';
         }
+
         $coordGerenteVN = '';
         if ($asesor[0]->nombreCoordinador == ' ') {
             $coordinadorVN = '';
         } else {
             $coordinadorVN = '- ' . $asesor[0]->nombreCoordinador . ', ';
         }
+
         if ($asesor[0]->nombreGerente == '') {
             $gerenteVN = '';
         } else {
             $gerenteVN = $asesor[0]->nombreGerente;
         }
+
         $coordGerenteVN = $coordinadorVN . $gerenteVN;
         if ($informacion_asesor->num_rows() > 0) {
             if ($informacion_asesor2->num_rows() > 0) {
@@ -1597,6 +1648,7 @@ class Asesor extends CI_Controller
                     $valor .= $informacion_asesor2->row()->nombreAsesor . " - ";
                     $valo2 .= $informacion_asesor2->row()->nombreGerente . " - ";
                 }
+
                 $html .= '<tr><br><br><br><br><br> <td width="50%" align="center">' . $valor . $informacion_asesor->row()->nombreAsesor . $asesor[0] . '<BR> ______________________________________________________________________________<p> <b>Nombre y Firma / Asesor</b></p></td>
                     <td width="50%" align="center">' . $valo2 . $informacion_asesor->row()->nombreGerente . $asesor[0] . '<BR> ______________________________________________________________________________<p> 
                     <b>Nombre y Firma / Autorización de operación</b></p>
@@ -1610,6 +1662,7 @@ class Asesor extends CI_Controller
         } else {
             $html .= '<br><p align="left">SIN REFERENCIAS PERSONALES</p>';
         }
+
         $html .= '<tr>
             <td width="100%" align="center">
             <table border="0" width="91%" style="background-color:#ffffff;">
@@ -1625,60 +1678,57 @@ class Asesor extends CI_Controller
             </div>
             </body>
             </html>';
+
         $pdf->writeHTMLCell(0, 0, $x = '', $y = '', $html, $border = 0, $ln = 1, $fill = 0, $reseth = true, $align = '', $autopadding = true);
         ob_end_clean();
         $namePDF = $pdf->Output(utf8_decode('DEPÓSITO_DE_SERIEDAD.pdf'), 'I');
         $attachment = $pdf->Output(utf8_decode($namePDF), 'S');
     }
+
     public function editar_ds()
     {
         setlocale(LC_MONETARY, 'en_US');
-        $array1 = $this->input->post("email_cop[]");
-        $array2 = $this->input->post("telefono1_cop[]");
-        $array3 = $this->input->post("telefono2_cop[]");
-        $array4 = $this->input->post("fnacimiento_cop[]");
-        $array5 = $this->input->post("nacionalidad_cop[]");
-        $array6 = $this->input->post("originario_cop[]");
-        $array7 = $this->input->post("id_particular_cop[]");
-        $array8 = $this->input->post("ecivil_cop[]");
-        $array9 = $this->input->post("conyuge_cop[]");
-        $array10 = $this->input->post("r_matrimonial_cop[]");
-        $array11 = $this->input->post("ocupacion_cop[]");
-        $array12 = $this->input->post("puesto_cop[]");
-        $array13 = $this->input->post("empresa_cop[]");
-        $array14 = $this->input->post("antiguedad_cop[]");
-        $array15 = $this->input->post("edadFirma_cop[]");
-        $array16 = $this->input->post("dom_emp_cop[]");
-        $array17 = $this->input->post("id_cop[]");
-        $array19 = $this->input->post("rfc_cop[]");
-        $array20 = $this->input->post("regimen_fac[]");
+        $emailCopArray = $this->input->post("email_cop[]");
+        $telefono1CopArray = $this->input->post("telefono1_cop[]");
+        $telefono2CopArray = $this->input->post("telefono2_cop[]");
+        $fNacimientoCopArray = $this->input->post("fnacimiento_cop[]");
+        $nacionalidadCopArray = $this->input->post("nacionalidad_cop[]");
+        $originarioCopArray = $this->input->post("originario_cop[]");
+        $idParticularCopArray = $this->input->post("id_particular_cop[]");
+        $eCivilCopArray = $this->input->post("ecivil_cop[]");
+        $conyugeCopArray = $this->input->post("conyuge_cop[]");
+        $rMatrimonialCopArray = $this->input->post("r_matrimonial_cop[]");
+        $ocupacionCopArray = $this->input->post("ocupacion_cop[]");
+        $puestoCopArray = $this->input->post("puesto_cop[]");
+        $empresaCopArray = $this->input->post("empresa_cop[]");
+        $antiguedadCopArray = $this->input->post("antiguedad_cop[]");
+        $edadFirmaCopArray = $this->input->post("edadFirma_cop[]");
+        $domEmpCopArray = $this->input->post("dom_emp_cop[]");
+        $idCopArray = $this->input->post("id_cop[]") ?? [];
+        $rfcCopArray = $this->input->post("rfc_cop[]");
+        $regimenFacArray = $this->input->post("regimen_fac[]");
         $numOfCoprops = $this->input->post('numOfCoprops');
-        $cm = (empty( $this->input->post('especificar') )) ? '11' : $this->input->post('especificar');
+
         if ($numOfCoprops > 0) {
             for ($i = 0; $i < $numOfCoprops; $i++) {
                 if ($this->input->post("tipo_vivienda_cop" . $i) == null ||
                     $this->input->post("tipo_vivienda_cop" . $i) == '' ||
                     empty($this->input->post("tipo_vivienda_cop" . $i))
                 ) {
-                    $array18[$i] = 5;
+                    $tipoViviendaCopArray[$i] = 5;
                 } else {
-                    $array18[$i] = $this->input->post("tipo_vivienda_cop" . $i . "[]");
+                    $tipoViviendaCopArray[$i] = $this->input->post("tipo_vivienda_cop" . $i . "[]");
                 }
             }
         }
-        if ($this->input->post("id_cop[]")) {
-            for ($i = 0; $i <= 5; $i++) {
-                $valor_coprop = '<input type="radio" name="tipoLote" id="tipoLote" value="1" checked="checked" readonly> yeii';
-            }
-        } else {
-            $valor_coprop = '<input type="radio" name="tipoLote" id="tipoLote" value="1" checked="checked" readonly> Lote';
-        }
+
         $clave_folio = $this->input->post('clavevalor');
         $id_cliente = $this->input->post('id_cliente');
         $desarrollo = $this->input->post('desarrollo');
         $tipoLote = $this->input->post('tipoLote_valor');
         $asesor_datos = $this->input->post('asesor_datos');
         $gerente_datos = $this->input->post('gerente_datos');
+
         //VALORES SELECT
         $nac_select = $this->input->post('nacionalidad');
         $ecivil_select = $this->input->post('estado_civil');
@@ -1686,45 +1736,53 @@ class Asesor extends CI_Controller
         $regifis_select = $this->input->post('regimenFiscal');
         $parentezco_select1 = $this->input->post('parentezco_select1');
         $parentezco_select2 = $this->input->post('parentezco_select2');
+
         $catalogs = $this->Asesor_model->getCatalogs()->result_array();
-        $arrayobj1 = new ArrayObject();
-        $arrayobj2 = new ArrayObject();
-        $arrayobj3 = new ArrayObject();
-        $arrayobj4 = new ArrayObject();
-        for ($i = 0; $i < count($catalogs); $i++) {
-            if ($catalogs[$i]["id_catalogo"] == 11)  // MJ: NACIONALIDAD
-                $arrayobj1->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
-            else if ($catalogs[$i]["id_catalogo"] == 18) // MJ: ESTADO CIVIL
-                $arrayobj2->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
-            else if ($catalogs[$i]["id_catalogo"] == 19) // MJ: REGIMEN MATRIMONIAL
-                $arrayobj3->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
-            else if ($catalogs[$i]["id_catalogo"] == 92) // UR: REGIMEN FISCAL
-                $arrayobj4->append(array('id_opcion' => $catalogs[$i]["id_opcion"], 'nombre' => $catalogs[$i]["nombre"]));
-        }
-        $nacionalidades2 = $arrayobj1;
-        $edoCivil = $arrayobj2;
-        $regMat = $arrayobj3;
-        $regFiscal2 = $arrayobj4;
-        for ($n = 0; $n < count($nacionalidades2); $n++) {
-            if ($nacionalidades2[$n]['id_opcion'] == $nac_select) {
-                $nac_select_II = $nacionalidades2[$n]['nombre'];
+
+        $nacionalidades = array_merge(array_filter($catalogs, function ($item) {
+            // NACIONALIDAD
+            return $item['id_catalogo'] == 11;
+        }));
+
+        $edoCivil = array_merge(array_filter($catalogs, function ($item) {
+            // ESTADO CIVIL
+            return $item['id_catalogo'] == 18;
+        }));
+
+        $regMat = array_merge(array_filter($catalogs, function ($item) {
+            // REGIMEN MATRIMONIAL
+            return $item['id_catalogo'] == 19;
+        }));
+
+        $regFiscal2 = array_merge(array_filter($catalogs, function ($item) {
+            // REGIMEN FISCAL
+            return $item['id_catalogo'] == 92;
+        }));
+
+        for ($n = 0; $n < count($nacionalidades); $n++) {
+            if ($nacionalidades[$n]['id_opcion'] == $nac_select) {
+                $nac_select_II = $nacionalidades[$n]['nombre'];
             }
         }
+
         for ($n = 0; $n < count($edoCivil); $n++) {
             if ($edoCivil[$n]['id_opcion'] == $ecivil_select) {
                 $est_vic = $edoCivil[$n]['nombre'];
             }
         }
+
         for ($c = 0; $c < count($regMat); $c++) {
             if ($regMat[$c]['id_opcion'] == $regimen_select) {
                 $reg_ses = $regMat[$c]['nombre'];
             }
         }
+
         for ($c = 0; $c < count($regFiscal2); $c++){
             if ($regFiscal2[$c]['id_opcion'] == $regifis_select) {
                 $reg_fis = $regFiscal2[$c]['nombre'];
             }
         }
+
         //DOCUMENTACIÓN
         //PERSONA FISICA
         $idOficial_pf = $this->input->post('idOficial_pf');
@@ -1763,11 +1821,6 @@ class Asesor extends CI_Controller
         $costoM2 = str_replace('$','', $costoM2);
         $costom2f = str_replace(',','',$this->input->post('costom2f'));
         $costom2f = str_replace('$','', $costom2f);
-        if(strlen($costom2f) === 0){
-            $this->session->set_flashdata('costom2f', "Campo metro cuadrado es requerido");
-            redirect('Asesor/deposito_seriedad/119765/0');
-            return;
-        }
         $proyecto = $this->input->post('proyecto');
         $municipioDS = $this->input->post('municipioDS');
         $importOferta = str_replace(',','',$this->input->post('importOferta'));
@@ -1807,25 +1860,30 @@ class Asesor extends CI_Controller
         $tipo_comprobante = $this->input->post('tipo_comprobante');
         //revisar si coloco que no quiere la carta, revisar si hay un registro en el arbol
         //si es así hayq ue borrar la rama ya que no la estará utilizando
+
         if($tipo_comprobante == 2){ //ha eligido que no, hay que borrar la rama y el archivo el archivo
             $dcv = $this->Asesor_model->informacionVerificarCliente($id_cliente);
             $revisar_registro = $this->Asesor_model->revisarCartaVerif($id_cliente,  29);
-            if(count($revisar_registro)>0){
+
+            if (count($revisar_registro)>0) {
                 $ubicacion = getFolderFile($revisar_registro[0]['tipo_doc']);
                 $filename = $revisar_registro[0]['expediente'];
                 //revisar si hay algun documento
                 $array_key = array("idDocumento" => $revisar_registro[0]['idDocumento']);
                 $tabla = 'historial_documento';
+
                 if($filename=='' || $filename==NULL){
-                    $borrar_archivo = $this->General_model->deleteRecord($tabla, $array_key);
-                }else{
-                    $eliminar_archivo = delete_img($ubicacion, $filename);
-                    $borrar_archivo = $this->General_model->deleteRecord($tabla, $array_key);
+                    $this->General_model->deleteRecord($tabla, $array_key);
+                } else {
+                    delete_img($ubicacion, $filename);
+                    $this->General_model->deleteRecord($tabla, $array_key);
                 }
             }
         }
+
         /*****MARTHA DEBALE OPTION*******/
         $des_casa = $this->input->post('des_hide');
+
         //ARRAY DEPOSITO DE SERIEDAD
         $arreglo_ds = array();
         $arreglo_ds["clave"] = $clave_folio;
@@ -1836,11 +1894,13 @@ class Asesor extends CI_Controller
         $arreglo_ds["actaMatrimonio_pf"] = $actaMatrimonio_pf;
         $arreglo_ds["actaConstitutiva_pm"] = $actaConstitutiva_pm;
         $arreglo_ds["idOficialApoderado_pm"] = $idOficialApoderado_pm;
+
         if ($des_casa == 1){
             $arreglo_ds["costoM2_casas"] = $costoM2;
         } else {
             $arreglo_ds["costoM2"] = $costoM2;
         }
+
         $arreglo_ds["costom2f"] = $costom2f;
         $arreglo_ds["proyecto"] = $proyecto;
         $arreglo_ds["municipio"] = $municipioDS;
@@ -1860,6 +1920,7 @@ class Asesor extends CI_Controller
         $arreglo_ds["anio"] = $anio;
         $arreglo_ds["observacion"] = $observacion;
         $arreglo_ds['modificado_por'] = $this->session->userdata('id_usuario');
+
         //ARRAY DATOS CLIENTE
         $arreglo_cliente = array();
         $arreglo_cliente["nombre"] = $nombre;
@@ -1875,8 +1936,6 @@ class Asesor extends CI_Controller
         $arreglo_cliente["cp_fac"] = $cp_fac;
         $arreglo_cliente["originario_de"] = $originario;
         $arreglo_cliente["estado_civil"] = $estado_civil;
-        $arreglo_cliente["nombre_conyuge"] = $nombre_conyuge;
-        $arreglo_cliente["regimen_matrimonial"] = $regimen_matrimonial;
         $arreglo_cliente["domicilio_particular"] = $domicilio_particular;
         $arreglo_cliente["ocupacion"] = $ocupacion;
         $arreglo_cliente["nombre_conyuge"] = $nombre_conyuge;
@@ -1892,6 +1951,7 @@ class Asesor extends CI_Controller
         $arreglo_cliente["tipo_nc"] = $tipo_nc;
         $arreglo_cliente["printPagare"] = $printPagare;
         $arreglo_cliente["tipo_comprobanteD"] = $tipo_comprobante;
+
         //ARRAY REFERENCIAS
         $arreglo_referencia1 = array();
         $arreglo_referencia1["nombre"] = $nombre1;
@@ -1903,6 +1963,7 @@ class Asesor extends CI_Controller
         $arreglo_referencia2["parentesco"] = $parentesco2;
         $tpl1 = '';
         $tpl2 = '';
+
         if ($this->input->post('tipoLote_valor')) {
             $arreglo_ds["tipoLote"] = $tipoLote;
             if ($this->input->post('tipoLote_valor') == 0 || $this->input->post('tipoLote_valor') == '0') {
@@ -1916,6 +1977,7 @@ class Asesor extends CI_Controller
         } else if (!$this->input->post('tipoLote_valor')) {
             $arreglo_ds["tipoLote"] = '0';
         }
+
         if ($this->input->post('desarrollo')) {
             $arreglo_ds["desarrollo"] = $desarrollo;
             if ($this->input->post('desarrollo') == 1) {
@@ -1956,6 +2018,7 @@ class Asesor extends CI_Controller
         } else if (!$this->input->post('desarrollo')) {
             $arreglo_ds["desarrollo"] = '0';
         }
+
         if ($this->input->post('idOficial_pf')) {
             $arreglo_ds["idOficial_pf"] = $idOficial_pf;
             $id_identificacion = '<input type="checkbox" readonly name="idOficial_pf" id="idOficial_pf" value="1" checked="checked"> Identificación&nbsp;Oficial';
@@ -1963,6 +2026,7 @@ class Asesor extends CI_Controller
             $id_identificacion = '<input type="checkbox" readonly name="idOficial_pf" id="idOficial_pf" value="1"> Identificación&nbsp;Oficial';
             $arreglo_ds["idOficial_pf"] = '0';
         }
+
         if ($this->input->post('idDomicilio_pf')) {
             $arreglo_ds["idDomicilio_pf"] = $idDomicilio_pf;
             $id_domicilio = '<input type="checkbox" readonly name="idDomicilio_pf" id="idDomicilio_pf" value="1" checked="checked"> Comprobante&nbsp;de&nbsp;Domicilio';
@@ -1970,6 +2034,7 @@ class Asesor extends CI_Controller
             $id_domicilio = '<input type="checkbox" readonly name="idDomicilio_pf" id="idDomicilio_pf" value="1"> Comprobante&nbsp;de&nbsp;Domicilio';
             $arreglo_ds["idDomicilio_pf"] = '0';
         }
+
         if ($this->input->post('actaMatrimonio_pf')) {
             $arreglo_ds["actaMatrimonio_pf"] = $actaMatrimonio_pf;
             $id_acta_m = '<input type="checkbox" readonly name="actaMatrimonio_pf" id="actaMatrimonio_pf" value="1" checked="checked"> Acta&nbsp;de&nbsp;Matrimonio';
@@ -1977,6 +2042,7 @@ class Asesor extends CI_Controller
             $id_acta_m = '<input type="checkbox" readonly name="actaMatrimonio_pf" id="actaMatrimonio_pf" value="1"> Acta&nbsp;de&nbsp;Matrimonio';
             $arreglo_ds["actaMatrimonio_pf"] = '0';
         }
+
         if ($this->input->post('actaConstitutiva_pm')) {
             $arreglo_ds["actaConstitutiva_pm"] = $actaConstitutiva_pm;
             $id_acta_c = '<input type="checkbox" readonly name="actaConstitutiva_pm" id="actaConstitutiva_pm" value="1" checked="checked"> Acta&nbsp;Constitutiva';
@@ -1984,6 +2050,7 @@ class Asesor extends CI_Controller
             $id_acta_c = '<input type="checkbox" readonly name="actaConstitutiva_pm" id="actaConstitutiva_pm" value="1"> Acta&nbsp;Constitutiva';
             $arreglo_ds["actaConstitutiva_pm"] = '0';
         }
+
         if ($this->input->post('poder_pm')) {
             $arreglo_ds["poder_pm"] = $poder_pm;
             $id_poder = '<input type="checkbox" readonly name="poder_pm" id="poder_pm" value="1" checked="checked"> Poder';
@@ -1991,6 +2058,7 @@ class Asesor extends CI_Controller
             $id_poder = '<input type="checkbox" readonly name="poder_pm" id="poder_pm" value="1"> Poder';
             $arreglo_ds["poder_pm"] = '0';
         }
+
         if ($this->input->post('idOficialApoderado_pm')) {
             $arreglo_ds["idOficialApoderado_pm"] = $idOficialApoderado_pm;
             $id_apoderado = '<input type="checkbox" readonly name="idOficialApoderado_pm" id="idOficialApoderado_pm" value="1" checked="checked"> Identificación&nbsp;Oficial&nbsp;Apoderado';
@@ -1998,6 +2066,7 @@ class Asesor extends CI_Controller
             $id_apoderado = '<input type="checkbox" readonly name="idOficialApoderado_pm" id="idOficialApoderado_pm" value="1"> Identificación&nbsp;Oficial&nbsp;Apoderado';
             $arreglo_ds["idOficialApoderado_pm"] = '0';
         }
+
         if ($this->input->post('tipo_vivienda')) {
             $arreglo_cliente["tipo_vivienda"] = $tipo_vivienda;
             if ($this->input->post('tipo_vivienda') == 1) {
@@ -2038,6 +2107,7 @@ class Asesor extends CI_Controller
         } else if (!$this->input->post('tipo_vivienda')) {
             $arreglo_cliente["tipo_vivienda"] = '0';
         }
+
         if ($this->input->post('pdfOK') != null || $this->input->post('pdfOK') == '0') {
             //CONVERTIMOS A ARREGLO TANTO LOS DESCUENTOS ACTUALES COMO EL NUEVO A AGREGAR
             $arrayCorreo = explode(",", $correo);/*$correo)*/
@@ -2070,244 +2140,245 @@ class Asesor extends CI_Controller
             $auto_page_break = $pdf->getAutoPageBreak();
             $pdf->Image('static/images/ar4c.png', 120, 15, 300, 0, 'PNG', '', '', false, 300, '', false, false, 0, false, false, false);
             $pdf->setPageMark();
-        $html = '<!DOCTYPE html>
-            <html lang="en">
-            <head>
-            <link rel="shortcut icon" href="' . base_url() . 'static/images/arbol_cm.png" />
-            <link href="<?=base_url()?>dist/css/bootstrap.min.css" rel="stylesheet" />
-            <!--  Material Dashboard CSS    -->
-            <link href="<?=base_url()?>dist/css/material-dashboard.css" rel="stylesheet" />
-            <!--  CSS for Demo Purpose, don\'t include it in your project     -->
-            <link href="<?=base_url()?>dist/css/demo.css" rel="stylesheet" />
-            <!--     Fonts and icons     -->
-            <link href="<?=base_url()?>dist/css/font-awesome.css" rel="stylesheet" />
-            <link href="<?=base_url()?>dist/css/google-roboto-300-700.css" rel="stylesheet" />
-            <style>
-            body{color: #084c94;}
-            .espacio{padding: 5%;}
-            .espaciodos{padding: 10%;} 
-            h2{font-weight: bold;color: #084c94;}
-            .save {display:scroll;position:fixed;bottom:225px;right:17px;z-index: 3;}
-            p{color: #084c94;}
-            .col-xs-16 {width: 3px;float: left;}
-            .col-xs-17 {width: 16%;float: left;}
-            #imagenbg {position: relative;top:1500px;z-index: -1;}
-            #fichadeposito {position: absolute;z-index: 2;}
-            .mySectionPdf
-            {
-                padding: 20px;
-            }
-            .form-group.is-focused .form-control 
-            {
-                outline: none;
-                background-image: linear-gradient(#0c63c5, #177beb), linear-gradient(#D2D2D2, #D2D2D2);
-                background-size: 100% 2px, 100% 1px;
-                box-shadow: none;
-                transition-duration: 0.3s;
-            }
-            b
-            {
-                font-size: 8px;
-            }
-            </style>
-            </head>
-            <body>
-            <div id="fichadeposito" name="fichadeposito" class="fichadeposito">
-            <div id="muestra">
-            <table border="0" width="100%" id="tabla" align="center">
-            <tr>
-            
-            <td width="70%" align="left">
-            <label>
-            <h1 style="margin-right: 50px;"> DEPÓSITO DE SERIEDAD</h1>
-            </label>
-            </td>
-            <td align="right" width="15%">
-            <br><br><br>
-            <p style="margin-right: 2px;">FOLIO</p>
-            </td>
-            <td width="15%" style="border-bottom:1px solid #CCCCCC">
-            <p style="color: red;font-size:14px;">' . $clave_folio . '</p>
-            </td>
-            </tr>
-            </table>
-            <table border="0" width="100%" align="" align="">
-            <tr>
-            <th rowspan="4" width="283" align="left">
-            <img src="' . base_url() . '/static/images/CMOF.png" alt="Servicios Condominales" title="Servicios Condominales" style="width: 250px"/>
-            </th>
-            <td width="367">
-            <h5><p style="font-size:9px;"><strong>DESARROLLO:</strong></p></h5>
-            </td>
-            </tr>
-            <tr>
-            <td width="367">
-            <table border="0" width="100%">
-            <tr>
-            <td width="20%">' . $d1 . '</td>
-            <td width="20%">' . $d2 . '</td>
-            <td width="20%">' . $d3 . '</td>
-            <td width="20%">' . $d4 . '</td>
-            <td width="20%">' . $d5 . '</td>
-            </tr>
-            <tr>
-            <td width="20%">' . $tpl1 . '</td>
-            <td width="20%">' . $tpl2 . '</td>
-            <td width="20%"></td>
-            <td width="20%"></td>
-            <td width="20%"></td>
-            </tr>
-            </table>
-            </td>
-            </tr>
-            <tr>
-            <td>
-            <h5><p style="font-size:9px;"><strong>DOCUMENTACIÓN ENTREGADA:</strong></p></h5>
-            </td>
-            </tr>
-            <tr>
-            <td>
-            <table border="0" width="100%">
-            <tr>
-            <td width="19 %"><p><strong>Personas&nbsp;Físicas</strong></p></td>
-            <td width="23%">' . $id_identificacion . '</td>
-            <td width="27%">' . $id_domicilio . '</td>
-            <td width="29%" colspan="2">' . $id_acta_m . '</td>
-            </tr>
-            <tr>
-            <td width="19%"><p><strong>Personas&nbsp;Morales</strong></p></td>
-            <td width="23%">' . $id_acta_c . '</td>
-            <td width="27%">' . $id_poder . '</td>
-            <td width="29%" colspan="2">' . $id_apoderado . '</td>
-            </tr>
-            <tr>
-            <td></td>
-            <td width="25%"><b>RFC:</b> ' . $rfc . '</td>
-            <td width="43%"><b>REF:</b> ' . $reg_fis . '</td>
-            <td width="23%"><b>CP:</b> ' . $cp_fac . '</td>
-            <td width="27%"></td>
-            <td width="29%" colspan="2"></td>
-            </tr>
-            </table>
-            </td>
-            </tr>
-            <tr>
-            <td width="100%" colspan="2">
-            <br>
-            </td>
-            </tr>
-            
-            <tr>
-            <td width="40%" colspan="2" style="border-bottom: 1px solid #CCCCCC; margin: 0px 0px 150px 0px">
-            <label>NOMBRE(<b><span style="color: red;">*</span></b>):</label><br><br><b>&nbsp;' . $nombre . ' <br></b>
-            </td>
-            <td width="30%" colspan="2" style="border-bottom: 1px solid #CCCCCC; margin: 0px 0px 150px 0px">
-            <label>APELLIDO PATERNO(<b><span style="color: red;">*</span></b>):</label><br><br><b>&nbsp;' . $apellido_paterno . ' <br></b>
-            </td>
-            <td width="30%" colspan="2" style="border-bottom: 1px solid #CCCCCC; margin: 0px 0px 150px 0px">
-            <label>APELLIDO MATERNO(<b><span style="color: red;">*</span></b>):</label><br><br><b>&nbsp;' . $apellido_materno . ' <br></b>
-            </td>
-            </tr>
-            <tr>
-            <td width="100%" colspan="2"></td>
-            </tr>
-            <tr>
-            <td width="33.3%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>TELÉFONO CASA:
-                </label><br><br><b style="padding-left: 250px">&nbsp;' . $telefono1 . '</b><br>
-            </td>
-            <td width="33.3%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>CELULAR (<b><span style="color: red;">*</span></b>) </label><br><br><b>&nbsp;' . $telefono2 . '</b><br>
-            </td>
-            <td width="33.3%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label> EMAIL (<b><span style="color: red;">*</span></b>)
-                </label><br><br><b>&nbsp;' . $correo . '</b><br>
-            </td>
-            </tr>
-            
-            <tr>
-            <td width="100%" colspan="2"></td>
-            </tr>
-            <tr>
-            <td width="33.3%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>FECHA DE NACIMIENTO:
-                </label><br><br><b style="padding-left: 250px">&nbsp;' . $fecha_nacimiento . '</b><br>
-            </td>
-            <td width="33.3%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>NACIONALIDAD:
-                </label><br><br><b>&nbsp;' . $nac_select_II . '</b><br>
-            </td>
-            <td width="33.3%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>ORIGINARIO DE:
-                </label><br><br><b>&nbsp;' . $originario . '</b><br>
-            </td>
-            </tr>
-            <tr>
-            <td width="100%" colspan="2"></td>
-            </tr>
-            <tr>
-            <td width="33.3%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>ESTADO CIVIL:
-                </label><br><br><b style="padding-left: 250px">&nbsp;' . $est_vic . '</b><br>
-            </td>
-            <td width="33.3%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>NOMBRE CONYUGE:
-                </label><br><br><b>&nbsp;' . $nombre_conyuge . '</b><br>
-            </td>
-            <td width="33.3%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>RÉGIMEN:
-                </label><br><br><b>&nbsp;' . $reg_ses . '</b><br>
-            </td>
-            </tr>
-            <tr>
-            <td width="100%" colspan="2"></td>
-            </tr>
-            <tr>
-            <td width="100%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>DOMICILIO PARTICULAR:
-                </label><br><br><b style="padding-left: 250px">&nbsp;' . $domicilio_particular . '</b><br>
-            </td>
-            </tr>
-            <tr>
-            <td width="100%" colspan="2"></td>
-            </tr>
-            <tr>
-            <td width="20%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>OCUPACIÓN:
-                </label><br><br><b style="padding-left: 250px">&nbsp;' . $ocupacion . '</b><br>
-            </td>
-            <td width="35%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>EMPRESA EN LA QUE TRABAJA:
-                </label><br><br><b>&nbsp;' . $empresa . '</b><br>
-            </td>
-            <td width="35%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>PUESTO:
-                </label><br><br><b>&nbsp;' . $puesto . '</b><br>
-            </td>
-            <td width="10%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>ANTIGÜEDAD:
-                </label><br><br><b>&nbsp;' . $antiguedad . '</b><br>
-            </td>
-            </tr>
-            <tr>
-            <td width="100%" colspan="2"></td>
-            </tr>
-            <tr>
-            <td width="15%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>EDAD:
-                </label><br><br><b style="padding-left: 250px">&nbsp;' . $edadFirma . '</b><br>
-            </td>
-            <td width="70%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>DOMICILIO EMPRESA:
-                </label><br><br><b>&nbsp;' . $domicilio_empresa . '</b><br>
-            </td>
-            <td width="15%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>TELÉFONO EMPRESA:
-                </label><br><br><b>&nbsp;' . $telefono_empresa . '</b><br>
-            </td>
-            </tr>
-            <tr>
-            <td width="100%" colspan="2"></td>
-            </tr>
-            <tr>
-            <td width="100%" colspan="2"></td>
-            </tr>
-            <tr>
-            <td width="15%" colspan="2"><b>VIVE EN CASA:</b></td>
-            <td width="10%">' . $tv1 . '</td>
-            <td width="10%">' . $tv2 . '</td>
-            <td width="10%">' . $tv3 . '</td>
-            <td width="10%">' . $tv4 . '</td>
-            <td width="10%">' . $tv5 . '<br><br></td>
-            </tr>
-            <tr >
-                <td width="100%" style="border-top:1px solid #CCC">
-                <br><br>
-                    <b style="font-size:1.5em;">CO - PROPIETARIOS:</b><br>
-                    ';
+            $html = '<!DOCTYPE html>
+                <html lang="en">
+                <head>
+                <link rel="shortcut icon" href="' . base_url() . 'static/images/arbol_cm.png" />
+                <link href="<?=base_url()?>dist/css/bootstrap.min.css" rel="stylesheet" />
+                <!--  Material Dashboard CSS    -->
+                <link href="<?=base_url()?>dist/css/material-dashboard.css" rel="stylesheet" />
+                <!--  CSS for Demo Purpose, don\'t include it in your project     -->
+                <link href="<?=base_url()?>dist/css/demo.css" rel="stylesheet" />
+                <!--     Fonts and icons     -->
+                <link href="<?=base_url()?>dist/css/font-awesome.css" rel="stylesheet" />
+                <link href="<?=base_url()?>dist/css/google-roboto-300-700.css" rel="stylesheet" />
+                <style>
+                body{color: #084c94;}
+                .espacio{padding: 5%;}
+                .espaciodos{padding: 10%;} 
+                h2{font-weight: bold;color: #084c94;}
+                .save {display:scroll;position:fixed;bottom:225px;right:17px;z-index: 3;}
+                p{color: #084c94;}
+                .col-xs-16 {width: 3px;float: left;}
+                .col-xs-17 {width: 16%;float: left;}
+                #imagenbg {position: relative;top:1500px;z-index: -1;}
+                #fichadeposito {position: absolute;z-index: 2;}
+                .mySectionPdf
+                {
+                    padding: 20px;
+                }
+                .form-group.is-focused .form-control 
+                {
+                    outline: none;
+                    background-image: linear-gradient(#0c63c5, #177beb), linear-gradient(#D2D2D2, #D2D2D2);
+                    background-size: 100% 2px, 100% 1px;
+                    box-shadow: none;
+                    transition-duration: 0.3s;
+                }
+                b
+                {
+                    font-size: 8px;
+                }
+                </style>
+                </head>
+                <body>
+                <div id="fichadeposito" name="fichadeposito" class="fichadeposito">
+                <div id="muestra">
+                <table border="0" width="100%" id="tabla" align="center">
+                <tr>
+                
+                <td width="70%" align="left">
+                <label>
+                <h1 style="margin-right: 50px;"> DEPÓSITO DE SERIEDAD</h1>
+                </label>
+                </td>
+                <td align="right" width="15%">
+                <br><br><br>
+                <p style="margin-right: 2px;">FOLIO</p>
+                </td>
+                <td width="15%" style="border-bottom:1px solid #CCCCCC">
+                <p style="color: red;font-size:14px;">' . $clave_folio . '</p>
+                </td>
+                </tr>
+                </table>
+                <table border="0" width="100%" align="" align="">
+                <tr>
+                <th rowspan="4" width="283" align="left">
+                <img src="' . base_url() . '/static/images/CMOF.png" alt="Servicios Condominales" title="Servicios Condominales" style="width: 250px"/>
+                </th>
+                <td width="367">
+                <h5><p style="font-size:9px;"><strong>DESARROLLO:</strong></p></h5>
+                </td>
+                </tr>
+                <tr>
+                <td width="367">
+                <table border="0" width="100%">
+                <tr>
+                <td width="20%">' . $d1 . '</td>
+                <td width="20%">' . $d2 . '</td>
+                <td width="20%">' . $d3 . '</td>
+                <td width="20%">' . $d4 . '</td>
+                <td width="20%">' . $d5 . '</td>
+                </tr>
+                <tr>
+                <td width="20%">' . $tpl1 . '</td>
+                <td width="20%">' . $tpl2 . '</td>
+                <td width="20%"></td>
+                <td width="20%"></td>
+                <td width="20%"></td>
+                </tr>
+                </table>
+                </td>
+                </tr>
+                <tr>
+                <td>
+                <h5><p style="font-size:9px;"><strong>DOCUMENTACIÓN ENTREGADA:</strong></p></h5>
+                </td>
+                </tr>
+                <tr>
+                <td>
+                <table border="0" width="100%">
+                <tr>
+                <td width="19 %"><p><strong>Personas&nbsp;Físicas</strong></p></td>
+                <td width="23%">' . $id_identificacion . '</td>
+                <td width="27%">' . $id_domicilio . '</td>
+                <td width="29%" colspan="2">' . $id_acta_m . '</td>
+                </tr>
+                <tr>
+                <td width="19%"><p><strong>Personas&nbsp;Morales</strong></p></td>
+                <td width="23%">' . $id_acta_c . '</td>
+                <td width="27%">' . $id_poder . '</td>
+                <td width="29%" colspan="2">' . $id_apoderado . '</td>
+                </tr>
+                <tr>
+                <td></td>
+                <td width="25%"><b>RFC:</b> ' . $rfc . '</td>
+                <td width="43%"><b>REF:</b> ' . $reg_fis . '</td>
+                <td width="23%"><b>CP:</b> ' . $cp_fac . '</td>
+                <td width="27%"></td>
+                <td width="29%" colspan="2"></td>
+                </tr>
+                </table>
+                </td>
+                </tr>
+                <tr>
+                <td width="100%" colspan="2">
+                <br>
+                </td>
+                </tr>
+                
+                <tr>
+                <td width="40%" colspan="2" style="border-bottom: 1px solid #CCCCCC; margin: 0px 0px 150px 0px">
+                <label>NOMBRE(<b><span style="color: red;">*</span></b>):</label><br><br><b>&nbsp;' . $nombre . ' <br></b>
+                </td>
+                <td width="30%" colspan="2" style="border-bottom: 1px solid #CCCCCC; margin: 0px 0px 150px 0px">
+                <label>APELLIDO PATERNO(<b><span style="color: red;">*</span></b>):</label><br><br><b>&nbsp;' . $apellido_paterno . ' <br></b>
+                </td>
+                <td width="30%" colspan="2" style="border-bottom: 1px solid #CCCCCC; margin: 0px 0px 150px 0px">
+                <label>APELLIDO MATERNO(<b><span style="color: red;">*</span></b>):</label><br><br><b>&nbsp;' . $apellido_materno . ' <br></b>
+                </td>
+                </tr>
+                <tr>
+                <td width="100%" colspan="2"></td>
+                </tr>
+                <tr>
+                <td width="33.3%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>TELÉFONO CASA:
+                    </label><br><br><b style="padding-left: 250px">&nbsp;' . $telefono1 . '</b><br>
+                </td>
+                <td width="33.3%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>CELULAR (<b><span style="color: red;">*</span></b>) </label><br><br><b>&nbsp;' . $telefono2 . '</b><br>
+                </td>
+                <td width="33.3%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label> EMAIL (<b><span style="color: red;">*</span></b>)
+                    </label><br><br><b>&nbsp;' . $correo . '</b><br>
+                </td>
+                </tr>
+                
+                <tr>
+                <td width="100%" colspan="2"></td>
+                </tr>
+                <tr>
+                <td width="33.3%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>FECHA DE NACIMIENTO:
+                    </label><br><br><b style="padding-left: 250px">&nbsp;' . $fecha_nacimiento . '</b><br>
+                </td>
+                <td width="33.3%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>NACIONALIDAD:
+                    </label><br><br><b>&nbsp;' . $nac_select_II . '</b><br>
+                </td>
+                <td width="33.3%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>ORIGINARIO DE:
+                    </label><br><br><b>&nbsp;' . $originario . '</b><br>
+                </td>
+                </tr>
+                <tr>
+                <td width="100%" colspan="2"></td>
+                </tr>
+                <tr>
+                <td width="33.3%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>ESTADO CIVIL:
+                    </label><br><br><b style="padding-left: 250px">&nbsp;' . $est_vic . '</b><br>
+                </td>
+                <td width="33.3%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>NOMBRE CONYUGE:
+                    </label><br><br><b>&nbsp;' . $nombre_conyuge . '</b><br>
+                </td>
+                <td width="33.3%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>RÉGIMEN:
+                    </label><br><br><b>&nbsp;' . $reg_ses . '</b><br>
+                </td>
+                </tr>
+                <tr>
+                <td width="100%" colspan="2"></td>
+                </tr>
+                <tr>
+                <td width="100%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>DOMICILIO PARTICULAR:
+                    </label><br><br><b style="padding-left: 250px">&nbsp;' . $domicilio_particular . '</b><br>
+                </td>
+                </tr>
+                <tr>
+                <td width="100%" colspan="2"></td>
+                </tr>
+                <tr>
+                <td width="20%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>OCUPACIÓN:
+                    </label><br><br><b style="padding-left: 250px">&nbsp;' . $ocupacion . '</b><br>
+                </td>
+                <td width="35%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>EMPRESA EN LA QUE TRABAJA:
+                    </label><br><br><b>&nbsp;' . $empresa . '</b><br>
+                </td>
+                <td width="35%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>PUESTO:
+                    </label><br><br><b>&nbsp;' . $puesto . '</b><br>
+                </td>
+                <td width="10%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>ANTIGÜEDAD:
+                    </label><br><br><b>&nbsp;' . $antiguedad . '</b><br>
+                </td>
+                </tr>
+                <tr>
+                <td width="100%" colspan="2"></td>
+                </tr>
+                <tr>
+                <td width="15%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>EDAD:
+                    </label><br><br><b style="padding-left: 250px">&nbsp;' . $edadFirma . '</b><br>
+                </td>
+                <td width="70%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>DOMICILIO EMPRESA:
+                    </label><br><br><b>&nbsp;' . $domicilio_empresa . '</b><br>
+                </td>
+                <td width="15%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>TELÉFONO EMPRESA:
+                    </label><br><br><b>&nbsp;' . $telefono_empresa . '</b><br>
+                </td>
+                </tr>
+                <tr>
+                <td width="100%" colspan="2"></td>
+                </tr>
+                <tr>
+                <td width="100%" colspan="2"></td>
+                </tr>
+                <tr>
+                <td width="15%" colspan="2"><b>VIVE EN CASA:</b></td>
+                <td width="10%">' . $tv1 . '</td>
+                <td width="10%">' . $tv2 . '</td>
+                <td width="10%">' . $tv3 . '</td>
+                <td width="10%">' . $tv4 . '</td>
+                <td width="10%">' . $tv5 . '<br><br></td>
+                </tr>
+                <tr >
+                    <td width="100%" style="border-top:1px solid #CCC">
+                    <br><br>
+                        <b style="font-size:1.5em;">CO - PROPIETARIOS:</b><br>
+            ';
+
             $copropiedad = $this->Asesor_model->selectDSCopropiedad($id_cliente);
             $datos["copropiedadTotal"] = $this->Asesor_model->selectDSCopropiedadCount($id_cliente);
             $limite = $datos["copropiedadTotal"][0]->valor_propietarios;
@@ -2315,61 +2386,69 @@ class Asesor extends CI_Controller
             $edoCivil = $this->Asesor_model->getCivilStatus()->result_array();
             $regMat = $this->Asesor_model->getMatrimonialRegime()->result_array();
             $regFiscal = $this->Asesor_model->getFiscalRegime()->result_array();
-            $parentescos = $this->Asesor_model->getParentesco()->result_array();
+
             if ($limite > 0) {
                 $coprops_ds = '';
                 for ($i = 0; $i < $limite; $i++) {
                     $coprops_ds .= '/ ' . $copropiedad[$i]->nombre_cop . ' ' . $copropiedad[$i]->apellido_paterno . ' ' . $copropiedad[$i]->apellido_materno;
                 }
             }
+
             if ($limite > 0) {
                 for ($i = 0; $i < $limite; $i++) {
                     $html .= '<center><br><br><label style="font-size: 1.5em; color:#0A548B;"><b>PROPIETARIO: ' . ($i + 1) . '</b></label></center><br><br>
                     <table style="font-size: 1.2em; border-bottom: 1px solid #CCC">
                     <tr>
                         <td ><label>Nombre: </label><br><b>' . $copropiedad[$i]->nombre_cop . ' ' . $copropiedad[$i]->apellido_paterno . ' ' . $copropiedad[$i]->apellido_materno . '</b></td>
-                        <td ><label>Email: </label><br><b>' . $array1[$i] . '</b></td>
-                        <td ><label>Tel. Casa: </label><br><b>' . $array2[$i] . '</b></td>
-                        <td ><label>Celular: </label><br><b>' . $array3[$i] . '</b></td>
-                        <td ><label>Fecha Nac:</label><br><b>' . $array4[$i] . '</b></td>
+                        <td ><label>Email: </label><br><b>' . $emailCopArray[$i] . '</b></td>
+                        <td ><label>Tel. Casa: </label><br><b>' . $telefono1CopArray[$i] . '</b></td>
+                        <td ><label>Celular: </label><br><b>' . $telefono2CopArray[$i] . '</b></td>
+                        <td ><label>Fecha Nac:</label><br><b>' . $fNacimientoCopArray[$i] . '</b></td>
                         <td ><label>Nacionalidad: </label><br><b>';
+
                     for ($n = 0; $n < count($nacionalidades); $n++) {
-                        if ($nacionalidades[$n]['id_opcion'] == $array5[$i]) {
+                        if ($nacionalidades[$n]['id_opcion'] == $nacionalidadCopArray[$i]) {
                             $html .= $nacionalidades[$n]['nombre'];
                         }
                     }
+
                     $html .= '</b><br><br></td>
                     </tr>
                     <tr>
-                        <td colspan="2"><label>Originario de: </label><br><b>' . $array6[$i] . '</b></td>
-                        <td><label>Domicilio particular: </label><br><b>' . $array7[$i] . '</b></td>
+                        <td colspan="2"><label>Originario de: </label><br><b>' . $originarioCopArray[$i] . '</b></td>
+                        <td><label>Domicilio particular: </label><br><b>' . $idParticularCopArray[$i] . '</b></td>
                         <td><label>Estado Civil: </label><br><b>';
+
                     for ($n = 0; $n < count($edoCivil); $n++) {
-                        if ($edoCivil[$n]['id_opcion'] == $array8[$i]) {
+                        if ($edoCivil[$n]['id_opcion'] == $eCivilCopArray[$i]) {
                             $html .= $edoCivil[$n]['nombre'];
                         }
                     }
+
                     $html .= '</b></td>
-                        <td><label>Nombre Conyugue: </label><br><b>' . $array9[$i] . '</b></td>
+                        <td><label>Nombre Conyugue: </label><br><b>' . $conyugeCopArray[$i] . '</b></td>
                         <td><label>Régimen: </label><br><b>';
+
                     for ($n = 0; $n < count($regMat); $n++) {
-                        if ($regMat[$n]['id_opcion'] == $array10[$i]) {
+                        if ($regMat[$n]['id_opcion'] == $rMatrimonialCopArray[$i]) {
                             $html .= $regMat[$n]['nombre'];
                         }
                     }
+
                     $html .= '</b><br><br></td>
                     </tr>
                     <tr>
-                        <td><label>Ocupación: </label><br><b>' . $array11[$i] . '</b></td>
-                        <td><label>Puesto: </label><br><b>' . $array12[$i] . '</b></td>
-                        <td><label>Empresa Laboral: </label><br><b>' . $array13[$i] . '</b></td>
-                        <td><label>Antigüedad: </label><br><b>' . $array14[$i] . '</b></td>
-                        <td><label>Edad Firma: </label><br><b>' . $array15[$i] . '</b></td>
-                        <td><label>Domicilio Empresa: </label><br><b>' . $array16[$i] . '<br></b></td>
+                        <td><label>Ocupación: </label><br><b>' . $ocupacionCopArray[$i] . '</b></td>
+                        <td><label>Puesto: </label><br><b>' . $puestoCopArray[$i] . '</b></td>
+                        <td><label>Empresa Laboral: </label><br><b>' . $empresaCopArray[$i] . '</b></td>
+                        <td><label>Antigüedad: </label><br><b>' . $antiguedadCopArray[$i] . '</b></td>
+                        <td><label>Edad Firma: </label><br><b>' . $edadFirmaCopArray[$i] . '</b></td>
+                        <td><label>Domicilio Empresa: </label><br><b>' . $domEmpCopArray[$i] . '<br></b></td>
                     </tr>
                     <tr>
                         <td width="80%"><label>Tipo vivienda: </label><br><b>';
-                    if ($array18[$i] == 1) {
+
+                    if ($tipoViviendaCopArray[$i] == 1) {
                         $html .= '
                             <input type="radio" name="tipo_vivienda" id="tipo_vivienda" value="1" readonly checked="checked" readonly> PROPIA
                             <input type="radio" name="tipo_vivienda" id="tipo_vivienda" value="2" readonly> RENTADA
@@ -2377,7 +2456,7 @@ class Asesor extends CI_Controller
                             <input type="radio" name="tipo_vivienda" id="tipo_vivienda" value="4" readonly> FAMILIAR
                             <input type="radio" name="tipo_vivienda" id="tipo_vivienda" value="5" readonly> OTRO
                             ';
-                    } elseif ($array18[$i] == 2) {
+                    } elseif ($tipoViviendaCopArray[$i] == 2) {
                         $html .= '
                             <input type="radio" name="tipo_vivienda" id="tipo_vivienda" value="1" readonly readonly> PROPIA
                             <input type="radio" name="tipo_vivienda" id="tipo_vivienda" value="2" readonly checked="checked"> RENTADA
@@ -2385,7 +2464,7 @@ class Asesor extends CI_Controller
                             <input type="radio" name="tipo_vivienda" id="tipo_vivienda" value="4" readonly> FAMILIAR
                             <input type="radio" name="tipo_vivienda" id="tipo_vivienda" value="5" readonly> OTRO
                             ';
-                    } elseif ($array18[$i] == 3) {
+                    } elseif ($tipoViviendaCopArray[$i] == 3) {
                         $html .= '
                             <input type="radio" name="tipo_vivienda" id="tipo_vivienda" value="1" readonly readonly> PROPIA
                             <input type="radio" name="tipo_vivienda" id="tipo_vivienda" value="2" readonly> RENTADA
@@ -2393,7 +2472,7 @@ class Asesor extends CI_Controller
                             <input type="radio" name="tipo_vivienda" id="tipo_vivienda" value="4" readonly> FAMILIAR
                             <input type="radio" name="tipo_vivienda" id="tipo_vivienda" value="5" readonly> OTRO
                             ';
-                    } elseif ($array18[$i] == 4) {
+                    } elseif ($tipoViviendaCopArray[$i] == 4) {
                         $html .= '
                             <input type="radio" name="tipo_vivienda" id="tipo_vivienda" value="1" readonly readonly> PROPIA
                             <input type="radio" name="tipo_vivienda" id="tipo_vivienda" value="2" readonly> RENTADA
@@ -2401,7 +2480,7 @@ class Asesor extends CI_Controller
                             <input type="radio" name="tipo_vivienda" id="tipo_vivienda" value="4" readonly checked="checked"> FAMILIAR
                             <input type="radio" name="tipo_vivienda" id="tipo_vivienda" value="5" readonly> OTRO
                             ';
-                    } elseif ($array18[$i] == 5) {
+                    } elseif ($tipoViviendaCopArray[$i] == 5) {
                         $html .= '
                             <input type="radio" name="tipo_vivienda" id="tipo_vivienda" value="1" readonly readonly> PROPIA
                             <input type="radio" name="tipo_vivienda" id="tipo_vivienda" value="2" readonly> RENTADA
@@ -2418,184 +2497,188 @@ class Asesor extends CI_Controller
                             <input type="radio" name="tipo_vivienda" id="tipo_vivienda" value="5" readonly> OTRO
                             ';
                     }
+
                     $html .= '</b></td>
-                        <td><label>RFC: </label><br><b>' . $array19[$i] . '</b></td>
+                        <td><label>RFC: </label><br><b>' . $rfcCopArray[$i] . '</b></td>
                         <td><label>Régimen Fiscal: </label><br><b>';
                         for ($n = 0; $n < count($regFiscal); $n++) {
-                        if ($regFiscal[$n]['id_opcion'] == $array20[$i]) {
+                        if ($regFiscal[$n]['id_opcion'] == $regimenFacArray[$i]) {
                             $html .= $regFiscal[$n]['nombre'];
                         }
                     }
+
                     $html .= '</b></td>
                     </tr>
                     </table>';
                 }
             } else {
-                echo '<table><tr><td><center>NO HAY CO - PROPIETARIOS</ceneter></td></tr></table>';
+                $html.= '<table><tr><td><center>NO HAY CO - PROPIETARIOS</ceneter></td></tr></table>';
             }
+
             $html .= '
                     
-                    
+                        
+                    </td>
+                </tr>
+                <tr>
+                <td width="100%" colspan="2"></td>
+                </tr>
+                <tr>
+                <td width="100%" colspan="2"></td>
+                </tr>
+                <tr>
+                <td width="100%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>El Sr.(a):
+                    </label><br><br><b style="padding-left: 250px">&nbsp;' . $nombre . ' ' . $apellido_paterno . ' ' . $apellido_materno . ' ' . $coprops_ds . '</b><br>
                 </td>
-            </tr>
-            <tr>
-            <td width="100%" colspan="2"></td>
-            </tr>
-            <tr>
-            <td width="100%" colspan="2"></td>
-            </tr>
-            <tr>
-            <td width="100%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>El Sr.(a):
-                </label><br><br><b style="padding-left: 250px">&nbsp;' . $nombre . ' ' . $apellido_paterno . ' ' . $apellido_materno . ' ' . $coprops_ds . '</b><br>
-            </td>
-            </tr>
-            <tr>
-            <td width="100%" colspan="2"></td>
-            </tr>
-            <tr>
-            <td width="25%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>SE COMPROMETE A ADQUIRIR:
-                </label><br><br><b style="padding-left: 250px">&nbsp;' . $nombreLote . '</b><br>
-            </td>
-            <td width="25%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>EN EL CLÚSTER:
-                </label><br><br><b style="padding-left: 250px">&nbsp;' . $nombreCondominio . '</b><br>
-            </td>
-            <td width="25%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>DE SUP APROX:
-                </label><br><br><b style="padding-left: 250px">&nbsp;' . $sup . '</b><br>
-            </td>
-            <td width="25%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>NO. REFERENCIA PAGO:
-                </label><br><br><b style="padding-left: 250px">&nbsp;' . $referencia . '</b><br>
-            </td>
-            </tr>
-            <tr>
-            <td width="100%" colspan="2"></td>
-            </tr>
-            <tr>
-            <td width="25%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>COSTO POR M<sup>2</sup> LISTA:
-                </label><br><br><b style="padding-left: 250px">&nbsp;' . $costoM2 . '</b><br>
-            </td>
-            <td width="25%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>COSTO POR M<sup>2</sup> FINAL:
-                </label><br><br><b style="padding-left: 250px">&nbsp;' . $costom2f . '</b><br>
-            </td>
-            <td width="25%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>UNA VEZ QUE SEA AUTORIZADO:
-                </label><br><br><b style="padding-left: 250px">&nbsp;' . $proyecto . '</b><br>
-            </td>
-            <td width="25%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>EN EL MUNICIPIO DE:
-                </label><br><br><b style="padding-left: 250px">&nbsp;' . $municipio2 . '</b><br>
-            </td>
-            </tr>
-            <tr>
-            <td width="100%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>LA UBICACIÓN DE LOTE PUEDE VARIAR DEBIDO A AJUSTES DEL PROYECTO
-                </label><br><br><br>
-            </td>
-            </tr>
-            <tr>
-            <td width="25%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>IMPORTE DE LA OFERTA:
-                </label><br><br><b style="padding-left: 250px">&nbsp;' . $importOferta . '</b><br>
-            </td>
-            <td width="75%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>IMPORTE EN LETRA:
-                </label><br><br><b style="padding-left: 250px">&nbsp;' . $letraImport . '</b><br>
-            </td>
-            </tr>
-            <tr>
-            <td width="100%" colspan="2"></td>
-            </tr>
-            <tr>
-            <td width="100%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label><label>El ofertante como garantía de seriedad de la operación, entrega en este momento la cantidad de $: </label><b>' . $cantidad . '</b> <b> ( ' . $letraCantidad . ' ), </b> misma que se aplicará a cuenta del precio al momento de celebrar el contrato definitivo.El ofertante manifiesta que es su voluntad seguir aportando cantidades a cuenta de la siguiente forma:</label> 
-            </td>
-            </tr>
-            <tr>
-            <td width="100%" colspan="2"></td>
-            </tr>
-            <tr>
-            <td width="15%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>SALDO DE DEPÓSITO:
-                </label><br><br><b style="padding-left: 250px">&nbsp;' . $saldoDeposito . '</b><br>
-            </td>
-            <td width="15%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>APORTACIÓN MENSUAL:
-                </label><br><br><b style="padding-left: 250px">&nbsp;' . $aportMensualOfer . '</b><br>
-            </td>
-            <td width="20%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>FECHA 1° APORTACIÓN:
-                </label><br><br><b style="padding-left: 250px">&nbsp;' . $fecha1erAport . '</b><br>
-            </td>
-            <td width="10%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>PLAZO:
-                </label><br><br><b style="padding-left: 250px">&nbsp;' . $plazo . '</b><br>
-            </td>
-            <td width="20%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>FECHA LIQUIDACIÓN:
-                </label><br><br><b style="padding-left: 250px">&nbsp;' . $fechaLiquidaDepo . '</b><br>
-            </td>
-            <td width="20%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>FECHA 2° APORTACIÓN:
-                </label><br><br><b style="padding-left: 250px">&nbsp;' . $fecha2daAport . '</b><br>
-            </td>
-            </tr>
-            <tr>
-            <td width="100%" colspan="2"></td>
-            </tr>
-            <tr>
-            <td width="100%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label align="justify">Esta oferta tendrá una vigencia de 180 (ciento ochenta) días naturales. Dicho lapso de tiempo será para la firma del contrato privado el cual contendrá entre otras cláusulas, los términos y condiciones suspensivas que regulan esta oferta. En caso de no llevarse a cabo la firma del contrato, todo compromiso u obligación quedará sin efectos. En caso de que el ofertante realizara alguna aportación con cheque, éste será recibido salvo buen cobro y en el supuesto de que no fuera cobrable el título, esta operación también quedará sin efectos. En caso de cancelarse la presente operación o de no firmarse el contrato en el lapso arriba mencionado, la empresa cobrará al ofertante únicamente $10,000.00 (Diez mil pesos 00/100 m.n.) que cubren parcialmente los gastos generados por la operación. Que el ofertante sabe que como consecuencia de la modificación del proyecto por parte del desarrollador o de las autorizaciones definitivas emitidas por el Municipio correspondiente, la ubicación, la superficie, medidas y colindancias del lote señalado en el presente documento, así como la nomenclatura o el número definitivo de lotes del Desarrollo Inmobiliario, en el que se encuentra, puede variar, así mismo con motivo de ello, el lote puede sufrir afectaciones y/o servidumbres libres de construcción.Durante el periodo de contingencia derivado de la prevención contra el virus denominado COVID-19, la suscripción de éste Depósito de Seriedad, será documento suficiente para la formalización de la compraventa con la empresa titular del inmueble que por este medio adquiere el cliente. Una vez que se decrete el término del periodo de contingencia a que se hace referencia en el párrafo anterior, el comprador se compromete a suscribir el contrato de compraventa respectivo, mismo que le será entregado impreso en un periodo máximo de 60 (sesenta) días naturales, contados a partir del término del periodo de contingencia. De acuerdo a lo estipulado en el contrato de compraventa que habrá de suscribirse entre el comprador y el vendedor, la pena convencional en caso de que el comprador incumpla con cualquiera de sus obligaciones es del 25% (veinticinco por ciento) del precio total pactado. Una vez formalizada la compraventa y en caso de que el comprador solicite el envío del contrato de compraventa en forma digital, éste podrá ser solicitado a través de su asesor de ventas.</label> 
-            </td>
-            </tr>
-            <tr>
-            <td width="100%" colspan="2"></td>
-            </tr>
-            <tr>
-            <td width="100%" colspan="2"></td>
-            </tr>
-            <tr>
-            <td width="100%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>En el Municipio de <b>' . $municipio2 . '</b> a <b>' . $dia . '</b> del mes <b>' . $mes . '</b> del año <b>' . $anio . '</b>.</label> 
-            </td>
-            </tr>
-            <tr>
-            <td width="100%" colspan="2"></td>
-            </tr>
-            <tr>
-            <br><br><br><br><br> 
-            <td width="70%" align="center">' . $nombre . ' ' . $apellido_paterno . ' ' . $apellido_materno . ' ' . $coprops_ds . '
-            <BR> ______________________________________________________________________________<p>Nombre y Firma / Ofertante</p><p>Acepto que se realice una verificación de mis datos, en los teléfonos<br> y correos que proporciono para el otorgamiento del crédito.</p>
-            </td>
-            <td width="30%" align="center"><label><b>REFERENCIAS PERSONALES</b>.</label><br>
-            <p align="left">
-            <label>' . $nombre1 . ' - ' . $parentezco_select1 . ' - ' . $telefono1 . '</label><br>
-            <label>' . $nombre2 . ' - ' . $parentezco_select2 . ' - ' . $telefono2 . '</label>
-            </p>
-            </td>
-            </tr>
-            <tr>
-            <td width="100%" colspan="2"></td>
-            </tr>
-            <tr>
-            <td width="100%" colspan="2"></td>
-            </tr>
-            <tr>
-            <td width="100%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>OBSERVACIONES:
-                </label><br><br><b style="padding-left: 250px">&nbsp;' . $observacion . '</b><br>
-            </td>
-            </tr>
-            <tr>
-            <td width="100%" colspan="2"></td>
-            </tr>
-            <tr>
-            <br><br><br><br><br> 
-            <td width="50%" align="center">' . $asesor_datos . '<BR> ______________________________________________________________________________<p> 
-            <b>Nombre y Firma / Asesor</b></p>
-            </td>
-            <td width="50%" align="center">' . $gerente_datos . '<BR> ______________________________________________________________________________<p> 
-            <b>Nombre y Firma / Autorización de operación</b></p>
-            </td>
-            </tr>
-            <tr>
-            <td width="100%" align="center">
-            <table border="0" width="91%" style="background-color:#ffffff;">
-            <tr>
-            <td></td>
-            </tr>
-            </table>
-            </td>
-            </tr>
-            </table>
-            </td>
-            </div>
-            </div>
-            </body>
-            </html>';
+                </tr>
+                <tr>
+                <td width="100%" colspan="2"></td>
+                </tr>
+                <tr>
+                <td width="25%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>SE COMPROMETE A ADQUIRIR:
+                    </label><br><br><b style="padding-left: 250px">&nbsp;' . $nombreLote . '</b><br>
+                </td>
+                <td width="25%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>EN EL CLÚSTER:
+                    </label><br><br><b style="padding-left: 250px">&nbsp;' . $nombreCondominio . '</b><br>
+                </td>
+                <td width="25%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>DE SUP APROX:
+                    </label><br><br><b style="padding-left: 250px">&nbsp;' . $sup . '</b><br>
+                </td>
+                <td width="25%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>NO. REFERENCIA PAGO:
+                    </label><br><br><b style="padding-left: 250px">&nbsp;' . $referencia . '</b><br>
+                </td>
+                </tr>
+                <tr>
+                <td width="100%" colspan="2"></td>
+                </tr>
+                <tr>
+                <td width="25%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>COSTO POR M<sup>2</sup> LISTA:
+                    </label><br><br><b style="padding-left: 250px">&nbsp;' . $costoM2 . '</b><br>
+                </td>
+                <td width="25%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>COSTO POR M<sup>2</sup> FINAL:
+                    </label><br><br><b style="padding-left: 250px">&nbsp;' . $costom2f . '</b><br>
+                </td>
+                <td width="25%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>UNA VEZ QUE SEA AUTORIZADO:
+                    </label><br><br><b style="padding-left: 250px">&nbsp;' . $proyecto . '</b><br>
+                </td>
+                <td width="25%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>EN EL MUNICIPIO DE:
+                    </label><br><br><b style="padding-left: 250px">&nbsp;' . $municipio2 . '</b><br>
+                </td>
+                </tr>
+                <tr>
+                <td width="100%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>LA UBICACIÓN DE LOTE PUEDE VARIAR DEBIDO A AJUSTES DEL PROYECTO
+                    </label><br><br><br>
+                </td>
+                </tr>
+                <tr>
+                <td width="25%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>IMPORTE DE LA OFERTA:
+                    </label><br><br><b style="padding-left: 250px">&nbsp;' . $importOferta . '</b><br>
+                </td>
+                <td width="75%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>IMPORTE EN LETRA:
+                    </label><br><br><b style="padding-left: 250px">&nbsp;' . $letraImport . '</b><br>
+                </td>
+                </tr>
+                <tr>
+                <td width="100%" colspan="2"></td>
+                </tr>
+                <tr>
+                <td width="100%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label><label>El ofertante como garantía de seriedad de la operación, entrega en este momento la cantidad de $: </label><b>' . $cantidad . '</b> <b> ( ' . $letraCantidad . ' ), </b> misma que se aplicará a cuenta del precio al momento de celebrar el contrato definitivo.El ofertante manifiesta que es su voluntad seguir aportando cantidades a cuenta de la siguiente forma:</label> 
+                </td>
+                </tr>
+                <tr>
+                <td width="100%" colspan="2"></td>
+                </tr>
+                <tr>
+                <td width="15%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>SALDO DE DEPÓSITO:
+                    </label><br><br><b style="padding-left: 250px">&nbsp;' . $saldoDeposito . '</b><br>
+                </td>
+                <td width="15%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>APORTACIÓN MENSUAL:
+                    </label><br><br><b style="padding-left: 250px">&nbsp;' . $aportMensualOfer . '</b><br>
+                </td>
+                <td width="20%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>FECHA 1° APORTACIÓN:
+                    </label><br><br><b style="padding-left: 250px">&nbsp;' . $fecha1erAport . '</b><br>
+                </td>
+                <td width="10%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>PLAZO:
+                    </label><br><br><b style="padding-left: 250px">&nbsp;' . $plazo . '</b><br>
+                </td>
+                <td width="20%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>FECHA LIQUIDACIÓN:
+                    </label><br><br><b style="padding-left: 250px">&nbsp;' . $fechaLiquidaDepo . '</b><br>
+                </td>
+                <td width="20%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>FECHA 2° APORTACIÓN:
+                    </label><br><br><b style="padding-left: 250px">&nbsp;' . $fecha2daAport . '</b><br>
+                </td>
+                </tr>
+                <tr>
+                <td width="100%" colspan="2"></td>
+                </tr>
+                <tr>
+                <td width="100%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label align="justify">Esta oferta tendrá una vigencia de 180 (ciento ochenta) días naturales. Dicho lapso de tiempo será para la firma del contrato privado el cual contendrá entre otras cláusulas, los términos y condiciones suspensivas que regulan esta oferta. En caso de no llevarse a cabo la firma del contrato, todo compromiso u obligación quedará sin efectos. En caso de que el ofertante realizara alguna aportación con cheque, éste será recibido salvo buen cobro y en el supuesto de que no fuera cobrable el título, esta operación también quedará sin efectos. En caso de cancelarse la presente operación o de no firmarse el contrato en el lapso arriba mencionado, la empresa cobrará al ofertante únicamente $10,000.00 (Diez mil pesos 00/100 m.n.) que cubren parcialmente los gastos generados por la operación. Que el ofertante sabe que como consecuencia de la modificación del proyecto por parte del desarrollador o de las autorizaciones definitivas emitidas por el Municipio correspondiente, la ubicación, la superficie, medidas y colindancias del lote señalado en el presente documento, así como la nomenclatura o el número definitivo de lotes del Desarrollo Inmobiliario, en el que se encuentra, puede variar, así mismo con motivo de ello, el lote puede sufrir afectaciones y/o servidumbres libres de construcción.Durante el periodo de contingencia derivado de la prevención contra el virus denominado COVID-19, la suscripción de éste Depósito de Seriedad, será documento suficiente para la formalización de la compraventa con la empresa titular del inmueble que por este medio adquiere el cliente. Una vez que se decrete el término del periodo de contingencia a que se hace referencia en el párrafo anterior, el comprador se compromete a suscribir el contrato de compraventa respectivo, mismo que le será entregado impreso en un periodo máximo de 60 (sesenta) días naturales, contados a partir del término del periodo de contingencia. De acuerdo a lo estipulado en el contrato de compraventa que habrá de suscribirse entre el comprador y el vendedor, la pena convencional en caso de que el comprador incumpla con cualquiera de sus obligaciones es del 25% (veinticinco por ciento) del precio total pactado. Una vez formalizada la compraventa y en caso de que el comprador solicite el envío del contrato de compraventa en forma digital, éste podrá ser solicitado a través de su asesor de ventas.</label> 
+                </td>
+                </tr>
+                <tr>
+                <td width="100%" colspan="2"></td>
+                </tr>
+                <tr>
+                <td width="100%" colspan="2"></td>
+                </tr>
+                <tr>
+                <td width="100%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>En el Municipio de <b>' . $municipio2 . '</b> a <b>' . $dia . '</b> del mes <b>' . $mes . '</b> del año <b>' . $anio . '</b>.</label> 
+                </td>
+                </tr>
+                <tr>
+                <td width="100%" colspan="2"></td>
+                </tr>
+                <tr>
+                <br><br><br><br><br> 
+                <td width="70%" align="center">' . $nombre . ' ' . $apellido_paterno . ' ' . $apellido_materno . ' ' . $coprops_ds . '
+                <BR> ______________________________________________________________________________<p>Nombre y Firma / Ofertante</p><p>Acepto que se realice una verificación de mis datos, en los teléfonos<br> y correos que proporciono para el otorgamiento del crédito.</p>
+                </td>
+                <td width="30%" align="center"><label><b>REFERENCIAS PERSONALES</b>.</label><br>
+                <p align="left">
+                <label>' . $nombre1 . ' - ' . $parentezco_select1 . ' - ' . $telefono1 . '</label><br>
+                <label>' . $nombre2 . ' - ' . $parentezco_select2 . ' - ' . $telefono2 . '</label>
+                </p>
+                </td>
+                </tr>
+                <tr>
+                <td width="100%" colspan="2"></td>
+                </tr>
+                <tr>
+                <td width="100%" colspan="2"></td>
+                </tr>
+                <tr>
+                <td width="100%" colspan="2" style="border-bottom: 1px solid #CCCCCC"><label>OBSERVACIONES:
+                    </label><br><br><b style="padding-left: 250px">&nbsp;' . $observacion . '</b><br>
+                </td>
+                </tr>
+                <tr>
+                <td width="100%" colspan="2"></td>
+                </tr>
+                <tr>
+                <br><br><br><br><br> 
+                <td width="50%" align="center">' . $asesor_datos . '<BR> ______________________________________________________________________________<p> 
+                <b>Nombre y Firma / Asesor</b></p>
+                </td>
+                <td width="50%" align="center">' . $gerente_datos . '<BR> ______________________________________________________________________________<p> 
+                <b>Nombre y Firma / Autorización de operación</b></p>
+                </td>
+                </tr>
+                <tr>
+                <td width="100%" align="center">
+                <table border="0" width="91%" style="background-color:#ffffff;">
+                <tr>
+                <td></td>
+                </tr>
+                </table>
+                </td>
+                </tr>
+                </table>
+                </td>
+                </div>
+                </div>
+                </body>
+                </html>';
+
             $pdf->writeHTMLCell(0, 0, $x = '', $y = '', $html, $border = 0, $ln = 1, $fill = 0, $reseth = true, $align = '', $autopadding = true);
             $namePDF = utf8_decode('DEPÓSITO_DE_SERIEDAD_' . $id_cliente . '.pdf');
             ob_end_clean();
@@ -2607,38 +2690,43 @@ class Asesor extends CI_Controller
             ************************************************************************************/
             $correos_entregar = array();
             $datos_etiquetas = null;
-            $archivo_adjunto = array('adjunto'      =>  $attachment,
-                                    'nombre_pdf'   =>  $namePDF);
+            $archivo_adjunto = array('adjunto' => $attachment, 'nombre_pdf' => $namePDF);
             $datos_correo[0] = array();
             #PROVICIONAL TESTING
             array_push($correos_entregar, 'programador.analista18@ciudadmaderas.com');
             //$correos_entregar[0] = 'programador.analista18@ciudadmaderas.com';
             //$correos_entregar[1] = 'mariadejesus.garduno@ciudadmaderas.com';
-            $elementos_correo = array(  "setFrom" => Elementos_Correos_Asesor::SET_FROM_EMAIL,
-                                        "Subject" => Elementos_Correos_Asesor::ASUNTO_CORREO_TABLA_DEPOSITOS_SERIEDAD_ASESOR);
+            $elementos_correo = array(
+                "setFrom" => Elementos_Correos_Asesor::SET_FROM_EMAIL,
+                "Subject" => Elementos_Correos_Asesor::ASUNTO_CORREO_TABLA_DEPOSITOS_SERIEDAD_ASESOR
+            );
+
             $comentario_general = Elementos_Correos_Asesor::EMAIL_DEPOSITO_SERIEDAD_ASESOR;
             $datos_encabezados_tabla = Elementos_Correos_Asesor::ETIQUETAS_ENCABEZADO_TABLA_DEPOSITOS_SERIEDAD_ASESOR;
             $plantilla_correo = new plantilla_dinamica_correo;
             $checkIfRefExist = $this->Asesor_model->checkExistRefrencias($id_cliente);
+
             if (count($checkIfRefExist) >= 1) {
-                if (count($array17) > 0) {
-                    for ($i = 0; $i < sizeof($array17); $i++) {
-                        $updCoprop = $this->db->query(" UPDATE copropietarios SET correo = '" . $array1[$i] . "', telefono = '" . $array2[$i] . "', 
-                                                            telefono_2 = '" . $array3[$i] . "', fecha_nacimiento = '" . $array4[$i] . "',
-                                                            nacionalidad = '" . $array5[$i] . "', originario_de = '" . $array6[$i] . "',
-                                                            domicilio_particular = '" . $array7[$i] . "', estado_civil = '" . $array8[$i] . "',
-                                                            conyuge = '" . $array9[$i] . "', regimen_matrimonial = '" . $array10[$i] . "',
-                                                            ocupacion = '" . $array11[$i] . "', posicion = '" . $array12[$i] . "', empresa = '" . $array13[$i] . "',
-                                                            antiguedad = '" . $array14[$i] . "', edadFirma = '" . $array15[$i] . "', direccion = '" . $array16[$i] . "',
-                                                            rfc='" . $array19[$i] . "',  tipo_vivienda=" . $array18[$i] . "
-                                                        WHERE id_copropietario = " . $array17[$i]);
+                if (count($idCopArray) > 0) {
+                    for ($i = 0; $i < sizeof($idCopArray); $i++) {
+                        $updCoprop = $this->db->query(" UPDATE copropietarios SET correo = '" . $emailCopArray[$i] . "', telefono = '" . $telefono1CopArray[$i] . "', 
+                                                            telefono_2 = '" . $telefono2CopArray[$i] . "', fecha_nacimiento = '" . $fNacimientoCopArray[$i] . "',
+                                                            nacionalidad = '" . $nacionalidadCopArray[$i] . "', originario_de = '" . $originarioCopArray[$i] . "',
+                                                            domicilio_particular = '" . $idParticularCopArray[$i] . "', estado_civil = '" . $eCivilCopArray[$i] . "',
+                                                            conyuge = '" . $conyugeCopArray[$i] . "', regimen_matrimonial = '" . $rMatrimonialCopArray[$i] . "',
+                                                            ocupacion = '" . $ocupacionCopArray[$i] . "', posicion = '" . $puestoCopArray[$i] . "', empresa = '" . $empresaCopArray[$i] . "',
+                                                            antiguedad = '" . $antiguedadCopArray[$i] . "', edadFirma = '" . $edadFirmaCopArray[$i] . "', direccion = '" . $domEmpCopArray[$i] . "',
+                                                            rfc='" . $rfcCopArray[$i] . "',  tipo_vivienda=" . $tipoViviendaCopArray[$i] . "
+                                                        WHERE id_copropietario = " . $idCopArray[$i]);
                     }
                 }
+
                 if ($this->Asesor_model->editaRegistroClienteDS($id_cliente, $arreglo_cliente, $arreglo_ds, $id_referencia1, $arreglo_referencia1, $id_referencia2, $arreglo_referencia2)) {
                     if($arreglo_cliente['tipo_comprobanteD'] == 1){
                         //checar si ya se ha añadido el registro anteriormente
                         $dcv = $this->Asesor_model->informacionVerificarCliente($id_cliente);
                         $revisar_registro = $this->Asesor_model->revisarCartaVerif($id_cliente, 29);
+
                         if(count($revisar_registro) == 0){
                             //validar la opcion de domicilio empresa
                             //se crea rama
@@ -2656,36 +2744,35 @@ class Asesor extends CI_Controller
                                 'tipo_doc'          => 29,
                                 'estatus_validacion'=> 0
                             );
-                            $dbTransaction = $this->General_model->addRecord("historial_documento", $data_insert); // MJ: LLEVA 2 PARÁMETROS $table, $data
-                            //if ($dbTransaction) // SUCCESS TRANSACTION
-                            //echo json_encode(array("status" => 200, "message" => "Registro guardado con éxito.", "resultado" => $result), JSON_UNESCAPED_UNICODE);
-                            //else // ERROR TRANSACTION
-                            //echo json_encode(array("status" => 503, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+                            $this->General_model->addRecord("historial_documento", $data_insert); // MJ: LLEVA 2 PARÁMETROS $table, $data
                         }
                     }
+
                     $datos_correo_enviar = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo,
                                                                                 $datos_encabezados_tabla, $datos_etiquetas, $comentario_general, $archivo_adjunto);
                     if ($datos_correo_enviar > 0) {
-                        ECHO "SUCCESS";
+                        echo json_encode(['code' => 200]);
                     } else {
-                        ECHO 'Correo no enviado '.$datos_correo_enviar;
+                        echo json_encode(['code' => 400, 'message' => 'Correo no enviado']);
                     }
                 } else {
-                    die("ERROR");
+                    echo json_encode(['code' => 500]);
                 }
             } else {
-                if (count($array17) > 0) {
-                    for ($i = 0; $i < sizeof($array17); $i++) {
-                        $updCoprop = $this->db->query("UPDATE copropietarios SET correo = '" . $array1[$i] . "', telefono = '" . $array2[$i] . "', telefono_2 = '" . $array3[$i] . "', fecha_nacimiento = '" . $array4[$i] . "', nacionalidad = '" . $array5[$i] . "', originario_de = '" . $array6[$i] . "', domicilio_particular = '" . $array7[$i] . "', estado_civil = '" . $array8[$i] . "', conyuge = '" . $array9[$i] . "', regimen_matrimonial = '" . $array10[$i] . "', ocupacion = '" . $array11[$i] . "', posicion = '" . $array12[$i] . "', empresa = '" . $array13[$i] . "', antiguedad = '" . $array14[$i] . "', edadFirma = '" . $array15[$i] . "', direccion = '" . $array16[$i] . "',
-                                rfc='" . $array19[$i] . "',  tipo_vivienda=" . $array18[$i] . "
-                            WHERE id_copropietario = " . $array17[$i]);
+                if (count($idCopArray) > 0) {
+                    for ($i = 0; $i < sizeof($idCopArray); $i++) {
+                        $this->db->query("UPDATE copropietarios SET correo = '" . $emailCopArray[$i] . "', telefono = '" . $telefono1CopArray[$i] . "', telefono_2 = '" . $telefono2CopArray[$i] . "', fecha_nacimiento = '" . $fNacimientoCopArray[$i] . "', nacionalidad = '" . $nacionalidadCopArray[$i] . "', originario_de = '" . $originarioCopArray[$i] . "', domicilio_particular = '" . $idParticularCopArray[$i] . "', estado_civil = '" . $eCivilCopArray[$i] . "', conyuge = '" . $conyugeCopArray[$i] . "', regimen_matrimonial = '" . $rMatrimonialCopArray[$i] . "', ocupacion = '" . $ocupacionCopArray[$i] . "', posicion = '" . $puestoCopArray[$i] . "', empresa = '" . $empresaCopArray[$i] . "', antiguedad = '" . $antiguedadCopArray[$i] . "', edadFirma = '" . $edadFirmaCopArray[$i] . "', direccion = '" . $domEmpCopArray[$i] . "',
+                                rfc='" . $rfcCopArray[$i] . "',  tipo_vivienda=" . $tipoViviendaCopArray[$i] . "
+                            WHERE id_copropietario = " . $idCopArray[$i]);
                     }
                 }
+
                 if ($this->Asesor_model->editaRegistroClienteDS_2($id_cliente, $arreglo_cliente, $arreglo_ds)) {
                     if($arreglo_cliente['tipo_comprobanteD'] == 1){
                         //checar si ya se ha añadido el registro anteriormente
                         $dcv = $this->Asesor_model->informacionVerificarCliente($id_cliente);
                         $revisar_registro = $this->Asesor_model->revisarCartaVerif($id_cliente, 29);
+
                         if(count($revisar_registro) == 0){
                             //validar la opcion de domicilio empresa
                             //se crea rama
@@ -2703,13 +2790,10 @@ class Asesor extends CI_Controller
                                 'tipo_doc'          => 29,
                                 'estatus_validacion'=> 0
                             );
-                            $dbTransaction = $this->General_model->addRecord("historial_documento", $data_insert); // MJ: LLEVA 2 PARÁMETROS $table, $data
-                            //if ($dbTransaction) // SUCCESS TRANSACTION
-                            //echo json_encode(array("status" => 200, "message" => "Registro guardado con éxito.", "resultado" => $result), JSON_UNESCAPED_UNICODE);
-                            //else // ERROR TRANSACTION
-                            //echo json_encode(array("status" => 503, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+                            $this->General_model->addRecord("historial_documento", $data_insert); // MJ: LLEVA 2 PARÁMETROS $table, $data
                         }
                     }
+
                     $arreglo_referencia2["id_cliente"] = $id_cliente;
                     $arreglo_referencia1["id_cliente"] = $id_cliente;
                     $this->Asesor_model->insertnewRef($arreglo_referencia1);
@@ -2717,26 +2801,28 @@ class Asesor extends CI_Controller
                     $datos_correo_enviar = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo,
                                                                                     $datos_encabezados_tabla, $datos_etiquetas, $comentario_general, $archivo_adjunto);
                     if ($datos_correo_enviar > 0) {
-                        ECHO "SUCCESS";
+                        echo json_encode(['code' => 200]);
                     } else {
-                        ECHO 'Correo no enviado '.$datos_correo_enviar;
+                        echo json_encode(['code' => 400, 'message' => 'Correo no enviado']);
                     }
                 } else {
-                    die("ERROR");
+                    echo json_encode(['code' => 500]);
                 }
             }
-        }
-        else if ($this->input->post('pdfOK') == null || $this->input->post('pdfOK') != '1') {
+        } else if ($this->input->post('pdfOK') == null || $this->input->post('pdfOK') != '1') {
             $checkIfRefExist = $this->Asesor_model->checkExistRefrencias($id_cliente);
+
             if (count($checkIfRefExist) > 0) {
                 $updateDs = $this->Asesor_model->editaRegistroClienteDS($id_cliente, $arreglo_cliente, $arreglo_ds, $id_referencia1, $arreglo_referencia1, $id_referencia2, $arreglo_referencia2);
+
                 if ($updateDs) {
                     if($arreglo_cliente['tipo_comprobanteD'] == 1){
                         //checar si ya se ha añadido el registro anteriormente
                         $dcv = $this->Asesor_model->informacionVerificarCliente($id_cliente);
                         $revisar_registro = $this->Asesor_model->revisarCartaVerif($id_cliente, 29);
+
                         if(count($revisar_registro) == 0){
-                        //validar la opcion de domicilio empresa
+                            //validar la opcion de domicilio empresa
                             //se crea rama
                             $data_insert = array(
                                 'movimiento'        =>'CARTA DOMICILIO CM',
@@ -2752,35 +2838,24 @@ class Asesor extends CI_Controller
                                 'tipo_doc'          => 29,
                                 'estatus_validacion'=> 0
                             );
-                            $dbTransaction = $this->General_model->addRecord("historial_documento", $data_insert); // MJ: LLEVA 2 PARÁMETROS $table, $data
-                            //if ($dbTransaction) // SUCCESS TRANSACTION
-                            //echo json_encode(array("status" => 200, "message" => "Registro guardado con éxito.", "resultado" => $result), JSON_UNESCAPED_UNICODE);
-                            //else // ERROR TRANSACTION
-                            //echo json_encode(array("status" => 503, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+                            $this->General_model->addRecord("historial_documento", $data_insert); // MJ: LLEVA 2 PARÁMETROS $table, $data
                         }
                     }
-                    if (count($array17) > 0) {
-                        for ($i = 0; $i < sizeof($array17); $i++) {
-                            $updCoprop = $this->db->query("UPDATE copropietarios SET correo = '" . $array1[$i] . "', telefono = '" . $array2[$i] . "', telefono_2 = '" . $array3[$i] . "', fecha_nacimiento = '" . $array4[$i] . "', nacionalidad = '" . $array5[$i] . "', originario_de = '" . $array6[$i] . "', domicilio_particular = '" . $array7[$i] . "', estado_civil = '" . $array8[$i] . "', conyuge = '" . $array9[$i] . "', regimen_matrimonial = '" . $array10[$i] . "', ocupacion = '" . $array11[$i] . "', posicion = '" . $array12[$i] . "', empresa = '" . $array13[$i] . "', antiguedad = '" . $array14[$i] . "', edadFirma = '" . $array15[$i] . "', direccion = '" . $array16[$i] . "',
-                                rfc='" . $array19[$i] . "',  tipo_vivienda=" . $array18[$i] . "
-                            WHERE id_copropietario = " . $array17[$i]);
-                            //$array18=$this->input->post("tipo_vivienda_cop[]");
-                            //$array19=$this->input->post("rfc_cop[]");
+                    if (count($idCopArray) > 0) {
+                        for ($i = 0; $i < sizeof($idCopArray); $i++) {
+                            $updCoprop = $this->db->query("UPDATE copropietarios SET correo = '" . $emailCopArray[$i] . "', telefono = '" . $telefono1CopArray[$i] . "', telefono_2 = '" . $telefono2CopArray[$i] . "', fecha_nacimiento = '" . $fNacimientoCopArray[$i] . "', nacionalidad = '" . $nacionalidadCopArray[$i] . "', originario_de = '" . $originarioCopArray[$i] . "', domicilio_particular = '" . $idParticularCopArray[$i] . "', estado_civil = '" . $eCivilCopArray[$i] . "', conyuge = '" . $conyugeCopArray[$i] . "', regimen_matrimonial = '" . $rMatrimonialCopArray[$i] . "', ocupacion = '" . $ocupacionCopArray[$i] . "', posicion = '" . $puestoCopArray[$i] . "', empresa = '" . $empresaCopArray[$i] . "', antiguedad = '" . $antiguedadCopArray[$i] . "', edadFirma = '" . $edadFirmaCopArray[$i] . "', direccion = '" . $domEmpCopArray[$i] . "',
+                                rfc='" . $rfcCopArray[$i] . "',  tipo_vivienda=" . $tipoViviendaCopArray[$i] . "
+                            WHERE id_copropietario = " . $idCopArray[$i]);
                         }
+
                         if ($updCoprop) {
-                            //echo 'Se actualizaron correctamente';
-                            $this->session->set_userdata('success_coprop', 777);
-                            redirect(base_url() . 'index.php/Asesor/deposito_seriedad/' . $id_cliente . '/0');
-                            // redirect(base_url()."index.php/asesor/depositoSeriedad");
+                            echo json_encode(['code' => 200]);
                         }
                     }
-                    $this->session->set_userdata('success_coprop', 777);
-                    redirect(base_url() . 'index.php/Asesor/deposito_seriedad/' . $id_cliente . '/0');
-                    // redirect(base_url()."index.php/asesor/depositoSeriedad");
+
+                    echo json_encode(['code' => 200]);
                 } else {
-                    $this->session->set_userdata('success_coprop', -1);
-                    redirect(base_url() . 'index.php/Asesor/deposito_seriedad/' . $id_cliente . '/0');
-                    // redirect(base_url()."index.php/asesor/depositoSeriedad");
+                    echo json_encode(['code' => 200]);
                 }
             } else {
                 if ($this->Asesor_model->editaRegistroClienteDS_2($id_cliente, $arreglo_cliente, $arreglo_ds)) {
@@ -2792,14 +2867,14 @@ class Asesor extends CI_Controller
                         $this->Asesor_model->insertnewRef($arreglo_referencia1);
                         $this->Asesor_model->insertnewRef($arreglo_referencia2);
                     }
-                    $this->session->set_userdata('success_coprop', 777);
-                    redirect(base_url() . 'index.php/Asesor/deposito_seriedad/' . $id_cliente . '/0');
+                    echo json_encode(['code' => 200]);
                 } else {
-                    die("ERROR");
+                    echo json_encode(['code' => 500]);
                 }
             }
         }
     }
+
     /*autorizaciones*/
     public function autorizaciones()
     {
@@ -2893,6 +2968,14 @@ class Asesor extends CI_Controller
         $nombreLote = $this->input->post('nombreLote');
         $id_cliente = $this->input->post('idCliente');
         $tipo_comprobante = $this->input->post('tipo_comprobante');
+
+        $cliente = $this->Clientes_model->clienteAutorizacion($id_cliente);
+        if (intval($cliente->autorizacion_correo) !== AutorizacionClienteOpcs::VALIDADO || intval($cliente->autorizacion_sms) !== AutorizacionClienteOpcs::VALIDADO) {
+            $data['message'] = 'VERIFICACION CORREO/SMS';
+            echo json_encode($data);
+            return;
+        }
+
         $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
         if($valida_tventa[0]['tipo_venta'] == 1 ){
             if($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 104 || $valida_tventa[0]['idStatusContratacion'] == 2 && $valida_tventa[0]['idMovimiento'] == 108){
@@ -4307,10 +4390,10 @@ class Asesor extends CI_Controller
                                                         Elementos_Correos_Asesor::ASUNTO_CORREO_TABLA_EVIDENCIAS_RECHAZADAS_ASESOR . $correo);
                 $datos_correo = $data_eviRec;
                 $datos_encabezados_tabla = Elementos_Correos_Asesor::ETIQUETAS_ENCABEZADO_TABLA_EVIDENCIAS_RECHAZADAS_ASESOR;
-                
+
                 $comentario_general = Elementos_Correos_Asesor::EMAIL_EVIDENCIAS_RECHAZADAS_ASESOR . '<br>' . (!isset($comentario) ? '' : '<br>'. $comentario);
                 $plantilla_correo = new plantilla_dinamica_correo;
-                
+
                 $envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, 
                                                                         $datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
                 if ($envio_correo > 0) {
@@ -4458,7 +4541,7 @@ class Asesor extends CI_Controller
                 if ($data_return_insert >= 1) {
                     $data['exe'] = 1;
                     $data['msg'] = 'Se ha eliminado correctamente';
-                    
+
                     if ($id_prospecto != '' || $id_prospecto != null) {
                         $this->Asesor_model->updateProspectLP($data_update_cl, $id_prospecto);
                     }
@@ -4666,11 +4749,6 @@ class Asesor extends CI_Controller
             return false;
         }
 
-        if (intval($cliente->total_sol_correo_aut) > 0) {
-            echo json_encode(['code' => 400, 'message' => 'La solicitud ya tuvo una autorización previamente.']);
-            return false;
-        }
-
         $codigo = md5(microtime());
         $codigoCorreoData = [
             'id_cliente' => $idCliente,
@@ -4686,7 +4764,8 @@ class Asesor extends CI_Controller
         $this->General_model->updateRecord('clientes', $banderaCorreoData, 'id_cliente', $idCliente);
 
         $url = base_url()."Api/validarAutorizacionCorreo/$idCliente?codigo=$codigo";
-        $this->correoAut($url, $correoCliente);
+        $nombreCliente = "$cliente->nombre $cliente->apellido_paterno $cliente->apellido_materno";
+        // $this->correoAut($url, $correoCliente, $nombreCliente);
 
         return true;
     }
@@ -4725,19 +4804,14 @@ class Asesor extends CI_Controller
             return false;
         }
 
-        if (intval($cliente->total_sol_sms_aut) > 0) {
-            echo json_encode(['code' => 400, 'message' => 'La solicitud ya tuvo una autorización previamente.']);
-            return false;
-        }
-
-        $codigo = md5(microtime());
-        $url = base_url()."Api/autorizacionSms/$idCliente?codigo=$codigo";
-        $resultadoSms = $this->smsAut($url, "00$lada$telefonoCliente");
-
-        if (!$resultadoSms) {
-            echo json_encode(['code' => 400, 'message' => 'Ocurrió un error al enviar el SMS. Favor de intentarlo más tarde.']);
-            return false;
-        }
+        $codigo = $this->getCodigoVerificacion(6);
+        $url = base_url()."Api/autSms/$idCliente?cod=$codigo";
+//        $resultadoSms = $this->smsAut($url, "00$lada$telefonoCliente");
+//
+//        if (!$resultadoSms) {
+//            echo json_encode(['code' => 400, 'message' => 'Ocurrió un error al enviar el SMS. Favor de intentarlo más tarde.']);
+//            return false;
+//        }
 
         $codigoSmsData = [
             'id_cliente' => $idCliente,
@@ -4804,7 +4878,8 @@ class Asesor extends CI_Controller
 
             $urlCorreo = base_url()."Api/validarAutorizacionCorreo/$idCliente?codigo=$cliente->codigo_correo";
 
-            $this->correoAut($urlCorreo, $cliente->correo);
+            $nombreCliente = "$cliente->nombre $cliente->apellido_paterno $cliente->apellido_materno";
+            // $this->correoAut($urlCorreo, $cliente->correo, $nombreCliente);
         }
 
         if (isset($reenviarSms)) {
@@ -4818,14 +4893,14 @@ class Asesor extends CI_Controller
                 return;
             }
 
-            $url = base_url()."Api/autorizacionSms/$idCliente?codigo=$cliente->codigo_sms";
+            $url = base_url()."Api/autSms/$idCliente?cod=$cliente->codigo_sms";
 
-            $resultadoSms = $this->smsAut($url, "00$cliente->lada_tel$cliente->telefono1");
-
-            if (!$resultadoSms) {
-                echo json_encode(['code' => 400, 'message' => 'Ocurrió un error al enviar el SMS. Favor de intentarlo más tarde.']);
-                return;
-            }
+//            $resultadoSms = $this->smsAut($url, "00$cliente->lada_tel$cliente->telefono1");
+//
+//            if (!$resultadoSms) {
+//                echo json_encode(['code' => 400, 'message' => 'Ocurrió un error al enviar el SMS. Favor de intentarlo más tarde.']);
+//                return;
+//            }
         }
 
         echo json_encode(['code' => 200]);
@@ -4868,11 +4943,6 @@ class Asesor extends CI_Controller
                 return;
             }
 
-            if (intval($cliente->total_sol_correo_aut) > 0) {
-                echo json_encode(['code' => 400, 'message' => 'La solicitud ya tuvo una autorización previamente.']);
-                return;
-            }
-
             $this->crearRegistroAclaracion($idCliente, $lote->idLote, $this->session->userdata('id_usuario'),
                 $idSubdirector, $comentario, TipoAutorizacionClienteOpcs::CORREO);
         }
@@ -4885,11 +4955,6 @@ class Asesor extends CI_Controller
 
             if (intval($cliente->total_sol_sms_pend) > 0) {
                 echo json_encode(['code' => 400, 'message' => 'Hay una solicitud de sms en transcurso.']);
-                return;
-            }
-
-            if (intval($cliente->total_sol_sms_aut) > 0) {
-                echo json_encode(['code' => 400, 'message' => 'La solicitud ya tuvo una autorización previamente.']);
                 return;
             }
 
@@ -4909,17 +4974,13 @@ class Asesor extends CI_Controller
             'id_aut' => $idSubdirector,
             'estatus' => 1,
             'autorizacion' => $comentario,
-            'estatus_particular' => 1
+            'estatus_particular' => 1,
+            'id_tipo' => $tipo
         ];
         $this->Asesor_model->insertAutorizacion($autorizacionData);
-        $autorizacionId = $this->db->insert_id();
-        $this->General_model->addRecord('autorizaciones_clientes', [
-            'id_autorizacion' => $autorizacionId,
-            'tipo' => $tipo
-        ]);
     }
 
-    public function correoAut(string $url, string $correo): void
+    public function correoAut(string $url, string $correo, string $nombreCliente): void
     {
         $mail = $this->phpmailer_lib->load();
         $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
@@ -4954,10 +5015,6 @@ class Asesor extends CI_Controller
                             text-align: center;
                         }
 
-                        p {
-                            text-align: right;
-                        }
-
                         strong {
                             color: #234e7f;
                         }
@@ -4977,19 +5034,25 @@ class Asesor extends CI_Controller
                             </table>
                         </tr>
                         <tr>
-                            Estimado/a 'cliente' <br>
-                            Gracias por iniciar el registro de la compra de tu terreno en Ciudad Maderas. Para garantizar la precisión de la información y asegurarnos de que podemos comunicarnos correctamente con usted, requerimos que verifique su dirección de correo electrónico.<br>
-                            Por favor, siga los pasos a continuación para completar el proceso de verificación:<br>
-                            1.	Haga clic en el siguiente <a href='$url' target='_blank'>enlace.</a><br>
-                            2.	Será redirigido una página de verificación en nuestro sitio web.<br><br>
-                            
-                            Una vez que haya completado estos pasos, su dirección de correo electrónico quedará verificada. Si no ha iniciado este proceso o ha recibido este correo electrónico por error, le pedimos que ignore este mensaje. No se realizará ninguna acción en su nombre.<br>
-                            
-                            Si tiene alguna pregunta o necesita ayuda adicional, no dude en ponerse en contacto con nuestro equipo de atención al cliente.<br><br>
-                            
-                            ¡Gracias por su colaboración!<br>
-                            Atentamente,<br>
-                            Equipo de Ventas de Ciudad Maderas
+                            <p class='text-justify'>
+                                Estimado/a $nombreCliente <br><br>
+                                Gracias por iniciar el registro de la compra de tu terreno en Ciudad Maderas. Para garantizar la precisión de la información y asegurarnos de que podemos comunicarnos correctamente con usted, requerimos que verifique su dirección de correo electrónico.<br>
+                                Por favor, siga los pasos a continuación para completar el proceso de verificación:<br><br>
+                                <ul>
+                                    <li>
+                                        Haga clic en el siguiente <a href='$url' target='_blank'>enlace.</a><br>
+                                    </li>
+                                    <li>
+                                        Será redirigido una página de verificación en nuestro sitio web.<br><br>
+                                    </li>
+                                </ul>
+                                
+                                Una vez que haya completado estos pasos, su dirección de correo electrónico quedará verificada. Si no ha iniciado este proceso o ha recibido este correo electrónico por error, le pedimos que ignore este mensaje. No se realizará ninguna acción en su nombre. Si tiene alguna pregunta o necesita ayuda adicional, no dude en ponerse en contacto con nuestro equipo de atención al cliente.<br><br>
+                                
+                                ¡Gracias por su colaboración!<br>
+                                Atentamente,<br>
+                                Equipo de Ventas de Ciudad Maderas
+                            </p>
                         </tr>
                     </table>
                 </body>      
@@ -5004,7 +5067,7 @@ class Asesor extends CI_Controller
     public function smsAut(string $url, string $telefono): bool
     {
         $camposSms = [
-            'Content' => "Gracias por iniciar el registro de la compra de tu terreno en Ciudad Maderas. Se ha iniciado un proceso de autentificacion, requerimos que verifique su numero telefonico.\nHaga clic en el siguiente enlace: [URL]\nUna vez que haya completado estos pasos, su numero quedara verificado. Si no ha iniciado este proceso o ha recibido este SMS por error, le pedimos que ignore este mensaje. No se realizara ninguna accion en su nombre.\nSi tiene alguna pregunta o necesita ayuda adicional, no dude en ponerse en contacto con nuestro equipo de atencion al cliente.\nGracias por su colaboracion\nAtentamente,\nEquipo de Ventas de Ciudad Maderas",
+            'Content' => "Verifique su numero telefonico en el siguiente enlace: [URL]\nAtentamente,\nCiudad Maderas",
             'ListGuid' => 'c4bcd75f-1ec5-4af1-9449-6e077892e424',
             'ListSecret' => 'fd0ca54e-4155-46c9-b0c9-c2a8b33e200e',
             'Sender' => 'aut_clientes',
@@ -5051,6 +5114,12 @@ class Asesor extends CI_Controller
         curl_close($curl);
 
         return $response;
+    }
+
+    function getCodigoVerificacion(int $longitud): string
+    {
+        $caracteres_permitidos = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        return substr(str_shuffle($caracteres_permitidos), 0, $longitud);
     }
 }
 ?>

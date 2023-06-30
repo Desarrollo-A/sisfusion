@@ -4,7 +4,6 @@
 <body>
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
-
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -17,22 +16,20 @@
                                 <h3 class="card-title center-align">Plantilla activa.</h3>
                                 <div class="material-datatables">
                                     <div class="form-group">
-                                        <div class="table-responsive">
-                                            <table class="table-striped table-hover" id="users_datatable"name="users_datatable">
-                                                <thead>
-                                                    <tr>
-                                                        <th class="disabled-sorting text-right">Estatus</th>
-                                                        <th>ID</th>
-                                                        <th class="disabled-sorting text-right">Nombre</th>
-                                                        <th>Correo</th>
-                                                        <th>Teléfono</th>
-                                                        <th>Tipo</th>
-                                                        <th>Jefe directo</th>
-                                                        <th>Sede</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
-                                        </div>
+                                        <table class="table-striped table-hover" id="users_datatable" name="users_datatable">
+                                            <thead>
+                                                <tr>
+                                                    <th>ESTATUS</th>
+                                                    <th>ID</th>
+                                                    <th>NOMBRE</th>
+                                                    <th>CORREO</th>
+                                                    <th>TELÉFONO</th>
+                                                    <th>TIPO</th>
+                                                    <th>JEFE DIRECTO</th>
+                                                    <th>SEDE</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -56,8 +53,6 @@
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
 <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
-<!--<script src="--><?php //base_url()?>
-<!--dist/js/jquery.validate.js"></script>-->
 
 <!-- MODAL WIZARD -->
 <script src="<?=base_url()?>dist/js/modal-steps.min.js"></script>
@@ -66,9 +61,7 @@
 <script src="<?= base_url() ?>dist/js/es.js"></script>
 <!-- DateTimePicker Plugin -->
 <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
-<!-- <script src="<?=base_url()?>dist/js/controllers/general-1.1.0.js"></script> -->
 <script src="<?=base_url()?>static/yadcf/jquery.dataTables.yadcf.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/general/main_services.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/Usuarios/usersByLeader.js"></script>
-
 </html>

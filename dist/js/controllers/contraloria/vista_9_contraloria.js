@@ -66,7 +66,6 @@ $("#tabla_ingresar_9").ready(function () {
         ordering: false,
         scrollX: true,
         columns: [{
-            width: "3%",
             className: 'details-control',
             orderable: false,
             data: null,
@@ -113,7 +112,6 @@ $("#tabla_ingresar_9").ready(function () {
             }
         },
         {
-            width: "17%",
             data: function (d) {
                 return `<span class="label lbl-azure">${d.nombreSede}</span>`;
             }
