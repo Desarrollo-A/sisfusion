@@ -970,20 +970,20 @@ class Postventa extends CI_Controller
         $data = $this->Postventa_model->getInfoNotaria($idSolicitud)->result_array();
         $info = $this->Postventa_model->getInfoSolicitud($idSolicitud)->row();
 
-        $this->load->library('email');
         $mail = $this->email;
-        $mail->from('noreply@ciudadmaderas.com', 'Ciudad Maderas');
-        $mail->to('programador.analista18@ciudadmaderas.com');
-        $mail->Subject(utf8_decode("Expediente Cliente"));
+
         foreach ($data as $row) {
             $folder = $this->getFolderFile($row['tipo_documento']);
-            // print_r($folder.$row['expediente']);
-            // print_r(' / ');
-            $this->email->attach($folder . $row['expediente']);
+            $mail->attach($folder . $row['expediente']);
         }
-        $mail->message('Buen día, se anexa documentación de completa para proceder con escrituración como compraventa del lote citado  al rubro a nombre de ' . $info->nombre_escrituras . ' existe dueño beneficiario, es la señora _____ pido de favor, en su caso, actualizar la cotizacion antes de  la firma, saludos cordiales.');
+
+        $mail->initialize()
+            ->from('Ciudad Maderas')
+            ->to('programador.analista24@ciudadmaderas.com')
+            ->subject('Expediente cliente')
+            ->view("<h3>Buen día, se anexa documentación de completa para proceder con escrituración como compraventa del lote citado  al rubro a nombre de $info->nombre_escrituras existe dueño beneficiario, es la señora _____ pido de favor, en su caso, actualizar la cotizacion antes de  la firma, saludos cordiales.</h3>");
+
         $response = $mail->send();
-        // echo $this->email->print_debugger();
 
         echo json_encode($response);
     }
