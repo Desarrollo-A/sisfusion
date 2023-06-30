@@ -1220,18 +1220,16 @@ class Postventa extends CI_Controller
     public function presupuestoCliente()
     {
         $idSolicitud = $_POST['idSolicitud'];
-        $this->load->library('email');
-        $mail = $this->email;
-        $data = $this->Postventa_model->checkBudgetInfo($idSolicitud)->row();
-        $mail->from('noreply@ciudadmaderas.com', 'Ciudad Maderas');
-        $mail->to('programador.analista18@ciudadmaderas.com');
-        $mail->Subject(utf8_decode("Presupuesto escrituracion"));
-        // $mail->message('');
-
         $doc = $this->getFileNameByDoctype($idSolicitud, 12);
-        $this->email->attach(__DIR__ . "/../../static/documentos/postventa/escrituracion/PRESUPUESTO/" . $doc->expediente);
 
-        $response = $mail->send();
+        $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to('programador.analista24@ciudadmaderas.com')
+            ->subject('Presupuesto escrituración')
+            ->attach(__DIR__ . "/../../static/documentos/postventa/escrituracion/PRESUPUESTO/" . $doc->expediente)
+
+        $response = $this->email->send();
 
         echo json_encode($response);
     }
