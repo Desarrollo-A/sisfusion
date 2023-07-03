@@ -1,8 +1,8 @@
 
+var sedes,tipos_venta;
 $(document).ready(function(){ /**FUNCIÓN PARA LLENAR EL SELECT DE PROYECTOS(RESIDENCIALES)*/
     $.post(`${general_base_url}General/getResidencialesList`, function (data) {        
         let len = data.length;
-        console.log(data)
         for (let i = 0; i < len; i++) {
             let id = data[i]['idResidencial'];
             let name = data[i]['descripcion'];
@@ -14,14 +14,20 @@ $(document).ready(function(){ /**FUNCIÓN PARA LLENAR EL SELECT DE PROYECTOS(RES
         $("#residencial").selectpicker('refresh');
         $('#spiner-loader').addClass('hide');
     }, 'json'); 
+
+            $.post("get_tventa", function (data) {
+                tipos_venta = data;
+            }, 'json');
+            $.post("get_sede", function (data) {
+                sedes = data;
+            }, 'json');
+
 });
 
 $('#residencial').change(function(){
     var residencial = $(this).val();
-    //$('#tableClient').DataTable().clear();
     $("#condominio").empty().selectpicker('refresh');
     $("#lotes").empty().selectpicker('refresh');
-    $("#clientes").empty().selectpicker('refresh');
     $.post(`${general_base_url}General/getCondominiosList`,{idResidencial:residencial}, function (data) {  
             data = JSON.parse(data);
             let len = data.length;
@@ -38,9 +44,7 @@ $('#residencial').change(function(){
 
 $('#condominio').change(function(){
     var condominio = $(this).val();
-    //$('#tableClient').DataTable().clear();
     $("#lotes").selectpicker('refresh');
-    $("#clientes").empty().selectpicker('refresh');
     $.post(`${general_base_url}General/getLotesList`,{idCondominio:condominio,typeTransaction:0}, function (data) {  
             data = JSON.parse(data);
             let len = data.length;
@@ -54,42 +58,37 @@ $('#condominio').change(function(){
             $('#spiner-loader').addClass('hide');
     });
 });
-
+var contador=0;
 var datosTable;
-
-$('#lotes').change(function(){
+function llenarClientes(idLote){
     datosTable = [];
-    var lote = $(this).val();
-    $("#clientes").empty().selectpicker('refresh');
+    var lote = idLote;
     $.ajax({
         url:`${general_base_url}RegistroCliente/getClientByID`,
         type: 'POST',
         data:{idLote:lote,idCliente:''},
         success: function(data) {
+            contador == 0 ? $('#tableClient').removeClass('hide') : '';
+            contador = contador == 0 ? 1 : 1;
                     data = JSON.parse(data);
                     datosTable = data;
                     let datosSelect = data.data;
-                    console.log(data)
                     let len = datosSelect.length;
-                    for( let i = 0; i<len; i++)
-                    {
-                        let id = datosSelect[i]['id_cliente'];
-                        let name = datosSelect[i]['nombreCliente'];
-                        $("#clientes").append($('<option>').val(id).text(name));
-                    }
-                    $("#clientes").selectpicker('refresh');
+
                     $('#spiner-loader').addClass('hide');  
-                 },
+        },
         async:   false
    }); 
-    construirTableClient('','',datosTable); 
+    construirTableClient('','',datosTable);
+}
+$('#lotes').change(function(){
+    var lote = $(this).val();
+    llenarClientes(lote);
 });
 
 
 let titulos = [];
 $('#tableClient thead tr:eq(0) th').each(function (i) {
-
-    if (i != 19) {
         var title = $(this).text();
         titulos.push(title);
         $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>`);
@@ -101,28 +100,9 @@ $('#tableClient thead tr:eq(0) th').each(function (i) {
                     .draw();
             }
         });
-    }
     $('[data-toggle="tooltip"]').tooltip();
 });
-
-$('#clientes').change(function(){
-    datosTable = [];
-    var idCliente = $(this).val();
-    $.ajax({
-        url:`${general_base_url}RegistroCliente/getClientByID`,
-        type: 'POST',
-        data:{idLote:'',idCliente:idCliente},
-        success: function(data) {
-                    data = JSON.parse(data);
-                    datosTable = data;
-                 },
-        async:   false
-   });
-    construirTableClient('',idCliente,datosTable);
-});
-
 function construirTableClient(idCliente = '',idLote = '',datos = ''){
-    console.log(datos.data)
     let opcionConsulta = 'getClientsByLote'
     tableClient = $("#tableClient").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -143,23 +123,8 @@ function construirTableClient(idCliente = '',idLote = '',datos = ''){
                     }
                 }
             },
-        },{
-            extend: 'pdfHtml5',
-            text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
-            className: 'btn buttons-pdf',
-            titleAttr: 'Regreso de expediente',
-            title: "Regreso de expediente",
-            orientation: 'landscape',
-            pageSize: 'LEGAL',
-            exportOptions: {
-                columns: [0,1,2,3,4,5,7,8,9,10,11,12,13,14,15,16,17,18,19],
-                format: {
-                    header:  function (d, columnIdx) {
-                        return titulos[columnIdx];
-                    }
-                }
-            }
-        } ],
+        },
+        ],
         pagingType: "full_numbers",
         fixedHeader: true,
         language: {
@@ -280,9 +245,9 @@ function construirTableClient(idCliente = '',idLote = '',datos = ''){
                 "data": function( d ){
                     let lblStatus='';
                     if(d.estatus_cliente == 1){
-                        lblStatus = '<small style="background: rgb(52,199,89); color:white; padding: 5px; width: 40px;border-radius: 10px">ACTIVO</small>';
+                        lblStatus = '<span class="label lbl-green">ACTIVO</span>';
                     }else{
-                        lblStatus = '<small style="background: rgb(255,59,48); color:white; padding: 5px; width: 40px;border-radius: 10px">INACTIVO</small>';
+                        lblStatus = '<span class="label lbl-warning">INACTIVO</span>';
                     }
                     return '<p style="font-size: .8em">'+lblStatus+'</p>';
                 }
@@ -290,7 +255,7 @@ function construirTableClient(idCliente = '',idLote = '',datos = ''){
             {
                 "width": "10%",
                 "data": function( d ){
-                    return '<p style="font-size: .8em; background-color:'+d.statusLoteColor+'; padding: 2px; color:white; padding: 2px;border-radius: 10px">'+d.estatus_lote+'</p>';
+                    return '<span class="label lbl-blueMaderas">'+d.estatus_lote+'</span>';
                 }
             },
             {
@@ -304,11 +269,18 @@ function construirTableClient(idCliente = '',idLote = '',datos = ''){
                 data: null,
                 render: function ( data, type, row )
                 {
+                    let tipoVenta = data.tipo_ventaId == 0 || data.tipo_ventaId == null ? 0 : data.tipo_ventaId;
+                    let ubicacion = data.ubicacion == 0 || data.ubicacion == null ? 0 : data.ubicacion;
                     let button_action='';
                     if(data.estatus_cliente==0){
-                        button_action = '<center><a class="backButton btn-data btn-warning" title= "Regresar expediente" style="cursor:pointer;" data-nomLote="'+data.nombreLote+'" data-nombreCliente="'+data.nomCliente+'" data-idCliente="'+data.id_cliente+'"><i class="fas fa-history"></i></a></center>';
+                        
+                        button_action = data.hlidStatus < 5 ? `<center><a class="backButton btn-data btn-warning" data-accion="3" title= "Regresar expediente" style="cursor:pointer;" data-idLote="${data.idLote}" data-nomLote="${data.nombreLote}" data-nombreCliente="${data.nomCliente}" data-idCliente="${data.id_cliente}"><i class="fas fa-history"></i></a></center>` : 
+                        `<center><a class="editButton btn-data btn-warning" title= "Regresar expediente" data-tipoVenta="${tipoVenta}" data-ubicacion="${ubicacion}" data-accion="1" style="cursor:pointer;" data-idStatusConstruccion="${data.hlidStatus}" data-idLote="${data.idLote}" data-nomLote="${data.nombreLote}" data-nombreCliente="${data.nomCliente}" data-idCliente="${data.id_cliente}"><i class="fas fa-history"></i></a></center>`;
                     }else{
-                        button_action = 'NA';
+
+                        if(data.hlidStatus >= 5){
+                            button_action = `<center><a class="editButton btn-data btn-sky" data-tipoVenta="${tipoVenta}" data-ubicacion="${ubicacion}" data-accion="2" title= "Regresar expediente" style="cursor:pointer;" data-idStatusConstruccion="${data.hlidStatus}" data-idLote="${data.idLote}" data-nomLote="${data.nombreLote}" data-nombreCliente="${data.nomCliente}" data-idCliente="${data.id_cliente}"><i class="fas fa-edit"></i></a></center>`;
+                        }
                     }
                     return button_action;
                 }
@@ -323,48 +295,161 @@ function construirTableClient(idCliente = '',idLote = '',datos = ''){
 }
 
 
+const permisosEstatus = [
+    {
+        idStatusContratacion : [5,6,7], // idStatusContratacion in(5,6,7)
+        campos: ['ubicacion','tipo_venta'],
+        title: ['Ubicacion','Tipo venta']
+    },
+    {
+        idStatusContratacion : [8,11],
+        campos: ['totalValidado','totalNeto','totalNeto2','comentario','ubicacion','tipo_venta'],
+        title: ['Total validado (Enganche Administración)','Total Neto (Enganche contraloría)','Precio final con descuento','Comentario','Ubicación' ,'Tipo venta']
+
+    },
+    {
+        idStatusContratacion : [9,10,12,13,14,15], // idStatusContratacion >= 11
+        campos:  ['totalValidado','totalNeto','totalNeto2','comentario','ubicacion','tipo_venta'],          
+        title: ['Total validado (Enganche Administración)','Total Neto (Enganche contraloría)','Precio final con descuento','Comentario','Ubicación' ,'Tipo venta']
+
+    },
+];
+
+$(document).on('click', '.editButton', function(){
+    var $itself = $(this);
+    var datosPorTr = tableClient.row($(this).parents('tr')).data();
+    let cliente = $itself.attr('data-nombreCliente');
+    let accion = $itself.attr('data-accion');
+    let tipoVenta = $itself.attr('data-tipoVenta');
+    let ubicacion = $itself.attr('data-ubicacion');
+    
+    $('#idCliente').val(datosPorTr.id_cliente);
+    $('#accion').val(accion);
+    let idStatusConstrataccion = $itself.attr('data-idStatusConstruccion');
+    if(idStatusConstrataccion < 5){ //SI ES MENOR A 5 SE PASAN LOS DATOS A NULL
+    
+    }else{ //SI EL ESTATUS ES MAYOR IGUAL A 5, SE CONSULTAN LOS CAMPOS A EDITAR
+        //OBTENERMOS LOS CAMPOS A EDITAR DEPENDIENDO DEL ULTIMO idStatusContruccion REGISTRADO
+        document.getElementById('camposEditar').innerHTML = '';
+        const permisos = permisosEstatus.filter(element => element.idStatusContratacion.find(element2 => element2 == idStatusConstrataccion));
+        for (let m = 0; m < permisos[0].campos.length; m++) {
+            if(permisos[0].campos[m] == 'comentario'){
+                $('#camposEditar').append(`
+                    <div class="form-group m-0">
+                        <label>${permisos[0].title[m]}</label>
+                            <textarea class="text-modal" rows="1" required name="${permisos[0].campos[m]}" id="${permisos[0].campos[m]}"></textarea>
+                    </div>`);
+            }else if(permisos[0].campos[m] == 'ubicacion' || permisos[0].campos[m] == 'tipo_venta'){
+                $('#camposEditar').append(`
+                    <div class="col-lg-12">
+                    <div class="form-group m-0 overflow-hidden">
+                    <label>${permisos[0].title[m]}</label>
+                    <select class="selectpicker select-gral" data-container="body" tabindex="-1" required="required" title="SELECCIONA UNA OPCIÓN" name="${permisos[0].campos[m]}" id="${permisos[0].campos[m]}">
+                    </select>
+                </div>
+                    </div>    
+                `);
+            }else{
+               let columna = permisos[0].campos[m] == 'totalNeto' ? datosPorTr.totalNeto :(permisos[0].campos[m] == 'totalNeto2' ? datosPorTr.totalNeto2 : datosPorTr.totalValidado) ;
+                $('#camposEditar').append(`
+                    <div class="form-group m-0">
+                        <label>${permisos[0].title[m]}</label>
+                        <input class="form-control input-gral" type="text" required value="$${formatMoney(columna)}" name="${permisos[0].campos[m]}" id="${permisos[0].campos[m]}">
+                    </div>`);
+            }                        
+        }    
+        
+        var len = sedes.length;
+        for (var i = 0; i < len; i++) {
+            var id = sedes[i]['id_sede'];
+            var name = sedes[i]['nombre'];
+            $("#ubicacion").append($('<option>').val(id).text(name.toUpperCase()));
+        }
+        var len = tipos_venta.length;
+        for (var i = 0; i < len; i++) {
+            var id = tipos_venta[i]['id_tventa'];
+            var name = tipos_venta[i]['tipo_venta'];
+            $("#tipo_venta").append($('<option>').val(id).text(name.toUpperCase()));
+        }
+        if(ubicacion != 0){
+            $("#ubicacion").selectpicker();
+            $('#ubicacion').val(parseInt(ubicacion)).trigger('change');
+        }
+        if(tipoVenta != 0){
+            $("#tipo_venta").selectpicker();
+            $('#tipo_venta').val(parseInt(tipoVenta)).trigger('change');
+        }
+        
+        $("#tipo_venta").selectpicker('refresh');
+        $("#ubicacion").selectpicker('refresh');
+    }
+    $('#modalEditExp').modal();
+});
+
+
+
+function RegresarExpo(datos){
+
+    let idLote = $('#lotes').val();
+    let accion = $('#accion').val();
+    datos.append("idLote",idLote);
+    let ruta = accion == 1 || accion == 3 ? 'return_status_uno' : 'updateLote';
+    $.ajax({
+        type: "POST",
+        url:  `${general_base_url}Restore/${ruta}/`,
+        data: datos,
+        processData: false,
+        contentType: false, 
+        success: function(data){
+            data = JSON.parse(data);
+            $('#spiner-loader').addClass('hide');
+            $('#tempIDC').val(0);
+            $('#idLote').val(0);
+            $('#accion').val(0);
+            if(data.data==true){
+                llenarClientes(idLote);
+                accion == 1 || accion == 2  ? $('#modalEditExp').modal('hide')  : $('#modalConfirmRegExp').modal('hide');
+                alerts.showNotification("top", "right", "Se ha regresado el expediente correctamente.", "success");
+            }else{
+                alerts.showNotification("top", "right", "Ha ocurrido un error intentalo nuevamente.", "danger");
+            }
+            $('#modalConfirmRegExp').modal('hide');
+        },
+        async:   false,
+        error: function() {
+            $('#modalConfirmRegExp').modal('hide');
+    
+            $('#spiner-loader').addClass('hide');
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+}
+
+$(document).on("submit", "#formEdit", function (e) {
+    e.preventDefault();
+    let datos = new FormData($(this)[0]);
+    RegresarExpo(datos);
+
+});
+
 $(document).on('click', '.backButton', function(){
 var $itself = $(this);
 let nombreLote = $itself.attr('data-nomLote');
 let cliente = $itself.attr('data-nombreCliente');
 let idCliente = $itself.attr('data-idCliente');
-console.log("nombreLote: ", nombreLote);
-console.log("cliente: ", cliente);
-console.log("idCliente: ", idCliente);
+let idLote = $itself.attr('data-idLote');
+let accion = $itself.attr('data-accion');
+$('#accion').val(accion);
 $('#tempIDC').val(idCliente);
 $('#loteName').text(nombreLote);
+$('#idLote').text(idLote);
 $('#modalConfirmRegExp').modal();
 });
 
-$(document).on('click', '.acepta_regreso', function(){
-console.log('olv si acepto jejee');
-let id_cliente = $('#tempIDC').val();
-$.ajax({
-    type: "POST",
-    url:  `${base_url}Restore/return_status_uno/`,//https://maderascrm.gphsis.com/index.php/Restore/return_status_uno/idCliente
-    data: {idCliente: id_cliente},
-    dataType: 'json',
-    cache: false,
-    beforeSend: function() {
-        $('#spiner-loader').removeClass('hide');
-    },
-    success: function(data){
-        $('#spiner-loader').addClass('hide');
-        console.log(data.data);
-        if(data.data==true){
-            alerts.showNotification("top", "right", "Se ha regresado el expediente correctamente.", "success");
-        }else{
-            alerts.showNotification("top", "right", "Ha ocurrido un error intentalo nuevamente.", "danger");
-        }
-        $('#modalConfirmRegExp').modal('hide');
-        $("#tableClient").DataTable().ajax.reload();
-    },
-    error: function() {
-        $('#modalConfirmRegExp').modal('hide');
-
-        $('#spiner-loader').addClass('hide');
-        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-    }
-}); /* */
+$(document).on('click', '.acepta_regreso', function(e){
+        let idCliente = $('#tempIDC').val();
+        datos = new FormData();
+        datos.append("idCliente", idCliente);
+    RegresarExpo(datos);
 });
 
