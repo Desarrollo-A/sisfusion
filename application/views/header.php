@@ -11,7 +11,7 @@ setlocale(LC_ALL,"es_ES");
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Ciudad Maderas | Sistema de Contratación</title>
+    <title>Ciudad Maderas | </title>
     <!-- Tell the browser to be responsive to screen width -->
 
     <link rel="shortcut icon" href="<?=base_url()?>static/images/arbol_cm.png" />
