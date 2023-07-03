@@ -237,7 +237,7 @@ function tablaInventario(ix_idResidencial = 0,ix_idCondominio = 0,ix_idEstatus =
         { data: 'fecha_validacion' }, // VALIDAR FECHA NULL DESDE LA QUERY
         {
             data: function (d) {
-                return '$' + formatMoney(d.cantidad_enganche);
+                return formatMoney(d.cantidad_enganche);
             }
         },
         {

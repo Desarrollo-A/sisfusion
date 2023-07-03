@@ -72,9 +72,7 @@
                                                     <th>GERENTE</th>
                                                     <th>CLIENTE</th>
                                                     <th>SEDE</th>
-                                                    <?php if($this->session->userdata('id_rol') != 53 && $this->session->userdata('id_rol') != 54 && $this->session->userdata('id_rol') != 63) { // ANALISTA DE COMISIONES Y SUBDIREECTOR CONSULTA (POPEA)?>
                                                     <th>ACCIONES</th>
-                                                    <?php } ?>
                                                 </tr>
                                             </thead>
                                         </table>

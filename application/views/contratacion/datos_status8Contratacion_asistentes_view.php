@@ -153,9 +153,7 @@
                                                     <th>CLIENTE</th>
                                                     <th>ESTATUS ACTUAL</th>
                                                     <th>UBICACIÓN</th>
-                                                    <?php if($this->session->userdata('id_rol') != 53 && $this->session->userdata('id_rol') != 54 && $this->session->userdata('id_rol') != 63) { // ANALISTA DE COMISIONES Y SUBDIRECCIÓN CONUSLTA (POPEA) ?>
-                                                        <th>ACCIONES</th> 
-                                                    <?php } ?>
+                                                    <th>ACCIONES</th> 
                                                 </tr>
                                             </thead>
                                         </table>

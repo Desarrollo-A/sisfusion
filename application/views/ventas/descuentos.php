@@ -174,20 +174,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="modal fade modal-alertas" id="modal_descuentos" role="dialog">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header bg-red">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <form method="post" id="form_descuentos">
-                        <div class="modal-body"></div>
-                        <div class="modal-footer"></div>
-                    </form>
-                </div>
-            </div>
-        </div>
     
         <div class="modal fade modal-alertas" id="modal_abono" data-backdrop="static" data-keyboard="false" role="dialog">
             <div class="modal-dialog ">
@@ -199,14 +185,6 @@
                         <div class="modal-body"></div>
                         <div class="modal-footer"></div>
                     </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                    <div class="modal-body"></div>
                 </div>
             </div>
         </div>

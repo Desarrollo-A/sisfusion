@@ -19,28 +19,37 @@ $(document).ready( function() {
 
     $(".select-is-empty").removeClass("is-empty");
 
-    $('#all_users_datatable thead tr:eq(0) th').each(function (i) {
-        if (i != 16) {
-            var title = $(this).text();
-            $(this).html('<input type="text" style="width:100%; background:#003D82; color:white; border: 0; font-weight: 500;" class="textoshead"  placeholder="' + title + '"/>');
-            $('input', this).on('keyup change', function () {
-                if ($('#all_users_datatable').DataTable().column(i).search() !== this.value) {
-                    $('#all_users_datatable').DataTable()
-                        .column(i)
-                        .search(this.value)
-                        .draw();
-                }
-            });
-        }
-    });
+    
 
     // MJ: EJECUTAR FUNCIÓN PARA EL LLENADO DE LA DT
     fillUsersTable();
 });
 
+let titulos = [];
+$('#all_users_datatable thead tr:eq(0) th').each(function (i) {
+        if (i != 16) {
+            var title = $(this).text();
+            titulos.push(title);
+            $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
+            $('input', this).on('keyup change', function () {
+                if ($('#all_users_datatable').DataTable().column(i).search() !== this.value) {
+                    $('#all_users_datatable').DataTable().column(i).search(this.value).draw();
+                }
+            });
+        }
+    });
+
+$('#all_users_datatable').on('draw.dt', function() {
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
+    });
+});
+
 function fillUsersTable() {
     $allUsersTable = $('#all_users_datatable').DataTable({
-        dom: 'Brt' + "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: "100%",
+        scrollX: true,
         buttons: [
             {
                 extend: 'excelHtml5',
@@ -49,35 +58,10 @@ function fillUsersTable() {
                 titleAttr: 'Listado de usuarios',
                 title: 'Listado de usuarios',
                 exportOptions: {
-
-                    columns:  (rolId==54) ? [0, 1, 2, 3, 4, 5, 6, 7] : [0, 1, 2, 3, 4, 5, 6, 7],
+                    columns:  (id_rol_general==54) ? [0, 1, 2, 3, 4, 5, 6, 7] : [0, 1, 2, 3, 4, 5, 6, 7],
                     format: {
                         header: function (d, columnIdx) {
-                            switch (columnIdx) {
-                                case 0:
-                                    return 'ESTATUS';
-                                    break;
-                                case 1:
-                                    return 'ID';
-                                    break;
-                                case 2:
-                                    return 'NOMBRE';
-                                case 3:
-                                    return 'CORREO';
-                                    break;
-                                case 4:
-                                    return 'TELÉFONO';
-                                    break;
-                                case 5:
-                                    return 'TIPO';
-                                    break;
-                                case 6:
-                                    return 'SEDE';
-                                    break;
-                                case 7:
-                                    return 'JEFE DIRECTO';
-                                    break;
-                            }
+                            return ' ' + titulos[columnIdx] + ' ';
                         }
                     }
                 }
@@ -85,14 +69,13 @@ function fillUsersTable() {
         ],
         ordering: false,
         paging: true,
-        scrollX: true,
         pagingType: "full_numbers",
         lengthMenu: [
             [10, 25, 50, -1],
             [10, 25, 50, "Todos"]
         ],
         language: {
-            url: "./..//static/spanishLoader_v2.json",
+            url: `${general_base_url}/static/spanishLoader_v2.json`,
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -103,11 +86,11 @@ function fillUsersTable() {
             {
                 data: function (d) {
                     if (d.estatus == 1) {
-                        return '<center><span class="label" style="    background: #A5D6A7;color: #1B5E20;">Activo</span><center>';
+                        return '<center><span class="label lbl-green">ACTIVO</span><center>';
                     } else if (d.estatus == 3) {
-                        return '<center><span class="label" style="background: #ffcc6f;color: #905500;">Inactivo comisionando</span><center>';
+                        return '<center><span class="label lbl-orangeYellow">INACTIVO COMISIONADO</span><center>';
                     } else {
-                        return '<center><span class="label" style="background: #ffafb5;color: #7e000e;">Inactivo</span><center>';
+                        return '<center><span class="label lbl-warning">INACTIVO</span><center>';
                     }
                 }
             },
@@ -135,7 +118,7 @@ function fillUsersTable() {
                 data: function (d) {
                     var propiedadExtra = '';
                     if(d.puesto == 'Asesor' && d.simbolico==1){
-                        propiedadExtra = '<br><label class="label" style="background: #AED6F1;color: #1B4F72;">SIMBÓLICO</label>';
+                        propiedadExtra = '<br><label class="label lbl-sky">SIMBÓLICO</label>';
                     }
                     return d.puesto + propiedadExtra;
                 }
@@ -151,74 +134,70 @@ function fillUsersTable() {
                 }
             },
             {
-
                 data: function (d) {
                     var id_rol = id_rol_global;
-                 
                     if(id_rol == 8 && d.estatus == 1){
-
-                        if (userId == 1297 || userId == 1) { // filtro para soporte excluyendo ambos perfiles
-                            return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
-                                '<button class="btn-data btn-warning change-user-status" title="Dar de baja" id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock"></i></button>'+
+                        if (id_usuario_general == 1297 || id_usuario_general == 1) { // filtro para soporte excluyendo ambos perfiles
+                            return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-toggle="tooltip"  data-placement="top" title="EDITAR INFORMACIÓN" data-id-usuario="' + d.id_usuario +'"> '+
+                            '<i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow  see-changes-log"  data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip"  data-placement="top" title="CONSULTA LA INFORMACIÓN" ><i class="fas fa-eye"></i> </button>' +
+                                '<button class="btn-data btn-warning change-user-status"  id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'" data-toggle="tooltip"  data-placement="top" title="DAR DE BAJA"><i class="fas fa-lock"></i></button>'+
                                 '</div>';
                             } else  {
                                 //TODO SOPORTE  
-                                return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
-                            '<button class="btn-data btn-warning change-user-status" title="Dar de baja" id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock"></i></button></div>';
+                                return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="EDITAR INFORMACIÓN" class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button><button data-toggle="tooltip"  data-placement="top" title="BITÁCORA DE CAMBIOS"class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
+                            '<button data-toggle="tooltip"  data-placement="top" title="DAR DE BAJA" class="btn-data btn-warning change-user-status"  id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock"></i></button></div>';
                         }
                     }
                     else {
-                        if (userId == 1297 || userId == 1) {
-                            return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' ;
+                        if (id_usuario_general == 1297 || id_usuario_general == 1) {
+                            return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="EDITAR INFORMACIÓN" class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button><button data-toggle="tooltip"  data-placement="top" title="BITACORA DE CAMBIOS" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' ;
                             } else {
-                                if (userId != 1297 || userId != 1  ) { 
+                                if (id_usuario_general != 1297 || id_usuario_general != 1  ) { 
                                     let bt = ``;
-                                    bt =  '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button>' +
-                                    '<button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' ;
-                                 
+                                    bt =  '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="EDITAR INFORMACIÓN" class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button>' +
+                                    '<button  class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip"  data-placement="top" title="BITACORA DE CAMBIOS" ><i class="fas fa-eye"></i> </button>' ;
                                     if ((d.puesto == 'Asesor' || d.puesto == 'Coordinador de ventas' || d.puesto == 'Gerente') && (id_rol != 6 && id_rol != 5 && id_rol != 4)) { 
                                     }else {
                                         if(d.estatus == 1){
-                                            bt += '<button class="btn-data btn-green change-user-status" id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock-open"></i></button>';
+                                                bt += '<button class="btn-data btn-warning change-user-status" id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'" data-toggle="tooltip"  data-placement="top" title="DAR DE BAJA"><i class="fas fa-lock-open"></i></button>';
                                         }else{
                                             bt += '';
                                         }
-
                                     }
-                                  bt += '</div>';
-                                  return bt;
+                                    bt += '</div>';
+                                    return bt;
                                 }
-                            if(id_rol == 8 && userId != 1297 && d.puesto == 'Contraloría' && d.estatus == 0){
-                                return '<div class="d-flex justify-center"><button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
-                                '<button class="btn-data btn-green change-user-status" id="' + d.id_usuario +'" data-estatus="1" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock-open"></i></button>'+
+                            if(id_rol == 8 && id_usuario_general != 1297 && d.puesto == 'Contraloría' && d.estatus == 0){
+                                return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="BITÁCORA DE CAMBIOS" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
+                                '<button data-toggle="tooltip"  data-placement="top" title="DAR DE ALTA" class="btn-data btn-green change-user-status" id="' + d.id_usuario +'" data-estatus="1" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock-open"></i></button>'+
                                 '</div>';
                             }
                         }
                     }
                     if (id_rol == 53) {
-                        return '<button class="btn-data btn-azure see-changes-log" data-id-usuario="' + d.id_usuario + '"><span class="material-icons">visibility</span> </button>';
+                        return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="BITÁCORA DE CAMBIOS" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' ;
                     } else if (id_rol == 41) {
-                        return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
-                            '<button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario + '" ><i class="fas fa-eye"></i> </button>' +
+                        return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="EDITAR INFORMACIÓN" class="btn-data btn-blueMaderas edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
+                                '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="BITÁCORA DE CAMBIOS" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
                             '</div>';
-                    } else if(rolId==25){
+                    } else if(id_rol_general==25){
                         return '';
                     }
                     else{
                         if (d.estatus == 1) {
-                         return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
-                                '<button class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario + '" ><i class="fas fa-eye"></i> </button>' +
-                                '<button class="btn-data btn-warning change-user-status" title="Dar de baja" id="' + d.id_usuario + '" data-estatus="0" data-id-usuario="' + d.id_usuario + '" data-name="' + d.nombre + '" data-rol="' + d.puesto + '"><i class="fas fa-lock"></i></button>'+
+                            return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="EDITAR INFORMACIÓN" class="btn-data btn-blueMaderas edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
+                                '<button data-toggle="tooltip"  data-placement="top" title="BITÁCORA DE CAMBIOS" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario + '" ><i class="fas fa-eye"></i> </button>' +
+                                '<button data-toggle="tooltip"  data-placement="top" title="DAR DE BAJA" class="btn-data btn-warning change-user-status"  id="' + d.id_usuario + '" data-estatus="0" data-id-usuario="' + d.id_usuario + '" data-name="' + d.nombre + '" data-rol="' + d.puesto + '"><i class="fas fa-lock"></i></button>'+
                                 '</div>';
                             } else {
                             if (d.puesto == 'Asesor' || d.puesto == 'Coordinador de ventas' || d.puesto == 'Gerente') {
-                                return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas  edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
-                                    '<button class="btn-data btn-orangeYellow see-changes-log" data-id-usuario="' + d.id_usuario + '" ><i class="fas fa-eye"></i></button>' +
+                                return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="EDITAR INFORMACIÓN" class="btn-data btn-blueMaderas  edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
+                                    '<button data-toggle="tooltip"  data-placement="top" title="BITÁCORA DE CAMBIOS" class="btn-data btn-orangeYellow see-changes-log" data-id-usuario="' + d.id_usuario + '" ><i class="fas fa-eye"></i></button>' +
                                     '</div>';
                                 } else {
-                                return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas  edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
-                                    '<button class="btn-data btn-orangeYellow see-changes-log" data-id-usuario="' + d.id_usuario + '" ><i class="fas fa-eye"></i></button>' +
-                                    '<button class="btn-data btn-warning change-user-status" id="' + d.id_usuario + '" data-estatus="1" data-id-usuario="' + d.id_usuario + '" data-name="' + d.nombre + '" data-rol="' + d.puesto + '"><i class="fas fa-lock"></i></button>' +
+                                return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas  edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '" data-toggle="tooltip"  data-placement="top" title="EDITAR INFORMACIÓN"><i class="fas fa-pencil-alt"></i></button>' +
+                                    '<button class="btn-data btn-orangeYellow see-changes-log" data-id-usuario="' + d.id_usuario + '" data-toggle="tooltip"  data-placement="top" title="BITÁCORA DE CAMBIOS" ><i class="fas fa-eye"></i></button>' +
+                                    '<button class="btn-data btn-warning change-user-status" id="' + d.id_usuario + '" data-estatus="1" data-id-usuario="' + d.id_usuario + '" data-name="' + d.nombre + '" data-rol="' + d.puesto + '" data-toggle="tooltip"  data-placement="top" title="DAR DE BAJA"><i class="fas fa-lock"></i></button>' +
                                     '</div>';
                             }
                         }
@@ -234,7 +213,7 @@ function fillUsersTable() {
             }
         }
     });
-    if(rolId == 54){//validacion para no mostrarle acciones a usuario POPEA
+    if(id_rol_general == 54){//validacion para no mostrarle acciones a usuario POPEA
         let arrayNOView = [8];
         $allUsersTable.columns(arrayNOView).visible(false);
     }
@@ -306,9 +285,8 @@ $("#my_add_user_form").on('submit', function(e){
 function getLeadersList(){
     headquarter = $('#headquarter').val();
     type = $('#member_type').val();
-    if(rolId==4 || rolId==5 || rolId==6){
+    if(id_rol_general==4 || id_rol_general==5 || id_rol_general==6){
         if(type==7){
-            console.log('Es un asesor');
             $('#tipoMiembro_column').removeClass('col-sm-6');
             $('#tipoMiembro_column').addClass('col-sm-3');
             $('#simbolico_column').removeClass('hide');
@@ -418,31 +396,28 @@ $("#BajaUserForm").on('submit', function(e){
         }
     });
 });
-    $(document).on('click', '.buscar-pass-user', function(e)
-    {
-        id_usuario = $(this).attr("data-id-usuario");
-        console.log(id_usuario );
 
-        $.getJSON("getUserInformation/"+id_usuario).done( function( data ){
-            $.each( data, function(i, v){
-                console.log(v);
-                let leader;
-                var inputNombre = document.getElementById("usuarioPC");
-                inputNombre.value =  v.usuario;
-                var inputpass = document.getElementById("passPC");
-                inputpass.value =  v.contrasena;
-                //document.getElementById("passPC").value = v.contrasena;
-               if (v.id_rol == 9)
-                    leader = v.gerente_id
-               else if (v.id_rol == 3)
-                   leader = v.subdirector_id
-                else
-                   leader = v.id_lider;
-            });
+$(document).on('click', '.buscar-pass-user', function(e){
+    id_usuario = $(this).attr("data-id-usuario");
+    $.getJSON("getUserInformation/"+id_usuario).done( function( data ){
+        $.each( data, function(i, v){
+            console.log(v);
+            let leader;
+            var inputNombre = document.getElementById("usuarioPC");
+            inputNombre.value =  v.usuario;
+            var inputpass = document.getElementById("passPC");
+            inputpass.value =  v.contrasena;
+            if (v.id_rol == 9)
+                leader = v.gerente_id
+            else if (v.id_rol == 3)
+                leader = v.subdirector_id
+            else
+                leader = v.id_lider;
         });
-        $("#modalData").modal();
-       
     });
+    $("#modalData").modal();
+    
+});
 
 $("#BajaConfirmForm").on('submit', function(e){
     e.preventDefault();
@@ -481,44 +456,37 @@ $(document).on('click', '.change-user-status', function(e) {
     estatus = $(this).attr("data-estatus");
     id_rol = $(this).attr("data-rol");
     nameUser = $(this).attr("data-name");
-if(estatus == 0 && (id_rol == 'Asesor' || id_rol == 'Gerente' || id_rol == 'Coordinador de ventas')){
-    document.getElementById('nameUs').innerHTML = '';
-    $('#id_user').val(0);
-    $('#idrol').val(0);
-
-
-    document.getElementById('nameUs').innerHTML = nameUser;
-    $('#id_user').val(id_user);
-    $('#idrol').val(id_rol);
-    $("#BajaUser").modal();
-}else{
-    document.getElementById('nameUs2').innerHTML = '';
-    document.getElementById('msj').innerHTML = '';
-
-    $('#iduser').val(0);
-    $('#id_rol').val(0);
-    $('#status').val(0);
-    if(estatus == 0){
-        document.getElementById('msj').innerHTML = '¿Está seguro que desea dar de baja a ';
-        document.getElementById('nameUs2').innerHTML = nameUser;
-        //alert('baja');
-        $('#iduser').val(id_user);
-        $('#id_rol').val(id_rol);
-        $('#status').val(estatus);
-        $("#BajaConfirm").modal();
-
+    if(estatus == 0 && (id_rol == 'Asesor' || id_rol == 'Gerente' || id_rol == 'Coordinador de ventas')){
+        document.getElementById('nameUs').innerHTML = '';
+        $('#id_user').val(0);
+        $('#idrol').val(0);
+        document.getElementById('nameUs').innerHTML = nameUser;
+        $('#id_user').val(id_user);
+        $('#idrol').val(id_rol);
+        $("#BajaUser").modal();
     }else{
-        document.getElementById('msj').innerHTML = '¿Está seguro que desea dar de alta a ';
-        document.getElementById('nameUs2').innerHTML = nameUser;
-       // alert('alta');
-        $('#iduser').val(id_user);
-        $('#id_rol').val(id_rol);
-        $('#status').val(estatus);
-        $("#BajaConfirm").modal();
-
+        document.getElementById('nameUs2').innerHTML = '';
+        document.getElementById('msj').innerHTML = '';
+        $('#iduser').val(0);
+        $('#id_rol').val(0);
+        $('#status').val(0);
+        if(estatus == 0){
+            document.getElementById('msj').innerHTML = '¿Está seguro que desea dar de baja a ';
+            document.getElementById('nameUs2').innerHTML = nameUser;
+            $('#iduser').val(id_user);
+            $('#id_rol').val(id_rol);
+            $('#status').val(estatus);
+            $("#BajaConfirm").modal();
+        }else{
+            document.getElementById('msj').innerHTML = '¿Está seguro que desea dar de alta a ';
+            document.getElementById('nameUs2').innerHTML = nameUser;
+            $('#iduser').val(id_user);
+            $('#id_rol').val(id_rol);
+            $('#status').val(estatus);
+            $("#BajaConfirm").modal();
+        }
     }
-}
-$('#'+id_user+'').prop('disabled', false);
+    $('#'+id_user+'').prop('disabled', false);
 });
 
 $(document).on('click', '.edit-user-information', function(e){
@@ -534,8 +502,6 @@ $(document).on('click', '.edit-user-information', function(e){
             }else{
                 $('#btn_acept').removeClass('hide');
             }
-
-            
             let leader;
             if (v.id_rol == 9)
                 leader = v.gerente_id
@@ -543,14 +509,13 @@ $(document).on('click', '.edit-user-information', function(e){
                 leader = v.subdirector_id
             else
                 leader = v.id_lider;
-
             if (v.id_rol == '7' || v.id_rol == '9' || v.id_rol == '3') { // ASESOR || COORDINADOR || GERENTE
                 var row = $('.col-estructura');
                 row.append(`
                     <div class="col-sm-6">
                         <div class="form-group label-floating select-is-empty div_nuevaEstructura">
                             <label class="control-label"><small class="isRequired">*</small>Nueva estructura</label>
-                            <select class="selectpicker select-gral m-0" id="nueva_estructura" name="nueva_estructura" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" data-container="body" required>
+                            <select class="selectpicker select-gral m-0" id="nueva_estructura" name="nueva_estructura" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required>
                                 <option value="0" ${ (v.nueva_estructura == 0 || v.nueva_estructura != null ) ? 'checked' : ''}>No</option>
                                 <option value="1" ${ (v.nueva_estructura == 1 || v.nueva_estructura != null ) ? 'checked' : ''}>Sí</option>
                             </select>
@@ -558,10 +523,9 @@ $(document).on('click', '.edit-user-information', function(e){
                     </div>
                 `);
             }
-
             //se valida que tipo de usuario está editando el usuario para poder agregarle la propiedad
             //de si es simbólico o no
-            if(rolId == 4 || rolId == 5 || rolId==6){
+            if(id_rol_general == 4 || id_rol_general == 5 || id_rol_general==6){
                 if (v.id_rol == '7' ){
                     $('#tipoMiembro_column').removeClass('col-sm-6');
                     $('#tipoMiembro_column').addClass('col-sm-3');
@@ -569,12 +533,12 @@ $(document).on('click', '.edit-user-information', function(e){
                     row_add.append(`
                     <div class="col-sm-3">
                         <div class="form-group label-floating select-is-empty div_membertype">
-                              <label class="control-label"><small class="isRequired">*</small>¿Asesor simbólico?</label>
-                              <select class="selectpicker select-gral m-0" id="simbolicoType" name="simbolicoType" data-style="btn" data-show-subtext="true" 
-                              data-live-search="true" title="Seleccione sí es simbolíco" data-size="7" data-container="body" required>
-                                    <option value="1" ${ (v.simbolico == 1 || v.simbolico == '1' ) ? 'selected' : ''}>SÍ</option>
-                                    <option value="0" ${ (v.simbolico == 0 || v.simbolico == '0' || v.simbolico == null ) ? 'selected' : ''}>NO</option>
-                              </select>
+                            <label class="control-label"><small class="isRequired">*</small>¿Asesor simbólico?</label>
+                            <select class="selectpicker select-gral m-0" id="simbolicoType" name="simbolicoType" data-style="btn" data-show-subtext="true" 
+                            data-live-search="true" title="Seleccione sí es simbolíco" data-size="7" data-container="body" required>
+                                <option value="1" ${ (v.simbolico == 1 || v.simbolico == '1' ) ? 'selected' : ''}>SÍ</option>
+                                <option value="0" ${ (v.simbolico == 0 || v.simbolico == '0' || v.simbolico == null ) ? 'selected' : ''}>NO</option>
+                            </select>
                         </div>
                     </div>
                 `);
@@ -583,7 +547,6 @@ $(document).on('click', '.edit-user-information', function(e){
                     $('#tipoMiembro_column').addClass('col-sm-6');
                 }
             }
-            
             $('#nueva_estructura').selectpicker('refresh');
             $('#simbolicoType').selectpicker('refresh');
             getLeadersListForEdit(v.id_sede, v.id_rol, leader);
@@ -597,15 +560,13 @@ $(document).on('click', '.edit-user-information', function(e){
 $(document).on('change', '#sedech', function() {
     let id_sede = $('#sedech').val();
     $("#sucursal").empty();
-    $("#sucursal").append($('<option disabled selected>').val("").text("Seleccione una opción"));
+    $("#sucursal").append($('<option disabled selected>').val("").text("SELECCIONA UNA OPCIÓN"));
     $.getJSON("getSucursalCH/"+id_sede).done( function( data ){
-
         var select = document.getElementsByName('sucursal')[0];
         if(data.data.length > 0){
             $('#sucursal').prop('required', true);
         }else{
             document.getElementById("sucursal").removeAttribute("required");
-
         }
         $.each( data.data, function(i, v){
                 var option = document.createElement("option");
@@ -616,13 +577,13 @@ $(document).on('change', '#sedech', function() {
         $('#sucursal').selectpicker('refresh');
     });
 });
+
 function getSedesCH(sede = 0,sucursal = 0){
     $('#spiner-loader').removeClass('hide');
     $('#sedech').selectpicker('refresh');
     $("#sedech").empty();
-    sede == 0 ?  $("#sedech").append($('<option disabled selected>').val("").text("Seleccione una opción")) : '';
+    sede == 0 ?  $("#sedech").append($('<option disabled selected>').val("").text("SELECCIONA UNA OPCIÓN")) : '';
     $('#sedech').prop('required', true);
-
     $.getJSON("getSedesCH").done( function( data ){
         $('#spiner-loader').addClass('hide');
         var select = document.getElementsByName('sedech')[0];
@@ -653,6 +614,7 @@ function getSedesCH(sede = 0,sucursal = 0){
         $('#sedech').selectpicker('refresh');
     });
 }
+
 function fillFields (v) {
     $("#id_usuario").val(v.id_usuario);
     $("#name").val(v.nombre);
@@ -666,12 +628,10 @@ function fillFields (v) {
     $("#member_type").val(v.id_rol);
     $("#member_type").val(v.id_rol);
     let rol_asignado = v.id_rol;
-
     if (v.id_rol == 2 && (v.id_usuario == 3 || v.id_usuario == 5 || v.id_usuario == 607 || v.id_usuario == 4 ))
         $("#member_type option[value=2]").text("DIRECTOR REGIONAL");
     else if (v.id_rol == 2 && (v.id_usuario != 3 || v.id_usuario != 5 || v.id_usuario != 607))
         $("#member_type option[value=2]").text("SUBDIRECTOR");
-        
     $("#lastTM").val(v.id_rol);
     $("#talla").val(v.talla == null ? 0 : v.talla);
     $("#sexo").val(v.sexo == null ? 'S' : v.sexo);
@@ -683,7 +643,6 @@ function fillFields (v) {
     $('#sexo').selectpicker('refresh');
     $('#hijos').selectpicker('refresh');
     $('#nueva_estructura').val(v.nueva_estructura).selectpicker('refresh');
-
     if(rol_asignado == 7 || rol_asignado== 3 || rol_asignado == 9 ){
         $('#ch').show();
         document.getElementById("sedech").removeAttribute("required");
@@ -771,8 +730,6 @@ $("#editUserForm").on('submit', function(e){
     });
 });
 
-
-
 $(document).on('click', '.see-changes-log', function(){
     id_usuario = $(this).attr("data-id-usuario");
     $.post("getChangeLogUsers/"+id_usuario).done( function( data ){
@@ -790,47 +747,47 @@ function fillChangelogUsers(v) {
 
 
     switch (v.col_afect) {
-      case 'nombre':
+        case 'nombre':
             nombreMovimiento = 'Nombre';
             dataMovimiento = '<b>Valor anterior:</b> ' + v.anterior + '\n' +
         '            <br>\n' +
         '            <b>Valor nuevo:</b> ' + v.nuevo + '\n';
         break;
-      case 'apellido_paterno':
+        case 'apellido_paterno':
             nombreMovimiento = 'Apellido paterno';
             dataMovimiento = '<b>Valor anterior:</b> ' + v.anterior + '\n' +
         '            <br>\n' +
         '            <b>Valor nuevo:</b> ' + v.nuevo + '\n';
         break;
-      case 'apellido_materno':
+        case 'apellido_materno':
             nombreMovimiento = 'Apellido materno';
             dataMovimiento = '<b>Valor anterior:</b> ' + v.anterior + '\n' +
         '            <br>\n' +
         '            <b>Valor nuevo:</b> ' + v.nuevo + '\n';
         break;
-      case 'contrasena':
+        case 'contrasena':
             nombreMovimiento = 'Contraseña';
             dataMovimiento = 'Cambio de Contraseña';
         break;
-      case 'telefono':
+        case 'telefono':
             nombreMovimiento = 'Teléfono';
             dataMovimiento = '<b>Valor anterior:</b> ' + v.anterior + '\n' +
         '            <br>\n' +
         '            <b>Valor nuevo:</b> ' + v.nuevo + '\n';
         break;
-      case 'imagen_perfil':
+        case 'imagen_perfil':
             nombreMovimiento = 'Imagen de perfil';
             dataMovimiento = '<b>Valor anterior:</b> ' + v.anterior + '\n' +
         '            <br>\n' +
         '            <b>Valor nuevo:</b> ' + v.nuevo + '\n';
         break;
-      case 'forma_pago':
+        case 'forma_pago':
             nombreMovimiento = 'Forma de pago';
             dataMovimiento = '<b>Valor anterior:</b> ' + v.anterior + '\n' +
         '            <br>\n' +
         '            <b>Valor nuevo:</b> ' + v.nuevo + '\n';
         break;
-      default:
+        default:
             nombreMovimiento = v.col_afect;
             dataMovimiento = '<b>Valor anterior:</b> ' + v.anterior + '\n' +
         '            <br>\n' +
@@ -838,14 +795,13 @@ function fillChangelogUsers(v) {
         break;
     }
 
-
     $("#changelogUsers").append('<li class="timeline-inverted">\n' +
         '    <div class="timeline-badge success"><span class="material-icons">done</span></div>\n' +
         '    <div class="timeline-panel">\n' +
         '            <label><h6 style="text-transform:uppercase">' + nombreMovimiento + '</h6></label><br>\n' +
                     dataMovimiento +
         '        <h6>\n' +
-        '            <span class="small text-gray"><i class="fa fa-clock-o mr-1"></i> ' + v.fecha_creacion + ' - ' + v.creador + '</span>\n' +
+        '            <span class="small text-gray"><i class="fa fa-clock-o mr-1"></i> ' + v.fec_creacion + ' - ' + v.creador + '</span>\n' +
         '        </h6>\n' +
         '    </div>\n' +
         '</li>');

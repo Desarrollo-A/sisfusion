@@ -159,7 +159,7 @@
 														<th>SUBDIRECTOR</th>
 														<th>DIRECTOR REGIONAL</th>
 														<th>DIRECTOR REGIONAL 2</th>
-														<th>FECHA APARTADO</th>
+														<th>FECHA DE APARTADO</th>
 														<th>ACCIONES</th>
 													</tr>
 												</thead>

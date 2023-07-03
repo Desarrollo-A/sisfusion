@@ -307,7 +307,11 @@ function dataTable(ruta) {
             { data: 'nombreResidencial' },
             { data: 'nombreCondominio' },
             { data: 'nombreLote' },
-            { data: 'sup' },
+            {
+                data: function (d) {
+                    return d.sup + ' <b>m<sup>2</sup></b>';
+                }
+            },
             { data: function(data){return "$ " + alerts.number_format(data.precio, '2', '.', ',')} },
             { data: function(data){return "$ " + alerts.number_format(data.total, '2', '.', ',')} },
             { data: 'mesesn' },

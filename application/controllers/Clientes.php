@@ -2666,8 +2666,11 @@ public function getStatusMktdPreventa(){
         $sede = $this->input->post("sede");
         $id_dragon = $this->input->post("id_dragon");
         $tipo_busqueda = $this->input->post("TB");
-        $fecha_init = $this->input->post("fecha_init");
-        $fecha_end = $this->input->post("fecha_end");
+
+        $fechaInicio = explode('/', $this->input->post("fecha_init"));
+        $fechaFin = explode('/', $this->input->post("fecha_end"));
+        $fecha_init = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+        $fecha_end = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
 
         $data_search = array(
             'idLote' => $idLote,

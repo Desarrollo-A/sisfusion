@@ -8189,5 +8189,5 @@ public function getDataDispersionPagoEspecial($val = '') {
                 ORDER BY fecha_creacion DESC ";
         $query = $this->db->query($cmd);
         return $query->row();
-
+    }
 }

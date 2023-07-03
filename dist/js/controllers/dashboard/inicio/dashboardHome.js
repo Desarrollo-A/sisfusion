@@ -750,7 +750,6 @@ async function prospectsTable(){
         $('.datepicker').datetimepicker({locale: 'es'});
         setInitialValues2();
     }
-
     $('#tablePR thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
         $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}"placeholder="${title}"/>`);    
@@ -800,7 +799,7 @@ function changeIcon(anchor) {
 function createAccordionsPR(option, render, rol) {
     let tittle = getTitle(option);
     let html = '';
-    html = `<div data-rol="${rol}" class="bk ${render == 1 ? 'parentTable': 'childTable'}">
+    html = `<div class="bk ${render == 1 ? 'parentTable': 'childTable'}">
                 <div class="card p-2 h-auto">
                     <div class="d-flex justify-between align-center">   
                         <div class="cursor-point accordionToggle">
@@ -834,7 +833,7 @@ function createAccordionsPR(option, render, rol) {
                         <div class="accordion-content pb-3">
                             <div class="material-datatables">
                                 <div class="form-group">
-                                    <table class="table-striped table-hover hide" id="tablePR" name="table`+option+`">
+                                    <table class="table-striped table-hover hide" id="tablePR">
                                         <thead>
                                             <tr>
                                                 <th>ESTADO</th>
@@ -916,8 +915,8 @@ function multirol(){
             let finalEndDate = $("#endDate3").val();
             $('#tablePR thead tr:eq(0) th').each( function (i) {
                 var title = $(this).text();
-                $(this).html('<input type="text" style="width:100%; background:#003D82; color:white; border: 0; font-weight: 500;" class="textoshead"  placeholder="'+title+'"/>' );
-                $( 'input', this ).on('keyup change', function () {
+                $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}"placeholder="${title}"/>`);    
+                $( 'input', this).on( 'keyup change', function () {
                     if ($('#tablePR').DataTable().column(i).search() !== this.value ) {
                         $('#tablePR').DataTable().column(i).search(this.value).draw();
                     }
@@ -1394,6 +1393,14 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
                 "endDate": endDate,
                 "where": where
             }
+        },
+        columnDefs: [{
+            "searchable": true,
+            "orderable": false,
+            "targets": 0
+        }],
+        drawCallback: function (settings) {
+            $('[data-toggle="tooltip"]').tooltip();
         }
     })
     $('#spiner-loader').addClass('hide');
