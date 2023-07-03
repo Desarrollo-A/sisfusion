@@ -3033,4 +3033,41 @@ class Contraloria extends CI_Controller {
         } else
             json_encode(array());
     }
+
+    public function lineaVentaInventario() {
+        $this->validateSession();
+        $this->load->view('template/header');
+        $this->load->view("contraloria/lineaVentaInventario");
+    }
+    public function get_inventario() {
+		$this->validateSession();
+        $fechaInicio = $this->input->post("fechaInicio");
+        $fechaFin = $this->input->post("fechaFin");
+		$data = $this->Contraloria_model->getInventarioData($fechaInicio, $fechaFin);
+		if($data!=null)
+            print_r(json_encode(array("data" => $data)));
+        else
+		    print_r(json_encode(array("data" => [])));
+		exit;
+    }
+    public function getLineaVenta(){
+        $idCliente = $this->input->post("idCliente");
+        $banderaVC = $this->input->post("vanderaVC");
+        $data = $this->Contraloria_model->getLineaVenta($idCliente,$banderaVC);
+        echo json_encode($data,JSON_NUMERIC_CHECK);
+    }
+    public function allUserVentas()
+    {
+        $datos = $this->Contraloria_model->allUserVentas();
+        echo json_encode($datos,JSON_NUMERIC_CHECK);
+    }
+    public function EditarInventario(){
+        $datos = $_POST;
+        $result = $this->Contraloria_model->EditarInventario($datos);
+        if($result == true){
+            echo json_encode(1);
+        }else {
+            echo json_encode(0);
+        }
+    }
 }

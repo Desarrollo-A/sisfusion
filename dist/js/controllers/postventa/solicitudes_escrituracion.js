@@ -1162,20 +1162,7 @@ $(document).on("change", ".selectpicker.notaria-select", async function (e) {
   }
 });
 
-$(document).on("click", ".saveNotaria", function () {
-  let tr = $(this).closest("tr");
-  let select = tr.find("select").val();
-  if (tr.find("select").val()) {
-    saveNotaria($(this).attr("data-idSolicitud"), select, $(this));
-  } else {
-    alerts.showNotification(
-      "top",
-      "right",
-      "Debe seleccionar una notaría",
-      "warning"
-    );
-  }
-});
+
 
 $(document).on("click", ".modalPresupuestos", function () {
   let idNxS = $(this).attr("data-idNxS");
@@ -1196,6 +1183,7 @@ $(document).on('click', '.saveNotaria', function() {
         alerts.showNotification("top", "right", "Debe seleccionar una notaría", "warning");
     }
 })
+
 
 $(document).on('click', '.modalCopiaCertificada', function(){
     let idNxS = $(this).attr('data-idNxS2');
@@ -1609,7 +1597,7 @@ function crearTablas(datosTablas){
                     if(bandera_request == 1){
                        d.area_sig = banderaAdmin == 1 ? 'Postventa' : d.area_sig;
                        d.nombre_estatus_siguiente = banderaAdmin == 1 ? 'APE0004 - RECEPCIÓN DE ESTATUS DE CONSTRUCCIÓN - POSTVENTA' : d.nombre_estatus_siguiente;
-                       group_buttons += `<button id="request" data-num-table="${numTable} data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
+                       group_buttons += `<button id="request" data-num-table="${numTable}" data-siguiente-area="${d.area_sig}" data-siguiente_actividad="${d.nombre_estatus_siguiente}" data-type="5" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Aprobar"><i class="fas fa-paper-plane"></i></button>`;
                     }
                     if(bandera_reject == 1){
                         group_buttons += `<button id="reject" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Rechazar"><i class="fas fa-reply"></i></button>`;
