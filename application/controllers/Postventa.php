@@ -1227,7 +1227,7 @@ class Postventa extends CI_Controller
             ->from('Ciudad Maderas')
             ->to('programador.analista24@ciudadmaderas.com')
             ->subject('Presupuesto escrituración')
-            ->attach(__DIR__ . "/../../static/documentos/postventa/escrituracion/PRESUPUESTO/" . $doc->expediente)
+            ->attach(__DIR__ . "/../../static/documentos/postventa/escrituracion/PRESUPUESTO/" . $doc->expediente);
 
         $response = $this->email->send();
 
