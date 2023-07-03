@@ -1568,15 +1568,14 @@ class Postventa extends CI_Controller
     {
         $idSolicitud = $_POST['idSolicitud'];
         $observaciones = $_POST['observaciones'];
-        
-        $this->load->library('email');
-        $mail = $this->email;
-        $mail->from('noreply@ciudadmaderas.com', 'Ciudad Maderas');
-        $mail->to('programador.analista21@ciudadmaderas.com');
-        $mail->Subject(utf8_decode("Observaciones Notaria"));
-        $mail->message('Buen día! Las observaciones que la notaria envío sobre la solicitud: ' . $idSolicitud . ' son: ' . $observaciones);
-        $response = $mail->send();
-        echo json_encode($response);
+
+        $this->email
+            ->from('Ciudad Maderas')
+            ->to('programador.analista21@ciudadmaderas.com')
+            ->subject('Observaciones Notaria')
+            ->view("<h3>Las observaciones que la notaría envió sobre la solicitud: $idSolicitud son: $observaciones</h3>");
+
+        echo json_encode($this->email->send());
     }
 
     public function saveEstatusLote()
