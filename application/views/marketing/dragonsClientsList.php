@@ -1,5 +1,6 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
 
 <style>
     #reviewTokenEvidence .close{
@@ -32,7 +33,7 @@
     </div>
 
     <div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+        <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-body">
                     <div role="tabpanel">
@@ -46,8 +47,8 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="card card-plain">
-                                            <div class="card-content">
-                                                <ul class="timeline timeline-simple" id="changelog"></ul>
+                                            <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                                <ul class="timeline-3" id="changelog"></ul>
                                             </div>
                                         </div>
                                     </div>
@@ -109,21 +110,8 @@
 
 <?php $this->load->view('template/footer'); ?>
 <!--DATATABLE BUTTONS DATA EXPORT-->
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script type="text/javascript" src="//unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
-<link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
 <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/marketing/dragonsClientsList.js"></script>
-
-<script>
-    $(document).ready(function () {
-        fillDragonsClientsTable();
-        Shadowbox.init();
-    });
-</script>
 
 </body>

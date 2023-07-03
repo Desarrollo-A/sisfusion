@@ -513,8 +513,8 @@ $(document).on('click', '.edit-user-information', function(e){
                 var row = $('.col-estructura');
                 row.append(`
                     <div class="col-sm-6">
-                        <div class="form-group label-floating select-is-empty div_nuevaEstructura">
-                            <label class="control-label"><small class="isRequired">*</small>Nueva estructura</label>
+                        <div class="form-group">
+                            <label class="control-label">Nueva estructura (<small class="isRequired">*</small>)</label>
                             <select class="selectpicker select-gral m-0" id="nueva_estructura" name="nueva_estructura" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required>
                                 <option value="0" ${ (v.nueva_estructura == 0 || v.nueva_estructura != null ) ? 'checked' : ''}>No</option>
                                 <option value="1" ${ (v.nueva_estructura == 1 || v.nueva_estructura != null ) ? 'checked' : ''}>Sí</option>
@@ -795,17 +795,29 @@ function fillChangelogUsers(v) {
         break;
     }
 
-    $("#changelogUsers").append('<li class="timeline-inverted">\n' +
-        '    <div class="timeline-badge success"><span class="material-icons">done</span></div>\n' +
-        '    <div class="timeline-panel">\n' +
-        '            <label><h6 style="text-transform:uppercase">' + nombreMovimiento + '</h6></label><br>\n' +
-                    dataMovimiento +
-        '        <h6>\n' +
-        '            <span class="small text-gray"><i class="fa fa-clock-o mr-1"></i> ' + v.fec_creacion + ' - ' + v.creador + '</span>\n' +
-        '        </h6>\n' +
-        '    </div>\n' +
+    $("#changelogUsers").append('<li>\n' +
+    '    <div class="container-fluid">\n' +
+    '       <div class="row">\n' +
+    '           <div class="col-md-6">\n' +
+    '               <a><small>Campo: </small><b> ' +v.col_afect.toUpperCase()+ '</b></a><br>\n' +
+    '           </div>\n' +
+    '<div class="float-end text-right">\n' +
+    '               <a>' + v.fec_creacion + '</a>\n' +
+    '           </div>\n' +
+    '           <div class="col-md-12">\n' +
+    '                <p class="m-0"><small>USUARIO: </small><b> ' + v.creador + '</b></p>\n'+
+    '                <p class="m-0"><small>VALOR ANTERIOR: </small><b> ' + v.anterior.toUpperCase() + '</b></p>\n' +
+    '                <p class="m-0"><small>VALOR NUEVO: </small><b> ' + v.nuevo.toUpperCase() + '</b></p>\n' +
+    '           </div>\n' +
+    '        <h6>\n' +
+    '        </h6>\n' +
+    '       </div>\n' +
+    '    </div>\n' +
         '</li>');
 }
+
+
+
 
 $(document).on('change', '#nueva_estructura', function() {
     if ($(this).val() == 1) {

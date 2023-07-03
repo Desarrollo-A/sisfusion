@@ -55,13 +55,13 @@
                         </div>
                             <div class="modal-body">
                                 <div class="col-sm-6">
-                                    <div class="form-group label-floating div_name">
+                                    <div class="form-group">
                                         <label class="control-label">usuario</label>
                                     </div>
                                     <input  class="form-control input-gral pl-1 pr-1" readonly type="text" id="usuarioPC" name="usuarioPC" value="">
                                 </div>
                                 <div class="col-sm-6">
-                                    <div class="form-group label-floating div_name">
+                                    <div class="form-group">
                                         <label class="control-label">Contraseña</label>
                                     </div>
                                     <input  class="form-control input-gral pl-1 pr-1" readonly type="text" id="passPC" name="passPC" value="" >
@@ -88,7 +88,7 @@
                         <form id="BajaUserForm" name="BajaUsersForm" method="post">
                             <div class="modal-body">
                                 <div class="col-sm-6">
-                                    <div class="form-group label-floating div_name">
+                                    <div class="form-group">
                                         <label class="control-label">Motivo de baja <small>(requerido)</small></label>
                                         <textarea id="motivo" name="motivo" class="form-control" required></textarea>
                                         <input type="hidden" name="id_user" id="id_user">
@@ -134,7 +134,7 @@
 
             <!------------------------------------->
             <div class="modal fade" id="changesRegsUsers" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-                <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+                <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal"aria-hidden="true">
@@ -156,8 +156,8 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="card card-plain">
-                                                    <div class="card-content">
-                                                        <ul class="timeline timeline-simple" id="changelogUsers"></ul>
+                                                    <div class="card-content " style="height: 350px; overflow: auto">
+                                                        <ul class="timeline-3" id="changelogUsers"></ul>
                                                     </div>
                                                 </div>
                                             </div>
@@ -188,19 +188,19 @@
                                 <div class="container-fluid">
                                     <div class="row">
                                         <div class="col-sm-4">
-                                            <div class="form-group label-floating div_name">
-                                                <label class="control-label"><span class="isRequired">*</span>Nombre</label>
+                                            <div class="form-group">
+                                                <label class="control-label">Nombre (<span class="isRequired">*</span>)</label>
                                                 <input id="name" name="name" onkeyup="javascript:this.value=this.value.toUpperCase();" onchange="validateInputs(this);" type="text" class="form-control input-gral" required>
                                             </div>
                                         </div>
                                         <div class="col-sm-4">
-                                            <div class="form-group label-floating div_last_name">
+                                            <div class="form-group">
                                                 <label class="control-label"><small class="isRequired"></small>Apellido paterno</label>
                                                 <input id="last_name" onkeyup="javascript:this.value=this.value.toUpperCase();" onchange="validateInputs(this);" name="last_name" type="text" class="form-control input-gral" required>
                                             </div>
                                         </div>
                                         <div class="col-sm-4">
-                                            <div class="form-group label-floating div_mothers_last_name">
+                                            <div class="form-group">
                                                 <label class="control-label">Apellido materno</label>
                                                 <input id="mothers_last_name" onkeyup="javascript:this.value=this.value.toUpperCase();" onchange="validateInputs(this);" name="mothers_last_name" type="text" class="form-control input-gral">
                                             </div>
@@ -208,52 +208,52 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-3">
-                                            <div class="form-group label-floating div_rfc">
-                                                <label class="control-label"><small class="isRequired">*</small>RFC</label>
+                                            <div class="form-group ">
+                                                <label class="control-label">RFC (<small class="isRequired">*</small>)</label>
                                                 <input id="rfc" name="rfc" onkeyup="javascript:this.value=this.value.toUpperCase();" onchange="validateInputs(this);" type="text" class="form-control input-gral" required maxlength="13" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                             </div>
                                         </div>
                                         <div class="col-sm-3">
-                                            <div class="form-group label-floating select-is-empty div_payment_method ">
-                                                <label class="control-label"><small class="isRequired">*</small>Forma de pago </label>
+                                            <div class="form-group overflow-hidden">
+                                                <label class="control-label">Forma de pago (<small class="isRequired">*</small>)</label>
                                                 <select class="selectpicker select-gral payment_method m-0" id="payment_method" name="payment_method" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una forma de pago" data-size="7" data-container="body" required disabled>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-sm-3">
-                                            <div class="form-group label-floating div_email">
-                                                <label class="control-label"><small class="isRequired">*</small>Correo electrónico </label>
+                                            <div class="form-group ">
+                                                <label class="control-label">Correo electrónico (<small class="isRequired">*</small>)</label>
                                                 <input id="email" name="email" type="email" onkeyup="javascript:this.value=this.value.toUpperCase();" onchange="validateInputs(this);" class="form-control input-gral pl-1 pr-1" required>
                                             </div>
                                         </div>
                                         <div class="col-sm-3">
-                                            <div class="form-group label-floating div_phone_number">
-                                                <label class="control-label"><small class="isRequired">*</small>Teléfono celular </label>
+                                            <div class="form-group ">
+                                                <label class="control-label">Teléfono celular (<small class="isRequired">*</small>) </label>
                                                 <input id="phone_number" name="phone_number" type="number" class="form-control input-gral" required maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                     <div class="col-sm-6">
-                                        <div class="form-group label-floating select-is-empty div_headquarter">
-                                            <label class="control-label"><small class="isRequired">*</small>Sede</label>
+                                        <div class="form-group overflow-hidden">
+                                            <label class="control-label">Sede (<small class="isRequired">*</small>)</label>
                                             <select class="selectpicker select-gral m-0" id="headquarter" name="headquarter" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una sede" data-size="7" data-container="body" required onchange="cleadFieldsHeadquarterChange()">
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-estructura"></div>
                                     <div class="col-sm-6" id="tipoMiembro_column">
-                                        <div class="form-group label-floating select-is-empty div_membertype">
-                                            <label class="control-label"><small class="isRequired">*</small>Tipo de miembro</label>
+                                        <div class="form-group overflow-hidden">
+                                            <label class="control-label">Tipo de miembro (<small class="isRequired">*</small>)</label>
                                                 <select class="selectpicker select-gral m-0" id="member_type" name="member_type" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione un rol" data-size="7" data-container="body" required onchange="getLeadersList()">
                                                 </select>
                                         </div>
                                     </div>
                                     <div class="simbolico_column"></div>
                                         <div class="col-sm-6">
-                                            <div class="form-group label-floating select-is-empty div_leader">
+                                            <div class="form-group overflow-hidden">
                                                 <input type="hidden" name="rol_actual" id="rol_actual">
-                                                <label class="control-label"><small class="isRequired">*</small>Líder</label>
+                                                <label class="control-label">Líder (<small class="isRequired">*</small>)</label>
                                                 <select class="selectpicker select-gral m-0" id="leader" name="leader" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione un lider" data-size="7" data-container="body" required></select>
                                             </div>
                                         </div>
@@ -267,7 +267,7 @@
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
-                                            <div class="form-group label-floating select-is-empty div_leader">
+                                            <div class="form-group overflow-hidden">
                                                 <label class="control-label ml-2">Sede capital humano</label>
                                                 <div class="boxInfoEsp">
                                                     <i class="fas fa-info" data-toggle="tooltip" data-placement="bottom" title="Sede de asignación del asesor"></i>
@@ -277,7 +277,7 @@
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
-                                            <div class="form-group label-floating select-is-empty div_leader">
+                                            <div class="form-group overflow-hidden">
                                                 <label class="control-label ml-2">Sucursal capital humano</label>
                                                 <div class="boxInfoEsp" data-toggle="tooltip" data-placement="bottom" title="Oficina en la que se encuentra ubicado el asesor">
                                                     <i class="fas fa-info"></i>
@@ -292,7 +292,7 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-group m-0">
-                                                <label class="control-label"><small class="isRequired">*</small>Nombre de usuario</label>
+                                                <label class="control-label">Nombre de usuario (<small class="isRequired">*</small>)</label>
                                                 <input id="username" name="username" type="text" class="form-control input-gral" required>
                                             </div>
                                         </div>
@@ -337,15 +337,15 @@
                                     <table id="all_users_datatable" class="table-striped table-hover">
                                         <thead>
                                             <tr>
-                                                <th class="disabled-sorting">ESTATUS</th>
-                                                <th class="disabled-sorting">ID</th>
-                                                <th class="disabled-sorting">NOMBRE</th>
-                                                <th class="disabled-sorting">CORREO</th>
-                                                <th class="disabled-sorting">TELÉFONO</th>
-                                                <th class="disabled-sorting">TIPO</th>
-                                                <th class="disabled-sorting">SEDE</th>
-                                                <th class="disabled-sorting">JEFE DIRECTO</th>
-                                                <th class="disabled-sorting">ACCIONES</th>
+                                                <th>ESTATUS</th>
+                                                <th>ID</th>
+                                                <th>NOMBRE</th>
+                                                <th>CORREO</th>
+                                                <th>TELÉFONO</th>
+                                                <th>TIPO</th>
+                                                <th>SEDE</th>
+                                                <th>JEFE DIRECTO</th>
+                                                <th>ACCIONES</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -362,5 +362,4 @@
 
     <?php $this->load->view('template/footer'); ?>
     <script src="<?= base_url() ?>dist/js/controllers/usuarios-1.1.0.js"></script>
-    
     </html>
