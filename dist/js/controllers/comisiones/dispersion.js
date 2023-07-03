@@ -2,7 +2,6 @@
 $(document).ready(function () {
     numerosDispersion();
     let titulos_intxt = [];
-
     $('#tabla_dispersar_comisiones thead tr:eq(0) th').each(function (i) {
         $(this).css('text-align', 'center');
         var title = $(this).text();
@@ -91,12 +90,18 @@ $(document).ready(function () {
                 "data": null,
                 "defaultContent": '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i>'
             },
+            // nombre residencia
             { data: 'nombreResidencial' },
+            //condominio 
             { data: 'nombreCondominio' },
+            // lote 
             { data: 'nombreLote' },
+            // idLote 
             { data: 'idLote' },
+            //cliente
             { data: 'nombreCliente' },
             {
+                // tipo de venta
                 data: function (d) {
                     var labelTipoVenta;
                     if (d.tipo_venta == 1) {
@@ -110,6 +115,7 @@ $(document).ready(function () {
                 }
             },
             {
+                // modalidad
                 data: function (d) {
                     var labelCompartida;
                     if (d.compartida == null) {
@@ -121,6 +127,7 @@ $(document).ready(function () {
                 }
             },
             {
+                // contratacion
                 data: function (d) {
                     var labelStatus;
                     if (d.idStatusContratacion == 15) {
@@ -132,6 +139,7 @@ $(document).ready(function () {
                 }
             },
             {
+                //plna de venta 
                 data: function (d) {
                     var labelEstatus;
                     if (d.totalNeto2 == null) {
@@ -145,6 +153,7 @@ $(document).ready(function () {
                 }
             },
             {
+                //fecha sistema
                 data: function (d) {
                     var fechaSistema;
                     if (d.fecha_sistema <= '01 OCT 20' || d.fecha_sistema == null) {
@@ -156,6 +165,7 @@ $(document).ready(function () {
                 }
             },
             {
+                //fecha  neodata 
                 data: function (d) {
                     var fechaNeodata;
                     var rescisionLote;
@@ -168,6 +178,17 @@ $(document).ready(function () {
                         rescisionLote = '<br><span class="label" style="color:#78281F;background:#F5B7B1;">Recisión Nueva Venta</span>';
                     }
                     return fechaNeodata + rescisionLote;
+                }
+            }, {
+                //fecha  ULTIA DISPERSION 
+                data: function (d) {
+                    var fechaSistema;
+                    if (d.fecha_sistema <= '01 OCT 20' || d.fecha_sistema == null) {
+                        fechaSistema = '<span class="label" style="color:#626567;background:#E5E7E9;">Sin Definir</span>';
+                    } else {
+                        fechaSistema = '<br><span class="label" style="color:#1B4F72;background:#AED6F1;">' + d.fecha_sistema + '</span>';
+                    }
+                    return fechaSistema;
                 }
             },
             {
@@ -943,6 +964,7 @@ $("#form_NEODATA").submit(function (e) {
     submitHandler: function (form) {
         $('#spiner-loader').removeClass('hidden');
         var data = new FormData($(form)[0]);
+        let formulario = new FormData($(form)[0]);
         $.ajax({
             url: general_base_url + 'Comisiones/InsertNeo',
             data: data,
@@ -953,6 +975,7 @@ $("#form_NEODATA").submit(function (e) {
             method: 'POST',
             type: 'POST', // For jQuery < 1.9
             success: function (data) {
+            
                 if (data == 1) {
                     $('#spiner-loader').addClass('hidden');
                     alerts.showNotification("top", "right", "Dispersión guardada con éxito", "success");
@@ -961,7 +984,27 @@ $("#form_NEODATA").submit(function (e) {
                  
                     $('#dispersar').prop('disabled', false);
                     document.getElementById('dispersar').disabled = false;
-                    numerosDispersion();
+                    console.log('data para mostrar:');
+                    console.log(formulario);
+                    $.ajax({
+                        url: general_base_url + 'Comisiones/ultimaDispersion',
+                        data: formulario,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        dataType: 'json',
+                        method: 'POST',
+                        type: 'POST', 
+                        success:function(data){
+                                console.log(data.response_code)
+                            numerosDispersion();
+                        
+                        
+                        
+                        }
+                    })
+                 
+                    
 
                 } else if (data == 2) {
                     $('#spiner-loader').addClass('hidden');
@@ -1285,6 +1328,5 @@ $('#planes').change(function () {
             $('#monto_label').append(data.monto);
             $('#pagos_label').append(data.pagos);
             $('#lotes_label').append(data.lotes);
-            console.log('kdkdkkdkdkdkdkkdkdkdkdkdkkdkdkdkdkdkkdk');
         }, 'json');
     }

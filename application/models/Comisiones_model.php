@@ -15,7 +15,10 @@ public function getDataActivasPago($val = '') {
          
         $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre as nombreCondominio, l.nombreLote,  
             CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombreCliente, l.tipo_venta, 
-            vc.id_cliente AS compartida, l.idStatusContratacion, l.totalNeto2, pc.fecha_modificacion, convert(nvarchar, pc.fecha_modificacion, 6) fecha_sistema, convert(nvarchar, pc.fecha_neodata, 6) fecha_neodata, 
+            vc.id_cliente AS compartida, l.idStatusContratacion, l.totalNeto2, pc.fecha_modificacion, 
+            convert(nvarchar, pc.ultima_dispersion, 6) ultima_dispersion,
+            convert(nvarchar, pc.fecha_modificacion, 6) fecha_sistema, 
+            convert(nvarchar, pc.fecha_neodata, 6) fecha_neodata, 
             convert(nvarchar, cl.fechaApartado, 6) fechaApartado, se.nombre as sede,
             l.registro_comision, l.referencia, cl.id_cliente,            
             CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) as asesor,
@@ -8191,3 +8194,20 @@ public function getDataDispersionPagoEspecial($val = '') {
         return $query->row();
 
 }
+
+    public  function ultimaDispersion($id_lote, $data)
+    {
+        try {
+            $this->db->where('id_lote', $id_lote);
+            $this->db->update('pago_comision', $data);
+            $afftectedRows = $this->db->affected_rows();
+            var_dump($afftectedRows);
+            return $afftectedRows > 0 ? TRUE : FALSE ;
+        }
+        catch(Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+
+    }
