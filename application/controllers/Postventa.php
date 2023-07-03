@@ -1653,12 +1653,16 @@ class Postventa extends CI_Controller
             $a = 0;
             if ( $data[$i]['tiempo'] != 0 && $data[$i]['tiempo'] != null){
                 $startDate = $data[$i]['fecha_creacion'];
-                $endDate = ( $i+1 < count($data) ) ? $data[$i+1]['fecha_creacion'] : date('m/d/Y h:i:s a', time());
+                $endDate = ( $i+1 < count($data) ) ? $data[$i+1]['fecha_creacion'] : date('Y-m-d h:i:s');
 
-
-                $result = $this->getWorkingDays($startDate, $endDate, $data[$i]['tiempo']);
-                $data[$i]['atrasado'] = $result['atrasado'];
-                $data[$i]['diferencia'] = $result['diferencia'];
+                //$result = $this->getWorkingDays($startDate, $endDate, $data[$i]['tiempo']);
+                if($data[$i]['dias_vencimiento'] >= $data[$i]['dias']){
+                    $data[$i]['atrasado'] = "EN TIEMPO";
+                    $data[$i]['diferencia'] = $data[$i]['tiempo'];
+                }else{
+                    $data[$i]['atrasado'] = "ATRASADO";
+                    $data[$i]['diferencia'] = $data[$i]['tiempo'];
+                }
             }
             else{
                 $data[$i]['atrasado'] = "EN TIEMPO";
@@ -1767,38 +1771,116 @@ class Postventa extends CI_Controller
         else
             echo json_encode(array());
     }
-
+    function getWorkingDays2($startDate, $endDate, $tiempo){
+        $dataTime=[];
+        $stop_date = date('Y-m-d H:i:s', strtotime($startDate . ' +'.$tiempo.' day'));
+        echo $begin = strtotime($startDate);
+        echo "<br>";
+        $end   = strtotime($endDate);
+        echo $stop = strtotime($stop_date);
+        echo "<br>";
+        if ($begin > $stop) {
+            //echo 1111;
+            return 0;
+        } else {
+            $no_days  = 0;
+            $weekends = 0;
+            while ($begin < $stop) {
+                $no_days++; // no of days in the given interval
+               echo $what_day = date("N", $begin);
+                if ($what_day > 5) { // 6 and 7 are weekend days
+                    $weekends++;
+                };
+                $begin += 86400; // +1 day
+            };
+             $weekends;
+            $working_days = $no_days - $weekends;
+    
+            $dt = new DateTime($startDate);
+            $dt2 = new DateTime($stop_date);    
+            $timeStart = $dt->format('Y-m-d h:i:s');
+            $timeEnd = $dt2->format('Y-m-d h:i:s');
+            $st_time    =   strtotime($timeStart);
+            $end_time   =   strtotime($timeEnd);
+    
+            if( $end_time <= $st_time ){
+                $dataTime['atrasado'] = "En tiempo";
+                $dataTime['diferencia'] = 0;
+    
+                return $dataTime;
+            }
+            else{
+               // echo 121;
+                $dataTime['atrasado'] = "Atrasado";
+              $dataTime['diferencia'] = ( $working_days != 0 ) ? $working_days - 1 : $working_days;
+    
+                return $dataTime;
+            }        
+        }
+    }
 function getWorkingDays($startDate, $endDate, $tiempo){
+    $startDate;
+    //echo "<br>";
+     $endDate;
+    //echo "<br>";
+     $tiempo;
+    //echo "<br>";
+   // echo "<br>";
     $dataTime=[];
-    $stop_date = date('Y-m-d H:i:s', strtotime($startDate . ' +'.$tiempo.' day'));
+     $stop_date = date('Y-m-d H:i:s', strtotime($startDate . ' +'.$tiempo.' day'));
+    //"<br>";
     $begin = strtotime($startDate);
     $end   = strtotime($endDate);
     $stop = strtotime($stop_date);
     $validDays = 0;
 
         $dt = new DateTime($startDate);
-        $dt2 = new DateTime($stop_date);    
-        $timeStart = $dt->format('h:i:s A');
-        $timeEnd = $dt2->format('h:i:s A');
+       // var_dump($dt);
+        //echo "<br>";
+        $dt2 = new DateTime($stop_date); 
+        //var_dump($dt2);
+        //echo "<br>";   
+         $timeStart = $dt->format('Y-m-d h:i:s');
+        //echo $dt->date;
+        //echo $dt["date"];
+       // echo "<br>";
+       $timeEnd = $dt2->format('Y-m-d H:i:s');
+      // echo $dt2["date"];
+      //  echo "<br>";
         $st_time    =   strtotime($timeStart);
+    //   echo "<br>";
         $end_time   =   strtotime($timeEnd);
+       //echo "<br>";
+       //echo "-----------------";
 
+       $no_days  = 0;
+            $weekends = 0;
+            while ($st_time <= $stop) {
+                $no_days++; // no of days in the given interval
+                $what_day = date("N", $st_time);
+                if ($what_day > 5) { // 6 and 7 are weekend days
+                    $weekends++;
+                };
+                $st_time  += 86400; // +1 day
+            };
+             $weekends;
+            $working_days = $no_days - $weekends;
         if( $end_time <= $st_time ){
             $dataTime['atrasado'] = "EN TIEMPO";
             $dataTime['diferencia'] = 0;
-
+             $dataTime;
             return $dataTime;
         }
         else{
             $dataTime['atrasado'] = "ATRASADO";
             $dataTime['diferencia'] = ( $working_days != 0 ) ? $working_days - 1 : $working_days;
-
+             $dataTime;
             return $dataTime;
         }        
     // while ($begin < $stop) {
         
     // };
-    $working_days = $no_days - $weekends;
+    /*$working_days = $no_days - $weekends;
 
     $dt = new DateTime($startDate);
     $dt2 = new DateTime($stop_date);    
@@ -1818,7 +1900,7 @@ function getWorkingDays($startDate, $endDate, $tiempo){
         $dataTime['diferencia'] = ( $working_days != 0 ) ? $working_days - 1 : $working_days;
 
         return $dataTime;
-    }        
+    }*/        
 }
 
 function getNotariasXUsuario(){
@@ -2167,7 +2249,7 @@ function saveNotaria(){
                     ],
                     [
                         "title" => 'Fecha del estatus',
-                        "data" => 'fecha_creacion'
+                        "data" => 'fecha_ultima'
                     ],
                 );
             break;
@@ -2212,7 +2294,7 @@ function saveNotaria(){
                     ],
                     [
                         "title" => 'Fecha del estatus',
-                        "data" => 'fecha_creacion'
+                        "data" => 'fecha_ultima'
                     ]
                 );
             break;
@@ -2257,7 +2339,7 @@ function saveNotaria(){
                     ],
                     [
                         "title" => 'Fecha del estatus',
-                        "data" => 'fecha_creacion'
+                        "data" => 'fecha_ultima'
                     ]
                 );
             break;
@@ -2266,15 +2348,22 @@ function saveNotaria(){
 
         for ($i = 0; $i < count($data); $i++) {
             $a = 0;
-            if ( $data[$i]['dias'] == 0 || $data[$i]['dias'] == null ){
-                $data[$i]['atrasado']  = 'EN TIEMPO';
-                $data[$i]['diferencia']  = 0;
+            if ( $data[$i]['tiempo'] != 0 && $data[$i]['tiempo'] != null){
+              //  $startDate = $data[$i]['fecha_creacion'];
+               // $endDate = ( $i+1 < count($data) ) ? $data[$i+1]['fecha_creacion'] : date('Y-m-d h:i:s');
+
+                //$result = $this->getWorkingDays($startDate, $endDate, $data[$i]['tiempo']);
+                if($data[$i]['dias_vencimiento'] >= $data[$i]['dias']){
+                    $data[$i]['atrasado'] = "EN TIEMPO";
+                    $data[$i]['diferencia'] = $data[$i]['tiempo'];
+                }else{
+                    $data[$i]['atrasado'] = "ATRASADO";
+                    $data[$i]['diferencia'] = $data[$i]['tiempo'];
+                }
             }
             else{
-                $endDate = date('m/d/Y h:i:s a', time());
-                $result = $this->getWorkingDays($data[$i]['fecha_creacion'], $endDate, $data[$i]['dias']);
-                $data[$i]['atrasado'] = $result['atrasado'];
-                $data[$i]['diferencia'] = $result['diferencia'];
+                $data[$i]['atrasado'] = "EN TIEMPO";
+                $data[$i]['diferencia'] = 0;
             }
         }
 
