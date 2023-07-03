@@ -153,8 +153,9 @@ class Corrida extends CI_Controller {
         $tipoIM = $objDatos->tipoIM;
         $arreglo["tipoPM"] = $tipoIM;
         $arreglo["fechaInicioPM"] = $objDatos->customDate;
+        $clienteID = ($objDatos->id_cliente!=null || $objDatos->id_cliente!='') ?  $objDatos->id_cliente: 0;
 
-        if($tipoIM == 3){
+        if($tipoIM == 3 && $clienteID>0){
             $verifica = $this->Corrida_model->revisaFIFCDOC($idLote,  $objDatos->id_cliente);
             if(count($verifica) == 0){
                 $data_insert = array(
