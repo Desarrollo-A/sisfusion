@@ -712,8 +712,14 @@ function checkBudgetInfo($idSolicitud){
         if($begin != 0){
             $WhereFechas = " AND se.fecha_creacion >= '$begin' AND se.fecha_creacion <= '$end' ";
           }
-        return $this->db->query("SELECT se.id_solicitud, l.nombreLote, cond.nombre nombreCondominio, r.nombreResidencial, c.nombre, av.nombre as estatus, av.dias_vencimiento as dias, se.fecha_creacion, CASE WHEN (se.id_titulacion IS null) THEN ar.nombre ELSE CONCAT(uj.nombre, ' ', uj.apellido_paterno, ' ', uj.apellido_materno) END as asignado, (CASE WHEN se.id_estatus IN (4,2,3) AND (se.bandera_admin IS NULL OR se.bandera_comite IS NULL) THEN 'Administración / Comité técnico' ELSE ar.nombre END) area, se.id_solicitud as idEscrituracion
+        return $this->db->query("SELECT se.id_solicitud, l.nombreLote, cond.nombre nombreCondominio, r.nombreResidencial, c.nombre, av.nombre as estatus,
+		se.fecha_creacion, CASE WHEN (se.id_titulacion IS null) THEN ar.nombre ELSE CONCAT(uj.nombre, ' ', uj.apellido_paterno, ' ', uj.apellido_materno) END as asignado,
+		(CASE WHEN se.id_estatus IN (4,2,3) AND (se.bandera_admin IS NULL OR se.bandera_comite IS NULL) THEN 'Administración / Comité técnico' ELSE ar.nombre END) area, 
+		se.id_solicitud as idEscrituracion,
+		concat((select[dbo].[DiasLaborales]( (dateadd(day,1,his.fecha_ultima)) ,GETDATE())), ' día(s) de ',av.dias_vencimiento) tiempo,
+		av.dias_vencimiento,(select[dbo].[DiasLaborales]( (dateadd(day,1,his.fecha_ultima)) ,GETDATE())) dias,his.fecha_ultima
         FROM solicitudes_escrituracion se
+		LEFT JOIN (SELECT MAX(fecha_modificacion) fecha_ultima,id_solicitud,estatus_siguiente FROM historial_escrituracion GROUP BY id_solicitud,estatus_siguiente) his ON his.id_solicitud=se.id_solicitud AND his.estatus_siguiente=se.id_estatus
         INNER JOIN lotes l ON se.id_lote = l.idLote 
         INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
         INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial 
@@ -723,10 +729,9 @@ function checkBudgetInfo($idSolicitud){
         INNER JOIN opcs_x_cats ar ON ar.id_opcion = cp.area_actual AND ar.id_catalogo = 1
         INNER JOIN usuarios uj ON uj.id_usuario = se.id_titulacion
         $WhereFechas
-        GROUP BY se.id_solicitud,se.id_estatus,se.bandera_admin,se.bandera_comite, l.nombreLote, cond.nombre, r.nombreResidencial, c.nombre, av.nombre, av.dias_vencimiento, se.fecha_creacion, se.id_titulacion, uj.nombre, uj.apellido_paterno, uj.apellido_materno, ar.nombre, se.id_solicitud
+        GROUP BY se.id_solicitud,his.fecha_ultima,se.id_estatus,se.bandera_admin,se.bandera_comite, l.nombreLote, cond.nombre, r.nombreResidencial, c.nombre, av.nombre, av.dias_vencimiento, se.fecha_creacion, se.id_titulacion, uj.nombre, uj.apellido_paterno, uj.apellido_materno, ar.nombre, se.id_solicitud
         ORDER BY se.fecha_creacion ASC");
     }
-
     function getEstatusEscrituracion()
     {
         $query = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo = 59 AND id_opcion NOT IN (25,90);");
@@ -734,18 +739,22 @@ function checkBudgetInfo($idSolicitud){
     }
 
     function getFullReportContraloria($idSolicitud){
-        $query = $this->db->query("SELECT MAX(he.fecha_creacion) fecha_creacion, he.descripcion as comentarios, he.numero_estatus idStatus, he.id_solicitud as idEscrituracion, isNULL(lag(MAX(he.fecha_creacion)) OVER (ORDER BY he.numero_estatus), he.fecha_creacion) fechados, lo.nombreLote, co.nombre_condominio, re.nombreResidencial, cl.nombre, av.nombre, ar.nombre as area, av.dias_vencimiento as tiempo
-        FROM historial_escrituracion he
-        INNER JOIN solicitudes_escrituracion se ON se.id_solicitud = he.id_solicitud
-        INNER JOIN lotes lo ON se.id_lote = lo.idLote
-        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
-        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial 
-        INNER JOIN clientes cl ON cl.id_cliente = se.id_cliente AND cl.status = 1
-        INNER JOIN control_permisos cp ON cp.estatus_actual = he.numero_estatus AND cp.bandera_vista = 1
-        INNER JOIN actividades_escrituracion av ON av.clave = cp.clave_actividad
-        INNER JOIN opcs_x_cats ar ON ar.id_opcion = cp.area_actual AND ar.id_catalogo = 1
-        WHERE he.id_solicitud = $idSolicitud
-        GROUP BY he.fecha_creacion, he.numero_estatus, he.id_solicitud, he.descripcion, av.fecha_creacion, lo.nombreLote, co.nombre_condominio, re.nombreResidencial, cl.nombre, av.nombre, ar.nombre, av.dias_vencimiento");
+        $query = $this->db->query("SELECT MAX(he.fecha_creacion) fecha_creacion,he.id_historial,se.fecha_creacion, he.descripcion as comentarios, he.numero_estatus idStatus, he.id_solicitud as idEscrituracion,
+        isNULL(lag(MAX(he.fecha_creacion)) OVER (ORDER BY he.id_historial), he.fecha_creacion) fechados, lo.nombreLote, co.nombre_condominio, re.nombreResidencial, cl.nombre, av.nombre, ar.nombre as area, 
+        concat((select[dbo].[DiasLaborales]( (dateadd(day,1,se.fecha_creacion)) ,he.fecha_modificacion)), ' día(s) de ',av.dias_vencimiento) tiempo,
+        av.dias_vencimiento,(select[dbo].[DiasLaborales]( (dateadd(day,1,se.fecha_creacion)) ,he.fecha_modificacion)) dias
+                FROM historial_escrituracion he
+                INNER JOIN solicitudes_escrituracion se ON se.id_solicitud = he.id_solicitud
+                INNER JOIN lotes lo ON se.id_lote = lo.idLote
+                INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
+                INNER JOIN residenciales re ON re.idResidencial = co.idResidencial 
+                INNER JOIN clientes cl ON cl.id_cliente = se.id_cliente AND cl.status = 1
+                INNER JOIN control_permisos cp ON cp.estatus_actual = he.numero_estatus AND cp.bandera_vista = 1
+                INNER JOIN actividades_escrituracion av ON av.clave = cp.clave_actividad
+                INNER JOIN opcs_x_cats ar ON ar.id_opcion = cp.area_actual AND ar.id_catalogo = 1
+                WHERE he.id_solicitud = $idSolicitud
+                GROUP BY he.id_historial,he.fecha_modificacion,se.fecha_creacion,he.fecha_creacion, he.numero_estatus, he.id_solicitud, he.descripcion,
+                av.fecha_creacion, lo.nombreLote, co.nombre_condominio, re.nombreResidencial, cl.nombre, av.nombre, ar.nombre, av.dias_vencimiento");
         return $query->result_array();
     }
 

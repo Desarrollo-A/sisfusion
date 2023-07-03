@@ -22,7 +22,7 @@
                                 <div class="container-fluid">
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 m-0 overflow-hidden">
-                                            <label class="control-label">Prospectos</label>
+                                            <label class="control-label">Proyecto</label>
                                             <select class="selectpicker select-gral m-0" name="proyecto" id="proyecto" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un proyecto" data-size="7" data-container="body"></select>
                                         </div>
                                         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 m-0 overflow-hidden">
