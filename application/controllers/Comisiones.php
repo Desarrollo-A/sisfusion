@@ -5866,4 +5866,27 @@ public function descuentosCapitalHumano(){
       $respusta = $this->comisiones_model->ultimoRegistro($idLote);
       var_dump($respusta);
     }
+
+    public function ultimaDispersion (){
+
+      $lote_1 =  $this->input->post("idLote");
+      $insertArray = array(
+          'ultima_dispersion' => date('Y-m-d H:i:s'),
+                  );
+      $respuesta =  $this->Comisiones_model->ultimaDispersion($lote_1,$insertArray);
+
+      if($respuesta){
+        $d=  array(
+          "response_code" => 200, 
+          "response_type" => 'success',
+          "message" => "");
+      }else{
+        $d=  array(
+          "response_code" => 400, 
+          "response_type" => 'danger',
+          "message" => "");  
+      }
+        return $d;
+    }
+
 }
