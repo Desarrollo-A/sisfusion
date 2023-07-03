@@ -58,7 +58,7 @@ class Juridico_model extends CI_Model {
 		else {
 			$id_sede = $this->session->userdata('id_sede');
 			$id_usuario = $this->session->userdata('id_usuario');
-			if(in_array($this->session->userdata('id_usuario'), array("2765", "2776", "10463", "2820", "2876", "10437", "5468", "2764", "6856", "2800", "11129", "11258", "12047", "12842", "11097")))
+			if(in_array($this->session->userdata('id_usuario'), array("2765", "2776", "10463", "2820", "2876", "10437", "5468", "2764", "6856", "2800", "11129", "11258", "12047", "12842", "11097", "2825")))
 				$filtroAsignacion = "AND l.asig_jur = $id_usuario";
 			else
 				$filtroAsignacion = "";
