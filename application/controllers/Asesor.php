@@ -4683,7 +4683,7 @@ class Asesor extends CI_Controller
 
         $url = base_url()."Api/validarAutorizacionCorreo/$idCliente?codigo=$codigo";
         $nombreCliente = "$cliente->nombre $cliente->apellido_paterno $cliente->apellido_materno";
-        // $this->correoAut($url, $correoCliente, $nombreCliente);
+        $this->correoAut($url, $correoCliente, $nombreCliente);
 
         return true;
     }
@@ -4724,12 +4724,12 @@ class Asesor extends CI_Controller
 
         $codigo = $this->getCodigoVerificacion(6);
         $url = base_url()."Api/autSms/$idCliente?cod=$codigo";
-//        $resultadoSms = $this->smsAut($url, "00$lada$telefonoCliente");
-//
-//        if (!$resultadoSms) {
-//            echo json_encode(['code' => 400, 'message' => 'Ocurrió un error al enviar el SMS. Favor de intentarlo más tarde.']);
-//            return false;
-//        }
+        $resultadoSms = $this->smsAut($url, "00$lada$telefonoCliente");
+
+        if (!$resultadoSms) {
+            echo json_encode(['code' => 400, 'message' => 'Ocurrió un error al enviar el SMS. Favor de intentarlo más tarde.']);
+            return false;
+        }
 
         $codigoSmsData = [
             'id_cliente' => $idCliente,
@@ -4797,7 +4797,7 @@ class Asesor extends CI_Controller
             $urlCorreo = base_url()."Api/validarAutorizacionCorreo/$idCliente?codigo=$cliente->codigo_correo";
 
             $nombreCliente = "$cliente->nombre $cliente->apellido_paterno $cliente->apellido_materno";
-            // $this->correoAut($urlCorreo, $cliente->correo, $nombreCliente);
+            $this->correoAut($urlCorreo, $cliente->correo, $nombreCliente);
         }
 
         if (isset($reenviarSms)) {
@@ -4813,12 +4813,12 @@ class Asesor extends CI_Controller
 
             $url = base_url()."Api/autSms/$idCliente?cod=$cliente->codigo_sms";
 
-//            $resultadoSms = $this->smsAut($url, "00$cliente->lada_tel$cliente->telefono2");
-//
-//            if (!$resultadoSms) {
-//                echo json_encode(['code' => 400, 'message' => 'Ocurrió un error al enviar el SMS. Favor de intentarlo más tarde.']);
-//                return;
-//            }
+            $resultadoSms = $this->smsAut($url, "00$cliente->lada_tel$cliente->telefono2");
+
+            if (!$resultadoSms) {
+                echo json_encode(['code' => 400, 'message' => 'Ocurrió un error al enviar el SMS. Favor de intentarlo más tarde.']);
+                return;
+            }
         }
 
         echo json_encode(['code' => 200]);
