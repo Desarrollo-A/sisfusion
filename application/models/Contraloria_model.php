@@ -1250,13 +1250,14 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END regional,
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END regional2,
         lot.precio, ISNULL(CONVERT(varchar, lot.fecha_modst, 20), '') fecha_modst,  ISNULL(CONVERT(varchar, cl.fechaApartado, 20), '') AS fechaApartado, ISNULL (cl.apartadoXReubicacion, 0) AS apartadoXReubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 21), '') AS fechaAlta, lot.observacionContratoUrgente,
-        CASE WHEN cl.id_cliente IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) END as nombreCliente, lot.motivo_change_status,
+        CASE WHEN cl.id_cliente IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) END as nombreCliente, lot.motivo_change_status,opx.nombre registro,
         lot.fecha_creacion,
         lot.idStatusContratacion,
         sl.background_sl,sed.nombre as ubicacion,com.idCliente comision,lot.idCliente,vc.id_cliente as banderaVC
         FROM lotes lot
         INNER JOIN condominios con ON con.idCondominio = lot.idCondominio 
-        INNER JOIN residenciales res ON res.idResidencial = con.idResidencial 
+        INNER JOIN residenciales res ON res.idResidencial = con.idResidencial
+        LEFT JOIN opcs_x_cats opx ON opx.id_opcion=lot.registro_comision AND opx.id_catalogo=95 
         INNER JOIN statuslote sl ON sl.idStatusLote = lot.idStatusLote 
         LEFT JOIN tipo_venta tv ON tv.id_tventa = lot.tipo_venta 
         LEFT JOIN clientes cl ON cl.id_cliente = lot.idCliente 

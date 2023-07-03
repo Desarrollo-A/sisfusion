@@ -321,9 +321,11 @@ $(document).on('click','#searchByDateRange', function () {
             {
                 data: function (d) {
                     let libContraloria = (d.observacionContratoUrgente == '1') ? '<center><span class="label lbl-pink">Lib. Contraloría</span> <center><p><p>' : '';
+                    let compartida =  d.banderaVC != null || d.banderaVC != undefined ? '<center><span class="label lbl-violetBoots">Compartida</span><center><p><p>' : '';
+                    let registro = `<center><span class="label lbl-violetBoots">${d.registro}</span><center><p><p>`; 
                     return d.tipo_venta == null ?
-                        `<center><span class="label" style="background:#${d.background_sl}18; color:#${d.color};">${d.descripcion_estatus}</span> ${libContraloria} <center>` :
-                        `<center><span class="label" style="background:#${d.background_sl}18; color:#${d.color};">${d.descripcion_estatus}</span> <p><p> <span class="label lbl-green">${d.tipo_venta}</span> ${libContraloria} <center>`;
+                        `<center><span class="label" style="background:#${d.background_sl}; color:#${d.color};">${d.descripcion_estatus}</span> ${libContraloria} <center>${compartida} ${registro}` :
+                        `<center><span class="label" style="background:#${d.background_sl}; color:#${d.color};">${d.descripcion_estatus}</span> <p><p> <span class="label lbl-green">${d.tipo_venta}</span> ${libContraloria} <center>${compartida} ${registro}`;
                 }
             },
             {
@@ -356,7 +358,7 @@ $(document).on('click','#searchByDateRange', function () {
                     $('[data-toggle="tooltip"]').tooltip({
                         trigger: "hover"
                     });
-                    return d.comision == null ? `<center><button class="editButton btn-data btn-yellow" data-accion="1" data-banderaVC="${d.banderaVC}" data-idCliente="${d.idCliente}" title="Ver inventario"><i class="fas fa-eye"></i></button></center>` : `<center><button class="editButton btn-data btn-yellow" data-accion="1" data-banderaVC="${d.banderaVC}" data-idCliente="${d.idCliente}" title="Ver inventario"><i class="fas fa-eye"></i></button><button data-accion="2" class="editButton btn-data btn-sky" data-banderaVC="${d.banderaVC}" data-idCliente="${d.idCliente}" title= "Editar línea de venta"><i class="fas fa-edit"></i></button></center>`;
+                    return d.comision == null ? `<center><button class="editButton btn-data btn-yellow" data-accion="1" data-banderaVC="${d.banderaVC}" data-idCliente="${d.idCliente}" title="Ver inventario"><i class="fas fa-eye"></i></button></button><button data-accion="2" class="editButton btn-data btn-sky" data-banderaVC="${d.banderaVC}" data-idCliente="${d.idCliente}" title= "Editar línea de venta"><i class="fas fa-edit"></i></button></center>` : `<center><button class="editButton btn-data btn-yellow" data-accion="1" data-banderaVC="${d.banderaVC}" data-idCliente="${d.idCliente}" title="Ver inventario"><i class="fas fa-eye"></i></center>`;
                 }
             }],
             ajax: {
