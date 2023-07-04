@@ -280,7 +280,7 @@ $(document).on('click','#searchByDateRange', function () {
             },
             {
                 data: function (d) {
-                      return  d.id_asesor == 12205 ? `<center><span class="label lbl-azure">ASESOR COMODÍN</span> <center>` : 'NORMAL';
+                      return  d.id_asesor == 12205 || d.id_asesor == 12874 || d.id_asesor == 12205 ? `<center><span class="label lbl-azure">ASESOR COMODÍN</span> <center>` : 'NORMAL';
                 }
             },
             {
