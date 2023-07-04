@@ -1266,7 +1266,7 @@ class Contraloria extends CI_Controller {
             $array = array_unique($correosClean);
         }
 
-        $infoLote = $this->Contraloria_model->getNameLote($idLote);
+        $infoLote = (array)$this->Contraloria_model->getNameLote($idLote);
 
         $encabezados = [
             'nombreResidencial'   => 'PROYECTO',
@@ -1276,14 +1276,14 @@ class Contraloria extends CI_Controller {
             'fechaHora'           => 'FECHA/HORA'
         ];
 
-        $contenido = array_merge($infoLote, ["motivoRechazo" => $comentario, "fechaHora" => date("Y-m-d H:i:s")]);
+        $contenido[] = array_merge($infoLote, ["motivoRechazo" => $comentario, "fechaHora" => date("Y-m-d H:i:s")]);
 
         $this->email
             ->initialize()
             ->from('Ciudad Maderas')
             ->to('programador.analista24@ciudadmaderas.com')
             ->subject('EXPEDIENTE RECHAZADO-CONTRALORÍA (6. CORRIDA ELABORADA)')
-            ->view($this->load->view('mail/contraloria/', [
+            ->view($this->load->view('mail/contraloria/editar-registro-lote-rechazo-proceso6', [
                 'encabezados' => $encabezados,
                 'contenido' => $contenido,
                 'comentario' => $comentario
