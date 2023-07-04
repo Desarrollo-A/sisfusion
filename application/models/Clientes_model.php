@@ -1130,7 +1130,7 @@ function getStatusMktdPreventa(){
     }
 
     function getChangelog($prospecto){
-        return $this->db->query("SELECT CONVERT(VARCHAR,fecha_creacion, 120) AS fecha_creacion, isNULL(creador, cambios.creado_por) creador, UPPER(parametro_modificado) AS parametro_modificado,(
+        return $this->db->query("SELECT CONVERT(VARCHAR,fecha_creacion, 120) AS fecha_creacion, isNULL(creador, cambios.creado_por) creador, UPPER(parametro_modificado) AS parametro_modificado,UPPER((
             CASE 
                 WHEN parametro_modificado = 'Nacionalidad' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 11)
                 WHEN parametro_modificado = 'Personalidad jurídica' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 10)
@@ -1149,7 +1149,7 @@ function getStatusMktdPreventa(){
                 WHEN parametro_modificado = 'Estatus vigencia' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 3)
                 WHEN parametro_modificado = 'Estatus prospecto' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 38)
                 ELSE nuevo  
-            END) AS nuevo,(
+            END)) AS nuevo,UPPER((
             CASE 
                 WHEN parametro_modificado = 'Nacionalidad' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 11)
                 WHEN parametro_modificado = 'Personalidad jurídica' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 10)
@@ -1168,7 +1168,7 @@ function getStatusMktdPreventa(){
                 WHEN parametro_modificado = 'Estatus vigencia' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 3)
                 WHEN parametro_modificado = 'Estatus prospecto' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 38)
                 ELSE anterior  
-            END) AS anterior
+            END)) AS anterior
             FROM cambios
             LEFT JOIN (SELECT id_usuario AS id_creador, CONCAT(nombre, ' ', apellido_paterno,' ',apellido_materno) AS creador  FROM usuarios) AS creadores ON CAST(id_creador as VARCHAR(45)) = creado_por
             WHERE id_prospecto = $prospecto ORDER BY fecha_creacion DESC");
