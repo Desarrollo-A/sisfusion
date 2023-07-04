@@ -13,7 +13,7 @@ class Asistente_gerente extends CI_Controller {
     $this->load->library(array('session','form_validation', 'get_menu'));
 		$this->load->helper(array('url','form', 'email/asistenete_gerente/elementos_correo', 'email/plantilla_dinamica_correo'));
 		$this->load->database('default');
-		$this->load->library('phpmailer_lib');
+		$this->load->library('email');
 		$this->validateSession();
 
 		date_default_timezone_set('America/Mexico_City');
@@ -325,7 +325,7 @@ class Asistente_gerente extends CI_Controller {
       $array = array_unique($correosClean);
     }
 
-    $infoLote = $this->VentasAsistentes_model->getNameLote($idLote);
+    $infoLote = (array)$this->VentasAsistentes_model->getNameLote($idLote);
 
     $encabezados = [
         'nombreResidencial' =>  'PROYECTO',
@@ -335,7 +335,7 @@ class Asistente_gerente extends CI_Controller {
         'fechaHora'         =>  'FECHA/HORA'
     ];
 
-    $data = array_merge($infoLote, [
+    $data[] = array_merge($infoLote, [
         "motivoRechazo" =>  $comentario,
         "fechaHora"     =>  $modificado
     ]);
