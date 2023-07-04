@@ -273,7 +273,7 @@
 
     public function allAsesor()
     {
-        return $this->db->query("SELECT u0.id_usuario as id_asesor,u0.id_sede, 
+        return $this->db->query("(SELECT u0.id_usuario as id_asesor,u0.id_sede, 
 		u0.id_lider as id_coordinador, 
 		(CASE u1.id_rol WHEN 3 THEN u1.id_usuario ELSE u2.id_usuario END) id_gerente, 
 		(CASE u1.id_rol WHEN 3 THEN u1.id_lider ELSE u3.id_usuario END) id_subdirector, 
@@ -293,7 +293,10 @@
 		LEFT JOIN usuarios u2 ON u2.id_usuario = u1.id_lider -- GERENTE
 		LEFT JOIN usuarios u3 ON u3.id_usuario = u2.id_lider -- SUBDIRECTOR
         WHERE u0.id_rol = 7 AND u0.estatus = 1 AND ISNULL(u0.correo, '') NOT LIKE '%SINCO%' AND ISNULL(u0.correo, '') NOT LIKE '%test_%'
-		AND u0.id_usuario NOT IN (4415,11160,11161,11179,11750,12187,11332,2595)")->result();
+		AND u0.id_usuario NOT IN (4415,11160,11161,11179,11750,12187,11332,2595,12874))
+		UNION ALL
+		(SELECT id_usuario as id_asesor,0 id_sede,0 id_coordinador , 0 id_gerente, 
+		0 id_subdirector,0 id_regional, 0 id_regional_2,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as nombre FROM usuarios WHERE id_usuario = 12874)")->result();
     }
 
 
@@ -1423,7 +1426,10 @@
 		LEFT JOIN usuarios u3 ON u3.id_usuario = u2.id_lider -- SUBDIRECTOR
 		LEFT JOIN usuarios u4 ON u4.id_usuario = u3.id_lider -- REGIONAL
         WHERE u0.id_rol = 7 AND u0.estatus = 1 AND ISNULL(u0.correo, '') NOT LIKE '%SINCO%' AND ISNULL(u0.correo, '') NOT LIKE '%test_%'
-		AND u0.id_usuario NOT IN (4415,11160,11161,11179,11750,12187,11332,2595,10828,9942,10549)")->result();
+		AND u0.id_usuario NOT IN (4415,11160,11161,11179,11750,12187,11332,2595,10828,9942,10549,12874)
+		UNION ALL
+		(SELECT id_usuario as id_asesor,2 id_sede,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as asesor,0 id_coordinador ,'NO APLICA' coordinador, 0 id_gerente, 'NO APLICA' gerente,
+		0 id_subdirector, 'NO APLICA' subdirector,0 id_regional, 'NO APLICA' regional, 0 id_regional_2, 'NO APLICA' regional_2 FROM usuarios WHERE id_usuario = 12874)")->result();
     }
 
 }
