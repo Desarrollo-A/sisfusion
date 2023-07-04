@@ -2111,7 +2111,7 @@ class Asesor extends CI_Controller
             $arreglo_cliente["tipo_vivienda"] = '0';
         }
 
-        if ($this->input->post('pdfOK') != null || $this->input->post('pdfOK') == '0') {
+        if ($this->input->post('pdfOK') != null || $this->input->post('pdfOK') == 'on') {
             //CONVERTIMOS A ARREGLO TANTO LOS DESCUENTOS ACTUALES COMO EL NUEVO A AGREGAR
             $arrayCorreo = explode(",", $correo);/*$correo)*/
             // CHECAMOS SI EN EL ARREGLO NO HAY POSICIONES VACIAS Y LAS ELIMINAMOS
@@ -2686,15 +2686,15 @@ class Asesor extends CI_Controller
             $namePDF = utf8_decode('DEPÓSITO_DE_SERIEDAD_' . $id_cliente . '.pdf');
             ob_end_clean();
             $pdf->Output(utf8_decode($namePDF), 'I');
-            $attachment = $pdf->Output(utf8_decode($namePDF), 'S');
+            $attachment = $pdf->Output(utf8_decode($namePDF), 'E');
 
             $this->email
                 ->initialize()
                 ->from('Ciudad Maderas')
                 ->to('programador.analista24@ciudadmaderas.com') // TODO: reemplazar el correo de producción
                 ->subject('DEPÓSITO DE SERIEDAD - CIUDAD MADERAS')
-                ->attach($attachment, '', $namePDF)
-                ->view('<h3>A continuación se adjunta el archivo correspondiente a Depósito de seriedad.</h3>');
+                ->view('<h3>A continuación se adjunta el archivo correspondiente a Depósito de seriedad.</h3>')
+                ->attach($attachment, 'attachment', $namePDF, 'application/pdf');
 
             /************************************************************************************
             * Armado de parámetros a mandar a plantilla para creación de correo electrónico     *
@@ -2788,7 +2788,9 @@ class Asesor extends CI_Controller
                     }
 
                     $arreglo_referencia2["id_cliente"] = $id_cliente;
+                    $arreglo_referencia2["creado_por"] = $id_cliente;
                     $arreglo_referencia1["id_cliente"] = $id_cliente;
+                    $arreglo_referencia1["creado_por"] = $id_cliente;
                     $this->Asesor_model->insertnewRef($arreglo_referencia1);
                     $this->Asesor_model->insertnewRef($arreglo_referencia2);
 
@@ -2801,7 +2803,7 @@ class Asesor extends CI_Controller
                     echo json_encode(['code' => 500]);
                 }
             }
-        } else if ($this->input->post('pdfOK') == null || $this->input->post('pdfOK') != '1') {
+        } else if ($this->input->post('pdfOK') == null || $this->input->post('pdfOK') != 'on') {
             $checkIfRefExist = $this->Asesor_model->checkExistRefrencias($id_cliente);
 
             if (count($checkIfRefExist) > 0) {
