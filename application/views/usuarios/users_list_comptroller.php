@@ -83,8 +83,8 @@
                         <div class="modal-body">                      
                                 <div class="container-fluid p-0" id="changelogTab">
                                     <div class="row">
-                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                            <ul class="timeline-3 scroll-styles" id="changelog"></ul>
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 scroll-styles" style="height: 350px; overflow: auto">
+                                            <ul class="timeline-3" id="changelog"></ul>
                                         </div>
                                     </div>
                                 </div>
