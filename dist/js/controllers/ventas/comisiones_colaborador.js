@@ -77,8 +77,10 @@ function requestCodigoPostal(){
         success: function (response) {
             const data = JSON.parse(response);
             $("#cp").val( data.length != 0 ? `${data[0]['codigo_postal']}` : '' );
-            if( data.length == 0 )
+            if( data.length == 0 ){
                 $("#nuevoCp").val('true'); 
+                $("#cpModal").modal();
+            }
             else if( data[0]['estatus'] == 0){
                 $("#nuevoCp").val('false'); 
                 $("#cpModal").modal();
