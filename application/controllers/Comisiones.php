@@ -325,8 +325,6 @@ class Comisiones extends CI_Controller
       $this->load->view("ventas/historial_contraloria");
       break;
     }
-
-
   }
   
   public function acepto_internomex_factura(){

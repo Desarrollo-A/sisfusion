@@ -203,7 +203,7 @@
                                            name="descuentoEscrito"
                                            autocomplete="off"
                                            min="1"
-                                           max="19000"
+                                           max="99000"
                                            step=".01"
                                            required
                                     />
@@ -543,7 +543,7 @@
                                            name="descuento"
                                            autocomplete="off"
                                            min="1"
-                                           max="19000"
+                                           max="99000"
                                            step=".01"
                                            required />
                                 </div>
@@ -632,7 +632,7 @@
                                            name="descuento"
                                            autocomplete="off"
                                            min="1"
-                                           max="19000"
+                                           max="99000"
                                            step=".01"
                                            required />
                                 </div>

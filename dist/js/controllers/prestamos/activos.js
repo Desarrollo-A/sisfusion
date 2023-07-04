@@ -166,6 +166,8 @@ $("#form_delete").on('submit', function (e) {
 });
 
 
+
+
 $("#form_descuentos").on('submit', function(e){ 
     $("#idloteorigen").prop("disabled", false);
     e.preventDefault();
@@ -181,12 +183,12 @@ $("#form_descuentos").on('submit', function(e){
         success: function(data) {
             if (data == 1) {
                 document.getElementById("form_descuentos").reset();
-                $('#tabla_descuentos').DataTable().ajax.reload(null, false);
-                $('#miModal').modal('hide');
+                // $('#tabla_descuentos').DataTable().ajax.reload(null, false);
+                $('#descuentosNuevosModal').modal('hide');
                 $('#idloteorigen option').remove();
                 $("#roles").selectpicker("refresh");
-                $('#usuarioid').val('default');
-                $("#usuarioid").selectpicker("refresh");
+                $('#usuarioNuevos').val('default');
+                $("#usuarioNuevos").selectpicker("refresh");
                 document.getElementById('sumaReal').innerHTML = '';
                 document.getElementById('btn_abonarNuevos').disabled=false;
                 alerts.showNotification("top", "right", "Descuento registrado con exito.", "success");
@@ -194,23 +196,23 @@ $("#form_descuentos").on('submit', function(e){
             else if(data == 2) {
                 document.getElementById('btn_abonarNuevos').disabled=false;
 
-                $('#tabla_descuentos').DataTable().ajax.reload(null, false);
-                $('#miModal').modal('hide');
+                // $('#tabla_descuentos').DataTable().ajax.reload(null, false);
+                $('#descuentosNuevosModal').modal('hide');
                 alerts.showNotification("top", "right", "Ocurrio un error.", "warning");
                 $(".directorSelect2").empty();
             }
             else if(data == 3){
                 document.getElementById('btn_abonarNuevos').disabled=false;
 
-                $('#tabla_descuentos').DataTable().ajax.reload(null, false);
-                $('#miModal').modal('hide');
+                // $('#tabla_descuentos').DataTable().ajax.reload(null, false);
+                $('#descuentosNuevosModal').modal('hide');
                 alerts.showNotification("top", "right", "El usuario seleccionado ya tiene un pago activo.", "warning");
                 $(".directorSelect2").empty();
             }
         },
         error: function(){
             document.getElementById('btn_abonarNuevos').disabled=false;
-            $('#miModal').modal('hide');
+            $('#descuentosNuevosModal').modal('hide');
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
@@ -870,7 +872,7 @@ $("#usuarioNuevos").change(function() {
             }
             $("#idloteorigen").selectpicker('refresh');
         }, 'json');     
-        document.getElementById("monto").focus();
+        document.getElementById("montoNuevo").focus();
         alerts.showNotification("top", "right", "Debe ingresar el monto a descontar, antes de seleccionar pagos.", "warning"); 
     });
 
@@ -938,43 +940,113 @@ $("#idloteorigen").change(function() {
 
 });
 
-function verificarMontos(){
-    
-    let disponible = remplazarCaracter($('#valor_comision').val(), '$', '');
-    disponible = remplazarCaracter(disponible, ',', '');
-    let monto = remplazarCaracter($('#monto').val(), ',', '');
-    let cuantos = $('#idloteorigen').val().length;
-    if(parseFloat(monto) <= parseFloat(disponible) ){
-        $("#idloteorigen").prop("disabled", true);
-        $("#btn_abonarNuevos").prop("disabled", false);    
-            let cantidad = parseFloat($('#numeroP').val());
-            resultado = monto /cantidad;
-            $('#pago').val(formatMoney(resultado));
+$("#numeroPDU").change(function(){
+    let monto = parseFloat($('#monto').val());
+    let cantidad = parseFloat($('#numeroPDU').val());
+    let resultado=0;
+
+    if (isNaN(monto)) {
+        alerts.showNotification("top", "right", "Debe ingresar un monto valido.", "warning");
+        $('#pago').val(resultado);
+        document.getElementById('btn_abonarNuevos').disabled=true;
+    }
+    else{
+        resultado = monto /cantidad;
+
+        if(resultado > 0){
             document.getElementById('btn_abonarNuevos').disabled=false;
+            $('#pago').val(formatMoney(resultado));
+        }
+        else{
+            document.getElementById('btn_abonarNuevos').disabled=true;
+            $('#pago').val(formatMoney(0));
+        }
+    }
+});
+
+
+function verificarMontos(){
+            
+    // let disponible = parseFloat($('#valor_comision').val()).toFixed(2);
+     let disponible = replaceAll($('#valor_comision').val(), '$', '');
+     disponible = replaceAll(disponible, ',', '');
+    // let monto = parseFloat($('#monto').val()).toFixed(2);
+     let monto = replaceAll($('#montoNuevo').val(), ',', '');
+     //monto = replaceAll(monto, ',', '');
+     let cuantos = $('#idloteorigen').val().length;
+     console.log(monto);
+     console.log(disponible);
+     if(parseFloat(monto) <= parseFloat(disponible) ){
+         $("#idloteorigen").prop("disabled", true);
+         $("#btn_abonarNuevos").prop("disabled", false);    
+             let cantidad = parseFloat($('#numeroPDU').val());
+             resultado = monto /cantidad;
+             $('#pago').val(formatMoney(resultado));
+             document.getElementById('btn_abonarNuevos').disabled=false;
+
+           
+             let cadena = '';
+             var data = $('#idloteorigen').select2('data')
+             for (let index = 0; index < cuantos; index++) {
+                 let datos = data[index].id;
+                 let montoLote = datos.split(',');
+                 /*let abono_neo = montoLote[1];
+                 if(parseFloat(abono_neo) > parseFloat(monto) && cuantos > 1){
+                     document.getElementById('msj2').innerHTML="El monto ingresado se cubre con la comisión "+data[index].text;
+                     document.getElementById('btn_abonarNuevos').disabled=true; 
+                     break;  
+                 }*/
+                 cadena = cadena+' , '+data[index].text;
+                 document.getElementById('msj2').innerHTML='';
+             }
+             $('#comentario').val('Lotes involucrados en el descuento: '+cadena+'. Por la cantidad de: $'+formatMoney(monto));
+         }
+         else if(parseFloat(monto) > parseFloat(disponible) ){
+            // alerts.showNotification("top", "right", "Monto a descontar mayor a lo disponible", "danger");
+             
+             //document.getElementById('monto').value = ''; 
+             document.getElementById('btn_abonarNuevos').disabled=true; 
+         }
+ }
+
+
+// function verificarMontos(){
+    
+//     let disponible = remplazarCaracter($('#valor_comision').val(), '$', '');
+//     disponible = remplazarCaracter(disponible, ',', '');
+//     let monto = remplazarCaracter($('#monto').val(), ',', '');
+//     let cuantos = $('#idloteorigen').val().length;
+//     if(parseFloat(monto) <= parseFloat(disponible) ){
+//         $("#idloteorigen").prop("disabled", true);
+//         $("#btn_abonarNuevos").prop("disabled", false);    
+//             let cantidad = parseFloat($('#numeroPDU').val());
+//             resultado = monto /cantidad;
+//             $('#pago').val(formatMoney(resultado));
+//             document.getElementById('btn_abonarNuevos').disabled=false;
 
           
-            let cadena = '';
-            var data = $('#idloteorigen').select2('data')
-            for (let index = 0; index < cuantos; index++) {
-                let datos = data[index].id;
-                let montoLote = datos.split(',');
+//             let cadena = '';
+//             var data = $('#idloteorigen').select2('data')
+//             for (let index = 0; index < cuantos; index++) {
+//                 let datos = data[index].id;
+//                 let montoLote = datos.split(',');
 
-                cadena = cadena+' , '+data[index].text;
-                document.getElementById('msj2').innerHTML='';
-            }
-            $('#comentario').val('Lotes involucrados en el descuento: '+cadena+'. Por la cantidad de: $'+formatMoney(monto));
-        }
-        else if(parseFloat(monto) > parseFloat(disponible) ){
-                                 document.getElementById('btn_abonarNuevos').disabled=true; 
-        }
-}
+//                 cadena = cadena+' , '+data[index].text;
+//                 document.getElementById('msj2').innerHTML='';
+//             }
+//             $('#comentario').val('Lotes involucrados en el descuento: '+cadena+'. Por la cantidad de: $'+formatMoney(monto));
+//         }
+//         else if(parseFloat(monto) > parseFloat(disponible) ){
+//                                  document.getElementById('btn_abonarNuevos').disabled=true; 
+//         }
+// }
 // END SELECT MULTIPLE DE LOTES PARA DESCUENTOS NUEVOS
 
 
 function verificar() {
 
     var input1=  document.getElementById('monto');
-    var input2=  document.getElementById('numeroP');
+    var input2=  document.getElementById('numeroPDU');
     let monto = parseFloat(replaceAll($('#monto').val(), ',', ''));
     input1.addEventListener('input',function(){
         if (this.value.length > 12) 
@@ -985,13 +1057,13 @@ function verificar() {
                 this.value = this.value.slice(0,3); 
             })
             
-    if ($('#numeroP').val() != '') {
+    if ($('#numeroPDU').val() != '') {
         if (monto < 1 || isNaN(monto)) {
             alerts.showNotification("top", "right", "Ingresar un monto valido.", "warning");
             document.getElementById('btn_abonar').disabled = true;
         }
         else {
-            let cantidad = parseFloat(replaceAll($('#numeroP').val(), ',', ''));
+            let cantidad = parseFloat(replaceAll($('#numeroPDU').val(), ',', ''));
             resultado = parseFloat(monto / cantidad);
             $('#pago').val(formatMoney(parseFloat(resultado)));
             document.getElementById('btn_abonar').disabled = false;
