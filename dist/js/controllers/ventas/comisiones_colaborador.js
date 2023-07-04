@@ -1,4 +1,3 @@
-var fecha_actual = '';
 const excluir_column = ['MÁS', ''];
 let columnas_datatable = {};
 $("#file-upload-extranjero").on('change', function () {
@@ -67,14 +66,8 @@ $(document).on('click', '.verPDFExtranjero', function () {
     });
 });
 
-var input = document.getElementById('dato_solicitudcp');
-input.addEventListener('input', function () {
-    if (this.value.length > 5)
-        this.value = this.value.slice(0, 5);
-})
-
-// Apartado para la validacion del codigo postal       
-$(document).ready(function () {
+// Apartado para la validación del codigo postal       
+function requestCodigoPostal(){
     $.ajax({
         url: general_base_url + 'Comisiones/consulta_codigo_postal',
         cache: false,
@@ -83,44 +76,49 @@ $(document).ready(function () {
         type: 'GET',
         success: function (response) {
             const data = JSON.parse(response);
-            if(data.length == 0 && forma_pago == 3){
-                    $("#solicitud_cp").modal();
-            }else if (data[0]['estatus'] == 0 && forma_pago == 3){
-                var b = document.getElementById("dato_solicitudcp");
-                b.setAttribute("value", data[0]['codigo_postal']);
-                $("#solicitud_cp").modal();
-            }else if(data[0]['estatus'] != 0 && data.length != 0 && forma_pago == 3){
-                var b = document.getElementById("dato_solicitudcp");
-                b.setAttribute("value", data[0]['codigo_postal']);
+            $("#cp").val( data.length != 0 ? `${data[0]['codigo_postal']}` : '' );
+            if( data.length == 0 )
+                $("#nuevoCp").val('true'); 
+            else if( data[0]['estatus'] == 0){
+                $("#nuevoCp").val('false'); 
+                $("#cpModal").modal();
             }
         },
         error: function () {
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
-});
+}
 
-$(document).ready(function () {
-    $.ajax({
-        url: general_base_url + 'Comisiones/pagos_codigo_postal',
-        cache: false,
-        contentType: false,
-        processData: false,
-        type: 'GET',
-        success: function (response) {
-            const data1 = JSON.parse(response);
-            if (data1.length == 0) {
-            } else if (data1.length != 0) {
-            }
-        }
-    });
-});
+// $(document).ready(function () {
+//     $.ajax({
+//         url: general_base_url + 'Comisiones/pagos_codigo_postal',
+//         cache: false,
+//         contentType: false,
+//         processData: false,
+//         type: 'GET',
+//         success: function (response) {
+//             const data1 = JSON.parse(response);
+//             if (data1.length == 0) {
+//             } else if (data1.length != 0) {
+//             }
+//         }
+//     });
+// });
 
-$(document).on("submit", "#codigoForm", function (e) {
+$(document).on("submit", "#cpForm", function (e) {
     e.preventDefault();
-    let dato_solicitudcp = $('#dato_solicitudcp').val();
-    if (dato_solicitudcp == '') {
-        alerts.showNotification("top", "right", "Llenar la informacion solicitada.", "warning");
+    let cp = $('#cp').val();
+    if (cp == '') {
+        alerts.showNotification("top", "right", "Llenar la información solicitada.", "warning");
+        return false;
+    }
+    else if( cp.length != 5  ){
+        alerts.showNotification("top", "right", "La longitud del código postal debe de ser de 5 caracteres.", "warning");
+        return false;
+    }
+    else if( cp.length == 5 && (cp < 1000 || cp > 99998)){
+        alerts.showNotification("top", "right", "Código postal inválido, revisa nuevamente.", "warning");
         return false;
     }
     let data = new FormData($(this)[0]);
@@ -132,17 +130,14 @@ $(document).on("submit", "#codigoForm", function (e) {
         processData: false,
         type: 'POST',
         success: function (response) {
-            alerts.showNotification("top", "right", "Se capturó tu código postal: " + dato_solicitudcp + "", "success");
-            $("#solicitud_cp").modal("hide");
+            alerts.showNotification("top", "right", "Se capturó tu código postal: " + cp + "", "success");
+            $("#cpModal").modal("hide");
         }, error: function () {
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
 });
 
-function codigo_consulta() {
-    $("#solicitud_cp").modal();
-}
 // Termina apartado para la validacion del codigo postal
 $(document).ready(function () {
     $.post(general_base_url + "Contratacion/lista_proyecto", function (data) {
@@ -154,6 +149,27 @@ $(document).ready(function () {
         }
         $("#proyecto_wp").selectpicker('refresh');
     }, 'json');
+
+    
+    var hoy = new Date(fechaServer);
+    var dia = hoy.getDate();
+    var mes = hoy.getMonth() + 1;
+    var hora = hoy.getHours();
+
+    if (forma_pago == 3 && (((mes == 1 && dia == 9) || (mes == 1 && dia == 10 && hora <= 13)) || 
+    ((mes == 2 && dia == 13) || (mes == 2 && dia == 14 && hora <= 13)) ||
+    ((mes == 3 && dia == 13) || (mes == 3 && dia == 14 && hora <= 13)) ||
+    ((mes == 4 && dia == 10) || (mes == 4 && dia == 11 && hora <= 13)) ||
+    ((mes == 5 && dia == 8) || (mes == 5 && dia == 9 && hora <= 13)) ||
+    ((mes == 6 && dia == 12) || (mes == 6 && dia == 12 && hora <= 13)) ||
+    ((mes == 7 && dia == 3) || (mes == 7 && dia == 4 && hora <= 18)) ||
+    ((mes == 8 && dia == 7) || (mes == 8 && dia == 8 && hora <= 13)) ||
+    ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= 13)) ||
+    ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= 13)) ||
+    ((mes == 11 && dia == 13) || (mes == 11 && dia == 14 && hora <= 13)) ||
+    ((mes == 12 && dia == 11) || (mes == 12 && dia == 12 && hora <= 13)))) {
+        requestCodigoPostal();
+    }
 });
 
 $('#proyecto_wp').change(function () {
@@ -225,7 +241,6 @@ $("#tabla_nuevas_comisiones").ready(function () {
         document.getElementById("myText_nuevas").textContent = '$' + to;
     });
     let boton_sol_pago = (forma_pago != 2) ? '' : 'hidden';
-    let boton_CP = (forma_pago == 3) ? '' : 'hidden';
     let boton_youtube = ([2, 3, 4, 5].includes(forma_pago) && [3, 7, 9].includes(id_rol_general))
         ? ''
         : 'hidden';
@@ -255,7 +270,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                 if (userSede == 8) {
                     actual = 15;
                 }
-                var hoy = new Date(fecha_actual);
+                var hoy = new Date(fechaServer);
                 var dia = hoy.getDate();
                 var mes = hoy.getMonth() + 1;
                 var hora = hoy.getHours();
@@ -264,8 +279,8 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     ((mes == 3 && dia == 13) || (mes == 3 && dia == 14 && hora <= 13)) ||
                     ((mes == 4 && dia == 10) || (mes == 4 && dia == 11 && hora <= 13)) ||
                     ((mes == 5 && dia == 8) || (mes == 5 && dia == 9 && hora <= 13)) ||
-                    ((mes == 6 && dia == 12) || (mes == 6 && dia == 13 && hora <= 13)) ||
-                    ((mes == 7 && dia == 10) || (mes == 7 && dia == 11 && hora <= 13)) ||
+                    ((mes == 6 && dia == 12) || (mes == 6 && dia == 12 && hora <= 13)) ||
+                    ((mes == 7 && dia == 3) || (mes == 7 && dia == 4 && hora <= 18)) ||
                     ((mes == 8 && dia == 7) || (mes == 8 && dia == 8 && hora <= 13)) ||
                     ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= 13)) ||
                     ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= 13)) ||
@@ -279,6 +294,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                         }).get();
                         var com2 = new FormData();
                         com2.append("idcomision", idcomision);
+                        com2.append("cp", $('#cp').val());
                         $.ajax({
                             url: general_base_url + 'Comisiones/acepto_comisiones_user/',
                             data: com2,
@@ -299,6 +315,14 @@ $("#tabla_nuevas_comisiones").ready(function () {
                                     $('#spiner-loader').addClass('hide');
                                     $("#all").prop('checked', false);
                                     alerts.showNotification("top", "right", "ESTÁS FUERA DE TIEMPO PARA ENVIAR TUS SOLICITUDES.", "warning");
+                                } else if (data == 3) {
+                                    $('#spiner-loader').addClass('hide');
+                                    $("#all").prop('checked', false);
+                                    alerts.showNotification("top", "right", "NO HAS INGRESADO TU CÓDIGO POSTAL", "warning");
+                                } else if (data == 4) {
+                                    $('#spiner-loader').addClass('hide');
+                                    $("#all").prop('checked', false);
+                                    alerts.showNotification("top", "right", "NO HAS ACTUALIZADO CORRECTAMENTE TU CÓDIGO POSTAL", "warning");
                                 } else {
                                     $('#spiner-loader').addClass('hide');
                                     alerts.showNotification("top", "right", "Error al enviar comisiones, intentalo más tarde", "danger");
@@ -319,14 +343,6 @@ $("#tabla_nuevas_comisiones").ready(function () {
             attr: {
                 class: 'btn btn-azure',
                 style: 'position:relative; float:right'
-            }
-        },
-        {
-            text: '<i class="fa fa-archive" aria-hidden="true"></i>',
-            className: `btn btn-azure ${boton_CP}`,
-            titleAttr: 'Clic para consultar código postal',
-            action: function (e, dt, button, confing) {
-                $('#solicitud_cp').modal('show');
             }
         },
         {
@@ -536,8 +552,8 @@ $("#tabla_nuevas_comisiones").ready(function () {
                         ((mes == 3 && dia == 13) || (mes == 3 && dia == 14 && hora <= 13)) ||
                         ((mes == 4 && dia == 10) || (mes == 4 && dia == 11 && hora <= 13)) ||
                         ((mes == 5 && dia == 8) || (mes == 5 && dia == 9 && hora <= 13)) ||
-                        ((mes == 6 && dia == 12) || (mes == 6 && dia == 13 && hora <= 13)) ||
-                        ((mes == 7 && dia == 10) || (mes == 7 && dia == 11 && hora <= 13)) ||
+                        ((mes == 6 && dia == 12) || (mes == 6 && dia == 12 && hora <= 13)) ||
+                        ((mes == 7 && dia == 3) || (mes == 7 && dia == 4 && hora <= 18)) ||
                         ((mes == 8 && dia == 7) || (mes == 8 && dia == 8 && hora <= 13)) ||
                         ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= 13)) ||
                         ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= 13)) ||
@@ -1442,7 +1458,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
     if (userSede == 8) {
         actual = 15;
     }
-    var hoy = new Date(fecha_actual);
+    var hoy = new Date(fechaServer);
     var dia = hoy.getDate();
     var mes = hoy.getMonth() + 1;
     var hora = hoy.getHours();
@@ -1452,7 +1468,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
     ((mes == 4 && dia == 10) || (mes == 4 && dia == 11 && hora <= 13)) ||
     ((mes == 5 && dia == 8) || (mes == 5 && dia == 9 && hora <= 13)) ||
     ((mes == 6 && dia == 12) || (mes == 6 && dia == 13 && hora <= 13)) ||
-    ((mes == 7 && dia == 10) || (mes == 7 && dia == 11 && hora <= 13)) ||
+    ((mes == 7 && dia == 3) || (mes == 7 && dia == 4 && hora <= 18)) ||
     ((mes == 8 && dia == 7) || (mes == 8 && dia == 8 && hora <= 13)) ||
     ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= 13)) ||
     ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= 13)) ||

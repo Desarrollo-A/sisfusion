@@ -210,13 +210,13 @@ class Comisiones extends CI_Controller
      echo json_encode( array( "data" => $dat));
     }
     public function insertar_codigo_postal(){
-      $dato_solicitudcp = $this->input->post('dato_solicitudcp');
-      $respuesta = $this->Comisiones_model->insertar_codigo_postal($dato_solicitudcp);
+      $cp = $this->input->post('cp');
+      $nuevoCp = $this->input->post('nuevoCp');
+      $respuesta = $this->Comisiones_model->insertar_codigo_postal($cp, $nuevoCp);
     }
 
     public function consulta_codigo_postal(){
       $resolt = $this->Comisiones_model->consulta_codigo_postal($this->session->userdata('id_usuario'))->result_array();
-      $resolt[0]["fecha_actual"] = date('Y-m-d H:i:s');
       echo json_encode($resolt);
     }
 
@@ -562,7 +562,6 @@ function update_estatus(){
     $id_user = $this->session->userdata('id_usuario');
     $datos = array();
     $datos["opn_cumplimiento"] = $this->Usuarios_modelo->Opn_cumplimiento($this->session->userdata('id_usuario'))->result_array();
-    $datos["cp_datos"] = $this->Comisiones_model->consulta_codigo_postal($id_user)->result_array();
 
     switch($this->session->userdata('id_rol')){
       case '1':
@@ -634,7 +633,6 @@ function update_estatus(){
   }
 
   public function acepto_comisiones_user(){
-     //echo date('Y-m-d H:i:s');
     $this->load->model("Comisiones_model");
     $id_user_Vl = $this->session->userdata('id_usuario');
     $id_rol = $this->session->userdata('id_rol');
@@ -645,19 +643,27 @@ function update_estatus(){
     $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
     $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE mes=$mesActual")->result_array();
     $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;
-      if( $consulta_comisiones->num_rows() > 0 ){
+    if( $consulta_comisiones->num_rows() > 0 ){
+      $validar_sede = $this->session->userdata('id_sede');
+      $fecha_actual = strtotime($obtenerFechaSql);
+      $fechaInicio = strtotime($consultaFechasCorte[0]['fechaInicio']);
+      $fechaFin = $id_rol == 8 ? strtotime($consultaFechasCorte[0]['fechaFinTijuana']) : ($consultaFechasCorte[0]['fechaFinGeneral']) ;
 
-       $validar_sede = $this->session->userdata('id_sede');
-        $fecha_actual = strtotime($obtenerFechaSql);
-        $fechaInicio = strtotime($consultaFechasCorte[0]['fechaInicio']);
-        $fechaFin = $id_rol == 8 ? strtotime($consultaFechasCorte[0]['fechaFinTijuana']) : ($consultaFechasCorte[0]['fechaFinGeneral']) ;
+      if($formaPagoUsuario == 3){
+        $consultaCP = $this->Comisiones_model->consulta_codigo_postal($id_user_Vl)->result_array();
+      }
 
-      if(($fecha_actual >= $fechaInicio && $fecha_actual <= $fechaFin) || ($id_user_Vl == 7689))
-            {
-
-
-        $consulta_comisiones = $consulta_comisiones->result_array();
-        
+      // if(($fecha_actual >= $fechaInicio && $fecha_actual <= $fechaFin) || ($id_user_Vl == 7689)){
+        if($formaPagoUsuario == 3 && ( $this->input->post('cp') == '' || $this->input->post('cp') == 'undefined' )){
+          $data_response = 3;
+          echo json_encode($data_response);
+        }
+        else if( $formaPagoUsuario == 3 && ( $this->input->post('cp') != '' || $this->input->post('cp') != 'undefined' ) &&  $consultaCP[0]['estatus'] == 0 ){
+          $data_response = 4;
+          echo json_encode($data_response);
+        }
+        else{
+          $consulta_comisiones = $consulta_comisiones->result_array();
           $sep = ',';
           $id_pago_i = '';
 
@@ -675,7 +681,7 @@ function update_estatus(){
               'estatus' => 1,
               'comentario' =>  'COLABORADOR ENVÍO A CONTRALORÍA' 
             );
-             array_push($data,$row_arr);
+            array_push($data,$row_arr);
 
             if ($formaPagoUsuario == 5) { // Pago extranjero
               $pagoInvoice[] = array(
@@ -687,32 +693,32 @@ function update_estatus(){
               );
             }
           }
+
           $id_pago_i = rtrim($id_pago_i, $sep);
-      
           $up_b = $this->Comisiones_model->update_acepta_solicitante($id_pago_i);
           $ins_b = $this->Comisiones_model->insert_phc($data);
           $this->Comisiones_model->changeEstatusOpinion($id_user_Vl);
           if ($formaPagoUsuario == 5) {
             $this->PagoInvoice_model->insertMany($pagoInvoice);
           }
-      
-      if($up_b == true && $ins_b == true){
-        $data_response = 1;
-        echo json_encode($data_response);
-      } else {
-        $data_response = 0;
-        echo json_encode($data_response);
-      } 
-    }else{
-      $data_response = 2;
+        
+          if($up_b == true && $ins_b == true){
+            $data_response = 1;
+            echo json_encode($data_response);
+          } else {
+            $data_response = 0;
+            echo json_encode($data_response);
+          } 
+        } 
+      // } else {
+      //   $data_response = 2;
+      //   echo json_encode($data_response);
+      // }    
+    }
+    else{
+      $data_response = 0;
       echo json_encode($data_response);
     }
-        
-      }
-      else{
-        $data_response = 0;
-      echo json_encode($data_response);
-      }
   } 
  
   public function acepto_comisiones_resguardo(){

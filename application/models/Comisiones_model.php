@@ -5071,69 +5071,45 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
         return $this->db->query("UPDATE pago_comision_ind SET abono_neodata = '".$obs."',modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$id_pago_i.")");
       }
     
-    function insertar_codigo_postal($codigo_postal){
+    function insertar_codigo_postal($codigo_postal, $nuevoCp){
         $id_user = $this->session->userdata('id_usuario');
-        $estatus_cp= $this->consulta_codigo_postal($id_user)->result_array();
-        if(count($estatus_cp) <= 0){
-            $this->db->query("INSERT INTO cp_usuarios (id_usuario, codigo_postal, estatus, fecha_creacion, fecha_modificacion, creado_por)
-                            values ($id_user,$codigo_postal,1,GETDATE(),GETDATE(),$id_user)");
+        if($nuevoCp == 'true'){
+            $this->db->query("INSERT INTO cp_usuarios (id_usuario, codigo_postal, estatus, fecha_creacion, fecha_modificacion, creado_por) VALUES ($id_user,$codigo_postal,1,GETDATE(),GETDATE(),$id_user)");
             echo "Código postal insertado con éxito";
         }else{
-            $estatus_np= $estatus_cp[0]["estatus"];
-            $estatus_dato= $estatus_cp[0]["codigo_postal"];
-            if($estatus_np == 0){
-                $this->db->query("UPDATE cp_usuarios SET estatus = 1, codigo_postal = $codigo_postal, fecha_modificacion = GETDATE() WHERE id_usuario = $id_user");
-                $this->db->query("INSERT INTO auditoria (id_parametro, tipo, anterior, nuevo, col_afect, tabla, fecha_creacion, creado_por)
-                                values ($id_user,'update',$estatus_dato, $codigo_postal, 'codigo_postal', 'cp_usuarios', GETDATE(), ".$this->session->userdata('id_usuario').")");
-                echo "Datos actualizados correctamente";
-    
-            }elseif($estatus_np != 0 && $estatus_cp != []){
-                if($estatus_cp[0]['codigo_postal'] != $codigo_postal){
-                    $this->db->query("UPDATE cp_usuarios SET estatus = 1, codigo_postal = $codigo_postal, fecha_modificacion = GETDATE() WHERE id_usuario = $id_user");
-                    echo "Código postal actualizado correctamente";
-                }else {
-                    echo "El código postal ".$codigo_postal." ya se encuentra registrado";
-                }
-            }
+            $actualDatosCP= $this->consulta_codigo_postal($id_user)->result_array();
+            $actualCP = $actualDatosCP[0]["codigo_postal"];
+            $this->db->query("UPDATE cp_usuarios SET estatus = 1, codigo_postal = $codigo_postal, fecha_modificacion = GETDATE() WHERE id_usuario = $id_user");
+            $this->db->query("INSERT INTO auditoria (id_parametro, tipo, anterior, nuevo, col_afect, tabla, fecha_creacion, creado_por) VALUES ($id_user,'update',$actualCP, $codigo_postal, 'codigo_postal', 'cp_usuarios', GETDATE(), ".$this->session->userdata('id_usuario').")");
+            
+            echo "Datos actualizados correctamente";
         }
     }
-      function consulta_codigo_postal($id_user){
 
+    function consulta_codigo_postal($id_user){
         return $this->db->query("SELECT estatus, codigo_postal FROM cp_usuarios WHERE id_usuario = $id_user");
+    }
 
-      }
-
-      function pagos_codigo_postal($id_user){
-
+    function pagos_codigo_postal($id_user){
         return $this->db->query("SELECT * FROM pago_comision_ind WHERE estatus = 4 AND id_usuario = $id_user");
+    }
 
-      }
-
-       function update_estatus_add($id_pago_i, $obs) {
-    
+    function update_estatus_add($id_pago_i, $obs) {
         $id_user_Vl = $this->session->userdata('id_usuario');
         $QUERY_VAL = $this->db->query("SELECT id_usuario, id_comision FROM pago_comision_ind WHERE id_pago_i IN (".$id_pago_i.")");
         $comision = $QUERY_VAL->row()->id_comision;
         $user_com = $QUERY_VAL->row()->id_usuario;
     
-        // echo $comision.'<br>';
         return $this->db->query( "INSERT INTO pago_comision_ind VALUES (".$comision.", ".$user_com.", ".$obs.", GETDATE(), GETDATE(), 0, 11, 1, 'IMPORTACIÓN EXTEMPORANEA', NULL, NULL, NULL,'".$this->session->userdata('id_usuario')."')");
     
         $insert_id = $this->db->insert_id();
     
         $this->db->query("INSERT INTO  historial_comisiones VALUES ($insert_id, $id_user_Vl, GETDATE(), 1, 'SE AGREGA POR CONTRALORIA CON MONTO: ".$obs."')");
-    
-      }
-
-
-      // update_estatus_intmex
-
+    }
 
       /**-----------------------MKTD COMPARTIDAS---------------------- */
-    public function MKTD_compartida($lote,$p1,$p2,$user)
-    {
+    public function MKTD_compartida($lote,$p1,$p2,$user){
         $respuesta = $this->db->query("INSERT INTO compartidas_mktd VALUES ($lote,$p1,$p2, GETDATE(),$user)");
-
 
         if ($respuesta ) {
             return 1;
@@ -5141,22 +5117,15 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
             return 0;
         }
     }
-    public function VerificarMKTD($idlote)
-        {
-       return $query =  $this->db->query("SELECT * FROM comisiones co inner join pago_comision_ind pci on co.id_comision=pci.id_comision where pci.estatus != 12 and pci.id_usuario=4394 and co.id_lote=".$idlote."
-         ");
-        }
 
-
-
-
+    public function VerificarMKTD($idlote){
+       return $query =  $this->db->query("SELECT * FROM comisiones co inner join pago_comision_ind pci on co.id_comision=pci.id_comision where pci.estatus != 12 and pci.id_usuario=4394 and co.id_lote=".$idlote."");
+    }
 
    function getDatosNuevasCompartidas(){
-
     $filtro = " AND cl.id_asesor IN (SELECT id_usuario FROM usuarios WHERE id_sede IN (1,2,3,4,5,6) AND id_rol IN (7,9))  ";
 
-    return $this->db->query(" SELECT pci.id_usuario, lo.ubicacion_dos, plm.id_plan, s.nombre as sede, us.nombre, us.apellido_paterno, SUM(pci.abono_neodata) total, res.empresa, res.idResidencial, CAST(res.descripcion AS VARCHAR(MAX)) descripcion, 
- cmktd.sede1, cmktd.sede2, s1.nombre as s1, s2.nombre as s2
+    return $this->db->query(" SELECT pci.id_usuario, lo.ubicacion_dos, plm.id_plan, s.nombre as sede, us.nombre, us.apellido_paterno, SUM(pci.abono_neodata) total, res.empresa, res.idResidencial, CAST(res.descripcion AS VARCHAR(MAX)) descripcion, cmktd.sede1, cmktd.sede2, s1.nombre as s1, s2.nombre as s2
                                FROM pago_comision_ind pci 
                                INNER JOIN comisiones com ON com.id_comision = pci.id_comision
                                INNER JOIN lotes lo ON lo.idLote = com.id_lote
