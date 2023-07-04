@@ -4118,7 +4118,7 @@ function obtenerID($id){
 function getDescuentos(){
     return $this->db->query("SELECT pci.id_pago_i, CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) AS usuario, pci.abono_neodata as monto, 
     lo.nombreLote, hc.comentario AS motivo, pci.estatus, CONCAT(us2.nombre,' ',us2.apellido_paterno,' ',us2.apellido_materno) AS modificado_por,
-    pci.fecha_abono
+    CONVERT(VARCHAR,pci.fecha_abono,20) AS fecha_abono
     FROM pago_comision_ind pci
     INNER JOIN usuarios us ON us.id_usuario = pci.id_usuario
     INNER JOIN comisiones co ON co.id_comision = pci.id_comision
@@ -8158,6 +8158,5 @@ public function getDataDispersionPagoEspecial($val = '') {
                 ORDER BY fecha_creacion DESC ";
         $query = $this->db->query($cmd);
         return $query->row();
-
     }
 }

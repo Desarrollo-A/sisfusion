@@ -1491,7 +1491,7 @@ function fillTableReport(dataObject) {
                 {
                     data: function (d) {
                         if(d.fechaStatus9 == null){
-                            return 'No aplica';
+                            return 'NO APLICA';
                         }
                         else
                             return d.fechaStatus9;
@@ -1510,10 +1510,10 @@ function fillTableReport(dataObject) {
                 {
                     data: function (d) {
                         if (d.apartadoXReubicacion == 1 || d.apartadoXReubicacion == '1'){
-                            return 'Apartado por reubicación';
+                            return 'APARTADO POR REUBICACIÓN';
                         }
                         else{
-                            return 'Estándar';
+                            return 'ESTÁNDAR';
                         }
                     }
                 }
@@ -1752,7 +1752,7 @@ function fillTableReport(dataObject) {
                 {
                     data: function (d) {
                         if(d.fechaStatus9 == null){
-                            return 'No aplica';
+                            return 'NO APLICA';
                         }
                         else
                             return d.fechaStatus9;
@@ -1781,10 +1781,10 @@ function fillTableReport(dataObject) {
                 {
                     data: function (d) {
                         if (d.apartadoXReubicacion == 1){
-                            return 'Apartado por reubicación';
+                            return 'APARTADO POR REUBICACIÓN';
                         }
                         else{
-                            return 'Estandar';
+                            return 'ESTÁNDAR';
                         }
                     }
                 }

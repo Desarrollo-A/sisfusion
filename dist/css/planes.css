@@ -1477,9 +1477,6 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
 .timeline-3 {
   list-style-type: none;
   position: relative;
-  height: 300px;
-  /* Establece la altura del contenedor */
-  overflow: auto;
 }
 
 .timeline-3::before {

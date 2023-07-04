@@ -408,13 +408,13 @@ $(document).on('click', '.seeAuts', function (e) {
                 statusProceso="<span class='label lbl-green'>ACEPTADA</span>";
             }
             else if(item['estatus'] == 1){
-                statusProceso="<span class='label lbl-orangeYellow'>En proceso</span>";
+                statusProceso="<span class='label lbl-orangeYellow'>EN PROCESO</span>";
             }
             else if(item['estatus'] == 2){
                 statusProceso="<span class='label lbl-warning'>DENEGADA</span>";
             }
             else if(item['estatus'] == 3){
-                statusProceso="<span class='label lbl-sky'>En DC</span>";
+                statusProceso="<span class='label lbl-sky'>EN DC</span>";
             }
             else{
                 statusProceso="<span class='label lbl-gray'>N/A</span>";
@@ -426,7 +426,7 @@ $(document).on('click', '.seeAuts', function (e) {
                             <label style="font-weight:100; font-size: 12px">Solicitud de autorización: <b>${statusProceso}</b></label>
                         </div>
                         <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-5" style="text-align: right">
-                            <label style="font-weight:100; font-size: 12px">${item['fecha_creacion'].split(":").shift()}</label>
+                            <label style="font-weight:100; font-size: 12px">${item['fecha_creacion']}</label>
                         </div>
                         <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <p style="text-align: justify;">

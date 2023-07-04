@@ -633,18 +633,17 @@ function fillDataTable(idCondominio) {
                     }
 
                     if (parseInt(d.idMovimiento) !== MOVIMIENTOS.NUEVO_APARTADO && parseInt(d.idStatusContratacion) !== STATUS_CONTRATACION) {
-                        return 'Asignado correctamente';
+                        return 'ASIGNADO CORRECTAMENTE';
                     }
 
                     if (d.id_prospecto != 0) { // APARTADO DESDE LA PAGINA DE CIUDAD MADERAS
-                        return 'Asignado correctamente';
+                        return 'ASIGNADO CORRECTAMENTE';
                     }
 
                     if (d.id_coordinador == 10807 || d.id_coordinador == 10806 || d.id_gerente == 10807 || d.id_gerente == 10806) {
-                        return 'Asignado correctamente';
+                        return 'ASIGNADO CORRECTAMENTE';
                     }
-
-                    return '<p>Debes asignar el prospecto al cliente para poder acceder al depósito de seriedad o integrar el expediente</p>';
+                return '<p>DEBES ASIGNAR EL PROSPECTOS AL CLIENTE PARA PODER ACCEDER AL DEPÓSITO DE SERIEDAD O INTEGRAR EL EXPEDIETNE</p>';
                 }
             },
             {
