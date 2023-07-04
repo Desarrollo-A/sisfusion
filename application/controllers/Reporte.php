@@ -198,7 +198,7 @@ class Reporte extends CI_Controller {
                 if ( $fechaStatus9 != null){
                     $diasStatus9 = $this->formatter->validarDiasHabiles($fechaApartado, $fechaStatus9);
                 }
-                else $diasStatus9 = 'No aplica';
+                else $diasStatus9 = 'NO APLICA';
 
                 $data['data'][$x]['diasUltimoStatus'] = $diasUltimoStatus;
                 $data['data'][$x]['diasStatus9'] = $diasStatus9;

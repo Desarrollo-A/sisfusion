@@ -931,7 +931,7 @@ function loadSbdir(){
     $("#subdirector").empty().selectpicker('refresh');
     $.post('../Clientes/getSubdirs/', function(data) {
         var len = data.length;
-        $("#subdirector").append($('<option>').val('').text('SELECCIONA UN SUBDIRECTOR'));
+        $("#subdirector").append($('<option>').val('').text('SELECCIONA UNA OPCIÓN'));
         for( var i = 0; i<len; i++)
         {
             var id = data[i]['id_usuario'];
@@ -940,7 +940,7 @@ function loadSbdir(){
         }
         if(len<=0)
         {
-            $("#subdirector").append('<option selected="selected" disabled>NINGUN SUBDIRECTOR</option>');
+            $("#subdirector").append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
         }
         $("#subdirector").selectpicker('refresh');
     }, 'json');
@@ -957,9 +957,9 @@ function loadCoord(){
     $.post('../Clientes/getCoordsByGrs/'+id_usuario, function(data) {
         var len = data.length;
         if(len<=0){
-            $("#coordinadors").append('<option selected="selected" disabled>NINGUN COORDINADOR</option>');
+            $("#coordinadors").append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
         }{
-            $("#coordinadors").append('<option selected="selected">SELECCIONA COORDINADOR</option>');
+            $("#coordinadors").append('<option selected="selected">SELECCIONA UNA OPCIÓN</option>');
         }
 
         for( var i = 0; i<len; i++){
@@ -979,7 +979,7 @@ function loadAsesores(){
             $("#asesors").append('<option selected="selected" disabled>NINGUN COORDINADOR</option>');
         }
         else{
-            $("#asesors").append('<option selected="selected">SELECCIONA ASESOR</option>');
+            $("#asesors").append('<option selected="selected">SELECCIONA UNA OPCIÓN</option>');
         }
         for( var i = 0; i<len; i++){
             var id = data[i]['id_usuario'];
@@ -1003,7 +1003,7 @@ function createSelect(dataDinamic){
         dataMaks = dataDinamic;
     }
 
-    let html_select ='<div class="col-md-3 form-group"><div id="'+nombreID+'" class="form-group overflow-hidden"><label class="control-label">'+dataMaks+'</label></div></div>';
+    let html_select ='<div class="col-md-3 form-group"><div id="'+nombreID+'" class="form-group overflow-hidden"><label class="control-label">'+dataMaks.toUpperCase()+'</label></div></div>';
     var $selectSub = $('<select/>', {
         'class':"selectpicker select-gral m-0",
         'id': dataDinamic,
@@ -1014,7 +1014,7 @@ function createSelect(dataDinamic){
         'data-container':"body",
     }).append($('<option/>',{
         'value': 'default',
-        'text': 'Selecciona el '+dataMaks,
+        'text': 'SELECCIONA UNA OPCIÓN',
         'selected': true,
         'disabled': true
     }));
@@ -1034,7 +1034,7 @@ function getFirstFilter(rol, secondRol){
     $(`#${rol == 59 ? 'subdirector':'gerente'}`).empty().selectpicker('refresh');
     var $option = $('<option/>',{
         'value': 'default',
-        'text': 'Selecciona el subdirector',
+        'text': 'SELECCIONA UNA OPCIÓN',
         'selected': true,
         'disabled': true
     });
@@ -1048,7 +1048,7 @@ function getFirstFilter(rol, secondRol){
             $(`#${rol == 59 ? 'subdirector':'gerente'}`).append($('<option>').val(id).text(name));
         }
         if(len<=0){
-            $(`#${rol == 59 ? 'subdirector':'gerente'}`).append('<option selected="selected" disabled>NINGÚN GERENTE</option>');
+            $(`#${rol == 59 ? 'subdirector':'gerente'}`).append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
         }
         $(`#${rol == 59 ? 'subdirector':'gerente'}`).selectpicker('refresh');
     }, 'json');
@@ -1132,9 +1132,9 @@ $(document).on('change','#subdirector', function () {
         var len = data.length;
         if(len<=0)
         {
-            $("#gerente").append('<option selected="selected" disabled>NINGUN GERENTE</option>');
+            $("#gerente").append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
         }else{
-            $("#gerente").append($('<option selected="selected">').val('').text('SELECCIONA GERENTE'));
+            $("#gerente").append($('<option selected="selected" disabled>').val('').text('SELECCIONA UNA OPCIÓN'));
         }
         for( var i = 0; i<len; i++)
         {
@@ -1160,10 +1160,10 @@ $(document).on('change', '#gerente', function () {
     $.post('../Clientes/getCoordsByGrs/'+gerente, function(data) {
         var len = data.length;
         if(len<=0){
-            $("#coordinadors").append('<option selected="selected" disabled>NINGUN COORDINADOR</option>');
+            $("#coordinadors").append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
         }
         {
-            $("#coordinadors").append('<option selected="selected">SELECCIONA COORDINADOR</option>');
+            $("#coordinadors").append('<option selected="selected" disabled>SELECCIONA UNA OPCIÓN</option>');
         }
         for( var i = 0; i<len; i++){
             var id = data[i]['id_usuario'];
@@ -1192,9 +1192,7 @@ $(document).on('change', '#coordinadors', function () {
         var len = data.length;
         if(len<=0)
         {
-            $("#asesors").append('<option selected="selected" disabled>NINGUN COORDINADOR</option>');
-        }else{
-            $("#asesors").append('<option selected="selected">SELECCIONA ASESOR</option>');
+            $("#asesors").append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
         }
 
         for( var i = 0; i<len; i++){
