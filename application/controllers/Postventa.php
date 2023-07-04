@@ -582,30 +582,29 @@ class Postventa extends CI_Controller
     public function uploadFile()
     {
         $file = $_FILES["uploadedDocument"];
-        $idSolicitud = $this->input->post('idSolicitud');
-        $documentType = $this->input->post('documentType');
-        $presupuestoType = null;
-        $idPresupuesto = null;
-        $idNxS = null;
-        if( $documentType == 12){
-            $presupuestoType = $this->input->post('presupuestoType');
-            $idPresupuesto = $this->input->post('idPresupuesto');
-            $idNxS = $this->input->post('idNxS');
-        }
-        $documentName = $this->Postventa_model->generateFilename($idSolicitud, $documentType)->row();
-        $documentInfo = $documentName;
-        if($documentType == 12){
-            $documentName = $documentName->fileName . '.' . $presupuestoType . '.' . substr(strrchr($_FILES["uploadedDocument"]["name"], '.'), 1);
-        }else{
-            /*if($documentInfo->estatus == 22){
-
+        if($_FILES["uploadedDocument"]["size"] <= 50000000){
+            $idSolicitud = $this->input->post('idSolicitud');
+            $documentType = $this->input->post('documentType');
+            $presupuestoType = null;
+            $idPresupuesto = null;
+            $idNxS = null;
+            if( $documentType == 12){
+                $presupuestoType = $this->input->post('presupuestoType');
+                $idPresupuesto = $this->input->post('idPresupuesto');
+                $idNxS = $this->input->post('idNxS');
+            }
+            $documentName = $this->Postventa_model->generateFilename($idSolicitud, $documentType)->row();
+            $documentInfo = $documentName;
+            if($documentType == 12){
+                $documentName = $documentName->fileName . '.' . $presupuestoType . '.' . substr(strrchr($_FILES["uploadedDocument"]["name"], '.'), 1);
             }else{
-
-            }*/
-            $documentName = $documentName->fileName . '.' . substr(strrchr($_FILES["uploadedDocument"]["name"], '.'), 1);
+                $documentName = $documentName->fileName . '.' . substr(strrchr($_FILES["uploadedDocument"]["name"], '.'), 1);
+            }
+            $folder = $this->getFolderFile($documentType);
+            $this->updateDocumentBranch($file, $folder, $documentName, $idSolicitud, $documentType, $documentInfo->expediente, $documentInfo->idDocumento, $presupuestoType, $documentInfo->estatus_validacion, $idPresupuesto, $idNxS);
+        }else{
+            echo json_encode(2);
         }
-        $folder = $this->getFolderFile($documentType);
-        $this->updateDocumentBranch($file, $folder, $documentName, $idSolicitud, $documentType, $documentInfo->expediente, $documentInfo->idDocumento, $presupuestoType, $documentInfo->estatus_validacion, $idPresupuesto, $idNxS);
     }
 
     public function uploadFile2()
