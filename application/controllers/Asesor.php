@@ -4905,7 +4905,7 @@ class Asesor extends CI_Controller
             ->from('Ciudad Maderas')
             ->to($correo)
             ->subject('PROCESO DE VERIFICACIÓN DE CLIENTE')
-            ->view($this->load->view('mail/asesor/codigo-verificacion', ['url' => $url], true));
+            ->view($this->load->view('mail/asesor/codigo-verificacion', ['url' => $url, 'nombreCliente' => $nombreCliente], true));
 
         return $this->email->send();
     }
