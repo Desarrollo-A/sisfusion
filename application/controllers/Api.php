@@ -549,9 +549,9 @@ class Api extends CI_Controller
         ]);
     }
 
-    public function autorizacionSms(int $idCliente)
+    public function autSms(int $idCliente)
     {
-        $codigo = $this->input->get('codigo');
+        $codigo = $this->input->get('cod');
 
         if (!isset($codigo)) {
             $this->load->view('template/header');

@@ -4395,7 +4395,7 @@ function getStatusMktdPreventa(){
             LEFT JOIN codigo_autorizaciones acs ON c.id_cliente = acs.id_cliente AND acs.tipo = 3
             LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
                 FROM autorizaciones
-                WHERE id_tipo = 1 AND estatus = 0
+                WHERE id_tipo = 2 AND estatus = 0
                 GROUP BY idCliente, idLote) tipo_correo_aut ON tipo_correo_aut.idCliente = $id AND tipo_correo_aut.idLote = l.idLote
             
             LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote

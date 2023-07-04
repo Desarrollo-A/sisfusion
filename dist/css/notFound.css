@@ -1664,7 +1664,7 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
 }
 
 #enviar-autorizacion-link {
-  color: white;
+  color: #96843D;
 }
 
 #enviar-autorizacion-link :link {
@@ -1677,5 +1677,5 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
 
 #enviar-autorizacion-link :hover {
   text-decoration: none;
-  color: white;
+  color: #96843D;
 }

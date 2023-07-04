@@ -381,7 +381,7 @@ $(document).ready (function() {
                             <div class="w-20">
                                 <div class="radio-with-icon-autorizacones d-flex justify-end">
                                     <p class="radioOption-Item m-0">
-                                        <input type="radio" name="accion${i}" id="acceptAut${i}" value="0" class="d-none" aria-invalid="false" checked>
+                                        <input type="radio" name="accion${i}" id="acceptAut${i}" value="0" class="d-none" aria-invalid="false">
                                         <label for="acceptAut${i}" class="cursor-point m-0">
                                             <i class="fas fa-thumbs-up iAccepted" style="font-size:15px" data-toggle="tooltip" 
                                                 data-placement="bottom" title="Aceptar"></i>
@@ -456,6 +456,11 @@ $("#sendAutsFromD").on('submit', function(e){
 
 $('#autClienteForm').on('submit', function (e) {
     e.preventDefault();
+
+    if (parseInt($('#numeroDeRowAut').val()) !== $('#autClienteForm input:radio:checked').length) {
+        alerts.showNotification("top", "right", "Debe APROBAR o RECHAZAR todas las solicitudes.", "warning");
+        return;
+    }
 
     $.ajax({
         type: 'POST',

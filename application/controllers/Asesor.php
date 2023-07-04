@@ -19,9 +19,12 @@ class Asesor extends CI_Controller
             'opcs_catalogo/valores/AutorizacionClienteOpcs',
             'opcs_catalogo/valores/TipoAutorizacionClienteOpcs'
         ]);
+
         $this->load->library(array('session', 'form_validation'));
         //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
         $this->load->library(array('session', 'form_validation', 'get_menu'));
+        $this->load->library('email');
+
         $this->load->helper(array('url', 'form', 'email/asesor/elementos_correo', 'email/plantilla_dinamica_correo'));
         $this->load->database('default');
         $this->load->library('Pdf');
@@ -734,7 +737,7 @@ class Asesor extends CI_Controller
             $data[$i]['total_sol_sms_pend'] = $query[0]->total_sol_sms_pend;
             $data[$i]['total_sol_sms_rech'] = $query[0]->total_sol_sms_rech;
             $data[$i]['correo'] = $query[0]->correo;
-            $data[$i]['telefono'] = $query[0]->telefono1;
+            $data[$i]['telefono'] = $query[0]->telefono2;
         }
         if ($data != null) {
             echo json_encode($data);
@@ -2684,26 +2687,18 @@ class Asesor extends CI_Controller
             ob_end_clean();
             $pdf->Output(utf8_decode($namePDF), 'I');
             $attachment = $pdf->Output(utf8_decode($namePDF), 'S');
-            // PHPMailer object
+
+            $this->email
+                ->initialize()
+                ->from('Ciudad Maderas')
+                ->to('programador.analista24@ciudadmaderas.com') // TODO: reemplazar el correo de producción
+                ->subject('DEPÓSITO DE SERIEDAD - CIUDAD MADERAS')
+                ->attach($attachment, '', $namePDF)
+                ->view('<h3>A continuación se adjunta el archivo correspondiente a Depósito de seriedad.</h3>');
+
             /************************************************************************************
             * Armado de parámetros a mandar a plantilla para creación de correo electrónico     *
             ************************************************************************************/
-            $correos_entregar = array();
-            $datos_etiquetas = null;
-            $archivo_adjunto = array('adjunto' => $attachment, 'nombre_pdf' => $namePDF);
-            $datos_correo[0] = array();
-            #PROVICIONAL TESTING
-            array_push($correos_entregar, 'programador.analista18@ciudadmaderas.com');
-            //$correos_entregar[0] = 'programador.analista18@ciudadmaderas.com';
-            //$correos_entregar[1] = 'mariadejesus.garduno@ciudadmaderas.com';
-            $elementos_correo = array(
-                "setFrom" => Elementos_Correos_Asesor::SET_FROM_EMAIL,
-                "Subject" => Elementos_Correos_Asesor::ASUNTO_CORREO_TABLA_DEPOSITOS_SERIEDAD_ASESOR
-            );
-
-            $comentario_general = Elementos_Correos_Asesor::EMAIL_DEPOSITO_SERIEDAD_ASESOR;
-            $datos_encabezados_tabla = Elementos_Correos_Asesor::ETIQUETAS_ENCABEZADO_TABLA_DEPOSITOS_SERIEDAD_ASESOR;
-            $plantilla_correo = new plantilla_dinamica_correo;
             $checkIfRefExist = $this->Asesor_model->checkExistRefrencias($id_cliente);
 
             if (count($checkIfRefExist) >= 1) {
@@ -2748,9 +2743,7 @@ class Asesor extends CI_Controller
                         }
                     }
 
-                    $datos_correo_enviar = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo,
-                                                                                $datos_encabezados_tabla, $datos_etiquetas, $comentario_general, $archivo_adjunto);
-                    if ($datos_correo_enviar > 0) {
+                    if ($this->email->send()) {
                         echo json_encode(['code' => 200]);
                     } else {
                         echo json_encode(['code' => 400, 'message' => 'Correo no enviado']);
@@ -2798,9 +2791,8 @@ class Asesor extends CI_Controller
                     $arreglo_referencia1["id_cliente"] = $id_cliente;
                     $this->Asesor_model->insertnewRef($arreglo_referencia1);
                     $this->Asesor_model->insertnewRef($arreglo_referencia2);
-                    $datos_correo_enviar = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo,
-                                                                                    $datos_encabezados_tabla, $datos_etiquetas, $comentario_general, $archivo_adjunto);
-                    if ($datos_correo_enviar > 0) {
+
+                    if ($this->email->send()) {
                         echo json_encode(['code' => 200]);
                     } else {
                         echo json_encode(['code' => 400, 'message' => 'Correo no enviado']);
@@ -2931,32 +2923,35 @@ class Asesor extends CI_Controller
         }
         if ($dataInsert == 1) {
             $correos_entregar = array();
-            //funcion aterior -> notifyUsers 
-            /************************************************************************************
-		    * Armado de parámetros a mandar a plantilla para creación de correo electrónico     *
-		    ************************************************************************************/
-            $dataUser = $this->Asesor_model->getInfoUserById($id_aut);
-            $datos_correo[0] = array('nombreResidencial'   =>  $nombreResidencial,
-                                'nombreCondominio'    =>  $nombreCondominio,
-                                'nombreLote'          =>  $nombreLote,
-                                'motivoAut'           =>  $autorizacionComent,
-                                'fecgaHora'           =>  date("Y-m-d H:i:s"));
-            $datos_etiquetas = null; 
-            $elementos_correo = array("setFrom" => Elementos_Correos_Asesor::SET_FROM_EMAIL,
-							        "Subject" => Elementos_Correos_Asesor::ASUNTO_CORREO_TABLA_NUEVA_AUTORIZACION_SBMT);
-            $comentario_general = Elementos_Correos_Asesor::EMAIL_NUEVA_AUTORIZACION_SBMT.'<br><br>'. $comentario;
-            $datos_encabezados_tabla = Elementos_Correos_Asesor::ETIQUETAS_ENCABEZADO_TABLA_NUEVA_AUTORIZACION_SBMT;
-            $plantilla_correo = new plantilla_dinamica_correo;
-            /***************
-            *CORREO TESTING* 
-            ****************/
-            array_push($correos_entregar, 'programador.analista18@ciudadmaderas.com');
-            if(count($correos_entregar) > 0){
-                /*envia un correo cuando se solicita una nueva autorizacion*/
-                $plantilla_correo
-                    ->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, 
-                                            $datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
-            }
+
+            $encabezados = [
+                'nombreResidencial' => 'PROYECTO',
+                'nombreCondominio'  => 'CONDOMINIO',
+                'nombreLote'        => 'LOTE',
+                'motivoAut'         => 'AUTORIZACIÓN',
+                'fechaHora'         => 'FECHA/HORA'
+            ];
+            $data[0] = [
+                'nombreResidencial'   =>  $nombreResidencial,
+                'nombreCondominio'    =>  $nombreCondominio,
+                'nombreLote'          =>  $nombreLote,
+                'motivoAut'           =>  $autorizacionComent,
+                'fechaHora'           =>  date("Y-m-d H:i:s")
+            ];
+
+            $this->email
+                ->initialize()
+                ->from('Ciudad Maderas')
+                ->to('programador.analista24@ciudadmaderas.com') // TODO: reemplazar el correo de producción
+                ->subject('SOLICITUD DE AUTORIZACIÓN - CONTRATACIÓN')
+                ->view($this->load->view('mail/asesor/add-autorizacion-sbmt', [
+                    'encabezados' => $encabezados,
+                    'contenido' => $data,
+                    'comentario' => $comentario
+                ], true));
+
+            $this->email->send();
+
             echo json_encode($dataInsert);
         } else {
             echo json_encode($dataInsert);
@@ -4380,26 +4375,24 @@ class Asesor extends CI_Controller
                     break;
             }
             if (count($data_eviRec) > 0) {
-                /***********************************************************************************
-                *   Armado de parámetros a mandar a plantilla para creación de correo electrónico  *
-                ***********************************************************************************/
-                $correo = 'programador.analista18@ciudadmaderas.com';
-                array_push($correos_entregar, $correo);
-                $elementos_correo = array('setFrom'  =>  Elementos_Correos_Asesor::SET_FROM_EMAIL,
-                                        'Subject'  =>  '['.strtoupper($sedes_array[$i]['abreviacion']).']'.
-                                                        Elementos_Correos_Asesor::ASUNTO_CORREO_TABLA_EVIDENCIAS_RECHAZADAS_ASESOR . $correo);
-                $datos_correo = $data_eviRec;
-                $datos_encabezados_tabla = Elementos_Correos_Asesor::ETIQUETAS_ENCABEZADO_TABLA_EVIDENCIAS_RECHAZADAS_ASESOR;
+                $encabezados = [
+                    'nombreSolicitante' => 'SOLICITANTE',
+                    'nombreLote' => 'LOTE',
+                    'comentario_autorizacion' => 'COMENTARIO',
+                    'fecha_creacion' => 'FECHA/HORA'
+                ];
 
-                $comentario_general = Elementos_Correos_Asesor::EMAIL_EVIDENCIAS_RECHAZADAS_ASESOR . '<br>' . (!isset($comentario) ? '' : '<br>'. $comentario);
-                $plantilla_correo = new plantilla_dinamica_correo;
+                $this->email
+                    ->initialize()
+                    ->from('Ciudad Maderas')
+                    ->to('programador.analista24@ciudadmaderas.com') // TODO: reemplazar el correo de producción
+                    ->subject("[REPORTE] EVIDENCIAS RECHAZADAS PARA: $correo")
+                    ->view($this->load->view('mail/asesor/reporte-er', ['encabezados' => $encabezados, 'contenido' => $data_eviRec], true));
 
-                $envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, 
-                                                                        $datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
-                if ($envio_correo > 0) {
+                if ($this->email->send()) {
                     $data_request['msg'] = 'Correo enviado correctamente [' . $sedes_array[$i]['abreviacion'] . ']';
                 } else {
-                    $data_request['msg'] = 'Correo no enviado [' . $sedes_array[$i]['abreviacion'] . '] : [' . $envio_correo . ']';
+                    $data_request['msg'] = 'Correo no enviado [' . $sedes_array[$i]['abreviacion'] . ']';
                 }
             }else {
                 $data_request['msg'] = 'No hay registros para enviar un correo en [' . $sedes_array[$i]['abreviacion'] . ']';
@@ -4413,100 +4406,25 @@ class Asesor extends CI_Controller
     }
     public function notifyRejEv($correo, $data_eviRec, $sede)
     {
-        // $correo_new = 'programador.analista8@ciudadmaderas.com';/*se coloca el correo de testeo para desarrollo*/
-        $correoDir = $dataUser[0]->correo;
-        $mail = $this->phpmailer_lib->load();
-        $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-        $mail->addAddress($correo_new);
-        // $mail->addCC('erick_eternal@live.com.mx');
-        //$mail->addBCC('copia_oculta@outlook.com');
-        $mail->Subject = utf8_decode('[' . strtoupper($sede) . '][REPORTE] EVIDENCIAS RECHAZADAS PARA:' . $correo);
-        $mail->isHTML(true);
-        $mailContent = "<html><head>
-        <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-        <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>
-        <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'> 
-        <style media='all' type='text/css'>
-            .encabezados{
-                text-align: center;
-                padding-top:  1.5%;
-                padding-bottom: 1.5%;
-            }
-            .encabezados a{
-                color: #234e7f;
-                font-weight: bold;
-            }
-            
-            .fondo{
-                background-color: #234e7f;
-                color: #fff;
-            }
-            
-            h4{
-                text-align: center;
-            }
-            p{
-                text-align: right;
-            }
-            strong{
-                color: #234e7f;
-            }
-        </style>
-        </head>
-        <body>
-        <img src='" . base_url() . "static/images/mailER/header9@4x.png' width='100%'>
-        <table align='center' cellspacing='0' cellpadding='0' border='0' width='100%'>
-            <tr colspan='3'>
-            <td class='navbar navbar-inverse' align='center'>
-                <table width='750px' cellspacing='0' cellpadding='3' class='container'>
-                    <tr class='navbar navbar-inverse encabezados'><td>
-                        <p><a href='#'>SISTEMA DE CONTRATACIÓN</a></p>
-                    </td></tr>
-                </table>
-            </td>
-            </tr>
-            <tr>
-                <td border=1 bgcolor='#FFFFFF' align='center'> 
-                    <h3>¡ Buenos días estimad@ !</h3><br> <br>
-                    
-                    <p style='padding: 10px 90px;text-align: justify;'>¿Cómo estás?, espero que bien, te adjunto el reporte semanal de las evidencias rechazadas por
-                        <b>cobranza/contraloria</b>, te invito a leer las observaciones. Recuerda que deben ser corregidas a más
-                        tardar los jueves a las 12:00 PM, con esto ayudas a que el proceso en cobranza sea en tiempo y forma,
-                        dando como resultado el cobro a tiempo de las comisiones.
-                    </p><br><br>
-                    
-                    
-                </td>
-            </tr>
-            <tr>
-                <td border=1 bgcolor='#FFFFFF' align='center'>  
-                <center><table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='100%' style class='darkheader'>
-                    <tr class='active' style='text-align: center'>
-                    <th>Solicitante</th>   
-                    <th>Lote</th>   
-                    <th>comentario</th>   
-                    <th>Fecha/Hora</th>   
-                    </tr>";
-        for ($p = 0; $p < count($data_eviRec); $p++) {
-            $mailContent .= '<tr>';
-            $mailContent .= '    <td><center>' . $data_eviRec[$p]['nombreSolicitante'] . '</center></td>';
-            $mailContent .= '    <td><center>' . $data_eviRec[$p]['nombreLote'] . '</center></td>';
-            $mailContent .= '    <td><center>' . $data_eviRec[$p]['comentario_autorizacion'] . '</center></td>';
-            $mailContent .= '    <td><center>' . $data_eviRec[$p]['fecha_creacion'] . '</center></td>';
-            $mailContent .= '</tr>';
-        }
-        $mailContent .= "</table></center>
-                    <br><br>
-                </td>
-            </tr>
-        </table>
-        <img src='" . base_url() . "static/images/mailER/footer@4x.png' width='100%'>
-        </body></html>";
-        $mail->Body = utf8_decode($mailContent);
-        if ($mail->send()) {
+        $encabezados = [
+            'nombreSolicitante' => 'SOLICITANTE',
+            'nombreLote' => 'LOTE',
+            'comentario_autorizacion' => 'COMENTARIO',
+            'fecha_creacion' => 'FECHA/HORA'
+        ];
+
+        $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to('programador.analista24@ciudadmaderas.com') // TODO: reemplazar el correo de producción
+            ->subject('[' . strtoupper($sede) . '][REPORTE] EVIDENCIAS RECHAZADAS PARA:' . $correo)
+            ->view($this->load->view('mail/asesor/notify-rej-ev', ['encabezados' => $encabezados, 'contenido' => $data_eviRec], true));
+
+
+        if ($this->email->send()) {
             return 1;
         } else {
-            return $mail->ErrorInfo;
+            return $this->email->print_debugger();
         }
     }
     function getSedes()
@@ -4765,7 +4683,7 @@ class Asesor extends CI_Controller
 
         $url = base_url()."Api/validarAutorizacionCorreo/$idCliente?codigo=$codigo";
         $nombreCliente = "$cliente->nombre $cliente->apellido_paterno $cliente->apellido_materno";
-        // $this->correoAut($url, $correoCliente, $nombreCliente);
+        $this->correoAut($url, $correoCliente, $nombreCliente);
 
         return true;
     }
@@ -4804,14 +4722,14 @@ class Asesor extends CI_Controller
             return false;
         }
 
-        $codigo = md5(microtime());
-        $url = base_url()."Api/autorizacionSms/$idCliente?codigo=$codigo";
-//        $resultadoSms = $this->smsAut($url, "00$lada$telefonoCliente");
-//
-//        if (!$resultadoSms) {
-//            echo json_encode(['code' => 400, 'message' => 'Ocurrió un error al enviar el SMS. Favor de intentarlo más tarde.']);
-//            return false;
-//        }
+        $codigo = $this->getCodigoVerificacion(6);
+        $url = base_url()."Api/autSms/$idCliente?cod=$codigo";
+        $resultadoSms = $this->smsAut($url, "00$lada$telefonoCliente");
+
+        if (!$resultadoSms) {
+            echo json_encode(['code' => 400, 'message' => 'Ocurrió un error al enviar el SMS. Favor de intentarlo más tarde.']);
+            return false;
+        }
 
         $codigoSmsData = [
             'id_cliente' => $idCliente,
@@ -4821,7 +4739,7 @@ class Asesor extends CI_Controller
         $this->General_model->addRecord('codigo_autorizaciones', $codigoSmsData, $this->session->userdata('id_usuario'));
 
         $banderaSmsData = [
-            'telefono1' => $telefonoCliente,
+            'telefono2' => $telefonoCliente,
             'lada_tel' => $lada,
             'autorizacion_sms' => AutorizacionClienteOpcs::ENVIADO
         ];
@@ -4879,7 +4797,7 @@ class Asesor extends CI_Controller
             $urlCorreo = base_url()."Api/validarAutorizacionCorreo/$idCliente?codigo=$cliente->codigo_correo";
 
             $nombreCliente = "$cliente->nombre $cliente->apellido_paterno $cliente->apellido_materno";
-            // $this->correoAut($urlCorreo, $cliente->correo, $nombreCliente);
+            $this->correoAut($urlCorreo, $cliente->correo, $nombreCliente);
         }
 
         if (isset($reenviarSms)) {
@@ -4893,14 +4811,14 @@ class Asesor extends CI_Controller
                 return;
             }
 
-            $url = base_url()."Api/autorizacionSms/$idCliente?codigo=$cliente->codigo_sms";
+            $url = base_url()."Api/autSms/$idCliente?cod=$cliente->codigo_sms";
 
-//            $resultadoSms = $this->smsAut($url, "00$cliente->lada_tel$cliente->telefono1");
-//
-//            if (!$resultadoSms) {
-//                echo json_encode(['code' => 400, 'message' => 'Ocurrió un error al enviar el SMS. Favor de intentarlo más tarde.']);
-//                return;
-//            }
+            $resultadoSms = $this->smsAut($url, "00$cliente->lada_tel$cliente->telefono2");
+
+            if (!$resultadoSms) {
+                echo json_encode(['code' => 400, 'message' => 'Ocurrió un error al enviar el SMS. Favor de intentarlo más tarde.']);
+                return;
+            }
         }
 
         echo json_encode(['code' => 200]);
@@ -4980,85 +4898,16 @@ class Asesor extends CI_Controller
         $this->Asesor_model->insertAutorizacion($autorizacionData);
     }
 
-    public function correoAut(string $url, string $correo, string $nombreCliente): void
+    public function correoAut(string $url, string $correo, string $nombreCliente): bool
     {
-        $mail = $this->phpmailer_lib->load();
-        $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-        $mail->addAddress($correo);
-        $mail->Subject = utf8_decode('PROCESO DE VERIFICACIÓN DE CLIENTE');
-        $mail->isHTML(true);
-        $mail->Body = utf8_decode("
-            <html>
-                <head>
-                    <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-                    <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>
-                    <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css'
-                        integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'>
-                    <style media='all' type='text/css'>
-                        .encabezados {
-                            text-align: center;
-                            padding-top:  1.5%;
-                            padding-bottom: 1.5%;
-                        }
+        $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to($correo)
+            ->subject('PROCESO DE VERIFICACIÓN DE CLIENTE')
+            ->view($this->load->view('mail/asesor/codigo-verificacion', ['url' => $url], true));
 
-                        .encabezados a {
-                            color: #234e7f;
-                            font-weight: bold;
-                        }
-
-                        .fondo {
-                            background-color: #234e7f;
-                            color: #fff;
-                        }
-
-                        h4 {
-                            text-align: center;
-                        }
-
-                        strong {
-                            color: #234e7f;
-                        }
-                    </style>
-                </head>      
-                <body>
-                    <table align='center' cellspacing='0' cellpadding='0' border='0' width='100%'>
-                        <tr colspan='3'><td class='navbar navbar-inverse' align='center'>
-                            <table width='750px' cellspacing='0' cellpadding='3' class='container'>
-                                <tr class='navbar navbar-inverse encabezados'>
-                                    <td>
-                                        <img src='https://www.ciudadmaderas.com/assets/img/logo.png'
-                                             width='100%'
-                                             class='img-fluid'/>
-                                    </td>
-                                </tr>
-                            </table>
-                        </tr>
-                        <tr>
-                            <p class='text-justify'>
-                                Estimado/a $nombreCliente <br><br>
-                                Gracias por iniciar el registro de la compra de tu terreno en Ciudad Maderas. Para garantizar la precisión de la información y asegurarnos de que podemos comunicarnos correctamente con usted, requerimos que verifique su dirección de correo electrónico.<br>
-                                Por favor, siga los pasos a continuación para completar el proceso de verificación:<br><br>
-                                <ul>
-                                    <li>
-                                        Haga clic en el siguiente <a href='$url' target='_blank'>enlace.</a><br>
-                                    </li>
-                                    <li>
-                                        Será redirigido una página de verificación en nuestro sitio web.<br><br>
-                                    </li>
-                                </ul>
-                                
-                                Una vez que haya completado estos pasos, su dirección de correo electrónico quedará verificada. Si no ha iniciado este proceso o ha recibido este correo electrónico por error, le pedimos que ignore este mensaje. No se realizará ninguna acción en su nombre. Si tiene alguna pregunta o necesita ayuda adicional, no dude en ponerse en contacto con nuestro equipo de atención al cliente.<br><br>
-                                
-                                ¡Gracias por su colaboración!<br>
-                                Atentamente,<br>
-                                Equipo de Ventas de Ciudad Maderas
-                            </p>
-                        </tr>
-                    </table>
-                </body>      
-            </html>
-        ");
-        $mail->send();
+        return $this->email->send();
     }
 
     /**
@@ -5067,7 +4916,7 @@ class Asesor extends CI_Controller
     public function smsAut(string $url, string $telefono): bool
     {
         $camposSms = [
-            'Content' => "Gracias por iniciar el registro de la compra de tu terreno en Ciudad Maderas. Se ha iniciado un proceso de autentificacion, requerimos que verifique su numero telefonico.\nHaga clic en el siguiente enlace: [URL]\nUna vez que haya completado estos pasos, su numero quedara verificado. Si no ha iniciado este proceso o ha recibido este SMS por error, le pedimos que ignore este mensaje. No se realizara ninguna accion en su nombre.\nSi tiene alguna pregunta o necesita ayuda adicional, no dude en ponerse en contacto con nuestro equipo de atencion al cliente.\nGracias por su colaboracion\nAtentamente,\nEquipo de Ventas de Ciudad Maderas",
+            'Content' => "Verifique su numero telefonico en el siguiente enlace: [URL]\nAtentamente,\nCiudad Maderas",
             'ListGuid' => 'c4bcd75f-1ec5-4af1-9449-6e077892e424',
             'ListSecret' => 'fd0ca54e-4155-46c9-b0c9-c2a8b33e200e',
             'Sender' => 'aut_clientes',
@@ -5114,6 +4963,12 @@ class Asesor extends CI_Controller
         curl_close($curl);
 
         return $response;
+    }
+
+    function getCodigoVerificacion(int $longitud): string
+    {
+        $caracteres_permitidos = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        return substr(str_shuffle($caracteres_permitidos), 0, $longitud);
     }
 }
 ?>

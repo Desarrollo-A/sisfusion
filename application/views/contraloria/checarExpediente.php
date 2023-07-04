@@ -3,7 +3,7 @@
 <body class="">
 <div class="wrapper ">
     <?php
-    if($this->session->userdata('id_rol')=="16" || $this->session->userdata('id_rol')=="6" || $this->session->userdata('id_rol')=="11"  || $this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="32" || $this->session->userdata('id_rol')=="17" || $this->session->userdata('id_rol')=="47" || $this->session->userdata('id_rol')=="15" || $this->session->userdata('id_rol')=="7" || $this->session->userdata('id_rol')=="12")//contratacion
+    if($this->session->userdata('id_rol')=="17")//contraloría
     {
         $this->load->view('template/sidebar');
     }
@@ -12,7 +12,12 @@
         echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
     }
     ?>
- 
+ <style>
+     .col-lg-6 select:required + label {
+            display: block;
+            color: red;
+        }
+ </style>
     <!-- Modals -->
     <div class="modal fade " id="modalConfirmRegExp" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-md">
@@ -22,12 +27,36 @@
                         <h3>¿Estás seguro que desea regresar el expediente <b id="loteName"></b> ?</h3>
                         <p><small>El cambio no podrá ser revertido.</small></p>
                         <input type="hidden" value="" id="tempIDC">
+                        <input type="hidden" value="" id="idLote">
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                     <button type="submit" class="btn btn-primary acepta_regreso">Aceptar</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade " id="modalEditExp" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <form id="formEdit">
+                    <div class="modal-body">
+                        <div class="modal-body text-center p-0">
+                            <h5>¿Estás seguro que desea editar el expediente <b id="loteName"></b> ?</h5>
+                            <p><small>El cambio no podrá ser revertido.</small></p>
+                        </div>
+                        <input type="hidden" name="idCliente" id="idCliente">
+                        <div id="camposEditar">
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Aceptar</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -47,8 +76,8 @@
                             </div>
                             <div class="toolbar">
                                 <div class="row">
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-3">
-                                        <div class="form-group label-floating select-is-empty">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                                        <div class="form-group label-floating select-is-empty overflow-hidden">
                                             <label class="control-label">Proyecto</label>
                                             <select name="residencial" id="residencial"
                                                     class="selectpicker select-gral m-0"
@@ -56,12 +85,15 @@
                                                     data-live-search="true"
                                                     data-style="btn" data-show-subtext="true"
                                                     data-live-search="true"
-                                                    title="Selecciona un proyecto" data-size="7" required>
+                                                    title="Selecciona un proyecto" data-size="7"
+                                                    data-container="body" 
+                                                    required>
                                             </select>
+                                            <input type="hidden" name="accion" id="accion" value="0">
                                         </div>
                                     </div>
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-3">
-                                        <div class="form-group label-floating select-is-empty">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                                        <div class="form-group label-floating select-is-empty overflow-hidden">
                                             <label class="control-label">Condominio</label>
                                             <select id="condominio" name="condominio"
                                                     class="selectpicker select-gral m-0"
@@ -69,12 +101,14 @@
                                                     data-live-search="true"
                                                     data-style="btn" data-show-subtext="true"
                                                     data-live-search="true"
-                                                    title="Selecciona un condominio" data-size="7" required>
+                                                    title="Selecciona un condominio" data-size="7" 
+                                                    data-container="body"
+                                                    required>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-3">
-                                        <div class="form-group label-floating select-is-empty">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                                        <div class="form-group label-floating select-is-empty overflow-hidden">
                                             <label class="control-label">Lote</label>
                                             <select id="lotes" name="lotes"
                                                     class="selectpicker select-gral m-0"
@@ -82,20 +116,9 @@
                                                     data-live-search="true"
                                                     data-style="btn" data-show-subtext="true"
                                                     data-live-search="true"
-                                                    title="Selecciona un lote" data-size="7" required>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-3">
-                                        <div class="form-group label-floating select-is-empty">
-                                            <label class="control-label">Clientes</label>
-                                            <select id="clientes" name="clientes"
-                                                    class="selectpicker select-gral m-0"
-                                                    data-show-subtext="true"
-                                                    data-live-search="true"
-                                                    data-style="btn" data-show-subtext="true"
-                                                    data-live-search="true"
-                                                    title="Selecciona un cliente" data-size="7" required>
+                                                    title="Selecciona un lote" data-size="7" 
+                                                    data-container="body"
+                                                    required>
                                             </select>
                                         </div>
                                     </div>
@@ -103,9 +126,8 @@
                             </div>
                             <div class="material-datatables">
                                 <div class="form-group">
-                                    <div class="table-responsive">
                                         <table id="tableClient"
-                                               class="table-striped table-hover" style="text-align:center;">
+                                               class="table-striped table-hover hide">
                                             <thead>
                                             <tr>
                                                 <th>PROYECTO</th>
@@ -132,7 +154,6 @@
                                             </tr>
                                             </thead>
                                         </table>
-                                    </div>
                                 </div>
                             </div>
                         </div>

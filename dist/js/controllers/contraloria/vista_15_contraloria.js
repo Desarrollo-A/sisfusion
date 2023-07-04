@@ -122,10 +122,26 @@ $("#tabla_ingresar_15").ready(function () {
                         if (data.idStatusContratacion == 14 && data.idMovimiento == 44 ||
                             data.idStatusContratacion == 14 && data.idMovimiento == 69 ||
                             data.idStatusContratacion == 14 && data.idMovimiento == 80) {
-                            cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
-                                'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' +
-                                'class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
-                                '<i class="fas fa-thumbs-up"></i></button>';
+
+                            cntActions =
+                                `<button    href="#"
+                                            data-idLote="${data.idLote}" 
+                                            data-nomLote="${data.nombreLote}"
+                                            data-idCond="${data.idCondominio}"
+                                            data-idCliente="${data.id_cliente}"
+                                            data-fecVen="${data.fechaVenc}"
+                                            data-ubic="${data.ubicacion}"
+                                            data-code="${data.cbbtton}" 
+                                            data-fechaArcus="${data.fecha_arcus}"
+                                            data-idProspecto="${data.id_prospecto}"
+                                            data-idArcus="${data.id_arcus}"
+                                            data-totalNeto2="${data.totalNeto2}"
+                                            class="btn-data btn-green editReg" 
+                                            data-toggle="tooltip"
+                                            data-placement="top"
+                                            title="REGISTRAR ESTATUS">
+                                    <i class="fas fa-thumbs-up"></i>
+                                </button>`;
                         }
                         else
                             cntActions = 'N/A';
@@ -418,9 +434,6 @@ jQuery(document).ready(function () {
     })
 });
 
-$(window).resize(function(){
-    tabla_15.columns.adjust();
-});
 async function sendInfoArcus(dataArcus) {
     try {
         const headers = {
@@ -442,3 +455,6 @@ async function sendInfoArcus(dataArcus) {
         throw new Error('Error en la solicitud: ' + error.message);
     }
 }
+$(window).resize(function(){
+    tabla_15.columns.adjust();
+});

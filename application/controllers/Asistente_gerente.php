@@ -327,50 +327,38 @@ class Asistente_gerente extends CI_Controller {
 
     $infoLote = $this->VentasAsistentes_model->getNameLote($idLote);
 
-    /*************************************************************************************
-		* Armado de parámetros a mandar a plantilla para creación de correo electrónico	 *
-		************************************************************************************/
-    $datos_correo[0] = json_decode(json_encode($infoLote), true);
-    $datos_correo[0] += ["motivoRechazo" =>  $comentario];
-    $datos_correo[0] += ["fechaHora"     =>  $modificado];
+    $encabezados = [
+        'nombreResidencial' =>  'PROYECTO',
+        'nombre'            =>  'CONDOMINIO',
+        'nombreLote'        =>  'LOTE',
+        'motivoRechazo'     =>  'MOTIVO DE RECHAZO',
+        'fechaHora'         =>  'FECHA/HORA'
+    ];
 
-    $datos_etiquetas = null;
-		
-		$correos_entregar = array('programador.analista18@ciudadmaderas.com');
-		// foreach($array as $email)
-		// {
-    //   if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
-    //     if (trim($email) != ''){ 
-    //       array_push($correos_entregar, $email);
-    //     }
-    //   }
-  
-    //   if(trim($email) == 'diego.perez@ciudadmaderas.com'){
-    //     array_push($correos_entregar, 'analista.comercial@ciudadmaderas.com');
-    //   }
-		// }
+    $data = array_merge($infoLote, [
+        "motivoRechazo" =>  $comentario,
+        "fechaHora"     =>  $modificado
+    ]);
 
-		$elementos_correo = array("setFrom" => Elementos_Correo_Asistenete_Gerente::SET_FROM_EMAIL,
-                              "Subject" => Elementos_Correo_Asistenete_Gerente::ASUNTO_CORREO_TABLA_RECHAZO_ESTATUS_8);
+    $this->email
+      ->initialize()
+      ->from('Ciudad Maderas')
+      ->to('programador.analista24@ciudadmaderas.com') // TODO: Reemplazar por el correo de producción
+      ->subject('EXPEDIENTE RECHAZADO-VENTAS (8. CONTRATO ENTREGADO AL ASESOR PARA FIRMA DEL CLIENTE)')
+      ->view($this->load->view('mail/asistente-gerente/editar-registro-lote-rechazo-status2-asistentes-proceso8', [
+          'encabezados' => $encabezados,
+          'contenido' => $data
+      ], true));
 
-		$comentario_general = Elementos_Correo_Asistenete_Gerente::EMAIL_RECHAZO_ESTATUS_8.'<br><br>'. (!isset($comentario) ? '' : $comentario);
-		$datos_encabezados_tabla = Elementos_Correo_Asistenete_Gerente::ETIQUETAS_ENCABEZADO_TABLA_RECHAZO_ESTATUS_8;
-
-		//Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
-		$plantilla_correo = new plantilla_dinamica_correo;
-		/********************************************************************************************/
-
-	  $validate = $this->VentasAsistentes_model->validateSt8($idLote);
+    $validate = $this->VentasAsistentes_model->validateSt8($idLote);
 
     if($validate == 1){
 
-      if ($this->VentasAsistentes_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
-        $data_enviar_mail = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo,
-                                                                    $datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
-        if ($data_enviar_mail > 0) {
+      if ($this->VentasAsistentes_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){
+        if ($this->email->send()) {
           $data['status_msg'] = 'Correo enviado correctamente';
         } else {
-          $data['status_msg'] = 'Correo no enviado '.$data_enviar_mail;
+          $data['status_msg'] = 'Correo no enviado';
         }
         $data['message'] = 'OK';
         echo json_encode($data);

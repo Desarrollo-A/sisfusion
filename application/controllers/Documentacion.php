@@ -5,7 +5,7 @@ class Documentacion extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model(array('Documentacion_model', 'General_model', 'Registrolote_modelo'));
-        $this->load->library(array('session', 'form_validation', 'get_menu', 'phpmailer_lib'));
+        $this->load->library(array('session', 'form_validation', 'get_menu', 'email'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
         date_default_timezone_set('America/Mexico_City');
@@ -116,102 +116,41 @@ class Documentacion extends CI_Controller {
             return;
         }
 
-        $mail = $this->phpmailer_lib->load();
+        $contenido[0] = [
+            'nombreResidencial' => $infoLote->nombreResidencial,
+            'nombre' => $infoLote->nombre,
+            'nombreLote' => $infoLote->nombreLote,
+            'observacion' => 'SE MODIFICÓ CORRIDA FINANCIERA',
+            'fechaHora' => date('Y-m-d H:i:s')
+        ];
 
-        $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-        // TODO: Reemplazar el correo por los de producción
-        $mail->addAddress('programador.analista24@ciudadmaderas.com');
-//        $mail->AddAddress('coord.administrativoslp@ciudadmaderas.com');
-//        $mail->AddAddress('coord.administrativo@ciudadmaderas.com');
-//        $mail->AddAddress('coord.administrativo1@ciudadmaderas.com');
-//        $mail->AddAddress('coord.administrativo2@ciudadmaderas.com');
-//        $mail->AddAddress('coord.administrativo3@ciudadmaderas.com');
-//        $mail->AddAddress('karen.pina@ciudadmaderas.com');
-//        $mail->AddAddress('coord.administrativo4@ciudadmaderas.com');
-//        $mail->AddAddress('coord.administrativo5@ciudadmaderas.com');
-//        $mail->AddAddress('coord.administrativo7@ciudadmaderas.com');
-//        $mail->AddAddress('asistente.admon@ciudadmaderas.com');
-        $mail->Subject = utf8_decode('MODIFICACIÓN DE CORRIDA FINANCIERA');
-        $mail->isHTML(true);
-        $mailContent = utf8_decode("
-            <html>
-                <head>
-                    <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-                    <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>
-                    <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css'
-                        integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'>
-                    <style media='all' type='text/css'>
-                        .encabezados {
-                            text-align: center;
-                            padding-top:  1.5%;
-                            padding-bottom: 1.5%;
-                        }
+        $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to('programador.analista24@ciudadmaderas.com')
+            /*->to('coord.administrativoslp@ciudadmaderas.com',
+                'coord.administrativo@ciudadmaderas.com',
+                'coord.administrativo1@ciudadmaderas.com',
+                'coord.administrativo2@ciudadmaderas.com',
+                'coord.administrativo3@ciudadmaderas.com',
+                'karen.pina@ciudadmaderas.com',
+                'coord.administrativo4@ciudadmaderas.com',
+                'coord.administrativo5@ciudadmaderas.com',
+                'coord.administrativo7@ciudadmaderas.com',
+                'asistente.admon@ciudadmaderas.com')*/
+            ->subject('MODIFICACIÓN DE CORRIDA FINANCIERA')
+            ->view($this->load->view('template/mail/componentes/tabla', [
+                'encabezados' => [
+                    'nombreResidencial' => 'PROYECTO',
+                    'nombre' => 'CONDOMINIO',
+                    'nombreLote' => 'LOTE',
+                    'observacion' => 'OBSERVACIÓN',
+                    'fechaHora' => 'FECHA/HORA'
+                ],
+                'contenido' => $contenido
+            ], true));
 
-                        .encabezados a {
-                            color: #234e7f;
-                            font-weight: bold;
-                        }
-
-                        .fondo {
-                            background-color: #234e7f;
-                            color: #fff;
-                        }
-
-                        h4 {
-                            text-align: center;
-                        }
-
-                        p {
-                            text-align: right;
-                        }
-
-                        strong {
-                            color: #234e7f;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <table align='center' cellspacing='0' cellpadding='0' border='0' width='100%'>
-                        <tr colspan='3'><td class='navbar navbar-inverse' align='center'>
-                            <table width='750px' cellspacing='0' cellpadding='3' class='container'>
-                                <tr class='navbar navbar-inverse encabezados'>
-                                    <td>
-                                        <img src='https://www.ciudadmaderas.com/assets/img/logo.png'
-                                             width='100%'
-                                             class='img-fluid'/>
-                                        <p><a href='#'>SISTEMA DE CONTRATACIÓN</a></p>
-                                    </td>
-                                </tr>
-                            </table>
-                        </tr>
-                        <tr>
-                            <td border=1 bgcolor='#FFFFFF' align='center'>
-                                <center>
-                                    <table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='50%' style class='darkheader'>
-                                        <tr class='active'>
-                                            <th>Proyecto</th>
-                                            <th>Condominio</th>
-                                            <th>Lote</th>
-                                            <th>Observación</th>
-                                            <th>Fecha/Hora</th>
-                                        </tr>
-                                        <tr>
-                                            <td><center>".$infoLote->nombreResidencial."</center></td>
-                                            <td><center>".$infoLote->nombre."</center></td>
-                                            <td><center>".$infoLote->nombreLote."</center></td>
-                                            <td><center>SE MODIFICÓ CORRIDA FINANCIERA</center></td>
-                                            <td><center>". date('Y-m-d H:i:s') ."</center></td>
-                                        </tr>
-                                    </table>
-                                </center>
-                            </td>
-                        </tr>
-                    </table>
-                </body>
-            </html>
-        ");
-        $mail->Body = $mailContent;
-        $mail->send();
+            $this->email->send();
 
         echo json_encode($response);
     }

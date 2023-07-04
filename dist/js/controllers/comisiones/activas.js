@@ -131,7 +131,17 @@ $(document).ready(function () {
                 if (d.registro_comision == 8){
                     rescisionLote = '<br><span class="label lbl-peach">Recisión Nueva Venta</span>';
                 }
-                return fechaNeodata+rescisionLote;
+                return fechaNeodata+rescisionLote;  
+            }},
+            
+            { data: function (d) {
+                var ultima_dispersion;
+                if( d.ultima_dispersion == null ) {
+                    ultima_dispersion ='<span class="label lbl-deepGray">Sin Definir</span>';
+                }else {
+                    ultima_dispersion = '<br><span class="label lbl-lightBlue">'+d.ultima_dispersion+'</span>';
+                }
+                return ultima_dispersion;
             }},
             { data: function (d) {
                 var BtnStats = '';
