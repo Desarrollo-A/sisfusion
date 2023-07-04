@@ -827,7 +827,7 @@ class Asesor_model extends CI_Model {
     }
     public function insertAutorizacion($data)
     {
-        $this->db->insert('autorizaciones', $data);
+        return $this->db->insert('autorizaciones', $data);
     }
     public function registroClienteDS($id_condominio) {
         ini_set('max_execution_time', 300);

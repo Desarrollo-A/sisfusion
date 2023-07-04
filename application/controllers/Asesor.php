@@ -2897,16 +2897,16 @@ class Asesor extends CI_Controller
     public function addAutorizacionSbmt()
     {
         $data = array();
-        $tamanoArreglo = $_POST['tamanocer'];
-        $idCliente = $_POST['idCliente'];
-        $idLote = $_POST['idLote'];
-        $id_sol = $_POST['id_sol'];
-        $id_aut = $_POST['id_aut'];
+        $tamanoArreglo = $this->input->post('tamanocer');
+        $idCliente = $this->input->post('idCliente');
+        $idLote = $this->input->post('idLote');
+        $id_sol = $this->input->post('id_sol');
+        $id_aut = $this->input->post('id_aut');
         /*nuevo*/
-        $nombreResidencial = $_POST['nombreResidencial'];
-        $nombreCondominio = $_POST['nombreCondominio'];
-        $nombreLote = $_POST['nombreLote'];
-        $idCondominio = $_POST['idCondominio'];
+        $nombreResidencial = $this->input->post('nombreResidencial');
+        $nombreCondominio = $this->input->post('nombreCondominio');
+        $nombreLote = $this->input->post('nombreLote');
+        $idCondominio = $this->input->post('idCondominio');
         $autorizacionComent = "";
         /*termina nuevo*/
         $comentario = '';
@@ -2917,11 +2917,11 @@ class Asesor extends CI_Controller
                 'id_sol' => $id_sol,
                 'id_aut' => $id_aut,
                 'estatus' => 1,
-                'autorizacion' => $_POST['comentario_' . $n]
+                'autorizacion' => $this->input->post('comentario_' . $n)
             );
             $dataInsert = $this->Asesor_model->insertAutorizacion($data);
-            $n > 0 ? $comentario .= "<br>-".$_POST['comentario_' . $n] : $comentario .= '-'.$_POST['comentario_' . $n];
-            $autorizacionComent .= $_POST['comentario_' . $n] . ". ";
+            $n > 0 ? $comentario .= "<br>-".$this->input->post('comentario_' . $n) : $comentario .= '-'.$this->input->post('comentario_' . $n);
+            $autorizacionComent .= $this->input->post('comentario_' . $n) . ". ";
         }
         if ($dataInsert == 1) {
             $correos_entregar = array();
@@ -2933,7 +2933,7 @@ class Asesor extends CI_Controller
                 'motivoAut'         => 'AUTORIZACIÓN',
                 'fechaHora'         => 'FECHA/HORA'
             ];
-            $data[0] = [
+            $info[0] = [
                 'nombreResidencial'   =>  $nombreResidencial,
                 'nombreCondominio'    =>  $nombreCondominio,
                 'nombreLote'          =>  $nombreLote,
@@ -2948,7 +2948,7 @@ class Asesor extends CI_Controller
                 ->subject('SOLICITUD DE AUTORIZACIÓN - CONTRATACIÓN')
                 ->view($this->load->view('mail/asesor/add-autorizacion-sbmt', [
                     'encabezados' => $encabezados,
-                    'contenido' => $data,
+                    'contenido' => $info,
                     'comentario' => $comentario
                 ], true));
 
