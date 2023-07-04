@@ -5,7 +5,6 @@
     <div class="wrapper">
         <?php
         switch ($this->session->userdata('id_rol')) {
-
             case '3': // GERENTE
             case '7': // ASESOR
             case '9': // COORDINADORmultiple
@@ -28,24 +27,14 @@
                 } 
                 else{
                     if($opn_cumplimiento[0]['estatus'] == 1){
-                        $cadena = '<button  type="button" 
-                                            class="btn btn-sky subir_factura_multiple"
-                                            style="box-shadow: none; padding: 7px 25px; border: 1px solid #4382EF; border-radius: 27px; margin: 0;">
-                                        <i class="fa fa-upload" aria-hidden="true"></i> 
-                                        SUBIR FACTURAS
-                                    </button>';
+                        $cadena = '<button type="button" class="btn btn-info subir_factura_multiple" >SUBIR FACTURAS</button>';
                     }
                     else if($opn_cumplimiento[0]['estatus'] == 0){
                         $cadena ='<a href="https://maderascrm.gphsis.com/index.php/Usuarios/configureProfile"> <span class="label label-danger" style="background:orange;">  SIN OPINIÓN DE CUMPLIMIENTO, CLIC AQUI PARA SUBIRLA</span> </a>';
 
                     }
                     else if($opn_cumplimiento[0]['estatus'] == 2){
-                        $cadena = '<button  type="button" 
-                                            class="btn btn-sky subir_factura_multiple"
-                                            style="box-shadow: none; padding: 7px 25px; border: 1px solid #4382EF18; border-radius: 27px; margin: 0;">
-                                        <i class="fa fa-upload" aria-hidden="true"></i> 
-                                        SUBIR FACTURAS
-                                    </button>';
+                        $cadena = '<button type="button" class="btn btn-info subir_factura_multiple" >SUBIR FACTURAS</button>';
                     }
                 }
             } else if ($forma_pago == 5) {
@@ -85,30 +74,23 @@
             </div>
         </div>
 
-        <div class="modal fade modal-alertas" data-backdrop="static" id="solicitud_cp" role="dialog">
+        <div class="modal fade modal-alertas" data-backdrop="static" id="cpModal" role="dialog">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel"><b>Verifica tu información</b></h5>
-                        <p style = "padding: 1rem">
-                            Para poder realizar tu pago, Internomex requiere mantener tu información actualizada, favor de verificar o ingresar tu Código Postal.
-                        </p>
+                        <p style = "padding: 1rem">Para poder realizar tu pago, Internomex requiere mantener tu información actualizada. Por favor verifica o ingresa tu Código Postal. 
+                        <br><br><b>Nota. </b><i>El valor que ingreses debe ser el mismo que viene en tu constancia de situación fiscal.</i></p>
                     </div>
-                    <form id="codigoForm">
-                    <div class="modal-body">
-                        <input  type="text"
-                                id="dato_solicitudcp"
-                                name="dato_solicitudcp"
-                                class="form-control input-gral"
-                                minlength="5"
-                                maxlength="5"
-                                placeholder="Captura tu Código Postal"
-                                required>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" id="codigopostalCancel" class="btn btn-danger btn-simple" data-dismiss="modal" style="display:none" >Close</button>
-                        <button type="submit" id="codigopostalSubmit" class="btn btn-primary">Aceptar</button>
-                    </div>
+                    <form id="cpForm">
+                        <div class="modal-body pt-0">
+                            <input type="number" id="cp" name="cp" class="form-control input-gral m-0"
+                            placeholder="Captura tu código postal" required value=''>
+                            <input type="text" id="nuevoCp" name="nuevoCp" hidden>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" id="codigopostalSubmit" class="btn btn-primary">Aceptar</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -203,7 +185,7 @@
         </div>
 
         <!-- inicia modal subir factura -->
-        <div id="modal_formulario_solicitud_multiple" class="modal" style="position:fixed; top:0; left:0; margin-bottom: 1%;  margin-top: -5%;">
+        <div id="modal_formulario_solicitud_multiple" class="modal" style="position:fixed; top:0; left:0; margin-bottom: 1%; margin-top: -5%;">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -211,18 +193,18 @@
                             <div class="active tab-pane" id="generar_solicitud">
                                 <div class="row">
                                     <div class="col-lg-12">
-                                        <!-- //poner modal -->
                                         <div class="row">
                                             <div class="col-lg-5">
                                                 <div class="fileinput fileinput-new text-center" data-provides="fileinput">
-                                                    <div><br>
+                                                    <div>
+                                                        <br>
                                                         <span class="fileinput-new">Selecciona archivo</span>
                                                         <input type="file" name="xmlfile" id="xmlfile" accept="application/xml">
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-lg-7">
-                                                    <button class="btn btn-warning justify-center" type="button" id="cargar_xml"><i class="fa fa-upload"></i> CARGAR</button>
+                                                <button class="btn btn-warning justify-center" type="button" id="cargar_xml"><i class="fa fa-upload"></i> CARGAR</button>
                                             </div>
                                         </div>
                                         <form id="frmnewsol" method="post" action="#">
@@ -448,14 +430,6 @@
                                                         </a>
                                                     </p>
                                                 <?php } ?>
-                                                
-                                                <?php if ($this->session->userdata('forma_pago') == 3) { ?>
-                                                    <!-- <p class="card-title pl-2">
-                                                        <a onclick="codigo_consulta()" style="cursor: pointer;">
-                                                            <u>Clic para consultar codigo postal</u>
-                                                        </a>
-                                                    </p> -->
-                                                <?php } ?>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
@@ -640,30 +614,14 @@
                                                         <div class="col-6 col-sm-6 col-md-6 col-lg-6">
                                                             <div class="form-group">
                                                                 <label class="m-0" for="proyecto">Proyecto</label>
-                                                                <select name="proyecto_wp"
-                                                                        id="proyecto_wp"
-                                                                        class="selectpicker select-gral"
-                                                                        data-style="btn btn-second"
-                                                                        data-show-subtext="true"
-                                                                        data-live-search="true"
-                                                                        title="Selecciona una opción"
-                                                                        data-size="7"
-                                                                        required>
+                                                                <select name="proyecto_wp" id="proyecto_wp" class="selectpicker select-gral" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required>
                                                                 </select>
                                                             </div>
                                                         </div>
                                                         <div class="col-6 col-sm-6 col-md-6 col-lg-6">
                                                             <div class="form-group">
                                                                 <label class="m-0" for="proyecto">Condominio</label>
-                                                                <select name="condominio_wp"
-                                                                        id="condominio_wp"
-                                                                        class="selectpicker select-gral"
-                                                                        data-style="btn btn-second"
-                                                                        data-show-subtext="true"
-                                                                        data-live-search="true"
-                                                                        title="Selecciona una opción"
-                                                                        data-size="7"
-                                                                        required>
+                                                                <select name="condominio_wp" id="condominio_wp" class="selectpicker select-gral" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required>
                                                                     <option disabled selected>Selecciona una opción</option>
                                                                 </select>
                                                             </div>
@@ -713,6 +671,7 @@
         Shadowbox.init();
         var forma_pago = <?= $this->session->userdata('forma_pago') ?>;
         var userSede = <?= $this->session->userdata('id_sede') ?>;
+        var fechaServer = '<?php echo date('Y-m-d H:i:s')?>';
     </script>
     <script src="<?=base_url()?>dist/js/controllers/ventas/comisiones_colaborador.js"></script>
 </body>

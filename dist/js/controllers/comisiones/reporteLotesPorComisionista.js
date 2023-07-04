@@ -29,10 +29,14 @@ $(document).ready(function () {
         $('#tipoUsuario').selectpicker('refresh');
     }, 'json');
 
-    setInitialValuesReporte();
     sp.initFormExtendedDatetimepickers();
-    $('.datepicker').datetimepicker({ locale: 'es' });
+    $('.datepicker').datetimepicker({locale: 'es'});
+    setIniDatesXMonth("#beginDate", "#endDate");
+    let finalBeginDate = $("#beginDate").val();
+    let finalEndDate = $("#endDate").val();
+    fillTable(finalBeginDate, finalEndDate, id_usuario_general,id_rol_general );
 });
+
 
 sp = { // MJ: DATE PICKER
     initFormExtendedDatetimepickers: function () {
@@ -266,7 +270,7 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
 }
 
 $(document).on("click", "#searchByDateRange", function () {
-    $('#reporteLotesPorComisionista').removeClass('hide');
+    $('#box-reporteLotesPorComisionista').removeClass('hide');
     if ($("#comisionista").val() != '' && $("#tipoUsuario").val() != '') {
         colocarValoresTotales('0.00', '0.00', '0.00');
         let finalBeginDate = $("#beginDate").val();
@@ -281,6 +285,7 @@ $(document).on("click", "#searchByDateRange", function () {
 });
 
 $(document).on("click", "#detailComisionistaBtn", function () {
+    $('#spiner-loader').removeClass('hide');
     $(".timelineR").html('');
     var idComisionista = `${$("#comisionista").val() == '' ? id_usuario_general : $("#comisionista").val()}`;
     let orderedArray = [];
@@ -320,7 +325,7 @@ $(document).on("click", "#detailComisionistaBtn", function () {
                 }
             }
         }
-        console.log(orderedArray);
+        
         for (let i = 0; i < orderedArray.length; i++) {
             let htmlRol = '';
             for (let j = 0; j < orderedArray[i].datos.length; j++) {
@@ -341,28 +346,9 @@ $(document).on("click", "#detailComisionistaBtn", function () {
                 </div>`;
         $(".timelineR").append(html);
         $("#detailComisionistaModal").modal();
+        $('#spiner-loader').addClass('hide');
     }, 'json');
 });
-
-
-
-function setInitialValuesReporte() {
-    // BEGIN DATE
-    // BEGIN DATE
-    const fechaInicio = new Date();
-    // Iniciar en este año, este mes, en el día 1
-    const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
-    // END DATE
-    const fechaFin = new Date();
-    // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
-    const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
-    finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
-    finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
-    finalBeginDate2 = ['01', '01', beginDate.getFullYear()].join('/');
-    finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
-    $('#beginDate').val(finalBeginDate2);
-    $('#endDate').val(finalEndDate2);
-}
 
 function colocarValoresTotales(total, totalAbonado, totalPagado) {
     document.getElementById("txt_totalComision").textContent = '$' + formatMoney(total);

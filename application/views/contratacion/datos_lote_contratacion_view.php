@@ -1,24 +1,6 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet" />
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
-<style>
-table thead tr th {
-    padding: 0px !important;
-    color: #fff;
-    font-weight: lighter;
-    font-size: 0.8em;
-    text-align: center;
-}
-tfoot tr {
-    background: #143860;
-}
-table tfoot tr th {
-    padding: 0px !important;
-    color: #fff;
-    font-weight: lighter;
-    font-size: 1.3em;
-    text-align: center;
-}
-</style>
+
 <body>
     <div class="wrapper">
         <?php
@@ -40,12 +22,19 @@ table tfoot tr th {
                     <div class="modal-body">
                         <div role="tabpanel">
                             <ul class="nav nav-tabs" role="tablist" style="background: #003d82;">
-                                <li role="presentation" class="active"><a href="#tabHistoriaContratacion" aria-controls="tabHistoriaContratacion" role="tab" data-toggle="tab">Historial contratación</a></li>
-                                <li role="presentation"><a href="#tabHistoriaLiberacion" aria-controls="tabHistoriaLiberacion" role="tab" data-toggle="tab">Historial liberación</a></li>
-                                <li role="presentation"><a href="#tabVentasCompartidas" aria-controls="tabVentasCompartidas" role="tab" data-toggle="tab">Ventas compartidas</a></li>
-                                <li role="presentation" id="divTabClausulas"><a href="#tabClausulas" aria-controls="tabClausulas" role="tab" data-toggle="tab">Cláusulas</a></li>
+                                <li role="presentation" class="active">
+                                    <a href="#tabHistoriaContratacion" aria-controls="tabHistoriaContratacion" role="tab" data-toggle="tab">Historial de contratación</a>
+                                </li>
+                                <li role="presentation">
+                                    <a href="#tabHistoriaLiberacion" aria-controls="tabHistoriaLiberacion" role="tab" data-toggle="tab">Historial de liberación</a>
+                                </li>
+                                <li role="presentation">
+                                    <a href="#tabVentasCompartidas" aria-controls="tabVentasCompartidas" role="tab" data-toggle="tab">Ventas compartidas</a>
+                                </li>
+                                <li role="presentation" id="divTabClausulas">
+                                    <a href="#tabClausulas" aria-controls="tabClausulas" role="tab" data-toggle="tab">Cláusulas</a>
+                                </li>
                             </ul>
-                            <!-- Tab panes -->
                             <div class="tab-content">
                                 <div role="tabpanel" class="tab-pane active" id="tabHistoriaContratacion">
                                     <div class="row">
@@ -154,7 +143,6 @@ table tfoot tr th {
                                                 <select id="idResidencial" name="idResidencial" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" size="5" data-container="body" required></select>
                                             </div>
                                         </div>
-
                                         <div class="col-md-4 form-group overflow-hidden">
                                             <div class="form-group">
                                                 <label class="m-0" for="idCondominioInventario">Condominio</label>

@@ -1,6 +1,6 @@
 const excluir_column = ['MÁS', ''];
 let columnas_datatable = {};
-$('#filtro33').change(function(ruta){
+$('#filtro33').change(function(){
     residencial = $('#filtro33').val();
     param = $('#param').val();
     condominio = '';
@@ -22,7 +22,7 @@ $('#filtro33').change(function(ruta){
 });
 
 
-$('#filtro44').change(function(ruta){
+$('#filtro44').change(function(){
     proyecto = $('#filtro33').val();
     condominio = $('#filtro44').val();
     $('#tabla_historialGral').removeClass('hide');
@@ -35,7 +35,7 @@ $('#filtro44').change(function(ruta){
     getAssimilatedCommissions(proyecto, condominio);
 });
 
-$('#filtro35').change(function(ruta){
+$('#filtro35').change(function(){
     residencial = $('#filtro35').val();
     param = $('#param').val();
     $("#filtro45").empty().selectpicker('refresh');
@@ -56,7 +56,7 @@ $('#filtro35').change(function(ruta){
 });
 
 
-$('#filtro45').change(function(ruta){
+$('#filtro45').change(function(){
     proyecto = $('#filtro35').val();
     condominio = $('#filtro45').val();
     $('#tabla_comisiones_canceladas').removeClass('hide');
@@ -87,7 +87,7 @@ var tabla_historialGral2 ;
 var tabla_historialGral3 ;
 var totaPen = 0;
 
-//INICIO TABLA QUERETARO ACTIVOS****************************************************************************************
+//INICIO TABLA HISTORIAL ACTIVOS
 function getAssimilatedCommissions(proyecto, condominio){
     asignarValorColumnasDT("tabla_historialGral");
     $('#tabla_historialGral thead tr:eq(0) th').each( function (i) {
@@ -106,6 +106,7 @@ function getAssimilatedCommissions(proyecto, condominio){
             });
         }
     });
+
     $("#tabla_historialGral").prop("hidden", false);
     tabla_historialGral2 = $("#tabla_historialGral").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -220,18 +221,18 @@ function getAssimilatedCommissions(proyecto, condominio){
                 var lblPenalizacion = '';
 
                 if (d.penalizacion == 1){
-                    lblPenalizacion ='<p class="m-0" title="Penalización + 90 días"><span class="label lbl-vividOrange"> + 90 días</span></p>';
+                    lblPenalizacion ='<p class="m-0" title="PENALIZACIÓN + 90 DÍAS"><span class="label lbl-vividOrange"> + 90 DÍAS</span></p>';
                 }
 
                 if(d.bonificacion >= 1){
-                    p1 = '<p class="m-0" title="Lote con bonificación en NEODATA"><span class="label lbl-darkPink"">Bon. $ '+formatMoney(d.bonificacion)+'</span></p>';
+                    p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-darkPink"">BON. $ '+formatMoney(d.bonificacion)+'</span></p>';
                 }
                 else{
                     p1 = '';
                 }
 
                 if(d.lugar_prospeccion == 0){
-                    p2 = '<p class="m-0" title="Lote con cancelación de CONTRATO"><span class="label lbl-warning">Recisión</span></p>';
+                    p2 = '<p class="m-0" title="LOTE CON CANCELACIÓN DE CONTRATO"><span class="label lbl-warning">RECISIÓN</span></p>';
                 }
                 else{
                     p2 = '';
@@ -266,9 +267,8 @@ function getAssimilatedCommissions(proyecto, condominio){
             orderable: false,
             className: 'select-checkbox',
             targets:   0,
-            'searchable':false,
+            'searchable':true,
             'className': 'dt-body-center',
-
             select: {
                 style:    'os',
                 selector: 'td:first-child'
@@ -289,7 +289,6 @@ function getAssimilatedCommissions(proyecto, condominio){
         });
     });
 
-
     $("#tabla_historialGral tbody").on("click", ".consultar_logs_asimilados", function(e){
         e.preventDefault();
         e.stopImmediatePropagation();
@@ -306,11 +305,9 @@ function getAssimilatedCommissions(proyecto, condominio){
         });
     });
 }
+//FIN TABLA  
 
-//FIN TABLA  ****************************************************************************************
-
-//INICIO TABLA QUERETARO CANCELACIONES****************************************************************************************
-
+//INICIO TABLA CANCELACIONES
 function getAssimilatedCancelacion(proyecto, condominio){
     asignarValorColumnasDT("tabla_comisiones_canceladas");
     $('#tabla_comisiones_canceladas thead tr:eq(0) th').each( function (i) {
@@ -444,18 +441,18 @@ function getAssimilatedCancelacion(proyecto, condominio){
                 var lblPenalizacion = '';
 
                 if (d.penalizacion == 1){
-                    lblPenalizacion ='<p class="m-0" title="Penalización + 90 días"><span class="label lbl-vividOrange"> + 90 días</span></p>';
+                    lblPenalizacion ='<p class="m-0" title="PENALIZACIÓN + 90 DÍAS"><span class="label lbl-vividOrange"> + 90 DÍAS</span></p>';
                 }
 
                 if(d.bonificacion >= 1){
-                    p1 = '<p class="m-0" title="Lote con bonificación en NEODATA"><span class="label lbl-darkPink">Bon. $'+formatMoney(d.bonificacion)+'</span></p>';
+                    p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-darkPink">BON. $'+formatMoney(d.bonificacion)+'</span></p>';
                 }
                 else{
                     p1 = '';
                 }
 
                 if(d.lugar_prospeccion == 0){
-                    p2 = '<p class="m-0" title="Lote con cancelación de CONTRATO"><span class="label lbl-warning">Recisión</span></p>';
+                    p2 = '<p class="m-0" title="LOTE CON cancelCANCELACIÓN DE CONTRATO"><span class="label lbl-warning">RECISIÓN</span></p>';
                 }
                 else{
                     p2 = '';
@@ -467,7 +464,6 @@ function getAssimilatedCancelacion(proyecto, condominio){
         {
             "data": function( d ){
                 var etiqueta;
-
                         if(d.pago_neodata < 1){
                             etiqueta = '<p class="m-0">'+
                                             '<span class="label" style="background:'+d.color+'18; color:'+d.color+'">'
@@ -480,7 +476,6 @@ function getAssimilatedCancelacion(proyecto, condominio){
                                             '</span>'+
                                         '</p>';
                         }else{
-
                             etiqueta = '<p class="m-0"><span class="label" style="background:'+d.color+'18; color:'+d.color+'">'+d.estatus_actual+'</span></p>';
                         }
 
@@ -503,7 +498,6 @@ function getAssimilatedCancelacion(proyecto, condominio){
             targets:   0,
             'searchable':false,
             'className': 'dt-body-center',
-
             select: {
                 style:    'os',
                 selector: 'td:first-child'
@@ -541,8 +535,7 @@ function getAssimilatedCancelacion(proyecto, condominio){
         });
     });
 }
-
-//FIN TABLA  ****************************************************************************************
+//FIN TABLA  
 
 
 $('a[data-toggle="tooltip"]').on('shown.bs.tab', function (e) {
@@ -568,7 +561,7 @@ $("#form_interes").submit( function(e) {
             processData: false,
             dataType: 'json',
             method: 'POST',
-            type: 'POST', // For jQuery < 1.9
+            type: 'POST',
             success: function(data){
                 if( data[0] ){
                     $("#modal_nuevas").modal('toggle' );
@@ -651,7 +644,7 @@ $(document).on('click', '.ver-info-asesor', function(){
             },
             {
                 "data": function( d ){
-                    return '<p class="m-0"> Descuentos universidad</p>';
+                    return '<p class="m-0">DESCUENTOS UNIVERSIDAD</p>';
                 }
             }
             ],
@@ -675,7 +668,6 @@ $(document).on('click', '.ver-info-asesor', function(){
         },
         order: [[ 1, 'asc' ]]
     });
-    /*TABLA MODAL END*/
 });
 
 
@@ -702,10 +694,9 @@ function tableComisionesSuma(anio){
         var total = 0;
         $.each(json, function(i, v) {
             total += parseFloat(v.total_comision);
-        });
-        var to = formatMoney(total);
-        
+        });        
     });
+
     tabla_suma = $("#tabla_comisiones_suma").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width:'100%',
@@ -802,7 +793,6 @@ function tableComisionesSuma(anio){
         });
     });
 
-
     $("#tabla_comisiones_suma tbody").on("click", ".consultar_history", function(e){
         e.preventDefault();
         e.stopImmediatePropagation();
@@ -820,7 +810,6 @@ function tableComisionesSuma(anio){
         });
     });
 }
-    
 
 $("#anio").ready( function(){
     let yearBegin = 2019;
@@ -847,4 +836,3 @@ function asignarValorColumnasDT(nombre_datatable) {
         columnas_datatable[`${nombre_datatable}`] = {titulos_encabezados: [], num_encabezados: []};
     }
 }
-

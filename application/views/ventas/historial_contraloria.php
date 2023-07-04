@@ -7,13 +7,13 @@
 <body>
     <div class="wrapper">
         <?php
-        if (in_array($this->session->userdata('id_rol'), array('1', '2', '3', '4', '7', '9', '17', '18', '28', '31', '32', '63', '70'))) {
+        if (in_array($this->session->userdata('id_rol'), array('1', '2', '3', '4', '7', '9', '17', '18', '28', '31', '32', '66', '70'))) {
             $this->load->view('template/sidebar');
         } else {
             echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
         }
         ?>
-
+        <!-- MODALS -->
         <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
                 <div class="modal-content">
@@ -48,7 +48,6 @@
         <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
-
                     <form method="post" id="form_interes">
                         <div class="modal-body"></div>
                     </form>
@@ -86,20 +85,23 @@
                 </div>
             </div>
         </div>
+        <!-- END MODALS -->
 
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <ul class="nav nav-tabs nav-tabs-cm">
+                            <?php if ($this->session->userdata('id_rol') != 66) { ?>
                             <li class="active">
-                                <a href="#solicitudesCRM" role="tab" data-toggle="tab">CRM por lotes</a>
+                                <a href="#solicitudesCRM" role="tab" data-toggle="tab">Historial CRM</a>
                             </li>
-
-                            <li><a href="#solicitudesCanceladas" role="tab" data-toggle="tab">Historial Canceladas</a>
+                            <li>
+                                <a href="#solicitudesCanceladas" role="tab" data-toggle="tab">Historial canceladas</a>
                             </li>
+                            <?php }?>
 
-                            <?php if ($this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9) { ?>
+                            <?php if( $this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 66) { ?>
                                 <li>
                                     <a href="#solicitudesSUMA" role="tab" data-toggle="tab">Historial SUMA</a>
                                 </li>
@@ -109,11 +111,11 @@
                             <div class="card-content p-0">
                                 <div class="nav-tabs-custom">
                                     <div class="tab-content p-2">
-                                        <div class="tab-pane active" id="solicitudesCRM">
+                                        <div class="tab-pane <?php if($this->session->userdata('id_rol') != 66){ ?> active <?php } ?>" id="solicitudesCRM">
                                             <div class="encabezadoBox">
                                                 <div class="row">
-                                                <h3 class="card-title center-align">Historial activos</h3>
-                                                <p class="card-title pl-1">(Listado de todos los pagos aplicados, en proceso de lotes contratados y activos)</p>
+                                                    <h3 class="card-title center-align">Historial activos</h3>
+                                                    <p class="card-title pl-1">(Listado de todos los pagos aplicados, en proceso de lotes contratados y activos)</p>
                                                 </div>
                                             </div>
                                             <div class="toolbar">
@@ -133,7 +135,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0 overflow-hidden">
-                                                        <div class="form-group  select-is-empty">
+                                                        <div class="form-group select-is-empty">
                                                             <label for="proyecto" class="control-label">PROYECTO</label>
                                                             <select name="filtro44" id="filtro44" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                                         </div>
@@ -169,7 +171,6 @@
                                         </div>
 
                                         <!-- INICIO tab CANCELADAS validado -->
-
                                         <div class="tab-pane" id="solicitudesCanceladas">
                                             <div class="encabezadoBox">
                                                 <div class="row">
@@ -231,9 +232,8 @@
                                             </div>
                                         </div><!-- End tab CANCELADAS validado -->
 
-
-                                        <?php if ($this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9) { ?>
-                                            <div class="tab-pane" id="solicitudesSUMA">
+                                        <?php if( $this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 66 ) { ?>
+                                        <div class="tab-pane <?php if($this->session->userdata('id_rol') == 66){ ?> active <?php } ?>" id="solicitudesSUMA">
                                                 <div class="encabezadoBox">
                                                     <h3 class="card-title center-align">Historial general SUMA</h3>
                                                 </div>
@@ -279,7 +279,7 @@
         </div>
         <?php $this->load->view('template/footer_legend'); ?>
     </div>
-    </div><!--main-panel close-->
+    </div>
 
     <?php $this->load->view('template/footer'); ?>
     <!--DATATABLE BUTTONS DATA EXPORT-->
@@ -292,5 +292,4 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-
 </body>

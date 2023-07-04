@@ -48,8 +48,10 @@ $(document).on("click", "#searchByDateRange", function () {
 
     function fillTable(typeTransaction, beginDate, endDate, where) {
         
-        var table = $('#Jtabla').dataTable({
+        $('#Jtabla').dataTable({
             dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+            width: '100%',
+            scrollX: true,
             buttons: [{
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',

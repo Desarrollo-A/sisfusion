@@ -1508,6 +1508,30 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
   z-index: 400;
 }
 
+/* CHANGE ICONO*/
+.wrapper p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wrapper.active p {
+  white-space: normal;
+  overflow: visible;
+}
+
+.wrapper .less {
+  display: none;
+}
+
+.wrapper.active .less {
+  display: inline;
+}
+
+.wrapper.active .more {
+  display: none;
+}
+
 #metricas table.dataTable > thead > tr > th, #metricas table.dataTable > tbody > tr > th, #metricas table.dataTable > tfoot > tr > th, #metricas table.dataTable > thead > tr > td, #metricas table.dataTable > tbody > tr > td, #metricas table.dataTable > tfoot > tr > td {
   white-space: nowrap !important;
 }

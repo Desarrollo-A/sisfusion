@@ -48,7 +48,6 @@ $('#idEstatus').change(function (){
     tablaInventario(index_idResidencial,index_CondominioInventario,index_idEstatus);
     $('#spiner-loader').addClass('hide');
     });
-    
 });
 
 let titulosInventario = [];
@@ -74,38 +73,37 @@ function tablaInventario(ix_idResidencial = 0,ix_idCondominio = 0,ix_idEstatus =
             url: `${general_base_url}Contratacion/get_inventario/${ix_idEstatus}/${ix_idCondominio}/${ix_idResidencial}`,
             dataSrc: ""
         },
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                className: 'btn buttons-excel',
-                titleAttr: 'Descargar archivo de Excel',
-                title: 'MADERAS_CRM_INVENTARIO',
-                exportOptions: {
-                    columns: coordinador = id_rol_general == 11 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 26, 27, 28, 29, 30],
-                    format: {
-                        header: function (d, columnIdx) {
-                            return ' ' + titulosInventario[columnIdx] + ' ';
-                        }
+        buttons: [{
+            extend: 'excelHtml5',
+            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+            className: 'btn buttons-excel',
+            titleAttr: 'Descargar archivo de Excel',
+            title: 'MADERAS_CRM_INVENTARIO',
+            exportOptions: {
+                columns: coordinador = id_rol_general == 11 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 26, 27, 28, 29, 30],
+                format: {
+                    header: function (d, columnIdx) {
+                        return ' ' + titulosInventario[columnIdx] + ' ';
                     }
                 }
-            },
-            {
-                extend: 'pdfHtml5',
-                text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i>',
-                className: 'btn buttons-pdf',
-                titleAttr: 'PDF',
-                orientation: 'landscape',
-                pageSize: 'LEGAL',
-                exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 22],
-                    format: {
-                        header: function (d, columnIdx) {
-                            return ' ' + titulosInventario[columnIdx]  + ' ';
-                        }
+            }
+        },
+        {
+            extend: 'pdfHtml5',
+            text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i>',
+            className: 'btn buttons-pdf',
+            titleAttr: 'PDF',
+            orientation: 'landscape',
+            pageSize: 'LEGAL',
+            exportOptions: {
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 22],
+                format: {
+                    header: function (d, columnIdx) {
+                        return ' ' + titulosInventario[columnIdx]  + ' ';
                     }
                 }
-            }],
+            }
+        }],
         columnDefs: [{
             targets: [22, 23, 24],
             visible: coordinador = id_rol_general == 11 ? true : false
@@ -126,184 +124,186 @@ function tablaInventario(ix_idResidencial = 0,ix_idCondominio = 0,ix_idEstatus =
         paging: true,
         ordering: true,
         fixedColumns: true,
-        columns: [
-            { data: 'nombreResidencial' },
-            { data: 'nombreCondominio' },
-            {
-                data: function (d) {
-                    if (d.casa == 1)
-                        return `${d.nombreLote} <br><span class="label lbl-violetDeep">${d.nombre_tipo_casa}</span>`
-                    else
-                        return d.nombreLote;
-                }
-            },
-            { data: 'idLote' },
-            {
-                data: function (d) {
-                    return d.superficie + ' <b>m<sup>2</sup></b>';
-                }
-            },
-            {
-                data: function (d) {
-                    return formatMoney(d.precio * d.sup);
-                }
-            },
-            {
-                data: function (d) {
-                    return formatMoney(d.totalNeto2);
-                }
-            },
-            {
-                data: function (d) {
-                    return formatMoney(d.precio);
-                }
-            },
-            { data: 'referencia' },
-            { data: 'msni' },
-            {
-                data: function (d) {
-                    if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-                        return d.asesor2;
-                    else
-                        return d.asesor;
-                }
-            },
-            {
-                data: function (d) {
-                    if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-                        return d.coordinador2;
-                    else
-                        return d.coordinador;
-                }
-            },
-            {
-                data: function (d) {
-                    if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-                        return d.gerente2;
-                    else
-                        return d.gerente;
-                }
-            },
-            {
-                data: function (d) {
-                    if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-                        return d.subdirector2;
-                    else
-                        return d.subdirector;
-                }
-            },
-            {
-                data: function (d) {
-                    if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-                        return d.regional22;
-                    else
-                        return d.regional;
-                }
-            },
-            {
-                data: function (d) {
-                    if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-                        return 'SIN ESPECIFICAR';
-                    else
-                        return d.regional2;
-                }
-            },
-            {
-                data: function (d) {
-                    let libContraloria = (d.observacionContratoUrgente == '1') ? '<center><span class="label" style="background:#E6B0AA; color:#641E16">Lib. Contraloría</span> <center><p><p>' : '';
-                    return d.tipo_venta == null ?
-                        `<center><span class="label" style="background:#${d.background_sl}18; color:#${d.color};">${d.descripcion_estatus}</span> ${libContraloria} <center>` :
-                        `<center><span class="label" style="background:#${d.background_sl}18; color:#${d.color};">${d.descripcion_estatus}</span> <p><p> <span class="label" style="background:#A5D6A7; color:#1B5E20;">${d.tipo_venta}</span> ${libContraloria} <center>`;
-                }
-            },
-            {
-                data: function (d) { // VALIDAR FECHAS NULL DESDE LA QUERY
-                    if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-                        return d.fecha_modst;
-                    else
-                        return d.fechaApartado;
-                }
-            },
-            {
-                data: function (d) { // VALIDAR FECHAS NULL DESDE LA QUERY
-                    if (d.comentario == null || d.comentario == 'NULL' || d.comentario == '')
-                        return 'SIN ESPECIFICAR';
-                    else
-                        return d.comentario;
-                }
-            },
-            { data: 'lugar_prospeccion' },
-            { data: 'fecha_validacion' }, // VALIDAR FECHA NULL DESDE LA QUERY
-            {
-                data: function (d) {
-                    return '$' + formatMoney(d.cantidad_enganche);
-                }
-            },
-            {
-                visible: (id_rol_general == 11) ? true : false,
-                data: function (d) {
-                    return d.idStatusContratacion; // VALIDAR ESTATUS NULL DESDE LA QUERY
-                }
-            },
-            {
-                visible: (id_rol_general == 11) ? true : false,
-                data: function (d) {
-                    return d.nombreCliente; // VALIDAR CLIENTE NULL DESDE LA QUERY
-                }
-            },
-            {
-                visible: (id_rol_general == 11) ? true : false,
-                data: function (d) {
-                    return d.nombreCopropietario; // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
-                }
-            },
-            { data: 'comentario_administracion' },
-            {
-                data: function(d){
-                    if(d.fecha_creacion == 'NULL' || d.fecha_creacion == 'null' || d.fecha_creacion == null || d.fecha_creacion == '')
-                        return 'SIN ESPECIFICAR';
-                    else
-                        return d.fecha_creacion;
-                }
-            },
-            {
-                data: function(d){
-                    if(d.apartadoXReubicacion == 1)
-                        return `<center><span class="label lbl-violetBoots">REUBICACIÓN</span> <center>`;
-                    else
-                        return `<center><span class="label lbl-gray">NO APLICA</span> <center>`;                   
-                }         
-            },
-            {
-                data: function(d){
-                    if(d.apartadoXReubicacion == 1)
-                        return d.fechaAlta;
-                    else
-                        return `<center><span class="label lbl-gray">NO APLICA</span> <center>`;                
-                }         
-            },
-            {
-                data: function(d){
-                    if(d.venta_compartida != 0)
-                        return `<center><span class="label lbl-green">COMPARTIDA</span> <center>`;
-                    else
-                        return `<center><span class="label lbl-gray">NO APLICA</span> <center>`;                   
-                }         
-            },
-            {
-                data: function(d) {
-                    if(d.ubicacion != null)
-                        return `<center><span class="label lbl-oceanGreen">${d.ubicacion}</span> <center>`;
-                    else
-                        return `<center><span class="label lbl-gray">NO APLICA</span> <center>`;                   
-                }         
-            },
-            {
-                data: function (d) {
-                    return `<center><button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-tipo-venta="${d.tipo_venta}" data-toggle="tooltip" data-placement="left" title="VER MÁS INFORMACIÓN"><i class="fas fa-history"></i></button></center>`;
-                }
+        columns: [{ 
+            data: 'nombreResidencial' 
+        },
+        { 
+            data: 'nombreCondominio' 
+        },
+        {
+            data: function (d) {
+                if (d.casa == 1)
+                    return `${d.nombreLote} <br><span class="label lbl-violetDeep">${d.nombre_tipo_casa}</span>`
+                else
+                    return d.nombreLote;
             }
-        ],
+        },
+        { data: 'idLote' },
+        {
+            data: function (d) {
+                return d.superficie + ' <b>m<sup>2</sup></b>';
+            }
+        },
+        {
+            data: function (d) {
+                return formatMoney(d.precio * d.sup);
+            }
+        },
+        {
+            data: function (d) {
+                return formatMoney(d.totalNeto2);
+            }
+        },
+        {
+            data: function (d) {
+                return formatMoney(d.precio);
+            }
+        },
+        { data: 'referencia' },
+        { data: 'msni' },
+        {
+            data: function (d) {
+                if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
+                    return d.asesor2;
+                else
+                    return d.asesor;
+            }
+        },
+        {
+            data: function (d) {
+                if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
+                    return d.coordinador2;
+                else
+                    return d.coordinador;
+            }
+        },
+        {
+            data: function (d) {
+                if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
+                    return d.gerente2;
+                else
+                    return d.gerente;
+            }
+        },
+        {
+            data: function (d) {
+                if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
+                    return d.subdirector2;
+                else
+                    return d.subdirector;
+            }
+        },
+        {
+            data: function (d) {
+                if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
+                    return d.regional22;
+                else
+                    return d.regional;
+            }
+        },
+        {
+            data: function (d) {
+                if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
+                    return 'SIN ESPECIFICAR';
+                else
+                    return d.regional2;
+            }
+        },
+        {
+            data: function (d) {
+                let libContraloria = (d.observacionContratoUrgente == '1') ? '<center><span class="label lbl-pink">Lib. Contraloría</span> <center><p><p>' : '';
+                return d.tipo_venta == null ?
+                    `<center><span class="label" style="background:#${d.background_sl}18; color:#${d.color};">${d.descripcion_estatus}</span> ${libContraloria} <center>` :
+                    `<center><span class="label" style="background:#${d.background_sl}18; color:#${d.color};">${d.descripcion_estatus}</span> <p><p> <span class="label lbl-green">${d.tipo_venta}</span> ${libContraloria} <center>`;
+            }
+        },
+        {
+            data: function (d) { // VALIDAR FECHAS NULL DESDE LA QUERY
+                if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
+                    return d.fecha_modst;
+                else
+                    return d.fechaApartado;
+            }
+        },
+        {
+            data: function (d) { // VALIDAR FECHAS NULL DESDE LA QUERY
+                if (d.comentario == null || d.comentario == 'NULL' || d.comentario == '')
+                    return 'SIN ESPECIFICAR';
+                else
+                    return d.comentario;
+            }
+        },
+        { data: 'lugar_prospeccion' },
+        { data: 'fecha_validacion' }, // VALIDAR FECHA NULL DESDE LA QUERY
+        {
+            data: function (d) {
+                return formatMoney(d.cantidad_enganche);
+            }
+        },
+        {
+            visible: (id_rol_general == 11) ? true : false,
+            data: function (d) {
+                return d.idStatusContratacion; // VALIDAR ESTATUS NULL DESDE LA QUERY
+            }
+        },
+        {
+            visible: (id_rol_general == 11) ? true : false,
+            data: function (d) {
+                return d.nombreCliente; // VALIDAR CLIENTE NULL DESDE LA QUERY
+            }
+        },
+        {
+            visible: (id_rol_general == 11) ? true : false,
+            data: function (d) {
+                return d.nombreCopropietario; // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+            }
+        },
+        { data: 'comentario_administracion' },
+        {
+            data: function(d){
+                if(d.fecha_creacion == 'NULL' || d.fecha_creacion == 'null' || d.fecha_creacion == null || d.fecha_creacion == '')
+                    return 'SIN ESPECIFICAR';
+                else
+                    return d.fecha_creacion;
+            }
+        },
+        {
+            data: function(d){
+                if(d.apartadoXReubicacion == 1)
+                    return `<center><span class="label lbl-violetBoots">REUBICACIÓN</span> <center>`;
+                else
+                    return `<center><span class="label lbl-gray">NO APLICA</span> <center>`;                   
+            }         
+        },
+        {
+            data: function(d){
+                if(d.apartadoXReubicacion == 1)
+                    return d.fechaAlta;
+                else
+                    return `<center><span class="label lbl-gray">NO APLICA</span> <center>`;                
+            }         
+        },
+        {
+            data: function(d){
+                if(d.venta_compartida != 0)
+                    return `<center><span class="label lbl-green">COMPARTIDA</span> <center>`;
+                else
+                    return `<center><span class="label lbl-gray">NO APLICA</span> <center>`;                   
+            }         
+        },
+        {
+            data: function(d) {
+                if(d.ubicacion != null)
+                    return `<center><span class="label lbl-oceanGreen">${d.ubicacion}</span> <center>`;
+                else
+                    return `<center><span class="label lbl-gray">NO APLICA</span> <center>`;                   
+            }         
+        },
+        {
+            data: function (d) {
+                return `<center><button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-tipo-venta="${d.tipo_venta}" data-toggle="tooltip" data-placement="left" title="VER MÁS INFORMACIÓN"><i class="fas fa-history"></i></button></center>`;
+            }
+        }],
     });  
 }
 
@@ -331,10 +331,8 @@ $(document).on("click", ".ver_historial", function () {
 
     // LLENA LA TABLA CON EL HISTORIAL DEL PROCESO DE CONTRATACIÓN DEL LOTE X
     consultarHistoriaContratacion(idLote);
-
     // LLENA LA TABLA CON EL HISTORIAL DE LIBERACIÓN DEL LOTE X
     consultarHistoriaLiberacion(idLote);
-
     // LLENA LA TABLA CON EL LISTADO DE COMISIONISTAS COMO VENTAS COMPARTIDAS DEL LOTE X
     consultarVentasCompartidas(idLote);
 });
@@ -417,23 +415,21 @@ $('#tablaHistoriaLiberacion thead tr:eq(0) th').each(function (i) {
 function consultarHistoriaLiberacion(idLote) {
     tablaHistoriaLiberacion = $('#tablaHistoriaLiberacion').DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                className: 'btn buttons-excel',
-                titleAttr: 'Descargar archivo de Excel',
-                title: 'HISTORIAL LIBERACIÓN',
-                exportOptions: {
-                    columns: [0, 1, 2, 3, 4],
-                    format: {
-                        header: function (d, columnIdx) {
-                            return ' ' + titulosTablaHistoriaLiberacion[columnIdx] + ' ';
-                        }
+        buttons: [{
+            extend: 'excelHtml5',
+            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+            className: 'btn buttons-excel',
+            titleAttr: 'Descargar archivo de Excel',
+            title: 'HISTORIAL LIBERACIÓN',
+            exportOptions: {
+                columns: [0, 1, 2, 3, 4],
+                format: {
+                    header: function (d, columnIdx) {
+                        return ' ' + titulosTablaHistoriaLiberacion[columnIdx] + ' ';
                     }
-                },
-            }
-        ],
+                }
+            },
+        }],
         language: {
             url: `${general_base_url}/static/spanishLoader_v2.json`,
             paginate: {
@@ -475,23 +471,21 @@ $('#tablaVentasCompartidas thead tr:eq(0) th').each(function (i) {
 function consultarVentasCompartidas(idLote) {
     tablaVentasCompartidas = $('#tablaVentasCompartidas').DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                className: 'btn buttons-excel',
-                titleAttr: 'Descargar archivo de Excel',
-                title: 'VENTAS COMPARTIDAS',
-                exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7],
-                    format: {
-                        header: function (d, columnIdx) {
-                            return ' ' + titulosTablaVentasCompartidas[columnIdx] + ' ';
-                        }
+        buttons: [{
+            extend: 'excelHtml5',
+            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+            className: 'btn buttons-excel',
+            titleAttr: 'Descargar archivo de Excel',
+            title: 'VENTAS COMPARTIDAS',
+            exportOptions: {
+                columns: [0, 1, 2, 3, 4, 5, 6, 7],
+                format: {
+                    header: function (d, columnIdx) {
+                        return ' ' + titulosTablaVentasCompartidas[columnIdx] + ' ';
                     }
-                },
-            }
-        ],
+                }
+            },
+        }],
         width: '100%',
         scrollX: true,
         pageLength: 10,

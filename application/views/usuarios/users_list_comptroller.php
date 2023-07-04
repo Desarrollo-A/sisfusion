@@ -1,60 +1,10 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
-<style>
 
-    .buttons-html5 {
-        margin-right: 10px;
-    }
-</style>
-<div>
+<body>
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
-
-
-        <style>
-            .textoshead::placeholder { color: white; }
-        </style>
-
-        <div class="content boxContent">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <div class="card">
-                            <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                <i class="fas fa-user-circle fa-2x"></i>
-                            </div>
-                            <div class="card-content">
-                                <h3 class="card-title center-align">Lista de usuarios</h3>
-                                <div class="toolbar">
-                                    <div class="row">
-                                    </div>
-                                </div>
-                                <div class="material-datatables">
-                                    <div class="form-group">
-                                        <table id="all_users_datatable" class="table-striped table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>ESTATUS</th>
-                                                    <th>ID</th>
-                                                    <th>NOMBRE</th>
-                                                    <th>CORREO</th>
-                                                    <th>TELÉFONO</th>
-                                                    <th>TIPO</th>
-                                                    <th>SEDE</th>
-                                                    <th>JEFE DIRECTO</th>
-                                                    <th>ACCIONES</th>
-                                                </tr>
-                                            </thead>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+        <!-- MODALS -->
         <div class="modal fade" id="changesRegsUsers" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
                 <div class="modal-content">
@@ -92,6 +42,7 @@
                 </div>
             </div>
         </div>
+
         <div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -102,22 +53,18 @@
                         <h4 class="modal-title">Edita su información</h4>
                     </div>
                     <form id="editUserForm" name="editUserForm" method="post">
-                        <div class="modal-body">
+                        <div class="modal-body p-0">
                             <div class="col-sm-12">
-                                <div class="form-group label-floating select-is-empty div_payment_method">
-                                    <label class="control-label">Forma de pago <small>(requerido)</small></label>
-                                    <select id="payment_method" name="payment_method" class="form-control payment_method" required></select>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="form-group">
-                                    <input id="id_usuario" name="id_usuario" type="hidden" class="form-control">
+                                <div class="form-group select-is-empty div_payment_method m-0">
+                                    <label class="control-label">Forma de pago (<span style="color: red;">*</span>)</label>
+                                    <select class="selectpicker select-gral m-0"id="payment_method" name="payment_method" data-style="btn btn-primary "data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
+                                    </select>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                             <button type="submit" class="btn btn-primary">Aceptar</button>
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                         </div>
                     </form>
                 </div>
@@ -125,7 +72,7 @@
         </div>
 
         <div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-                <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+                <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
@@ -136,7 +83,7 @@
                         <div class="modal-body">                      
                                 <div class="container-fluid p-0" id="changelogTab">
                                     <div class="row">
-                                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 scroll-styles" style="height: 350px; overflow: auto">
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 scroll-styles" style="height: 350px; overflow: auto">
                                             <ul class="timeline-3" id="changelog"></ul>
                                         </div>
                                     </div>
@@ -149,11 +96,55 @@
                     </div>
                 </div>
         </div>
+        <!-- END MODALS -->
 
+        <!--TABLE-->
+        <div class="content boxContent">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-header card-header-icon" data-background-color="goldMaderas">
+                                <i class="fas fa-user-circle fa-2x"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3 class="card-title center-align">Lista de usuarios</h3>
+                                <div class="toolbar">
+                                    <div class="row">
+                                    </div>
+                                </div>
+                                <div class="material-datatables">
+                                    <div class="form-group">
+                                        <table id="all_users_datatable" class="table-striped table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>ESTATUS</th>
+                                                    <th>ID</th>
+                                                    <th>NOMBRE</th>
+                                                    <th>CORREO</th>
+                                                    <th>TELÉFONO</th>
+                                                    <th>TIPO</th>
+                                                    <th>SEDE</th>
+                                                    <th>FORMA DE PAGO</th>
+                                                    <th>NACIONALIDAD</th>
+                                                    <th>JEFE DIRECTO</th>
+                                                    <th>TIPO DE USUARIO</th>
+                                                    <th>FECHA DE ALTA</th>
+                                                    <th>ACCIONES</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--END TABLE-->
         <?php $this->load->view('template/footer_legend');?>
-
     </div>
-</div>
 </body>
 
 <?php $this->load->view('template/footer');?>
@@ -161,13 +152,6 @@
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-<script>
-    userType = <?= $this->session->userdata('id_rol') ?> ;
-    userId = <?= $this->session->userdata('id_usuario') ?>;
-</script>
 <script src="<?= base_url() ?>dist/js/controllers/Usuarios/users_list_comptroller.js"></script>
-</html>

@@ -118,7 +118,6 @@ function readyReport(){
     initReport();
     chart = new ApexCharts(document.querySelector("#boxModalChart"), initialOptions);
     chart.render();
-
     $('[data-toggle="tooltip"]').tooltip();
     setListEstatus();
 }
@@ -173,13 +172,26 @@ function validateFilters(){
     return filters;
 }
 
+/* Función para cambiar icono y cerrar o abrir tabla*/
+
+function changeIcon(anchor) {
+    anchor.closest('.wrapper').classList.toggle('active');
+    $(document).off('click', '.accordionToggle').on('click', '.accordionToggle', function () {
+        $(this).parent().next().slideToggle(200);
+        $(this).toggleClass('open', 200);
+    });
+}
+
 function createAccordions(option, render, rol){
     let tittle = getTitle(option);
     let html = '';
     html = `<div data-rol="${rol}" class="bk ${render == 1 ? 'parentTable': 'childTable'}">
                 <div class="d-flex justify-between align-center">   
-                    <div>
-                        <i class="fas fa-angle-down"></i>
+                    <div class="cursor-point accordionToggle">
+                        <a class="purple-head hover-black" onclick="changeIcon(this)" id="myBtn">
+                        <i class="less fas fa-angle-down font-xs"></i>
+                        <i class="more fas fa-angle-up font-xs"></i>
+                        </a>
                     </div>
                     <div>
                         <h4 class="p-0 accordion-title js-accordion-title">`+tittle+`</h4>
@@ -196,14 +208,14 @@ function createAccordions(option, render, rol){
                             <th class="encabezado">`+option.toUpperCase()+`</th>
                             <th>GRAN TOTAL</th>
                             <th>MONTO</th>
-                            <th># LOTES APARTADOS</th>
+                            <th>NÚMERO DE LOTES APARTADOS</th>
                             <th>APARTADO</th>
                             <th>CANCELADOS</th>
-                            <th>% CANCELADOS</th>
-                            <th># LOTES CONTRATADOS</th>
+                            <th>PORCENTAJE DE CANCELADOS</th>
+                            <th>NÚMERO DE LOTES CONTRATADOS</th>
                             <th>CONTRATADOS</th>
                             <th>CANCELADOS</th>
-                            <th>% CANCELADOS</th>
+                            <th>PORCENTAJE DE CANCELADOS</th>
                             <th>ACCIONES</th>
                         </tr>
                     </thead>
@@ -234,7 +246,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
 
     $('#table'+option+' thead tr:eq(0) th').each(function (i) {
         const title = $(this).text();
-        $(this).html('<input type="text" class="w-100 textoshead"  placeholder="' + title + '"/>');
+        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}"placeholder="${title}"/>`);    
         if(i > 1 && i <10){
             $('input', this)[0].type = 'number';
             $('input', this).addClass('no-spin');
@@ -247,6 +259,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                 }  
             }
         });
+        $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
     });
 
     generalDataTable = $("#table"+option).DataTable({
@@ -258,6 +271,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
+                title: 'Reporte de ventas por '+option ,
                 exportOptions: {
                     columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                     format: {
@@ -267,34 +281,34 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                                     return option;
                                     break;
                                 case 2:
-                                    return 'Gran total'
+                                    return 'GRAN TOTAL'
                                     break;
                                 case 3:
-                                    return 'Monto';
+                                    return 'MONTO';
                                     break;
                                 case 4:
-                                    return '# lotes apartados';
+                                    return 'NÚMERO DE LOTES APARTADOS';
                                     break;
                                 case 5:
-                                    return 'Apartado';
+                                    return 'APARTADO';
                                     break;
                                 case 6:
-                                    return 'Cancelados';
+                                    return 'CANCELADOS';
                                     break;
                                 case 7:
-                                    return '% cancelados';
+                                    return 'PORCENTAJE DE CANCELADOS';
                                     break;
                                 case 8:
-                                    return '# lotes contratados';
+                                    return 'NÚMERO DE LOTES CONTRATADOS';
                                     break;
                                 case 9:
-                                    return 'Contratados';
+                                    return 'CONTRATADOS';
                                     break;
                                 case 10:
-                                    return 'Cancelados';
+                                    return 'CANCELADOS';
                                     break;
                                 case 11:
-                                    return '% cancelados';
+                                    return 'PORCENTAJE DE CANCELADOS';
                                     break;
                             }
                         }
@@ -319,85 +333,72 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
         },
         columns: [
             {
-                width: "2%",
                 data: function(d){
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
                     return `<button type="btn" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnSub"><i class="fas fa-sitemap" data-toggle="tooltip" data-placement="bottom" title="Desglose a detalle"></i></button>`;
                 }
             },
             {
-                width: "26%",
                 data: function (d) {
                     return d.nombreUsuario;
                 }
             },
             {
-                width: "26%",
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
                     return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="5" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT + d.totalConT).toLocaleString('es-MX')}</button>`;
                 }
             },
             {
-                width: "8%",
                 data: function (d) {
                     return "<b>" + d.gran_total +"</b>"; // MJ: SUMA GRAN TOTAL
                 }
             },
             {
-                width: "8%",
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
                     return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="1" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT).toLocaleString('es-MX')}</button>`;
                 }
             },
             {
-                width: "8%",
                 data: function (d) {
                     return "<b>" + d.sumaAT+"</b>"; //SUMA APARTADOS
                 }
             },
             {
-                width: "8%",
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
                     return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="4" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanA).toLocaleString('es-MX')}</button>`; //# CANCELADOS APARTADOS;
                 }
             },
             {
-                width: "8%",
                 data: function (d) {
                     return d.porcentajeTotalCanA + "%"; //PORCENTAJE CANCELADOS APARTADOS
                 }
             },
             {
-                width: "8%",
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
                     return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="2" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalConT).toLocaleString('es-MX')}</button>`; //# CONTRATADOS;
                 }
             },
             {
-                width: "8%",
                 data: function (d) {
                     return "<b>" + d.sumaConT +"</b>"; //SUMA CONTRATADOS
                 }
             },
             {
-                width: "8%",
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
                     return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-sede = 0 data-type="3" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanC).toLocaleString('es-MX')}</button>`; //# CANCELADOS CONTRATADOS;
                 }
             },
             {
-                width: "8%",
                 data: function (d) {
                     return d.porcentajeTotalCanC + "%"; //PORCENTAJE CANCELADOS CONTRATADOS
                 }
             },
             {
-                width: "8%",
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario);                    
                     return  rol == 7 || (rol == 9 && render == 1) ? '' : `<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas update-dataTable" data-transaction="${transaction}" data-type="${rol}" data-render="${render}" value="${d.userID}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}"><i class="fas fa-sign-in-alt"></i></button></div>`;
@@ -438,7 +439,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
 // 2: Corrdinador
 // 3: Gerente
 // 4: Subirector
-// 5: Director regional
+// 5: DIRECTOR REGIONAL
 // 6: Rol
 function getLeadersLine (leadersList, id_usuario, id_lider) {  
     if (leadersList[0] == 0 && (leadersList[6] == 1 || leadersList[6] == 4 || leadersList[6] == 33 || leadersList[6] == 58 || leadersList[6] == 63 || leadersList[6] == 69)){ // PRIMER NIVEL: SÓLO TENEMOS EL ID REGIONAL
@@ -1316,67 +1317,67 @@ function fillTableReport(dataObject) {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
                                     case 0:
-                                        return 'Proyecto';
+                                        return 'PROYECTO';
                                         break;
                                     case 1:
-                                        return 'Condominio';
+                                        return 'CONDOMINIO';
                                         break;
                                     case 2:
-                                        return 'Lote'
+                                        return 'LOTE'
                                         break;
                                     case 3:
-                                        return 'Superficie'
+                                        return 'SUPERFICIE'
                                         break;    
                                     case 4:
-                                        return 'Precio de lista';
+                                        return 'PRECIO DE LISTA';
                                         break;
                                     case 5:
-                                        return 'Precio con desc';
+                                        return 'PRECIO CON DESCUENTO';
                                         break;
                                     case 6:
-                                        return 'Casa';
+                                        return 'CASA';
                                         break;
                                     case 7:
-                                        return 'Cliente';
+                                        return 'CLIENTE';
                                         break;
                                     case 8:
-                                        return 'Asesor';
+                                        return 'ASESOR';
                                         break;
                                     case 9:
-                                        return 'Coordinador';
+                                        return 'COORDINADOR';
                                         break;
                                     case 10:
-                                        return 'Gerente';
+                                        return 'GERENTE';
                                         break;
                                     case 11:
-                                        return 'Subdirector';
+                                        return 'SUBDIRECTOR';
                                         break;
                                     case 12:
-                                        return 'Director regional';
+                                        return 'DIRECTOR REGIONAL';
                                         break;
                                     case 13:
-                                        return 'Fecha de apartado';
+                                        return 'FECHA DE APARTADO';
                                         break;
                                     case 13:
-                                        return 'Fecha último estatus';
+                                        return 'FECHA DE ÚLTIMO ESTATUS';
                                         break;
                                     case 14:
-                                        return 'Días último estatus';
+                                        return 'DÍAS DE ÚLTIMO ESTATUSs';
                                         break;
                                     case 15:
-                                        return 'Estatus contratación';
+                                        return 'ESTATUS DE CONTRATACIÓN';
                                         break;
                                     case 16:
-                                        return 'Fecha estatus 9';
+                                        return 'FECHA DE ESTATUS 9';
                                         break;
                                     case 17:
-                                        return 'Días estatus 9';
+                                        return 'DÍAS EN ESTATUS 9';
                                         break;
                                     case 18:
-                                        return 'Estatus lote';
+                                        return 'ESTATUS DEL LOTE';
                                         break;
                                     case 19:
-                                        return 'Apartado';
+                                        return 'APARTADO';
                                         break;
                                 }
                             }
@@ -1490,7 +1491,7 @@ function fillTableReport(dataObject) {
                 {
                     data: function (d) {
                         if(d.fechaStatus9 == null){
-                            return 'No aplica';
+                            return 'NO APLICA';
                         }
                         else
                             return d.fechaStatus9;
@@ -1509,10 +1510,10 @@ function fillTableReport(dataObject) {
                 {
                     data: function (d) {
                         if (d.apartadoXReubicacion == 1 || d.apartadoXReubicacion == '1'){
-                            return 'Apartado por reubicación';
+                            return 'APARTADO POR REUBICACIÓN';
                         }
                         else{
-                            return 'Estándar';
+                            return 'ESTÁNDAR';
                         }
                     }
                 }
@@ -1575,70 +1576,70 @@ function fillTableReport(dataObject) {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
                                     case 0:
-                                        return 'Proyecto';
+                                        return 'PROYECTO';
                                         break;
                                     case 1:
-                                        return 'Condominio';
+                                        return 'CONDOMINIO';
                                         break;
                                     case 2:
-                                        return 'Lote'
+                                        return 'LOTE'
                                         break;
                                     case 3:
-                                        return 'Precio de lista';
+                                        return 'PRECIO DE LISTA';
                                         break;
                                     case 4:
-                                        return 'Precio con desc';
+                                        return 'PRECIO CON DESCUENTO';
                                         break;
                                     case 5:
-                                        return 'Casa';
+                                        return 'CASA';
                                         break;
                                     case 6:
-                                        return 'Cliente';
+                                        return 'CLIENTE';
                                         break;
                                     case 7:
-                                        return 'Asesor';
+                                        return 'ASESOR';
                                         break;
                                     case 8:
-                                        return 'Coordinador';
+                                        return 'COORDINADOR';
                                         break;
                                     case 9:
-                                        return 'Gerente';
+                                        return 'GERENTE';
                                         break;
                                     case 10:
-                                        return 'Subdirector';
+                                        return 'SUBDIRECTOR';
                                         break;
                                     case 11:
-                                        return 'Director regional';
+                                        return 'DIRECTOR REGIONAL';
                                         break;
                                     case 12:
-                                        return 'Fecha de apartado';
+                                        return 'FECHA DE APARTADO';
                                         break;
                                     case 13:
-                                        return 'Fecha de último estatus';
+                                        return 'FECHA DE ÚLTIMO ESTATUS';
                                         break;
                                     case 14:
-                                        return 'Días últimos estatus';
+                                        return 'DÍAS EN ÚLTIMO ESTATUS';
                                         break;    
                                     case 15:
-                                        return 'Estatus contratación';
+                                        return 'ESTATUS DE CONTRATACIÓN';
                                         break;
                                     case 16:
-                                        return 'Fecha estatus 9';
+                                        return 'FECHA DE ESTATUS 9';
                                         break;
                                     case 17:
-                                        return 'Días estatus 9';
+                                        return 'DÍAS EN ESTATUS 9';
                                         break;
                                     case 18:
-                                        return 'Estatus lote';
+                                        return 'ESTATUS DEL LOTE';
                                         break;
                                     case 19:
-                                        return 'Fecha liberación';
+                                        return 'FECHA DE LIBERACIÓN';
                                         break;
                                     case 20:
-                                        return 'Motivo';
+                                        return 'MOTIVO';
                                         break;
                                     case 21:
-                                        return 'Apartado';
+                                        return 'APARTADO';
                                         break;
                                 }
                             }
@@ -1751,7 +1752,7 @@ function fillTableReport(dataObject) {
                 {
                     data: function (d) {
                         if(d.fechaStatus9 == null){
-                            return 'No aplica';
+                            return 'NO APLICA';
                         }
                         else
                             return d.fechaStatus9;
@@ -1780,10 +1781,10 @@ function fillTableReport(dataObject) {
                 {
                     data: function (d) {
                         if (d.apartadoXReubicacion == 1){
-                            return 'Apartado por reubicación';
+                            return 'APARTADO POR REUBICACIÓN';
                         }
                         else{
-                            return 'Estandar';
+                            return 'ESTÁNDAR';
                         }
                     }
                 }

@@ -73,6 +73,7 @@ $('#lote').change(function () {
     $('#tabla_contrato_ventas').removeClass('hide');
     tabla_contrato = $("#tabla_contrato_ventas").DataTable({
         width: '100%',
+        scrollX: true,
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         "ajax":
         {
@@ -174,5 +175,5 @@ $('#lote').change(function () {
 
 
 $(window).resize(function () {
-    tabla_contrato.columns.adjust();
+    tabla_contrato.adjust();
 });

@@ -6,7 +6,7 @@ var getInfo5 = new Array(7);
 var getInfo6 = new Array(7);
 
 let titulos = [];
-$("#Jtabla").ready(function () {
+$(document).ready(function () {
     $('#Jtabla thead tr:eq(0) th').each(function (i) {
         if (i != 0) {
             var title = $(this).text();
@@ -162,6 +162,9 @@ $("#Jtabla").ready(function () {
                         }
                     }
                     return '<div class="d-flex justify-center">' + cntActions + '</div>';
+                }
+                else {
+                    return  `<span class="label lbl-warning">N/A</span>`;
                 }
             }
         }

@@ -129,7 +129,7 @@ function historial() {
         changeSizeModal('modal-md');
         appendBodyModal(historialCampoHtml(info));
 
-        appendFooterModal(`<button type="button" class="btn btn-danger" onclick="hideModal()">Cerrar</button>`);
+        appendFooterModal(`<button type="button" class="btn btn-danger btn-simple" onclick="hideModal()">Cerrar</button>`);
         showModal();
     });
 }
@@ -175,9 +175,9 @@ function historialCampoHtml(data) {
     data.forEach(columna => {
         dataTable += `<li><div class="container-fluid">
         <div class="row">
-        <div class="col-md-6"><a><small>Campo:</small><b> ${columna.columna}</b></a></div>`;
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6"><a><small>Campo:</small><b> ${columna.columna}</b></a></div>`;
         columna.detalle.forEach(cambio => {
-            dataTable += `<div class="col-md-6 text-right"><a class="float-end">${cambio.fecha}</a></div>
+            dataTable += `<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 text-right"><a class="float-end">${cambio.fecha}</a></div>
             </div>
             </div>
             <p class="m-0">USUARIO: <b>${(cambio.usuario) ? cambio.usuario : ''} </b></p>
@@ -317,7 +317,7 @@ $(document).on('submit', '#deposito-seriedad-form', function (e) {
     const costoFinalM2 = parseFloat($('#costom2f').val().replace('$', '').replace(',', ''));
 
     if (costoFinalM2 > costoListaM2 || costoFinalM2 < ((costoListaM2 * .80))) {
-        alerts.showNotification('top', 'right', 'El COSTO POR M2 FINAL no debe ser superior al M2 LISTA ni debe ser inferior al 20% de desc. del M2 LISTA.', 'danger');
+        alerts.showNotification('top', 'right', 'El COSTO POR M2 FINAL no debe ser superior al COSTO POR M2 LISTA ni debe ser inferior al 20% de descuento del COSTO POR M2 LISTA.', 'danger');
         return;
     }
 
@@ -345,6 +345,8 @@ $(document).on('submit', '#deposito-seriedad-form', function (e) {
 
     const data = new FormData(this);
 
+    $('#depositoSeriedadGuardar').attr('disabled', true);
+
     $.ajax({
         url: `${general_base_url}Asesor/editar_ds`,
         data: data,
@@ -354,12 +356,10 @@ $(document).on('submit', '#deposito-seriedad-form', function (e) {
         type: 'POST',
         success: function (response) {
             const res = JSON.parse(response);
+            $('#depositoSeriedadGuardar').attr('disabled', false);
 
             if (res.code === 200) {
                 alerts.showNotification("top", "right", 'Datos guardados con éxito', "success");
-                setTimeout(() => {
-                    location.reload();
-                }, 1500);
             }
 
             if (res.code === 400) {
@@ -370,6 +370,7 @@ $(document).on('submit', '#deposito-seriedad-form', function (e) {
                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
             }
         }, error: function () {
+            $('#depositoSeriedadGuardar').attr('disabled', false);
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });

@@ -750,15 +750,15 @@ async function prospectsTable(){
         $('.datepicker').datetimepicker({locale: 'es'});
         setInitialValues2();
     }
-
     $('#tablePR thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
-        $(this).html('<input type="text" style="width:100%; background:#003D82; color:white; border: 0; font-weight: 500;" class="textoshead"  placeholder="'+title+'"/>' );
-        $( 'input', this ).on('keyup change', function () {
+        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}"placeholder="${title}"/>`);    
+            $( 'input', this ).on('keyup change', function () {
             if ($('#tablePR').DataTable().column(i).search() !== this.value ) {
                 $('#tablePR').DataTable().column(i).search(this.value).draw();
             }
         });
+        $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
     });
 }
 
@@ -785,20 +785,34 @@ function getRolDR(idUser){
     });
 }
 
+/* Función para cambiar icono y cerrar o abrir tabla*/
+
+function changeIcon(anchor) {
+    anchor.closest('.wrapper').classList.toggle('active');
+    $(document).off('click', '.accordionToggle').on('click', '.accordionToggle', function () {
+        $(this).parent().next().slideToggle(200);
+        $(this).toggleClass('open', 200);
+    });
+}
+
+
 function createAccordionsPR(option, render, rol) {
     let tittle = getTitle(option);
     let html = '';
-    html = `<div data-rol="${rol}" class="bk ${render == 1 ? 'parentTable': 'childTable'}">
+    html = `<div class="bk ${render == 1 ? 'parentTable': 'childTable'}">
                 <div class="card p-2 h-auto">
                     <div class="d-flex justify-between align-center">   
                         <div class="cursor-point accordionToggle">
-                            <i class="fas fa-angle-down"></i>
+                            <a class="purple-head hover-black" onclick="changeIcon(this)" id="myBtn">
+                            <i class="less fas fa-angle-down font-xs"></i>
+                            <i class="more fas fa-angle-up font-xs"></i>
+                            </a>
                         </div>
                         <div>
                             <h4 class="p-0 accordion-title js-accordion-title">`+tittle+`</h4>
                         </div>
                         <div class="cursor-point">
-                            ${render == 1 ? '': '<i class="fas fa-times deleteTable"></i>'}
+                            <a onClick="prospectsTable()">${render == 1 ? '': '<i class="fas fa-times deleteTable"></i>'}</a>
                         </div>
                     </div>
                     <div class="toolbar">
@@ -819,30 +833,29 @@ function createAccordionsPR(option, render, rol) {
                         <div class="accordion-content pb-3">
                             <div class="material-datatables">
                                 <div class="form-group">
-                                    <div class="table-responsive">
-                                        <table class="table-responsive table-striped table-hover" id="tablePR" name="table`+option+`"><!--anterior:tablePR + option + -->
-                                            <thead>
-                                                <tr>
-                                                    <th>ESTADO</th>
-                                                    <th>ETAPA</th>
-                                                    <th>TIPO</th>
-                                                    <th>PROSPECTO</th>
-                                                    <th>ASESOR</th>
-                                                    <th>COORDINADOR</th>
-                                                    <th>GERENTE</th>
-                                                    <th>LUGAR PROSPECCIÓN</th>
-                                                    <th>TELÉFONO</th>
-                                                    <th>CREACIÓN</th>
-                                                    <th>VENCIMIENTO</th>
-                                                </tr>
-                                            </thead>
-                                        </table>
-                                    </div>
+                                    <table class="table-striped table-hover hide" id="tablePR">
+                                        <thead>
+                                            <tr>
+                                                <th>ESTADO</th>
+                                                <th>ETAPA</th>
+                                                <th>TIPO</th>
+                                                <th>PROSPECTO</th>
+                                                <th>ASESOR</th>
+                                                <th>COORDINADOR</th>
+                                                <th>GERENTE</th>
+                                                <th>LUGAR DE PROSPECCIÓN</th>
+                                                <th>TELÉFONO</th>
+                                                <th>CREACIÓN</th>
+                                                <th>VENCIMIENTO</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>`;
+                </div>
+            </div>`;
     $(".table-dinamic").append(html);
 }
 
@@ -902,8 +915,8 @@ function multirol(){
             let finalEndDate = $("#endDate3").val();
             $('#tablePR thead tr:eq(0) th').each( function (i) {
                 var title = $(this).text();
-                $(this).html('<input type="text" style="width:100%; background:#003D82; color:white; border: 0; font-weight: 500;" class="textoshead"  placeholder="'+title+'"/>' );
-                $( 'input', this ).on('keyup change', function () {
+                $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}"placeholder="${title}"/>`);    
+                $( 'input', this).on( 'keyup change', function () {
                     if ($('#tablePR').DataTable().column(i).search() !== this.value ) {
                         $('#tablePR').DataTable().column(i).search(this.value).draw();
                     }
@@ -990,14 +1003,15 @@ function createSelect(dataDinamic){
         dataMaks = dataDinamic;
     }
 
-    let html_select ='<div class="col-md-3 form-group"><div id="'+nombreID+'" class="form-group label-floating select-is-empty"><label class="control-label">'+dataMaks+'</label></div></div>';
+    let html_select ='<div class="col-md-3 form-group"><div id="'+nombreID+'" class="form-group overflow-hidden"><label class="control-label">'+dataMaks+'</label></div></div>';
     var $selectSub = $('<select/>', {
         'class':"selectpicker select-gral m-0",
         'id': dataDinamic,
         'name': dataDinamic,
         'data-style':"btn",
         'data-show-subtext':"true",
-        'data-live-search':"true"
+        'data-live-search':"true",
+        'data-container':"body",
     }).append($('<option/>',{
         'value': 'default',
         'text': 'Selecciona el '+dataMaks,
@@ -1005,6 +1019,7 @@ function createSelect(dataDinamic){
         'disabled': true
     }));
         $('#filterContainer').append(html_select);
+        
     return $selectSub;
 }
 
@@ -1102,10 +1117,6 @@ function newRoles(option) {
     return rol;
 }
 
-$(document).off('click', '.accordionToggle').on('click', '.accordionToggle', function () {
-    $(this).parent().next().slideToggle(200);
-    $(this).toggleClass('open', 200);
-});
 
 
 $(document).on('change','#subdirector', function () {
@@ -1235,6 +1246,8 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
 
     prospectsTables = $('#tablePR').dataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',
+        scrollX:true,
         ordering: false,
         buttons: [
             {
@@ -1303,9 +1316,9 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
         columns: [
             { data: function (d) {
                 if (d.estatus == 1)
-                    return '<center><span class="label" style="background: #A9DFBF; color: #145A32">Vigente</span><center>';
+                    return '<center><span class="label lbl-green">Vigente</span><center>';
                 else
-                    return '<center><span class="label" style="background: #E6B0AA; color: #641E16">Sin vigencia</span><center>';
+                    return '<center><span class="label lbl-warning">Sin vigencia</span><center>';
             } },
             { data: function (d) {
                 if(d.estatus_particular == 1) // DESCARTADO
@@ -1322,13 +1335,13 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
                     estatus_particular = 'Preventa';
                 else if (d.estatus_particular == 3) // CLIENTE
                     estatus_particular = 'Cliente';
-                return `<center><span class="label" style="background: #D2B4DE; color: #4A235A">${estatus_particular}</span><center>`;
+                return `<center><span class="label lbl-violetBoots">${estatus_particular}</span><center>`;
             } },
             {   data: function (d) {
                 if (d.tipo == 0){
-                    return '<center><span class="label" style="background: #F9E79F; color: #7D6608">Prospecto</span></center>';
+                    return '<center><span class="label lbl-yellow">Prospecto</span></center>';
                 } else {
-                    return '<center><span class="label" style="background: #A3E4D7; color: #0E6251">Cliente</span></center>';
+                    return '<center><span class="label lbl-oceanGreen">Cliente</span></center>';
                 }
             } },
             { data: function (d) {
@@ -1380,9 +1393,18 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
                 "endDate": endDate,
                 "where": where
             }
+        },
+        columnDefs: [{
+            "searchable": true,
+            "orderable": false,
+            "targets": 0
+        }],
+        drawCallback: function (settings) {
+            $('[data-toggle="tooltip"]').tooltip();
         }
     })
     $('#spiner-loader').addClass('hide');
+    $('#tablePR').removeClass('hide');
 }
 
 $(document).on("click", "#searchByDateRangePR", function () {

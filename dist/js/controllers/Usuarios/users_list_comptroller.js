@@ -1,31 +1,34 @@
-$.getJSON("getPaymentMethod").done( function( data ){
-    $(".payment_method").append($('<option disabled selected>').val("").text("Seleccione una opción"));
+$(document).ready(function() {
+    $.post(`${general_base_url}Usuarios/getPaymentMethod`, function(data) {
     var len = data.length;
     for( var i = 0; i<len; i++)
     {
         var id = data[i]['id_opcion'];
         var name = data[i]['nombre'];
-        $(".payment_method").append($('<option>').val(id).text(name));
+        $('#payment_method').append($('<option>').val(id).text(name.toUpperCase()));
     }
+    $('#payment_method').selectpicker('refresh');
+
+    }, 'json');
 });
 
-$('#all_users_datatable thead tr:eq(0) th').each( function (i) {
-
-     if(i != 14){
+let titulos = [];
+$('#all_users_datatable thead tr:eq(0) th').each( function (i) {    
     var title = $(this).text();
+    titulos.push(title);
     $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>` );
     $( 'input', this ).on('keyup change', function () {
         if ($('#all_users_datatable').DataTable().column(i).search() !== this.value ) {
             $('#all_users_datatable').DataTable().column(i).search(this.value).draw();
         }
-    } );
-    }
+    });
 });
 
 $('#all_users_datatable').DataTable({
     dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-
-    "buttons": [
+    width: "100%",
+    scrollX: true,
+    buttons: [
         {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
@@ -33,105 +36,10 @@ $('#all_users_datatable').DataTable({
             titleAttr: 'Lista de usuarios',
             title:'Lista de usuarios',
             exportOptions: {
-            
-                columns: userType == 49 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14] ,
+                columns: id_rol_general == 49 ? [0, 1, 2, 3, 4, 5, 6, 7, 8,9,10,11,] : [0, 1, 2, 3, 4, 5, 6, 7 ,8 ,9 ,10 ,11,] ,
                 format: {
                     header: function (d, columnIdx) {
-
-                        if(userType == 49){
-                            switch (columnIdx) {
-                            case 0:
-                                return 'ESTATUS';
-                                break;
-                            case 1:
-                                return 'ID';
-                                break;
-                            case 2:
-                                return 'NOMBRE';
-                            case 3:
-                                return 'CORREO';
-                                break;
-                            case 4:
-                                return 'TELÉFONO';
-                                break;
-                            case 5:
-                                return 'TIPO';
-                                break;
-                            case 6:
-                                return 'SEDE';
-                                break;
-                            case 7:
-                                return 'FORMA PAGO';
-                                break;
-                            case 8:
-                                return 'NACIONALIDAD';
-                                break;
-                            case 9:
-                                return 'COORDINADOR';
-                                break;
-                            case 10:
-                                return 'GERENTE';
-                                break;
-                            case 11:
-                                return 'SUBDIRECTOR';
-                                break;
-                            case 12:
-                                return 'DIRECTOR REGIONAL';
-                                break;
-                            case 13:
-                                return 'TIPO DE USUARIO';
-                                break;
-                            case 14:
-                                return 'FECHA ALTA';
-                                break;
-                        }
-
-                        }else{
-                            switch (columnIdx) {
-                            case 0:
-                                return 'ESTATUS';
-                                break;
-                            case 1:
-                                return 'ID';
-                                break;
-                            case 2:
-                                return 'NOMBRE';
-                            case 3:
-                                return 'CORREO';
-                                break;
-                            case 4:
-                                return 'TELÉFONO';
-                                break;
-                            case 5:
-                                return 'TIPO';
-                                break;
-                            case 6:
-                                return 'SEDE';
-                                break;
-                            case 7:
-                                return 'FORMA PAGO';
-                                break;
-                            case 8:
-                                return 'COORDINADOR';
-                                break;
-                            case 9:
-                                return 'GERENTE';
-                                break;
-                            case 10:
-                                return 'SUBDIRECTOR';
-                                break;
-                            case 11:
-                                return 'DIRECTOR REGIONAL';
-                                break;
-                            case 12:
-                                return 'TIPO DE USUARIO';
-                                break;
-                            case 13:
-                                return 'FECHA ALTA';
-                                break;
-                        }
-
-                        }
+                        return ' ' + titulos[columnIdx] + ' ';
                     }
                 }
             }
@@ -139,7 +47,6 @@ $('#all_users_datatable').DataTable({
     ],
     ordering: false,
     paging: true,
-    scrollX: true,
     pagingType: "full_numbers",
     lengthMenu: [
         [10, 25, 50, -1],
@@ -157,86 +64,44 @@ $('#all_users_datatable').DataTable({
         {
             data: function (d) {
                 if (d.nuevo == 1) {
-                    return '<center><span class="label label-info" >Nuevo usuario</span><center>';
-
+                    return '<center><span class="label lbl-cerulean" >Nuevo usuario</span><center>';
                 } else {
                     if (d.estatus == 1) {
-                        return '<center><span class="label label-danger" style="background:#27AE60">Activo</span><center>';
+                        return '<center><span class="label lbl-green">Activo</span><center>';
                     } else if (d.estatus == 3) {
-                        boton =  '<center><span class="label label-danger" style="background:#E74C3C">Baja </span><center>';
-
-                         
-                                    if(userType == 49){
-                                
-                                 var fecha_baja = '<center>Fecha baja: <b>'+d.fecha_baja+'</b><br><center>';
-                                
+                        boton = '<center><span class="label lbl-warning">Baja </span><center>';
+                                    if(id_rol_general == 49){
+                                var fecha_baja = '<center>Fecha baja: <b>'+d.fecha_baja+'</b><br><center>';
                                     }else{
-                               
-                                 var fecha_baja = '';
-                                       
+                                var fecha_baja = '';
                                     }
-
-                              
-                                
-
                                 return boton + fecha_baja;
-
-
                     } else {
                         if (d.abono_pendiente !== undefined) {
                             if (parseFloat(d.abono_pendiente) > 0) {
-                                boton = '<center><p class="mt-1"><span class="label label-danger" style="background:#E74C3C">Baja </span></p><center>';
-
-
-                                
-                                    if(userType == 49){
-                                
-                                 var fecha_baja = '<center>Fecha baja: <b>'+d.fecha_baja+'</b><br><center>';
-                               
+                                boton = '<center><p class="mt-1"><span class="label lbl-warning">Baja </span></p><center>';
+                                    if(id_rol_general == 49){
+                                var fecha_baja = '<center>Fecha baja: <b>'+d.fecha_baja+'</b><br><center>';
                                     }else{
-                               
-                                 var fecha_baja = '';
-                                       
+                                var fecha_baja = '';
                                     }
-
-                               
-
-
                                 return boton + fecha_baja;
-
                             } else {
-                                var boton = '<center><span class="label label-danger" style="background:#E74C3C">Baja </span></center>';
-                               
-                               
-                                    if(userType == 49){
-                                
-                                 var fecha_baja = '<center>Fecha baja: <b>'+d.fecha_baja+'</b><br><center>';
-                                
+                                var boton = '<center><span class="label lbl-warning">Baja </span></center>';
+                                    if(id_rol_general == 49){
+                                var fecha_baja = '<center>Fecha baja: <b>'+d.fecha_baja+'</b><br><center>';
                                     }else{
-                                
-                                 var fecha_baja = '';
-                                        
+                                var fecha_baja = '';
                                     }
-
-                            
                                 return boton + fecha_baja;
                             }
-
                         } else {
-                                var boton = '<center><span class="label label-danger" style="background:#E74C3C">Baja </span></center>';
-                               
-                                
-                                    if(userType == 49){
-                                
-                                 var fecha_baja = '<center>Fecha baja: <b>'+d.fecha_baja+'</b><br><center>';
-                                
+                                var boton = '<center><span class="label lbl-warning">Baja </span></center>';
+                                    if(id_rol_general == 49){
+                                var fecha_baja = '<center>Fecha baja: <b>'+d.fecha_baja+'</b><br><center>';
                                     }else{
-                               
-                                 var fecha_baja = '';
-                                       
+                                var fecha_baja = '';
                                     }
-
-                                
                                 return boton + fecha_baja;
                         }
                     }
@@ -268,24 +133,44 @@ $('#all_users_datatable').DataTable({
             }
         },
         { data: function (d) {
-                return d.jefe_directo;
+            return d.forma_pago;
             }
         },
         { data: function (d) {
-                if (userId == 2767 || userId == 5957 || userId == 4878) {
-                    return '<button class="btn btn-success btn-round btn-fab btn-fab-mini edit-user-information" data-id-usuario="' + d.id_usuario +'" style="margin-right: 5px;background-color:#2874A6;border-color:#21618C" title="Cambiar forma de pago"><i class="material-icons">edit</i></button>'+
-                    '<button class="btn btn-success btn-round btn-fab btn-fab-mini see-user-information" data-id-usuario="' + d.id_usuario +'" style="background-color:#96843d;border-color:#48DBA7" title="Ver historial de cambios"><i class="material-icons">visibility</i></button>';
+            return '<span class="label lbl-green">'+ d.nacionalidad+ '</span>';
+            }
+        },
+        { data: function (d) {
+                return d.jefe_directo;
+            }
+        },
+        {
+            data: function (d) {
+                if (d.ismktd == 1)
+                    return '<center><span class="label lbl-azure">ES MKTD</span><center>';
+                else
+                    return '<center><span class="label lbl-gray">SIN ESPECIFICAR</span><center>';
+            }
+        },
+        { data: function (d) {
+            return d.fecha_alta; 
+            }
+        },
+        { data: function (d) {
+                if (id_usuario_general == 2767 || id_usuario_general == 5957 || id_usuario_general == 4878) {
+                    return '<button class="btn btn-blueMaderas btn-round btn-fab btn-fab-mini edit-user-information" data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip" data-placement="top" title="CAMBIAR FORMA DE PAGO"><i class="fas fa-pencil-alt"></i></button>'+
+                    '<button class="btn btn-green btn-round btn-fab btn-fab-mini see-user-information" data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip" data-placement="top" title="VER HISTORIAL DE CAMBIOS"><i class="far fa-eye"></i></button>';
                 } else {
-                    return '<button class="btn btn-success btn-round btn-fab btn-fab-mini see-user-information" data-id-usuario="' + d.id_usuario +'" style="background-color:#96843d;border-color:#48DBA7" title="Ver historial de cambios"><i class="material-icons">visibility</i></button>';
+                    return '<button class="btn-data btn-green see-user-information" data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip" data-placement="top" title="VER HISTORIAL DE CAMBIOS"><i class="far fa-eye"></i></button>';
                 }
             }
         }
     ],
-    "ajax": {
-        "url": general_base_url + "/usuarios/getUsersList",
-        "type": "POST",
+    ajax: {
+        url: general_base_url + "/usuarios/getUsersList",
+        type: "POST",
         cache: false,
-        "data": function( d ){
+        data: function( d ){
         }
     }
 });
@@ -297,8 +182,10 @@ $('#all_users_datatable').on('draw.dt', function() {
 });   
 
 $(document).on('click', '.edit-user-information', function(e){
+    $('#spiner-loader').removeClass('hide');
     id_usuario = $(this).attr("data-id-usuario");
     $.getJSON("getUserInformation/"+id_usuario).done( function( data ){
+        $('#spiner-loader').addClass('hide');
         $.each( data, function(i, v){
             $("#editUserModal").modal();
             $("#payment_method").val(v.forma_pago);
@@ -309,9 +196,11 @@ $(document).on('click', '.edit-user-information', function(e){
 });
 
 $(document).on('click', '.see-user-information', function(e){
+    $('#spiner-loader').removeClass('hide');
     id_usuario = $(this).attr("data-id-usuario");
     $.getJSON("getChangelog/"+id_usuario).done( function( data ){
         $("#seeInformationModal").modal();
+        $('#spiner-loader').addClass('hide');
         $.each( data, function(i, v){
             fillChangelog(v);
 
@@ -321,13 +210,13 @@ $(document).on('click', '.see-user-information', function(e){
 
 function fillChangelog (v) {
     $("#changelog").append('<li>\n' +
-        '            <a>Campo: <b>'+v.parametro_modificado+'</b></a>\n' +
+        '            <a>CAMPO: <b>'+v.parametro_modificado.toUpperCase()+'</b></a>\n' +
         '            <a style="float: right">'+v.fecha_creacion+'</a><br>\n' +
-        '            <a>Valor anterior:</a> <b> '+v.anterior+' </b>\n' +
+        '            <a>VALOR ANTERIOR:</a> <b> '+v.anterior.toUpperCase()+' </b>\n' +
         '            <br>\n' +
-        '            <a>Valor nuevo:</a> <b> '+v.nuevo+' </b>\n' +
+        '            <a>VALOR NUEVO:</a> <b> '+v.nuevo.toUpperCase()+' </b>\n' +
         '            <br>\n' +
-        '            <a>Usuario:<b> '+v.creador+' </b></a>\n' +
+        '            <a>USUARIO:<b> '+v.creador.toUpperCase()+' </b></a>\n' +
         '</li>');
 }
 
@@ -361,7 +250,6 @@ $("#editUserForm").on('submit', function(e){
         }
     });
 });
-
 
 $(document).on('click', '.see-changes-log', function(){
     id_usuario = $(this).attr("data-id-usuario");

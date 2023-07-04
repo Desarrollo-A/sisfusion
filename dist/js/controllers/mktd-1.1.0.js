@@ -63,10 +63,12 @@ $(document).on('click', '.see-comments', function(e){
 
 function cleanComments() {
     var myCommentsList = document.getElementById('comments-list');
-    myCommentsList.innerHTML = '';
+    if( myCommentsList != null )
+        myCommentsList.innerHTML = '';
 
     var myChangelog = document.getElementById('changelog');
-    myChangelog.innerHTML = '';
+    if( myChangelog != null )
+        myChangelog.innerHTML = '';
 }
 
 function fillTimeline (v) {
@@ -75,8 +77,8 @@ function fillTimeline (v) {
                             : '';
 
     let etiqueta_fecha = v.fecha_creacion !== '' 
-                         ? `<h6><span class="small text-gray"><i class="fa fa-clock-o mr-1"></i>${v.fecha_creacion}</span></h6>`
-                         : '';
+                        ? `<h6><span class="small text-gray"><i class="fa fa-clock-o mr-1"></i>${v.fecha_creacion}</span></h6>`
+                        : '';
     $("#comments-list")
         .append(`<li class="timeline-inverted">
                     <div class="timeline-badge success"></div>
@@ -109,8 +111,6 @@ function fillChangelog (v) {
     '    </div>\n' +
     '</li>');
 }
-
-
 
     $(document).on('click', '.to-comment', function(e){
     id_prospecto = $(this).attr("data-id-prospecto");
@@ -413,14 +413,6 @@ function printProspectInfoMktd() {
 function printProspectInfo() {
     id_prospecto =  $("#prospecto_lbl").val();
     window.open( "printProspectInfo/"+id_prospecto, "_blank")
-}
-
-function cleanComments() {
-    var myCommentsList = document.getElementById('comments-list');
-    myCommentsList.innerHTML = '';
-
-    var myChangelog = document.getElementById('changelog');
-    myChangelog.innerHTML = '';
 }
 
 $(document).on('click', '.re-asign', function(e){

@@ -21,7 +21,7 @@
     <div class="content boxContent">
         <div class="container-fluid">
             <div class="row">
-                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="card">
                         <div class="card-header card-header-icon" data-background-color="goldMaderas">
 							<i class="fas fa-user-friends fa-2x"></i>
@@ -31,19 +31,19 @@
                             <div class="toolbar">
                                 <div class="row">
                                     <div class="col-md-4 form-group">
-                                        <div class="form-group label-floating select-is-empty">
+                                        <div class="form-group  select-is-empty">
                                             <label class="control-label">Proyecto</label>
                                             <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
                                         </div>
                                     </div>
                                     <div class="col-md-4 form-group">
-                                        <div class="form-group label-floating select-is-empty">
+                                        <div class="form-group  select-is-empty">
                                             <label class="control-label">Condominio</label>
                                             <select name="condominio" id="condominio" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
                                         </div>
                                     </div>
                                     <div class="col-md-4 form-group">
-                                        <div class="form-group label-floating select-is-empty">
+                                        <div class="form-group  select-is-empty">
                                             <label class="control-label">Lote</label>
                                             <select name="lote" id="lote" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
                                         </div>

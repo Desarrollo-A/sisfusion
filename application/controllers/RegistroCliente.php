@@ -14,10 +14,10 @@ class RegistroCliente extends CI_Controller {
             'opcs_catalogo/valores/TipoAutorizacionClienteOpcs'
         ]);
 		$this->load->library(array('session','form_validation'));
-      //LIBRERIA PARA LLAMAR OBTENER LrAS CONSULTAS DE LAS  DEL MENÚ
-      $this->load->library(array('session','form_validation', 'get_menu'));
-		$this->load->library('Pdf'); 
-		$this->load->library('phpmailer_lib');
+        //LIBRERIA PARA LLAMAR OBTENER LrAS CONSULTAS DE LAS  DEL MENÚ
+        $this->load->library(array('session','form_validation', 'get_menu'));
+		$this->load->library('Pdf');
+		$this->load->library('email');
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
 		date_default_timezone_set('America/Mexico_City');
@@ -1385,44 +1385,21 @@ class RegistroCliente extends CI_Controller {
             $pdf->Output(utf8_decode($namePDF), 'I');
 
             $attachment= $pdf->Output(utf8_decode($namePDF), 'S');
-            // PHPMailer object
 
-            /*************************************************************************************
-             * Armado de parámetros a mandar a plantilla para creación de correo electrónico	 *
-             ************************************************************************************/
-            $datos_correo[0] = array();
+            $this->email
+                ->initialize()
+                ->from('Ciudad Maderas')
+                ->to('programador.analista24@ciudadmaderas.com')
+                // ->to($correo)
+                ->subject('DEPÓSITO DE SERIEDAD - CIUDAD MADERAS')
+                ->attach($attachment, '', $namePDF)
+                ->view('<h3>A continuación se adjunta el archivo correspondiente a Depósito de seriedad.</h3>');
 
-            $datos_etiquetas = null;
-
-            $correos_entregar = array();
-            
-            // foreach($arrayCorreoNotRepeat as $email)
-            // {
-            //   if ($email){
-            //     array_push($correos_entregar, $email);
-            //   }
-            // }
-            array_push($correos_entregar, 'programador.analista18@ciudadmaderas.com');
-
-            $archivo_adjunto = array("adjunto"  =>  $attachment,
-                                     "nombre_pdf" =>  $namePDF);
-            $elementos_correo = array("setFrom" => Elementos_Correo_Registro_Cliente::SET_FROM_EMAIL,
-                        "Subject" => Elementos_Correo_Registro_Cliente::ASUNTO_CORREO_TABLA_DEPOSITOS_SERIEDAD);
-
-            $comentario_general = Elementos_Correo_Registro_Cliente::EMAIL_DEPOSITO_SERIEDAD.'<br><br>'. (!isset($comentario) ? '' : $comentario);
-            $datos_encabezados_tabla = Elementos_Correo_Registro_Cliente::ETIQUETAS_ENCABEZADO_TABLA_DEPOSITOS_SERIEDAD;
-
-            //Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
-            //<title>AVISO DE BAJA </title>
-            $plantilla_correo = new plantilla_dinamica_correo;
-            /************************************************************************************************************************/
             if ($this->registrolote_modelo->editaRegistroClienteDS_EA($idCliente,$arreglo,$arreglo2)){
-              $envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, 
-                                                                      $datos_encabezados_tabla, $datos_etiquetas, $comentario_general, $archivo_adjunto);
-              if($envio_correo){
+              if($this->email->send()){
                 $data['message_email'] = 'OK';
               }else{
-                $data['message_email'] = $envio_correo;
+                $data['message_email'] = $this->email->print_debugger();
               }
               $data['message'] = 'OK';
             }else{
@@ -7033,45 +7010,22 @@ class RegistroCliente extends CI_Controller {
 			$namePDF = utf8_decode('DEPÓSITO_DE_SERIEDAD_'.$idCliente.'.pdf');
 			$pdf->Output(utf8_decode($namePDF), 'I');
 			$attachment= $pdf->Output(utf8_decode($namePDF), 'S');
-			
-      // PHPMailer object
-      /*************************************************************************************
-       * Armado de parámetros a mandar a plantilla para creación de correo electrónico	 *
-       ************************************************************************************/
-      $datos_correo[0] = array();
 
-      $datos_etiquetas = null;
+            $this->email
+                ->initialize()
+                ->from('Ciudad Maderas')
+                ->to('programador.analista24@ciudadmaderas.com')
+                // ->to($correo)
+                ->subject('DEPÓSITO DE SERIEDAD - CIUDAD MADERAS')
+                ->attach($attachment, '', $namePDF)
+                ->view('<h3>A continuación se adjunta el archivo correspondiente a Depósito de seriedad.</h3>');
 
-      $correos_entregar = array();
-      
-      // foreach($arrayCorreoNotRepeat as $email)
-      // {
-      //   if ($email){
-      //     array_push($correos_entregar, $email);
-      //   }
-      // }
-
-      array_push($correos_entregar, 'programador.analista18@ciudadmaderas.com');
-      
-      $archivo_adjunto = array("adjunto"  =>  $attachment,
-                                "nombre_pdf" =>  $namePDF);
-      $elementos_correo = array("setFrom" => Elementos_Correo_Registro_Cliente::SET_FROM_EMAIL,
-                  "Subject" => Elementos_Correo_Registro_Cliente::ASUNTO_CORREO_TABLA_DEPOSITOS_SERIEDAD);
-
-      $comentario_general = Elementos_Correo_Registro_Cliente::EMAIL_DEPOSITO_SERIEDAD.'<br><br>'. (!isset($comentario) ? '' : $comentario);
-      $datos_encabezados_tabla = Elementos_Correo_Registro_Cliente::ETIQUETAS_ENCABEZADO_TABLA_DEPOSITOS_SERIEDAD;
-
-      //Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
-      //<title>AVISO DE BAJA </title>
-      $plantilla_correo = new plantilla_dinamica_correo;
-      /************************************************************************************************************************/
 			if ($this->registrolote_modelo->editaRegistroClienteDS($idCliente,$arreglo,$arreglo2)){
-				$envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, $datos_encabezados_tabla, $datos_etiquetas, $comentario_general, $archivo_adjunto);
-        if($envio_correo){
-          $data['message_email'] = 'OK';
-        }else{
-          $data['message_email'] = $envio_correo;
-        }
+                if($this->email->send()){
+                  $data['message_email'] = 'OK';
+                }else{
+                  $data['message_email'] = $this->email->print_debugger();
+                }
 			}else
 			{
 				die("ERROR");
@@ -7544,42 +7498,48 @@ class RegistroCliente extends CI_Controller {
 				break;
 		}*/
 
-    /********************************************************************************
-    * Armado de parámetros a mandar a plantilla para creación de correo electrónico	*
-    ********************************************************************************/
-    $datos_correo[0] = array("nombreResidencial" =>  $nombreResidencial,
-                          "nombreCondominio"  =>  $nombreCondominio,
-                          "nombreLote"        =>  $nombreLote,
-                          "motivoAut"         =>  $motivoAut,
-                          "fechaHora"         =>  date("Y-m-d H:i:s"));
-    $datos_etiquetas = null;
-    
-    $correos_entregar = array('programador.analista18@ciudadmaderas.com');
-    // $dataUser = $this->Asesor_model->getInfoUserById($idAut);
-    // array_push($correos_entregar, $dataUser[0]->correo);
-    $comentario = $motivoAut;
-    $elementos_correo = array("setFrom" => Elementos_Correo_Registro_Cliente::SET_FROM_EMAIL,
-                              "Subject" => Elementos_Correo_Registro_Cliente::ASUNTO_CORREO_TABLA_SOLICITUD_AUTORIZACION_CONTRATACION);
+        $encabezados = [
+            "nombreResidencial" => "PROYECTO",
+            "nombreCondominio"  => "CONDOMINIO",
+            "nombreLote"        => "LOTE",
+            "motivoAut"         => "AUTORIZACIÓN",
+            "fechaHora"         => "FECHA/HORA"
+        ];
 
-    $comentario_general = Elementos_Correo_Registro_Cliente::EMAIL_SOLICITUD_AUTORIZACION_CONTRATACION.'<br><br>'. (!isset($comentario) ? '' : $comentario);
-    $datos_encabezados_tabla = Elementos_Correo_Registro_Cliente::ETIQUETAS_ENCABEZADO_TABLA_SOLICITUD_AUTORIZACION_CONTRATACION;
+        $contenido = [
+            "nombreResidencial" =>  $nombreResidencial,
+            "nombreCondominio"  =>  $nombreCondominio,
+            "nombreLote"        =>  $nombreLote,
+            "motivoAut"         =>  $motivoAut,
+            "fechaHora"         =>  date("Y-m-d H:i:s")
+        ];
 
-    //Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
-    $plantilla_correo = new plantilla_dinamica_correo;
-    /********************************************************************************************/
+        $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to('programador.analista24@ciudadmaderas.com')
+            ->subject('SOLICITUD DE AUTORIZACIÓN - CONTRATACIÓN')
+            ->view($this->load->view('mail/registro-cliente/send-aut', [
+                'comentario' => $motivoAut,
+                'encabezados' => $encabezados,
+                'contenido' => $contenido
+            ], true));
+
+        // $dataUser = $this->Asesor_model->getInfoUserById($idAut);
+        // array_push($correos_entregar, $dataUser[0]->correo);
+
 		$arr=array();
 		$arr["autorizacion"]= 1;
 		$arr["idAut"]= $idAut;
 		$arr["motivoAut"]= $motivoAut;
 		if (($this->registrolote_modelo->editaAut($idLote,$arr,$idCliente)) == TRUE) {
 			if($correoDir !== 'gustavo.mancilla@ciudadmaderas.com'){
-        $envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, $datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
-				if($envio_correo){
+				if($this->email->send()){
 					$data['message_email'] = 'OK';
 				}else{
-					$data['message_email'] = $envio_correo;
+					$data['message_email'] = $this->email->print_debugger();
 				}
-      }
+            }
 		}
 	}
 
@@ -7798,39 +7758,42 @@ class RegistroCliente extends CI_Controller {
 
             $idAut = $this->session->userdata('id_usuario');
             $motivoAut = $autorizacionComent;
-            /********************************************************************************
-            * Armado de parámetros a mandar a plantilla para creación de correo electrónico	*
-            ********************************************************************************/
-            $datos_correo[0] = array(
+            
+            $encabezados = [
+                "nombreResidencial" => "PROYECTO",
+                "nombreCondominio"  => "CONDOMINIO",
+                "nombreLote"        => "LOTE",
+                "motivoAut"         => "AUTORIZACIÓN",
+                "fechaHora"         => "FECHA/HORA"
+            ];
+
+            $contenido = [
                 'nombreResidencial' =>  $nombreResidencial,
                 'nombreCondominio'  =>  $nombreCondominio,
                 'nombreLote'        =>  $nombreLote,
                 'motivoAut'         =>  $motivoAut,
                 'fechaHora'         =>  date("Y-m-d H:i:s")
-            );
-            $datos_etiquetas = null;
-            $comentario = $autorizacionComent;
-            $dataUser = $this->Asesor_model->getInfoUserById($idAut);
-            $correos_entregar = array('programador.analista18@ciudadmaderas.com'); //quit ar correo de test
+            ];
+
+            $this->email
+                ->initialize()
+                ->from('Ciudad Maderas')
+                ->to('programador.analista24@ciudadmaderas.com')
+                ->subject('SOLICITUD DE AUTORIZACIÓN - CONTRATACIÓN')
+                ->view($this->load->view('mail/registro-cliente/update-auts-from-dc', [
+                    'comentario' => $motivoAut,
+                    'encabezados' => $encabezados,
+                    'contenido' => $contenido
+                ], true));
+
+            // $dataUser = $this->Asesor_model->getInfoUserById($idAut);
             //array_push($correos_entregar, $dataUser[0]->correo);
 
-            $elementos_correo = array("setFrom" => Elementos_Correo_Registro_Cliente::SET_FROM_EMAIL,
-                                "Subject" => Elementos_Correo_Registro_Cliente::ASUNTO_CORREO_TABLA_SOLICITUD_ASESOR_AUTORIZACIONES);
-
-            $comentario_general = Elementos_Correo_Registro_Cliente::EMAIL_SOLICITUD_ASESOR_AUTORIZACIONES.'<br><br>'. (!isset($comentario) ? '' : $comentario);
-
-            $datos_encabezados_tabla = Elementos_Correo_Registro_Cliente::ETIQUETAS_ENCABEZADO_TABLA_SOLICITUD_ASESOR_AUTORIZACIONES;
-
-            //Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
-            $plantilla_correo = new plantilla_dinamica_correo;
-            /********************************************************************************************/
             if($correos_entregar[0] != 'gustavo.mancilla@ciudadmaderas.com'){
-                $envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo,
-                                                                $datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
-                if($envio_correo === 1 ){
+                if($this->email->send()){
                   $data['message_email'] = 'OK';
-                }else{
-                  $data['message_email'] = $envio_correo;
+                } else {
+                  $data['message_email'] = $this->email->print_debugger();
                 }
             }
 		}

@@ -40,6 +40,7 @@ $("#form_bonos").on('submit', function(e) {
         }
     });
 });
+
 /**-------------------------  TABLA NUEVOS BONOS --------------------------- */
 $("#tabla_prestamos").ready(function() {
     let titulos = [];
@@ -179,8 +180,8 @@ $("#tabla_prestamos").ready(function() {
             "data": function(d) {
 
                 if (d.estado == 1) {
-                    return  '<div class="d-flex justify-center"><button class="btn btn-success btn-round btn-fab btn-fab-mini abonar" value="' + d.id_pago_bono + ',' + d.abono + '"   data-toggle="tooltip" data-placement="top" title="AUTORIZAR"><i class="material-icons "   >done</i></button>' +
-                    '<button class="btn btn-default btn-round btn-fab btn-fab-mini consulta_abonos" value="' + d.id_pago_bono + ','+d.nombre+'  "  data-impuesto="'+d.impuesto1+'"   data-toggle="tooltip" data-placement="top" title="HISTORIAL" ><i class="material-icons" >bar_chart</i></button></div>';
+                    return  '<div class="d-flex justify-center"><button class="btn btn-success btn-round btn-fab btn-fab-mini abonar" value="' + d.id_pago_bono + ',' + d.abono + '" data-toggle="tooltip" data-placement="top" title="AUTORIZAR"><i class="material-icons "   >done</i></button>' +
+                    '<button class="btn btn-default btn-round btn-fab btn-fab-mini consulta_abonos" value="' + d.id_pago_bono + ','+d.nombre+'  "  data-impuesto="'+d.impuesto1+'" data-toggle="tooltip" data-placement="top" title="HISTORIAL" ><i class="material-icons" >bar_chart</i></button></div>';
                             }
             }
         }],
@@ -277,7 +278,6 @@ $("#tabla_prestamos").ready(function() {
 
         $("#modal_abono .modal-body").append(``);
         $('#modal_abono').modal('show');
-
     });
 
     $(window).resize(function () {
@@ -522,8 +522,6 @@ $("#tabla_bono_revision").ready(function() {
 /**------------------------- FIN TABLA REVISONES---------------------------- */
 
 /**-----------------TABLA PAGADOS-------------------------------- */
-
-
 $("#tabla_bono_pagado").ready(function() {
     let titulos = [];
 
@@ -706,9 +704,7 @@ $("#tabla_bono_pagado").ready(function() {
             </div>  `);
 
             $("#modal_bonos").modal();
-            $('#spiner-loader').addClass('hide');
-
-            
+            $('#spiner-loader').addClass('hide'); 
         });
     });
 
@@ -725,9 +721,6 @@ $("#tabla_bono_pagado").ready(function() {
 /**----------------- FIN TABLA PAGADOS-------------------------------- */
 
 /**------------------------TABLA OTROS-------------------------------- */
-
-
-
 $("#tabla_bono_otros").ready(function() {
     let titulos = [];
 
@@ -930,7 +923,7 @@ $("#tabla_bono_otros").ready(function() {
 });
 /**------------------------ FIN TABLA OTROS-------------------------------- */
 
-    $("#form_abono").on('submit', function(e) {
+$("#form_abono").on('submit', function(e) {
     e.preventDefault();
     var formData = new FormData(document.getElementById("form_abono"));
     formData.append("dato", "valor");
@@ -950,7 +943,7 @@ $("#tabla_bono_otros").ready(function() {
                 tabla_nuevas2.ajax.reload();
                 closeModalEng();
 
-                alerts.showNotification("top", "right", "Abono autorizado con exito.", "success");                    
+                alerts.showNotification("top", "right", "Abono autorizado con éxito.", "success");                    
                 document.getElementById("form_abono").reset();
 
             } else if (data == 2) {
@@ -975,5 +968,3 @@ $("#tabla_bono_otros").ready(function() {
         }
     });
 });
-
-

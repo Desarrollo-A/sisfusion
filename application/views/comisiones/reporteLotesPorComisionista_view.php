@@ -87,6 +87,7 @@
             cursor: pointer;
         }
     </style>
+
     <div class="wrapper ">
         <?php
             if (in_array($this->session->userdata('id_rol'), array(18, 63, 8, 7, 9, 3, 2, 1, 4)))
@@ -147,10 +148,8 @@
                                                     <div class="row">
                                                         <div class="col-md-12 p-r">
                                                             <div class="form-group d-flex">
-                                                                <input type="text" class="form-control datepicker"
-                                                                    id="beginDate" value="01/01/2022"/>
-                                                                <input type="text" class="form-control datepicker" id="endDate"
-                                                                    value="01/01/2022"/>
+                                                                <input type="text" class="form-control datepicker" id="beginDate" />
+                                                                <input type="text" class="form-control datepicker" id="endDate"/>
                                                                 <button class="btn btn-success btn-round btn-fab btn-fab-mini"
                                                                         id="searchByDateRange">
                                                                     <span class="material-icons update-dataTable">search</span>
@@ -181,9 +180,9 @@
                                     </div>
                                 </div>
                                 <br>
-                                <div class="material-datatables" id="box-reporteLotesPorComisionista">
+                                <div class="material-datatables hide" id="box-reporteLotesPorComisionista">
                                     <div class="form-group">
-                                        <table class="table-striped table-hover hide" id="reporteLotesPorComisionista" name="reporteLotesPorComisionista">
+                                        <table class="table-striped table-hover" id="reporteLotesPorComisionista" name="reporteLotesPorComisionista">
                                             <thead>
                                                 <tr>
                                                     <th>PROYECTO</th>
@@ -221,7 +220,7 @@
         </div>
         <?php $this->load->view('template/footer_legend'); ?>
     </div>
-    </div><!--main-panel close-->
+    </div>
 
     <?php $this->load->view('template/footer');?>
     <!--DATATABLE BUTTONS DATA EXPORT-->
@@ -232,14 +231,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-    <!--  Plugin for Date Time Picker and Full Calendar Plugin-->
     <script src="<?= base_url() ?>dist/js/moment.min.js"></script>
     <script src="<?= base_url() ?>dist/js/es.js"></script>
-    <!-- DateTimePicker Plugin -->
     <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
-    <!-- Sliders Plugin -->
     <script src="<?= base_url() ?>dist/js/nouislider.min.js"></script>
-    <!--  Full Calendar Plugin    -->
     <script src="<?= base_url() ?>dist/js/fullcalendar.min.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/reporteLotesPorComisionista.js"></script>
 </body>

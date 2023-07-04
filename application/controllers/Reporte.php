@@ -188,7 +188,6 @@ class Reporte extends CI_Controller {
             
 
             $data['data'] = $this->Reporte_model->getGeneralLotesInformation($beginDate, $endDate, $typeSale, $typeLote, $typeConstruccion, $estatus, $rol, $id_usuario, $render, $type, $sede, $leader, [$asesor, $coordinador, $gerente, $subdirector, $regional])->result_array();
-
             for ( $x = 0; $x < count($data['data']); $x++ ){
                 $fechaUltimoStatus = $data['data'][$x]['fechaUltimoStatus'];
                 $fechaApartado = $data['data'][$x]['fechaApartado'];
