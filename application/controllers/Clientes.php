@@ -93,7 +93,6 @@ public function getRpClientes()
     public function statusByProspect(){
         $this->load->view('template/header');
         $this->load->view("clientes/dm_report");
-
     }
 
     public function digitalMarketingReport(){

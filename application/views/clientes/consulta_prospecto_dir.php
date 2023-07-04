@@ -19,28 +19,28 @@
                             </div>
                             <div class="toolbar">
                                 <div class="row">
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 overflow-hidden">
                                         <div class="form-group label-floating select-is-empty">
                                             <label class="control-label">Subdirector(<b><span style="color: red;">*</span></b>):</label>
-                                            <select name="subDir" id="subDir" class="selectpicker select-gral m-0" data-show-subtext="true" data-live-search="true" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                            <select name="subDir" id="subDir" class="selectpicker select-gral m-0" data-container="body" data-show-subtext="true" data-live-search="true" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                         </div>
                                     </div>
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 overflow-hidden">
                                         <div class="form-group label-floating select-is-empty">
                                             <label class="control-label">Gerente(<b><span style="color: red;">*</span></b>):</label>
-                                            <select name="gerente" id="gerente" class="selectpicker select-gral m-0" data-show-subtext="true" data-live-search="true" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                            <select name="gerente" id="gerente" class="selectpicker select-gral m-0" data-container="body" data-show-subtext="true" data-live-search="true" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                         </div>
                                     </div>
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 overflow-hidden">
                                         <div class="form-group label-floating select-is-empty">
                                             <label class="control-label">Coordinador</label>
-                                            <select name="coordinador" id="coordinador" class="selectpicker select-gral m-0" data-show-subtext="true" data-live-search="true" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                            <select name="coordinador" id="coordinador" class="selectpicker select-gral m-0" data-container="body" data-show-subtext="true" data-live-search="true" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                         </div>
                                     </div>
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 overflow-hidden">
                                         <div class="form-group label-floating select-is-empty">
                                             <label class="control-label">Asesor</label>
-                                            <select name="asesores" id="asesores" class="selectpicker select-gral m-0" data-show-subtext="true" data-live-search="true" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                            <select name="asesores" id="asesores" class="selectpicker select-gral m-0" data-container="body" data-show-subtext="true" data-live-search="true" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-8 hide" id="filter_date">

@@ -177,7 +177,7 @@ $(document).ready(function () {
         $("#seeInformationModalRetiros").modal();
         $.getJSON(general_base_url+"Resguardos/getListaRetiros/"+id_rc, function (data) {
             $.each( data, function(i, v){
-                $("#comments-list-retiros").append('<li><div><p>Fecha del movimiento: <b class="txt-blueNCS">'+v.fecha_creacion+'</b><br>Nombre del usuario: <b>'+v.usuario+'</b><br>Comentarios: <b>'+v.comentario+'</b></p><br></div></li>');
+                $("#comments-list-retiros").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>NOMBRE DEL USUARIO: </small><b>'+v.usuario+' </b></a><br></div><div class="float-end text-right"><a> '+v.fecha_creacion+' </a></div><div class="col-md-12"><p class="m-0"><small>COMENTARIOS: </small><b>'+ v.comentario+'</b></p></div><h6></h6></div></div></li>');
             });
         });
     });

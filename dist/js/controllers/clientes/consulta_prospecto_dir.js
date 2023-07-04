@@ -100,10 +100,9 @@ var coordinador;
 var asesor;
 $('#gerente').on('change', function () {
     $('#filter_date').removeClass('hide');
-    /**/gerente = $("#gerente").val();
+    gerente = $("#gerente").val();
     $("#coordinador").empty().selectpicker('refresh');
     $("#asesores").empty().selectpicker('refresh');
-    $('#spiner-loader').removeClass('hide');
     $.post(general_base_url + 'index.php/Clientes/getCoordsByGrs/'+gerente, function(data) {
         var len = data.length;
         for( var i = 0; i<len; i++)
@@ -129,9 +128,7 @@ $('#gerente').on('change', function () {
 $('#coordinador').on('change', function () {
     coordinador = $("#coordinador").val();
     $('#filter_date').removeClass('hide');
-    //gerente
     $("#asesores").empty().selectpicker('refresh');
-    $('#spiner-loader').removeClass('hide');
     $.post(general_base_url + 'index.php/Clientes/getAsesorByCoords/'+coordinador, function(data) {
         var len = data.length;
         for( var i = 0; i<len; i++)
@@ -157,7 +154,6 @@ $('#coordinador').on('change', function () {
 $('#asesores').on('change', function () {
     asesor = $("#asesores").val();
     /**///carga tabla
-    $('#spiner-loader').removeClass('hide');
     var url = general_base_url + "index.php/Clientes/getProspectsListByAsesor/"+asesor;
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();

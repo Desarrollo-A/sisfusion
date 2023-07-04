@@ -15,13 +15,9 @@
         ?>
 
         <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            <i class="material-icons" onclick="cleanCommentsAsimilados()">clear</i>
-                        </button>
-                    </div>
+                    <div class="modal-header"></div>
                     <div class="modal-body">
                         <div role="tabpanel">
                             <ul class="nav nav-tabs" role="tablist" style="background: #949494;">
@@ -122,10 +118,10 @@
                                             </div>
                                             <div class="toolbar">
                                                 <div class="row">
-                                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0">
+                                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0 overflow-hidden">
                                                         <div class="form-group select-is-empty">
                                                             <label class="control-label">AÑO</label>
-                                                            <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
+                                                            <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-container="body" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
                                                                 <?php
                                                                 setlocale(LC_ALL, 'es_ES');
                                                                 for ($i = 2019; $i <= 2023; $i++) {
@@ -183,10 +179,10 @@
                                             </div>
                                             <div class="toolbar">
                                                 <div class="row">
-                                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0">
+                                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0 overflow-hidden">
                                                         <div class="form-group">
                                                             <label for="proyecto">Año</label>
-                                                            <select name="filtro35" id="filtro35" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
+                                                            <select name="filtro35" id="filtro35" class="selectpicker select-gral" data-container="body" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
                                                                 <?php
                                                                 setlocale(LC_ALL, 'es_ES');
                                                                 for ($i = 2019; $i <= 2023; $i++) {

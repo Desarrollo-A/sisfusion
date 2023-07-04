@@ -75,7 +75,6 @@ $('#proyecto28').change( function(){
 });
 
 $('#condominio28').change( function(){
-    $('#spiner-loader').removeClass('hide');
     index_proyecto = $('#proyecto28').val();
     index_condominio = $(this).val();
     fillCommissionTableRESGUARDO(index_proyecto, index_condominio);
@@ -102,7 +101,6 @@ $('#proyecto1').change( function(){
 });
 
 $('#condominio1').change( function(){
-    $('#spiner-loader').removeClass('hide');
     index_proyecto = $('#proyecto1').val();
     index_condominio = $(this).val();
     fillCommissionTableNUEVAS(index_proyecto, index_condominio);
@@ -130,13 +128,11 @@ $('#proyecto2').change( function(){
 });
 
 $('#condominio2').change( function(){
-    $('#spiner-loader').removeClass('hide');
     index_proyecto = $('#proyecto2').val();
     index_condominio = $(this).val();
     fillCommissionTableREVISION(index_proyecto, index_condominio);
 });
 
-/**--------------------------------------------------------------------------- */
 $('#proyecto3').change( function(){
     index_proyecto = $(this).val();
     index_condominio = 0
@@ -159,7 +155,6 @@ $('#proyecto3').change( function(){
 });
 
 $('#condominio3').change( function(){
-    $('#spiner-loader').removeClass('hide');
     index_proyecto = $('#proyecto3').val();
     index_condominio = $(this).val();
     // SE MANDA LLAMAR FUNCTION QUE LLENA LA DATA TABLE DE COMISINONES SIN PAGO EN NEODATA
@@ -190,7 +185,6 @@ $('#proyecto4').change( function(){
 });
 
 $('#condominio4').change( function(){
-    $('#spiner-loader').removeClass('hide');
     index_proyecto = $('#proyecto4').val();
     index_condominio = $(this).val();
     // SE MANDA LLAMAR FUNCTION QUE LLENA LA DATA TABLE DE COMISINONES SIN PAGO EN NEODATA
@@ -524,7 +518,7 @@ function fillCommissionTableNUEVAS(proyecto,condominio){
         {
             "orderable": false,
             "data": function(data) {
-                return '<div class="d-flex justify-center"><button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_nuevas" data-toggle="tooltip" data-placement="left" title="BITACORA DE CAMBIOS">' +'<i class="fas fa-info"></i></button></div>';
+                return '<div class="d-flex justify-center"><button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_nuevas" data-toggle="tooltip" data-placement="left" title="BITÁCORA DE CAMBIOS">' +'<i class="fas fa-info"></i></button></div>';
             }
         }],
         columnDefs: [{
@@ -606,7 +600,7 @@ function fillCommissionTableNUEVAS(proyecto,condominio){
         $("#seeInformationModalAsimilados").modal();
         $.getJSON("getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
-                $("#comments-list-asimilados").append('<li><div><p>Fecha del movimiento: <b class="txt-blueNCS">'+v.fecha_movimiento+'</b><br>Nombre del usuario: <b>'+v.nombre_usuario+'</b><br>Comentarios: <b>'+v.comentario+'</b></p><br></div></li>');
+                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>NOMBRE DEL USUARIO: </small><b>'+ v.nombre_usuario +' </b></a><br></div><div class="float-end text-right"><a> '+ v.fecha_movimiento +' </a></div><div class="col-md-12"><p class="m-0"><small>COMENTARIO: </small><b>'+ v.comentario+'</b></p></div><h6></h6></div></div></li>');
             });
             $('#spiner-loader').addClass('hide');
         });
@@ -753,7 +747,7 @@ function fillCommissionTableRESGUARDO(proyecto,condominio){
         },
         {
             "data": function(data) {
-                return '<div class="d-flex justify-center"><button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_resguardo" data-toggle="tooltip" data-placement="left" title="BITACORA DE CAMBIOS">' +'<i class="fas fa-info"></i></button></div>';
+                return '<div class="d-flex justify-center"><button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_resguardo" data-toggle="tooltip" data-placement="left" title="BITÁCORA DE CAMBIOS">' +'<i class="fas fa-info"></i></button></div>';
             }
         }],
         columnDefs: [{
@@ -792,7 +786,7 @@ function fillCommissionTableRESGUARDO(proyecto,condominio){
         $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DEL LOTE <b style="color:#22CB99; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">'+lote+'</b></h5></p>');
         $.getJSON("getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
-                $("#comments-list-asimilados").append('<li><div><p>Fecha del movimiento: <b class="txt-blueNCS">'+v.fecha_movimiento+'</b><br>Nombre del usuario: <b>'+v.nombre_usuario+'</b><br>Comentarios: <b>'+v.comentario+'</b></p><br></div></li>');
+                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>NOMBRE DEL USUARIO: </small><b>'+ v.nombre_usuario +' </b></a><br></div><div class="float-end text-right"><a> '+ v.fecha_movimiento +' </a></div><div class="col-md-12"><p class="m-0"><small>COMENTARIO: </small><b>'+ v.comentario+'</b></p></div><h6></h6></div></div></li>');
             });
             $('#spiner-loader').addClass('hide');
         });
@@ -980,7 +974,7 @@ function fillCommissionTableREVISION(proyecto,condominio){
         $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DEL LOTE <b style="color:#2242CB; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">'+lote+'</b></h5></p>');
         $.getJSON("getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
-                $("#comments-list-asimilados").append('<li><div><p>Fecha del movimiento: <b class="txt-blueNCS">'+v.fecha_movimiento+'</b><br>Nombre del usuario: <b>'+v.nombre_usuario+'</b><br>Comentarios: <b>'+v.comentario+'</b></p><br></div></li>');
+                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>Nombre del usuario: </small><b>'+ v.nombre_usuario +' </b></a><br></div><div class="float-end text-right"><a> '+ v.fecha_movimiento +' </a></div><div class="col-md-12"><p class="m-0"><small>Comentario: </small><b>'+ v.comentario+'</b></p></div><h6></h6></div></div></li>');
             });
             $('#spiner-loader').addClass('hide');
         });
@@ -1169,7 +1163,7 @@ function fillCommissionTablePAGADAS(proyecto,condominio){
 
         $.getJSON("getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
-                $("#comments-list-asimilados").append('<li><div><p>Fecha del movimiento: <b class="txt-blueNCS">'+v.fecha_movimiento+'</b><br>Nombre del usuario: <b>'+v.nombre_usuario+'</b><br>Comentarios: <b>'+v.comentario+'</b></p><br></div></li>');
+                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>NOMBRE DEL USUARIO: </small><b>'+ v.nombre_usuario +' </b></a><br></div><div class="float-end text-right"><a> '+ v.fecha_movimiento +' </a></div><div class="col-md-12"><p class="m-0"><small>COMENTARIO: </small><b>'+ v.comentario+'</b></p></div><h6></h6></div></div></li>');
             });
             $('#spiner-loader').addClass('hide');
         });
@@ -1357,7 +1351,7 @@ function fillCommissionTableOTRAS(proyecto,condominio){
         $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DEL LOTE <b style="color:#CB7922; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">'+lote+'</b></h5></p>');
         $.getJSON("getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
-                $("#comments-list-asimilados").append('<li><div><p>Fecha del movimiento: <b class="txt-blueNCS">'+v.fecha_movimiento+'</b><br>Nombre del usuario: <b>'+v.nombre_usuario+'</b><br>Comentarios: <b>'+v.comentario+'</b></p><br></div></li>');
+                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>NOMBRE DEL USUARIO: </small><b>'+ v.nombre_usuario +' </b></a><br></div><div class="float-end text-right"><a> '+ v.fecha_movimiento +' </a></div><div class="col-md-12"><p class="m-0"><small>COMENTARIO: </small><b>'+ v.comentario+'</b></p></div><h6></h6></div></div></li>');
             });
             $('#spiner-loader').addClass('hide');
         });
@@ -1481,16 +1475,6 @@ $(window).resize(function() {
     tabla_pagadas.columns.adjust();
     tabla_otras.columns.adjust();
 });
-
-function formatMoney(n) {
-    var c = isNaN(c = Math.abs(c)) ? 2 : c,
-        d = d == undefined ? "." : d,
-        t = t == undefined ? "," : t,
-        s = n < 0 ? "-" : "",
-        i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
-        j = (j = i.length) > 3 ? j % 3 : 0;
-    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
-};
 
 $(document).on("click", ".subir_factura", function() {
     resear_formulario();

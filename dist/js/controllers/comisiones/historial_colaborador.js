@@ -301,7 +301,7 @@ function getAssimilatedCommissions(proyecto, condominio){
         $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $.getJSON("getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
-                $("#comments-list-asimilados").append('<li><div><p>Fecha del movimiento: <b class="txt-blueNCS">'+v.fecha_movimiento+'</b><br>Nombre del usuario: <b>'+v.nombre_usuario+'</b><br>Comentarios: <b>'+v.comentario+'</b></p><br></div></li>');
+                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>NOMBRE DEL USUARIO: </small><b>'+v.nombre_usuario+' </b></a><br></div><div class="float-end text-right"><a> '+v.fecha_movimiento+' </a></div><div class="col-md-12"><p class="m-0"><small>COMENTARIOS: </small><b>'+v.comentario+'</b></p></div><h6></h6></div></div></li>');
             });
         });
     });
@@ -536,7 +536,7 @@ function getAssimilatedCancelacion(proyecto, condominio){
         $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $.getJSON("getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
-                $("#comments-list-asimilados").append('<li><div><p>Fecha del movimiento: <b class="txt-blueNCS">'+v.fecha_movimiento+'</b><br>Nombre del usuario: <b>'+v.nombre_usuario+'</b><br>Comentarios: <b>'+v.comentario+'</b></p><br></div></li>');
+                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>NOMBRE DEL USUARIO: </small><b>'+v.nombre_usuario+' </b></a><br></div><div class="float-end text-right"><a> '+v.fecha_movimiento+' </a></div><div class="col-md-12"><p class="m-0"><small>COMENTARIOS: </small><b>'+v.comentario+'</b></p></div><h6></h6></div></div></li>');
             });
         });
     });
@@ -815,7 +815,7 @@ function tableComisionesSuma(anio){
         $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DE LA REFERENCIA <b style="color:#39A1C0; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">'+referencia+'</b></h5></p>');
         $.getJSON(general_base_url+"Suma/getHistorial/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
-                $("#comments-list-asimilados").append('<li><div><p>Fecha del movimiento: <b class="txt-blueNCS">'+v.fecha_movimiento+'</b><br>Modificado por: <b>'+v.modificado_por+'</b><br>Comentarios: <b>'+v.comentario+'</b></p><br></div></li>');
+                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>MODIFICADO POR: </small><b>'+v.modificado_por+' </b></a><br></div><div class="float-end text-right"><a> '+v.fecha_movimiento+' </a></div><div class="col-md-12"><p class="m-0"><small>COMENTARIOS: </small><b>'+v.comentario+'</b></p></div><h6></h6></div></div></li>');
             });
         });
     });

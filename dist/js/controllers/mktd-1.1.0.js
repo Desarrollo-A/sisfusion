@@ -89,18 +89,25 @@ function fillTimeline (v) {
 }
 
 function fillChangelog (v) {
-    $("#changelog").append('<li class="timeline-inverted">\n' +
-        '    <div class="timeline-badge success"></div>\n' +
-        '    <div class="timeline-panel">\n' +
-        '            <label><h6>'+v.parametro_modificado+'</h6></label><br>\n' +
-        '            <b>Valor anterior:</b> '+v.anterior+'\n' +
-        '            <br>\n' +
-        '            <b>Valor nuevo:</b> '+v.nuevo+'\n' +
-        '        <h6>\n' +
-        '            <span class="small text-gray"><i class="fa fa-clock-o mr-1"></i> '+v.fecha_creacion+' - '+v.creador+'</span>\n' +
-        '        </h6>\n' +
-        '    </div>\n' +
-        '</li>');
+    $("#changelog").append('<li>\n' +
+    '    <div class="container-fluid">\n' +
+    '       <div class="row">\n' +
+    '           <div class="col-md-6">\n' +
+    '               <a><small>CAMPO: </small><b>' + v.parametro_modificado + '</b></a><br>\n' +
+    '           </div>\n' +
+    '           <div class="float-end text-right">\n' +
+    '               <a>' + v.fecha_creacion + '</a>\n' +
+    '           </div>\n' +
+    '           <div class="col-md-12">\n' +
+    ' 	            <p class="m-0"><small>USUARIO: </small><b> ' + v.creador + '</b></p>\n'+
+    '               <p class="m-0"><small>VALOR ANTERIOR: </small><b> ' + v.anterior + '</b></p>\n' +
+    '               <p class="m-0"><small>VALOR NUEVO: </small><b> ' + v.nuevo + '</b></p>\n' +
+    '           </div>\n' +
+    '        <h6>\n' +
+    '        </h6>\n' +
+    '       </div>\n' +
+    '    </div>\n' +
+    '</li>');
 }
 
 

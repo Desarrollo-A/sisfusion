@@ -16,7 +16,7 @@
                     <div class="modal-body">
                         <div class="conteiner-fluid">
                             <div class="row">
-                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 scroll-styles" style="height: 350px; overflow: auto">
                                     <ul class="timeline-3" id="changelog"></ul>
                                 </div>
                             </div>
