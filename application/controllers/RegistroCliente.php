@@ -7506,7 +7506,7 @@ class RegistroCliente extends CI_Controller {
             "fechaHora"         => "FECHA/HORA"
         ];
 
-        $contenido = [
+        $contenido[] = [
             "nombreResidencial" =>  $nombreResidencial,
             "nombreCondominio"  =>  $nombreCondominio,
             "nombreLote"        =>  $nombreLote,
@@ -7656,7 +7656,7 @@ class RegistroCliente extends CI_Controller {
         $nombreResidencial = ($_POST['nombreResidencial']);
         $nombreCondominio = ($_POST['nombreCondominio']);
         $nombreLote = ($_POST['nombreLote']);
-        $autorizacionesCliente = $_POST['autorizacionesCliente'];
+        $autorizacionesCliente = $_POST['autorizacionesCliente'] ?? null;
         $response =  0 ;
         $code = '';
         $mensaje = '';
@@ -7767,7 +7767,7 @@ class RegistroCliente extends CI_Controller {
                 "fechaHora"         => "FECHA/HORA"
             ];
 
-            $contenido = [
+            $contenido[] = [
                 'nombreResidencial' =>  $nombreResidencial,
                 'nombreCondominio'  =>  $nombreCondominio,
                 'nombreLote'        =>  $nombreLote,
@@ -7786,10 +7786,10 @@ class RegistroCliente extends CI_Controller {
                     'contenido' => $contenido
                 ], true));
 
-            // $dataUser = $this->Asesor_model->getInfoUserById($idAut);
-            //array_push($correos_entregar, $dataUser[0]->correo);
 
-            if($correos_entregar[0] != 'gustavo.mancilla@ciudadmaderas.com'){
+            $dataUser = $this->Asesor_model->getInfoUserById($idAut);
+
+            if($dataUser[0]->correo != 'gustavo.mancilla@ciudadmaderas.com'){
                 if($this->email->send()){
                   $data['message_email'] = 'OK';
                 } else {
