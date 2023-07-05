@@ -1207,7 +1207,7 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
             'fechaAccion'   =>  'FECHA CREACIÓN'
         ];
 
-        $contenido = [
+        $contenido[] = [
             'usuario'      =>  'ASESOR COMODÍN',
             'contraseña'   =>  $key,
             'diasVencer'   =>  '15',
@@ -1219,7 +1219,7 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
             ->from('Ciudad Maderas')
             ->to('programador.analista24@ciudadmaderas.com')
             ->subject('Cambio de contraseña ASESOR COMODÍN.')
-            ->view($this->load->view('mail/schedule-tasks-cl/send-comp-notification', [
+            ->view($this->load->view('mail/schedule-tasks-cl/change-password', [
                 'encabezados' => $encabezados,
                 'contenido' => $contenido
             ], true));
