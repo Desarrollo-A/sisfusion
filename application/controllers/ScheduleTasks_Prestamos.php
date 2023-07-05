@@ -12,7 +12,7 @@ class ScheduleTasks_Prestamos extends CI_Controller
     $this->load->library(array('session', 'form_validation'));
     $this->load->helper(array('url', 'form'));
     $this->load->database('default');
-    $this->load->library('phpmailer_lib');
+    $this->load->library('email');
     $this->load->model('Comisiones_model');
   }
 
