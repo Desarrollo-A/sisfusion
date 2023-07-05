@@ -1010,7 +1010,7 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
 	//    $correosClean = explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com');
 	//    $array = array_unique($correosClean);
 	// }
-	$infoLote = $this->Juridico_model->getNameLote($idLote);
+	$infoLote = (array)$this->Juridico_model->getNameLote($idLote);
 
     $encabezados = [
       'nombreResidencial' =>  'PROYECTO',
@@ -1020,7 +1020,7 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
       'fechaHora'         =>  'FECHA/HORA'
     ];
 
-    $contenido = array_merge($infoLote, ['motivoRechazo' => $comentario, 'fechaHora' => date("Y-m-d H:i:s")]);
+    $contenido[] = array_merge($infoLote, ['motivoRechazo' => $comentario, 'fechaHora' => date("Y-m-d H:i:s")]);
 
     $this->email
       ->initialize()
