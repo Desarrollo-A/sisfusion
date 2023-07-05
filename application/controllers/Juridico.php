@@ -777,7 +777,7 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
 	   $array = array_unique($correosClean);
 	}
 
-	$infoLote = $this->Juridico_model->getNameLote($idLote);
+	$infoLote = (array)$this->Juridico_model->getNameLote($idLote);
 
     $encabezados = [
         'nombreResidencial' =>  'PROYECTO',
@@ -787,7 +787,7 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
         'fechaHora'         =>  'FECHA/HORA'
     ];
 
-    $contenido = array_merge($infoLote, ['motivoRechazo' => $comentario, 'fechaHora' => date("Y-m-d H:i:s")]);
+    $contenido[] = array_merge($infoLote, ['motivoRechazo' => $comentario, 'fechaHora' => date("Y-m-d H:i:s")]);
 
     $this->email
       ->initialize()
@@ -800,18 +800,7 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
           'comentario' => $comentario
         ], true));
 
-
-	/********************************************************************************
-	* Armado de parámetros a mandar a plantilla para creación de correo electrónico	*
-	********************************************************************************/
-	$datos_correo[0] = json_decode(json_encode($infoLote), true);
-	$datos_correo[0] += ["motivoRechazo" => $comentario];
-	$datos_correo[0] += ["fechaHora" => date("Y-m-d H:i:s")];
-
-	$datos_etiquetas = null;
-
 	$validate = $this->Juridico_model->validateSt7($idLote);
-
 
 	if($validate == 1){
 		if ($this->Juridico_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){
