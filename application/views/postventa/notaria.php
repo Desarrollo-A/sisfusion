@@ -23,9 +23,9 @@
                     <h4 class="card-title">Agregar notaría</h4>
                 </div>
                 <form method="post" id="form_notario">
-                    <div class="modal-body">
+                    <div class="modal-body pt-0">
                         <div class="form-group">
-                            <label class="control-label">Nombre de notaía</label>    
+                            <label class="control-label">Nombre de notaría</label>    
                             <input class="form-control input-gral" id="notaria_nombre" type="text" name="notaria_nombre" required>
                         </div>
                         <div class="form-group">
@@ -115,13 +115,6 @@
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
-<script>
-    userType = <?= $this->session->userdata('id_rol') ?> ;
-    idUser = <?= $this->session->userdata('id_usuario') ?> ;
-    typeTransaction = 1;
-	Shadowbox.init();
-    base_url = "<?=base_url()?>";
-</script>
 <!-- MODAL WIZARD -->
 <script src="<?=base_url()?>dist/js/modal-steps.min.js"></script>
 <!--  Plugin for Date Time Picker and Full Calendar Plugin-->
