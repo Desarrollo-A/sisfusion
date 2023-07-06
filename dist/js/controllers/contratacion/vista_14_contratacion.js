@@ -66,7 +66,7 @@ $("#tabla_ingresar_14").ready(function () {
         },
         {
             data: function (d) {
-                return '<p class="m-0">' + (d.nombreCondominio).toUpperCase(); +'</p>';
+                return '<p class="m-0">' + d.nombreCondominio +'</p>';
             }
         },
         {
@@ -82,12 +82,12 @@ $("#tabla_ingresar_14").ready(function () {
         },
         {
             data: function (d) {
-                return '<p class="m-0">' + d.nombre + " " + d.apellido_paterno + " " + d.apellido_materno + '</p>';
+                return '<p class="m-0">' + d.cliente +'</p>';
             }
         },
         {
             data: function (d) {
-                return `<span class="label lbl-grayDark">${d.nombreSede}</span>`;
+                return `<span class="label lbl-azure">${d.nombreSede}</span>`;
             }
         },
         {
@@ -104,14 +104,12 @@ $("#tabla_ingresar_14").ready(function () {
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' +
                                 'class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="REGISTRAR STATUS">' +
                                 '<i class="far fa-thumbs-up"></i></button>';
-
                         }
                         else if (data.idStatusContratacion == 13 && data.idMovimiento == 68 && (data.perfil == 32 || data.perfil == 13 || data.perfil == 17 || data.perfil == 70)) {
                             cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" ' +
                                 'class="revCont btn-data btn-orangeYellow" data-toggle="tooltip" data-placement="top" title= "REGISTRAR STATUS">' +
                                 '<i class="far fa-thumbs-up"></i></button>';
-
                         }
                         else {
                             cntActions = 'N/A';
@@ -119,8 +117,7 @@ $("#tabla_ingresar_14").ready(function () {
                     }
                     return '<div class="d-flex justify-center">' + cntActions + '</div>';
                 }
-
-                return '<div class="d-flex justify-center">N/A</div>';
+                return ' `<span class="label lbl-warning">N/A</span>`;';
             }
         }
         ],

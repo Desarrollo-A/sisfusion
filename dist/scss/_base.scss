@@ -611,8 +611,8 @@ $tv                 : "(min-width: 1280px)";
 }
 
 .lbl-cerulean{
-    color:              $cerulean;
-    border:             none;
+    color: $cerulean;
+    border: none;
     background-color: #00A0FF18;
 }
 
@@ -1073,8 +1073,6 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
 .timeline-3 {
     list-style-type: none;
     position: relative;
-    height: 300px; /* Establece la altura del contenedor */
-    overflow: auto;
     &::before{
         content: " ";
         background: #d4d9df;

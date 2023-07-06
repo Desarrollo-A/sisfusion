@@ -12,7 +12,7 @@ class ScheduleTasks_Prestamos extends CI_Controller
     $this->load->library(array('session', 'form_validation'));
     $this->load->helper(array('url', 'form'));
     $this->load->database('default');
-    $this->load->library('phpmailer_lib');
+    $this->load->library('email');
     $this->load->model('Comisiones_model');
   }
 
@@ -179,7 +179,8 @@ class ScheduleTasks_Prestamos extends CI_Controller
         $this->email
             ->initialize()
             ->from('Ciudad Maderas')
-            ->to('programador.analista24@ciudadmaderas.com') // TODO: Cambiar el correo por el de producción
+            ->to('programador.analista24@ciudadmaderas.com')
+            // ->to('programador.analista5@ciudadmaderas.com', 'programador.analista16@ciudadmaderas.com')
             ->subject('PRÉSTAMOS NO APLICADOS EL DÍA '.date('Y-m-d'))
             ->view($this->load->view('mail/schedule-tasks-prestamos/prestamos', [
                 'encabezados' => $encabezados,

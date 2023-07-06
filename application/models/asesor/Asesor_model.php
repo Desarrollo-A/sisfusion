@@ -827,7 +827,7 @@ class Asesor_model extends CI_Model {
     }
     public function insertAutorizacion($data)
     {
-        $this->db->insert('autorizaciones', $data);
+        return $this->db->insert('autorizaciones', $data);
     }
     public function registroClienteDS($id_condominio) {
         ini_set('max_execution_time', 300);
@@ -887,7 +887,7 @@ class Asesor_model extends CI_Model {
         $query = $this->db->query(
             'SELECT residencial.nombreResidencial, condominio.nombre as nombreCondominio, 
             lotes.nombreLote, autorizaciones.estatus, autorizaciones.autorizacion,
-            autorizaciones.fecha_creacion, users.usuario as sol, 
+            CONVERT(VARCHAR,autorizaciones.fecha_creacion,20) AS fecha_creacion, users.usuario as sol, 
             users1.usuario as aut, id_autorizacion, autorizaciones.idLote
 		    FROM autorizaciones 
             INNER JOIN lotes on lotes.idLote = autorizaciones.idLote 

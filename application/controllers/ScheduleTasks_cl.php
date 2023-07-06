@@ -1,13 +1,10 @@
 <?php
-
-use application\helpers\email\scheduleTasks_cl\Elementos_Correo_ScheduleTasks_Cl;
-
- class ScheduleTasks_cl extends CI_Controller {
+class ScheduleTasks_cl extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
     $this->load->model(array('scheduleTasks_model', 'Comisiones_model', 'asesor/Asesor_model', 'General_model'));
 		$this->load->library(array('session','form_validation'));
-		$this->load->helper(array('url','form', 'email/scheduleTasks_cl/elementos_correo', 'email/plantilla_dinamica_correo'));
+		$this->load->helper(array('url','form'));
 		$this->load->database('default');
 		$this->load->library('email');
     date_default_timezone_set('America/Mexico_City');
@@ -54,32 +51,7 @@ use application\helpers\email\scheduleTasks_cl\Elementos_Correo_ScheduleTasks_Cl
 	
 	
     public function sendRv5(){
-
         $datos["sendApartados_old"]= $this->scheduleTasks_model->sendMailVentasRetrasos();
-    
-        /************************************************************************************
-        * Armado de parámetros a mandar a plantilla para creación de correo electrónico	    *
-        ************************************************************************************/
-        // $correos_entregar = array('lucero.velazquez@ciudadmaderas.com',
-        //                         'mariela.sanchez@ciudadmaderas.com'
-        //                         'subdirector.contraloria@ciudadmaderas.com',
-        //                         'rigel.silva@prohabitacion.com',
-        //                         'rafael.bautista@ciudadmaderas.com',
-        //                         'vicky.paulin@ciudadmaderas.com',
-        //                         'adriana.rodriguez@ciudadmaderas.com',
-        //                         'aurea.garcia@ciudadmaderas.com',
-        //                         'valeria.palacios@ciudadmaderas.com',
-        //                         'juanamaria.guzman@ciudadmaderas.com',
-        //                         'adriana.perez@ciudadmaderas.com',
-        //                         'fernanda.monjaraz@ciudadmaderas.com',
-        //                         'grisell.malagon@ciudadmaderas.com',
-        //                         'karen.ponce@ciudadmaderas.com',
-        //                         'luz.angeles@ciudadmaderas.com',
-        //                         'irene.vallejo@ciudadmaderas.com',
-        //                         'leydi.sanchez@ciudadmaderas.com',
-        //                         'monserrat.cazares@ciudadmaderas.com');
-        //                         'danae.perez@ciudadmaderas.com');
-        //                         'nestor.vera@ciudadmaderas.com');
     
         $contenido[] = array();
         foreach ($datos['sendApartados_old'] as $key  =>  $valor) {
@@ -132,14 +104,32 @@ use application\helpers\email\scheduleTasks_cl\Elementos_Correo_ScheduleTasks_Cl
         ];
 
         $this->email
-          ->initialize()
-          ->from('Ciudad Maderas')
-          ->to('programador.analista24@ciudadmaderas.com')
-          ->subject('Acumulado de lotes sin integrar Expediente al: '.date("Y-m-d H:i:s"))
-          ->view($this->load->view('mail/schedule-tasks-cl/send-rv-5', [
-              'encabezados' => $encabezados,
-              'contenido' => $contenido
-          ], true));
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to('programador.analista24@ciudadmaderas.com')
+            /*->to('mariela.sanchez@ciudadmaderas.com',
+                'rigel.silva@prohabitacion.com',
+                'rafael.bautista@ciudadmaderas.com',
+                'vicky.paulin@ciudadmaderas.com',
+                'adriana.rodriguez@ciudadmaderas.com',
+                'aurea.garcia@ciudadmaderas.com',
+                'valeria.palacios@ciudadmaderas.com',
+                'juanamaria.guzman@ciudadmaderas.com',
+                'adriana.perez@ciudadmaderas.com',
+                'fernanda.monjaraz@ciudadmaderas.com',
+                'grisell.malagon@ciudadmaderas.com',
+                'karen.ponce@ciudadmaderas.com',
+                'luz.angeles@ciudadmaderas.com',
+                'irene.vallejo@ciudadmaderas.com',
+                'leydi.sanchez@ciudadmaderas.com',
+                'monserrat.cazares@ciudadmaderas.com',
+                'danae.perez@ciudadmaderas.com',
+                'nestor.vera@ciudadmaderas.com')*/
+            ->subject('Acumulado de lotes sin integrar Expediente al: '.date("Y-m-d H:i:s"))
+            ->view($this->load->view('mail/schedule-tasks-cl/send-rv-5', [
+                'encabezados' => $encabezados,
+                'contenido' => $contenido
+            ], true));
 
         $this->email->send();
     }
@@ -163,11 +153,6 @@ use application\helpers\email\scheduleTasks_cl\Elementos_Correo_ScheduleTasks_Cl
 
     public function mailBloqueosAfter45(){
         $datos["mailbloqueos"]= $this->scheduleTasks_model->sendMailBloqueosDireccion();
-        //print_r($datos["mailbloqueos"]); exit;
-        /************************************************************************************
-        * Armado de parámetros a mandar a plantilla para creación de correo electrónico	    *
-        ************************************************************************************/
-        //$correos_entregar = array("contraloria.corporativa6@ciudadmaderas.com");
     
         $contenido[] = array();
         foreach ($datos["mailbloqueos"] as $key  =>  $valor) {
@@ -207,6 +192,7 @@ use application\helpers\email\scheduleTasks_cl\Elementos_Correo_ScheduleTasks_Cl
             ->initialize()
             ->from('Ciudad Maderas')
             ->to('programador.analista24@ciudadmaderas.com')
+            //->to('contraloria.corporativa6@ciudadmaderas.com')
             ->subject('LOTES BLOQUEADOS - CIUDAD MADERAS')
             ->view($this->load->view('mail/schedule-tasks-cl/send-rv-5', [
                 'encabezados' => $encabezados,
@@ -965,18 +951,6 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
     }
 
     public function notifyRejEv($correo, $data_eviRec, $subject, $userType) {
-        /*$correoDir = $dataUser[0]->correo;linea de codigo para produccion*/
-      
-        // if(is_array($correo) && count($correo) > 1){
-        //   foreach($correo as $correo_destinatario){
-        //     if ($correo_destinatario){
-        //       array_push($correos_entregar, $correo_destinatario);
-        //     }
-        //   }
-        // }else{
-        //   array_push($correos_entregar, $correo);
-        // }
-
         $encabezados = ($userType === 32)
             ? [
                 'idLote'            =>  'ID LOTE',
@@ -1004,6 +978,7 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
             ->initialize()
             ->from('Ciudad Maderas')
             ->to('programador.analista24@ciudadmaderas.com')
+            // ->to($correo)
             ->subject($subject)
             ->view($this->load->view('mail/schedule-tasks-cl/send-rv-5', [
                 'encabezados' => $encabezados,
@@ -1065,14 +1040,6 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
 
     public function sendComptrollerNotification($data_eviRec, $subject, $typeTransaction)
     {
-        // $correos_entregar = array('asistente.pv2@ciudadmaderas.com',
-        //                           'coord.contraloriacorporativa@ciudadmaderas.com',
-        //                           'subdirector.contraloria@ciudadmaderas.com',
-        //                           'supervisor.bd@ciudadmaderas.com',
-        //                           'coord.contraloriacorporativa@ciudadmaderas.com',
-        //                           'mariela.sanchez@ciudadmaderas.com',
-        //                           'irene.vallejo@ciudadmaderas.com');
-
         $encabezados = ($typeTransaction === 1)
             ? [
                 'nombreSede'       => 'SEDE',
@@ -1116,6 +1083,10 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
             ->initialize()
             ->from('Ciudad Maderas')
             ->to('programador.analista24@ciudadmaderas.com')
+            /*->to('supervisor.bd@ciudadmaderas.com',
+                'coord.contraloriacorporativa@ciudadmaderas.com',
+                'mariela.sanchez@ciudadmaderas.com',
+                'irene.vallejo@ciudadmaderas.com')*/
             ->subject($subj)
             ->view($this->load->view('mail/schedule-tasks-cl/send-comp-notification', [
                 'encabezados' => $encabezados,
@@ -1183,23 +1154,6 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
     }
 
     public function change_password_mail($key){
-        // $correos_entregar = array('mariadejesus.garduno@ciudadmaderas.com',
-        //                           'rafael.bautista@ciudadmaderas.com',
-        //                           'vicky.paulin@ciudadmaderas.com',
-        //                           'adriana.perez@ciudadmaderas.com',
-        //                           'leonardo.aguilar@ciudadmaderas.com',
-        //                           'grisell.malagon@ciudadmaderas.com',
-        //                           'jorge.mugica@ciudadmaderas.com',
-        //                           'adriana.rodriguez@ciudadmaderas.com',
-        //                           'fernanda.monjaraz@ciudadmaderas.com',
-        //                           'valeria.palacios@ciduadmaderas.com',
-        //                           'juanamaria.guzman@ciudadmaderas.com',
-        //                           'monserrat.cazares@ciudadmaderas.com',
-        //                           'leydi.sanchez@ciudadmaderas.com',
-        //                           'nohemi.castillo@ciudadmaderas.com',
-        //                           'lorena.serrato@ciudadmaderas.com',
-        //                           'yaretzi.rosales@ciudadmaderas.com');
-
         $encabezados = [
             'usuario'       =>  'USUARIO',
             'contraseña'    =>  'CONTRASEÑA NUEVA',
@@ -1207,7 +1161,7 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
             'fechaAccion'   =>  'FECHA CREACIÓN'
         ];
 
-        $contenido = [
+        $contenido[] = [
             'usuario'      =>  'ASESOR COMODÍN',
             'contraseña'   =>  $key,
             'diasVencer'   =>  '15',
@@ -1218,8 +1172,24 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
             ->initialize()
             ->from('Ciudad Maderas')
             ->to('programador.analista24@ciudadmaderas.com')
+            /*->to('mariadejesus.garduno@ciudadmaderas.com',
+                'rafael.bautista@ciudadmaderas.com',
+                'vicky.paulin@ciudadmaderas.com',
+                'adriana.perez@ciudadmaderas.com',
+                'leonardo.aguilar@ciudadmaderas.com',
+                'grisell.malagon@ciudadmaderas.com',
+                'jorge.mugica@ciudadmaderas.com',
+                'adriana.rodriguez@ciudadmaderas.com',
+                'fernanda.monjaraz@ciudadmaderas.com',
+                'valeria.palacios@ciudadmaderas.com',
+                'juanamaria.guzman@ciudadmaderas.com',
+                'monserrat.cazares@ciudadmaderas.com',
+                'leydi.sanchez@ciudadmaderas.com',
+                'nohemi.castillo@ciudadmaderas.com',
+                'lorena.serrato@ciudadmaderas.com',
+                'yaretzi.rosales@ciudadmaderas.com')*/
             ->subject('Cambio de contraseña ASESOR COMODÍN.')
-            ->view($this->load->view('mail/schedule-tasks-cl/send-comp-notification', [
+            ->view($this->load->view('mail/schedule-tasks-cl/change-password', [
                 'encabezados' => $encabezados,
                 'contenido' => $contenido
             ], true));
