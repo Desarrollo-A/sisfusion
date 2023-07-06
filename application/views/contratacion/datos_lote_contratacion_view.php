@@ -179,6 +179,7 @@
                                                     <th>DIRECTOR REGIONAL</th>
                                                     <th>DIRECTOR REGIONAL 2</th>
                                                     <th>ESTATUS</th>
+                                                    <th>ESTATUS DE CONTRATACIÓN</th>
                                                     <th>APARTADO</th>
                                                     <th>COMENTARIO</th>
                                                     <th>LUGAR DE PROSPECCIÓN</th>

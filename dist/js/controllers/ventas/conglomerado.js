@@ -1431,7 +1431,7 @@ $('#actualizar-descuento-form')
                 required: true,
                 number: true,
                 min: 1,
-                max: 19000
+                max: 99000
             },
             "numero-pagos": {
                 required: true
@@ -1442,7 +1442,7 @@ $('#actualizar-descuento-form')
                 required: '* Campo requerido.',
                 number: 'Número no válido.',
                 min: 'El valor mínimo debe ser 1',
-                max: 'El valor máximo debe ser 19,000'
+                max: 'El valor máximo debe ser 99,000'
             },
             "numero-pagos": {
                 required: '* Campo requerido.'
@@ -1720,7 +1720,7 @@ $("#form_nuevo").submit(function (e) {
             required: true,
             number: true,
             min: 1,
-            max: 19000
+            max: 99000
         },
         numeroPagos: {
             required: true
@@ -1737,7 +1737,7 @@ $("#form_nuevo").submit(function (e) {
             required: '* Campo requerido',
             number: 'Número no válido.',
             min: 'El valor mínimo debe ser 1',
-            max: 'El valor máximo debe ser 19,000'
+            max: 'El valor máximo debe ser 99,000'
         },
         numeroPagos: {
             required: '* Campo requerido'
@@ -2122,7 +2122,7 @@ $(document).on("click", ".uniAdd", function () {
     informacion_adicional += '        <div class="form-group text-left">';
     informacion_adicional += '            <label class="label ">Monto Descuento *</label>';
     informacion_adicional += '            <input class="form-control  MontoDescontarCerti" type="number" id="MontoDescontarCerti"';
-    informacion_adicional += '                name="MontoDescontarCerti" autocomplete="off" min="1" max="19000" step=".01"';
+    informacion_adicional += '                name="MontoDescontarCerti" autocomplete="off" min="1" max="99000" step=".01"';
     informacion_adicional += '               required />';
     informacion_adicional += '         </div>';
     informacion_adicional += '       </div>';
@@ -2151,7 +2151,7 @@ $(document).on("click", ".uniAdd", function () {
     informacion_adicional += '        <div class="form-group text-left">';
     informacion_adicional += '            <label class="label">Nuevas mensualidades*</label>';
     informacion_adicional += '            <input class="form-control newMensualidades" type="number" id="newMensualidades"';
-    informacion_adicional += '                name="newMensualidades" autocomplete="off" min="1" max="19000" step=".01"';
+    informacion_adicional += '                name="newMensualidades" autocomplete="off" min="1" max="99000" step=".01"';
     informacion_adicional += '               required />';
     informacion_adicional += '         </div>';
     informacion_adicional += '      </div>';

@@ -201,6 +201,8 @@
                                         <th>GERENTE</th>
                                         <th>SUBDIRECTOR</th>
                                         <th>DIRECTOR REGIONAL</th>
+                                        <th>DIRECTOR REGIONAL 2</th>
+                                        <th>TIPO ASESOR</th>
                                         <th>ESTATUS</th>
                                         <th>FECHA DE APARTADO</th>
                                         <th>UBICACIÓN</th>

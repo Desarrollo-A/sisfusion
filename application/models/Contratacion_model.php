@@ -92,7 +92,7 @@ class Contratacion_model extends CI_Model {
       lot.fecha_creacion, lot.totalValidado as cantidad_enganche, ISNULL(CONVERT(varchar, fechaSolicitudValidacion, 20), '') as fecha_validacion,
       lot.idStatusContratacion, ISNULL(co.nombreCopropietario, 'SIN ESPECIFICAR') nombreCopropietario,
       sl.background_sl, ISNULL(cl.tipo_casa, 0) tipo_casa, ISNULL(oxc2.nombre, 'SIN ESPECIFICAR') nombre_tipo_casa, lot.casa,
-      sed.nombre as ubicacion, ISNULL(ca.comAdmon, 'SIN ESPECIFICAR') comentario_administracion
+      sed.nombre as ubicacion, ISNULL(ca.comAdmon, 'SIN ESPECIFICAR') comentario_administracion, ISNULL(sc.nombreStatus, 'SIN ESPECIFICAR') statusContratacion
       FROM lotes lot
       INNER JOIN condominios con ON con.idCondominio = lot.idCondominio $filtroCondominio
       INNER JOIN residenciales res ON res.idResidencial = con.idResidencial $filtroProyecto
@@ -117,6 +117,7 @@ class Contratacion_model extends CI_Model {
       LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = cl.tipo_casa AND oxc2.id_catalogo = 35
       LEFT JOIN sedes sed ON sed.id_sede = lot.ubicacion
       LEFT JOIN comentarios_administracion ca ON ca.nombreLote = lot.nombreLote
+      LEFT JOIN statuscontratacion sc ON sc.idStatusContratacion = lot.idStatusContratacion
       WHERE lot.status = 1 $filtroEstatus
       ORDER BY lot.nombreLote");
       return $query->result_array();

@@ -131,7 +131,7 @@
                                         <th>VIVIENDA</th>
                                         <th>CONTRATO</th>
                                         <th>CLIENTE</th>
-                                        <th>SÚPER CONTRATO</th>
+                                        <th>SUPERFICIE CONTRATO</th>
                                         <th>PRECIO DE VENTA</th>
                                         <th>FECHA DE CONTRATO</th>
                                         <th>FECHA DE RECONOCIMIENTO</th>

@@ -514,7 +514,7 @@ if(id_estatus == 12){
                     $("#uploadModal").modal("hide");
                     $('#spiner-loader').addClass('hide');
                 } else if (response == 0) alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
-                else if (response == 2) alerts.showNotification("top", "right", "No fue posible almacenar el archivo en el servidor.", "warning");
+                else if (response == 2) alerts.showNotification("top", "right", "No fue posible almacenar el archivo en el servidor, ya que supera los 50MB", "warning");
                 else if (response == 3) alerts.showNotification("top", "right", "El archivo que se intenta subir no cuenta con la extención .xlsx", "warning");
                 $('#spiner-loader').addClass('hide');
             }, error: function () {
@@ -1288,8 +1288,10 @@ function crearTablas(datosTablas){
                     switch (d.id_estatus) {
     
                             case 1: 
+                              if(d.creado_por == idUser){
                                 group_buttons +=`<button id="borrarSolicitud" data-idLote="${d.id_lote}" data-idCliente="${d.id_cliente}" data-banderaEscrituracion="${d.banderaEscrituracion}" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Borrar solicitud"><i class="fa fa-trash"></i></button>`;
                                 bandera_request = userType == 55 ? 1 : 0;
+                              }
                             break;
                             case 2:
                                 //ADMINISTRACIÓN Y COMITÉ TÉCNICO AUN NO DAN SU ESTATUS
@@ -1304,14 +1306,16 @@ function crearTablas(datosTablas){
 
                             break;
                             case 58:
-                                bandera_request = userType == 55 ? 1 : 0;
-                                if (userType == 55) { 
-                                    group_buttons +=`<button id="btnValorOper" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Valor de operación"><i class="fa fa-file"></i></button>`;
-                                }
+                              if(d.creado_por == idUser){
+                                  bandera_request = userType == 55 ? 1 : 0;
+                                  if (userType == 55) { 
+                                      group_buttons +=`<button id="btnValorOper" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Valor de operación"><i class="fa fa-file"></i></button>`;
+                                  }
+                              }
                             break;
                             case 3:
                                 //ADMINISTRACIÓN Y COMITÉ TÉCNICO YA DIERON SU ESTATUS
-                                if (userType == 55 && d.bandera_admin == 1 && d.bandera_comite == 1) {
+                                if (userType == 55 && idUser == d.creado_por && d.bandera_admin == 1 && d.bandera_comite == 1) {
                                     /**COMITÉ Y ADMIN DIERON SU ESTATUS, ADMIN FUE EL ULTIMO EN DAR ESTATUS */
                                       // BOTON APROBAR    
                                     bandera_request = d.contrato == 1 ? 1 : 0;
@@ -1328,7 +1332,7 @@ function crearTablas(datosTablas){
                               break;
                             case 4:
                                 //ADMINISTRACIÓN Y COMITÉ TÉCNICO YA DIERON SU ESTATUS
-                                if (userType == 55 && d.bandera_admin == 1 && d.bandera_comite == 1) {      
+                                if (userType == 55 && idUser == d.creado_por && d.bandera_admin == 1 && d.bandera_comite == 1) {      
                                     /**COMITÉ Y ADMIN DIERON SU ESTATUS, COMITÉ FUE EL ULTIMO EN DAR ESTATUS */
                                     // BOTON APROBAR  
                                     group_buttons += `<button id="docs${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control-otros" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
@@ -1362,7 +1366,7 @@ function crearTablas(datosTablas){
                             case 6:
                             case 8:
                             case 10:
-                                if (userType == 55 && d.bandera_admin == 1 && d.bandera_comite == 1) {
+                                if (userType == 55 && idUser == d.creado_por && d.bandera_admin == 1 && d.bandera_comite == 1) {
                                     group_buttons += `<button id="docs${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control-otros" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
                                     group_buttons +=`<button id="informacion" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información Cliente"><i class="fa fa-file"></i></button>`;
                                     bandera_request = d.contrato == 1 ? 1 : 0;

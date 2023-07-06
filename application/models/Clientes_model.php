@@ -4472,4 +4472,11 @@ function getStatusMktdPreventa(){
 
         return $query->result_array();
     }
+
+    public function buscarPorId($idCliente)
+    {
+        $query = $this->db->query("SELECT * FROM clientes WHERE id_cliente = $idCliente");
+
+        return $query->row();
+    }
 }
