@@ -249,7 +249,7 @@ class ComisionesNeo_model extends CI_Model {
     }
 
     public function UpdateBanderaPagoComision($idLote, $bonificacion, $FechaAplicado){
-        return $this->db->query("UPDATE pago_comision SET bandera = 0, fecha_modificacion = GETDATE(), bonificacion = ".$bonificacion.", fecha_neodata = '".$FechaAplicado."', modificado_por = 'NEO' WHERE id_lote = ".$idLote."");
+        return $this->db->query("UPDATE pago_comision SET bandera = (case when numero_dispersion >= 2 then 2 else 0 end), fecha_modificacion = GETDATE(), bonificacion = ".$bonificacion.", fecha_neodata = '".$FechaAplicado."', modificado_por = 'NEO' WHERE id_lote = ".$idLote."");
         $this->db->query("UPDATE lotes SET registro_comision = 1 WHERE registro_comision = 5 AND idLote = ".$idLote."");
 
     }
@@ -262,7 +262,7 @@ class ComisionesNeo_model extends CI_Model {
     }
 
     public function UpdateBanderaPagoComisionAnticipo(){
-        return $this->db->query("UPDATE pago_comision SET bandera = 0, fecha_modificacion = GETDATE(), modificado_por = 'NEO' FROM pago_comision P INNER JOIN lotes l ON l.idLote = p.id_lote WHERE p.bandera not in (0,8) AND l.registro_comision = 1 AND l.idStatusContratacion = 15 AND p.ultimo_pago > 0 AND p.pendiente > 1 AND p.ultimo_pago > p.total_comision");
+        return $this->db->query("UPDATE pago_comision SET CASE bandera = 0, fecha_modificacion = GETDATE(), modificado_por = 'NEO' FROM pago_comision P INNER JOIN lotes l ON l.idLote = p.id_lote WHERE p.bandera not in (0,8) AND l.registro_comision = 1 AND l.idStatusContratacion = 15 AND p.ultimo_pago > 0 AND p.pendiente > 1 AND p.ultimo_pago > p.total_comision");
     }
 
     public function getPrioridad($prioridad){
