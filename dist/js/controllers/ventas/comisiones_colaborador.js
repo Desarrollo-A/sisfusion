@@ -159,7 +159,7 @@ $(document).ready(function () {
 });
 
 $('#proyecto_wp').change(function () {
-    $('tabla_comisiones_sin_pago').removeClass('hide');
+    $('#boxTablaComisionesSinPago').removeClass('hide');
     index_proyecto = $(this).val();
     index_condominio = 0
     $("#condominio_wp").html("");
@@ -1192,7 +1192,6 @@ $("#tabla_otras_comisiones").ready(function () {
 });
 // FIN TABLA PAGADAS
 
-let titulos = [];
 $('#tabla_comisiones_sin_pago thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
     titulos.push(title);
@@ -1211,18 +1210,18 @@ function fillCommissionTableWithoutPayment(proyecto, condominio) {
     tabla_comisiones_sin_pago = $("#tabla_comisiones_sin_pago").DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
-        scrollX:true,
+        scrollX: true,
         buttons: [{
             extend: 'excelHtml5',
-            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+            text: `<i class="fa fa-file-excel-o" aria-hidden="true"></i>`,
             className: 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
-            title: 'REPORTE DE COMISIONES PAUSADAS POR CONTRALORÍA',
+            title: 'Sin pago en NEODATA',
             exportOptions: {
-                columns: [0,1,2,3,4,5,6,7,8],
+                columns: [1,2,3,4,5,6,7,8,9,10,11],
                 format: {
                     header: function (d, columnIdx) {
-                        return ' ' + titulos[columnIdx] + ' ';
+                        return ' ' + columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados[columnIdx] + ' ';
                     }
                 }
             },
@@ -1263,6 +1262,7 @@ function fillCommissionTableWithoutPayment(proyecto, condominio) {
                 return '<p class="m-0">' + d.nombreCliente + ' </p>';
             }
         },
+
         {
             data: function (d) {
                 return '<p class="m-0">' + d.nombreAsesor + '</p>';
@@ -1282,25 +1282,25 @@ function fillCommissionTableWithoutPayment(proyecto, condominio) {
             data: function (d) {
                 switch (d.reason) {
                     case '0':
-                        return '<p class="m-0"><b>EN ESPERA DE PRÓXIMO ABONO EN NEODATA</b></p>';
+                        return '<p class="m-0"><b>En espera de próximo abono en NEODATA </b></p>';
                         break;
                     case '1':
-                        return '<p class="m-0"><b>NO HAY SALDO A FAVOR. ESPERAR PRÓXIMA APLICACIÓN DE PAGO</b></p>';
+                        return '<p class="m-0"><b>No hay saldo a favor. Esperar próxima aplicación de pago. </b></p>';
                         break;
                     case '2':
-                        return '<p class="m-0"><b>NO SE ENCONTRÓ ESTA REFERENCIA</b></p>';
+                        return '<p class="m-0"><b>No se encontró esta referencia </b></p>';
                         break;
                     case '3':
-                        return '<p class="m-0"><b>NO TIENE VIVIENDA, SI HAY REFERENCIA</b></p>';
+                        return '<p class="m-0"><b>No tiene vivienda, si hay referencia </b></p>';
                         break;
                     case '4':
-                        return '<p class="m-0"><b>NO HAY PAGOS APLICADOS A ESTA REFERENCIA</b></p>';
+                        return '<p class="m-0"><b>No hay pagos aplicados a esta referencia </b></p>';
                         break;
                     case '5':
-                        return '<p class="m-0"><b>REFERENCIA DUPLICADA</b></p>';
+                        return '<p class="m-0"><b>Referencia duplicada </b></p>';
                         break;
                     default:
-                        return '<p class="m-0"><b>SIN LOCALIZAR</b></p>';
+                        return '<p class="m-0"><b>Sin localizar </b></p>';
                         break;
                 }
             }
@@ -1317,10 +1317,6 @@ function fillCommissionTableWithoutPayment(proyecto, condominio) {
             cache: false,
             data: function (d) { }
         },
-        initComplete: function () {
-            $('[data-toggle="tooltip"]').tooltip("destroy");
-            $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
-        }
     });
 };
 
