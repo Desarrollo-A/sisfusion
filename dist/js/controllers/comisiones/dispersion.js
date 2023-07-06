@@ -129,6 +129,14 @@ $(document).ready(function () {
                     rescisionLote = '<br><span class="label" style="color:#78281F;background:#F5B7B1;">Recisión Nueva Venta</span>';
                 }
                 return fechaNeodata+rescisionLote;
+            }},{ data: function (d) {
+                var ultima_dispersion;
+                if( d.ultima_dispersion == null ) {
+                    ultima_dispersion = '<span class="label" style="color:#626567;background:#E5E7E9;">Sin Definir</span>';
+                } else {
+                    ultima_dispersion = '<br><span class="label" style="color:#1B4F72;background:#AED6F1;">'+d.ultima_dispersion+'</span>';
+                }
+                return ultima_dispersion;
             }},
             { data: function (d) {
                 var BtnStats = '';
