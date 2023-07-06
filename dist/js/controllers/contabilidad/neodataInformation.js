@@ -91,22 +91,16 @@ const formatter = new Intl.NumberFormat('en-US', {
     //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
 });
 
-$("#tableLotificacionNeodata").ready(function () {
-    asignarValorColumnasDT("tableLotificacionNeodata");
-    $('#tableLotificacionNeodata thead tr:eq(0) th').each(function (i) {
-        var title = $(this).text();
-        if (!excluir_column.includes(title)) {
-            columnas_datatable.tableLotificacionNeodata.titulos_encabezados.push(title);
-            columnas_datatable.tableLotificacionNeodata.num_encabezados.push(columnas_datatable.tableLotificacionNeodata.titulos_encabezados.length-1);
+
+let titulosInventario = [];
+$('#tableLotificacionNeodata thead tr:eq(0) th').each(function (i) {
+    var title = $(this).text();
+    titulosInventario.push(title);
+    $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
+    $('input', this).on('keyup change', function () {
+        if ($('#tableLotificacionNeodata').DataTable().column(i).search() !== this.value) {
+            $('#tableLotificacionNeodata').DataTable().column(i).search(this.value).draw();
         }
-        //let readOnly = excluir_column.includes(title) ? 'readOnly' : ''; //Descomentar linea en caso de que se habilite la opcion de busqueda
-        $(this).html(`<input    type="text"
-                                class="textoshead"
-                                data-toggle="tooltip" 
-                                data-placement="top"
-                                title="${title}"
-                                placeholder="${title}"
-                                readOnly/>`);
     });
 });
 
@@ -121,10 +115,10 @@ function fillTableLotificacionNeoData(empresa, idProyecto, idCliente, fechaIni, 
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
                 exportOptions: {
-                    columns: columnas_datatable.tableLotificacionNeodata.num_encabezados,
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
                     format: {
                         header: function (d, columnIdx) {
-                            return ' ' + columnas_datatable.tableLotificacionNeodata.titulos_encabezados[columnIdx] + ' ';
+                            return ' ' + titulosInventario[columnIdx] + ' ';
                         }
                     }
                 }
@@ -184,7 +178,7 @@ function fillTableLotificacionNeoData(empresa, idProyecto, idCliente, fechaIni, 
             },
             {
                 data: function (d) {
-                    return '<p>$ ' + formatMoney(d.precioventa) + '</p>';
+                    return '$' + formatMoney(d.precioventa);
                 }
             },
             {
@@ -209,12 +203,12 @@ function fillTableLotificacionNeoData(empresa, idProyecto, idCliente, fechaIni, 
             },
             {
                 data: function (d) {
-                    return '<p>$ ' + formatMoney(d.monto2170) + '</p>';
+                    return '$' + formatMoney(d.monto2170);
                 }
             },
             {
                 data: function (d) {
-                    return '<p>$ ' + formatMoney(d.monto1150) + '</p>';
+                    return '$' + formatMoney(d.monto1150);
                 }
             },
             {
@@ -234,32 +228,32 @@ function fillTableLotificacionNeoData(empresa, idProyecto, idCliente, fechaIni, 
             },
             {
                 data: function (d) {
-                    return '<p>$ ' + formatMoney(d.totcontrato) + '</p>';
+                    return '$' + formatMoney(d.totcontrato);
                 }
             },
             {
                 data: function (d) {
-                    return '<p>$ ' + formatMoney(d.totcontratoint) + '</p>';
+                    return '$' + formatMoney(d.totcontratoint);
                 }
             },
             {
                 data: function (d) {
-                    return '<p>$ ' + formatMoney(d.pagado_cap) + '</p>'
+                    return '$' + formatMoney(d.pagado_cap)
                 }
             },
             {
                 data: function (d) {
-                    return '<p>$ ' + formatMoney(d.pagado_mor) + '</p>'
+                    return '$' + formatMoney(d.pagado_mor)
                 }
             },
             {
                 data: function (d) {
-                    return '<p>$ ' + formatMoney(d.pagado_int) + '</p>'
+                    return '$' + formatMoney(d.pagado_int)
                 }
             },
             {
                 data: function (d) {
-                    return '<p>$ ' + formatMoney(d.totcontratoint) + '</p>'
+                    return '$' + formatMoney(d.totcontratoint)
                 }
             }
         ],
@@ -293,12 +287,6 @@ $(document).on('change', "#empresas", function () {
 $(document).on('change', "#proyectos", function () {
     getClientesList($("#empresas").val(), $(this).val());
 });
-
-function asignarValorColumnasDT(nombre_datatable) {
-    if(!columnas_datatable[`${nombre_datatable}`]) {
-        columnas_datatable[`${nombre_datatable}`] = {titulos_encabezados: [], num_encabezados: []};
-    }
-}
 
 function setInitialValues() {
     // BEGIN DATE
