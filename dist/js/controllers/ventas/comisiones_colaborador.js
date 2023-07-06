@@ -1262,7 +1262,6 @@ function fillCommissionTableWithoutPayment(proyecto, condominio) {
                 return '<p class="m-0">' + d.nombreCliente + ' </p>';
             }
         },
-
         {
             data: function (d) {
                 return '<p class="m-0">' + d.nombreAsesor + '</p>';
@@ -1282,25 +1281,25 @@ function fillCommissionTableWithoutPayment(proyecto, condominio) {
             data: function (d) {
                 switch (d.reason) {
                     case '0':
-                        return '<p class="m-0"><b>En espera de próximo abono en NEODATA </b></p>';
+                        return '<p class="m-0"><b>EN ESPERA DE PRÓXIMO ABONO EN NEODATA</b></p>';
                         break;
                     case '1':
-                        return '<p class="m-0"><b>No hay saldo a favor. Esperar próxima aplicación de pago. </b></p>';
+                        return '<p class="m-0"><b>NO HAY SALDO A FAVOR. ESPERAR PRÓXIMA APLICACIÓN DE PAGO</b></p>';
                         break;
                     case '2':
-                        return '<p class="m-0"><b>No se encontró esta referencia </b></p>';
+                        return '<p class="m-0"><b>NO SE ENCONTRÓ ESTA REFERENCIA</b></p>';
                         break;
                     case '3':
-                        return '<p class="m-0"><b>No tiene vivienda, si hay referencia </b></p>';
+                        return '<p class="m-0"><b>NO TIENE VIVIENDA, SI HAY REFERENCIA</b></p>';
                         break;
                     case '4':
-                        return '<p class="m-0"><b>No hay pagos aplicados a esta referencia </b></p>';
+                        return '<p class="m-0"><b>NO HAY PAGOS APLICADOS A ESTA REFERENCIA</b></p>';
                         break;
                     case '5':
-                        return '<p class="m-0"><b>Referencia duplicada </b></p>';
+                        return '<p class="m-0"><b>REFERENCIA DUPLICADA</b></p>';
                         break;
                     default:
-                        return '<p class="m-0"><b>Sin localizar </b></p>';
+                        return '<p class="m-0"><b>SIN LOCALIZAR</b></p>';
                         break;
                 }
             }
@@ -1317,6 +1316,10 @@ function fillCommissionTableWithoutPayment(proyecto, condominio) {
             cache: false,
             data: function (d) { }
         },
+        initComplete: function () {
+            $('[data-toggle="tooltip"]').tooltip("destroy");
+            $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
+        }
     });
 };
 
