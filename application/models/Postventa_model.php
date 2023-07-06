@@ -206,7 +206,7 @@ class Postventa_model extends CI_Model
 
     function getNotarias()
     {
-        return $this->db->query("SELECT n.idNotaria, n.nombre_notaria, n.nombre_notario, n.direccion, n.correo, n.telefono, s.nombre, n.pertenece 
+        return $this->db->query("SELECT n.idNotaria, n.nombre_notaria, n.nombre_notario, UPPER(n.direccion) AS direccion, UPPER(n.correo) AS correo, n.telefono, UPPER(s.nombre) AS nombre, n.pertenece 
         FROM Notarias n
         JOIN sedes s ON n.sede = s.id_sede
         WHERE sede != 0 and n.Estatus = 1
