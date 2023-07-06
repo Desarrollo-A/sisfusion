@@ -650,7 +650,7 @@ function update_estatus(){
         $consultaCP = $this->Comisiones_model->consulta_codigo_postal($id_user_Vl)->result_array();
       }
 
-      // if(($fecha_actual >= $fechaInicio && $fecha_actual <= $fechaFin) || ($id_user_Vl == 7689)){
+      if(($fecha_actual >= $fechaInicio && $fecha_actual <= $fechaFin) || ($id_user_Vl == 7689)){
         if( $formaPagoUsuario == 3 && ( $this->input->post('cp') == '' || $this->input->post('cp') == 'undefined' ) ){
           $data_response = 3;
           echo json_encode($data_response);
@@ -707,10 +707,10 @@ function update_estatus(){
             echo json_encode($data_response);
           } 
         } 
-      // } else {
-      //   $data_response = 2;
-      //   echo json_encode($data_response);
-      // }    
+      } else {
+        $data_response = 2;
+        echo json_encode($data_response);
+      }    
     }
     else{
       $data_response = 0;

@@ -92,22 +92,6 @@ function requestCodigoPostal(){
     });
 }
 
-// $(document).ready(function () {
-//     $.ajax({
-//         url: general_base_url + 'Comisiones/pagos_codigo_postal',
-//         cache: false,
-//         contentType: false,
-//         processData: false,
-//         type: 'GET',
-//         success: function (response) {
-//             const data1 = JSON.parse(response);
-//             if (data1.length == 0) {
-//             } else if (data1.length != 0) {
-//             }
-//         }
-//     });
-// });
-
 $(document).on("submit", "#cpForm", function (e) {
     e.preventDefault();
     let cp = $('#cp').val();
@@ -163,8 +147,8 @@ $(document).ready(function () {
     ((mes == 3 && dia == 13) || (mes == 3 && dia == 14 && hora <= 13)) ||
     ((mes == 4 && dia == 10) || (mes == 4 && dia == 11 && hora <= 13)) ||
     ((mes == 5 && dia == 8) || (mes == 5 && dia == 9 && hora <= 13)) ||
-    ((mes == 6 && dia == 12) || (mes == 6 && dia == 12 && hora <= 13)) ||
-    ((mes == 7 && dia == 3) || (mes == 7 && dia == 4 && hora <= 18)) ||
+    ((mes == 6 && dia == 12) || (mes == 6 && dia == 13 && hora <= 13)) ||
+    ((mes == 7 && dia == 10) || (mes == 7 && dia == 11 && hora <= 13)) ||
     ((mes == 8 && dia == 7) || (mes == 8 && dia == 8 && hora <= 13)) ||
     ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= 13)) ||
     ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= 13)) ||
@@ -269,8 +253,10 @@ $("#tabla_nuevas_comisiones").ready(function () {
             text: '<i class="fa fa-paper-plane"></i> SOLICITAR PAGO',
             className: boton_sol_pago,
             action: function () {
-                if (userSede == 8) {
-                    actual = 15;
+                let actual=13;
+                if(userSede == 8){
+                    actual=15;
+
                 }
                 var hoy = new Date(fechaServer);
                 var dia = hoy.getDate();
@@ -281,8 +267,8 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     ((mes == 3 && dia == 13) || (mes == 3 && dia == 14 && hora <= 13)) ||
                     ((mes == 4 && dia == 10) || (mes == 4 && dia == 11 && hora <= 13)) ||
                     ((mes == 5 && dia == 8) || (mes == 5 && dia == 9 && hora <= 13)) ||
-                    ((mes == 6 && dia == 12) || (mes == 6 && dia == 12 && hora <= 13)) ||
-                    ((mes == 7 && dia == 3) || (mes == 7 && dia == 4 && hora <= 18)) ||
+                    ((mes == 6 && dia == 12) || (mes == 6 && dia == 13 && hora <= 13)) ||
+                    ((mes == 7 && dia == 10) || (mes == 7 && dia == 11 && hora <= 13)) ||
                     ((mes == 8 && dia == 7) || (mes == 8 && dia == 8 && hora <= 13)) ||
                     ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= 13)) ||
                     ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= 13)) ||
@@ -533,17 +519,17 @@ $("#tabla_nuevas_comisiones").ready(function () {
                         </div>`;
             }
         }],
-        columnDefs: [
-            {
+        columnDefs: [{
                 orderable: false,
                 className: 'select-checkbox',
                 targets: 0,
                 searchable: false,
                 className: 'dt-body-center',
                 render: function (d, type, full, meta) {
-                    let actual = 13;
-                    if (userSede == 8) {
-                        actual = 15;
+                    let actual=13;
+                    if(userSede == 8){
+                        actual=15;
+
                     }
                     var hoy = new Date();
                     var dia = hoy.getDate();
@@ -554,8 +540,8 @@ $("#tabla_nuevas_comisiones").ready(function () {
                         ((mes == 3 && dia == 13) || (mes == 3 && dia == 14 && hora <= 13)) ||
                         ((mes == 4 && dia == 10) || (mes == 4 && dia == 11 && hora <= 13)) ||
                         ((mes == 5 && dia == 8) || (mes == 5 && dia == 9 && hora <= 13)) ||
-                        ((mes == 6 && dia == 12) || (mes == 6 && dia == 12 && hora <= 13)) ||
-                        ((mes == 7 && dia == 3) || (mes == 7 && dia == 4 && hora <= 18)) ||
+                        ((mes == 6 && dia == 12) || (mes == 6 && dia == 13 && hora <= 13)) ||
+                        ((mes == 7 && dia == 10) || (mes == 7 && dia == 11 && hora <= 13)) ||
                         ((mes == 8 && dia == 7) || (mes == 8 && dia == 8 && hora <= 13)) ||
                         ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= 13)) ||
                         ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= 13)) ||
@@ -595,8 +581,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                         return '<span class="material-icons" style="color: #DCDCDC;">block</span>';
                     }
                 },
-            }
-        ],
+            }],
         ajax: {
             "url": general_base_url + "Comisiones/getDatosComisionesAsesor/" + 1,
             "type": "POST",
@@ -816,6 +801,7 @@ $("#tabla_revision_comisiones").ready(function () {
             $('[data-toggle="tooltip_revision"]').tooltip({ trigger: "hover" });
         }
     });
+    
     $("#tabla_revision_comisiones tbody").on("click", ".consultar_logs_revision", function (e) {
         e.preventDefault();
         e.stopImmediatePropagation();
@@ -1457,8 +1443,9 @@ function todos() {
 }
 
 $(document).on("click", ".subir_factura_multiple", function() {
-    if (userSede == 8) {
-        actual = 15;
+    let actual=13;
+    if(userSede == 8){
+        actual=15;
     }
     var hoy = new Date(fechaServer);
     var dia = hoy.getDate();
@@ -1470,7 +1457,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
     ((mes == 4 && dia == 10) || (mes == 4 && dia == 11 && hora <= 13)) ||
     ((mes == 5 && dia == 8) || (mes == 5 && dia == 9 && hora <= 13)) ||
     ((mes == 6 && dia == 12) || (mes == 6 && dia == 13 && hora <= 13)) ||
-    ((mes == 7 && dia == 3) || (mes == 7 && dia == 4 && hora <= 18)) ||
+    ((mes == 7 && dia == 10) || (mes == 7 && dia == 11 && hora <= 13)) ||
     ((mes == 8 && dia == 7) || (mes == 8 && dia == 8 && hora <= 13)) ||
     ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= 13)) ||
     ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= 13)) ||
@@ -1514,7 +1501,6 @@ $(document).on("click", ".subir_factura_multiple", function() {
             var valorSeleccionado = $(this).val();
             $("#modal_multiples .modal-body").html("");
             $.getJSON(general_base_url + "Comisiones/getDatosProyecto/" + valorSeleccionado).done(function (data) {
-                let sumaComision = 0;
                 if (!data) {
                     $("#modal_multiples .modal-body").append('<div class="row"><div class="col-md-12">SIN DATOS A MOSTRAR</div></div>');
                 }
@@ -1524,7 +1510,6 @@ $(document).on("click", ".subir_factura_multiple", function() {
                         <div class="col-md-1"><input type="checkbox" class="form-control" onclick="todos();" id="btn_all"></div><div class="col-md-10 text-left"><b>MARCAR / DESMARCAR TODO</b></div>`);
                     }
                     $.each(data, function (i, v) {
-                        c++;
                         abono_asesor = (v.abono_neodata);
                         $("#modal_multiples .modal-body").append('<div class="row">' +
                             '<div class="col-md-1"><input type="checkbox" class="form-control ng-invalid ng-invalid-required data1 checkdata1" onclick="sumCheck()" id="comisiones_facura_mult' + i + '" name="comisiones_facura_mult"></div><div class="col-md-4"><input id="data1' + i + '" name="data1' + i + '" value="' + v.nombreLote + '" class="form-control data1 ng-invalid ng-invalid-required" required placeholder="%"></div><div class="col-md-4"><input type="hidden" id="idpago-' + i + '" name="idpago-' + i + '" value="' + v.id_pago_i + '"><input id="data2' + i + '" name="data2' + i + '" value="' + "" + parseFloat(abono_asesor).toFixed(2) + '" class="form-control data1 ng-invalid ng-invalid-required" readonly="" required placeholder="%"></div></div>');
