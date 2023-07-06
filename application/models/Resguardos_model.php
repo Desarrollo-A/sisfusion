@@ -17,7 +17,7 @@ class Resguardos_model extends CI_Model {
     }
 
     function getListaRetiros($id) {
-        $query = $this->db->query("SELECT r.*,CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario  from historial_retiros r inner join usuarios u on u.id_usuario=r.id_usuario where id_retiro=$id");
+        $query = $this->db->query("SELECT r.*,CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario, CONVERT(varchar, r.fecha_creacion,20) AS fecha_creacion from historial_retiros r inner join usuarios u on u.id_usuario=r.id_usuario where id_retiro=$id");
         return $query;
     }
 

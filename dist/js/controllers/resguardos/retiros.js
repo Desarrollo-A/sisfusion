@@ -1,58 +1,55 @@
 $(document).ready(function () {
-    
     let titulos_intxt = [];
-
     let resto = 0;
     let total67 = 0;
     
     $.post('getDisponibleResguardo/' + id_usuario_general, function(data) {
                 document.getElementById('totalDisponible').textContent = '';
-                let disponible = formatMoney(data.toFixed(3));
+                let disponible = '$'+formatMoney(data.toFixed(3));
                 document.getElementById('totalDisponible').textContent = disponible;
                 resto = 0;
                 resto = data.toFixed(3);
             }, 'json');
 
-            $.post('getDisponibleResguardoP/' + id_usuario_general, function(data) {
-                document.getElementById('totalResguardo').textContent = '';
-                let disponible = formatMoney(data);
-                document.getElementById('totalResguardo').textContent = disponible;
-                total67 = data;
-            }, 'json');
+    $.post('getDisponibleResguardoP/' + id_usuario_general, function(data) {
+        document.getElementById('totalResguardo').textContent = '';
+        let disponible = '$'+formatMoney(data);
+        document.getElementById('totalResguardo').textContent = disponible;
+        total67 = data;
+    }, 'json');
 
-            //TABLA FILTROS
-            $('#tabla_retiros_resguardo').on('xhr.dt', function(e, settings, json, xhr) {
-                document.getElementById('totalAplicados').textContent = '';
-                var total = 0;
-                let sumaExtras=0;
+    //TABLA FILTROS
+    $('#tabla_retiros_resguardo').on('xhr.dt', function(e, settings, json, xhr) {
+        document.getElementById('totalAplicados').textContent = '';
+        var total = 0;
+        let sumaExtras=0;
 
-                $.each(json.data, function(i, v) {
-                    if (v.estatus != 3 && v.estatus != 67) {
-                        total += parseFloat(v.monto);
-                    }
-                    if(v.estatus == 67){
-                        sumaExtras=sumaExtras +parseFloat(v.monto);
-                    }
-                });
-                let to = 0;
-                to = formatMoney(total);
-                document.getElementById("totalAplicados").textContent = to;
+        $.each(json.data, function(i, v) {
+            if (v.estatus != 3 && v.estatus != 67) {
+                total += parseFloat(v.monto);
+            }
+            if(v.estatus == 67){
+                sumaExtras=sumaExtras +parseFloat(v.monto);
+            }
+        });
+        let to = 0;
+        to = '$'+formatMoney(total);
+        document.getElementById("totalAplicados").textContent = to;
 
-                let extra = 0;
-                extra = formatMoney(sumaExtras);
-                document.getElementById("totalExtras").textContent = extra;
-                
-                let to2 = 0;
-                to2 = parseFloat(resto) + parseFloat(total);
-            });
+        let extra = 0;
+        extra = '$'+formatMoney(sumaExtras);
+        document.getElementById("totalExtras").textContent = extra;
+        
+        let to2 = 0;
+        to2 = parseFloat(resto) + parseFloat(total);
+    });
 
- 
     $('#tabla_retiros_resguardo thead tr:eq(0) th').each( function (i) {
         $(this).css('text-align', 'center');
         var title = $(this).text();
         titulos_intxt.push(title);
         if (i != 7) {
-            $(this).html('<input type="text" class="textoshead"  placeholder="'+title+'"/>' );
+            $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
             $( 'input', this ).on('keyup change', function () {
                 if ($('#tabla_retiros_resguardo').DataTable().column(i).search() !== this.value ) {
                     $('#tabla_retiros_resguardo').DataTable().column(i).search(this.value).draw();
@@ -64,8 +61,9 @@ $(document).ready(function () {
             var data = $('#tabla_retiros_resguardo').DataTable().rows(index).data();
         });
     }});
+
     var id_user = id_usuario_general == 1875 ? 2 : id_usuario_general;
-    
+
     retirosDataTable = $('#tabla_retiros_resguardo').dataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
@@ -109,22 +107,22 @@ $(document).ready(function () {
             {data: 'usuario'},
             { data: function (d) {
                 return '<b>$'+formatMoney(d.monto)+'</b>';
-             }},
+            }},
             {data: 'conceptos'},
             { data: function (d) {
                 var labelEstatus;
                 if(d.estatus == 1) {
-                    labelEstatus ='<span class="label" style="color:#186A3B;background:#ABEBC6;">ACTIVO</span>';
+                    labelEstatus ='<span class="label lbl-green">ACTIVO</span>';
                 }else if(d.estatus == 3) {
-                    labelEstatus ='<span class="label" style="color:#78281F;background:#F5B7B1;">CANCELADO</span>';
+                    labelEstatus ='<span class="label lbl-warning">CANCELADO</span>';
                 }else if(d.estatus == 2) {
-                    labelEstatus ='<span class="label" style="color:#512E5F;background:#D7BDE2;">APROBADO</span>';
+                    labelEstatus ='<span class="label lbl-violetDeep">APROBADO</span>';
                 }else if(d.estatus == 4) {
-                    labelEstatus ='<span class="label" style="color:#78281F;background:#F5B7B1;">RECHAZÓ DIRECTIVO</span>';
+                    labelEstatus ='<span class="label lbl-warning">RECHAZÓ DIRECTIVO</span>';
                 }else if(d.estatus == 67) {
-                    labelEstatus ='<span class="label" style="color:#7D6608;background:#F9E79F;">INGRESO EXTRA</span>';
+                    labelEstatus ='<span class="label lbl-yellow">INGRESO EXTRA</span>';
                 }else {
-                    labelEstatus ='<span class="label" style="color:#626567;background:#E5E7E9;">Sin Definir</span>';
+                    labelEstatus ='<span class="label lbl-gray">Sin Definir</span>';
                 }
                 return labelEstatus;
             }}, 
@@ -137,14 +135,13 @@ $(document).ready(function () {
                 var BtnStats = '';
                 if(id_user == 1875 ){
                     if(d.estatus == 3 || d.estatus == 4 || d.estatus == 2){
-                        BtnStats = `<button class="btn-data btn-blueMaderas btn-log" value="${d.id_rc}" title="LOG"><i class="fas fa-info"></i></button>`;
+                        BtnStats = `<button class="btn-data btn-blueMaderas btn-log" value="${d.id_rc}" data-toggle="tooltip"  data-placement="top" title="HISTORIAL"><i class="fas fa-info"></i></button>`;
                     } 
                 } else{
                     if(d.estatus == 1){
-                        BtnStats = `<button class="btn-data btn-warning btn-cancelar" value="'+d.id_rc+','+d.monto+','+d.usuario+'" title="RECHAZAR RETIRO"><i class="fas fa-trash"></i></button><button class="btn-data btn-green btn-autorizar" value="${d.id_rc},${d.monto},${d.usuario}" title="APROBAR RETIRO"><i class="fas fa-check"></i></button>`;
-
+                        BtnStats = `<button class="btn-data btn-warning btn-cancelar" value="'+d.id_rc+','+d.monto+','+d.usuario+'" data-toggle="tooltip"  data-placement="top" title="RECHAZAR RETIRO"><i class="fas fa-trash"></i></button><button class="btn-data btn-green btn-autorizar" value="${d.id_rc},${d.monto},${d.usuario}" data-toggle="tooltip"  data-placement="top" title="APROBAR RETIRO"><i class="fas fa-check"></i></button>`;
                     } else if(d.estatus == 3 || d.estatus == 4 || d.estatus == 2){
-                        BtnStats = `<button class="btn-data btn-blueMaderas btn-log" value="${d.id_rc}" title="LOG"><i class="fas fa-info"></i></button>`;
+                        BtnStats = `<button class="btn-data btn-blueMaderas btn-log" value="${d.id_rc}" data-toggle="tooltip"  data-placement="top" title="HISTORIAL"><i class="fas fa-info"></i></button>`;
                     } 
                 }
                 return '<div class="d-flex justify-center">'+BtnStats+'</div>';
@@ -162,13 +159,16 @@ $(document).ready(function () {
         }
     }) 
 
+    $('#tabla_retiros_resguardo').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
+    });
 
     $("#tabla_retiros_resguardo tbody").on("click", ".btn-log", function(e){
         e.preventDefault();
         e.stopImmediatePropagation();
-
         id_rc = $(this).val();
-
         $("#seeInformationModalRetiros").modal();
         $.getJSON(url+"Resguardos/getListaRetiros/"+id_rc, function (data) {
             $.each( data, function(i, v){
@@ -177,18 +177,10 @@ $(document).ready(function () {
         });
     });
 
-    function cleanCommentsRetiros() {
-        var myCommentsList = document.getElementById('comments-list-retiros');
-        myCommentsList.innerHTML = '';
-    }
-
-
     $("#tabla_retiros_resguardo tbody").on("click", ".btn-autorizar", function(){
         var tr = $(this).closest('tr');
         var row =  $('#tabla_retiros_resguardo').DataTable().row(tr);
-
         id_pago_i = $(this).val();
-
         $("#autorizar-modal .modal-body").html("");
         $("#autorizar-modal .modal-header").html("");
         $("#autorizar-modal .modal-header").append('<h4 class="modal-title">Autorizar a <b>'+row.data().usuario+'</b> la cantidad de <b style="color:blue;">$'+formatMoney(row.data().monto)+'</b></h4>');
@@ -200,7 +192,6 @@ $(document).ready(function () {
         var tr = $(this).closest('tr');
         var row =  $('#tabla_retiros_resguardo').DataTable().row(tr);
         id_pago_i = $(this).val();
-
         $("#autorizar-modal .modal-body").html("");
         $("#autorizar-modal .modal-header").html("");
         $("#autorizar-modal .modal-header").append('<h4 class="modal-title">Rechazar retiro a <b>'+row.data().usuario+'</b> por la cantidad de <b style="color:blue;">$'+formatMoney(row.data().monto)+'</b></h4>');
@@ -233,7 +224,6 @@ $(document).ready(function () {
                     }
                     else{
                         alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
-
                     }
                 },error: function( ){
                     alert("ERROR EN EL SISTEMA");
@@ -241,5 +231,10 @@ $(document).ready(function () {
             });
         }
     });
- 
+
 });
+
+function cleanCommentsRetiros() {
+    var myCommentsList = document.getElementById('comments-list-retiros');
+    myCommentsList.innerHTML = '';
+}

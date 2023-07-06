@@ -115,10 +115,10 @@ class Ranking_model extends CI_Model {
         else // MJ: APARTADOS / CONTRATADOS
             $filtroTotal = "";
             
-        $query = $this->db->query("SELECT re.descripcion nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote, 
+        $query = $this->db->query("SELECT  UPPER(CAST(re.descripcion AS VARCHAR (120))) AS nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote, 
         UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
         UPPER(CONCAT(ua.nombre, ' ', ua.apellido_paterno, ' ', ua.apellido_materno)) nombreAsesor,
-        cl.fechaApartado, sc.nombreStatus, st.nombre estatusLote, 
+        CONVERT(VARCHAR,cl.fechaApartado,20) AS fechaApartado, UPPER(sc.nombreStatus) AS nombreStatus, UPPER(st.nombre) AS estatusLote, 
         FORMAT(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN lo.total ELSE lo.totalNeto2 END, 'C') total
         FROM clientes cl
         INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idCliente = cl.id_cliente AND lo.idStatusLote $statusLote $filtroTotal
