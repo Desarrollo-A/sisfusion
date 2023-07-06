@@ -12,9 +12,8 @@ class Administracion extends CI_Controller{
 		$this->load->model('asesor/Asesor_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
 		//LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
          $this->load->library(array('session','form_validation', 'get_menu'));
-		$this->load->helper(array('url', 'form', 'email/administracion/elementos_correo', 'email/plantilla_dinamica_correo'));
+		$this->load->helper(array('url', 'form'));
 		$this->load->database('default');
-        $this->load->library('phpmailer_lib');
         date_default_timezone_set('America/Mexico_City');
 		$this->validateSession();
 

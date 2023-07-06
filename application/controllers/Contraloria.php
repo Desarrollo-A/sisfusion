@@ -1,5 +1,4 @@
 <?php
-//use application\helpers\email\contraloria\Elementos_Correos_Contraloria;
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Contraloria extends CI_Controller {
     public function __construct() {
@@ -916,16 +915,28 @@ class Contraloria extends CI_Controller {
         $arreglo2["idCondominio"]= $idCondominio;
         $arreglo2["idCliente"]= $idCliente;
 
-        $datos= $this->Contraloria_model->getCorreoSt($idCliente);
-        $lp = $this->Contraloria_model->get_lp($idLote);
+        // $datos= $this->Contraloria_model->getCorreoSt($idCliente);
+        // $lp = $this->Contraloria_model->get_lp($idLote);
+        // $correosEntregar = [];
 
-        if(empty($lp)){
-            $correosClean = explode(',', $datos[0]["correos"]);
-            $array = array_unique($correosClean);
-        } else {
-            $correosClean = explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com');
-            $array = array_unique($correosClean);
-        }
+        // if(empty($lp)){
+        //    $correos = array_unique(explode(',', $datos[0]["correos"]));
+        // } else {
+        //    $correos = array_unique(explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com'));
+        // }
+
+        // foreach($correos as $email)
+        // {
+        // 	if(trim($email) != 'gustavo.mancilla@ciudadmaderas.com'){
+        // 		if (trim($email) != ''){
+        //            if(trim($email) == 'diego.perez@ciudadmaderas.com'){
+        //                array_push($correosEntregar, 'analista.comercial@ciudadmaderas.com');
+        //            } else {
+        //                array_push($correosEntregar, $email);
+        //            }
+        // 		}
+        // 	}
+        // }
 
         $infoLote = (array)$this->Contraloria_model->getNameLote($idLote);
 
@@ -943,6 +954,7 @@ class Contraloria extends CI_Controller {
             ->initialize()
             ->from('Ciudad Maderas')
             ->to('programador.analista24@ciudadmaderas.com')
+            // ->to($correosEntregar)
             ->subject('EXPEDIENTE RECHAZADO-CONTRALORÍA (5. REVISIÓN 100%)')
             ->view($this->load->view('mail/contraloria/editar-registro-lote-rechazo-proceso5', [
                 'encabezados' => $encabezados,
@@ -1252,19 +1264,28 @@ class Contraloria extends CI_Controller {
         $arreglo2["idCondominio"]= $idCondominio;
         $arreglo2["idCliente"]= $idCliente;
 
+        // $datos= $this->Contraloria_model->getCorreoSt($idCliente);
+        // $lp = $this->Contraloria_model->get_lp($idLote);
+        // $correosEntregar = [];
 
+        // if(empty($lp)){
+        //    $correos = array_unique(explode(',', $datos[0]["correos"]));
+        // } else {
+        //    $correos = array_unique(explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com'));
+        // }
 
-        $datos= $this->Contraloria_model->getCorreoSt($idCliente);
-
-        $lp = $this->Contraloria_model->get_lp($idLote);
-
-        if(empty($lp)){
-            $correosClean = explode(',', $datos[0]["correos"]);
-            $array = array_unique($correosClean);
-        } else {
-            $correosClean = explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com');
-            $array = array_unique($correosClean);
-        }
+        // foreach($correos as $email)
+        // {
+        // 	if(trim($email) != 'gustavo.mancilla@ciudadmaderas.com'){
+        // 		if (trim($email) != ''){
+        //            if(trim($email) == 'diego.perez@ciudadmaderas.com'){
+        //                array_push($correosEntregar, 'analista.comercial@ciudadmaderas.com');
+        //            } else {
+        //                array_push($correosEntregar, $email);
+        //            }
+        // 		}
+        // 	}
+        // }
 
         $infoLote = (array)$this->Contraloria_model->getNameLote($idLote);
 
@@ -1282,6 +1303,7 @@ class Contraloria extends CI_Controller {
             ->initialize()
             ->from('Ciudad Maderas')
             ->to('programador.analista24@ciudadmaderas.com')
+            // ->to($correosEntregar)
             ->subject('EXPEDIENTE RECHAZADO-CONTRALORÍA (6. CORRIDA ELABORADA)')
             ->view($this->load->view('mail/contraloria/editar-registro-lote-rechazo-proceso6', [
                 'encabezados' => $encabezados,
@@ -1559,16 +1581,28 @@ class Contraloria extends CI_Controller {
         $arreglo2["idCondominio"]= $idCondominio;
         $arreglo2["idCliente"]= $idCliente;
 
-        $datos= $this->Contraloria_model->getCorreoSt($idCliente);
-        $lp = $this->Contraloria_model->get_lp($idLote);
+        // $datos= $this->Contraloria_model->getCorreoSt($idCliente);
+        // $lp = $this->Contraloria_model->get_lp($idLote);
+        // $correosEntregar = [];
 
-        if(empty($lp)){
-            $correosClean = explode(',', $datos[0]["correos"]);
-            $array = array_unique($correosClean);
-        } else {
-            $correosClean = explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com');
-            $array = array_unique($correosClean);
-        }
+        // if(empty($lp)){
+        //    $correos = array_unique(explode(',', $datos[0]["correos"]));
+        // } else {
+        //    $correos = array_unique(explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com'));
+        // }
+
+        // foreach($correos as $email)
+        // {
+        // 	if(trim($email) != 'gustavo.mancilla@ciudadmaderas.com'){
+        // 		if (trim($email) != ''){
+        //            if(trim($email) == 'diego.perez@ciudadmaderas.com'){
+        //                array_push($correosEntregar, 'analista.comercial@ciudadmaderas.com');
+        //            } else {
+        //                array_push($correosEntregar, $email);
+        //            }
+        // 		}
+        // 	}
+        // }
 
         $infoLote = (array)$this->Contraloria_model->getNameLote($idLote);
 
@@ -1586,6 +1620,7 @@ class Contraloria extends CI_Controller {
             ->initialize()
             ->from('Ciudad Maderas')
             ->to('programador.analista24@ciudadmaderas.com')
+            // ->to($correosEntregar)
             ->subject('EXPEDIENTE RECHAZADO-CONTRALORÍA (5. REVISIÓN 100%)')
             ->view($this->load->view('mail/contraloria/editar-registro-lote-rechazo-proceso5-2', [
                 'encabezados' => $encabezados,

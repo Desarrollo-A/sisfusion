@@ -1,5 +1,4 @@
 <?php
-use application\helpers\email\asesor\Elementos_Correos_Asesor;
 
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
@@ -25,10 +24,9 @@ class Asesor extends CI_Controller
         $this->load->library(array('session', 'form_validation', 'get_menu'));
         $this->load->library('email');
 
-        $this->load->helper(array('url', 'form', 'email/asesor/elementos_correo', 'email/plantilla_dinamica_correo'));
+        $this->load->helper(array('url', 'form'));
         $this->load->database('default');
         $this->load->library('Pdf');
-        $this->load->library('phpmailer_lib');
         date_default_timezone_set('America/Mexico_City');
         $this->validateSession();
 
@@ -2691,7 +2689,8 @@ class Asesor extends CI_Controller
             $this->email
                 ->initialize()
                 ->from('Ciudad Maderas')
-                ->to('programador.analista24@ciudadmaderas.com') // TODO: reemplazar el correo de producción
+                ->to('programador.analista24@ciudadmaderas.com')
+                // ->to($correo)
                 ->subject('DEPÓSITO DE SERIEDAD - CIUDAD MADERAS')
                 ->view('<h3>A continuación se adjunta el archivo correspondiente a Depósito de seriedad.</h3>')
                 ->attach($attachment, 'attachment', $namePDF, 'application/pdf');
@@ -2924,7 +2923,8 @@ class Asesor extends CI_Controller
             $autorizacionComent .= $this->input->post('comentario_' . $n) . ". ";
         }
         if ($dataInsert == 1) {
-            $correos_entregar = array();
+            /*$dataUser = $this->Asesor_model->getInfoUserById($id_aut);
+            $correoDir = $dataUser[0]->correo;*/
 
             $encabezados = [
                 'nombreResidencial' => 'PROYECTO',
@@ -2944,7 +2944,8 @@ class Asesor extends CI_Controller
             $this->email
                 ->initialize()
                 ->from('Ciudad Maderas')
-                ->to('programador.analista24@ciudadmaderas.com') // TODO: reemplazar el correo de producción
+                ->to('programador.analista24@ciudadmaderas.com')
+                // -to($correoDir)
                 ->subject('SOLICITUD DE AUTORIZACIÓN - CONTRATACIÓN')
                 ->view($this->load->view('mail/asesor/add-autorizacion-sbmt', [
                     'encabezados' => $encabezados,

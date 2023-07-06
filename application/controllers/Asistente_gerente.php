@@ -1,5 +1,4 @@
 <?php
-use application\helpers\email\asistenete_gerente\Elementos_Correo_Asistenete_Gerente;
 
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Asistente_gerente extends CI_Controller {
@@ -311,19 +310,30 @@ class Asistente_gerente extends CI_Controller {
     $arreglo2["fechaVenc"]= $modificado;
     $arreglo2["idLote"]= $idLote;  
     $arreglo2["idCondominio"]= $idCondominio;          
-    $arreglo2["idCliente"]= $idCliente;    
+    $arreglo2["idCliente"]= $idCliente;
 
-	  $datos= $this->VentasAsistentes_model->getCorreoSt($idCliente);
+      // $datos= $this->VentasAsistentes_model->getCorreoSt($idCliente);
+      // $lp = $this->VentasAsistentes_model->get_lp($idLote);
+      // $correosEntregar = [];
 
-    $lp = $this->VentasAsistentes_model->get_lp($idLote);
+      // if(empty($lp)){
+      //    $correos = array_unique(explode(',', $datos[0]["correos"]));
+      // } else {
+      //    $correos = array_unique(explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com'));
+      // }
 
-    if(empty($lp)){
-      $correosClean = explode(',', $datos[0]["correos"]);
-      $array = array_unique($correosClean);
-    } else {
-      $correosClean = explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com');
-      $array = array_unique($correosClean);
-    }
+      // foreach($correos as $email)
+      // {
+      // 	if(trim($email) != 'gustavo.mancilla@ciudadmaderas.com'){
+      // 		if (trim($email) != ''){
+      //            if(trim($email) == 'diego.perez@ciudadmaderas.com'){
+      //                array_push($correosEntregar, 'analista.comercial@ciudadmaderas.com');
+      //            } else {
+      //                array_push($correosEntregar, $email);
+      //            }
+      // 		}
+      // 	}
+      // }
 
     $infoLote = (array)$this->VentasAsistentes_model->getNameLote($idLote);
 
@@ -341,14 +351,15 @@ class Asistente_gerente extends CI_Controller {
     ]);
 
     $this->email
-      ->initialize()
-      ->from('Ciudad Maderas')
-      ->to('programador.analista24@ciudadmaderas.com') // TODO: Reemplazar por el correo de producción
-      ->subject('EXPEDIENTE RECHAZADO-VENTAS (8. CONTRATO ENTREGADO AL ASESOR PARA FIRMA DEL CLIENTE)')
-      ->view($this->load->view('mail/asistente-gerente/editar-registro-lote-rechazo-status2-asistentes-proceso8', [
-          'encabezados' => $encabezados,
-          'contenido' => $data
-      ], true));
+        ->initialize()
+        ->from('Ciudad Maderas')
+        ->to('programador.analista24@ciudadmaderas.com')
+        // ->to($correosEntregar)
+        ->subject('EXPEDIENTE RECHAZADO-VENTAS (8. CONTRATO ENTREGADO AL ASESOR PARA FIRMA DEL CLIENTE)')
+        ->view($this->load->view('mail/asistente-gerente/editar-registro-lote-rechazo-status2-asistentes-proceso8', [
+            'encabezados' => $encabezados,
+            'contenido' => $data
+        ], true));
 
     $validate = $this->VentasAsistentes_model->validateSt8($idLote);
 
