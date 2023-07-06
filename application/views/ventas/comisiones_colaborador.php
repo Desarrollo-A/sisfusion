@@ -639,21 +639,23 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <table class="table-striped table-hover hide" id="tabla_comisiones_sin_pago" name="tabla_comisiones_sin_pago">
-                                                <thead>
-                                                    <tr>
-                                                        <th>ID</th>
-                                                        <th>PROYECTO</th>
-                                                        <th>CONDOMINIO</th>
-                                                        <th>LOTE</th>
-                                                        <th>CLIENTE</th>
-                                                        <th>ASESOR</th>
-                                                        <th>COORDINADOR</th>
-                                                        <th>GERENTE</th>
-                                                        <th>ESTATUS</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
+                                            <div class="material-datatables hide" id="boxTablaComisionesSinPago">
+                                                <table class="table-striped table-hover" id="tabla_comisiones_sin_pago" name="tabla_comisiones_sin_pago">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>ID</th>
+                                                            <th>PROYECTO</th>
+                                                            <th>CONDOMINIO</th>
+                                                            <th>LOTE</th>
+                                                            <th>CLIENTE</th>
+                                                            <th>ASESOR</th>
+                                                            <th>COORDINADOR</th>
+                                                            <th>GERENTE</th>
+                                                            <th>ESTATUS</th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
