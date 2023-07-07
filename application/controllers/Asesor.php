@@ -1,5 +1,4 @@
 <?php
-use application\helpers\email\asesor\Elementos_Correos_Asesor;
 
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
@@ -25,10 +24,9 @@ class Asesor extends CI_Controller
         $this->load->library(array('session', 'form_validation', 'get_menu'));
         $this->load->library('email');
 
-        $this->load->helper(array('url', 'form', 'email/asesor/elementos_correo', 'email/plantilla_dinamica_correo'));
+        $this->load->helper(array('url', 'form'));
         $this->load->database('default');
         $this->load->library('Pdf');
-        $this->load->library('phpmailer_lib');
         date_default_timezone_set('America/Mexico_City');
         $this->validateSession();
 
@@ -2111,7 +2109,7 @@ class Asesor extends CI_Controller
             $arreglo_cliente["tipo_vivienda"] = '0';
         }
 
-        if ($this->input->post('pdfOK') != null || $this->input->post('pdfOK') == '0') {
+        if ($this->input->post('pdfOK') != null || $this->input->post('pdfOK') == 'on') {
             //CONVERTIMOS A ARREGLO TANTO LOS DESCUENTOS ACTUALES COMO EL NUEVO A AGREGAR
             $arrayCorreo = explode(",", $correo);/*$correo)*/
             // CHECAMOS SI EN EL ARREGLO NO HAY POSICIONES VACIAS Y LAS ELIMINAMOS
@@ -2686,15 +2684,16 @@ class Asesor extends CI_Controller
             $namePDF = utf8_decode('DEPÓSITO_DE_SERIEDAD_' . $id_cliente . '.pdf');
             ob_end_clean();
             $pdf->Output(utf8_decode($namePDF), 'I');
-            $attachment = $pdf->Output(utf8_decode($namePDF), 'S');
+            $attachment = $pdf->Output(utf8_decode($namePDF), 'E');
 
             $this->email
                 ->initialize()
                 ->from('Ciudad Maderas')
-                ->to('programador.analista24@ciudadmaderas.com') // TODO: reemplazar el correo de producción
+                ->to('programador.analista24@ciudadmaderas.com')
+                // ->to($correo)
                 ->subject('DEPÓSITO DE SERIEDAD - CIUDAD MADERAS')
-                ->attach($attachment, '', $namePDF)
-                ->view('<h3>A continuación se adjunta el archivo correspondiente a Depósito de seriedad.</h3>');
+                ->view('<h3>A continuación se adjunta el archivo correspondiente a Depósito de seriedad.</h3>')
+                ->attach($attachment, 'attachment', $namePDF, 'application/pdf');
 
             /************************************************************************************
             * Armado de parámetros a mandar a plantilla para creación de correo electrónico     *
@@ -2788,7 +2787,9 @@ class Asesor extends CI_Controller
                     }
 
                     $arreglo_referencia2["id_cliente"] = $id_cliente;
+                    $arreglo_referencia2["creado_por"] = $id_cliente;
                     $arreglo_referencia1["id_cliente"] = $id_cliente;
+                    $arreglo_referencia1["creado_por"] = $id_cliente;
                     $this->Asesor_model->insertnewRef($arreglo_referencia1);
                     $this->Asesor_model->insertnewRef($arreglo_referencia2);
 
@@ -2801,7 +2802,7 @@ class Asesor extends CI_Controller
                     echo json_encode(['code' => 500]);
                 }
             }
-        } else if ($this->input->post('pdfOK') == null || $this->input->post('pdfOK') != '1') {
+        } else if ($this->input->post('pdfOK') == null || $this->input->post('pdfOK') != 'on') {
             $checkIfRefExist = $this->Asesor_model->checkExistRefrencias($id_cliente);
 
             if (count($checkIfRefExist) > 0) {
@@ -2895,16 +2896,16 @@ class Asesor extends CI_Controller
     public function addAutorizacionSbmt()
     {
         $data = array();
-        $tamanoArreglo = $_POST['tamanocer'];
-        $idCliente = $_POST['idCliente'];
-        $idLote = $_POST['idLote'];
-        $id_sol = $_POST['id_sol'];
-        $id_aut = $_POST['id_aut'];
+        $tamanoArreglo = $this->input->post('tamanocer');
+        $idCliente = $this->input->post('idCliente');
+        $idLote = $this->input->post('idLote');
+        $id_sol = $this->input->post('id_sol');
+        $id_aut = $this->input->post('id_aut');
         /*nuevo*/
-        $nombreResidencial = $_POST['nombreResidencial'];
-        $nombreCondominio = $_POST['nombreCondominio'];
-        $nombreLote = $_POST['nombreLote'];
-        $idCondominio = $_POST['idCondominio'];
+        $nombreResidencial = $this->input->post('nombreResidencial');
+        $nombreCondominio = $this->input->post('nombreCondominio');
+        $nombreLote = $this->input->post('nombreLote');
+        $idCondominio = $this->input->post('idCondominio');
         $autorizacionComent = "";
         /*termina nuevo*/
         $comentario = '';
@@ -2915,14 +2916,15 @@ class Asesor extends CI_Controller
                 'id_sol' => $id_sol,
                 'id_aut' => $id_aut,
                 'estatus' => 1,
-                'autorizacion' => $_POST['comentario_' . $n]
+                'autorizacion' => $this->input->post('comentario_' . $n)
             );
             $dataInsert = $this->Asesor_model->insertAutorizacion($data);
-            $n > 0 ? $comentario .= "<br>-".$_POST['comentario_' . $n] : $comentario .= '-'.$_POST['comentario_' . $n];
-            $autorizacionComent .= $_POST['comentario_' . $n] . ". ";
+            $n > 0 ? $comentario .= "<br>-".$this->input->post('comentario_' . $n) : $comentario .= '-'.$this->input->post('comentario_' . $n);
+            $autorizacionComent .= $this->input->post('comentario_' . $n) . ". ";
         }
         if ($dataInsert == 1) {
-            $correos_entregar = array();
+            /*$dataUser = $this->Asesor_model->getInfoUserById($id_aut);
+            $correoDir = $dataUser[0]->correo;*/
 
             $encabezados = [
                 'nombreResidencial' => 'PROYECTO',
@@ -2931,7 +2933,7 @@ class Asesor extends CI_Controller
                 'motivoAut'         => 'AUTORIZACIÓN',
                 'fechaHora'         => 'FECHA/HORA'
             ];
-            $data[0] = [
+            $info[0] = [
                 'nombreResidencial'   =>  $nombreResidencial,
                 'nombreCondominio'    =>  $nombreCondominio,
                 'nombreLote'          =>  $nombreLote,
@@ -2942,11 +2944,12 @@ class Asesor extends CI_Controller
             $this->email
                 ->initialize()
                 ->from('Ciudad Maderas')
-                ->to('programador.analista24@ciudadmaderas.com') // TODO: reemplazar el correo de producción
+                ->to('programador.analista24@ciudadmaderas.com')
+                // -to($correoDir)
                 ->subject('SOLICITUD DE AUTORIZACIÓN - CONTRATACIÓN')
                 ->view($this->load->view('mail/asesor/add-autorizacion-sbmt', [
                     'encabezados' => $encabezados,
-                    'contenido' => $data,
+                    'contenido' => $info,
                     'comentario' => $comentario
                 ], true));
 
@@ -4328,105 +4331,7 @@ class Asesor extends CI_Controller
             echo json_encode(array());
         }
     }
-    function sendMailReportER()
-    {
-        $sedes_array = $this->getSedes();
-        $correo = '';
-        for ($i = 0; $i < count($sedes_array); $i++) {
-            
-            $correos_entregar = array();
-            $elementos_correo = array();
-            $datos_correo[] = array();
-            $datos_encabezados_tabla = '';
-            $datos_etiquetas = null;
-            $comentario_general = '';
-            $data_eviRec = $this->Asesor_model->getEviRecBySede($sedes_array[$i]['id_sede']);
-            switch ($sedes_array[$i]['id_sede']) {
-                case 1:
-                    //SLP
-                   // $correo = 'bertha.magos@ciudadmaderas.com';
-                    break;
-                case 2:
-                    //QRO
-                    //$correo = 'estefania.oceguera@ciudadmaderas.com';
-                    break;
-                case 3:
-                    //PEN
-                    //$correo = 'maricela.rico@ciudadmaderas.com';
-                    break;
-                case 4:
-                    //CDMX
-                    //$correo = 'sergio.colina@ciudadmaderas.com';
-                    break;
-                case 5:
-                    //LEO
-                    //$correo = 'maria.licea@ciudadmaderas.com';
-                    break;
-                case 6:
-                    //CAN
-                    //$correo = 'villanueva@ciudadmaderas.com';
-                    break;
-                case 7:
-                    //US
-                    //$correo = 'programador.analista8@ciudadmaderas.com';
-                    break;
-                default:
-                    //$correo = 'programador.analista8@ciudadmaderas.com';
-                    break;
-            }
-            if (count($data_eviRec) > 0) {
-                $encabezados = [
-                    'nombreSolicitante' => 'SOLICITANTE',
-                    'nombreLote' => 'LOTE',
-                    'comentario_autorizacion' => 'COMENTARIO',
-                    'fecha_creacion' => 'FECHA/HORA'
-                ];
 
-                $this->email
-                    ->initialize()
-                    ->from('Ciudad Maderas')
-                    ->to('programador.analista24@ciudadmaderas.com') // TODO: reemplazar el correo de producción
-                    ->subject("[REPORTE] EVIDENCIAS RECHAZADAS PARA: $correo")
-                    ->view($this->load->view('mail/asesor/reporte-er', ['encabezados' => $encabezados, 'contenido' => $data_eviRec], true));
-
-                if ($this->email->send()) {
-                    $data_request['msg'] = 'Correo enviado correctamente [' . $sedes_array[$i]['abreviacion'] . ']';
-                } else {
-                    $data_request['msg'] = 'Correo no enviado [' . $sedes_array[$i]['abreviacion'] . ']';
-                }
-            }else {
-                $data_request['msg'] = 'No hay registros para enviar un correo en [' . $sedes_array[$i]['abreviacion'] . ']';
-            }
-            if ($data_request != null) {
-                echo json_encode($data_request);
-            }else {
-                echo json_encode(array());
-            }
-        }
-    }
-    public function notifyRejEv($correo, $data_eviRec, $sede)
-    {
-        $encabezados = [
-            'nombreSolicitante' => 'SOLICITANTE',
-            'nombreLote' => 'LOTE',
-            'comentario_autorizacion' => 'COMENTARIO',
-            'fecha_creacion' => 'FECHA/HORA'
-        ];
-
-        $this->email
-            ->initialize()
-            ->from('Ciudad Maderas')
-            ->to('programador.analista24@ciudadmaderas.com') // TODO: reemplazar el correo de producción
-            ->subject('[' . strtoupper($sede) . '][REPORTE] EVIDENCIAS RECHAZADAS PARA:' . $correo)
-            ->view($this->load->view('mail/asesor/notify-rej-ev', ['encabezados' => $encabezados, 'contenido' => $data_eviRec], true));
-
-
-        if ($this->email->send()) {
-            return 1;
-        } else {
-            return $this->email->print_debugger();
-        }
-    }
     function getSedes()
     {
         $data = $this->Asesor_model->getSedes();
@@ -4905,7 +4810,7 @@ class Asesor extends CI_Controller
             ->from('Ciudad Maderas')
             ->to($correo)
             ->subject('PROCESO DE VERIFICACIÓN DE CLIENTE')
-            ->view($this->load->view('mail/asesor/codigo-verificacion', ['url' => $url], true));
+            ->view($this->load->view('mail/asesor/codigo-verificacion', ['url' => $url, 'nombreCliente' => $nombreCliente], true));
 
         return $this->email->send();
     }

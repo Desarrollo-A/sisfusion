@@ -194,7 +194,7 @@ function createAccordions(option, render, rol){
                         </a>
                     </div>
                     <div>
-                        <h4 class="p-0 accordion-title js-accordion-title">`+tittle+`</h4>
+                        <h4 class="p-0">`+tittle+`</h4>
                     </div>
                     <div>
                         ${render == 1 ? '': '<i class="fas fa-times deleteTable"></i>'}
@@ -335,7 +335,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             {
                 data: function(d){
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
-                    return `<button type="btn" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnSub"><i class="fas fa-sitemap" data-toggle="tooltip" data-placement="bottom" title="Desglose a detalle"></i></button>`;
+                    return `<button type="btn" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnSub"  data-toggle="tooltip" data-placement="bottom" title="DESGLOSE A DETALLE"><i class="fas fa-sitemap" ></i></button>`;
                 }
             },
             {
@@ -401,14 +401,13 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             {
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario);                    
-                    return  rol == 7 || (rol == 9 && render == 1) ? '' : `<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas update-dataTable" data-transaction="${transaction}" data-type="${rol}" data-render="${render}" value="${d.userID}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}"><i class="fas fa-sign-in-alt"></i></button></div>`;
+                    return  rol == 7 || (rol == 9 && render == 1) ? '' : `<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas update-dataTable" data-transaction="${transaction}" data-type="${rol}" data-render="${render}" value="${d.userID}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" data-toggle="tooltip" data-placement="bottom" title = "ACCIONES "><i class="fas fa-sign-in-alt"></i></button></div>`;
                 }
             },
         ],
         columnDefs: [{
             className: "delimetter", "targets": [ 3, 7 ],
         },{
-           
             visible: false,
             searchable: false
         }],
@@ -429,10 +428,13 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                 "regional": leadersList[5],
                 "filters" : filters
             }
+        },
+        initComplete: function() {
+            $('[data-toggle="tooltip"]').tooltip()
         }
     });
-    $('[data-toggle="tooltip"]').tooltip();
 }
+
 
 // 0: Lo que ve a setear
 // 1:  Asesor

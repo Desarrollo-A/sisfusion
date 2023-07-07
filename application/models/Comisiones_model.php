@@ -269,7 +269,22 @@ function getDatosComisionesHistorialRigel($proyecto,$condominio){
 
         $this->db->query("SET LANGUAGE Español;");
 
-        $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre as nombreCondominio, l.nombreLote,  CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombreCliente,     vc.id_cliente AS compartida, l.idStatusContratacion, l.totalNeto2, pc.fecha_modificacion, convert(nvarchar, pc.fecha_modificacion, 6) fecha_sistema, convert(nvarchar, pc.fecha_neodata, 6) fecha_neodata, se.nombre as sede, l.registro_comision, l.referencia, cl.id_cliente, CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) as asesor, CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_materno) as coordinador, CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno) as gerente, CONCAT(su.nombre, ' ', su.apellido_paterno, ' ', su.apellido_materno) as subdirector, (CASE WHEN re.id_usuario IN (0) OR re.id_usuario IS NULL THEN 'NA' ELSE CONCAT(re.nombre, ' ', re.apellido_paterno, ' ', re.apellido_materno) END) regional, CONCAT(di.nombre, ' ', di.apellido_paterno, ' ', di.apellido_materno) as director, (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, cl.plan_comision,cl.id_subdirector, cl.id_sede, cl.id_prospecto, l.tipo_venta, cl.lugar_prospeccion, (CASE WHEN pe.id_penalizacion IS NOT NULL AND pe.estatus not in (3) THEN 1 ELSE 0 END) penalizacion, pe.bandera as bandera_penalizacion, pe.id_porcentaje_penalizacion,l.referencia
+        $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre as nombreCondominio, l.nombreLote,  
+        CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombreCliente,  
+           vc.id_cliente AS compartida, l.idStatusContratacion, l.totalNeto2, pc.fecha_modificacion, 
+           convert(nvarchar, pc.ultima_dispersion, 6) ultima_dispersion,
+           convert(nvarchar, pc.fecha_modificacion, 6) fecha_sistema, 
+           convert(nvarchar, pc.fecha_neodata, 6) fecha_neodata, se.nombre as sede, l.registro_comision, l.referencia, cl.id_cliente, 
+           CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) as asesor, 
+           CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_materno) as coordinador,
+            CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno) as gerente, 
+            CONCAT(su.nombre, ' ', su.apellido_paterno, ' ', su.apellido_materno) as subdirector, (
+                CASE WHEN re.id_usuario IN (0) OR re.id_usuario IS NULL THEN 'NA' ELSE CONCAT(re.nombre, ' ', re.apellido_paterno, ' ', re.apellido_materno) END) regional,
+             CONCAT(di.nombre, ' ', di.apellido_paterno, ' ', di.apellido_materno) as director,
+              (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, 
+              cl.plan_comision,cl.id_subdirector, cl.id_sede, cl.id_prospecto, l.tipo_venta, cl.lugar_prospeccion,
+               (CASE WHEN pe.id_penalizacion IS NOT NULL AND pe.estatus not in (3) THEN 1 ELSE 0 END) penalizacion, pe.bandera as bandera_penalizacion, 
+               pe.id_porcentaje_penalizacion,l.referencia
         FROM lotes l
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
@@ -5044,15 +5059,10 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
                                GROUP BY plm.id_plan, res.empresa, pci.id_usuario, lo.ubicacion_dos, s.nombre, us.nombre, us.apellido_paterno, res.idResidencial, CAST(res.descripcion AS VARCHAR(MAX)),
                                 cmktd.sede1, cmktd.sede2, s1.nombre, s2.nombre
                                ORDER by plm.id_plan");
-                               
-
+                            
    }
 
- 
-    /**--------------------------------------------------------- */
-      /**----------resguardos-------------------------------------- */
-      
-   
+    /**----------resguardos-------------------------------------- */
     function getRetiros($user,$opc){
        $query = '';
         if($opc == 2){
@@ -5060,102 +5070,86 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
         }
 
         return $this->db->query("SELECT rc.id_rc,CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) AS usuario,rc.monto,rc.conceptos,rc.fecha_creacion,rc.estatus,CONCAT(u2.nombre,' ',u2.apellido_paterno,' ',u2.apellido_materno) AS creado_por,rc.estatus from usuarios us inner join resguardo_conceptos rc on rc.id_usuario=us.id_usuario inner join usuarios u2 on u2.id_usuario=rc.creado_por where rc.id_usuario=$user $query");
-       
    }
-   function insertar_retiro($usuarioid,$monto,$comentario,$usuario,$opc){
- $estatus = 1;
- $adicional = 'SE INGRESÓ RETIRO ';
-if($opc == 2){
-    $adicional = 'SE AGREGÓ UN INGRESO EXTRA ';
-$estatus = 67;
-}
-    $respuesta = $this->db->query("INSERT INTO resguardo_conceptos VALUES ($usuarioid, $monto,'$comentario', $usuario,$estatus, GETDATE())");
-    $insert_id_2 = $this->db->insert_id();
-    $respuesta = $this->db->query("INSERT INTO  historial_retiros VALUES ($insert_id_2, ".$this->session->userdata('id_usuario').", GETDATE(), 1, '$adicional POR MOTIVO DE: $comentario POR LA CANTIDAD DE: $monto')");
 
-    if (! $respuesta ) {
-        return 0;
-        } else {
-        return 1;
+    function insertar_retiro($usuarioid,$monto,$comentario,$usuario,$opc){
+        $estatus = 1;
+        $adicional = 'SE INGRESÓ RETIRO ';
+        if($opc == 2){
+            $adicional = 'SE AGREGÓ UN INGRESO EXTRA ';
+            $estatus = 67;
         }
-}
 
+        $respuesta = $this->db->query("INSERT INTO resguardo_conceptos VALUES ($usuarioid, $monto,'$comentario', $usuario,$estatus, GETDATE())");
+        $insert_id_2 = $this->db->insert_id();
+        $respuesta = $this->db->query("INSERT INTO  historial_retiros VALUES ($insert_id_2, ".$this->session->userdata('id_usuario').", GETDATE(), 1, '$adicional POR MOTIVO DE: $comentario POR LA CANTIDAD DE: $monto')");
 
+        if (! $respuesta ) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
 
     function getHistoriRetiros($id) {
         $query = $this->db->query("SELECT r.*,CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario  from historial_retiros r inner join usuarios u on u.id_usuario=r.id_usuario where id_retiro=$id");
         return $query;
     }
-    /*--------------------------------------*/
-/**--------------PRECIO LOTE MKTD------------------------------------- */
-function getPrecioMKTD($lote) {
-    $query = $this->db->query("select * from reportes_marketing where id_lote=$lote");
-    return $query;
-}
-public function insert_MKTD_precioL($lote,$precio,$user)
-{
-    $respuesta = $this->db->query("INSERT INTO reportes_marketing VALUES ($lote,$precio,0,1,$user,GETDATE())");
-
-    if ($respuesta ) {
-        return 1;
-    } else {
-        return 0;
+    
+    /**--------------PRECIO LOTE MKTD------------------------------------- */
+    function getPrecioMKTD($lote) {
+        $query = $this->db->query("select * from reportes_marketing where id_lote=$lote");
+        return $query;
     }
-}
-public function Update_MKTD_precioL($lote,$precio,$user)
-{
-    $respuesta = $this->db->query("UPDATE reportes_marketing SET precio=".$precio.",creado_por=$user,fecha_creacion=GETDATE() WHERE id_lote=".$lote."");
 
-    if ($respuesta ) {
-        return 1;
-    } else {
-        return 0;
+    public function insert_MKTD_precioL($lote,$precio,$user){
+        $respuesta = $this->db->query("INSERT INTO reportes_marketing VALUES ($lote,$precio,0,1,$user,GETDATE())");
+
+        if ($respuesta ) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
-}
 
+    public function Update_MKTD_precioL($lote,$precio,$user){
+        $respuesta = $this->db->query("UPDATE reportes_marketing SET precio=".$precio.",creado_por=$user,fecha_creacion=GETDATE() WHERE id_lote=".$lote."");
 
+        if ($respuesta ) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 
-
-
-
- function getDatosColabMktdCompartida($sede, $PLAN,$sede1,$sede2){
- 
-
-    if($PLAN == '9'|| $PLAN == 9 ){
-
- 
-        $filtro_009 = " SELECT pk.id_plan, pk.fecha_plan, getdate() as fin_plan, u.id_usuario, CONCAT(u.nombre,' ' ,u.apellido_paterno,' ',u.apellido_materno) AS colaborador, op1.nombre AS rol, pcm.porcentaje, u.id_sede, op1.id_opcion, 
-             (CASE op1.id_opcion WHEN '18' THEN 1 WHEN '10' THEN 2 WHEN '19' THEN 3 WHEN '37' THEN 4 WHEN '25 ' THEN 5 WHEN '29' THEN 6 WHEN '30' THEN 7 WHEN '20' THEN 8  ELSE op1.id_opcion END) as rol_dos,'0' as valor
+    function getDatosColabMktdCompartida($sede, $PLAN,$sede1,$sede2){
+        if($PLAN == '9'|| $PLAN == 9 ){
+            $filtro_009 = " SELECT pk.id_plan, pk.fecha_plan, getdate() as fin_plan, u.id_usuario, CONCAT(u.nombre,' ' ,u.apellido_paterno,' ',u.apellido_materno) AS colaborador, op1.nombre AS rol, pcm.porcentaje, u.id_sede, op1.id_opcion, 
+            (CASE op1.id_opcion WHEN '18' THEN 1 WHEN '10' THEN 2 WHEN '19' THEN 3 WHEN '37' THEN 4 WHEN '25 ' THEN 5 WHEN '29' THEN 6 WHEN '30' THEN 7 WHEN '20' THEN 8  ELSE op1.id_opcion END) as rol_dos,'0' as valor
             FROM planes_mktd pk 
             INNER JOIN porcentajes_mktd pcm ON pcm.numero_plan = pk.id_plan 
             INNER JOIN usuarios u ON u.id_usuario = pcm.id_usuario 
             INNER JOIN opcs_x_cats op1 ON op1.id_opcion = pcm.rol 
             WHERE op1.id_catalogo = 1 AND pcm.rol NOT IN (19, 20, 28)  ";
-
-    }
-    else{
-         $filtro_009 = " SELECT pk.id_plan, pk.fecha_plan, getdate() as fin_plan, u.id_usuario, CONCAT(u.nombre,' ' ,u.apellido_paterno,' ',u.apellido_materno) AS colaborador, op1.nombre AS rol, pcm.porcentaje, u.id_sede, op1.id_opcion, (CASE op1.id_opcion WHEN '18' THEN 1 WHEN '10' THEN 2 WHEN '19' THEN 3 WHEN '37' THEN 4 WHEN '25 ' THEN 5 WHEN '29' THEN 6 WHEN '30' THEN 7 WHEN '20' THEN 8 WHEN '28' THEN 9 ELSE op1.id_opcion END) as rol_dos,'0' as valor
+        }
+        else{
+            $filtro_009 = " SELECT pk.id_plan, pk.fecha_plan, getdate() as fin_plan, u.id_usuario, CONCAT(u.nombre,' ' ,u.apellido_paterno,' ',u.apellido_materno) AS colaborador, op1.nombre AS rol, pcm.porcentaje, u.id_sede, op1.id_opcion, (CASE op1.id_opcion WHEN '18' THEN 1 WHEN '10' THEN 2 WHEN '19' THEN 3 WHEN '37' THEN 4 WHEN '25 ' THEN 5 WHEN '29' THEN 6 WHEN '30' THEN 7 WHEN '20' THEN 8 WHEN '28' THEN 9 ELSE op1.id_opcion END) as rol_dos,'0' as valor
             FROM planes_mktd pk 
             INNER JOIN porcentajes_mktd pcm ON pcm.numero_plan = pk.id_plan 
             INNER JOIN usuarios u ON u.id_usuario = pcm.id_usuario 
             INNER JOIN opcs_x_cats op1 ON op1.id_opcion = pcm.rol 
             WHERE op1.id_catalogo = 1 AND pcm.rol NOT IN (19, 20) AND pk.id_plan = $PLAN) ";
-    }
+        }
 
+        if($PLAN == '7'||$PLAN == 7 ){
+            $filtro_003 = " ((pcm.rol IN (19) AND (u.id_sede LIKE '%$sede1%' OR u.id_sede LIKE '%$sede2%') ) OR (pcm.id_usuario = 1981 AND id_plaza = 2))  ";
+        }
+        else{
+            $filtro_003 = " pcm.rol IN (19) AND (u.id_sede LIKE '%$sede1%' OR u.id_sede LIKE '%$sede2%')  ";
+        }
 
-     if($PLAN == '7'||$PLAN == 7 ){
-
-        $filtro_003 = " ((pcm.rol IN (19) AND (u.id_sede LIKE '%$sede1%' OR u.id_sede LIKE '%$sede2%') ) OR (pcm.id_usuario = 1981 AND id_plaza = 2))  ";
-
-    }
-    else{
-         $filtro_003 = " pcm.rol IN (19) AND (u.id_sede LIKE '%$sede1%' OR u.id_sede LIKE '%$sede2%')  ";
-    }
-
-     return $this->db->query("( $filtro_009
-
+        return $this->db->query("( $filtro_009
             UNION 
-
             (SELECT pk.id_plan, pk.fecha_plan, getdate() as fin_plan, u.id_usuario, CONCAT(u.nombre,' ' ,u.apellido_paterno,' ',u.apellido_materno) AS colaborador, op1.nombre AS rol, pcm.porcentaje, u.id_sede, op1.id_opcion, (CASE op1.id_opcion WHEN '18' THEN 1 WHEN '19' THEN 2 WHEN '20 ' THEN 3 WHEN '25' THEN 4 ELSE op1.id_opcion END) as rol_dos,'0' as valor 
             FROM planes_mktd pk 
             INNER JOIN porcentajes_mktd pcm ON pcm.numero_plan = pk.id_plan 
@@ -5171,17 +5165,12 @@ public function Update_MKTD_precioL($lote,$precio,$user)
             INNER JOIN usuarios u ON u.id_usuario = pcm.id_usuario 
             INNER JOIN opcs_x_cats op1 ON op1.id_opcion = pcm.rol 
             WHERE op1.id_catalogo = 1 AND  $filtro_003 and pk.id_plan = $PLAN) order by rol_dos");
-    
-     }
+    }
 
-
- 
-
-/**---------------------------------------------------------- */
- /**----------------------------RESGUARDO------------------------------ */
- function get_lote_lista($condominio){
-    return $this->db->query("SELECT * FROM lotes WHERE status = 1 and statuscontratacion BETWEEN 9 AND 15 and regristro_comision=0  AND idCondominio = ".$condominio." AND idCliente in (SELECT idCliente FROM clientes) AND (idCliente <> 0 AND idCliente <>'') ");
-}
+    /**----------------------------RESGUARDO------------------------------ */
+    function get_lote_lista($condominio){
+        return $this->db->query("SELECT * FROM lotes WHERE status = 1 and statuscontratacion BETWEEN 9 AND 15 and regristro_comision=0  AND idCondominio = ".$condominio." AND idCliente in (SELECT idCliente FROM clientes) AND (idCliente <> 0 AND idCliente <>'') ");
+    }
 
 public function Update_lote_reubicacion($idloteNuevo,$idloteAnterior,$precioNuevo,$user,$comentario)
 {
@@ -6644,7 +6633,6 @@ if(count($row2) != 0 && $compartida == 1){
       
          
      
-
 public function GetUserMktd($estatus,$f1,$f2){
     $complemento = '';
     if($f1 != 0){
