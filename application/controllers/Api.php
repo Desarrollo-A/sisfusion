@@ -362,19 +362,21 @@ class Api extends CI_Controller
     }
 
    
-    public function external_dashboard(){
+    function external_dashboard(){
         $response = $this->validateToken_dashboard($_GET['tkn']);
+        
         $res = json_decode($response);
         if($res->status == 200){
             $this->session->set_userdata(array(
                 'id_rol'  => 1,
                 'id_usuario' => 2,
-                'id_lider' => 0
+                'id_lider' => 0,
+                'estatus' => 1
             ));
             $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
             $datos['external'] = true;
-            $this->load->view('template/header');
-            $this->load->view("dashboard/base/base", $datos);
+            $this->load->view('template/header', $datos);
+            $this->load->view("dashboard/base/base");
         }else{
             die("Inicio de sesion caducado.");
         }
@@ -432,6 +434,7 @@ class Api extends CI_Controller
                             $data2[$i]['pagos']['monto_enganche'] = $dbTransaction[$i]['monto_enganche'];
                             $data2[$i]['pagos']['fecha_pago_comision'] = $dbTransaction[$i]['fecha_pago_comision'];
                             $data2[$i]['pagos']['monto_comision'] = $dbTransaction[$i]['monto_comision'];
+                            $data2[$i]['pagos']['fecha_ultima_dispersion'] = $dbTransaction[$i]['fecha_ultima_dispersion'];
                         }
                         if ($dbTransaction) // SUCCESS TRANSACTION
                             echo json_encode(array("status" => 1, "message" => "Consulta realizada con éxito.", "data" => $data2), JSON_UNESCAPED_UNICODE);

@@ -80,7 +80,7 @@ function tablaInventario(ix_idResidencial = 0,ix_idCondominio = 0,ix_idEstatus =
             titleAttr: 'Descargar archivo de Excel',
             title: 'MADERAS_CRM_INVENTARIO',
             exportOptions: {
-                columns: coordinador = id_rol_general == 11 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 26, 27, 28, 29, 30],
+                columns: coordinador = id_rol_general == 11 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 27, 28, 29, 30, 31],
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulosInventario[columnIdx] + ' ';
@@ -96,7 +96,7 @@ function tablaInventario(ix_idResidencial = 0,ix_idCondominio = 0,ix_idEstatus =
             orientation: 'landscape',
             pageSize: 'LEGAL',
             exportOptions: {
-                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 22],
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 22],
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulosInventario[columnIdx]  + ' ';
@@ -217,6 +217,7 @@ function tablaInventario(ix_idResidencial = 0,ix_idCondominio = 0,ix_idEstatus =
                     `<center><span class="label" style="background:#${d.background_sl}18; color:#${d.color};">${d.descripcion_estatus}</span> <p><p> <span class="label lbl-green">${d.tipo_venta}</span> ${libContraloria} <center>`;
             }
         },
+        { data: 'statusContratacion' },
         {
             data: function (d) { // VALIDAR FECHAS NULL DESDE LA QUERY
                 if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
@@ -237,7 +238,7 @@ function tablaInventario(ix_idResidencial = 0,ix_idCondominio = 0,ix_idEstatus =
         { data: 'fecha_validacion' }, // VALIDAR FECHA NULL DESDE LA QUERY
         {
             data: function (d) {
-                return '$' + formatMoney(d.cantidad_enganche);
+                return formatMoney(d.cantidad_enganche);
             }
         },
         {

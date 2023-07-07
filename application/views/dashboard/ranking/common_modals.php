@@ -103,15 +103,15 @@
             <table id="lotesInformationTableRanking" class="table-striped table-hover w-100">
                 <thead>
                     <tr>
-                        <th>Proyecto</th>
-                        <th>Condominio</th>
-                        <th>Lote</th>
-                        <th>Total</th>
-                        <th>Cliente</th>
-                        <th>Asesor</th>
-                        <th>Fecha de apartado</th>
-                        <th>Estatus contratación</th>
-                        <th>Estatus lote</th>
+                        <th>PROYECTO</th>
+                        <th>CONDOMINIO</th>
+                        <th>LOTE</th>
+                        <th>TOTAL</th>
+                        <th>CLIENTE</th>
+                        <th>ASESOR</th>
+                        <th>FECHA DE APARTADO</th>
+                        <th>ESTATUS DE CONTRACIÓN</th>
+                        <th>ESTATUS DEL LOTE</th>
                     </tr>
                 </thead>
             </table>

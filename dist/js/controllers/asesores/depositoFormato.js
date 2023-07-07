@@ -167,8 +167,8 @@ function historialCampoHtml(data) {
     dataTable += `
     <div class="container-fluid">
         <div class="row p-0">
-            <div class="col-md-12 offset-md-3 p-0">
-                <ul class="timeline-3 scroll-styles">
+            <div class="col-md-12 offset-md-3 p-0 scroll-styles" style="height: 350px; overflow: auto">
+                <ul class="timeline-3">
 
             `;
 

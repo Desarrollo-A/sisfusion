@@ -235,15 +235,15 @@ function fillChangelog(v) {
         '    <div class="container-fluid">\n' +
         '       <div class="row">\n' +
         '           <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">\n' +
-        '               <a><small>Campo: </small><b>' + v.parametro_modificado + '</b></a><br>\n' +
+        '               <a><small>Campo: </small><b>' + v.parametro_modificado.toUpperCase() + '</b></a><br>\n' +
         '           </div>\n' +
         '           <div class="float-end text-right">\n' +
         '               <a>' + v.fecha_creacion + '</a>\n' +
         '           </div>\n' +
         '           <div class="col-md-12">\n' +
-    '                <p class="m-0"><small>USUARIO: </small><b> ' + v.creador + '</b></p>\n'+
-    '                <p class="m-0"><small>VALOR ANTERIOR: </small><b> ' + v.anterior + '</b></p>\n' +
-    '                <p class="m-0"><small>VALOR NUEVO: </small><b> ' + v.nuevo + '</b></p>\n' +
+    '                <p class="m-0"><small>Usuario: </small><b> ' + v.creador.toUpperCase() + '</b></p>\n'+
+    '                <p class="m-0"><small>Valor anterior: </small><b> ' + v.anterior.toUpperCase() + '</b></p>\n' +
+    '                <p class="m-0"><small>Valor Nuevo: </small><b> ' + v.nuevo.toUpperCase() + '</b></p>\n' +
         '           </div>\n' +
         '        <h6>\n' +
         '        </h6>\n' +

@@ -1,9 +1,7 @@
 $(document).ready(function () {
-
-    
+    numerosDispersion();
     let titulos_intxt = [];
-    // let url = general_base_url;
-    $('#tabla_dispersar_comisiones thead tr:eq(0) th').each( function (i) {
+    $('#tabla_dispersar_comisiones thead tr:eq(0) th').each(function (i) {
         $(this).css('text-align', 'center');
         var title = $(this).text();
         titulos_intxt.push(title);
@@ -131,6 +129,14 @@ $(document).ready(function () {
                     rescisionLote = '<br><span class="label" style="color:#78281F;background:#F5B7B1;">Recisión Nueva Venta</span>';
                 }
                 return fechaNeodata+rescisionLote;
+            }},{ data: function (d) {
+                var ultima_dispersion;
+                if( d.ultima_dispersion == null ) {
+                    ultima_dispersion = '<span class="label" style="color:#626567;background:#E5E7E9;">Sin Definir</span>';
+                } else {
+                    ultima_dispersion = '<br><span class="label" style="color:#1B4F72;background:#AED6F1;">'+d.ultima_dispersion+'</span>';
+                }
+                return ultima_dispersion;
             }},
             { data: function (d) {
                 var BtnStats = '';
@@ -658,7 +664,29 @@ $("#form_NEODATA").submit( function(e) {
                     function_totales();
                     $('#dispersar').prop('disabled', false);
                     document.getElementById('dispersar').disabled = false;
-                }else if (data == 2) {
+                    console.log('data para mostrar:');
+                    console.log(formulario);
+                    $.ajax({
+                        url: general_base_url + 'Comisiones/ultimaDispersion',
+                        data: formulario,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        dataType: 'json',
+                        method: 'POST',
+                        type: 'POST', 
+                        success:function(data){
+                                console.log(data.response_code)
+                            numerosDispersion();
+                        
+                        
+                        
+                        }
+                    })
+                 
+                    
+
+                } else if (data == 2) {
                     $('#spiner-loader').addClass('hidden');
                     alerts.showNotification("top", "right", "Ya se dispersó por otra persona o es una recisión", "warning");
                     $('#tabla_dispersar_comisiones').DataTable().ajax.reload();
@@ -944,3 +972,19 @@ $('#planes').change(function () {
 
 });
 
+
+    function numerosDispersion(){
+        $('#monto_label').html('');
+        $('#pagos_label').html('');
+        $('#lotes_label').html('');
+        $.post(general_base_url + "/Comisiones/lotes", function (data) {
+            var lotes = data;
+            console.log(data.lotes);
+            console.log(data.monto);
+            console.log(data.pagos);
+
+            $('#monto_label').append(data.monto);
+            $('#pagos_label').append(data.pagos);
+            $('#lotes_label').append(data.lotes);
+        }, 'json');
+    }

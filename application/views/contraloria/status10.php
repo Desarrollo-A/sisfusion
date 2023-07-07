@@ -48,7 +48,7 @@
                                     <thead>
                                         <tr>
                                             <th>PROYECTO</th>
-                                            <th>CLUSTER</th>
+                                            <th>CONDOMINIO</th>
                                             <th>LOTE</th>
                                             <th>REFERENCIA</th>
                                             <th>CLIENTE</th>
@@ -56,9 +56,9 @@
                                             <th>ASESOR</th>
                                             <th>COORDINADOR</th>
                                             <th>GERENTE</th>
-                                            <th>FECHA APARTADO</th>
-                                            <th>FECHA REALIZADO</th>
-                                            <th>FECHA VENICMIENTO</th>
+                                            <th>FECHA DE APARTADO</th>
+                                            <th>FECHA DE REALIZADO</th>
+                                            <th>FECHA DE VENICMIENTO</th>
                                         </tr>
                                     </thead>
                                 </table>

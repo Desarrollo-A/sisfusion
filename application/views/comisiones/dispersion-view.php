@@ -325,6 +325,7 @@
                                                         <th>PLAN VENTA</th>
                                                         <th>FECHA SISTEMA</th> 
                                                         <th>FECHA NEODATA</th>
+                                                        <th>ULTIMA DISPERSION</th>
                                                         <th>ACCIONES</th>
                                                     </tr>
                                                 </thead>

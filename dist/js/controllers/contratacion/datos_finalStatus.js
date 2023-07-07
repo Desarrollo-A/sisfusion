@@ -31,6 +31,7 @@ $(document).on('change', "#sedes", function () {
         $('#JTH').removeClass('hide');
         $('#div_proyectos').addClass('hide');
         $('#residenciales').val('').selectpicker('refresh');
+        $('#spiner-loader').removeClass('hide');
     }
     else if($(this).val() == "2"){
         fillTable($(this).val(), 0);
@@ -219,6 +220,9 @@ function fillTable(sede, residencial) {
                 "id_sede": sede,
                 "residencial": residencial,
             }
+        },
+        initComplete: function () {
+            $('#spiner-loader').addClass('hide');
         }
     });
 }
