@@ -289,7 +289,7 @@ function buildTableApartados(data){
         pageLength : 10,
         width: '100%',
         destroy: true,
-        ordering: false,
+        ordering: true,
         scrollX: true,
         language: {
             url: `${base_url}static/spanishLoader_v2.json`,
@@ -298,6 +298,7 @@ function buildTableApartados(data){
                 next: "<i class='fa fa-angle-right'>"
             }
         },
+        order: [[2, "desc"]],
         data: data,
         columns: [{
             title: 'Ranking',
@@ -307,7 +308,7 @@ function buildTableApartados(data){
         },{
             title: 'Totales',
             data: function(d){
-                return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="1" data-asesor="${d.id_asesor}" class="btnModalDetailsRanking">${d.totalAT}</button>`; // APARTADOS
+                return `<button style=" border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="1" data-asesor="${d.id_asesor}" class="btnModalDetailsRanking label lbl-gray">${d.totalAT}</button>`; // APARTADOS
                 //return d.totalAT
             }
         },
@@ -326,7 +327,7 @@ function buildTableApartados(data){
         {
             title: 'Puesto',
             data: function(d){
-                return d.rol
+                return d.rol.toUpperCase();
             }
         },
         {
@@ -336,9 +337,12 @@ function buildTableApartados(data){
             }
         }],
         columnDefs: [{
-            visible: false,
-            searchable: false
+            visible: true,
+            searchable: true
         }],
+        drawCallback: function (settings) {
+            $('[data-toggle="tooltip"]').tooltip();
+        }
     });
 }
 
@@ -380,7 +384,7 @@ function buildTableContratados(data){
         },{
             title: 'Totales',
             data: function(d){
-                return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="2" data-asesor="${d.id_asesor}" class="btnModalDetailsRanking">${d.totalConT}</button>`; // CONTRATADOS
+                return `<button style="border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="2" data-asesor="${d.id_asesor}" class="btnModalDetailsRanking label lbl-gray">${d.totalConT}</button>`; // CONTRATADOS
                 //return d.totalConT
             }
         },
@@ -399,7 +403,7 @@ function buildTableContratados(data){
         {
             title: 'Puesto',
             data: function(d){
-                return d.rol
+                return d.rol.toUpperCase();
             }
         },
         {
@@ -452,7 +456,7 @@ function buildTableConEnganche(data){
         },{
             title: 'Totales',
             data: function(d){
-                return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="3" data-asesor="${d.id_asesor}" class="btnModalDetailsRanking">${d.cuantos}</button>`; // CON ENGANCHE
+                return `<button style="border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="3" data-asesor="${d.id_asesor}" class="btnModalDetailsRanking label lbl-gray">${d.cuantos}</button>`; // CON ENGANCHE
                 //return d.cuantos
             }
         },
@@ -471,7 +475,7 @@ function buildTableConEnganche(data){
         {
             title: 'Puesto',
             data: function(d){
-                return d.rol
+                return d.rol.toUpperCase();
             }
         },
         {
@@ -525,7 +529,7 @@ function buildTableSinEnganche(data){
         },{
             title: 'Totales',
             data: function(d){
-                return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="4" data-asesor="${d.id_asesor}" class="btnModalDetailsRanking">${d.cuantos}</button>`; // SIN ENGANCHE
+                return `<button style="border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="4" data-asesor="${d.id_asesor}" class="btnModalDetailsRanking label lbl-gray">${d.cuantos}</button>`; // SIN ENGANCHE
                 //return d.cuantos
             }
         },
@@ -544,7 +548,7 @@ function buildTableSinEnganche(data){
         {
             title: 'Puesto',
             data: function(d){
-                return d.rol
+                return d.rol.toUpperCase();
             }
         },
         {
@@ -972,7 +976,7 @@ $(document).on('click', '.btnModalDetailsRanking', function () {
 
 $('#lotesInformationTableRanking thead tr:eq(0) th').each(function (i) {
     const title = $(this).text();
-    $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
+    $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
     $('input', this).on('keyup change', function () {
         if(i != 0){
             if ($("#lotesInformationTableRanking").DataTable().column(i).search() !== this.value) {
@@ -980,6 +984,9 @@ $('#lotesInformationTableRanking thead tr:eq(0) th').each(function (i) {
                     .search(this.value).draw();
             }
         }
+    });
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
     });
 });
 
@@ -993,6 +1000,7 @@ function fillTable(dataObject) {
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
+                title: 'Desglose de lotes',
                 exportOptions: {
                     columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
                     format: {

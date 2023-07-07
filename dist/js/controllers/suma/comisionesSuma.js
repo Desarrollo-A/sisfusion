@@ -4,6 +4,9 @@ const excluir_column = ['MÁS', ''];
 let titulos_encabezado = [];
 let num_colum_encabezado = [];
 
+let forma_pago = 'forma_pago'
+Shadowbox.init();
+
 // Selección de CheckBox
 $(document).on("click", ".individualCheck", function() {
     totaPen = 0;

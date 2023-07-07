@@ -110,7 +110,7 @@ class Suma_model extends CI_Model
         return $query->row();
     }
     function getHistorial($idPago){
-        $result = $this->db->query("SELECT CONVERT(VARCHAR,hs.fecha_movimiento,120) AS fecha_movimiento, hs.comentario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) modificado_por
+        $result = $this->db->query("SELECT CONVERT(VARCHAR,hs.fecha_movimiento,20) AS fecha_movimiento, hs.comentario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) modificado_por
         FROM historial_suma hs
         INNER JOIN usuarios u ON u.id_usuario = hs.id_usuario 
         WHERE id_pago = $idPago

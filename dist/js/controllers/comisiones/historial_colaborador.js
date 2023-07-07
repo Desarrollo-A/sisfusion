@@ -485,9 +485,7 @@ function getAssimilatedCancelacion(proyecto, condominio){
         { 
             "orderable": false,
             "data": function( data ){
-
                 var BtnStats;
-
                 BtnStats = `<button href="#" value="${data.id_pago_i}" data-value="${data.nombreLote}" data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_asimilados" title="DETALLES" data-toggle="tooltip" data-placement="top"><i class="fas fa-info"></i></button>`;
                 return '<div class="d-flex justify-center">'+BtnStats+'</div>';
             }
@@ -620,41 +618,38 @@ $(document).on('click', '.ver-info-asesor', function(){
                 return lblStats;
             }
         },
-            {
-
-                "data": function( d ){
-                    return '<p class="m-0">'+d.nombreLote+'</p>';
-                }
-            },
-            {
-                "data": function( d ){
-                    return '<p class="m-0">$ '+formatMoney(d.abono_neodata)+'</p>';
-                }
-            },
-            {
-                "data": function( d ){
-                    return '<p class="m-0">'+d.fecha_modificacion+'</p>';
-                }
-            },
-            {
-
-                "data": function( d ){
-                    return '<p class="m-0">$'+formatMoney(d.saldo_comisiones)+'</p>';
-                }
-            },
-            {
-                "data": function( d ){
-                    return '<p class="m-0">DESCUENTOS UNIVERSIDAD</p>';
-                }
+        {
+            "data": function( d ){
+                return '<p class="m-0">'+d.nombreLote+'</p>';
             }
-            ],
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0">$ '+formatMoney(d.abono_neodata)+'</p>';
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0">'+d.fecha_modificacion+'</p>';
+            }
+        },
+        {
+
+            "data": function( d ){
+                return '<p class="m-0">$'+formatMoney(d.saldo_comisiones)+'</p>';
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0">DESCUENTOS UNIVERSIDAD</p>';
+            }
+        }],
         columnDefs: [{
             orderable: false,
             className: 'select-checkbox',
             targets:   0,
             'searchable':false,
             'className': 'dt-body-center',
-
             select: {
                 style:    'os',
                 selector: 'td:first-child'

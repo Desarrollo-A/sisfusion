@@ -157,8 +157,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="material-datatables">
-                                    <div class="form-group">
+                                <div class="container m-1">
+                                    <div class="material-datatables">
                                         <table class="table-striped table-hover hide" id="tablaInventario" name="tablaInventario">
                                             <thead>
                                                 <tr>
@@ -207,7 +207,6 @@
             </div>
         </div>
         <?php $this->load->view('template/footer_legend');?>
-    </div>
     </div>
     <!--main-panel close-->
     <?php $this->load->view('template/footer');?>
