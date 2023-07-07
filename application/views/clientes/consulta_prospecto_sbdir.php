@@ -37,36 +37,24 @@
                             </div>
                             <div class="material-datatables">
                                 <div class="form-group">
-                                        <table id="prospects-datatable_dir"  class="table-striped table-hover hide">
-                                            <thead>
-                                                <tr>
-                                                    <th>ESTADO</th>
-                                                    <th>ETAPA</th>
-                                                    <th>PROSPECTO</th>
-                                                    <th>ASESOR</th>
-                                                    <th>COORDINADOR</th>
-                                                    <th>GERENTE</th>
-                                                    <th>LUGAR DE PROSPECCIÓN</th>
-                                                    <th>CREACIÓN</th>
-                                                    <th>VENCIMIENTO</th>
-                                                    <?php
-                                                        if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 5){?>
-                                                            <th>ACCIONES</th>
-                                                            <!-- <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 103px;">
-                                                                <input  type="text"
-                                                                        style="width:100%; background:#143860!important; color:white; border: 0; font-weight: 500;"
-                                                                        class="textoshead" 
-                                                                        placeholder="ACCIONES">
-                                                            </th> -->
-                                                    <?php
-                                                        }
-                                                    ?>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                            </tbody>
-                                        </table>
-                                    
+                                    <table id="prospects-datatable_dir"  class="table-striped table-hover hide">
+                                        <thead>
+                                            <tr>
+                                                <th>ESTADO</th>
+                                                <th>ETAPA</th>
+                                                <th>PROSPECTO</th>
+                                                <th>ASESOR</th>
+                                                <th>COORDINADOR</th>
+                                                <th>GERENTE</th>
+                                                <th>LUGAR DE PROSPECCIÓN</th>
+                                                <th>CREACIÓN</th>
+                                                <th>VENCIMIENTO</th>
+                                                <?php if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 5){?>
+                                                <th>ACCIONES</th>
+                                                <?php } ?>
+                                            </tr>
+                                        </thead>
+                                    </table>
                                 </div>
                             </div>
                             <?php include 'common_modals.php' ?>
@@ -77,30 +65,18 @@
         </div>
     </div>
 	<?php $this->load->view('template/footer_legend');?>
-</div><!--main-panel close-->
+</div>
 <?php $this->load->view('template/footer');?>
 
 
-<!--<script src="--><?php //base_url()?><!--dist/js/jquery.validate.js"></script>-->
 <script src="<?= base_url() ?>dist/js/es.js"></script>
-<!-- DateTimePicker Plugin -->
 <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
-<!--  Full Calendar Plugin    -->
 <script src="<?= base_url() ?>dist/js/fullcalendar.min.js"></script>
 <script src="<?=base_url()?>dist/js/moment.min.js"></script>
 
-<!-- MODAL WIZARD -->
 <script src="<?=base_url()?>dist/js/modal-steps.min.js"></script>
-<?php
-    if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 5)
-    {
-?>
+<?php if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 5){?>
         <script src="<?=base_url()?>dist/js/controllers/consultaProspectos.js"></script>
-<?php
-    }
-?>
-
-<script src="<?=base_url()?>static/yadcf/jquery.dataTables.yadcf.js"></script>
-
+<?php } ?>
 <script src="<?=base_url()?>dist/js/controllers/clientes/consulta_prospecto_sbdir.js"></script>
 </body>

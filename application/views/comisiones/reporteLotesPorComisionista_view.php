@@ -153,8 +153,7 @@
                                                             <div class="form-group d-flex">
                                                                 <input type="text" class="form-control datepicker" id="beginDate" />
                                                                 <input type="text" class="form-control datepicker" id="endDate"/>
-                                                                <button class="btn btn-success btn-round btn-fab btn-fab-mini"
-                                                                        id="searchByDateRange">
+                                                                <button class="btn btn-success btn-round btn-fab btn-fab-mini"id="searchByDateRange">
                                                                     <span class="material-icons update-dataTable">search</span>
                                                                 </button>
                                                             </div>
@@ -183,7 +182,7 @@
                                     </div>
                                 </div>
                                 <br>
-                                <div class="material-datatables hide" id="box-reporteLotesPorComisionista">
+                                <div class="material-datatables hide ml-2" id="box-reporteLotesPorComisionista">
                                     <div class="form-group">
                                         <table class="table-striped table-hover" id="reporteLotesPorComisionista" name="reporteLotesPorComisionista">
                                             <thead>
@@ -226,6 +225,9 @@
     </div>
 
     <?php $this->load->view('template/footer');?>
-    <!--DATATABLE BUTTONS DATA EXPORT-->
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/reporteLotesPorComisionista.js"></script>
+    <script src="<?= base_url() ?>dist/js/es.js"></script>
+    <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
+
+
 </body>

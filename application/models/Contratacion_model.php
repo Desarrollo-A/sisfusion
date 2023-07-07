@@ -265,6 +265,10 @@ class Contratacion_model extends CI_Model {
    }
 
    public function getCompleteInventory ($sede_residencial) {
+      ini_set('max_execution_time', 900);
+      set_time_limit(900);
+      ini_set('memory_limit','2048M');
+
       $prospectingPlaceDetail = $this->getProspectingPlaceDetail();
       return $this->db->query("SELECT lot.idLote, lot.nombreLote, con.nombre as nombreCondominio, lot.totalNeto2,
       res.nombreResidencial, lot.idStatusLote, con.idCondominio, lot.sup, 
