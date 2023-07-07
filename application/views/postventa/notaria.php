@@ -23,38 +23,34 @@
                     <h4 class="card-title">Agregar notaría</h4>
                 </div>
                 <form method="post" id="form_notario">
-                    <div class="modal-body">
+                    <div class="modal-body pt-0">
                         <div class="form-group">
-                            <label class="label">Nombre de notaía</label>    
-                            <input class="form-control" id="notaria_nombre" type="text" name="notaria_nombre" required>
+                            <label class="control-label">Nombre de notaría</label>    
+                            <input class="form-control input-gral" id="notaria_nombre" type="text" name="notaria_nombre" required>
                         </div>
                         <div class="form-group">
-                            <label class="label">Nombre de notario</label>
-                            <input class="form-control" id="notario_nombre" type="text" name="notario_nombre" required>
+                            <label class="control-label">Nombre de notario</label>
+                            <input class="form-control input-gral" id="notario_nombre" type="text" name="notario_nombre" required>
                         </div>
                         <div class="form-group">
-                            <label class="label">Direccion</label>
-                            <input class="form-control" id="direccion" type="text" name="direccion" required>
+                            <label class="control-label">Direccion</label>
+                            <input class="form-control input-gral" id="direccion" type="text" name="direccion" required>
                         </div>
                         <div class="form-group">
-                            <label class="label">Correo</label>
-                            <input class="form-control" id="correo" type="email" name="correo" required>
+                            <label class="control-label">Correo</label>
+                            <input class="form-control input-gral" id="correo" type="email" name="correo" required>
                         </div>
                         <div class="form-group">
-                            <label class="label">Telefono</label>
-                            <input class="form-control" id="telefono" type="text" name="telefono" maxlength="10" required>
+                            <label class="control-label">Telefono</label>
+                            <input class="form-control input-gral" id="telefono" type="text" name="telefono" maxlength="10" required>
                         </div>
-                        <div class="form-group">
-                            <label class="label">Sede</label>
-                            <select name="sede" id="sede" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" required>
-                                <option disabled value="">Selecciona una opción</option>
-                            </select>
+                        <div class="form-group overflow-hidden">
+                            <label class="control-label">Sede</label>
+                            <select name="sede" id="sede" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-container="body" required></select>
                         </div>
-                        <div class="form-group">
-                            <center>
-                                <button type="submit" class="btn btn-primary">GUARDAR</button>
+                        <div class="form-group d-flex justify-center">
                                 <button class="btn btn-danger" id="cancelar-registro" type="button" data-dismiss="modal" onclick="closeModalRegisto()">CANCELAR</button>
-                            </center>
+                                <button type="submit" class="btn btn-primary">GUARDAR</button>
                         </div>
                     </div>
                 </form>
@@ -75,31 +71,27 @@
                                 <div class="toolbar">
                                     <div class="row"> 
                                         <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                                            
-                                            <!-- <button class="btn btn-info btn-round btn-sm" onclick="location.reload()"><i class="fas fa-redo"></i></button> -->
                                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-usuario" data-whatever="">Agregar Notaría</button>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="material-datatables">
                                     <div class="form-group">
-                                        <div class="table-responsive">
-                                            <table class="table-striped table-hover" id="notaria-datatable"
-                                                name="notaria-datatable">
-                                                <thead>
-                                                    <tr>
-                                                        <th>ID NOTARIA</th>
-                                                        <th>NOMBRE NOTARIA</th>
-                                                        <th>NOMBRE NOTARIO</th>
-                                                        <th>DIRECCION</th>
-                                                        <th>CORREO</th>
-                                                        <th>TELEFONO</th>
-                                                        <th>SEDE</th>
-                                                        <th>ACCIONES</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
-                                        </div>
+                                        <table class="table-striped table-hover" id="notaria-datatable"
+                                            name="notaria-datatable">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID NOTARIA</th>
+                                                    <th>NOMBRE NOTARIA</th>
+                                                    <th>NOMBRE NOTARIO</th>
+                                                    <th>DIRECCION</th>
+                                                    <th>CORREO</th>
+                                                    <th>TELEFONO</th>
+                                                    <th>SEDE</th>
+                                                    <th>ACCIONES</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
                                     </div>
                                 </div>
                               <?php include 'common_modals.php' ?>
@@ -123,27 +115,11 @@
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
-<script>
-    userType = <?= $this->session->userdata('id_rol') ?> ;
-    idUser = <?= $this->session->userdata('id_usuario') ?> ;
-    typeTransaction = 1;
-	Shadowbox.init();
-    base_url = "<?=base_url()?>";
-</script>
-
-<!-- MODAL WIZARD -->
 <script src="<?=base_url()?>dist/js/modal-steps.min.js"></script>
-<!--  Plugin for Date Time Picker and Full Calendar Plugin-->
 <script src="<?= base_url() ?>dist/js/moment.min.js"></script>
 <script src="<?= base_url() ?>dist/js/es.js"></script>
-<!-- DateTimePicker Plugin -->
 <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
 <script src="<?=base_url()?>static/yadcf/jquery.dataTables.yadcf.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/general/main_services.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/postventa/notaria.js"></script>
-<!-- <script  src="<?=base_url()?>dist/js/controllers/postventa/Escrituracion/Classes/actionButtonsClass.js"></script>
-<script  src="<?=base_url()?>dist/js/controllers/postventa/Escrituracion/Helpers/helpers.js"></script>
-<script  src="<?=base_url()?>dist/js/controllers/postventa/Escrituracion/Services/services.js"></script>
-<script  src="<?=base_url()?>dist/js/controllers/postventa/Escrituracion/escrituracion.js"></script> -->
-
 </html>
