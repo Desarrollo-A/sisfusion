@@ -1,13 +1,13 @@
 $(document).ready(function(){
-$.post("../Postventa/listSedes", function (data) {
-  var len = data.length;
-  for (var i = 0; i < len; i++) {
-      var id = data[i]['id_sede'];
-      var name = data[i]['nombre'];
-      $("#sede").append($('<option>').val(id).text(name.toUpperCase()));
-  }
-  $("#sede").selectpicker('refresh');
-}, 'json');
+  $.post("../Postventa/listSedes", function (data) {
+    var len = data.length;
+    for (var i = 0; i < len; i++) {
+        var id = data[i]['id_sede'];
+        var name = data[i]['nombre'];
+        $("#sede").append($('<option>').val(id).text(name.toUpperCase()));
+    }
+    $("#sede").selectpicker('refresh');
+  }, 'json');
 });
 
 $('#notaria-datatable thead tr:eq(0) th').each( function (i) {
@@ -18,9 +18,9 @@ $('#notaria-datatable thead tr:eq(0) th').each( function (i) {
         if ($('#notaria-datatable').DataTable().column(i).search() !== this.value ) {
             $('#notaria-datatable').DataTable().column(i).search(this.value).draw();
         }
-    });
-  }
-});
+      });
+    }
+  });
 
     // Traer los registros de la tabla notaria
     prospectsTable = $('#notaria-datatable').DataTable({
@@ -102,7 +102,7 @@ $('#notaria-datatable thead tr:eq(0) th').each( function (i) {
       $('[data-toggle="tooltip"]').tooltip({
           trigger: "hover"
       });
-  });
+    });
 
         // Funcionalidad para eliminar las notarias
     $("#notaria-datatable tbody").on("click", ".btn-delete", function(){    
@@ -183,6 +183,6 @@ $('#notaria-datatable thead tr:eq(0) th').each( function (i) {
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
           }
         });
-    });  
+      });  
 
 
