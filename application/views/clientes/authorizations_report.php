@@ -2,9 +2,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <body class="">
     <div class="wrapper ">
-        <?php
-                $this->load->view('template/sidebar');
-        ?>
+        <?php $this->load->view('template/sidebar'); ?>
         
         <div class="content boxContent">
             <div class="container-fluid">
@@ -40,10 +38,8 @@
                 </div>
             </div>
         </div>
-
         <?php $this->load->view('template/footer_legend');?>
-    </div><!--main-panel close-->
+    </div>
 </body>
 <?php $this->load->view('template/footer');?>
-<!--DATATABLE BUTTONS DATA EXPORT-->
 <script src="<?= base_url() ?>dist/js/controllers/clientes/authorizationsReport.js"></script>
