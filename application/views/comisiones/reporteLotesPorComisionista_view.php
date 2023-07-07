@@ -228,4 +228,6 @@
     <?php $this->load->view('template/footer');?>
     <!--DATATABLE BUTTONS DATA EXPORT-->
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/reporteLotesPorComisionista.js"></script>
+    <script src="<?= base_url() ?>dist/js/es.js"></script>
+    <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
 </body>

@@ -3,12 +3,12 @@ $(document).ready(function () {
     let resto = 0;
     
     $.post('getDisponibleResguardo/' + id_usuario_general, function(data) {
-                document.getElementById('totalDisponible').textContent = '';
-                let disponible = '$'+formatMoney(data.toFixed(3));
-                document.getElementById('totalDisponible').textContent = disponible;
-                resto = 0;
-                resto = data.toFixed(3);
-            }, 'json');
+        document.getElementById('totalDisponible').textContent = '';
+        let disponible = '$'+formatMoney(data.toFixed(3));
+        document.getElementById('totalDisponible').textContent = disponible;
+        resto = 0;
+        resto = data.toFixed(3);
+    }, 'json');
 
     $.post('getDisponibleResguardoP/' + id_usuario_general, function(data) {
         document.getElementById('totalResguardo').textContent = '';
@@ -38,9 +38,6 @@ $(document).ready(function () {
         let extra = 0;
         extra = '$'+formatMoney(sumaExtras);
         document.getElementById("totalExtras").textContent = extra;
-        
-        let to2 = 0;
-        to2 = parseFloat(resto) + parseFloat(total);
     });
 
     $('#tabla_retiros_resguardo thead tr:eq(0) th').each( function (i) {

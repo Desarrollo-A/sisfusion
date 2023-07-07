@@ -15,20 +15,13 @@ $('#prospects-datatable_dir thead tr:eq(0) th').each( function (i) {
 
 //Eliminamos la ultima columna "ACCIONES" donde se encuentra un elemento de tipo boton (para omitir en excel o pdf).
 num_colum_encabezado.pop();
-
 $(document).ready(function () {
-    
     multirol();
-
     //gerente
     setInitialDates();
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
-   
-
 });
-
-
 
 function multirol(){
     $.post('../General/multirol', function(data){
@@ -114,8 +107,6 @@ function createFilters(rol){
         $selectGer.appendTo('#div2').selectpicker('refresh');
         $selectCoord.appendTo('#div3').selectpicker('refresh');
         $selectAse.appendTo('#div4').selectpicker('refresh');
-        // $option.appendTo('#asesores');
-
     }else if(2){ 
         let div =   `<div class="col-md-4 form-group">
                         <div id="div2" class="form-group">

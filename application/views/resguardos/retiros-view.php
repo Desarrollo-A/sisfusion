@@ -118,21 +118,20 @@
                                 </div>
                                 <div class="material-datatables">
                                     <div class="form-group">
-                                            <table class="table-striped table-hover" id="tabla_retiros_resguardo" name="tabla_retiros_resguardo">
-                                            <thead>
-                                                <tr>
-                                                    <th>ID DESCUENTO</th>
-                                                    <th>USUARIO</th>
-                                                    <th>DESCUENTO</th>
-                                                    <th>MOTIVO</th>
-                                                    <th>ESTATUS</th>
-                                                    <th>CREADO POR</th>
-                                                    <th>FECHA DE CAPTURA</th>
-                                                    <th>ACCIONES</th>
-                                                </tr>
-                                            </thead>
-                                        </table>
-                                    </div>
+                                        <table class="table-striped table-hover" id="tabla_retiros_resguardo" name="tabla_retiros_resguardo">
+                                        <thead>
+                                            <tr>
+                                                <th>ID DESCUENTO</th>
+                                                <th>USUARIO</th>
+                                                <th>DESCUENTO</th>
+                                                <th>MOTIVO</th>
+                                                <th>ESTATUS</th>
+                                                <th>CREADO POR</th>
+                                                <th>FECHA DE CAPTURA</th>
+                                                <th>ACCIONES</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -140,14 +139,9 @@
                 </div>
             </div>
         </div>
+    </div>
     <?php $this->load->view('template/footer_legend');?>
-    </div><!--main-panel close-->
+    </div>
     <?php $this->load->view('template/footer');?>
-    <!--DATATABLE BUTTONS DATA EXPORT-->
-    <script > 
-    var url = "<?=base_url()?>";
-    var url2 = "<?=base_url()?>index.php/";
-    </script>
-
     <script src="<?= base_url() ?>dist/js/controllers/resguardos/retiros.js"></script>
 </body>
