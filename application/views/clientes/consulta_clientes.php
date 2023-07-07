@@ -3,6 +3,7 @@
 <body>
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
+
         <div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
                 <div class="modal-content">
@@ -183,10 +184,8 @@
             </div>
         </div>
         <?php $this->load->view('template/footer_legend');?>
-    </div><!--main-panel close-->
-
+    </div>
 <?php $this->load->view('template/footer');?>
-<!-- MODAL WIZARD -->
 <script src="<?=base_url()?>dist/js/modal-steps.min.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/consultaClientes.js"></script>
 </body>

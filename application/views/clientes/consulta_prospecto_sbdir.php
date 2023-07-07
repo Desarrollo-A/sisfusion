@@ -2,7 +2,7 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
 <div class="wrapper">
-	<?php $this->load->view('template/sidebar',''); ?>
+	<?php $this->load->view('template/sidebar'); ?>
 
     <div class="content boxContent">
         <div class="container-fluid">
@@ -74,9 +74,13 @@
 <script src="<?= base_url() ?>dist/js/fullcalendar.min.js"></script>
 <script src="<?=base_url()?>dist/js/moment.min.js"></script>
 
+<!-- MODAL WIZARD -->
 <script src="<?=base_url()?>dist/js/modal-steps.min.js"></script>
 <?php if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 5){?>
-        <script src="<?=base_url()?>dist/js/controllers/consultaProspectos.js"></script>
+    <script src="<?=base_url()?>dist/js/controllers/consultaProspectos.js"></script>
 <?php } ?>
+
+<script src="<?=base_url()?>static/yadcf/jquery.dataTables.yadcf.js"></script>
+
 <script src="<?=base_url()?>dist/js/controllers/clientes/consulta_prospecto_sbdir.js"></script>
 </body>

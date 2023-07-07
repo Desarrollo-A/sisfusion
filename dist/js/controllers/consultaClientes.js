@@ -230,6 +230,7 @@ function fillFields(v, type) {
         $("#phone_number_ed").val(v.telefono);
     }
 }
+
 function fillChangelog(v) {
     $("#changelog").append('<li>\n' +
         '    <div class="container-fluid">\n' +
@@ -259,7 +260,6 @@ function cleanComments() {
     var myChangelog = document.getElementById('changelog');
     myChangelog.innerHTML = '';
 }
-
 
 function fillTimeline(v, counter) {
     if(counter > 0){
