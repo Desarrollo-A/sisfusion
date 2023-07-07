@@ -1032,7 +1032,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
 		LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
 		LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
-		WHERE l.modificado BETWEEN '$fecha_inicio 00:00:00.000' AND '$fecha_inicio 23:59:59.000' $filter
+		WHERE l.modificado BETWEEN '$fecha_inicio 00:00:00.000' AND '$fecha_inicio 23:59:59.000' 
 		AND l.idStatusContratacion IN ('5', '2') AND l.idMovimiento IN ('35', '22', '62', '75', '94') AND cl.status = 1
 		GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
 		l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,

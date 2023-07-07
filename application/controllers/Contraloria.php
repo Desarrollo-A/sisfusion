@@ -2700,9 +2700,11 @@ class Contraloria extends CI_Controller {
         }
     }
 
-    public function getRegistroDiarioPorFecha($fecha_inicio) {
+    public function getRegistroDiarioPorFecha() {
+        $fechaFin = explode('/', $this->input->post("fecha_inicio"));
+        $begindDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
         $data = array();
-        $data = $this->Contraloria_model->registroDiarioPorFecha($fecha_inicio);
+        $data = $this->Contraloria_model->registroDiarioPorFecha($begindDate);
         if($data != null) {
             echo json_encode($data);
         } else {
