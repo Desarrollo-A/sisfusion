@@ -3935,17 +3935,12 @@ function getStatusMktdPreventa(){
         //return $this->db->query("SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo IN (5, 7, 9, 10, 11, 18, 19, 38) AND estatus = 1 ORDER BY id_catalogo, id_opcion");
     }
     
-    function getregistrosLP($typeTransaction, $beginDate, $endDate, $where){
-        /*if ($typeTransaction == 1 || $typeTransaction == 3) // FIRST LOAD || SEARCH BY DATE RANGE
-            $filter = "rlp.fecha_creacion BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
-        else
-            $filter = "";*/
-        
+    function getregistrosLP(){
         if($this->session->userdata('id_rol') == 54) // MJ: SUBDIRECCIÓN CONSULTA
             $extraFilter = "WHERE rlp.fecha_creacion > '2022-01-26 17:57:38.000'";
         else
             $extraFilter = "";
-        $query = $this->db->query("SELECT rlp.id_registro, se.nombre nombre_sede, UPPER(rlp.nombre) nombre, rlp.telefono, rlp.correo, rlp.origen, rlp.fecha_creacion
+        $query = $this->db->query("SELECT rlp.id_registro, UPPER(se.nombre) AS nombre_sede, UPPER(rlp.nombre) AS nombre, rlp.telefono, UPPER(rlp.correo) AS correo, UPPER(rlp.origen) AS origen, CONVERT(VARCHAR,rlp.fecha_creacion,120) AS fecha_creacion
         FROM registros_lp rlp
         INNER JOIN sedes se ON se.id_sede = rlp.id_sede
         $extraFilter");
