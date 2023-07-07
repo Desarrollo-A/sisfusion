@@ -168,7 +168,27 @@ $("#tabla_ingresar_14").ready(function () {
             else
                 status = "N/A";
 
-            var informacion_adicional = '<div class="container subBoxDetail"><div class="row"><div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>INFORMACIÓN ADICIONAL</b></label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Estatus: </b>' + status + '</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Comentario: </b>' + row.data().comentario + '</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Fecha vencimiento: </b>' + fechaVenc + '</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Fecha realizado: </b></label>' + row.data().modificado + '</div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Coordinador: </b>' + row.data().coordinador + '</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Asesor: </b>' + row.data().asesor + '</label></div></div></div>';
+            var informacion_adicional = 
+            '<div class="container subBoxDetail"><div class="row">'+
+                '<div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px">'+
+                    '<label><b>INFORMACIÓN ADICIONAL</b></label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Estatus: </b>' + status + '</label>'+
+                '</div>'+
+                '<div class="col-12 col-sm-12 col-md-12 col-lg-12">'+
+                    '<label><b>Comentario: </b>' + row.data().comentario + '</label>'+
+                '</div>'+
+                '<div class="col-12 col-sm-12 col-md-12 col-lg-12">'+
+                    '<label><b>Fecha de vencimiento: </b>' + fechaVenc + '</label>'+
+                '</div>'+
+                '<div class="col-12 col-sm-12 col-md-12 col-lg-12">'+
+                    '<label><b>Fecha de realizado: </b>' + row.data().modificado + '</label>'+
+                '</div>'+
+                '<div class="col-12 col-sm-12 col-md-12 col-lg-12">'+
+                    '<label><b>Coordinador: </b>' + row.data().coordinador + '</label>'+
+                '</div>'+
+                '<div class="col-12 col-sm-12 col-md-12 col-lg-12">'+
+                    '<label><b>Asesor: </b>' + row.data().asesor + '</label>'+
+                '</div>'+
+                '</div></div>';
             row.child(informacion_adicional).show();
             tr.addClass('shown');
             $(this).parent().find('.animacion').removeClass("fas fa-chevron-down").addClass("fas fa-chevron-up");
