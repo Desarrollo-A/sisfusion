@@ -2076,18 +2076,18 @@
 	}
 //	fin filtro de status
 		public function historialProcesoFin($lotes){
-		$query = $this->db-> query("SELECT historial_lotes.nombreLote, historial_lotes.modificado, historial_lotes.comentario, movimientos.descripcion,
+		$query = $this->db-> query("SELECT historial_lotes.nombreLote, historial_lotes.modificado, UPPER(CONVERT(VARCHAR,historial_lotes.comentario)) AS comentario, UPPER(movimientos.descripcion) AS descripcion,
 		(CASE WHEN (CONCAT(usuarios.nombre, ' ', usuarios.apellido_paterno, ' ', usuarios.apellido_materno)) = '' THEN historial_lotes.usuario 
 		ELSE (CONCAT(usuarios.nombre, ' ', usuarios.apellido_paterno, ' ', usuarios.apellido_materno)) END) usuario,
 		(CASE WHEN historial_lotes.perfil = '11' THEN 'administracion' WHEN historial_lotes.perfil = '13' THEN 'contraloria'
 		WHEN historial_lotes.perfil = '15' THEN 'juridico' WHEN historial_lotes.perfil = '32' THEN 'contraloriaCorporativa'
 		WHEN historial_lotes.perfil = '6' THEN 'asistentesGerentes' WHEN historial_lotes.perfil = '7' THEN 'asesor'
 		WHEN historial_lotes.perfil = '9' THEN 'coordinador' ELSE historial_lotes.perfil END) perfil,
-		CASE 
+		UPPER(CASE 
 		WHEN historial_lotes.idStatusContratacion = 2 AND historial_lotes.idMovimiento = 84 THEN '2.0 Integración de Expediente (Asesor)' 
 		ELSE
 		statuscontratacion.nombreStatus
-		END AS nombreStatus,
+		END) AS nombreStatus,
 		historial_lotes.idLote
 		FROM historial_lotes 
 		INNER JOIN movimientos ON historial_lotes.idMovimiento = movimientos.idMovimiento
@@ -3316,8 +3316,8 @@
 			$where = "hd.status = 1 AND hd.idLote = $lotes";
 		return $this->db-> query("SELECT hd.expediente, hd.idDocumento, CONVERT(VARCHAR,hd.modificado,20) AS modificado, hd.status, hd.idCliente, hd.idLote, lo.nombreLote, 
 		UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, cl.rfc, co.nombre, re.nombreResidencial, 
-		u.nombre as primerNom, u.apellido_paterno as apellidoPa, u.apellido_materno as apellidoMa, se.abreviacion as ubic, 
-		hd.movimiento, hd.movimiento, co.idCondominio, hd.tipo_doc, lo.idMovimiento, cl.id_asesor, cl.flag_compartida, lo.observacionContratoUrgente,
+		UPPER(u.nombre) as primerNom, UPPER(u.apellido_paterno) as apellidoPa, UPPER(u.apellido_materno) as apellidoMa, se.abreviacion as ubic, 
+		UPPER(hd.movimiento) AS movimiento, co.idCondominio, hd.tipo_doc, lo.idMovimiento, cl.id_asesor, cl.flag_compartida, lo.observacionContratoUrgente,
 		CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
         CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
         CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
@@ -3704,17 +3704,20 @@
     function getClientByID($idLote = '',$idCliente = ''){
 
 		$fragmento = $idCliente == '' ? "AND l.idLote=$idLote" : " AND cl.id_cliente=$idCliente";
-        $query = $this->db->query("SELECT 
+        $query = $this->db->query("SELECT hlo2.idStatusContratacion hlidStatus,hlo2.idMovimiento hlidMovimiento,
         CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
         CONCAT(coord.nombre, ' ', coord.apellido_paterno, ' ', coord.apellido_materno) as coordinador,
         CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
         CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nomCliente,
-        c.nombre as nombreCondominio, cl.status as estatus_cliente, oxc.nombre as lp,st.nombreStatus,tv.tipo_venta tventa, 
+        c.nombre as nombreCondominio, cl.status as estatus_cliente, oxc.nombre as lp,st.nombreStatus,
+		(CASE WHEN l.tipo_venta = 0 OR l.tipo_venta IS NULL THEN 'SIN ESPECIFICAR' ELSE tv.tipo_venta END) tventa,l.tipo_venta tipo_ventaId, 
 		(CASE WHEN l.status8Flag = 1 THEN 'Estatus 8 validado' ELSE 'Estatus 8 sin validar' END) bandera8,oxcRG.nombre registroComision,
-		(CASE WHEN l.validacionEnganche = 'VALIDADO' THEN l.validacionEnganche ELSE 'SIN VALIDAR' END) validacionEng,
+		(CASE WHEN l.validacionEnganche = 'VALIDADO' THEN l.validacionEnganche ELSE 'SIN VALIDAR' END) validacionEng,l.idLote,
         sl.nombre as estatus_lote, CONCAT('#',sl.color) as statusLoteColor, cl.nombre as nombreCliente, * 
         FROM lotes l
         INNER JOIN clientes cl ON cl.idLote=l.idLote $fragmento
+		INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes GROUP BY idLote, idCliente) hlo ON hlo.idLote = l.idLote AND hlo.idCliente = cl.id_cliente
+		INNER JOIN historial_lotes hlo2 ON hlo2.idLote = hlo.idLote AND hlo2.idCliente = hlo.idCliente AND hlo2.modificado = hlo.modificado
         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion=cl.lugar_prospeccion AND oxc.id_catalogo=9
         INNER JOIN condominios c ON l.idCondominio=c.idCondominio
         INNER JOIN residenciales r ON c.idResidencial=r.idResidencial 
@@ -3722,7 +3725,7 @@
         LEFT JOIN usuarios coord ON coord.id_usuario=cl.id_coordinador
         INNER JOIN usuarios gerente ON gerente.id_usuario = cl.id_gerente
         INNER JOIN statuslote sl ON sl.idStatusLote=l.idStatusLote
-		LEFT JOIN statuscontratacion st ON st.idStatusContratacion=l.idStatusContratacion
+		LEFT JOIN statuscontratacion st ON st.idStatusContratacion=hlo2.idStatusContratacion
 		LEFT JOIN tipo_venta tv ON tv.id_tventa=l.tipo_venta
 		LEFT JOIN opcs_x_cats oxcRG ON oxcRG.id_opcion=l.registro_comision AND oxcRG.id_catalogo=95
 		 ;");

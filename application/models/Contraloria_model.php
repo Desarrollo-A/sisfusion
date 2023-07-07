@@ -470,7 +470,8 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
 		concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
 		concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
-		cond.idCondominio, l.observacionContratoUrgente as vl, se.nombre as nombreSede
+		cond.idCondominio, l.observacionContratoUrgente as vl, se.nombre as nombreSede,
+        CONVERT(VARCHAR(23), GETDATE(), 126) + 'Z' as fecha_arcus, cl.id_prospecto, l.totalNeto2, pro.id_arcus
 		FROM lotes l
 		INNER JOIN clientes cl ON l.idLote=cl.idLote
 		INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
@@ -480,6 +481,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
 		LEFT JOIN sedes se ON se.id_sede = l.ubicacion
 		LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
+        LEFT JOIN prospectos pro ON cl.id_prospecto = pro.id_prospecto
 		WHERE l.idStatusContratacion IN (14) AND l.idMovimiento IN (44, 69, 80) AND cl.status = 1 $filtroSede
 		GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
 		l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
@@ -488,7 +490,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
 		concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
 		concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-		cond.idCondominio, l.observacionContratoUrgente, se.nombre
+		cond.idCondominio, l.observacionContratoUrgente, se.nombre, cl.id_prospecto, l.totalNeto2, pro.id_arcus
 		ORDER BY l.nombreLote");
         return $query->result();
     }
@@ -1237,4 +1239,125 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         WHERE lo.status = 1 AND lo.idStatusContratacion = 15 AND lo.idMovimiento = 45 AND lo.idStatusLote = 2")->result();
 	}
 
+    function getInventarioData($fechaInicio, $fechaFin) {
+        $filter = " AND cl.fechaApartado BETWEEN '$fechaInicio 00:00:00' AND '$fechaFin 23:59:59'";
+  
+        $query = $this->db->query("SELECT  lot.idLote,cl.id_asesor, lot.nombreLote, con.nombre as nombreCondominio, res.nombreResidencial, lot.idStatusLote, con.idCondominio, lot.totalNeto2,
+        lot.total, lot.referencia, ISNULL(lot.comentario, 'SIN ESPECIFICAR') comentario, lot.comentarioLiberacion, lot.observacionLiberacion, 
+        CASE WHEN lot.casa = 1 THEN CONCAT(sl.nombre, ' casa') ELSE sl.nombre end as descripcion_estatus, sl.color, tv.tipo_venta,
+        CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END asesor,
+        CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END coordinador,
+        CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END gerente,
+        CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END subdirector,
+        CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END regional,
+        CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END regional2,
+        lot.precio, ISNULL(CONVERT(varchar, lot.fecha_modst, 20), '') fecha_modst,  ISNULL(CONVERT(varchar, cl.fechaApartado, 20), '') AS fechaApartado, ISNULL (cl.apartadoXReubicacion, 0) AS apartadoXReubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 21), '') AS fechaAlta, lot.observacionContratoUrgente,
+        CASE WHEN cl.id_cliente IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) END as nombreCliente, lot.motivo_change_status,opx.nombre registro,
+        lot.fecha_creacion,
+        lot.idStatusContratacion,
+        sl.background_sl,sed.nombre as ubicacion,com.idCliente comision,lot.idCliente,vc.id_cliente as banderaVC
+        FROM lotes lot
+        INNER JOIN condominios con ON con.idCondominio = lot.idCondominio 
+        INNER JOIN residenciales res ON res.idResidencial = con.idResidencial
+        LEFT JOIN opcs_x_cats opx ON opx.id_opcion=lot.registro_comision AND opx.id_catalogo=95 
+        INNER JOIN statuslote sl ON sl.idStatusLote = lot.idStatusLote 
+        LEFT JOIN tipo_venta tv ON tv.id_tventa = lot.tipo_venta 
+        LEFT JOIN clientes cl ON cl.id_cliente = lot.idCliente 
+        LEFT JOIN (SELECT id_cliente FROM ventas_compartidas WHERE estatus=1 GROUP BY id_cliente) vc ON vc.id_cliente=cl.id_cliente
+        LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+        LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+        LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+        LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
+        LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
+        LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
+        LEFT JOIN sedes sed ON sed.id_sede = lot.ubicacion
+        LEFT JOIN (SELECT idCliente FROM comisiones GROUP BY idCliente) com ON com.idCliente=cl.id_cliente
+        WHERE lot.status = 1 $filter
+        ORDER BY lot.nombreLote");
+        return $query->result_array();
+     }
+     public function getProspectingPlaceDetail() {
+           $lpReturn = "CONCAT(REPLACE(ISNULL(oxc.nombre, 'Sin especificar'), ' (especificar)', ''), (CASE pr.source WHEN '0' THEN '' ELSE CONCAT(' - ', pr.source) END))"; 
+        return $lpReturn;
+     }
+
+     public function getLineaVenta($idCliente,$banderaVC){
+      $clientes =   $this->db->query("SELECT cl.id_cliente,cl.id_asesor,cl.id_coordinador,cl.id_gerente,cl.id_subdirector,cl.id_regional,cl.id_regional_2, 
+      CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END asesor,
+      CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END coordinador,
+      CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END gerente,
+      CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END subdirector,
+      CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END regional,
+      CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END regional2
+      FROM clientes cl
+      LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+      LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+      LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+      LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
+      LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
+      LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2 WHERE cl.id_cliente=$idCliente")->result_array();
+      $compartidas = $banderaVC = 0 ? [] : $this->db->query("SELECT vc.id_vcompartida,vc.id_cliente,vc.id_asesor,vc.id_coordinador,vc.id_gerente,vc.id_subdirector,vc.id_regional,vc.id_regional_2,
+      		CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END asesor,
+        CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END coordinador,
+        CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END gerente,
+        CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END subdirector,
+        CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END regional,
+        CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END regional2 
+      FROM ventas_compartidas vc
+      LEFT JOIN usuarios u0 ON u0.id_usuario = vc.id_asesor
+      LEFT JOIN usuarios u1 ON u1.id_usuario = vc.id_coordinador
+      LEFT JOIN usuarios u2 ON u2.id_usuario = vc.id_gerente
+      LEFT JOIN usuarios u3 ON u3.id_usuario = vc.id_subdirector
+      LEFT JOIN usuarios u4 ON u4.id_usuario = vc.id_regional
+      LEFT JOIN usuarios u5 ON u5.id_usuario = vc.id_regional_2 WHERE vc.id_cliente=$idCliente AND vc.estatus=1")->result_array();
+
+        return array("clientes" => $clientes,
+                     "compartidas" => $compartidas);
+     }
+
+     public function allUserVentas()
+     {
+        return $this->db->query("(SELECT id_usuario, CONCAT(id_usuario,' - ',nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre,
+		(CASE WHEN id_rol = 7 THEN id_sede ELSE 0 END) id_sede,
+        (CASE WHEN id_usuario IN(6482, 5, 7092) THEN 3 ELSE id_rol END) id_rol
+        FROM usuarios 
+        WHERE id_rol in(2,3,7,9) AND estatus = 1   AND ISNULL(correo, '') NOT LIKE '%SINCO%' AND ISNULL(correo, '') NOT LIKE '%test_%')
+        UNION 
+        (SELECT id_usuario, CONCAT(id_usuario,' - ',nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre,
+		(CASE WHEN id_rol = 7 THEN id_sede ELSE 0 END) id_sede,
+		id_rol
+        FROM usuarios 
+        WHERE id_usuario in(6482, 5, 7092) AND estatus = 1   AND ISNULL(correo, '') NOT LIKE '%SINCO%' AND ISNULL(correo, '') NOT LIKE '%test_%')")->result();
+     }
+     public function EditarInventario($datos){
+        $this->db->trans_begin();
+        $id_cliente = $datos['id_cliente'];
+        $id_asesor = $datos['id_asesor'];
+        $id_coordinador = $datos['id_coordinador'];
+        $id_gerente = $datos['id_gerente'];
+        $id_subdirector = $datos['id_subdirector'];
+        $id_regional = $datos['id_regional'];
+        $id_regional_2 = $datos['id_regional_2'];
+        $modificado_por = $this->session->userdata('id_usuario');
+        $this->db->query("UPDATE clientes SET id_asesor=$id_asesor,id_coordinador=$id_coordinador,id_gerente=$id_gerente,id_subdirector=$id_subdirector,id_regional=$id_regional,id_regional_2=$id_regional_2,modificado_por='$modificado_por'  WHERE id_cliente=$id_cliente;");
+
+        for($m=0; $m < $datos['indexVC'] ; $m++) { 
+            $id_vcompartida = $datos['id_vcompartida_'.$m];
+            $id_asesor = $datos['id_asesor_'.$m];
+            $id_coordinador = $datos['id_coordinador_'.$m];
+            $id_gerente = $datos['id_gerente_'.$m];
+            $id_subdirector = $datos['id_subdirector_'.$m];
+            $id_regional = $datos['id_regional_'.$m];
+            $id_regional_2 = $datos['id_regional_2_'.$m];
+            $this->db->query("UPDATE ventas_compartidas SET id_asesor=$id_asesor,id_coordinador=$id_coordinador,id_gerente=$id_gerente,id_subdirector=$id_subdirector,id_regional=$id_regional,id_regional_2=$id_regional_2,modificado_por='$modificado_por'  WHERE id_vcompartida=$id_vcompartida;");
+        }
+
+        if ($this->db->trans_status() === FALSE) { // Hubo errores en la consulta, entonces se cancela la transacción.
+            $this->db->trans_rollback();
+            return false;
+        } else { // Todas las consultas se hicieron correctamente.
+            $this->db->trans_commit();
+            return true;
+        }
+     }
 }

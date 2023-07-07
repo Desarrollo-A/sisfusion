@@ -42,15 +42,12 @@
         </div>
 
         <div class="modal fade" id="seeInformationModalRetiros" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            <i class="material-icons" onclick="cleanCommentsRetiros()">clear</i>
-                        </button>
                         <h3>Historial Retiro</h3>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body pt-0" >
                         <div role="tabpanel">
                             <ul class="nav nav-tabs" role="tablist" style="background: #ACACAC;"></ul>
                             <div class="tab-content">
@@ -58,8 +55,8 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="card card-plain">
-                                                <div class="card-content">
-                                                    <ul class="timeline timeline-simple" id="comments-list-retiros"></ul>
+                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                                    <ul class="timeline-3" id="comments-list-retiros"></ul>
                                                 </div>
                                             </div>
                                         </div>

@@ -3,63 +3,6 @@
 
 <body>
 <div class="wrapper">
-    <style>
-
-    ul.timeline-3 {
-        list-style-type: none;
-        position: relative;
-        height: 300px; /* Establece la altura del contenedor */
-        overflow: auto;
-    }
-    ul.timeline-3:before {
-        content: " ";
-        background: #d4d9df;
-        display: inline-block;
-        position: absolute;
-        left: 29px;
-        width: 2px;
-        height: 100%;
-        z-index: 400;
-    }
-    ul.timeline-3 > li {
-        margin: 20px 0;
-        padding-left: 20px;
-    }
-    ul.timeline-3 > li:before {
-        content: " ";
-        background: white;
-        display: inline-block;
-        position: absolute;
-        border-radius: 50%;
-        border: 3px solid #0a548b;
-        left: 20px;
-        width: 20px;
-        height: 20px;
-        z-index: 400;
-    }
-
-    .scroll-styles::-webkit-scrollbar-track {
-    border-radius: 10px;
-    background-color: transparent;
-    }
-
-    /* El background del scroll (border)*/
-    .scroll-styles::-webkit-scrollbar {
-    width: 9px;
-    background-color: transparent;
-    }
-
-    /* Color de la barra de desplazamiento */
-    .scroll-styles::-webkit-scrollbar-thumb {
-    background-color: #c1c1c1;
-    }
-
-    /* Color del HOVER de barra de desplazamiento */
-    .scroll-styles::-webkit-scrollbar-thumb:hover {
-    background-color: #929292;
-    }
-
-    </style>
     <?php
 
     ?>

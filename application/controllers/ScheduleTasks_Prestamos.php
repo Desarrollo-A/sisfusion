@@ -12,7 +12,7 @@ class ScheduleTasks_Prestamos extends CI_Controller
     $this->load->library(array('session', 'form_validation'));
     $this->load->helper(array('url', 'form'));
     $this->load->database('default');
-    $this->load->library('phpmailer_lib');
+    $this->load->library('email');
     $this->load->model('Comisiones_model');
   }
 
@@ -168,92 +168,27 @@ class ScheduleTasks_Prestamos extends CI_Controller
     $this->SendMailPrestamos( $arrayDatosCorreo);
 }
 
-function SendMailPrestamos($data){
-    var_dump($data);
-    $mail = $this->phpmailer_lib->load();
-    $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-    $mail->addAddress('programador.analista5@ciudadmaderas.com');
-    $mail->addAddress('programador.analista16@ciudadmaderas.com');
-    //$mail->addAddress('tester.ti2@ciudadmaderas.com');
+    function SendMailPrestamos($data){
 
+        $encabezados = [
+            'id_prestamo' => 'ID PRÉSTAMO',
+            'id_usuario' => 'ID USUARIO',
+            'motivo' => 'MOTIVO'
+        ];
 
-   $cadena='';
-   for ($i=0; $i <count($data) ; $i++) { 
-    $id_p = $data[$i]['id_prestamo'];
-    $id_user = $data[$i]['id_usuario'];
-    $motivo = $data[$i]['motivo'];
-    $cadena = "
-    <tr>
-        <td>".$id_p."</td>
-        <td>".$id_user."</td>
-        <td>".$motivo."</td>
-    </tr>
-    ";
-   }
-    
-  $mailContent = utf8_decode( "<html><head>
-  <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-  <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>
-  <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'>	
-  <title>PRÉSTAMOS NO APLICADOS </title>
-  <style media='all' type='text/css'>
-      .encabezados{
-          text-align: center;
-          padding-top:  1.5%;
-          padding-bottom: 1.5%;
-      }
-      .encabezados a{
-          color: #234e7f;
-          font-weight: bold;
-      }
-      
-      .fondo{
-          background-color: #234e7f;
-          color: #fff;
-      }
-      
-      h4{
-          text-align: center;
-      }
-      p{
-          text-align: right;
-      }
-      strong{
-          color: #234e7f;
-      }
-  </style>
-</head>
-<body>
-  <table align='center' cellspacing='0' cellpadding='0' border='0' width='100%'>
-      <tr colspan='3'><td class='navbar navbar-inverse' align='center'>
-          <table width='750px' cellspacing='0' cellpadding='3' class='container'>
-              <tr class='navbar navbar-inverse encabezados'><td>
-                  <img src='https://www.ciudadmaderas.com/assets/img/logo.png' width='100%' class='img-fluid'/>
-              </td></tr>
-          </table>
-      </td></tr>
-      <tr><td border=1 bgcolor='#FFFFFF' align='center'>  
-      <center><table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='50%' style class='darkheader'>
-        <tr class='active'>
-          <th>Id préstamo</th>
-          <th>Id usuario</th> 
-          <th>Motivo</th>     
-        </tr> 
-        ".$cadena."
-        </table></center>
-      
-      
-      </td></tr>
-  </table></body></html>");
+        $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to('programador.analista24@ciudadmaderas.com')
+            // ->to('programador.analista5@ciudadmaderas.com', 'programador.analista16@ciudadmaderas.com')
+            ->subject('PRÉSTAMOS NO APLICADOS EL DÍA '.date('Y-m-d'))
+            ->view($this->load->view('mail/schedule-tasks-prestamos/prestamos', [
+                'encabezados' => $encabezados,
+                'contenido' => $data
+            ], true));
 
-  $mail->Body = $mailContent;
-  
-
-
-  $mail->Subject = utf8_decode('PRÉSTAMOS NO APLICADOS EL DÍA '.date('Y-m-d'));
-  $mail->isHTML(true);
-  $mail->send();
-}
+        $this->email->send();
+    }
 
 
 

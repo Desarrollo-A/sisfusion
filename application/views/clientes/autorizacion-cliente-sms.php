@@ -16,7 +16,7 @@
                                 <h3 class="m-0" id="mensaje-success">
                                     Verifica tu número telefónico a través del siguiente
                                     <a href="#" id="enviar-autorizacion-link" data-idCliente="<?=$idCliente?>">
-                                        <u>enlace.</u>
+                                        <u><b>enlace.</b></u>
                                     </a>
                                 </h3>
                             <?php } else { ?>

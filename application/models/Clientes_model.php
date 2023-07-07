@@ -1130,7 +1130,7 @@ function getStatusMktdPreventa(){
     }
 
     function getChangelog($prospecto){
-        return $this->db->query("SELECT CONVERT(VARCHAR,fecha_creacion,20) AS fecha_creacion, isNULL(creador, cambios.creado_por) creador, parametro_modificado,(
+        return $this->db->query("SELECT CONVERT(VARCHAR,fecha_creacion, 120) AS fecha_creacion, isNULL(creador, cambios.creado_por) creador, UPPER(parametro_modificado) AS parametro_modificado,UPPER((
             CASE 
                 WHEN parametro_modificado = 'Nacionalidad' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 11)
                 WHEN parametro_modificado = 'Personalidad jurídica' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 10)
@@ -1148,9 +1148,8 @@ function getStatusMktdPreventa(){
                 WHEN parametro_modificado = 'Tpo vivienda' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 20)
                 WHEN parametro_modificado = 'Estatus vigencia' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 3)
                 WHEN parametro_modificado = 'Estatus prospecto' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 38)
-
                 ELSE nuevo  
-            END) AS nuevo,(
+            END)) AS nuevo,UPPER((
             CASE 
                 WHEN parametro_modificado = 'Nacionalidad' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 11)
                 WHEN parametro_modificado = 'Personalidad jurídica' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 10)
@@ -1168,9 +1167,8 @@ function getStatusMktdPreventa(){
                 WHEN parametro_modificado = 'Tpo vivienda' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 20)
                 WHEN parametro_modificado = 'Estatus vigencia' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 3)
                 WHEN parametro_modificado = 'Estatus prospecto' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 38)
-
                 ELSE anterior  
-            END) AS anterior
+            END)) AS anterior
             FROM cambios
             LEFT JOIN (SELECT id_usuario AS id_creador, CONCAT(nombre, ' ', apellido_paterno,' ',apellido_materno) AS creador  FROM usuarios) AS creadores ON CAST(id_creador as VARCHAR(45)) = creado_por
             WHERE id_prospecto = $prospecto ORDER BY fecha_creacion DESC");
@@ -1393,6 +1391,7 @@ function getStatusMktdPreventa(){
     }
 
     function getProspectsListByGerente($id_gerente, $typeTransaction, $beginDate, $endDate, $where)
+
     {
         if ($typeTransaction == 1 || $typeTransaction == 3) {  // FIRST LOAD || SEARCH BY DATE RANGE
             $filter = " AND c.fecha_creacion BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
@@ -1464,7 +1463,7 @@ function getStatusMktdPreventa(){
                             CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
                             CONVERT(VARCHAR, c.fecha_creacion, 20) AS fecha_creacion, 
                             CONVERT(VARCHAR, c.fecha_vencimiento, 20) AS fecha_creacion,
-                            c.estatus,c.estatus_particular, c.lugar_prospeccion, UPPER(oxc.nombre) nombre_lp
+                            c.estatus,c.estatus_particular, c.lugar_prospeccion, UPPER(oxc.nombre) AS nombre_lp
                     FROM prospectos c 
                     LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                     LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -1486,7 +1485,7 @@ function getStatusMktdPreventa(){
                             CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
                             CONVERT(VARCHAR, c.fecha_creacion, 20) AS fecha_creacion,
                             CONVERT(VARCHAR, c.fecha_vencimiento, 20) AS fecha_vencimiento,
-                            c.estatus,c.estatus_particular, c.lugar_prospeccion, UPPER(oxc.nombre) nombre_lp
+                            c.estatus,c.estatus_particular, c.lugar_prospeccion, UPPER(oxc.nombre) AS nombre_lp
                     FROM prospectos c 
                     LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                     LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -4396,7 +4395,7 @@ function getStatusMktdPreventa(){
             LEFT JOIN codigo_autorizaciones acs ON c.id_cliente = acs.id_cliente AND acs.tipo = 3
             LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
                 FROM autorizaciones
-                WHERE id_tipo = 1 AND estatus = 0
+                WHERE id_tipo = 2 AND estatus = 0
                 GROUP BY idCliente, idLote) tipo_correo_aut ON tipo_correo_aut.idCliente = $id AND tipo_correo_aut.idLote = l.idLote
             
             LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
@@ -4450,7 +4449,7 @@ function getStatusMktdPreventa(){
     public function getLotesApartadosReubicacion($fechaInicio, $fechaFin)
     {
         $query = $this->db->query("SELECT l.idLote, l.nombreLote,
-            UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, cl.fechaAlta
+            UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, CONVERT(VARCHAR, cl.fechaAlta, 20) AS fechaAlta,
             cond.nombre AS nombreCondominio, 
             res.nombreResidencial, cl.apartadoXReubicacion,
             CASE WHEN ase.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(ase.nombre, ' ', ase.apellido_paterno, ' ', ase.apellido_materno)) END asesor,
@@ -4472,5 +4471,12 @@ function getStatusMktdPreventa(){
         WHERE cl.apartadoXReubicacion = 1 AND cl.fechaApartado BETWEEN '$fechaInicio 00:00:00' AND '$fechaFin 23:59:59'");
 
         return $query->result_array();
+    }
+
+    public function buscarPorId($idCliente)
+    {
+        $query = $this->db->query("SELECT * FROM clientes WHERE id_cliente = $idCliente");
+
+        return $query->row();
     }
 }

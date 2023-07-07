@@ -122,8 +122,8 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="card card-plain">
-                                                <div class="card-content">
-                                                    <ul class="timeline-3 scroll-styles" id="changelog"></ul>
+                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                                    <ul class="timeline-3" id="changelog"></ul>
                                                 </div>
                                             </div>
                                         </div>

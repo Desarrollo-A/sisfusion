@@ -75,6 +75,8 @@
 <?php $this->load->view('dashboard/metricas/common_modals'); ?>
 
 <?php $this->load->view('template/footer');?>
+<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 <!--  Plugin for Date Time Picker and Full Calendar Plugin-->
 <script src="<?= base_url() ?>dist/js/moment.min.js"></script>
 <script src="<?= base_url() ?>dist/js/es.js"></script>

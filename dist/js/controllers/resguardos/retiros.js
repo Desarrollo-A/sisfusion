@@ -1,7 +1,6 @@
 $(document).ready(function () {
     let titulos_intxt = [];
     let resto = 0;
-    let total67 = 0;
     
     $.post('getDisponibleResguardo/' + id_usuario_general, function(data) {
                 document.getElementById('totalDisponible').textContent = '';
@@ -48,20 +47,19 @@ $(document).ready(function () {
         $(this).css('text-align', 'center');
         var title = $(this).text();
         titulos_intxt.push(title);
-        if (i != 7) {
-            $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
-            $( 'input', this ).on('keyup change', function () {
-                if ($('#tabla_retiros_resguardo').DataTable().column(i).search() !== this.value ) {
-                    $('#tabla_retiros_resguardo').DataTable().column(i).search(this.value).draw();
-                }
-                var index = $('#tabla_retiros_resguardo').DataTable().rows({
+        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
+        $( 'input', this ).on('keyup change', function () {
+            if ($('#tabla_retiros_resguardo').DataTable().column(i).search() !== this.value ) {
+                $('#tabla_retiros_resguardo').DataTable().column(i).search(this.value).draw();
+            }
+            var index = $('#tabla_retiros_resguardo').DataTable().rows({
                 selected: true,
                 search: 'applied'
             }).indexes();
             var data = $('#tabla_retiros_resguardo').DataTable().rows(index).data();
         });
-    }});
-
+        
+    });
     var id_user = id_usuario_general == 1875 ? 2 : id_usuario_general;
 
     retirosDataTable = $('#tabla_retiros_resguardo').dataTable({
@@ -141,7 +139,7 @@ $(document).ready(function () {
                     if(d.estatus == 1){
                         BtnStats = `<button class="btn-data btn-warning btn-cancelar" value="'+d.id_rc+','+d.monto+','+d.usuario+'" data-toggle="tooltip"  data-placement="top" title="RECHAZAR RETIRO"><i class="fas fa-trash"></i></button><button class="btn-data btn-green btn-autorizar" value="${d.id_rc},${d.monto},${d.usuario}" data-toggle="tooltip"  data-placement="top" title="APROBAR RETIRO"><i class="fas fa-check"></i></button>`;
                     } else if(d.estatus == 3 || d.estatus == 4 || d.estatus == 2){
-                        BtnStats = `<button class="btn-data btn-blueMaderas btn-log" value="${d.id_rc}" data-toggle="tooltip"  data-placement="top" title="HISTORIAL"><i class="fas fa-info"></i></button>`;
+                        BtnStats = `<button class="btn-data btn-blueMaderas btn-log" value="${d.id_rc}" data-toggle="tooltip" data-placement="left" title="HISTORIAL RETIRO"><i class="fas fa-info"></i></button>`;
                     } 
                 }
                 return '<div class="d-flex justify-center">'+BtnStats+'</div>';
@@ -157,7 +155,13 @@ $(document).ready(function () {
             cache: false,
             data: function( d ){}
         }
-    }) 
+    });
+
+    $('#tabla_retiros_resguardo').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
+    });
 
     $('#tabla_retiros_resguardo').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({
@@ -170,9 +174,9 @@ $(document).ready(function () {
         e.stopImmediatePropagation();
         id_rc = $(this).val();
         $("#seeInformationModalRetiros").modal();
-        $.getJSON(url+"Resguardos/getListaRetiros/"+id_rc, function (data) {
+        $.getJSON(general_base_url+"Resguardos/getListaRetiros/"+id_rc, function (data) {
             $.each( data, function(i, v){
-                $("#comments-list-retiros").append('<div class="col-lg-12"><p><i style="color:39A1C0;">'+v.comentario+'</i><br><b style="color:#39A1C0">'+v.fecha_creacion+'</b><b style="color:gray;"> - '+v.usuario+'</b></p></div>');
+                $("#comments-list-retiros").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>NOMBRE DEL USUARIO: </small><b>'+v.usuario+' </b></a><br></div><div class="float-end text-right"><a> '+v.fecha_creacion+' </a></div><div class="col-md-12"><p class="m-0"><small>COMENTARIOS: </small><b>'+ v.comentario+'</b></p></div><h6></h6></div></div></li>');
             });
         });
     });
@@ -206,7 +210,7 @@ $(document).ready(function () {
         submitHandler: function( form ) {
             var data = new FormData( $(form)[0] );        
             $.ajax({
-                url: url+'Resguardos/actualizarRetiro',
+                url: general_base_url+'Resguardos/actualizarRetiro',
                 data: data,
                 cache: false,
                 contentType: false,

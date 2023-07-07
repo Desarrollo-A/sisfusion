@@ -2,7 +2,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <body class="">
 <div class="wrapper ">
-    <?php $this->load->view('template/sidebar', $datos);  ?>
+    <?php $this->load->view('template/sidebar');  ?>
     
     <div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-lg">
@@ -135,7 +135,25 @@
             </div>
         </div>
     </div>
+    <!-- Modals -->
+    <div class="modal fade " id="modalLineaVenta" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-lg">
+            <form id="formLineaVentas">
+                <div class="modal-content">
+                    <div class="modal-body">
 
+                        <div class="modal-body" id="modalI">
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" id="btnInventario">Aceptar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
     <div class="content boxContent">
         <div class="container-fluid">
             <div class="row">
@@ -146,88 +164,47 @@
                         </div>
                         <div class="card-content">
                             <div class="encabezadoBox">
-                                <h3 class="card-title center-align">Inventario lotes</h3>
+                                <h3 class="card-title center-align">Línea de venta</h3>
                                 <p class="card-title pl-1"></p>
                             </div>
                             <div  class="toolbar">
                                 <div class="row">
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                        <div class="col-md-4 form-group">
-                                            <div class="form-group label-floating select-is-empty">
-                                                <label class="control-label">PROYECTO</label>
-                                                <select name="proyecto"
-                                                        id="proyecto" 
-                                                        class="selectpicker select-gral m-0"
-                                                        data-style="btn"
-                                                        data-show-subtext="true"
-                                                        title="Selecciona una opción"
-                                                        data-size="7"
-                                                        data-live-search="true"
-                                                        required>
-                                                </select>
+                                    <div class="col-12 col-sm-4 col-md-4 col-lg-4">
+                                            <div class="container-fluid p-0">
+                                                <div class="row">
+                                                    <div class="col-md-12 p-r">
+                                                    <label class="control-label">Fecha apartado</label>
+                                                        <div class="form-group d-flex">
+                                                            <input type="text" class="form-control datepicker" id="beginDate" value="" autocomplete='off' />
+                                                            <input type="text" class="form-control datepicker2" id="endDate" value="" autocomplete='off' />
+                                                            <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
+                                                                <span class="material-icons update-dataTable">search</span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-4 form-group">
-                                            <div class="form-group label-floating select-is-empty">
-                                                <label class="control-label">CONDOMINIO</label>
-                                                <select name="condominio"
-                                                        id="condominio" 
-                                                        class="selectpicker select-gral m-0"                                                             
-                                                        data-style="btn btn-second"
-                                                        data-show-subtext="true"
-                                                        data-live-search="true"
-                                                        title="Selecciona una opción"
-                                                        data-size="7" 
-                                                        data-live-search="true"
-                                                        required>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4 form-group">
-                                            <div class="form-group label-floating select-is-empty">
-                                                <label class="control-label">ESTATUS</label>
-                                                <select name="estatus"
-                                                        id="estatus"
-                                                        class="selectpicker select-gral m-0"                                                             
-                                                        data-style="btn btn-second"
-                                                        data-show-subtext="true"
-                                                        data-live-search="true"
-                                                        title="Selecciona una opción"
-                                                        data-size="7"
-                                                        data-live-search="true"
-                                                        required>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                             <div class="material-datatables">
-                                <table id="tabla_inventario_contraloria" name="tabla_inventario_contraloria"
+                                <table id="tabla_lineaVenta" name="tabla_lineaVenta"
                                         class="table-striped table-hover text-center">
                                     <thead>
                                     <tr>
                                         <th>PROYECTO</th>
                                         <th>CONDOMINIO</th>
                                         <th>LOTE</th>
-                                        <th>SUP</th>
-                                        <th>M2</th>
-                                        <th>PRECIO LISTA</th>
-                                        <th>TOTAL CON DESCUENTOS</th>
                                         <th>REFERENCIA</th>
-                                        <th>MSNI</th>
                                         <th>ASESOR</th>
                                         <th>COORDINADOR</th>
                                         <th>GERENTE</th>
                                         <th>SUBDIRECTOR</th>
                                         <th>DIRECTOR REGIONAL</th>
+                                        <th>DIRECTOR REGIONAL 2</th>
+                                        <th>TIPO ASESOR</th>
                                         <th>ESTATUS</th>
                                         <th>FECHA DE APARTADO</th>
-                                        <th>COMENTARIO</th>
-                                        <th>LUGAR PROSPECCIÓN</th>
-                                        <th>FECHA APERTURA</th>
-                                        <th>FECHA VAL. ENGANCHE</th>
-                                        <th>CANTIDAD ENGANCHE PAGADO</th>
                                         <th>UBICACIÓN</th>
                                         <th>ACCIONES</th>
                                     </tr>
@@ -253,6 +230,11 @@
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <!--CARGA DE DATOS.-->
-<script src="<?= base_url() ?>dist/js/controllers/contraloria/datos_lote_contratacion_c.js"></script>
+<!--  Plugin for Date Time Picker and Full Calendar Plugin-->
+<script src="<?= base_url() ?>dist/js/moment.min.js"></script>
+<script src="<?= base_url() ?>dist/js/es.js"></script>
+<!-- DateTimePicker Plugin -->
+<script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
+<script src="<?= base_url() ?>dist/js/controllers/contraloria/lineaVentaInventario.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
 

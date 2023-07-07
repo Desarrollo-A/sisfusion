@@ -51,8 +51,8 @@ class Contratacion_model extends CI_Model {
         /* return $this->db->query("SELECT nombreLote, idLiberacion, observacionLiberacion, modificado, usuarios.nombre, usuarios.apellido_paterno, usuarios.apellido_materno 
                                 FROM historial_liberacion INNER JOIN statuslote ON statuslote.idStatusLote = historial_liberacion.status 
                                 LEFT JOIN usuarios ON usuarios.usuario = historial_liberacion.userLiberacion WHERE idLote = ".$lote." ORDER BY modificado");*/
-         return $this->db->query("SELECT nombreLote, idLiberacion, observacionLiberacion, precio, fechaLiberacion
-                modificado, usuarios.nombre, status, idLote, userLiberacion,
+         return $this->db->query("SELECT nombreLote, idLiberacion, UPPER(observacionLiberacion) AS observacionLiberacion, precio, fechaLiberacion
+                modificado, usuarios.nombre, status, idLote, UPPER(userLiberacion) AS userLiberacion,
                 usuarios.apellido_paterno, usuarios.apellido_materno , comentarioLiberacion
                                 FROM historial_liberacion 
                                 INNER JOIN statuslote ON statuslote.idStatusLote = historial_liberacion.status 
@@ -92,7 +92,7 @@ class Contratacion_model extends CI_Model {
       lot.fecha_creacion, lot.totalValidado as cantidad_enganche, ISNULL(CONVERT(varchar, fechaSolicitudValidacion, 20), '') as fecha_validacion,
       lot.idStatusContratacion, ISNULL(co.nombreCopropietario, 'SIN ESPECIFICAR') nombreCopropietario,
       sl.background_sl, ISNULL(cl.tipo_casa, 0) tipo_casa, ISNULL(oxc2.nombre, 'SIN ESPECIFICAR') nombre_tipo_casa, lot.casa,
-      sed.nombre as ubicacion, ISNULL(ca.comAdmon, 'SIN ESPECIFICAR') comentario_administracion
+      sed.nombre as ubicacion, ISNULL(ca.comAdmon, 'SIN ESPECIFICAR') comentario_administracion, ISNULL(sc.nombreStatus, 'SIN ESPECIFICAR') statusContratacion
       FROM lotes lot
       INNER JOIN condominios con ON con.idCondominio = lot.idCondominio $filtroCondominio
       INNER JOIN residenciales res ON res.idResidencial = con.idResidencial $filtroProyecto
@@ -117,6 +117,7 @@ class Contratacion_model extends CI_Model {
       LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = cl.tipo_casa AND oxc2.id_catalogo = 35
       LEFT JOIN sedes sed ON sed.id_sede = lot.ubicacion
       LEFT JOIN comentarios_administracion ca ON ca.nombreLote = lot.nombreLote
+      LEFT JOIN statuscontratacion sc ON sc.idStatusContratacion = lot.idStatusContratacion
       WHERE lot.status = 1 $filtroEstatus
       ORDER BY lot.nombreLote");
       return $query->result_array();
@@ -225,7 +226,7 @@ class Contratacion_model extends CI_Model {
 
     function getInventoryBylote($idLote){
       return $this->db->query("SELECT  lot.idLote, lot.nombreLote, con.nombre as nombreCondominio, res.nombreResidencial, lot.idStatusLote, con.idCondominio, lot.sup as superficie, 
-      lot.total, lot.totalNeto2, lot.referencia, lot.comentario, lot.comentarioLiberacion, lot.observacionLiberacion, 
+      lot.total, lot.totalNeto2, lot.referencia, UPPER(CONVERT(VARCHAR,lot.comentario)) AS comentario, lot.comentarioLiberacion, lot.observacionLiberacion, 
       CASE WHEN lot.casa = 1 THEN CONCAT(sl.nombre, ' CASA') ELSE sl.nombre END as descripcion_estatus, sl.color, tv.tipo_venta, con.msni,
       CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
       CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
@@ -235,7 +236,7 @@ class Contratacion_model extends CI_Model {
       CONCAT(coordinador2.nombre,' ', coordinador2.apellido_paterno, ' ', coordinador2.apellido_materno) as gerente2,
       lot.precio, ISNULL(CONVERT(varchar, lot.fecha_modst, 21), '') AS fecha_modst, ISNULL(CONVERT(varchar, cl.fechaApartado, 21), '') AS fechaApartado, lot.observacionContratoUrgente,
       CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente, lot.motivo_change_status,
-      CONCAT(REPLACE(ISNULL(oxc.nombre, 'Sin especificar'), ' (especificar)', ''), (CASE pr.source WHEN '0' THEN '' ELSE CONCAT(' - ', pr.source) END)) lugar_prospeccion, 
+      UPPER(CONCAT(REPLACE(ISNULL(oxc.nombre, 'Sin especificar'), ' (especificar)', ''), (CASE pr.source WHEN '0' THEN '' ELSE CONCAT(' - ', pr.source) END))) lugar_prospeccion, 
       lot.fecha_creacion
       FROM lotes lot
       INNER JOIN condominios con ON con.idCondominio = lot.idCondominio 
