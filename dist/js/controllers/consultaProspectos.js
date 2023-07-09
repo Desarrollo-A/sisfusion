@@ -901,19 +901,27 @@ function fillTimeline(v) {
 }
 
 function fillChangelog(v) {
-    $("#changelog").append('<li class="timeline-inverted">\n' +
-        '    <div class="timeline-badge success"></div>\n' +
-        '    <div class="timeline-panel">\n' +
-        '            <label><h6>' + v.parametro_modificado + '</h6></label><br>\n' +
-        '            <b>Valor anterior:</b> ' + v.anterior + '\n' +
-        '            <br>\n' +
-        '            <b>Valor nuevo:</b> ' + v.nuevo + '\n' +
-        '        <h6>\n' +
-        '            <span class="small text-gray"><i class="fa fa-clock-o mr-1"></i> ' + v.fecha_creacion + ' - ' + v.creador + '</span>\n' +
-        '        </h6>\n' +
-        '    </div>\n' +
-        '</li>');
+    $("#changelog").append('<li>\n' +
+    '    <div class="container-fluid">\n' +
+    '       <div class="row">\n' +
+    '           <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">\n' +
+    '               <a><small>Campo: </small><b>' + v.parametro_modificado.toUpperCase() + '</b></a><br>\n' +
+    '           </div>\n' +
+    '           <div class="float-end text-right">\n' +
+    '               <a>' + v.fecha_creacion + '</a>\n' +
+    '           </div>\n' +
+    '           <div class="col-md-12">\n' +
+'                <p class="m-0"><small>Usuario: </small><b> ' + v.creador.toUpperCase() + '</b></p>\n'+
+'                <p class="m-0"><small>Valor anterior: </small><b> ' + v.anterior.toUpperCase() + '</b></p>\n' +
+'                <p class="m-0"><small>Valor Nuevo: </small><b> ' + v.nuevo.toUpperCase() + '</b></p>\n' +
+    '           </div>\n' +
+    '        <h6>\n' +
+    '        </h6>\n' +
+    '       </div>\n' +
+    '    </div>\n' +
+    '</li>');
 }
+
 function cleanComments() {
     var myCommentsList = document.getElementById('comments-list');
     myCommentsList.innerHTML = '';
@@ -921,6 +929,7 @@ function cleanComments() {
     var myChangelog = document.getElementById('changelog');
     myChangelog.innerHTML = '';
 }
+
 $(document).on('click', '.edit-reference-information', function(e) {
     id_referencia = $(this).attr("data-id-referencia");
     $.getJSON("getReferenceInformation/" + id_referencia).done(function(data) {
@@ -1311,9 +1320,9 @@ document.querySelector('#estatus_recordatorio_form').addEventListener('submit',a
         }
     });
 });
-
 function getStatusRecordatorio(){
     $.post('../Calendar/getStatusRecordatorio', function(data) {
+        console.log("iam here")
         $("#estatus_recordatorio").append($('<option disabled selected>').val("0").text("Seleccione una opción"));
         var len = data.length;
         for (var i = 0; i < len; i++) {

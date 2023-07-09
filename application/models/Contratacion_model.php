@@ -51,8 +51,8 @@ class Contratacion_model extends CI_Model {
         /* return $this->db->query("SELECT nombreLote, idLiberacion, observacionLiberacion, modificado, usuarios.nombre, usuarios.apellido_paterno, usuarios.apellido_materno 
                                 FROM historial_liberacion INNER JOIN statuslote ON statuslote.idStatusLote = historial_liberacion.status 
                                 LEFT JOIN usuarios ON usuarios.usuario = historial_liberacion.userLiberacion WHERE idLote = ".$lote." ORDER BY modificado");*/
-         return $this->db->query("SELECT nombreLote, idLiberacion, observacionLiberacion, precio, fechaLiberacion
-                modificado, usuarios.nombre, status, idLote, userLiberacion,
+         return $this->db->query("SELECT nombreLote, idLiberacion, UPPER(observacionLiberacion) AS observacionLiberacion, precio, fechaLiberacion
+                modificado, usuarios.nombre, status, idLote, UPPER(userLiberacion) AS userLiberacion,
                 usuarios.apellido_paterno, usuarios.apellido_materno , comentarioLiberacion
                                 FROM historial_liberacion 
                                 INNER JOIN statuslote ON statuslote.idStatusLote = historial_liberacion.status 
@@ -226,7 +226,7 @@ class Contratacion_model extends CI_Model {
 
     function getInventoryBylote($idLote){
       return $this->db->query("SELECT  lot.idLote, lot.nombreLote, con.nombre as nombreCondominio, res.nombreResidencial, lot.idStatusLote, con.idCondominio, lot.sup as superficie, 
-      lot.total, lot.totalNeto2, lot.referencia, lot.comentario, lot.comentarioLiberacion, lot.observacionLiberacion, 
+      lot.total, lot.totalNeto2, lot.referencia, UPPER(CONVERT(VARCHAR,lot.comentario)) AS comentario, lot.comentarioLiberacion, lot.observacionLiberacion, 
       CASE WHEN lot.casa = 1 THEN CONCAT(sl.nombre, ' CASA') ELSE sl.nombre END as descripcion_estatus, sl.color, tv.tipo_venta, con.msni,
       CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
       CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
@@ -236,7 +236,7 @@ class Contratacion_model extends CI_Model {
       CONCAT(coordinador2.nombre,' ', coordinador2.apellido_paterno, ' ', coordinador2.apellido_materno) as gerente2,
       lot.precio, ISNULL(CONVERT(varchar, lot.fecha_modst, 21), '') AS fecha_modst, ISNULL(CONVERT(varchar, cl.fechaApartado, 21), '') AS fechaApartado, lot.observacionContratoUrgente,
       CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente, lot.motivo_change_status,
-      CONCAT(REPLACE(ISNULL(oxc.nombre, 'Sin especificar'), ' (especificar)', ''), (CASE pr.source WHEN '0' THEN '' ELSE CONCAT(' - ', pr.source) END)) lugar_prospeccion, 
+      UPPER(CONCAT(REPLACE(ISNULL(oxc.nombre, 'Sin especificar'), ' (especificar)', ''), (CASE pr.source WHEN '0' THEN '' ELSE CONCAT(' - ', pr.source) END))) lugar_prospeccion, 
       lot.fecha_creacion
       FROM lotes lot
       INNER JOIN condominios con ON con.idCondominio = lot.idCondominio 

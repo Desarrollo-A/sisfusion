@@ -2076,18 +2076,18 @@
 	}
 //	fin filtro de status
 		public function historialProcesoFin($lotes){
-		$query = $this->db-> query("SELECT historial_lotes.nombreLote, historial_lotes.modificado, historial_lotes.comentario, movimientos.descripcion,
+		$query = $this->db-> query("SELECT historial_lotes.nombreLote, historial_lotes.modificado, UPPER(CONVERT(VARCHAR,historial_lotes.comentario)) AS comentario, UPPER(movimientos.descripcion) AS descripcion,
 		(CASE WHEN (CONCAT(usuarios.nombre, ' ', usuarios.apellido_paterno, ' ', usuarios.apellido_materno)) = '' THEN historial_lotes.usuario 
 		ELSE (CONCAT(usuarios.nombre, ' ', usuarios.apellido_paterno, ' ', usuarios.apellido_materno)) END) usuario,
 		(CASE WHEN historial_lotes.perfil = '11' THEN 'administracion' WHEN historial_lotes.perfil = '13' THEN 'contraloria'
 		WHEN historial_lotes.perfil = '15' THEN 'juridico' WHEN historial_lotes.perfil = '32' THEN 'contraloriaCorporativa'
 		WHEN historial_lotes.perfil = '6' THEN 'asistentesGerentes' WHEN historial_lotes.perfil = '7' THEN 'asesor'
 		WHEN historial_lotes.perfil = '9' THEN 'coordinador' ELSE historial_lotes.perfil END) perfil,
-		CASE 
+		UPPER(CASE 
 		WHEN historial_lotes.idStatusContratacion = 2 AND historial_lotes.idMovimiento = 84 THEN '2.0 Integración de Expediente (Asesor)' 
 		ELSE
 		statuscontratacion.nombreStatus
-		END AS nombreStatus,
+		END) AS nombreStatus,
 		historial_lotes.idLote
 		FROM historial_lotes 
 		INNER JOIN movimientos ON historial_lotes.idMovimiento = movimientos.idMovimiento
@@ -3316,8 +3316,8 @@
 			$where = "hd.status = 1 AND hd.idLote = $lotes";
 		return $this->db-> query("SELECT hd.expediente, hd.idDocumento, CONVERT(VARCHAR,hd.modificado,20) AS modificado, hd.status, hd.idCliente, hd.idLote, lo.nombreLote, 
 		UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, cl.rfc, co.nombre, re.nombreResidencial, 
-		u.nombre as primerNom, u.apellido_paterno as apellidoPa, u.apellido_materno as apellidoMa, se.abreviacion as ubic, 
-		hd.movimiento, hd.movimiento, co.idCondominio, hd.tipo_doc, lo.idMovimiento, cl.id_asesor, cl.flag_compartida, lo.observacionContratoUrgente,
+		UPPER(u.nombre) as primerNom, UPPER(u.apellido_paterno) as apellidoPa, UPPER(u.apellido_materno) as apellidoMa, se.abreviacion as ubic, 
+		UPPER(hd.movimiento) AS movimiento, co.idCondominio, hd.tipo_doc, lo.idMovimiento, cl.id_asesor, cl.flag_compartida, lo.observacionContratoUrgente,
 		CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
         CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
         CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
