@@ -46,8 +46,6 @@
 		</div>
 		<?php $this->load->view('template/footer_legend');?>
 	</div>
-	</div><!--main-panel close-->
-
 	<?php $this->load->view('template/footer');?>
 	<!--DATATABLE BUTTONS DATA EXPORT-->
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
@@ -58,5 +56,4 @@
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 	<script src="<?= base_url() ?>dist/js/controllers/administracion/vista_rechazos.js"></script>
-
 </body>

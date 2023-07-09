@@ -56,7 +56,7 @@ $("#tabla_clientes").ready(function () {
             let width = title=='MÁS' ? 'width: 37px;': (title == 'ACCIONES' ? 'width: 57px;' : '');
             $(this).html(`<input type="text"
                                 style="${width}"
-                                class="textoshead"
+                                class="textoshead "
                                 data-toggle="tooltip" 
                                 data-placement="top"
                                 title="${title}"
@@ -232,8 +232,7 @@ function fillTable(index_proyecto, index_condominio) {
     $('#tabla_clientes tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
         var row = tabla_valores_cliente.row(tr);
-
-        if (row.child.isShown()) {
+        if (row.child.isShown() ) {
             row.child.hide();
             tr.removeClass('shown');
             $(this).parent().find('.animacion').removeClass("fas fa-chevron-up").addClass("fas fa-chevron-down");
@@ -283,7 +282,7 @@ function fillTable(index_proyecto, index_condominio) {
                         <div class="col-12 col-sm-12 col-sm-12 col-lg-12">
                             <label>
                                 <b>
-                                    Fecha nacimiento: 
+                                    Fecha de nacimiento: 
                                 </b>
                                 ${myFunctions.validateEmptyField(row.data().fechaNacimiento)}
                             </label>

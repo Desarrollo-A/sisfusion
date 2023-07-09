@@ -225,6 +225,11 @@ function createAccordions(option, render, rol){
     $(".boxAccordions").append(html);
 }
 
+$(document).on('click', '#searchByDateRange', function(e){
+
+
+});
+
 function fillBoxAccordions(option, rol, id_usuario, render, transaction, leadersList, filters){
     if( rol == 5 && (idUser == 28 && idUser == 30 && idUser == 4888))
         rolEspecial = 59;
@@ -713,6 +718,11 @@ $(document).on('click', '#filterAction', async function (e) {
     fillBoxAccordions(rolString, rolOnReport, idUserOnReport, 1, 2, [0, null, null, null, null, null, rolOnReport], filters);
 });
 
+$(document).on('click', '#searchByDateRange', function(e){
+    e.preventDefault();
+    validateFilters();
+});
+
 $(document).on('click', '.chartButton', function () {
     $(".datesModal").hide();
     $("#modalChart .boxModalTitle .title").html('');
@@ -733,10 +743,8 @@ async function chartDetail(e, tipoChart){
     $("#modalChart .boxModalTitle .total").html('');
     $("#modalChart #type").val('');
 
-
     var nameChart = (titleCase($(e).data("name").replace(/_/g, " "))).split(" ");
     $(".boxModalTitle .title").append('<p class="mb-1">' + nameChart[0] + '<span class="enfatize"> '+ nameChart[1] +'</span></p>');
-
     let fecha_inicio = $('.moreMiniChart ').attr('data-fi');
     let fecha_fin    = $('.moreMiniChart ').attr('data-ft');
     if(fecha_inicio == undefined || fecha_fin==undefined){
@@ -854,6 +862,8 @@ function getLastSales(filters, rol){
     });
 }
 
+
+
 function loaderCharts(){
     $("#modalChart .boxModalTitle .total").html('');
     $('.appliedFilter').removeAttr('data-toggle');
@@ -870,7 +880,7 @@ function loaderCharts(){
     $('.boxMiniCharts').html('');
     let cargador = '<div class="loadChartMini w-100 h-100">'+
                         '<img src="'+base_url+'dist/img/miniChartLoading.gif" alt="Icono gráfica" class="h-100 w-auto">'+
-                     '</div>';
+                    '</div>';
     $('.boxMiniCharts').append('<div class="col-xs-12 pdt-20"><center><span class="loader center-align"></span></center></div>');
     $('.boxMiniCharts').append(cargador);
 

@@ -12,10 +12,10 @@
                                     <h4 class="text-left m-0 fw-400">Ventas por metro cuadrado</h4>
                                 </div>
                                 <div class="col-12 col-sm-3 col-md-3 col-lg-3 m-0 overflow-hidden">
-                                    <select class="selectpicker select-gral m-0 proyecto" id="proyecto" name="proyecto" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un proyecto" data-size="7" data-container="body" required style="height:100%!important"></select>
+                                    <select class="selectpicker select-gral m-0 proyecto" id="proyecto" name="proyecto" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required style="height:100%!important"></select>
                                 </div>
                                 <div class="col-12 col-sm-3 col-md-3 col-lg-3 m-0 overflow-hidden pl-0">
-                                    <select class="selectpicker select-gral m-0 condominio" id="condominio" name="condominio" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un condominio" data-size="7" data-container="body" required style="height:100%!important"></select>
+                                    <select class="selectpicker select-gral m-0 condominio" id="condominio" name="condominio" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required style="height:100%!important"></select>
                                 </div>
                             </div>
                         </div>
@@ -42,13 +42,12 @@
                             <div class="d-flex justify-between h-10 actions align-center">
                                 <div class="filters w-50 d-flex">
                                     <div class="w-50 overflow-hidden sedes_box">
-                                        <select class="selectpicker select-gral m-0 proyecto" id="sedes" name="sedes" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una sede" data-size="7" data-container="body" required style="height:100%!important"></select>
+                                        <select class="selectpicker select-gral m-0 proyecto" id="sedes" name="sedes" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required style="height:100%!important" ></select>
                                     </div>
                                     <div class="w-50 m-0 overflow-hidden pl-0 proyecto_box">
-                                        <select class="selectpicker select-gral m-0 proyecto" id="proyecto2" name="proyecto" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un proyecto" data-size="7" data-container="body" required style="height:100%!important"></select>
+                                        <select class="selectpicker select-gral m-0 proyecto" id="proyecto2" name="proyecto" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required style="height:100%!important"></select>
                                     </div>
                                 </div>
-                               
                                 <div class="w-40 m-0 pl-0 h-100">
                                     <div class="form-group d-flex m-0">
                                         <input type="text" class="form-control datepicker begin_promedioDates" id="tableBegin_promedio" value="" autocomplete='off'/>

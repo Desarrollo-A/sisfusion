@@ -121,31 +121,7 @@ $(document).ready(function () {
                 }
                 return fechaSistema;
             }},
-            { data: function (d) {
-                // FECHA SISTEMAS
-                var fechaSistema;
-                if(d.fecha_sistema <= '01 OCT 20' || d.fecha_sistema == null ) {
-                    fechaSistema ='<span class="label" style="color:#626567;background:#E5E7E9;">Sin Definir</span>';
-                }else {
-                    fechaSistema = '<br><span class="label" style="color:#1B4F72;background:#AED6F1;">'+d.fecha_sistema+'</span>';
-                }
-                return fechaSistema;
-            }},
-            { data: function (d) {
-                // FECHA DE NEEODATA
-                var fechaNeodata;
-                var rescisionLote;
-                fechaNeodata = '<br><span class="label" style="color:#1B4F72;background:#AED6F1;">'+d.fecha_neodata+'</span>';
-                rescisionLote = '';
-                if(d.fecha_neodata <= '01 OCT 20' || d.fecha_neodata == null ) {
-                    fechaNeodata = '<span class="label" style="color:#626567;background:#E5E7E9;">Sin Definir</span>';
-                } 
-                if (d.registro_comision == 8){
-                    rescisionLote = '<br><span class="label" style="color:#78281F;background:#F5B7B1;">Recisión Nueva Venta</span>';
-                }
-                return fechaNeodata+rescisionLote;
-            }},
-
+        
             { data: function (d) {
                 return '$'+formatMoney(d.abono_comisiones);;
             }},

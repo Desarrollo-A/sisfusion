@@ -1,19 +1,10 @@
 var tabla_valores_cliente;
-
 let titulos_encabezado = [];
 let num_colum_encabezado = [];
 const excluir_column = ['ACCIONES', 'MÁS'];
-
 let titulos_encabezado_detalle= [];
 let num_colum_encabezado_detalle = [];
-
-var busquedaParams = {  nombre: '',
-                        apellido_paterno: '',
-                        apellido_materno: '',
-                        correo: '',
-                        telefono: ''
-                    };
-
+var busquedaParams = {  nombre: '', apellido_paterno: '', apellido_materno: '', correo: '', telefono: '' };
 var id_lote_global = 0;          
 
 $(document).ready(function () {
@@ -28,32 +19,22 @@ function updateTable() {
             num_colum_encabezado.push(titulos_encabezado.length);
         }
         let readOnly = excluir_column.includes(title) ? 'readOnly': '';
-        let width = title=='MÁS' ? 'width: 37px;': (title == 'ACCIONES' ? 'width: 55px;' : '');
-        $(this).html(`<input    type="text"
-                                style="${width}"
-                                class="textoshead"
-                                data-toggle="tooltip" 
-                                data-placement="top"
-                                title="${title}"
-                                placeholder="${title}"
-                                ${readOnly}/>`);
-        
+        $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}" ${readOnly}/>`);
         $('input', this).on('keyup change', function () {
-            tabla_valores_cliente
-                .column(i)
-                .search(this.value)
-                .draw();
+            tabla_valores_cliente.column(i).search(this.value).draw();
         });
     });
 
     tabla_valores_cliente = $("#tabla_clientes").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        width: 'auto',
+        width: '100%',
+        scrollX: true,
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
+            title:'Búsqueda detallada de clientes',
             exportOptions: {
                 columns: num_colum_encabezado,
                 format: {
@@ -77,90 +58,69 @@ function updateTable() {
         ordering: false,
         columns: [
             {
-                "width": "3%",
                 "className": 'details-control',
                 "orderable": false,
                 "data": null,
                 "defaultContent": '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i>'
             },
             {
-                "width": "5%",
                 "data": function (d) {
                     return '<p class="m-0">' + d.idLote + '</p>';
                 }
             },
             {
-                "width": "7%",
                 "data": function (d) {
                     return '<p class="m-0">' + d.nombreResidencial + '</p>';
                 }
             },
             {
-                "width": "10%",
                 "data": function (d) {
                     return '<p class="m-0">' + d.nombreCondominio + '</p>';
                 }
             },
             {
-                "width": "12%",
                 "data": function (d) {
                     return '<p class="m-0">' + d.nombreLote + '</p>';
                 }
             },
             {
-                "width": "10%",
                 "data": function (d) {
                     return '<p class="m-0">' + d.nombreCliente + '</p>';
                 }
             },
             {
-                "width": "10%",
                 "data": function (d) {
                     return '<p class="m-0">' + d.noRecibo + '</p>';
                 }
             },
             {
-                "width": "8%",
                 "data": function (d) {
                     return '<p class="m-0">' + myFunctions.validateEmptyField(d.tipo) + '</p>';
                 }
             },
             {
-                "width": "10%",
                 "data": function (d) {
                     return '<p class="m-0">' + d.fechaApartado + '</p>';
                 }
             },
             {
-                "width": "8%",
                 "data": function (d) {
                     return '<p class="m-0">$ ' + myFunctions.number_format(d.engancheCliente, 2, '.', ',') + '</p>';
                 }
             },
             {
-                "width": "10%",
                 "data": function (d) {
                     return '<p class="m-0">' + d.fechaEnganche + '</p>';
                 }
             },
             {
-                "width": "10%",
                 "data": function (d) {
                     return '<p class="m-0">' + d.asesor + '</p>';
                 }
             },
             {
-                "width": "8%",
                 "data": function (d) {
-                    return `<button class="btn-data btn-blueMaderas to-comment cop"
-                                    data-toggle="tooltip" 
-                                    data-placement="top"
-                                    title= "Ventas compartidas"
-                                    data-idcliente="${d.id_cliente}"
-                                    data-idLote="${d.idLote}">
-                                <i class="fas fa-user-friends"></i>
-                            </button>`;
-
+                    return `<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas to-comment cop" data-toggle="tooltip" data-placement="top" title= "VENTAS COMPARTIDAS" data-idcliente="${d.id_cliente}" data-idLote="${d.idLote}"><i class="fas fa-user-friends"></i></button></div>`;
                 }
             }
         ],
@@ -185,9 +145,12 @@ function updateTable() {
             }
         },
         order: [[1, 'asc']],
-        initComplete: function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        }
+    });
+
+    $('#tabla_clientes').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
     });
 
     $('#tabla_clientes tbody').on('click', 'td.details-control', function () {
@@ -202,11 +165,10 @@ function updateTable() {
             var informacion_adicional = 
                 `<div class="container subBoxDetail">
                     <div class="row">
-                        <div    class="col-12 col-sm-12 col-sm-12 col-lg-12"
-                                style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px">
+                        <div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px">
                             <label>
                                 <b>
-                                    ${row.data().nombre} ${row.data().apellido_paterno} ${row.data().apellido_materno}
+                                    ${myFunctions.validateEmptyField(row.data().nombreCliente)}
                                 </b>
                             </label>
                         </div>
@@ -280,62 +242,49 @@ $(document).on('click', '#buscarBtn', function (e) {
     var telefonoField = $('#telefono').val();
     var apellido_paterno = $('#apellido_paterno').val();
     var apellido_materno = $('#apellido_materno').val();
-    busquedaParams = {nombre: $('#nombre').val(),
-                        apellido_paterno: $('#apellido_paterno').val(),
-                        apellido_materno: $('#apellido_materno').val(),
-                        correo: $('#correo').val(),
-                        telefono: $('#telefono').val()};
+    busquedaParams = {nombre: $('#nombre').val(),apellido_paterno: $('#apellido_paterno').val(), apellido_materno: $('#apellido_materno').val(), correo: $('#correo').val(), telefono: $('#telefono').val()};
     //all vacío
     if (nombreField.length <= 0 && correoField.length <= 0 && telefonoField.length <= 0 && apellido_paterno.length <= 0 && apellido_materno.length <= 0) {
         alerts.showNotification('top', 'right', 'Ups, asegurate de colocar al menos un criterío de búsqueda', 'warning');
         $('#nombre').focus();
     }else{
         updateTable();
-        //tabla_valores_cliente.ajax.reload();
     }
 });
 
 $(document).on('click', '.cop', function (e) {
     var $itself = $(this);
     var id_lote = $itself.attr('data-idLote');
-
     id_lote_global = id_lote;
     tabla_detalle_cliente.ajax.reload();
     $('#verDetalles').modal('show');
 });
+
 var tabla_detalle_cliente
 $(document).ready(function () {
     $('#verDet thead tr:eq(0) th').each(function (i) {
         var title = $(this).text();
         titulos_encabezado_detalle.push(title);
         num_colum_encabezado_detalle.push(i);
-        $(this).html(`<input    type="text"
-                                class="textoshead"
-                                data-toggle="tooltip_details" 
-                                data-placement="top"
-                                title="${title}"
-                                placeholder="${title}"
-                                readOnly/>`);
+        $(this).html(`<input    type="text" class="textoshead" data-toggle="tooltip_details" data-placement="top" title="${title}" placeholder="${title}" readOnly/>`);
         $('input', this).on('keyup change', function () {
             if (verDet.column(i).search() !== this.value) {
-                verDet
-                    .column(i)
-                    .search(this.value)
-                    .draw();
+                verDet.column(i).search(this.value).draw();
             }
         });
     });
 
     tabla_detalle_cliente = $('#verDet').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        width: 'auto',
+        width: '100%',
+        scrollX: true,
         select: true,
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
-            title: 'Descargar archivo de Excel',
+            title: 'Ventas compartidas',
             exportOptions: {
                 columns: num_colum_encabezado_detalle,
                 format: {

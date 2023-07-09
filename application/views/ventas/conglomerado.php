@@ -38,17 +38,18 @@
                     <div class="modal-header" id="header_modal" name="header_modal">
                         <h3 id="tituloModalUni" name="tituloModalUni"> Editando descuento actual </h3>
                     </div>
+                    <form method="post" id="updateDescuentoCertificado" name='updateDescuentoCertificado'>
                     <div class="modal-body" >
-                    <div class="col-4 col-sm-4 col-md-4 col-lg-4">
-                                <div class="form-group">
-                                    <label class="label">Certificaciones*</label>       
-                                    <select class="form-control select2 certificaciones" name="certificaciones" id="certificaciones">
-                                        <?php if(isset($certificaciones)){ foreach($certificaciones as $certificacion){ ?>
-                                            <option value="<?= $certificacion->id_opcion ?>"><?= $certificacion->nombre ?> </option>
-                                        <?php } } ?>
-                                    </select>
-                                </div>      
-                    </div>
+                                <div class="col-4 col-sm-4 col-md-4 col-lg-4">
+                                            <div class="form-group">
+                                                <label class="label">Certificaciones*</label>       
+                                                <select class="form-control select2 certificaciones" name="certificaciones" id="certificaciones">
+                                                    <?php if(isset($certificaciones)){ foreach($certificaciones as $certificacion){ ?>
+                                                        <option value="<?= $certificacion->id_opcion ?>"><?= $certificacion->nombre ?> </option>
+                                                    <?php } } ?>
+                                                </select>
+                                            </div>      
+                                </div>
                                 <div class="col-md-4" style="display:none;">
                                     <div class="form-group">
                                         <input class="form-control" type="text"   name="dineroPagado" id="dineroPagado" readonly>
@@ -84,55 +85,40 @@
                                         <input class="form-control" type="text"   name="precioOrginal" id="precioOrginal" readonly>
                                     </div>
                                 </div>
-                        <div class="col-4 col-sm-4 col-md-4 col-lg-4">
-                                <div class="form-group">
-                                    <label class="label">Descripcion:</label> 
-                                    <span class="small text-gray textDescripcion"  id="textDescripcion"  name="textDescripcion">
-                                    Persona que obtuvo una calificación favorable y con ello la certificación
-                                    </span>        
+                                <div class="col-4 col-sm-4 col-md-4 col-lg-4">
+                                        <div class="form-group">
+                                            <label class="label">Descripcion:</label> 
+                                            <span class="small text-gray textDescripcion"  id="textDescripcion"  name="textDescripcion">
+                                            Persona que obtuvo una calificación favorable y con ello la certificación
+                                            </span>        
+                                        </div>
                                 </div>
-                        </div>
                         <div class="col-4 col-sm-4 col-md-4 col-lg-4 ">
-                            <div class="form-group">
+                            <div class="form-group  box-table ">
                                     <label class="label">Fecha nueva*</label>  
                                             <div class="row">
                                                 <div class="col-md-12 p-r">
-                                                    <div > 
-                                                        <input type="date" class="form-control datepicker" id="fechaIncial" name="fechaIncial"  />
-                                                    </div>
+                                                     
+                                                    <!-- <input type="text" class="form-control datepicker text-center pl-1 endDate box-table " id="endDate" /> -->
+                                                        <input type="text" class="form-control datepicker" id="fechaIncial" name="fechaIncial"  />
+                                                    
                                                 </div>
                                             </div>
                             </div>
                         </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12" id="cuerpoModalUni" name="cuerpoModalUni">          
+                                </div>                   
                     </div>
+
                     <div class="modal-footer">
-                            <div class="row">
-                                
-                                <div class="col-xs-12 col-sm-12 col-md-12" id="cuerpoModalUni" name="cuerpoModalUni">
-                                                
-                                </div>
-                                <div class="col-xs-12 col-sm-12 col-md-12" >
-                                </div>
-                                    <div class="form-group col-xs-6 col-sm-6 col-md-6">
-                                        <div class="form-group">
-                                            <center>
-                                                <button name="updateDescuentoCertificado" style="display:block;" id="updateDescuentoCertificado"
-                                                    class="btn btn-primary updateDescuentoCertificado">GUARDAR</button>
-                                            </center>
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-xs-6 col-sm-6 col-md-6">
-                                        <div class="form-group">
-                                            <center>
-                                                <button class="btn btn-danger" type="button" data-dismiss="modal"
-                                                    data-toggle="modal">
-                                                    CANCELAR
-                                                </button>
-                                            </center>
-                                        </div>
-                                    </div>
-                            </div>  
+                    
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" id="updateDescuentoCertificado1" class="btn btn-primary">GUARDAR</button>
+                        <!-- <button name="updateDescuentoCertificado1" type="submit" style="display:block;" id="updateDescuentoCertificado1"
+                                      class="btn btn-primary ">GUARDAR</button> -->
                     </div>
+           
+                    </form>
                 </div>
             </div>
         </div>
@@ -885,7 +871,7 @@
 </div>
 
 </div><!--main-panel close-->
-</body>
+
 <?php $this->load->view('template/footer'); ?>
 <!--DATATABLE BUTTONS DATA EXPORT-->
 
@@ -896,9 +882,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-<!--<link href="<?= base_url() ?>dist/js/controllers/select2/select2.min.css" rel="stylesheet" />
-<script src="<?= base_url() ?>dist/js/controllers/select2/select2.min.js"></script>-->
+<script src="<?= base_url() ?>dist/js/es.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/ventas/conglomerado.js"></script>
+<script src="<?= base_url() ?>dist/js/jwt/hmac-sha256.js"></script>
+<script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
+    <script src="<?= base_url() ?>dist/js/jwt/enc-base64-min.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 
+
+
+</body>
