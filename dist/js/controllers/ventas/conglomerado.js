@@ -3,9 +3,34 @@ var url2 = "<?=base_url()?>index.php/";
 var tr;
 let tablaGeneral;
 let titulosTablaGeneral = [];
+// sp.initFormExtendedDatetimepickers();
 
+sp = { //  SELECT PICKER
+initFormExtendedDatetimepickers: function () {
+    $('.datepicker').datetimepicker({
+        format: 'MM/DD/YYYY',
+        icons: {
+            time: "fa fa-clock-o",
+            date: "fa fa-calendar",
+            up: "fa fa-chevron-up",
+            down: "fa fa-chevron-down",
+            previous: 'fa fa-chevron-left',
+            next: 'fa fa-chevron-right',
+            today: 'fa fa-screenshot',
+            clear: 'fa fa-trash',
+            close: 'fa fa-remove',
+            inline: true
+        }
+    });
+}
+}
 $(document).ready(function() {  
 
+    sp.initFormExtendedDatetimepickers();
+        var endDt = moment().format('DD/MM/YYYY');
+
+
+        $('.fechaIncial').val(endDt);
     $('#tabla-general thead tr:eq(0) th').each(function (i) {
         if (i !== 15) {
             const title = $(this).text();
@@ -2387,8 +2412,11 @@ $(document).on('input', '.MontoDescontarCerti', function(){
     //     document.getElementById("newMensualidades").value =  NuevasMensualidades.toFixed(2);
     // 
     // });                                                                                                                                                                                              
-
-$(document).on("click", ".updateDescuentoCertificado", function () {
+    $("#updateDescuentoCertificado").submit(function (e) {
+   
+        e.preventDefault();
+    }).validate({
+        submitHandler: function (form) {
     let tipoDescuento = $('#tipo_descuento').val();
     // let fechaSeleccionada = $('#fechaIncial').val();
     const fecha = new Date()
@@ -2425,13 +2453,15 @@ $(document).on("click", ".updateDescuentoCertificado", function () {
     fechaComparar = (year + '-' + month + '-' + day);
     var f1 = new Date(year,month, day);
     var f2 = new Date(fechaSeleccionada);
-
+    console.log(f1,'f1');
+    console.log(f2,'f2');
     MesSelecionado = parseInt(FechaEnArreglo[1]);
     DiaSeleccionado = parseInt(FechaEnArreglo[2]);
     MesSistemas = parseInt(month+1);
     // fecha f2 es para la fecha seleccionada 
     // fecha f1 es para la fecha del sistema 
     // Se compara las fechas son para 
+    
     if(  (f2 > f1 || f2 == f1)){
         // validamos que sea mayor la fecha seleccionada o que sean iguales
         validacion =true;
@@ -2467,14 +2497,14 @@ $(document).on("click", ".updateDescuentoCertificado", function () {
             "pagos_activos"         : pagos_activos,
             "estatus"               : estatus,
             "banderaPagosActivos"   : banderaPagosActivos,
-            "estatus_certificacion" : estatus_certificacion,
+            "estatus_certificacion" : estatus_certificacion,    
             "id_descuento"          : id_descuento,
             "monto"                 : monto,
             "pago_individual"       : pago_individual,
               }, 
     
               success: function(data) {
-               
+                
                 alerts.showNotification("top", "right", ""+data.message+"", ""+data.response_type+"");
                 document.getElementById('updateDescuento').disabled = false;
                 $('#tabla-general').DataTable().ajax.reload(null, false );
@@ -2491,7 +2521,7 @@ $(document).on("click", ".updateDescuentoCertificado", function () {
     
     }
 
-  
+        }
 });
 
 
@@ -2510,6 +2540,7 @@ function setInitialValues() {
     // console.log('Fecha inicio: ', finalBeginDate);
     // console.log('Fecha final: ', finalEndDate);
     // $("#beginDate").val(finalBeginDate);
-    // $("#endDate").val(finalEndDate);
+     $("#fechaIncial").val(FechaIncial);
  
 }
+

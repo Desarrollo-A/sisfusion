@@ -136,8 +136,6 @@
                                                         <th>MODALIDAD</th>
                                                         <th>CONTRATACIÓN</th>
                                                         <th>PLAN VENTA</th>
-                                                        <th>FEC. SISTEMA</th> 
-                                                        <th>FEC. NEODATA</th>
                                                         <th>ÚLTIMA DISPERSIÓN</th>
                                                         <th>ACCIONES</th>
                                                     </tr>
