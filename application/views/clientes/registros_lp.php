@@ -38,14 +38,14 @@
                 </div>
             </div>
         </div>
-        <?php $this->load->view('template/footer_legend');?>
+    <?php $this->load->view('template/footer_legend');?>
     </div>
-    </div><!--main-panel close-->
-    <?php $this->load->view('template/footer');?>
-    <script src="<?=base_url()?>dist/js/modal-steps.min.js"></script>
-    <script src="<?= base_url() ?>dist/js/moment.min.js"></script>
-    <script src="<?= base_url() ?>dist/js/es.js"></script>
-    <script src="<?= base_url()?>dist/js/bootstrap-datetimepicker.js"></script>
-    <script src="<?=base_url()?>dist/js/controllers/report_prospects.js"></script>
-    <script src="<?=base_url()?>dist/js/controllers/clientes/registros_lp.js"></script>
+</div><!--main-panel close-->
+<?php $this->load->view('template/footer');?>
+<script src="<?=base_url()?>dist/js/modal-steps.min.js"></script>
+<script src="<?= base_url() ?>dist/js/moment.min.js"></script>
+<script src="<?= base_url() ?>dist/js/es.js"></script>
+<script src="<?= base_url()?>dist/js/bootstrap-datetimepicker.js"></script>
+<script src="<?=base_url()?>dist/js/controllers/report_prospects.js"></script>
+<script src="<?=base_url()?>dist/js/controllers/clientes/registros_lp.js"></script>
 </body>

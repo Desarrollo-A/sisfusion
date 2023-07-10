@@ -105,7 +105,7 @@ $('#notaria-datatable').on('draw.dt', function() {
 $("#notaria-datatable tbody").on("click", ".btn-delete", function(){    
     id = $(this).val();
     $("#modal-delete .modal-body").html('');
-    $("#modal-delete .modal-body").append(`<div id="borrarBono"><form id="form-delete"><center><p style='color:#9D9D9D;'><b>¿Está seguro de eliminar este usuario?</b><br>Se eliminara el registro.</p></center><input type="hidden" id="idNotaria" name="idNotaria" value="${id}"><button class="btn btn-danger" style="margin: 15px;" data-dismiss="modal">Cerrar</button><input type="submit"  class="btn btn-primary" value="Aceptar"></form></div>`);
+    $("#modal-delete .modal-body").append(`<div id="borrarBono"><form id="form-delete"><center><p style='color:#9D9D9D;'><b>¿Está seguro de eliminar este usuario?</b><br>Se eliminara el registro.</p></center><input type="hidden" id="idNotaria" name="idNotaria" value="${id}"><button class="btn btn-danger btn-simple" style="margin: 15px;" data-dismiss="modal">Cerrar</button><input type="submit"  class="btn btn-primary" value="Aceptar"></form></div>`);
     $('#modal-delete').modal('show');
 });
 
