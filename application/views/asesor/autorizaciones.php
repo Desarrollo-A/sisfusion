@@ -15,8 +15,8 @@
 						<h4 class="modal-title">Revisión Status (6. Corrida elaborada)</h4>
 					</div>
 					<div class="modal-body">
-						<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-							<div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
+						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
 								<label>Lote:</label>
 								<input type="text" class="form-control" id="nomLoteFakeenvARevCE" disabled>
 
@@ -28,7 +28,7 @@
 									<option value="6">  6. Corrida elaborada (Contraloría) </option>
 								</select>
 							</div>
-							<div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
+							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
 								<label>Comentario:</label>
 								<input type="text" class="form-control" name="comentario" id="comentarioenvARevCE">
 								<br><br>
@@ -95,10 +95,10 @@
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-							<a href="#" class="btn btn-primary finishS" style="margin: 0px;" onclick="return validateEmptyFields()" id="btnSubmit">
+							<a type="submit"class="btn btn-success hidden" style="margin: 0px;" onclick="validateEmptyFields()" id="btnSubmitEnviar" data-dismiss="modal">
 									Enviar
 							</a>
-							<button type="submit" id="btnSubmitEnviar" class="btn btn-success hidden" data-dismiss="modal">
+							<button type="submit"   >
 							</button>
 							
 						</div>
@@ -128,7 +128,7 @@
 		<div class="content boxContent">
 			<div class="container-fluid">
 				<div class="row">
-					<div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 						<ul class="nav nav-tabs nav-tabs-cm">
 							<li class="active"><a href="#soli" data-toggle="tab" onclick="javascript:$('#sol_aut').DataTable().ajax.reload();">Solicitud</a></li>
 							<li><a href="#aut" data-toggle="tab" onclick="javascript:$('#addExp').DataTable().ajax.reload();">Autorizaciones</a></li>
@@ -143,8 +143,8 @@
 												A través de este panel(Solicitud) podrás realizar lo siguiente;
 												consulta de las solicitudes previas a su autorización,
 												envió de correo electrónico a usuarios con rol "Subdirector" que se encuentren activos
-													(seleccionar usuario según sea el caso) con una solicitud de autorización
-													(dependiendo del estatus de la misma),
+												(seleccionar usuario según sea el caso) con una solicitud de autorización
+												(dependiendo del estatus de la misma),
 												descarga de información en formatos: PDF y XLSX.
 											</p>
 											<table id="sol_aut" class="table-striped table-hover">

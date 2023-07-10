@@ -1509,29 +1509,29 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
 }
 
 /* CHANGE ICONO*/
-.wrapper p {
+.wrapper .boxTabla p {
   white-space: nowrap;
-  overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.wrapper.active p {
+.wrapper .boxTabla.active p {
   white-space: normal;
   overflow: visible;
 }
 
-.wrapper .less {
+.wrapper .boxTabla .less {
   display: none;
 }
 
-.wrapper.active .less {
+.wrapper .boxTabla.active .less {
   display: inline;
 }
 
-.wrapper.active .more {
+.wrapper .boxTabla.active .more {
   display: none;
 }
 
+/*CALENDARIO */
 #date {
   width: 150px;
   outline: none;

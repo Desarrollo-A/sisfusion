@@ -175,7 +175,7 @@ function validateFilters(){
 /* Función para cambiar icono y cerrar o abrir tabla*/
 
 function changeIcon(anchor) {
-    anchor.closest('.wrapper').classList.toggle('active');
+    anchor.closest('.wrapper .boxTabla').classList.toggle('active');
     $(document).off('click', '.accordionToggle').on('click', '.accordionToggle', function () {
         $(this).parent().next().slideToggle(200);
         $(this).toggleClass('open', 200);
@@ -186,11 +186,11 @@ function createAccordions(option, render, rol){
     let tittle = getTitle(option);
     let html = '';
     html = `<div data-rol="${rol}" class="bk ${render == 1 ? 'parentTable': 'childTable'}">
-                <div class="d-flex justify-between align-center">   
+                <div class="d-flex justify-between align-center boxTabla">   
                     <div class="cursor-point accordionToggle">
                         <a class="purple-head hover-black" onclick="changeIcon(this)" id="myBtn">
-                        <i class="less fas fa-angle-down font-xs"></i>
-                        <i class="more fas fa-angle-up font-xs"></i>
+                        <i class="less fas fa-angle-down "></i>
+                        <i class="more fas fa-angle-up "></i>
                         </a>
                     </div>
                     <div>

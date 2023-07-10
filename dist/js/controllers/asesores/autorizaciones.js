@@ -79,13 +79,7 @@ let titulos_autorizaciones = [];
 let num_colum_autorizaciones = [];
 $('#addExp thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
-    $(this).html(`<input type="text" 
-                         class="textoshead"
-                         data-toggle="tooltip" 
-                         data-placement="top"
-                         title="${title}" 
-                         placeholder="${title}"
-                />`);
+    $(this).html(`<input type="text" class="textoshead"data-toggle="tooltip" data-placement="top"title="${title}" placeholder="${title}"/>`);
     titulos_autorizaciones.push(title);
     num_colum_autorizaciones.push(i);
     $( 'input', this ).on('keyup change', function () {
@@ -213,13 +207,7 @@ let titulos_solicitud = [];
 let num_colum_solicitud = [];
 $('#sol_aut thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
-    $(this).html(`<input type="text" 
-                         class="textoshead"
-                         data-toggle="tooltip" 
-                         data-placement="top"
-                         title="${title}" 
-                         placeholder="${title}"
-                  />`);
+    $(this).html(`<input type="text" class="textoshead"data-toggle="tooltip" data-placement="top"title="${title}" placeholder="${title}"/>`);
     titulos_solicitud.push(title);
     num_colum_solicitud.push(i);
     $( 'input', this ).on('keyup change', function () {
@@ -335,16 +323,16 @@ $(document).ready (function() {
                 if((d.idStatusContratacion == 1 || d.idStatusContratacion == 2 || d.idStatusContratacion == 3) && (d.idMovimiento == 31 || d.idMovimiento == 85 || d.idMovimiento == 20 || d.idMovimiento == 63 || d.idMovimiento == 73 || d.idMovimiento == 82 || d.idMovimiento == 92 || d.idMovimiento == 96)){
                     aut =
                         `<a  href="#"
-                             class="btn-data btn-blueMaderas addAutorizacionAsesor"
-                             data-idCliente="${d.id_cliente}"
-                             data-nombreResidencial="${d.nombreResidencial}"
-                             data-nombreCondominio="${d.nombreCondominio}"
-                             data-nombreLote="${d.nombreLote}"
-                             data-idCondominio="${d.idCondominio}"
-                             data-idLote="${d.idLote}" 
-                             data-toggle="tooltip" 
-                             data-placement="top"
-                             title="ACCIONES">
+                            class="btn-data btn-blueMaderas addAutorizacionAsesor"
+                            data-idCliente="${d.id_cliente}"
+                            data-nombreResidencial="${d.nombreResidencial}"
+                            data-nombreCondominio="${d.nombreCondominio}"
+                            data-nombreLote="${d.nombreLote}"
+                            data-idCondominio="${d.idCondominio}"
+                            data-idLote="${d.idLote}" 
+                            data-toggle="tooltip" 
+                            data-placement="top"
+                            title="ACCIONES">
                             <i class="fas fa-redo"></i>
                         </a>`;
                     return '<div class="d-flex justify-center">'+aut+'</div>';
@@ -397,6 +385,7 @@ $('#solicitarAutorizacion').on('hidden.bs.modal', function (e) {
 });
 
 $(document).on('click', '.seeAuts', function (e) {
+    $('#spiner-loader').removeClass('hide');
     e.preventDefault();
     var $itself = $(this);
     var idLote=$itself.attr('data-idLote');
@@ -438,6 +427,8 @@ $(document).on('click', '.seeAuts', function (e) {
             `);
         });
         $('#verAutorizacionesAsesor').modal('show');
+        $('#spiner-loader').addClass('hide');
+
     });
 });
 
