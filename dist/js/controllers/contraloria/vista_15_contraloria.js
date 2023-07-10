@@ -278,7 +278,7 @@ $(document).on('click', '#save1', function (e) {
         (async function () {
             try {
                 const res = await sendInfoArcus(dataArcus)
-                if (res.status === 200){
+                if (res.status === 'Accepted'){
                     if (validaComent == 0)
                         alerts.showNotification('top', 'right', 'Ingresa un comentario.', 'danger')
 
