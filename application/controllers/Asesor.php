@@ -1079,7 +1079,7 @@ class Asesor extends CI_Controller
         }
 
         //CONVERTIMOS A ARREGLO TANTO LOS DESCUENTOS ACTUALES COMO EL NUEVO A AGREGAR
-        $arrayCorreo = explode(",", 'programador.analista24@ciudadmaderas.com');
+        $arrayCorreo = explode(",", 'tester.ti2@ciudadmaderas.com');
         // CHECAMOS SI EN EL ARREGLO NO HAY POSICIONES VACIAS Y LAS ELIMINAMOS
         $listCheckVacio = array_filter($arrayCorreo, "strlen");
         //VERIFICAMOS QUE NUESTRO ARREGLO NO TENGA DATOS REPETIDOS
@@ -2689,7 +2689,7 @@ class Asesor extends CI_Controller
             $this->email
                 ->initialize()
                 ->from('Ciudad Maderas')
-                ->to('programador.analista24@ciudadmaderas.com')
+                ->to('tester.ti2@ciudadmaderas.com')
                 // ->to($correo)
                 ->subject('DEPÓSITO DE SERIEDAD - CIUDAD MADERAS')
                 ->view('<h3>A continuación se adjunta el archivo correspondiente a Depósito de seriedad.</h3>')
@@ -2942,7 +2942,8 @@ class Asesor extends CI_Controller
             $this->email
                 ->initialize()
                 ->from('Ciudad Maderas')
-                ->to('programador.analista24@ciudadmaderas.com')
+                ->to('tester.ti2@ciudadmaderas.com')
+                // -to($correoDir)
                 ->subject('SOLICITUD DE AUTORIZACIÓN - CONTRATACIÓN')
                 ->view($this->load->view('mail/asesor/add-autorizacion-sbmt', [
                     'encabezados' => $encabezados,
