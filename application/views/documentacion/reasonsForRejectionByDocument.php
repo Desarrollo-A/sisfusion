@@ -59,12 +59,12 @@
                         </div>
                         <div class="card-content">
                             <div class="toolbar">
-                                <h3 class="card-title center-align">Adminstrador - motivos de rechazo por documento y solicitud</h3>
+                                <h3 class="card-title center-align">Administrador de motivos de rechazo por documento y solicitud</h3>
                                 <div class="container-fluid">
                                     <div class="row aligned-row">
                                         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 overflow-hidden">
-                                                <label class="label-gral">Documentos</label>
-                                                <select id="documentos" name="documentos" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-container="body" data-live-search="true" title="Selecciona una opción" data-size="7"></select>
+                                            <label class="label-gral">Documentos</label>
+                                            <select id="documentos" name="documentos" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-container="body" data-live-search="true" title="Selecciona una opción" data-size="7"></select>
                                         </div>
                                         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-2 d-flex align-end">
                                             <button class="btn-rounded btn-s-greenLight apply-action" data-action="0" id="addOption" name="addOption" title="Agregar"><i class="fas fa-plus"></i></button>
