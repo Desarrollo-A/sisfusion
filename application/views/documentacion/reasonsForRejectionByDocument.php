@@ -21,13 +21,13 @@
         <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-body">
-                    <div class="modal-body text-center boxContent p-0">
+                    <div class="modal-body boxContent p-0">
                         <div class="card no-shadow p-0">
                             <div class="card-content p-0">
                                 <h3 class="card-title center-align">Ingresa el motivo de rechazo que asociarás a <b><p id="documentName"></p></b></h3>
                                 <div class="toolbar">
                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-1">
-                                        <div class="form-group label-floating select-is-empty" id="main_div">
+                                        <div class="form-group" id="main_div">
                                             <label class="control-label">Motivo de rechazo(requerido)</label>
                                             <input id="rejectReason" name="rejectReason" type="text" class="form-control input-gral" required autocomplete="off">
                                             <input id="id_documento" name="id_documento" class="hide">
@@ -63,14 +63,11 @@
                                 <div class="container-fluid">
                                     <div class="row aligned-row">
                                         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 overflow-hidden">
-                                            <label class="label-gral">Documentos</label>
-                                            <select id="documentos" name="documentos" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-container="body" data-live-search="true" title="Selecciona un documento" data-size="7">
-                                            </select>
+                                                <label class="label-gral">Documentos</label>
+                                                <select id="documentos" name="documentos" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-container="body" data-live-search="true" title="Selecciona una opción" data-size="7"></select>
                                         </div>
                                         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-2 d-flex align-end">
-                                            <button class="btn-rounded btn-s-greenLight apply-action" data-action="0" id="addOption" name="addOption" title="Agregar">
-                                                <i class="fas fa-plus"></i>
-                                            </button>
+                                            <button class="btn-rounded btn-s-greenLight apply-action" data-action="0" id="addOption" name="addOption" title="Agregar"><i class="fas fa-plus"></i></button>
                                         </div>
                                     </div>
                                 </div>
@@ -78,19 +75,17 @@
                             <br>
                             <div class="material-datatables" id="box-reasonsForRejectionTable">
                                 <div class="form-group">
-                                    <div class="table-responsive">
-                                        <table class="table-striped table-hover" id="reasonsForRejectionTable" name="reasonsForRejectionTable">
-                                            <thead>
-                                                <tr>
-                                                    <th>ID</th>
-                                                    <th>DOCUMENTO</th>
-                                                    <th>MOTIVO</th>
-                                                    <th>ESTATUS</th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-                                        </table>
-                                    </div>
+                                    <table class="table-striped table-hover" id="reasonsForRejectionTable" name="reasonsForRejectionTable">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>DOCUMENTO</th>
+                                                <th>MOTIVO</th>
+                                                <th>ESTATUS</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -101,15 +96,7 @@
     </div>
     <?php $this->load->view('template/footer_legend'); ?>
 </div>
-</div>
+</div><!--main-panel close-->
 <?php $this->load->view('template/footer'); ?>
-<!--DATATABLE BUTTONS DATA EXPORT-->
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/documentacion/reasonForRejectionDocument.js"></script>
 </body>

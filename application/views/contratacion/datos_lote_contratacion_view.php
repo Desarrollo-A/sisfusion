@@ -208,7 +208,6 @@
     </div>
     <!--main-panel close-->
     <?php $this->load->view('template/footer');?>
-    <!--DATATABLE BUTTONS DATA EXPORT-->
     <script src="<?= base_url() ?>dist/js/controllers/contratacion/datos_lote_contratacion.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
 </body>

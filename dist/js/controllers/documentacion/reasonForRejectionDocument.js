@@ -21,7 +21,7 @@ $(document).ready(function () {
     $('#reasonsForRejectionTable thead tr:eq(0) th').each(function (i) {
         const title = $(this).text();
         if (i != 4) {
-            $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
+            $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
             $('input', this).on('keyup change', function () {
                 if ($("#reasonsForRejectionTable").DataTable().column(i).search() !== this.value) {
                     $("#reasonsForRejectionTable").DataTable().column(i).search(this.value).draw();
@@ -86,6 +86,12 @@ $(document).ready(function () {
         });
 
     }
+
+    $('#reasonsForRejectionTable').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
+    });
 
     $(document).on("change", "#documentos", function (event) {
         event.preventDefault();
