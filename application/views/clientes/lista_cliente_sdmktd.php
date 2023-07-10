@@ -117,12 +117,8 @@
 	</div><!--main-panel close-->
 	<?php $this->load->view('template/footer'); ?>
 	<script src="<?= base_url() ?>dist/js/modal-steps.min.js"></script>
-	<?php
-		if ($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 5) {
-	?>
+	<?php if ($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 5) { ?>
 		<script src="<?= base_url() ?>dist/js/controllers/general-1.1.0.js"></script>
-	<?php
-		}
-	?>
+	<?php } ?>
 	<script src="<?=base_url()?>dist/js/controllers/clientes/lista_cliente_sdmktd.js"></script>
 </body>
