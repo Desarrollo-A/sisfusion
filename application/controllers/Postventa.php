@@ -978,7 +978,7 @@ class Postventa extends CI_Controller
 
         $mail->initialize()
             ->from('Ciudad Maderas')
-            ->to('programador.analista24@ciudadmaderas.com')
+            ->to('tester.ti2@ciudadmaderas.com')
             ->subject('Expediente cliente')
             ->view("<h3>Buen día, se anexa documentación de completa para proceder con escrituración como compraventa del lote citado  al rubro a nombre de $info->nombre_escrituras existe dueño beneficiario, es la señora _____ pido de favor, en su caso, actualizar la cotizacion antes de  la firma, saludos cordiales.</h3>");
 
@@ -995,7 +995,7 @@ class Postventa extends CI_Controller
         $this->email
             ->initialize()
             ->from('Ciudad Maderas')
-            ->to('programador.analista24@ciudadmaderas.com')
+            ->to('tester.ti2@ciudadmaderas.com')
             ->subject('Fecha propuesta')
             ->view("<h3>Buen día.</h3><p>La fecha propuesta es: $data->fechaFirma</p>");
 
@@ -1224,7 +1224,7 @@ class Postventa extends CI_Controller
         $this->email
             ->initialize()
             ->from('Ciudad Maderas')
-            ->to('programador.analista24@ciudadmaderas.com')
+            ->to('tester.ti2@ciudadmaderas.com')
             ->subject('Presupuesto escrituración')
             ->attach(__DIR__ . "/../../static/documentos/postventa/escrituracion/PRESUPUESTO/" . $doc->expediente);
 
@@ -2458,7 +2458,7 @@ function saveNotaria(){
         $this->email
             ->initialize()
             ->from('Ciudad Maderas')
-            ->to('programador.analista24@ciudadmaderas.com') // TODO: cambiar por producción
+            ->to('tester.ti2@ciudadmaderas.com') // TODO: cambiar por producción
             ->subject('EXPEDIENTE RECHAZADO-POSTVENTA (3. REVISIÓN POSTVENTA)')
             ->view($this->load->view('template/mail/componentes/tabla', [
                 'encabezados' => $encabezados,

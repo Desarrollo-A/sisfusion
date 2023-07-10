@@ -353,7 +353,7 @@ class Asistente_gerente extends CI_Controller {
     $this->email
         ->initialize()
         ->from('Ciudad Maderas')
-        ->to('programador.analista24@ciudadmaderas.com')
+        ->to('tester.ti2@ciudadmaderas.com')
         // ->to($correosEntregar)
         ->subject('EXPEDIENTE RECHAZADO-VENTAS (8. CONTRATO ENTREGADO AL ASESOR PARA FIRMA DEL CLIENTE)')
         ->view($this->load->view('mail/asistente-gerente/editar-registro-lote-rechazo-status2-asistentes-proceso8', [
