@@ -49,8 +49,8 @@
                             <select name="sede" id="sede" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-container="body" required></select>
                         </div>
                         <div class="form-group d-flex justify-center">
-                                <button class="btn btn-danger" id="cancelar-registro" type="button" data-dismiss="modal" onclick="closeModalRegisto()">CANCELAR</button>
-                                <button type="submit" class="btn btn-primary">GUARDAR</button>
+                            <button class="btn btn-danger" id="cancelar-registro" type="button" data-dismiss="modal" onclick="closeModalRegisto()">CANCELAR</button>
+                            <button type="submit" class="btn btn-primary">GUARDAR</button>
                         </div>
                     </div>
                 </form>

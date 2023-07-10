@@ -43,12 +43,9 @@
     </div>
     </div><!--main-panel close-->
     <?php $this->load->view('template/footer');?>
-    <!-- MODAL WIZARD -->
     <script src="<?=base_url()?>dist/js/modal-steps.min.js"></script>
-    <!--  Plugin for Date Time Picker and Full Calendar Plugin-->
     <script src="<?= base_url() ?>dist/js/moment.min.js"></script>
     <script src="<?= base_url() ?>dist/js/es.js"></script>
-    <!-- DateTimePicker Plugin -->
     <script src="<?= base_url()?>dist/js/bootstrap-datetimepicker.js"></script>
     <script src="<?=base_url()?>dist/js/controllers/report_prospects.js"></script>
     <script src="<?=base_url()?>dist/js/controllers/clientes/registros_lp.js"></script>

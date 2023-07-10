@@ -8,8 +8,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-body">
-                    <p class="p-0 text-center" id="mainLabelText">Asegúrate que el campo <b>Documentos</b> tenga al
-                        menos un valor seleccionado.</p>
+                    <p class="p-0 text-center" id="mainLabelText">Asegúrate que el campo <b>Documentos</b> tenga al menos un valor seleccionado.</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -39,7 +38,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                     <input id="idLote" class="hide">
                 </div>
@@ -66,24 +64,19 @@
                                     <div class="row aligned-row">
                                         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 overflow-hidden">
                                                 <label class="label-gral">Documentos</label>
-                                                <select id="documentos" name="documentos" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-container="body" data-live-search="true" title="Selecciona un documento" data-size="7">
-                                                </select>
+                                                <select id="documentos" name="documentos" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-container="body" data-live-search="true" title="Selecciona una opción" data-size="7"></select>
                                         </div>
                                         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-2 d-flex align-end">
-                                            <button class="btn-rounded btn-s-greenLight apply-action" data-action="0" id="addOption" name="addOption" title="Agregar">
-                                                <i class="fas fa-plus"></i>
-                                            </button>
+                                            <button class="btn-rounded btn-s-greenLight apply-action" data-action="0" id="addOption" name="addOption" title="Agregar"><i class="fas fa-plus"></i></button>
                                         </div>
                                     </div>
-                              </div>
+                                </div>
                             </div>
                             <br>
                             <div class="material-datatables" id="box-reasonsForRejectionTable">
                                 <div class="form-group">
-                                    <div class="table-responsive">
-                                        <table class="table-striped table-hover"
-                                               id="reasonsForRejectionTable" name="reasonsForRejectionTable">
-                                            <thead>
+                                    <table class="table-striped table-hover" id="reasonsForRejectionTable" name="reasonsForRejectionTable">
+                                        <thead>
                                             <tr>
                                                 <th>ID</th>
                                                 <th>DOCUMENTO</th>
@@ -91,9 +84,8 @@
                                                 <th>ESTATUS</th>
                                                 <th></th>
                                             </tr>
-                                            </thead>
-                                        </table>
-                                    </div>
+                                        </thead>
+                                    </table>
                                 </div>
                             </div>
                         </div>

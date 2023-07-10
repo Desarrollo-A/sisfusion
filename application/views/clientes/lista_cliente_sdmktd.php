@@ -10,7 +10,7 @@
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-body">
-							<b><h4 class="card-title text-center">Ventas compartidas</h4></b>
+						    <b><h4 class="card-title text-center">Ventas compartidas</h4></b>
 						<table id="verDet" class="table-striped table-hover">
 							<thead>
 								<tr>
@@ -121,7 +121,6 @@
 	</div><!--main-panel close-->
 	<?php $this->load->view('template/footer'); ?>
 	<script src="<?= base_url() ?>dist/js/modal-steps.min.js"></script>
-	<!-- MODAL WIZARD -->
 	<?php
 		if ($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 5) {
 	?>

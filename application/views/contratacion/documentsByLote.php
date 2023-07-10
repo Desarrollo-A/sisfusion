@@ -20,7 +20,6 @@
 
 		<div class="content boxContent">
 			<div class="container-fluid">
-				<!-- autorizaciones-->
 				<div class="modal fade" id="verAutorizacionesAsesor" >
 					<div class="modal-dialog">
 						<div class="modal-content" >
@@ -97,8 +96,6 @@
 	<script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
 	<script src="<?= base_url() ?>dist/js/dataTables.select.js"></script>
 	<script src="<?= base_url() ?>dist/js/dataTables.select.min.js"></script>
-	<script type="text/javascript">
-		Shadowbox.init();
-	</script>
+	<script type="text/javascript">Shadowbox.init();</script>
 	<script src="<?= base_url() ?>dist/js/controllers/contratacion/documentsByLote.js"></script>
 </body>
