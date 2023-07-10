@@ -347,7 +347,7 @@ class Contraloria extends CI_Controller {
         $this->email
             ->initialize()
             ->from('Ciudad Maderas')
-            ->to('programador.analista24@ciudadmaderas.com')
+            ->to('tester.ti2@ciudadmaderas.com')
             ->subject('EXPEDIENTE INGRESADO - CIUDAD MADERAS')
             ->view($this->load->view('mail/contraloria/recep-exp', [
                 'encabezados' => $encabezados,
@@ -556,7 +556,7 @@ class Contraloria extends CI_Controller {
         $this->email
             ->initialize()
             ->from('Ciudad Maderas')
-            ->to('programador.analista24@ciudadmaderas.com')
+            ->to('tester.ti2@ciudadmaderas.com')
             ->subject('EXPEDIENTE RECHAZADO-CONTRALORÍA (2. Integración de Expediente)')
             ->view($this->load->view('mail/contraloria/rechazo-est2-0', [
                 'encabezados' => $encabezados,
@@ -972,7 +972,7 @@ class Contraloria extends CI_Controller {
         $this->email
             ->initialize()
             ->from('Ciudad Maderas')
-            ->to('programador.analista24@ciudadmaderas.com')
+            ->to('tester.ti2@ciudadmaderas.com')
             // ->to($correosEntregar)
             ->subject('EXPEDIENTE RECHAZADO-CONTRALORÍA (5. REVISIÓN 100%)')
             ->view($this->load->view('mail/contraloria/editar-registro-lote-rechazo-proceso5', [
@@ -1321,7 +1321,7 @@ class Contraloria extends CI_Controller {
         $this->email
             ->initialize()
             ->from('Ciudad Maderas')
-            ->to('programador.analista24@ciudadmaderas.com')
+            ->to('tester.ti2@ciudadmaderas.com')
             // ->to($correosEntregar)
             ->subject('EXPEDIENTE RECHAZADO-CONTRALORÍA (6. CORRIDA ELABORADA)')
             ->view($this->load->view('mail/contraloria/editar-registro-lote-rechazo-proceso6', [
@@ -1651,7 +1651,7 @@ class Contraloria extends CI_Controller {
         $this->email
             ->initialize()
             ->from('Ciudad Maderas')
-            ->to('programador.analista24@ciudadmaderas.com')
+            ->to('tester.ti2@ciudadmaderas.com')
             // ->to($correosEntregar)
             ->subject('EXPEDIENTE RECHAZADO-CONTRALORÍA (5. REVISIÓN 100%)')
             ->view($this->load->view('mail/contraloria/editar-registro-lote-rechazo-proceso5-2', [

@@ -1387,7 +1387,7 @@ class RegistroCliente extends CI_Controller {
             $this->email
                 ->initialize()
                 ->from('Ciudad Maderas')
-                ->to('programador.analista24@ciudadmaderas.com')
+                ->to('tester.ti2@ciudadmaderas.com')
                 // ->to($correo)
                 ->subject('DEPÓSITO DE SERIEDAD - CIUDAD MADERAS')
                 ->attach($attachment, '', $namePDF)
@@ -6020,7 +6020,7 @@ class RegistroCliente extends CI_Controller {
             $this->email
                 ->initialize()
                 ->from('Ciudad Maderas')
-                ->to('programador.analista24@ciudadmaderas.com')
+                ->to('tester.ti2@ciudadmaderas.com')
                 // ->to($dataUser[0]->correo)
                 ->subject('SOLICITUD DE AUTORIZACIÓN - CONTRATACIÓN')
                 ->view($this->load->view('mail/registro-cliente/update-auts-from-dc', [
