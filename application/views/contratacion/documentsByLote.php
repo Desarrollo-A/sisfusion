@@ -11,13 +11,6 @@
 			echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
 		}
 		?>
-		
-		<style>
-			iframe img{
-				width: 100%
-			}
-		</style>
-
 		<div class="content boxContent">
 			<div class="container-fluid">
 				<div class="modal fade" id="verAutorizacionesAsesor" >
@@ -34,7 +27,6 @@
 											</div>
 										</div>
 									</div>
-
 								</div>
 							</div>
 							<div class="modal-footer">

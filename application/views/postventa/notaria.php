@@ -48,8 +48,8 @@
                             <label class="control-label">Sede</label>
                             <select name="sede" id="sede" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-container="body" required></select>
                         </div>
-                        <div class="form-group d-flex justify-center">
-                            <button class="btn btn-danger" id="cancelar-registro" type="button" data-dismiss="modal" onclick="closeModalRegisto()">CANCELAR</button>
+                        <div class="form-group d-flex justify-end">
+                            <button class="btn btn-danger btn-simple" id="cancelar-registro" type="button" data-dismiss="modal" onclick="closeModalRegisto()">CANCELAR</button>
                             <button type="submit" class="btn btn-primary">GUARDAR</button>
                         </div>
                     </div>
@@ -81,12 +81,12 @@
                                             name="notaria-datatable">
                                             <thead>
                                                 <tr>
-                                                    <th>ID NOTARIA</th>
-                                                    <th>NOMBRE NOTARIA</th>
-                                                    <th>NOMBRE NOTARIO</th>
+                                                    <th>ID NOTARÍA</th>
+                                                    <th>NOMBRE DE LA NOTARÍA</th>
+                                                    <th>NOMBRE DEL NOTARIO</th>
                                                     <th>DIRECCION</th>
                                                     <th>CORREO</th>
-                                                    <th>TELEFONO</th>
+                                                    <th>TELÉFONO</th>
                                                     <th>SEDE</th>
                                                     <th>ACCIONES</th>
                                                 </tr>

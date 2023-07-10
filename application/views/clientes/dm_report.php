@@ -86,7 +86,6 @@
     </div>
     </div>
 </body>
-
 <?php $this->load->view('template/footer'); ?>
 <script src="<?= base_url() ?>dist/js/controllers/mktd-1.1.0.js"></script>
 <script src="<?= base_url() ?>dist/js/es.js"></script>

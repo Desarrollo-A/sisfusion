@@ -4,13 +4,11 @@
 <body>
 	<div class="wrapper">
 		<?php $this->load->view('template/sidebar'); ?>
-
-		<!-- Modals -->
 		<div class="modal fade" id="verDetalles" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-body">
-						    <b><h4 class="card-title text-center">Ventas compartidas</h4></b>
+						<b><h4 class="card-title text-center">Ventas compartidas</h4></b>
 						<table id="verDet" class="table-striped table-hover">
 							<thead>
 								<tr>
@@ -34,7 +32,6 @@
 				</div>
 			</div>
 		</div>
-		<!-- END Modals -->
 
 		<div class="content boxContent">
 			<div class="container-fluid">
@@ -97,7 +94,7 @@
 													<th>CONDOMINIO</th>
 													<th>LOTE</th>
 													<th>CLIENTE</th>
-													<th>NO. RECIBO</th>
+													<th>NUMERO DE RECIBO</th>
 													<th>TIPO DE PAGO</th>
 													<th>FECHA DE APARTADO</th>
 													<th>ENGANCHE</th>
@@ -111,7 +108,6 @@
 								</div>
 							</div>
 						</div>
-
 					</div>
 				</div>
 			</div>
