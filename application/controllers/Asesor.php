@@ -2923,8 +2923,6 @@ class Asesor extends CI_Controller
             $autorizacionComent .= $this->input->post('comentario_' . $n) . ". ";
         }
         if ($dataInsert == 1) {
-            /*$dataUser = $this->Asesor_model->getInfoUserById($id_aut);
-            $correoDir = $dataUser[0]->correo;*/
 
             $encabezados = [
                 'nombreResidencial' => 'PROYECTO',
@@ -2945,7 +2943,6 @@ class Asesor extends CI_Controller
                 ->initialize()
                 ->from('Ciudad Maderas')
                 ->to('programador.analista24@ciudadmaderas.com')
-                // -to($correoDir)
                 ->subject('SOLICITUD DE AUTORIZACIÓN - CONTRATACIÓN')
                 ->view($this->load->view('mail/asesor/add-autorizacion-sbmt', [
                     'encabezados' => $encabezados,
@@ -2954,7 +2951,6 @@ class Asesor extends CI_Controller
                 ], true));
 
             $this->email->send();
-
             echo json_encode($dataInsert);
         } else {
             echo json_encode($dataInsert);

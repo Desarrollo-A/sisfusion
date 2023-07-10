@@ -4,13 +4,11 @@
 <div class="wrapper ">
 <?php $this->load->view('template/sidebar'); ?>
 
-
     <div class="modal" tabindex="-1" role="dialog" id="notification">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-body">
-                    <p class="p-0 text-center" id="mainLabelText">Asegúrate que el campo <b>Documentos</b> tenga al
-                        menos un valor seleccionado.</p>
+                    <p class="p-0 text-center" id="mainLabelText">Asegúrate que el campo <b>Documentos</b> tenga al menos un valor seleccionado.</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -40,7 +38,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                     <input id="idLote" class="hide">
                 </div>
@@ -66,9 +63,9 @@
                                 <div class="container-fluid">
                                     <div class="row aligned-row">
                                         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 overflow-hidden">
-                                                <label class="label-gral">Documentos</label>
-                                                <select id="documentos" name="documentos" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-container="body" data-live-search="true" title="Selecciona un documento" data-size="7">
-                                                </select>
+                                            <label class="label-gral">Documentos</label>
+                                            <select id="documentos" name="documentos" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-container="body" data-live-search="true" title="Selecciona un documento" data-size="7">
+                                            </select>
                                         </div>
                                         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-2 d-flex align-end">
                                             <button class="btn-rounded btn-s-greenLight apply-action" data-action="0" id="addOption" name="addOption" title="Agregar">
@@ -76,23 +73,21 @@
                                             </button>
                                         </div>
                                     </div>
-                              </div>
+                                </div>
                             </div>
-
                             <br>
                             <div class="material-datatables" id="box-reasonsForRejectionTable">
                                 <div class="form-group">
                                     <div class="table-responsive">
-                                        <table class="table-striped table-hover"
-                                               id="reasonsForRejectionTable" name="reasonsForRejectionTable">
+                                        <table class="table-striped table-hover" id="reasonsForRejectionTable" name="reasonsForRejectionTable">
                                             <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>DOCUMENTO</th>
-                                                <th>MOTIVO</th>
-                                                <th>ESTATUS</th>
-                                                <th></th>
-                                            </tr>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>DOCUMENTO</th>
+                                                    <th>MOTIVO</th>
+                                                    <th>ESTATUS</th>
+                                                    <th></th>
+                                                </tr>
                                             </thead>
                                         </table>
                                     </div>
@@ -106,8 +101,7 @@
     </div>
     <?php $this->load->view('template/footer_legend'); ?>
 </div>
-</div><!--main-panel close-->
-
+</div>
 <?php $this->load->view('template/footer'); ?>
 <!--DATATABLE BUTTONS DATA EXPORT-->
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>

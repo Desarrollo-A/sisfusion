@@ -1290,10 +1290,10 @@ function compareDates(fecha_creacion){
 document.querySelector('#estatus_recordatorio_form').addEventListener('submit',async e =>  {
     e.preventDefault();
     const data = Object.fromEntries(new FormData(e.target));
-    if(gapi.auth2.getAuthInstance().isSignedIn.get()){
-        let inserted = await insertEventGoogle(data);
-        data['idGoogle'] = inserted;
-    }
+    // if(gapi.auth2.getAuthInstance().isSignedIn.get()){
+    //     let inserted = await insertEventGoogle(data);
+    //     data['idGoogle'] = inserted;
+    // }
     data['estatus_particular'] = $('#estatus_particular').val();
     data['id_prospecto_estatus_particular'] = $("#id_prospecto_estatus_particular").val();
     $.ajax({
@@ -1308,11 +1308,10 @@ document.querySelector('#estatus_recordatorio_form').addEventListener('submit',a
         },
         success: function(data) {
             $('#spiner-loader').addClass('hide');
-            $('#myUpdateStatusModal').modal("hide");
-            $('#agendaInsert').modal("hide");
+            $('#myUpdateStatusModal').modal("toggle");
+            $('#agendaInsert').modal("toggle");
             data = JSON.parse(data);
             alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
-            $('#agendaInsert').modal('toggle');
         },
         error: function() {
             $('#spiner-loader').addClass('hide');
