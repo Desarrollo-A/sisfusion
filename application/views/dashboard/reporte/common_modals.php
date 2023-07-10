@@ -154,10 +154,10 @@
                     </div>
                     <div class="col-12 col-sm-6 col-md-6 col-lg-6 d-flex justify-end datesModal">
                         <div class="form-group d-flex m-0 p-0">
-                            <input type="text" class="form-control datepicker text-center pl-1" id="beginDate"/>
+                            <input type="text" class="form-control datepicker text-center pl-1" id="fechaInicioVentas"/>
                             <span>-</span>
-                            <input type="text" class="form-control datepicker text-center " id="endDate"/>
-                            <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
+                            <input type="text" class="form-control datepicker text-center " id="fechaFinVentas"/>
+                            <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange" onclick="searchByDateRange()">
                                 <span class="material-icons">search</span>
                             </button>
                         </div>
