@@ -1086,6 +1086,7 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
             /*->to('supervisor.bd@ciudadmaderas.com',
                 'coord.contraloriacorporativa@ciudadmaderas.com',
                 'mariela.sanchez@ciudadmaderas.com',
+                'coord.bd@ciudadmaderas.com',
                 'irene.vallejo@ciudadmaderas.com')*/
             ->subject($subj)
             ->view($this->load->view('mail/schedule-tasks-cl/send-comp-notification', [
