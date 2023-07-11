@@ -216,14 +216,17 @@ $(document).ready(function () {
             else if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 77) {
                 status = "STATUS 2 ENVIADO REVISIÓN (VENTAS)";
             }
+            // else if (row.data().idStatusContratacion == 11 && row.data().idMovimiento == 41) {
+            //     status = "VALIDACIÓN DE ENGANCHE (ADMINISTRACIÓN)";
+            // }
 
             if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 37 ||
                 row.data().idStatusContratacion == 7 && row.data().idMovimiento == 7 ||
                 row.data().idStatusContratacion == 7 && row.data().idMovimiento == 64 ||
-                row.data().idStatusContratacion == 7 && row.data().idMovimiento == 77) {
+                row.data().idStatusContratacion == 7 && row.data().idMovimiento == 77){
                 fechaVenc = row.data().fechaVenc;
             } else if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 66) {
-                fechaVenc = 'Vencido';
+                fechaVenc = 'VENCIDO';
             }
 
             var informacion_adicional = 

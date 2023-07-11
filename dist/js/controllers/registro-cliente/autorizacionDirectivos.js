@@ -277,7 +277,7 @@ $(document).ready (function() {
                     : `<p class="radioOption-Item m-0 pl-1">
                         <input type="radio" name="accion${i}" id="send${i}" value="3" class="d-none" aria-invalid="false">
                         <label for="send${i}" class="cursor-point m-0">
-                            <i class="fas fa-paper-plane iSend" style="font-size:15px" data-toggle="tooltip" data-placement="bottom" title="Enviar a DC"></i>
+                            <i class="fas fa-paper-plane iSend" style="font-size:15px" data-toggle="tooltip" data-placement="top" title="Enviar a DC"></i>
                         </label>
                     </p>`;
 
@@ -296,15 +296,14 @@ $(document).ready (function() {
                                     <p class="radioOption-Item m-0">
                                         <input type="radio" name="accion${i}" id="accept${i}" value="0" class="d-none" aria-invalid="false" checked>
                                         <label for="accept${i}" class="cursor-point m-0">
-                                            <i class="fas fa-thumbs-up iAccepted" style="font-size:15px" data-toggle="tooltip" 
-                                                data-placement="bottom" title="Aceptar"></i>
+                                            <i class="fas fa-thumbs-up iAccepted" style="font-size:15px" data-toggle="tooltip" data-placement="top" title="Aceptar"></i>
                                         </label>
                                     </p>
                                     <p class="radioOption-Item m-0 pl-1">
                                         <input type="radio" name="accion${i}" id="denied${i}" value="2" class="d-none" aria-invalid="false">
                                         <label for="denied${i}" class="cursor-point m-0">
                                             <i class="fas fa-thumbs-down iDenied" style="font-size:15px" data-toggle="tooltip" 
-                                                data-placement="bottom" title="Rechazar"></i>
+                                                data-placement="top" title="Rechazar"></i>
                                         </label>
                                     </p>
                                     ${opcionDenegado}
@@ -337,8 +336,12 @@ $(document).ready (function() {
             $('#numeroDeRow').val(p);
             $('#addFile').modal('show');
             $('#spiner-loader').addClass('hide');
+            $('[data-toggle="tooltip"]').tooltip({
+                trigger: "hover"
+            });
         });
     });
+
 
     $("#aut-verificacion tbody").on("click", ".infoAut", function(e) {
         e.preventDefault();
@@ -383,15 +386,14 @@ $(document).ready (function() {
                                     <p class="radioOption-Item m-0">
                                         <input type="radio" name="accion${i}" id="acceptAut${i}" value="0" class="d-none" aria-invalid="false">
                                         <label for="acceptAut${i}" class="cursor-point m-0">
-                                            <i class="fas fa-thumbs-up iAccepted" style="font-size:15px" data-toggle="tooltip" 
-                                                data-placement="bottom" title="Aceptar"></i>
+                                            <i class="fas fa-thumbs-up iAccepted" style="font-size:15px" data-toggle="tooltip" data-placement="top" title="Aceptar"></i>
                                         </label>
                                     </p>
                                     <p class="radioOption-Item m-0 pl-1">
                                         <input type="radio" name="accion${i}" id="deniedAut${i}" value="2" class="d-none" aria-invalid="false">
                                         <label for="deniedAut${i}" class="cursor-point m-0">
                                             <i class="fas fa-thumbs-down iDenied" style="font-size:15px" data-toggle="tooltip" 
-                                                data-placement="bottom" title="Rechazar"></i>
+                                                data-placement="top" title="Rechazar"></i>
                                         </label>
                                     </p>
                                 </div>
@@ -416,6 +418,9 @@ $(document).ready (function() {
             $('#numeroDeRowAut').val(p);
             $('#autCliente').modal('show');
             $('#spiner-loader').addClass('hide');
+            $('[data-toggle="tooltip"]').tooltip({
+                trigger: "hover"
+            });
         });
     });
 });

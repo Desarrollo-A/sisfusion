@@ -330,7 +330,7 @@ function getStatusMktdPreventa(){
                                         AND c.estatus_particular IN (1, 2, 3, 5, 6) ORDER BY c.fecha_creacion DESC");
                 break;
             case '3': // GERENTE
-                return $this->db->query("SELECT c.id_prospecto, CONCAT (c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre,
+                return $this->db->query("SELECT c.id_prospecto, UPPER(CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno)) nombre,
                                         CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
                                         CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
                                         CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
