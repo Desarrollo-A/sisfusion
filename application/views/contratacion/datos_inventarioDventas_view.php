@@ -58,7 +58,7 @@
                                                 <th>TOTAL</th>
                                                 <th>ENGANCHE</th>
                                                 <th>A FINANCIAR</th>
-                                                <th>MESES S/I</th>
+                                                <th>MESES SIN INTERESES</th>
                                             </tr>
                                             </thead>
                                             <tbody>
