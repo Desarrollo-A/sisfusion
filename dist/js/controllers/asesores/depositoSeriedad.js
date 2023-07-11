@@ -770,7 +770,6 @@ function fillDataTable(idCondominio) {
                         d.id_prospecto == 0 &&
                         (d.id_coordinador != 10807 && d.id_coordinador != 10806 && d.id_gerente != 10807 && d.id_gerente != 10806)
                     ) {
-                        const nombreCliente = `${d.nombre} ${d.apellido_paterno} ${d.apellido_materno}`;
                         buttons += `<button class="btn-data btn-green abrir_prospectos btn-fab btn-fab-mini" data-toggle="tooltip" data-placement="left" title="ASIGNAR PROSPECTO" data-idCliente="${d.id_cliente}" data-nomCliente="${d.nombreCliente}"> <i class="fas fa-user-check"></i></button>`;
                     }
 

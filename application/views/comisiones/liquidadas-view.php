@@ -127,8 +127,7 @@
                                                         <th>CONTRATACIÓN</th>
                                                         <th>PLAN VENTA</th>
                                                         <th>ÚLTIMA DISPERSIÓN</th> 
-                                                        <th>FEC. SISTEMA</th> 
-                                                        <th>FEC. NEODATA</th>
+                                                
                                                         <th>TOTAL</th>
                                                         <th>PORCENTAJE</th>
                                                         <th>PENDIENTE</th>

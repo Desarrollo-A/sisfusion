@@ -109,15 +109,6 @@ $(document).ready(function () {
                 return labelEstatus;
             }},
             { data: function (d) {
-                var fechaSistema;
-                if(d.fecha_sistema <= '01 OCT 20' || d.fecha_sistema == null ) {
-                    fechaSistema ='<span class="label" style="color:#626567;background:#E5E7E9;">Sin Definir</span>';
-                }else {
-                    fechaSistema = '<br><span class="label" style="color:#1B4F72;background:#AED6F1;">'+d.fecha_sistema+'</span>';
-                }
-                return fechaSistema;
-            }},
-            { data: function (d) {
                 var fechaNeodata;
                 var rescisionLote;
                 fechaNeodata = '<br><span class="label" style="color:#1B4F72;background:#AED6F1;">'+d.fecha_neodata+'</span>';
@@ -129,14 +120,6 @@ $(document).ready(function () {
                     rescisionLote = '<br><span class="label" style="color:#78281F;background:#F5B7B1;">Recisión Nueva Venta</span>';
                 }
                 return fechaNeodata+rescisionLote;
-            }},{ data: function (d) {
-                var ultima_dispersion;
-                if( d.ultima_dispersion == null ) {
-                    ultima_dispersion = '<span class="label" style="color:#626567;background:#E5E7E9;">Sin Definir</span>';
-                } else {
-                    ultima_dispersion = '<br><span class="label" style="color:#1B4F72;background:#AED6F1;">'+d.ultima_dispersion+'</span>';
-                }
-                return ultima_dispersion;
             }},
             { data: function (d) {
                 var BtnStats = '';
