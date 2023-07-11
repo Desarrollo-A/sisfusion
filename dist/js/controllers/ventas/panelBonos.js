@@ -46,13 +46,13 @@ $("#tabla_prestamos").ready(function() {
     let titulos = [];
     $('#tabla_prestamos thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
-        titulos.push(title);
-        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`); 
-        $( 'input', this).on('keyup change', function () {
-            if ($('#tabla_prestamos').DataTable().column(i).search() !== this.value) {
+        $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
+        $( 'input', this ).on('keyup change', function () {
+            if ($('#tabla_prestamos').DataTable().column(i).search() !== this.value ) {
                 $('#tabla_prestamos').DataTable().column(i).search(this.value).draw();
-            }   
+            }
         });
+        $('[data-toggle="tooltip"]').tooltip();
     });
 
     tabla_nuevas = $("#tabla_prestamos").DataTable({
@@ -180,10 +180,20 @@ $("#tabla_prestamos").ready(function() {
             "data": function(d) {
 
                 if (d.estado == 1) {
-                    return  '<div class="d-flex justify-center"><button class="btn btn-success btn-round btn-fab btn-fab-mini abonar" value="' + d.id_pago_bono + ',' + d.abono + '" data-toggle="tooltip" data-placement="top" title="AUTORIZAR"><i class="material-icons "   >done</i></button>' +
-                    '<button class="btn btn-default btn-round btn-fab btn-fab-mini consulta_abonos" value="' + d.id_pago_bono + ','+d.nombre+'  "  data-impuesto="'+d.impuesto1+'" data-toggle="tooltip" data-placement="top" title="HISTORIAL" ><i class="material-icons" >bar_chart</i></button></div>';
+                    return  '<div class="d-flex justify-center">'+
+                        '<button class="btn btn-green btn-round btn-fab btn-fab-mini abonar" value="' + d.id_pago_bono + ',' + d.abono + '" data-toggle="tooltip" data-placement="top" title="AUTORIZAR">'+
+                            '<i class="fas fa-check"></i>'+
+                        '</button>' +
+                        '<button class="btn-data btn-blueMaderas consulta_abonos" value="' + d.id_pago_bono + ','+d.nombre+'  "  data-impuesto="'+d.impuesto1+'" data-toggle="tooltip" data-placement="top" title="HISTORIAL" >'+
+                            '<i class="fas fa-info"></i>'+
+                        '</button>';
                             }
             }
+        }],
+        columnDefs: [{
+            orderable : false,
+            searchable: true,
+            target: 0,
         }],
         ajax: {
             "url": general_base_url + "Comisiones/getBonosPorUser/" + 1,
@@ -292,14 +302,15 @@ $("#tabla_bono_revision").ready(function() {
 
     $('#tabla_bono_revision thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
-        titulos.push(title);
-        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top"title="${title}" placeholder="${title}"/>`); 
-        $( 'input', this).on('keyup change', function () {
-            if ($('#tabla_bono_revision').DataTable().column(i).search() !== this.value) {
+        $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
+        $( 'input', this ).on('keyup change', function () {
+            if ($('#tabla_bono_revision').DataTable().column(i).search() !== this.value ) {
                 $('#tabla_bono_revision').DataTable().column(i).search(this.value).draw();
-            }   
+            }
         });
+        $('[data-toggle="tooltip"]').tooltip();
     });
+
 
     tabla_nuevas2 = $("#tabla_bono_revision").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -431,6 +442,11 @@ $("#tabla_bono_revision").ready(function() {
                 }
             }
         }],
+        columnDefs: [{
+            orderable : false,
+            searchable: true,
+            target: 0,
+        }],
         ajax: {
             url: general_base_url + "Comisiones/getBonosPorUser/" + 2,
             type: "POST",
@@ -527,13 +543,13 @@ $("#tabla_bono_pagado").ready(function() {
 
     $('#tabla_bono_pagado thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
-        titulos.push(title);
-        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top"title="${title}" placeholder="${title}"/>`); 
-        $( 'input', this).on('keyup change', function () {
-            if ($('#tabla_bono_pagado').DataTable().column(i).search() !== this.value) {
+        $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
+        $( 'input', this ).on('keyup change', function () {
+            if ($('#tabla_bono_pagado').DataTable().column(i).search() !== this.value ) {
                 $('#tabla_bono_pagado').DataTable().column(i).search(this.value).draw();
-            }   
+            }
         });
+        $('[data-toggle="tooltip"]').tooltip();
     });
 
     $('#tabla_bono_pagado').on('xhr.dt', function ( e, settings, json, xhr ) {
@@ -663,9 +679,18 @@ $("#tabla_bono_pagado").ready(function() {
             "orderable": false,
             "data": function(d) {
                 if (d.estado == 4) {
-                    return '<div class="d-flex justify-center"><button class="btn btn-default btn-round btn-fab btn-fab-mini consulta_abonos" value="' + d.id_pago_bono + ','+d.nombre+ ' " data-impuesto="'+d.impuesto1+'" data-toggle="tooltip" data-placement="top" title="HISTORIAL" ><i class="material-icons">bar_chart</i></button></div>';
+                    return '<div class="d-flex justify-center">'+
+                                '<button class="btn-data btn-blueMaderas consulta_abonos" value="' + d.id_pago_bono + ','+d.nombre+ ' " data-impuesto="'+d.impuesto1+'" data-toggle="tooltip" data-placement="top" title="HISTORIAL" >'+
+                                    '<i class="fas fa-info"></i>'+
+                                '</button>'+
+                            '</div>';
                 }
             }
+        }],
+        columnDefs: [{
+            orderable : false,
+            searchable: true,
+            target: 0,
         }],
         ajax: {
             "url": general_base_url + "Comisiones/getBonosPorUser/" + 4,
@@ -700,7 +725,7 @@ $("#tabla_bono_pagado").ready(function() {
             $("#modal_bonos .modal-body").append(`<div class="col-md-3"><h6>PARA: <b>${nombre}</b></h6></div>
             <div class="col-md-3"><h6>Abono: <b style="color:green;">$${formatMoney(impuesto)}</b></h6></div>
             <div class="col-md-3"><h6>Fecha: <b>${data[0].fecha_movimiento}</b></h6></div>
-            <br><div class="col-md-3"><span class="label label-danger" style="background:#${color}">${estatus}</span></h6></div>
+            <br><div class="col-md-3"><span class="label lbl-green">${estatus}</span></h6></div>
             </div>  `);
 
             $("#modal_bonos").modal();
@@ -726,13 +751,13 @@ $("#tabla_bono_otros").ready(function() {
 
     $('#tabla_bono_otros thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
-        titulos.push(title);
-        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top"title="${title}" placeholder="${title}"/>`); 
-        $( 'input', this).on('keyup change', function () {
-            if ($('#tabla_bono_otros').DataTable().column(i).search() !== this.value) {
+        $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
+        $( 'input', this ).on('keyup change', function () {
+            if ($('#tabla_bono_otros').DataTable().column(i).search() !== this.value ) {
                 $('#tabla_bono_otros').DataTable().column(i).search(this.value).draw();
-            }   
+            }
         });
+        $('[data-toggle="tooltip"]').tooltip();
     });
 
     $('#tabla_bono_otros').on('xhr.dt', function ( e, settings, json, xhr ) {
@@ -866,6 +891,11 @@ $("#tabla_bono_otros").ready(function() {
                 }
             }
         }],
+        columnDefs: [{
+            orderable : false,
+            searchable: true,
+            target: 0,
+        }],
         ajax: {
             url: general_base_url + "Comisiones/getBonosPorUser/" + 5,
             type: "POST",
@@ -901,7 +931,7 @@ $("#tabla_bono_otros").ready(function() {
             $("#modal_bonos .modal-body").append(`<div class="row"><div class="col-md-3"><h6>PARA: <b>${nombre}</b></h6></div>
             <div class="col-md-3"><h6>Abono: <b style="color:green;">$${formatMoney(impuesto)}</b></h6></div>
             <div class="col-md-3"><h6>Fecha: <b>${data[0].fecha_movimiento}</b></h6></div>
-            <br><div class="col-md-3"><span class="label label-danger" style="background:#${color}">${estatus}</span></h6></div>
+            <br><div class="col-md-3"><span class="label lbl-warning" >${estatus}</span></h6></div>
             </div>`);
 
             $("#modal_bonos").modal();
