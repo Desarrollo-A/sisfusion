@@ -269,11 +269,11 @@ $(document).on('click', '#save1', function (e) {
 
     if(getInfo1[10] > 0 && getInfo1[10] !== 0){
         dataArcus = {
-            "idLote": getInfo1[5],
-            "fechaArcus": getInfo1[8],
-            "idProspecto": getInfo1[9],
-            "idArcus": getInfo1[10],
-            "totalNeto2": getInfo1[11]
+            "id": getInfo1[9], // idProspecto
+            "propiedadRelacionada": getInfo1[5], // idLote
+            "montoDelNegocio": getInfo1[11], // totalNeto2
+            "fechaDeCompra": getInfo1[8], // fechaArcus
+            "uid": getInfo1[10] // idArcus
         };
         (async function () {
             try {

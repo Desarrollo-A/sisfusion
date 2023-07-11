@@ -740,7 +740,7 @@ class Api extends CI_Controller
 
     function sendLeadInfoRecord() {
         $data = json_decode(file_get_contents('php://input'));
-        if(!isset($data->fechaArcus) || !isset($data->idLote) || !isset($data->idArcus) || !isset($data->idProspecto) || !isset($data->totalNeto2))
+        if(!isset($data->fechaDeCompra) || !isset($data->propiedadRelacionada) || !isset($data->uid) || !isset($data->id) || !isset($data->montoDelNegocio))
             echo json_encode(array("status" => 400, "message" => "Algún parámetro no viene informado."), JSON_UNESCAPED_UNICODE);
         else {
             $JwtSecretKey = $this->jwt_actions->getSecretKey(5918);
