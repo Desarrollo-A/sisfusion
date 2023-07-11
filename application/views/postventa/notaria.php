@@ -67,7 +67,7 @@
                                 <i class="fas fa-feather-alt fa-2x"></i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Apartado Notarias</h3>
+                                <h3 class="card-title center-align">Apartado notarías</h3>
                                 <div class="toolbar">
                                     <div class="row"> 
                                         <div class="col-12 col-sm-12 col-md-12 col-lg-12">
@@ -84,7 +84,7 @@
                                                     <th>ID NOTARÍA</th>
                                                     <th>NOMBRE DE LA NOTARÍA</th>
                                                     <th>NOMBRE DEL NOTARIO</th>
-                                                    <th>DIRECCION</th>
+                                                    <th>DIRECCIÓN</th>
                                                     <th>CORREO</th>
                                                     <th>TELÉFONO</th>
                                                     <th>SEDE</th>

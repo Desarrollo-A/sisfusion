@@ -64,6 +64,9 @@
 
 	<?php $this->load->view('template/footer');?>
 	<!--DATATABLE BUTTONS DATA EXPORT-->
+	<script src="<?= base_url() ?>dist/js/modal-steps.min.js"></script>
+	<script src="<?= base_url() ?>dist/js/moment.min.js"></script>
+	<script src="<?= base_url() ?>dist/js/es.js"></script>
 	<script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
 	<script src="<?= base_url() ?>dist/js/fullcalendar.min.js"></script>
 	<script src="<?= base_url() ?>dist/js/controllers/contratacion/report_historial.js"></script>

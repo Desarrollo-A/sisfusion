@@ -95,17 +95,13 @@ $(".find_doc").click( function() {
                                 stella = ( parseInt(d.total) + parseInt(2029185) );
                                 aura = ( parseInt(d.total) + parseInt(1037340) );
                                 terreno = parseInt(d.total);
-                                preciot = '<p>S: $ '+formatMoney(stella)+'</p>' +
-                                        '<p>A: $ '+formatMoney(aura)+'</p>' +
-                                        '<p>T: $ '+formatMoney(terreno)+'</p>';
+                                preciot = '<p>S: $ '+formatMoney(stella)+'</p>' + '<p>A: $ '+formatMoney(aura)+'</p>' + '<p>T: $ '+formatMoney(terreno)+'</p>';
                         }
                         else {
                             stella = ( parseInt(d.total) + parseInt(2104340) );
                             aura = ( parseInt(d.total) + parseInt(1075760) );
                             terreno = parseInt(d.total);
-                            preciot = '<p>S: $ '+formatMoney(stella)+'</p>' +
-                                    '<p>A: $ '+formatMoney(aura)+'</p>' +
-                                    '<p>T: $ '+formatMoney(terreno)+'</p>';
+                            preciot = '<p>S: $ '+formatMoney(stella)+'</p>' + '<p>A: $ '+formatMoney(aura)+'</p>' + '<p>T: $ '+formatMoney(terreno)+'</p>';
                         }
                     } 
                     else if(d.idStatusLote == 3 || d.idStatusLote == 2){
@@ -133,13 +129,11 @@ $(".find_doc").click( function() {
                         var stella;
                         var aura;
                         var terreno;
-                
                         if (d.nombreLote == 'CCMP-LAMAY-011' || d.nombreLote == 'CCMP-LAMAY-021' || d.nombreLote == 'CCMP-LAMAY-030' ||
                         d.nombreLote == 'CCMP-LAMAY-031' || d.nombreLote == 'CCMP-LAMAY-032' || d.nombreLote == 'CCMP-LAMAY-045' ||
                         d.nombreLote == 'CCMP-LAMAY-046' || d.nombreLote == 'CCMP-LAMAY-047' || d.nombreLote == 'CCMP-LAMAY-054' || 
                         d.nombreLote == 'CCMP-LAMAY-064' || d.nombreLote == 'CCMP-LAMAY-079' || d.nombreLote == 'CCMP-LAMAY-080' ||
                         d.nombreLote == 'CCMP-LAMAY-090' || d.nombreLote == 'CCMP-LIRIO-010' ||
-                        
                         d.nombreLote == 'CCMP-LIRIO-010' ||
                         d.nombreLote == 'CCMP-LIRIO-033' || d.nombreLote == 'CCMP-LIRIO-048' || d.nombreLote == 'CCMP-LIRIO-049' ||
                         d.nombreLote == 'CCMP-LIRIO-067' || d.nombreLote == 'CCMP-LIRIO-089' || d.nombreLote == 'CCMP-LIRIO-091' ||
@@ -147,21 +141,13 @@ $(".find_doc").click( function() {
                             stella = ( (parseInt(d.total) + parseInt(2029185)) / d.superficie);
                             aura = ( (parseInt(d.total) + parseInt(1037340)) / d.superficie );
                             terreno = (parseInt(d.total) / d.superficie);
-
-                            preciom2 = '<p>S: $ '+formatMoney(stella)+'</p>' +
-                                    '<p>A: $ '+formatMoney(aura)+'</p>' +
-                                    '<p>T: $ '+formatMoney(terreno)+'</p>';
+                            preciom2 = '<p>S: $ '+formatMoney(stella)+'</p>' + '<p>A: $ '+formatMoney(aura)+'</p>' + '<p>T: $ '+formatMoney(terreno)+'</p>';
                         }
                         else {
-                            
                                 stella = ( (parseInt(d.total) + parseInt(2104340)) / d.superficie );
                                 aura = ( (parseInt(d.total) + parseInt(1075760)) / d.superficie );
                                 terreno = (parseInt(d.total) / d.superficie);
-
-                                preciom2 = '<p>S: $ '+formatMoney(stella)+'</p>' +
-                                        '<p>A: $ '+formatMoney(aura)+'</p>' +
-                                        '<p>T: $ '+formatMoney(terreno)+'</p>';
-
+                                preciom2 = '<p>S: $ '+formatMoney(stella)+'</p>' + '<p>A: $ '+formatMoney(aura)+'</p>' + '<p>T: $ '+formatMoney(terreno)+'</p>';
                         }
                     } 
                     else if(d.idStatusLote == 3 || d.idStatusLote == 2) {
@@ -175,7 +161,6 @@ $(".find_doc").click( function() {
             }
         },
         {
-
             data: 'referencia'
         },
         {
@@ -183,20 +168,16 @@ $(".find_doc").click( function() {
         },
         {
             "data": function(d){
-                var gerente;
+                var asesor;
                 if(d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
                 {
-                    if(d.id_rol == 9){
-                        gerente = myFunctions.validateEmptyField(d.coordinador2);
-                    } else {
-                        gerente = myFunctions.validateEmptyField(d.gerente2);
-                    }
+                    asesor = myFunctions.validateEmptyField(d.asesor2);
                 }
                 else
                 {
-                    gerente = myFunctions.validateEmptyField(d.gerente);
+                    asesor = myFunctions.validateEmptyField(d.asesor);
                 }
-                return gerente;
+                return asesor;
             }
         },
         {
@@ -221,30 +202,32 @@ $(".find_doc").click( function() {
         },
         {
             "data": function(d){
-                var asesor;
+                var gerente;
                 if(d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
                 {
-                    asesor = myFunctions.validateEmptyField(d.asesor2);
+                    if(d.id_rol == 9){
+                        gerente = myFunctions.validateEmptyField(d.coordinador2);
+                    } else {
+                        gerente = myFunctions.validateEmptyField(d.gerente2);
+                    }
                 }
                 else
                 {
-                    asesor = myFunctions.validateEmptyField(d.asesor);
+                    gerente = myFunctions.validateEmptyField(d.gerente);
                 }
-                return asesor;
+                return gerente;
             }
         },
         {
             "data": function(d){
                 valTV = (d.tipo_venta == null) ? '<center><span class="label" style="color:background:#'+d.color+';">'+d.descripcion_estatus+'</span> <center>' :
                 '<center><span class="label" style="color:#0a548b; border: none; background:#'+d.color+'18;">'+d.descripcion_estatus+'</span> <p><p> <span class="label lbl-orangeYellow">'+d.tipo_venta+'</span> <center>';
-
                 return valTV;
             }
         },
         {
 
             "data": function(d){
-                
                 if(d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10){
                     if(d.fecha_modst == null || d.fecha_modst == 'null') {
                         return 'Sin registro';
@@ -272,12 +255,10 @@ $(".find_doc").click( function() {
             }
         },
         {
-
             data: 'lugar_prospeccion'
         },
         {
             "data": function( d ){
-
                 return '<div class="d-flex justify-center"><button class="btn-data btn-sky ver_historial" data-toggle="tooltip" data-placement="top" title="CONSULTA HISTORIAL" value="' + d.idLote +'" data-nomLote="'+d.nombreLote+'" data-tipo-venta="'+d.tipo_venta+'"><i class="fas fa-history"></i></button></div>';
             }
         }]
@@ -333,7 +314,6 @@ $(document).on("click", ".ver_historial", function(){
         urlTableCSA = general_base_url+"Contratacion/getCoSallingAdvisers/"+idLote;
         fillCoSellingAdvisers(urlTableCSA);
     });	
-
     fill_data_asignacion();
 });
 
@@ -563,7 +543,6 @@ tableCoSellingAdvisers = $('#seeCoSellingAdvisers').DataTable( {
 });
 }
 
-
 function fill_data_asignacion(){
 $.getJSON(general_base_url + "Administracion/get_data_asignacion/"+idLote).done( function( data ){
     (data.id_estado == 1) ? $("#check_edo").prop('checked', true) : $("#check_edo").prop('checked', false);
@@ -572,13 +551,10 @@ $.getJSON(general_base_url + "Administracion/get_data_asignacion/"+idLote).done(
 });
 }
 
-
-
 $(document).on('click', '#save_asignacion', function(e) {
     e.preventDefault();
     var id_desarrollo = $("#sel_desarrollo").val();
     var id_estado = ($('input:checkbox[id=check_edo]:checked').val() == 'on') ? 1 : 0;
-
     var data_asignacion = new FormData();
     data_asignacion.append("idLote", idLote);
     data_asignacion.append("id_desarrollo", id_desarrollo);

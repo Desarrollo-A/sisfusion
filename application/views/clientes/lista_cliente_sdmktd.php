@@ -18,7 +18,7 @@
 									<th>SUBDIRECTOR</th>
 									<th>DIRECTOR REGIONAL</th>
 									<th>DIRECTOR REGIONAL 2</th>
-									<th>FECHA ALTA</th>
+									<th>FECHA DE ALTA</th>
 									<th>USUARIO</th>
 								</tr>
 							</thead>
@@ -94,7 +94,7 @@
 													<th>CONDOMINIO</th>
 													<th>LOTE</th>
 													<th>CLIENTE</th>
-													<th>NUMERO DE RECIBO</th>
+													<th>NÚMERO DE RECIBO</th>
 													<th>TIPO DE PAGO</th>
 													<th>FECHA DE APARTADO</th>
 													<th>ENGANCHE</th>

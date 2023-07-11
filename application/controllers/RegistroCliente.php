@@ -5707,54 +5707,6 @@ class RegistroCliente extends CI_Controller {
 		$this->load->view('editar_cliente_ventasAutorizacion_view',$datos);
 	}
 
-
-	public function alta_autorizacionVentas(){
-
-		$nombreResidencial=$this->input->post('nombreResidencial');
-		$nombreCondominio=$this->input->post('nombreCondominio');
-		$nombreLote=$this->input->post('nombreLote');
-
-		$proyecto = str_replace(' ', '', $nombreResidencial);
-		$condominio = str_replace(' ', '', $nombreCondominio);
-		$condom = substr($condominio, 0, 3);
-		$cond = strtoupper($condom);
-		$numeroLote = preg_replace('/[^0-9]/', '', $nombreLote);
-		$date = date('dmY');
-		$composicion = $proyecto . "_" . $cond . $numeroLote . "_" . $date;
-
-
-		$aleatorio = rand(100,1000);
-		$idCliente=$this->input->post('idCliente');
-		$nombArchivo=$composicion;
-		$expediente=  $nombArchivo.'_'.$idCliente.'_'.$aleatorio.'_'.$_FILES["expediente"]["name"];
-		$idCondominio=$this->input->post('idCondominio');
-
-
-		$arreglo2=array();
-		$arreglo2["movimiento"]="Se adjunto Autorización";
-		$arreglo2["idCliente"]=$this->input->post('idClienteHistorial');
-		$arreglo2["idLote"]=$this->input->post('idLoteHistorial');
-		$arreglo2["expediente"]= $expediente;
-		$arreglo2["idUser"]=$this->input->post('idUser');
-		$arreglo2["idCondominio"]=$this->input->post('idCondominio');
-
-
-		$arreglo=array();
-		$arreglo["expediente"] = $nombArchivo.'_'.$idCliente.'_'.$aleatorio.'_'.$_FILES["expediente"]["name"];
-		if ($this->registrolote_modelo->editaRegistroCliente($idCliente,$arreglo)){
-			$this->registrolote_modelo->insert_historial_documento($arreglo2);
-			if (move_uploaded_file($_FILES["expediente"]["tmp_name"],"static/documentos/cliente/expediente/".$nombArchivo.'_'.$idCliente.'_'.$aleatorio.'_'.$_FILES["expediente"]["name"])) {
-				$this->session->set_userdata("success","1");
-				redirect(base_url()."index.php/Asistente_gerente/registrosClienteAutorizacionAsistentes");
-			}
-			else{
-				$this->session->set_userdata("success","33");
-				redirect(base_url()."index.php/Asistente_gerente/registrosClienteAutorizacionAsistentes");
-				die('error');
-			}
-		}
-	}
-
 	public function registrosClienteDocumentosContraloria2(){
 		$datos=array();
 		$datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
@@ -6321,16 +6273,12 @@ class RegistroCliente extends CI_Controller {
       ? $info_client["cl.apellido_materno"] = $this->input->post('apellido_materno')
       : '';
 
-      $this->input->post('telefono') !== ''
-      ? $info_client["cl.telefono"] = $this->input->post('telefono')
-      : '';
-
       $this->input->post('correo') !== ''
       ? $info_client["cl.correo"] = $this->input->post('correo')
       : '';
       
       $data = (!empty($info_client) || count($info_client) > 0) 
-              ? $this->registrolote_modelo->getDetailedInfoClients($info_client)
+              ? $this->registrolote_modelo->getDetailedInfoClients($info_client, $this->input->post('telefono'))
               : array();
       if($data != null) {
           echo json_encode($data);

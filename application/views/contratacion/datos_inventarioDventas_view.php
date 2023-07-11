@@ -25,9 +25,9 @@
                             <div class="toolbar">
                                 <div class="row">
                                     <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                        <div class="form-group label-floating select-is-empty">
+                                        <div class="form-group label-floating select-is-empty overflow-hidden">
                                             <label class="control-label">Proyecto</label>
-                                            <select name="filtro3" id="filtro3" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="Selecciona proyecto" data-size="7" required>
+                                            <select name="filtro3" id="filtro3" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="Selecciona proyecto" data-size="7" data-container="body" required>
                                                 <?php
                                                 if($residencial != NULL) :
                                                     foreach($residencial as $fila) : ?>
@@ -39,9 +39,9 @@
                                         </div>
                                     </div>
                                     <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                        <div class="form-group label-floating select-is-empty">
+                                        <div class="form-group label-floating select-is-empty overflow-hidden">
                                             <label class="control-label">Condominio</label>
-                                            <select id="filtro4" name="filtro4"class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="Selecciona Condominio" data-size="7" required>
+                                            <select id="filtro4" name="filtro4"class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="Selecciona Condominio" data-size="7" data-container="body" required>
                                             </select>
                                         </div>
                                     </div>

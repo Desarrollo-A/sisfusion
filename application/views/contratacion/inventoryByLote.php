@@ -21,26 +21,17 @@
 					<div class="modal-body">
 						<div role="tabpanel">
 							<ul class="nav nav-tabs" role="tablist" style="background: #003d82;">
-								<li role="presentation" class="active"><a href="#changeprocesTab" aria-controls="changeprocesTab" role="tab"
-									onclick="javascript:$('#verDet').DataTable().ajax.reload();"	data-toggle="tab">Proceso de contratación</a>
-								</li>
-								<li role="presentation"><a href="#changelogTab" aria-controls="changelogTab" role="tab" data-toggle="tab"
-								onclick="javascript:$('#verDetBloqueo').DataTable().ajax.reload();">Liberación</a>
-								</li>
-								<li role="presentation"><a href="#coSellingAdvisers" aria-controls="coSellingAdvisers" role="tab" data-toggle="tab"
-									onclick="javascript:$('#seeCoSellingAdvisers').DataTable().ajax.reload();">Asesores venta compartida</a>
-								</li>
+								<li role="presentation" class="active"><a href="#changeprocesTab" aria-controls="changeprocesTab" role="tab" onclick="javascript:$('#verDet').DataTable().ajax.reload();"	data-toggle="tab">Proceso de contratación</a></li>
+								<li role="presentation"><a href="#changelogTab" aria-controls="changelogTab" role="tab" data-toggle="tab" onclick="javascript:$('#verDetBloqueo').DataTable().ajax.reload();">Liberación</a></li>
+								<li role="presentation"><a href="#coSellingAdvisers" aria-controls="coSellingAdvisers" role="tab" data-toggle="tab" onclick="javascript:$('#seeCoSellingAdvisers').DataTable().ajax.reload();">Asesores venta compartida</a></li>
 								<?php 
 								$id_rol = $this->session->userdata('id_rol');
 								if($id_rol == 11){
-								echo '<li role="presentation"><a href="#tab_asignacion" aria-controls="tab_asignacion" role="tab" data-toggle="tab"
-									onclick="fill_data_asignacion();">Asignación</a>
-								</li>';
+								echo '<li role="presentation"><a href="#tab_asignacion" aria-controls="tab_asignacion" role="tab" data-toggle="tab" onclick="fill_data_asignacion();">Asignación</a></li>';
 								}
 								?>
 								<li role="presentation" class="hide" id="li_individual_sales"><a href="#salesOfIndividuals" aria-controls="salesOfIndividuals" role="tab" data-toggle="tab">Clausulas</a></li>
 							</ul>
-							<!-- Tab panes -->
 							<div class="tab-content">
 								<div role="tabpanel" class="tab-pane active" id="changeprocesTab">
 									<div class="row">
@@ -66,7 +57,6 @@
 										</div>
 									</div>
 								</div>
-
 								<div role="tabpanel" class="tab-pane" id="changelogTab">
 									<div class="row">
 										<div class="col-md-12">
@@ -77,8 +67,8 @@
 															<tr>
 																<th>LOTE</th>
 																<th>PRECIO</th>
-																<th>FECHA LIBERACIÓN</th>
-																<th>COMENTARIO LIBERACIÓN</th>
+																<th>FECHA DE LIBERACIÓN</th>
+																<th>COMENTARIO DE LIBERACIÓN</th>
 																<th>USUARIO</th>
 															</tr>
 														</thead>
@@ -101,7 +91,7 @@
 																<th>ASESOR</th>
 																<th>COORDINADOR</th>
 																<th>GERENTE</th>
-																<th>FECHA ALTA</th>
+																<th>FECHA DE ALTA</th>
 																<th>USUARIO</th>
 															</tr>
 														</thead>
@@ -120,9 +110,7 @@
 												<div class="card-content">
 													<div class="form-group">
 														<label for="des">Desarrollo</label>
-														<select name="sel_desarrollo" id="sel_desarrollo" class="selectpicker" 
-														data-style="btn btn-second" data-show-subtext="true" 
-														data-live-search="true"  title="" data-size="7" required>
+														<select name="sel_desarrollo" id="sel_desarrollo" class="selectpicker" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="" data-size="7" required>
 														<option disabled selected>Selecciona un desarrollo</option></select>
 													</div>
 													<div class="form-group"></div>
@@ -159,16 +147,12 @@
 				</div>
 			</div>
 		</div>
-		<!-- END Modals -->
-
 		<div class="content boxContent">
 			<div class="container-fluid">
 				<div class="row">
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 						<div class="card">
-							<div class="card-header card-header-icon fa-2x" data-background-color="goldMaderas">
-								<i class="fas fa-box"></i>
-							</div>
+							<div class="card-header card-header-icon fa-2x" data-background-color="goldMaderas"><i class="fas fa-box"></i></div>
 							<div class="card-content">
 								<h3 class="card-title center-align">Inventario de lotes</h3>
 								<div class="toolbar">
@@ -195,19 +179,19 @@
 													<th>CONDOMINIO</th>
 													<th>LOTE</th>
 													<th>ID LOTE</th>
-													<th>SUP.</th>
+													<th>SUPERFICIE</th>
 													<th>TOTAL</th>
 													<th>TOTAL DESCUENTO</th>
-													<th>M2</th>
+													<th>PRECIO M<sup>2</sup></th>
 													<th>REFERENCIA</th>
-													<th>MSI</th>
-													<th>GERENTE</th>
-													<th>COORDINADOR</th>
+													<th>MESES SIN INTERESES</th>
 													<th>ASESOR</th>
+													<th>COORDINADOR</th>
+													<th>GERENTE</th>
 													<th>ESTATUS</th>
 													<th>APARTADO</th>
 													<th>COMENTARIO</th>
-													<th>LUGAR PROSPECCIÓN</th>
+													<th>LUGAR DE PROSPECCIÓN</th>
 													<th></th>
 												</tr>
 											</thead>
@@ -222,7 +206,7 @@
 		</div>
 		<?php $this->load->view('template/footer_legend');?>
 	</div>
-	</div><!--main-panel close-->
+	</div>
 	<?php $this->load->view('template/footer');?>
 	<script src="<?= base_url() ?>dist/js/controllers/contratacion/inventarioByLote.js"></script>
 </body>
