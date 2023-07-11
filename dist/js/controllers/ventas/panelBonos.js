@@ -180,9 +180,9 @@ $("#tabla_prestamos").ready(function() {
             "data": function(d) {
 
                 if (d.estado == 1) {
-                    return  '<div class="d-flex justify-center"><button class="btn btn-success btn-round btn-fab btn-fab-mini abonar" value="' + d.id_pago_bono + ',' + d.abono + '" data-toggle="tooltip" data-placement="top" title="AUTORIZAR"><i class="material-icons "   >done</i></button>' +
-                    '<button class="btn btn-default btn-round btn-fab btn-fab-mini consulta_abonos" value="' + d.id_pago_bono + ','+d.nombre+'  "  data-impuesto="'+d.impuesto1+'" data-toggle="tooltip" data-placement="top" title="HISTORIAL" ><i class="material-icons" >bar_chart</i></button></div>';
-                            }
+                    return  '<div class="d-flex justify-center"><button class="btn-data btn-green abonar" value="' + d.id_pago_bono + ',' + d.abono + '" data-toggle="tooltip" data-placement="top" title="AUTORIZAR"><i class="material-icons "   >done</i></button>' +
+                    '<button class="btn-data btn-gray consulta_abonos" value="' + d.id_pago_bono + ','+d.nombre+'  "  data-impuesto="'+d.impuesto1+'" data-toggle="tooltip" data-placement="top" title="HISTORIAL" ><i class="material-icons" >bar_chart</i></button></div>';
+                }
             }
         }],
         ajax: {
@@ -663,7 +663,7 @@ $("#tabla_bono_pagado").ready(function() {
             "orderable": false,
             "data": function(d) {
                 if (d.estado == 4) {
-                    return '<div class="d-flex justify-center"><button class="btn btn-default btn-round btn-fab btn-fab-mini consulta_abonos" value="' + d.id_pago_bono + ','+d.nombre+ ' " data-impuesto="'+d.impuesto1+'" data-toggle="tooltip" data-placement="top" title="HISTORIAL" ><i class="material-icons">bar_chart</i></button></div>';
+                    return '<div class="d-flex justify-center"><button class="btn-data btn-gray consulta_abonos" value="' + d.id_pago_bono + ','+d.nombre+ ' " data-impuesto="'+d.impuesto1+'" data-toggle="tooltip" data-placement="top" title="HISTORIAL" ><i class="material-icons">bar_chart</i></button></div>';
                 }
             }
         }],
