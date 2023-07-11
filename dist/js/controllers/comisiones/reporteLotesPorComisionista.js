@@ -231,22 +231,22 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
                     if (d.rec == 8 && d.comisionTotal == '0.0')
                         return '-';
                     else
-                        return '$' + formatMoney(d.pagoCliente);
+                        return formatMoney(d.pagoCliente);
                 }
             },
             {
                 data: function (d) {
-                    return '$' + formatMoney(d.comisionTotal);
+                    return formatMoney(d.comisionTotal);
                 }
             },
             {
                 data: function (d) {
-                    return '$' + formatMoney(d.abonoDispersado);
+                    return formatMoney(d.abonoDispersado);
                 }
             },
             {
                 data: function (d) {
-                    return '$' + formatMoney(d.abonoPagado);
+                    return formatMoney(d.abonoPagado);
                 }
             },
             { data: 'lugar_prospeccion' }
