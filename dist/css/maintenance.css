@@ -1511,7 +1511,6 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
 /* CHANGE ICONO*/
 .wrapper p {
   white-space: nowrap;
-  overflow: hidden;
   text-overflow: ellipsis;
 }
 
