@@ -35,6 +35,14 @@ const ESTATUS_AUTORIZACION = Object.freeze({
 });
 const STATUS_CONTRATACION = 1;
 
+$('body').tooltip({
+    selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
+    trigger: 'hover',
+    container: 'body'
+}).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
+    $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
+});
+
 $('#tabla_deposito_seriedad thead tr:eq(0) th').each(function (i) {
     const title = $(this).text();
     titulos_intxt.push(title);
@@ -45,8 +53,6 @@ $('#tabla_deposito_seriedad thead tr:eq(0) th').each(function (i) {
             $('#tabla_deposito_seriedad').DataTable().column(i).search(this.value).draw();
         }
     });
-
-    $('[data-toggle="tooltip"]').tooltip();
 });
 
 $(document).ready(function() {
@@ -219,10 +225,6 @@ $("#tabla_deposito_seriedad").ready( function(){
                 cache: false,
                 "data": function( d ){
                 }
-            },
-            initComplete: function () {
-                $('[data-toggle="tooltip"]').tooltip("destroy");
-                $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
             }
 
 
@@ -241,9 +243,6 @@ $("#tabla_deposito_seriedad").ready( function(){
             }
         });
         titulos_encabezado.push(title);
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
     });
 
     $(document).on('click', '.became_prospect_to_cliente', function() {
@@ -473,7 +472,7 @@ function fillDataTable(idCondominio) {
             titleAttr: 'Tus ventas',
             title:"Tus ventas",
             exportOptions: {
-                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulos_intxt[columnIdx] + ' ';
@@ -661,10 +660,10 @@ function fillDataTable(idCondominio) {
                     }
 
                     if (parseInt(d.autorizacion_correo) === 1) {
-                        return `<span class='label lbl-yellow'>Verificación pendiente</span><br><span class='label lbl-yellow'>${d.correo}</span>`;
+                        return `<span class='label lbl-yellow'>Verificación pendiente:</span></br>&nbsp;<span class='label lbl-yellow'>${d.correo}</span>`;
                     }
                     if (parseInt(d.autorizacion_correo) === 2) {
-                        return `<span class='label lbl-green'>Verificado</span><br><span class='label lbl-green'>${d.correo}</span>`;
+                        return `<span class='label lbl-green'>Verificado:</span></br>&nbsp;<span class='label lbl-green'>${d.correo}</span>`;
                     }
 
                     return '';
@@ -685,11 +684,11 @@ function fillDataTable(idCondominio) {
                     }
 
                     if (parseInt(d.autorizacion_sms) === 1) {
-                        return `<span class='label lbl-yellow'>Verificación pendiente</span><br><span class='label lbl-yellow'>${d.telefono}</span>`;
+                        return `<span class='label lbl-yellow'>Verificación pendiente:</span></br>&nbsp;<span class='label lbl-yellow'>${d.telefono}</span>`;
                     }
 
                     if (parseInt(d.autorizacion_sms) === 2) {
-                        return `<span class='label lbl-green'>Verificado</span><br><span class='label lbl-green'>${d.telefono}</span>`;
+                        return `<span class='label lbl-green'>Verificado:</span></br>&nbsp;<span class='label lbl-green'>${d.telefono}</span>`;
                     }
 
                     return '';
@@ -790,12 +789,6 @@ function fillDataTable(idCondominio) {
         }
     });
 }
-
-$('#tabla_deposito_seriedad').on('draw.dt', function() {
-    $('[data-toggle="tooltip"]').tooltip({
-        trigger: "hover"
-    });
-});
 
 $(document).on('click', '#save1', function(e) {
     e.preventDefault();
