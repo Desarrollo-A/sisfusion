@@ -81,7 +81,6 @@ class Cobranza extends CI_Controller
         $endDate = $_POST['endDate'];
         $sede = $_POST['sede'];
         $data =$this->Cobranza_model->getDetails($id, $checks, $beginDate, $endDate, $sede)->result_array();
-
         echo json_encode($data);
     }
     public function setControversy(){

@@ -39,12 +39,6 @@ $('#all_users_datatable thead tr:eq(0) th').each(function (i) {
         }
     });
 
-$('#all_users_datatable').on('draw.dt', function() {
-    $('[data-toggle="tooltip"]').tooltip({
-        trigger: "hover"
-    });
-});
-
 function fillUsersTable() {
     $allUsersTable = $('#all_users_datatable').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -218,6 +212,12 @@ function fillUsersTable() {
         $allUsersTable.columns(arrayNOView).visible(false);
     }
 }
+
+$('#all_users_datatable').on('draw.dt', function() {
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
+    });
+});
 
 function showPassword() {
     if ($("#contrasena").attr("type") == "password") $("#contrasena").attr("type", "text");

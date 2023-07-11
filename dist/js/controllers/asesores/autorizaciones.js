@@ -29,7 +29,7 @@ $("#my_authorization_form").on('submit', function(e){
 
         },
         success: function(data) {
-            if (data == 1) {
+            if (data == 'true') {
                 $('#btnSubmit').prop('disabled', false);
                 $('#btnSubmit').css("opacity","1");
                 $('#solicitarAutorizacion').modal("hide");

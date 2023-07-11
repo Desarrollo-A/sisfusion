@@ -299,7 +299,6 @@ $(document).on("click", ".ver_historial", function(){
     idLote = $(this).val();
     var $itself = $(this);
     var element = document.getElementById("li_individual_sales");
-
     if ($itself.attr('data-tipo-venta') == 'Venta de particulares') {
         $.getJSON(general_base_url + "Contratacion/getClauses/"+idLote).done( function( data ){
             $('#clauses_content').html(data[0]['nombre']);
@@ -316,20 +315,19 @@ $(document).on("click", ".ver_historial", function(){
         $("#changelog").html("");
         $('#nomLoteHistorial').html("");
     });
+
     $("#seeInformationModal").modal();
     var urlTableFred = '';
     $.getJSON(general_base_url+"Contratacion/obtener_liberacion/"+idLote).done( function( data ){
         urlTableFred = general_base_url+"Contratacion/obtener_liberacion/"+idLote;
         fillFreedom(urlTableFred);
     });
-
     var urlTableHist = '';
     $.getJSON(general_base_url+"Contratacion/historialProcesoLoteOp/"+idLote).done( function( data ){
         $('#nomLoteHistorial').html($itself.attr('data-nomLote'));
             urlTableHist = general_base_url+"Contratacion/historialProcesoLoteOp/"+idLote;
             fillHistory(urlTableHist);
     });
-    
     var urlTableCSA = '';
     $.getJSON(general_base_url+"Contratacion/getCoSallingAdvisers/"+idLote).done( function( data ){
         urlTableCSA = general_base_url+"Contratacion/getCoSallingAdvisers/"+idLote;

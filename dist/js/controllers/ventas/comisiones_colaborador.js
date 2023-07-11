@@ -1192,6 +1192,7 @@ $("#tabla_otras_comisiones").ready(function () {
 });
 // FIN TABLA PAGADAS
 
+let titulos = [];
 $('#tabla_comisiones_sin_pago thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
     titulos.push(title);
