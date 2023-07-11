@@ -800,7 +800,7 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
     $this->email
         ->initialize()
         ->from('Ciudad Maderas')
-        ->to('programador.analista24@ciudadmaderas.com')
+        ->to('tester.ti2@ciudadmaderas.com')
         // ->to($correosEntregar)
         ->subject('EXPEDIENTE RECHAZADO-JURÍDICO (7. ELABORACIÓN DE CONTRATO)')
         ->view($this->load->view('mail/juridico/rechazo-est3', [
@@ -1047,7 +1047,7 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
     $this->email
       ->initialize()
       ->from('Ciudad Maderas')
-      ->to('programador.analista24@ciudadmaderas.com')
+      ->to('tester.ti2@ciudadmaderas.com')
       // ->to($correosEntregar)
       ->subject('EXPEDIENTE RECHAZADO-JURÍDICO (7. ELABORACIÓN DE CONTRATO)')
       ->view($this->load->view('mail/juridico/return1-jaa', [

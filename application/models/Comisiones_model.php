@@ -2122,21 +2122,11 @@ ORDER BY hc.id_log DESC");
 
 }
 
- function getCommentsDU($user){
-//     return $this->db->query("SELECT DISTINCT(hc.comentario), hc.id_pago_i, hc.id_usuario, hc.fecha_movimiento,
-// CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario
-// FROM historial_comisiones hc 
-// INNER JOIN pago_comision_ind pci ON pci.id_pago_i = hc.id_pago_i
-// INNER JOIN usuarios u ON u.id_usuario = hc.id_usuario 
-// WHERE hc.id_pago_i = $pago  
-// ORDER BY hc.fecha_movimiento DESC");
-$this->db->query("SET LANGUAGE Español;");
-return $this->db->query("SELECT pci.abono_neodata as comentario,concat(' - ',pci.comentario) comentario2, pci.id_pago_i, pci.modificado_por, 
-convert(nvarchar(20), pci.fecha_abono, 113) date_final,
-pci.fecha_abono,
-CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario
+function getCommentsDU($user){
+    return $this->db->query("SELECT pci.abono_neodata as comentario,concat(' - ',pci.comentario) comentario2, pci.id_pago_i, pci.modificado_por, convert(nvarchar(20), pci.fecha_abono, 113) date_final, pci.fecha_abono, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario
 FROM pago_comision_ind pci  
-INNER JOIN usuarios u ON u.id_usuario = pci.modificado_por 
+INNER JOIN historial_comisiones hc ON hc.id_pago_i = pci.id_pago_i and hc.comentario like '%motivo%'
+INNER JOIN usuarios u ON u.id_usuario = hc.id_usuario 
 WHERE pci.estatus = 17 AND pci.id_usuario = $user
 ORDER BY pci.fecha_abono DESC");
 

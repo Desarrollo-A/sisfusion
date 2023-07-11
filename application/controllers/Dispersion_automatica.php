@@ -27,15 +27,42 @@ class Dispersion_automatica extends CI_Controller
   public function index(){
     redirect(base_url());
   }
+  
   public function validateSession() {
     if ($this->session->userdata('id_usuario') == "" || $this->session->userdata('id_rol') == "")
       redirect(base_url() . "index.php/login");
   }
-  public function prueba(){
+
+  public function prueba  (){
+  
+    $QUERY_V = $this->db->query("SELECT MAX(idResidencial) DATA_V FROM residenciales ");
+    $DAT = $QUERY_V->row()->DATA_V;
+
+    var_dump($DAT);
+
+    // for($j = 1; $j < $DAT+1; $j++){
+    //     $datos = $this->ComisionesNeo_model->getLotesPagados($j)->result_array();
+        
+    //     if(count($datos) > 0){
+    //         $data = array();
+    //         $final_data = array();
+            
+    //     }
+    //   }
+
+    $informacion_de_dispersion = array();
+
+    // if(count($informacion_de_dispersion) > 0){
+ 
+    //   // switch (){
+
+    //   // }
+
+
+
+
+    // }
     echo ('Dispersión automatica');
-
-
-
 
   }
 

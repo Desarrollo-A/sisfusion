@@ -2076,13 +2076,13 @@
 	}
 //	fin filtro de status
 		public function historialProcesoFin($lotes){
-		$query = $this->db-> query("SELECT historial_lotes.nombreLote, historial_lotes.modificado, UPPER(CONVERT(VARCHAR,historial_lotes.comentario)) AS comentario, UPPER(movimientos.descripcion) AS descripcion,
-		(CASE WHEN (CONCAT(usuarios.nombre, ' ', usuarios.apellido_paterno, ' ', usuarios.apellido_materno)) = '' THEN historial_lotes.usuario 
-		ELSE (CONCAT(usuarios.nombre, ' ', usuarios.apellido_paterno, ' ', usuarios.apellido_materno)) END) usuario,
-		(CASE WHEN historial_lotes.perfil = '11' THEN 'administracion' WHEN historial_lotes.perfil = '13' THEN 'contraloria'
+		$query = $this->db-> query("SELECT historial_lotes.nombreLote, CONVERT(VARCHAR,historial_lotes.modificado, 20) AS modificado, UPPER(CONVERT(VARCHAR,historial_lotes.comentario)) AS comentario, UPPER(movimientos.descripcion) AS descripcion,
+		UPPER((CASE WHEN (CONCAT(usuarios.nombre, ' ', usuarios.apellido_paterno, ' ', usuarios.apellido_materno)) = '' THEN historial_lotes.usuario 
+		ELSE (CONCAT(usuarios.nombre, ' ', usuarios.apellido_paterno, ' ', usuarios.apellido_materno)) END)) usuario,
+		UPPER((CASE WHEN historial_lotes.perfil = '11' THEN 'administracion' WHEN historial_lotes.perfil = '13' THEN 'contraloria'
 		WHEN historial_lotes.perfil = '15' THEN 'juridico' WHEN historial_lotes.perfil = '32' THEN 'contraloriaCorporativa'
 		WHEN historial_lotes.perfil = '6' THEN 'asistentesGerentes' WHEN historial_lotes.perfil = '7' THEN 'asesor'
-		WHEN historial_lotes.perfil = '9' THEN 'coordinador' ELSE historial_lotes.perfil END) perfil,
+		WHEN historial_lotes.perfil = '9' THEN 'coordinador' ELSE historial_lotes.perfil END)) perfil,
 		UPPER(CASE 
 		WHEN historial_lotes.idStatusContratacion = 2 AND historial_lotes.idMovimiento = 84 THEN '2.0 Integración de Expediente (Asesor)' 
 		ELSE

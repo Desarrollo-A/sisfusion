@@ -157,48 +157,46 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="container m-1">
-                                    <div class="material-datatables">
-                                        <table class="table-striped table-hover hide" id="tablaInventario" name="tablaInventario">
-                                            <thead>
-                                                <tr>
-                                                    <th>PROYECTO</th>
-                                                    <th>CONDOMINIO</th>
-                                                    <th>LOTE</th>
-                                                    <th>ID LOTE</th>
-                                                    <th>SUPERFICIE</th>
-                                                    <th>PRECIO DE LISTA</th>
-                                                    <th>TOTAL CON DESCUENTOS</th>
-                                                    <th>M2</th>
-                                                    <th>REFERENCIA</th>
-                                                    <th>MSI</th>
-                                                    <th>ASESOR</th>
-                                                    <th>COORDINADOR</th>
-                                                    <th>GERENTE</th>
-                                                    <th>SUBDIRECTOR</th>
-                                                    <th>DIRECTOR REGIONAL</th>
-                                                    <th>DIRECTOR REGIONAL 2</th>
-                                                    <th>ESTATUS</th>
-                                                    <th>ESTATUS DE CONTRATACIÓN</th>
-                                                    <th>APARTADO</th>
-                                                    <th>COMENTARIO</th>
-                                                    <th>LUGAR DE PROSPECCIÓN</th>
-                                                    <th>FECHA DE VALIDACIÓN ENGANCHE</th>
-                                                    <th>CANTIDAD DE ENGANCHE PAGADO</th>
-                                                    <th>ESTATUS DE LA CONTRATACIÓN</th>
-                                                    <th>CLIENTE</th>
-                                                    <th>COPROPIETARIO (S)</th>
-                                                    <th>COMENTARIO DE NEODATA</th>
-                                                    <th>FECHA DE APERTURA</th>
-                                                    <th>APARTADO DE REUBICACIÓN</th>
-                                                    <th>FECHA DE ALTA</th>
-                                                    <th>VENTA COMPARTIDA</th>
-                                                    <th>UBICACIÓN DE LA VENTA</th>
-                                                    <th>ACCIONES</th>
-                                                </tr>
-                                            </thead>
-                                        </table>
-                                    </div>
+                                <div class="material-datatables">
+                                    <table class="table-striped table-hover hide" id="tablaInventario" name="tablaInventario">
+                                        <thead>
+                                            <tr>
+                                                <th>PROYECTO</th>
+                                                <th>CONDOMINIO</th>
+                                                <th>LOTE</th>
+                                                <th>ID LOTE</th>
+                                                <th>SUPERFICIE</th>
+                                                <th>PRECIO DE LISTA</th>
+                                                <th>TOTAL CON DESCUENTOS</th>
+                                                <th>M2</th>
+                                                <th>REFERENCIA</th>
+                                                <th>MSI</th>
+                                                <th>ASESOR</th>
+                                                <th>COORDINADOR</th>
+                                                <th>GERENTE</th>
+                                                <th>SUBDIRECTOR</th>
+                                                <th>DIRECTOR REGIONAL</th>
+                                                <th>DIRECTOR REGIONAL 2</th>
+                                                <th>ESTATUS</th>
+                                                <th>ESTATUS DE CONTRATACIÓN</th>
+                                                <th>APARTADO</th>
+                                                <th>COMENTARIO</th>
+                                                <th>LUGAR DE PROSPECCIÓN</th>
+                                                <th>FECHA DE VALIDACIÓN ENGANCHE</th>
+                                                <th>CANTIDAD DE ENGANCHE PAGADO</th>
+                                                <th>ESTATUS DE LA CONTRATACIÓN</th>
+                                                <th>CLIENTE</th>
+                                                <th>COPROPIETARIO (S)</th>
+                                                <th>COMENTARIO DE NEODATA</th>
+                                                <th>FECHA DE APERTURA</th>
+                                                <th>APARTADO DE REUBICACIÓN</th>
+                                                <th>FECHA DE ALTA</th>
+                                                <th>VENTA COMPARTIDA</th>
+                                                <th>UBICACIÓN DE LA VENTA</th>
+                                                <th>ACCIONES</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
                                 </div>
                             </div>
                         </div>

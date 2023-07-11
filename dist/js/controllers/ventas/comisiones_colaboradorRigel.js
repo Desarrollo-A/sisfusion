@@ -1862,6 +1862,7 @@ function save2() {
                 alert("LA FACTURA SE SUBIO CORRECTAMENTE");
                 $("#modal_multiples").modal('toggle');
                 tabla_nuevas.ajax.reload();
+                tabla_revision.ajax.reload();
                 $("#modal_multiples .modal-body").html("");
                 $("#modal_multiples .header").html("");
             } else if(data.resultado == 3){

@@ -87,7 +87,6 @@
     </div>
 </body>
 <?php $this->load->view('template/footer'); ?>
-<!--DATATABLE BUTTONS DATA EXPORT-->
 <script src="<?= base_url() ?>dist/js/controllers/mktd-1.1.0.js"></script>
 <script src="<?= base_url() ?>dist/js/es.js"></script>
 <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>

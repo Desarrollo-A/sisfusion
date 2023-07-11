@@ -11,7 +11,7 @@
 					<div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
 						<div class="card">
 							<div class="card-header card-header-icon" data-background-color="goldMaderas">
-							<i class="fas fa-bookmark fa-2x"></i>
+								<i class="fas fa-bookmark fa-2x"></i>
                             </div>
 							<div class="card-content">
 								<h3 class="card-title center-align" id="showDate">Contratos recibidos</h3>
@@ -60,8 +60,7 @@
 			</div>
 			<?php $this->load->view('template/footer_legend');?>
 		</div>
-	</div><!--main-panel close-->
-
+	</div>
 	<?php $this->load->view('template/footer');?>
 	<!--DATATABLE BUTTONS DATA EXPORT-->
 	<script src="<?= base_url() ?>dist/js/modal-steps.min.js"></script>

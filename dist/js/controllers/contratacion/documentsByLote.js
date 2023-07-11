@@ -61,7 +61,6 @@ $(document).ready (function() {
                 }],
                 columns:
                     [
-
                         {data: 'nombreResidencial'},
                         {data: 'nombre'},
                         {data: 'nombreLote'},

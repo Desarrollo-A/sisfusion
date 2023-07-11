@@ -12,7 +12,7 @@ $(document).ready(function () {
 
     $.post('getDisponibleResguardoP/' + id_usuario_general, function(data) {
         document.getElementById('totalResguardo').textContent = '';
-        let disponible = '$'+formatMoney(data);
+        let disponible = formatMoney(data);
         document.getElementById('totalResguardo').textContent = disponible;
         total67 = data;
     }, 'json');
@@ -32,11 +32,11 @@ $(document).ready(function () {
             }
         });
         let to = 0;
-        to = '$'+formatMoney(total);
+        to = formatMoney(total);
         document.getElementById("totalAplicados").textContent = to;
 
         let extra = 0;
-        extra = '$'+formatMoney(sumaExtras);
+        extra = formatMoney(sumaExtras);
         document.getElementById("totalExtras").textContent = extra;
     });
 
@@ -101,7 +101,7 @@ $(document).ready(function () {
             {data: 'id_rc'},
             {data: 'usuario'},
             { data: function (d) {
-                return '<b>$'+formatMoney(d.monto)+'</b>';
+                return '<b>'+formatMoney(d.monto)+'</b>';
             }},
             {data: 'conceptos'},
             { data: function (d) {

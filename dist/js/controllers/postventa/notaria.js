@@ -2,22 +2,22 @@ $(document).ready(function(){
   $.post("../Postventa/listSedes", function (data) {
     var len = data.length;
     for (var i = 0; i < len; i++) {
-        var id = data[i]['id_sede'];
-        var name = data[i]['nombre'];
-        $("#sede").append($('<option>').val(id).text(name.toUpperCase()));
+      var id = data[i]['id_sede'];
+      var name = data[i]['nombre'];
+      $("#sede").append($('<option>').val(id).text(name.toUpperCase()));
     }
     $("#sede").selectpicker('refresh');
   }, 'json');
 });
 
 $('#notaria-datatable thead tr:eq(0) th').each( function (i) {
-    var title = $(this).text();
-    $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>' );
-    $( 'input', this ).on('keyup change', function () {
-        if ($('#notaria-datatable').DataTable().column(i).search() !== this.value ) {
-            $('#notaria-datatable').DataTable().column(i).search(this.value).draw();
-        }
-    });
+  var title = $(this).text();
+  $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>' );
+  $( 'input', this ).on('keyup change', function () {
+    if ($('#notaria-datatable').DataTable().column(i).search() !== this.value ) {
+      $('#notaria-datatable').DataTable().column(i).search(this.value).draw();
+    }
+  });
 });
 
 prospectsTable = $('#notaria-datatable').DataTable({
@@ -27,11 +27,11 @@ prospectsTable = $('#notaria-datatable').DataTable({
     pagingType: "full_numbers",
     pageLength: 12,
     language: {
-        url: "../static/spanishLoader_v2.json",
-        paginate: {
-            previous: "<i class='fa fa-angle-left'>",
-            next: "<i class='fa fa-angle-right'>"
-        }
+      url: "../static/spanishLoader_v2.json",
+      paginate: {
+        previous: "<i class='fa fa-angle-left'>",
+        next: "<i class='fa fa-angle-right'>"
+      }
     },
     destroy: true,
     ordering: false,
@@ -97,16 +97,16 @@ prospectsTable = $('#notaria-datatable').DataTable({
 
 $('#notaria-datatable').on('draw.dt', function() {
   $('[data-toggle="tooltip"]').tooltip({
-      trigger: "hover"
+    trigger: "hover"
   });
 });
 
-      // Funcionalidad para eliminar las notarias
+// Funcionalidad para eliminar las notarias
 $("#notaria-datatable tbody").on("click", ".btn-delete", function(){    
-    id = $(this).val();
-    $("#modal-delete .modal-body").html('');
-    $("#modal-delete .modal-body").append(`<div id="borrarBono"><form id="form-delete"><center><p style='color:#9D9D9D;'><b>¿Está seguro de eliminar este usuario?</b><br>Se eliminara el registro.</p></center><input type="hidden" id="idNotaria" name="idNotaria" value="${id}"><button class="btn btn-danger btn-simple" style="margin: 15px;" data-dismiss="modal">Cerrar</button><input type="submit"  class="btn btn-primary" value="Aceptar"></form></div>`);
-    $('#modal-delete').modal('show');
+  id = $(this).val();
+  $("#modal-delete .modal-body").html('');
+  $("#modal-delete .modal-body").append(`<div id="borrarBono"><form id="form-delete"><center><p style='color:#9D9D9D;'><b>¿Está seguro de eliminar este usuario?</b><br>Se eliminara el registro.</p></center><input type="hidden" id="idNotaria" name="idNotaria" value="${id}"><button class="btn btn-danger btn-simple" style="margin: 15px;" data-dismiss="modal">Cerrar</button><input type="submit"  class="btn btn-primary" value="Aceptar"></form></div>`);
+  $('#modal-delete').modal('show');
 });
 
 function CloseModalDelete2(){
@@ -150,7 +150,7 @@ $(document).on('submit','#form-delete', function(e){
   });
 });
 
-  //   Funciones para crear un nuevo notario
+//   Funciones para crear un nuevo notario
 $("#form_notario").on('submit', function(e){
   e.preventDefault();
   var formData = new FormData(document.getElementById("form_notario"));
@@ -166,7 +166,6 @@ $("#form_notario").on('submit', function(e){
         closeModalRegisto();
         $('#notaria-datatable').DataTable().ajax.reload(null, false);
         alerts.showNotification("top", "right", "Notaría registrada con exito.", "success");
-        // document.getElementById("form_abono").reset(); 
       }
       else if(data == 2) {
         $('#notaria-datatable').DataTable().ajax.reload(null, false);

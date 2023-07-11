@@ -17,17 +17,19 @@ class Administracion_model extends CI_Model {
         concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
         concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
-		cond.idCondominio, cl.expediente, mo.descripcion, se.nombre nombreSede
-	    FROM lotes l
+        cond.idCondominio, cl.expediente, mo.descripcion, se.nombre nombreSede, hl.modificado ultimaFechaEstatus7
+        FROM lotes l
         INNER JOIN clientes cl ON l.idLote=cl.idLote
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
         INNER JOIN movimientos mo ON mo.idMovimiento = l.idMovimiento
-		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
-		LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
-		LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
+        LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
+        LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
+        LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
         INNER JOIN sedes se ON se.id_sede = l.ubicacion
-	    LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
+        LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
+        LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes 
+        WHERE idStatusContratacion IN (7, 8) AND idMovimiento IN (37, 7, 64, 77, 67) AND status = 1 GROUP BY idLote, idCliente) hl ON hl.idLote = l.idLote AND hl.idCliente = l.idCliente
         WHERE ((l.idStatusContratacion IN (8, 10) AND l.idMovimiento IN (40, 10, 67) AND (l.validacionEnganche = 'NULL' OR l.validacionEnganche IS NULL)) OR
         (l.idStatusContratacion = 12 AND l.idMovimiento = 42 AND (l.validacionEnganche = 'NULL' OR l.validacionEnganche IS NULL)) OR
         (l.idStatusContratacion IN (7) AND l.idMovimiento IN (37, 7, 64, 77) AND (l.validacionEnganche = 'NULL' OR l.validacionEnganche IS NULL)) OR
@@ -40,10 +42,10 @@ class Administracion_model extends CI_Model {
         concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
         concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-        cond.idCondominio, cl.expediente, mo.descripcion, se.nombre
+        cond.idCondominio, cl.expediente, mo.descripcion, se.nombre, hl.modificado
         ORDER BY l.nombreLote");
-		return $query->result();
-	}
+        return $query->result();
+    }
 
     public function get_datos_admon($condominio){
     	return $this->db->query("SELECT lot.idCliente, lot.nombreLote, con.nombre as nombreCondominio, res.nombreResidencial, lot.idStatusLote, lot.comentarioLiberacion, lot.fechaLiberacion, 
