@@ -1235,9 +1235,6 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
     let dayPE = (newDateEnd.getDate()<10) ? '0'+ newDateEnd.getDate() : newDateEnd.getDate();
     endDate = dayPE+'-'+monthPE+'-'+yearPE;
 
-    console.log(beginDate);
-    console.log(endDate);
-
     prospectsTables = $('#tablePR').dataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',

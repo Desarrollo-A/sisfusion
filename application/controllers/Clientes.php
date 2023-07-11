@@ -1861,8 +1861,8 @@ public function getStatusMktdPreventa(){
     public function getProspectsListByAsesor($id_asesor)
     {
         $typeTransaction = $this->input->post("typeTransaction");
-        $fechaInicio = explode('/', $this->input->post("beginDate"));
-        $fechaFin = explode('/', $this->input->post("endDate"));
+        $fechaInicio = explode('-', $this->input->post("beginDate"));
+        $fechaFin = explode('-', $this->input->post("endDate"));
         $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
         $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
         $where = $this->input->post("where");
