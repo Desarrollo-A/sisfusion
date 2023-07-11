@@ -50,16 +50,16 @@
                                     <div class="form-group">
                                         <table id="tableTerrenos" class="table-striped table-hover">
                                             <thead>
-                                            <tr>
-                                                <th>PROYECTO</th>
-                                                <th>CONDOMINIO</th>
-                                                <th>LOTE</th>
-                                                <th>SUPERFICIE</th>
-                                                <th>TOTAL</th>
-                                                <th>ENGANCHE</th>
-                                                <th>A FINANCIAR</th>
-                                                <th>MESES S/I</th>
-                                            </tr>
+                                                <tr>
+                                                    <th>PROYECTO</th>
+                                                    <th>CONDOMINIO</th>
+                                                    <th>LOTE</th>
+                                                    <th>SUPERFICIE</th>
+                                                    <th>TOTAL</th>
+                                                    <th>ENGANCHE</th>
+                                                    <th>A FINANCIAR</th>
+                                                    <th>MESES S/I</th>
+                                                </tr>
                                             </thead>
                                             <tbody>
                                             </tbody>
