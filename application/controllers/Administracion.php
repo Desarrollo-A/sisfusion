@@ -106,7 +106,7 @@ class Administracion extends CI_Controller{
                         $d = end($arregloFechas);
                         $dataPer[$i]['fechaVenc2'] = $d;
                     } else {
-                        $fecha = $fechaAccion;
+                        $fecha = $ultimaFechaEstatus7; // ANTES fechaAccion
                         $z = 0;
                         while ($z <= 0) {
                             $hoy_strtotime = strtotime($fecha);
