@@ -4,13 +4,11 @@
 <body>
 	<div class="wrapper">
 		<?php $this->load->view('template/sidebar'); ?>
-
-		<!-- Modals -->
 		<div class="modal fade" id="verDetalles" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-body">
-							<b><h4 class="card-title text-center">Ventas compartidas</h4></b>
+						<b><h4 class="card-title text-center">Ventas compartidas</h4></b>
 						<table id="verDet" class="table-striped table-hover">
 							<thead>
 								<tr>
@@ -34,7 +32,6 @@
 				</div>
 			</div>
 		</div>
-		<!-- END Modals -->
 
 		<div class="content boxContent">
 			<div class="container-fluid">
@@ -97,7 +94,7 @@
 													<th>CONDOMINIO</th>
 													<th>LOTE</th>
 													<th>CLIENTE</th>
-													<th>NO. RECIBO</th>
+													<th>NUMERO DE RECIBO</th>
 													<th>TIPO DE PAGO</th>
 													<th>FECHA DE APARTADO</th>
 													<th>ENGANCHE</th>
@@ -111,7 +108,6 @@
 								</div>
 							</div>
 						</div>
-
 					</div>
 				</div>
 			</div>
@@ -120,22 +116,9 @@
 	</div>
 	</div><!--main-panel close-->
 	<?php $this->load->view('template/footer'); ?>
-	<!--DATATABLE BUTTONS DATA EXPORT-->
-	<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 	<script src="<?= base_url() ?>dist/js/modal-steps.min.js"></script>
-	<!-- MODAL WIZARD -->
-	<?php
-		if ($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 5) {
-	?>
+	<?php if ($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 5) { ?>
 		<script src="<?= base_url() ?>dist/js/controllers/general-1.1.0.js"></script>
-	<?php
-		}
-	?>
+	<?php } ?>
 	<script src="<?=base_url()?>dist/js/controllers/clientes/lista_cliente_sdmktd.js"></script>
 </body>

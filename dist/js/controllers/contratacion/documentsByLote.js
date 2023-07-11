@@ -1,16 +1,16 @@
 let titulos_intxt = [];
 $(document).ready (function() {
-        $('#tableDoct thead tr:eq(0) th').each( function (i) {
-            $(this).css('text-align', 'center');
-            var title = $(this).text();
-            titulos_intxt.push(title);
-            $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
-            $( 'input', this ).on('keyup change', function () {
-                if ($('#tableDoct').DataTable().column(i).search() !== this.value ) {
-                    $('#tableDoct').DataTable().column(i).search(this.value).draw();
-                }
-            });
+    $('#tableDoct thead tr:eq(0) th').each( function (i) {
+        $(this).css('text-align', 'center');
+        var title = $(this).text();
+        titulos_intxt.push(title);
+        $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
+        $( 'input', this ).on('keyup change', function () {
+            if ($('#tableDoct').DataTable().column(i).search() !== this.value ) {
+                $('#tableDoct').DataTable().column(i).search(this.value).draw();
+            }
         });
+    });
 
     $(".find_doc").click( function() {
         $('#tableDoct').removeClass('hide');
@@ -61,7 +61,6 @@ $(document).ready (function() {
                 }],
                 columns:
                     [
-
                         {data: 'nombreResidencial'},
                         {data: 'nombre'},
                         {data: 'nombreLote'},
@@ -245,7 +244,6 @@ $(document).on('click', '.verProspectos', function () {
         title:      "Visualizando Prospecto: " + $itself.attr('data-nombreProspecto'),
         width:      985,
         height:     660
-
     });
 });
 
@@ -253,7 +251,6 @@ $(document).on('click', '.verProspectos', function () {
 $(document).on('click', '.verEVMKTD', function () {
     var $itself = $(this);
     var cntShow = '';
-
     if(checaTipo($itself.attr('data-expediente')) == "pdf")
     {
         cntShow = '<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="'+ general_base_url +'static/documentos/evidencia_mktd/'+$itself.attr('data-expediente')+'" allowfullscreen></iframe></div>';
@@ -273,7 +270,7 @@ $(document).on('click', '.verEVMKTD', function () {
 function checaTipo(archivo)
 {
     archivo.split('.').pop();
-        return validaFile;
+    return validaFile;
 }
 
 $(document).on('click', '.seeAuts', function (e) {
@@ -306,10 +303,7 @@ $(document).on('click', '.seeAuts', function (e) {
             }
             $('#auts-loads').append('<h4>Solicitud de autorización:  '+statusProceso+'</h4><br>');
             $('#auts-loads').append('<h4>Autoriza: '+item['nombreAUT']+'</h4><br>');
-            $('#auts-loads').append('<p style="text-align: justify;"><i>'+item['autorizacion']+'</i></p>' +
-                '<br><hr>');
-
-
+            $('#auts-loads').append('<p style="text-align: justify;"><i>'+item['autorizacion']+'</i></p>' +'<br><hr>');
         });
         $('#verAutorizacionesAsesor').modal('show');
     });
