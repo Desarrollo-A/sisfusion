@@ -13,6 +13,8 @@ const rolesPermitidosCartaDomicilio = [5, 2, 6];
 const movimientosPermitidosEstatus2 = [31, 85, 20, 63, 73, 82, 92, 96, 99, 102, 104, 107, 108, 109, 111];
 const rolesPermitidosEstatus2 = [7, 9, 3, 2];
 
+const rolesPermitidosEstatus2AsesorInactivo = [6];
+
 const AccionDoc = {
     DOC_NO_CARGADO: 1, // NO HAY DOCUMENTO CARGADO
     DOC_CARGADO: 2, // LA RAMA TIENE UN DOCUMENTO CARGADO
@@ -323,6 +325,29 @@ $('#idLote').change(function () {
                         buttonMain = crearBotonAccion(AccionDoc.DOC_CARGADO, data); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
 
                         return `<div class="d-flex justify-center">${buttonMain}</div>`;
+                    }
+
+                    // EL ASESOR ESTÁ INACTIVO Y EL ROL DE
+                    if (data.estatusAsesor != 1) {
+                        if (data.expediente == null || data.expediente === "") {
+                            buttonMain = (
+                                includesArray(movimientosPermitidosEstatus2, parseInt(data.idMovimiento)) &&
+                                includesArray(rolesPermitidosEstatus2AsesorInactivo, parseInt(id_rol_general))
+                            )
+                                ? crearBotonAccion(AccionDoc.SUBIR_DOC, data)
+                                : crearBotonAccion(AccionDoc.DOC_NO_CARGADO, data);
+
+                            return `<div class="d-flex justify-center">${buttonMain}</div>`;
+                        }
+
+                        // LA RAMA TIENE UN DOCUMENTO CARGADO
+                        buttonMain = crearBotonAccion(AccionDoc.DOC_CARGADO, data); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
+
+                        if (includesArray(movimientosPermitidosEstatus2, data.idMovimiento) && includesArray(rolesPermitidosEstatus2AsesorInactivo, id_rol_general)) {
+                            buttonDelete  = crearBotonAccion(AccionDoc.ELIMINAR_DOC, data);
+                        }
+
+                        return `<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`;
                     }
 
                     // ES EL RESTO DEL EXPEDIENTE (HISTORIAL DOCUMENTOS)
