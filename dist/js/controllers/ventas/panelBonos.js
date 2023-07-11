@@ -267,7 +267,8 @@ $("#tabla_prestamos").ready(function() {
             </div>`);
 
             for (let index = 0; index < data.length; index++) {
-                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><b style="color:#896597">'+data[index].fecha_movimiento+'</b><b style="color:gray;"> - '+data[index].nombre_usuario+'</b><br><i style="color:gray;">'+data[index].comentario+'</i></p><br></div>');   
+                let fechaComentario = data[index].fecha_movimiento.split('.')[0];
+                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><b style="color:#896597">'+fechaComentario+'</b><b style="color:gray;"> - '+data[index].nombre_usuario+'</b><br><i style="color:gray;">'+data[index].comentario+'</i></p><br></div>');   
             }
             $('#spiner-loader').addClass('hide');
             $("#modal_bonos").modal();
@@ -523,7 +524,8 @@ $("#tabla_bono_revision").ready(function() {
             </div>`);
 
             for (let index = 0; index < data.length; index++) {
-                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><b style="color:#896597">'+data[index].fecha_movimiento+'</b><b style="color:gray;"> - '+data[index].nombre_usuario+'</b><br><i style="color:gray;">'+data[index].comentario+'</i></p><br></div>');  
+                let fechaComentario = data[index].fecha_movimiento.split('.')[0];
+                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><b style="color:#896597">'+fechaComentario+'</b><b style="color:gray;"> - '+data[index].nombre_usuario+'</b><br><i style="color:gray;">'+data[index].comentario+'</i></p><br></div>');  
             }
 
             $("#modal_bonos").modal();   
@@ -712,6 +714,7 @@ $("#tabla_bono_pagado").ready(function() {
             $("#modal_bonos .modal-body").html("");
             $("#modal_bonos .modal-footer").html("");
 
+            let fechaComentario = data[0].fecha_movimiento.split('.')[0];
             let estatus = '';
             let color='';
             
@@ -724,7 +727,7 @@ $("#tabla_bono_pagado").ready(function() {
             </div>`);
             $("#modal_bonos .modal-body").append(`<div class="col-md-3"><h6>PARA: <b>${nombre}</b></h6></div>
             <div class="col-md-3"><h6>Abono: <b style="color:green;">$${formatMoney(impuesto)}</b></h6></div>
-            <div class="col-md-3"><h6>Fecha: <b>${data[0].fecha_movimiento}</b></h6></div>
+            <div class="col-md-3"><h6>Fecha: <b>${fechaComentario}</b></h6></div>
             <br><div class="col-md-3"><span class="label lbl-green">${estatus}</span></h6></div>
             </div>  `);
 
@@ -918,7 +921,7 @@ $("#tabla_bono_otros").ready(function() {
             $("#modal_bonos .modal-header").html("");
             $("#modal_bonos .modal-body").html("");
             $("#modal_bonos .modal-footer").html("");
-
+            let fechaComentario = data[0].fecha_movimiento.split('.')[0];
             let estatus = '';
             let color='';
             color='RED';
@@ -930,7 +933,7 @@ $("#tabla_bono_otros").ready(function() {
             </div>`);
             $("#modal_bonos .modal-body").append(`<div class="row"><div class="col-md-3"><h6>PARA: <b>${nombre}</b></h6></div>
             <div class="col-md-3"><h6>Abono: <b style="color:green;">$${formatMoney(impuesto)}</b></h6></div>
-            <div class="col-md-3"><h6>Fecha: <b>${data[0].fecha_movimiento}</b></h6></div>
+            <div class="col-md-3"><h6>Fecha: <b>${fechaComentario}</b></h6></div>
             <br><div class="col-md-3"><span class="label lbl-warning" >${estatus}</span></h6></div>
             </div>`);
 
