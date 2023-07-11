@@ -12,7 +12,7 @@
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
 					<h4 class="modal-title">Subir archivo de autorización.</h4>
 				</div>
-				<form method="post" action="<?= base_url() ?>index.php/registroCliente/alta_autorizacionVentas/" enctype="multipart/form-data" name="status">
+				<form method="post" id="envioAutorizacion" name="envioAutorizacion" enctype="multipart/form-data">
 					<input type="hidden" name="idCliente" id="idCliente">
 					<input type="hidden" name="idClienteHistorial" id="idClienteHistorial">
 					<input type="hidden" name="idLoteHistorial" id="idLoteHistorial">
@@ -25,7 +25,7 @@
 					</div>
 					<div class="modal-footer"><br><br>
        					<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-       					<button class="btn btn-primary btn-fillbtn-fill">Guardar</button>
+       					<button class="btn btn-primary" type="submit">Guardar</button>
 					</div>
 				</form>
 			</div>
