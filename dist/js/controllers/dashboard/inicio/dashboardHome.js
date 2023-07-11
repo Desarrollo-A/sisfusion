@@ -1225,7 +1225,7 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
     let monthP = ((newDate.getMonth()+1)<10) ? '0'+(newDate.getMonth()+1) : (newDate.getMonth()+1);
     let dayP = (newDate.getDate()<10) ? '0'+ newDate.getDate() : newDate.getDate();
 
-    beginDate = yearP+'-'+monthP+'-'+dayP;
+    beginDate = dayP+'-'+monthP+'-'+yearP;
 
     let oldDateend = endDate.split('/');
     let newDateEnd = new Date(oldDateend[1]+'-'+oldDateend[0]+'-'+oldDateend[2]).toISOString();
@@ -1233,7 +1233,7 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
     let yearPE = newDateEnd.getFullYear();
     let monthPE = ((newDateEnd.getMonth()+1)<10) ? '0'+(newDateEnd.getMonth()+1) : (newDateEnd.getMonth()+1);
     let dayPE = (newDateEnd.getDate()<10) ? '0'+ newDateEnd.getDate() : newDateEnd.getDate();
-    endDate = yearPE+'-'+monthPE+'-'+dayPE;
+    endDate = dayPE+'-'+monthPE+'-'+yearPE;
 
     console.log(beginDate);
     console.log(endDate);
