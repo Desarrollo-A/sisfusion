@@ -234,7 +234,7 @@ class Contratacion_model extends CI_Model {
       CONCAT(asesor2.nombre,' ', asesor2.apellido_paterno, ' ', asesor2.apellido_materno) as asesor2,
       CONCAT(asesor2.nombre,' ', asesor2.apellido_paterno, ' ', asesor2.apellido_materno) as coordinador2,
       CONCAT(coordinador2.nombre,' ', coordinador2.apellido_paterno, ' ', coordinador2.apellido_materno) as gerente2,
-      lot.precio, ISNULL(CONVERT(varchar, lot.fecha_modst, 21), '') AS fecha_modst, ISNULL(CONVERT(varchar, cl.fechaApartado, 21), '') AS fechaApartado, lot.observacionContratoUrgente,
+      lot.precio, ISNULL(CONVERT(varchar, lot.fecha_modst, 21), '') AS fecha_modst, ISNULL(CONVERT(varchar, cl.fechaApartado, 120), '') AS fechaApartado, lot.observacionContratoUrgente,
       CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente, lot.motivo_change_status,
       UPPER(CONCAT(REPLACE(ISNULL(oxc.nombre, 'Sin especificar'), ' (especificar)', ''), (CASE pr.source WHEN '0' THEN '' ELSE CONCAT(' - ', pr.source) END))) lugar_prospeccion, 
       lot.fecha_creacion
