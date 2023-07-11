@@ -5,7 +5,7 @@ $(document).ready(function() {
         var title = $(this).text();
         titulos_encabezado.push(title);
         num_colum_encabezado.push(i);
-        $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>` );
+        $(this).html(`<input type="text"style=" background:#143860!important; color:white; border: 0; font-weight: 500;"class="textoshead"data-toggle="tooltip" data-placement="top"title="${title}"placeholder="${title}"/>`);
         $( 'input', this ).on('keyup change', function () {
             if ($('#clients-datatable').DataTable().column(i).search() !== this.value ) {
                 $('#clients-datatable').DataTable().column(i).search(this.value).draw();

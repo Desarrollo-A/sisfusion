@@ -1509,26 +1509,55 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
 }
 
 /* CHANGE ICONO*/
-.wrapper p {
+.wrapper .boxTabla p {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
-.wrapper.active p {
+.wrapper .boxTabla.active p {
   white-space: normal;
   overflow: visible;
 }
 
-.wrapper .less {
+.wrapper .boxTabla .less {
   display: none;
 }
 
-.wrapper.active .less {
+.wrapper .boxTabla.active .less {
   display: inline;
 }
 
-.wrapper.active .more {
+.wrapper .boxTabla.active .more {
   display: none;
+}
+
+/*CALENDARIO */
+#date {
+  width: 150px;
+  outline: none;
+  border: 1px solid #aaa;
+  padding: 6px 28px;
+}
+
+.date-container {
+  position: relative;
+  float: left;
+}
+
+.date-container .date-text {
+  position: absolute;
+  top: 6px;
+  left: 12px;
+  color: #000000;
+}
+
+.date-container .date-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  /* pointer-events: none; */
+  cursor: pointer;
+  color: #000000;
 }
 
 .input-gral {

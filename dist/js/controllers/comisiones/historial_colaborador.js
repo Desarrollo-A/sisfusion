@@ -290,17 +290,17 @@ function getAssimilatedCommissions(proyecto, condominio){
     });
 
     $("#tabla_historialGral tbody").on("click", ".consultar_logs_asimilados", function(e){
+        $('#spiner-loader').removeClass('hide');
         e.preventDefault();
         e.stopImmediatePropagation();
-
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
-
         $("#seeInformationModalAsimilados").modal();
         $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $.getJSON("getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
                 $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>NOMBRE DEL USUARIO: </small><b>'+v.nombre_usuario+' </b></a><br></div><div class="float-end text-right"><a> '+v.fecha_movimiento+' </a></div><div class="col-md-12"><p class="m-0"><small>COMENTARIOS: </small><b>'+v.comentario+'</b></p></div><h6></h6></div></div></li>');
+                $('#spiner-loader').addClass('hide');
             });
         });
     });
@@ -518,6 +518,8 @@ function getAssimilatedCancelacion(proyecto, condominio){
     });
 
     $("#tabla_comisiones_canceladas tbody").on("click", ".consultar_logs_asimilados", function(e){
+        $('#spiner-loader').removeClass('hide');
+
         e.preventDefault();
         e.stopImmediatePropagation();
 
@@ -529,6 +531,8 @@ function getAssimilatedCancelacion(proyecto, condominio){
         $.getJSON("getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
                 $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>NOMBRE DEL USUARIO: </small><b>'+v.nombre_usuario+' </b></a><br></div><div class="float-end text-right"><a> '+v.fecha_movimiento+' </a></div><div class="col-md-12"><p class="m-0"><small>COMENTARIOS: </small><b>'+v.comentario+'</b></p></div><h6></h6></div></div></li>');
+                $('#spiner-loader').addClass('hide');
+
             });
         });
     });
@@ -789,6 +793,7 @@ function tableComisionesSuma(anio){
     });
 
     $("#tabla_comisiones_suma tbody").on("click", ".consultar_history", function(e){
+        $('#spiner-loader').removeClass('hide');
         e.preventDefault();
         e.stopImmediatePropagation();
         id_pago = $(this).val();
@@ -801,6 +806,8 @@ function tableComisionesSuma(anio){
         $.getJSON(general_base_url+"Suma/getHistorial/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
                 $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>MODIFICADO POR: </small><b>'+v.modificado_por+' </b></a><br></div><div class="float-end text-right"><a> '+v.fecha_movimiento+' </a></div><div class="col-md-12"><p class="m-0"><small>COMENTARIOS: </small><b>'+v.comentario+'</b></p></div><h6></h6></div></div></li>');
+                $('#spiner-loader').addClass('hide');
+
             });
         });
     });
