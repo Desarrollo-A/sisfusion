@@ -396,13 +396,11 @@ function getProspectsByYear(com2) {
                 name: 'Prospectos',
                 data: data
             }])
-
             prospectosChart.updateOptions({
                 xaxis: {
-                   categories: months
+                    categories: months
                 },
-             });
-
+                });
             $('#numberGraphic').text(count.toLocaleString('es-MX'));
             document.getElementById('numberGraphic').title = count.toLocaleString('es-MX');
             $('.loadProspectosChart').addClass('d-none');
@@ -433,19 +431,16 @@ function getClientsAndProspectsByYear(type = 1, beginDate = null, endDate= null)
             let dataC = [];
             let countC = 0;
             let countP = 0;
-
             response.Clientes.forEach(element => {
                 monthsP.push(`${element.MONTH} ${element.año}`);
                 dataC.push(element.counts);
                 countC = countC + element.counts;
             });
-
             response.Prospectos.forEach(element => {
                 monthsC.push(`${element.MONTH} ${element.año}`);
                 dataP.push(element.counts);
                 countP = countP + element.counts;
             });
-
             chartProspClients.updateSeries([{
                 name: 'Prospectos',
                 data: dataP
@@ -453,7 +448,6 @@ function getClientsAndProspectsByYear(type = 1, beginDate = null, endDate= null)
                 name: 'Clientes',
                 data: dataC
             }])
-
             chartProspClients.updateOptions({
                 xaxis: {
                     categories: monthsP.length >= monthsC.length ? monthsP:monthsC
@@ -518,7 +512,6 @@ function getDataFromDates(com2){
                 data: suma > 0 ? [response.prospNuevos, response.prosCita, response.totalVentas, response.totalConT,
                 response.totalAT, response.totalCanC, response.totalCanA] : []
             }]);
-
             addTextFields(response);
             $('.loadChartWeekly').addClass('d-none');
         }
@@ -537,7 +530,7 @@ function cicloVenta(com2){
         dataType: 'json',
         success : function (response) {
             chartFunnel.updateSeries([
-               response.totalProspectosCita, response.totalProspectosCitaSeguimiento, 
+                response.totalProspectosCita, response.totalProspectosCitaSeguimiento, 
                 response.totalApartados, response.prospectosNoInteresados
             ]);
             
@@ -788,7 +781,7 @@ function getRolDR(idUser){
 /* Función para cambiar icono y cerrar o abrir tabla*/
 
 function changeIcon(anchor) {
-    anchor.closest('.wrapper').classList.toggle('active');
+    anchor.closest('.wrapper .boxTabla').classList.toggle('active');
     $(document).off('click', '.accordionToggle').on('click', '.accordionToggle', function () {
         $(this).parent().next().slideToggle(200);
         $(this).toggleClass('open', 200);
@@ -800,12 +793,12 @@ function createAccordionsPR(option, render, rol) {
     let tittle = getTitle(option);
     let html = '';
     html = `<div class="bk ${render == 1 ? 'parentTable': 'childTable'}">
-                <div class="card p-2 h-auto">
+                <div class="card p-2 h-auto boxTabla">
                     <div class="d-flex justify-between align-center">   
                         <div class="cursor-point accordionToggle">
                             <a class="purple-head hover-black" onclick="changeIcon(this)" id="myBtn">
-                            <i class="less fas fa-angle-down font-xs"></i>
-                            <i class="more fas fa-angle-up font-xs"></i>
+                            <i class="less fas fa-angle-down"></i>
+                            <i class="more fas fa-angle-up "></i>
                             </a>
                         </div>
                         <div>
@@ -1422,6 +1415,8 @@ $(document).on("click", "#searchByDateRangePR", function () {
         url_inter = "../Clientes/getProspectsListByAsesor/"+idUser;
     }else if(gerente == undefined && coordinador!=undefined && asesor!=undefined){
         url_inter = "../Clientes/getProspectsListByAsesor/"+asesor;
+    }else if(gerente == undefined && coordinador!=undefined && asesor==undefined){
+        url_inter = "../Clientes/getProspectsListByCoord/"+coordinador;
     }
 
     updateTable(url_inter, 3, finalBeginDate, finalEndDate, 0);
