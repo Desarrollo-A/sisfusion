@@ -1235,9 +1235,6 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
     let dayPE = (newDateEnd.getDate()<10) ? '0'+ newDateEnd.getDate() : newDateEnd.getDate();
     endDate = dayPE+'-'+monthPE+'-'+yearPE;
 
-    console.log(beginDate);
-    console.log(endDate);
-
     prospectsTables = $('#tablePR').dataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
@@ -1418,6 +1415,8 @@ $(document).on("click", "#searchByDateRangePR", function () {
         url_inter = "../Clientes/getProspectsListByAsesor/"+idUser;
     }else if(gerente == undefined && coordinador!=undefined && asesor!=undefined){
         url_inter = "../Clientes/getProspectsListByAsesor/"+asesor;
+    }else if(gerente == undefined && coordinador!=undefined && asesor==undefined){
+        url_inter = "../Clientes/getProspectsListByCoord/"+coordinador;
     }
 
     updateTable(url_inter, 3, finalBeginDate, finalEndDate, 0);
