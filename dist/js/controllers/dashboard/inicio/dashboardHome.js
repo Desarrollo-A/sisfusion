@@ -1415,6 +1415,8 @@ $(document).on("click", "#searchByDateRangePR", function () {
         url_inter = "../Clientes/getProspectsListByAsesor/"+idUser;
     }else if(gerente == undefined && coordinador!=undefined && asesor!=undefined){
         url_inter = "../Clientes/getProspectsListByAsesor/"+asesor;
+    }else if(gerente == undefined && coordinador!=undefined && asesor==undefined){
+        url_inter = "../Clientes/getProspectsListByCoord/"+coordinador;
     }
 
     updateTable(url_inter, 3, finalBeginDate, finalEndDate, 0);
