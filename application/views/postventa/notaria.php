@@ -84,7 +84,7 @@
                                                     <th>ID NOTARÍA</th>
                                                     <th>NOMBRE DE LA NOTARÍA</th>
                                                     <th>NOMBRE DEL NOTARIO</th>
-                                                    <th>DIRECCION</th>
+                                                    <th>DIRECCIÓN</th>
                                                     <th>CORREO</th>
                                                     <th>TELÉFONO</th>
                                                     <th>SEDE</th>

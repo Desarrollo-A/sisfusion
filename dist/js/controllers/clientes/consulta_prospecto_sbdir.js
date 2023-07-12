@@ -5,7 +5,7 @@ $('#prospects-datatable_dir thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
     titulos_encabezado.push(title);
     num_colum_encabezado.push(i);
-    $(this).html(`<input type="text"style=" background:#143860!important; color:white; border: 0; font-weight: 500;"class="textoshead"data-toggle="tooltip" data-placement="top"title="${title}"placeholder="${title}"/>`);
+    $(this).html(`<input type="text" class="textoshead"data-toggle="tooltip" data-placement="top"title="${title}"placeholder="${title}"/>`);
     $( 'input', this ).on('keyup change', function () {
         if ($('#prospects-datatable_dir').DataTable().column(i).search() !== this.value ) {
             $('#prospects-datatable_dir').DataTable().column(i).search(this.value).draw();
@@ -39,21 +39,21 @@ function multirol(){
 function createFilters(rol){
     if(rol == 59){
         let div = `<div class="col-md-3 form-group">
-                        <div id="div1" class="form-group">
+                        <div id="div1" class="form-group overflow-hidden">
                             <label class="control-label">SUBDIRECTOR</label>
                         </div>
                     </div>`;
         div += `<div class="col-md-3 form-group">
-                    <div id="div2" class="form-group">
+                    <div id="div2" class="form-group overflow-hidden">
                         <label class="control-label">GERENTE</label>
                     </div>
                 </div>`;
         div += `<div class="col-md-3 form-group">
-                    <div id="div3" class="form-group">
+                    <div id="div3" class="form-group overflow-hidden">
                         <label class="control-label">COORDINADOR</label>
                     </div>
                 </div>`;
-        div += `<div class="col-md-3 form-group">
+        div += `<div class="col-md-3 form-group overflow-hidden">
                     <div id="div4" class="form-group">
                         <label class="control-label">ASESOR</label>
                     </div>

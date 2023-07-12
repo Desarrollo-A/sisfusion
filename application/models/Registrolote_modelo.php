@@ -3539,16 +3539,25 @@
 			return $query->result();
 	}
 	   /*busquedas*/
-	public function getDetailedInfoClients($inf_client){
+	public function getDetailedInfoClients($inf_client, $telefono = ''){
 		$array_size = count($inf_client);
-		$where = ($array_size == 1) ? key($inf_client)." LIKE '%".$inf_client[key($inf_client)]."%'" : '';
+		$telefonoWhere = '';
+		if(!empty($telefono)){
+			$telefonoWhere = "(cl.telefono1 LIKE '%$telefono%' OR cl.telefono2 LIKE '%$telefono%' OR cl.telefono3 LIKE '%$telefono%')";
+		} 
+		$where = ($array_size == 1) ? key($inf_client)." LIKE '%".$inf_client[key($inf_client)]."%'" : '' ;
 		if(isset($where) && $array_size > 1){
 			foreach ($inf_client as $index => $client_data) {
 				$where .= $index . " LIKE '%" . $client_data . "%' " . ($array_size > 1 ? "AND " : '');
 				$array_size--;
 			}
 		}
-		$query = $this->db->query("SELECT	cl.id_cliente, id_asesor, id_coordinador, id_gerente,
+		if(empty($where) && !empty($telefonoWhere)){
+			$where = $telefonoWhere;
+		}else if(!empty($where) && !empty($telefonoWhere)){
+			$where = "$where AND $telefonoWhere";
+		}
+		$query = $this->db->query("SELECT cl.id_cliente, id_asesor, id_coordinador, id_gerente,
 		cl.id_sede, personalidad_juridica,
 		cl.nacionalidad, cl.rfc, curp, cl.correo,
 		telefono1, us.rfc, telefono2, telefono3,

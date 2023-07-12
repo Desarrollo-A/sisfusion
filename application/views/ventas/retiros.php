@@ -293,11 +293,9 @@
                                 <textarea id="comentario" name="comentario" class="form-control" rows="3" required></textarea>
                             </div>
 
-                            <div class="form-group">
-                                <center>
+                            <div class="form-group d-flex justify-center">
                                     <button type="submit" id="btn_abonar" class="btn btn-success">GUARDAR</button>
                                     <button class="btn btn-danger" type="button" data-dismiss="modal">CANCELAR</button>
-                                </center>
                             </div>
                         </div>
                     </form>
