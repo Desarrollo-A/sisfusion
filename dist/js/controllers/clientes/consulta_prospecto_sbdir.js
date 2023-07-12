@@ -39,21 +39,21 @@ function multirol(){
 function createFilters(rol){
     if(rol == 59){
         let div = `<div class="col-md-3 form-group">
-                        <div id="div1" class="form-group">
+                        <div id="div1" class="form-group overflow-hidden">
                             <label class="control-label">SUBDIRECTOR</label>
                         </div>
                     </div>`;
         div += `<div class="col-md-3 form-group">
-                    <div id="div2" class="form-group">
+                    <div id="div2" class="form-group overflow-hidden">
                         <label class="control-label">GERENTE</label>
                     </div>
                 </div>`;
         div += `<div class="col-md-3 form-group">
-                    <div id="div3" class="form-group">
+                    <div id="div3" class="form-group overflow-hidden">
                         <label class="control-label">COORDINADOR</label>
                     </div>
                 </div>`;
-        div += `<div class="col-md-3 form-group">
+        div += `<div class="col-md-3 form-group overflow-hidden">
                     <div id="div4" class="form-group">
                         <label class="control-label">ASESOR</label>
                     </div>

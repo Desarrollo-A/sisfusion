@@ -84,17 +84,17 @@ function fillTableInventario(sede) {
 				},
 				{
 					data: function (d) {
-						return '$ ' + formatMoney(d.precio);
+						return formatMoney(d.precio);
 					}
 				},
 				{
 					data: function (d) {
-						return '$ ' + formatMoney(d.precio * d.sup);
+						return formatMoney(d.precio * d.sup);
 					}
 				},
 				{
 					data: function (d) {
-						return '$ ' + formatMoney(d.totalNeto2);
+						return formatMoney(d.totalNeto2);
 					}
 				},
 				{data: 'referencia'},
