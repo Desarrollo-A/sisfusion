@@ -175,9 +175,13 @@ class MKT extends CI_Controller {
 
 	public function documentsByLote()
 	{
-		$datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
-		$this->load->view('template/header');
-		$this->load->view("contratacion/documentsByLote", $datos);
+        $datos = [
+            'residencial' => $this->registrolote_modelo->getResidencialQro(),
+            'tieneAcciones' => 0,
+            'tipoFiltro' => 2
+        ];
+        $this->load->view('template/header');
+        $this->load->view("documentacion/documentacion_view", $datos);
 	}
 
 
