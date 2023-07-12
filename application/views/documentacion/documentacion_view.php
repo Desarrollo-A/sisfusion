@@ -6,7 +6,11 @@
     <div class="wrapper">
         <?php
 		    //se debe validar que tipo de perfil esta sesionado para poder asignarle el tipo de sidebar
-		    if(in_array($this->session->userdata('id_rol'), array(2, 3, 4, 5, 6, 7, 9, 11, 12, 13, 15, 16, 28, 32, 33, 34, 39, 50, 40, 53, 58, 65, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 55, 17, 73, 70, 71, 47)))
+		    if(
+                    in_array($this->session->userdata('id_rol'), array(2, 3, 4, 5, 6, 7, 9, 11, 12, 13, 15, 16, 17, 19, 28, 32, 33, 34, 39, 40, 47, 50, 53, 54, 55, 58, 65, 70, 71, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83)) ||
+                    ($this->session->userdata('id_rol') == 11 && $this->session->userdata('id_usuario') == 2755) ||
+                    $this->session->userdata('id_usuario') == 2748
+            )
                 $this->load->view('template/sidebar');
             else
                 echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
@@ -45,6 +49,7 @@
                 </div>
             </div>
         </div>
+
         <!-- autorizaciones-->
         <div class="modal fade" id="verAutorizacionesAsesor">
             <div class="modal-dialog">
@@ -69,6 +74,7 @@
                 </div>
             </div>
         </div>
+
         <!-- Modals -->
         <div class="content boxContent">
             <div class="container-fluid">
@@ -79,44 +85,123 @@
                                 <i class="fas fa-user-friends fa-2x"></i>
                             </div>
                             <div class="card-content">
-                                <div class="toolbar">
-                                    <h3 class="card-title center-align">Documentación por lote</h3>
-                                    <div class="row">
-                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                            <div class="form-group select-is-empty overflow-hidden">
-                                                <label class="control-label">Proyecto</label>
-                                                <select name="idResidencial" id="idResidencial" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container='body' required>
-                                                    <?php
-													if ($residencial != NULL) :
-														foreach ($residencial as $fila) : ?>
-                                                    <option value=<?= $fila['idResidencial'] ?>>
-                                                        <?= $fila['nombreResidencial'] ?> </option>
-                                                    <?php endforeach;
-													endif;
-													?>
-                                                </select>
+                                <!-- FILTROS POR DEFAULT (Proyecto, Condominio y Lote) -->
+                                <?php if (!isset($tipoFiltro)) { ?>
+                                    <div class="toolbar">
+                                        <h3 class="card-title center-align">Documentación por lote</h3>
+                                        <div class="row">
+                                            <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                <div class="form-group select-is-empty overflow-hidden">
+                                                    <label class="control-label">Proyecto</label>
+                                                    <select name="idResidencial" id="idResidencial" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container='body' required>
+                                                        <?php
+                                                        if ($residencial != NULL) :
+                                                            foreach ($residencial as $fila) : ?>
+                                                                <option value=<?= $fila['idResidencial'] ?>>
+                                                                    <?= $fila['nombreResidencial'] ?> </option>
+                                                            <?php endforeach;
+                                                        endif;
+                                                        ?>
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                            <div class="form-group select-is-empty overflow-hidden">
-                                                <label class="control-label">Condominio</label>
-                                                <select id="idCondominio" name="idCondominio" class="selectpicker select-gral m-0"
-                                                    data-style="btn" data-show-subtext="true" data-live-search="true"
-                                                    title="SELECCIONA UNA OPCIÓN" data-size="7" data-container='body' required>
-                                                </select>
+                                            <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                <div class="form-group select-is-empty overflow-hidden">
+                                                    <label class="control-label">Condominio</label>
+                                                    <select id="idCondominio" name="idCondominio" class="selectpicker select-gral m-0"
+                                                            data-style="btn" data-show-subtext="true" data-live-search="true"
+                                                            title="SELECCIONA UNA OPCIÓN" data-size="7" data-container='body' required>
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                            <div class="form-group select-is-empty overflow-hidden">
-                                                <label class="control-label">Lote</label>
-                                                <select id="idLote" name="idLote" class="selectpicker select-gral m-0"
-                                                    data-style="btn" data-show-subtext="true" data-live-search="true"
-                                                    title="SELECCIONA UNA OPCIÓN" data-size="7" data-container='body' required>
-                                                </select>
+                                            <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                <div class="form-group select-is-empty overflow-hidden">
+                                                    <label class="control-label">Lote</label>
+                                                    <select id="idLote" name="idLote" class="selectpicker select-gral m-0"
+                                                            data-style="btn" data-show-subtext="true" data-live-search="true"
+                                                            title="SELECCIONA UNA OPCIÓN" data-size="7" data-container='body' required>
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                <?php } ?>
+                                <!-- FIN FILTRO POR DEFECTO -->
+
+                                <!-- FILTROS 1 (Proyecto, Condominio, Lote y Cliente) -->
+                                <?php if ($tipoFiltro == 1) { ?>
+                                    <div class="toolbar">
+                                        <h3 class="card-title center-align">Documentación por lote</h3>
+                                        <div class="row">
+                                            <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                                <div class="form-group select-is-empty">
+                                                    <label class="control-label">Proyecto</label>
+                                                    <select name="idResidencial" id="idResidencial" class="selectpicker select-gral m-0"
+                                                            data-style="btn" data-show-subtext="true" data-live-search="true"
+                                                            title="Selecciona un proyecto" data-size="7" required>
+                                                        <?php
+                                                        if ($residencial != NULL) :
+                                                            foreach ($residencial as $fila) : ?>
+                                                                <option value=<?= $fila['idResidencial'] ?>>
+                                                                    <?= $fila['nombreResidencial'] ?> </option>
+                                                            <?php endforeach;
+                                                        endif;
+                                                        ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                                <div class="form-group select-is-empty">
+                                                    <label class="control-label">Condominio</label>
+                                                    <select id="idCondominio" name="idCondominio" class="selectpicker select-gral m-0"
+                                                            data-style="btn" data-show-subtext="true" data-live-search="true"
+                                                            title="Selecciona un condominio" data-size="7" required>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                                <div class="form-group select-is-empty">
+                                                    <label class="control-label">Lote</label>
+                                                    <select id="idLote" name="idLote" class="selectpicker select-gral m-0"
+                                                            data-style="btn" data-show-subtext="true" data-live-search="true"
+                                                            title="Selecciona un lote" data-size="7" required>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                                <div class="form-group select-is-empty">
+                                                    <label class="control-label">Cliente</label>
+                                                    <select id="idCliente" name="idCliente" class="selectpicker select-gral m-0"
+                                                            data-style="btn" data-show-subtext="true" data-live-search="true"
+                                                            title="Selecciona un cliente" data-size="7" required>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--        Here you can write extra buttons/accions for the toolbar              -->
+                                    </div>
+                                <?php } ?>
+                                <!-- FIN FILTRO 1 -->
+
+                                <?php if ($tipoFiltro == 2) { ?>
+                                    <div class="toolbar">
+                                        <h3 class="card-title center-align">Documentación por lote</h3>
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    <label class="control-label label-gral">ID lote</label>
+                                                    <input id="inp_lote" name="inp_lote" class="form-control input-gral" type="number">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mt-3">
+                                                <div class="form-group">
+                                                    <button type="submit" class="btn-gral-data find_doc">Buscar</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php } ?>
+
                                 <table id="tableDoct" class="table-striped table-hover hide">
                                     <thead>
                                         <tr>
@@ -147,7 +232,6 @@
         </div>
         <?php $this->load->view('template/footer_legend');?>
     </div>
-    </div>
     <!--main-panel close-->
 
     <?php $this->load->view('template/footer');?>
@@ -161,6 +245,9 @@
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
     <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
+    <script type="text/javascript">
+        const tieneAcciones = <?=$hasActions?>;
+    </script>
     <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/documentacion/documentacion.js"></script>
 </body>
