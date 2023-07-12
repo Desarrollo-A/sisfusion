@@ -46,7 +46,6 @@
                             <li class="active menuTab" id="prospectosTab"><a href="#generalProspectos" role="tab" data-toggle="tab">LISTADO PROSPECTOS</a></li>
                             <li class="menuTab" id="clientesTab"><a href="#generalClientes" role="tab" data-toggle="tab">LISTADO CLIENTES</a></li>
                         </ul>
-                        
                         <div class="card no-shadow m-0">
                             <div class="card-content p-0">
                                 <div class="nav-tabs-custom">
@@ -185,20 +184,18 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 hide" id="fechasFiltroC">
-                                                                <div class="container-fluid ">
-                                                                    <div class="row">
-                                                                        <div class="col-md-12 p-r">
-                                                                            <div class="form-group d-flex">
-                                                                                <input type="text" class="form-control datepicker beginDate" id="beginDateC"/>
-                                                                                <input type="text" class="form-control datepicker endDate" id="endDateC" />
-                                                                                <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRangeC">
-                                                                                    <span class="material-icons update-dataTable">search</span>
-                                                                                </button>
-                                                                            </div>
+                                                            <div class="container-fluid ">
+                                                                <div class="row">
+                                                                    <div class="col-md-12 p-r">
+                                                                        <div class="form-group d-flex">
+                                                                            <input type="text" class="form-control datepicker beginDate" id="beginDateC"/>
+                                                                            <input type="text" class="form-control datepicker endDate" id="endDateC" />
+                                                                            <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRangeC"><span class="material-icons update-dataTable">search</span></button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                        </div>
                                                         <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 center-align centered" id="insideC">
                                                             <div class="form-group div_last_name">
                                                                 <button type="button" class="btn btn-danger btn-simple" onclick="cleanFiltersC()" id="cleanButton">LIMPIAR</button>

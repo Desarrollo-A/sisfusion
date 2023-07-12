@@ -7685,6 +7685,7 @@ class RegistroLote extends CI_Controller
 	function getLotesDventas($condominio, $residencial)
 	{
 		$data = $this->registrolote_modelo->getInventarioAd($condominio, $residencial);
+		
 		if ($data != null) {
 			echo json_encode($data);
 		} else {
