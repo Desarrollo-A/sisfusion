@@ -104,7 +104,7 @@ class VentasAsistentes_model extends CI_Model {
             $filtroUsuarioBR = '';
             if($id_usuario == 2815)
                 $filtroUsuarioBR = ' AND (l.tipo_venta IN (4, 6) OR cl.id_asesor IN (2549, 2570, 2591))';
-            else if ($id_usuario == 12377 || $id_usuario == 2799) // MIRIAM PAOLA JIMENEZ FIGUEROA o LADY SKARLETT LOPEZ VEN REUBICACIONES
+            else if (in_array($id_usuario, array(12377, 2799, 10088, 2827, 6012))) // MIRIAM PAOLA JIMENEZ FIGUEROA o LADY SKARLETT LOPEZ VEN REUBICACIONES
                 $filtroUsuarioBR = ' AND l.tipo_venta IN (6)';
             else
                 $filtroUsuarioBR = ' AND l.tipo_venta IN (4, 6)';
@@ -258,7 +258,7 @@ class VentasAsistentes_model extends CI_Model {
             $filtroUsuarioBR = '';
             if($id_usuario == 2815)
                 $filtroUsuarioBR = ' AND (l.tipo_venta IN (4, 6) OR cl.id_asesor IN (2549, 2570, 2591))';
-            else if ($id_usuario == 12377 || $id_usuario == 2799) // MIRIAM PAOLA JIMENEZ FIGUEROA o LADY SKARLETT LOPEZ VEN REUBICACIONES
+            else if (in_array($id_usuario, array(12377, 2799, 10088, 2827, 6012))) // MIRIAM PAOLA JIMENEZ FIGUEROA o LADY SKARLETT LOPEZ VEN REUBICACIONES
                 $filtroUsuarioBR = ' AND l.tipo_venta IN (6)';
             else
                 $filtroUsuarioBR = ' AND l.tipo_venta IN (4, 6)';
