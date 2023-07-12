@@ -78,7 +78,7 @@ function tablaInventario(ix_idResidencial = 0,ix_idCondominio = 0,ix_idEstatus =
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
-            title: 'MADERAS_CRM_INVENTARIO',
+            title: 'Inventario lotes',
             exportOptions: {
                 columns: coordinador = id_rol_general == 11 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 27, 28, 29, 30, 31],
                 format: {
@@ -93,6 +93,7 @@ function tablaInventario(ix_idResidencial = 0,ix_idCondominio = 0,ix_idEstatus =
             text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i>',
             className: 'btn buttons-pdf',
             titleAttr: 'PDF',
+            title: 'Inventario lotes',
             orientation: 'landscape',
             pageSize: 'LEGAL',
             exportOptions: {

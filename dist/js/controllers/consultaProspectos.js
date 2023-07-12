@@ -886,16 +886,23 @@ function validateEmptyFields(v, type) {
 }
 
 function fillTimeline(v) {
-    $("#comments-list").append('<li class="timeline-inverted">\n' +
-        '    <div class="timeline-badge info"></div>\n' +
-        '    <div class="timeline-panel">\n' +
-        '            <label><h6>' + v.creador + '</h6></label>\n' +
-        '            <br>' + v.observacion + '\n' +
-        '        <h6>\n' +
-        '            <span class="small text-gray"><i class="fa fa-clock-o mr-1"></i> ' + v.fecha_creacion + '</span>\n' +
-        '        </h6>\n' +
+    $("#comments-list").append(
+        '<li>\n' +
+        '    <div class="container-fluid">\n' +
+        '       <div class="row">\n' +
+        '           <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">\n' +
+        '               <a><small>Creador por: </small><b>' + v.creador + '</b></a><br>\n' +
+        '           </div>\n' +
+        '           <div class="float-end text-right">\n' +
+        '               <a>' + v.fecha_creacion + '</a>\n' +
+        '           </div>\n' +
+        '           <div class="col-md-12">\n' +
+    '                <p class="m-0"><small>Comentario: </small><b> ' + v.observacion + '</b></p>\n'+
+        '           </div>\n' +
+        '       </div>\n' +
         '    </div>\n' +
-        '</li>');
+        '</li>'
+    );
 }
 
 function fillChangelog(v) {
