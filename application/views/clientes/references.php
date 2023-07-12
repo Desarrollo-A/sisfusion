@@ -164,7 +164,6 @@
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script src="<?php base_url()?>dist/js/jquery.validate.js"></script>
-
 <script src="<?=base_url()?>dist/js/controllers/general-1.1.0.js"></script>
 
 </html>

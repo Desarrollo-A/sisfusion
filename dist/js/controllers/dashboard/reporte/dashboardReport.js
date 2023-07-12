@@ -143,7 +143,7 @@ async function initReport(){
     fillBoxAccordions(rolString, rolOnReport, idUserOnReport, 1, 1, [0, null, null, null, null, null, rolOnReport], filters);
 }
 
-function validateFilters(){
+function validateFilters(fechaInicio = null, fechaFin = null){
     filters = [];
     //Filtros con enganche / sin enganche
     let selector1 = $('#typeSale1')[0];
@@ -155,8 +155,8 @@ function validateFilters(){
     let selector5 = $('#typeBuild1')[0];
     let selector6 = $('#typeBuild2')[0];
     //Rango de fechas
-    let beginDate = $('#tableBegin').val();
-    let endDate = $('#tableEnd').val();
+    let beginDate = (fechaInicio == null) ? $('#tableBegin').val() : fechaInicio;
+    let endDate = (fechaFin == null) ? $('#tableEnd').val() : fechaFin;
     //Estauts de contratación
     let estatus = $("#estatusContratacion").val();
 
@@ -765,11 +765,18 @@ async function chartDetail(e, tipoChart){
         finalEndDate2 = fecha_fin;
     }
 
-    $("#modalChart #beginDate").val(finalBeginDate2);
-    $("#modalChart #endDate").val(finalEndDate2);
+    $("#modalChart #fechaInicioVentas").val(finalBeginDate2);
+    $("#modalChart #fechaFinVentas").val(finalEndDate2);
     $("#modalChart #type").val(tipoChart);
     filters = validateFilters();
     getSpecificChart(tipoChart, formatDate(finalBeginDate2), formatDate(finalEndDate2), filters);
+}
+
+function searchByDateRange() {
+    const fechaInicio = $('#fechaInicioVentas').val();
+    const fechaFin    = $('#fechaFinVentas').val();
+    const filters = validateFilters(fechaInicio, fechaFin);
+    getSpecificChart($("#modalChart #type").val(), formatDate(fechaInicio), formatDate(fechaFin), filters);
 }
 
 function getSpecificChart(type, beginDate, endDate, filters){

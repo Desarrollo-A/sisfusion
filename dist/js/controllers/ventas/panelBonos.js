@@ -181,7 +181,7 @@ $("#tabla_prestamos").ready(function() {
 
                 if (d.estado == 1) {
                     return  '<div class="d-flex justify-center">'+
-                        '<button class="btn btn-green btn-round btn-fab btn-fab-mini abonar" value="' + d.id_pago_bono + ',' + d.abono + '" data-toggle="tooltip" data-placement="top" title="AUTORIZAR">'+
+                        '<button class="btn-data btn-green abonar" value="' + d.id_pago_bono + ',' + d.abono + '" data-toggle="tooltip" data-placement="top" title="AUTORIZAR">'+
                             '<i class="fas fa-check"></i>'+
                         '</button>' +
                         '<button class="btn-data btn-blueMaderas consulta_abonos" value="' + d.id_pago_bono + ','+d.nombre+'  "  data-impuesto="'+d.impuesto1+'" data-toggle="tooltip" data-placement="top" title="HISTORIAL" >'+

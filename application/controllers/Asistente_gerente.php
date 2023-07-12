@@ -353,7 +353,7 @@ class Asistente_gerente extends CI_Controller {
     $this->email
         ->initialize()
         ->from('Ciudad Maderas')
-        ->to('programador.analista24@ciudadmaderas.com')
+        ->to('tester.ti2@ciudadmaderas.com')
         // ->to($correosEntregar)
         ->subject('EXPEDIENTE RECHAZADO-VENTAS (8. CONTRATO ENTREGADO AL ASESOR PARA FIRMA DEL CLIENTE)')
         ->view($this->load->view('mail/asistente-gerente/editar-registro-lote-rechazo-status2-asistentes-proceso8', [
@@ -1042,6 +1042,50 @@ public function setVar($var)
     echo $this->session->userdata('datauserjava');
 }
 
- 
+public function alta_autorizacionVentas(){
+  $nombreResidencial=$this->input->post('nombreResidencial');
+  $nombreCondominio=$this->input->post('nombreCondominio');
+  $nombreLote=$this->input->post('nombreLote');
+
+  $proyecto = str_replace(' ', '', $nombreResidencial);
+  $condominio = str_replace(' ', '', $nombreCondominio);
+  $condom = substr($condominio, 0, 3);
+  $cond = strtoupper($condom);
+  $numeroLote = preg_replace('/[^0-9]/', '', $nombreLote);
+  $date = date('dmY');
+  $composicion = $proyecto . "_" . $cond . $numeroLote . "_" . $date;
+
+
+  $aleatorio = rand(100,1000);
+  $idCliente=$this->input->post('idCliente');
+  $nombArchivo=$composicion;
+  $expediente=  $nombArchivo.'_'.$idCliente.'_'.$aleatorio.'_'.$_FILES["expediente"]["name"];
+  $idCondominio=$this->input->post('idCondominio');
+
+
+  $arreglo2=array();
+  $arreglo2["movimiento"]="Se adjunto Autorización";
+  $arreglo2["idCliente"]=$this->input->post('idClienteHistorial');
+  $arreglo2["idLote"]=$this->input->post('idLoteHistorial');
+  $arreglo2["expediente"]= $expediente;
+  $arreglo2["idUser"]=$this->input->post('idUser');
+  $arreglo2["idCondominio"]=$this->input->post('idCondominio');
+
+
+  $arreglo=array();
+  $arreglo["expediente"] = $nombArchivo.'_'.$idCliente.'_'.$aleatorio.'_'.$_FILES["expediente"]["name"];
+  if ($this->registrolote_modelo->editaRegistroCliente($idCliente,$arreglo)){
+    $this->registrolote_modelo->insert_historial_documento($arreglo2);
+    if (move_uploaded_file($_FILES["expediente"]["tmp_name"],"static/documentos/cliente/expediente/".$nombArchivo.'_'.$idCliente.'_'.$aleatorio.'_'.$_FILES["expediente"]["name"])) {
+      $data['message'] = 'OK';
+		  echo json_encode($data);
+    }
+    else{
+      $data['message'] = 'FALSE';
+		  echo json_encode($data);
+    }
+  } 
+}
+
 }
 ?>

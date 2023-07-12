@@ -106,7 +106,7 @@ class ScheduleTasks_cl extends CI_Controller {
         $this->email
             ->initialize()
             ->from('Ciudad Maderas')
-            ->to('programador.analista24@ciudadmaderas.com')
+            ->to('tester.ti2@ciudadmaderas.com')
             /*->to('mariela.sanchez@ciudadmaderas.com',
                 'rigel.silva@prohabitacion.com',
                 'rafael.bautista@ciudadmaderas.com',
@@ -191,7 +191,7 @@ class ScheduleTasks_cl extends CI_Controller {
         $this->email
             ->initialize()
             ->from('Ciudad Maderas')
-            ->to('programador.analista24@ciudadmaderas.com')
+            ->to('tester.ti2@ciudadmaderas.com')
             //->to('contraloria.corporativa6@ciudadmaderas.com')
             ->subject('LOTES BLOQUEADOS - CIUDAD MADERAS')
             ->view($this->load->view('mail/schedule-tasks-cl/send-rv-5', [
@@ -977,7 +977,7 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
         $this->email
             ->initialize()
             ->from('Ciudad Maderas')
-            ->to('programador.analista24@ciudadmaderas.com')
+            ->to('tester.ti2@ciudadmaderas.com')
             // ->to($correo)
             ->subject($subject)
             ->view($this->load->view('mail/schedule-tasks-cl/send-rv-5', [
@@ -1082,10 +1082,11 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
         $this->email
             ->initialize()
             ->from('Ciudad Maderas')
-            ->to('programador.analista24@ciudadmaderas.com')
+            ->to('tester.ti2@ciudadmaderas.com')
             /*->to('supervisor.bd@ciudadmaderas.com',
                 'coord.contraloriacorporativa@ciudadmaderas.com',
                 'mariela.sanchez@ciudadmaderas.com',
+                'coord.bd@ciudadmaderas.com',
                 'irene.vallejo@ciudadmaderas.com')*/
             ->subject($subj)
             ->view($this->load->view('mail/schedule-tasks-cl/send-comp-notification', [
@@ -1171,7 +1172,7 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
         $this->email
             ->initialize()
             ->from('Ciudad Maderas')
-            ->to('programador.analista24@ciudadmaderas.com')
+            ->to('tester.ti2@ciudadmaderas.com')
             /*->to('mariadejesus.garduno@ciudadmaderas.com',
                 'rafael.bautista@ciudadmaderas.com',
                 'vicky.paulin@ciudadmaderas.com',

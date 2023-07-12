@@ -1047,7 +1047,7 @@ function update_estatus(){
     $fechaInicio = strtotime($consultaFechasCorte[0]['fechaInicio']);
     $fechaFin = $validar_sede == 8 ? strtotime($consultaFechasCorte[0]['fechaFinTijuana']) : ($consultaFechasCorte[0]['fechaFinGeneral']) ;
       //fecha inicio
-      if(($fecha_actual >= $fechaInicio && $fecha_actual <= $fechaFin) || ($id_user_Vl == 7689))
+      if(($fecha_actual >= $fechaInicio && $fecha_actual <= $fechaFin) || ($validar_user == 7689))
           {
             if($a == ''){
               echo json_encode($this->Comisiones_model->getDesarrolloSelect()->result_array());

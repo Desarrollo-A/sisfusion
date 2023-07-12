@@ -11,24 +11,22 @@
                         <b><h4 class="card-title ">Ventas compartidas</h4></b>
                         <div class="material-datatables">
                             <div class="form-group">
-                                <div class="table-responsive">
-                                    <table id="verDet" class="table-striped table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>ASESOR</th>
-                                                <th>COORDINADOR</th>
-                                                <th>GERENTE</th>
-                                                <th>SUBDIRECTOR</th>
-                                                <th>DIRECTOR REGIONAL</th>
-                                                <th>DIRECTOR REGIONAL 2</th>
-                                                <th>FECHA DE ALTA</th>
-                                                <th>USUARIO</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                <table id="verDet" class="table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ASESOR</th>
+                                            <th>COORDINADOR</th>
+                                            <th>GERENTE</th>
+                                            <th>SUBDIRECTOR</th>
+                                            <th>DIRECTOR REGIONAL</th>
+                                            <th>DIRECTOR REGIONAL 2</th>
+                                            <th>FECHA DE ALTA</th>
+                                            <th>USUARIO</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -48,7 +46,6 @@
                             <li class="active menuTab" id="prospectosTab"><a href="#generalProspectos" role="tab" data-toggle="tab">LISTADO PROSPECTOS</a></li>
                             <li class="menuTab" id="clientesTab"><a href="#generalClientes" role="tab" data-toggle="tab">LISTADO CLIENTES</a></li>
                         </ul>
-                        
                         <div class="card no-shadow m-0">
                             <div class="card-content p-0">
                                 <div class="nav-tabs-custom">
@@ -187,20 +184,18 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 hide" id="fechasFiltroC">
-                                                                <div class="container-fluid ">
-                                                                    <div class="row">
-                                                                        <div class="col-md-12 p-r">
-                                                                            <div class="form-group d-flex">
-                                                                                <input type="text" class="form-control datepicker beginDate" id="beginDateC"/>
-                                                                                <input type="text" class="form-control datepicker endDate" id="endDateC" />
-                                                                                <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRangeC">
-                                                                                    <span class="material-icons update-dataTable">search</span>
-                                                                                </button>
-                                                                            </div>
+                                                            <div class="container-fluid ">
+                                                                <div class="row">
+                                                                    <div class="col-md-12 p-r">
+                                                                        <div class="form-group d-flex">
+                                                                            <input type="text" class="form-control datepicker beginDate" id="beginDateC"/>
+                                                                            <input type="text" class="form-control datepicker endDate" id="endDateC" />
+                                                                            <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRangeC"><span class="material-icons update-dataTable">search</span></button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                        </div>
                                                         <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 center-align centered" id="insideC">
                                                             <div class="form-group div_last_name">
                                                                 <button type="button" class="btn btn-danger btn-simple" onclick="cleanFiltersC()" id="cleanButton">LIMPIAR</button>
@@ -247,20 +242,9 @@
             </div>
         </div>
         <?php $this->load->view('template/footer_legend');?>
-    </div><!-- main-panel close -->
-
+    </div>
     <?php $this->load->view('template/footer');?>
-    <!--DATATABLE BUTTONS DATA EXPORT-->
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <script src="<?= base_url() ?>dist/js/es.js"></script>
-    <!-- DateTimePicker Plugin -->
     <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
-    <!-- MODAL WIZARD -->
     <script src="<?=base_url()?>dist/js/controllers/marketing/marketing.js"></script>
 </body>
