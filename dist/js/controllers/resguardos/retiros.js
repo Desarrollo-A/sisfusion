@@ -4,7 +4,7 @@ $(document).ready(function () {
     
     $.post('getDisponibleResguardo/' + id_usuario_general, function(data) {
         document.getElementById('totalDisponible').textContent = '';
-        let disponible = '$'+formatMoney(data.toFixed(3));
+        let disponible = formatMoney(data.toFixed(3));
         document.getElementById('totalDisponible').textContent = disponible;
         resto = 0;
         resto = data.toFixed(3);
@@ -184,7 +184,7 @@ $(document).ready(function () {
         id_pago_i = $(this).val();
         $("#autorizar-modal .modal-body").html("");
         $("#autorizar-modal .modal-header").html("");
-        $("#autorizar-modal .modal-header").append('<h4 class="modal-title">Autorizar a <b>'+row.data().usuario+'</b> la cantidad de <b style="color:blue;">$'+formatMoney(row.data().monto)+'</b></h4>');
+        $("#autorizar-modal .modal-header").append('<h4 class="modal-title">Autorizar a <b>'+row.data().usuario+'</b> la cantidad de <b style="color:blue;">'+formatMoney(row.data().monto)+'</b></h4>');
         $("#autorizar-modal .modal-body").append('<input type="hidden" name="id_descuento" id="id_descuento" value="'+row.data().id_rc+'"><input type="hidden" name="opcion" id="opcion" value="Autorizar">');
         $("#autorizar-modal").modal();
     });
@@ -195,7 +195,7 @@ $(document).ready(function () {
         id_pago_i = $(this).val();
         $("#autorizar-modal .modal-body").html("");
         $("#autorizar-modal .modal-header").html("");
-        $("#autorizar-modal .modal-header").append('<h4 class="modal-title">Rechazar retiro a <b>'+row.data().usuario+'</b> por la cantidad de <b style="color:blue;">$'+formatMoney(row.data().monto)+'</b></h4>');
+        $("#autorizar-modal .modal-header").append('<h4 class="modal-title">Rechazar retiro a <b>'+row.data().usuario+'</b> por la cantidad de <b style="color:blue;">'+formatMoney(row.data().monto)+'</b></h4>');
         $("#autorizar-modal .modal-body").append('<input type="hidden" name="id_descuento" id="id_descuento" value="'+row.data().id_rc+'"><input type="hidden" name="opcion" id="opcion" value="Rechazar">');
         $("#autorizar-modal").modal();
     });

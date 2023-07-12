@@ -18,9 +18,6 @@ $(document).ready( function() {
     });
 
     $(".select-is-empty").removeClass("is-empty");
-
-    
-
     // MJ: EJECUTAR FUNCIÓN PARA EL LLENADO DE LA DT
     fillUsersTable();
 });
@@ -416,7 +413,6 @@ $(document).on('click', '.buscar-pass-user', function(e){
         });
     });
     $("#modalData").modal();
-    
 });
 
 $("#BajaConfirmForm").on('submit', function(e){
@@ -604,7 +600,7 @@ function getSedesCH(sede = 0,sucursal = 0){
                                 select.add(option);
                                 if(v.idsucursal == sucursal){
                                     $('#sucursal').selectpicker('refresh');
-                                $('#sucursal').selectpicker('val',v.idsucursal);
+                                    $('#sucursal').selectpicker('val',v.idsucursal);
                                 }
                         });
                     });
@@ -815,9 +811,6 @@ function fillChangelogUsers(v) {
     '    </div>\n' +
         '</li>');
 }
-
-
-
 
 $(document).on('change', '#nueva_estructura', function() {
     if ($(this).val() == 1) {

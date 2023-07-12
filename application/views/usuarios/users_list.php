@@ -67,9 +67,8 @@
                                     <input  class="form-control input-gral pl-1 pr-1" readonly type="text" id="passPC" name="passPC" value="" >
                                 </div>
                             </div>
-                            <div class="modal-footer">
-                                
-                            </div>
+                            <div class="modal-footer"> 
+                        </div>
                     </div>
                 </div>    
             </div>
@@ -356,7 +355,7 @@
                 </div>
             </div>
         </div>
-            <?php $this->load->view('template/footer_legend'); ?>
+        <?php $this->load->view('template/footer_legend'); ?>
     </div>
     </body>
 

@@ -102,7 +102,7 @@ $datos = array();
         <div class="content">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="block full">
                             <div class="row">
                                 <div class="col-md-12">
@@ -117,14 +117,14 @@ $datos = array();
                                                     <table id="all_users_datatable" class="table table-striped table-no-bordered table-hover" style="text-align:center;"><!--table table-bordered table-hover -->
                                                         <thead>
                                                         <tr>
-                                                            <th class="disabled-sorting text-right"><center>Estatus</center></th>
-                                                            <th class="disabled-sorting text-right"><center>ID</center></th>
-                                                            <th class="disabled-sorting text-right"><center>Nombre</center></th>
-                                                            <th class="disabled-sorting text-right"><center>Correo</center></th>
-                                                            <th class="disabled-sorting text-right"><center>Teléfono</center></th>
-                                                            <th class="disabled-sorting text-right"><center>Tipo</center></th>
-                                                            <th class="disabled-sorting text-right"><center>Jefe directo</center></th>
-                                                            <th class="disabled-sorting text-right"><center>Acciones</center></th>
+                                                            <th class="disabled-sorting text-right">Estatus</th>
+                                                            <th class="disabled-sorting text-right">ID</th>
+                                                            <th class="disabled-sorting text-right">Nombre</th>
+                                                            <th class="disabled-sorting text-right">Correo</th>
+                                                            <th class="disabled-sorting text-right">Teléfono</th>
+                                                            <th class="disabled-sorting text-right">Tipo</th>
+                                                            <th class="disabled-sorting text-right">Jefe directo</th>
+                                                            <th class="disabled-sorting text-right">Acciones</th>
                                                         </tr>
                                                         </thead>
                                                     </table>
@@ -231,7 +231,6 @@ $datos = array();
                                                             </div>
                                                         </div>
                                                     </div>
-
                                                 </div>
                                             </div>
                                         </div>
@@ -243,9 +242,7 @@ $datos = array();
                 </div>
             </div>
         </div>
-
         <?php $this->load->view('template/footer_legend');?>
-
     </div>
 </div>
 </body>
@@ -259,14 +256,6 @@ $datos = array();
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-
-<!--<link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/js/controllers/datatables/datatables.min.css"/>
-<script type="text/javascript" src="<?=base_url()?>dist/js/controllers/datatables/pdfmake.min.js"></script>
-<script type="text/javascript" src="<?=base_url()?>dist/js/controllers/datatables/vfs_fonts.js"></script>
-<script type="text/javascript" src="<?=base_url()?>dist/js/controllers/datatables/datatables.min.js"></script>-->
-
 <script src="<?=base_url()?>dist/js/controllers/usuarios-1.1.0.js"></script>
-
-
 
 </html>
