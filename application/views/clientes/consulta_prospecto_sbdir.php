@@ -16,7 +16,7 @@
                             <h3 class="card-title center-align">Listado general de prospectos</h3>
                             <div class="toolbar">
                                 <div class="row">
-                                    <div id="filterContainer" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 overflow-hidden">
+                                    <div id="filterContainer" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-lg-offset-6 col-md-offset-6 col-sm-offset-6">
                                         <div class="container-fluid p-0">

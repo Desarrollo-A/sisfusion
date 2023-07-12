@@ -1310,7 +1310,6 @@ document.querySelector('#estatus_recordatorio_form').addEventListener('submit',a
 
 function getStatusRecordatorio(){
     $.post('../Calendar/getStatusRecordatorio', function(data) {
-        console.log("iam here")
         $("#estatus_recordatorio").append($('<option disabled selected>').val("0").text("Seleccione una opción"));
         var len = data.length;
         for (var i = 0; i < len; i++) {
