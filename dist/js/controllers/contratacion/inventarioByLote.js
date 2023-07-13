@@ -95,21 +95,21 @@ $(".find_doc").click( function() {
                                 stella = ( parseInt(d.total) + parseInt(2029185) );
                                 aura = ( parseInt(d.total) + parseInt(1037340) );
                                 terreno = parseInt(d.total);
-                                preciot = '<p>S: $ '+formatMoney(stella)+'</p>' + '<p>A: $ '+formatMoney(aura)+'</p>' + '<p>T: $ '+formatMoney(terreno)+'</p>';
+                                preciot = '<p>S: '+formatMoney(stella)+'</p>' + '<p>A: '+formatMoney(aura)+'</p>' + '<p>T: '+formatMoney(terreno)+'</p>';
                         }
                         else {
                             stella = ( parseInt(d.total) + parseInt(2104340) );
                             aura = ( parseInt(d.total) + parseInt(1075760) );
                             terreno = parseInt(d.total);
-                            preciot = '<p>S: $ '+formatMoney(stella)+'</p>' + '<p>A: $ '+formatMoney(aura)+'</p>' + '<p>T: $ '+formatMoney(terreno)+'</p>';
+                            preciot = '<p>S: '+formatMoney(stella)+'</p>' + '<p>A: '+formatMoney(aura)+'</p>' + '<p>T: '+formatMoney(terreno)+'</p>';
                         }
                     } 
                     else if(d.idStatusLote == 3 || d.idStatusLote == 2){
-                        preciot = '<p>$ '+formatMoney(d.total)+'</p>';
+                        preciot = '<p> '+formatMoney(d.total)+'</p>';
                     }
                 } 
                 else {
-                    preciot = '<p>$ '+formatMoney(d.total)+'</p>';
+                    preciot = '<p> '+formatMoney(d.total)+'</p>';
                 }
                 return preciot;
             }
@@ -117,7 +117,7 @@ $(".find_doc").click( function() {
         {
 
             "data": function(d){
-                return '<p class="m-0">$'+formatMoney(d.totalNeto2)+'</p>';
+                return '<p class="m-0"> '+formatMoney(d.totalNeto2)+'</p>';
             }
         },
         {
@@ -141,21 +141,21 @@ $(".find_doc").click( function() {
                             stella = ( (parseInt(d.total) + parseInt(2029185)) / d.superficie);
                             aura = ( (parseInt(d.total) + parseInt(1037340)) / d.superficie );
                             terreno = (parseInt(d.total) / d.superficie);
-                            preciom2 = '<p>S: $ '+formatMoney(stella)+'</p>' + '<p>A: $ '+formatMoney(aura)+'</p>' + '<p>T: $ '+formatMoney(terreno)+'</p>';
+                            preciom2 = '<p>S: '+formatMoney(stella)+'</p>' + '<p>A: '+formatMoney(aura)+'</p>' + '<p>T: '+formatMoney(terreno)+'</p>';
                         }
                         else {
                                 stella = ( (parseInt(d.total) + parseInt(2104340)) / d.superficie );
                                 aura = ( (parseInt(d.total) + parseInt(1075760)) / d.superficie );
                                 terreno = (parseInt(d.total) / d.superficie);
-                                preciom2 = '<p>S: $ '+formatMoney(stella)+'</p>' + '<p>A: $ '+formatMoney(aura)+'</p>' + '<p>T: $ '+formatMoney(terreno)+'</p>';
+                                preciom2 = '<p>S: '+formatMoney(stella)+'</p>' + '<p>A: '+formatMoney(aura)+'</p>' + '<p>T: '+formatMoney(terreno)+'</p>';
                         }
                     } 
                     else if(d.idStatusLote == 3 || d.idStatusLote == 2) {
-                        preciom2 = '<p>$ '+formatMoney(d.precio)+'</p>';
+                        preciom2 = '<p> '+formatMoney(d.precio)+'</p>';
                     }
                 } 
                 else {
-                    preciom2 = '<p>$ '+formatMoney(d.precio)+'</p>';
+                    preciom2 = '<p> '+formatMoney(d.precio)+'</p>';
                 }
                 return preciom2;
             }
