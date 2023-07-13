@@ -446,10 +446,8 @@ contador = 1;
 function agregarAutorizacion (){
     $("#autorizacionesExtra").append('<div class="mt-2" id="cnt-'+contador+'"><label>Observación: (<span class="isRequired">*</span>) </label>' +
         '<button class="fl-r" onclick="eliminaAutorizacion('+contador+')" style="color: gray; background-color:transparent; border:none;" title="Eliminar observación"><i class="fas fa-trash"></i></button>' +
-        '<textarea  type="text" name="comentario_' + contador + '" placeholder="Ingresa tu comentario" ' +
-        '           class="text-modal" id="comentario_'+ contador +'" rows="3" '+
-        '            '+
-        '           oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">'+
+        '<textarea name="comentario_' + contador + '" placeholder="Ingresa tu comentario" ' +
+        '           class="text-modal" id="comentario_'+ contador +'" rows="3" >'+
         '</textarea></div>');
     contador = contador + 1;
     $('#tamanocer').val(contador);
