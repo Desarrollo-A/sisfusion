@@ -24,17 +24,17 @@ $(document).ready( function() {
 
 let titulos = [];
 $('#all_users_datatable thead tr:eq(0) th').each(function (i) {
-        if (i != 16) {
-            var title = $(this).text();
-            titulos.push(title);
-            $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
-            $('input', this).on('keyup change', function () {
-                if ($('#all_users_datatable').DataTable().column(i).search() !== this.value) {
-                    $('#all_users_datatable').DataTable().column(i).search(this.value).draw();
-                }
-            });
-        }
-    });
+    if (i != 16) {
+        var title = $(this).text();
+        titulos.push(title);
+        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
+        $('input', this).on('keyup change', function () {
+            if ($('#all_users_datatable').DataTable().column(i).search() !== this.value) {
+                $('#all_users_datatable').DataTable().column(i).search(this.value).draw();
+            }
+        });
+    }
+});
 
 function fillUsersTable() {
     $allUsersTable = $('#all_users_datatable').DataTable({
@@ -218,8 +218,7 @@ $('#all_users_datatable').on('draw.dt', function() {
 
 function showPassword() {
     if ($("#contrasena").attr("type") == "password") $("#contrasena").attr("type", "text");
-    else $("#contrasena").attr("type", "password");    
-    
+    else $("#contrasena").attr("type", "password");
     $("#showPass i").toggle();
 }
 
@@ -667,7 +666,6 @@ function fillFields (v) {
         document.getElementById("sucursal").removeAttribute("required");
         $("#sucursal").empty();
     }
-    
     $("#rol_actual").val(v.id_rol);
     $("#username").val(v.usuario);
     $("#contrasena").val(v.contrasena);
@@ -731,7 +729,6 @@ $(document).on('click', '.see-changes-log', function(){
     $.post("getChangeLogUsers/"+id_usuario).done( function( data ){
         $("#changesRegsUsers").modal();
         $.each( JSON.parse(data), function(i, v){
-            // $("#changesRegsUsers").modal();
             fillChangelogUsers(v);
         });
     });
@@ -740,8 +737,7 @@ $(document).on('click', '.see-changes-log', function(){
 function fillChangelogUsers(v) {
     var nombreMovimiento;
     var dataMovimiento;
-
-
+    
     switch (v.col_afect) {
         case 'nombre':
             nombreMovimiento = 'Nombre';
