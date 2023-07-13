@@ -40,7 +40,6 @@ function updateTable() {
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulos_encabezado[columnIdx - 1] + ' ';
-
                     }
                 }
             }
