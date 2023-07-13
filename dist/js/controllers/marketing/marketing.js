@@ -9,7 +9,6 @@ $(document).ready(function () {
 			$("#sede").append($('<option>').val(id).text(name.toUpperCase()));
 			$("#sedeC").append($('<option>').val(id).text(name.toUpperCase()));
 		}
-
 		$("#sede").selectpicker('refresh');
 		$("#sedeC").selectpicker('refresh');
 	}, 'json');
@@ -297,7 +296,6 @@ $("#tabla_clientes").ready(function () {
 	let excluir_column = ['ACCIONES'];
 	$('#tabla_clientes thead tr:eq(0) th').each(function (i) {
 		var title = $(this).text();
-
 		if (!excluir_column.includes(title) && title !== ''){
             titulos_encabezado.push(title);
             num_colum_encabezado.push(i);
@@ -313,9 +311,6 @@ $("#tabla_clientes").ready(function () {
 	});
 });
 
-/** END TABLA PROSPECTOS  */
-
-/** TABLA CLIENTES  */
 var tabla_valores_cliente;
 function fillTableClientes(data_search) {
 	tabla_valores_cliente = $("#tabla_clientes").DataTable({
@@ -416,7 +411,7 @@ function fillTableClientes(data_search) {
 			},
 			{
 				data: function (d) {
-					return '$' + formatMoney(d.engancheCliente) 
+					return formatMoney(d.engancheCliente) 
 				}
 			},
 			{
@@ -510,7 +505,6 @@ $("#verDet").ready(function () {
 	});
 });
 
-/*TABLA MODAL */
 $(document).ready(function () {
 	tableHistorial = $('#verDet').DataTable({
 		dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
