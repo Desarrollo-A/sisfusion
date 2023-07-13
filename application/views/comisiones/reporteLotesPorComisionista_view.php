@@ -228,9 +228,4 @@
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/reporteLotesPorComisionista.js"></script>
     <script src="<?= base_url() ?>dist/js/es.js"></script>
     <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 8814ec0ba817b18767af0e32704fac24e0215454
 </body>
