@@ -372,21 +372,21 @@ function fillHistory(urlTableHist){
         scrollX:true,
         select: true,
         buttons: [{
-                extend: 'excelHtml5',
-                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                className: 'btn buttons-excel',
-                titleAttr: 'Descargar archivo de Excel',
-                title:'PROCESO DE CONTRA',
-                exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5],
-                    format: 
-                    {
-                        header:  function (d, columnIdx) {
-                            return ' ' + titulos_ver[columnIdx]  + ' ';
-                        }
+            extend: 'excelHtml5',
+            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+            className: 'btn buttons-excel',
+            titleAttr: 'Descargar archivo de Excel',
+            title:'PROCESO DE CONTRA',
+            exportOptions: {
+                columns: [0, 1, 2, 3, 4, 5],
+                format: 
+                {
+                    header:  function (d, columnIdx) {
+                        return ' ' + titulos_ver[columnIdx]  + ' ';
                     }
                 }
-            }],
+            }
+        }],
         pagingType: "full_numbers",
         fixedHeader: true,
         language: {
@@ -405,13 +405,11 @@ function fillHistory(urlTableHist){
             { "data": "comentario" },
             { "data": "modificado" },
             { "data": "usuario" }
-
         ],
-        ajax:
-            {
-                "url": urlTableHist,
-                "dataSrc": ""
-            },
+        ajax: {
+            "url": urlTableHist,
+            "dataSrc": ""
+        },
     });
 }
 
@@ -434,21 +432,21 @@ function fillFreedom(urlTableFred){
         scrollX:true,
         select: true,
         buttons: [{
-                extend: 'excelHtml5',
-                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                className: 'btn buttons-excel',
-                titleAttr: 'Descargar archivo de Excel',
-                title: 'LIBERACIÓN',
-                exportOptions: {
-                    columns: [0, 1, 2, 3, 4],
-                    format: 
-                    {
-                        header:  function (d, columnIdx) {
-                            return ' ' + titulos_det[columnIdx]  + ' ';
-                        }
+            extend: 'excelHtml5',
+            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+            className: 'btn buttons-excel',
+            titleAttr: 'Descargar archivo de Excel',
+            title: 'LIBERACIÓN',
+            exportOptions: {
+                columns: [0, 1, 2, 3, 4],
+                format: 
+                {
+                    header:  function (d, columnIdx) {
+                        return ' ' + titulos_det[columnIdx]  + ' ';
                     }
                 }
-            }],
+            }
+        }],
         pagingType: "full_numbers",
         fixedHeader: true,
         language: {
@@ -489,66 +487,64 @@ $('#seeCoSellingAdvisers thead tr:eq(0) th').each(function (i) {
 });
     
 function fillCoSellingAdvisers(urlTableCSA){
-tableCoSellingAdvisers = $('#seeCoSellingAdvisers').DataTable( {
-    dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-    width: '100%',
-    scrollX: true,
-    select: true,
-    buttons: [{
-            extend: 'excelHtml5',
-            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-            className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
-            title: 'Asesores venta compartida',
-            exportOptions: {
-                columns: [0, 1, 2, 3, 4],
-                format: 
-                {
-                    header:  function (d, columnIdx) {
-                        return ' ' + titulos_see[columnIdx]  + ' ';
+    tableCoSellingAdvisers = $('#seeCoSellingAdvisers').DataTable( {
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',
+        scrollX: true,
+        select: true,
+        buttons: [{
+                extend: 'excelHtml5',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                className: 'btn buttons-excel',
+                titleAttr: 'Descargar archivo de Excel',
+                title: 'Asesores venta compartida',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4],
+                    format: 
+                    {
+                        header:  function (d, columnIdx) {
+                            return ' ' + titulos_see[columnIdx]  + ' ';
+                        }
                     }
                 }
+            }],
+        columnDefs: [{
+                defaultContent: "",
+                targets: "_all",
+                searchable: true,
+                orderable: false
+            }],
+        pagingType: "full_numbers",
+        fixedHeader: true,
+        language: {
+            url: general_base_url + "/static/spanishLoader_v2.json",
+            paginate: {
+                previous: "<i class='fa fa-angle-left'>",
+                next: "<i class='fa fa-angle-right'>"
             }
-        }],
-    columnDefs: [{
-            defaultContent: "",
-            targets: "_all",
-            searchable: true,
-            orderable: false
-        }],
-    pagingType: "full_numbers",
-    fixedHeader: true,
-    language: {
-        url: general_base_url + "/static/spanishLoader_v2.json",
-        paginate: {
-            previous: "<i class='fa fa-angle-left'>",
-            next: "<i class='fa fa-angle-right'>"
-        }
-    },
-    destroy: true,
-    ordering: false,
-    columns: [
-        { "data": "asesor" },
-        { "data": "coordinador" },
-        { "data": "gerente" },
-        { "data" : "fecha_creacion"},
-        { "data": "creado_por" }
-
-    ],
-    ajax:
-        {
+        },
+        destroy: true,
+        ordering: false,
+        columns: [
+            { "data": "asesor" },
+            { "data": "coordinador" },
+            { "data": "gerente" },
+            { "data" : "fecha_creacion"},
+            { "data": "creado_por" }
+        ],
+        ajax:{
             "url": urlTableCSA,
             "dataSrc": ""
         },
-});
+    });
 }
 
 function fill_data_asignacion(){
-$.getJSON(general_base_url + "Administracion/get_data_asignacion/"+idLote).done( function( data ){
-    (data.id_estado == 1) ? $("#check_edo").prop('checked', true) : $("#check_edo").prop('checked', false);
-    $('#sel_desarrollo').val(data.id_desarrollo_n);
-    $("#sel_desarrollo").selectpicker('refresh');
-});
+    $.getJSON(general_base_url + "Administracion/get_data_asignacion/"+idLote).done( function( data ){
+        (data.id_estado == 1) ? $("#check_edo").prop('checked', true) : $("#check_edo").prop('checked', false);
+        $('#sel_desarrollo').val(data.id_desarrollo_n);
+        $("#sel_desarrollo").selectpicker('refresh');
+    });
 }
 
 $(document).on('click', '#save_asignacion', function(e) {
@@ -586,9 +582,9 @@ $(document).on('click', '#save_asignacion', function(e) {
                 }
             },
             error: function( data ){
-                    $('#save_asignacion').prop('disabled', false);
-                    $('#seeInformationModal').modal('hide');
-                    alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                $('#save_asignacion').prop('disabled', false);
+                $('#seeInformationModal').modal('hide');
+                alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
             }
         });
     }
