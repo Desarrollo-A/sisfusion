@@ -9,7 +9,6 @@ $(document).ready(function () {
 			$("#sede").append($('<option>').val(id).text(name.toUpperCase()));
 			$("#sedeC").append($('<option>').val(id).text(name.toUpperCase()));
 		}
-
 		$("#sede").selectpicker('refresh');
 		$("#sedeC").selectpicker('refresh');
 	}, 'json');
@@ -114,24 +113,22 @@ function fillTable(data_search) {
 		dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
-		buttons: [
-			{
-				extend: 'excelHtml5',
-				text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-				className: 'btn buttons-excel',
-				titleAttr: 'Registro de clientes',
-				title:'Lista de prospectos',
-				exportOptions: {
-					columns: num_colum_encabezado_prospectos,
-					format: {
-						header: function (d, columnIdx) {
-							return ' '+titulos_encabezado_prospectos[columnIdx] +' ';
-						}
+		buttons: [{
+			extend: 'excelHtml5',
+			text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+			className: 'btn buttons-excel',
+			titleAttr: 'Registro de clientes',
+			title:'Lista de prospectos',
+			exportOptions: {
+				columns: num_colum_encabezado_prospectos,
+				format: {
+					header: function (d, columnIdx) {
+						return ' '+titulos_encabezado_prospectos[columnIdx] +' ';
 					}
-				},
+				}
+			},
 
-			}
-		],
+		}],
 		pagingType: "full_numbers",
 		language: {
 			url: general_base_url+"static/spanishLoader_v2.json",
@@ -149,118 +146,115 @@ function fillTable(data_search) {
 		ordering: false,
 		fixedColumns: true,
 		destroy: true,
-		columns: [
-			{
-				data: function (d) {
-					return d.nombre_prospecto 
-				}
-			},
-			{
-				data: function (d) {
-					let tel1 = d.telefono;
-					let tel2 = d.telefono_2;
-					let telefono;
-					if(tel1==null){
-						telefono = tel2;
-					}else if(tel2==null){
-						telefono = tel1;
-					}else if(tel1==null || tel2==null){
-						telefono = '--'
-					}else{
-						telefono = 'SIN TELÉFONO';
-					}
-					return telefono 
-				}
-			},
-			{
-				data: function (d) {
-					let correo = '';
-					if(d.correo == undefined || d.correo == '' || d.correo == null){
-						correo = 'SIN CORREO';
-					}else{
-						correo = d.correo;
-					}
-					return correo
-				}
-			},
-			{
-				data: function (d) {
-					let lugar_prospeccion = '';
-					if(d.lugar_prospeccion=='' || d.lugar_prospeccion==undefined || d.lugar_prospeccion==null){
-						lugar_prospeccion = '--';
-					}else{
-						lugar_prospeccion = d.lugar_prospeccion;
-					}
-					return lugar_prospeccion 
-				}
-			},
-			{
-				data: function (d) {
-					let asesor;
-					if(d.nombre_asesor=='' || d.nombre_asesor==undefined || d.nombre_asesor==null){
-						asesor = 'SIN ASESOR';
-					}else{
-						asesor = d.nombre_asesor;
-					}
-					return asesor
-				}
-			},
-			{
-				data: function (d) {
-					let coordinador;
-					if(d.nombre_coordinador == undefined || d.nombre_coordinador==null || d.nombre_coordinador==''){
-						coordinador = 'SIN COORDINADOR';
-					}else{
-						coordinador = d.nombre_coordinador;
-					}
-					return coordinador 
-				}
-			},
-			{
-				data: function (d) {
-					let gerente;
-					if(d.nombre_gerente == undefined || d.nombre_gerente == null || d.nombre_gerente ==''){
-						gerente = 'SIN GERENTE';
-					}else{
-						gerente = d.nombre_gerente;
-					}
-					return gerente 
-				}
-			},
-			{
-				data: function (d) {
-					return  myFunctions.convertDateYMDHMS(d.fecha_creacion)  
-				}
-			},
-			{
-				data: function (d) {
-					return `<span class="label lbl-oceanGreen">${d.id_prospecto}</span>`;
-				}
-			},
-			{
-				data: function (d) {
-					let validateData = d.id_dragon == 0 ? 'No disponible' : d.id_dragon;
-					return `<span class="label lbl-azure">${validateData}</span>`;
-				}
-			},
-			{
-				data: function (d) {
-					return `<span class="label lbl-yellow">${d.source}</span>`;
-				}
-			},
-			{
-				data: function (d) {
-					let sede;
-					if(d.sede_nombre==null || d.sede_nombre==undefined || d.sede_nombre ==''){
-						sede = 'Sin sede';
-					}else{
-						sede = d.sede_nombre;
-					}
-					return   sede 
-				}
+		columns: [{
+			data: function (d) {
+				return d.nombre_prospecto 
 			}
-		],
-
+		},
+		{
+			data: function (d) {
+				let tel1 = d.telefono;
+				let tel2 = d.telefono_2;
+				let telefono;
+				if(tel1==null){
+					telefono = tel2;
+				}else if(tel2==null){
+					telefono = tel1;
+				}else if(tel1==null || tel2==null){
+					telefono = '--'
+				}else{
+					telefono = 'SIN TELÉFONO';
+				}
+				return telefono 
+			}
+		},
+		{
+			data: function (d) {
+				let correo = '';
+				if(d.correo == undefined || d.correo == '' || d.correo == null){
+					correo = 'SIN CORREO';
+				}else{
+					correo = d.correo;
+				}
+				return correo
+			}
+		},
+		{
+			data: function (d) {
+				let lugar_prospeccion = '';
+				if(d.lugar_prospeccion=='' || d.lugar_prospeccion==undefined || d.lugar_prospeccion==null){
+					lugar_prospeccion = '--';
+				}else{
+					lugar_prospeccion = d.lugar_prospeccion;
+				}
+				return lugar_prospeccion 
+			}
+		},
+		{
+			data: function (d) {
+				let asesor;
+				if(d.nombre_asesor=='' || d.nombre_asesor==undefined || d.nombre_asesor==null){
+					asesor = 'SIN ASESOR';
+				}else{
+					asesor = d.nombre_asesor;
+				}
+				return asesor
+			}
+		},
+		{
+			data: function (d) {
+				let coordinador;
+				if(d.nombre_coordinador == undefined || d.nombre_coordinador==null || d.nombre_coordinador==''){
+					coordinador = 'SIN COORDINADOR';
+				}else{
+					coordinador = d.nombre_coordinador;
+				}
+				return coordinador 
+			}
+		},
+		{
+			data: function (d) {
+				let gerente;
+				if(d.nombre_gerente == undefined || d.nombre_gerente == null || d.nombre_gerente ==''){
+					gerente = 'SIN GERENTE';
+				}else{
+					gerente = d.nombre_gerente;
+				}
+				return gerente 
+			}
+		},
+		{
+			data: function (d) {
+				return  myFunctions.convertDateYMDHMS(d.fecha_creacion)  
+			}
+		},
+		{
+			data: function (d) {
+				return `<span class="label lbl-oceanGreen">${d.id_prospecto}</span>`;
+			}
+		},
+		{
+			data: function (d) {
+				let validateData = d.id_dragon == 0 ? 'No disponible' : d.id_dragon;
+				return `<span class="label lbl-azure">${validateData}</span>`;
+			}
+		},
+		{
+			data: function (d) {
+				return `<span class="label lbl-yellow">${d.source}</span>`;
+			}
+		},
+		{
+			data: function (d) {
+				let sede;
+				if(d.sede_nombre==null || d.sede_nombre==undefined || d.sede_nombre ==''){
+					sede = 'Sin sede';
+				}else{
+					sede = d.sede_nombre;
+				}
+				return   sede 
+			}
+		}],
 		columnDefs: [{
 			defaultContent: "",
 			targets: "_all",
@@ -297,7 +291,6 @@ $("#tabla_clientes").ready(function () {
 	let excluir_column = ['ACCIONES'];
 	$('#tabla_clientes thead tr:eq(0) th').each(function (i) {
 		var title = $(this).text();
-
 		if (!excluir_column.includes(title) && title !== ''){
             titulos_encabezado.push(title);
             num_colum_encabezado.push(i);
@@ -313,32 +306,27 @@ $("#tabla_clientes").ready(function () {
 	});
 });
 
-/** END TABLA PROSPECTOS  */
-
-/** TABLA CLIENTES  */
 var tabla_valores_cliente;
 function fillTableClientes(data_search) {
 	tabla_valores_cliente = $("#tabla_clientes").DataTable({
 		dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
-		buttons: [
-			{
-				extend: 'excelHtml5',
-				text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-				className: 'btn buttons-excel',
-				titleAttr: 'Registro de clientes',
-				title:'Registro de clientes',
-				exportOptions: {
-					columns: num_colum_encabezado,
-					format: {
-						header: function (d, columnIdx) {
-							return ' '+titulos_encabezado[columnIdx] +' ';
-						}
+		buttons: [{
+			extend: 'excelHtml5',
+			text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+			className: 'btn buttons-excel',
+			titleAttr: 'Registro de clientes',
+			title:'Registro de clientes',
+			exportOptions: {
+				columns: num_colum_encabezado,
+				format: {
+					header: function (d, columnIdx) {
+						return ' '+titulos_encabezado[columnIdx] +' ';
 					}
-				},
-			}
-		],
+				}
+			},
+		}],
 		pagingType: "full_numbers",
 		language: {
 			url: general_base_url +"static/spanishLoader_v2.json",
@@ -356,108 +344,106 @@ function fillTableClientes(data_search) {
 		ordering: false,
 		fixedColumns: true,
 		destroy: true,
-		columns: [
-			{
-				data: function (d) {
-					return d.idLote 
-				}
-			},
-			{
-				data: function (d) {
-					return d.nombreProyecto.toUpperCase();
-				}
-			},
-			{
-				data: function (d) {
-					return d.nombreCondominio 
-				}
-			},
-			{
-				data: function (d) {
-					return d.nombreLote 
-				}
-			},
-			{
-				data: function (d) {
-					let cliente ;
-					if(d.nombreCliente==''||d.nombreCliente==undefined||d.nombreCliente==null){
-						cliente = 'SIN CLIENTE';
-					}else{
-						cliente = d.nombreCliente;
-					}
-					return cliente 
-				}
-			},
-			{
-				data: function (d) {
-					let numero_recibo;
-					if(d.noRecibo == null)
-						numero_recibo = '--';
-					else
-						numero_recibo = d.noRecibo;
-					return numero_recibo 
-				}
-			},
-			{
-				data: function (d) {
-					let referencia;
-					if(d.referencia==undefined || d.referencia==null || d.referencia==''){
-						referencia = 'SIN REFERENCIA';
-					}else{
-						referencia = d.referencia;
-					}
-					return referencia 
-				}
-			},
-			{
-				data: function (d) {
-					return myFunctions.convertDateYMDHMS(d.fechaApartado)
-				}
-			},
-			{
-				data: function (d) {
-					return '$' + formatMoney(d.engancheCliente) 
-				}
-			},
-			{
-				data: function (d) {
-					return myFunctions.convertDateYMDHMS(d.fechaEnganche) 
-				}
-			},
-			{
-				data: function (d) {
-					return   myFunctions.convertDateYMDHMS(d.fechaCreacionProspecto)  
-				}
-			},
-			{
-				data: function (d) {
-					return `<span class="label lbl-oceanGreen">${d.id_prospecto}</span>`;
-				}
-			},
-			{
-				data: function (d) {
-					let validateData = d.id_dragon == 0 ? 'NO DISPONIBLE' : d.id_dragon;
-					return `<span class="label lbl-azure">${validateData}</span>`;
-				}
-			},
-			{
-				data: function (d) {
-					return `<span class="label lbl-yellow">${d.source}</span>`;
-				}
-			},
-			{
-				data: function (d) {
-					return `<span class="label lbl-violetBoots">${d.nombreStatusContratacion}</span>`;
-				}
-			},
-			{
-				data: function (d) {
-					return `<button class="btn-data btn-blueMaderas cop" data-toggle="tooltip" data-placement="top"title="VENTAS COMPARTIDAS"data-idcliente="${d.id_cliente}"data-idLote="${d.idLote}">
-								<i class="material-icons">people</i>
-							</button>`;
-				}
+		columns: [{
+			data: function (d) {
+				return d.idLote 
 			}
-		],
+		},
+		{
+			data: function (d) {
+				return d.nombreProyecto.toUpperCase();
+			}
+		},
+		{
+			data: function (d) {
+				return d.nombreCondominio 
+			}
+		},
+		{
+			data: function (d) {
+				return d.nombreLote 
+			}
+		},
+		{
+			data: function (d) {
+				let cliente ;
+				if(d.nombreCliente==''||d.nombreCliente==undefined||d.nombreCliente==null){
+					cliente = 'SIN CLIENTE';
+				}else{
+					cliente = d.nombreCliente;
+				}
+				return cliente 
+			}
+		},
+		{
+			data: function (d) {
+				let numero_recibo;
+				if(d.noRecibo == null)
+					numero_recibo = '--';
+				else
+					numero_recibo = d.noRecibo;
+				return numero_recibo 
+			}
+		},
+		{
+			data: function (d) {
+				let referencia;
+				if(d.referencia==undefined || d.referencia==null || d.referencia==''){
+					referencia = 'SIN REFERENCIA';
+				}else{
+					referencia = d.referencia;
+				}
+				return referencia 
+			}
+		},
+		{
+			data: function (d) {
+				return myFunctions.convertDateYMDHMS(d.fechaApartado)
+			}
+		},
+		{
+			data: function (d) {
+				return formatMoney(d.engancheCliente) 
+			}
+		},
+		{
+			data: function (d) {
+				return myFunctions.convertDateYMDHMS(d.fechaEnganche) 
+			}
+		},
+		{
+			data: function (d) {
+				return myFunctions.convertDateYMDHMS(d.fechaCreacionProspecto)  
+			}
+		},
+		{
+			data: function (d) {
+				return `<span class="label lbl-oceanGreen">${d.id_prospecto}</span>`;
+			}
+		},
+		{
+			data: function (d) {
+				let validateData = d.id_dragon == 0 ? 'NO DISPONIBLE' : d.id_dragon;
+				return `<span class="label lbl-azure">${validateData}</span>`;
+			}
+		},
+		{
+			data: function (d) {
+				return `<span class="label lbl-yellow">${d.source}</span>`;
+			}
+		},
+		{
+			data: function (d) {
+				return `<span class="label lbl-violetBoots">${d.nombreStatusContratacion}</span>`;
+			}
+		},
+		{
+			data: function (d) {
+				return `<button class="btn-data btn-blueMaderas cop" data-toggle="tooltip" data-placement="top"title="VENTAS COMPARTIDAS"data-idcliente="${d.id_cliente}"data-idLote="${d.idLote}">
+							<i class="material-icons">people</i>
+						</button>`;
+			}
+		}],
 		columnDefs: [{
 			defaultContent: "",
 			targets: "_all",
@@ -510,29 +496,26 @@ $("#verDet").ready(function () {
 	});
 });
 
-/*TABLA MODAL */
 $(document).ready(function () {
 	tableHistorial = $('#verDet').DataTable({
 		dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
-		buttons:[
-			{
-				extend: 'excelHtml5',
-				text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-				className: 'btn buttons-excel',
-				titleAttr: 'Reporte ventas compartidas',
-				title:'Reporte ventas compartidas',
-				exportOptions: {
-					columns: num_colum_encabezado_detalle,
-					format: {
-						header: function (d, columnIdx) {
-							return ' '+titulos_encabezado_detalle[columnIdx] +' ';
-						}
+		buttons:[{
+			extend: 'excelHtml5',
+			text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+			className: 'btn buttons-excel',
+			titleAttr: 'Reporte ventas compartidas',
+			title:'Reporte ventas compartidas',
+			exportOptions: {
+				columns: num_colum_encabezado_detalle,
+				format: {
+					header: function (d, columnIdx) {
+						return ' '+titulos_encabezado_detalle[columnIdx] +' ';
 					}
 				}
 			}
-		],
+		}],
 		pageLength: 10,
 		language: {
 			url: general_base_url+"static/spanishLoader_v2.json",
@@ -588,7 +571,6 @@ $(document).ready(function () {
         }
 	});
 });
-
 
 function changeSede(){
 	let sedes = $('#sede').val();

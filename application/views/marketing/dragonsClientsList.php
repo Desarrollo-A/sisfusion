@@ -109,9 +109,7 @@
 </div>
 
 <?php $this->load->view('template/footer'); ?>
-<!--DATATABLE BUTTONS DATA EXPORT-->
 <script type="text/javascript" src="//unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
 <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/marketing/dragonsClientsList.js"></script>
-
 </body>

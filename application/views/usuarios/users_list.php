@@ -41,9 +41,6 @@
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>  
 
-        <!-- MODALS -->
-
-            <!---------Modal reutilizable-------->
             <div class="modal fade" id="modalData" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static"data-keyboard="false">
                 <div class="modal-dialog modal-md">
                     <div class="modal-content">
@@ -67,15 +64,12 @@
                                     <input  class="form-control input-gral pl-1 pr-1" readonly type="text" id="passPC" name="passPC" value="" >
                                 </div>
                             </div>
-                            <div class="modal-footer">
-                                
-                            </div>
+                            <div class="modal-footer"> 
+                        </div>
                     </div>
                 </div>    
             </div>
-            <!------FIN MODAL REUTILIZABLE------>
-
-            <!-- -->
+          
             <div class="modal fade" id="BajaUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static"data-keyboard="false">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
@@ -104,9 +98,7 @@
                     </div>
                 </div>
             </div>
-
-            <!------------------------------------->
-                                                
+                                              
             <div class="modal fade" id="BajaConfirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
                 <div class="modal-dialog modal-md ">
                     <div class="modal-content">
@@ -131,8 +123,6 @@
                 </div>
             </div>
 
-
-            <!------------------------------------->
             <div class="modal fade" id="changesRegsUsers" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
                 <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                     <div class="modal-content">
@@ -320,9 +310,7 @@
                     </div>
                 </div>
             </div>
-
-        <!-- END MODALS -->
-
+    
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -356,7 +344,7 @@
                 </div>
             </div>
         </div>
-            <?php $this->load->view('template/footer_legend'); ?>
+        <?php $this->load->view('template/footer_legend'); ?>
     </div>
     </body>
 
