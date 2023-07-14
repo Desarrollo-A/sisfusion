@@ -2,14 +2,6 @@
 var estatus,usuariosVentas;
 sp = {
     initFormExtendedDatetimepickers: function () {
-      var today = new Date();
-      var date =
-        today.getFullYear() +
-        "-" +
-        (today.getMonth() + 1) +
-        "-" +
-        today.getDate();
-      var time = today.getHours() + ":" + today.getMinutes();
   
       $(".datepicker").datetimepicker({
         format: "DD/MM/YYYY",
@@ -67,7 +59,6 @@ $(".datepicker").datetimepicker({ locale: "es" });
     
     $('#beginDate').val(finalBeginDate2);
     $('#endDate').val(finalEndDate2);
-
     $.post(`${general_base_url}General/getResidencialesList`, function (data) {        
         let len = data.length;
         for (let i = 0; i < len; i++) {
@@ -91,7 +82,6 @@ $(".datepicker").datetimepicker({ locale: "es" });
                 }
                 $("#estatus").selectpicker('refresh');
             }, 'json');
-
 
             $.post(`${general_base_url}contraloria/allUserVentas`, function (data) {
                     usuariosVentas = data;
@@ -233,12 +223,10 @@ $(document).on('click','#searchByDateRange', function () {
         }],
         columns:
             [{
-        
                 data: 'nombreResidencial'
             },
             {
                 "data": function (d) {
-                    
                     return '<p>' + (d.nombreCondominio).toUpperCase() + '</p>';
                 }
             },
@@ -280,7 +268,7 @@ $(document).on('click','#searchByDateRange', function () {
             },
             {
                 data: function (d) {
-                      return  d.id_asesor == 12205 || d.id_asesor == 12874 || d.id_asesor == 12205 ? `<center><span class="label lbl-azure">ASESOR COMODÍN</span> <center>` : 'NORMAL';
+                      return  d.id_asesor == 12845 || d.id_asesor == 12874 || d.id_asesor == 12205 ? `<center><span class="label lbl-azure">ASESOR COMODÍN</span> <center>` : 'NORMAL';
                 }
             },
             {
@@ -333,7 +321,6 @@ $(document).on('click','#searchByDateRange', function () {
                 data: {fechaInicio:fechaInicio,fechaFin:fechaFin}
             }      
     });
-
     $(window).resize(function () {
         tabla_inventario.columns.adjust();
     });
@@ -346,49 +333,26 @@ $('#tabla_lineaVenta').on('draw.dt', function() {
     })
 });
 
-
-
-/*
-const numeros  = [1,2,3,1];
-let duplicados = [];
- 
-for (let i = 0; i < tempArray.length; i++) {
-  if (tempArray[i + 1] === tempArray[i]) {
-    duplicados.push(tempArray[i]);
-    contador++;
-  }
-}
-console.log(contador);
-console.log(duplicados);
-*/
 function validarAsesor(id_asesor,bandera,len,origen,index){
     let  id_asesores = [];
     let duplicados = [];
-
     let  contador = 0;
     let asesorCliente = $(`#id_asesor`).val();
-    console.log(asesorCliente)
 
     id_asesores.push(asesorCliente);
     if(bandera != 0 && bandera != null){
         setTimeout(() => {
         for (let m = 0; m < len; m++) {
             let idAsesorCompartida = $(`#id_asesor_${m}`).val();
-            console.log(idAsesorCompartida)
                 id_asesores.push(idAsesorCompartida);
         }
         const arrTemporal = [...id_asesores].sort();
-       // console.log(idAsesorCompartida)
-
         for (let i = 0; i < arrTemporal.length; i++) {
             if (arrTemporal[i + 1] === arrTemporal[i]) {
               duplicados.push(arrTemporal[i]);
               contador++;
             }
           }
-          console.log(id_asesores)
-
-console.log(arrTemporal)
           if(contador == 0){
             $('#btnInventario').prop('disabled', false)
             $('#btnInventario').removeClass('hide');
@@ -397,40 +361,7 @@ console.log(arrTemporal)
             $('#btnInventario').prop('disabled', true); 
             alerts.showNotification("top", "right", "Los asesores no pueden estan repetidos, favor de verificarlo", "warning");
           }
-
-        }, 1000);
-       /* if(origen == 1){ //SELECT CLIENTES
-            let c = 0;
-            for (let m = 0; m < len; m++) {
-                    let idAsesorCompartida = $(`#id_asesor_${m}`).val();
-                    if(asesorCliente == idAsesorCompartida){
-                        c++;
-                        $('#btnInventario').prop('disabled', true); 
-                        alerts.showNotification("top", "right", "El asesor seleccionado ya se seleccionó anteriormente.", "warning");   
-                    }
-            }
-              c == 0 ? $('#btnInventario').prop('disabled', false) : '';
-        }else{  //SELECT VENTAS COMPARTIDAS
-            let c = 0;
-            asesorActualComp = $(`#id_asesor_${index}`).val();
-            if(asesorActualComp == asesorCliente){
-                $('#btnInventario').prop('disabled', true); 
-                alerts.showNotification("top", "right", "El asesor seleccionado ya se seleccionó anteriormente.", "warning");  
-            }else{
-                for (let j = 0; j < len; j++) {     
-                    let idAsesorCompartida = $(`#id_asesor_${j}`).val();
-                    if(j != index){
-                        if(asesorActualComp == idAsesorCompartida){
-                            c++;
-                            $('#btnInventario').prop('disabled', true); 
-                            alerts.showNotification("top", "right", "El asesor seleccionado ya se seleccionó anteriormente.", "warning");   
-                        }  
-                    }      
-                }
-                c == 0 ? $('#btnInventario').prop('disabled', false) : '';
-            }
-        }*/
-        
+        }, 1000);  
     }
 }
 
@@ -442,9 +373,7 @@ $(document).on('click', '.editButton', function(){
     let banderaVC = $itself.attr('data-banderaVC') != null && $itself.attr('data-banderaVC') != undefined ? 1 : 0;
     document.getElementById('modalI').innerHTML = '';
     $.post(`${general_base_url}contraloria/getLineaVenta`,{idCliente:idCliente,banderaVC:banderaVC}, function (data) {        
-        console.log(data);
         let len = data.compartidas.length;
-
         if(accion == 1){ //mostrar inventario 
 
             $('#btnInventario').addClass('hide');
@@ -564,7 +493,7 @@ $(document).on('click', '.editButton', function(){
                         </div>
                         <div class="col-lg-4  overflow-hidden">
                             <label class="control-label">Regional</label>
-                            <select class="selectpicker select-gral m-0 subdirector" name="id_regional" id="id_regional" data-style="btn"
+                            <select class="selectpicker select-gral m-0 regional" name="id_regional" id="id_regional" data-style="btn"
                             data-show-subtext="true"
                             title="Selecciona una opción"
                             data-size="7"
@@ -573,7 +502,7 @@ $(document).on('click', '.editButton', function(){
                         </div>
                         <div class="col-lg-4  overflow-hidden">
                             <label class="control-label">Regional 2</label>
-                            <select class="selectpicker select-gral m-0 subdirector" name="id_regional_2" id="id_regional_2" data-style="btn"
+                            <select class="selectpicker select-gral m-0 regional" name="id_regional_2" id="id_regional_2" data-style="btn"
                             data-show-subtext="true"
                             title="Selecciona una opción"
                             data-size="7"
@@ -582,7 +511,6 @@ $(document).on('click', '.editButton', function(){
                         </div>
                 </div>
         `);
-
 
         let asesores = usuariosVentas.filter(asesor => asesor.id_rol == 7);
         let coordinadores = usuariosVentas.filter(asesor => asesor.id_rol == 9);
@@ -635,7 +563,7 @@ $(document).on('click', '.editButton', function(){
                 </div>
                 <div class="col-lg-4  overflow-hidden">
                     <label class="control-label">Regional</label>
-                    <select class="selectpicker select-gral m-0 subdirector" name="id_regional_${m}" id="id_regional_${m}" data-style="btn"
+                    <select class="selectpicker select-gral m-0 regional" name="id_regional_${m}" id="id_regional_${m}" data-style="btn"
                     data-show-subtext="true"
                     title="Selecciona una opción"
                     data-size="7"
@@ -644,7 +572,7 @@ $(document).on('click', '.editButton', function(){
                 </div>
                 <div class="col-lg-4  overflow-hidden">
                     <label class="control-label">Regional 2</label>
-                    <select class="selectpicker select-gral m-0 subdirector" name="id_regional_2_${m}" id="id_regional_2_${m}" data-style="btn"
+                    <select class="selectpicker select-gral m-0 regional" name="id_regional_2_${m}" id="id_regional_2_${m}" data-style="btn"
                     data-show-subtext="true"
                     title="Selecciona una opción"
                     data-size="7"
@@ -656,30 +584,27 @@ $(document).on('click', '.editButton', function(){
             }
         }
         for (var i = 0; i < asesores.length; i++) {
-            // console.log()
              var id = asesores[i].id_usuario;
              var name = asesores[i].nombre;
              $(".asesor").append($('<option>').val(id).text(name.toUpperCase()));
          }
          $(".coordinador").append($('<option>').val(0).text('NO APLICA'));
          for (var i = 0; i < coordinadores.length; i++) {
-             // console.log()
               var id = coordinadores[i].id_usuario;
               var name = coordinadores[i].nombre;
               $(".coordinador").append($('<option>').val(id).text(name.toUpperCase()));
           }
           for (var i = 0; i < gerentes.length; i++) {
-             // console.log()
               var id = gerentes[i].id_usuario;
               var name = gerentes[i].nombre;
               $(".gerente").append($('<option>').val(id).text(name.toUpperCase()));
           }
-          $(".subdirector").append($('<option>').val(0).text('NO APLICA'));
+          $(".regional").append($('<option>').val(0).text('NO APLICA'));
           for (var i = 0; i < subdirectores.length; i++) {
-             // console.log()
               var id = subdirectores[i].id_usuario;
               var name = subdirectores[i].nombre;
               $(".subdirector").append($('<option>').val(id).text(name.toUpperCase()));
+              $(".regional").append($('<option>').val(id).text(name.toUpperCase()));
           }
           $("#id_asesor").selectpicker();
           $('#id_asesor').val(parseInt(data.clientes[0].id_asesor)).trigger('change');
@@ -719,7 +644,6 @@ $(document).on('click', '.editButton', function(){
         $('#spiner-loader').addClass('hide');
         $('#modalLineaVenta').modal('show');
     }, 'json'); 
-
 });
 
 $(document).on("submit", "#formLineaVentas", function (e) {
@@ -733,10 +657,9 @@ $(document).on("submit", "#formLineaVentas", function (e) {
         processData: false,
         contentType: false, 
         success: function(data){
-            //data = JSON.parse(data);
             $('#spiner-loader').addClass('hide');
             if(data==true){
-                alerts.showNotification("top", "right", "El inventario se actualizó correctamente.", "success");
+                alerts.showNotification("top", "right", "Los datos se actualizaron correctamente.", "success");
                 tabla_inventario.ajax.reload(null,false);    
             }else{
                 alerts.showNotification("top", "right", "Ha ocurrido un error intentalo nuevamente.", "danger");
@@ -750,356 +673,4 @@ $(document).on("submit", "#formLineaVentas", function (e) {
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
-
 });
-
-$(document).on("click", ".ver_historial", function () {
-    var tr = $(this).closest('tr');
-    var row = tabla_inventario.row(tr);
-    idLote = $(this).val();
-    var $itself = $(this);
-
-    var element = document.getElementById("li_individual_sales");
-
-    if ($itself.attr('data-tipo-venta') == 'Venta de particulares') {
-        $.getJSON(`${general_base_url}Contratacion/getClauses/` + idLote).done(function (data) {
-            $('#clauses_content').html(data[0]['nombre']);
-        });
-        element.classList.remove("hide");
-    } else {
-        element.classList.add("hide");
-        $('#clauses_content').html('');
-    }
-
-    $("#seeInformationModal").on("hidden.bs.modal", function () {
-        $("#changeproces").html("");
-        $("#changelog").html("");
-        $('#nomLoteHistorial').html("");
-    });
-    $("#seeInformationModal").modal();
-
-    var urlTableFred = '';
-    $.getJSON(`${general_base_url}Contratacion/obtener_liberacion/` + idLote).done(function (data) {
-        urlTableFred = `${general_base_url}Contratacion/obtener_liberacion/` + idLote;
-        fillFreedom(urlTableFred);
-    });
-
-
-    var urlTableHist = '';
-    $.getJSON(`${general_base_url}Contratacion/historialProcesoLoteOp/` + idLote).done(function (data) {
-        $('#nomLoteHistorial').html($itself.attr('data-nomLote'));
-        urlTableHist = `${general_base_url}Contratacion/historialProcesoLoteOp/` + idLote;
-        fillHistory(urlTableHist);
-    });
-
-    var urlTableCSA = '';
-    $.getJSON(`${general_base_url}Contratacion/getCoSallingAdvisers/` + idLote).done(function (data) {
-        urlTableCSA = `${general_base_url}Contratacion/getCoSallingAdvisers/` + idLote;
-        fillCoSellingAdvisers(urlTableCSA);
-    });
-});
-
-function fillLiberacion(v) {
-    $("#changelog").append('<li class="timeline-inverted">\n' +
-        '<div class="timeline-badge success"></div>\n' +
-        '<div class="timeline-panel">\n' +
-        '<label><h5><b>LIBERACIÓN - </b>' + v.nombreLote + '</h5></label><br>\n' +
-        '<b>ID:</b> ' + v.idLiberacion + '\n' +
-        '<br>\n' +
-        '<b>Estatus:</b> ' + v.estatus_actual + '\n' +
-        '<br>\n' +
-        '<b>Comentario:</b> ' + v.observacionLiberacion + '\n' +
-        '<br>\n' +
-        '<span class="small text-gray"><i class="fa fa-clock-o mr-1"></i> ' + v.nombre + ' ' + v.apellido_paterno + ' ' + v.apellido_materno + ' - ' + v.modificado + '</span>\n' +
-        '</h6>\n' +
-        '</div>\n' +
-        '</li>');
-}
-
-function fillProceso(i, v) {
-    $("#changeproces").append('<li class="timeline-inverted">\n' +
-        '<div class="timeline-badge info">' + (i + 1) + '</div>\n' +
-        '<div class="timeline-panel">\n' +
-        '<b>' + v.nombreStatus + '</b><br><br>\n' +
-        '<b>Comentario:</b> \n<p><i>' + v.comentario + '</i></p>\n' +
-        '<br>\n' +
-        '<b>Detalle:</b> ' + v.descripcion + '\n' +
-        '<br>\n' +
-        '<b>Perfil:</b> ' + v.perfil + '\n' +
-        '<br>\n' +
-        '<b>Usuario:</b> ' + v.usuario + '\n' +
-        '<br>\n' +
-        '<span class="small text-gray"><i class="fa fa-clock-o mr-1"></i> ' + v.modificado + '</span>\n' +
-        '</h6>\n' +
-        '</div>\n' +
-        '</li>');
-
-    // comentario, perfil, modificado,
-}
-
-let titulos_encabezadoh = [];
-let num_colum_encabezadoh = [];
-$('#verDet thead tr:eq(0) th').each(function (i) {
-    var title = $(this).text();
-    titulos_encabezadoh.push(title);
-    num_colum_encabezadoh .push(i);
-    $(this).html(`<input type="text"
-                         class="textoshead w-100"
-                         data-toggle="tooltip" 
-                         data-placement="top"
-                         title="${title}"
-                         placeholder="${title}"/>`);
-    $('input', this).on('keyup change', function () {
-        if ($('#verDet').DataTable().column(i).search() !== this.value) {
-            $('#verDet').DataTable().column(i).search(this.value).draw();
-        }
-    });
-});
-
-function fillHistory(urlTableHist) {
-    tableHistorial = $('#verDet').DataTable({
-        dom: "<'container-fluid pb-1 p-0'<'row'<'col-xs-12 col-sm-6 col-md-6 col-lg-6'B><'col-xs-12 col-sm-6 col-md-6 col-lg-6'f>>>" + "rt" + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        width:"100%",
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                text: '<i class="fa fa-file-excel-o"></i>',
-                className: 'btn buttons-excel',
-                titleAttr: 'Excel',
-                exportOptions: {
-                    columns: num_colum_encabezadoh,
-                    format: {
-                        header: function (d, columnIdx) {
-                            return ' '+titulos_encabezadoh[columnIdx] +' ';
-                        }
-                    }
-                }
-            },
-            {
-                extend: 'pdfHtml5',
-                text: '<i class="fa fa-file-pdf-o"></i>',
-                className: 'btn buttons-pdf',
-                titleAttr: 'PDF',
-                exportOptions: {
-                    columns: num_colum_encabezadoh,
-                    format: {
-                        header: function (d, columnIdx) {
-                            return ' '+titulos_encabezadoh[columnIdx] +' ';
-                        }
-                    }
-                }
-            }
-        ],
-        columnDefs: [{
-            defaultContent: "",
-            targets: "_all",
-            searchable: true,
-            orderable: false
-        }],
-        "scrollX": true,
-        "pageLength": 10,
-        language: {
-            url: `${general_base_url}static/spanishLoader_v2.json`,
-            paginate: {
-                previous: "<i class='fa fa-angle-left'>",
-                next: "<i class='fa fa-angle-right'>"
-            }
-        },
-        "destroy": true,
-        "ordering": false,
-        columns: [
-            { "data": "nombreLote" },
-            { "data": "nombreStatus" },
-            { "data": "descripcion" },
-            { "data": "comentario" },
-            { "data": "modificado" },
-            { "data": "usuario" }
-
-        ],
-        "ajax":
-        {
-            "url": urlTableHist,
-            "dataSrc": ""
-        },
-        initComplete: function () {
-            $('[data-toggle="tooltip"]').tooltip({
-                trigger: "hover"
-            });
-        }
-    });
-}
-
-let titulos_encabezadob = [];
-let num_colum_encabezadob = [];
-$('#verDetBloqueo thead tr:eq(0) th').each(function (i) {
-    var title = $(this).text();
-    titulos_encabezadob.push(title);
-    num_colum_encabezadob .push(i);
-    $(this).html(`<input type="text"
-                         class="textoshead w-100"
-                         data-toggle="tooltip" 
-                         data-placement="top"
-                         title="${title}"
-                         placeholder="${title}"/>`);
-    $('input', this).on('keyup change', function () {
-        if ($('#verDet').DataTable().column(i).search() !== this.value) {
-            $('#verDet').DataTable().column(i).search(this.value).draw();
-        }
-    });
-});
-
-function fillFreedom(urlTableFred) {
-    tableHistorialBloqueo = $('#verDetBloqueo').DataTable({
-        responsive: true,
-
-        dom: "<'container-fluid pb-1 p-0'<'row'<'col-xs-12 col-sm-6 col-md-6 col-lg-6'B><'col-xs-12 col-sm-6 col-md-6 col-lg-6'f>>>" + "rt" + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        width:"100%",
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                text: '<i class="fa fa-file-excel-o"></i>',
-                titleAttr: 'Excel',
-                className: 'btn buttons-excel',
-                exportOptions: {
-                    columns: num_colum_encabezadob,
-                    format: {
-                        header: function (d, columnIdx) {
-                            return ' '+titulos_encabezadob[columnIdx] +' ';
-                        }
-                    }
-                }
-            },
-            {
-                extend: 'pdfHtml5',
-                text: '<i class="fa fa-file-pdf-o"></i>',
-                titleAttr: 'PDF',
-                className: 'btn buttons-pdf',
-                exportOptions: {
-                    columns: num_colum_encabezadob,
-                    format: {
-                        header: function (d, columnIdx) {
-                            return ' '+titulos_encabezadob[columnIdx] +' ';
-                        }
-                    }
-                }
-            }
-        ],
-        columnDefs: [{
-            defaultContent: "",
-            targets: "_all",
-            searchable: true,
-            orderable: false
-        }],
-        "scrollX": true,
-        "pageLength": 10,
-        language: {
-            url: `${general_base_url}static/spanishLoader_v2.json`,
-            paginate: {
-                previous: "<i class='fa fa-angle-left'>",
-                next: "<i class='fa fa-angle-right'>"
-            }
-        },
-        "destroy": true,
-        "ordering": false,
-        columns: [
-            { "data": "nombreLote" },
-            { "data": "precio" },
-            { "data": "modificado" },
-            { "data": "observacionLiberacion" },
-            { "data": "userLiberacion" }
-
-        ],
-        "ajax":
-        {
-            "url": urlTableFred,
-            "dataSrc": ""
-        },
-    });
-}
-
-let titulos_encabezadoc = [];
-let num_colum_encabezadoc = [];
-$('#seeCoSellingAdvisers thead tr:eq(0) th').each(function (i) {
-    var title = $(this).text();
-    titulos_encabezadoc.push(title);
-    num_colum_encabezadoc .push(i);
-    $(this).html(`<input type="text"
-                         class="textoshead w-100"
-                         data-toggle="tooltip" 
-                         data-placement="top"
-                         title="${title}"
-                         placeholder="${title}"/>`);
-    $('input', this).on('keyup change', function () {
-        if ($('#verDet').DataTable().column(i).search() !== this.value) {
-            $('#verDet').DataTable().column(i).search(this.value).draw();
-        }
-    });
-});
-
-function fillCoSellingAdvisers(urlTableCSA) {
-    tableCoSellingAdvisers = $('#seeCoSellingAdvisers').DataTable({
-        responsive: true,
-        dom: "<'container-fluid pb-1 p-0'<'row'<'col-xs-12 col-sm-6 col-md-6 col-lg-6'B><'col-xs-12 col-sm-6 col-md-6 col-lg-6'f>>>" + "rt" + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        width:"100%",
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                text: '<i class="fa fa-file-excel-o"></i>',
-                titleAttr: 'Excel',
-                className: 'btn buttons-excel',
-                exportOptions: {
-                    columns: num_colum_encabezadoc,
-                    format: {
-                        header: function (d, columnIdx) {
-                            return ' '+titulos_encabezadoc[columnIdx] +' ';
-                        }
-                    }
-                }
-            },
-            {
-                extend: 'pdfHtml5',
-                text: '<i class="fa fa-file-pdf-o"></i>',
-                titleAttr: 'PDF',
-                className: 'btn buttons-pdf',
-                exportOptions: {
-                    columns: num_colum_encabezadoc,
-                    format: {
-                        header: function (d, columnIdx) {
-                            return ' '+titulos_encabezadoc[columnIdx] +' ';
-                        }
-                    }
-                }
-            }
-        ],
-        columnDefs: [{
-            defaultContent: "",
-            targets: "_all",
-            searchable: true,
-            orderable: false
-        }],
-        "scrollX": true,
-        "pageLength": 10,
-        language: {
-            url: `${general_base_url}static/spanishLoader_v2.json`,
-            paginate: {
-                previous: "<i class='fa fa-angle-left'>",
-                next: "<i class='fa fa-angle-right'>"
-            }
-        },
-        "destroy": true,
-        "ordering": false,
-        columns: [
-            { "data": "asesor" },
-            { "data": "coordinador" },
-            { "data": "gerente" },
-            { "data": "fecha_creacion" },
-            { "data": "creado_por" }
-
-        ],
-        "ajax":
-        {
-            "url": urlTableCSA,
-            "dataSrc": ""
-        },
-    });
-}
