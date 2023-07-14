@@ -42,9 +42,9 @@ sp = {
     },
   };
 $(document).ready(function(){ /**FUNCIÓN PARA LLENAR EL SELECT DE PROYECTOS(RESIDENCIALES)*/
-sp.initFormExtendedDatetimepickers();
-sp2.initFormExtendedDatetimepickers();
-$(".datepicker").datetimepicker({ locale: "es" });
+    sp.initFormExtendedDatetimepickers();
+    sp2.initFormExtendedDatetimepickers();
+    $(".datepicker").datetimepicker({ locale: "es" });
 
     // BEGIN DATE
     const fechaInicio = new Date();
@@ -73,49 +73,45 @@ $(".datepicker").datetimepicker({ locale: "es" });
         $('#spiner-loader').addClass('hide');
     }, 'json'); 
 
-            $.post(`${general_base_url}Contratacion/lista_estatus`, function (data) {
-                var len = data.length;
-                for (var i = 0; i < len; i++) {
-                    var id = data[i]['idStatusLote'];
-                    var name = data[i]['nombre'];
-                    $("#estatus").append($('<option>').val(id).text(name.toUpperCase()));
-                }
-                $("#estatus").selectpicker('refresh');
-            }, 'json');
+    $.post(`${general_base_url}Contratacion/lista_estatus`, function (data) {
+        var len = data.length;
+        for (var i = 0; i < len; i++) {
+            var id = data[i]['idStatusLote'];
+            var name = data[i]['nombre'];
+            $("#estatus").append($('<option>').val(id).text(name.toUpperCase()));
+        }
+        $("#estatus").selectpicker('refresh');
+    }, 'json');
 
-            $.post(`${general_base_url}contraloria/allUserVentas`, function (data) {
-                    usuariosVentas = data;
-            }, 'json');
+    $.post(`${general_base_url}contraloria/allUserVentas`, function (data) {
+            usuariosVentas = data;
+    }, 'json');
 
-            $('#anio').html("");
-            var d = new Date();
-            var n = d.getFullYear();
-            for (var i = n; i >= 2020; i--){
-              var id = i;
-              $("#anio").append($('<option>').val(id).text(id));
-            }
-            $("#anio").selectpicker('refresh');
-
+    $('#anio').html("");
+    var d = new Date();
+    var n = d.getFullYear();
+    for (var i = n; i >= 2020; i--){
+        var id = i;
+        $("#anio").append($('<option>').val(id).text(id));
+    }
+    $("#anio").selectpicker('refresh');
 });
-
-
-
 
 $('#residencial').change(function(){
     var residencial = $(this).val();
     $("#condominio").empty().selectpicker('refresh');
     $("#lotes").empty().selectpicker('refresh');
     $.post(`${general_base_url}General/getCondominiosList`,{idResidencial:residencial}, function (data) {  
-            data = JSON.parse(data);
-            let len = data.length;
-            for( let i = 0; i<len; i++)
-            {
-                let id = data[i]['idCondominio'];
-                let name = data[i]['nombre'];
-                $("#condominio").append($('<option>').val(id).text(name));
-            }
-            $("#condominio").selectpicker('refresh');
-            $('#spiner-loader').addClass('hide');
+        data = JSON.parse(data);
+        let len = data.length;
+        for( let i = 0; i<len; i++)
+        {
+            let id = data[i]['idCondominio'];
+            let name = data[i]['nombre'];
+            $("#condominio").append($('<option>').val(id).text(name));
+        }
+        $("#condominio").selectpicker('refresh');
+        $('#spiner-loader').addClass('hide');
     });
 });
 
@@ -123,19 +119,17 @@ $('#condominio').change(function(){
     var condominio = $(this).val();
     $("#lotes").selectpicker('refresh');
     $.post(`${general_base_url}General/getLotesList`,{idCondominio:condominio,typeTransaction:0}, function (data) {  
-            data = JSON.parse(data);
-            let len = data.length;
-            for( let i = 0; i<len; i++)
-            {
-                let id = data[i]['idLote'];
-                let name = data[i]['nombreLote'];
-                $("#lotes").append($('<option>').val(id).text(name));
-            }
-            $("#lotes").selectpicker('refresh');
-            $('#spiner-loader').addClass('hide');
+        data = JSON.parse(data);
+        let len = data.length;
+        for( let i = 0; i<len; i++){
+            let id = data[i]['idLote'];
+            let name = data[i]['nombreLote'];
+            $("#lotes").append($('<option>').val(id).text(name));
+        }
+        $("#lotes").selectpicker('refresh');
+        $('#spiner-loader').addClass('hide');
     });
 });
-
 
 //VARIABLES DECLARADAS PARA LA OPTIMIZACION DE COLUMNAS AL MOMENTO DE GENERAR ARCHIVOS DESCARGABLES (XLSX Y PDF)
 let titulos_encabezado = [];
@@ -144,12 +138,7 @@ $('#tabla_lineaVenta thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
     titulos_encabezado.push(title);
     num_colum_encabezado.push(i);
-    $(this).html(`<input type="text"
-                         class="textoshead w-100"
-                         data-toggle="tooltip" 
-                         data-placement="top"
-                         title="${title}"
-                         placeholder="${title}"/>`);
+    $(this).html(`<input type="text" class="textoshead w-100" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
     $('input', this).on('keyup change', function () {
         if ($('#tabla_lineaVenta').DataTable().column(i).search() !== this.value) {
             $('#tabla_lineaVenta').DataTable().column(i).search(this.value).draw();
@@ -168,7 +157,8 @@ function formatDate(date) {
     if (day.length < 2) day = "0" + day;
   
     return [year, month, day].join("-");
-  }
+}
+
 $(document).on('click','#searchByDateRange', function () {
     fechaInicio = $("#beginDate").val();
     fechaFin =  $("#endDate").val();
@@ -182,23 +172,21 @@ $(document).on('click','#searchByDateRange', function () {
                 trigger: "hover"
             });
         },
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                className: 'btn buttons-excel',
-                titleAttr: 'Inventario Lotes',
-                title: "Inventario Lotes",
-                exportOptions: {
-                    columns: num_colum_encabezado,
-                    format: {
-                        header: function (d, columnIdx) {
-                            return ' '+titulos_encabezado[columnIdx] +' ';
-                        }
+        buttons: [{
+            extend: 'excelHtml5',
+            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+            className: 'btn buttons-excel',
+            titleAttr: 'Inventario Lotes',
+            title: "Inventario Lotes",
+            exportOptions: {
+                columns: num_colum_encabezado,
+                format: {
+                    header: function (d, columnIdx) {
+                        return ' '+titulos_encabezado[columnIdx] +' ';
                     }
                 }
-            },
-        ],
+            }
+        }],
         language: {
             url: general_base_url+'static/spanishLoader_v2.json',
             paginate: {
@@ -221,110 +209,108 @@ $(document).on('click','#searchByDateRange', function () {
             searchable: true,
             orderable: false
         }],
-        columns:
-            [{
-                data: 'nombreResidencial'
-            },
-            {
-                "data": function (d) {
-                    return '<p>' + (d.nombreCondominio).toUpperCase() + '</p>';
-                }
-            },
-            {
-                data: 'nombreLote'
-            },
-            {
-                data: 'referencia'
-            },
-            {
-                data: function (d) {
-                    return d.asesor;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.coordinador;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.gerente;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.subdirector;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.regional;
-                }
-            },
-            {
-                data: function (d) {
-                      return  d.regional2;
-                }
-            },
-            {
-                data: function (d) {
-                      return  d.id_asesor == 12845 || d.id_asesor == 12874 || d.id_asesor == 12205 ? `<center><span class="label lbl-azure">ASESOR COMODÍN</span> <center>` : 'NORMAL';
-                }
-            },
-            {
-                data: function (d) {
-                    let libContraloria = (d.observacionContratoUrgente == '1') ? '<center><span class="label lbl-pink">Lib. Contraloría</span> <center><p><p>' : '';
-                    let compartida =  d.banderaVC != null || d.banderaVC != undefined ? '<center><span class="label lbl-violetBoots">Compartida</span><center><p><p>' : '';
-                    let registro = `<center><span class="label lbl-violetBoots">${d.registro}</span><center><p><p>`; 
-                    return d.tipo_venta == null ?
-                        `<center><span class="label" style="background:#${d.background_sl}; color:#${d.color};">${d.descripcion_estatus}</span> ${libContraloria} <center>${compartida} ${registro}` :
-                        `<center><span class="label" style="background:#${d.background_sl}; color:#${d.color};">${d.descripcion_estatus}</span> <p><p> <span class="label lbl-green">${d.tipo_venta}</span> ${libContraloria} <center>${compartida} ${registro}`;
-                }
-            },
-            {
-                "data": function (d) {
-                    if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10) {
-                        if (d.fecha_modst == 'null' || d.fecha_modst == 'NULL' || d.fecha_modst == null || d.fecha_modst == '') {
-                            return '-';
-                        } else {
-                            return '<p>' + d.fecha_modst + '</p>';
-                        }
+        columns:[{
+            data: 'nombreResidencial'
+        },
+        {
+            "data": function (d) {
+                return '<p>' + (d.nombreCondominio).toUpperCase() + '</p>';
+            }
+        },
+        {
+            data: 'nombreLote'
+        },
+        {
+            data: 'referencia'
+        },
+        {
+            data: function (d) {
+                return d.asesor;
+            }
+        },
+        {
+            data: function (d) {
+                return d.coordinador;
+            }
+        },
+        {
+            data: function (d) {
+                return d.gerente;
+            }
+        },
+        {
+            data: function (d) {
+                return d.subdirector;
+            }
+        },
+        {
+            data: function (d) {
+                return d.regional;
+            }
+        },
+        {
+            data: function (d) {
+                    return  d.regional2;
+            }
+        },
+        {
+            data: function (d) {
+                    return  d.id_asesor == 12845 || d.id_asesor == 12874 || d.id_asesor == 12205 ? `<center><span class="label lbl-azure">ASESOR COMODÍN</span> <center>` : 'NORMAL';
+            }
+        },
+        {
+            data: function (d) {
+                let libContraloria = (d.observacionContratoUrgente == '1') ? '<center><span class="label lbl-pink">Lib. Contraloría</span> <center><p><p>' : '';
+                let compartida =  d.banderaVC != null || d.banderaVC != undefined ? '<center><span class="label lbl-violetBoots">Compartida</span><center><p><p>' : '';
+                let registro = `<center><span class="label lbl-violetBoots">${d.registro}</span><center><p><p>`; 
+                return d.tipo_venta == null ?
+                    `<center><span class="label" style="background:#${d.background_sl}; color:#${d.color};">${d.descripcion_estatus}</span> ${libContraloria} <center>${compartida} ${registro}` :
+                    `<center><span class="label" style="background:#${d.background_sl}; color:#${d.color};">${d.descripcion_estatus}</span> <p><p> <span class="label lbl-green">${d.tipo_venta}</span> ${libContraloria} <center>${compartida} ${registro}`;
+            }
+        },
+        {
+            "data": function (d) {
+                if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10) {
+                    if (d.fecha_modst == 'null' || d.fecha_modst == 'NULL' || d.fecha_modst == null || d.fecha_modst == '') {
+                        return '-';
                     } else {
-                        if (d.fechaApartado == 'null' || d.fechaApartado == 'NULL' || d.fechaApartado == null || d.fechaApartado == '') {
-                            return '-';
-                        } else {
-                            return '<p>' + d.fechaApartado + '</p>';
-                        }
+                        return '<p>' + d.fecha_modst + '</p>';
+                    }
+                } else {
+                    if (d.fechaApartado == 'null' || d.fechaApartado == 'NULL' || d.fechaApartado == null || d.fechaApartado == '') {
+                        return '-';
+                    } else {
+                        return '<p>' + d.fechaApartado + '</p>';
                     }
                 }
-            },
-            {
-                data: function(d) {
-                    if(d.ubicacion != null)
-                        return `<center><span class="label lbl-oceanGreen">${d.ubicacion}</span> <center>`;
-                    else
-                        return `<center><span class="label lbl-gray">NO APLICA</span> <center>`;                   
-                }         
-            },
-            {
-                "data": function (d) {
-                    $('[data-toggle="tooltip"]').tooltip({
-                        trigger: "hover"
-                    });
-                    return d.comision == null ? `<center><button class="editButton btn-data btn-yellow" data-accion="1" data-banderaVC="${d.banderaVC}" data-idCliente="${d.idCliente}" title="Ver inventario"><i class="fas fa-eye"></i></button></button><button data-accion="2" class="editButton btn-data btn-sky" data-banderaVC="${d.banderaVC}" data-idCliente="${d.idCliente}" title= "Editar línea de venta"><i class="fas fa-edit"></i></button></center>` : `<center><button class="editButton btn-data btn-yellow" data-accion="1" data-banderaVC="${d.banderaVC}" data-idCliente="${d.idCliente}" title="Ver inventario"><i class="fas fa-eye"></i></center>`;
-                }
-            }],
-            ajax: {
-                url: `${general_base_url}index.php/contraloria/get_inventario`,
-                type: "POST",
-                cache: false,
-                data: {fechaInicio:fechaInicio,fechaFin:fechaFin}
-            }      
+            }
+        },
+        {
+            data: function(d) {
+                if(d.ubicacion != null)
+                    return `<center><span class="label lbl-oceanGreen">${d.ubicacion}</span> <center>`;
+                else
+                    return `<center><span class="label lbl-gray">NO APLICA</span> <center>`;                   
+            }         
+        },
+        {
+            "data": function (d) {
+                $('[data-toggle="tooltip"]').tooltip({
+                    trigger: "hover"
+                });
+                return d.comision == null ? `<center><button class="editButton btn-data btn-yellow" data-accion="1" data-banderaVC="${d.banderaVC}" data-idCliente="${d.idCliente}" title="Ver inventario"><i class="fas fa-eye"></i></button></button><button data-accion="2" class="editButton btn-data btn-sky" data-banderaVC="${d.banderaVC}" data-idCliente="${d.idCliente}" title= "Editar línea de venta"><i class="fas fa-edit"></i></button></center>` : `<center><button class="editButton btn-data btn-yellow" data-accion="1" data-banderaVC="${d.banderaVC}" data-idCliente="${d.idCliente}" title="Ver inventario"><i class="fas fa-eye"></i></center>`;
+            }
+        }],
+        ajax: {
+            url: `${general_base_url}index.php/contraloria/get_inventario`,
+            type: "POST",
+            cache: false,
+            data: {fechaInicio:fechaInicio,fechaFin:fechaFin}
+        }
     });
     $(window).resize(function () {
         tabla_inventario.columns.adjust();
     });
-    
 });
 
 $('#tabla_lineaVenta').on('draw.dt', function() {
@@ -522,104 +508,103 @@ $(document).on('click', '.editButton', function(){
             $('#modalI').append(`<h4>Venta compartida</h4`);
             for (let m = 0; m < len; m++) {
             $('#modalI').append(`
-            <h5>Línea ${m +1}</h5>
-            <div class="row">
-                <div class="col-lg-4  overflow-hidden">
-                        <label class="control-label">Asesor</label>
-                        <select class="selectpicker select-gral m-0 asesor" onchange="validarAsesor(${data.compartidas[0].id_asesor},${banderaVC},${len},2,${m})" name="id_asesor_${m}" id="id_asesor_${m}" data-style="btn"
-                        data-show-subtext="true"
-                        title="Selecciona una opción"
-                        data-size="7"
-                        data-live-search="true" data-container="body"
-                        required ></select>
-                </div>
-                <input type="hidden" value="${data.compartidas[m].id_vcompartida}" name="id_vcompartida_${m}" id="id_vcompartida_${m}">
-                <div class="col-lg-4  overflow-hidden">
-                        <label class="control-label">Coordinador</label>
-                        <select class="selectpicker select-gral m-0 coordinador" name="id_coordinador_${m}" id="id_coordinador_${m}" data-style="btn"
-                        data-show-subtext="true"
-                        title="Selecciona una opción"
-                        data-size="7"
-                        data-live-search="true" data-container="body"
-                        ></select>
-                </div>
-                <div class="col-lg-4  overflow-hidden">
-                        <label class="control-label">Gerente</label>
-                        <select class="selectpicker select-gral m-0 gerente" name="id_gerente_${m}" id="id_gerente_${m}" data-style="btn"
+                <h5>Línea ${m +1}</h5>
+                <div class="row">
+                    <div class="col-lg-4  overflow-hidden">
+                            <label class="control-label">Asesor</label>
+                            <select class="selectpicker select-gral m-0 asesor" onchange="validarAsesor(${data.compartidas[0].id_asesor},${banderaVC},${len},2,${m})" name="id_asesor_${m}" id="id_asesor_${m}" data-style="btn"
+                            data-show-subtext="true"
+                            title="Selecciona una opción"
+                            data-size="7"
+                            data-live-search="true" data-container="body"
+                            required ></select>
+                    </div>
+                    <input type="hidden" value="${data.compartidas[m].id_vcompartida}" name="id_vcompartida_${m}" id="id_vcompartida_${m}">
+                    <div class="col-lg-4  overflow-hidden">
+                            <label class="control-label">Coordinador</label>
+                            <select class="selectpicker select-gral m-0 coordinador" name="id_coordinador_${m}" id="id_coordinador_${m}" data-style="btn"
+                            data-show-subtext="true"
+                            title="Selecciona una opción"
+                            data-size="7"
+                            data-live-search="true" data-container="body"
+                            ></select>
+                    </div>
+                    <div class="col-lg-4  overflow-hidden">
+                            <label class="control-label">Gerente</label>
+                            <select class="selectpicker select-gral m-0 gerente" name="id_gerente_${m}" id="id_gerente_${m}" data-style="btn"
+                            data-show-subtext="true"
+                            title="Selecciona una opción"
+                            data-size="7"
+                            data-live-search="true" data-container="body"
+                            required></select>
+                    </div>
+                    <div class="col-lg-4  overflow-hidden">
+                        <label class="control-label">Subdirector</label>
+                        <select class="selectpicker select-gral m-0 subdirector" name="id_subdirector_${m}" id="id_subdirector_${m}" data-style="btn"
                         data-show-subtext="true"
                         title="Selecciona una opción"
                         data-size="7"
                         data-live-search="true" data-container="body"
                         required></select>
-                </div>
-                <div class="col-lg-4  overflow-hidden">
-                    <label class="control-label">Subdirector</label>
-                    <select class="selectpicker select-gral m-0 subdirector" name="id_subdirector_${m}" id="id_subdirector_${m}" data-style="btn"
-                    data-show-subtext="true"
-                    title="Selecciona una opción"
-                    data-size="7"
-                    data-live-search="true" data-container="body"
-                    required></select>
-                </div>
-                <div class="col-lg-4  overflow-hidden">
-                    <label class="control-label">Regional</label>
-                    <select class="selectpicker select-gral m-0 regional" name="id_regional_${m}" id="id_regional_${m}" data-style="btn"
-                    data-show-subtext="true"
-                    title="Selecciona una opción"
-                    data-size="7"
-                    data-live-search="true" data-container="body"
-                    ></select>
-                </div>
-                <div class="col-lg-4  overflow-hidden">
-                    <label class="control-label">Regional 2</label>
-                    <select class="selectpicker select-gral m-0 regional" name="id_regional_2_${m}" id="id_regional_2_${m}" data-style="btn"
-                    data-show-subtext="true"
-                    title="Selecciona una opción"
-                    data-size="7"
-                    data-live-search="true" data-container="body"
-                    ></select>
-                </div>
-            </div> 
-            `);
+                    </div>
+                    <div class="col-lg-4  overflow-hidden">
+                        <label class="control-label">Regional</label>
+                        <select class="selectpicker select-gral m-0 regional" name="id_regional_${m}" id="id_regional_${m}" data-style="btn"
+                        data-show-subtext="true"
+                        title="Selecciona una opción"
+                        data-size="7"
+                        data-live-search="true" data-container="body"
+                        ></select>
+                    </div>
+                    <div class="col-lg-4  overflow-hidden">
+                        <label class="control-label">Regional 2</label>
+                        <select class="selectpicker select-gral m-0 regional" name="id_regional_2_${m}" id="id_regional_2_${m}" data-style="btn"
+                        data-show-subtext="true"
+                        title="Selecciona una opción"
+                        data-size="7"
+                        data-live-search="true" data-container="body"
+                        ></select>
+                    </div>
+                </div> `);
             }
         }
         for (var i = 0; i < asesores.length; i++) {
-             var id = asesores[i].id_usuario;
-             var name = asesores[i].nombre;
-             $(".asesor").append($('<option>').val(id).text(name.toUpperCase()));
-         }
-         $(".coordinador").append($('<option>').val(0).text('NO APLICA'));
-         for (var i = 0; i < coordinadores.length; i++) {
-              var id = coordinadores[i].id_usuario;
-              var name = coordinadores[i].nombre;
-              $(".coordinador").append($('<option>').val(id).text(name.toUpperCase()));
-          }
-          for (var i = 0; i < gerentes.length; i++) {
-              var id = gerentes[i].id_usuario;
-              var name = gerentes[i].nombre;
-              $(".gerente").append($('<option>').val(id).text(name.toUpperCase()));
-          }
-          $(".regional").append($('<option>').val(0).text('NO APLICA'));
-          for (var i = 0; i < subdirectores.length; i++) {
-              var id = subdirectores[i].id_usuario;
-              var name = subdirectores[i].nombre;
-              $(".subdirector").append($('<option>').val(id).text(name.toUpperCase()));
-              $(".regional").append($('<option>').val(id).text(name.toUpperCase()));
-          }
-          $("#id_asesor").selectpicker();
-          $('#id_asesor').val(parseInt(data.clientes[0].id_asesor)).trigger('change');
-          $("#id_coordinador").selectpicker();
-          $('#id_coordinador').val(parseInt(data.clientes[0].id_coordinador)).trigger('change');
-          $("#id_gerente").selectpicker();
-          $('#id_gerente').val(parseInt(data.clientes[0].id_gerente)).trigger('change');
-          $("#id_subdirector").selectpicker();
-          $('#id_subdirector').val(parseInt(data.clientes[0].id_subdirector)).trigger('change');
-          $("#id_regional").selectpicker();
-          $('#id_regional').val(parseInt(data.clientes[0].id_regional == null ? 0 : data.clientes[0].id_regional)).trigger('change');
-          $("#id_regional_2").selectpicker();
-          $('#id_regional_2').val(parseInt(data.clientes[0].id_regional_2 == null ? 0 : data.clientes[0].id_regional_2)).trigger('change');
+            var id = asesores[i].id_usuario;
+            var name = asesores[i].nombre;
+            $(".asesor").append($('<option>').val(id).text(name.toUpperCase()));
+        }
+        $(".coordinador").append($('<option>').val(0).text('NO APLICA'));
+        for (var i = 0; i < coordinadores.length; i++) {
+            var id = coordinadores[i].id_usuario;
+            var name = coordinadores[i].nombre;
+            $(".coordinador").append($('<option>').val(id).text(name.toUpperCase()));
+        }
+        for (var i = 0; i < gerentes.length; i++) {
+            var id = gerentes[i].id_usuario;
+            var name = gerentes[i].nombre;
+            $(".gerente").append($('<option>').val(id).text(name.toUpperCase()));
+        }
+        $(".regional").append($('<option>').val(0).text('NO APLICA'));
+        for (var i = 0; i < subdirectores.length; i++) {
+            var id = subdirectores[i].id_usuario;
+            var name = subdirectores[i].nombre;
+            $(".subdirector").append($('<option>').val(id).text(name.toUpperCase()));
+            $(".regional").append($('<option>').val(id).text(name.toUpperCase()));
+        }
+        $("#id_asesor").selectpicker();
+        $('#id_asesor').val(parseInt(data.clientes[0].id_asesor)).trigger('change');
+        $("#id_coordinador").selectpicker();
+        $('#id_coordinador').val(parseInt(data.clientes[0].id_coordinador)).trigger('change');
+        $("#id_gerente").selectpicker();
+        $('#id_gerente').val(parseInt(data.clientes[0].id_gerente)).trigger('change');
+        $("#id_subdirector").selectpicker();
+        $('#id_subdirector').val(parseInt(data.clientes[0].id_subdirector)).trigger('change');
+        $("#id_regional").selectpicker();
+        $('#id_regional').val(parseInt(data.clientes[0].id_regional == null ? 0 : data.clientes[0].id_regional)).trigger('change');
+        $("#id_regional_2").selectpicker();
+        $('#id_regional_2').val(parseInt(data.clientes[0].id_regional_2 == null ? 0 : data.clientes[0].id_regional_2)).trigger('change');
 
-          if(banderaVC != 0 && banderaVC != 0){
+        if(banderaVC != 0 && banderaVC != 0){
             for (let o = 0; o < data.compartidas.length; o++) {
                 $(`#id_asesor_${o}`).selectpicker();
                 $(`#id_asesor_${o}`).val(parseInt(data.compartidas[o].id_asesor)).trigger('change');
@@ -635,7 +620,7 @@ $(document).on('click', '.editButton', function(){
                 $(`#id_regional_2_${o}`).val(parseInt(data.compartidas[o].id_regional_2 == null ? 0 : data.clientes[0].id_regional_2)).trigger('change');             
                 $(`#id_asesor_${o}`).selectpicker('refresh'); 
             }
-          }
+        }
         $(".asesor").selectpicker('refresh');
         $(".coordinador").selectpicker('refresh');
         $(".gerente").selectpicker('refresh');
