@@ -117,7 +117,7 @@ $("#tabla_ingresar_14").ready(function () {
                     }
                     return '<div class="d-flex justify-center">' + cntActions + '</div>';
                 }
-                return ' `<span class="label lbl-warning">N/A</span>`;';
+                return '<span class="label lbl-warning">N/A</span>';
             }
         }
         ],

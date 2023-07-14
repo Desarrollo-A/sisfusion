@@ -54,6 +54,9 @@ class Contratacion extends CI_Controller
     }
 
     public function get_inventario($estatus, $condominio, $proyecto) {
+        ini_set('max_execution_time', 900);
+        set_time_limit(900);
+        ini_set('memory_limit','2048M');
 		$this->validateSession();
 		$data = $this->Contratacion_model->getInventarioData($estatus, $condominio, $proyecto);
 		if($data!=null)

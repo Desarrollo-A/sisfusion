@@ -4,6 +4,7 @@
 <body>
 	<div class="wrapper">
 		<?php $this->load->view('template/sidebar'); ?>
+
 		<div class="modal fade" id="verDetalles" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
@@ -114,8 +115,9 @@
 		</div>
 		<?php $this->load->view('template/footer_legend'); ?>
 	</div>
-	</div><!--main-panel close-->
+	</div>
 	<?php $this->load->view('template/footer'); ?>
+	
 	<script src="<?= base_url() ?>dist/js/modal-steps.min.js"></script>
 	<?php if ($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 5) { ?>
 		<script src="<?= base_url() ?>dist/js/controllers/general-1.1.0.js"></script>

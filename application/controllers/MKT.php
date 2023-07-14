@@ -165,6 +165,9 @@ class MKT extends CI_Controller {
 
 	public function inventario()
 	{
+		ini_set('max_execution_time', 900);
+		set_time_limit(900);
+		ini_set('memory_limit','2048M');
 		$datos["registrosLoteContratacion"] = $this->registrolote_modelo->registroLote();
 		$datos["residencial"] = $this->Asesor_model->get_proyecto_lista();
 		$this->load->view('template/header');
