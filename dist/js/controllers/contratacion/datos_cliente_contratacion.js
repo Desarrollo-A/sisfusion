@@ -54,20 +54,10 @@ $("#tabla_clientes").ready(function () {
         if(title !== ''){
             let readOnly = excluir_column.includes(title) ? 'readOnly': '';
             let width = title=='MÁS' ? 'width: 37px;': (title == 'ACCIONES' ? 'width: 57px;' : '');
-            $(this).html(`<input type="text"
-                                style="${width}"
-                                class="textoshead "
-                                data-toggle="tooltip" 
-                                data-placement="top"
-                                title="${title}"
-                                placeholder="${title}"
-                                ${readOnly}/>`);
+            $(this).html(`<input type="text" style="${width}" class="textoshead " data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}" ${readOnly}/>`);
             $('input', this).on('keyup change', function () {
                 if (tabla_valores_cliente.column(i).search() !== this.value) {
-                    tabla_valores_cliente
-                        .column(i)
-                        .search(this.value)
-                        .draw();
+                    tabla_valores_cliente.column(i).search(this.value).draw();
                 }
             });
         }
@@ -188,16 +178,7 @@ function fillTable(index_proyecto, index_condominio) {
             {
                 data: function (d) {
                     return `<center>
-                                <button class="btn-data btn-blueMaderas cop"
-                                        data-toggle="tooltip" 
-                                        data-placement="top"
-                                        title= "VENTAS COMPARTIDAS"
-                                        data-idcliente="${d.id_cliente}"
-                                        data-idLote="${d.idLote}">
-                                    <i class="material-icons">
-                                        people
-                                    </i>
-                                </button>
+                                <button class="btn-data btn-blueMaderas cop" data-toggle="tooltip" data-placement="top" title= "VENTAS COMPARTIDAS" data-idcliente="${d.id_cliente}" data-idLote="${d.idLote}"><i class="material-icons">people</i></button>
                             </center>`;
                 }
             }
@@ -333,7 +314,6 @@ $(document).on('click', '.cop', function (e) {
     e.preventDefault();
     var $itself = $(this);
     var id_lote = $itself.attr('data-idLote');
-
     id_lote_global = id_lote;
     tableHistorial.ajax.reload();
     $('#verDetalles').modal('show');

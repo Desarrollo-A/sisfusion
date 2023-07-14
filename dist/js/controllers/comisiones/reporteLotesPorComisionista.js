@@ -351,7 +351,7 @@ $(document).on("click", "#detailComisionistaBtn", function () {
 });
 
 function colocarValoresTotales(total, totalAbonado, totalPagado) {
-    document.getElementById("txt_totalComision").textContent = '$' + formatMoney(total);
-    document.getElementById("txt_totalAbonado").textContent = '$' + formatMoney(totalAbonado);
-    document.getElementById("txt_totalPagado").textContent = '$' + formatMoney(totalPagado);
+    document.getElementById("txt_totalComision").textContent = formatMoney(total);
+    document.getElementById("txt_totalAbonado").textContent = formatMoney(totalAbonado);
+    document.getElementById("txt_totalPagado").textContent = formatMoney(totalPagado);
 }

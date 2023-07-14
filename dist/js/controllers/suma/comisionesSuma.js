@@ -24,7 +24,7 @@ $(document).on("click", ".individualCheck", function() {
         else 
             $("#all").prop("checked", false); // si se desmarca un CB se desmarca CB total
     });
-    $("#totpagarPen").html('$ ' + formatMoney(totaPen));
+    $("#totpagarPen").html(formatMoney(totaPen));
 });
     // Función de selección total
 function selectAll(e) {
@@ -38,7 +38,7 @@ function selectAll(e) {
                 $(v).prop("checked", true);
             }
         }); 
-        $("#totpagarPen").html('$ ' + formatMoney(tota2));
+        $("#totpagarPen").html(formatMoney(tota2));
     }
     if(e.checked == false){
         $(tabla_nuevas.$('input[type="checkbox"]')).each(function (i, v) {
@@ -46,7 +46,7 @@ function selectAll(e) {
                 $(v).prop("checked", false);
             }
         }); 
-        $("#totpagarPen").html('$ ' + formatMoney(0));
+        $("#totpagarPen").html(formatMoney(0));
     }
 }
 
@@ -68,7 +68,7 @@ $(document).on("click", ".subir-archivo", function (e) {
         dataType: 'JSON',
         success: function (data) {
             $('#total-comision').html("");
-            $('#total-comision').append(`Total: $${formatMoney(data.total)}`);
+            $('#total-comision').append(`Total: ${formatMoney(data.total)}`);
             $('#addFileExtranjero').modal('show');
         }
     });
@@ -168,7 +168,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     $.each(data, function (i, v) {
                         total += parseFloat(v.total_comision);
                     });
-                    document.getElementById("myText_nuevas").textContent = '$' + formatMoney(total);
+                    document.getElementById("myText_nuevas").textContent = formatMoney(total);
                 }
             });
         }
@@ -183,7 +183,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
             total += parseFloat(v.total_comision);
         });
         var to = formatMoney(total);
-        document.getElementById("myText_nuevas").textContent = '$' + to;
+        document.getElementById("myText_nuevas").textContent = to;
     });
 
     tabla_nuevas = $("#tabla_nuevas_comisiones").DataTable({
@@ -299,12 +299,12 @@ $("#tabla_nuevas_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$ ' + formatMoney(d.total_comision) + '</p>';
+                return '<p class="m-0"> ' + formatMoney(d.total_comision) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$ ' + formatMoney(d.impuesto) + '</p>';
+                return '<p class="m-0"> ' + formatMoney(d.impuesto) + '</p>';
             }
         },
         {
@@ -460,7 +460,7 @@ $("#tabla_revision_comisiones").ready(function () {
                 $.each(data, function (i, v) {
                     total += parseFloat(v.total_comision);
                 });
-                document.getElementById("myText_revision").textContent = '$' + formatMoney(total);
+                document.getElementById("myText_revision").textContent = formatMoney(total);
             }
         });
     });
@@ -471,7 +471,7 @@ $("#tabla_revision_comisiones").ready(function () {
             total += parseFloat(v.total_comision);
         });
         var to = formatMoney(total);
-        document.getElementById("myText_revision").textContent = '$' + to;
+        document.getElementById("myText_revision").textContent = to;
     });
 
     tabla_revision = $("#tabla_revision_comisiones").DataTable({
@@ -531,12 +531,12 @@ $("#tabla_revision_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$ ' + formatMoney(d.total_comision) + '</p>';
+                return '<p class="m-0"> ' + formatMoney(d.total_comision) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$ ' + formatMoney(d.impuesto) + '</p>';
+                return '<p class="m-0"> ' + formatMoney(d.impuesto) + '</p>';
             }
         },
         {
@@ -622,7 +622,7 @@ $("#tabla_pagadas_comisiones").ready(function () {
                 $.each(data, function (i, v) {
                     total += parseFloat(v.total_comision);
                 });
-                document.getElementById("myText_pagadas").textContent = '$' + formatMoney(total);
+                document.getElementById("myText_pagadas").textContent = formatMoney(total);
             }
         });
     });
@@ -633,7 +633,7 @@ $("#tabla_pagadas_comisiones").ready(function () {
             total += parseFloat(v.total_comision);
         });
         var to = formatMoney(total);
-        document.getElementById("myText_pagadas").textContent = '$' + to;
+        document.getElementById("myText_pagadas").textContent = to;
     });
 
     tabla_pagadas = $("#tabla_pagadas_comisiones").DataTable({
@@ -693,12 +693,12 @@ $("#tabla_pagadas_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$' + formatMoney(d.total_comision) + '</p>';
+                return '<p class="m-0">' + formatMoney(d.total_comision) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$' + formatMoney(d.impuesto) + '</p>';
+                return '<p class="m-0">' + formatMoney(d.impuesto) + '</p>';
             }
         },
         {
@@ -811,7 +811,7 @@ $("#tabla_pausadas_comisiones").ready(function () {
                     total += parseFloat(v.total_comision);
                 });
 
-                document.getElementById("myText_pausadas").textContent = '$' + formatMoney(total);
+                document.getElementById("myText_pausadas").textContent = formatMoney(total);
             }
         });
     });
@@ -822,7 +822,7 @@ $("#tabla_pausadas_comisiones").ready(function () {
             total += parseFloat(v.total_comision);
         });
         var to = formatMoney(total);
-        document.getElementById("myText_pausadas").textContent = '$' + to;
+        document.getElementById("myText_pausadas").textContent = to;
     });
 
     tabla_pausadas = $("#tabla_pausadas_comisiones").DataTable({
@@ -882,12 +882,12 @@ $("#tabla_pausadas_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$' + formatMoney(d.total_comision) + '</p>';
+                return '<p class="m-0">' + formatMoney(d.total_comision) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$' + formatMoney(d.impuesto) + '</p>';
+                return '<p class="m-0">' + formatMoney(d.impuesto) + '</p>';
             }
         },
         {
@@ -1324,7 +1324,7 @@ function sumCheck() {
         }
     }
     var myCommentsList = document.getElementById('sumacheck');
-    myCommentsList.innerHTML = 'Suma seleccionada: $ ' + formatMoney(suma.toFixed(3));
+    myCommentsList.innerHTML = 'Suma seleccionada: ' + formatMoney(suma.toFixed(3));
 }
 
 function disabled() {

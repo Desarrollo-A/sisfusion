@@ -42,10 +42,7 @@
                         <div class="row aligned-row">
                             <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-3">
                                 <div class="form-group label-floating select-is-empty m-0 p-0">
-                                    <select id="asesoresList" name="asesoresList"
-                                        class="selectpicker select-gral m-0"
-                                        data-style="btn" data-show-subtext="true"
-                                        data-live-search="true"
+                                    <select id="asesoresList" name="asesoresList" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true"
                                         title="SELECCIONA UNA OPCIÓN" data-size="7" required>
                                     </select>
                                  </div>

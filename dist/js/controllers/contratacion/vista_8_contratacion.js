@@ -188,6 +188,9 @@ $(document).ready(function () {
         });
     });
 
+    const idStatusContratacion = [7,11];
+    const idMovimiento = [7, 37, 64, 66, 77, 41];
+
     $('#Jtabla tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
         var row = tabla_6.row(tr);
@@ -202,30 +205,27 @@ $(document).ready(function () {
             var fechaVenc;
 
             if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 37) {
-                status = "STATUS 7 LISTO (JURÍDICO)";
+                status = "ESTATUS 7 LISTO (JURÍDICO)";
             }
             else if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 7) {
-                status = "STATUS 7 LISTO CON MODIFICACIONES (JURÍDICO)";
+                status = "ESTATUS 7 LISTO CON MODIFICACIONES (JURÍDICO)";
             }
             else if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 64) {
-                status = "STATUS 8 RECHAZADO (CONTRALORIA)";
+                status = "ESTATUS 8 RECHAZADO (CONTRALORIA)";
             }
             else if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 66) {
-                status = "STATUS 8 RECHAZADO (ADMINISTRACIÓN)";
+                status = "ESTATUS 8 RECHAZADO (ADMINISTRACIÓN)";
             }
             else if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 77) {
-                status = "STATUS 2 ENVIADO REVISIÓN (VENTAS)";
+                status = "ESTATUS 2 ENVIADO REVISIÓN (VENTAS)";
             }
-            // else if (row.data().idStatusContratacion == 11 && row.data().idMovimiento == 41) {
-            //     status = "VALIDACIÓN DE ENGANCHE (ADMINISTRACIÓN)";
-            // }
-
-            if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 37 ||
-                row.data().idStatusContratacion == 7 && row.data().idMovimiento == 7 ||
-                row.data().idStatusContratacion == 7 && row.data().idMovimiento == 64 ||
-                row.data().idStatusContratacion == 7 && row.data().idMovimiento == 77){
-                fechaVenc = row.data().fechaVenc;
-            } else if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 66) {
+            else if (row.data().idStatusContratacion == 11 && row.data().idMovimiento == 41) {
+                status = "ESTATUS 11 VALIDACIÓN DE ENGANCHE (ADMINISTRACIÓN)";
+            }
+    
+            if(idStatusContratacion.includes(parseInt(row.data().idStatusContratacion)) && idMovimiento.includes(parseInt(row.data().idMovimiento)))
+                    fechaVenc = row.data().fechaVenc;
+             else if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 66) {
                 fechaVenc = 'VENCIDO';
             }
 

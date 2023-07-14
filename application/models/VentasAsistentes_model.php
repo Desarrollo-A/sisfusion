@@ -104,7 +104,7 @@ class VentasAsistentes_model extends CI_Model {
             $filtroUsuarioBR = '';
             if($id_usuario == 2815)
                 $filtroUsuarioBR = ' AND (l.tipo_venta IN (4, 6) OR cl.id_asesor IN (2549, 2570, 2591))';
-            else if ($id_usuario == 12377 || $id_usuario == 2799) // MIRIAM PAOLA JIMENEZ FIGUEROA o LADY SKARLETT LOPEZ VEN REUBICACIONES
+            else if (in_array($id_usuario, array(12377, 2799, 10088, 2827, 6012))) // MIRIAM PAOLA JIMENEZ FIGUEROA o LADY SKARLETT LOPEZ VEN REUBICACIONES
                 $filtroUsuarioBR = ' AND l.tipo_venta IN (6)';
             else
                 $filtroUsuarioBR = ' AND l.tipo_venta IN (4, 6)';
@@ -134,7 +134,7 @@ class VentasAsistentes_model extends CI_Model {
 
 		$query = $this->db-> query("SELECT l.idLote, cl.id_cliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, CONVERT(VARCHAR, l.modificado, 120) AS modificado, cl.rfc, sd.nombre as nombreSede,
-        CAST(l.comentario AS varchar(MAX)) as comentario, l.fechaVenc, l.perfil, cond.nombre as nombreCondominio, res.nombreResidencial, l.ubicacion,
+        CAST(l.comentario AS varchar(MAX)) as comentario, CONVERT(VARCHAR,l.fechaVenc,120) AS fechaVenc, l.perfil, cond.nombre as nombreCondominio, res.nombreResidencial, l.ubicacion,
         ISNULL(tv.tipo_venta, 'Sin especificar') tipo_venta, l.observacionContratoUrgente as vl,
         CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
         CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
@@ -258,7 +258,7 @@ class VentasAsistentes_model extends CI_Model {
             $filtroUsuarioBR = '';
             if($id_usuario == 2815)
                 $filtroUsuarioBR = ' AND (l.tipo_venta IN (4, 6) OR cl.id_asesor IN (2549, 2570, 2591))';
-            else if ($id_usuario == 12377 || $id_usuario == 2799) // MIRIAM PAOLA JIMENEZ FIGUEROA o LADY SKARLETT LOPEZ VEN REUBICACIONES
+            else if (in_array($id_usuario, array(12377, 2799, 10088, 2827, 6012))) // MIRIAM PAOLA JIMENEZ FIGUEROA o LADY SKARLETT LOPEZ VEN REUBICACIONES
                 $filtroUsuarioBR = ' AND l.tipo_venta IN (6)';
             else
                 $filtroUsuarioBR = ' AND l.tipo_venta IN (4, 6)';

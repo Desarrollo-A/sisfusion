@@ -799,13 +799,72 @@
                                     <input type="hidden" id="id-prospecto-lbl" name="id_prospecto_lbl">
                                 </div>
                             </div>
-                            <div role="tabpanel" class="tab-pane" id="commentsTab">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="card card-plain">
-                                            <div class="card-content">
-                                                <ul class="timeline-3" id="comments-list"></ul>
-                                            </div>
+							<!-- recovered-->
+
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label class="control-label">Nombre / Razón social</label>
+										<input id="name-lbl" type="text" class="form-control input-gral" disabled>
+									</div>
+								</div>
+								<div class="col-sm-4">
+									<div class="form-group">
+										<label class="control-label">Correo electrónico</label>
+										<input id="email-lbl" type="text" class="form-control input-gral" disabled>
+									</div>
+								</div>
+								<div class="col-sm-2">
+									<div class="form-group">
+										<label class="control-label">Teléfono</label>
+										<input id="phone-number-lbl" type="text" class="form-control input-gral" disabled>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label class="control-label">¿Cómo nos contactaste?</label>
+										<input id="prospecting-place-lbl" type="text" class="form-control input-gral" disabled>
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label class="control-label">Plaza de venta</label>
+										<input id="sales-plaza-lbl" type="text" class="form-control input-gral" disabled>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4">
+									<div class="form-group">
+										<label class="control-label">Asesor</label>
+										<input id="asesor-lbl" type="text" class="form-control input-gral" disabled>
+									</div>
+								</div>
+								<div class="col-sm-4">
+									<div class="form-group">
+										<label class="control-label">Coordinador</label>
+										<input id="coordinador-lbl" type="text" class="form-control input-gral" disabled>
+									</div>
+								</div>
+								<div class="col-sm-4">
+									<div class="form-group">
+										<label class="control-label">Gerente</label>
+										<input id="gerente-lbl" type="text" class="form-control input-gral" disabled>
+									</div>
+								</div>
+							</div>
+                            <div class="row">
+                                <input type="hidden" id="id-prospecto-lbl" name="id_prospecto_lbl">
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="commentsTab">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card card-plain">
+                                        <div class="card-content">
+                                            <ul class="timeline-3" id="comments-list"></ul>
                                         </div>
                                     </div>
                                 </div>

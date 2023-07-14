@@ -32,10 +32,10 @@ class Usuarios_modelo extends CI_Model
         switch ($this->session->userdata('id_rol')) {
             case '54': // POPEA
                 return $this->db->query("SELECT usuarios.id_usuario, id_rol, 
-                CASE WHEN usuarios.nueva_estructura = 1 THEN oxcNE.nombre ELSE opcs_x_cats.nombre END puesto,
+                UPPER(CASE WHEN usuarios.nueva_estructura = 1 THEN oxcNE.nombre ELSE opcs_x_cats.nombre END) puesto,
                 CONCAT(usuarios.nombre, ' ', apellido_paterno, ' ', apellido_materno) AS nombre, 
-                (CASE id_rol WHEN 7 THEN lider ELSE lider_coord END) AS jefe_directo, telefono, correo, usuarios.estatus, id_lider, id_lider_2, 0 nuevo, 
-                usuarios.fecha_creacion, s.nombre sede, usuarios.nueva_estructura, usuarios.simbolico
+                (CASE id_rol WHEN 7 THEN lider ELSE lider_coord END) AS jefe_directo, telefono, UPPER(correo) AS correo, usuarios.estatus, id_lider, id_lider_2, 0 nuevo, 
+                usuarios.fecha_creacion, UPPER(s.nombre) sede, usuarios.nueva_estructura, usuarios.simbolico
                 FROM usuarios 
                 INNER JOIN (SELECT * FROM opcs_x_cats WHERE id_catalogo = 1) opcs_x_cats ON usuarios.id_rol = opcs_x_cats.id_opcion 
                 LEFT JOIN (SELECT id_usuario AS id_lid, id_lider AS id_lider_2, CONCAT(apellido_paterno, ' ', apellido_materno, ' ', usuarios.nombre) lider FROM usuarios) AS lider_2 ON lider_2.id_lid = usuarios.id_lider 
