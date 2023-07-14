@@ -84,7 +84,7 @@ class Administracion extends CI_Controller{
                         $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
                         $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
                         $sig_fecha_feriado2 == "25-12") {
-                        $fecha = $fechaAccion;
+						$fecha = $ultimaFechaEstatus7; // ANTES fechaAccion
                         $z = 0;
                         while ($z <= 1) {
                             $hoy_strtotime = strtotime($fecha);
@@ -106,7 +106,7 @@ class Administracion extends CI_Controller{
                         $d = end($arregloFechas);
                         $dataPer[$i]['fechaVenc2'] = $d;
                     } else {
-                        $fecha = $fechaAccion;
+                        $fecha = $ultimaFechaEstatus7; // ANTES fechaAccion
                         $z = 0;
                         while ($z <= 0) {
                             $hoy_strtotime = strtotime($fecha);
@@ -135,7 +135,7 @@ class Administracion extends CI_Controller{
                         $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
                         $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
                         $sig_fecha_feriado2 == "25-12") {
-                        $fecha = $fechaAccion;
+						$fecha = $ultimaFechaEstatus7; // ANTES fechaAccion
                         $z = 0;
                         while ($z <= 1) {
                             $hoy_strtotime = strtotime($fecha);
