@@ -241,9 +241,9 @@ function updateTable(typeTransaction, busquedaParams, urlBusqueda){
         { 
             data: function (d) {
                 if (d.estatus == 1) {
-                    return '<center><span class="label label-danger" style="background:#27AE60">Vigente</span><center>';
+                    return '<center><span class="label lbl-green">Vigente</span><center>';
                 } else {
-                    return '<center><span class="label label-danger" style="background:#E74C3C">No vigente</span><center>';
+                    return '<center><span class="label label-danger">No vigente</span><center>';
                 }
             }
         },
@@ -251,14 +251,14 @@ function updateTable(typeTransaction, busquedaParams, urlBusqueda){
             data: function (d) {
                 if( d.lugar_prospeccion == 'MKT digital (especificar)'){
                     if(d.otro_lugar != '0'){
-                        return '<center><span class="label label-danger" style="background:#2081a7">'+d.lugar_prospeccion+'</span><br><br><span class="label label-danger" style="background:#494e54">'+d.otro_lugar+'</span><center>';
+                        return '<center><span class="label lbl-azure">'+d.lugar_prospeccion+'</span><br><br><span class="label label-danger" style="background:#494e54">'+d.otro_lugar+'</span><center>';
                     }
                     else{
-                        return '<center><span class="label label-danger" style="background:#2081a7">'+d.lugar_prospeccion+'</span><center>';
+                        return '<center><span class="label lbl-azure">'+d.lugar_prospeccion+'</span><center>';
                     }
                 }
                 else{
-                    return '<center><span class="label label-danger" style="background:#2081a7">'+d.lugar_prospeccion+'</span><center>';
+                    return '<center><span class="label lbl-azure">'+d.lugar_prospeccion+'</span><center>';
                 }
             }
         },
