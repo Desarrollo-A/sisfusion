@@ -50,7 +50,7 @@ $(document).on('click', '#btnLimpiar', function (e) {
         $('#idSolicitudAut').val('');
         $('#paquetes').val('');	
         document.getElementById('accion').value = 1;
-        setIniDatesXMonth("fechainicio", "fechafin");
+        setIniDatesXMonth("#fechainicio", "#fechafin");
         sinPlanesDiv();
         $(".leyendItems").addClass('d-none');
         $("#btn_save").addClass('d-none');
@@ -245,7 +245,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         $('#spiner-loader').removeClass('hide');
 
         var data = tablaAutorizacion.row($(this).parents('tr')).data();
-        document.getElementById('fechainicio').value = data.fecha_inicio;
+        document.getElementById('fechainicio').value =  data.fecha_inicio;
         document.getElementById('fechafin').value = data.fecha_fin;
         document.getElementById('accion').value = 2;
         document.getElementById('idSolicitudAut').value = data.id_autorizacion;
@@ -916,7 +916,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         document.getElementById('showPackage').innerHTML = '';
         $('#index').val(0);	
         $('#idSolicitudAut').val('');
-        setIniDatesXMonth("fechainicio", "fechafin");
+        setIniDatesXMonth("#fechainicio", "#fechafin");
         sinPlanesDiv();
         $(".leyendItems").addClass('d-none');
         $("#btn_save").addClass('d-none');
