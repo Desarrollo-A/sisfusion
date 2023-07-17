@@ -1020,7 +1020,6 @@ function createFilters(rol, selects){
 
 function getFirstFilter(rol, secondRol){
     $(`#${rol == 59 ? 'subdirector':'gerente'}`).empty().selectpicker('refresh');
-    $(`#${rol == 59 ? 'subdirector':'gerente'}`).append($option);
     $.post('../General/getUsersByLeader', {rol: rol, secondRol:secondRol},function(data) {
         var len = data.length;
         for( var i = 0; i<len; i++)
@@ -1149,9 +1148,6 @@ $(document).on('change', '#gerente', function () {
         }
         $("#coordinadors").selectpicker('refresh');
     }, 'json');
-
-
-
     /**///carga tabla
     var url = general_base_url+"Clientes/getProspectsListByGerente/"+gerente;
     let finalBeginDate = $("#beginDate3").val();
