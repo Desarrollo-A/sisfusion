@@ -290,12 +290,53 @@ $(document).ready(function () {
                                 
                                 let labelPenalizacion = '';
                                 if(penalizacion == 1){labelPenalizacion = ' <b style = "color:orange">(Penalización + 90 días)</b>';}
-                                $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-12 text-center"><h3>Lote: <b>${row.data().nombreLote}${labelPenalizacion}</b></h3><l style='color:gray;'>Plan de venta: <b>${descripcion_plan}</b></l></div></div><div class="row"><div class="col-md-3 p-0"><h5>Precio lote: <b>$${formatMoney(totalNeto2)}</b></h5></div><div class="col-md-3 p-0"><h5>$ Neodata: <b style="color:${data[0].Aplicado <= 0 ? 'black' : 'blue'};">$${formatMoney(data[0].Aplicado)}</b></h5></div><div class="col-md-3 p-0"><h5>Disponible: <b style="color:green;">$${formatMoney(total0)}</b></h5></div><div class="col-md-3 p-0">${cadena}</div></div><br>`);
+                                $("#modal_NEODATA .modal-body").append(`
+                                    <div class="row">
+                                        <div class="col-md-12 text-center">
+                                            <h3>Lote: <b>${row.data().nombreLote}${labelPenalizacion}</b></h3>
+                                                <l style='color:gray;'>Plan de venta: <b>${descripcion_plan}</b></l>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3 p-0">
+                                            <h5>Precio lote: <b>$${formatMoney(totalNeto2)}</b></h5>
+                                        </div>
+                                        <div class="col-md-3 p-0">
+                                            <h5>$ Neodata: <b style="color:${data[0].Aplicado <= 0 ? 'black' : 'blue'};">$${formatMoney(data[0].Aplicado)}</b></h5>
+                                        </div>
+                                        <div class="col-md-3 p-0">
+                                            <h5>Disponible: <b style="color:green;">$${formatMoney(total0)}</b></h5>
+                                        </div>
+                                        <div class="col-md-3 p-0">${cadena}
+                                        </div>
+                                    </div>
+                                    <br>`);
  
                                 $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;"> Anticipo </b> diponible <i>'+row.data().nombreLote+'</i></h3></div></div><br><br>');
                           
                     
-                            $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-3"><p style="font-zise:10px;"><b>USUARIOS</b></p></div><div class="col-md-1"><b>%</b></div><div class="col-md-2"><b>TOT. COMISIÓN</b></div><div class="col-md-2"><b><b>ABONADO</b></div><div class="col-md-2"><b>PENDIENTE</b></div><div class="col-md-2"><b>DISPONIBLE</b></div></div>`);
+                            $("#modal_NEODATA .modal-body").append(`
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <p style="font-zise:10px;">
+                                                    <b>USUARIOS</b></p>
+                                            </div>
+                                            <div class="col-md-1">
+                                                <b>%</b>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <b>TOT. COMISIÓN</b>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <b><b>ABONADO</b>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <b>PENDIENTE</b>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <b>DISPONIBLE</b>
+                                            </div>
+                                        </div>`);
                             var_sum = 0;
                             let abonado=0;
                             let porcentaje_abono=0;
