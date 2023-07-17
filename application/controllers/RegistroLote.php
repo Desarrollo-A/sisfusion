@@ -1,5 +1,5 @@
 <?php
-use application\helpers\email\registro_lote\Elementos_Correo_Registro_Lote;
+
 class RegistroLote extends CI_Controller
 {
 	public function __construct()
@@ -11,9 +11,8 @@ class RegistroLote extends CI_Controller
 		$this->load->library(array('session', 'form_validation'));
 		//LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
 		$this->load->library(array('session', 'form_validation', 'get_menu'));
-		$this->load->helper(array('url', 'form', 'email/registro_lote/elementos_correo', 'email/plantilla_dinamica_correo'));
+		$this->load->helper(array('url', 'form'));
 		$this->load->database('default');
-		$this->load->library('phpmailer_lib');
 		$this->validateSession();
 		date_default_timezone_set('America/Mexico_City');
 
@@ -164,85 +163,7 @@ class RegistroLote extends CI_Controller
 		$datos["gerentes"] = $this->registrolote_modelo->getGerente();
 		$this->load->view('editar_lote_caja_view', $datos);
 	}
-	public function editar_registro_lote_caja()
-	{
-		$idLote = $this->input->post('idLote');
-		$idStatusLote = $this->input->post('idStatusLote');
-		$idAsesor = $this->input->post('filtro2');
-		$idAsesor2 = $this->input->post('filtro9');
-		if ($idStatusLote == 9 || $idStatusLote == 10) {
-			$arreglo = array();
-			$arreglo["idStatusLote"] = $idStatusLote;
-			$arreglo["idAsesor"] = $idAsesor;
-			$arreglo["idAsesor2"] = $idAsesor2;
-			$arreglo["fecha_modst"] = date("Y-m-d H:i:s");
-			$arreglo["userstatus"] = $this->session->userdata('username');
-			if ($this->registrolote_modelo->editaRegistroLoteCaja($idLote, $arreglo)) {
-				redirect(base_url() . "index.php/registroLote/registrosLoteCaja");
-			} else {
-				die("ERROR");
-			}
-		} else if ($idStatusLote == 8) {
-			$arreglo = array();
-			$arreglo["idStatusLote"] = $idStatusLote;
-			$arreglo["idAsesor"] = $idAsesor;
-			$arreglo["idAsesor2"] = $idAsesor2;
-			$arreglo["fecha_modst"] = date("Y-m-d H:i:s");
-			$arreglo["userstatus"] = $this->session->userdata('username');
-			$datos["lote"] = $this->registrolote_modelo->infoBloqueos($idLote);
-			$data = array();
-			$data["idResidencial"] = $datos["lote"]->idResidencial;
-			$data["idCondominio"] = $datos["lote"]->idCondominio;
-			$data["idLote"] = $datos["lote"]->idLoteL;
-			$data["user"] = $this->session->userdata('username');
-			$data["idAsesor"] = $idAsesor;
-			$data["idAsesor2"] = $idAsesor2;
 
-            $encabezados = [
-                'nombreResidencial' =>  'Proyecto',
-                'nombreCondominio'  =>  'Condominio',
-                'nombreLote'        =>  'Lote',
-                'create_at'         =>  'Fecha/Hora'
-            ];
-            $data = array_merge($datos['lote'], ["create_at" => date("Y-m-d H:i:s")]);
-
-            $this->email
-                ->initialize()
-                ->from('Ciudad Maderas')
-                ->to('programador.analista24@ciudadmaderas.com')
-                //->to("lucero.velazquez@ciudadmaderas.com", "coord.contraloria2@ciudadmaderas.com", "subdirector.contraloria@ciudadmaderas.com")
-                ->subject('LOTE BLOQUEADO-CIUDAD MADERAS')
-                ->view($this->load->view('mail/registro-lote/editar-registro-lote-caja', [
-                    'encabezados' => $encabezados,
-                    'contenido' => $data
-                ], true));
-
-			if ($this->registrolote_modelo->editaRegistroLoteCaja($idLote, $arreglo)) {
-				$this->registrolote_modelo->insert_bloqueos($data);
-
-				if ($this->email->send()) {
-					$data['message_email'] = 'OK';
-				} else {
-					$data['message_email'] = $this->email->print_debugger();
-				}
-				redirect(base_url() . "index.php/registroLote/registrosLoteCaja");
-			} else {
-				die("ERROR");
-			}
-		} else {
-			$arreglo = array();
-			$arreglo["idStatusLote"] = $idStatusLote;
-			$arreglo["idAsesor"] = NULL;
-			$arreglo["idAsesor2"] = NULL;
-			$arreglo["fecha_modst"] = NULL;
-			$arreglo["userstatus"] = NULL;
-			if ($this->registrolote_modelo->editaRegistroLoteCaja($idLote, $arreglo)) {
-				redirect(base_url() . "index.php/registroLote/registrosLoteCaja");
-			} else {
-				die("ERROR");
-			}
-		}
-	}
 	function registrosLoteLiberacion()
 	{
 		$datos = array();
@@ -7764,6 +7685,7 @@ class RegistroLote extends CI_Controller
 	function getLotesDventas($condominio, $residencial)
 	{
 		$data = $this->registrolote_modelo->getInventarioAd($condominio, $residencial);
+		
 		if ($data != null) {
 			echo json_encode($data);
 		} else {
@@ -8612,43 +8534,7 @@ class RegistroLote extends CI_Controller
 			}
 		}
 	}
-	public function mailBloqueosAfter45()
-	{
-        $datos["mailbloqueos"] = $this->registrolote_modelo->sendMailBloqueosDireccion();
 
-        $data = array();
-        foreach ($datos["mailbloqueos"] as $info_lote_bloqueado) {
-            $fecha_bloqueo = date_create($info_lote_bloqueado->create_at);
-            $fecha_hoy = date_create(date("Y-m-d H:i:s"));
-            $dias_diferencia = (date_diff($fecha_bloqueo, $fecha_hoy)->format("%a") + 1);
-
-            $data[] = array_merge($info_lote_bloqueado, ['diasDiferencia' => $dias_diferencia]);
-        }
-
-        $encabezados = [
-            'nombreResidencial' =>  'Proyecto',
-            'nombreCondominio'  =>  'Condominio',
-            'nombreLote'        =>  'Lote',
-            'create_at'         =>  'Fecha Bloqueo',
-            'diasDiferencia'    =>  'Días acumulados con estatus Bloqueado'
-        ];
-
-        $this->email
-            ->initialize()
-            ->from('Ciudad Maderas')
-            ->to('programador.analista24@ciudadmaderas.com') // TODO: Cambiar el correo por los de producción
-            ->subject('LOTE BLOQUEADO - CIUDAD MADERAS')
-            ->view($this->load->view('mail/registro-lote/bloqueos-after-45', [
-                'encabezados' => $encabezados,
-                'contenido' => $data
-            ], true));
-
-        if ($this->email->send()) {
-            $datos['message_email'] = 'OK';
-        } else {
-            $datos['message_email'] = $this->email->print_debugger();
-        }
-	}
 	public function getDatosClientesChangeAsesor()
 	{
 		$datos = array();

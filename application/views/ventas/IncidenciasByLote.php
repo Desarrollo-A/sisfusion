@@ -7,6 +7,7 @@
             switch ($this->session->userdata('id_usuario')) {
                 case 1: // corporativa
                 case 2815: // admin
+                case 12931:
                     $this->load->view('template/sidebar');
                     break;
                 default:

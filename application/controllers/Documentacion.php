@@ -15,7 +15,12 @@ class Documentacion extends CI_Controller {
     }
     
     public function documentacion() {
-        $datos["residencial"] = $this->Registrolote_modelo->getResidencialQro();
+        $datos = [
+            'residencial' => $this->Registrolote_modelo->getResidencialQro(),
+            'tieneAcciones' => 1,
+            'tipoFiltro' => null
+        ];
+
         $this->load->view('template/header');
         $this->load->view("documentacion/documentacion_view", $datos);
     }
@@ -127,7 +132,7 @@ class Documentacion extends CI_Controller {
         $this->email
             ->initialize()
             ->from('Ciudad Maderas')
-            ->to('programador.analista24@ciudadmaderas.com')
+            ->to('tester.ti2@ciudadmaderas.com')
             /*->to('coord.administrativoslp@ciudadmaderas.com',
                 'coord.administrativo@ciudadmaderas.com',
                 'coord.administrativo1@ciudadmaderas.com',
@@ -282,9 +287,14 @@ class Documentacion extends CI_Controller {
     }
 
     public function documentacionPorClienteLote() {
-		$datos["residencial"]= $this->Registrolote_modelo->getResidencialQro();
+        $datos = [
+            'residencial' => $this->Registrolote_modelo->getResidencialQro(),
+            'tieneAcciones' => 0,
+            'tipoFiltro' => 1
+        ];
+
         $this->load->view('template/header');
-        $this->load->view("documentacion/documentacionClienteLote_view", $datos);
+        $this->load->view("documentacion/documentacion_view", $datos);
     }
 
     public function getLotesAll($condominio, $residencial) {

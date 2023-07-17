@@ -45,12 +45,7 @@ $('#tabla_inventario_contraloria thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
     titulos_encabezado.push(title);
     num_colum_encabezado.push(i);
-    $(this).html(`<input type="text"
-                         class="textoshead w-100"
-                         data-toggle="tooltip" 
-                         data-placement="top"
-                         title="${title}"
-                         placeholder="${title}"/>`);
+    $(this).html(`<input type="text" class="textoshead w-100" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
     $('input', this).on('keyup change', function () {
         if ($('#tabla_inventario_contraloria').DataTable().column(i).search() !== this.value) {
             $('#tabla_inventario_contraloria').DataTable().column(i).search(this.value).draw();
@@ -406,8 +401,8 @@ $(document).on('change', '#proyecto, #condominio, #estatus', function () {
             {
                 "data": function (d) {
                     lugar_ubicacion = (d.ubicacion == null)
-                        ? '<center><span class="label label-warning;" style="background:#F9E79F; color: #7D6608">Sin asignar</span> <center>'
-                        : '<center><span class="label label-warning;" style="background:#D2B4DE; color: #4A235A">' + d.ubicacion + '</span> <center>';
+                        ? '<center><span class="label lbl-orangeYellow">Sin asignar</span> <center>'
+                        : '<center><span class="label lbl-violetBoots"S>' + d.ubicacion + '</span> <center>';
                     return lugar_ubicacion;
                 }
             },
@@ -523,12 +518,7 @@ $('#verDet thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
     titulos_encabezadoh.push(title);
     num_colum_encabezadoh .push(i);
-    $(this).html(`<input type="text"
-                         class="textoshead w-100"
-                         data-toggle="tooltip" 
-                         data-placement="top"
-                         title="${title}"
-                         placeholder="${title}"/>`);
+    $(this).html(`<input type="text" class="textoshead w-100" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
     $('input', this).on('keyup change', function () {
         if ($('#verDet').DataTable().column(i).search() !== this.value) {
             $('#verDet').DataTable().column(i).search(this.value).draw();
@@ -615,12 +605,7 @@ $('#verDetBloqueo thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
     titulos_encabezadob.push(title);
     num_colum_encabezadob .push(i);
-    $(this).html(`<input type="text"
-                         class="textoshead w-100"
-                         data-toggle="tooltip" 
-                         data-placement="top"
-                         title="${title}"
-                         placeholder="${title}"/>`);
+    $(this).html(`<input type="text" class="textoshead w-100" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
     $('input', this).on('keyup change', function () {
         if ($('#verDet').DataTable().column(i).search() !== this.value) {
             $('#verDet').DataTable().column(i).search(this.value).draw();
@@ -703,12 +688,7 @@ $('#seeCoSellingAdvisers thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
     titulos_encabezadoc.push(title);
     num_colum_encabezadoc .push(i);
-    $(this).html(`<input type="text"
-                         class="textoshead w-100"
-                         data-toggle="tooltip" 
-                         data-placement="top"
-                         title="${title}"
-                         placeholder="${title}"/>`);
+    $(this).html(`<input type="text" class="textoshead w-100" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
     $('input', this).on('keyup change', function () {
         if ($('#verDet').DataTable().column(i).search() !== this.value) {
             $('#verDet').DataTable().column(i).search(this.value).draw();

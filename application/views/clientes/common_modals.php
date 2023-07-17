@@ -804,7 +804,7 @@
                                 <div class="col-md-12">
                                     <div class="card card-plain">
                                         <div class="card-content">
-                                            <ul class="timeline timeline-simple" id="comments-list"></ul>
+                                            <ul class="timeline-3" id="comments-list"></ul>
                                         </div>
                                     </div>
                                 </div>
@@ -815,7 +815,7 @@
                                 <div class="col-md-12">
                                     <div class="card card-plain">
                                         <div class="card-content">
-                                            <ul class="timeline timeline-simple" id="changelog"></ul>
+                                            <ul class="timeline-3" id="changelog"></ul>
                                         </div>
                                     </div>
                                 </div>

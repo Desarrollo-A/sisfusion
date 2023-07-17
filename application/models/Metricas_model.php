@@ -47,7 +47,7 @@ class Metricas_model extends CI_Model {
     }
 
     public function getDisponibilidadProyecto($data = null){
-        $query = $this->db->query("SELECT re.nombreResidencial,  CAST(re.descripcion as varchar(max)) descripcion, COUNT(lo.idLote) totales, COUNT(lot.idLote) ocupados, (COUNT(lo.idLote) -  COUNT(lot.idLote)) restante  FROM lotes lo
+        $query = $this->db->query("SELECT re.nombreResidencial,  UPPER(CAST(re.descripcion as varchar(max))) descripcion, COUNT(lo.idLote) totales, COUNT(lot.idLote) ocupados, (COUNT(lo.idLote) -  COUNT(lot.idLote)) restante  FROM lotes lo
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = con.idResidencial
         LEFT JOIN lotes lot ON lot.idLote = lo.idLote AND lot.idStatusLote != 1 AND lot.status = 1
@@ -95,7 +95,7 @@ class Metricas_model extends CI_Model {
 
     public function getLugarProspeccion($data = null){
         $year = date("Y");
-        $query = $this->db->query("SELECT t1.nombre, t1.prospectos, t2.clientes FROM (
+        $query = $this->db->query("SELECT UPPER(t1.nombre) AS nombre, t1.prospectos, t2.clientes FROM (
         (SELECT se.nombre, COUNT(*) prospectos FROM prospectos pr
         INNER JOIN sedes se ON se.id_sede = pr.id_sede
         WHERE YEAR(pr.fecha_creacion) = 2022
@@ -112,7 +112,7 @@ class Metricas_model extends CI_Model {
 
     public function getMedioProspeccion($data = null){
         $year = date("Y");
-        $query = $this->db->query("SELECT oxc.nombre,pros.lugar_prospeccion, COUNT(*) cantidad FROM prospectos pros
+        $query = $this->db->query("SELECT UPPER(oxc.nombre) AS nombre,pros.lugar_prospeccion, COUNT(*) cantidad FROM prospectos pros
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = pros.lugar_prospeccion AND oxc.id_catalogo = 9 AND oxc.estatus = 1
         WHERE pros.estatus = 1 AND YEAR(pros.fecha_creacion)= $year
         GROUP BY oxc.nombre,pros.lugar_prospeccion
@@ -126,7 +126,7 @@ class Metricas_model extends CI_Model {
         }else{
             $filtro = "AND sede_residencial=$sede";
         }
-        $query = $this->db->query("SELECT * FROM residenciales WHERE status = 1 $filtro");
+        $query = $this->db->query("SELECT UPPER(CAST(descripcion as varchar(MAX))) AS descripcion, sede_residencial, idResidencial FROM residenciales WHERE status = 1 $filtro");
         return $query->result_array();
     }
 
@@ -183,7 +183,8 @@ class Metricas_model extends CI_Model {
     }
 
     public function getSedes(){
-        $query = $this->db->query("SELECT * FROM sedes WHERE estatus = 1");
+        $query = $this->db->query("SELECT id_sede, UPPER(nombre) as nombre FROM sedes
+        WHERE estatus = 1");
         return $query->result_array();
     }
 
@@ -195,14 +196,14 @@ class Metricas_model extends CI_Model {
         }else{
             $filtro = "AND res.sede_residencial = $sede_residencial AND res.idResidencial = $idResidencial";
         }
-        $query = $this->db->query("SELECT lo.nombreLote, cond.nombre nombreCondominio, res.descripcion nombreResidencial, 
+        $query = $this->db->query("SELECT lo.nombreLote, cond.nombre nombreCondominio, UPPER(CAST(res.descripcion AS VARCHAR(max))) AS nombreResidencial, 
         UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
         UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) nombreAsesor,
         UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) nombreCoordinador,
         UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) nombreGerente,
         UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) nombreSubdirector,
         UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) nombreRegional,
-        cl.fechaApartado, lo.sup,  
+        CONVERT(VARCHAR,cl.fechaApartado,20) AS fechaApartado, lo.sup,  
         FORMAT(isNULL(CASE 
         WHEN isNULL(cl.totalNeto2_cl ,lo.totalNeto2) IS NULL THEN isNULL(cl.total_cl ,lo.total) 
         WHEN isNULL(cl.totalNeto2_cl ,lo.totalNeto2) = 0 THEN isNULL(cl.total_cl ,lo.total) 

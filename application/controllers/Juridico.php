@@ -1,7 +1,5 @@
 <?php
 
-use application\helpers\email\juridico\Elementos_Correo_Juridico;
-
  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 class Juridico extends CI_Controller
@@ -15,7 +13,7 @@ class Juridico extends CI_Controller
 		$this->load->library(array('session','form_validation'));
 		 //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
 		$this->load->library(array('session','form_validation', 'get_menu'));
-		$this->load->helper(array('url','form', 'email/juridico/elementos_correo', 'email/plantilla_dinamica_correo'));
+		$this->load->helper(array('url','form'));
 		$this->load->database('default');
 		$this->load->library('email');
 		$this->validateSession();
@@ -762,22 +760,32 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
 	$arreglo2["fechaVenc"]= date("Y-m-d H:i:s");
 	$arreglo2["idLote"]= $idLote;  
 	$arreglo2["idCondominio"]= $idCondominio;          
-	$arreglo2["idCliente"]= $idCliente;          
-  
+	$arreglo2["idCliente"]= $idCliente;
 
-	$datos= $this->Juridico_model->getCorreoSt($idCliente);
+	    // $datos= $this->Juridico_model->getCorreoSt($idCliente);
+      // $lp = $this->Juridico_model->get_lp($idLote);
+      // $correosEntregar = [];
 
-	$lp = $this->Juridico_model->get_lp($idLote);
+      // if(empty($lp)){
+      //    $correos = array_unique(explode(',', $datos[0]["correos"]));
+      // } else {
+      //    $correos = array_unique(explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com'));
+      // }
 
-	if(empty($lp)){
-	   $correosClean = explode(',', $datos[0]["correos"]);
-	   $array = array_unique($correosClean);
-	} else {
-	   $correosClean = explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com');
-	   $array = array_unique($correosClean);
-	}
+      // foreach($correos as $email)
+      // {
+      // 	if(trim($email) != 'gustavo.mancilla@ciudadmaderas.com'){
+      // 		if (trim($email) != ''){
+      //            if(trim($email) == 'diego.perez@ciudadmaderas.com'){
+      //                array_push($correosEntregar, 'analista.comercial@ciudadmaderas.com');
+      //            } else {
+      //                array_push($correosEntregar, $email);
+      //            }
+      // 		}
+      // 	}
+      // }
 
-	$infoLote = $this->Juridico_model->getNameLote($idLote);
+	$infoLote = (array)$this->Juridico_model->getNameLote($idLote);
 
     $encabezados = [
         'nombreResidencial' =>  'PROYECTO',
@@ -787,31 +795,21 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
         'fechaHora'         =>  'FECHA/HORA'
     ];
 
-    $contenido = array_merge($infoLote, ['motivoRechazo' => $comentario, 'fechaHora' => date("Y-m-d H:i:s")]);
+    $contenido[] = array_merge($infoLote, ['motivoRechazo' => $comentario, 'fechaHora' => date("Y-m-d H:i:s")]);
 
     $this->email
-      ->initialize()
-      ->from('Ciudad Maderas')
-      ->to('programador.analista24@ciudadmaderas.com')
-      ->subject('EXPEDIENTE RECHAZADO-JURÍDICO (7. ELABORACIÓN DE CONTRATO)')
-      ->view($this->load->view('mail/juridico/rechazo-est3', [
-          'encabezados' => $encabezados,
-          'contenido' => $contenido,
-          'comentario' => $comentario
+        ->initialize()
+        ->from('Ciudad Maderas')
+        ->to('tester.ti2@ciudadmaderas.com')
+        // ->to($correosEntregar)
+        ->subject('EXPEDIENTE RECHAZADO-JURÍDICO (7. ELABORACIÓN DE CONTRATO)')
+        ->view($this->load->view('mail/juridico/rechazo-est3', [
+            'encabezados' => $encabezados,
+            'contenido' => $contenido,
+            'comentario' => $comentario
         ], true));
 
-
-	/********************************************************************************
-	* Armado de parámetros a mandar a plantilla para creación de correo electrónico	*
-	********************************************************************************/
-	$datos_correo[0] = json_decode(json_encode($infoLote), true);
-	$datos_correo[0] += ["motivoRechazo" => $comentario];
-	$datos_correo[0] += ["fechaHora" => date("Y-m-d H:i:s")];
-
-	$datos_etiquetas = null;
-
-	$validate = $this->Juridico_model->validateSt7($idLote);
-
+    $validate = $this->Juridico_model->validateSt7($idLote);
 
 	if($validate == 1){
 		if ($this->Juridico_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){
@@ -1013,15 +1011,28 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
 	$datos= $this->Juridico_model->getCorreoSt($idCliente);
 
 	// $lp = $this->Juridico_model->get_lp($idLote);
+    // $correosEntregar = [];
 
 	// if(empty($lp)){
-	//    $correosClean = explode(',', $datos[0]["correos"]);
-	//    $array = array_unique($correosClean);
+	//    $correos = array_unique(explode(',', $datos[0]["correos"]));
 	// } else {
-	//    $correosClean = explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com');
-	//    $array = array_unique($correosClean);
+	//    $correos = array_unique(explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com'));
 	// }
-	$infoLote = $this->Juridico_model->getNameLote($idLote);
+
+      // foreach($correos as $email)
+      // {
+      // 	if(trim($email) != 'gustavo.mancilla@ciudadmaderas.com'){
+      // 		if (trim($email) != ''){
+      //            if(trim($email) == 'diego.perez@ciudadmaderas.com'){
+      //                array_push($correosEntregar, 'analista.comercial@ciudadmaderas.com');
+      //            } else {
+      //                array_push($correosEntregar, $email);
+      //            }
+      // 		}
+      // 	}
+      // }
+
+	$infoLote = (array)$this->Juridico_model->getNameLote($idLote);
 
     $encabezados = [
       'nombreResidencial' =>  'PROYECTO',
@@ -1031,31 +1042,19 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
       'fechaHora'         =>  'FECHA/HORA'
     ];
 
-    $contenido = array_merge($infoLote, ['motivoRechazo' => $comentario, 'fechaHora' => date("Y-m-d H:i:s")]);
+    $contenido[] = array_merge($infoLote, ['motivoRechazo' => $comentario, 'fechaHora' => date("Y-m-d H:i:s")]);
 
     $this->email
       ->initialize()
       ->from('Ciudad Maderas')
-      ->to('programador.analista24@ciudadmaderas.com')
+      ->to('tester.ti2@ciudadmaderas.com')
+      // ->to($correosEntregar)
       ->subject('EXPEDIENTE RECHAZADO-JURÍDICO (7. ELABORACIÓN DE CONTRATO)')
       ->view($this->load->view('mail/juridico/return1-jaa', [
           'encabezados' => $encabezados,
           'contenido' => $contenido,
           'comentario' => $comentario
       ], true));
-
-	// foreach($array as $email)
-	// {
-	// 	if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
-	// 		if (trim($email) != ''){ 
-	// 			array_push($correos_entregar, $email);
-	// 		}
-	// 	}
-
-	// 	if(trim($email) == 'diego.perez@ciudadmaderas.com'){
-	// 		array_push($correos_entregar, 'analista.comercial@ciudadmaderas.com');
-	// 	}
-	// }
 
 	$validate = $this->Juridico_model->validateSt7($idLote);
 

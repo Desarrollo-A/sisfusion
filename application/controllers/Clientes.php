@@ -93,7 +93,6 @@ public function getRpClientes()
     public function statusByProspect(){
         $this->load->view('template/header');
         $this->load->view("clientes/dm_report");
-
     }
 
     public function digitalMarketingReport(){
@@ -1814,8 +1813,10 @@ public function getStatusMktdPreventa(){
         } else {
 
             $typeTransaction = $this->input->post("typeTransaction");
-            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+            $fechaInicio = explode('-', $this->input->post("beginDate"));
+            $fechaFin = explode('-', $this->input->post("endDate"));
+            $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+            $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
             $where = $this->input->post("where");
             $data = $this->Clientes_model->getProspectsListByGerente($id_gerente, $typeTransaction, $beginDate, $endDate, $where);
         }
@@ -1833,14 +1834,18 @@ public function getStatusMktdPreventa(){
         if ($this->session->userdata('id_rol') == 19) {
             $dato = $this->Clientes_model->getSedeByUser($id_coord);
             $typeTransaction = $this->input->post("typeTransaction");
-            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+            $fechaInicio = explode('/', $this->input->post("beginDate"));
+            $fechaFin = explode('/', $this->input->post("endDate"));
+            $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+            $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
             $where = $this->input->post("where");
             $data = $this->Clientes_model->getProspectsListByCoord($dato[0]['id_sede'], $typeTransaction, $beginDate, $endDate, $where);
         } else {
             $typeTransaction = $this->input->post("typeTransaction");
-            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+            $fechaInicio = explode('/', $this->input->post("beginDate"));
+            $fechaFin = explode('/', $this->input->post("endDate"));
+            $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+            $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
             $where = $this->input->post("where");
             $data = $this->Clientes_model->getProspectsListByCoord($id_coord, $typeTransaction, $beginDate, $endDate, $where);
         }
@@ -1856,8 +1861,10 @@ public function getStatusMktdPreventa(){
     public function getProspectsListByAsesor($id_asesor)
     {
         $typeTransaction = $this->input->post("typeTransaction");
-        $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-        $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+        $fechaInicio = explode('/', $this->input->post("beginDate"));
+        $fechaFin = explode('/', $this->input->post("endDate"));
+        $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+        $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
         $where = $this->input->post("where");
 
 
@@ -2666,8 +2673,11 @@ public function getStatusMktdPreventa(){
         $sede = $this->input->post("sede");
         $id_dragon = $this->input->post("id_dragon");
         $tipo_busqueda = $this->input->post("TB");
-        $fecha_init = $this->input->post("fecha_init");
-        $fecha_end = $this->input->post("fecha_end");
+
+        $fechaInicio = explode('/', $this->input->post("fecha_init"));
+        $fechaFin = explode('/', $this->input->post("fecha_end"));
+        $fecha_init = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+        $fecha_end = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
 
         $data_search = array(
             'idLote' => $idLote,

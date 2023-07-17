@@ -129,9 +129,10 @@
                                             <div class="col-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
                                                 <div class="d-flex justify-between">
                                                     <label class="label-gral">
-                                                        <span class="isRequired">*</span>Comisionista
+                                                        Comisionista 
                                                         <span class="lblEstatus"></span> 
                                                         <span class="lblRolActual"></span>
+                                                        <span class="isRequired">*</span>
                                                     </label>
                                                     <label>
                                                         <span id="detailComisionistaBtn"><i class="fas fa-info"></i></span>
@@ -140,7 +141,9 @@
                                                 <select class="selectpicker select-gral m-0" id="comisionista" name="comisionista" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body"></select>
                                             </div>
                                             <div class="col-12 col-sm-3 col-md-3 col-lg-3 overflow-hidden">
-                                                <label class="label-gral"><span class="isRequired">*</span>Tipo de usuario</label>
+                                                <label class="label-gral m-0">
+                                                    Tipo de usuario (<span class="isRequired">*</span>)
+                                                </label>
                                                 <select class="selectpicker select-gral m-0" id="tipoUsuario" name="tipoUsuario" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body"></select>
                                             </div>
                                             <div class="col-12 col-sm-3 col-md-3 col-lg-3">
@@ -150,8 +153,7 @@
                                                             <div class="form-group d-flex">
                                                                 <input type="text" class="form-control datepicker" id="beginDate" />
                                                                 <input type="text" class="form-control datepicker" id="endDate"/>
-                                                                <button class="btn btn-success btn-round btn-fab btn-fab-mini"
-                                                                        id="searchByDateRange">
+                                                                <button class="btn btn-success btn-round btn-fab btn-fab-mini"id="searchByDateRange">
                                                                     <span class="material-icons update-dataTable">search</span>
                                                                 </button>
                                                             </div>
@@ -180,7 +182,7 @@
                                     </div>
                                 </div>
                                 <br>
-                                <div class="material-datatables hide" id="box-reporteLotesPorComisionista">
+                                <div class="material-datatables hide ml-2" id="box-reporteLotesPorComisionista">
                                     <div class="form-group">
                                         <table class="table-striped table-hover" id="reporteLotesPorComisionista" name="reporteLotesPorComisionista">
                                             <thead>
@@ -223,18 +225,7 @@
     </div>
 
     <?php $this->load->view('template/footer');?>
-    <!--DATATABLE BUTTONS DATA EXPORT-->
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-    <script src="<?= base_url() ?>dist/js/moment.min.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/comisiones/reporteLotesPorComisionista.js"></script>
     <script src="<?= base_url() ?>dist/js/es.js"></script>
     <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
-    <script src="<?= base_url() ?>dist/js/nouislider.min.js"></script>
-    <script src="<?= base_url() ?>dist/js/fullcalendar.min.js"></script>
-    <script src="<?= base_url() ?>dist/js/controllers/comisiones/reporteLotesPorComisionista.js"></script>
 </body>

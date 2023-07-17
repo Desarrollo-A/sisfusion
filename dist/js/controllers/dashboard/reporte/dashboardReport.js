@@ -143,7 +143,7 @@ async function initReport(){
     fillBoxAccordions(rolString, rolOnReport, idUserOnReport, 1, 1, [0, null, null, null, null, null, rolOnReport], filters);
 }
 
-function validateFilters(){
+function validateFilters(fechaInicio = null, fechaFin = null){
     filters = [];
     //Filtros con enganche / sin enganche
     let selector1 = $('#typeSale1')[0];
@@ -155,8 +155,8 @@ function validateFilters(){
     let selector5 = $('#typeBuild1')[0];
     let selector6 = $('#typeBuild2')[0];
     //Rango de fechas
-    let beginDate = $('#tableBegin').val();
-    let endDate = $('#tableEnd').val();
+    let beginDate = (fechaInicio == null) ? $('#tableBegin').val() : fechaInicio;
+    let endDate = (fechaFin == null) ? $('#tableEnd').val() : fechaFin;
     //Estauts de contratación
     let estatus = $("#estatusContratacion").val();
 
@@ -175,7 +175,7 @@ function validateFilters(){
 /* Función para cambiar icono y cerrar o abrir tabla*/
 
 function changeIcon(anchor) {
-    anchor.closest('.wrapper').classList.toggle('active');
+    anchor.closest('.wrapper .boxTabla').classList.toggle('active');
     $(document).off('click', '.accordionToggle').on('click', '.accordionToggle', function () {
         $(this).parent().next().slideToggle(200);
         $(this).toggleClass('open', 200);
@@ -186,15 +186,15 @@ function createAccordions(option, render, rol){
     let tittle = getTitle(option);
     let html = '';
     html = `<div data-rol="${rol}" class="bk ${render == 1 ? 'parentTable': 'childTable'}">
-                <div class="d-flex justify-between align-center">   
+                <div class="d-flex justify-between align-center boxTabla">   
                     <div class="cursor-point accordionToggle">
                         <a class="purple-head hover-black" onclick="changeIcon(this)" id="myBtn">
-                        <i class="less fas fa-angle-down font-xs"></i>
-                        <i class="more fas fa-angle-up font-xs"></i>
+                        <i class="less fas fa-angle-down "></i>
+                        <i class="more fas fa-angle-up "></i>
                         </a>
                     </div>
                     <div>
-                        <h4 class="p-0 accordion-title js-accordion-title">`+tittle+`</h4>
+                        <h4 class="p-0">`+tittle+`</h4>
                     </div>
                     <div>
                         ${render == 1 ? '': '<i class="fas fa-times deleteTable"></i>'}
@@ -224,6 +224,11 @@ function createAccordions(option, render, rol){
         </div>`;
     $(".boxAccordions").append(html);
 }
+
+$(document).on('click', '#searchByDateRange', function(e){
+
+
+});
 
 function fillBoxAccordions(option, rol, id_usuario, render, transaction, leadersList, filters){
     if( rol == 5 && (idUser == 28 && idUser == 30 && idUser == 4888))
@@ -335,7 +340,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             {
                 data: function(d){
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
-                    return `<button type="btn" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnSub"><i class="fas fa-sitemap" data-toggle="tooltip" data-placement="bottom" title="Desglose a detalle"></i></button>`;
+                    return `<button type="btn" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnSub"  data-toggle="tooltip" data-placement="bottom" title="DESGLOSE A DETALLE"><i class="fas fa-sitemap" ></i></button>`;
                 }
             },
             {
@@ -401,14 +406,13 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             {
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario);                    
-                    return  rol == 7 || (rol == 9 && render == 1) ? '' : `<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas update-dataTable" data-transaction="${transaction}" data-type="${rol}" data-render="${render}" value="${d.userID}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}"><i class="fas fa-sign-in-alt"></i></button></div>`;
+                    return  rol == 7 || (rol == 9 && render == 1) ? '' : `<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas update-dataTable" data-transaction="${transaction}" data-type="${rol}" data-render="${render}" value="${d.userID}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" data-toggle="tooltip" data-placement="bottom" title = "ACCIONES "><i class="fas fa-sign-in-alt"></i></button></div>`;
                 }
             },
         ],
         columnDefs: [{
             className: "delimetter", "targets": [ 3, 7 ],
         },{
-           
             visible: false,
             searchable: false
         }],
@@ -429,10 +433,13 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                 "regional": leadersList[5],
                 "filters" : filters
             }
+        },
+        initComplete: function() {
+            $('[data-toggle="tooltip"]').tooltip()
         }
     });
-    $('[data-toggle="tooltip"]').tooltip();
 }
+
 
 // 0: Lo que ve a setear
 // 1:  Asesor
@@ -711,6 +718,11 @@ $(document).on('click', '#filterAction', async function (e) {
     fillBoxAccordions(rolString, rolOnReport, idUserOnReport, 1, 2, [0, null, null, null, null, null, rolOnReport], filters);
 });
 
+$(document).on('click', '#searchByDateRange', function(e){
+    e.preventDefault();
+    validateFilters();
+});
+
 $(document).on('click', '.chartButton', function () {
     $(".datesModal").hide();
     $("#modalChart .boxModalTitle .title").html('');
@@ -731,10 +743,8 @@ async function chartDetail(e, tipoChart){
     $("#modalChart .boxModalTitle .total").html('');
     $("#modalChart #type").val('');
 
-
     var nameChart = (titleCase($(e).data("name").replace(/_/g, " "))).split(" ");
     $(".boxModalTitle .title").append('<p class="mb-1">' + nameChart[0] + '<span class="enfatize"> '+ nameChart[1] +'</span></p>');
-
     let fecha_inicio = $('.moreMiniChart ').attr('data-fi');
     let fecha_fin    = $('.moreMiniChart ').attr('data-ft');
     if(fecha_inicio == undefined || fecha_fin==undefined){
@@ -755,11 +765,18 @@ async function chartDetail(e, tipoChart){
         finalEndDate2 = fecha_fin;
     }
 
-    $("#modalChart #beginDate").val(finalBeginDate2);
-    $("#modalChart #endDate").val(finalEndDate2);
+    $("#modalChart #fechaInicioVentas").val(finalBeginDate2);
+    $("#modalChart #fechaFinVentas").val(finalEndDate2);
     $("#modalChart #type").val(tipoChart);
     filters = validateFilters();
     getSpecificChart(tipoChart, formatDate(finalBeginDate2), formatDate(finalEndDate2), filters);
+}
+
+function searchByDateRange() {
+    const fechaInicio = $('#fechaInicioVentas').val();
+    const fechaFin    = $('#fechaFinVentas').val();
+    const filters = validateFilters(fechaInicio, fechaFin);
+    getSpecificChart($("#modalChart #type").val(), formatDate(fechaInicio), formatDate(fechaFin), filters);
 }
 
 function getSpecificChart(type, beginDate, endDate, filters){
@@ -852,6 +869,8 @@ function getLastSales(filters, rol){
     });
 }
 
+
+
 function loaderCharts(){
     $("#modalChart .boxModalTitle .total").html('');
     $('.appliedFilter').removeAttr('data-toggle');
@@ -868,7 +887,7 @@ function loaderCharts(){
     $('.boxMiniCharts').html('');
     let cargador = '<div class="loadChartMini w-100 h-100">'+
                         '<img src="'+base_url+'dist/img/miniChartLoading.gif" alt="Icono gráfica" class="h-100 w-auto">'+
-                     '</div>';
+                    '</div>';
     $('.boxMiniCharts').append('<div class="col-xs-12 pdt-20"><center><span class="loader center-align"></span></center></div>');
     $('.boxMiniCharts').append(cargador);
 
@@ -1491,7 +1510,7 @@ function fillTableReport(dataObject) {
                 {
                     data: function (d) {
                         if(d.fechaStatus9 == null){
-                            return 'No aplica';
+                            return 'NO APLICA';
                         }
                         else
                             return d.fechaStatus9;
@@ -1510,10 +1529,10 @@ function fillTableReport(dataObject) {
                 {
                     data: function (d) {
                         if (d.apartadoXReubicacion == 1 || d.apartadoXReubicacion == '1'){
-                            return 'Apartado por reubicación';
+                            return 'APARTADO POR REUBICACIÓN';
                         }
                         else{
-                            return 'Estándar';
+                            return 'ESTÁNDAR';
                         }
                     }
                 }
@@ -1752,7 +1771,7 @@ function fillTableReport(dataObject) {
                 {
                     data: function (d) {
                         if(d.fechaStatus9 == null){
-                            return 'No aplica';
+                            return 'NO APLICA';
                         }
                         else
                             return d.fechaStatus9;
@@ -1781,10 +1800,10 @@ function fillTableReport(dataObject) {
                 {
                     data: function (d) {
                         if (d.apartadoXReubicacion == 1){
-                            return 'Apartado por reubicación';
+                            return 'APARTADO POR REUBICACIÓN';
                         }
                         else{
-                            return 'Estandar';
+                            return 'ESTÁNDAR';
                         }
                     }
                 }

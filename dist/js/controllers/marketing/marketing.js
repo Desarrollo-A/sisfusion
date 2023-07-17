@@ -1,3 +1,5 @@
+let array_data = [];
+
 $(document).ready(function () {
 	$.post(general_base_url + "Contraloria/get_sede", function (data) {
 		var len = data.length;
@@ -7,35 +9,18 @@ $(document).ready(function () {
 			$("#sede").append($('<option>').val(id).text(name.toUpperCase()));
 			$("#sedeC").append($('<option>').val(id).text(name.toUpperCase()));
 		}
-
 		$("#sede").selectpicker('refresh');
 		$("#sedeC").selectpicker('refresh');
 	}, 'json');
-	sp.initFormExtendedDatetimepickers();
-	$('.datepicker').datetimepicker({locale: 'es'});
+	setIniDatesXMonth();
+    $('.datepicker').datetimepicker({locale: 'es'});
+    setIniDatesXMonth("#beginDate", "#endDate");
+	setIniDatesXMonth("#beginDateC", "#endDateC");
 });
-sp = { //  SELECT PICKER
-	initFormExtendedDatetimepickers: function () {
-		$('.datepicker').datetimepicker({
-			format: 'MM/DD/YYYY',
-			icons: {
-				time: "fa fa-clock-o",
-				date: "fa fa-calendar",
-				up: "fa fa-chevron-up",
-				down: "fa fa-chevron-down",
-				previous: 'fa fa-chevron-left',
-				next: 'fa fa-chevron-right',
-				today: 'fa fa-screenshot',
-				clear: 'fa fa-trash',
-				close: 'fa fa-remove',
-				inline: true
-			}
-		});
-	}
-}
 
+
+/** BOTÓN BUSCAR TABLA PROSPECTOS  */
 $('#searchButton').click(()=>{
-
 	let name = $('#name').val();
 	let mail = $('#mail').val();
 	let telephone = $('#telephone').val();
@@ -43,7 +28,6 @@ $('#searchButton').click(()=>{
 	let id_dragon = $('#idDragon').val();
 	let fecha_init = $('#beginDate').val();
 	let fecha_end = $('#endDate').val();
-
 	name = (name!='') ? name : '';
 	mail = (mail!='') ? mail : '';
 	telephone = (telephone!='') ? telephone : '';
@@ -52,9 +36,8 @@ $('#searchButton').click(()=>{
 	fecha_init = (fecha_init!='') ? fecha_init : '';
 	fecha_end = (fecha_end!='') ? fecha_end : '';
 
-
 	if(name!='' || mail!='' || telephone!='' || sede!='' || id_dragon!=''){
-		let array_data = [];
+		$('#tabla_prospectos').removeClass('hide');
 		array_data['idLote'] = '';
 		array_data['name'] = name;
 		array_data['mail'] = mail;
@@ -65,12 +48,13 @@ $('#searchButton').click(()=>{
 		array_data['fecha_end'] = fecha_end;
 		fillTable(array_data);
 	}else{
-		alerts.showNotification('top', 'right', 'Ingresa al menos un parámetro de busqueda', 'warning')
+		alerts.showNotification('top', 'right', 'Ingresa al menos un parámetro de búsqueda', 'warning')
+		$('#tabla_prospectos').addClass('hide');
 	}
-
 });
-$('#searchButtonC').click(()=>{
 
+/** BOTÓN BUSCAR TABLA CLIENTES  */
+$('#searchButtonC').click(()=>{
 	let idLote = $('#idLotteC').val();
 	let name = $('#nameC').val();
 	let mail = $('#mailC').val();
@@ -79,8 +63,6 @@ $('#searchButtonC').click(()=>{
 	let id_dragon = $('#idDragonC').val();
 	let fecha_init = $('#beginDateC').val();
 	let fecha_end = $('#endDateC').val();
-
-
 	idLote = (idLote!='') ? idLote : '';
 	name = (name!='') ? name : '';
 	mail = (mail!='') ? mail : '';
@@ -90,8 +72,8 @@ $('#searchButtonC').click(()=>{
 	fecha_init = (fecha_init!='') ? fecha_init : '';
 	fecha_end = (fecha_end!='') ? fecha_end : '';
 
-
 	if(idLote!='' || name!='' || mail!='' || telephone!='' || sede!='' || id_dragon!=''){
+		$('#tabla_clientes').removeClass('hide');
 		let array_data = [];
 		array_data['idLote'] = idLote;
 		array_data['name'] = name;
@@ -101,14 +83,14 @@ $('#searchButtonC').click(()=>{
 		array_data['id_dragon'] = id_dragon;
 		array_data['fecha_init'] = fecha_init;
 		array_data['fecha_end'] = fecha_end;
-
-
 		fillTableClientes(array_data);
 	} else {
-		alerts.showNotification('top', 'right', 'Ingresa al menos un parámetro de busqueda', 'warning')
+		alerts.showNotification('top', 'right', 'Ingresa al menos un parámetro de búsqueda', 'warning')
+		$('#tabla_clientes').addClass('hide')
 	}
 });
 
+/** TABLA PROSPECTOS  */
 var tabla_valores_prospectos;
 var titulos_encabezado_prospectos = [];
 var num_colum_encabezado_prospectos = [];
@@ -117,18 +99,10 @@ $("#tabla_prospectos").ready(function () {
 		var title = $(this).text();
 		titulos_encabezado_prospectos.push(title);
         num_colum_encabezado_prospectos.push(i);
-		$(this).html(`<input 	type="text"
-                                class="textoshead"
-                                data-toggle="tooltip_prospectos" 
-                                data-placement="top"
-                                title="${title}"
-                                placeholder="${title}"/>`);
+		$(this).html(`<input type="text"class="textoshead"data-toggle="tooltip_prospectos" data-placement="top"title="${title}"placeholder="${title}"/>`);
 		$('input', this).on('keyup change', function () {
 			if (tabla_valores_prospectos.column(i).search() !== this.value) {
-				tabla_valores_prospectos
-					.column(i)
-					.search(this.value)
-					.draw();
+				tabla_valores_prospectos.column(i).search(this.value).draw();
 			}
 		});
 	});
@@ -136,26 +110,25 @@ $("#tabla_prospectos").ready(function () {
 
 function fillTable(data_search) {
 	tabla_valores_prospectos = $("#tabla_prospectos").DataTable({
-		width: 'auto',
 		dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-		buttons: [
-			{
-				extend: 'excelHtml5',
-				text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-				className: 'btn buttons-excel',
-				titleAttr: 'Registro de clientes',
-				title:'Lista de prospectos',
-				exportOptions: {
-					columns: num_colum_encabezado_prospectos,
-					format: {
-						header: function (d, columnIdx) {
-							return ' '+titulos_encabezado_prospectos[columnIdx] +' ';
-						}
+        width: "100%",
+        scrollX: true,
+		buttons: [{
+			extend: 'excelHtml5',
+			text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+			className: 'btn buttons-excel',
+			titleAttr: 'Registro de clientes',
+			title:'Lista de prospectos',
+			exportOptions: {
+				columns: num_colum_encabezado_prospectos,
+				format: {
+					header: function (d, columnIdx) {
+						return ' '+titulos_encabezado_prospectos[columnIdx] +' ';
 					}
-				},
+				}
+			},
 
-			}
-		],
+		}],
 		pagingType: "full_numbers",
 		language: {
 			url: general_base_url+"static/spanishLoader_v2.json",
@@ -168,124 +141,120 @@ function fillTable(data_search) {
 		pageLength: 10,
 		bAutoWidth: false,
 		bLengthChange: false,
-		scrollX: true,
 		bInfo: true,
 		searching: true,
 		ordering: false,
 		fixedColumns: true,
 		destroy: true,
-		columns: [
-			{
-				data: function (d) {
-					return '<p class="m-0">' + d.nombre_prospecto + '</p>';
-				}
-			},
-			{
-				data: function (d) {
-					let tel1 = d.telefono;
-					let tel2 = d.telefono_2;
-					let telefono;
-					if(tel1==null){
-						telefono = tel2;
-					}else if(tel2==null){
-						telefono = tel1;
-					}else if(tel1==null || tel2==null){
-						telefono = '--'
-					}else{
-						telefono = 'Sin teléfono';
-					}
-					return '<p class="m-0">' + telefono + '</p>';
-				}
-			},
-			{
-				data: function (d) {
-					let correo = '';
-					if(d.correo == undefined || d.correo == '' || d.correo == null){
-						correo = 'Sin correo';
-					}else{
-						correo = d.correo;
-					}
-					return '<p class="m-0">' + correo+ '</p>';
-				}
-			},
-			{
-				data: function (d) {
-					let lugar_prospeccion = '';
-					if(d.lugar_prospeccion=='' || d.lugar_prospeccion==undefined || d.lugar_prospeccion==null){
-						lugar_prospeccion = '--';
-					}else{
-						lugar_prospeccion = d.lugar_prospeccion;
-					}
-					return '<p class="m-0">'+ lugar_prospeccion + '</p>';
-				}
-			},
-			{
-				data: function (d) {
-					let asesor;
-					if(d.nombre_asesor=='' || d.nombre_asesor==undefined || d.nombre_asesor==null){
-						asesor = 'Sin asesor';
-					}else{
-						asesor = d.nombre_asesor;
-					}
-					return '<p class="m-0">' + asesor+ '</p>';
-				}
-			},
-			{
-				data: function (d) {
-					let coordinador;
-					if(d.nombre_coordinador == undefined || d.nombre_coordinador==null || d.nombre_coordinador==''){
-						coordinador = 'Sin coordinador';
-					}else{
-						coordinador = d.nombre_coordinador;
-					}
-					return '<p class="m-0">' + coordinador + '</p>';
-				}
-			},
-			{
-				data: function (d) {
-					let gerente;
-					if(d.nombre_gerente == undefined || d.nombre_gerente == null || d.nombre_gerente ==''){
-						gerente = 'Sin gerente';
-					}else{
-						gerente = d.nombre_gerente;
-					}
-					return '<p class="m-0">' + gerente + '</p>';
-				}
-			},
-			{
-				data: function (d) {
-					return '<p class="m-0">' +  myFunctions.convertDateYMDHMS(d.fecha_creacion)  + '</p>';
-				}
-			},
-			{
-				data: function (d) {
-					return `<span class="label" style="background: #A3E4D7; color: #0E6251">${d.id_prospecto}</span>`;
-				}
-			},
-			{
-				data: function (d) {
-					let validateData = d.id_dragon == 0 ? 'No disponible' : d.id_dragon;
-					return `<span class="label" style="background: #AED6F1; color: #1B4F72">${validateData}</span>`;
-				}
-			},
-			{
-				data: function (d) {
-					return `<span class="label" style="background: #F9E79F; color: #7D6608">${d.source}</span>`;
-				}
-			},
-			{
-				data: function (d) {
-					let sede;
-					if(d.sede_nombre==null || d.sede_nombre==undefined || d.sede_nombre ==''){
-						sede = 'Sin sede';
-					}else{
-						sede = d.sede_nombre;
-					}
-					return '<p class="m-0">' +   sede + '</p>';
-				}
+		columns: [{
+			data: function (d) {
+				return d.nombre_prospecto 
 			}
-		],
-
+		},
+		{
+			data: function (d) {
+				let tel1 = d.telefono;
+				let tel2 = d.telefono_2;
+				let telefono;
+				if(tel1==null){
+					telefono = tel2;
+				}else if(tel2==null){
+					telefono = tel1;
+				}else if(tel1==null || tel2==null){
+					telefono = '--'
+				}else{
+					telefono = 'SIN TELÉFONO';
+				}
+				return telefono 
+			}
+		},
+		{
+			data: function (d) {
+				let correo = '';
+				if(d.correo == undefined || d.correo == '' || d.correo == null){
+					correo = 'SIN CORREO';
+				}else{
+					correo = d.correo;
+				}
+				return correo
+			}
+		},
+		{
+			data: function (d) {
+				let lugar_prospeccion = '';
+				if(d.lugar_prospeccion=='' || d.lugar_prospeccion==undefined || d.lugar_prospeccion==null){
+					lugar_prospeccion = '--';
+				}else{
+					lugar_prospeccion = d.lugar_prospeccion;
+				}
+				return lugar_prospeccion 
+			}
+		},
+		{
+			data: function (d) {
+				let asesor;
+				if(d.nombre_asesor=='' || d.nombre_asesor==undefined || d.nombre_asesor==null){
+					asesor = 'SIN ASESOR';
+				}else{
+					asesor = d.nombre_asesor;
+				}
+				return asesor
+			}
+		},
+		{
+			data: function (d) {
+				let coordinador;
+				if(d.nombre_coordinador == undefined || d.nombre_coordinador==null || d.nombre_coordinador==''){
+					coordinador = 'SIN COORDINADOR';
+				}else{
+					coordinador = d.nombre_coordinador;
+				}
+				return coordinador 
+			}
+		},
+		{
+			data: function (d) {
+				let gerente;
+				if(d.nombre_gerente == undefined || d.nombre_gerente == null || d.nombre_gerente ==''){
+					gerente = 'SIN GERENTE';
+				}else{
+					gerente = d.nombre_gerente;
+				}
+				return gerente 
+			}
+		},
+		{
+			data: function (d) {
+				return  myFunctions.convertDateYMDHMS(d.fecha_creacion)  
+			}
+		},
+		{
+			data: function (d) {
+				return `<span class="label lbl-oceanGreen">${d.id_prospecto}</span>`;
+			}
+		},
+		{
+			data: function (d) {
+				let validateData = d.id_dragon == 0 ? 'No disponible' : d.id_dragon;
+				return `<span class="label lbl-azure">${validateData}</span>`;
+			}
+		},
+		{
+			data: function (d) {
+				return `<span class="label lbl-yellow">${d.source}</span>`;
+			}
+		},
+		{
+			data: function (d) {
+				let sede;
+				if(d.sede_nombre==null || d.sede_nombre==undefined || d.sede_nombre ==''){
+					sede = 'Sin sede';
+				}else{
+					sede = d.sede_nombre;
+				}
+				return   sede 
+			}
+		}],
 		columnDefs: [{
 			defaultContent: "",
 			targets: "_all",
@@ -322,27 +291,16 @@ $("#tabla_clientes").ready(function () {
 	let excluir_column = ['ACCIONES'];
 	$('#tabla_clientes thead tr:eq(0) th').each(function (i) {
 		var title = $(this).text();
-
 		if (!excluir_column.includes(title) && title !== ''){
             titulos_encabezado.push(title);
             num_colum_encabezado.push(i);
         }
 		let readOnly = excluir_column.includes(title) ? 'readOnly': '';
         let width = title == 'ACCIONES' ? 'width: 57px;' : '';
-		$(this).html(`<input 	type="text"
-                                style="${width}"
-                                class="textoshead"
-                                data-toggle="tooltip" 
-                                data-placement="top"
-                                title="${title}"
-                                placeholder="${title}"
-                                ${readOnly}/>`);
+		$(this).html(`<input 	type="text"style="${width}"class="textoshead"data-toggle="tooltip" data-placement="top"title="${title}"placeholder="${title}"${readOnly}/>`);
 		$('input', this).on('keyup change', function () {
 			if (tabla_valores_cliente.column(i).search() !== this.value) {
-				tabla_valores_cliente
-					.column(i)
-					.search(this.value)
-					.draw();
+				tabla_valores_cliente.column(i).search(this.value).draw();
 			}
 		});
 	});
@@ -351,26 +309,24 @@ $("#tabla_clientes").ready(function () {
 var tabla_valores_cliente;
 function fillTableClientes(data_search) {
 	tabla_valores_cliente = $("#tabla_clientes").DataTable({
-		width: 'auto',
 		dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-		buttons: [
-			{
-				extend: 'excelHtml5',
-				text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-				className: 'btn buttons-excel',
-				titleAttr: 'Registro de clientes',
-				title:'Registro de clientes',
-				exportOptions: {
-					columns: num_colum_encabezado,
-					format: {
-						header: function (d, columnIdx) {
-							return ' '+titulos_encabezado[columnIdx] +' ';
-						}
+        width: "100%",
+        scrollX: true,
+		buttons: [{
+			extend: 'excelHtml5',
+			text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+			className: 'btn buttons-excel',
+			titleAttr: 'Registro de clientes',
+			title:'Registro de clientes',
+			exportOptions: {
+				columns: num_colum_encabezado,
+				format: {
+					header: function (d, columnIdx) {
+						return ' '+titulos_encabezado[columnIdx] +' ';
 					}
-				},
-
-			}
-		],
+				}
+			},
+		}],
 		pagingType: "full_numbers",
 		language: {
 			url: general_base_url +"static/spanishLoader_v2.json",
@@ -383,125 +339,111 @@ function fillTableClientes(data_search) {
 		pageLength: 10,
 		bAutoWidth: false,
 		bLengthChange: false,
-		scrollX: true,
 		bInfo: true,
 		searching: true,
 		ordering: false,
 		fixedColumns: true,
 		destroy: true,
-		columns: [
-			{
-				data: function (d) {
-					return '<p class="m-0">' + d.idLote + '</p>';
-				}
-			},
-			{
-				data: function (d) {
-					return '<p class="m-0">' + d.nombreProyecto + '</p>';
-				}
-			},
-			{
-				data: function (d) {
-					return '<p class="m-0">' + d.nombreCondominio + '</p>';
-				}
-			},
-			{
-				data: function (d) {
-					return '<p class="m-0">' + d.nombreLote + '</p>';
-				}
-			},
-			{
-				data: function (d) {
-					let cliente ;
-					if(d.nombreCliente==''||d.nombreCliente==undefined||d.nombreCliente==null){
-						cliente = 'Sin cliente';
-					}else{
-						cliente = d.nombreCliente;
-					}
-					return '<p class="m-0">'+ cliente + '</p>';
-				}
-			},
-			{
-				data: function (d) {
-					let numero_recibo;
-					if(d.noRecibo == null)
-						numero_recibo = '--';
-					else
-						numero_recibo = d.noRecibo;
-					return '<p class="m-0">' + numero_recibo + '</p>';
-				}
-			},
-			{
-				data: function (d) {
-					let referencia;
-					if(d.referencia==undefined || d.referencia==null || d.referencia==''){
-						referencia = 'Sin referencia';
-					}else{
-						referencia = d.referencia;
-					}
-					return '<p class="m-0">' + referencia + '</p>';
-				}
-			},
-			{
-				data: function (d) {
-					return '<p class="m-0">' + myFunctions.convertDateYMDHMS(d.fechaApartado)+ '</p>';
-				}
-			},
-			{
-				data: function (d) {
-					return '<p class="m-0">$' + myFunctions.number_format(d.engancheCliente, 2, '.', ',') + '</p>';
-				}
-			},
-			{
-				data: function (d) {
-					return '<p class="m-0">' + myFunctions.convertDateYMDHMS(d.fechaEnganche) + '</p>';
-				}
-			},
-			{
-
-				data: function (d) {
-					return '<p class="m-0">' +   myFunctions.convertDateYMDHMS(d.fechaCreacionProspecto)  + '</p>';
-				}
-			},
-			{
-				data: function (d) {
-					return `<span class="label" style="background: #A3E4D7; color: #0E6251">${d.id_prospecto}</span>`;
-				}
-			},
-			{
-				data: function (d) {
-					let validateData = d.id_dragon == 0 ? 'No disponible' : d.id_dragon;
-					return `<span class="label" style="background: #AED6F1; color: #1B4F72">${validateData}</span>`;
-				}
-			},
-			{
-				data: function (d) {
-					return `<span class="label" style="background: #F9E79F; color: #7D6608">${d.source}</span>`;
-				}
-			},
-			{
-				data: function (d) {
-					return `<span class="label" style="background: #D2B4DE; color: #4A235A">${d.nombreStatusContratacion}</span>`;
-				}
-			},
-			{
-				data: function (d) {
-					return `<center>
-								<button class="btn-data btn-blueMaderas cop"
-										data-toggle="tooltip" 
-                                        data-placement="top"
-										title="Ventas compartidas"
-										data-idcliente="${d.id_cliente}"
-										data-idLote="${d.idLote}">
-									<i class="material-icons">
-										people
-									</i>
-								</button>
-							</center>`;
-				}
+		columns: [{
+			data: function (d) {
+				return d.idLote 
 			}
-
-		],
+		},
+		{
+			data: function (d) {
+				return d.nombreProyecto.toUpperCase();
+			}
+		},
+		{
+			data: function (d) {
+				return d.nombreCondominio 
+			}
+		},
+		{
+			data: function (d) {
+				return d.nombreLote 
+			}
+		},
+		{
+			data: function (d) {
+				let cliente ;
+				if(d.nombreCliente==''||d.nombreCliente==undefined||d.nombreCliente==null){
+					cliente = 'SIN CLIENTE';
+				}else{
+					cliente = d.nombreCliente;
+				}
+				return cliente 
+			}
+		},
+		{
+			data: function (d) {
+				let numero_recibo;
+				if(d.noRecibo == null)
+					numero_recibo = '--';
+				else
+					numero_recibo = d.noRecibo;
+				return numero_recibo 
+			}
+		},
+		{
+			data: function (d) {
+				let referencia;
+				if(d.referencia==undefined || d.referencia==null || d.referencia==''){
+					referencia = 'SIN REFERENCIA';
+				}else{
+					referencia = d.referencia;
+				}
+				return referencia 
+			}
+		},
+		{
+			data: function (d) {
+				return myFunctions.convertDateYMDHMS(d.fechaApartado)
+			}
+		},
+		{
+			data: function (d) {
+				return formatMoney(d.engancheCliente) 
+			}
+		},
+		{
+			data: function (d) {
+				return myFunctions.convertDateYMDHMS(d.fechaEnganche) 
+			}
+		},
+		{
+			data: function (d) {
+				return myFunctions.convertDateYMDHMS(d.fechaCreacionProspecto)  
+			}
+		},
+		{
+			data: function (d) {
+				return `<span class="label lbl-oceanGreen">${d.id_prospecto}</span>`;
+			}
+		},
+		{
+			data: function (d) {
+				let validateData = d.id_dragon == 0 ? 'NO DISPONIBLE' : d.id_dragon;
+				return `<span class="label lbl-azure">${validateData}</span>`;
+			}
+		},
+		{
+			data: function (d) {
+				return `<span class="label lbl-yellow">${d.source}</span>`;
+			}
+		},
+		{
+			data: function (d) {
+				return `<span class="label lbl-violetBoots">${d.nombreStatusContratacion}</span>`;
+			}
+		},
+		{
+			data: function (d) {
+				return `<button class="btn-data btn-blueMaderas cop" data-toggle="tooltip" data-placement="top"title="VENTAS COMPARTIDAS"data-idcliente="${d.id_cliente}"data-idLote="${d.idLote}">
+							<i class="material-icons">people</i>
+						</button>`;
+			}
+		}],
 		columnDefs: [{
 			defaultContent: "",
 			targets: "_all",
@@ -550,39 +492,30 @@ $("#verDet").ready(function () {
 		var title = $(this).text();
 		titulos_encabezado_detalle.push(title);
 		num_colum_encabezado_detalle.push(i);
-		$(this).html(`<input 	type="text"
-								class="textoshead"
-								data-toggle="tooltip_details" 
-								data-placement="top"
-								title="${title}"
-								placeholder="${title}"
-								readOnly/>`);
+		$(this).html(`<input type="text"class="textoshead"data-toggle="tooltip_details" data-placement="top"title="${title}"placeholder="${title}"readOnly/>`);
 	});
 });
 
 $(document).ready(function () {
 	tableHistorial = $('#verDet').DataTable({
-		responsive: true,
-		autoWidth: 'true',
 		dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-		buttons:[
-			{
-				extend: 'excelHtml5',
-				text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-				className: 'btn buttons-excel',
-				titleAttr: 'Reporte ventas compartidas',
-				title:'Reporte ventas compartidas',
-				exportOptions: {
-					columns: num_colum_encabezado_detalle,
-					format: {
-						header: function (d, columnIdx) {
-							return ' '+titulos_encabezado_detalle[columnIdx] +' ';
-						}
+        width: "100%",
+        scrollX: true,
+		buttons:[{
+			extend: 'excelHtml5',
+			text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+			className: 'btn buttons-excel',
+			titleAttr: 'Reporte ventas compartidas',
+			title:'Reporte ventas compartidas',
+			exportOptions: {
+				columns: num_colum_encabezado_detalle,
+				format: {
+					header: function (d, columnIdx) {
+						return ' '+titulos_encabezado_detalle[columnIdx] +' ';
 					}
 				}
 			}
-		],
-		scrollX: true,
+		}],
 		pageLength: 10,
 		language: {
 			url: general_base_url+"static/spanishLoader_v2.json",
@@ -643,36 +576,26 @@ function changeSede(){
 	let sedes = $('#sede').val();
 	if(sedes.length>0){
 		$('#fechasFiltro').removeClass('hide');
-		$('#clientes_btnsPr').removeClass('col-md-4 col-lg-4');
-		$('#clientes_btnsPr').addClass('col-md-12 col-lg-12');
-		$('#inside').removeClass('col-md-12 col-lg-12');
-		$('#inside').addClass('col-md-offset-8 col-lg-offset-8 col-md-4 col-lg-4');
+		$('#inside').addClass('col-md-offset-8 col-lg-offset-8');
 	}else{
 		$('#fechasFiltro').addClass('hide');
-		$('#clientes_btnsPr').addClass('col-md-4 col-lg-4');
-		$('#clientes_btnsPr').removeClass('col-md-12 col-lg-12');
-		$('#inside').addClass('col-md-12 col-lg-12');
-		$('#inside').removeClass('col-md-offset-8 col-lg-offset-8 col-md-4 col-lg-4');
+		$('#inside').removeClass('col-md-offset-8 col-lg-offset-8');
 	}
 }
+
 function changeSedeC(){
 	let sedes = $('#sedeC').val();
 	if(sedes.length>0){
 		$('#fechasFiltroC').removeClass('hide');
-		$('#clientes_btns').removeClass('col-md-4 col-lg-4');
-		$('#clientes_btns').addClass('col-md-12 col-lg-12');
-		$('#insideC').removeClass('col-md-12 col-lg-12');
-		$('#insideC').addClass('col-md-offset-8 col-lg-offset-8 col-md-4 col-lg-4');
-	}else{
+		$('#insideC').addClass('col-md-offset-8 col-lg-offset-8');
+		}else{
 		$('#fechasFiltroC').addClass('hide');
-		$('#clientes_btns').addClass('col-md-4 col-lg-4');
-		$('#clientes_btns').removeClass('col-md-12 col-lg-12');
-		$('#insideC').addClass('col-md-12 col-lg-12');
-		$('#insideC').removeClass('col-md-offset-8 col-lg-offset-8 col-md-4 col-lg-4');
+		$('#insideC').removeClass('col-md-offset-8 col-lg-offset-8');
 	}
 }
-function cleanFilters(){
 
+function cleanFilters(){
+	$('#tabla_prospectos').addClass('hide');
 	if($('#name').val()=='' && $('#mail').val()=='' && $('#telephone').val()=='' && $('#idDragon').val()=='' && $("#sede").val().length<=0){
 		alerts.showNotification('top', 'right', 'Primero debes realizar una búsqueda', 'warning')
 	}else{
@@ -683,23 +606,17 @@ function cleanFilters(){
 		$("#sede").val('default');
 		$("#sede").selectpicker("refresh");
 		$('#fechasFiltro').addClass('hide');
-		$('#beginDate').val('01/01/2022');
-		$('#endDate').val('12/31/2022');
-		$('#clientes_btnsPr').removeClass('col-md-12 col-lg-12');
-		$('#clientes_btnsPr').addClass('col-md-4 col-lg-4');
-		$('#inside').addClass('col-md-12 col-lg-12');
-		$('#inside').removeClass('col-md-offset-8 col-lg-offset-8 col-md-4 col-lg-4');
-		// $("#tabla_prospectos").DataTable().clear().draw();
+		$('#beginDate').val('');
+		$('#endDate').val('');
+		$('#inside').addClass('col-md-4 col-lg-4');
+		$('#inside').removeClass('col-md-offset-8 col-lg-offset-8');
 		tabla_valores_prospectos.clear().draw();
 		tabla_valores_prospectos.destroy();
 	}
-
-
 }
 
 function cleanFiltersC(){
-	// clientes_btns
-	// insideC
+	$('#tabla_clientes').addClass('hide');
 	if($('#idLotteC').val()=='' && $('#nameC').val()=='' && $('#mailC').val()=='' && $('#telephoneC').val()=='' && $("#sedeC").val().length<=0){
 		alerts.showNotification('top', 'right', 'Primero debes realizar una búsqueda', 'warning')
 	}else{
@@ -711,16 +628,11 @@ function cleanFiltersC(){
 		$("#sedeC").val('default');
 		$("#sedeC").selectpicker("refresh");
 		$('#fechasFiltroC').addClass('hide');
-		$('#beginDateC').val('01/01/2022');
-		$('#endDateC').val('12/31/2022');
-		$('#clientes_btns').removeClass('col-md-12 col-lg-12');
-		$('#clientes_btns').addClass('col-md-4 col-lg-4');
-		$('#insideC').addClass('col-md-12 col-lg-12');
-		$('#insideC').removeClass('col-md-offset-8 col-lg-offset-8 col-md-4 col-lg-4');
-		// tabla_valores_cliente.clear();
+		$('#beginDateC').val('');
+		$('#endDateC').val('');
+		$('#insideC').addClass('col-md-4 col-lg-4');
+		$('#insideC').removeClass('col-md-offset-8 col-lg-offset-8');
 		tabla_valores_cliente.clear().draw();
 		tabla_valores_cliente.destroy();
 	}
-
-
 }

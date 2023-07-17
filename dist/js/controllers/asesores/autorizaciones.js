@@ -29,7 +29,7 @@ $("#my_authorization_form").on('submit', function(e){
 
         },
         success: function(data) {
-            if (data == 1) {
+            if (data == 'true') {
                 $('#btnSubmit').prop('disabled', false);
                 $('#btnSubmit').css("opacity","1");
                 $('#solicitarAutorizacion').modal("hide");
@@ -79,13 +79,7 @@ let titulos_autorizaciones = [];
 let num_colum_autorizaciones = [];
 $('#addExp thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
-    $(this).html(`<input type="text" 
-                         class="textoshead"
-                         data-toggle="tooltip" 
-                         data-placement="top"
-                         title="${title}" 
-                         placeholder="${title}"
-                />`);
+    $(this).html(`<input type="text" class="textoshead"data-toggle="tooltip" data-placement="top"title="${title}" placeholder="${title}"/>`);
     titulos_autorizaciones.push(title);
     num_colum_autorizaciones.push(i);
     $( 'input', this ).on('keyup change', function () {
@@ -213,13 +207,7 @@ let titulos_solicitud = [];
 let num_colum_solicitud = [];
 $('#sol_aut thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
-    $(this).html(`<input type="text" 
-                         class="textoshead"
-                         data-toggle="tooltip" 
-                         data-placement="top"
-                         title="${title}" 
-                         placeholder="${title}"
-                  />`);
+    $(this).html(`<input type="text" class="textoshead"data-toggle="tooltip" data-placement="top"title="${title}" placeholder="${title}"/>`);
     titulos_solicitud.push(title);
     num_colum_solicitud.push(i);
     $( 'input', this ).on('keyup change', function () {
@@ -335,16 +323,16 @@ $(document).ready (function() {
                 if((d.idStatusContratacion == 1 || d.idStatusContratacion == 2 || d.idStatusContratacion == 3) && (d.idMovimiento == 31 || d.idMovimiento == 85 || d.idMovimiento == 20 || d.idMovimiento == 63 || d.idMovimiento == 73 || d.idMovimiento == 82 || d.idMovimiento == 92 || d.idMovimiento == 96)){
                     aut =
                         `<a  href="#"
-                             class="btn-data btn-blueMaderas addAutorizacionAsesor"
-                             data-idCliente="${d.id_cliente}"
-                             data-nombreResidencial="${d.nombreResidencial}"
-                             data-nombreCondominio="${d.nombreCondominio}"
-                             data-nombreLote="${d.nombreLote}"
-                             data-idCondominio="${d.idCondominio}"
-                             data-idLote="${d.idLote}" 
-                             data-toggle="tooltip" 
-                             data-placement="top"
-                             title="ACCIONES">
+                            class="btn-data btn-blueMaderas addAutorizacionAsesor"
+                            data-idCliente="${d.id_cliente}"
+                            data-nombreResidencial="${d.nombreResidencial}"
+                            data-nombreCondominio="${d.nombreCondominio}"
+                            data-nombreLote="${d.nombreLote}"
+                            data-idCondominio="${d.idCondominio}"
+                            data-idLote="${d.idLote}" 
+                            data-toggle="tooltip" 
+                            data-placement="top"
+                            title="ACCIONES">
                             <i class="fas fa-redo"></i>
                         </a>`;
                     return '<div class="d-flex justify-center">'+aut+'</div>';
@@ -397,6 +385,7 @@ $('#solicitarAutorizacion').on('hidden.bs.modal', function (e) {
 });
 
 $(document).on('click', '.seeAuts', function (e) {
+    $('#spiner-loader').removeClass('hide');
     e.preventDefault();
     var $itself = $(this);
     var idLote=$itself.attr('data-idLote');
@@ -408,13 +397,13 @@ $(document).on('click', '.seeAuts', function (e) {
                 statusProceso="<span class='label lbl-green'>ACEPTADA</span>";
             }
             else if(item['estatus'] == 1){
-                statusProceso="<span class='label lbl-orangeYellow'>En proceso</span>";
+                statusProceso="<span class='label lbl-orangeYellow'>EN PROCESO</span>";
             }
             else if(item['estatus'] == 2){
                 statusProceso="<span class='label lbl-warning'>DENEGADA</span>";
             }
             else if(item['estatus'] == 3){
-                statusProceso="<span class='label lbl-sky'>En DC</span>";
+                statusProceso="<span class='label lbl-sky'>EN DC</span>";
             }
             else{
                 statusProceso="<span class='label lbl-gray'>N/A</span>";
@@ -426,7 +415,7 @@ $(document).on('click', '.seeAuts', function (e) {
                             <label style="font-weight:100; font-size: 12px">Solicitud de autorización: <b>${statusProceso}</b></label>
                         </div>
                         <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-5" style="text-align: right">
-                            <label style="font-weight:100; font-size: 12px">${item['fecha_creacion'].split(":").shift()}</label>
+                            <label style="font-weight:100; font-size: 12px">${item['fecha_creacion']}</label>
                         </div>
                         <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <p style="text-align: justify;">
@@ -438,6 +427,8 @@ $(document).on('click', '.seeAuts', function (e) {
             `);
         });
         $('#verAutorizacionesAsesor').modal('show');
+        $('#spiner-loader').addClass('hide');
+
     });
 });
 
@@ -446,10 +437,8 @@ contador = 1;
 function agregarAutorizacion (){
     $("#autorizacionesExtra").append('<div class="mt-2" id="cnt-'+contador+'"><label>Observación: (<span class="isRequired">*</span>) </label>' +
         '<button class="fl-r" onclick="eliminaAutorizacion('+contador+')" style="color: gray; background-color:transparent; border:none;" title="Eliminar observación"><i class="fas fa-trash"></i></button>' +
-        '<textarea  type="text" name="comentario_' + contador + '" placeholder="Ingresa tu comentario" ' +
-        '           class="text-modal" id="comentario_'+ contador +'" rows="3" '+
-        '            '+
-        '           oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">'+
+        '<textarea name="comentario_' + contador + '" placeholder="Ingresa tu comentario" ' +
+        '           class="text-modal" id="comentario_'+ contador +'" rows="3" >'+
         '</textarea></div>');
     contador = contador + 1;
     $('#tamanocer').val(contador);

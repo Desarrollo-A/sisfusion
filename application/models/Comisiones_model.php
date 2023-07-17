@@ -2111,31 +2111,19 @@ function update_comisionesDir($ideLote, $directorSelect, $abonadoDir, $totalDir,
 // WHERE hc.id_pago_i = $pago  
 // ORDER BY hc.fecha_movimiento DESC");
 $this->db->query("SET LANGUAGE Español;");
-return $this->db->query("SELECT DISTINCT(hc.comentario), hc.id_pago_i, hc.id_usuario, 
-convert(nvarchar(20), hc.fecha_movimiento, 113) date_final,
-hc.fecha_movimiento,
-CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario
-FROM historial_comisiones hc 
-INNER JOIN pago_comision_ind pci ON pci.id_pago_i = hc.id_pago_i
-INNER JOIN usuarios u ON u.id_usuario = hc.id_usuario 
-WHERE hc.id_pago_i = $pago
-ORDER BY hc.fecha_movimiento DESC");
+return $this->db->query("SELECT hc.comentario, hc.id_pago_i, hc.id_usuario, 
+convert(varchar, hc.fecha_movimiento, 120) date_final, convert(varchar,hc.fecha_movimiento,120) as fecha_movimiento, 
+CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario FROM historial_comisiones hc 
+INNER JOIN pago_comision_ind pci ON pci.id_pago_i = hc.id_pago_i 
+INNER JOIN usuarios u ON u.id_usuario = hc.id_usuario WHERE hc.id_pago_i = 2646550 
+GROUP BY hc.comentario, hc.id_pago_i, hc.id_usuario, hc.fecha_movimiento, hc.fecha_movimiento,u.nombre, u.apellido_paterno, u.apellido_materno, hc.id_log
+ORDER BY hc.id_log DESC");
 
 
 }
 
- function getCommentsDU($user){
-//     return $this->db->query("SELECT DISTINCT(hc.comentario), hc.id_pago_i, hc.id_usuario, hc.fecha_movimiento,
-// CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario
-// FROM historial_comisiones hc 
-// INNER JOIN pago_comision_ind pci ON pci.id_pago_i = hc.id_pago_i
-// INNER JOIN usuarios u ON u.id_usuario = hc.id_usuario 
-// WHERE hc.id_pago_i = $pago  
-// ORDER BY hc.fecha_movimiento DESC");
-$this->db->query("SET LANGUAGE Español;");
-return $this->db->query("SELECT pci.abono_neodata as comentario,concat(' - ',pci.comentario) comentario2, pci.id_pago_i, pci.modificado_por, convert(nvarchar(20), pci.fecha_abono, 113) date_final,
-pci.fecha_abono,
-CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario
+function getCommentsDU($user){
+    return $this->db->query("SELECT pci.abono_neodata as comentario,concat(' - ',pci.comentario) comentario2, pci.id_pago_i, pci.modificado_por, convert(nvarchar(20), pci.fecha_abono, 113) date_final, pci.fecha_abono, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario
 FROM pago_comision_ind pci  
 INNER JOIN historial_comisiones hc ON hc.id_pago_i = pci.id_pago_i and hc.comentario like '%motivo%'
 INNER JOIN usuarios u ON u.id_usuario = hc.id_usuario 
@@ -4033,7 +4021,7 @@ function getInformacionDataResguardo($var){
 function getDescuentos(){
     return $this->db->query("SELECT pci.id_pago_i, CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) AS usuario, pci.abono_neodata as monto, 
     lo.nombreLote, hc.comentario AS motivo, pci.estatus, CONCAT(us2.nombre,' ',us2.apellido_paterno,' ',us2.apellido_materno) AS modificado_por,
-    pci.fecha_abono
+    CONVERT(VARCHAR,pci.fecha_abono,20) AS fecha_abono
     FROM pago_comision_ind pci
     INNER JOIN usuarios us ON us.id_usuario = pci.id_usuario
     INNER JOIN comisiones co ON co.id_comision = pci.id_comision
@@ -4986,69 +4974,45 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
         return $this->db->query("UPDATE pago_comision_ind SET abono_neodata = '".$obs."',modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$id_pago_i.")");
       }
     
-    function insertar_codigo_postal($codigo_postal){
+    function insertar_codigo_postal($codigo_postal, $nuevoCp){
         $id_user = $this->session->userdata('id_usuario');
-        $estatus_cp= $this->consulta_codigo_postal($id_user)->result_array();
-        if(count($estatus_cp) <= 0){
-            $this->db->query("INSERT INTO cp_usuarios (id_usuario, codigo_postal, estatus, fecha_creacion, fecha_modificacion, creado_por)
-                            values ($id_user,$codigo_postal,1,GETDATE(),GETDATE(),$id_user)");
+        if($nuevoCp == 'true'){
+            $this->db->query("INSERT INTO cp_usuarios (id_usuario, codigo_postal, estatus, fecha_creacion, fecha_modificacion, creado_por) VALUES ($id_user,$codigo_postal,1,GETDATE(),GETDATE(),$id_user)");
             echo "Código postal insertado con éxito";
         }else{
-            $estatus_np= $estatus_cp[0]["estatus"];
-            $estatus_dato= $estatus_cp[0]["codigo_postal"];
-            if($estatus_np == 0){
-                $this->db->query("UPDATE cp_usuarios SET estatus = 1, codigo_postal = $codigo_postal, fecha_modificacion = GETDATE() WHERE id_usuario = $id_user");
-                $this->db->query("INSERT INTO auditoria (id_parametro, tipo, anterior, nuevo, col_afect, tabla, fecha_creacion, creado_por)
-                                values ($id_user,'update',$estatus_dato, $codigo_postal, 'codigo_postal', 'cp_usuarios', GETDATE(), ".$this->session->userdata('id_usuario').")");
-                echo "Datos actualizados correctamente";
-    
-            }elseif($estatus_np != 0 && $estatus_cp != []){
-                if($estatus_cp[0]['codigo_postal'] != $codigo_postal){
-                    $this->db->query("UPDATE cp_usuarios SET estatus = 1, codigo_postal = $codigo_postal, fecha_modificacion = GETDATE() WHERE id_usuario = $id_user");
-                    echo "Código postal actualizado correctamente";
-                }else {
-                    echo "El código postal ".$codigo_postal." ya se encuentra registrado";
-                }
-            }
+            $actualDatosCP= $this->consulta_codigo_postal($id_user)->result_array();
+            $actualCP = $actualDatosCP[0]["codigo_postal"];
+            $this->db->query("UPDATE cp_usuarios SET estatus = 1, codigo_postal = $codigo_postal, fecha_modificacion = GETDATE() WHERE id_usuario = $id_user");
+            $this->db->query("INSERT INTO auditoria (id_parametro, tipo, anterior, nuevo, col_afect, tabla, fecha_creacion, creado_por) VALUES ($id_user,'update',$actualCP, $codigo_postal, 'codigo_postal', 'cp_usuarios', GETDATE(), ".$this->session->userdata('id_usuario').")");
+            
+            echo "Datos actualizados correctamente";
         }
     }
-      function consulta_codigo_postal($id_user){
 
+    function consulta_codigo_postal($id_user){
         return $this->db->query("SELECT estatus, codigo_postal FROM cp_usuarios WHERE id_usuario = $id_user");
+    }
 
-      }
-
-      function pagos_codigo_postal($id_user){
-
+    function pagos_codigo_postal($id_user){
         return $this->db->query("SELECT * FROM pago_comision_ind WHERE estatus = 4 AND id_usuario = $id_user");
+    }
 
-      }
-
-       function update_estatus_add($id_pago_i, $obs) {
-    
+    function update_estatus_add($id_pago_i, $obs) {
         $id_user_Vl = $this->session->userdata('id_usuario');
         $QUERY_VAL = $this->db->query("SELECT id_usuario, id_comision FROM pago_comision_ind WHERE id_pago_i IN (".$id_pago_i.")");
         $comision = $QUERY_VAL->row()->id_comision;
         $user_com = $QUERY_VAL->row()->id_usuario;
     
-        // echo $comision.'<br>';
         return $this->db->query( "INSERT INTO pago_comision_ind VALUES (".$comision.", ".$user_com.", ".$obs.", GETDATE(), GETDATE(), 0, 11, 1, 'IMPORTACIÓN EXTEMPORANEA', NULL, NULL, NULL,'".$this->session->userdata('id_usuario')."')");
     
         $insert_id = $this->db->insert_id();
     
         $this->db->query("INSERT INTO  historial_comisiones VALUES ($insert_id, $id_user_Vl, GETDATE(), 1, 'SE AGREGA POR CONTRALORIA CON MONTO: ".$obs."')");
-    
-      }
-
-
-      // update_estatus_intmex
-
+    }
 
       /**-----------------------MKTD COMPARTIDAS---------------------- */
-    public function MKTD_compartida($lote,$p1,$p2,$user)
-    {
+    public function MKTD_compartida($lote,$p1,$p2,$user){
         $respuesta = $this->db->query("INSERT INTO compartidas_mktd VALUES ($lote,$p1,$p2, GETDATE(),$user)");
-
 
         if ($respuesta ) {
             return 1;
@@ -5056,22 +5020,15 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
             return 0;
         }
     }
-    public function VerificarMKTD($idlote)
-        {
-       return $query =  $this->db->query("SELECT * FROM comisiones co inner join pago_comision_ind pci on co.id_comision=pci.id_comision where pci.estatus != 12 and pci.id_usuario=4394 and co.id_lote=".$idlote."
-         ");
-        }
 
-
-
-
+    public function VerificarMKTD($idlote){
+       return $query =  $this->db->query("SELECT * FROM comisiones co inner join pago_comision_ind pci on co.id_comision=pci.id_comision where pci.estatus != 12 and pci.id_usuario=4394 and co.id_lote=".$idlote."");
+    }
 
    function getDatosNuevasCompartidas(){
-
     $filtro = " AND cl.id_asesor IN (SELECT id_usuario FROM usuarios WHERE id_sede IN (1,2,3,4,5,6) AND id_rol IN (7,9))  ";
 
-    return $this->db->query(" SELECT pci.id_usuario, lo.ubicacion_dos, plm.id_plan, s.nombre as sede, us.nombre, us.apellido_paterno, SUM(pci.abono_neodata) total, res.empresa, res.idResidencial, CAST(res.descripcion AS VARCHAR(MAX)) descripcion, 
- cmktd.sede1, cmktd.sede2, s1.nombre as s1, s2.nombre as s2
+    return $this->db->query(" SELECT pci.id_usuario, lo.ubicacion_dos, plm.id_plan, s.nombre as sede, us.nombre, us.apellido_paterno, SUM(pci.abono_neodata) total, res.empresa, res.idResidencial, CAST(res.descripcion AS VARCHAR(MAX)) descripcion, cmktd.sede1, cmktd.sede2, s1.nombre as s1, s2.nombre as s2
                                FROM pago_comision_ind pci 
                                INNER JOIN comisiones com ON com.id_comision = pci.id_comision
                                INNER JOIN lotes lo ON lo.idLote = com.id_lote
@@ -5092,15 +5049,10 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
                                GROUP BY plm.id_plan, res.empresa, pci.id_usuario, lo.ubicacion_dos, s.nombre, us.nombre, us.apellido_paterno, res.idResidencial, CAST(res.descripcion AS VARCHAR(MAX)),
                                 cmktd.sede1, cmktd.sede2, s1.nombre, s2.nombre
                                ORDER by plm.id_plan");
-                               
-
+                            
    }
 
- 
-    /**--------------------------------------------------------- */
-      /**----------resguardos-------------------------------------- */
-      
-   
+    /**----------resguardos-------------------------------------- */
     function getRetiros($user,$opc){
        $query = '';
         if($opc == 2){
@@ -5108,102 +5060,86 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
         }
 
         return $this->db->query("SELECT rc.id_rc,CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) AS usuario,rc.monto,rc.conceptos,rc.fecha_creacion,rc.estatus,CONCAT(u2.nombre,' ',u2.apellido_paterno,' ',u2.apellido_materno) AS creado_por,rc.estatus from usuarios us inner join resguardo_conceptos rc on rc.id_usuario=us.id_usuario inner join usuarios u2 on u2.id_usuario=rc.creado_por where rc.id_usuario=$user $query");
-       
    }
-   function insertar_retiro($usuarioid,$monto,$comentario,$usuario,$opc){
- $estatus = 1;
- $adicional = 'SE INGRESÓ RETIRO ';
-if($opc == 2){
-    $adicional = 'SE AGREGÓ UN INGRESO EXTRA ';
-$estatus = 67;
-}
-    $respuesta = $this->db->query("INSERT INTO resguardo_conceptos VALUES ($usuarioid, $monto,'$comentario', $usuario,$estatus, GETDATE())");
-    $insert_id_2 = $this->db->insert_id();
-    $respuesta = $this->db->query("INSERT INTO  historial_retiros VALUES ($insert_id_2, ".$this->session->userdata('id_usuario').", GETDATE(), 1, '$adicional POR MOTIVO DE: $comentario POR LA CANTIDAD DE: $monto')");
 
-    if (! $respuesta ) {
-        return 0;
-        } else {
-        return 1;
+    function insertar_retiro($usuarioid,$monto,$comentario,$usuario,$opc){
+        $estatus = 1;
+        $adicional = 'SE INGRESÓ RETIRO ';
+        if($opc == 2){
+            $adicional = 'SE AGREGÓ UN INGRESO EXTRA ';
+            $estatus = 67;
         }
-}
 
+        $respuesta = $this->db->query("INSERT INTO resguardo_conceptos VALUES ($usuarioid, $monto,'$comentario', $usuario,$estatus, GETDATE())");
+        $insert_id_2 = $this->db->insert_id();
+        $respuesta = $this->db->query("INSERT INTO  historial_retiros VALUES ($insert_id_2, ".$this->session->userdata('id_usuario').", GETDATE(), 1, '$adicional POR MOTIVO DE: $comentario POR LA CANTIDAD DE: $monto')");
 
+        if (! $respuesta ) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
 
     function getHistoriRetiros($id) {
         $query = $this->db->query("SELECT r.*,CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario  from historial_retiros r inner join usuarios u on u.id_usuario=r.id_usuario where id_retiro=$id");
         return $query;
     }
-    /*--------------------------------------*/
-/**--------------PRECIO LOTE MKTD------------------------------------- */
-function getPrecioMKTD($lote) {
-    $query = $this->db->query("select * from reportes_marketing where id_lote=$lote");
-    return $query;
-}
-public function insert_MKTD_precioL($lote,$precio,$user)
-{
-    $respuesta = $this->db->query("INSERT INTO reportes_marketing VALUES ($lote,$precio,0,1,$user,GETDATE())");
-
-    if ($respuesta ) {
-        return 1;
-    } else {
-        return 0;
+    
+    /**--------------PRECIO LOTE MKTD------------------------------------- */
+    function getPrecioMKTD($lote) {
+        $query = $this->db->query("select * from reportes_marketing where id_lote=$lote");
+        return $query;
     }
-}
-public function Update_MKTD_precioL($lote,$precio,$user)
-{
-    $respuesta = $this->db->query("UPDATE reportes_marketing SET precio=".$precio.",creado_por=$user,fecha_creacion=GETDATE() WHERE id_lote=".$lote."");
 
-    if ($respuesta ) {
-        return 1;
-    } else {
-        return 0;
+    public function insert_MKTD_precioL($lote,$precio,$user){
+        $respuesta = $this->db->query("INSERT INTO reportes_marketing VALUES ($lote,$precio,0,1,$user,GETDATE())");
+
+        if ($respuesta ) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
-}
 
+    public function Update_MKTD_precioL($lote,$precio,$user){
+        $respuesta = $this->db->query("UPDATE reportes_marketing SET precio=".$precio.",creado_por=$user,fecha_creacion=GETDATE() WHERE id_lote=".$lote."");
 
+        if ($respuesta ) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 
-
-
-
- function getDatosColabMktdCompartida($sede, $PLAN,$sede1,$sede2){
- 
-
-    if($PLAN == '9'|| $PLAN == 9 ){
-
- 
-        $filtro_009 = " SELECT pk.id_plan, pk.fecha_plan, getdate() as fin_plan, u.id_usuario, CONCAT(u.nombre,' ' ,u.apellido_paterno,' ',u.apellido_materno) AS colaborador, op1.nombre AS rol, pcm.porcentaje, u.id_sede, op1.id_opcion, 
-             (CASE op1.id_opcion WHEN '18' THEN 1 WHEN '10' THEN 2 WHEN '19' THEN 3 WHEN '37' THEN 4 WHEN '25 ' THEN 5 WHEN '29' THEN 6 WHEN '30' THEN 7 WHEN '20' THEN 8  ELSE op1.id_opcion END) as rol_dos,'0' as valor
+    function getDatosColabMktdCompartida($sede, $PLAN,$sede1,$sede2){
+        if($PLAN == '9'|| $PLAN == 9 ){
+            $filtro_009 = " SELECT pk.id_plan, pk.fecha_plan, getdate() as fin_plan, u.id_usuario, CONCAT(u.nombre,' ' ,u.apellido_paterno,' ',u.apellido_materno) AS colaborador, op1.nombre AS rol, pcm.porcentaje, u.id_sede, op1.id_opcion, 
+            (CASE op1.id_opcion WHEN '18' THEN 1 WHEN '10' THEN 2 WHEN '19' THEN 3 WHEN '37' THEN 4 WHEN '25 ' THEN 5 WHEN '29' THEN 6 WHEN '30' THEN 7 WHEN '20' THEN 8  ELSE op1.id_opcion END) as rol_dos,'0' as valor
             FROM planes_mktd pk 
             INNER JOIN porcentajes_mktd pcm ON pcm.numero_plan = pk.id_plan 
             INNER JOIN usuarios u ON u.id_usuario = pcm.id_usuario 
             INNER JOIN opcs_x_cats op1 ON op1.id_opcion = pcm.rol 
             WHERE op1.id_catalogo = 1 AND pcm.rol NOT IN (19, 20, 28)  ";
-
-    }
-    else{
-         $filtro_009 = " SELECT pk.id_plan, pk.fecha_plan, getdate() as fin_plan, u.id_usuario, CONCAT(u.nombre,' ' ,u.apellido_paterno,' ',u.apellido_materno) AS colaborador, op1.nombre AS rol, pcm.porcentaje, u.id_sede, op1.id_opcion, (CASE op1.id_opcion WHEN '18' THEN 1 WHEN '10' THEN 2 WHEN '19' THEN 3 WHEN '37' THEN 4 WHEN '25 ' THEN 5 WHEN '29' THEN 6 WHEN '30' THEN 7 WHEN '20' THEN 8 WHEN '28' THEN 9 ELSE op1.id_opcion END) as rol_dos,'0' as valor
+        }
+        else{
+            $filtro_009 = " SELECT pk.id_plan, pk.fecha_plan, getdate() as fin_plan, u.id_usuario, CONCAT(u.nombre,' ' ,u.apellido_paterno,' ',u.apellido_materno) AS colaborador, op1.nombre AS rol, pcm.porcentaje, u.id_sede, op1.id_opcion, (CASE op1.id_opcion WHEN '18' THEN 1 WHEN '10' THEN 2 WHEN '19' THEN 3 WHEN '37' THEN 4 WHEN '25 ' THEN 5 WHEN '29' THEN 6 WHEN '30' THEN 7 WHEN '20' THEN 8 WHEN '28' THEN 9 ELSE op1.id_opcion END) as rol_dos,'0' as valor
             FROM planes_mktd pk 
             INNER JOIN porcentajes_mktd pcm ON pcm.numero_plan = pk.id_plan 
             INNER JOIN usuarios u ON u.id_usuario = pcm.id_usuario 
             INNER JOIN opcs_x_cats op1 ON op1.id_opcion = pcm.rol 
             WHERE op1.id_catalogo = 1 AND pcm.rol NOT IN (19, 20) AND pk.id_plan = $PLAN) ";
-    }
+        }
 
+        if($PLAN == '7'||$PLAN == 7 ){
+            $filtro_003 = " ((pcm.rol IN (19) AND (u.id_sede LIKE '%$sede1%' OR u.id_sede LIKE '%$sede2%') ) OR (pcm.id_usuario = 1981 AND id_plaza = 2))  ";
+        }
+        else{
+            $filtro_003 = " pcm.rol IN (19) AND (u.id_sede LIKE '%$sede1%' OR u.id_sede LIKE '%$sede2%')  ";
+        }
 
-     if($PLAN == '7'||$PLAN == 7 ){
-
-        $filtro_003 = " ((pcm.rol IN (19) AND (u.id_sede LIKE '%$sede1%' OR u.id_sede LIKE '%$sede2%') ) OR (pcm.id_usuario = 1981 AND id_plaza = 2))  ";
-
-    }
-    else{
-         $filtro_003 = " pcm.rol IN (19) AND (u.id_sede LIKE '%$sede1%' OR u.id_sede LIKE '%$sede2%')  ";
-    }
-
-     return $this->db->query("( $filtro_009
-
+        return $this->db->query("( $filtro_009
             UNION 
-
             (SELECT pk.id_plan, pk.fecha_plan, getdate() as fin_plan, u.id_usuario, CONCAT(u.nombre,' ' ,u.apellido_paterno,' ',u.apellido_materno) AS colaborador, op1.nombre AS rol, pcm.porcentaje, u.id_sede, op1.id_opcion, (CASE op1.id_opcion WHEN '18' THEN 1 WHEN '19' THEN 2 WHEN '20 ' THEN 3 WHEN '25' THEN 4 ELSE op1.id_opcion END) as rol_dos,'0' as valor 
             FROM planes_mktd pk 
             INNER JOIN porcentajes_mktd pcm ON pcm.numero_plan = pk.id_plan 
@@ -5219,17 +5155,12 @@ public function Update_MKTD_precioL($lote,$precio,$user)
             INNER JOIN usuarios u ON u.id_usuario = pcm.id_usuario 
             INNER JOIN opcs_x_cats op1 ON op1.id_opcion = pcm.rol 
             WHERE op1.id_catalogo = 1 AND  $filtro_003 and pk.id_plan = $PLAN) order by rol_dos");
-    
-     }
+    }
 
-
- 
-
-/**---------------------------------------------------------- */
- /**----------------------------RESGUARDO------------------------------ */
- function get_lote_lista($condominio){
-    return $this->db->query("SELECT * FROM lotes WHERE status = 1 and statuscontratacion BETWEEN 9 AND 15 and regristro_comision=0  AND idCondominio = ".$condominio." AND idCliente in (SELECT idCliente FROM clientes) AND (idCliente <> 0 AND idCliente <>'') ");
-}
+    /**----------------------------RESGUARDO------------------------------ */
+    function get_lote_lista($condominio){
+        return $this->db->query("SELECT * FROM lotes WHERE status = 1 and statuscontratacion BETWEEN 9 AND 15 and regristro_comision=0  AND idCondominio = ".$condominio." AND idCliente in (SELECT idCliente FROM clientes) AND (idCliente <> 0 AND idCliente <>'') ");
+    }
 
 public function Update_lote_reubicacion($idloteNuevo,$idloteAnterior,$precioNuevo,$user,$comentario)
 {
@@ -6692,7 +6623,6 @@ if(count($row2) != 0 && $compartida == 1){
       
          
      
-
 public function GetUserMktd($estatus,$f1,$f2){
     $complemento = '';
     if($f1 != 0){
@@ -8105,8 +8035,7 @@ public function getDataDispersionPagoEspecial($val = '') {
                 ORDER BY fecha_creacion DESC ";
         $query = $this->db->query($cmd);
         return $query->row();
-
-}
+    }
 
     public  function ultimaDispersion($id_lote, $data)
     {
@@ -8121,6 +8050,4 @@ public function getDataDispersionPagoEspecial($val = '') {
             return $e->getMessage();
         }
     }
-
-
-    }
+}

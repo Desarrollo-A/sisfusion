@@ -31,7 +31,7 @@ var optionsTotalVentas = {
                     offsetY: 120,
                     formatter: function (w) {
                         // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
-                        
+
                         let val = w.globals.labels[0];
                         return `${val.toLocaleString('es-MX')}`;
                     }
@@ -91,7 +91,7 @@ var optionsProspectos = {
             colorStops: []
         }
     },
-    tooltip: { 
+    tooltip: {
         enabled: true,
         y: {
             formatter: (value) => value.toLocaleString('es-MX'),
@@ -157,7 +157,7 @@ var optionsProspClients = {
             colorStops: []
         }
     },
-    tooltip: { 
+    tooltip: {
         enabled: true,
         y: {
             formatter: (value) => value.toLocaleString('es-MX'),
@@ -213,7 +213,7 @@ var optionsWeekly = {
         categories: ['Prospectos nuevos','Prospectos c/cita','Ventas totales','Ventas contratadas',
         'Ventas apartadas','Cancelados contratados','Cancelados apartados']
     },
-    tooltip: { 
+    tooltip: {
         enabled: true,
         y: {
             formatter: (value) => value.toLocaleString('es-MX'),
@@ -253,7 +253,7 @@ var optionsFunnel = {
     legend: {
         show: false
     },
-    tooltip: { 
+    tooltip: {
         enabled: true,
         y: {
             formatter: (value) => value.toLocaleString('es-MX'),
@@ -332,11 +332,11 @@ function loadInit(){
         typeTransaction = validateMainFilters();
         var com2 = new FormData();
         com2.append("typeTransaction", typeTransaction);
-        getProspectsByYear(com2); 
+        getProspectsByYear(com2);
         getSalesByYear(com2);
-        generalMetrics(typeTransaction); 
+        generalMetrics(typeTransaction);
         cicloVenta(com2);
-        getClientsAndProspectsByYear(); 
+        getClientsAndProspectsByYear();
 }
 
 function getSalesByYear(com2){
@@ -396,13 +396,11 @@ function getProspectsByYear(com2) {
                 name: 'Prospectos',
                 data: data
             }])
-
             prospectosChart.updateOptions({
                 xaxis: {
-                   categories: months
+                    categories: months
                 },
-             });
-
+                });
             $('#numberGraphic').text(count.toLocaleString('es-MX'));
             document.getElementById('numberGraphic').title = count.toLocaleString('es-MX');
             $('.loadProspectosChart').addClass('d-none');
@@ -433,19 +431,16 @@ function getClientsAndProspectsByYear(type = 1, beginDate = null, endDate= null)
             let dataC = [];
             let countC = 0;
             let countP = 0;
-
             response.Clientes.forEach(element => {
                 monthsP.push(`${element.MONTH} ${element.año}`);
                 dataC.push(element.counts);
                 countC = countC + element.counts;
             });
-
             response.Prospectos.forEach(element => {
                 monthsC.push(`${element.MONTH} ${element.año}`);
                 dataP.push(element.counts);
                 countP = countP + element.counts;
             });
-
             chartProspClients.updateSeries([{
                 name: 'Prospectos',
                 data: dataP
@@ -453,7 +448,6 @@ function getClientsAndProspectsByYear(type = 1, beginDate = null, endDate= null)
                 name: 'Clientes',
                 data: dataC
             }])
-
             chartProspClients.updateOptions({
                 xaxis: {
                     categories: monthsP.length >= monthsC.length ? monthsP:monthsC
@@ -518,7 +512,6 @@ function getDataFromDates(com2){
                 data: suma > 0 ? [response.prospNuevos, response.prosCita, response.totalVentas, response.totalConT,
                 response.totalAT, response.totalCanC, response.totalCanA] : []
             }]);
-
             addTextFields(response);
             $('.loadChartWeekly').addClass('d-none');
         }
@@ -537,10 +530,10 @@ function cicloVenta(com2){
         dataType: 'json',
         success : function (response) {
             chartFunnel.updateSeries([
-               response.totalProspectosCita, response.totalProspectosCitaSeguimiento, 
+                response.totalProspectosCita, response.totalProspectosCitaSeguimiento,
                 response.totalApartados, response.prospectosNoInteresados
             ]);
-            
+
             addTextFields2(response);
             $('.loadChartFunnel').addClass('d-none');
         }
@@ -750,10 +743,9 @@ async function prospectsTable(){
         $('.datepicker').datetimepicker({locale: 'es'});
         setInitialValues2();
     }
-
     $('#tablePR thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
-        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}"placeholder="${title}"/>`);    
+        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}"placeholder="${title}"/>`);
             $( 'input', this ).on('keyup change', function () {
             if ($('#tablePR').DataTable().column(i).search() !== this.value ) {
                 $('#tablePR').DataTable().column(i).search(this.value).draw();
@@ -789,7 +781,7 @@ function getRolDR(idUser){
 /* Función para cambiar icono y cerrar o abrir tabla*/
 
 function changeIcon(anchor) {
-    anchor.closest('.wrapper').classList.toggle('active');
+    anchor.closest('.wrapper .boxTabla').classList.toggle('active');
     $(document).off('click', '.accordionToggle').on('click', '.accordionToggle', function () {
         $(this).parent().next().slideToggle(200);
         $(this).toggleClass('open', 200);
@@ -800,13 +792,13 @@ function changeIcon(anchor) {
 function createAccordionsPR(option, render, rol) {
     let tittle = getTitle(option);
     let html = '';
-    html = `<div data-rol="${rol}" class="bk ${render == 1 ? 'parentTable': 'childTable'}">
-                <div class="card p-2 h-auto">
-                    <div class="d-flex justify-between align-center">   
+    html = `<div class="bk ${render == 1 ? 'parentTable': 'childTable'}">
+                <div class="card p-2 h-auto boxTabla">
+                    <div class="d-flex justify-between align-center">
                         <div class="cursor-point accordionToggle">
                             <a class="purple-head hover-black" onclick="changeIcon(this)" id="myBtn">
-                            <i class="less fas fa-angle-down font-xs"></i>
-                            <i class="more fas fa-angle-up font-xs"></i>
+                            <i class="less fas fa-angle-down"></i>
+                            <i class="more fas fa-angle-up "></i>
                             </a>
                         </div>
                         <div>
@@ -834,7 +826,7 @@ function createAccordionsPR(option, render, rol) {
                         <div class="accordion-content pb-3">
                             <div class="material-datatables">
                                 <div class="form-group">
-                                    <table class="table-striped table-hover hide" id="tablePR" name="table`+option+`">
+                                    <table class="table-striped table-hover hide" id="tablePR">
                                         <thead>
                                             <tr>
                                                 <th>ESTADO</th>
@@ -916,8 +908,8 @@ function multirol(){
             let finalEndDate = $("#endDate3").val();
             $('#tablePR thead tr:eq(0) th').each( function (i) {
                 var title = $(this).text();
-                $(this).html('<input type="text" style="width:100%; background:#003D82; color:white; border: 0; font-weight: 500;" class="textoshead"  placeholder="'+title+'"/>' );
-                $( 'input', this ).on('keyup change', function () {
+                $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}"placeholder="${title}"/>`);
+                $( 'input', this).on( 'keyup change', function () {
                     if ($('#tablePR').DataTable().column(i).search() !== this.value ) {
                         $('#tablePR').DataTable().column(i).search(this.value).draw();
                     }
@@ -932,7 +924,6 @@ function loadSbdir(){
     $("#subdirector").empty().selectpicker('refresh');
     $.post('../Clientes/getSubdirs/', function(data) {
         var len = data.length;
-        $("#subdirector").append($('<option>').val('').text('SELECCIONA UN SUBDIRECTOR'));
         for( var i = 0; i<len; i++)
         {
             var id = data[i]['id_usuario'];
@@ -941,7 +932,7 @@ function loadSbdir(){
         }
         if(len<=0)
         {
-            $("#subdirector").append('<option selected="selected" disabled>NINGUN SUBDIRECTOR</option>');
+            $("#subdirector").append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
         }
         $("#subdirector").selectpicker('refresh');
     }, 'json');
@@ -958,9 +949,9 @@ function loadCoord(){
     $.post('../Clientes/getCoordsByGrs/'+id_usuario, function(data) {
         var len = data.length;
         if(len<=0){
-            $("#coordinadors").append('<option selected="selected" disabled>NINGUN COORDINADOR</option>');
+            $("#coordinadors").append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
         }{
-            $("#coordinadors").append('<option selected="selected">SELECCIONA COORDINADOR</option>');
+            $("#coordinadors").append('<option selected="selected">SELECCIONA UNA OPCIÓN</option>');
         }
 
         for( var i = 0; i<len; i++){
@@ -980,7 +971,7 @@ function loadAsesores(){
             $("#asesors").append('<option selected="selected" disabled>NINGUN COORDINADOR</option>');
         }
         else{
-            $("#asesors").append('<option selected="selected">SELECCIONA ASESOR</option>');
+            $("#asesors").append('<option selected="selected">SELECCIONA UNA OPCIÓN</option>');
         }
         for( var i = 0; i<len; i++){
             var id = data[i]['id_usuario'];
@@ -1004,7 +995,7 @@ function createSelect(dataDinamic){
         dataMaks = dataDinamic;
     }
 
-    let html_select ='<div class="col-md-3 form-group"><div id="'+nombreID+'" class="form-group overflow-hidden"><label class="control-label">'+dataMaks+'</label></div></div>';
+    let html_select ='<div class="col-md-3 form-group"><div id="'+nombreID+'" class="form-group overflow-hidden"><label class="control-label">'+dataMaks.toUpperCase()+'</label></div></div>';
     var $selectSub = $('<select/>', {
         'class':"selectpicker select-gral m-0",
         'id': dataDinamic,
@@ -1013,14 +1004,10 @@ function createSelect(dataDinamic){
         'data-show-subtext':"true",
         'data-live-search':"true",
         'data-container':"body",
-    }).append($('<option/>',{
-        'value': 'default',
-        'text': 'Selecciona el '+dataMaks,
-        'selected': true,
-        'disabled': true
-    }));
+        'title': 'SELECCIONA UNA OPCIÓN'
+    });
         $('#filterContainer').append(html_select);
-        
+
     return $selectSub;
 }
 
@@ -1033,12 +1020,6 @@ function createFilters(rol, selects){
 
 function getFirstFilter(rol, secondRol){
     $(`#${rol == 59 ? 'subdirector':'gerente'}`).empty().selectpicker('refresh');
-    var $option = $('<option/>',{
-        'value': 'default',
-        'text': 'Selecciona el subdirector',
-        'selected': true,
-        'disabled': true
-    });
     $(`#${rol == 59 ? 'subdirector':'gerente'}`).append($option);
     $.post('../General/getUsersByLeader', {rol: rol, secondRol:secondRol},function(data) {
         var len = data.length;
@@ -1049,7 +1030,7 @@ function getFirstFilter(rol, secondRol){
             $(`#${rol == 59 ? 'subdirector':'gerente'}`).append($('<option>').val(id).text(name));
         }
         if(len<=0){
-            $(`#${rol == 59 ? 'subdirector':'gerente'}`).append('<option selected="selected" disabled>NINGÚN GERENTE</option>');
+            $(`#${rol == 59 ? 'subdirector':'gerente'}`).append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
         }
         $(`#${rol == 59 ? 'subdirector':'gerente'}`).selectpicker('refresh');
     }, 'json');
@@ -1133,9 +1114,7 @@ $(document).on('change','#subdirector', function () {
         var len = data.length;
         if(len<=0)
         {
-            $("#gerente").append('<option selected="selected" disabled>NINGUN GERENTE</option>');
-        }else{
-            $("#gerente").append($('<option selected="selected">').val('').text('SELECCIONA GERENTE'));
+            $("#gerente").append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
         }
         for( var i = 0; i<len; i++)
         {
@@ -1161,10 +1140,7 @@ $(document).on('change', '#gerente', function () {
     $.post('../Clientes/getCoordsByGrs/'+gerente, function(data) {
         var len = data.length;
         if(len<=0){
-            $("#coordinadors").append('<option selected="selected" disabled>NINGUN COORDINADOR</option>');
-        }
-        {
-            $("#coordinadors").append('<option selected="selected">SELECCIONA COORDINADOR</option>');
+            $("#coordinadors").append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
         }
         for( var i = 0; i<len; i++){
             var id = data[i]['id_usuario'];
@@ -1193,9 +1169,7 @@ $(document).on('change', '#coordinadors', function () {
         var len = data.length;
         if(len<=0)
         {
-            $("#asesors").append('<option selected="selected" disabled>NINGUN COORDINADOR</option>');
-        }else{
-            $("#asesors").append('<option selected="selected">SELECCIONA ASESOR</option>');
+            $("#asesors").append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
         }
 
         for( var i = 0; i<len; i++){
@@ -1394,6 +1368,14 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
                 "endDate": endDate,
                 "where": where
             }
+        },
+        columnDefs: [{
+            "searchable": true,
+            "orderable": false,
+            "targets": 0
+        }],
+        drawCallback: function (settings) {
+            $('[data-toggle="tooltip"]').tooltip();
         }
     })
     $('#spiner-loader').addClass('hide');
@@ -1417,6 +1399,8 @@ $(document).on("click", "#searchByDateRangePR", function () {
         url_inter = "../Clientes/getProspectsListByAsesor/"+idUser;
     }else if(gerente == undefined && coordinador!=undefined && asesor!=undefined){
         url_inter = "../Clientes/getProspectsListByAsesor/"+asesor;
+    }else if(gerente == undefined && coordinador!=undefined && asesor==undefined){
+        url_inter = "../Clientes/getProspectsListByCoord/"+coordinador;
     }
 
     updateTable(url_inter, 3, finalBeginDate, finalEndDate, 0);

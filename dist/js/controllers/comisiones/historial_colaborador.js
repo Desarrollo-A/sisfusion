@@ -32,9 +32,7 @@ $('#filtro44').change(function(){
     if(tabla_historialGral2){
         tabla_historialGral2.destroy();
     }
-
     getAssimilatedCommissions(proyecto, condominio);
-
 });
 
 $('#filtro35').change(function(){
@@ -68,7 +66,6 @@ $('#filtro45').change(function(){
     if(tabla_historialGral3){
         tabla_historialGral3.destroy();
     }
-
     getAssimilatedCancelacion(proyecto, condominio);
 });
 
@@ -90,7 +87,7 @@ var tabla_historialGral2 ;
 var tabla_historialGral3 ;
 var totaPen = 0;
 
-//INICIO TABLA QUERETARO ACTIVOS****************************************************************************************
+//INICIO TABLA HISTORIAL ACTIVOS
 function getAssimilatedCommissions(proyecto, condominio){
     asignarValorColumnasDT("tabla_historialGral");
     $('#tabla_historialGral thead tr:eq(0) th').each( function (i) {
@@ -104,10 +101,7 @@ function getAssimilatedCommissions(proyecto, condominio){
             $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}" ${readOnly}/>`);
             $( 'input', this ).on('keyup change', function () {
                 if ($('#tabla_historialGral').DataTable().column(i).search() !== this.value ) {
-                    $('#tabla_historialGral').DataTable()
-                    .column(i)
-                    .search(this.value)
-                    .draw();
+                    $('#tabla_historialGral').DataTable().column(i).search(this.value).draw();
                 }
             });
         }
@@ -296,24 +290,24 @@ function getAssimilatedCommissions(proyecto, condominio){
     });
 
     $("#tabla_historialGral tbody").on("click", ".consultar_logs_asimilados", function(e){
+        $('#spiner-loader').removeClass('hide');
         e.preventDefault();
         e.stopImmediatePropagation();
-
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
-
         $("#seeInformationModalAsimilados").modal();
         $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $.getJSON("getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
-                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:gray;">'+v.comentario+'</i><br><b style="color:#3982C0">'+v.fecha_movimiento+'</b><b style="color:gray;"> - '+v.nombre_usuario+'</b></p></div>');
+                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>NOMBRE DEL USUARIO: </small><b>'+v.nombre_usuario+' </b></a><br></div><div class="float-end text-right"><a> '+v.fecha_movimiento+' </a></div><div class="col-md-12"><p class="m-0"><small>COMENTARIOS: </small><b>'+v.comentario+'</b></p></div><h6></h6></div></div></li>');
+                $('#spiner-loader').addClass('hide');
             });
         });
     });
 }
-//FIN TABLA  ****************************************************************************************
+//FIN TABLA  
 
-//INICIO TABLA QUERETARO CANCELACIONES****************************************************************************************
+//INICIO TABLA CANCELACIONES
 function getAssimilatedCancelacion(proyecto, condominio){
     asignarValorColumnasDT("tabla_comisiones_canceladas");
     $('#tabla_comisiones_canceladas thead tr:eq(0) th').each( function (i) {
@@ -327,10 +321,7 @@ function getAssimilatedCancelacion(proyecto, condominio){
             $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}" ${readOnly}/>`);
             $( 'input', this ).on('keyup change', function () {
                 if ($('#tabla_comisiones_canceladas').DataTable().column(i).search() !== this.value ) {
-                    $('#tabla_comisiones_canceladas').DataTable()
-                    .column(i)
-                    .search(this.value)
-                    .draw();
+                    $('#tabla_comisiones_canceladas').DataTable().column(i).search(this.value).draw();
                 }
             });
         }
@@ -494,9 +485,7 @@ function getAssimilatedCancelacion(proyecto, condominio){
         { 
             "orderable": false,
             "data": function( data ){
-
                 var BtnStats;
-
                 BtnStats = `<button href="#" value="${data.id_pago_i}" data-value="${data.nombreLote}" data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_asimilados" title="DETALLES" data-toggle="tooltip" data-placement="top"><i class="fas fa-info"></i></button>`;
                 return '<div class="d-flex justify-center">'+BtnStats+'</div>';
             }
@@ -529,6 +518,8 @@ function getAssimilatedCancelacion(proyecto, condominio){
     });
 
     $("#tabla_comisiones_canceladas tbody").on("click", ".consultar_logs_asimilados", function(e){
+        $('#spiner-loader').removeClass('hide');
+
         e.preventDefault();
         e.stopImmediatePropagation();
 
@@ -539,12 +530,14 @@ function getAssimilatedCancelacion(proyecto, condominio){
         $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $.getJSON("getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
-                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:gray;">'+v.comentario+'</i><br><b style="color:#3982C0">'+v.fecha_movimiento+'</b><b style="color:gray;"> - '+v.nombre_usuario+'</b></p></div>');
+                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>NOMBRE DEL USUARIO: </small><b>'+v.nombre_usuario+' </b></a><br></div><div class="float-end text-right"><a> '+v.fecha_movimiento+' </a></div><div class="col-md-12"><p class="m-0"><small>COMENTARIOS: </small><b>'+v.comentario+'</b></p></div><h6></h6></div></div></li>');
+                $('#spiner-loader').addClass('hide');
+
             });
         });
     });
 }
-//FIN TABLA  ****************************************************************************************
+//FIN TABLA  
 
 
 $('a[data-toggle="tooltip"]').on('shown.bs.tab', function (e) {
@@ -592,7 +585,6 @@ $("#form_interes").submit( function(e) {
 function cleanComments(){
     var myCommentsList = document.getElementById('documents');
     myCommentsList.innerHTML = '';
-
     var myFactura = document.getElementById('facturaInfo');
     myFactura.innerHTML = '';
 }
@@ -630,41 +622,38 @@ $(document).on('click', '.ver-info-asesor', function(){
                 return lblStats;
             }
         },
-            {
-
-                "data": function( d ){
-                    return '<p class="m-0">'+d.nombreLote+'</p>';
-                }
-            },
-            {
-                "data": function( d ){
-                    return '<p class="m-0">$ '+formatMoney(d.abono_neodata)+'</p>';
-                }
-            },
-            {
-                "data": function( d ){
-                    return '<p class="m-0">'+d.fecha_modificacion+'</p>';
-                }
-            },
-            {
-
-                "data": function( d ){
-                    return '<p class="m-0">$'+formatMoney(d.saldo_comisiones)+'</p>';
-                }
-            },
-            {
-                "data": function( d ){
-                    return '<p class="m-0">DESCUENTOS UNIVERSIDAD</p>';
-                }
+        {
+            "data": function( d ){
+                return '<p class="m-0">'+d.nombreLote+'</p>';
             }
-            ],
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0">$ '+formatMoney(d.abono_neodata)+'</p>';
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0">'+d.fecha_modificacion+'</p>';
+            }
+        },
+        {
+
+            "data": function( d ){
+                return '<p class="m-0">$'+formatMoney(d.saldo_comisiones)+'</p>';
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0">DESCUENTOS UNIVERSIDAD</p>';
+            }
+        }],
         columnDefs: [{
             orderable: false,
             className: 'select-checkbox',
             targets:   0,
             'searchable':false,
             'className': 'dt-body-center',
-
             select: {
                 style:    'os',
                 selector: 'td:first-child'
@@ -694,10 +683,7 @@ function tableComisionesSuma(anio){
             $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}" ${readOnly}/>`);
             $( 'input', this ).on('keyup change', function () {
                 if ($('#tabla_comisiones_suma').DataTable().column(i).search() !== this.value ) {
-                    $('#tabla_comisiones_suma').DataTable()
-                    .column(i)
-                    .search(this.value)
-                    .draw();
+                    $('#tabla_comisiones_suma').DataTable().column(i).search(this.value).draw();
                 }
             });
         }
@@ -807,6 +793,7 @@ function tableComisionesSuma(anio){
     });
 
     $("#tabla_comisiones_suma tbody").on("click", ".consultar_history", function(e){
+        $('#spiner-loader').removeClass('hide');
         e.preventDefault();
         e.stopImmediatePropagation();
         id_pago = $(this).val();
@@ -818,7 +805,9 @@ function tableComisionesSuma(anio){
         $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DE LA REFERENCIA <b style="color:#39A1C0; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">'+referencia+'</b></h5></p>');
         $.getJSON(general_base_url+"Suma/getHistorial/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
-                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:39A1C0;">'+v.comentario+'</i><br><b style="color:#39A1C0">'+v.fecha_movimiento+'</b><b style="color:gray;"> - '+v.modificado_por+'</b></p></div>');
+                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>MODIFICADO POR: </small><b>'+v.modificado_por+' </b></a><br></div><div class="float-end text-right"><a> '+v.fecha_movimiento+' </a></div><div class="col-md-12"><p class="m-0"><small>COMENTARIOS: </small><b>'+v.comentario+'</b></p></div><h6></h6></div></div></li>');
+                $('#spiner-loader').addClass('hide');
+
             });
         });
     });

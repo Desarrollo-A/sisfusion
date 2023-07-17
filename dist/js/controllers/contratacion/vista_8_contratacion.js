@@ -6,7 +6,7 @@ var getInfo5 = new Array(7);
 var getInfo6 = new Array(7);
 
 let titulos = [];
-$("#Jtabla").ready(function () {
+$(document).ready(function () {
     $('#Jtabla thead tr:eq(0) th').each(function (i) {
         if (i != 0) {
             var title = $(this).text();
@@ -163,6 +163,9 @@ $("#Jtabla").ready(function () {
                     }
                     return '<div class="d-flex justify-center">' + cntActions + '</div>';
                 }
+                else {
+                    return  `<span class="label lbl-warning">N/A</span>`;
+                }
             }
         }
         ],
@@ -185,6 +188,9 @@ $("#Jtabla").ready(function () {
         });
     });
 
+    const idStatusContratacion = [7,11];
+    const idMovimiento = [7, 37, 64, 66, 77, 41];
+
     $('#Jtabla tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
         var row = tabla_6.row(tr);
@@ -199,31 +205,55 @@ $("#Jtabla").ready(function () {
             var fechaVenc;
 
             if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 37) {
-                status = "STATUS 7 LISTO (JURÍDICO)";
+                status = "ESTATUS 7 LISTO (JURÍDICO)";
             }
             else if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 7) {
-                status = "STATUS 7 LISTO CON MODIFICACIONES (JURÍDICO)";
+                status = "ESTATUS 7 LISTO CON MODIFICACIONES (JURÍDICO)";
             }
             else if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 64) {
-                status = "STATUS 8 RECHAZADO (CONTRALORIA)";
+                status = "ESTATUS 8 RECHAZADO (CONTRALORIA)";
             }
             else if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 66) {
-                status = "STATUS 8 RECHAZADO (ADMINISTRACIÓN)";
+                status = "ESTATUS 8 RECHAZADO (ADMINISTRACIÓN)";
             }
             else if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 77) {
-                status = "STATUS 2 ENVIADO REVISIÓN (VENTAS)";
+                status = "ESTATUS 2 ENVIADO REVISIÓN (VENTAS)";
+            }
+            else if (row.data().idStatusContratacion == 11 && row.data().idMovimiento == 41) {
+                status = "ESTATUS 11 VALIDACIÓN DE ENGANCHE (ADMINISTRACIÓN)";
+            }
+    
+            if(idStatusContratacion.includes(parseInt(row.data().idStatusContratacion)) && idMovimiento.includes(parseInt(row.data().idMovimiento)))
+                    fechaVenc = row.data().fechaVenc;
+             else if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 66) {
+                fechaVenc = 'VENCIDO';
             }
 
-            if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 37 ||
-                row.data().idStatusContratacion == 7 && row.data().idMovimiento == 7 ||
-                row.data().idStatusContratacion == 7 && row.data().idMovimiento == 64 ||
-                row.data().idStatusContratacion == 7 && row.data().idMovimiento == 77) {
-                fechaVenc = row.data().fechaVenc;
-            } else if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 66) {
-                fechaVenc = 'Vencido';
-            }
-
-            var informacion_adicional = '<div class="container subBoxDetail bottom"><div class="row"><div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>INFORMACIÓN ADICIONAL</b></label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Estatus: </b>' + status + '</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Comentario: </b>' + row.data().comentario + '</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Fecha vencimiento: </b>' + fechaVenc + '</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Fecha realizado: </b></label>' + row.data().modificado + '</div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Coordinador: </b>' + row.data().coordinador + '</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Asesor: </b>' + row.data().asesor + '</label></div></div></div>';
+            var informacion_adicional = 
+            '<div class="container subBoxDetail bottom"><div class="row">'+
+                '<div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px">'+
+                    '<label><b>INFORMACIÓN ADICIONAL</b></label>'+
+                '</div>'+
+                '<div class="col-12 col-sm-12 col-md-12 col-lg-12">'+
+                    '<label><b>Estatus: </b>' + status + '</label>'+
+                '</div>'+
+                '<div class="col-12 col-sm-12 col-md-12 col-lg-12">'+
+                    '<label><b>Comentario: </b>' + row.data().comentario + '</label>'+
+                '</div>'+
+                '<div class="col-12 col-sm-12 col-md-12 col-lg-12">'+
+                    '<label><b>Fecha de vencimiento: </b>' + fechaVenc + '</label>'+
+                '</div>'+
+                '<div class="col-12 col-sm-12 col-md-12 col-lg-12">'+
+                    '<label><b>Fecha de realizado: </b>' + row.data().modificado + '</label> '+
+                '</div>'+
+                '<div class="col-12 col-sm-12 col-md-12 col-lg-12">'+
+                    '<label><b>Coordinador: </b>' + row.data().coordinador + '</label> '+
+                '</div>'+
+                '<div class="col-12 col-sm-12 col-md-12 col-lg-12">'+
+                    '<label><b>Asesor: </b>' + row.data().asesor + '</label>'+
+                '</div>'+
+            '</div>'+
+            '</div>';
 
             row.child(informacion_adicional).show();
             tr.addClass('shown');
