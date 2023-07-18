@@ -1531,7 +1531,13 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
   display: none;
 }
 
-/*CALENDARIO */
+#calendarioDay {
+  width: 170px;
+  outline: none;
+  border: 1px solid #aaa;
+  padding: 6px 28px;
+}
+
 #metricas table.dataTable > thead > tr > th, #metricas table.dataTable > tbody > tr > th, #metricas table.dataTable > tfoot > tr > th, #metricas table.dataTable > thead > tr > td, #metricas table.dataTable > tbody > tr > td, #metricas table.dataTable > tfoot > tr > td {
   white-space: nowrap !important;
 }

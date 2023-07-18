@@ -131,9 +131,8 @@
 			</div>
 		</div>
 		<?php $this->load->view('template/footer_legend');?>
-	</div><!--main-panel close-->
+	</div>
 	<?php $this->load->view('template/footer');?>
-	<!--DATATABLE BUTTONS DATA EXPORT-->
 	<script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
 	<script src="<?=base_url();?>dist/js/controllers/registro-cliente/autorizacionDirectivos.js"></script>
 </body>

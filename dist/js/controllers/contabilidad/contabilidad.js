@@ -484,5 +484,5 @@ function getLotesC(idCondominio) {
             $("#lotes").selectpicker('refresh');
         }
     });
-}
+} 
 

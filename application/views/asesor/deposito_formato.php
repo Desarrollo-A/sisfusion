@@ -7,7 +7,7 @@
 
     ?>
     <?php
-        if(in_array($this->session->userdata('id_rol'), array(7, 9, 3, 6, 2)) || in_array($this->session->userdata('id_usuario'), array(2752, 2826, 2810, 2855, 2815, 5957, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012)) AND $onlyView==0){
+        if(in_array($this->session->userdata('id_rol'), array(7, 9, 3, 6, 2)) || in_array($this->session->userdata('id_usuario'), array(2752, 2826, 2810, 2855, 2815, 5957, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012, 12931)) AND $onlyView==0){
             $readOnly = '';
             $statsInput = '';
             $html_action = '<form id="deposito-seriedad-form">';
@@ -30,7 +30,7 @@
     <div class="container" id="mainBoxDS">
         <div class="card">
 			<?php echo $html_action;?> 
-            <?php if(in_array($this->session->userdata('id_rol'), array(7, 9, 3, 6, 2)) || in_array($this->session->userdata('id_usuario'), array(2752, 2826, 2810, 2855, 2815, 5957, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012)) AND $onlyView==0){?>
+            <?php if(in_array($this->session->userdata('id_rol'), array(7, 9, 3, 6, 2)) || in_array($this->session->userdata('id_usuario'), array(2752, 2826, 2810, 2855, 2815, 5957, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012, 12931)) AND $onlyView==0){?>
                 <section id="sectionBtns">
                     <button type="submit" id="depositoSeriedadGuardar" name="guardarC" class="btn btnAction">GUARDAR CAMBIOS</button>
                 </section>
@@ -434,7 +434,7 @@
 
                 <div class="row" id="viviendaDSP">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <label class="label-on-left m-0">VIVE EN CASA</label>
+                        <label class="label-on-left m-0">VIVE EN CASA (<small style="color: red;">*</small>)</label>
                         <div class="radio_container">
                             <input type="radio" id="tipo_vivienda_1" <?php echo $statsInput; ?> name="tipo_vivienda" <?php if ($cliente[0]->tipo_vivienda == 1) { echo "checked=true"; } ?>  value="1"/>
                             <label for="tipo_vivienda_1">PROPIA</label>

@@ -2919,7 +2919,9 @@ class Asesor extends CI_Controller
                 'autorizacion' => $this->input->post('comentario_' . $n)
             );
             $dataInsert = $this->Asesor_model->insertAutorizacion($data);
-            $n > 0 ? $comentario .= "<br>-".$this->input->post('comentario_' . $n) : $comentario .= '-'.$this->input->post('comentario_' . $n);
+            if (!empty($this->input->post('comentario_' . $n))) {
+                ($n > 0 && !empty($comentario)) ? $comentario .= "<br>-".$this->input->post('comentario_' . $n) : $comentario .= '-'.$this->input->post('comentario_' . $n);
+            }
             $autorizacionComent .= $this->input->post('comentario_' . $n) . ". ";
         }
         if ($dataInsert == 1) {

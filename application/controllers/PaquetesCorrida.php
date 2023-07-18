@@ -4,49 +4,49 @@
 class PaquetesCorrida extends CI_Controller
 {
     public $id_rol = FALSE;
-  public function __construct()
-  {
-    parent::__construct();
-    $this->load->model(array('PaquetesCorrida_model', 'asesor/Asesor_model', 'General_model'));
-    $this->load->library(array('session', 'form_validation', 'get_menu'));
-    $this->load->helper(array('url', 'form'));
-    $this->load->database('default');
-    $this->programacion = $this->load->database('default', TRUE);
-    $this->id_rol = $this->session->userdata('id_rol');
+    public function __construct()
+    {
+      parent::__construct();
+      $this->load->model(array('PaquetesCorrida_model', 'asesor/Asesor_model', 'General_model'));
+      $this->load->library(array('session', 'form_validation', 'get_menu'));
+      $this->load->helper(array('url', 'form'));
+      $this->load->database('default');
+      $this->programacion = $this->load->database('default', TRUE);
+      $this->id_rol = $this->session->userdata('id_rol');
 
-    $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
-  }
+      $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+      $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+    }
 
 
-  public function validateSession()
-  {
-    if ($this->session->userdata('id_usuario') == "" || $this->session->userdata('id_rol') == "")
-      redirect(base_url() . "index.php/login");
-  }
+    public function validateSession()
+    {
+      if ($this->session->userdata('id_usuario') == "" || $this->session->userdata('id_rol') == "")
+        redirect(base_url() . "index.php/login");
+    }
  
-  public function Planes()
-  {
-    $this->load->view('template/header');
-    $this->load->view("ventas/Planes");
-  }
-  function getResidencialesList($id_sede)
-  {
-    $data = $this->PaquetesCorrida_model->getResidencialesList($id_sede);
-    if ($data != null)
-      echo json_encode($data);
-    else
-      echo json_encode(array());
-  }
+    public function Planes()
+    {
+      $this->load->view('template/header');
+      $this->load->view("ventas/Planes");
+    }
+    function getResidencialesList($id_sede)
+    {
+      $data = $this->PaquetesCorrida_model->getResidencialesList($id_sede);
+      if ($data != null)
+        echo json_encode($data);
+      else
+        echo json_encode(array());
+    }
   
-  function getTipoDescuento()
-  {
-    $data = $this->PaquetesCorrida_model->getTipoDescuento();
-    if ($data != null)
-      echo json_encode($data);
-    else
-      echo json_encode(array());
-  }
+    function getTipoDescuento()
+    {
+      $data = $this->PaquetesCorrida_model->getTipoDescuento();
+      if ($data != null)
+        echo json_encode($data);
+      else
+        echo json_encode(array());
+    }
 
 
     public function SavePaquete()
@@ -58,8 +58,8 @@ class PaquetesCorrida extends CI_Controller
         $residenciales = $this->input->post("residencial[]");
         $superficie = $this->input->post("superficie");
         $idAutorizacion = $this->input->post("idSolicitudAut");
-        $inicio = 0;//$this->input->post("inicio");
-        $fin = 0;//$this->input->post("fin");
+        $inicio = 0;
+        $fin = 0;
         $query_superdicie = '';
         $query_tipo_lote = '';
         //Superficie
@@ -72,14 +72,14 @@ class PaquetesCorrida extends CI_Controller
             $query_superdicie = 'and sup < 200 ';
         } else if ($superficie == 2) { // Mayor a 200
             $query_superdicie = 'and sup >= 200 ';
-            $inicio =0;// $this->input->post("fin");
-            $fin = 0;//$this->input->post("inicio");
+            $inicio =0;
+            $fin = 0;
         } else if ($superficie == 3) { // Cualquiera
             $query_superdicie = '';
             $inicio = 0;
             $fin = 0;
         }
-        $Fechainicio = $this->input->post("fechainicio");
+        $Fechainicio =  $this->input->post("fechainicio");
         $Fechafin = $this->input->post("fechafin");
         /*Tipo lote
         1.-Habitacional
@@ -112,13 +112,6 @@ class PaquetesCorrida extends CI_Controller
                     $descuentos = $_POST[$i . "_0_ListaDescuentosTotal_"];
 
                     for ($j = 0; $j < count($descuentos); $j++) {
-                       /* $meses_s_i = 0;
-                        if (isset($_POST[$i . '_' . $descuentos[$j] . '_msi'])) {
-                            $msi = $descuentos[$j] . ',' . $_POST[$i . '_' . $descuentos[$j] . '_msi'];
-                            $msi = explode(",", $msi);
-                            $meses_s_i = $msi[1];
-                        }*/
-
                         $data_descuento = array(
                             'id_paquete' => $id_paquete,
                             'id_descuento' => $descuentos[$j],
@@ -135,12 +128,6 @@ class PaquetesCorrida extends CI_Controller
                 if (isset($_POST[$i . "_1_ListaDescuentosEnganche_"])) {
                     $descuentos = $_POST[$i . "_1_ListaDescuentosEnganche_"];
                     for ($j = 0; $j < count($descuentos); $j++) {
-                       /* $meses_s_i = 0;
-                        if (isset($_POST[$i . '_' . $descuentos[$j] . '_msi'])) {
-                            $msi = $descuentos[$j] . ',' . $_POST[$i . '_' . $descuentos[$j] . '_msi'];
-                            $msi = explode(",", $msi);
-                            $meses_s_i = $msi[1];
-                        }*/
                         $data_descuento = array(
                             'id_paquete' => $id_paquete,
                             'id_descuento' => $descuentos[$j],
@@ -157,12 +144,6 @@ class PaquetesCorrida extends CI_Controller
                 if (isset($_POST[$i . "_2_ListaDescuentosEfectivoporm_"])) {
                     $descuentos = $_POST[$i . "_2_ListaDescuentosEfectivoporm_"];
                     for ($j = 0; $j < count($descuentos); $j++) {
-                       /* if (isset($_POST[$i . '_' . $descuentos[$j] . '_msi'])) {
-                            $meses_s_i = 0;
-                            $msi = $descuentos[$j] . ',' . $_POST[$i . '_' . $descuentos[$j] . '_msi'];
-                            $msi = explode(",", $msi);
-                            $meses_s_i = $msi[1];
-                        }*/
                         $data_descuento = array(
                             'id_paquete' => $id_paquete,
                             'id_descuento' => $descuentos[$j],
@@ -179,12 +160,6 @@ class PaquetesCorrida extends CI_Controller
                 if (isset($_POST[$i . "_3_ListaDescuentosBono_"])) {
                     $descuentos = $_POST[$i . "_3_ListaDescuentosBono_"];
                     for ($j = 0; $j < count($descuentos); $j++) {
-                        /*$meses_s_i = 0;
-                        if (isset($_POST[$i . '_' . $descuentos[$j] . '_msi'])) {
-                            $msi = $descuentos[$j] . ',' . $_POST[$i . '_' . $descuentos[$j] . '_msi'];
-                            $msi = explode(",", $msi);
-                            $meses_s_i = $msi[1];
-                        }*/
                         $data_descuento = array(
                             'id_paquete' => $id_paquete,
                             'id_descuento' => $descuentos[$j],
@@ -227,7 +202,6 @@ class PaquetesCorrida extends CI_Controller
         $getPaquetesByLotes = $this->PaquetesCorrida_model->getPaquetesByLotes($desarrollos, $query_superdicie, $query_tipo_lote, $superficie, $inicio, $fin);
         $user_sesionado = $this->session->userdata('id_usuario');
         //ESTE INSERT ES EL QUE SE HACIA ANTERIORMENTE, AUN NO SE ELIMINA YA SE OCUPARA PARA EL
-        // $this->PaquetesCorrida_model->UpdateLotes($desarrollos, $cadena_lotes, $query_superdicie, $query_tipo_lote, $this->session->userdata('id_usuario'), $Fechainicio, $Fechafin);
         $dataInsertAutPventas = array(
           "idResidencial" => $desarrollos,
           "fecha_inicio" => $Fechainicio,
@@ -246,8 +220,6 @@ class PaquetesCorrida extends CI_Controller
            "idAutorizacion" => $idAutorizacion
         );
          $this->PaquetesCorrida_model->saveAutorizacion($dataInsertAutPventas);
-        // $this->PaquetesCorrida_model->insertAutorizacionPventas($desarrollos,$cadena_lotes,$superficie,$TipoLote,$user_sesionado,$Fechainicio,$Fechafin);
-        //$this->General_model->addRecord('autorizaciones_pventas',$dataInsertAutPventas);
         if ($this->db->trans_status() === false) {
             $this->db->trans_rollback();
             echo json_encode(0);
@@ -304,8 +276,8 @@ class PaquetesCorrida extends CI_Controller
     $desarrollos = implode(",", $residenciales);
     $superficie = $this->input->post("superficie");
     /***/
-    $inicio = 0;//$this->input->post("inicio");
-    $fin = 0;//$this->input->post("fin");
+    $inicio = 0;
+    $fin = 0;
     $fechaInicio = $this->input->post("fechaInicio");
     $fechaFin = $this->input->post("fechaFin");
     $query_superdicie = '';
@@ -326,9 +298,9 @@ class PaquetesCorrida extends CI_Controller
 
     /*
     Tipo lote
-    1.-Habitacional
-    2.-Comercial
-    3.-AmbosPlanes
+    0.-Habitacional
+    1.-Comercial
+    2.-AmbosPlanes
     */
     $ArrPAquetes = array();
     $TipoLote = $this->input->post("tipolote");
@@ -364,7 +336,6 @@ class PaquetesCorrida extends CI_Controller
   
   public function Autorizaciones()
     {
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/     
         if ($this->id_rol == FALSE) {
             redirect(base_url());
         }

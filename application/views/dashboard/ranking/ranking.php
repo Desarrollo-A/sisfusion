@@ -9,7 +9,7 @@
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-chart h-100">
                             <div class="d-flex justify-between h-10 actions">
                                 <div id="boxSede1" class="boxSedes w-30 " ></div>
-                                <div class="form-group d-flex m-0 p-0 w-50 overflow-hidden">
+                                <div class="form-group d-flex m-0 p-0 w-50">
                                     <input type="text" class="form-control datepicker text-center pl-1 beginDate" id="beginDateApartados"/>
                                     <input type="text" class="form-control datepicker text-center endDate" id="endDateApartados"/>
                                     <button class="btn-search" id="searchByDateRangeRanking" onclick="getRankings(false, 'Apartados')">

@@ -33,7 +33,7 @@
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <ul class="nav nav-tabs nav-tabs-cm">
                             <li class="active">
-                                <a href="#solicitudes" onclick="borrarClase()" role="tab" id="solicitudes_tabla" data-toggle="tab">Solicitudes</a>
+                                <a href="#solicitudes" role="tab" id="solicitudes_tabla" data-toggle="tab">Solicitudes</a>
                             </li>
                             <li>
                                 <a href="#carga_test" role="tab" id="testimonio_tabla" data-toggle="tab">Carga testimonio</a>
@@ -42,7 +42,7 @@
                                 <a href="#pausadas" role="tab" id="tabla_pausadas" data-toggle="tab">Solicitudes pausadas</a>
                             </li>
                         </ul>
-                        <div class="card card no-shadow m-0" >
+                        <div class="card card no-shadow m-0" > 
                             <div class="card-content">
                                 <div class="nav-tabs-custom">
                                     <div class="tab-content p-2">
@@ -84,7 +84,6 @@
                                                             <tr>
                                                                 <th>ID</th>
                                                                 <th>PROYECTO</th>
-                                                                <!-- <th>CONDOMINIO</th> -->
                                                                 <th>LOTE</th>
                                                                 <th>CLIENTE</th>
                                                                 <th>VAL DE OPE</th>
@@ -92,6 +91,7 @@
                                                                 <th>ESTATUS</th>
                                                                 <th>ÁREA</th>
                                                                 <th>ASIGNADA A</th>
+                                                                <th>CREADA POR</th>
                                                                 <th>COMENTARIOS</th>
                                                                 <th>OBS.</th>
                                                                 <th>ACCIONES</th>
@@ -148,6 +148,7 @@
                                                                             <th>ESTATUS</th>
                                                                             <th>ÁREA</th>
                                                                             <th>ASIGNADA A</th>
+                                                                            <th>CREADA POR</th>
                                                                             <th>COMENTARIOS</th>
                                                                             <th>OBS</th>
                                                                             <th>ACCIONES</th>
@@ -197,6 +198,7 @@
                                                                             <th>FECHA DE CREACIÓN</th>
                                                                             <th>ESTATUS</th>
                                                                             <th>ÁREA</th>
+                                                                            <th>CREADA POR</th>
                                                                             <th>ASIGNADA A</th>
                                                                             <th>COMENTARIOS</th>
                                                                             <th>OBS</th>

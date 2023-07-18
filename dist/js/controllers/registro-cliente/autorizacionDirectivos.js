@@ -162,7 +162,7 @@ $(document).ready (function() {
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
-                title: ' Tus autorizaciones de verificación',
+                title: 'Tus autorizaciones de verificación',
                 exportOptions: {
                     columns: [0,1,2,3,4],
                     format: {
@@ -179,7 +179,7 @@ $(document).ready (function() {
                 text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
                 className: 'btn buttons-pdf',
                 titleAttr: 'Descargar archivo PDF',
-                title: ' Tus autorizaciones de verificación',
+                title: 'Tus autorizaciones de verificación',
                 orientation: 'landscape',
                 pageSize: 'LEGAL',
                 exportOptions: {

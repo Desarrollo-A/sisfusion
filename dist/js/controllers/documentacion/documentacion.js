@@ -13,6 +13,8 @@ const rolesPermitidosCartaDomicilio = [5, 2, 6];
 const movimientosPermitidosEstatus2 = [31, 85, 20, 63, 73, 82, 92, 96, 99, 102, 104, 107, 108, 109, 111];
 const rolesPermitidosEstatus2 = [7, 9, 3, 2];
 
+const rolesPermitidosEstatus2AsesorInactivo = [6];
+
 const AccionDoc = {
     DOC_NO_CARGADO: 1, // NO HAY DOCUMENTO CARGADO
     DOC_CARGADO: 2, // LA RAMA TIENE UN DOCUMENTO CARGADO
@@ -41,6 +43,7 @@ const observacionContratoUrgente = 1; // Bandera para inhabilitar
 const status8Flag = 1;
 
 let documentacionLoteTabla = null;
+let titulos = [];
 
 Shadowbox.init();
 
@@ -108,18 +111,72 @@ $('#idCondominio').change(function () {
 });
 
 $('#idLote').change(function () {
-    $('#tableDoct').removeClass('hide');
     const seleccion = $(this).val();
     const datos = seleccion.split(',');
-    const valorSeleccionado = datos[0];
-    let titulos = [];
+    const idLote = datos[0];
+
+    if (document.getElementById('idCliente')) {
+        $('#spiner-loader').removeClass('hide');
+        $("#idCliente").empty().selectpicker('refresh');
+        $.ajax({
+            url: `${general_base_url}Documentacion/getClientesPorLote/${idLote}`,
+            type: 'post',
+            dataType: 'json',
+            success:function(response){
+                if(response.length > 0){
+                    for( var i = 0; i < response.length; i++) {
+                        let labelStatus='';
+                        if(response[i]['status'] == 1)
+                            labelStatus=' [ACTIVO]'
+                        $("#idCliente").append($('<option>').val(response[i]['id_cliente']).text(response[i]['nombreCliente'] + labelStatus));
+                    }
+                } else {
+                    $("#idCliente").append($('<option selected>').val(0).text('SIN CLIENTES'));
+                }
+
+                $("#idCliente").selectpicker('refresh');
+            },
+            complete: function () {
+                $('#spiner-loader').addClass('hide');
+            }
+        });
+        return;
+    }
+
+    cargarTabla(idLote);
+});
+
+$('#idCliente').change(function () {
+    const loteVal = $("#idLote").val();
+    const loteValues = loteVal.split(',');
+    const idLote = loteValues[0];
+
+    const seleccionCliente = $(this).val();
+    const datosCliente = seleccionCliente.split(',');
+    const idCliente = datosCliente[0];
+
+    cargarTabla(idLote, idCliente);
+});
+
+$(".find_doc").click(function () {
+    const idLote = $('#inp_lote').val();
+    if(idLote === '' || idLote === undefined || idLote === null) {
+        alerts.showNotification('top', 'right', 'Ingresa el ID de lote', 'danger');
+        return;
+    }
+
+    cargarTabla(idLote);
+});
+
+function cargarTabla(idLote, idCliente = '') {
+    $('#tableDoct').removeClass('hide');
 
     $('#tableDoct thead tr:eq(0) th').each(function (i) {
 
         $(this).css('text-align', 'center');
         const title = $(this).text();
         titulos.push(title);
-        
+
         $(this).html('<input type="text" data-toggle="tooltip" data-placement="top" title="' + title + '" class="textoshead"  placeholder="' + title + '"/>');
         $('input', this).on('keyup change', function () {
             if ($('#tableDoct').DataTable().column(i).search() !== this.value) {
@@ -131,7 +188,7 @@ $('#idLote').change(function () {
     documentacionLoteTabla = $('#tableDoct').DataTable({
         destroy: true,
         ajax: {
-            url: `${general_base_url}registroCliente/expedientesWS/${valorSeleccionado}`,
+            url: `${general_base_url}registroCliente/expedientesWS/${idLote}/${idCliente}`,
             dataSrc: ""
         },
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -224,10 +281,10 @@ $('#idLote').change(function () {
                     if (data.tipo_doc == TipoDoc.CORRIDA) { // CORRIDA
                         if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
                             buttonMain = (includesArray(movimientosPermitidosCorrida, data.idMovimiento) && includesArray(rolesPermitidosContraloria, id_rol_general))
-                                    // ESTÁ EN ESTATUS 6 Y ES CONTRALORÍA EL QUE CONSULTA, SE VEA A MONSTRAR ENABLED EL BOTÓN PARA CARGAR EL ARCHIVO
-                                    ? crearBotonAccion(AccionDoc.SUBIR_DOC, data)
-                                    // ESTÁ EN CUALQUIER OTRO ESTATUS O NO ES JURÍDICO QUIEN CONSULTA, SE VA A MOSTRAR EL BOTÓN DISABLED
-                                    : crearBotonAccion(AccionDoc.DOC_NO_CARGADO, data);
+                                // ESTÁ EN ESTATUS 6 Y ES CONTRALORÍA EL QUE CONSULTA, SE VEA A MONSTRAR ENABLED EL BOTÓN PARA CARGAR EL ARCHIVO
+                                ? crearBotonAccion(AccionDoc.SUBIR_DOC, data)
+                                // ESTÁ EN CUALQUIER OTRO ESTATUS O NO ES JURÍDICO QUIEN CONSULTA, SE VA A MOSTRAR EL BOTÓN DISABLED
+                                : crearBotonAccion(AccionDoc.DOC_NO_CARGADO, data);
 
                             return `<div class="d-flex justify-center">${buttonMain}</div>`;
                         }
@@ -242,7 +299,7 @@ $('#idLote').change(function () {
 
                         return `<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`;
                     }
-                    
+
                     if (data.tipo_doc == TipoDoc.CARTA_DOMICILIO) { // CARTA DOMICILIO
                         if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
                             buttonMain = (
@@ -325,6 +382,29 @@ $('#idLote').change(function () {
                         return `<div class="d-flex justify-center">${buttonMain}</div>`;
                     }
 
+                    // EL ASESOR ESTÁ INACTIVO Y EL ROL DE
+                    if (data.estatusAsesor != 1) {
+                        if (data.expediente == null || data.expediente === "") {
+                            buttonMain = (
+                                includesArray(movimientosPermitidosEstatus2, parseInt(data.idMovimiento)) &&
+                                includesArray(rolesPermitidosEstatus2AsesorInactivo, parseInt(id_rol_general))
+                            )
+                                ? crearBotonAccion(AccionDoc.SUBIR_DOC, data)
+                                : crearBotonAccion(AccionDoc.DOC_NO_CARGADO, data);
+
+                            return `<div class="d-flex justify-center">${buttonMain}</div>`;
+                        }
+
+                        // LA RAMA TIENE UN DOCUMENTO CARGADO
+                        buttonMain = crearBotonAccion(AccionDoc.DOC_CARGADO, data); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
+
+                        if (includesArray(movimientosPermitidosEstatus2, data.idMovimiento) && includesArray(rolesPermitidosEstatus2AsesorInactivo, id_rol_general)) {
+                            buttonDelete  = crearBotonAccion(AccionDoc.ELIMINAR_DOC, data);
+                        }
+
+                        return `<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`;
+                    }
+
                     // ES EL RESTO DEL EXPEDIENTE (HISTORIAL DOCUMENTOS)
                     if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
                         buttonMain = (
@@ -362,7 +442,7 @@ $('#idLote').change(function () {
             });
         },
     });
-});
+}
 
 $(document).on('click', '.verDocumento', function () {
     const $itself = $(this);
@@ -409,12 +489,6 @@ $(document).on('click', '.verDocumento', function () {
         width: 985,
         height: 660
     });
-});
-
-$(document).on('click', '.seeAuts', function (e) {
-    e.preventDefault();
-    const $itself = $(this);
-
 });
 
 $(document).on("click", ".addRemoveFile", function (e) {
