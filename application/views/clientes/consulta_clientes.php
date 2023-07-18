@@ -123,8 +123,8 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="card card-plain">
-                                                <div class="card-content">
-                                                    <ul class="timeline timeline-simple" id="changelog"></ul>
+                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                                    <ul class="timeline-3" id="changelog"></ul>
                                                 </div>
                                             </div>
                                         </div>
@@ -145,7 +145,7 @@
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
                                 <i class="fas fa-address-book fa-2x"></i>
@@ -163,18 +163,17 @@
                                                     <th>CLIENTE</th>
                                                     <th>CORREO</th>
                                                     <th>TELÉFONO</th>
-                                                    <th>LUGAR PROSPECCIÓN</th>
+                                                    <th>LUGAR DE PROSPECCIÓN</th>
                                                     <th>ASESOR</th>
                                                     <th>COORDINADOR</th>
                                                     <th>GERENTE</th>
                                                     <th>SUBDIRECTOR</th>
                                                     <th>DIRECTOR REGIONAL</th>
-                                                    <th>CREACIÓN</th>
+                                                    <th>FECHA DE CREACIÓN</th>
                                                     <th>FECHA CLIENTE</th>
                                                     <th>ACCIONES</th>
                                                 </tr>
                                             </thead>
-                                            <tbody></tbody>
                                         </table>
                                     </div>
                                 </div>
@@ -186,18 +185,7 @@
         </div>
         <?php $this->load->view('template/footer_legend');?>
     </div>
-    </div><!--main-panel close-->
-
 <?php $this->load->view('template/footer');?>
-<!--DATATABLE BUTTONS DATA EXPORT-->
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-<!-- MODAL WIZARD -->
 <script src="<?=base_url()?>dist/js/modal-steps.min.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/consultaClientes.js"></script>
 </body>

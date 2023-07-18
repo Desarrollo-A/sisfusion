@@ -40,8 +40,8 @@ class Suma_model extends CI_Model
     }
     function getComisionesByStatus($estatus, $user){
         $query = $this->db->query("SELECT cs.id_cliente, cs.nombre_cliente, cs.id_pago,  cs.estatus, cs.referencia, ps.id_pago_suma, ps.id_usuario,
-        CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombre_comisionista, se.nombre sede, oxc.nombre forma_pago, 
-        us.forma_pago id_forma_pago, ps.total_comision, ps.porcentaje_comision, cs.total_venta,
+        CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombre_comisionista, UPPER(se.nombre) AS  sede, UPPER(oxc.nombre) AS forma_pago, 
+        us.forma_pago id_forma_pago, ps.total_comision,ROUND( ps.porcentaje_comision,2) AS porcentaje_comision, cs.total_venta,
         (CASE us.forma_pago WHEN 3 THEN (((100-se.impuesto)/100)* ps.total_comision) ELSE ps.total_comision END) impuesto
         FROM comisiones_suma cs
         INNER JOIN pagos_suma ps ON ps.referencia = cs.referencia
@@ -65,8 +65,8 @@ class Suma_model extends CI_Model
     }
     function getAllComisionesByUser($user, $year){
         $query = $this->db->query("SELECT cs.id_cliente, cs.nombre_cliente, cs.id_pago,  cs.estatus, cs.referencia, ps.id_pago_suma, ps.id_usuario,
-        CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombre_comisionista, se.nombre sede, oxc.nombre forma_pago, 
-        us.forma_pago id_forma_pago, ps.total_comision, ps.porcentaje_comision, cs.total_venta,
+        CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombre_comisionista, UPPER(se.nombre) AS sede, UPPER(oxc.nombre) AS forma_pago, 
+        us.forma_pago id_forma_pago, ps.total_comision, ROUND(ps.porcentaje_comision,2) AS porcentaje_comision , cs.total_venta,
         (CASE us.forma_pago WHEN 3 THEN (((100-se.impuesto)/100)* ps.total_comision) ELSE ps.total_comision END) impuesto, oxc2.nombre estatus, oxc2.color color_estatus
         FROM comisiones_suma cs
         INNER JOIN pagos_suma ps ON ps.referencia = cs.referencia
@@ -110,7 +110,7 @@ class Suma_model extends CI_Model
         return $query->row();
     }
     function getHistorial($idPago){
-        $result = $this->db->query("SELECT hs.fecha_movimiento, hs.comentario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) modificado_por
+        $result = $this->db->query("SELECT CONVERT(VARCHAR,hs.fecha_movimiento,20) AS fecha_movimiento, hs.comentario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) modificado_por
         FROM historial_suma hs
         INNER JOIN usuarios u ON u.id_usuario = hs.id_usuario 
         WHERE id_pago = $idPago
@@ -267,7 +267,7 @@ class Suma_model extends CI_Model
         ORDER BY u.nombre");
     }
     function get_solicitudes_factura($usuario){
-        return $this->db->query("SELECTT ps.total_comision, cm.referencia, ps.id_pago_suma
+        return $this->db->query("SELECT ps.total_comision, cm.referencia, ps.id_pago_suma
         FROM pagos_suma ps 
         INNER JOIN comisiones_suma cm ON ps.referencia = cm.referencia  
         INNER JOIN usuarios u ON u.id_usuario = ps.id_usuario AND u.id_usuario = $usuario

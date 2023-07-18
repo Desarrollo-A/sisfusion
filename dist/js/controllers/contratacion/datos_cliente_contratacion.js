@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    $('#spiner-loader').removeClass('hide');
     $.post(general_base_url + "Contratacion/lista_proyecto", function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
@@ -6,8 +7,8 @@ $(document).ready(function () {
             var name = data[i]['descripcion'];
             $("#proyecto").append($('<option>').val(id).text(name.toUpperCase()));
         }
-
         $("#proyecto").selectpicker('refresh');
+        $('#spiner-loader').addClass('hide');
     }, 'json');
 });
 
@@ -15,6 +16,7 @@ $('#proyecto').change(function () {
     let index_proyecto = $(this).val();
     $("#condominio").html("");
     $("#tabla_clientes").removeClass('hide');
+    $('#spiner-loader').removeClass('hide');
     $(document).ready(function () {
         $.post(general_base_url + "Contratacion/lista_condominio/" + index_proyecto, function (data) {
             var len = data.length;
@@ -24,15 +26,18 @@ $('#proyecto').change(function () {
                 $("#condominio").append($('<option>').val(id).text(name.toUpperCase()));
             }
             $("#condominio").selectpicker('refresh');
+            $('#spiner-loader').addClass('hide');
         }, 'json');
     });
     fillTable(index_proyecto, 0);
 });
 
 $('#condominio').change(function () {
+    $('#spiner-loader').removeClass('hide');
     let index_proyecto = $("#proyecto").val();
     let index_condominio = $(this).val();
     fillTable(index_proyecto, index_condominio);
+    $('#spiner-loader').addClass('hide');
 });
 
 let titulos_encabezado = [];
@@ -49,20 +54,10 @@ $("#tabla_clientes").ready(function () {
         if(title !== ''){
             let readOnly = excluir_column.includes(title) ? 'readOnly': '';
             let width = title=='MÁS' ? 'width: 37px;': (title == 'ACCIONES' ? 'width: 57px;' : '');
-            $(this).html(`<input type="text"
-                                style="${width}"
-                                class="textoshead"
-                                data-toggle="tooltip" 
-                                data-placement="top"
-                                title="${title}"
-                                placeholder="${title}"
-                                ${readOnly}/>`);
+            $(this).html(`<input type="text" style="${width}" class="textoshead " data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}" ${readOnly}/>`);
             $('input', this).on('keyup change', function () {
                 if (tabla_valores_cliente.column(i).search() !== this.value) {
-                    tabla_valores_cliente
-                        .column(i)
-                        .search(this.value)
-                        .draw();
+                    tabla_valores_cliente.column(i).search(this.value).draw();
                 }
             });
         }
@@ -183,16 +178,7 @@ function fillTable(index_proyecto, index_condominio) {
             {
                 data: function (d) {
                     return `<center>
-                                <button class="btn-data btn-blueMaderas cop"
-                                        data-toggle="tooltip" 
-                                        data-placement="top"
-                                        title= "VENTAS COMPARTIDAS"
-                                        data-idcliente="${d.id_cliente}"
-                                        data-idLote="${d.idLote}">
-                                    <i class="material-icons">
-                                        people
-                                    </i>
-                                </button>
+                                <button class="btn-data btn-blueMaderas cop" data-toggle="tooltip" data-placement="top" title= "VENTAS COMPARTIDAS" data-idcliente="${d.id_cliente}" data-idLote="${d.idLote}"><i class="material-icons">people</i></button>
                             </center>`;
                 }
             }
@@ -227,8 +213,7 @@ function fillTable(index_proyecto, index_condominio) {
     $('#tabla_clientes tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
         var row = tabla_valores_cliente.row(tr);
-
-        if (row.child.isShown()) {
+        if (row.child.isShown() ) {
             row.child.hide();
             tr.removeClass('shown');
             $(this).parent().find('.animacion').removeClass("fas fa-chevron-up").addClass("fas fa-chevron-down");
@@ -278,7 +263,7 @@ function fillTable(index_proyecto, index_condominio) {
                         <div class="col-12 col-sm-12 col-sm-12 col-lg-12">
                             <label>
                                 <b>
-                                    Fecha nacimiento: 
+                                    Fecha de nacimiento: 
                                 </b>
                                 ${myFunctions.validateEmptyField(row.data().fechaNacimiento)}
                             </label>
@@ -329,7 +314,6 @@ $(document).on('click', '.cop', function (e) {
     e.preventDefault();
     var $itself = $(this);
     var id_lote = $itself.attr('data-idLote');
-
     id_lote_global = id_lote;
     tableHistorial.ajax.reload();
     $('#verDetalles').modal('show');
@@ -337,20 +321,18 @@ $(document).on('click', '.cop', function (e) {
 
 let titulos_encabezado_detalle= [];
 let num_colum_encabezado_detalle = [];
-$("#tabla_clientes_detalles").ready(function () {
-    $('#tabla_clientes_detalles thead tr:eq(0) th').each(function (i) {
-        var title = $(this).text();
-        titulos_encabezado_detalle.push(title);
-        num_colum_encabezado_detalle.push(i);
-        $(this).html(`<input    type="text"
-                                class="textoshead"
-                                data-toggle="tooltip_details" 
-                                data-placement="top"
-                                title="${title}"
-                                placeholder="${title}"
-                                readOnly/>`);
+$('#tabla_clientes_detalles thead tr:eq(0) th').each(function (i) {
+    var title = $(this).text();
+    titulos_encabezado_detalle.push(title);
+    num_colum_encabezado_detalle.push(i);
+    $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
+    $('input', this).on('keyup change', function () {
+        if ($('#tabla_clientes_detalles').DataTable().column(i).search() !== this.value)
+            $('#tabla_clientes_detalles').DataTable().column(i).search(this.value).draw();
     });
+    $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
 });
+
 $(document).ready(function () {
     tableHistorial = $('#tabla_clientes_detalles').DataTable({
         responsive: true,

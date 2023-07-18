@@ -9,11 +9,11 @@
             <div class="modal-dialog">
                 <div class="modal-content" >
                     <div class="modal-header">
-                        <center><h4 class="modal-title"><label>Registro estatus 8 - <b><span class="lote"></span></b></label></h4></center>
+                        <h4 class="modal-title text-center"><label>Registro estatus 8 - <b><span class="lote"></span></b></label></h4>
                     </div>
                     <div class="modal-body">
                         <label>Comentario:</label>
-                        <textarea class="form-control" id="comentario" rows="3"></textarea>
+                        <textarea class="text-modal" id="comentario" rows="3"></textarea>
                         <br>              
                     </div>
                     <div class="modal-footer">
@@ -29,11 +29,11 @@
             <div class="modal-dialog">
                 <div class="modal-content" >
                     <div class="modal-header">
-                        <center><h4 class="modal-title"><label>Registro estatus 8 - <b><span class="lote"></span></b></label></h4></center>
+                        <h4 class="modal-title text-center"><label>Registro estatus 8 - <b><span class="lote"></span></b></label></h4>
                     </div>
                     <div class="modal-body">
                         <label>Comentario:</label>
-                        <textarea class="form-control" id="comentario2" rows="3"></textarea>
+                        <textarea class="text-modal" id="comentario2" rows="3"></textarea>
                         <br>              
                     </div>
                     <div class="modal-footer">
@@ -49,11 +49,11 @@
             <div class="modal-dialog">
                 <div class="modal-content" >
                     <div class="modal-header">
-                        <center><h4 class="modal-title"><label>Rechazo/regreso estatus 8 - <b><span class="lote"></span></b></label></h4></center>
+                        <h4 class="modal-title text-center"><label>Rechazo/regreso estatus 8 - <b><span class="lote"></span></b></label></h4>
                     </div>
                     <div class="modal-body">
                         <label>Comentario:</label>
-                        <textarea class="form-control" id="comentario3" rows="3"></textarea>
+                        <textarea class="text-modal" id="comentario3" rows="3"></textarea>
                         <br>              
                     </div>
                     <div class="modal-footer">
@@ -69,11 +69,11 @@
             <div class="modal-dialog">
                 <div class="modal-content" >
                     <div class="modal-header">
-                        <center><h4 class="modal-title"><label>Rechazo estatus 8 - <b><span class="lote"></span></b></label></h4></center>
+                        <h4 class="modal-title text-center"><label>Rechazo estatus 8 - <b><span class="lote"></span></b></label></h4>
                     </div>
                     <div class="modal-body">
                         <label>Comentario:</label>
-                        <textarea class="form-control" id="comentario4" rows="3"></textarea>
+                        <textarea class="text-modal" id="comentario4" rows="3"></textarea>
                         <br>              
                     </div>
                     <div class="modal-footer">
@@ -89,11 +89,11 @@
             <div class="modal-dialog">
                 <div class="modal-content" >
                     <div class="modal-header">
-                        <center><h4 class="modal-title"><label>Registro estatus 8 - <b><span class="lote"></span></b></label></h4></center>
+                        <h4 class="modal-title text-center"><label>Registro estatus 8 - <b><span class="lote"></span></b></label></h4>
                     </div>
                     <div class="modal-body">
                         <label>Comentario:</label>
-                        <textarea class="form-control" id="comentario5" rows="3"></textarea>
+                        <textarea class="text-modal" id="comentario5" rows="3"></textarea>
                         <br>              
                     </div>
                     <div class="modal-footer">
@@ -109,11 +109,11 @@
             <div class="modal-dialog">
                 <div class="modal-content" >
                     <div class="modal-header">
-                        <center><h4 class="modal-title"><label>Registro estatus 8 - <b><span class="lote"></span></b></label></h4></center>
+                        <h4 class="modal-title text-center"><label>Registro estatus 8 - <b><span class="lote"></span></b></label></h4>
                     </div>
                     <div class="modal-body">
                         <label>Comentario:</label>
-                        <textarea class="form-control" id="comentario6" rows="3"></textarea>
+                        <textarea class="text-modal" id="comentario6" rows="3"></textarea>
                         <br>              
                     </div>
                     <div class="modal-footer">
@@ -141,30 +141,22 @@
                                 </div>
                                 <div class="material-datatables"> 
                                     <div class="form-group">
-                                        <div class="table-responsive">
-                                            <table class="table-striped table-hover" id="Jtabla" name="Jtabla">
-                                                <thead>
-                                                    <tr>
-                                                        <th></th>
-                                                        <th>TIPO DE VENTA</th>
-                                                        <th>PROYECTO</th>
-                                                        <th>CONDOMINIO</th>
-                                                        <th>LOTE</th>
-                                                        <th>GERENTE</th>
-                                                        <th>CLIENTE</th>
-                                                        <th>ESTATUS ACTUAL</th>
-                                                        <th>UBICACIÓN</th>
-                                                        <?php
-                                                        if($this->session->userdata('id_rol') != 53 && $this->session->userdata('id_rol') != 54 && $this->session->userdata('id_rol') != 63) { // ANALISTA DE COMISIONES Y SUBDIRECCIÓN CONUSLTA (POPEA)
-                                                        ?>
-                                                        <th>ACCIONES</th>
-                                                    <?php 
-                                                    }
-                                                    ?>
-                                                    </tr>
-                                                </thead>
-                                            </table>
-                                        </div>
+                                        <table class="table-striped table-hover" id="Jtabla" name="Jtabla">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>TIPO DE VENTA</th>
+                                                    <th>PROYECTO</th>
+                                                    <th>CONDOMINIO</th>
+                                                    <th>LOTE</th>
+                                                    <th>GERENTE</th>
+                                                    <th>CLIENTE</th>
+                                                    <th>ESTATUS ACTUAL</th>
+                                                    <th>UBICACIÓN</th>
+                                                    <th>ACCIONES</th> 
+                                                </tr>
+                                            </thead>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -178,12 +170,5 @@
     </div><!--main-panel close-->
     <?php $this->load->view('template/footer');?>
     <!--DATATABLE BUTTONS DATA EXPORT-->
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/contratacion/vista_8_contratacion.js"></script>
 </body>

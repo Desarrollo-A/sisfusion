@@ -1,23 +1,18 @@
-$(document).ready(function() 
-{
+$(document).ready(function() {
     let titulos_encabezado = [];
     let num_colum_encabezado = [];
     $('#clients-datatable thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
-        titulos_encabezado.push(title);
-        num_colum_encabezado.push(i);
-        $(this).html(`<input type="text" 
-                             class="textoshead" 
-                             data-toggle="tooltip" 
-                             data-placement="top"
-                             title="${title}"
-                             placeholder="${title}"/>` );
+        $(this).html(`<input  data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
         $( 'input', this ).on('keyup change', function () {
             if ($('#clients-datatable').DataTable().column(i).search() !== this.value ) {
                 $('#clients-datatable').DataTable().column(i).search(this.value).draw();
             }
         });
-    });
+        $('[data-toggle="tooltip"]').tooltip();
+        });
+    
+
     //Eliminamos la ultima columna "ACCIONES" donde se encuentra un elemento de tipo boton (para omitir en excel o pdf).
     num_colum_encabezado.pop();
     $usersTable = $('#clients-datatable').DataTable({
@@ -55,7 +50,7 @@ $(document).ready(function()
         ordering: false,
         columns: [{
                 data: function(d) {
-                    return d.nombre + '<br>' +'<span class="label lbl-blueNCS">'+ d.id_prospecto +'</span>';
+                    return d.nombre + '<br>' +'<span class="label lbl-blueMaderas">'+ d.id_prospecto +'</span>';
                 }
             },
             {
@@ -114,12 +109,7 @@ $(document).ready(function()
                         return '';
                     } else { // ES EL ASESOR DEL EXPEDIENTE O ES UN GERENTE O SUBIDIRECTOR DE MKTD QUIEN CONSULTA
                         return `<center>
-                                    <button class="btn-data btn-blueMaderas see-information"
-                                            data-id-prospecto="${d.id_prospecto}" 
-                                            style="margin-right: 3px;" 
-                                            data-toggle="tooltip" 
-                                            data-placement="top"
-                                            title="Ver información">
+                                    <button class="btn-data btn-blueMaderas see-information" data-id-prospecto="${d.id_prospecto}" style="margin-right: 3px;" data-toggle="tooltip" data-placement="top" title="VER INFORMACIÓN">
                                         <i class="fas fa-eye"></i>
                                     </button>
                                 </center>`;
@@ -134,7 +124,10 @@ $(document).ready(function()
             data: function(d) {}
         },
         initComplete: function () {
-            $('[data-toggle="tooltip"]').tooltip();
+            $('[data-toggle="tooltip"]').tooltip({ 
+                trigger: "hover"
+        });
+                
         }
     });
 
@@ -182,7 +175,6 @@ function fillFields(v, type) {
         $("#prospecting_place").val(v.lugar_prospeccion);
         $("#advertising").val(v.medio_publicitario);
         $("#sales_plaza").val(v.plaza_venta);
-        //document.getElementById("observations").innerHTML = v.observaciones;
         $("#observation").val(v.observaciones);
         if (v.tipo_vivienda == 1) {
             document.getElementById('own').setAttribute("checked", "true");
@@ -220,7 +212,6 @@ function fillFields(v, type) {
         $("#phone-number2-lbl").val(v.telefono_2);
         $("#prospecting-place-lbl").val(v.lugar_prospeccion);
         $("#specify-lbl").html(v.otro_lugar);
-        //$("#advertising-lbl").val(v.medio_publicitario);
         $("#sales-plaza-lbl").val(v.plaza_venta);
         $("#comments-lbl").val(v.observaciones);
         $("#asesor-lbl").val(v.asesor);
@@ -239,17 +230,25 @@ function fillFields(v, type) {
         $("#phone_number_ed").val(v.telefono);
     }
 }
+
 function fillChangelog(v) {
-    $("#changelog").append('<li class="timeline-inverted">\n' +
-        '    <div class="timeline-badge success"><span class="material-icons">check</span></div>\n' +
-        '    <div class="timeline-panel">\n' +
-        '            <label><h6>' + v.parametro_modificado + '</h6></label><br>\n' +
-        '            <b>Valor anterior:</b> ' + v.anterior + '\n' +
-        '            <br>\n' +
-        '            <b>Valor nuevo:</b> ' + v.nuevo + '\n' +
+    $("#changelog").append('<li>\n' +
+        '    <div class="container-fluid">\n' +
+        '       <div class="row">\n' +
+        '           <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">\n' +
+        '               <a><small>Campo: </small><b>' + v.parametro_modificado.toUpperCase() + '</b></a><br>\n' +
+        '           </div>\n' +
+        '           <div class="float-end text-right">\n' +
+        '               <a>' + v.fecha_creacion + '</a>\n' +
+        '           </div>\n' +
+        '           <div class="col-md-12">\n' +
+    '                <p class="m-0"><small>Usuario: </small><b> ' + v.creador.toUpperCase() + '</b></p>\n'+
+    '                <p class="m-0"><small>Valor anterior: </small><b> ' + v.anterior.toUpperCase() + '</b></p>\n' +
+    '                <p class="m-0"><small>Valor Nuevo: </small><b> ' + v.nuevo.toUpperCase() + '</b></p>\n' +
+        '           </div>\n' +
         '        <h6>\n' +
-        '            <span class="small text-gray"><i class="fa fa-clock-o mr-1"></i> ' + v.fecha_creacion + ' - ' + v.creador + '</span>\n' +
         '        </h6>\n' +
+        '       </div>\n' +
         '    </div>\n' +
         '</li>');
 }
@@ -261,7 +260,6 @@ function cleanComments() {
     var myChangelog = document.getElementById('changelog');
     myChangelog.innerHTML = '';
 }
-
 
 function fillTimeline(v, counter) {
     if(counter > 0){
@@ -281,7 +279,6 @@ function fillTimeline(v, counter) {
 }
 
 $(document).on('click', '.see-information', function(e) {
-
     id_prospecto = $(this).attr("data-id-prospecto");
     $("#seeInformationModal").modal();
     $("#prospecto_lbl").val(id_prospecto);
@@ -309,5 +306,4 @@ $(document).on('click', '.see-information', function(e) {
             fillChangelog(v);
         });
     });
-
 });

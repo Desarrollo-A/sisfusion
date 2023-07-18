@@ -217,6 +217,8 @@ class Caja_outside extends CI_Controller {
                     $datos['idStatusLote'] = 7;
                 } else if ($value->idStatusLote == 'BLOQUEO' || $value->idStatusLote == 'BLOQUEADO') {
                     $datos['idStatusLote'] = 8;
+                } else if ($value->idStatusLote == 'ESPECIAL') {
+                    $datos['idStatusLote'] = 101;
                 } else {
                     $datos['idStatusLote'] = 8;
                 }
@@ -528,7 +530,11 @@ class Caja_outside extends CI_Controller {
                     exit;
             }
         }
-
+        $dias = [1,2,3];
+        $date = new DateTime('now');
+        $date->modify('-1 month');
+        $date->format('Y-m-t');
+        $fechaApartado = $datosView->pagoRetrasado != 0 &&  in_array(date("j"),$dias) ? $date->format('Y-m-t H:i:s') : date('Y-m-d H:i:s') ;
         $dataInsertCliente = array(
             'id_asesor' => $datosView->id_asesor,
             'id_coordinador' => $voBoCoord,
@@ -572,7 +578,7 @@ class Caja_outside extends CI_Controller {
             'fechaEnganche' => date('Y-m-d H:i:s'),
             'status' => 1,
             'idLote' => $data['lote'],
-            'fechaApartado' => ( $datosView->concepto == 'REUBICACIÓN') ? $datosView->fechaApartadoReubicacion : date('Y-m-d H:i:s'),
+            'fechaApartado' => ( $datosView->concepto == 'REUBICACIÓN') ? $datosView->fechaApartadoReubicacion : $fechaApartado,
             'fechaVencimiento' => date("Y-m-d H:i:s", strtotime($data['prospecto'][0]['fecha_vencimiento'])),
             'usuario' => $datosView->id_usuario,
             'modificado_por' => $datosView->id_usuario,

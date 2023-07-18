@@ -214,121 +214,32 @@
 
 
     public function aplicaLiberacion($datos){
-       $descuentos=NULL;
-        $query = $this->db-> query("SELECT idLote, nombreLote, status, sup FROM lotes where idCondominio = ".$datos['idCondominio']." and nombreLote = '".$datos['nombreLote']."' and status = 1");
-        foreach ($query->result_array() as $row) {
-            $this->db->trans_begin();
-            $id_cliente = $this->db->query("SELECT id_cliente FROM clientes WHERE status = 1 and idLote IN (" . $row['idLote'] . ") ")->result_array();
-            $this->db->query("UPDATE historial_documento SET status = 0 WHERE status = 1 and idLote IN (".$row['idLote'].") ");
-            $this->db->query("UPDATE prospectos SET tipo = 0, estatus_particular = 4, modificado_por = 1, fecha_modificacion = GETDATE() WHERE id_prospecto IN (SELECT id_prospecto FROM clientes WHERE status = 1 AND idLote = ".$row['idLote'].")");
-            $this->db->query("UPDATE clientes SET status = 0 WHERE status = 1 and idLote IN (".$row['idLote'].") ");
-            $this->db->query("UPDATE historial_enganche SET status = 0, comentarioCancelacion = 'LOTE LIBERADO' WHERE status = 1 and idLote IN (".$row['idLote'].") ");
-            $this->db->query("UPDATE historial_lotes SET status = 0 WHERE status = 1 and idLote IN (".$row['idLote'].") ");
-            /**------------------------------------------------- */
-            $comisiones = $this->db->query("SELECT id_comision,id_lote,comision_total FROM comisiones where id_lote=".$row['idLote']."")->result_array();
+        $this->db->trans_begin();
+        $descuentosComerciales = !isset($datos['descuentosComerciales']) ? 0 : $datos['descuentosComerciales'];
+        $descuentoHabMenores = !isset($datos['descuentoHabMenores']) ? 0 : $datos['descuentoHabMenores'] ;
+        $descuentoHabMayores = !isset($datos['descuentoHabMayores']) ? 0 : $datos['descuentoHabMayores'] ;
+        $activeLE = $datos['activeLE'] == FALSE ? 0 : 1 ;
+        $activeLP = $datos['activeLP'] == FALSE ? 0 : 1 ;
+        $clausulas = !isset($datos['clausulas']) ? 0 : $datos['clausulas'] ;
+         $this->db-> query("EXEC aplicaLiberacion 
+        @idCondominio = ".$datos['idCondominio'].", 
+        @nombreLote = '".$datos['nombreLote']."',
+        @tipoLote = ".$datos['tipo_lote'].",
+        @comentarioLiberacion = '".$datos['comentarioLiberacion']."',
+        @observacionLiberacion = '".$datos['observacionLiberacion']."',
+        @precio = ".$datos['precio'].",
+        @fechaLiberacion = '".$datos['fechaLiberacion']."',
+        @modificado = '".$datos['modificado']."',
+        @statusParam = ".$datos['status'].",
+        @tipoParam = ".$datos['tipo'].",
+        @userLiberacion = '".$datos['userLiberacion']."',
+        @activeLE = $activeLE,
+        @activeLP = $activeLP,
+        @datosClausulas = '$clausulas',
+        @descuentosComerciales = '$descuentosComerciales',
+        @descuentoHabMenores = '$descuentoHabMenores',
+        @descuentoHabMayores = '$descuentoHabMayores' ");
 
-            for ($i=0; $i <count($comisiones) ; $i++) {
-                $sumaxcomision=0;
-                $pagos_ind = $this->db->query("select * from pago_comision_ind where id_comision=".$comisiones[$i]['id_comision']."")->result_array();
-                for ($j=0; $j <count($pagos_ind) ; $j++) { 
-                    $sumaxcomision = $sumaxcomision + $pagos_ind[$j]['abono_neodata'];
-                }
-                $this->db->query("UPDATE comisiones set  modificado_por='" . $datos['userLiberacion'] . "',comision_total=$sumaxcomision,estatus=8 where id_comision=".$comisiones[$i]['id_comision']." ");
-            }
-            //$this->db->query("UPDATE lotes set registro_comision=8  where idLote=".$row['idLote']." ");
-            $this->db->query("UPDATE pago_comision set bandera=0,total_comision=0,abonado=0,pendiente=0,ultimo_pago=0  where id_lote=".$row['idLote']." ");
-           
-           /**PAQUETES CF */
-                  if($datos['tipo_lote'] == 1 ){ //1 - Comercial
-                    //si el condominio es comercial solo consultar sin importar la superficie
-                   $descuentos=$datos['descuentosComerciales'];
-                  }else{ //0 - Habitacional
-                          $descuentos = $row['sup'] < 200 ? $datos['descuentoHabMenores'] : $datos['descuentoHabMenores'];
-                          var_dump($datos['descuentoHabMenores']);
-                 }
-            /**----------------------------------------------- */
-            $data_l = array(
-            'nombreLote'=> $datos['nombreLote'],
-            'comentarioLiberacion'=> $datos['comentarioLiberacion'],
-            'observacionLiberacion'=> $datos['observacionLiberacion'],
-            'precio'=> $datos['precio'],
-            'fechaLiberacion'=> $datos['fechaLiberacion'],
-            'modificado'=> $datos['modificado'],
-            'status'=> $datos['status'],
-            'idLote'=> $row['idLote'],
-            'tipo'=> $datos['tipo'],
-            'userLiberacion'=> $datos['userLiberacion'],
-            'id_cliente' => (count($id_cliente)>=1 ) ? $id_cliente[0]['id_cliente'] : 0);
-            $this->db->insert('historial_liberacion',$data_l);
-            if ($datos['activeLE'] == 0){
-                $st = ($datos['activeLP'] == 1) ? 1 : 1;
-                $tv = ($datos['activeLP'] == 1) ? 1 : 0;
-                if ($tv == 1) { // LIBERACIÓN VENTA DE PARTICULAES
-                    $data_lp = array(
-                        'id_lote'=> $row['idLote'],
-                        'nombre'=> $datos['clausulas'],
-                        'estatus'=> 1,
-                        "fecha_creacion" => date("Y-m-d H:i:s"),
-                        "creado_por" => $datos['userLiberacion']
-                    );
-                    $clauses_data =  $this->db->query("SELECT * FROM clausulas WHERE id_lote = ". $row['idLote'] ." AND estatus = 1")->result_array();
-                    if (COUNT($clauses_data) > 0) {
-                        for ($i = 0; $i < COUNT($clauses_data); $i++) {
-                            $this->db->query("UPDATE clausulas SET estatus = 0 WHERE id_clausula = ". $clauses_data[$i]['id_clausula'] ." AND estatus = 1");
-                        }
-                    }
-                    $this->db->insert('clausulas', $data_lp);
-                } else {
-                    $clauses_data =  $this->db->query("SELECT * FROM clausulas WHERE id_lote = ". $row['idLote'] ." AND estatus = 1")->result_array();
-                    if (COUNT($clauses_data) > 0) {
-                        for ($i = 0; $i < COUNT($clauses_data); $i++) {
-                            $this->db->query("UPDATE clausulas SET estatus = 0 WHERE id_clausula = ". $clauses_data[$i]['id_clausula'] ." AND estatus = 1");
-                        }
-                    }
-                }
-                    $this->db->query("UPDATE lotes SET idStatusContratacion = 0, nombreLote = REPLACE(REPLACE(nombreLote, ' AURA', ''), ' STELLA', ''),
-                    idMovimiento = 0, comentario = 'NULL', idCliente = 0, usuario = 'NULL', perfil = 'NULL ', 
-                    fechaVenc = null, modificado = null, status8Flag = 0, 
-                    ubicacion = 0, totalNeto = 0, totalNeto2 = 0,
-                    casa = (CASE WHEN idCondominio IN (759, 639) THEN 1 ELSE 0 END),
-                    totalValidado = 0, validacionEnganche = 'NULL', 
-                    fechaSolicitudValidacion = null, 
-                    fechaRL = null, 
-                    registro_comision = 8,
-                    id_descuento='$descuentos',
-                    tipo_venta = $tv, 
-                    observacionContratoUrgente = null,
-                    firmaRL = 'NULL', comentarioLiberacion = 'LIBERADO', 
-                    observacionLiberacion = 'LIBERADO POR CORREO', idStatusLote = ".$st.", 
-                    fechaLiberacion = '".date("Y-m-d H:i:s")."', 
-                    userLiberacion = '".$this->session->userdata('username')."',
-                    precio = ".$datos['precio'].", total = ((".$row['sup'].") * ".$datos['precio']."),
-                    enganche = (((".$row['sup'].") * ".$datos['precio'].") * 0.1), 
-                    saldo = (((".$row['sup'].") * ".$datos['precio'].") - (((".$row['sup'].") * ".$datos['precio'].") * 0.1)),
-                    asig_jur = 0
-                    WHERE idLote IN (".$row['idLote'].") and status = 1 ");
-                } else if ($datos['activeLE'] == 1){
-                    $this->db->query("UPDATE lotes SET idStatusContratacion = 0, 
-                    idMovimiento = 0, comentario = 'NULL', idCliente = 0, usuario = 'NULL', perfil = 'NULL ', 
-                    fechaVenc = null, modificado = null, status8Flag = 0,
-                    ubicacion = 0, totalNeto = 0, totalNeto2 = 0,
-                    casa = (CASE WHEN idCondominio IN (759, 639) THEN 1 ELSE 0 END),
-                    totalValidado = 0, validacionEnganche = 'NULL', 
-                    fechaSolicitudValidacion = null,
-                    fechaRL = null, 
-                    registro_comision = 8,
-                    tipo_venta = null, 
-                    observacionContratoUrgente = null,
-                    firmaRL = 'NULL', comentarioLiberacion = 'LIBERADO', 
-                    observacionLiberacion = 'LIBERADO POR CORREO', idStatusLote = 101, 
-                    fechaLiberacion = '".date("Y-m-d H:i:s")."', 
-                    userLiberacion = '".$this->session->userdata('username')."',
-                    precio = ".$datos['precio'].", total = ((".$row['sup'].") * ".$datos['precio']."),
-                    enganche = (((".$row['sup'].") * ".$datos['precio'].") * 0.1), 
-                    saldo = (((".$row['sup'].") * ".$datos['precio'].") - (((".$row['sup'].") * ".$datos['precio'].") * 0.1)),
-                    asig_jur = 0
-                    WHERE idLote IN (".$row['idLote'].") and status = 1 ");
-                }
                 if ($this->db->trans_status() === FALSE){
                     $this->db->trans_rollback();
                     return false;
@@ -336,7 +247,6 @@
                     $this->db->trans_commit();
                     return true;
                 }
-        }
     }
 
 
@@ -363,7 +273,7 @@
 
     public function allAsesor()
     {
-        return $this->db->query("SELECT u0.id_usuario as id_asesor,u0.id_sede, 
+        return $this->db->query("(SELECT u0.id_usuario as id_asesor,u0.id_sede, 
 		u0.id_lider as id_coordinador, 
 		(CASE u1.id_rol WHEN 3 THEN u1.id_usuario ELSE u2.id_usuario END) id_gerente, 
 		(CASE u1.id_rol WHEN 3 THEN u1.id_lider ELSE u3.id_usuario END) id_subdirector, 
@@ -383,7 +293,10 @@
 		LEFT JOIN usuarios u2 ON u2.id_usuario = u1.id_lider -- GERENTE
 		LEFT JOIN usuarios u3 ON u3.id_usuario = u2.id_lider -- SUBDIRECTOR
         WHERE u0.id_rol = 7 AND u0.estatus = 1 AND ISNULL(u0.correo, '') NOT LIKE '%SINCO%' AND ISNULL(u0.correo, '') NOT LIKE '%test_%'
-		AND u0.id_usuario NOT IN (4415,11160,11161,11179,11750,12187,11332,2595)")->result();
+		AND u0.id_usuario NOT IN (4415,11160,11161,11179,11750,12187,11332,2595,12874))
+		UNION ALL
+		(SELECT id_usuario as id_asesor,0 id_sede,0 id_coordinador , 0 id_gerente, 
+		0 id_subdirector,0 id_regional, 0 id_regional_2,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as nombre FROM usuarios WHERE id_usuario = 12874)")->result();
     }
 
 
@@ -1410,17 +1323,21 @@
         return $this->db->query("SELECT id_vcompartida, id_cliente, id_asesor, id_coordinador, id_gerente FROM ventas_compartidas WHERE id_cliente = $id_cliente AND estatus = 1");
     }
 
-    public function getLider($id_gerente){
-        return $this->db->query("SELECT id_lider as id_subdirector, 
-        (CASE 
+    public function getLider($id_gerente) {
+        return $this->db->query("SELECT us.id_lider as id_subdirector, 
+		(CASE 
         WHEN us.id_lider = 7092 THEN 3 
-        WHEN (us.id_lider = 9471 OR us.id_lider = 681 OR us.id_lider = 609 OR us.id_lider = 690) THEN 607 
-        --WHEN (us.id_lider = 5 AND us.id_sede = '11') THEN 5 
+        WHEN us.id_lider IN (9471, 681, 609, 690) THEN 607 
+		WHEN us.id_lider = 692 THEN u0.id_lider
+        WHEN us.id_lider = 703 THEN 4
+        WHEN us.id_lider = 7886 THEN 5
         ELSE 0 END) id_regional,
-		CASE us.id_sede WHEN '11' 
-		THEN (CASE us.id_lider WHEN 5 THEN 607 ELSE 5 END)
+		CASE 
+		WHEN (us.id_sede = '13' AND u0.id_lider = 7092) THEN 3
+		WHEN (us.id_sede = '13' AND u0.id_lider = 3) THEN 7092
 		ELSE 0 END id_regional_2
         FROM usuarios us
+        INNER JOIN usuarios u0 ON u0.id_usuario = us.id_lider
         WHERE us.id_usuario IN ($id_gerente)")->result_array();
     }
 
@@ -1479,18 +1396,44 @@
     }
     public function allUserVentas()
     {
-        return $this->db->query("(SELECT id_usuario, CONCAT(id_usuario,' - ',nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre,
-		(CASE WHEN id_rol = 7 THEN id_sede ELSE 0 END) id_sede,
-        (CASE WHEN id_usuario IN(6482, 5, 7092) THEN 3 ELSE id_rol END) id_rol
-        FROM usuarios 
-        WHERE id_rol in(2,3,7,9) AND estatus = 1   AND ISNULL(correo, '') NOT LIKE '%SINCO%' AND ISNULL(correo, '') NOT LIKE '%test_%')
-        UNION 
-        (SELECT id_usuario, CONCAT(id_usuario,' - ',nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre,
-		(CASE WHEN id_rol = 7 THEN id_sede ELSE 0 END) id_sede,
-		id_rol
-
-        FROM usuarios 
-        WHERE id_usuario in(6482, 5, 7092) AND estatus = 1   AND ISNULL(correo, '') NOT LIKE '%SINCO%' AND ISNULL(correo, '') NOT LIKE '%test_%')")->result();
+        return $this->db->query("SELECT u0.id_usuario as id_asesor,u0.id_sede, 
+		CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno) asesor,
+		u0.id_lider as id_coordinador,
+		(CASE u1.id_rol WHEN 9 THEN CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno) WHEN 3 THEN CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno) END) coordinador,
+		(CASE u1.id_rol WHEN 3 THEN u1.id_usuario ELSE u2.id_usuario END) id_gerente, 
+		(CASE u1.id_rol WHEN 3 THEN CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno) ELSE CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) END) gerente,
+		(CASE u1.id_rol WHEN 3 THEN u1.id_lider ELSE u3.id_usuario END) id_subdirector, 
+		(CASE u1.id_rol WHEN 3 THEN CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) ELSE CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) END) subdirector,
+		(CASE u1.id_rol WHEN 3 THEN (CASE WHEN u2.id_lider = 2 THEN 0 ELSE u2.id_lider END) ELSE CASE 
+		WHEN u3.id_usuario = 7092 THEN 3 
+		WHEN u3.id_usuario = 9471 THEN 607 
+		WHEN u3.id_usuario = 681 THEN 607 
+		WHEN u3.id_usuario = 609 THEN 607  
+		WHEN (u3.id_usuario = 5 AND u0.id_sede = '11') THEN 0 ELSE 0 END END) id_regional,
+			(CASE u1.id_rol WHEN 3 THEN (CASE WHEN u2.id_lider = 2 THEN 'NO APLICA' ELSE CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) END) ELSE CASE 
+		WHEN u3.id_usuario = 7092 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
+		WHEN u3.id_usuario = 9471 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
+		WHEN u3.id_usuario = 681 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
+		WHEN u3.id_usuario = 609 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)  
+		WHEN (u3.id_usuario = 5 AND u0.id_sede = '11') THEN 'NO APLICA' ELSE 'NO APLICA' END END) regional,
+				CASE 
+		WHEN (u0.id_sede = '13' AND u2.id_lider = 7092) THEN 3
+		WHEN (u0.id_sede = '13' AND u2.id_lider = 3) THEN 7092
+		ELSE 0 END id_regional_2,
+		CASE 
+		WHEN (u0.id_sede = '13' AND u2.id_lider = 7092) THEN CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)
+		WHEN (u0.id_sede = '13' AND u2.id_lider = 3) THEN CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)
+		ELSE 'NO APLICA' END regional_2
+		FROM usuarios u0
+		LEFT JOIN usuarios u1 ON u1.id_usuario = u0.id_lider -- COORDINADOR
+		LEFT JOIN usuarios u2 ON u2.id_usuario = u1.id_lider -- GERENTE
+		LEFT JOIN usuarios u3 ON u3.id_usuario = u2.id_lider -- SUBDIRECTOR
+		LEFT JOIN usuarios u4 ON u4.id_usuario = u3.id_lider -- REGIONAL
+        WHERE u0.id_rol = 7 AND u0.estatus = 1 AND ISNULL(u0.correo, '') NOT LIKE '%SINCO%' AND ISNULL(u0.correo, '') NOT LIKE '%test_%'
+		AND u0.id_usuario NOT IN (4415,11160,11161,11179,11750,12187,11332,2595,10828,9942,10549,12874)
+		UNION ALL
+		(SELECT id_usuario as id_asesor,2 id_sede,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as asesor,0 id_coordinador ,'NO APLICA' coordinador, 0 id_gerente, 'NO APLICA' gerente,
+		0 id_subdirector, 'NO APLICA' subdirector,0 id_regional, 'NO APLICA' regional, 0 id_regional_2, 'NO APLICA' regional_2 FROM usuarios WHERE id_usuario = 12874)")->result();
     }
 
 }

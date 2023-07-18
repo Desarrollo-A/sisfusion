@@ -7,7 +7,7 @@ class VentasAsistentes_model extends CI_Model {
         parent::__construct();
     }
     function get_proyecto_lista(){
-        return $this->db->query("SELECT * FROM [residenciales] WHERE status = 1");
+        return $this->db->query("SELECT CONCAT(nombreResidencial,' - ', descripcion) AS descripcionConcat,* FROM [residenciales] WHERE status = 1");
     }
     function get_condominio_lista($proyecto){
         return $this->db->query("SELECT * FROM [condominios] WHERE status = 1 AND idResidencial = ".$proyecto."");
@@ -102,9 +102,9 @@ class VentasAsistentes_model extends CI_Model {
         $id_usuario = $this->session->userdata('id_usuario');
         if (in_array($id_rol, array(17, 70))) { // MJ: ES CONTRALORÍA Y EJECUTIVO DE CONTRALORÍA JR
             $filtroUsuarioBR = '';
-            if($id_usuario == 2815)
+            if($id_usuario == 2815 || $id_usuario == 12931)
                 $filtroUsuarioBR = ' AND (l.tipo_venta IN (4, 6) OR cl.id_asesor IN (2549, 2570, 2591))';
-            else if ($id_usuario == 12377 || $id_usuario == 2799) // MIRIAM PAOLA JIMENEZ FIGUEROA o LADY SKARLETT LOPEZ VEN REUBICACIONES
+            else if (in_array($id_usuario, array(12377, 2799, 10088, 2827, 6012))) // MIRIAM PAOLA JIMENEZ FIGUEROA o LADY SKARLETT LOPEZ VEN REUBICACIONES
                 $filtroUsuarioBR = ' AND l.tipo_venta IN (6)';
             else
                 $filtroUsuarioBR = ' AND l.tipo_venta IN (4, 6)';
@@ -133,13 +133,13 @@ class VentasAsistentes_model extends CI_Model {
         }
 
 		$query = $this->db-> query("SELECT l.idLote, cl.id_cliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
-        l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc, sd.nombre as nombreSede,
-        CAST(l.comentario AS varchar(MAX)) as comentario, l.fechaVenc, l.perfil, cond.nombre as nombreCondominio, res.nombreResidencial, l.ubicacion,
+        l.nombreLote, l.idStatusContratacion, l.idMovimiento, CONVERT(VARCHAR, l.modificado, 120) AS modificado, cl.rfc, sd.nombre as nombreSede,
+        CAST(l.comentario AS varchar(MAX)) as comentario, CONVERT(VARCHAR,l.fechaVenc,120) AS fechaVenc, l.perfil, cond.nombre as nombreCondominio, res.nombreResidencial, l.ubicacion,
         ISNULL(tv.tipo_venta, 'Sin especificar') tipo_venta, l.observacionContratoUrgente as vl,
         CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
         CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
         CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
-        cond.idCondominio, cl.expediente, mo.descripcion
+        cond.idCondominio, cl.expediente, UPPER(mo.descripcion) AS descripcion
         FROM lotes l
         INNER JOIN clientes cl ON l.idLote=cl.idLote and cl.status = 1
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
@@ -256,9 +256,9 @@ class VentasAsistentes_model extends CI_Model {
         $id_sede = $this->session->userdata('id_sede');
         if (in_array($id_rol, array(17, 70))){ // MJ: ES CONTRALORÍA Y EJECUTIVO CONTRALORÍA JR
             $filtroUsuarioBR = '';
-            if($id_usuario == 2815)
+            if($id_usuario == 2815 || $id_usuario == 12931)
                 $filtroUsuarioBR = ' AND (l.tipo_venta IN (4, 6) OR cl.id_asesor IN (2549, 2570, 2591))';
-            else if ($id_usuario == 12377 || $id_usuario == 2799) // MIRIAM PAOLA JIMENEZ FIGUEROA o LADY SKARLETT LOPEZ VEN REUBICACIONES
+            else if (in_array($id_usuario, array(12377, 2799, 10088, 2827, 6012))) // MIRIAM PAOLA JIMENEZ FIGUEROA o LADY SKARLETT LOPEZ VEN REUBICACIONES
                 $filtroUsuarioBR = ' AND l.tipo_venta IN (6)';
             else
                 $filtroUsuarioBR = ' AND l.tipo_venta IN (4, 6)';
@@ -285,10 +285,11 @@ class VentasAsistentes_model extends CI_Model {
             
             $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1 $filtroSede $filtroGerente";
         }
-        $query = $this->db->query(" SELECT l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
-        l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
-        CAST(l.comentario AS VARCHAR(MAX)) AS comentario, l.fechaVenc, l.perfil, cond.nombre AS nombreCondominio, res.nombreResidencial, l.ubicacion,
+        $query = $this->db->query(" SELECT l.idLote, cl.id_cliente, 
+        l.nombreLote, l.idStatusContratacion, l.idMovimiento, CONVERT(VARCHAR,l.modificado,120) AS modificado, cl.rfc,
+        CAST(l.comentario AS VARCHAR(MAX)) AS comentario, CONVERT(VARCHAR,l.fechaVenc,120) AS fechaVenc, l.perfil, cond.nombre AS nombreCondominio, res.nombreResidencial, l.ubicacion,
         ISNULL(tv.tipo_venta, 'Sin especificar') tipo_venta,
+        UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente,
         CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) AS asesor,
         CONCAT(coordinador.nombre, ' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) AS coordinador,
         CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) AS gerente,

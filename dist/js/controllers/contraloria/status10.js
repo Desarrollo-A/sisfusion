@@ -47,7 +47,7 @@ sp = { //  SELECT PICKER
 }
 
 function fillDataTable(typeTransaction, beginDate, endDate, where) {
-    var table = $('#Jtabla').dataTable( {
+    $('#Jtabla').dataTable( {
         "ajax": {
             "url": `${general_base_url}index.php/contraloria/getRevision10`,
             "dataSrc": "",

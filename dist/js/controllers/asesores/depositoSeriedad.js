@@ -35,6 +35,26 @@ const ESTATUS_AUTORIZACION = Object.freeze({
 });
 const STATUS_CONTRATACION = 1;
 
+$('body').tooltip({
+    selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
+    trigger: 'hover',
+    container: 'body'
+}).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
+    $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
+});
+
+$('#tabla_deposito_seriedad thead tr:eq(0) th').each(function (i) {
+    const title = $(this).text();
+    titulos_intxt.push(title);
+    $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>`);
+
+    $('input', this).on('keyup change', function () {
+        if ($('#tabla_deposito_seriedad').DataTable().column(i).search() !== this.value) {
+            $('#tabla_deposito_seriedad').DataTable().column(i).search(this.value).draw();
+        }
+    });
+});
+
 $(document).ready(function() {
     if (id_usuario_general == 9651) { // MJ: ERNESTO DEL PINO SILVA
         $.post(`${general_base_url}Contratacion/lista_proyecto`, function(data) {
@@ -64,45 +84,30 @@ $(document).ready(function() {
 });
 
 $('#proyecto').change( function(){
-	const proyecto = $(this).val();
-	$("#condominio").html("");
+    const proyecto = $(this).val();
+    $("#condominio").html("");
 
-	$(document).ready(function(){
-		$.post(`${general_base_url}Contratacion/lista_condominio/`+proyecto, function(data) {
-			$('#condominio').append($('<option disabled selected>Selecciona un codominio</option>'));
+    $(document).ready(function(){
+        $.post(`${general_base_url}Contratacion/lista_condominio/`+proyecto, function(data) {
+            $('#condominio').append($('<option disabled selected>Selecciona un codominio</option>'));
 
-			for(let i = 0; i < data.length; i++) {
-				const id = data[i]['idCondominio'];
-				const name = data[i]['nombre'];
+            for(let i = 0; i < data.length; i++) {
+                const id = data[i]['idCondominio'];
+                const name = data[i]['nombre'];
 
-				$('#condominio').append($('<option>').val(id).text(name.toUpperCase()));
-			}
+                $('#condominio').append($('<option>').val(id).text(name.toUpperCase()));
+            }
 
-			$("#condominio").selectpicker('refresh');
-		}, 'json');
-	});
+            $("#condominio").selectpicker('refresh');
+        }, 'json');
+    });
 });
 
 $('#condominio').change( function(){
     fillDataTable($(this).val());
 });
-    
-$('#tabla_deposito_seriedad thead tr:eq(0) th').each( function (i) {
-    const title = $(this).text();
 
-    $(this).css('text-align', 'center');
-    titulos_intxt.push(title);
-    $(this).html('<input type="text" class="textoshead"  placeholder="'+title+'"/>' );
 
-    $('input', this).on('keyup change', function () {
-        if ($('#tabla_deposito_seriedad').DataTable().column(i).search() !== this.value ) {
-            $('#tabla_deposito_seriedad').DataTable()
-                .column(i)
-                .search(this.value)
-                .draw();
-        }
-    });
-});
 
 $("#tabla_deposito_seriedad").ready( function(){
     $(document).on('click', '.abrir_prospectos', function () {
@@ -115,14 +120,23 @@ $("#tabla_deposito_seriedad").ready( function(){
         $('#id_cliente_asignar').val(id_cliente);
 
         tabla_valores_ds = $("#table_prospectos").DataTable({
-            width: 'auto',
-            "dom": "Bfrtip",
+            width: '100%',
+            dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+            scrollX: true,
             buttons: [{
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
                 titleAttr: 'Prospectos',
                 title:"Prospectos",
+                exportOptions: {
+                    columns: [0,1,2,3,4,5,6],
+                    format: {
+                        header: function (d, columnIdx) {
+                            return ' '+titulos_encabezado[columnIdx] +' ';
+                        }
+                    }
+                }
             },
             {
                 extend: 'pdfHtml5',
@@ -132,6 +146,14 @@ $("#tabla_deposito_seriedad").ready( function(){
                 title:"Prospectos",
                 orientation: 'landscape',
                 pageSize: 'LEGAL',
+                exportOptions: {
+                    columns: [0,1,2,3,4,5,6],
+                    format: {
+                        header: function (d, columnIdx) {
+                            return ' '+titulos_encabezado[columnIdx] +' ';
+                        }
+                    }
+                }
             }],
             columnDefs: [{
                 defaultContent: "",
@@ -167,20 +189,30 @@ $("#tabla_deposito_seriedad").ready( function(){
                 },
                 {
                     "data": function(d){
-                        let info = '';
-                        info = '<b>Observación:</b> '+myFunctions.validateEmptyField(d.observaciones)+'<br>';
-                        info += '<b>Lugar prospección:</b> '+d.lugar_prospeccion+'<br>';
-                        info += '<b>Plaza venta:</b> '+d.plaza_venta+'<br>';
-                        info += '<b>Nacionalidad:</b> '+d.nacionalidad+'<br>';
-
-
+                        var info = '';
+                        info = myFunctions.validateEmptyField(d.observaciones)
                         return info;
                     }
                 },
                 {
                     "data": function(d){
+                        return d.lugar_prospeccion;
+                    }
+                },
+                {
+                    "data": function(d){
+                        return d.plaza_venta;
+                    }
+                },
+                {
+                    "data": function(d){
+                        return d.nacionalidad;
+                    }
+                },
+                {
+                    "data": function(d){
                         return '<center><button class="btn-data btn-green became_prospect_to_cliente"' +
-                            'data-id_prospecto="'+d.id_prospecto+'" data-id_cliente="'+id_cliente+'">' +
+                            'data-id_prospecto="'+d.id_prospecto+'" data-id_cliente="'+id_cliente+'" data-toggle="tooltip" data-placement="top" title="NUEVO PROSPECTO">' +
                             '<i class="fas fa-user-check"></i></button></center>';
                     }
                 },
@@ -193,22 +225,24 @@ $("#tabla_deposito_seriedad").ready( function(){
                 cache: false,
                 "data": function( d ){
                 }
-            },
+            }
+
 
         });
 
         $('#asignar_prospecto_a_cliente').modal();
     });
 
+    let titulos_encabezado = [];
     $('#table_prospectos thead tr:eq(0) th').each( function (i) {
-        const title = $(this).text();
-        $(this).html('<input type="text" style="width:100%; background:#003D82; color:white; border: 0; font-weight: 300;" class="textoshead"  placeholder="'+title+'"/>' );
-
-        $('input', this).on('keyup change', function () {
+        var title = $(this).text();
+        $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
+        $( 'input', this ).on('keyup change', function () {
             if ($('#table_prospectos').DataTable().column(i).search() !== this.value ) {
                 $('#table_prospectos').DataTable().column(i).search(this.value).draw();
             }
         });
+        titulos_encabezado.push(title);
     });
 
     $(document).on('click', '.became_prospect_to_cliente', function() {
@@ -219,6 +253,7 @@ $("#tabla_deposito_seriedad").ready( function(){
 
         $(document).on('click', '#asignar_prospecto', function () {
             //ajax con el post de update prospecto a cliente
+
             $.ajax({
                 type: 'POST',
                 url: general_base_url+'asesor/prospecto_a_cliente',
@@ -248,6 +283,10 @@ $("#tabla_deposito_seriedad").ready( function(){
                 }
             });
         });
+    });
+
+    $(document).on('click', '#cancelar', function(){
+        $('#asignar_prospecto_a_cliente').css({overflow:'auto'});
     });
 
     $(document).on('click', '.pdfLink2', function () {
@@ -423,6 +462,9 @@ function fillDataTable(idCondominio) {
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
+        pageLength: 10,
+        ordering: false,
+        destroy: true,
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
@@ -430,7 +472,7 @@ function fillDataTable(idCondominio) {
             titleAttr: 'Tus ventas',
             title:"Tus ventas",
             exportOptions: {
-                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulos_intxt[columnIdx] + ' ';
@@ -438,33 +480,29 @@ function fillDataTable(idCondominio) {
                 }
             }
         },
-        {
-            extend: 'pdfHtml5',
-            text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
-            className: 'btn buttons-pdf',
-            titleAttr: 'Tus ventas',
-            title:"Tus ventas",
-            orientation: 'landscape',
-            pageSize: 'LEGAL',
-            exportOptions: {
-                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-                format: {
-                    header: function (d, columnIdx) {
-                        return ' ' + titulos_intxt[columnIdx] + ' ';
+            {
+                extend: 'pdfHtml5',
+                text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
+                className: 'btn buttons-pdf',
+                titleAttr: 'Tus ventas',
+                title:"Tus ventas",
+                orientation: 'landscape',
+                pageSize: 'LEGAL',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                    format: {
+                        header: function (d, columnIdx) {
+                            return ' ' + titulos_intxt[columnIdx] + ' ';
+                        }
                     }
                 }
-            }
-        }],
+            }],
         columnDefs: [{
             defaultContent: "",
             targets: "_all",
             searchable: true,
             orderable: false
         }],
-        pageLength: 10,
-        bAutoWidth: false,
-        fixedColumns: true,
-        ordering: false,
         language: {
             url: general_base_url+"static/spanishLoader_v2.json",
             paginate: {
@@ -472,8 +510,6 @@ function fillDataTable(idCondominio) {
                 next: "<i class='fa fa-angle-right'>"
             }
         },
-        order: [[4, "desc"]],
-        destroy: true,
         columns: [
             { "data": "nombreResidencial" },
             { "data": "nombreCondominio" },
@@ -531,15 +567,15 @@ function fillDataTable(idCondominio) {
                     }
 
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_2) {
-                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloria estatus 2</span>`;
+                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloría estatus 2</span>`;
                     }
 
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_5) {
-                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloria estatus 5</span>`;
+                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloría estatus 5</span>`;
                     }
 
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_6) {
-                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloria estatus 6</span>`;
+                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloría estatus 6</span>`;
                     }
 
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_VENTAS_ESTATUS_8) {
@@ -551,7 +587,7 @@ function fillDataTable(idCondominio) {
                     }
 
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_5_II) {
-                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloria estatus 5</span>`;
+                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloría estatus 5</span>`;
                     }
 
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_JURIDICO_ESTATUS_7_II) {
@@ -563,11 +599,11 @@ function fillDataTable(idCondominio) {
                     }
 
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_2_II) {
-                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloria estatus 2</span>`;
+                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloría estatus 2</span>`;
                     }
 
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_6_II) {
-                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloria estatus 6</span>`;
+                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloría estatus 6</span>`;
                     }
 
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_POSTVENTA_ESTATUS_3_II) {
@@ -575,7 +611,7 @@ function fillDataTable(idCondominio) {
                     }
 
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_JURIDICO_ESTATUS_7_III) {
-                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Juridico estatus 7</span>`;
+                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Jurídico estatus 7</span>`;
                     }
 
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_POSTVENTA_3) {
@@ -583,7 +619,7 @@ function fillDataTable(idCondominio) {
                     }
 
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_6_III) {
-                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo de Contraloria estatus 6</span>`;
+                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo de Contraloría estatus 6</span>`;
                     }
 
                     return d.comentario;
@@ -595,36 +631,74 @@ function fillDataTable(idCondominio) {
                         return '';
                     }
 
-                    if (parseInt(d.idMovimiento) !== MOVIMIENTOS.NUEVO_APARTADO || parseInt(d.idStatusContratacion) !== STATUS_CONTRATACION) {
-                        return 'Asignado correctamente';
+                    if (parseInt(d.idMovimiento) !== MOVIMIENTOS.NUEVO_APARTADO && parseInt(d.idStatusContratacion) !== STATUS_CONTRATACION) {
+                        return 'ASIGNADO CORRECTAMENTE';
                     }
 
                     if (d.id_prospecto != 0) { // APARTADO DESDE LA PAGINA DE CIUDAD MADERAS
-                        return 'Asignado correctamente';
+                        return 'ASIGNADO CORRECTAMENTE';
                     }
 
                     if (d.id_coordinador == 10807 || d.id_coordinador == 10806 || d.id_gerente == 10807 || d.id_gerente == 10806) {
-                        return 'Asignado correctamente';
+                        return 'ASIGNADO CORRECTAMENTE';
+                    }
+                return '<p>DEBES ASIGNAR EL PROSPECTOS AL CLIENTE PARA PODER ACCEDER AL DEPÓSITO DE SERIEDAD O INTEGRAR EL EXPEDIETNE</p>';
+                }
+            },
+            {
+                "data": function (d) {
+                    if (d.autorizacion_correo === null) {
+                        return "<span class='label lbl-gray'>Sin envío de verificación</span>";
                     }
 
-                    const nombreCliente = `${d.nombre} ${d.apellido_paterno} ${d.apellido_materno}`;
-                    return `
-                        <center>
-                            <button class="btn-data btn-green abrir_prospectos btn-fab btn-fab-mini" 
-                                    data-idCliente="${d.id_cliente}"
-                                    data-nomCliente="${nombreCliente}">
-                                <i class="fas fa-user-check"></i>
-                            </button>
-                        </center>
-                        <br>
-                        <p>Debes asignar el prospecto al cliente para poder acceder al depósito de seriedad o integrar el expediente</p>
-                    `;
+                    if (parseInt(d.total_sol_correo_pend) > 0) {
+                        return "<span class='label lbl-azure'>Solicitud de autorización</span>";
+                    }
+
+                    if (parseInt(d.total_sol_correo_rech) > 0 && parseInt(d.total_sol_correo_aut) === 0 && parseInt(d.total_sol_correo_pend) === 0) {
+                        return "<span class='label lbl-warning'>Solicitud rechazada</span>";
+                    }
+
+                    if (parseInt(d.autorizacion_correo) === 1) {
+                        return `<span class='label lbl-yellow'>Verificación pendiente:</span></br>&nbsp;<span class='label lbl-yellow'>${d.correo}</span>`;
+                    }
+                    if (parseInt(d.autorizacion_correo) === 2) {
+                        return `<span class='label lbl-green'>Verificado:</span></br>&nbsp;<span class='label lbl-green'>${d.correo}</span>`;
+                    }
+
+                    return '';
+                }
+            },
+            {
+                "data": function (d) {
+                    if (d.autorizacion_sms === null) {
+                        return "<span class='label lbl-gray'>Sin envío de verificación</span>";
+                    }
+
+                    if (parseInt(d.total_sol_sms_pend) > 0) {
+                        return "<span class='label lbl-azure'>Solicitud de autorización</span>";
+                    }
+
+                    if (parseInt(d.total_sol_sms_rech) > 0 && parseInt(d.total_sol_sms_aut) === 0 && parseInt(d.total_sol_sms_pend) === 0) {
+                        return "<span class='label lbl-warning'>Solicitud rechazada</span>";
+                    }
+
+                    if (parseInt(d.autorizacion_sms) === 1) {
+                        return `<span class='label lbl-yellow'>Verificación pendiente:</span></br>&nbsp;<span class='label lbl-yellow'>${d.telefono}</span>`;
+                    }
+
+                    if (parseInt(d.autorizacion_sms) === 2) {
+                        return `<span class='label lbl-green'>Verificado:</span></br>&nbsp;<span class='label lbl-green'>${d.telefono}</span>`;
+                    }
+
+                    return '';
                 }
             },
             {
                 "data": function( d ){
                     let atributoButton = '';
                     let buttons = '';
+                    
                     const idMovimiento = parseInt(d.idMovimiento);
                     const idStatusContratacion = parseInt(d.idStatusContratacion);
 
@@ -662,7 +736,7 @@ function fillDataTable(idCondominio) {
                     }
 
                     let urlToGo  = '';
-                    
+
                     if (d.idMovimiento == 31 && d.idStatusContratacion == STATUS_CONTRATACION) {
                         if (d.id_prospecto == 0) { // APARTADO DESDE LA PAGINA DE CIUDAD MADERAS
                             if (d.id_coordinador == 10807 || d.id_coordinador == 10806 || d.id_gerente == 10807 || d.id_gerente == 10806) {
@@ -682,10 +756,21 @@ function fillDataTable(idCondominio) {
                     }
 
                     if (d.dsType == 1){
-                        buttons += '<a class="btn-data btn-blueMaderas btn_ds'+d.id_cliente+'" '+atributoButton+' id="btn_ds'+d.id_cliente+'" href="'+urlToGo+'" data-toggle="tooltip" data-placement="left" title="Depósito de seriedad" target=”_blank”><i class="fas fa-print"></i></a>';
+                        buttons += '<a class="btn-data btn-blueMaderas btn_ds'+d.id_cliente+'" '+atributoButton+' id="btn_ds'+d.id_cliente+'" href="'+urlToGo+'" data-toggle="tooltip" data-placement="top" title="DEPÓSITO DE SERIEDAD" target=”_blank”><i class="fas fa-print"></i></a>';
+                    } else if(d.dsType == 2) { // DATA FROM DEPOSITO_SERIEDAD_CONSULTA OLD VERSION
+                        buttons += '<a class="btn-data btn-blueMaderas" href="'+general_base_url+'Asesor/deposito_seriedad_ds/'+d.id_cliente+'/0" data-toggle="tooltip" data-placement="left" title="DEPÓSITO DE SERIEDAD" target=”_blank”><i class="fas fa-print"></i></a>';
                     }
                     if(d.dsType == 2) { // DATA FROM DEPOSITO_SERIEDAD_CONSULTA OLD VERSION
-                        buttons += '<a class="btn-data btn-blueMaderas" href="'+general_base_url+'Asesor/deposito_seriedad_ds/'+d.id_cliente+'/0" title= "Depósito de seriedad" target=”_blank”><i class="fas fa-print"></i></a>';
+                        buttons += '<a class="btn-data btn-blueMaderas" href="'+general_base_url+'Asesor/deposito_seriedad_ds/'+d.id_cliente+'/0" data-toggle="tooltip" data-placement="left" title="DEPÓSITO DE SERIEDAD" target=”_blank”><i class="fas fa-print"></i></a>';
+                    }
+
+                    if (
+                        d.dsType == 1 &&
+                        (parseInt(d.idMovimiento) === MOVIMIENTOS.NUEVO_APARTADO && parseInt(d.idStatusContratacion) === STATUS_CONTRATACION) &&
+                        d.id_prospecto == 0 &&
+                        (d.id_coordinador != 10807 && d.id_coordinador != 10806 && d.id_gerente != 10807 && d.id_gerente != 10806)
+                    ) {
+                        buttons += `<button class="btn-data btn-green abrir_prospectos btn-fab btn-fab-mini" data-toggle="tooltip" data-placement="left" title="ASIGNAR PROSPECTO" data-idCliente="${d.id_cliente}" data-nomCliente="${d.nombreCliente}"> <i class="fas fa-user-check"></i></button>`;
                     }
 
                     return '<div class="d-flex justify-center">'+buttons+'</div>';
@@ -700,9 +785,6 @@ function fillDataTable(idCondominio) {
             data: {
                 "idCondominio": idCondominio,
             }
-        },
-        initComplete: function () {
-            $('[data-toggle="tooltip"]').tooltip();
         }
     });
 }
@@ -769,6 +851,11 @@ $(document).on('click', '#save1', function(e) {
                     $('#modal1').modal('hide');
                     $('#tabla_deposito_seriedad').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "EN PROCESO DE LIBERACIÓN. No podrás avanzar la solicitud hasta que el proceso de liberación haya concluido", "danger");
+                } else if (response.message == 'VERIFICACION CORREO/SMS') {
+                    $('#save1').prop('disabled', false);
+                    $('#modal1').modal('hide');
+                    $('#tabla_deposito_seriedad').DataTable().ajax.reload();
+                    alerts.showNotification("top", "right", "El correo electrónico y/o número telefónico no están verificados.", "danger");
                 }
             },
             error: function(){
@@ -1307,10 +1394,13 @@ $(document).on('click', '.btn-autorizacion', function () {
             $('#chk-correo-aut-div').removeAttr('class');
             $('#chk-correo-aut-div').attr('class', 'col-12 col-sm-12 col-md-12 col-lg-12 p-0');
         } else {
-            const telLength = cliente.telefono1.length;
-            const telefono = (telLength > 10)
-                ? parseInt(cliente.telefono1.substring(telLength - 10, telLength))
-                : parseInt(cliente.telefono1);
+            let telefono = '';
+            if (cliente.telefono1) {
+                const telLength = cliente.telefono1.length;
+                telefono = (telLength > 10)
+                    ? parseInt(cliente.telefono1.substring(telLength - 10, telLength))
+                    : parseInt(cliente.telefono1);
+            }
 
             $('#smsAut').val(telefono);
             $('#ladaAut').val(cliente.lada_tel).trigger('change');
@@ -1353,14 +1443,14 @@ $(document).on('click', '.btn-solicitar', function () {
     $.get(`${general_base_url}Asesor/clienteAutorizacion/${idCliente}`, function (data) {
         cliente = JSON.parse(data);
 
-        if (parseInt(cliente.total_sol_correo_pend) > 0 || cliente.autorizacion_correo === null) {
+        if (parseInt(cliente.total_sol_correo_pend) > 0 || parseInt(cliente.total_sol_correo_aut) > 0 || cliente.autorizacion_correo === null || parseInt(cliente.autorizacion_correo) === ESTATUS_AUTORIZACION.AUTORIZADO) {
             $('#chk-correo-sol-div').hide();
             $('#chk-sms-sol-div').removeAttr('class');
             $('#chk-sms-sol-div').attr('class', 'col-12 col-sm-12 col-md-12 col-lg-12 p-0');
             $('#chkCorreoSol').prop('checked', false);
         }
 
-        if (parseInt(cliente.total_sol_sms_pend) > 0 || cliente.autorizacion_sms === null) {
+        if (parseInt(cliente.total_sol_sms_pend) > 0 || parseInt(cliente.total_sol_sms_aut) > 0 || cliente.autorizacion_sms === null || parseInt(cliente.autorizacion_sms) === ESTATUS_AUTORIZACION.AUTORIZADO) {
             $('#chk-sms-sol-div').hide();
             $('#chk-correo-sol-div').removeAttr('class');
             $('#chk-correo-sol-div').attr('class', 'col-12 col-sm-12 col-md-12 col-lg-12 p-0');
@@ -1432,7 +1522,7 @@ $(document).on('submit', '#autorizacion-form', function (e) {
 
     let formValues = {};
     $.each($('#autorizacion-form').serializeArray(), function (i, campo) {
-       formValues[campo.name] = campo.value;
+        formValues[campo.name] = campo.value;
     });
 
     if (!formValues.chkCorreoAut && !formValues.chkSmsAut) {
@@ -1498,8 +1588,8 @@ $(document).on('submit', '#autorizacion-form', function (e) {
             const response = JSON.parse(data);
 
             if (response.code === 200) {
-                alerts.showNotification("top", "right", 'Autorización enviada con éxito', "success");
-                tabla_valores_ds.ajax.reload();
+                alerts.showNotification("top", "right", 'Verificación enviada con éxito', "success");
+                $('#tabla_deposito_seriedad').DataTable().ajax.reload();
                 $('#autorizaciones-modal').modal('hide');
             }
 
@@ -1571,7 +1661,7 @@ $(document).on('submit', '#reenvio-form', function (e) {
 
             if (response.code === 200) {
                 alerts.showNotification("top", "right", 'Autorización reenviada con éxito', "success");
-                tabla_valores_ds.ajax.reload();
+                $('#tabla_deposito_seriedad').DataTable().ajax.reload();
                 $('#reenvio-modal').modal('hide');
             }
 
@@ -1615,7 +1705,7 @@ $(document).on('submit', '#solicitar-form', function (e) {
         alerts.showNotification('top', 'right', 'El subdirector es requerido.', 'danger');
         return;
     }
-    
+
     let data = new FormData();
     data.append('idCliente', cliente.id_cliente);
     data.append('idSubdirector', formValues.subdirector);
@@ -1643,7 +1733,7 @@ $(document).on('submit', '#solicitar-form', function (e) {
 
             if (response.code === 200) {
                 alerts.showNotification("top", "right", 'Solicitud enviada con éxito', "success");
-                tabla_valores_ds.ajax.reload();
+                $('#tabla_deposito_seriedad').DataTable().ajax.reload();
                 $('#solicitar-modal').modal('hide');
             }
 
@@ -1735,22 +1825,22 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
 });
 
-function construirBotonEstatus(data, fechaVenc, classButton, atributoButton = '', titulo = 'Enviar Estatus') {
+function construirBotonEstatus(data, fechaVenc, classButton, atributoButton = '', titulo = 'ENVIAR ESTATUS') {
     return `<a href='#' 
-               ${atributoButton}
-               data-tiComp='${data.tipo_comprobanteD}'
-               data-nomLote='${data.nombreLote}'
-               data-idCliente='${data.id_cliente}'
-               data-nombreResidencial='${data.nombreResidencial}'
-               data-nombreCondominio='${data.nombreCondominio}'
-               data-nombreLote='${data.nombreLote}'
-               data-idCondominio='${data.idCondominio}'
-               data-idLote='${data.idLote}'
-               data-fechavenc='${fechaVenc}'
-               class="btn-data btn-green ${classButton}"
-               data-toggle="tooltip"
-               data-placement="left"
-               title="${titulo}">
+                ${atributoButton}
+                data-tiComp='${data.tipo_comprobanteD}'
+                data-nomLote='${data.nombreLote}'
+                data-idCliente='${data.id_cliente}'
+                data-nombreResidencial='${data.nombreResidencial}'
+                data-nombreCondominio='${data.nombreCondominio}'
+                data-nombreLote='${data.nombreLote}'
+                data-idCondominio='${data.idCondominio}'
+                data-idLote='${data.idLote}'
+                data-fechavenc='${fechaVenc}'
+                class="btn-data btn-green ${classButton}"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="${titulo}">
         <i class="fas fa-check"></i>
     </a>`;
 }
@@ -1758,21 +1848,23 @@ function construirBotonEstatus(data, fechaVenc, classButton, atributoButton = ''
 function generarBotonesAutorizacion(clienteData) {
     let botones = '';
 
-    console.log(clienteData);
-
     if (clienteData.autorizacion_correo === null || clienteData.autorizacion_sms === null) {
         botones += `
-            <button class="btn-data btn-green btn-rounded btn-autorizacion" 
-                    title="ENVIAR AUTORIZACIÓN"
+            <button class="btn-data btn-violetDeep btn-rounded btn-autorizacion"
+                    data-toggle="tooltip" 
+                    data-placement="left" 
+                    title="ENVÍO DE VERIFICACIONES"
                     data-idCliente='${clienteData.id_cliente}'>
                 <i class="fas fa-send"></i>
             </button>
         `;
     }
 
-    if (clienteData.autorizacion_correo !== null || clienteData.autorizacion_sms !== null) {
+    if (parseInt(clienteData.autorizacion_correo) === ESTATUS_AUTORIZACION.ENVIADO || parseInt(clienteData.autorizacion_sms) === ESTATUS_AUTORIZACION.ENVIADO) {
         botones += `
-            <button class="btn-data btn-azure btn-rounded btn-reenvio" 
+            <button class="btn-data btn-azure btn-rounded btn-reenvio"
+                    data-toggle="tooltip" 
+                    data-placement="left" 
                     title="REENVÍO DE VERIFICACIÓN"
                     data-idCliente='${clienteData.id_cliente}'>
                 <i class="fas fa-rotate-right"></i>
@@ -1781,13 +1873,15 @@ function generarBotonesAutorizacion(clienteData) {
     }
 
     if (
-        ((parseInt(clienteData.total_sol_correo_pend) === 0 && parseInt(clienteData.total_sol_correo_aut) === 0) &&
-            (parseInt(clienteData.autorizacion_correo) === ESTATUS_AUTORIZACION.ENVIADO || parseInt(clienteData.autorizacion_correo) === ESTATUS_AUTORIZACION.AUTORIZADO)) ||
-        ((parseInt(clienteData.total_sol_sms_pend) === 0 && parseInt(clienteData.total_sol_sms_aut) === 0) &&
-            (parseInt(clienteData.autorizacion_sms) === ESTATUS_AUTORIZACION.ENVIADO || parseInt(clienteData.autorizacion_sms) === ESTATUS_AUTORIZACION.AUTORIZADO))
+        (parseInt(clienteData.total_sol_correo_pend) === 0 && parseInt(clienteData.total_sol_correo_aut) === 0) &&
+            parseInt(clienteData.autorizacion_correo) === ESTATUS_AUTORIZACION.ENVIADO ||
+        (parseInt(clienteData.total_sol_sms_pend) === 0 && parseInt(clienteData.total_sol_sms_aut) === 0) &&
+            parseInt(clienteData.autorizacion_sms) === ESTATUS_AUTORIZACION.ENVIADO
     ) {
         botones += `
-            <button class="btn-data btn-violetDeep btn-rounded btn-solicitar"
+            <button class="btn-data btn-yellow btn-rounded btn-solicitar"
+                    data-toggle="tooltip" 
+                    data-placement="left"
                     title="SOLICITAR EDICIÓN DEL REGISTRO" 
                     data-idCliente='${clienteData.id_cliente}'>
                 <i class="fas fa-hand-paper-o"></i>

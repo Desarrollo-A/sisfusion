@@ -154,10 +154,10 @@
                     </div>
                     <div class="col-12 col-sm-6 col-md-6 col-lg-6 d-flex justify-end datesModal">
                         <div class="form-group d-flex m-0 p-0">
-                            <input type="text" class="form-control datepicker text-center pl-1" id="beginDate"/>
+                            <input type="text" class="form-control datepicker text-center pl-1" id="fechaInicioVentas"/>
                             <span>-</span>
-                            <input type="text" class="form-control datepicker text-center " id="endDate"/>
-                            <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
+                            <input type="text" class="form-control datepicker text-center " id="fechaFinVentas"/>
+                            <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange" onclick="searchByDateRange()">
                                 <span class="material-icons">search</span>
                             </button>
                         </div>
@@ -192,27 +192,27 @@
             <table id="lotesInformationTable" class="table-striped table-hover w-100">
                 <thead>
                     <tr>
-                        <th>Proyecto</th>
-                        <th>Condominio</th>
-                        <th>Lote</th>
-                        <th>Superficie</th>
-                        <th>Precio de lista</th>
-                        <th>Precio con desc</th>
-                        <th>Casa</th>
-                        <th>Cliente</th>
-                        <th>Asesor</th>
-                        <th>Coordinador</th>
-                        <th>Gerente</th>
-                        <th>Subdirector</th>
-                        <th>Director regional</th>
-                        <th>Fecha de apartado</th>
-                        <th>Fecha último estatus</th>
-                        <th>Días último estatus</th>
-                        <th>Estatus contratación</th>
-                        <th>Fecha estatus 9</th>
-                        <th>Días estatus 9</th>
-                        <th>Estatus lote</th>
-                        <th>Apartado</th>
+                        <th>PROYECTO</th>
+                        <th>CONDOMINIO</th>
+                        <th>LOTE</th>
+                        <th>SUPERFICIE</th>
+                        <th>PRECIO DE LISTA</th>
+                        <th>PRECIO CON DESCUENTO</th>
+                        <th>CASA</th>
+                        <th>CLIENTE</th>
+                        <th>ASESOR</th>
+                        <th>COORDINADOR</th>
+                        <th>GERENTE</th>
+                        <th>SUBDIRECTOR</th>
+                        <th>DIRECTOR REGIONAL</th>
+                        <th>FECHA DE APARTADO</th>
+                        <th>FECHA DE ÚLTIMO ESTATUS</th>
+                        <th>DÍAS DE ÚLTIMO ESTATUS</th>
+                        <th>ESTATUS DE CONTRATACÍON</th>
+                        <th>FECHA DE ESTATUS 9</th>
+                        <th>DÍAS EN ESTATUS 9</th>
+                        <th>ESTATUS DEL LOTE</th>
+                        <th>APARTADO</th>
                     </tr>
                 </thead>
             </table>
@@ -241,29 +241,29 @@
             <table id="lotesInformationTableCancelados" class="table-striped table-hover w-100">
                 <thead>
                     <tr>
-                        <th>Proyecto</th>
-                        <th>Condominio</th>
-                        <th>Lote</th>
-                        <th>Superficie</th>
-                        <th>Precio de lista</th>
-                        <th>Precio con desc</th>
-                        <th>Casa</th>
-                        <th>Cliente</th>
-                        <th>Asesor</th>
-                        <th>Coordinador</th>
-                        <th>Gerente</th>
-                        <th>Subdirector</th>
-                        <th>Director regional</th>
-                        <th>Fecha de apartado</th>
-                        <th>Fecha último estatus</th>
-                        <th>Días último estatus</th>
-                        <th>Estatus contratación</th>
-                        <th>Fecha estatus 9</th>
-                        <th>Días estatus 9</th>
-                        <th>Estatus lote</th>
+                        <th>PROYECTO</th>
+                        <th>CONDOMINIO</th>
+                        <th>LOTE</th>
+                        <th>SUPERFICIE</th>
+                        <th>PRECIO DE LISTA</th>
+                        <th>PRECIO CON DESCUENTO</th>
+                        <th>CASA</th>
+                        <th>CLIENTE</th>
+                        <th>ASESOR</th>
+                        <th>COORDINADOR</th>
+                        <th>GERENTE</th>
+                        <th>SUBDIRECTOR</th>
+                        <th>DIRECTOR REGIONAL</th>
+                        <th>FECHA DE APARTADO</th>
+                        <th>FECHA DE ÚLTIMO ESTATUS</th>
+                        <th>DÍAS DE ÚLTIMO ESTATUS</th>
+                        <th>ESTATUS DE CONTRATACÍON</th>
+                        <th>FECHA DE ESTATUS 9</th>
+                        <th>DÍAS EN ESTATUS 9</th>
+                        <th>ESTATUS DEL LOTE</th>
                         <th>Fecha liberación</th>
-                        <th>Motivo</th>
-                        <th>Apartado</th>
+                        <th>MOTIVO</th>
+                        <th>APARTADO</th>
                     </tr>
                 </thead>
             </table>

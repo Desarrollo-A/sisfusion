@@ -52,7 +52,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
-                        <h4 class="card-title"><b>Cargar documento fiscal</b></h4>
+                        <h4 class="card-title"><b>Cargar de documento fiscal</b></h4>
                     </div>
                     <form id="EditarPerfilExtranjeroForm" name="EditarPerfilExtranjeroForm" method="post">
                         <div class="modal-body">
@@ -74,8 +74,7 @@
                                         <div class="col-lg-12 text-center">
                                             <h3 id="total-comision"></h3>
                                         </div>
-                                        <div class="col-lg-12" id="preview-div">
-                                        </div>
+                                        <div class="col-lg-12" id="preview-div"></div>
                                     </div>
                                     <div class="form-group">
                                         <button type="submit" id="sendFileExtranjero" class="btn btn-primary">GUARDAR</button>
@@ -116,15 +115,13 @@
                                             <div class="col-lg-5">
                                                 <div class="fileinput fileinput-new text-center" data-provides="fileinput">
                                                     <div><br>
-                                                        <span class="fileinput-new">Selecciona archivo</span>
+                                                        <span class="fileinput-new">Selecciona un archivo</span>
                                                         <input type="file" name="xmlfile" id="xmlfile" accept="application/xml">
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-lg-7">
-                                                <center>
-                                                    <button class="btn btn-warning" type="button" id="cargar_xml"><i class="fa fa-upload"></i> CARGAR</button>
-                                                </center>
+                                                <button class="btn btn-warning" type="button" id="cargar_xml"><i class="fa fa-upload"></i> CARGAR</button>
                                             </div>
                                         </div>
                                         <form id="frmnewsol" method="post" action="#">
@@ -154,8 +151,8 @@
                                                     <input type="text" class="form-control" id="total" name="total" placeholder="Total" value="" required>
                                                 </div>
                                                 <div class="col-lg-3 form-group">
-                                                    <label for="formaPago">Forma Pago:</label>
-                                                    <input type="text" class="form-control" placeholder="Forma Pago" id="formaPago" name="formaPago" value="">
+                                                    <label for="formaPago">Forma de pago:</label>
+                                                    <input type="text" class="form-control" placeholder="Forma de Pago" id="formaPago" name="formaPago" value="">
                                                 </div>
                                                 <div class="col-lg-3 form-group">
                                                     <label for="cfdi">Uso del CFDI:</label>
@@ -176,7 +173,7 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-lg-12 form-group">
-                                                    <label for="obse">OBSERVACIONES FACTURA <i class="fa fa-question-circle faq" tabindex="0" data-container="body" data-trigger="focus" data-toggle="popover" title="Observaciones de la factura" data-content="En este campo pueden ser ingresados datos opcionales como descuentos, observaciones, descripción de la operación, etc." data-placement="right"></i></label><br>
+                                                    <label for="obse">OBSERVACIONES DE LA FACTURA <i class="fa fa-question-circle faq" tabindex="0" data-container="body" data-trigger="focus" data-toggle="popover" title="Observaciones de la factura" data-content="En este campo pueden ser ingresados datos opcionales como descuentos, observaciones, descripción de la operación, etc." data-placement="right"></i></label><br>
                                                     <textarea class="form-control" rows='1' data-min-rows='1' id="obse" name="obse" placeholder="Observaciones"></textarea>
                                                 </div>
                                             </div>
@@ -259,7 +256,7 @@
                 </div>
             </div>
         </div>
-
+        <!--END MODALS-->
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -294,9 +291,8 @@
                                                         </p>
                                                     </div>
                                                     <?php if ($this->session->userdata('forma_pago') == 3) { ?>
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-12">
                                                             <p style="color:#0a548b;"><i class="fa fa-info-circle" aria-hidden="true"></i> Al monto mostrado habrá que descontar el <b>impuesto estatal</b> del
-
                                                                 <?php
                                                                 $sede = $this->session->userdata('id_sede');
                                                                 $query = $this->db->query("SELECT * FROM sedes WHERE estatus in (1) AND id_sede = " . $sede . "");
@@ -309,7 +305,7 @@
                                                             </p>
                                                         </div>
                                                     <?php } else if ($this->session->userdata('forma_pago') == 4) { ?>
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-12 m-1">
                                                             <p style="color:#0a548b;"><i class="fa fa-info-circle" aria-hidden="true"></i> La cantidad mostrada es menos las deducciones aplicables para el régimen de <b>Remanente Distribuible.</b>
                                                         </div>
                                                     <?php } ?>
@@ -322,11 +318,9 @@
                                                             $this->session->userdata('id_rol') == 9)
                                                     ) { ?>
 
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-12">
                                                             <p class="card-title m-1">
-                                                                Para consultar más detalles sobre el uso y funcionalidad del apartado
-                                                                de comisiones podrás visualizarlo en el siguiente tutorial
-
+                                                                Para consultar más detalles sobre el uso y funcionalidad del apartado de comisiones podrás visualizarlo en el siguiente tutorial
                                                                 <?php if ($this->session->userdata('forma_pago') == 2) { ?>
                                                                     <a href="https://youtu.be/YuZNsPk8-gY" target="_blank"><u>clic aquí</u></a>
                                                                 <?php } ?>
@@ -384,12 +378,12 @@
                                                         <thead>
                                                             <tr>
                                                                 <th></th>
-                                                                <th>ID PAGO</th>
+                                                                <th>ID DE PAGO</th>
                                                                 <th>REFERENCIA</th>
                                                                 <th>NOMBRE</th>
                                                                 <th>SEDE</th>
-                                                                <th>FORMA PAGO</th>
-                                                                <th>TOTAL COMISIÓN</th>
+                                                                <th>FORMA DE PAGO</th>
+                                                                <th>TOTAL DE LA COMISIÓN</th>
                                                                 <th>IMPUESTO</th>
                                                                 <th>% COMISIÓN</th>
                                                                 <th>ESTATUS</th>
@@ -425,12 +419,12 @@
                                             <table class="table-striped table-hover" id="tabla_revision_comisiones" name="tabla_revision_comisiones">
                                                 <thead>
                                                     <tr>
-                                                        <th>ID PAGO</th>
+                                                        <th>ID DE PAGO</th>
                                                         <th>REFERENCIA</th>
                                                         <th>NOMBRE</th>
                                                         <th>SEDE</th>
-                                                        <th>FORMA PAGO</th>
-                                                        <th>TOTAL COMISIÓN</th>
+                                                        <th>FORMA DE PAGO</th>
+                                                        <th>TOTAL DE LA COMISIÓN</th>
                                                         <th>IMPUESTO</th>
                                                         <th>% COMISIÓN</th>
                                                         <th>ESTATUS</th>
@@ -441,10 +435,8 @@
                                         </div>
                                         <div class="tab-pane" id="porPagar">
                                             <div class="encabezadoBox">
-                                                <p class="card-title pl-1">
-                                                    Comisiones en proceso de pago por parte de INTERNOMEX. Si requieres ver más detalles
-                                                    como lo pagado y lo pendiente, podrás consultarlo en el historial 
-                                                    <a href="<?= base_url() ?>Comisiones/historial_colaborador"><b>Da clic para ir al historial</b></a>.</p>
+                                                <p class="card-title pl-1">Comisiones en proceso de pago por parte de INTERNOMEX. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el historial 
+                                                <a href="<?= base_url() ?>Comisiones/historial_colaborador"><b>Da clic para ir al historial</b></a>.</p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
@@ -461,12 +453,12 @@
                                             <table class="table-striped table-hover" id="tabla_pagadas_comisiones" name="tabla_pagadas_comisiones">
                                                 <thead>
                                                     <tr>
-                                                        <th>ID PAGO</th>
+                                                        <th>ID DE PAGO</th>
                                                         <th>REFERENCIA</th>
                                                         <th>NOMBRE</th>
                                                         <th>SEDE</th>
-                                                        <th>FORMA PAGO</th>
-                                                        <th>TOTAL COMISIÓN</th>
+                                                        <th>FORMA DE PAGO</th>
+                                                        <th>TOTAL DE LA COMISIÓN</th>
                                                         <th>IMPUESTO</th>
                                                         <th>% COMISIÓN</th>
                                                         <th>ESTATUS</th>
@@ -478,8 +470,7 @@
                                         <div class="tab-pane" id="pausadas">
                                             <div class="encabezadoBox">
                                                 <p class="card-title pl-1">
-                                                    Comisiones pausadas, para ver el motivo da clic el botón de información. Si requieres ver 
-                                                    más detalles como lo pagado y lo pendiente, podrás consultarlo en el historial 
+                                                    Comisiones pausadas, para ver el motivo da clic el botón de información. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el historial 
                                                     <a href="<?= base_url() ?>Comisiones/historial_colaborador">
                                                         <b>Da clic para ir al historial</b>
                                                     </a>
@@ -500,12 +491,12 @@
                                             <table class="table-striped table-hover" id="tabla_pausadas_comisiones" name="tabla_pausadas_comisiones">
                                                 <thead>
                                                     <tr>
-                                                        <th>ID PAGO</th>
+                                                        <th>ID DE PAGO</th>
                                                         <th>REFERENCIA</th>
                                                         <th>NOMBRE</th>
                                                         <th>SEDE</th>
-                                                        <th>FORMA PAGO</th>
-                                                        <th>TOTAL COMISIÓN</th>
+                                                        <th>FORMA DE PAGO</th>
+                                                        <th>TOTAL DE LA COMISIÓN</th>
                                                         <th>IMPUESTO</th>
                                                         <th>% COMISIÓN</th>
                                                         <th>ESTATUS</th>
@@ -513,7 +504,7 @@
                                                     </tr>
                                                 </thead>
                                             </table>
-                                        </div><!-- Panes -->
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -523,23 +514,9 @@
             </div>
         </div>
         <?php $this->load->view('template/footer_legend'); ?>
-    </div>
     </div><!-- main-panel close -->
     <?php $this->load->view('template/footer'); ?>
     <!--DATATABLE BUTTONS DATA EXPORT-->
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <script type="text/javascript" src="<?= base_url() ?>dist/js/shadowbox.js"></script>
-    <script>
-        userType = <?= $this->session->userdata('id_rol') ?>;
-        userSede = <?= $this->session->userdata('id_sede') ?>;
-        forma_pago = <?= $this->session->userdata('forma_pago') ?>;
-        Shadowbox.init();
-    </script>
     <script src="<?= base_url() ?>dist/js/controllers/suma/comisionesSuma.js"></script>
 </body>

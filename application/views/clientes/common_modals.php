@@ -10,7 +10,7 @@
             </div>
             <form id="my-comment-form" name="my-comment-form" method="post">
                 <div class="modal-body">
-                    <textarea class="form-control input-gral" type="text" name="observations" id="observations" autofocus="true" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
+                    <textarea class="text-modal" type="text" name="observations" id="observations" autofocus="true" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
                     <input type="hidden" name="id_prospecto" id="id_prospecto">
                 </div>
                 <div class="modal-footer">
@@ -31,8 +31,8 @@
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
                             <h4 class="modal-title">¿Qué estatus asignarás a este prospecto?</h4>
                         </div>
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                            <select class="selectpicker select-gral m-0" name="estatus_particular" id="estatus_particular" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body"></select>
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0 overflow-hidden">
+                            <select class="selectpicker select-gral m-0" name="estatus_particular" id="estatus_particular" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="5" data-container="body"></select>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end pt-1">
                             <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanSelects()">Cancelar</button>
@@ -58,9 +58,9 @@
                 <h4 class="modal-title">¿Qué estatus asignarás a este prospeto?</h4>
             </div>
             <form id="my_update_status_form_preventa" name="my_update_status_form_preventa" method="post">
-                <div class="col-lg-12 form-group">
+                <div class="col-lg-12 form-group overflow-hidden">
                     <label>Estatus</label>
-                    <select class="selectpicker" name="estatus_particular2" id="estatus_particular2" data-style="select-with-transition" title="Selecciona una opción" data-size="7"></select>
+                    <select class="selectpicker" name="estatus_particular2" id="estatus_particular2" data-style="select-with-transition" title="SELECCIONA UNA OPCIÓN" data-size="7"></select>
                 </div>
                 <input type="hidden" name="id_prospecto_estatus_particular2" id="id_prospecto_estatus_particular2">
                 <div class="modal-footer">
@@ -101,11 +101,11 @@
             <form id="my_reasign_form_sm" name="my_reasign_form_sm" method="post">
                 <div class="col-lg-12 form-group">
                     <label>Gerente</label>
-                    <select class="selectpicker" name="id_gerente" id="myselectgerente" data-live-search="true" data-style="select-with-transition" onchange="getAdvisers(this)" title="Selecciona una opción" data-size="7" required></select>
+                    <select class="selectpicker" name="id_gerente" id="myselectgerente" data-live-search="true" data-style="select-with-transition" onchange="getAdvisers(this)" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                 </div>
                 <div class="col-lg-12 form-group">
                     <label>Asesor</label>
-                    <select class="selectpicker" name="id_asesor" id="myselectasesor" data-live-search="true" data-style="select-with-transition" title="Selecciona una opción" data-size="7" required></select>
+                    <select class="selectpicker" name="id_asesor" id="myselectasesor" data-live-search="true" data-style="select-with-transition" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                 </div>
                 <input type="hidden" name="id_prospecto_re_asign" id="id_prospecto_re_asign_sm">
                 <input type="hidden" name="request_type" id="request_type_sm" value="1"> 
@@ -130,7 +130,7 @@
             <form id="my_reasign_form_gm" name="my_reasign_form_gm" method="post">
                 <div class="col-lg-12 form-group">
                     <label>Asesor</label>
-                    <select class="selectpicker" name="id_asesor" id="myselectasesor2" data-live-search="true" data-style="select-with-transition" title="Selecciona una opción" data-size="7" required></select>
+                    <select class="selectpicker" name="id_asesor" id="myselectasesor2" data-live-search="true" data-style="select-with-transition" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                 </div>
                 <input type="hidden" name="id_prospecto_re_asign" id="id_prospecto_re_asign_gm">
                 <input type="hidden" name="request_type" id="request_type_gm" value="2">
@@ -155,15 +155,15 @@
             <form id="my_reasign_form_ve" name="my_reasign_form_ve" method="post">
                 <div class="col-lg-12 form-group">
                     <label>Gerente</label>
-                    <select class="selectpicker" name="id_gerente" id="myselectgerente2" data-live-search="true" data-style="select-with-transition" onchange="getCoordinatorsByManager(this)" title="Selecciona una opción" data-size="7" required></select>
+                    <select class="selectpicker select-gral m-0" name="id_gerente" id="myselectgerente2" data-style="btn" data-live-search="true" data-style="select-with-transition" onchange="getCoordinatorsByManager(this)" title="Selecciona una opción" data-size="7" required></select>
                 </div>
                 <div class="col-lg-12 form-group">
                     <label>Coordinador</label>
-                    <select class="selectpicker" name="id_coordinador" id="myselectcoordinador" data-live-search="true" data-style="select-with-transition" onchange="getAdvisersByCoordinator(this)" title="Selecciona una opción" data-size="7" required></select>
+                    <select class="selectpicker select-gral m-0" name="id_coordinador" id="myselectcoordinador" data-style="btn" data-live-search="true" data-style="select-with-transition" onchange="getAdvisersByCoordinator(this)" title="Selecciona una opción" data-size="7" required></select>
                 </div>
                 <div class="col-lg-12 form-group">
                     <label>Asesor</label>
-                    <select class="selectpicker" name="id_asesor" id="myselectasesor3" data-live-search="true" data-style="select-with-transition" title="Selecciona una opción" data-size="7" required></select>
+                    <select class="selectpicker select-gral m-0" name="id_asesor" id="myselectasesor3" data-style="btn" data-live-search="true" data-style="select-with-transition" title="Selecciona una opción" data-size="7" required></select>
                 </div>
                 <input type="hidden" name="id_prospecto_re_asign" id="id_prospecto_re_asign_ve">
                 <input type="hidden" name="request_type" id="request_type_ve" value="3">
@@ -209,25 +209,15 @@
                 <div class="modal-body">
                     <div class="row" data-step="1" data-title="Acerca de">
                         <div>
-                            <div class="col-sm-3">
-                                <div class="form-group label-floating select-is-empty">
+                            <div class="col-sm-3 ">
+                                <div class="form-group label-floating select-is-empty overflow-hidden">
                                     <label class="control-label">Nacionalidad<small> (requerido)</small></label>
-                                    <select id="nationality"
-                                            name="nationality" 
-                                            class="selectpicker select-gral m-0"
-                                            data-style="btn" 
-                                            data-show-subtext="true"
-                                            data-live-search="true"
-                                            title="Selecciona una opción"
-                                            data-size="7"
-                                            data-container="body"
-                                            required>
+                                    <select id="nationality" name="nationality" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required>
                                     </select>
-                                    <!-- <input id="name" name="name" type="text" class="form-control input-gral" required> -->
                                 </div>
                             </div>
                             <div class="col-sm-3">
-                                <div class="form-group label-floating select-is-empty">
+                                <div class="form-group label-floating select-is-empty overflow-hidden">
                                     <label class="control-label">Personalidad jurídica<small> (requerido)</small></label>
                                     <select id="legal_personality"
                                             name="legal_personality"
@@ -235,7 +225,7 @@
                                             data-style="btn" 
                                             data-show-subtext="true"
                                             data-live-search="true"
-                                            title="Selecciona una opción"
+                                            title="SELECCIONA UNA OPCIÓN"
                                             data-size="7"
                                             data-container="body"
                                             required>
@@ -309,7 +299,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-3">
-                                <div class="form-group label-floating select-is-empty">
+                                <div class="form-group label-floating select-is-empty overflow-hidden">
                                     <label class="control-label">Estado civil</label>
                                     <select id="civil_status"
                                             name="civil_status"
@@ -317,7 +307,7 @@
                                             data-style="btn" 
                                             data-show-subtext="true"
                                             data-live-search="true"
-                                            title="Selecciona una opción"
+                                            title="SELECCIONA UNA OPCIÓN"
                                             data-size="7"
                                             data-container="body"
                                             onchange="validateCivilStatus(2)">
@@ -325,7 +315,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-3">
-                                <div class="form-group label-floating select-is-empty">
+                                <div class="form-group label-floating select-is-empty overflow-hidden">
                                     <label class="control-label">Régimen matrimonial</label>
                                     <select id="matrimonial_regime"
                                             name="matrimonial_regime"
@@ -333,7 +323,7 @@
                                             data-style="btn" 
                                             data-show-subtext="true"
                                             data-live-search="true"
-                                            title="Selecciona una opción"
+                                            title="SELECCIONA UNA OPCIÓN"
                                             data-size="7"
                                             data-container="body"
                                             onchange="validateMatrimonialRegime(2)">
@@ -367,7 +357,7 @@
                                     <label><input id="own" name="lives_at_home" type="radio" value="1"> Propia</label>
                                 </div>
                                 <div class="radio radio-inline">
-                                    <label><input id="rented" name="lives_at_home" type="radio" value="2""> Rentada</label>
+                                    <label><input id="rented" name="lives_at_home" type="radio" value="2"> Rentada</label>
                                 </div>
                                 <div class="radio radio-inline">
                                     <label><input id="paying" name="lives_at_home" type="radio" value="3"> Pagándose</label>
@@ -417,9 +407,9 @@
                         </div>
                     </div>
                     <div class="row hide" data-step="3" data-title="Prospección">
-                        <div class="row">
+                        <div>
                             <div class="col-sm-3">
-                                <div class="form-group label-floating select-is-empty">
+                                <div class="form-group label-floating select-is-empty overflow-hidden">
                                     <label class="control-label">¿Cómo nos contactaste?<small> (requerido)</small></label>
                                     <select id="prospecting_place"
                                             name="prospecting_place"
@@ -427,7 +417,7 @@
                                             data-style="btn" 
                                             data-show-subtext="true"
                                             data-live-search="true"
-                                            title="Selecciona una opción"
+                                            title="SELECCIONA UNA OPCIÓN"
                                             data-size="7"
                                             data-container="body"
                                             disabled>
@@ -453,7 +443,7 @@
                                                 data-style="btn"
                                                 data-show-subtext="true"
                                                 data-live-search="true"
-                                                title="Selecciona una opción"
+                                                title="SELECCIONA UNA OPCIÓN"
                                                 data-size="7"
                                                 style="display: none;"
                                                 disabled>
@@ -475,7 +465,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-3">
-                                <div class="form-group label-floating select-is-empty">
+                                <div class="form-group label-floating select-is-empty overflow-hidden">
                                     <label class="control-label">Plaza de venta<small> (requerido)</small></label>
                                     <select id="sales_plaza"
                                             name="sales_plaza"
@@ -483,7 +473,7 @@
                                             data-style="btn" 
                                             data-show-subtext="true"
                                             data-live-search="true"
-                                            title="Selecciona una opción"
+                                            title="SELECCIONA UNA OPCIÓN"
                                             data-size="7"
                                             data-container="body"
                                             required>
@@ -493,7 +483,7 @@
                             <div class="col-sm-12">
                                 <div class="form-group label-floating div-observations">
                                     <label class="control-label">Observaciones</label>
-                                    <textarea type="text" id="observation" name="observation" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
+                                    <textarea type="text" id="observation" name="observation"  class="text-modal" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
                                     <input type="hidden" name="id_prospecto_ed" id="id_prospecto_ed">
                                     <input type="hidden" name="owner" id="owner">
                                     <input type="hidden" name="source" id="source">
@@ -702,51 +692,111 @@
         </div>
     </div>
 </div>
+<!-- MODAL-->
+    <div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <i class="material-icons" onclick="cleanComments()">clear</i>
+                    </button>
+                    <h4 class="modal-title">Consulta información</h4>
+                </div>
+                <div class="modal-body">
+                    <div role="tabpanel">
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs" role="tablist" style="background: #003d82;">
+                            <li role="presentation" class="active"><a href="#generalTab" aria-controls="generalTab" role="tab" data-toggle="tab">General</a></li>
+                            <li role="presentation"><a href="#commentsTab" aria-controls="commentsTab" role="tab" data-toggle="tab">Comentarios</a></li>
+                            <li role="presentation"><a href="#changelogTab" aria-controls="changelogTab" role="tab" data-toggle="tab">Bitácora de cambios</a></li>
+                        </ul>
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="generalTab">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label class="control-label">Personalidad jurídica</label>
+                                            <input id="legal-personality-lbl" type="text" class="form-control input-gral" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label class="control-label">Nacionalidad</label>
+                                            <input id="nationality-lbl" type="text" class="form-control input-gral" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label class="control-label">CURP</label>
+                                            <input id="curp-lbl" type="text" class="form-control input-gral" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label class="control-label">RFC</label>
+                                            <input id="rfc-lbl" type="text" class="form-control input-gral" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- recovered-->
 
-<div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                    <i class="material-icons" onclick="cleanComments()">clear</i>
-                </button>
-                <h4 class="modal-title">Consulta información</h4>
-            </div>
-            <div class="modal-body">
-                <div role="tabpanel">
-                    <!-- Nav tabs -->
-                    <ul class="nav nav-tabs" role="tablist" style="background: #003d82;">
-                        <li role="presentation" class="active"><a href="#generalTab" aria-controls="generalTab" role="tab" data-toggle="tab">General</a></li>
-                        <li role="presentation"><a href="#commentsTab" aria-controls="commentsTab" role="tab" data-toggle="tab">Comentarios</a></li>
-                        <li role="presentation"><a href="#changelogTab" aria-controls="changelogTab" role="tab" data-toggle="tab">Bitácora de cambios</a></li>
-                    </ul>
-                    <!-- Tab panes -->
-                    <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane active" id="generalTab">
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <div class="form-group">
-                                        <label class="control-label">Personalidad jurídica</label>
-                                        <input id="legal-personality-lbl" type="text" class="form-control input-gral" disabled>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Nombre / Razón social</label>
+                                            <input id="name-lbl" type="text" class="form-control input-gral" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label class="control-label">Correo electrónico</label>
+                                            <input id="email-lbl" type="text" class="form-control input-gral" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <div class="form-group">
+                                            <label class="control-label">Teléfono</label>
+                                            <input id="phone-number-lbl" type="text" class="form-control input-gral" disabled>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-3">
-                                    <div class="form-group">
-                                        <label class="control-label">Nacionalidad</label>
-                                        <input id="nationality-lbl" type="text" class="form-control input-gral" disabled>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label">¿Cómo nos contactaste?</label>
+                                            <input id="prospecting-place-lbl" type="text" class="form-control input-gral" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Plaza de venta</label>
+                                            <input id="sales-plaza-lbl" type="text" class="form-control input-gral" disabled>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-3">
-                                    <div class="form-group">
-                                        <label class="control-label">CURP</label>
-                                        <input id="curp-lbl" type="text" class="form-control input-gral" disabled>
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label class="control-label">Asesor</label>
+                                            <input id="asesor-lbl" type="text" class="form-control input-gral" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label class="control-label">Coordinador</label>
+                                            <input id="coordinador-lbl" type="text" class="form-control input-gral" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label class="control-label">Gerente</label>
+                                            <input id="gerente-lbl" type="text" class="form-control input-gral" disabled>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-3">
-                                    <div class="form-group">
-                                        <label class="control-label">RFC</label>
-                                        <input id="rfc-lbl" type="text" class="form-control input-gral" disabled>
-                                    </div>
+                                <div class="row">
+                                    <input type="hidden" id="id-prospecto-lbl" name="id_prospecto_lbl">
                                 </div>
                             </div>
 							<!-- recovered-->
@@ -814,34 +864,34 @@
                                 <div class="col-md-12">
                                     <div class="card card-plain">
                                         <div class="card-content">
-                                            <ul class="timeline timeline-simple" id="comments-list"></ul>
+                                            <ul class="timeline-3" id="comments-list"></ul>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div role="tabpanel" class="tab-pane" id="changelogTab">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="card card-plain">
-                                        <div class="card-content">
-                                            <ul class="timeline timeline-simple" id="changelog"></ul>
+                            <div role="tabpanel" class="tab-pane" id="changelogTab">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="card card-plain">
+                                            <div class="card-content">
+                                                <ul class="timeline-3" id="changelog"></ul>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <input type="hidden" name="prospecto_lbl" id="prospecto_lbl">
                 </div>
-                <input type="hidden" name="prospecto_lbl" id="prospecto_lbl">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanComments()">Cerrar</button>
-                <button type="button" class="btn btn-primary" onclick="{{$('#prospecting-place-lbl').val() == 'MKT digital (especificar)' ? printProspectInfoMktd() : printProspectInfo()}}"><i class="material-icons">cloud_download</i> Descargar pdf</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanComments()">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="{{$('#prospecting-place-lbl').val() == 'MKT digital (especificar)' ? printProspectInfoMktd() : printProspectInfo()}}"><i class="material-icons">cloud_download</i> Descargar pdf</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+<!-- END MODAL-->
 
 <div class="modal fade" id="agendaInsert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-md">
@@ -857,7 +907,7 @@
                     </div>
                     <div class="col-lg-12 form-group m-0" id="select">
                         <label class="label-gral">Tipo de cita</label>
-                        <select class="selectpicker select-gral m-0" name="estatus_recordatorio" id="estatus_recordatorio" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
+                        <select class="selectpicker select-gral m-0" name="estatus_recordatorio" id="estatus_recordatorio" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                     </div>
                     <div class="col-lg-12 form-group m-0 hide" id="comodinDIV"></div>
                     <div class="col-lg-12 form-group m-0">
@@ -872,8 +922,8 @@
                         <textarea class="text-modal" type="text" name="description" id="description" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary finishS">Aceptar</button>
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanSelects()">Cancelar</button>
+                        <button type="submit" class="btn btn-primary finishS">Aceptar</button>
                     </div>
                 </form>
             </div>

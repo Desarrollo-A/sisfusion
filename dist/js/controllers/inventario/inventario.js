@@ -1,4 +1,3 @@
-
 $(document).ready(function () {
 	$.post(`${general_base_url}Contratacion/sedesPorDesarrollos`, function (data) {
 		var len = data.length;
@@ -13,18 +12,21 @@ $(document).ready(function () {
 
 $(document).on('change', "#sedes", function () {
 	fillTableInventario($(this).val());
+	$('#tabla_inventario_contraloria').removeClass('hide');
+	$('#spiner-loader').removeClass('hide');
 });
 
 let titulos = [];
 $('#tabla_inventario_contraloria thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
     titulos.push(title);
-    $(this).html(`<input type="text" class="textoshead" placeholder="${title}"/>`);
+    $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
     $('input', this).on('keyup change', function () {
         if ($('#tabla_inventario_contraloria').DataTable().column(i).search() !== this.value) {
             $('#tabla_inventario_contraloria').DataTable().column(i).search(this.value).draw();
         }
     });
+	$('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
 });
 
 function fillTableInventario(sede) {
@@ -44,7 +46,6 @@ function fillTableInventario(sede) {
 				format: {
 					header: function (d, columnIdx) {
 						return ' ' + titulos[columnIdx] + ' ';
-
 					}
 				}
 			}
@@ -148,10 +149,9 @@ function fillTableInventario(sede) {
 				},
 				{
 					data: function (d) {
-
-						libContraloria = (d.observacionContratoUrgente == '1') ? '<center><span class="label label-warning";">Lib. Contraloría</span> <center><p><p>' : '';
-						valTV = (d.tipo_venta == null) ? '<center><span class="label label-danger" style="background:#' + d.background_sl + '; color:#' + d.color + ';">' + d.descripcion_estatus + '</span> <center>' :
-							'<center><span class="label label-danger" style="background:#' + d.background_sl + '; color:#' + d.color + ';">' + d.descripcion_estatus + '</span> <p><p> <span class="label label-warning";">' + d.tipo_venta + '</span> <center>';
+						libContraloria = (d.observacionContratoUrgente == '1') ? '<center><span class="label lbl-warning";">Lib. Contraloría</span> <center><p><p>' : '';
+						valTV = (d.tipo_venta == null) ? '<center><span class="label lbl-danger" style="background:#' + d.background_sl + '18; color:#' + d.color + ';">' + d.descripcion_estatus + '</span> <center>' :
+							'<center><span class="label lbl-danger" style="background:#' + d.background_sl + '18; color:#' + d.color + ';">' + d.descripcion_estatus + '</span> <p><p> <span class="label lbl-warning">' + d.tipo_venta + '</span> <center>';
 						return valTV + libContraloria;
 					}
 				},
@@ -190,9 +190,9 @@ function fillTableInventario(sede) {
 				{
 					data: function (d) {
 						if (d.id_cliente_reubicacion == 0)
-							return `<span class="label" style="background: #A3E4D7; color: #0E6251">REUBICADO</span>`;
+							return `<span class="label lbl-oceanGreen"">REUBICADO</span>`;
 						else
-							return `<span class="label" style="background: #A3E4D7; color: #0E6251">NO APLICA</span>`;
+							return `<span class="label lbl-pink">NO APLICA</span>`;
 					}
 				},
 				{
@@ -209,6 +209,9 @@ function fillTableInventario(sede) {
 			type: "POST",
 			cache: false,
 			data: {id_sede: sede}
+		},
+		initComplete: function () {
+			$('#spiner-loader').addClass('hide');
 		}
 	});
 
@@ -216,15 +219,3 @@ function fillTableInventario(sede) {
 		tabla_inventario.columns.adjust();
 	});
 }
-
-function formatMoney(n) {
-	var c = isNaN(c = Math.abs(c)) ? 2 : c,
-		d = d == undefined ? "." : d,
-		t = t == undefined ? "," : t,
-		s = n < 0 ? "-" : "",
-		i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
-		j = (j = i.length) > 3 ? j % 3 : 0;
-
-	return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
-}
-

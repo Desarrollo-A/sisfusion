@@ -2,24 +2,11 @@
 <div class="wrapper">
 
     <?php
-
-if ($this->session->userdata('id_usuario') == "2767"||$this->session->userdata('id_usuario') == "2752" ||$this->session->userdata('id_usuario') == "2807" ||$this->session->userdata('id_usuario') == "2855" ||$this->session->userdata('id_usuario') == "2810"||$this->session->userdata('id_usuario') == "2751"||$this->session->userdata('id_usuario') == "4245"||$this->session->userdata('id_usuario') == "2798"||$this->session->userdata('id_usuario') == "2834"||$this->session->userdata('id_usuario') == "2799"||$this->session->userdata('id_usuario') == "2830"||$this->session->userdata('id_usuario') == "2815")
-
-
- // 4245, 2834, 2830, 2798, 2799, 2815
-
-  //contraloria
-{
-
-    // 2752
-// 2807
-
-    $this->load->view('template/sidebar');
-} 
-else {
-    echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-}
-?>
+        if (in_array($this->session->userdata('id_usuario'), array(2767, 2752, 2807, 2855, 2810, 2751, 4245, 2798, 2834, 2799, 2830, 2815, 10088, 2827, 6012, 12931)))
+            $this->load->view('template/sidebar');
+        else 
+            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
+    ?>
 
 
 

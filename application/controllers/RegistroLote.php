@@ -1,5 +1,5 @@
 <?php
-use application\helpers\email\registro_lote\Elementos_Correo_Registro_Lote;
+
 class RegistroLote extends CI_Controller
 {
 	public function __construct()
@@ -11,9 +11,8 @@ class RegistroLote extends CI_Controller
 		$this->load->library(array('session', 'form_validation'));
 		//LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
 		$this->load->library(array('session', 'form_validation', 'get_menu'));
-		$this->load->helper(array('url', 'form', 'email/registro_lote/elementos_correo', 'email/plantilla_dinamica_correo'));
+		$this->load->helper(array('url', 'form'));
 		$this->load->database('default');
-		$this->load->library('phpmailer_lib');
 		$this->validateSession();
 		date_default_timezone_set('America/Mexico_City');
 
@@ -164,82 +163,7 @@ class RegistroLote extends CI_Controller
 		$datos["gerentes"] = $this->registrolote_modelo->getGerente();
 		$this->load->view('editar_lote_caja_view', $datos);
 	}
-	public function editar_registro_lote_caja()
-	{
-		$idLote = $this->input->post('idLote');
-		$idStatusLote = $this->input->post('idStatusLote');
-		$idAsesor = $this->input->post('filtro2');
-		$idAsesor2 = $this->input->post('filtro9');
-		if ($idStatusLote == 9 || $idStatusLote == 10) {
-			$arreglo = array();
-			$arreglo["idStatusLote"] = $idStatusLote;
-			$arreglo["idAsesor"] = $idAsesor;
-			$arreglo["idAsesor2"] = $idAsesor2;
-			$arreglo["fecha_modst"] = date("Y-m-d H:i:s");
-			$arreglo["userstatus"] = $this->session->userdata('username');
-			if ($this->registrolote_modelo->editaRegistroLoteCaja($idLote, $arreglo)) {
-				redirect(base_url() . "index.php/registroLote/registrosLoteCaja");
-			} else {
-				die("ERROR");
-			}
-		} else if ($idStatusLote == 8) {
-			$arreglo = array();
-			$arreglo["idStatusLote"] = $idStatusLote;
-			$arreglo["idAsesor"] = $idAsesor;
-			$arreglo["idAsesor2"] = $idAsesor2;
-			$arreglo["fecha_modst"] = date("Y-m-d H:i:s");
-			$arreglo["userstatus"] = $this->session->userdata('username');
-			$datos["lote"] = $this->registrolote_modelo->infoBloqueos($idLote);
-			$data = array();
-			$data["idResidencial"] = $datos["lote"]->idResidencial;
-			$data["idCondominio"] = $datos["lote"]->idCondominio;
-			$data["idLote"] = $datos["lote"]->idLoteL;
-			$data["user"] = $this->session->userdata('username');
-			$data["idAsesor"] = $idAsesor;
-			$data["idAsesor2"] = $idAsesor2;
-			/********************************************************************************
-			 * Armado de parámetros a mandar a plantilla para creación de correo electrónico	*
-			 ********************************************************************************/
-			$datos_correo[0] = json_decode(json_encode($datos["lote"]), true);
-			$datos_correo[0] += ["create_at" => date("Y-m-d H:i:s")];
-			$datos_etiquetas = null;
-			//Correos establecidos estaticamente.
-			$correos_entregar = array('programador.analista18@ciudadmaderas.com');
-			//$correos_entregar = array("lucero.velazquez@ciudadmaderas.com", "coord.contraloria2@ciudadmaderas.com", "subdirector.contraloria@ciudadmaderas.com");
-			$elementos_correo = array(
-				"setFrom" => Elementos_Correo_Registro_Lote::SET_FROM_EMAIL,
-				"Subject" => Elementos_Correo_Registro_Lote::ASUNTO_CORREO_TABLA_EDITAR_REGISTRO_LOTE_BLOQUEO_CAJA
-			);
-			$comentario_general = Elementos_Correo_Registro_Lote::EMAIL_EDITAR_REGISTRO_LOTE_BLOQUEO_CAJA . '<br><br>' . (!isset($comentario) ? '' : $comentario);
-			$datos_encabezados_tabla = Elementos_Correo_Registro_Lote::ETIQUETAS_ENCABEZADO_TABLA_EDITAR_REGISTRO_LOTE_BLOQUEO_CAJA;
-			//Se crea variable para poder mandar llamar la funcion que crea y manda correo electronico
-			$plantilla_correo = new plantilla_dinamica_correo;
-			if ($this->registrolote_modelo->editaRegistroLoteCaja($idLote, $arreglo)) {
-				$this->registrolote_modelo->insert_bloqueos($data);
-				$envio_correo = $plantilla_correo->crearPlantillaCorreo($correos_entregar, $elementos_correo, $datos_correo, $datos_encabezados_tabla, $datos_etiquetas, $comentario_general);
-				if ($envio_correo) {
-					$data['message_email'] = 'OK';
-				} else {
-					$data['message_email'] = $envio_correo;
-				}
-				redirect(base_url() . "index.php/registroLote/registrosLoteCaja");
-			} else {
-				die("ERROR");
-			}
-		} else {
-			$arreglo = array();
-			$arreglo["idStatusLote"] = $idStatusLote;
-			$arreglo["idAsesor"] = NULL;
-			$arreglo["idAsesor2"] = NULL;
-			$arreglo["fecha_modst"] = NULL;
-			$arreglo["userstatus"] = NULL;
-			if ($this->registrolote_modelo->editaRegistroLoteCaja($idLote, $arreglo)) {
-				redirect(base_url() . "index.php/registroLote/registrosLoteCaja");
-			} else {
-				die("ERROR");
-			}
-		}
-	}
+
 	function registrosLoteLiberacion()
 	{
 		$datos = array();
@@ -6709,9 +6633,11 @@ class RegistroLote extends CI_Controller
 	{
 		if (isset($_POST) && !empty($_POST)) {
 			$typeTransaction = $this->input->post("typeTransaction");
-			$beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-			$endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
-			$where = $this->input->post("where");
+            $fechaInicio = explode('/', $this->input->post("beginDate"));
+            $fechaFin = explode('/', $this->input->post("endDate"));
+            $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+            $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
+            $where = $this->input->post("where");
 			$data['data'] = $this->registrolote_modelo->report($typeTransaction, $beginDate, $endDate, $where)->result_array();
 			echo json_encode($data);
 		} else {
@@ -7759,6 +7685,7 @@ class RegistroLote extends CI_Controller
 	function getLotesDventas($condominio, $residencial)
 	{
 		$data = $this->registrolote_modelo->getInventarioAd($condominio, $residencial);
+		
 		if ($data != null) {
 			echo json_encode($data);
 		} else {
@@ -8607,44 +8534,7 @@ class RegistroLote extends CI_Controller
 			}
 		}
 	}
-	public function mailBloqueosAfter45()
-	{
-		$datos["mailbloqueos"] = $this->registrolote_modelo->sendMailBloqueosDireccion();
-		/********************************************************************************
-		 * Armado de parámetros a mandar a plantilla para creación de correo electrónico	*
-		 ********************************************************************************/
-		$datos_correo = array();
-		foreach ($datos["mailbloqueos"] as $indice => $info_lote_bloqueado) {
-			$datos_correo[$indice] = json_decode(json_encode($info_lote_bloqueado), true);
-			$fecha_bloqueo = date_create($info_lote_bloqueado->create_at);
-			$fecha_hoy = date_create(date("Y-m-d H:i:s"));
-			$dias_diferencia = (date_diff($fecha_bloqueo, $fecha_hoy)->format("%a") + 1);
-			$datos_correo[$indice] += ['diasDiferencia' => $dias_diferencia];
-		}
-		$datos_etiquetas = null;
-		$correos_entregar = array('programador.analista18@ciudadmaderas.com');
-		$elementos_correo = array(
-			"setFrom" => Elementos_Correo_Registro_Lote::SET_FROM_EMAIL,
-			"Subject" => Elementos_Correo_Registro_Lote::ASUNTO_CORREO_TABLA_LOTES_BLOQUEADOS_A_FECHA
-		);
-		$comentario_general = Elementos_Correo_Registro_Lote::EMAIL_LOTES_BLOQUEADOS_A_FECHA . date("Y-m-d H:i:s") .
-			'<br><br>' . (!isset($comentario) ? '' : $comentario);
-		$datos_encabezados_tabla = Elementos_Correo_Registro_Lote::ETIQUETAS_ENCABEZADO_TABLA_LOTES_BLOQUEADOS_A_FECHA;
-		$plantilla_correo = new plantilla_dinamica_correo;
-		$envio_correo = $plantilla_correo->crearPlantillaCorreo(
-			$correos_entregar,
-			$elementos_correo,
-			$datos_correo,
-			$datos_encabezados_tabla,
-			$datos_etiquetas,
-			$comentario_general
-		);
-		if ($envio_correo === 1) {
-			$datos['message_email'] = 'OK';
-		} else {
-			$datos['message_email'] = $envio_correo;
-		}
-	}
+
 	public function getDatosClientesChangeAsesor()
 	{
 		$datos = array();

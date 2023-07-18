@@ -22,7 +22,7 @@
                 margin-left: 20px;
             }
 
-            .form-group.label-floating label.control-label, .form-group.label-placeholder label.control-label {
+            .form-group. label.control-label, .form-group.label-placeholder label.control-label {
                 top: -3px;
                 font-size: 14px;
                 line-height: 1.42857;
@@ -32,23 +32,16 @@
                 color: #929292;
             }
 
-            .pl-3 {
-                padding-left: 30px;
-            }
-            .pr-3{
-                padding-right: 30px;
-            } 
-            .pb-2{
-                padding-bottom: 20px;
-            }
-            .m-0 {
-                margin: 0 !important;
-            }
-
             @keyframes progress-indeterminate {
                 from { left: -25%; width: 25%; }
                 to { left: 100%; width: 25%;}
             }
+
+            .isRequired{
+            color: #EA4335;
+            margin: 0 3px;
+            }
+
         </style>
 
         <div class="content">
@@ -89,9 +82,9 @@
 
                                             <div class="col-sm-12 pl-3 pr-3 pb-2">
                                                 <div class="col-sm-3">
-                                                    <div class="form-group label-floating select-is-empty">
+                                                    <div class="form-group  select-is-empty">
                                                         <label class="control-label">
-                                                            * Nacionalidad<small> (requerido)</small>
+                                                            Nacionalidad (<span class="isRequired">*</span>)
                                                         </label>
                                                         <select id="nationality" 
                                                                 name="nationality"
@@ -108,8 +101,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <div class="form-group label-floating select-is-empty">
-                                                        <label class="control-label">* Personalidad jurídica<small> (requerido)</small></label>
+                                                    <div class="form-group  select-is-empty">
+                                                        <label class="control-label">Personalidad jurídica (<span class="isRequired">*</span>)</label>
                                                         <select id="legal_personality" 
                                                                 name="legal_personality"
                                                                 class="selectpicker select-gral m-0"
@@ -124,7 +117,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <div class="form-group label-floating">
+                                                    <div class="form-group ">
                                                         <label class="control-label">CURP</label>
                                                         <input  id="curp" 
                                                                 name="curp"
@@ -137,7 +130,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <div class="form-group label-floating">
+                                                    <div class="form-group ">
                                                         <label class="control-label">RFC</label>
                                                         <input  id="rfc"
                                                                 name="rfc"
@@ -152,8 +145,8 @@
 
                                             <div class="col-sm-12 pl-3 pr-3 pb-2">
                                                 <div class="col-sm-3">
-                                                    <div class="form-group label-floating">
-                                                        <label class="control-label">* Nombre / Razón social<small> (requerido)</small></label>
+                                                    <div class="form-group ">
+                                                        <label class="control-label">Nombre / Razón social (<span class="isRequired">*</span>)</label>
                                                         <input  id="name"
                                                                 name="name"
                                                                 type="text"
@@ -164,7 +157,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <div class="form-group label-floating">
+                                                    <div class="form-group ">
                                                         <label class="control-label">Apellido paterno</label>
                                                         <input  id="last_name"
                                                                 name="last_name"
@@ -174,7 +167,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <div class="form-group label-floating">
+                                                    <div class="form-group ">
                                                         <label class="control-label">Apellido materno</label>
                                                         <input  id="mothers_last_name"
                                                                 name="mothers_last_name"
@@ -184,7 +177,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <div class="form-group label-floating select-is-empty">
+                                                    <div class="form-group  select-is-empty">
                                                         <label class="control-label">Fecha de nacimiento</label>
                                                         <input  id="date_birth"
                                                                 name="date_birth"
@@ -196,7 +189,7 @@
                                             
                                             <div class="col-sm-12 pl-3 pr-3 pb-2">
                                                 <div class="col-sm-2">
-                                                    <div class="form-group label-floating select-is-empty">
+                                                    <div class="form-group  select-is-empty">
                                                         <label class="control-label">Edad</label>
                                                         <input  id="company_antiquity"
                                                                 name="company_antiquity"
@@ -207,7 +200,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <div class="form-group label-floating">
+                                                    <div class="form-group ">
                                                         <label class="control-label">Correo electrónico</label>
                                                         <input  id="email"
                                                                 name="email"
@@ -218,8 +211,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <div class="form-group label-floating">
-                                                        <label class="control-label">* Teléfono celular<small> (requerido)</small></label>
+                                                    <div class="form-group ">
+                                                        <label class="control-label">Teléfono celular (<span class="isRequired">*</span>)</label>
                                                         <input  id="phone_number"
                                                                 name="phone_number"
                                                                 type="number"
@@ -231,7 +224,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <div class="form-group label-floating">
+                                                    <div class="form-group ">
                                                         <label class="control-label">Teléfono casa</label>
                                                         <input  id="phone_number2"
                                                                 name="phone_number2"
@@ -245,7 +238,7 @@
 
                                             <div class="col-sm-12 pl-3 pr-3 pb-2">
                                                 <div class="col-sm-2">
-                                                    <div class="form-group label-floating select-is-empty">
+                                                    <div class="form-group  select-is-empty">
                                                         <label class="control-label">Estado civil</label>
                                                         <select id="civil_status"
                                                                 name="civil_status"
@@ -259,7 +252,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-2">
-                                                    <div class="form-group label-floating select-is-empty">
+                                                    <div class="form-group  select-is-empty">
                                                         <label class="control-label">Régimen matrimonial</label>
                                                         <select id="matrimonial_regime"
                                                                 name="matrimonial_regime"
@@ -274,7 +267,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <div class="form-group label-floating">
+                                                    <div class="form-group ">
                                                         <label class="control-label">Cónyugue</label>
                                                         <input  id="spouce"
                                                                 name="spouce"
@@ -285,7 +278,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-2">
-                                                    <div class="form-group label-floating">
+                                                    <div class="form-group ">
                                                         <label class="control-label">Originiario de</label>
                                                         <input  id="from"
                                                                 name="from"
@@ -295,7 +288,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <div class="form-group label-floating">
+                                                    <div class="form-group ">
                                                         <label class="control-label">Domicilio particular</label>
                                                         <input  id="home_address"
                                                                 name="home_address"
@@ -368,7 +361,7 @@
                                         <h4 class="info-text"> ¿Cuál es su empleo? </h4>
                                         <div class="row">
                                             <div class="col-sm-4 col-sm-offset-1">
-                                                <div class="form-group label-floating">
+                                                <div class="form-group ">
                                                     <label class="control-label">Ocupación</label>
                                                     <input  id="occupation"
                                                             name="occupation"
@@ -378,7 +371,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
-                                                <div class="form-group label-floating">
+                                                <div class="form-group ">
                                                     <label class="control-label">Empresa</label>
                                                     <input  id="company"
                                                             name="company"
@@ -388,7 +381,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-sm-2 col-sm-offset-1">
-                                                <div class="form-group label-floating">
+                                                <div class="form-group ">
                                                     <label class="control-label">Puesto</label>
                                                     <input  id="position"
                                                             name="position"
@@ -398,7 +391,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-sm-2">
-                                                <div class="form-group label-floating">
+                                                <div class="form-group ">
                                                     <label class="control-label">Antigüedad (años)</label>
                                                     <input  id="antiquity"
                                                             name="antiquity"
@@ -409,7 +402,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
-                                                <div class="form-group label-floating">
+                                                <div class="form-group ">
                                                     <label class="control-label">Domicilio</label>
                                                     <input  id="residence"
                                                             name="company_residence"
@@ -427,8 +420,8 @@
                                             </div>
                                             <div class="col-sm-12 pl-3 pr-3"> 
                                                 <div class="col-sm-4">
-                                                    <div class="form-group label-floating select-is-empty">
-                                                        <label class="control-label">¿Cómo nos contactaste?<small> (requerido)</small></label>
+                                                    <div class="form-group  select-is-empty">
+                                                        <label class="control-label">¿Cómo nos contactaste? (<span class="isRequired">*</span>)</label>
                                                         <select id="prospecting_place"
                                                                 name="prospecting_place"
                                                                 class="selectpicker select-gral m-0"
@@ -437,27 +430,18 @@
                                                                 data-live-search="true"
                                                                 title="Selecciona una opción"
                                                                 data-size="7"
+                                                                data-container="body"
                                                                 onchange="validateProspectingPlace(), validateSelect('prospecting_place')"
                                                                 required>
                                                         </select>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <div class="form-group label-floating select-is-empty">
+                                                    <div class="form-group  select-is-empty">
                                                         <label class="control-label">Específique cuál</label>
                                                         <input id="specify" name="specify" type="text" class="form-control input-gral" readonly onkeyup="javascript:this.value=this.value.toUpperCase();">
-                                                        <div    id="specify_mkt_div"
-                                                                name="specify_mkt_div"
-                                                                style="display: none;">
-                                                            <select id="specify_mkt"
-                                                                    name="specify_mkt" 
-                                                                    class="selectpicker select-gral m-0"                                                             
-                                                                    data-style="btn"
-                                                                    data-show-subtext="true"
-                                                                    data-live-search="true"
-                                                                    title="Selecciona una opción"
-                                                                    data-size="7"
-                                                                    style="display: none;">
+                                                        <div id="specify_mkt_div" name="specify_mkt_div" style="display: none;">
+                                                            <select id="specify_mkt"name="specify_mkt" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" style="display: none;">
                                                                 <option value="01 800">01 800</option>
                                                                 <option value="Chat">Chat</option>
                                                                 <option value="Contacto web">Contacto web</option>
@@ -467,51 +451,30 @@
                                                                 <option value="WhatsApp">WhatsApp</option>
                                                             </select>
                                                         </div>
-                                                        <select id="specify_recommends"
-                                                                name="specify"
-                                                                class="form-control input-gral"
-                                                                required data-live-search="true"
-                                                                style="display: none; width: 100%"
-                                                                onchange="getRecommendationData()">
+                                                        <select id="specify_recommends" name="specify" class="form-control input-gral" required data-live-search="true" style="display: none; width: 100%" onchange="getRecommendationData()">
                                                         </select>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <div class="form-group label-floating select-is-empty">
-                                                        <label class="control-label">Plaza de venta<small> (requerido)</small></label>
-                                                        <select id="sales_plaza"
-                                                                name="sales_plaza"
-                                                                class="selectpicker select-gral m-0"
-                                                                data-style="btn"
-                                                                data-show-subtext="true"
-                                                                data-live-search="true"
-                                                                title="Selecciona una opción"
-                                                                data-size="7"
-                                                                onchange="validateSelect('sales_plaza')"
-                                                                required>
+                                                    <div class="form-group  select-is-empty">
+                                                        <label class="control-label">Plaza de venta (<span class="isRequired">*</span>)</label>
+                                                        <select id="sales_plaza" name="sales_plaza" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" data-container="body" title="Selecciona una opción" data-size="7" onchange="validateSelect('sales_plaza')" required>
                                                         </select>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-sm-12 pl-3 pr-3">
                                                 <div class="col-sm-12">
-                                                    <div class="form-group label-floating">
+                                                    <div class="form-group ">
                                                         <label class="control-label">Observaciones</label>
-                                                        <textarea   type="password"
-                                                                    id="observations"
-                                                                    name="observations"
-                                                                    class="form-control input-gral"
-                                                                    onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
+                                                        <textarea   type="password" id="observations" name="observations" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-sm-12 pl-3 pr-3">
                                                 <div class="col-sm-12">
-                                                    <div class="form-group label-floating">
-                                                        <input  id="type_recomendado"
-                                                                name="type_recomendado"
-                                                                type="hidden"
-                                                                class="form-control input-gral">
+                                                    <div class="form-group ">
+                                                        <input  id="type_recomendado" name="type_recomendado" type="hidden" class="form-control input-gral">
                                                     </div>
                                                 </div>
                                             </div>
@@ -521,29 +484,15 @@
                                 <div class="wizard-footer">
                                     <div class="col-md-12" id="savingProspect"></div>
                                     <div class="pull-right">
-                                        <input  type="hidden"
-                                                name="asesor_prospecto"
-                                                id="asesor_prospecto"
-                                                value="0">
+                                        <input  type="hidden" name="asesor_prospecto" id="asesor_prospecto" value="0">
                                         
-                                        <input  type='button'
-                                                class='btn btn-next btn-fill btn-wd'
-                                                name='next'
-                                                value='Siguiente'
-                                                style="background-color: #4caf50"/>
+                                        <input  type='button' class='btn btn-next btn-fill btn-wd' name='next' value='Siguiente' style="background-color: #4caf50"/>
                                         
-                                        <button type='button'
-                                                class='btn btn-finish btn-fill btn-wd'
-                                                name='finish'
-                                                id="finish"
-                                                value='Finalizar'
-                                                style="background-color: #4caf50">
+                                        <button type='button' class='btn btn-finish btn-fill btn-wd' name='finish' id="finish" value='Finalizar' style="background-color: #4caf50">
                                             Finalizar
                                         </button>
 
-                                        <button type="submit"
-                                                id="submt"
-                                                class="hide">
+                                        <button type="submit" id="submt" class="hide">
                                             Enviar final
                                         </button>
 
@@ -568,9 +517,7 @@
                                             </button>
                                             <br>
                                             <h5 class="modal-title" id="exampleModalLongTitle">
-                                                <center>
                                                     <em>Recuerda que dependiendo del lugar de prospección que selecciones se calculará tu comisión. El valor no podrá ser modificado una vez guardado.</em><br>¿Estás seguro que deseas continuar?
-                                                </center>
                                             </h5>
                                         </div>
                                         <div class="modal-footer"><br><br>

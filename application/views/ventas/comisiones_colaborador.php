@@ -4,12 +4,15 @@
 <body>
     <div class="wrapper">
         <?php
-        if (in_array($this->session->userdata('id_rol'), array(3,7,9))){
-            $this->load->view('template/sidebar');
-
-        }
-        else{
-            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
+        switch ($this->session->userdata('id_rol')) {
+            case '3': // GERENTE
+            case '7': // ASESOR
+            case '9': // COORDINADORmultiple
+                $this->load->view('template/sidebar');
+            break;
+            default: // NO ACCESS
+                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
+            break;
         }
 
         $usuarioid =  $this->session->userdata('id_usuario');
@@ -24,24 +27,14 @@
                 } 
                 else{
                     if($opn_cumplimiento[0]['estatus'] == 1){
-                        $cadena = '<button  type="button" 
-                                            class="btn btn-sky subir_factura_multiple"
-                                            style="box-shadow: none; padding: 7px 25px; border: 1px solid #4382EF; border-radius: 27px; margin: 0;">
-                                        <i class="fa fa-upload" aria-hidden="true"></i> 
-                                        SUBIR FACTURAS
-                                    </button>';
+                        $cadena = '<button type="button" class="btn btn-info subir_factura_multiple" >SUBIR FACTURAS</button>';
                     }
                     else if($opn_cumplimiento[0]['estatus'] == 0){
                         $cadena ='<a href="https://maderascrm.gphsis.com/index.php/Usuarios/configureProfile"> <span class="label label-danger" style="background:orange;">  SIN OPINIÓN DE CUMPLIMIENTO, CLIC AQUI PARA SUBIRLA</span> </a>';
 
                     }
                     else if($opn_cumplimiento[0]['estatus'] == 2){
-                        $cadena = '<button  type="button" 
-                                            class="btn btn-sky subir_factura_multiple"
-                                            style="box-shadow: none; padding: 7px 25px; border: 1px solid #4382EF18; border-radius: 27px; margin: 0;">
-                                        <i class="fa fa-upload" aria-hidden="true"></i> 
-                                        SUBIR FACTURAS
-                                    </button>';
+                        $cadena = '<button type="button" class="btn btn-info subir_factura_multiple" >SUBIR FACTURAS</button>';
                     }
                 }
             } else if ($forma_pago == 5) {
@@ -81,30 +74,23 @@
             </div>
         </div>
 
-        <div class="modal fade modal-alertas" data-backdrop="static" id="solicitud_cp" role="dialog">
+        <div class="modal fade modal-alertas" data-backdrop="static" id="cpModal" role="dialog">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel"><b>Verifica tu información</b></h5>
-                        <p style = "padding: 1rem">
-                            Para poder realizar tu pago, Internomex requiere mantener tu información actualizada, favor de verificar o ingresar tu Código Postal.
-                        </p>
+                        <p style = "padding: 1rem">Para poder realizar tu pago, Internomex requiere mantener tu información actualizada. Por favor verifica o ingresa tu Código Postal. 
+                        <br><br><b>Nota. </b><i>El valor que ingreses debe ser el mismo que viene en tu constancia de situación fiscal.</i></p>
                     </div>
-                    <form id="codigoForm">
-                    <div class="modal-body">
-                        <input  type="text"
-                                id="dato_solicitudcp"
-                                name="dato_solicitudcp"
-                                class="form-control input-gral"
-                                minlength="5"
-                                maxlength="5"
-                                placeholder="Captura tu Código Postal"
-                                required>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" id="codigopostalCancel" class="btn btn-danger btn-simple" data-dismiss="modal" style="display:none" >Close</button>
-                        <button type="submit" id="codigopostalSubmit" class="btn btn-primary">Aceptar</button>
-                    </div>
+                    <form id="cpForm">
+                        <div class="modal-body pt-0">
+                            <input type="number" id="cp" name="cp" class="form-control input-gral m-0"
+                            placeholder="Captura tu código postal" required value=''>
+                            <input type="text" id="nuevoCp" name="nuevoCp" hidden>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" id="codigopostalSubmit" class="btn btn-primary">Aceptar</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -199,7 +185,7 @@
         </div>
 
         <!-- inicia modal subir factura -->
-        <div id="modal_formulario_solicitud_multiple" class="modal" style="position:fixed; top:0; left:0; margin-bottom: 1%;  margin-top: -5%;">
+        <div id="modal_formulario_solicitud_multiple" class="modal" style="position:fixed; top:0; left:0; margin-bottom: 1%; margin-top: -5%;">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -207,20 +193,18 @@
                             <div class="active tab-pane" id="generar_solicitud">
                                 <div class="row">
                                     <div class="col-lg-12">
-                                        <!-- //poner modal -->
                                         <div class="row">
                                             <div class="col-lg-5">
                                                 <div class="fileinput fileinput-new text-center" data-provides="fileinput">
-                                                    <div><br>
+                                                    <div>
+                                                        <br>
                                                         <span class="fileinput-new">Selecciona archivo</span>
                                                         <input type="file" name="xmlfile" id="xmlfile" accept="application/xml">
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-lg-7">
-                                                <center>
-                                                    <button class="btn btn-warning" type="button" id="cargar_xml"><i class="fa fa-upload"></i> CARGAR</button>
-                                                </center>
+                                                <button class="btn btn-warning justify-center" type="button" id="cargar_xml"><i class="fa fa-upload"></i> CARGAR</button>
                                             </div>
                                         </div>
                                         <form id="frmnewsol" method="post" action="#">
@@ -300,8 +284,8 @@
                         <h4 class="card-title"><b>Cargar documento fiscal</b></h4>
                     </div>
                     <form id="EditarPerfilExtranjeroForm"
-                          name="EditarPerfilExtranjeroForm"
-                          method="post">
+                        name="EditarPerfilExtranjeroForm"
+                        method="post">
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-lg-12 text-center">
@@ -321,7 +305,7 @@
                                             <h3 id="total-comision"></h3>
                                         </div>
                                         <div class="col-lg-12"
-                                             id="preview-div">
+                                            id="preview-div">
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -353,15 +337,15 @@
                             <b>II.</b> Número de identificación fiscal, o su equivalente, de quien lo expide.
                         </p>
                         <p>
-                              USA se llama Tax Id o ITIN (Taxpayer Identification Number).
+                            USA se llama Tax Id o ITIN (Taxpayer Identification Number).
                             <br>
-                              Canadá: Tax Id o Business Number.
+                            Canadá: Tax Id o Business Number.
                             <br>
-                              Ecuador: RUC (Registro Único de Contribuyentes).
+                            Ecuador: RUC (Registro Único de Contribuyentes).
                             <br>
-                              Colombia: RUT (Registro Único Tributario).
+                            Colombia: RUT (Registro Único Tributario).
                             <br>
-                              Otros países: el número de registro que se utiliza en su país para el pago de impuesto.
+                            Otros países: el número de registro que se utiliza en su país para el pago de impuesto.
                         </p>
                         <p>
                             <b>III.</b> Lugar y fecha de expedición.
@@ -417,7 +401,6 @@
                                                         <b>Da clic aquí para ir al historial</b>
                                                     </a>
                                                 </p>
-                                                
                                                 <?php
                                                     if($this->session->userdata('forma_pago') == 3){
                                                 ?>
@@ -426,11 +409,8 @@
                                                     Al monto mostrado habrá que descontar el
                                                     <b>impuesto estatal</b> del
                                                 <?php
-
                                                 $sede = $this->session->userdata('id_sede');
-                                                      
                                                 $query = $this->db->query("SELECT * FROM sedes WHERE estatus in (1) AND id_sede = ".$sede."");
-
                                                 foreach ($query->result() as $row){
                                                     $number = $row->impuesto;
                                                     echo '<b>' .number_format($number,2).'%</b> e ISR de acuerdo a las tablas publicadas en el SAT.';
@@ -442,7 +422,6 @@
                                                     ?>
                                                 <p style="color:#0a548b;"><i class="fa fa-info-circle" aria-hidden="true"></i> La cantidad mostrada es menos las deducciones aplicables para el régimen de <b>Remanente Distribuible.</b>
                                                 <?php }?>
-                                    
                                                 <?php if ($this->session->userdata('forma_pago') == 5) { ?>
                                                     <p class="card-title pl-2">Comprobantes fiscales emitidos por residentes en el <b>extranjero</b>
                                                         sin establecimiento permanente en México.
@@ -451,21 +430,10 @@
                                                         </a>
                                                     </p>
                                                 <?php } ?>
-                                                
-                                                <?php if ($this->session->userdata('forma_pago') == 3) { ?>
-                                                    <!-- <p class="card-title pl-2">
-                                                        <a onclick="codigo_consulta()" style="cursor: pointer;">
-                                                            <u>Clic para consultar codigo postal</u>
-                                                        </a>
-                                                    </p> -->
-                                                <?php } ?>
-
-
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
                                                     <div class="row">
-                                                       
                                                         <div class="col-12 col-sm-12 col-md-4 col-lg-4">
                                                             <div class="form-group text-center">
                                                                 <h4 class="title-tot center-align m-0">Saldo sin impuestos:</h4>
@@ -488,27 +456,25 @@
                                             </div>
                                             <div class="material-datatables">
                                                 <div class="form-group">
-                                                    <div class="table-responsive">
-                                                        <table class="table-striped table-hover" id="tabla_nuevas_comisiones" name="tabla_nuevas_comisiones">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th></th>
-                                                                    <th>ID PAGO</th>
-                                                                    <th>PROYECTO</th>
-                                                                    <th>LOTE</th>
-                                                                    <th>PRECIO LOTE</th>
-                                                                    <th>TOTAL COMISIÓN</th>
-                                                                    <th>PAGADO CLIENTE</th>
-                                                                    <th>DISPERSADO</th>
-                                                                    <th>SALDO A COBRAR</th>
-                                                                    <th>% COMISIÓN</th>
-                                                                    <th>DETALLE</th>
-                                                                    <th>ESTATUS</th>
-                                                                    <th>MÁS</th>
-                                                                </tr>
-                                                            </thead>
-                                                        </table>
-                                                    </div>
+                                                    <table class="table-striped table-hover" id="tabla_nuevas_comisiones" name="tabla_nuevas_comisiones">
+                                                        <thead>
+                                                            <tr>
+                                                                <th></th>
+                                                                <th>ID PAGO</th>
+                                                                <th>PROYECTO</th>
+                                                                <th>LOTE</th>
+                                                                <th>PRECIO DEL LOTE</th>
+                                                                <th>TOTAL DE LA COMISIÓN</th>
+                                                                <th>PAGADO DEL CLIENTE</th>
+                                                                <th>DISPERSADO</th>
+                                                                <th>SALDO A COBRAR</th>
+                                                                <th>% COMISIÓN</th>
+                                                                <th>DETALLE</th>
+                                                                <th>ESTATUS</th>
+                                                                <th>MÁS</th>
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
                                                 </div>
                                             </div>
                                         </div>
@@ -535,26 +501,24 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="table-responsive">
-                                                <table class="table-striped table-hover" id="tabla_revision_comisiones" name="tabla_revision_comisiones">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>ID PAGO</th>
-                                                            <th>PROYECTO</th>
-                                                            <th>LOTE</th>
-                                                            <th>PRECIO LOTE</th>
-                                                            <th>TOTAL COMISIÓN</th>
-                                                            <th>PAGADO CLIENTE</th>
-                                                            <th>DISPERSADO</th>
-                                                            <th>SALDO A COBRAR</th>
-                                                            <th>% COMISIÓN</th>
-                                                            <th>DETALLE</th>
-                                                            <th>ESTATUS</th>
-                                                            <th>MÁS</th>
-                                                        </tr>
-                                                    </thead>
-                                                </table>
-                                            </div>
+                                            <table class="table-striped table-hover" id="tabla_revision_comisiones" name="tabla_revision_comisiones">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID PAGO</th>
+                                                        <th>PROYECTO</th>
+                                                        <th>LOTE</th>
+                                                        <th>PRECIO DEL LOTE</th>
+                                                        <th>TOTAL DE LA COMISIÓN</th>
+                                                        <th>PAGADO DEL CLIENTE</th>
+                                                        <th>DISPERSADO</th>
+                                                        <th>SALDO A COBRAR</th>
+                                                        <th>% COMISIÓN</th>
+                                                        <th>DETALLE</th>
+                                                        <th>ESTATUS</th>
+                                                        <th>MÁS</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
                                         </div>
                                         <div class="tab-pane" id="proceso-2">
                                             <div class="encabezadoBox">
@@ -570,7 +534,6 @@
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
                                                     <div class="row">
-                                                         
                                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                             <div class="form-group d-flex justify-center align-center">
                                                                 <h4 class="title-tot center-align m-0">Por pagar sin impuestos:</h4>
@@ -580,26 +543,24 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="table-responsive">
-                                                <table class="table-striped table-hover" id="tabla_pagadas_comisiones" name="tabla_pagadas_comisiones">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>ID PAGO</th>
-                                                            <th>PROYECTO</th>
-                                                            <th>LOTE</th>
-                                                            <th>PRECIO LOTE</th>
-                                                            <th>TOTAL COMISIÓN</th>
-                                                            <th>PAGADO CLIENTE</th>
-                                                            <th>DISPERSADO</th>
-                                                            <th>SALDO A COBRAR</th>
-                                                            <th>% COMISIÓN</th>
-                                                            <th>DETALLE</th>
-                                                            <th>ESTATUS</th>
-                                                            <th>MÁS</th>
-                                                        </tr>
-                                                    </thead>
-                                                </table>
-                                            </div>
+                                            <table class="table-striped table-hover" id="tabla_pagadas_comisiones" name="tabla_pagadas_comisiones">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID PAGO</th>
+                                                        <th>PROYECTO</th>
+                                                        <th>LOTE</th>
+                                                        <th>PRECIO DEL LOTE</th>
+                                                        <th>TOTAL DE LA COMISIÓN</th>
+                                                        <th>PAGADO DEL CLIENTE</th>
+                                                        <th>DISPERSADO</th>
+                                                        <th>SALDO A COBRAR</th>
+                                                        <th>% COMISIÓN</th>
+                                                        <th>DETALLE</th>
+                                                        <th>ESTATUS</th>
+                                                        <th>MÁS</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
                                         </div>
                                         <div class="tab-pane" id="otras-1">
                                             <div class="encabezadoBox">
@@ -615,7 +576,6 @@
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
                                                     <div class="row">
-                                                     
                                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                             <div class="form-group d-flex justify-center align-center">
                                                                 <h4 class="title-tot center-align m-0">Total pausado:</h4>
@@ -625,32 +585,26 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="table-responsive">
-                                                <table class="table-striped table-hover" id="tabla_otras_comisiones" name="tabla_otras_comisiones">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>ID PAGO</th>
-                                                            <th>PROYECTO</th>
-                                                            <th>LOTE</th>
-                                                            <th>PRECIO LOTE</th>
-                                                            <th>TOTAL COMISIÓN</th>
-                                                            <th>PAGADO CLIENTE</th>
-                                                            <th>DISPERSADO</th>
-                                                            <th>SALDO A COBRAR</th>
-                                                            <th>% COMISIÓN</th>
-                                                            <th>DETALLE</th>
-                                                            <th>ESTATUS</th>
-                                                            <th>MÁS</th>
-                                                        </tr>
-                                                    </thead>
-                                                </table>
-                                            </div>
+                                            <table class="table-striped table-hover" id="tabla_otras_comisiones" name="tabla_otras_comisiones">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID PAGO</th>
+                                                        <th>PROYECTO</th>
+                                                        <th>LOTE</th>
+                                                        <th>PRECIO DEL LOTE</th>
+                                                        <th>TOTAL DE LA COMISIÓN</th>
+                                                        <th>PAGADO DEL CLIENTE</th>
+                                                        <th>DISPERSADO</th>
+                                                        <th>SALDO A COBRAR</th>
+                                                        <th>% COMISIÓN</th>
+                                                        <th>DETALLE</th>
+                                                        <th>ESTATUS</th>
+                                                        <th>MÁS</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
                                         </div>
                                         <div class="tab-pane" id="sin_pago_neodata">
-                                            <!-- <div class="encabezadoBox">
-                                                <h3 class="card-title center-align">Estatus comisiones</h3>
-                                                <p class="card-title pl-1">(Comisiones sin pago reflejado en NEODATA)</p>
-                                            </div> -->
                                             <div class="encabezadoBox">
                                                 <p class="card-title pl-1">Comisiones sin pago reflejado en NEODATA y que por ello no se han dispersado ciertos lotes con tus comisiones.</p>
                                             </div>
@@ -660,30 +614,14 @@
                                                         <div class="col-6 col-sm-6 col-md-6 col-lg-6">
                                                             <div class="form-group">
                                                                 <label class="m-0" for="proyecto">Proyecto</label>
-                                                                <select name="proyecto_wp"
-                                                                        id="proyecto_wp"
-                                                                        class="selectpicker select-gral"
-                                                                        data-style="btn btn-second"
-                                                                        data-show-subtext="true"
-                                                                        data-live-search="true"
-                                                                        title="Selecciona una opción"
-                                                                        data-size="7"
-                                                                        required>
+                                                                <select name="proyecto_wp" id="proyecto_wp" class="selectpicker select-gral" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required>
                                                                 </select>
                                                             </div>
                                                         </div>
                                                         <div class="col-6 col-sm-6 col-md-6 col-lg-6">
                                                             <div class="form-group">
                                                                 <label class="m-0" for="proyecto">Condominio</label>
-                                                                <select name="condominio_wp"
-                                                                        id="condominio_wp"
-                                                                        class="selectpicker select-gral"
-                                                                        data-style="btn btn-second"
-                                                                        data-show-subtext="true"
-                                                                        data-live-search="true"
-                                                                        title="Selecciona una opción"
-                                                                        data-size="7"
-                                                                        required>
+                                                                <select name="condominio_wp" id="condominio_wp" class="selectpicker select-gral" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required>
                                                                     <option disabled selected>Selecciona una opción</option>
                                                                 </select>
                                                             </div>
@@ -691,7 +629,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="table-responsive">
+                                            <div class="material-datatables hide" id="boxTablaComisionesSinPago">
                                                 <table class="table-striped table-hover" id="tabla_comisiones_sin_pago" name="tabla_comisiones_sin_pago">
                                                     <thead>
                                                         <tr>
@@ -735,6 +673,7 @@
         Shadowbox.init();
         var forma_pago = <?= $this->session->userdata('forma_pago') ?>;
         var userSede = <?= $this->session->userdata('id_sede') ?>;
+        var fechaServer = '<?php echo date('Y-m-d H:i:s')?>';
     </script>
     <script src="<?=base_url()?>dist/js/controllers/ventas/comisiones_colaborador.js"></script>
 </body>

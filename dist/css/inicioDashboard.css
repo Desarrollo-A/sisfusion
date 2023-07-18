@@ -592,7 +592,7 @@
 .buttons-pdf {
   box-shadow: none;
   padding: 7px 25px;
-  background-color: #f44336 !important;
+  background-color: #f4433618 !important;
   border-radius: 27px;
   margin: 0;
 }
@@ -606,7 +606,7 @@
 }
 
 .buttons-pdf:hover {
-  background-color: #f4433618 !important;
+  background-color: #f44336 !important;
 }
 
 .buttons-pdf:hover i {
@@ -899,13 +899,13 @@
 }
 
 .btn-sky {
-  color: #00bcd4;
+  color: #0067d4;
   border: none;
-  background-color: #00bcd418;
+  background-color: #0067d418;
 }
 
 .btn-sky:hover {
-  background-color: #00bcd4;
+  background-color: #0067d4;
   color: #ffffff !important;
 }
 
@@ -976,7 +976,7 @@
 .lbl-cerulean {
   color: #00A0FF;
   border: none;
-  background-color: #00A0FF;
+  background-color: #00A0FF18;
 }
 
 .lbl-deepGray {
@@ -991,8 +991,9 @@
 }
 
 .lbl-gray {
-  background-color: #4e4e4e;
-  color: #ffffff;
+  color: #4e4e4e;
+  border: none;
+  background-color: #4e4e4e18;
 }
 
 .lbl-grayDark {
@@ -1016,7 +1017,7 @@
 .lbl-oceanGreen {
   color: #4BBC8E;
   border: none;
-  background-color: #4BBC8E;
+  background-color: #4BBC8E18;
 }
 
 .lbl-orangeYellow {
@@ -1032,9 +1033,9 @@
 }
 
 .lbl-sky {
-  color: #00bcd4;
+  color: #0067d4;
   border: none;
-  background-color: #00bcd418;
+  background-color: #0067d418;
 }
 
 .lbl-violetBoots {
@@ -1071,6 +1072,30 @@
   color: #B7950B;
   border: none;
   background-color: #F9F87118;
+}
+
+.lbl-lightBlue {
+  color: #1B4F72;
+  border: none;
+  background: #AED6F1;
+}
+
+.lbl-peach {
+  color: #78281F;
+  border: none;
+  background: #F5B7B1;
+}
+
+.lbl-purple {
+  color: #512E5F;
+  border: none;
+  background: #D7BDE2;
+}
+
+.lbl-aqua {
+  color: #ffffff;
+  border: none;
+  background: #11DFC6;
 }
 
 /* END Etiquetas */
@@ -1113,10 +1138,17 @@
   color: #929292;
   box-shadow: 0px 4px 4px RGB(0, 0, 0, 0.1);
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .file-gph .upload-btn:hover {
   box-shadow: none;
+}
+
+.file-gph .upload-btn span {
+  margin: 5px;
 }
 
 .file-gph .file-name {
@@ -1414,13 +1446,13 @@ Etiqueta para etiquetas dentro de la DataTable en vistas:
 .lbl-dark-blue {
   color: #1B4F72;
   border: none;
-  background-color: #1B4F7250;
+  background-color: #1B4F7218;
 }
 
 .lbl-dark-cyan {
   color: #008c76;
   border: none;
-  background-color: #008c7650;
+  background-color: #008c7618;
 }
 
 /************************************************************/
@@ -1440,6 +1472,70 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
   color: #880E4F;
   border: none;
   background-color: #880E4F18;
+}
+
+.timeline-3 {
+  list-style-type: none;
+  position: relative;
+}
+
+.timeline-3::before {
+  content: " ";
+  background: #d4d9df;
+  display: inline-block;
+  position: absolute;
+  left: 29px;
+  width: 2px;
+  height: 100%;
+  z-index: 400;
+}
+
+.timeline-3 > li {
+  margin: 20px 0;
+  padding-left: 20px;
+}
+
+.timeline-3 > li::before {
+  content: " ";
+  background: white;
+  display: inline-block;
+  position: absolute;
+  border-radius: 50%;
+  border: 3px solid #0a548b;
+  left: 20px;
+  width: 20px;
+  height: 20px;
+  z-index: 400;
+}
+
+/* CHANGE ICONO*/
+.wrapper .boxTabla p {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.wrapper .boxTabla.active p {
+  white-space: normal;
+  overflow: visible;
+}
+
+.wrapper .boxTabla .less {
+  display: none;
+}
+
+.wrapper .boxTabla.active .less {
+  display: inline;
+}
+
+.wrapper .boxTabla.active .more {
+  display: none;
+}
+
+#calendarioDay {
+  width: 170px;
+  outline: none;
+  border: 1px solid #aaa;
+  padding: 6px 28px;
 }
 
 #inicio .card {

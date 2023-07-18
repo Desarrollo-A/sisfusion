@@ -28,12 +28,95 @@
                 </div>
             </div>
         </div>
+
+        <!-- INICIO Modal editar monto internomex -->
+        <div class="modal fade" id="editMontoInternomex" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <i class="material-icons">clear</i>
+                        </button>
+                        <h4 class="modal-title">Monto internomex</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group label-floating div_name">
+                                        <input id="monto" name="monto"  onchange="validateInputs(this);" type="text" class="form-control input-gral" required>
+                                    </div>
+                                    <div class="form-group label-floating div_name" hidden>
+                                        <input id="id_pago" name="id_pago"  onchange="validateInputs(this);" type="text" class="form-control input-gral" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 d-flex justify-end">
+                                    <button type="button" class="btn btn-danger btn-simple mt-1" data-dismiss="modal">Cancelar
+                                    </button>
+                                    <button id="aceptarMonto" name="aceptarMonto" class="btn btn-primary mt-1">Aceptar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- FIN Modal editar monto internomex -->
+
+
+        <!-- INICIO Modal para bitácora -->
+        <div class="modal fade" id="changesBitacora" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-hidden="true">
+                            <i class="material-icons" onclick="cleanComments()">clear</i>
+                        </button>
+                        <h4 class="modal-title">Consulta información</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div role="tabpanel">
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs" role="tablist"
+                                style="background: #003d82;">
+                                <li role="presentation" class="active">
+                                    <a href="#changelogUsersTab" aria-controls="changelogUsersTab" role="tab" data-toggle="tab">Bitácora de cambios</a>
+                                </li>
+                            </ul>
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active"
+                                    id="changelogUsersTab">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="card card-plain">
+                                                <div class="card-content">
+                                                    <ul class="timeline timeline-simple" id="changelogUsers"></ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">
+                            Aceptar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- END Modals -->
 
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
                                 <i class="fas fa-coins fa-2x"></i>
@@ -45,12 +128,14 @@
                                         <p class="center-align">A través de este panel podrás descargar una plantilla que agrupara por comisionista los n pagos enviados para cobro. De los cuales, se tendrá que ingresar el monto final pagado.</p>
                                     <?php } else { ?>
                                         <h3 class="card-title center-align">Consulta pago final</h3>
-                                        <p class="center-align">A través de este panel podrás consultar el monto final pagado en cada corte de comisiones. Por mes se guardará un solo registro, el módulo precargará la información encontrada en el año corriente. En caso de querer consultar una fecha en particular, podrás hacerlo a través de los filtros situados en la parte superior derecha (a partir del corte del mes de diciembre del 2022 se podrá acceder a esta información).</p>
-                                    <?php } ?>
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <h7>A través de este panel podrás consultar el monto final pagado en cada corte de comisiones. Por mes se guardará un solo registro, el módulo precargará la información encontrada en el año corriente. En caso de querer consultar una fecha en particular, podrás hacerlo a través de los filtros situados en la parte superior derecha (a partir del corte del mes de diciembre del 2022 se podrá acceder a esta información).</h7>
+                                        </div>
+                                        <?php } ?>
 
                                     <?php if($this->session->userdata('id_rol') == 31){?>
                                         <div class="row aligned-row pb-3" id="tipo_pago_selector">
-                                            <div class="form-group col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                            <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                 <label>Tipo de pago*</label>
                                                 <select class="selectpicker select-gral m-0" title="Seleccione una opción"
                                                         id="tipo_accion" onchange="validaTipoPago(this.value)">
@@ -62,7 +147,7 @@
                                     <?php }?>
 
                                     <div class="row aligned-row">
-                                        <div class="form-group col col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                        <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                             <div class="radio_container w-100">
                                                 <?php if ($this->session->userdata('id_rol') == 31) { ?>
                                                     <input class="d-none generate" type="radio" disabled="true" id="one" checked>
@@ -77,7 +162,14 @@
                                                 <?php } ?>
                                             </div>
                                         </div>
-                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4 d-flex align-center justify-evenly  row-load hide ">
+                                        <div class=" form-group d-flex col-xs-12 col-sm-6 col-md-6 col-lg-6 align-center justify-evenly  box-table hide">
+                                            <input type="text" class="form-control datepicker text-center pl-1 beginDate box-table hide" id="beginDate" />
+                                            <input type="text" class="form-control datepicker text-center pl-1 endDate box-table hide" id="endDate" />
+                                            <button class="btn btn-success btn-round btn-fab btn-fab-mini searchByDateRange box-table hide" name="searchByDateRange" id="searchByDateRange">
+                                                <span class="material-icons update-dataTable">search</span>
+                                            </button>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 d-flex align-center justify-evenly  row-load hide ">
                                             <button class="btn-rounded btn-s-greenLight row-load hide " id="downloadFile" name="downloadFile" title="Download">
                                                 <i class="fas fa-download"></i>
                                             </button> <!-- DOWNLOAD -->
@@ -85,16 +177,10 @@
                                                 <i class="fas fa-upload"></i>
                                             </button> <!-- UPLOAD -->
                                         </div>
-                                        <div class=" form-group d-flex col col-xs-12 col-sm-12 col-md-4 col-lg-4 align-center justify-evenly  box-table hide">
-                                            <input type="text" class="form-control datepicker text-center pl-1 beginDate box-table hide" id="beginDate" />
-                                            <input type="text" class="form-control datepicker text-center pl-1 endDate box-table hide" id="endDate" />
-                                            <button class="btn btn-success btn-round btn-fab btn-fab-mini searchByDateRange box-table hide" name="searchByDateRange" id="searchByDateRange">
-                                                <span class="material-icons update-dataTable">search</span>
-                                            </button>
-                                        </div>
+                                        
                                     </div>
                                     <div class="row pt-2 hide">
-                                        <div class="col col-xs-12 col-sm-12 col-md-10 col-lg-10">
+                                        <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
                                             <div class="form-group label-floating select-is-empty m-0 p-0">
                                                 <select id="columns" name="columns" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona las columnas que se requieran" data-size="10" required multiple>
                                                 </select>
@@ -102,20 +188,19 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="table-responsive box-table hide">
+                                <div class="box-table hide">
                                     <table id="tableLotificacion" name="tableLotificacion" class="table-striped table-hover">
                                         <thead>
                                             <tr>
-                                                <th>ID REGISTRO</th>
+                                                <th>ID DEL REGISTRO</th>
                                                 <th>NOMBRE</th>
                                                 <th>ROL</th>
                                                 <th>FORMA DE PAGO</th>
                                                 <th>SEDE</th>
                                                 <th>MONTO SIN DESCUENTO</th>
                                                 <th>MONTO CON DESCUENTO</th>
-                                                <th>MONTO INTERNOMEX</th>
-                                                <th>FECHA CAPTURA REGISTRO</th>
-                                                <th>TIPO PAGO</th>
+                                                <th>MONTO DE INTERNOMEX</th>
+                                                <th>FECHA DE CAPTURA DEL REGISTRO</th>
                                                 <th>COMENTARIO</th>
                                                 <th>ACCIONES</th>
                                             </tr>
@@ -128,111 +213,13 @@
                 </div>
             </div>
         </div>
-
-        <!-- INICIO Modal editar monto internomex -->
-        <div class="modal fade" id="editMontoInternomex" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            <i class="material-icons">clear</i>
-                        </button>
-                        <h4 class="modal-title">Monto internomex</h4>
-                    </div>
-                    <!-- <form id="editMontoForm" name="editMontoForm" method="post"> -->
-                        <div class="modal-body">
-                            <div class="container-fluid">
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                    <!-- <label class="control-label"><span class="isRequired">*</span>Monto: </label> -->
-                                        <div class="form-group label-floating div_name">
-                                            <input id="monto" name="monto"  onchange="validateInputs(this);" type="text" class="form-control input-gral" required>
-                                        </div>
-                                        <div class="form-group label-floating div_name" hidden>
-                                            <input id="id_pago" name="id_pago"  onchange="validateInputs(this);" type="text" class="form-control input-gral" required>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12 d-flex justify-end">
-                                        <button type="button" class="btn btn-danger btn-simple mt-1" data-dismiss="modal">Cancelar
-                                        </button>
-                                        <button id="aceptarMonto" name="aceptarMonto" class="btn btn-primary mt-1">Aceptar</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    <!-- </form> -->
-                </div>
-            </div>
-        </div>
-        <!-- FIN Modal editar monto internomex -->
-
-
-        <!-- INICIO Modal para bitácora -->
-        <div class="modal fade" id="changesBitacora" tabindex="-1" role="dialog"
-                                        aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static"
-                                        data-keyboard="false">
-                                        <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                            aria-hidden="true">
-                                                        <i class="material-icons" onclick="cleanComments()">clear</i>
-                                                    </button>
-                                                    <h4 class="modal-title">Consulta información</h4>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div role="tabpanel">
-                                                        <!-- Nav tabs -->
-                                                        <ul class="nav nav-tabs" role="tablist"
-                                                            style="background: #003d82;">
-                                                            <li role="presentation" class="active">
-                                                                <a href="#changelogUsersTab" aria-controls="changelogUsersTab" role="tab" data-toggle="tab">Bitácora de cambios</a>
-                                                            </li>
-                                                        </ul>
-                                                        <!-- Tab panes -->
-                                                        <div class="tab-content">
-                                                            <div role="tabpanel" class="tab-pane active"
-                                                                id="changelogUsersTab">
-                                                                <div class="row">
-                                                                    <div class="col-md-12">
-                                                                        <div class="card card-plain">
-                                                                            <div class="card-content">
-                                                                                <ul class="timeline timeline-simple" id="changelogUsers"></ul>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-primary" data-dismiss="modal">
-                                                        Aceptar
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-        <!-- INICIO Modal para bitácora -->
         <?php $this->load->view('template/footer_legend'); ?>
     </div>
-
     </div>
     </div>
 
     <?php $this->load->view('template/footer'); ?>
     <!--DATATABLE BUTTONS DATA EXPORT-->
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-    <!--<script type="text/javascript" src="//unpkg.com/xlsx/dist/xlsx.full.min.js"></script>-->
     <script type="text/javascript" src="<?= base_url() ?>dist/js/xlsx/xlsx.full.min.js"></script>
     <script src="<?= base_url() ?>dist/js/es.js"></script>
     <!-- DateTimePicker Plugin -->

@@ -8,7 +8,7 @@ class Postventa extends CI_Controller
     {
         parent::__construct();
         $this->load->model(array('Postventa_model', 'General_model', 'Contraloria_model', 'asesor/Asesor_model'));
-        $this->load->library(array('session', 'form_validation', 'Jwt_actions','formatter', 'phpmailer_lib'));
+        $this->load->library(array('session', 'form_validation', 'Jwt_actions','formatter', 'email'));
         $this->jwt_actions->authorize('2278',$_SERVER['HTTP_HOST']);
         $this->validateSession();
         date_default_timezone_set('America/Mexico_City');
@@ -582,30 +582,29 @@ class Postventa extends CI_Controller
     public function uploadFile()
     {
         $file = $_FILES["uploadedDocument"];
-        $idSolicitud = $this->input->post('idSolicitud');
-        $documentType = $this->input->post('documentType');
-        $presupuestoType = null;
-        $idPresupuesto = null;
-        $idNxS = null;
-        if( $documentType == 12){
-            $presupuestoType = $this->input->post('presupuestoType');
-            $idPresupuesto = $this->input->post('idPresupuesto');
-            $idNxS = $this->input->post('idNxS');
-        }
-        $documentName = $this->Postventa_model->generateFilename($idSolicitud, $documentType)->row();
-        $documentInfo = $documentName;
-        if($documentType == 12){
-            $documentName = $documentName->fileName . '.' . $presupuestoType . '.' . substr(strrchr($_FILES["uploadedDocument"]["name"], '.'), 1);
-        }else{
-            /*if($documentInfo->estatus == 22){
-
+        if($_FILES["uploadedDocument"]["size"] <= 50000000){
+            $idSolicitud = $this->input->post('idSolicitud');
+            $documentType = $this->input->post('documentType');
+            $presupuestoType = null;
+            $idPresupuesto = null;
+            $idNxS = null;
+            if( $documentType == 12){
+                $presupuestoType = $this->input->post('presupuestoType');
+                $idPresupuesto = $this->input->post('idPresupuesto');
+                $idNxS = $this->input->post('idNxS');
+            }
+            $documentName = $this->Postventa_model->generateFilename($idSolicitud, $documentType)->row();
+            $documentInfo = $documentName;
+            if($documentType == 12){
+                $documentName = $documentName->fileName . '.' . $presupuestoType . '.' . substr(strrchr($_FILES["uploadedDocument"]["name"], '.'), 1);
             }else{
-
-            }*/
-            $documentName = $documentName->fileName . '.' . substr(strrchr($_FILES["uploadedDocument"]["name"], '.'), 1);
+                $documentName = $documentName->fileName . '.' . substr(strrchr($_FILES["uploadedDocument"]["name"], '.'), 1);
+            }
+            $folder = $this->getFolderFile($documentType);
+            $this->updateDocumentBranch($file, $folder, $documentName, $idSolicitud, $documentType, $documentInfo->expediente, $documentInfo->idDocumento, $presupuestoType, $documentInfo->estatus_validacion, $idPresupuesto, $idNxS);
+        }else{
+            echo json_encode(2);
         }
-        $folder = $this->getFolderFile($documentType);
-        $this->updateDocumentBranch($file, $folder, $documentName, $idSolicitud, $documentType, $documentInfo->expediente, $documentInfo->idDocumento, $presupuestoType, $documentInfo->estatus_validacion, $idPresupuesto, $idNxS);
     }
 
     public function uploadFile2()
@@ -895,6 +894,16 @@ class Postventa extends CI_Controller
     {
         $idSolicitud = $this->input->post('idSolicitud');
         $data = $this->Postventa_model->getBudgetInfo($idSolicitud)->row();
+        $data->copropietarios = $this->Postventa_model->getCopropietarios($idSolicitud);
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
+    public function borrarCopropietario()
+    {
+        $idCopropietario = $this->input->post('idCopropietario');
+        $data = $this->Postventa_model->borrarCopropietario($idCopropietario);
         if ($data != null)
             echo json_encode($data);
         else
@@ -937,6 +946,33 @@ class Postventa extends CI_Controller
             $updateData['id_notaria'] = 0;
             $updateData['bandera_notaria'] = 1;
         }
+        $insertData = array();
+        $commonData = array();
+        $updateArrayData = [];
+        if($data['indexCo'] != 0){
+            for ($i = 0; $i < $data['indexCo']; $i++) {
+                if(isset($data['copropietario_'.$i])){
+                    $commonData = array(
+                        "id_solicitud" => (int)$id_solicitud,
+                        "nombre" => $data['copropietario_'.$i],
+                        "estatus" => (int)1,
+                        "creado_por" => (int)$this->session->userdata('id_usuario'),
+                        "fecha_creacion" => date("Y-m-d H:i:s"),
+                        "fecha_modificacion" => date("Y-m-d H:i:s")
+                    );
+                    array_push($insertData, $commonData);
+                }
+                if(isset($data['copropietario_Update_'.$i])){
+                        $updateArrayData[] = array(
+                            'nombre' => $data["copropietario_Update_".$i],
+                            'idCopropietario' => $data["id_copropietario_".$i],
+                        ); 
+                }
+              }
+              count($insertData) > 0 ? $this->General_model->insertBatch("copropietariosEscritura", $insertData) : '';
+             count($updateArrayData) > 0 ? $this->General_model->updateBatch("copropietariosEscritura", $updateArrayData, "idCopropietario") : '';
+        }
+
 
         $data = $this->Postventa_model->updatePresupuesto($updateData, $id_solicitud);
         if ($data != null)
@@ -970,20 +1006,20 @@ class Postventa extends CI_Controller
         $data = $this->Postventa_model->getInfoNotaria($idSolicitud)->result_array();
         $info = $this->Postventa_model->getInfoSolicitud($idSolicitud)->row();
 
-        $this->load->library('email');
         $mail = $this->email;
-        $mail->from('noreply@ciudadmaderas.com', 'Ciudad Maderas');
-        $mail->to('programador.analista18@ciudadmaderas.com');
-        $mail->Subject(utf8_decode("Expediente Cliente"));
+
         foreach ($data as $row) {
             $folder = $this->getFolderFile($row['tipo_documento']);
-            // print_r($folder.$row['expediente']);
-            // print_r(' / ');
-            $this->email->attach($folder . $row['expediente']);
+            $mail->attach($folder . $row['expediente']);
         }
-        $mail->message('Buen día, se anexa documentación de completa para proceder con escrituración como compraventa del lote citado  al rubro a nombre de ' . $info->nombre_escrituras . ' existe dueño beneficiario, es la señora _____ pido de favor, en su caso, actualizar la cotizacion antes de  la firma, saludos cordiales.');
+
+        $mail->initialize()
+            ->from('Ciudad Maderas')
+            ->to('tester.ti2@ciudadmaderas.com')
+            ->subject('Expediente cliente')
+            ->view("<h3>Buen día, se anexa documentación de completa para proceder con escrituración como compraventa del lote citado  al rubro a nombre de $info->nombre_escrituras existe dueño beneficiario, es la señora _____ pido de favor, en su caso, actualizar la cotizacion antes de  la firma, saludos cordiales.</h3>");
+
         $response = $mail->send();
-        // echo $this->email->print_debugger();
 
         echo json_encode($response);
     }
@@ -992,15 +1028,15 @@ class Postventa extends CI_Controller
     {
         $idSolicitud = $_POST['idSolicitud'];
         $data = $this->Postventa_model->getInfoSolicitud($idSolicitud)->row();
-        $this->load->library('email');
-        $mail = $this->email;
-        $mail->from('noreply@ciudadmaderas.com', 'Ciudad Maderas');
-        $mail->to('programador.analista18@ciudadmaderas.com');
-        $mail->Subject(utf8_decode("Fecha Propuesta"));
-        $mail->message('buenas tardes la fecha propuesta es: ' . $data->fechaFirma);
-        $response = $mail->send();
 
-        echo json_encode($response);
+        $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to('tester.ti2@ciudadmaderas.com')
+            ->subject('Fecha propuesta')
+            ->view("<h3>Buen día.</h3><p>La fecha propuesta es: $data->fechaFirma</p>");
+
+        echo json_encode($this->email->send());
     }
 
     public function presupuestoPDF($data)
@@ -1102,7 +1138,7 @@ class Postventa extends CI_Controller
                                                     <div>Superficie:</div>
                                                 </td>
                                                 <td style="border: 1px solid #333;width: 50%;text-align: initial; display:flex; align-items: center;">
-                                                    <div style ="width: 100%;border: 1px solid #F1F4FF;">' . $data->superficie . '</div>
+                                                    <div style ="width: 100%;border: 1px solid #F1F4FF;">' . number_format($data->superficie, 2, '.', ',') . '</div>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -1195,8 +1231,6 @@ class Postventa extends CI_Controller
         $idNotaria = $_POST['notaria'];
         $idValuador = $_POST['valuador'];
 
-        $this->load->library('email');
-        $mail = $this->email;
         $insert = $this->Postventa_model->insertNotariaValuador($idNotaria, $idValuador, $idSolicitud);
         $data = $this->Postventa_model->checkBudgetInfo($idSolicitud)->row();
 
@@ -1206,14 +1240,15 @@ class Postventa extends CI_Controller
         //$data->correoV correos del valuador
         $this->presupuestoPDF($data);
 
-        $mail->from('noreply@ciudadmaderas.com', 'Ciudad Maderas');
-        $mail->to('programador.analista18@ciudadmaderas.com');
-        $mail->Subject(utf8_decode("Solicitud de presupuesto y valores"));
-        $mail->message('Buen dia me apoyan con el pre-avaluo con valor actual y referido  del lote que se menciona en la tabla que se anexa ?');
-        $this->email->attach(__DIR__ . "/../../static/documentos/postventa/escrituracion/SOLICITUD_PRESUPUESTO/".$documentName->expediente);
+        $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to('programador.analista18@ciudadmaderas.com')
+            ->subject('Solicitud de presupuesto y valores')
+            ->attach(__DIR__ . "/../../static/documentos/postventa/escrituracion/SOLICITUD_PRESUPUESTO/".$documentName->expediente)
+            ->view('<h3>Buen dia</h3><p>Me apoyan con el pre-avaluo con valor actual y referido  del lote que se menciona en la tabla que se anexa</p>');
 
-        $response = $mail->send();
-        // echo $this->email->print_debugger();
+        $response = $this->email->send();
 
         echo json_encode($response);
     }
@@ -1221,18 +1256,16 @@ class Postventa extends CI_Controller
     public function presupuestoCliente()
     {
         $idSolicitud = $_POST['idSolicitud'];
-        $this->load->library('email');
-        $mail = $this->email;
-        $data = $this->Postventa_model->checkBudgetInfo($idSolicitud)->row();
-        $mail->from('noreply@ciudadmaderas.com', 'Ciudad Maderas');
-        $mail->to('programador.analista18@ciudadmaderas.com');
-        $mail->Subject(utf8_decode("Presupuesto escrituracion"));
-        // $mail->message('');
-
         $doc = $this->getFileNameByDoctype($idSolicitud, 12);
-        $this->email->attach(__DIR__ . "/../../static/documentos/postventa/escrituracion/PRESUPUESTO/" . $doc->expediente);
 
-        $response = $mail->send();
+        $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to('tester.ti2@ciudadmaderas.com')
+            ->subject('Presupuesto escrituración')
+            ->attach(__DIR__ . "/../../static/documentos/postventa/escrituracion/PRESUPUESTO/" . $doc->expediente);
+
+        $response = $this->email->send();
 
         echo json_encode($response);
     }
@@ -1267,6 +1300,7 @@ class Postventa extends CI_Controller
         $pdf->setPageMark();
 
         $data = $this->Postventa_model->checkBudgetInfo($idSolicitud)->row();
+        $copropietarios = $this->Postventa_model->getCopropietarios($idSolicitud);
 
 
         $html = '
@@ -1325,7 +1359,7 @@ class Postventa extends CI_Controller
                                                 
                                                 <td style="font-size: 1em;">
                                                     <b>Superficie:</b><br>
-                                                    ' . $data->superficie . '
+                                                    ' . number_format($data->superficie, 2, '.', ',') . '
                                                 </td>
                                                 <td style="font-size: 1em;">
                                                     <b>Valor de operación de contrato</b><br>
@@ -1343,7 +1377,7 @@ class Postventa extends CI_Controller
                                             <tr>
                                                 <td style="font-size: 1em;">
                                                     <b>Fecha de contrato:</b><br>
-                                                    ' . $data->fecha_contrato . '
+                                                    ' . date("d-m-Y", strtotime($data->fecha_contrato)) . '
                                                 </td>
                                                 <td style="font-size: 1em;">
                                                 <b>Motivo:</b><br>
@@ -1374,6 +1408,28 @@ class Postventa extends CI_Controller
                                                
                                         </table>
                                     </div>';
+                                            if(count($copropietarios) > 0){
+                                               
+                                                    $html .= '
+                                                    <div class="row">                
+                                                        <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-align: center;" width="690">
+                                                            <tr> ';
+                                                        for ($i=0; $i < count($copropietarios); $i++) { 
+                                                            $nombreCo = $copropietarios[$i]['nombre'];
+                                                            $num = $i +1;
+                                                       $html .='<td style="font-size: 1em;">
+                                                                    <b>Nombre del copropietario '.$num.' :</b><br>
+                                                                    ' . $nombreCo . '
+                                                                </td>
+                                                                ';
+                                                        }
+                                                           $html .=' </tr>
+                                                        </table>
+                                                    </div>
+                                                    ';
+                                                
+                                               
+                                            }
                                             if($data->cliente_anterior == 1){
                                                 $html .= '
                                                 <div class="row">                
@@ -1571,15 +1627,14 @@ class Postventa extends CI_Controller
     {
         $idSolicitud = $_POST['idSolicitud'];
         $observaciones = $_POST['observaciones'];
-        
-        $this->load->library('email');
-        $mail = $this->email;
-        $mail->from('noreply@ciudadmaderas.com', 'Ciudad Maderas');
-        $mail->to('programador.analista21@ciudadmaderas.com');
-        $mail->Subject(utf8_decode("Observaciones Notaria"));
-        $mail->message('Buen día! Las observaciones que la notaria envío sobre la solicitud: ' . $idSolicitud . ' son: ' . $observaciones);
-        $response = $mail->send();
-        echo json_encode($response);
+
+        $this->email
+            ->from('Ciudad Maderas')
+            ->to('programador.analista21@ciudadmaderas.com')
+            ->subject('Observaciones Notaria')
+            ->view("<h3>Las observaciones que la notaría envió sobre la solicitud: $idSolicitud son: $observaciones</h3>");
+
+        echo json_encode($this->email->send());
     }
 
     public function saveEstatusLote()
@@ -1651,14 +1706,22 @@ class Postventa extends CI_Controller
         //var_dump($data);
         for ($i = 0; $i < count($data); $i++) {
             $a = 0;
+            $dias = $data[$i]['dias_vencimiento'];
+            $fechados = explode(" ",$data[$i]['fechados']);
+            $data[$i]['fecha_creacion'] = date("Y-m-d",strtotime($fechados[0]."+ ".$dias." days")) . " ".$fechados[1]; ; 
+            
             if ( $data[$i]['tiempo'] != 0 && $data[$i]['tiempo'] != null){
                 $startDate = $data[$i]['fecha_creacion'];
-                $endDate = ( $i+1 < count($data) ) ? $data[$i+1]['fecha_creacion'] : date('m/d/Y h:i:s a', time());
+                $endDate = ( $i+1 < count($data) ) ? $data[$i+1]['fecha_creacion'] : date('Y-m-d h:i:s');
 
-
-                $result = $this->getWorkingDays($startDate, $endDate, $data[$i]['tiempo']);
-                $data[$i]['atrasado'] = $result['atrasado'];
-                $data[$i]['diferencia'] = $result['diferencia'];
+                //$result = $this->getWorkingDays($startDate, $endDate, $data[$i]['tiempo']);
+                if($data[$i]['dias_vencimiento'] >= $data[$i]['dias']){
+                    $data[$i]['atrasado'] = "EN TIEMPO";
+                    $data[$i]['diferencia'] = $data[$i]['tiempo'];
+                }else{
+                    $data[$i]['atrasado'] = "ATRASADO";
+                    $data[$i]['diferencia'] = $data[$i]['tiempo'];
+                }
             }
             else{
                 $data[$i]['atrasado'] = "EN TIEMPO";
@@ -1767,38 +1830,116 @@ class Postventa extends CI_Controller
         else
             echo json_encode(array());
     }
-
+    function getWorkingDays2($startDate, $endDate, $tiempo){
+        $dataTime=[];
+        $stop_date = date('Y-m-d H:i:s', strtotime($startDate . ' +'.$tiempo.' day'));
+        echo $begin = strtotime($startDate);
+        echo "<br>";
+        $end   = strtotime($endDate);
+        echo $stop = strtotime($stop_date);
+        echo "<br>";
+        if ($begin > $stop) {
+            //echo 1111;
+            return 0;
+        } else {
+            $no_days  = 0;
+            $weekends = 0;
+            while ($begin < $stop) {
+                $no_days++; // no of days in the given interval
+               echo $what_day = date("N", $begin);
+                if ($what_day > 5) { // 6 and 7 are weekend days
+                    $weekends++;
+                };
+                $begin += 86400; // +1 day
+            };
+             $weekends;
+            $working_days = $no_days - $weekends;
+    
+            $dt = new DateTime($startDate);
+            $dt2 = new DateTime($stop_date);    
+            $timeStart = $dt->format('Y-m-d h:i:s');
+            $timeEnd = $dt2->format('Y-m-d h:i:s');
+            $st_time    =   strtotime($timeStart);
+            $end_time   =   strtotime($timeEnd);
+    
+            if( $end_time <= $st_time ){
+                $dataTime['atrasado'] = "En tiempo";
+                $dataTime['diferencia'] = 0;
+    
+                return $dataTime;
+            }
+            else{
+               // echo 121;
+                $dataTime['atrasado'] = "Atrasado";
+              $dataTime['diferencia'] = ( $working_days != 0 ) ? $working_days - 1 : $working_days;
+    
+                return $dataTime;
+            }        
+        }
+    }
 function getWorkingDays($startDate, $endDate, $tiempo){
+    $startDate;
+    //echo "<br>";
+     $endDate;
+    //echo "<br>";
+     $tiempo;
+    //echo "<br>";
+   // echo "<br>";
     $dataTime=[];
-    $stop_date = date('Y-m-d H:i:s', strtotime($startDate . ' +'.$tiempo.' day'));
+     $stop_date = date('Y-m-d H:i:s', strtotime($startDate . ' +'.$tiempo.' day'));
+    //"<br>";
     $begin = strtotime($startDate);
     $end   = strtotime($endDate);
     $stop = strtotime($stop_date);
     $validDays = 0;
 
         $dt = new DateTime($startDate);
-        $dt2 = new DateTime($stop_date);    
-        $timeStart = $dt->format('h:i:s A');
-        $timeEnd = $dt2->format('h:i:s A');
+       // var_dump($dt);
+        //echo "<br>";
+        $dt2 = new DateTime($stop_date); 
+        //var_dump($dt2);
+        //echo "<br>";   
+         $timeStart = $dt->format('Y-m-d h:i:s');
+        //echo $dt->date;
+        //echo $dt["date"];
+       // echo "<br>";
+       $timeEnd = $dt2->format('Y-m-d H:i:s');
+      // echo $dt2["date"];
+      //  echo "<br>";
         $st_time    =   strtotime($timeStart);
+    //   echo "<br>";
         $end_time   =   strtotime($timeEnd);
+       //echo "<br>";
+       //echo "-----------------";
 
+       $no_days  = 0;
+            $weekends = 0;
+            while ($st_time <= $stop) {
+                $no_days++; // no of days in the given interval
+                $what_day = date("N", $st_time);
+                if ($what_day > 5) { // 6 and 7 are weekend days
+                    $weekends++;
+                };
+                $st_time  += 86400; // +1 day
+            };
+             $weekends;
+            $working_days = $no_days - $weekends;
         if( $end_time <= $st_time ){
             $dataTime['atrasado'] = "EN TIEMPO";
             $dataTime['diferencia'] = 0;
-
+             $dataTime;
             return $dataTime;
         }
         else{
             $dataTime['atrasado'] = "ATRASADO";
             $dataTime['diferencia'] = ( $working_days != 0 ) ? $working_days - 1 : $working_days;
-
+             $dataTime;
             return $dataTime;
         }        
     // while ($begin < $stop) {
         
     // };
-    $working_days = $no_days - $weekends;
+    /*$working_days = $no_days - $weekends;
 
     $dt = new DateTime($startDate);
     $dt2 = new DateTime($stop_date);    
@@ -1818,7 +1959,7 @@ function getWorkingDays($startDate, $endDate, $tiempo){
         $dataTime['diferencia'] = ( $working_days != 0 ) ? $working_days - 1 : $working_days;
 
         return $dataTime;
-    }        
+    }*/        
 }
 
 function getNotariasXUsuario(){
@@ -2130,8 +2271,12 @@ function saveNotaria(){
             case '17': //CONTRALORIA 
                 $columns = array(
                     [
-                        "title" => 'ID',
+                        "title" => 'Id solicitud',
                         "data" => 'id_solicitud'
+                    ],
+                    [
+                        "title" => 'Referencia',
+                        "data" => 'referencia'
                     ],
                     [
                         "title" => 'Lote',
@@ -2147,7 +2292,11 @@ function saveNotaria(){
                     ],
                     [
                         "title" => 'Cliente',
-                        "data" => 'nombre'
+                        "data" => 'cliente'
+                    ],
+                    [
+                        "title" => 'Nombre a escriturar',
+                        "data" => 'nombre_a_escriturar'
                     ],
                     [
                         "title" => 'Estatus',
@@ -2167,7 +2316,11 @@ function saveNotaria(){
                     ],
                     [
                         "title" => 'Fecha del estatus',
-                        "data" => 'fecha_creacion'
+                        "data" => 'fecha_ultima'
+                    ],
+                    [
+                        "title" => 'Ultimo comentario',
+                        "data" => 'descripcion'
                     ],
                 );
             break;
@@ -2175,8 +2328,12 @@ function saveNotaria(){
             case 55: //POSTVENTA
                 $columns = array(
                     [
-                        "title" => 'ID',
+                        "title" => 'Id solicitud',
                         "data" => 'id_solicitud'
+                    ],
+                    [
+                        "title" => 'Referencia',
+                        "data" => 'referencia'
                     ],
                     [
                         "title" => 'Lote',
@@ -2192,7 +2349,11 @@ function saveNotaria(){
                     ],
                     [
                         "title" => 'Cliente',
-                        "data" => 'nombre'
+                        "data" => 'cliente'
+                    ],
+                    [
+                        "title" => 'Nombre a escriturar',
+                        "data" => 'nombre_a_escriturar'
                     ],
                     [
                         "title" => 'Estatus',
@@ -2212,16 +2373,24 @@ function saveNotaria(){
                     ],
                     [
                         "title" => 'Fecha del estatus',
-                        "data" => 'fecha_creacion'
-                    ]
+                        "data" => 'fecha_ultima'
+                    ],
+                    [
+                        "title" => 'Ultimo comentario',
+                        "data" => 'descripcion'
+                    ],
                 );
             break;
 
             case 57: //TITULACION
                 $columns = array(
                     [
-                        "title" => 'ID',
+                        "title" => 'Id solicitud',
                         "data" => 'id_solicitud'
+                    ],
+                    [
+                        "title" => 'Referencia',
+                        "data" => 'referencia'
                     ],
                     [
                         "title" => 'Lote',
@@ -2236,15 +2405,19 @@ function saveNotaria(){
                         "data" => 'nombreResidencial'
                     ],
                     [
-                        "title" => 'Cliente',
-                        "data" => 'nombre'
+                        "title" => 'Nombre Cliente',
+                        "data" => 'cliente'
+                    ],
+                    [
+                        "title" => 'Nombre a escriturar',
+                        "data" => 'nombre_a_escriturar'
                     ],
                     [
                         "title" => 'Estatus',
                         "data" => 'estatus'
                     ],
                     [
-                        "title" => 'Area',
+                        "title" => 'Área',
                         "data" => 'area'
                     ],
                     [
@@ -2257,8 +2430,12 @@ function saveNotaria(){
                     ],
                     [
                         "title" => 'Fecha del estatus',
-                        "data" => 'fecha_creacion'
-                    ]
+                        "data" => 'fecha_ultima'
+                    ],
+                    [
+                        "title" => 'Ultimo comentario',
+                        "data" => 'descripcion'
+                    ],
                 );
             break;
         }
@@ -2266,15 +2443,22 @@ function saveNotaria(){
 
         for ($i = 0; $i < count($data); $i++) {
             $a = 0;
-            if ( $data[$i]['dias'] == 0 || $data[$i]['dias'] == null ){
-                $data[$i]['atrasado']  = 'EN TIEMPO';
-                $data[$i]['diferencia']  = 0;
+            if ( $data[$i]['tiempo'] != 0 && $data[$i]['tiempo'] != null){
+              //  $startDate = $data[$i]['fecha_creacion'];
+               // $endDate = ( $i+1 < count($data) ) ? $data[$i+1]['fecha_creacion'] : date('Y-m-d h:i:s');
+
+                //$result = $this->getWorkingDays($startDate, $endDate, $data[$i]['tiempo']);
+                if($data[$i]['dias_vencimiento'] >= $data[$i]['dias']){
+                    $data[$i]['atrasado'] = "EN TIEMPO";
+                    $data[$i]['diferencia'] = $data[$i]['tiempo'];
+                }else{
+                    $data[$i]['atrasado'] = "ATRASADO";
+                    $data[$i]['diferencia'] = $data[$i]['tiempo'];
+                }
             }
             else{
-                $endDate = date('m/d/Y h:i:s a', time());
-                $result = $this->getWorkingDays($data[$i]['fecha_creacion'], $endDate, $data[$i]['dias']);
-                $data[$i]['atrasado'] = $result['atrasado'];
-                $data[$i]['diferencia'] = $result['diferencia'];
+                $data[$i]['atrasado'] = "EN TIEMPO";
+                $data[$i]['diferencia'] = 0;
             }
         }
 
@@ -2345,105 +2529,49 @@ function saveNotaria(){
             $array = array_unique($correosClean);
         }
 
-        $infoLote = $this->Contraloria_model->getNameLote($idLote);
-
-
-        $mail = $this->phpmailer_lib->load();
-
-
-        $mail->setFrom('no-reply@ciudadmaderas.com', 'Ciudad Maderas');
-
-
+        $emails = [];
         foreach($array as $email)
         {
             if(trim($email)!= 'gustavo.mancilla@ciudadmaderas.com'){
                 if (trim($email) != ''){
-                    $mail->addAddress($email);//$email
+                    $emails[] = $email;
                 }
             }
 
             if(trim($email) == 'diego.perez@ciudadmaderas.com'){
-                $mail->addAddress('analista.comercial@ciudadmaderas.com');//analista.comercial@ciudadmaderas.com
+                $emails[] = 'analista.comercial@ciudadmaderas.com';
             }
         }
 
+        $infoLote = $this->Contraloria_model->getNameLote($idLote);
 
+        $encabezados = [
+            'nombreResidencial' => 'Proyecto',
+            'nombre' => 'Condominio',
+            'nombreLote' => 'Lote',
+            'comentario' => 'Motivo de rechazo',
+            'fechaHora' => 'Fecha/Hora'
+        ];
 
-        $mail->Subject = utf8_decode('EXPEDIENTE RECHAZADO-POSTVENTA (3. REVISIÓN POSTVENTA)');
-        $mail->isHTML(true);
+        $contenido = array_merge($infoLote, ['comentario' => $comentario, 'fechaHora' => date("Y-m-d H:i:s")]);
 
-        $mailContent = utf8_decode( "<html><head>
-  <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-  <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>
-  <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'>	
-  <title>RECHAZO DE STATUS 3 POST VENTA </title>
-  <style media='all' type='text/css'>
-	  .encabezados{
-		  text-align: center;
-		  padding-top:  1.5%;
-		  padding-bottom: 1.5%;
-	  }
-	  .encabezados a{
-		  color: #234e7f;
-		  font-weight: bold;
-	  }
-	  
-	  .fondo{
-		  background-color: #234e7f;
-		  color: #fff;
-	  }
-	  
-	  h4{
-		  text-align: center;
-	  }
-	  p{
-		  text-align: right;
-	  }
-	  strong{
-		  color: #234e7f;
-	  }
-  </style>
-</head>
-                    <body>
-  <table align='center' cellspacing='0' cellpadding='0' border='0' width='100%'>
-	  <tr colspan='3'><td class='navbar navbar-inverse' align='center'>
-		  <table width='750px' cellspacing='0' cellpadding='3' class='container'>
-			  <tr class='navbar navbar-inverse encabezados'><td>
-				  <img src='https://www.ciudadmaderas.com/assets/img/logo.png' width='100%' class='img-fluid'/><p><a href='#'>SISTEMA DE CONTRATACIÓN</a></p>
-			  </td></tr>
-		  </table>
-	  </td></tr>
-	  <tr><td border=1 bgcolor='#FFFFFF' align='center'>  
-	  <center><table id='reporyt' cellpadding='0' cellspacing='0' border='1' width ='50%' style class='darkheader'>
-		<tr class='active'>
-		  <th>Proyecto</th>
-		  <th>Condominio</th> 
-		  <th>Lote</th>   
-		  <th>Motivo de rechazo</th>   
-		  <th>Fecha/Hora</th>   
-		</tr> 
-		<tr>   
-               <td><center>".$infoLote->nombreResidencial."</center></td>
-               <td><center>".$infoLote->nombre."</center></td>
-               <td><center>".$infoLote->nombreLote."</center></td>
-               <td><center>".$comentario."</center></td>
-               <td><center>".date("Y-m-d H:i:s")."</center></td>
-		</tr>
-		</table></center>
-	  
-	  
-	  </td></tr>
-  </table></body></html>");
-
-        $mail->Body = $mailContent;
+        $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to('tester.ti2@ciudadmaderas.com') // TODO: cambiar por producción
+            ->subject('EXPEDIENTE RECHAZADO-POSTVENTA (3. REVISIÓN POSTVENTA)')
+            ->view($this->load->view('template/mail/componentes/tabla', [
+                'encabezados' => $encabezados,
+                'contenido' => $contenido
+            ], true));
 
 
         $validate = $this->Postventa_model->validateSt3($idLote);
 
 
         if($validate == 1){
-            if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){
-                $mail->send();
+            if ($this->Contraloria_model->updateSt($idLote, $arreglo, $arreglo2)){
+                $this->email->send();
                 $data['message'] = 'OK';
                 echo json_encode($data);
             }else{
@@ -3129,6 +3257,7 @@ function saveNotaria(){
         $idSolicitud = $this->input->post("id_solicitud");
         $comentarioPausa = $this->input->post("comentarioPausa");
         $banderaCliente = $this->input->post("banderaCliente");
+        $estatus = $this->input->post("id_est");
         $idusuario = $this->session->userdata('id_usuario');
         $idCliente = $this->input->post('idCliente');
         $idLote = $this->input->post('idLote');
@@ -3148,7 +3277,7 @@ function saveNotaria(){
         
         $insertData[0] = array(
             "id_solicitud" => $idSolicitud,
-            "numero_estatus" => 1,
+            "numero_estatus" => $estatus,
             "tipo_movimiento" => 0,
             "descripcion" => $comentarioPausa.$comentarioAdicional,
             "fecha_creacion" => $fecha,

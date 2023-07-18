@@ -1,6 +1,6 @@
 $('[data-toggle="tooltip"]').tooltip();
 
-const movimientosPermitidosContrato = [36, 6, 23, 76, 83, 95, 97, 41];
+const movimientosPermitidosContrato = [36, 6, 23, 76, 83, 95, 97, 112];
 const rolesPermitidosContrato = [15];
 
 const movimientosPermitidosContratoFirmado = [45];
@@ -10,8 +10,10 @@ const rolesPermitidosContraloria = [17, 70];
 const movimientosPermitidosCartaDomicilio = [37, 7, 64, 66, 77, 41];
 const rolesPermitidosCartaDomicilio = [5, 2, 6];
 
-const movimientosPermitidosEstatus2 = [31, 85, 20, 63, 73, 82, 92, 96, 99, 104];
+const movimientosPermitidosEstatus2 = [31, 85, 20, 63, 73, 82, 92, 96, 99, 102, 104, 107, 108, 109, 111];
 const rolesPermitidosEstatus2 = [7, 9, 3, 2];
+
+const rolesPermitidosEstatus2AsesorInactivo = [6];
 
 const AccionDoc = {
     DOC_NO_CARGADO: 1, // NO HAY DOCUMENTO CARGADO
@@ -41,6 +43,7 @@ const observacionContratoUrgente = 1; // Bandera para inhabilitar
 const status8Flag = 1;
 
 let documentacionLoteTabla = null;
+let titulos = [];
 
 Shadowbox.init();
 
@@ -110,15 +113,71 @@ $('#idCondominio').change(function () {
 $('#idLote').change(function () {
     const seleccion = $(this).val();
     const datos = seleccion.split(',');
-    const valorSeleccionado = datos[0];
-    let titulos = [];
+    const idLote = datos[0];
+
+    if (document.getElementById('idCliente')) {
+        $('#spiner-loader').removeClass('hide');
+        $("#idCliente").empty().selectpicker('refresh');
+        $.ajax({
+            url: `${general_base_url}Documentacion/getClientesPorLote/${idLote}`,
+            type: 'post',
+            dataType: 'json',
+            success:function(response){
+                if(response.length > 0){
+                    for( var i = 0; i < response.length; i++) {
+                        let labelStatus='';
+                        if(response[i]['status'] == 1)
+                            labelStatus=' [ACTIVO]'
+                        $("#idCliente").append($('<option>').val(response[i]['id_cliente']).text(response[i]['nombreCliente'] + labelStatus));
+                    }
+                } else {
+                    $("#idCliente").append($('<option selected>').val(0).text('SIN CLIENTES'));
+                }
+
+                $("#idCliente").selectpicker('refresh');
+            },
+            complete: function () {
+                $('#spiner-loader').addClass('hide');
+            }
+        });
+        return;
+    }
+
+    cargarTabla(idLote);
+});
+
+$('#idCliente').change(function () {
+    const loteVal = $("#idLote").val();
+    const loteValues = loteVal.split(',');
+    const idLote = loteValues[0];
+
+    const seleccionCliente = $(this).val();
+    const datosCliente = seleccionCliente.split(',');
+    const idCliente = datosCliente[0];
+
+    cargarTabla(idLote, idCliente);
+});
+
+$(".find_doc").click(function () {
+    const idLote = $('#inp_lote').val();
+    if(idLote === '' || idLote === undefined || idLote === null) {
+        alerts.showNotification('top', 'right', 'Ingresa el ID de lote', 'danger');
+        return;
+    }
+
+    cargarTabla(idLote);
+});
+
+function cargarTabla(idLote, idCliente = '') {
+    $('#tableDoct').removeClass('hide');
 
     $('#tableDoct thead tr:eq(0) th').each(function (i) {
+
         $(this).css('text-align', 'center');
         const title = $(this).text();
         titulos.push(title);
-        
-        $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
+
+        $(this).html('<input type="text" data-toggle="tooltip" data-placement="top" title="' + title + '" class="textoshead"  placeholder="' + title + '"/>');
         $('input', this).on('keyup change', function () {
             if ($('#tableDoct').DataTable().column(i).search() !== this.value) {
                 $('#tableDoct').DataTable().column(i).search(this.value).draw();
@@ -129,7 +188,7 @@ $('#idLote').change(function () {
     documentacionLoteTabla = $('#tableDoct').DataTable({
         destroy: true,
         ajax: {
-            url: `${general_base_url}registroCliente/expedientesWS/${valorSeleccionado}`,
+            url: `${general_base_url}registroCliente/expedientesWS/${idLote}/${idCliente}`,
             dataSrc: ""
         },
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -222,10 +281,10 @@ $('#idLote').change(function () {
                     if (data.tipo_doc == TipoDoc.CORRIDA) { // CORRIDA
                         if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
                             buttonMain = (includesArray(movimientosPermitidosCorrida, data.idMovimiento) && includesArray(rolesPermitidosContraloria, id_rol_general))
-                                    // ESTÁ EN ESTATUS 6 Y ES CONTRALORÍA EL QUE CONSULTA, SE VEA A MONSTRAR ENABLED EL BOTÓN PARA CARGAR EL ARCHIVO
-                                    ? crearBotonAccion(AccionDoc.SUBIR_DOC, data)
-                                    // ESTÁ EN CUALQUIER OTRO ESTATUS O NO ES JURÍDICO QUIEN CONSULTA, SE VA A MOSTRAR EL BOTÓN DISABLED
-                                    : crearBotonAccion(AccionDoc.DOC_NO_CARGADO, data);
+                                // ESTÁ EN ESTATUS 6 Y ES CONTRALORÍA EL QUE CONSULTA, SE VEA A MONSTRAR ENABLED EL BOTÓN PARA CARGAR EL ARCHIVO
+                                ? crearBotonAccion(AccionDoc.SUBIR_DOC, data)
+                                // ESTÁ EN CUALQUIER OTRO ESTATUS O NO ES JURÍDICO QUIEN CONSULTA, SE VA A MOSTRAR EL BOTÓN DISABLED
+                                : crearBotonAccion(AccionDoc.DOC_NO_CARGADO, data);
 
                             return `<div class="d-flex justify-center">${buttonMain}</div>`;
                         }
@@ -240,7 +299,7 @@ $('#idLote').change(function () {
 
                         return `<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`;
                     }
-                    
+
                     if (data.tipo_doc == TipoDoc.CARTA_DOMICILIO) { // CARTA DOMICILIO
                         if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
                             buttonMain = (
@@ -323,6 +382,29 @@ $('#idLote').change(function () {
                         return `<div class="d-flex justify-center">${buttonMain}</div>`;
                     }
 
+                    // EL ASESOR ESTÁ INACTIVO Y EL ROL DE
+                    if (data.estatusAsesor != 1) {
+                        if (data.expediente == null || data.expediente === "") {
+                            buttonMain = (
+                                includesArray(movimientosPermitidosEstatus2, parseInt(data.idMovimiento)) &&
+                                includesArray(rolesPermitidosEstatus2AsesorInactivo, parseInt(id_rol_general))
+                            )
+                                ? crearBotonAccion(AccionDoc.SUBIR_DOC, data)
+                                : crearBotonAccion(AccionDoc.DOC_NO_CARGADO, data);
+
+                            return `<div class="d-flex justify-center">${buttonMain}</div>`;
+                        }
+
+                        // LA RAMA TIENE UN DOCUMENTO CARGADO
+                        buttonMain = crearBotonAccion(AccionDoc.DOC_CARGADO, data); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
+
+                        if (includesArray(movimientosPermitidosEstatus2, data.idMovimiento) && includesArray(rolesPermitidosEstatus2AsesorInactivo, id_rol_general)) {
+                            buttonDelete  = crearBotonAccion(AccionDoc.ELIMINAR_DOC, data);
+                        }
+
+                        return `<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`;
+                    }
+
                     // ES EL RESTO DEL EXPEDIENTE (HISTORIAL DOCUMENTOS)
                     if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
                         buttonMain = (
@@ -353,23 +435,28 @@ $('#idLote').change(function () {
                     return `<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`;
                 }
             }
-        ]
+        ],
+        initComplete: function () {
+            $('[data-toggle="tooltip"]').tooltip({
+                trigger: "hover"
+            });
+        },
     });
-});
+}
 
 $(document).on('click', '.verDocumento', function () {
     const $itself = $(this);
 
-    let pathUrl = `${general_base_url}static/documentos/cliente/${obtenerPathDoc($itself.attr('data-tipoDocumento'))}`+
-        $itself.attr('data-expediente');
-        if ($itself.attr('data-tipoDocumento') === TipoDoc.DS_NEW) {
-            const idCliente = $itself.attr('data-idCliente');
-            const urlDs = ($itself.attr('data-expediente') === 'Depósito de seriedad')
-                ? 'deposito_seriedad' : 'deposito_seriedad_ds';
-    
-            pathUrl = `${general_base_url}asesor/${urlDs}/${idCliente}/1`;
-        }
-        if (parseInt($itself.attr('data-tipoDocumento')) === TipoDoc.CORRIDA) {
+    let pathUrl = `${general_base_url}static/documentos/cliente/${obtenerPathDoc($itself.attr('data-tipoDocumento'))}`+$itself.attr('data-expediente');
+
+    if ($itself.attr('data-tipoDocumento') === TipoDoc.DS_NEW) {
+        const idCliente = $itself.attr('data-idCliente');
+        const urlDs = ($itself.attr('data-expediente') === 'Depósito de seriedad')
+            ? 'deposito_seriedad' : 'deposito_seriedad_ds';
+
+        pathUrl = `${general_base_url}asesor/${urlDs}/${idCliente}/1`;
+    }
+    if (parseInt($itself.attr('data-tipoDocumento')) === TipoDoc.CORRIDA) {
         descargarArchivo(pathUrl, $itself.attr('data-expediente'));
 
         alerts.showNotification('top', 'right', 'El documento <b>' + $itself.attr('data-expediente') + '</b> se ha descargado con éxito.', 'success');
@@ -396,18 +483,12 @@ $(document).on('click', '.verDocumento', function () {
     }
 
     Shadowbox.open({
-        content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src=${pathUrl}></iframe></div>`,
+        content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="${pathUrl}"></iframe></div>`,
         player: "html",
         title: `Visualizando archivo: ${$itself.attr('data-expediente')}`,
         width: 985,
         height: 660
     });
-});
-
-$(document).on('click', '.seeAuts', function (e) {
-    e.preventDefault();
-    const $itself = $(this);
-
 });
 
 $(document).on("click", ".addRemoveFile", function (e) {
@@ -577,20 +658,32 @@ function abrirModalAutorizaciones(idLote) {
 
         $.each(JSON.parse(data), function (i, item) {
             if (item['estatus'] == 0) {
-                statusProceso = "<small class='label bg-green' style='background-color: #00a65a'>ACEPTADA</small>";
+                statusProceso = "<small class='label lbl-green'>ACEPTADA</small>";
             } else if (item['estatus'] == 1) {
-                statusProceso = "<small class='label bg-orange' style='background-color: #FF8C00'>En proceso</small>";
+                statusProceso = "<small class='label lbl-orangeYellow'>En proceso</small>";
             } else if (item['estatus'] == 2) {
-                statusProceso = "<small class='label bg-red' style='background-color: #8B0000'>DENEGADA</small>";
+                statusProceso = "<small class='label lbl-warning'>DENEGADA</small>";
             } else if (item['estatus'] == 3) {
-                statusProceso = "<small class='label bg-blue' style='background-color: #00008B'>En DC</small>";
+                statusProceso = "<small class='label lbl-sky'>En DC</small>";
             } else {
-                statusProceso = "<small class='label bg-gray' style='background-color: #2F4F4F'>N/A</small>";
+                statusProceso = "<small class='label lbl-gray'>N/A</small>";
             }
 
-            $('#auts-loads').append('<h4>Solicitud de autorización:  ' + statusProceso + '</h4><br>');
-            $('#auts-loads').append('<h4>Autoriza: ' + item['nombreAUT'] + '</h4><br>');
-            $('#auts-loads').append('<p style="text-align: justify;"><i>' + item['autorizacion'] + '</i></p><br><hr>');
+            $('#auts-loads').append(`
+            <div class="container-fluid" style="background-color: #f7f7f7; border-radius: 15px; padding: 15px; margin-bottom: 15px">
+                <div class="row">
+                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-7">
+                        <span style="font-weight:100; font-size: 12px">Solicitud de autorización: <b>${statusProceso}</b></span>
+                        <span style="font-weight:100; font-size: 12px">Autoriza:${item['nombreAUT'].split(":").shift()}</span>
+                    </div>
+                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <p style="text-align: justify;">
+                            <span class="font-weight:400">${item['autorizacion']}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        `);
         });
 
         $('#verAutorizacionesAsesor').modal('show');
@@ -642,7 +735,7 @@ function crearBotonAccion(type, data) {
                 data-accion="${buttonTipoAccion}" 
                 data-tipoDocumento="${data.tipo_doc}" ${buttonEstatus} 
                 data-toggle="tooltip" 
-                data-placement="left" 
+                data-placement="top" 
                 data-nombre="${data.movimiento}" 
                 data-idDocumento="${data.idDocumento}" 
                 data-idLote="${data.idLote}" 
@@ -669,7 +762,7 @@ function getAtributos(type) {
     let buttonTipoAccion = '';
 
     if (type === AccionDoc.DOC_NO_CARGADO) {
-        buttonTitulo = 'Documento no cargado';
+        buttonTitulo = 'DOCUMENTO NO CARGADO';
         buttonEstatus = 'disabled';
         buttonClassColor = 'btn-data btn-orangeYellow';
         buttonClassAccion = '';
@@ -677,7 +770,7 @@ function getAtributos(type) {
         buttonTipoAccion = '';
     }
     if (type === AccionDoc.DOC_CARGADO) {
-        buttonTitulo = 'Ver documento';
+        buttonTitulo = 'VER DOCUMENTO';
         buttonEstatus = '';
         buttonClassColor = 'btn-data btn-blueMaderas';
         buttonClassAccion = 'verDocumento';
@@ -685,7 +778,7 @@ function getAtributos(type) {
         buttonTipoAccion = '3';
     }
     if (type === AccionDoc.SUBIR_DOC) {
-        buttonTitulo = 'Subir documento';
+        buttonTitulo = 'SUBIR DOCUMENTO';
         buttonEstatus = '';
         buttonClassColor = 'btn-data btn-green';
         buttonClassAccion = 'addRemoveFile';
@@ -693,7 +786,7 @@ function getAtributos(type) {
         buttonTipoAccion = '1';
     }
     if (type === AccionDoc.ELIMINAR_DOC) {
-        buttonTitulo = 'Eliminar documento';
+        buttonTitulo = 'ELIMINAR DOCUMENTO';
         buttonEstatus = '';
         buttonClassColor = 'btn-data btn-warning';
         buttonClassAccion = 'addRemoveFile';

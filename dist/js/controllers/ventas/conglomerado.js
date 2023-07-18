@@ -3,9 +3,34 @@ var url2 = "<?=base_url()?>index.php/";
 var tr;
 let tablaGeneral;
 let titulosTablaGeneral = [];
+// sp.initFormExtendedDatetimepickers();
 
+sp = { //  SELECT PICKER
+initFormExtendedDatetimepickers: function () {
+    $('.datepicker').datetimepicker({
+        format: 'MM/DD/YYYY',
+        icons: {
+            time: "fa fa-clock-o",
+            date: "fa fa-calendar",
+            up: "fa fa-chevron-up",
+            down: "fa fa-chevron-down",
+            previous: 'fa fa-chevron-left',
+            next: 'fa fa-chevron-right',
+            today: 'fa fa-screenshot',
+            clear: 'fa fa-trash',
+            close: 'fa fa-remove',
+            inline: true
+        }
+    });
+}
+}
 $(document).ready(function() {  
 
+    sp.initFormExtendedDatetimepickers();
+        var endDt = moment().format('DD/MM/YYYY');
+
+
+        $('.fechaIncial').val(endDt);
     $('#tabla-general thead tr:eq(0) th').each(function (i) {
         if (i !== 15) {
             const title = $(this).text();
@@ -184,7 +209,7 @@ function loadTable(tipoDescuento) {
                             }
 
                         }
-                        if (d.abono_nuevo < 10000) {
+                        if (d.abono_nuevo < 12500) {
                             return `<p style="font-size: 1em; color:gray">$${formatMoney(d.abono_nuevo)}</p>`;
                         } else {
                             return `<p style="font-size: 1em; color:blue"><b>$${formatMoney(d.abono_nuevo)}</b></p>`;
@@ -239,7 +264,7 @@ function loadTable(tipoDescuento) {
                             } else {
                                 $RES = 1;
                             }
-                        } else if (d.abono_nuevo < 10000) {
+                        } else if (d.abono_nuevo < 12500) {
                             $RES = 0;
                         } else {
                             $RES = 1;
@@ -326,11 +351,11 @@ function loadTable(tipoDescuento) {
                                 }
                             }
                         } else {
-                            if (d.abono_nuevo < 10000) {
+                            if (d.abono_nuevo < 12500) {
                                 respuesta = 0;
                             } else {
 
-                                validar = Math.trunc(d.abono_nuevo / 10000);
+                                validar = Math.trunc(d.abono_nuevo / 12500);
 
                                 if (validar >= d.pagos_activos) {
                                     validar = d.pagos_activos;
@@ -535,10 +560,10 @@ function loadTable(tipoDescuento) {
                 //                             }
                 //                             BOTON = 1;
                 //                         }
-                //                     } else if (d.abono_nuevo < 10000) {
+                //                     } else if (d.abono_nuevo < 12500) {
                 //                         BOTON = 0;
                 //                     } else {
-                //                         validar = Math.trunc(d.abono_nuevo / 10000);
+                //                         validar = Math.trunc(d.abono_nuevo / 12500);
                 //                         if (validar >= d.pagos_activos) {
                 //                             validar = d.pagos_activos;
                 //                             pendiente = pend;
@@ -838,10 +863,10 @@ function loadTable(tipoDescuento) {
                                                 }
                                                 BOTON = 1;
                                             }
-                                        } else if (d.abono_nuevo < 10000) {
+                                        } else if (d.abono_nuevo < 12500) {
                                             BOTON = 0;
                                         } else {
-                                            validar = Math.trunc(d.abono_nuevo / 10000);
+                                            validar = Math.trunc(d.abono_nuevo / 12500);
                                             if (validar >= d.pagos_activos) {
                                                 validar = d.pagos_activos;
                                                 pendiente = pend;
@@ -941,7 +966,7 @@ function loadTable(tipoDescuento) {
             document.getElementById("numeroPagos1").value = Math.trunc( mensualidadesFaltantesMostrar);
         
             Total_a_pagar = mensualidadesFaltantes * pago_mensual;
-
+            
             
             sobrante = Total_a_pagar - total;
             //para agregar llo que ya se pago
@@ -1091,8 +1116,8 @@ function loadTable(tipoDescuento) {
         $("#tabla-general tbody").on("click", ".agregar_nuevo_descuento", function (e) {
             e.preventDefault();
             e.stopImmediatePropagation();
-
-
+            $("#condominios1").val('');
+          
             $("#idloteorigen").val('');
             $("#usuarioid").val('');
             $("#pagos_aplicados").val('');
@@ -1100,8 +1125,8 @@ function loadTable(tipoDescuento) {
 
             $("#idloteorigen").selectpicker("refresh");
             $('#idloteorigen option').remove();
-
-
+            $("#condominios1").selectpicker('refresh');
+            $('#condominios1 option').remove();
             id_user = $(this).val();
             monto = $(this).attr("data-value");
             sde = $(this).attr("data-sede");
@@ -1135,7 +1160,7 @@ function loadTable(tipoDescuento) {
                     sumaselected = sumaselected + parseFloat(data[i]['comision_total']);
 
 
-
+                    $("#condominios1").append(`<option value='${comision},${comtotal.toFixed(2)},${pago_neodata},${name}' selected="selected">${name}  -   $${formatMoney(comtotal.toFixed(2))}</option>`);
 
                     $("#idloteorigen").append(`<option value='${comision},${comtotal.toFixed(2)},${pago_neodata},${name}' selected="selected">${name}  -   $${formatMoney(comtotal.toFixed(2))}</option>`);
                 }
@@ -1147,6 +1172,7 @@ function loadTable(tipoDescuento) {
                     $("#idloteorigen").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
                 }
                 $("#idloteorigen").selectpicker('refresh');
+                $("#condominios1").selectpicker('refresh');
             }, 'json');
 
 
@@ -1192,51 +1218,51 @@ function loadTable(tipoDescuento) {
 
         let meses = [
             {
-                id:01,
+                id: '01',
                 mes:'Enero'
             },
             {
-                id:02,
+                id:'02',
                 mes:'Febrero'
             },
             {
-                id:03,
+                id:'03',
                 mes:'Marzo'
             },
             {
-                id:04,
+                id:'04',
                 mes:'Abril'
             },
             {
-                id:05,
+                id:'05',
                 mes:'Mayo'
             },
             {
-                id:06,
+                id:'06',
                 mes:'Junio'
             },
             {
-                id:07,
+                id:'07',
                 mes:'Julio'
             },
             {
-                id:08,
+                id:'08',
                 mes:'Agosto'
             },
             {
-                id:09,
+                id:'09',
                 mes:'Septiembre'
             },
             {
-                id:10,
+                id:'10',
                 mes:'Octubre'
             },
             {
-                id:11,
+                id:'11',
                 mes:'Noviembre'
             },
             {
-                id:12,
+                id:'12',
                 mes:'Diciembre'
             }
         ];
@@ -1430,7 +1456,7 @@ $('#actualizar-descuento-form')
                 required: true,
                 number: true,
                 min: 1,
-                max: 19000
+                max: 99000
             },
             "numero-pagos": {
                 required: true
@@ -1441,7 +1467,7 @@ $('#actualizar-descuento-form')
                 required: '* Campo requerido.',
                 number: 'Número no válido.',
                 min: 'El valor mínimo debe ser 1',
-                max: 'El valor máximo debe ser 19,000'
+                max: 'El valor máximo debe ser 99,000'
             },
             "numero-pagos": {
                 required: '* Campo requerido.'
@@ -1458,7 +1484,7 @@ $('#actualizar-descuento-form')
                 cache: false,
                 processData: false,
                 success: function (data) {
-                   
+
                     $('#actualizar-descuento-modal').modal('hide');
                     alerts.showNotification("top", "right", "Descuento actualizado con exito.", "success");
                     $('#tabla-general').DataTable().ajax.reload(null, false);
@@ -1719,7 +1745,7 @@ $("#form_nuevo").submit(function (e) {
             required: true,
             number: true,
             min: 1,
-            max: 19000
+            max: 99000
         },
         numeroPagos: {
             required: true
@@ -1736,7 +1762,7 @@ $("#form_nuevo").submit(function (e) {
             required: '* Campo requerido',
             number: 'Número no válido.',
             min: 'El valor mínimo debe ser 1',
-            max: 'El valor máximo debe ser 19,000'
+            max: 'El valor máximo debe ser 99,000'
         },
         numeroPagos: {
             required: '* Campo requerido'
@@ -1968,7 +1994,7 @@ function verificar() {
                 $('#btn_abonar').prop('disabled', false);
                 document.getElementById('btn_abonar').disabled = false;
 
-               
+        
                 let cuantos = $('#idloteorigen').val().length;
                 let cadena = '';
                 var data = $('#idloteorigen').select2('data')
@@ -2063,9 +2089,9 @@ $('#ModalBonos').on('hidden.bs.modal', function() {
 $(document).on("click", ".uniAdd", function () {
     let banderaLiquidados = false;
     $("#modalUni").modal();
-    
+
     document.getElementById("fechaIncial").value = '';
-    
+
     document.getElementById("descuentoEscrito").value = '';
     // el que modificaremos    
     id_descuento = $(this).attr("data-value");
@@ -2080,16 +2106,6 @@ $(document).on("click", ".uniAdd", function () {
     total = $(this).attr("data-total"); //dinero que ha pagado al momento
     MontoDescontarCerti = $(this).attr("data-value");
     valorCertificacion = $(this).attr("data-idCertificacion");
-
-
-    // if(valorCertificacion == null )
-    // {
-    //     console.log(valorCertificacion);
-    //     document.getElementById("certificaciones").value = '0';
-    // }else{
-    //      console.log(valorCertificacion);
-      
-    // }
     document.getElementById("certificaciones").value = valorCertificacion;
     if (descuento == total){
         banderaLiquidados = true;
@@ -2131,7 +2147,7 @@ $(document).on("click", ".uniAdd", function () {
     informacion_adicional += '        <div class="form-group text-left">';
     informacion_adicional += '            <label class="label ">Monto Descuento *</label>';
     informacion_adicional += '            <input class="form-control  MontoDescontarCerti" type="number" id="MontoDescontarCerti"';
-    informacion_adicional += '                name="MontoDescontarCerti" autocomplete="off" min="1" max="19000" step=".01"';
+    informacion_adicional += '                name="MontoDescontarCerti" autocomplete="off" min="1" max="99000" step=".01"';
     informacion_adicional += '               required />';
     informacion_adicional += '         </div>';
     informacion_adicional += '       </div>';
@@ -2160,7 +2176,7 @@ $(document).on("click", ".uniAdd", function () {
     informacion_adicional += '        <div class="form-group text-left">';
     informacion_adicional += '            <label class="label">Nuevas mensualidades*</label>';
     informacion_adicional += '            <input class="form-control newMensualidades" type="number" id="newMensualidades"';
-    informacion_adicional += '                name="newMensualidades" autocomplete="off" min="1" max="19000" step=".01"';
+    informacion_adicional += '                name="newMensualidades" autocomplete="off" min="1" max="99000" step=".01"';
     informacion_adicional += '               required />';
     informacion_adicional += '         </div>';
     informacion_adicional += '      </div>';
@@ -2396,8 +2412,11 @@ $(document).on('input', '.MontoDescontarCerti', function(){
     //     document.getElementById("newMensualidades").value =  NuevasMensualidades.toFixed(2);
     // 
     // });                                                                                                                                                                                              
-
-$(document).on("click", ".updateDescuentoCertificado", function () {
+    $("#updateDescuentoCertificado").submit(function (e) {
+   
+        e.preventDefault();
+    }).validate({
+        submitHandler: function (form) {
     let tipoDescuento = $('#tipo_descuento').val();
     // let fechaSeleccionada = $('#fechaIncial').val();
     const fecha = new Date()
@@ -2434,13 +2453,15 @@ $(document).on("click", ".updateDescuentoCertificado", function () {
     fechaComparar = (year + '-' + month + '-' + day);
     var f1 = new Date(year,month, day);
     var f2 = new Date(fechaSeleccionada);
-  
+    console.log(f1,'f1');
+    console.log(f2,'f2');
     MesSelecionado = parseInt(FechaEnArreglo[1]);
     DiaSeleccionado = parseInt(FechaEnArreglo[2]);
     MesSistemas = parseInt(month+1);
     // fecha f2 es para la fecha seleccionada 
     // fecha f1 es para la fecha del sistema 
     // Se compara las fechas son para 
+    
     if(  (f2 > f1 || f2 == f1)){
         // validamos que sea mayor la fecha seleccionada o que sean iguales
         validacion =true;
@@ -2476,14 +2497,14 @@ $(document).on("click", ".updateDescuentoCertificado", function () {
             "pagos_activos"         : pagos_activos,
             "estatus"               : estatus,
             "banderaPagosActivos"   : banderaPagosActivos,
-            "estatus_certificacion" : estatus_certificacion,
+            "estatus_certificacion" : estatus_certificacion,    
             "id_descuento"          : id_descuento,
             "monto"                 : monto,
             "pago_individual"       : pago_individual,
               }, 
     
               success: function(data) {
-               
+                
                 alerts.showNotification("top", "right", ""+data.message+"", ""+data.response_type+"");
                 document.getElementById('updateDescuento').disabled = false;
                 $('#tabla-general').DataTable().ajax.reload(null, false );
@@ -2500,7 +2521,7 @@ $(document).on("click", ".updateDescuentoCertificado", function () {
     
     }
 
-  
+        }
 });
 
 
@@ -2519,6 +2540,7 @@ function setInitialValues() {
     // console.log('Fecha inicio: ', finalBeginDate);
     // console.log('Fecha final: ', finalEndDate);
     // $("#beginDate").val(finalBeginDate);
-    // $("#endDate").val(finalEndDate);
+     $("#fechaIncial").val(FechaIncial);
  
 }
+
