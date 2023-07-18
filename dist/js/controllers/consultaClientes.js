@@ -3,6 +3,8 @@ $(document).ready(function() {
     let num_colum_encabezado = [];
     $('#clients-datatable thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
+        titulos_encabezado.push(title);
+        num_colum_encabezado.push(i);
         $(this).html(`<input  data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
         $( 'input', this ).on('keyup change', function () {
             if ($('#clients-datatable').DataTable().column(i).search() !== this.value ) {

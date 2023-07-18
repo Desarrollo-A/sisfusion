@@ -38,8 +38,8 @@
             }
 
             .isRequired{
-            color: #EA4335;
-            margin: 0 3px;
+                color: #EA4335;
+                margin: 0 3px;
             }
 
         </style>
