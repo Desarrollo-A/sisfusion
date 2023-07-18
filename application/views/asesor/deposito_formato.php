@@ -434,7 +434,7 @@
 
                 <div class="row" id="viviendaDSP">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <label class="label-on-left m-0">VIVE EN CASA</label>
+                        <label class="label-on-left m-0">VIVE EN CASA (<small style="color: red;">*</small>)</label>
                         <div class="radio_container">
                             <input type="radio" id="tipo_vivienda_1" <?php echo $statsInput; ?> name="tipo_vivienda" <?php if ($cliente[0]->tipo_vivienda == 1) { echo "checked=true"; } ?>  value="1"/>
                             <label for="tipo_vivienda_1">PROPIA</label>

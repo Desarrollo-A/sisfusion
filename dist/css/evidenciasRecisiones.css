@@ -1531,7 +1531,13 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
   display: none;
 }
 
-/*CALENDARIO */
+#calendarioDay {
+  width: 170px;
+  outline: none;
+  border: 1px solid #aaa;
+  padding: 6px 28px;
+}
+
 .recisiones .miniCard {
   background: HSLA(212, 57%, 25%, 1);
   background: linear-gradient(135deg, HSLA(212, 57%, 25%, 1) 22%, HSLA(212, 62%, 25%, 1) 55%, HSLA(211, 57%, 21%, 1) 100%);

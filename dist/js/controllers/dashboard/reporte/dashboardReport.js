@@ -225,11 +225,6 @@ function createAccordions(option, render, rol){
     $(".boxAccordions").append(html);
 }
 
-$(document).on('click', '#searchByDateRange', function(e){
-
-
-});
-
 function fillBoxAccordions(option, rol, id_usuario, render, transaction, leadersList, filters){
     if( rol == 5 && (idUser == 28 && idUser == 30 && idUser == 4888))
         rolEspecial = 59;

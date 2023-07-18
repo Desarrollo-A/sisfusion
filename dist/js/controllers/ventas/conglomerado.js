@@ -1218,51 +1218,51 @@ function loadTable(tipoDescuento) {
 
         let meses = [
             {
-                id:01,
+                id: '01',
                 mes:'Enero'
             },
             {
-                id:02,
+                id:'02',
                 mes:'Febrero'
             },
             {
-                id:03,
+                id:'03',
                 mes:'Marzo'
             },
             {
-                id:04,
+                id:'04',
                 mes:'Abril'
             },
             {
-                id:05,
+                id:'05',
                 mes:'Mayo'
             },
             {
-                id:06,
+                id:'06',
                 mes:'Junio'
             },
             {
-                id:07,
+                id:'07',
                 mes:'Julio'
             },
             {
-                id:08,
+                id:'08',
                 mes:'Agosto'
             },
             {
-                id:09,
+                id:'09',
                 mes:'Septiembre'
             },
             {
-                id:10,
+                id:'10',
                 mes:'Octubre'
             },
             {
-                id:11,
+                id:'11',
                 mes:'Noviembre'
             },
             {
-                id:12,
+                id:'12',
                 mes:'Diciembre'
             }
         ];

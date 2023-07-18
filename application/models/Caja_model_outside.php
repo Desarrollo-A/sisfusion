@@ -1323,17 +1323,21 @@
         return $this->db->query("SELECT id_vcompartida, id_cliente, id_asesor, id_coordinador, id_gerente FROM ventas_compartidas WHERE id_cliente = $id_cliente AND estatus = 1");
     }
 
-    public function getLider($id_gerente){
-        return $this->db->query("SELECT id_lider as id_subdirector, 
-        (CASE 
+    public function getLider($id_gerente) {
+        return $this->db->query("SELECT us.id_lider as id_subdirector, 
+		(CASE 
         WHEN us.id_lider = 7092 THEN 3 
-        WHEN (us.id_lider = 9471 OR us.id_lider = 681 OR us.id_lider = 609 OR us.id_lider = 690) THEN 607 
-        --WHEN (us.id_lider = 5 AND us.id_sede = '11') THEN 5 
+        WHEN us.id_lider IN (9471, 681, 609, 690) THEN 607 
+		WHEN us.id_lider = 692 THEN u0.id_lider
+        WHEN us.id_lider = 703 THEN 4
+        WHEN us.id_lider = 7886 THEN 5
         ELSE 0 END) id_regional,
-		CASE us.id_sede WHEN '11' 
-		THEN (CASE us.id_lider WHEN 5 THEN 607 ELSE 5 END)
+		CASE 
+		WHEN (us.id_sede = '13' AND u0.id_lider = 7092) THEN 3
+		WHEN (us.id_sede = '13' AND u0.id_lider = 3) THEN 7092
 		ELSE 0 END id_regional_2
         FROM usuarios us
+        INNER JOIN usuarios u0 ON u0.id_usuario = us.id_lider
         WHERE us.id_usuario IN ($id_gerente)")->result_array();
     }
 

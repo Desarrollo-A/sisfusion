@@ -7,7 +7,7 @@
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
                                 <i class="fas fa-expand fa-2x"></i>
@@ -19,11 +19,8 @@
                                 <div  class="toolbar">
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-md-offset-9 col-lg-offset-9 p-0">
-                                            <div class="date-container">
-                                                <div class="form-group m-0">
-                                                    <input class="input-gral" name="date" id="date" type="text" readOnly/>
-                                                    <i class="date-icon fa fa-calendar m-0" aria-hidden="true"></i>
-                                                </div>
+                                            <div class="form-group  select-is-empty">
+                                                <input  id="calendarioDay" name="calendarioDay" type="date" class="form-control input-gral" />
                                             </div>
                                         </div>
                                     </div>
@@ -53,12 +50,9 @@
         <?php $this->load->view('template/footer_legend');?>
     </div>
 </div>
-
-</div><!--main-panel close-->
+</div>
 </body>
 <?php $this->load->view('template/footer');?>
-<!--DATATABLE BUTTONS DATA EXPORT-->
-
 <script src="<?= base_url() ?>dist/js/controllers/contraloria/vista_reporte_diario.js"></script>
 <script src="<?= base_url() ?>dist/js/es.js"></script>
 <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
