@@ -1130,7 +1130,7 @@ function getStatusMktdPreventa(){
     }
 
     function getChangelog($prospecto){
-        return $this->db->query("SELECT CONVERT(VARCHAR,fecha_creacion, 120) AS fecha_creacion, isNULL(creador, cambios.creado_por) creador, UPPER(parametro_modificado) AS parametro_modificado,UPPER((
+        return $this->db->query("SELECT CONVERT(VARCHAR,fecha_creacion,20) AS fecha_creacion, isNULL(creador, cambios.creado_por) creador, UPPER(parametro_modificado) AS parametro_modificado,UPPER((
             CASE 
                 WHEN parametro_modificado = 'Nacionalidad' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 11)
                 WHEN parametro_modificado = 'Personalidad jurídica' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 10)

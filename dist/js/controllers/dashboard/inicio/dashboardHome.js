@@ -810,10 +810,10 @@ function createAccordionsPR(option, render, rol) {
                     </div>
                     <div class="toolbar">
                         <div class="row">
-                            <div id="filterContainer" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 pb-3"></div>
+                            <div id="filterContainer"></div>
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
                                 <div class="w-30">
-                                    <div class="form-group d-flex">
+                                    <div class="form-group d-flex m-0">
                                         <input type="text" class="form-control datepicker beginDates" id="beginDate3"  />
                                         <input type="text" class="form-control datepicker endDates" id="endDate3"  />
                                         <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRangePR">
@@ -823,7 +823,7 @@ function createAccordionsPR(option, render, rol) {
                                 </div>
                             </div>
                         </div>
-                        <div class="accordion-content pb-3">
+                        <div class="accordion-content">
                             <div class="material-datatables">
                                 <div class="form-group">
                                     <table class="table-striped table-hover hide" id="tablePR">
@@ -995,7 +995,7 @@ function createSelect(dataDinamic){
         dataMaks = dataDinamic;
     }
 
-    let html_select ='<div class="col-md-3 form-group"><div id="'+nombreID+'" class="form-group overflow-hidden"><label class="control-label">'+dataMaks.toUpperCase()+'</label></div></div>';
+    let html_select ='<div class="col-md-3 form-group m-0"><div id="'+nombreID+'" class="form-group overflow-hidden"><label class="control-label">'+dataMaks.toUpperCase()+'</label></div></div>';
     var $selectSub = $('<select/>', {
         'class':"selectpicker select-gral m-0",
         'id': dataDinamic,
@@ -1099,12 +1099,8 @@ function newRoles(option) {
     return rol;
 }
 
-
-
 $(document).on('change','#subdirector', function () {
     var subdir = $("#subdirector").val();
-
-    //gerente
     $("#gerente").empty().selectpicker('refresh');
     $("#coordinadors").empty().selectpicker('refresh');
     $("#asesor").empty().selectpicker('refresh');
@@ -1310,7 +1306,7 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
                     estatus_particular = 'Preventa';
                 else if (d.estatus_particular == 3) // CLIENTE
                     estatus_particular = 'Cliente';
-                return `<center><span class="label lbl-violetBoots">${estatus_particular}</span><center>`;
+                return `<center><span class="label lbl-violetBoots">${d.estatus_particular}</span><center>`;
             } },
             {   data: function (d) {
                 if (d.tipo == 0){
