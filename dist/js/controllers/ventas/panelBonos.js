@@ -41,6 +41,11 @@ $("#form_bonos").on('submit', function(e) {
     });
 });
 
+/** Función para dejar solo dos decimales */
+function numberTwoDecimal(x) {
+    return parseFloat(x).toFixed(2);
+} 
+
 /**-------------------------  TABLA NUEVOS BONOS --------------------------- */
 $("#tabla_prestamos").ready(function() {
     let titulos = [];
@@ -102,7 +107,7 @@ $("#tabla_prestamos").ready(function() {
         },
         {
             "data": function(d) {
-                return '<p class="m-0">$' + formatMoney(d.monto) + '</p>';
+                return '<p class="m-0">' + formatMoney(d.monto) + '</p>';
             }
         },
         {
@@ -113,7 +118,7 @@ $("#tabla_prestamos").ready(function() {
                 }else{
                     abonado =d.n_p*d.pago;
                 }
-                return '<p class="m-0"><b>$' + formatMoney(abonado) + '</b></p>';
+                return '<p class="m-0"><b>' + formatMoney(abonado) + '</b></p>';
             }
         },
         {
@@ -124,7 +129,7 @@ $("#tabla_prestamos").ready(function() {
                 }else{
                     pendiente = d.monto - (d.n_p*d.pago);
                 }
-                return '<p class="m-0"><b>$' + formatMoney(pendiente) + '</b></p>';
+                return '<p class="m-0"><b>' + formatMoney(pendiente) + '</b></p>';
             }
         },
         {
@@ -134,7 +139,7 @@ $("#tabla_prestamos").ready(function() {
         },
         {
             "data": function(d) {
-                return '<p class="m-0"><b> $' + formatMoney(d.pago) + '</b></p>';
+                return '<p class="m-0"><b> ' + formatMoney(d.pago) + '</b></p>';
             }
         },
         {
@@ -152,12 +157,12 @@ $("#tabla_prestamos").ready(function() {
         {
             "data": function(d) {
                 if(parseFloat(d.pago) == parseFloat(d.impuesto1)){
-                    return '<p class="m-0"><b>$' + formatMoney(d.pago) + '</b></p>';
+                    return '<p class="m-0"><b>' + formatMoney(d.pago) + '</b></p>';
                 }
                 else{
                     let iva = ((parseFloat(d.impuesto)/100)*d.pago);
                     let pagar = parseFloat(d.pago) - iva;
-                    return '<p class="m-0"><b>$' + formatMoney(pagar) + '</b></p>';
+                    return '<p class="m-0"><b>' + formatMoney(numberTwoDecimal(pagar)) + '</b></p>';
                 }
             }
         },
@@ -242,7 +247,7 @@ $("#tabla_prestamos").ready(function() {
             
             let f = data[0].fecha_movimiento.split('.');
             $("#modal_bonos .modal-body").append(`<div class="row"><div class="col-md-3"><h6>PARA: <b>${nombre}</b></h6></div>
-            <div class="col-md-3"><h6>Abono: <b style="color:green;">$${formatMoney(impuesto)}</b></h6></div>
+            <div class="col-md-3"><h6>Abono: <b style="color:green;">${formatMoney(numberTwoDecimal(impuesto))}</b></h6></div>
             <div class="col-md-3"><h6>Fecha: <b>${f[0]}</b></h6></div>
             <div class="col-md-3"><span class="label label-danger" style="background:#${color}">${estatus}</span></h6></div>
             </div>`);
@@ -267,7 +272,8 @@ $("#tabla_prestamos").ready(function() {
             </div>`);
 
             for (let index = 0; index < data.length; index++) {
-                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><b style="color:#896597">'+data[index].fecha_movimiento+'</b><b style="color:gray;"> - '+data[index].nombre_usuario+'</b><br><i style="color:gray;">'+data[index].comentario+'</i></p><br></div>');   
+                let fechaComentario = data[index].fecha_movimiento.split('.')[0];
+                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><b style="color:#896597">'+fechaComentario+'</b><b style="color:gray;"> - '+data[index].nombre_usuario+'</b><br><i style="color:gray;">'+data[index].comentario+'</i></p><br></div>');   
             }
             $('#spiner-loader').addClass('hide');
             $("#modal_bonos").modal();
@@ -278,7 +284,7 @@ $("#tabla_prestamos").ready(function() {
         bono = $(this).val();
         var dat = bono.split(",");
         $("#modal_abono .modal-body").append(`<div id="inputhidden">
-        <h6>¿Seguro que deseas autorizar el bono seleccionado de <b style="color:green;">$${formatMoney(dat[1])}</b> ?</h6>
+        <h6>¿Seguro que deseas autorizar el bono seleccionado de <b style="color:green;">${formatMoney(dat[1])}</b> ?</h6>
         <input type='hidden' name="id_abono" id="id_abono" value="${dat[0]}"><input type='hidden' name="pago" id="pago" value="${dat[1]}">
         <div class=" modal-footer">
         <button type="button" class="btn btn-danger btn-simple" onclick="closeModalEng()" > CANCELAR</button>
@@ -359,7 +365,7 @@ $("#tabla_bono_revision").ready(function() {
         },
         {
             "data": function(d) {
-                return '<p class="m-0">$' + formatMoney(d.monto) + '</p>';
+                return '<p class="m-0">' + formatMoney(d.monto) + '</p>';
             }
         },
         {
@@ -370,7 +376,7 @@ $("#tabla_bono_revision").ready(function() {
                 }else{
                     abonado =d.n_p*d.pago;
                 }
-                return '<p class="m-0"><b>$' + formatMoney(abonado) + '</b></p>';
+                return '<p class="m-0"><b>' + formatMoney(abonado) + '</b></p>';
             }
         },
         {
@@ -381,7 +387,7 @@ $("#tabla_bono_revision").ready(function() {
                 }else{
                     pendiente = d.monto - (d.n_p*d.pago);
                 }
-                return '<p class="m-0"><b>$' + formatMoney(pendiente) + '</b></p>';
+                return '<p class="m-0"><b>' + formatMoney(pendiente) + '</b></p>';
             }
         },
         {
@@ -391,7 +397,7 @@ $("#tabla_bono_revision").ready(function() {
         },
         {
             "data": function(d) {
-                return '<p class="m-0"><b>$' + formatMoney(d.pago) + '</b></p>';
+                return '<p class="m-0"><b>' + formatMoney(d.pago) + '</b></p>';
             }
         },
         {
@@ -408,12 +414,12 @@ $("#tabla_bono_revision").ready(function() {
         {
             "data": function(d) {
                 if(parseFloat(d.pago) == parseFloat(d.impuesto1)){
-                    return '<p class="m-0"><b>$' + formatMoney(d.pago) + '</b></p>';
+                    return '<p class="m-0"><b>' + formatMoney(d.pago) + '</b></p>';
                 }
                 else{
                     let iva = ((parseFloat(d.impuesto)/100)*d.pago);
                     let pagar = parseFloat(d.pago) - iva;
-                    return '<p class="m-0"><b>$' + formatMoney(pagar) + '</b></p>';
+                    return '<p class="m-0"><b>' + formatMoney(numberTwoDecimal(pagar)) + '</b></p>';
                 }
             }
         },
@@ -498,7 +504,7 @@ $("#tabla_bono_revision").ready(function() {
     
             let f = data[0].fecha_movimiento.split('.');
             $("#modal_bonos .modal-body").append(`<div class="row"><div class="col-md-3"><h6>PARA: <b>${nombre}</b></h6></div>
-            <div class="col-md-3"><h6>Abono: <b style="color:green;">$${formatMoney(impuesto)}</b></h6></div>
+            <div class="col-md-3"><h6>Abono: <b style="color:green;">${formatMoney(numberTwoDecimal(impuesto))}</b></h6></div>
             <div class="col-md-3"><h6>Fecha: <b>${f[0]}</b></h6></div>
             <div class="col-md-3"><span class="label label-danger" style="background:#${color}">${estatus}</span></h6></div>
             </div>`);
@@ -523,7 +529,8 @@ $("#tabla_bono_revision").ready(function() {
             </div>`);
 
             for (let index = 0; index < data.length; index++) {
-                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><b style="color:#896597">'+data[index].fecha_movimiento+'</b><b style="color:gray;"> - '+data[index].nombre_usuario+'</b><br><i style="color:gray;">'+data[index].comentario+'</i></p><br></div>');  
+                let fechaComentario = data[index].fecha_movimiento.split('.')[0];
+                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><b style="color:#896597">'+fechaComentario+'</b><b style="color:gray;"> - '+data[index].nombre_usuario+'</b><br><i style="color:gray;">'+data[index].comentario+'</i></p><br></div>');  
             }
 
             $("#modal_bonos").modal();   
@@ -557,8 +564,8 @@ $("#tabla_bono_pagado").ready(function() {
         $.each(json.data, function(i, v){
             total += parseFloat(v.impuesto1);
         });
-        var to = formatMoney(total);
-        document.getElementById("totalp").textContent = '$' +  to;
+        var to = formatMoney(numberTwoDecimal(total));
+        document.getElementById("totalp").textContent = to;
     });
 
     tabla_nuevas3 = $("#tabla_bono_pagado").DataTable({
@@ -608,17 +615,17 @@ $("#tabla_bono_pagado").ready(function() {
         },
         {
             "data": function(d) {
-                return '<p class="m-0">$' + formatMoney(d.monto) + '</p>';
+                return '<p class="m-0">' + formatMoney(d.monto) + '</p>';
             }
         },
         {
             "data": function(d) {
-                return '<p class="m-0"><b>$' + formatMoney(d.n_p*d.pago) + '</b></p>';
+                return '<p class="m-0"><b>' + formatMoney(d.n_p*d.pago) + '</b></p>';
             }
         },
         {
             "data": function(d) {
-                return '<p class="m-0"><b>$' + formatMoney(d.monto - (d.n_p*d.pago)) + '</b></p>';
+                return '<p class="m-0"><b>' + formatMoney(d.monto - (d.n_p*d.pago)) + '</b></p>';
             }
         },
         {
@@ -628,7 +635,7 @@ $("#tabla_bono_pagado").ready(function() {
         },
         {
             "data": function(d) {
-                return '<p class="m-0">$' + formatMoney(d.pago) + '</p>';
+                return '<p class="m-0">' + formatMoney(d.pago) + '</p>';
             }
         },
         {
@@ -645,12 +652,12 @@ $("#tabla_bono_pagado").ready(function() {
         {
             "data": function(d) {
                 if(parseFloat(d.pago) == parseFloat(d.impuesto1)){
-                    return '<p class="m-0"><b>$' + formatMoney(d.pago) + '</b></p>';
+                    return '<p class="m-0"><b>' + formatMoney(d.pago) + '</b></p>';
                 }
                 else{
                     let iva = ((parseFloat(d.impuesto)/100)*d.pago);
                     let pagar = parseFloat(d.pago) - iva;
-                    return '<p class="m-0"><b>$' + formatMoney(pagar) + '</b></p>';
+                    return '<p class="m-0"><b>' + formatMoney(numberTwoDecimal(pagar)) + '</b></p>';
                 }
             }
         },
@@ -712,6 +719,7 @@ $("#tabla_bono_pagado").ready(function() {
             $("#modal_bonos .modal-body").html("");
             $("#modal_bonos .modal-footer").html("");
 
+            let fechaComentario = data[0].fecha_movimiento.split('.')[0];
             let estatus = '';
             let color='';
             
@@ -723,8 +731,8 @@ $("#tabla_bono_pagado").ready(function() {
             </ul>
             </div>`);
             $("#modal_bonos .modal-body").append(`<div class="col-md-3"><h6>PARA: <b>${nombre}</b></h6></div>
-            <div class="col-md-3"><h6>Abono: <b style="color:green;">$${formatMoney(impuesto)}</b></h6></div>
-            <div class="col-md-3"><h6>Fecha: <b>${data[0].fecha_movimiento}</b></h6></div>
+            <div class="col-md-3"><h6>Abono: <b style="color:green;">${formatMoney(numberTwoDecimal(impuesto))}</b></h6></div>
+            <div class="col-md-3"><h6>Fecha: <b>${fechaComentario}</b></h6></div>
             <br><div class="col-md-3"><span class="label lbl-green">${estatus}</span></h6></div>
             </div>  `);
 
@@ -765,8 +773,8 @@ $("#tabla_bono_otros").ready(function() {
         $.each(json.data, function(i, v){
             total += parseFloat(v.impuesto1);
         });
-        var to = formatMoney(total);
-        document.getElementById("totalo").textContent = '$' +  to;
+        var to = formatMoney(numberTwoDecimal(total));
+        document.getElementById("totalo").textContent = to;
     });
 
     tabla_otros = $("#tabla_bono_otros").DataTable({
@@ -816,17 +824,17 @@ $("#tabla_bono_otros").ready(function() {
         },
         {
             "data": function(d) {
-                return '<p class="m-0">$' + formatMoney(d.monto) + '</p>';
+                return '<p class="m-0">' + formatMoney(d.monto) + '</p>';
             }
         },
         {
             "data": function(d) {
-                return '<p class="m-0"><b>$' + formatMoney(d.n_p*d.pago) + '</b></p>';
+                return '<p class="m-0"><b>' + formatMoney(d.n_p*d.pago) + '</b></p>';
             }
         },
         {
             "data": function(d) {
-                return '<p class="m-0"><b>$' + formatMoney(d.monto - (d.n_p*d.pago)) + '</b></p>';
+                return '<p class="m-0"><b>' + formatMoney(d.monto - (d.n_p*d.pago)) + '</b></p>';
             }
         },
         {
@@ -836,7 +844,7 @@ $("#tabla_bono_otros").ready(function() {
         },
         {
             "data": function(d) {
-                return '<p class="m-0">$' + formatMoney(d.pago) + '</p>';
+                return '<p class="m-0">' + formatMoney(d.pago) + '</p>';
             }
         },
         {
@@ -853,12 +861,12 @@ $("#tabla_bono_otros").ready(function() {
         {
             "data": function(d) {
                 if(parseFloat(d.pago) == parseFloat(d.impuesto1)){
-                return '<p class="m-0"><b>$' + formatMoney(d.pago) + '</b></p>';
+                return '<p class="m-0"><b>' + formatMoney(d.pago) + '</b></p>';
                 }
                 else{
                     let iva = ((parseFloat(d.impuesto)/100)*d.pago);
                     let pagar = parseFloat(d.pago) - iva;
-                    return '<p class="m-0"><b>$' + formatMoney(pagar) + '</b></p>';
+                    return '<p class="m-0"><b>' + formatMoney(numberTwoDecimal(pagar)) + '</b></p>';
                 }
             }
         },
@@ -918,7 +926,7 @@ $("#tabla_bono_otros").ready(function() {
             $("#modal_bonos .modal-header").html("");
             $("#modal_bonos .modal-body").html("");
             $("#modal_bonos .modal-footer").html("");
-
+            let fechaComentario = data[0].fecha_movimiento.split('.')[0];
             let estatus = '';
             let color='';
             color='RED';
@@ -929,8 +937,8 @@ $("#tabla_bono_otros").ready(function() {
             </ul>
             </div>`);
             $("#modal_bonos .modal-body").append(`<div class="row"><div class="col-md-3"><h6>PARA: <b>${nombre}</b></h6></div>
-            <div class="col-md-3"><h6>Abono: <b style="color:green;">$${formatMoney(impuesto)}</b></h6></div>
-            <div class="col-md-3"><h6>Fecha: <b>${data[0].fecha_movimiento}</b></h6></div>
+            <div class="col-md-3"><h6>Abono: <b style="color:green;">${formatMoney(numberTwoDecimal(impuesto))}</b></h6></div>
+            <div class="col-md-3"><h6>Fecha: <b>${fechaComentario}</b></h6></div>
             <br><div class="col-md-3"><span class="label lbl-warning" >${estatus}</span></h6></div>
             </div>`);
 

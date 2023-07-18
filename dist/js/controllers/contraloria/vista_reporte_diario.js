@@ -3,21 +3,6 @@ var getInfo2 = new Array(6);
 var getInfo3 = new Array(6);
 var getInfo6 = new Array(1);
 
-
-$(function() {    
-    $('#date').datepicker({
-        dateFormat: 'dd/mm/yy',
-        uiLibrary: 'bootstrap4',
-        locale: 'es-es',
-        // formatSubmit: 'dd/mm/yy',
-    });
-    
-    $('.date-icon').on('click', function() {
-        $('#date').focus();
-    })
-
-});
-
 let titulos_intxt = [];
 $('#tabla_ingresar_6 thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
@@ -30,9 +15,11 @@ $('#tabla_ingresar_6 thead tr:eq(0) th').each( function (i) {
     });
 });
 
-$("#date").change( function (){
-    let fecha_inicio = $("#date").val();
-    console.log(fecha_inicio);
+$("#calendarioDay").change( function (){
+    let fecha_inicio = $("#calendarioDay").val();
+    if(fecha_inicio ==""){
+    
+    }else{
     $("#tabla_ingresar_6").ready( function(){
         tabla_6 = $("#tabla_ingresar_6").DataTable({
             "ajax": {
@@ -244,7 +231,7 @@ $("#date").change( function (){
 
         });
     });
-
+}
 });
 
 $(document).ready(function(){
@@ -588,7 +575,7 @@ $("#guardar").click(function () {
         type: 'POST',
         data: parametros,
         success: function(data){
-          response = JSON.parse(data);
+            response = JSON.parse(data);
             if(response.message == 'OK') {
                 $('#guardar').prop('disabled', false);
                 $('#rechazarStatus').modal('hide');
@@ -605,15 +592,15 @@ $("#guardar").click(function () {
                 $('#tabla_ingresar_6').DataTable().ajax.reload();
                 alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
             }
-          },
-          error: function( data ){
-                $('#guardar').prop('disabled', false);
-                $('#rechazarStatus').modal('hide');
-                $('#tabla_ingresar_6').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
-          }
+        },
+        error: function( data ){
+            $('#guardar').prop('disabled', false);
+            $('#rechazarStatus').modal('hide');
+            $('#tabla_ingresar_6').DataTable().ajax.reload();
+            alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+        }
     });
-  }
+    }
 });
 
 $(document).on('click', '.noCorrida', function(e){
@@ -844,7 +831,6 @@ $(document).on('click', '#savecs', function(e) {
         });
     }
 });
-
 
 jQuery(document).ready(function(){
     jQuery('#regCorrElab').on('hidden.bs.modal', function (e) {

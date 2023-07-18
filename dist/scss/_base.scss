@@ -401,12 +401,12 @@ $tv                 : "(min-width: 1280px)";
     background-color: $blueLight;
     color: $white;
   }
-  
+
   .btn-s-greenLight {
     background-color: $green;
     color: $white;
   }
-  
+
   .btn-rounded {
     border-radius: 50%;
     width: 38px;
@@ -457,7 +457,7 @@ $tv                 : "(min-width: 1280px)";
     color: $white!important;
 }
 .btn-gray{
-    color: $gray;  
+    color: $gray;
     border: none;
     background-color: #33333318;
 }
@@ -716,7 +716,7 @@ $tv                 : "(min-width: 1280px)";
 }
 
 .lbl-aqua{
-    color: $white; 
+    color: $white;
     border: none;
     background:#11DFC6;
 }
@@ -770,7 +770,7 @@ $tv                 : "(min-width: 1280px)";
     .file-name{
         width: 77%;
         background-color: transparent;
-        border: none; 
+        border: none;
     }
 }
 
@@ -1047,7 +1047,7 @@ Etiqueta para etiquetas dentro de la DataTable en vistas:
 .lbl-dark-cyan{
     color: $darkCyan;
     border: none;
-    background-color: #008c7618;    
+    background-color: #008c7618;
 }
 /************************************************************/
 
@@ -1081,7 +1081,7 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
         left: 29px;
         width: 2px;
         height: 100%;
-        z-index: 400;     
+        z-index: 400;
     }
     & > li {
         margin: 20px 0;
@@ -1096,7 +1096,7 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
             left: 20px;
             width: 20px;
             height: 20px;
-            z-index: 400;    
+            z-index: 400;
         }
     }
 }
@@ -1125,25 +1125,25 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
     display: none;
 }
 
-/*CALENDARIO */
-// #date {
-//     width: 150px;
-//     outline: none;
-//     border: 1px solid #aaa;
-//     padding: 6px 28px;
-// }
+// /*CALENDARIO */
+#calendarioDay {
+    width: 170px;
+    outline: none;
+    border: 1px solid #aaa;
+    padding: 6px 28px;
+}
 
-// .date-container {
+// .calendarioDay-container {
 //     position: relative;
 //     float: left;
-//     .date-text {
+//     .calendarioDay-text {
 //         position: absolute;
 //         top: 6px;
 //         left: 12px;
 //         color: #000000;
 //     }
 
-//     .date-icon {
+//     .calendarioDay-icon {
 //         position: absolute;
 //         top: 10px;
 //         right: 10px;
