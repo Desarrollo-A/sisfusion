@@ -39,8 +39,8 @@
                         <div class="modal-body" >
                             <div class="col-4 col-sm-4 col-md-4 col-lg-4">
                                         <div class="form-group">
-                                            <label class="label">Certificaciones*</label>       
-                                            <select class="form-control select2 certificaciones" name="certificaciones" id="certificaciones">
+                                            <label class="control-label">Certificaciones (<span class="isRequired">*</span>)</label>       
+                                            <select class="selectpicker select-gral select2 certificaciones" name="certificaciones" id="certificaciones">
                                                 <?php if(isset($certificaciones)){ foreach($certificaciones as $certificacion){ ?>
                                                     <option value="<?= $certificacion->id_opcion ?>"><?= $certificacion->nombre ?> </option>
                                                 <?php } } ?>
@@ -84,23 +84,20 @@
                             </div>
                             <div class="col-4 col-sm-4 col-md-4 col-lg-4">
                                     <div class="form-group">
-                                        <label class="label">Descripcion:</label> 
-                                        <span class="small text-gray textDescripcion"  id="textDescripcion"  name="textDescripcion">
+                                        <label class="control-label">Descripcion:</label> 
+                                        <b class="small text-gray textDescripcion"  id="textDescripcion"  name="textDescripcion">
                                         Persona que obtuvo una calificación favorable y con ello la certificación
-                                        </span>        
+                                        </b>        
                                     </div>
                             </div>
                             <div class="col-4 col-sm-4 col-md-4 col-lg-4 ">
                                 <div class="form-group  box-table ">
-                                        <label class="label">Fecha nueva*</label>  
-                                                <div class="row">
-                                                    <div class="col-md-12 p-r">
-                                                        
-                                                        <!-- <input type="text" class="form-control datepicker text-center pl-1 endDate box-table " id="endDate" /> -->
-                                                            <input type="text" class="form-control datepicker" id="fechaIncial" name="fechaIncial"  />
-                                                        
-                                                    </div>
-                                                </div>
+                                    <label class="control-label">Fecha nueva (<span class="isRequired">*</span>)</label>  
+                                    <div class="row">
+                                        <div class="col-md-12 p-r">
+                                            <input type="text" class="form-control datepicker" id="fechaIncial" name="fechaIncial"   />
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-12" id="cuerpoModalUni" name="cuerpoModalUni">          
@@ -109,8 +106,6 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                             <button type="submit" id="updateDescuentoCertificado1" class="btn btn-primary">GUARDAR</button>
-                            <!-- <button name="updateDescuentoCertificado1" type="submit" style="display:block;" id="updateDescuentoCertificado1"
-                                        class="btn btn-primary ">GUARDAR</button> -->
                         </div>
                     </form>
                 </div>
@@ -263,7 +258,7 @@
                                         <div class="col-md-12">
                                             <div class="card card-plain">
                                                 <div class="card-content">
-                                                    <ul class="timeline timeline-simple" id="comments-list-asimilados"></ul>
+                                                    <ul class="timeline-3" id="comments-list-asimilados"></ul>
                                                 </div>
                                             </div>
                                         </div>
@@ -296,18 +291,12 @@
                                 <div role="tabpanel" class="tab-pane active" id="changelogTabP">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <div class="card card-plain">
+                                            <div class="card card-plain m-0">
                                                 <div class="card-content">
-                                                    <ul class="" id="comments-list-asimiladosP">
+                                                    <ul id="comments-list-asimiladosP">
                                                         <div class="row toolbar">
                                                             <input id="userid" name="userid" value="0" type="hidden">
-                                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                                                <div class="form-group">
-                                                                    <label class="m-0" for="mes">Mes</label>
-                                                                    <select name="mes" id="mes" class="selectpicker select-gral m-0 " data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona un mes" data-size="7" required>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
+                                                            <div class="form-group text-center" ><h4>MONTO:</h4><p class="category input-tot pl-1" ><B id="montito">$0</B></p></div>
                                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                                 <div class="form-group">
                                                                     <label class="m-0" for="mes">Año</label>
@@ -315,7 +304,13 @@
                                                                     </select>
                                                                 </div>
                                                             </div>
-                                                            <div class="form-group text-center" ><h4 class="title-tot center-align m-0 " >MONTO:</h4><p class="category input-tot pl-1" ><B id="montito">$0</B></p></div>
+                                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                                                <div class="form-group">
+                                                                    <label class="m-0" for="mes">Mes</label>
+                                                                    <select name="mes" id="mes" class="selectpicker select-gral m-0 " data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona un mes" data-size="7" required>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </ul>
                                                 </div>
@@ -482,11 +477,11 @@
                     <form method="post" id="form_nuevo">
                         <div class="modal-body">
                             <div class="form-group">
-                                <label class="label">Puesto del usuario *</label>
+                                <label class="control-label">Puesto del usuario (<span class="isRequired">*</span>)</label>
                                 <select class="selectpicker select-gral roles" name="roles" id="roles" title="SELECCIONA UNA OPCIÓN" required data-live-search="true" required>
-                                    <option value="7">Asesor</option>
-                                    <option value="9">Coordinador</option>
-                                    <option value="3">Gerente</option>
+                                    <option value="7">ASESOR</option>
+                                    <option value="9">COORDINADOR</option>
+                                    <option value="3">GERENTE</option>
                                 </select>
                             </div>
                             <div class="form-group" id="users2">
@@ -494,14 +489,14 @@
                             <div class="form-group row">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label class="label">Monto Descuento *</label>
+                                        <label class="control-label">Monto Descuento (<span class="isRequired">*</span>)</label>
                                         <input class="form-control input-gral" type="number" id="descuento" name="descuento" autocomplete="off" min="1" max="99000" step=".01" required />
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label class="label">Número de Pagos *</label>
-                                        <select class="selectpicker select-gral " name="numeroPagos" id="numeroPagos" title="SELECCIONA UNA OPCIÓN" required data-live-search="true" required>
+                                        <label class="control-label">Número de Pagos (<span class="isRequired">*</span>)</label>
+                                        <select class="selectpicker select-gral m-0" name="numeroPagos" id="numeroPagos" title="SELECCIONA UNA OPCIÓN" required data-live-search="true" required>
                                             <option value="1">1</option>
                                             <option value="2">2</option>
                                             <option value="3">3</option>
@@ -518,19 +513,19 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label class="label">Monto a descontar</label>
+                                        <label class="control-label">Monto a descontar</label>
                                         <input class="form-control input-gral" type="text" id="pago_ind01" name="pago_ind01" value="">
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="label">Mótivo de descuento *</label>
-                                <textarea id="comentario2" name="comentario2" class="form-control input-gral" rows="3" required></textarea>
+                                <label class="control-label">Mótivo de descuento  (<span class="isRequired">*</span>)</label>
+                                <textarea id="comentario2" name="comentario2" class="text-modal" rows="3" required></textarea>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-danger btn-simple" type="button" data-dismiss="modal" data-toggle="modal">CANCELAR</button>
-                            <button type="submit" id="btn_descontar" class="btn btn-gral-data">GUARDAR</button>
+                            <button type="submit" id="btn_descontar" class="btn btn-primary">GUARDAR</button>
                         </div>
                     </form>
                 </div>
@@ -565,30 +560,32 @@
                             </div>
                             <div class="card-content">
                                 <div class="toolbar">
-                                    <div class="container">
+                                    <div class="container-fluid">
                                         <!-- USUARIOS ACTIVOS-->
                                         <div id="title-activo">
                                             <div class="col-lg-12 text-center mt-1 p-0">
                                                 <h3 class="card-title center-align">Descuentos Universidad</h3>
                                                 <p class="card-title pl-1">(Descuentos activos, una vez liquidados podrás consultarlos en el Historial de descuentos)</p><br>
                                             </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                                <h5 class="card-title center-align">
-                                                    Total
-                                                    <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="total-activo">
-                                                </h5>
-                                            </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                                <h5 class="card-title center-align">
-                                                Total recaudado
-                                                    <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="total-abonado">
-                                                </h5>
-                                            </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                                <h5 class="card-title center-align">
-                                                    Pendiente
-                                                    <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="total-pendiente">
-                                                </h5>
+                                            <div class="row">
+                                                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                    <h5 class="card-title center-align">
+                                                        Total
+                                                        <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="total-activo">
+                                                    </h5>
+                                                </div>
+                                                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                    <h5 class="card-title center-align">
+                                                    Total recaudado
+                                                        <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="total-abonado">
+                                                    </h5>
+                                                </div>
+                                                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                    <h5 class="card-title center-align">
+                                                        Pendiente
+                                                        <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="total-pendiente">
+                                                    </h5>
+                                                </div>
                                             </div>
                                         </div>
                                         <!-- END USUARIOS ACTIVOS-->
@@ -649,19 +646,19 @@
                                                 <h3 class="card-title center-align">Descuentos Universidad y Liquidados</h3>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                                <h5 class="card-title center-align">
+                                                <h5 class="card-title">
                                                     Total
                                                     <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="total-conglomerado">
                                                 </h5>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                                <h5 class="card-title center-align">
+                                                <h5 class="card-title">
                                                 Total recaudado
                                                     <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="abonado-conglomerado">
                                                 </h5>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                                <h5 class="card-title center-align">
+                                                <h5 class="card-title">
                                                     Pendiente
                                                     <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="pendiente-conglomerado">
                                                 </h5>
@@ -671,14 +668,14 @@
                                         <!-- BUSCADOR/SELECT -->
                                         <div class="col-lg-12">
                                             <div class="form-group is-empty">
-                                                <label for="proyecto">Tipo descuento:</label>
+                                                <label class="control-label"for="proyecto">Tipo de descuento:</label>
                                                 <select name="tipo_descuento" id="tipo_descuento" class="selectpicker select-gral" data-style="btn " data-show-subtext="true"
                                                         data-live-search="true"  title="Selecciona el tipo de descuento" data-size="7" required onChange="checkTypeOfDesc()">
                                                     <!--<option value="0">Seleccione all</option>-->
-                                                    <option value="1" selected>Activo</option>
-                                                    <option value="2">Baja</option>
-                                                    <option value="3">Liquidado</option>
-                                                    <option value="4">Conglomerado</option>
+                                                    <option value="1" selected>ACTIVO</option>
+                                                    <option value="2">BAJA</option>
+                                                    <option value="3">LIQUIDADO</option>
+                                                    <option value="4">CONGLOMERADO</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -720,6 +717,7 @@
 </div>
 
 <?php $this->load->view('template/footer'); ?>
+<script src="<?= base_url() ?>dist/js/funciones-generales.js"></script>
 <script src="<?= base_url() ?>dist/js/es.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/ventas/conglomerado.js"></script>
 <script src="<?= base_url() ?>dist/js/jwt/hmac-sha256.js"></script>

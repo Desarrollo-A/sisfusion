@@ -1006,3 +1006,19 @@ $("#form_abono").on('submit', function(e) {
         }
     });
 });
+
+$(window).resize(function(){
+    tabla_nuevas.columns.adjust();
+});
+
+$(window).resize(function(){
+    tabla_nuevas2.columns.adjust();
+});
+
+$(window).resize(function(){
+    tabla_nuevas3.columns.adjust();
+});
+
+$(window).resize(function(){
+    tabla_otros.columns.adjust();
+});
