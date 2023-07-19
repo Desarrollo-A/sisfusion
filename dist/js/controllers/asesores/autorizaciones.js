@@ -16,6 +16,8 @@ function validateEmptyFields(){
 
 $("#my_authorization_form").on('submit', function(e){
     e.preventDefault();
+    $('#spiner-loader').removeClass('hide');
+
     $.ajax({
         type: 'POST',
         url: general_base_url+'asesor/addAutorizacionSbmt',
@@ -23,27 +25,19 @@ $("#my_authorization_form").on('submit', function(e){
         contentType: false,
         cache: false,
         processData:false,
-        beforeSend: function(){
-            $('#btnSubmit').attr("disabled","disabled");
-            $('#btnSubmit').css("opacity",".5");
-
-        },
         success: function(data) {
             if (data == 'true') {
-                $('#btnSubmit').prop('disabled', false);
-                $('#btnSubmit').css("opacity","1");
                 $('#solicitarAutorizacion').modal("hide");
                 alerts.showNotification('top', 'right', 'Se enviaron las autorizaciones correctamente', 'success');
             } else {
-                $('#btnSubmit').prop('disabled', false);
-                $('#btnSubmit').css("opacity","1");
                 alerts.showNotification('top', 'right', 'Asegúrate de haber llenado todos los campos mínimos requeridos', 'danger');
             }
         },
         error: function(){
-            $('#btnSubmit').prop('disabled', false);
-            $('#btnSubmit').css("opacity","1");
             alerts.showNotification('top', 'right', 'Oops! Algo salió mal, inténtalo de nuevo.', 'danger');
+        },
+        complete: function () {
+            $('#spiner-loader').addClass('hide');
         }
     });
 });
@@ -440,10 +434,8 @@ contador = 1;
 function agregarAutorizacion (){
     $("#autorizacionesExtra").append('<div class="mt-2" id="cnt-'+contador+'"><label>Observación: (<span class="isRequired">*</span>) </label>' +
         '<button class="fl-r" onclick="eliminaAutorizacion('+contador+')" style="color: gray; background-color:transparent; border:none;" title="Eliminar observación"><i class="fas fa-trash"></i></button>' +
-        '<textarea  type="text" name="comentario_' + contador + '" placeholder="Ingresa tu comentario" ' +
-        '           class="text-modal" id="comentario_'+ contador +'" rows="3" '+
-        '            '+
-        '           oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">'+
+        '<textarea name="comentario_' + contador + '" placeholder="Ingresa tu comentario" ' +
+        '           class="text-modal" id="comentario_'+ contador +'" rows="3" >'+
         '</textarea></div>');
     contador = contador + 1;
     $('#tamanocer').val(contador);

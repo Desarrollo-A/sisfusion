@@ -894,8 +894,18 @@ class Postventa extends CI_Controller
     {
         $idSolicitud = $this->input->post('idSolicitud');
         $data = $this->Postventa_model->getBudgetInfo($idSolicitud)->row();
+        $data->copropietarios = $this->Postventa_model->getCopropietarios($idSolicitud);
         if ($data != null)
-            echo json_encode($data,JSON_NUMERIC_CHECK);
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
+    public function borrarCopropietario()
+    {
+        $idCopropietario = $this->input->post('idCopropietario');
+        $data = $this->Postventa_model->borrarCopropietario($idCopropietario);
+        if ($data != null)
+            echo json_encode($data);
         else
             echo json_encode(array());
     }
@@ -905,7 +915,7 @@ class Postventa extends CI_Controller
         $idSolicitud = $this->input->post('idSolicitud');
         $data = $this->Postventa_model->checkBudgetInfo($idSolicitud)->row();
         if ($data != null)
-            echo json_encode($data,JSON_NUMERIC_CHECK);
+            echo json_encode($data);
         else
             echo json_encode(array());
     }
@@ -936,6 +946,33 @@ class Postventa extends CI_Controller
             $updateData['id_notaria'] = 0;
             $updateData['bandera_notaria'] = 1;
         }
+        $insertData = array();
+        $commonData = array();
+        $updateArrayData = [];
+        if($data['indexCo'] != 0){
+            for ($i = 0; $i < $data['indexCo']; $i++) {
+                if(isset($data['copropietario_'.$i])){
+                    $commonData = array(
+                        "id_solicitud" => (int)$id_solicitud,
+                        "nombre" => $data['copropietario_'.$i],
+                        "estatus" => (int)1,
+                        "creado_por" => (int)$this->session->userdata('id_usuario'),
+                        "fecha_creacion" => date("Y-m-d H:i:s"),
+                        "fecha_modificacion" => date("Y-m-d H:i:s")
+                    );
+                    array_push($insertData, $commonData);
+                }
+                if(isset($data['copropietario_Update_'.$i])){
+                        $updateArrayData[] = array(
+                            'nombre' => $data["copropietario_Update_".$i],
+                            'idCopropietario' => $data["id_copropietario_".$i],
+                        ); 
+                }
+              }
+              count($insertData) > 0 ? $this->General_model->insertBatch("copropietariosEscritura", $insertData) : '';
+             count($updateArrayData) > 0 ? $this->General_model->updateBatch("copropietariosEscritura", $updateArrayData, "idCopropietario") : '';
+        }
+
 
         $data = $this->Postventa_model->updatePresupuesto($updateData, $id_solicitud);
         if ($data != null)
@@ -1263,6 +1300,7 @@ class Postventa extends CI_Controller
         $pdf->setPageMark();
 
         $data = $this->Postventa_model->checkBudgetInfo($idSolicitud)->row();
+        $copropietarios = $this->Postventa_model->getCopropietarios($idSolicitud);
 
 
         $html = '
@@ -1370,6 +1408,28 @@ class Postventa extends CI_Controller
                                                
                                         </table>
                                     </div>';
+                                            if(count($copropietarios) > 0){
+                                               
+                                                    $html .= '
+                                                    <div class="row">                
+                                                        <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-align: center;" width="690">
+                                                            <tr> ';
+                                                        for ($i=0; $i < count($copropietarios); $i++) { 
+                                                            $nombreCo = $copropietarios[$i]['nombre'];
+                                                            $num = $i +1;
+                                                       $html .='<td style="font-size: 1em;">
+                                                                    <b>Nombre del copropietario '.$num.' :</b><br>
+                                                                    ' . $nombreCo . '
+                                                                </td>
+                                                                ';
+                                                        }
+                                                           $html .=' </tr>
+                                                        </table>
+                                                    </div>
+                                                    ';
+                                                
+                                               
+                                            }
                                             if($data->cliente_anterior == 1){
                                                 $html .= '
                                                 <div class="row">                
@@ -1646,6 +1706,10 @@ class Postventa extends CI_Controller
         //var_dump($data);
         for ($i = 0; $i < count($data); $i++) {
             $a = 0;
+            $dias = $data[$i]['dias_vencimiento'];
+            $fechados = explode(" ",$data[$i]['fechados']);
+            $data[$i]['fecha_creacion'] = date("Y-m-d",strtotime($fechados[0]."+ ".$dias." days")) . " ".$fechados[1]; ; 
+            
             if ( $data[$i]['tiempo'] != 0 && $data[$i]['tiempo'] != null){
                 $startDate = $data[$i]['fecha_creacion'];
                 $endDate = ( $i+1 < count($data) ) ? $data[$i+1]['fecha_creacion'] : date('Y-m-d h:i:s');
@@ -2207,8 +2271,12 @@ function saveNotaria(){
             case '17': //CONTRALORIA 
                 $columns = array(
                     [
-                        "title" => 'ID',
+                        "title" => 'Id solicitud',
                         "data" => 'id_solicitud'
+                    ],
+                    [
+                        "title" => 'Referencia',
+                        "data" => 'referencia'
                     ],
                     [
                         "title" => 'Lote',
@@ -2224,7 +2292,11 @@ function saveNotaria(){
                     ],
                     [
                         "title" => 'Cliente',
-                        "data" => 'nombre'
+                        "data" => 'cliente'
+                    ],
+                    [
+                        "title" => 'Nombre a escriturar',
+                        "data" => 'nombre_a_escriturar'
                     ],
                     [
                         "title" => 'Estatus',
@@ -2246,14 +2318,22 @@ function saveNotaria(){
                         "title" => 'Fecha del estatus',
                         "data" => 'fecha_ultima'
                     ],
+                    [
+                        "title" => 'Ultimo comentario',
+                        "data" => 'descripcion'
+                    ],
                 );
             break;
 
             case 55: //POSTVENTA
                 $columns = array(
                     [
-                        "title" => 'ID',
+                        "title" => 'Id solicitud',
                         "data" => 'id_solicitud'
+                    ],
+                    [
+                        "title" => 'Referencia',
+                        "data" => 'referencia'
                     ],
                     [
                         "title" => 'Lote',
@@ -2269,7 +2349,11 @@ function saveNotaria(){
                     ],
                     [
                         "title" => 'Cliente',
-                        "data" => 'nombre'
+                        "data" => 'cliente'
+                    ],
+                    [
+                        "title" => 'Nombre a escriturar',
+                        "data" => 'nombre_a_escriturar'
                     ],
                     [
                         "title" => 'Estatus',
@@ -2290,15 +2374,23 @@ function saveNotaria(){
                     [
                         "title" => 'Fecha del estatus',
                         "data" => 'fecha_ultima'
-                    ]
+                    ],
+                    [
+                        "title" => 'Ultimo comentario',
+                        "data" => 'descripcion'
+                    ],
                 );
             break;
 
             case 57: //TITULACION
                 $columns = array(
                     [
-                        "title" => 'ID',
+                        "title" => 'Id solicitud',
                         "data" => 'id_solicitud'
+                    ],
+                    [
+                        "title" => 'Referencia',
+                        "data" => 'referencia'
                     ],
                     [
                         "title" => 'Lote',
@@ -2313,15 +2405,19 @@ function saveNotaria(){
                         "data" => 'nombreResidencial'
                     ],
                     [
-                        "title" => 'Cliente',
-                        "data" => 'nombre'
+                        "title" => 'Nombre Cliente',
+                        "data" => 'cliente'
+                    ],
+                    [
+                        "title" => 'Nombre a escriturar',
+                        "data" => 'nombre_a_escriturar'
                     ],
                     [
                         "title" => 'Estatus',
                         "data" => 'estatus'
                     ],
                     [
-                        "title" => 'Area',
+                        "title" => 'Área',
                         "data" => 'area'
                     ],
                     [
@@ -2335,7 +2431,11 @@ function saveNotaria(){
                     [
                         "title" => 'Fecha del estatus',
                         "data" => 'fecha_ultima'
-                    ]
+                    ],
+                    [
+                        "title" => 'Ultimo comentario',
+                        "data" => 'descripcion'
+                    ],
                 );
             break;
         }
@@ -3157,6 +3257,7 @@ function saveNotaria(){
         $idSolicitud = $this->input->post("id_solicitud");
         $comentarioPausa = $this->input->post("comentarioPausa");
         $banderaCliente = $this->input->post("banderaCliente");
+        $estatus = $this->input->post("id_est");
         $idusuario = $this->session->userdata('id_usuario');
         $idCliente = $this->input->post('idCliente');
         $idLote = $this->input->post('idLote');
@@ -3176,7 +3277,7 @@ function saveNotaria(){
         
         $insertData[0] = array(
             "id_solicitud" => $idSolicitud,
-            "numero_estatus" => 1,
+            "numero_estatus" => $estatus,
             "tipo_movimiento" => 0,
             "descripcion" => $comentarioPausa.$comentarioAdicional,
             "fecha_creacion" => $fecha,

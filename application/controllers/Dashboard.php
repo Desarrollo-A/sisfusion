@@ -1,4 +1,3 @@
-
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 class Dashboard extends CI_Controller
@@ -22,9 +21,8 @@ class Dashboard extends CI_Controller
     }
     public function index()
     {
-        if ($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '55' && $this->session->userdata('id_rol') != '56' && $this->session->userdata('id_rol') != '57' && $this->session->userdata('id_rol') != '13') {
+        if ($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '55' && $this->session->userdata('id_rol') != '56' && $this->session->userdata('id_rol') != '57' && $this->session->userdata('id_rol') != '13')
             redirect(base_url() . 'login');
-        }
         $this->load->view('template/header');
         $this->load->view('template/home');
         $this->load->view('template/footer');

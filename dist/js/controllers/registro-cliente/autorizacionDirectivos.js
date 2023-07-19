@@ -441,6 +441,9 @@ $("#filtro4").on("change", function(){
 $("#sendAutsFromD").on('submit', function(e){
     e.preventDefault();
     let formData = new FormData(this);
+
+    $('#spiner-loader').removeClass('hide');
+
     $.ajax({
         type: 'POST',
         url: `${general_base_url}RegistroCliente/updateAutsFromsDC`,
@@ -455,6 +458,9 @@ $("#sendAutsFromD").on('submit', function(e){
         },
         error: function(){
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        },
+        complete: function () {
+            $('#spiner-loader').addClass('hide');
         }
     });
 });
@@ -466,6 +472,8 @@ $('#autClienteForm').on('submit', function (e) {
         alerts.showNotification("top", "right", "Debe APROBAR o RECHAZAR todas las solicitudes.", "warning");
         return;
     }
+
+    $('#spiner-loader').removeClass('hide');
 
     $.ajax({
         type: 'POST',
@@ -481,6 +489,9 @@ $('#autClienteForm').on('submit', function (e) {
         },
         error: function(){
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        },
+        complete: function () {
+            $('#spiner-loader').addClass('hide');
         }
     });
 });

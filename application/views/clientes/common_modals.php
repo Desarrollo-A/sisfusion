@@ -1,4 +1,3 @@
-<link href="<?= base_url() ?>dist/scss/_base.scss" rel="stylesheet"/>
 <div class="modal fade" id="myCommentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -831,8 +830,6 @@
             </div>
         </div>
     </div>
-</div>
-<!-- END MODAL-->
 
 <div class="modal fade" id="agendaInsert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-md">

@@ -315,7 +315,7 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
     
     }
     public function avanceAutorizacion($id_autorizacion,$estatus,$tipo,$comentario,$sesionado){
-            //$this->db->trans_begin();
+            $this->db->trans_begin();
             date_default_timezone_set('America/Mexico_City');
             $hoy2 = date('Y-m-d H:i:s');
             $datosAvance =  $this->db->query("SELECT * FROM avanceAutorizacion a
