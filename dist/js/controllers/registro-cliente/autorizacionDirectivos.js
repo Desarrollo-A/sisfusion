@@ -235,7 +235,8 @@ $(document).ready (function() {
                         </div>
                     `;
                 }
-            }]
+            }
+        ]
     });
 
     $('#aut-verificacion').on('draw.dt', function() {
@@ -277,7 +278,7 @@ $(document).ready (function() {
                     : `<p class="radioOption-Item m-0 pl-1">
                         <input type="radio" name="accion${i}" id="send${i}" value="3" class="d-none" aria-invalid="false">
                         <label for="send${i}" class="cursor-point m-0">
-                            <i class="fas fa-paper-plane iSend" style="font-size:15px" data-toggle="tooltip" data-placement="top" title="Enviar a DC"></i>
+                            <i class="fas fa-paper-plane iSend" style="font-size:15px" data-toggle="tooltip" data-placement="top" title="ENVIAR A DC"></i>
                         </label>
                     </p>`;
 
@@ -294,16 +295,16 @@ $(document).ready (function() {
                             <div class="w-20">
                                 <div class="radio-with-icon-autorizacones d-flex justify-end">
                                     <p class="radioOption-Item m-0">
-                                        <input type="radio" name="accion${i}" id="accept${i}" value="0" class="d-none" aria-invalid="false" checked>
+                                        <input type="radio" name="accion${i}" id="accept${i}" value="0" class="d-none" aria-invalid="false">
                                         <label for="accept${i}" class="cursor-point m-0">
-                                            <i class="fas fa-thumbs-up iAccepted" style="font-size:15px" data-toggle="tooltip" data-placement="top" title="Aceptar"></i>
+                                            <i class="fas fa-thumbs-up iAccepted" style="font-size:15px" data-toggle="tooltip" data-placement="top" title="ACEPTAR"></i>
                                         </label>
                                     </p>
                                     <p class="radioOption-Item m-0 pl-1">
                                         <input type="radio" name="accion${i}" id="denied${i}" value="2" class="d-none" aria-invalid="false">
                                         <label for="denied${i}" class="cursor-point m-0">
                                             <i class="fas fa-thumbs-down iDenied" style="font-size:15px" data-toggle="tooltip" 
-                                                data-placement="top" title="Rechazar"></i>
+                                                data-placement="top" title="RECHAZAR"></i>
                                         </label>
                                     </p>
                                     ${opcionDenegado}
@@ -386,14 +387,14 @@ $(document).ready (function() {
                                     <p class="radioOption-Item m-0">
                                         <input type="radio" name="accion${i}" id="acceptAut${i}" value="0" class="d-none" aria-invalid="false">
                                         <label for="acceptAut${i}" class="cursor-point m-0">
-                                            <i class="fas fa-thumbs-up iAccepted" style="font-size:15px" data-toggle="tooltip" data-placement="top" title="Aceptar"></i>
+                                            <i class="fas fa-thumbs-up iAccepted" style="font-size:15px" data-toggle="tooltip" data-placement="top" title="ACEPTAR"></i>
                                         </label>
                                     </p>
                                     <p class="radioOption-Item m-0 pl-1">
                                         <input type="radio" name="accion${i}" id="deniedAut${i}" value="2" class="d-none" aria-invalid="false">
                                         <label for="deniedAut${i}" class="cursor-point m-0">
                                             <i class="fas fa-thumbs-down iDenied" style="font-size:15px" data-toggle="tooltip" 
-                                                data-placement="top" title="Rechazar"></i>
+                                                data-placement="top" title="RECHAZAR"></i>
                                         </label>
                                     </p>
                                 </div>
@@ -440,8 +441,13 @@ $("#filtro4").on("change", function(){
 
 $("#sendAutsFromD").on('submit', function(e){
     e.preventDefault();
-    let formData = new FormData(this);
 
+    if (parseInt($('#numeroDeRow').val()) !== $('#autClienteForm input:radio:checked').length) {
+        alerts.showNotification("top", "right", "Debe APROBAR o RECHAZAR o ENVIAR A DC todas las solicitudes.", "warning");
+        return;
+    }
+
+    let formData = new FormData(this);
     $('#spiner-loader').removeClass('hide');
 
     $.ajax({
