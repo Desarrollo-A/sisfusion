@@ -36,7 +36,7 @@ $('#all_users_datatable').DataTable({
             titleAttr: 'Lista de usuarios',
             title:'Lista de usuarios',
             exportOptions: {
-                columns: id_rol_general == 49 ? [0, 1, 2, 3, 4, 5, 6, 7, 8,9,10,11,] : [0, 1, 2, 3, 4, 5, 6, 7 ,8 ,9 ,10 ,11,] ,
+                columns: id_rol_general == 49 ? [0, 1, 2, 3, 4, 5, 6, 7, 8,10,11,] : [0, 1, 2, 3, 4, 5, 6, 7 ,8 ,9 ,10 ,11,] ,
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulos[columnIdx] + ' ';
@@ -71,7 +71,7 @@ $('#all_users_datatable').DataTable({
                     } else if (d.estatus == 3) {
                         boton = '<center><span class="label lbl-warning">Baja </span><center>';
                                     if(id_rol_general == 49){
-                                var fecha_baja = '<center>Fecha baja: <b>'+d.fecha_baja+'</b><br><center>';
+                                var fecha_baja = '<center>FECHA DE BAJA <b>'+d.fecha_baja+'</b><br><center>';
                                     }else{
                                 var fecha_baja = '';
                                     }
@@ -81,7 +81,7 @@ $('#all_users_datatable').DataTable({
                             if (parseFloat(d.abono_pendiente) > 0) {
                                 boton = '<center><p class="mt-1"><span class="label lbl-warning">Baja </span></p><center>';
                                     if(id_rol_general == 49){
-                                var fecha_baja = '<center>Fecha baja: <b>'+d.fecha_baja+'</b><br><center>';
+                                var fecha_baja = '<center>FECHA DE BAJA <b>'+d.fecha_baja+'</b><br><center>';
                                     }else{
                                 var fecha_baja = '';
                                     }
@@ -89,7 +89,7 @@ $('#all_users_datatable').DataTable({
                             } else {
                                 var boton = '<center><span class="label lbl-warning">Baja </span></center>';
                                     if(id_rol_general == 49){
-                                var fecha_baja = '<center>Fecha baja: <b>'+d.fecha_baja+'</b><br><center>';
+                                var fecha_baja = '<center>FECHA DE BAJA <b>'+d.fecha_baja+'</b><br><center>';
                                     }else{
                                 var fecha_baja = '';
                                     }
@@ -98,7 +98,7 @@ $('#all_users_datatable').DataTable({
                         } else {
                                 var boton = '<center><span class="label lbl-warning">Baja </span></center>';
                                     if(id_rol_general == 49){
-                                var fecha_baja = '<center>Fecha baja: <b>'+d.fecha_baja+'</b><br><center>';
+                                var fecha_baja = '<center>FECHA DE BAJA <b>'+d.fecha_baja+'</b><br><center>';
                                     }else{
                                 var fecha_baja = '';
                                     }
@@ -137,6 +137,7 @@ $('#all_users_datatable').DataTable({
             }
         },
         { data: function (d) {
+            
             return '<span class="label lbl-green">'+ d.nacionalidad+ '</span>';
             }
         },
@@ -161,7 +162,7 @@ $('#all_users_datatable').DataTable({
                     return '<button class="btn btn-blueMaderas btn-round btn-fab btn-fab-mini edit-user-information" data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip" data-placement="top" title="CAMBIAR FORMA DE PAGO"><i class="fas fa-pencil-alt"></i></button>'+
                     '<button class="btn btn-green btn-round btn-fab btn-fab-mini see-user-information" data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip" data-placement="top" title="VER HISTORIAL DE CAMBIOS"><i class="far fa-eye"></i></button>';
                 } else {
-                    return '<button class="btn-data btn-green see-user-information" data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip" data-placement="top" title="VER HISTORIAL DE CAMBIOS"><i class="far fa-eye"></i></button>';
+                    return '<center><button class="btn-data btn-green see-user-information" data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip" data-placement="top" title="VER HISTORIAL DE CAMBIOS"><i class="far fa-eye"></i></button></center>';
                 }
             }
         }
@@ -172,7 +173,11 @@ $('#all_users_datatable').DataTable({
         cache: false,
         data: function( d ){
         }
-    }
+    },
+    columnDefs:[{
+        visible: id_rol_general == 49 ? false : true,
+        targets:8, 
+    }],
 });
 
 $('#all_users_datatable').on('draw.dt', function() {
@@ -196,27 +201,26 @@ $(document).on('click', '.edit-user-information', function(e){
 });
 
 $(document).on('click', '.see-user-information', function(e){
-    $('#spiner-loader').removeClass('hide');
+    // $('#spiner-loader').removeClass('hide');
     id_usuario = $(this).attr("data-id-usuario");
     $.getJSON("getChangelog/"+id_usuario).done( function( data ){
         $("#seeInformationModal").modal();
-        $('#spiner-loader').addClass('hide');
+        // $('#spiner-loader').addClass('hide');
         $.each( data, function(i, v){
             fillChangelog(v);
-
         });
     });
 });
 
 function fillChangelog (v) {
     $("#changelog").append('<li>\n' +
-        '            <a>CAMPO: <b>'+v.parametro_modificado.toUpperCase()+'</b></a>\n' +
+        '            <a>Campo: <b>'+v.parametro_modificado.toUpperCase()+'</b></a>\n' +
         '            <a style="float: right">'+v.fecha_creacion+'</a><br>\n' +
-        '            <a>VALOR ANTERIOR:</a> <b> '+v.anterior.toUpperCase()+' </b>\n' +
+        '            <a>Valor anterior:</a> <b> '+v.anterior.toUpperCase()+' </b>\n' +
         '            <br>\n' +
-        '            <a>VALOR NUEVO:</a> <b> '+v.nuevo.toUpperCase()+' </b>\n' +
+        '            <a>Valor nuevo:</a> <b> '+v.nuevo.toUpperCase()+' </b>\n' +
         '            <br>\n' +
-        '            <a>USUARIO:<b> '+v.creador.toUpperCase()+' </b></a>\n' +
+        '            <a>Usuario:<b> '+v.creador.toUpperCase()+' </b></a>\n' +
         '</li>');
 }
 

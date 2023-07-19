@@ -1949,6 +1949,10 @@ table .boxSBtns {
   width: fit-content;
 }
 
+.dataTables_scroll .dataTables_scrollHeadInner {
+  width: 100% !important;
+}
+
 .dataTables_scroll .container-fluid {
   padding-top: 5px;
   padding-bottom: 5px;
