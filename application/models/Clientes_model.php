@@ -4474,4 +4474,20 @@ function getStatusMktdPreventa(){
 
         return $query->row();
     }
+
+    public function actualizarProspectosPorPropietario($idOwner, $data)
+    {
+        $set = '';
+
+        foreach (array_keys($data) as $key) {
+            if (empty($set)) {
+                $set .= "$key = $data[$key]";
+                continue;
+            }
+
+            $set .= ", $key = $data[$key]";
+        }
+
+        $this->db->query("UPDATE prospectos SET $set WHERE id_asesor = $idOwner AND becameClient IS NULL");
+    }
 }
