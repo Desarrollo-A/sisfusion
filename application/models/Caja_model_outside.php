@@ -273,30 +273,46 @@
 
     public function allAsesor()
     {
-        return $this->db->query("(SELECT u0.id_usuario as id_asesor,u0.id_sede, 
-		u0.id_lider as id_coordinador, 
+        return $this->db->query("SELECT u0.id_usuario as id_asesor,u0.id_sede, 
+		CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno) asesor,
+		u0.id_lider as id_coordinador,
+		(CASE u1.id_rol WHEN 9 THEN CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno) WHEN 3 THEN CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno) END) coordinador,
 		(CASE u1.id_rol WHEN 3 THEN u1.id_usuario ELSE u2.id_usuario END) id_gerente, 
+		(CASE u1.id_rol WHEN 3 THEN CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno) ELSE CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) END) gerente,
 		(CASE u1.id_rol WHEN 3 THEN u1.id_lider ELSE u3.id_usuario END) id_subdirector, 
+		(CASE u1.id_rol WHEN 3 THEN CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) ELSE CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) END) subdirector,
 		(CASE u1.id_rol WHEN 3 THEN (CASE WHEN u2.id_lider = 2 THEN 0 ELSE u2.id_lider END) ELSE CASE 
 		WHEN u3.id_usuario = 7092 THEN 3 
-		WHEN u3.id_usuario = 9471 THEN 607 
-		WHEN u3.id_usuario = 681 THEN 607 
-		WHEN u3.id_usuario = 609 THEN 607  
-		WHEN (u3.id_usuario = 5 AND u0.id_sede = '11') THEN 0 ELSE 0 END END) id_regional,
-		CASE 
+		WHEN u2.id_usuario IN (9471,681,609,690) THEN 607 
+		WHEN u2.id_lider = 692 THEN u0.id_lider
+        WHEN u2.id_lider = 703 THEN 4
+        WHEN u2.id_lider = 7886 THEN 5
+		ELSE 0 END END) id_regional,
+			(CASE u1.id_rol WHEN 3 THEN (CASE WHEN u2.id_lider = 2 THEN 'NO APLICA' ELSE CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) END) ELSE CASE 
+		WHEN u3.id_usuario = 7092 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
+		WHEN u3.id_usuario = 9471 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
+		WHEN u3.id_usuario = 681 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
+		WHEN u3.id_usuario = 609 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
+		WHEN u3.id_usuario = 690 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
+		WHEN (u3.id_usuario = 5 AND u0.id_sede = '11') THEN 'NO APLICA' ELSE 'NO APLICA' END END) regional,
+				CASE 
 		WHEN (u0.id_sede = '13' AND u2.id_lider = 7092) THEN 3
 		WHEN (u0.id_sede = '13' AND u2.id_lider = 3) THEN 7092
 		ELSE 0 END id_regional_2,
-		CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno) nombre
+		CASE 
+		WHEN (u0.id_sede = '13' AND u2.id_lider = 7092) THEN CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)
+		WHEN (u0.id_sede = '13' AND u2.id_lider = 3) THEN CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)
+		ELSE 'NO APLICA' END regional_2
 		FROM usuarios u0
 		LEFT JOIN usuarios u1 ON u1.id_usuario = u0.id_lider -- COORDINADOR
 		LEFT JOIN usuarios u2 ON u2.id_usuario = u1.id_lider -- GERENTE
 		LEFT JOIN usuarios u3 ON u3.id_usuario = u2.id_lider -- SUBDIRECTOR
+		LEFT JOIN usuarios u4 ON u4.id_usuario = u3.id_lider -- REGIONAL
         WHERE u0.id_rol = 7 AND u0.estatus = 1 AND ISNULL(u0.correo, '') NOT LIKE '%SINCO%' AND ISNULL(u0.correo, '') NOT LIKE '%test_%'
-		AND u0.id_usuario NOT IN (4415,11160,11161,11179,11750,12187,11332,2595,12874))
+		AND u0.id_usuario NOT IN (4415,11160,11161,11179,11750,12187,11332,2595,10828,9942,10549,12874)
 		UNION ALL
-		(SELECT id_usuario as id_asesor,0 id_sede,0 id_coordinador , 0 id_gerente, 
-		0 id_subdirector,0 id_regional, 0 id_regional_2,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as nombre FROM usuarios WHERE id_usuario = 12874)")->result();
+		(SELECT id_usuario as id_asesor,0 id_sede,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as asesor,0 id_coordinador ,'NO APLICA' coordinador, 0 id_gerente, 'NO APLICA' gerente,
+		0 id_subdirector, 'NO APLICA' subdirector,0 id_regional, 'NO APLICA' regional, 0 id_regional_2, 'NO APLICA' regional_2 FROM usuarios WHERE id_usuario = 12874)")->result();
     }
 
 
@@ -1402,15 +1418,17 @@
 		(CASE u1.id_rol WHEN 3 THEN CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) ELSE CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) END) subdirector,
 		(CASE u1.id_rol WHEN 3 THEN (CASE WHEN u2.id_lider = 2 THEN 0 ELSE u2.id_lider END) ELSE CASE 
 		WHEN u3.id_usuario = 7092 THEN 3 
-		WHEN u3.id_usuario = 9471 THEN 607 
-		WHEN u3.id_usuario = 681 THEN 607 
-		WHEN u3.id_usuario = 609 THEN 607  
-		WHEN (u3.id_usuario = 5 AND u0.id_sede = '11') THEN 0 ELSE 0 END END) id_regional,
+		WHEN u2.id_usuario IN (9471,681,609,690) THEN 607 
+		WHEN u2.id_lider = 692 THEN u0.id_lider
+        WHEN u2.id_lider = 703 THEN 4
+        WHEN u2.id_lider = 7886 THEN 5
+		ELSE 0 END END) id_regional,
 			(CASE u1.id_rol WHEN 3 THEN (CASE WHEN u2.id_lider = 2 THEN 'NO APLICA' ELSE CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) END) ELSE CASE 
 		WHEN u3.id_usuario = 7092 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
 		WHEN u3.id_usuario = 9471 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
 		WHEN u3.id_usuario = 681 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
-		WHEN u3.id_usuario = 609 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)  
+		WHEN u3.id_usuario = 609 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
+		WHEN u3.id_usuario = 690 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
 		WHEN (u3.id_usuario = 5 AND u0.id_sede = '11') THEN 'NO APLICA' ELSE 'NO APLICA' END END) regional,
 				CASE 
 		WHEN (u0.id_sede = '13' AND u2.id_lider = 7092) THEN 3
@@ -1428,7 +1446,7 @@
         WHERE u0.id_rol = 7 AND u0.estatus = 1 AND ISNULL(u0.correo, '') NOT LIKE '%SINCO%' AND ISNULL(u0.correo, '') NOT LIKE '%test_%'
 		AND u0.id_usuario NOT IN (4415,11160,11161,11179,11750,12187,11332,2595,10828,9942,10549,12874)
 		UNION ALL
-		(SELECT id_usuario as id_asesor,2 id_sede,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as asesor,0 id_coordinador ,'NO APLICA' coordinador, 0 id_gerente, 'NO APLICA' gerente,
+		(SELECT id_usuario as id_asesor,0 id_sede,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as asesor,0 id_coordinador ,'NO APLICA' coordinador, 0 id_gerente, 'NO APLICA' gerente,
 		0 id_subdirector, 'NO APLICA' subdirector,0 id_regional, 'NO APLICA' regional, 0 id_regional_2, 'NO APLICA' regional_2 FROM usuarios WHERE id_usuario = 12874)")->result();
     }
 
