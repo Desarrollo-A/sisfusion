@@ -1055,6 +1055,7 @@ $("#form_abono").on('submit', function(e) {
     });
 });
 
+
 $(window).resize(function(){
     tabla_nuevas.columns.adjust();
 });
