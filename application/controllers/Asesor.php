@@ -2925,6 +2925,7 @@ class Asesor extends CI_Controller
             $autorizacionComent .= $this->input->post('comentario_' . $n) . ". ";
         }
         if ($dataInsert == 1) {
+            $dataUser = $this->Asesor_model->getInfoUserById($id_aut);
 
             $encabezados = [
                 'nombreResidencial' => 'PROYECTO',
@@ -2945,7 +2946,7 @@ class Asesor extends CI_Controller
                 ->initialize()
                 ->from('Ciudad Maderas')
                 ->to('tester.ti2@ciudadmaderas.com')
-                // -to($correoDir)
+                // ->to($dataUser[0]->correo)
                 ->subject('SOLICITUD DE AUTORIZACIÓN - CONTRATACIÓN')
                 ->view($this->load->view('mail/asesor/add-autorizacion-sbmt', [
                     'encabezados' => $encabezados,
