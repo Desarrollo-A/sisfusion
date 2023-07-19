@@ -80,7 +80,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                     
                                                 <table class="table-striped table-hover" id="tabla_nuevos" name="tabla_nuevos">
                                                         <thead>
                                                             <tr>
