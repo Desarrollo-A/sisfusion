@@ -62,7 +62,7 @@ class Contraloria_model extends CI_Model {
 		WHERE idHistorialLote =(SELECT MAX(idHistorialLote) FROM historial_lotes WHERE idLote IN (l.idLote) 
 		AND (perfil IN ('13', '32', 'contraloria', '17', '70')) AND status = 1)) as lastUc
         FROM lotes l
-        INNER JOIN clientes cl ON l.idLote=cl.idLote
+        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
 		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
@@ -130,7 +130,7 @@ class Contraloria_model extends CI_Model {
 		FROM historial_lotes left join usuarios on historial_lotes.usuario = usuarios.id_usuario
 		WHERE idHistorialLote = (SELECT MAX(idHistorialLote) FROM historial_lotes WHERE idLote IN (l.idLote) AND (perfil IN ('13', '32', 'contraloria', '17', '70')) AND status = 1)) as lastUc
 	    FROM lotes l
-        INNER JOIN clientes cl ON l.idLote=cl.idLote
+        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
 		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
@@ -239,7 +239,7 @@ class Contraloria_model extends CI_Model {
 		concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
 		cond.idCondominio
 		FROM lotes l
-		INNER JOIN clientes cl ON l.idLote=cl.idLote
+		INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote
 		INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
 		INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
 		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
@@ -416,7 +416,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,opx.nombre as RL,
 		cond.idCondominio, l.observacionContratoUrgente as vl, se.nombre as nombreSede
 		FROM lotes l
-		INNER JOIN clientes cl ON l.idLote=cl.idLote
+		INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote
 		INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
 		INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
 		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
@@ -473,7 +473,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		cond.idCondominio, l.observacionContratoUrgente as vl, se.nombre as nombreSede,
         CONVERT(VARCHAR(23), GETDATE(), 126) + 'Z' as fecha_arcus, cl.id_prospecto, l.totalNeto2, pro.id_arcus
 		FROM lotes l
-		INNER JOIN clientes cl ON l.idLote=cl.idLote
+		INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote
 		INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
 		INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
 		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
@@ -940,7 +940,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		WHERE idHistorialLote =(SELECT MAX(idHistorialLote) FROM historial_lotes WHERE idLote IN (l.idLote) 
 		AND (perfil IN ('13', '32', 'contraloria', '17') AND status = 1))) AS lastUc
 	    FROM lotes l
-        INNER JOIN clientes cl ON l.idLote=cl.idLote
+        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
 		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
