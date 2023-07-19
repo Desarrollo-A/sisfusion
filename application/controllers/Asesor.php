@@ -2895,6 +2895,8 @@ class Asesor extends CI_Controller
     }
     public function addAutorizacionSbmt()
     {
+        $this->db->trans_begin();
+
         $data = array();
         $tamanoArreglo = $this->input->post('tamanocer');
         $idCliente = $this->input->post('idCliente');
@@ -2918,47 +2920,56 @@ class Asesor extends CI_Controller
                 'estatus' => 1,
                 'autorizacion' => $this->input->post('comentario_' . $n)
             );
-            $dataInsert = $this->Asesor_model->insertAutorizacion($data);
+            $this->Asesor_model->insertAutorizacion($data);
             if (!empty($this->input->post('comentario_' . $n))) {
                 ($n > 0 && !empty($comentario)) ? $comentario .= "<br>-".$this->input->post('comentario_' . $n) : $comentario .= '-'.$this->input->post('comentario_' . $n);
             }
             $autorizacionComent .= $this->input->post('comentario_' . $n) . ". ";
         }
-        if ($dataInsert == 1) {
-            $dataUser = $this->Asesor_model->getInfoUserById($id_aut);
 
-            $encabezados = [
-                'nombreResidencial' => 'PROYECTO',
-                'nombreCondominio'  => 'CONDOMINIO',
-                'nombreLote'        => 'LOTE',
-                'motivoAut'         => 'AUTORIZACIÓN',
-                'fechaHora'         => 'FECHA/HORA'
-            ];
-            $info[0] = [
-                'nombreResidencial'   =>  $nombreResidencial,
-                'nombreCondominio'    =>  $nombreCondominio,
-                'nombreLote'          =>  $nombreLote,
-                'motivoAut'           =>  $autorizacionComent,
-                'fechaHora'           =>  date("Y-m-d H:i:s")
-            ];
-
-            $this->email
-                ->initialize()
-                ->from('Ciudad Maderas')
-                ->to('tester.ti2@ciudadmaderas.com')
-                // ->to($dataUser[0]->correo)
-                ->subject('SOLICITUD DE AUTORIZACIÓN - CONTRATACIÓN')
-                ->view($this->load->view('mail/asesor/add-autorizacion-sbmt', [
-                    'encabezados' => $encabezados,
-                    'contenido' => $info,
-                    'comentario' => $comentario
-                ], true));
-
-            $this->email->send();
-            echo json_encode($dataInsert);
-        } else {
-            echo json_encode($dataInsert);
+        if ($this->db->trans_status() === false) {
+            $this->db->trans_rollback();
+            echo json_encode(false);
+            return;
         }
+
+        $dataUser = $this->Asesor_model->getInfoUserById($id_aut);
+
+        $encabezados = [
+            'nombreResidencial' => 'PROYECTO',
+            'nombreCondominio'  => 'CONDOMINIO',
+            'nombreLote'        => 'LOTE',
+            'motivoAut'         => 'AUTORIZACIÓN',
+            'fechaHora'         => 'FECHA/HORA'
+        ];
+        $info[0] = [
+            'nombreResidencial'   =>  $nombreResidencial,
+            'nombreCondominio'    =>  $nombreCondominio,
+            'nombreLote'          =>  $nombreLote,
+            'motivoAut'           =>  $autorizacionComent,
+            'fechaHora'           =>  date("Y-m-d H:i:s")
+        ];
+
+        $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to('tester.ti2@ciudadmaderas.com')
+            // ->to($dataUser[0]->correo)
+            ->subject('SOLICITUD DE AUTORIZACIÓN - CONTRATACIÓN')
+            ->view($this->load->view('mail/asesor/add-autorizacion-sbmt', [
+                'encabezados' => $encabezados,
+                'contenido' => $info,
+                'comentario' => $comentario
+            ], true));
+
+        if ($this->email->send()) {
+            $this->db->trans_commit();
+            echo json_encode(true);
+        } else {
+            $this->db->trans_rollback();
+            echo json_encode(false);
+        }
+
     }
     public function intExpAsesor()
     {
