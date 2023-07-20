@@ -471,7 +471,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
 		concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
 		cond.idCondominio, l.observacionContratoUrgente as vl, se.nombre as nombreSede,
-        CONVERT(VARCHAR(23), GETDATE(), 126) + 'Z' as fecha_arcus, cl.id_prospecto, l.totalNeto2, pro.id_arcus
+        CONVERT(VARCHAR(23), GETDATE(), 23) as fecha_arcus, cl.id_prospecto, l.totalNeto2, pro.id_arcus
 		FROM lotes l
 		INNER JOIN clientes cl ON l.idLote=cl.idLote
 		INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
