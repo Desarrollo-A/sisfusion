@@ -728,14 +728,14 @@ function checkBudgetInfo($idSolicitud){
 		av.dias_vencimiento,(select[dbo].[DiasLaborales]( (dateadd(day,1,his.fecha_ultima)) ,GETDATE())) dias,FORMAT(fecha_ultima,'dd-MM-yyyy hh:mm:ss') as fecha_ultima,his.descripcion
         FROM solicitudes_escrituracion se
 		LEFT JOIN (SELECT MAX(fecha_modificacion) fecha_ultima,id_solicitud,estatus_siguiente,descripcion FROM historial_escrituracion GROUP BY id_solicitud,estatus_siguiente,descripcion) his ON his.id_solicitud=se.id_solicitud AND his.estatus_siguiente=se.id_estatus
-        INNER JOIN lotes l ON se.id_lote = l.idLote 
-        INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio 
-        INNER JOIN residenciales r ON r.idResidencial = cond.idResidencial 
-        INNER JOIN clientes c ON c.id_cliente = se.id_cliente AND c.status = 1
-        INNER JOIN control_permisos cp ON cp.estatus_actual = se.id_estatus AND cp.bandera_vista in (1)
-        INNER JOIN actividades_escrituracion av ON av.clave = cp.clave_actividad
-        INNER JOIN opcs_x_cats ar ON ar.id_opcion = cp.area_actual AND ar.id_catalogo = 1
-        INNER JOIN usuarios uj ON uj.id_usuario = se.id_titulacion
+        LEFT JOIN lotes l ON se.id_lote = l.idLote 
+        LEFT JOIN condominios cond ON cond.idCondominio = l.idCondominio 
+        LEFT JOIN residenciales r ON r.idResidencial = cond.idResidencial 
+        LEFT JOIN clientes c ON c.id_cliente = se.id_cliente AND c.status = 1
+        LEFT JOIN control_permisos cp ON cp.estatus_actual = se.id_estatus AND cp.bandera_vista in (1)
+        LEFT JOIN actividades_escrituracion av ON av.clave = cp.clave_actividad
+        LEFT JOIN opcs_x_cats ar ON ar.id_opcion = cp.area_actual AND ar.id_catalogo = 1
+        LEFT JOIN usuarios uj ON uj.id_usuario = se.id_titulacion
         $WhereFechas
         GROUP BY se.id_solicitud,se.nombre_a_escriturar,l.referencia,his.descripcion,his.fecha_ultima,se.id_estatus,se.bandera_admin,se.bandera_comite, l.nombreLote, cond.nombre, r.nombreResidencial, c.nombre,c.apellido_paterno,c.apellido_materno, av.nombre, av.dias_vencimiento, se.fecha_creacion, se.id_titulacion, uj.nombre, uj.apellido_paterno, uj.apellido_materno, ar.nombre, se.id_solicitud
         ORDER BY se.fecha_creacion ASC");

@@ -2337,7 +2337,7 @@ function saveNotaria(){
                     ],
                     [
                         "title" => 'Referencia',
-                        "data" => 'referencia'
+                        "data" => 'referencia' 
                     ],
                     [
                         "title" => 'Lote',
@@ -2464,6 +2464,18 @@ function saveNotaria(){
                 $data[$i]['atrasado'] = "EN TIEMPO";
                 $data[$i]['diferencia'] = 0;
             }
+
+            if($data[$i]['nombreLote'] == null){
+                $data[$i]['nombre_a_escriturar'] = 'SOLICITUD ELIMINADA';
+                $data[$i]['nombreLote'] =  'SOLICITUD ELIMINADA';
+                $data[$i]['nombreCondominio'] =  'SOLICITUD ELIMINADA';
+                $data[$i]['nombreResidencial'] =  'SOLICITUD ELIMINADA';
+                $data[$i]['nombre'] =  'SOLICITUD ELIMINADA';
+                $data[$i]['estatus'] =  'SOLICITUD ELIMINADA';
+                $data[$i]['area'] =  'SOLICITUD ELIMINADA';
+                $data[$i]['dias_vencimiento'] =  0;
+            }
+            
         }
 
         $array = [
