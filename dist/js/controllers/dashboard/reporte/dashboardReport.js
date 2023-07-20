@@ -225,11 +225,6 @@ function createAccordions(option, render, rol){
     $(".boxAccordions").append(html);
 }
 
-$(document).on('click', '#searchByDateRange', function(e){
-
-
-});
-
 function fillBoxAccordions(option, rol, id_usuario, render, transaction, leadersList, filters){
     if( rol == 5 && (idUser == 28 && idUser == 30 && idUser == 4888))
         rolEspecial = 59;
@@ -716,11 +711,6 @@ $(document).on('click', '#filterAction', async function (e) {
     
     getLastSales(filters, rolOnReport);
     fillBoxAccordions(rolString, rolOnReport, idUserOnReport, 1, 2, [0, null, null, null, null, null, rolOnReport], filters);
-});
-
-$(document).on('click', '#searchByDateRange', function(e){
-    e.preventDefault();
-    validateFilters();
 });
 
 $(document).on('click', '.chartButton', function () {
@@ -1331,7 +1321,7 @@ function fillTableReport(dataObject) {
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,20],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -1377,25 +1367,25 @@ function fillTableReport(dataObject) {
                                     case 13:
                                         return 'FECHA DE APARTADO';
                                         break;
-                                    case 13:
+                                    case 14:
                                         return 'FECHA DE ÚLTIMO ESTATUS';
                                         break;
-                                    case 14:
+                                    case 15:
                                         return 'DÍAS DE ÚLTIMO ESTATUSs';
                                         break;
-                                    case 15:
+                                    case 16:
                                         return 'ESTATUS DE CONTRATACIÓN';
                                         break;
-                                    case 16:
+                                    case 17:
                                         return 'FECHA DE ESTATUS 9';
                                         break;
-                                    case 17:
+                                    case 18:
                                         return 'DÍAS EN ESTATUS 9';
                                         break;
-                                    case 18:
+                                    case 19:
                                         return 'ESTATUS DEL LOTE';
                                         break;
-                                    case 19:
+                                    case 20:
                                         return 'APARTADO';
                                         break;
                                 }

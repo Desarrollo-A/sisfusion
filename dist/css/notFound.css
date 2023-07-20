@@ -1531,7 +1531,13 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
   display: none;
 }
 
-/*CALENDARIO */
+#calendarioDay {
+  width: 170px;
+  outline: none;
+  border: 1px solid #aaa;
+  padding: 6px 28px;
+}
+
 @font-face {
   font-family: Montserrat-Black;
   src: url(../fonts/Montserrat/Montserrat-Black.ttf);

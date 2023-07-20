@@ -44,7 +44,8 @@ $('#residencial').change(function(){
 
 $('#condominio').change(function(){
     var condominio = $(this).val();
-    $("#lotes").selectpicker('refresh');
+    $("#lotes").empty().selectpicker('refresh');
+   // $("#lotes").selectpicker('refresh');
     $.post(`${general_base_url}General/getLotesList`,{idCondominio:condominio,typeTransaction:0}, function (data) {  
             data = JSON.parse(data);
             let len = data.length;
@@ -275,11 +276,11 @@ function construirTableClient(idCliente = '',idLote = '',datos = ''){
                     if(data.estatus_cliente==0){
                         
                         button_action = data.hlidStatus < 5 ? `<center><a class="backButton btn-data btn-warning" data-accion="3" title= "Regresar expediente" style="cursor:pointer;" data-idLote="${data.idLote}" data-nomLote="${data.nombreLote}" data-nombreCliente="${data.nomCliente}" data-idCliente="${data.id_cliente}"><i class="fas fa-history"></i></a></center>` : 
-                        `<center><a class="editButton btn-data btn-warning" title= "Regresar expediente" data-tipoVenta="${tipoVenta}" data-ubicacion="${ubicacion}" data-accion="1" style="cursor:pointer;" data-idStatusConstruccion="${data.hlidStatus}" data-idLote="${data.idLote}" data-nomLote="${data.nombreLote}" data-nombreCliente="${data.nomCliente}" data-idCliente="${data.id_cliente}"><i class="fas fa-history"></i></a></center>`;
+                        `<center><button class="editButton btn-data btn-warning" title= "Regresar expediente" data-tipoVenta="${tipoVenta}" data-ubicacion="${ubicacion}" data-accion="1" style="cursor:pointer;" data-idStatusConstruccion="${data.hlidStatus}" data-idLote="${data.idLote}" data-nomLote="${data.nombreLote}" data-nombreCliente="${data.nomCliente}" data-idCliente="${data.id_cliente}"><i class="fas fa-history"></i></button></center>`;
                     }else{
 
                         if(data.hlidStatus >= 5){
-                            button_action = `<center><a class="editButton btn-data btn-sky" data-tipoVenta="${tipoVenta}" data-ubicacion="${ubicacion}" data-accion="2" title= "Regresar expediente" style="cursor:pointer;" data-idStatusConstruccion="${data.hlidStatus}" data-idLote="${data.idLote}" data-nomLote="${data.nombreLote}" data-nombreCliente="${data.nomCliente}" data-idCliente="${data.id_cliente}"><i class="fas fa-edit"></i></a></center>`;
+                            button_action = `<center><button class="editButton btn-data btn-sky" data-tipoVenta="${tipoVenta}" data-ubicacion="${ubicacion}" data-accion="2" title= "Regresar expediente" style="cursor:pointer;" data-idStatusConstruccion="${data.hlidStatus}" data-idLote="${data.idLote}" data-nomLote="${data.nombreLote}" data-nombreCliente="${data.nomCliente}" data-idCliente="${data.id_cliente}"><i class="fas fa-edit"></i></button></center>`;
                         }
                     }
                     return button_action;

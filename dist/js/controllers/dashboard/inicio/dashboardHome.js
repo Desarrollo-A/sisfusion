@@ -810,10 +810,10 @@ function createAccordionsPR(option, render, rol) {
                     </div>
                     <div class="toolbar">
                         <div class="row">
-                            <div id="filterContainer" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 pb-3"></div>
+                            <div id="filterContainer"></div>
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
                                 <div class="w-30">
-                                    <div class="form-group d-flex">
+                                    <div class="form-group d-flex m-0">
                                         <input type="text" class="form-control datepicker beginDates" id="beginDate3"  />
                                         <input type="text" class="form-control datepicker endDates" id="endDate3"  />
                                         <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRangePR">
@@ -823,7 +823,7 @@ function createAccordionsPR(option, render, rol) {
                                 </div>
                             </div>
                         </div>
-                        <div class="accordion-content pb-3">
+                        <div class="accordion-content">
                             <div class="material-datatables">
                                 <div class="form-group">
                                     <table class="table-striped table-hover hide" id="tablePR">
@@ -865,7 +865,6 @@ function multirol(){
                 items_activos.push('asesors');
                 createFilters(1, items_activos);
                 loadSbdir();
-
             }
             break;
         case 2:
@@ -878,6 +877,7 @@ function multirol(){
                     items_activos.push('gerente');
                     items_activos.push('coordinadors');
                     items_activos.push('asesors');
+                    loadSbdir();
                     createFilters(59, items_activos);
                     getFirstFilter(59, 2);
                 }else{
@@ -995,7 +995,7 @@ function createSelect(dataDinamic){
         dataMaks = dataDinamic;
     }
 
-    let html_select ='<div class="col-md-3 form-group"><div id="'+nombreID+'" class="form-group overflow-hidden"><label class="control-label">'+dataMaks.toUpperCase()+'</label></div></div>';
+    let html_select ='<div class="col-md-3 form-group m-0"><div id="'+nombreID+'" class="form-group overflow-hidden"><label class="control-label">'+dataMaks.toUpperCase()+'</label></div></div>';
     var $selectSub = $('<select/>', {
         'class':"selectpicker select-gral m-0",
         'id': dataDinamic,
@@ -1020,7 +1020,6 @@ function createFilters(rol, selects){
 
 function getFirstFilter(rol, secondRol){
     $(`#${rol == 59 ? 'subdirector':'gerente'}`).empty().selectpicker('refresh');
-    $(`#${rol == 59 ? 'subdirector':'gerente'}`).append($option);
     $.post('../General/getUsersByLeader', {rol: rol, secondRol:secondRol},function(data) {
         var len = data.length;
         for( var i = 0; i<len; i++)
@@ -1099,12 +1098,8 @@ function newRoles(option) {
     return rol;
 }
 
-
-
 $(document).on('change','#subdirector', function () {
     var subdir = $("#subdirector").val();
-
-    //gerente
     $("#gerente").empty().selectpicker('refresh');
     $("#coordinadors").empty().selectpicker('refresh');
     $("#asesor").empty().selectpicker('refresh');
@@ -1149,9 +1144,6 @@ $(document).on('change', '#gerente', function () {
         }
         $("#coordinadors").selectpicker('refresh');
     }, 'json');
-
-
-
     /**///carga tabla
     var url = general_base_url+"Clientes/getProspectsListByGerente/"+gerente;
     let finalBeginDate = $("#beginDate3").val();
@@ -1209,7 +1201,7 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
     let monthP = ((newDate.getMonth()+1)<10) ? '0'+(newDate.getMonth()+1) : (newDate.getMonth()+1);
     let dayP = (newDate.getDate()<10) ? '0'+ newDate.getDate() : newDate.getDate();
 
-    beginDate = dayP+'-'+monthP+'-'+yearP;
+    beginDate = dayP+'/'+monthP+'/'+yearP;
 
     let oldDateend = endDate.split('/');
     let newDateEnd = new Date(oldDateend[1]+'-'+oldDateend[0]+'-'+oldDateend[2]).toISOString();
@@ -1217,7 +1209,7 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
     let yearPE = newDateEnd.getFullYear();
     let monthPE = ((newDateEnd.getMonth()+1)<10) ? '0'+(newDateEnd.getMonth()+1) : (newDateEnd.getMonth()+1);
     let dayPE = (newDateEnd.getDate()<10) ? '0'+ newDateEnd.getDate() : newDateEnd.getDate();
-    endDate = dayPE+'-'+monthPE+'-'+yearPE;
+    endDate = dayPE+'/'+monthPE+'/'+yearPE;
 
     prospectsTables = $('#tablePR').dataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -1310,7 +1302,7 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
                     estatus_particular = 'Preventa';
                 else if (d.estatus_particular == 3) // CLIENTE
                     estatus_particular = 'Cliente';
-                return `<center><span class="label lbl-violetBoots">${estatus_particular}</span><center>`;
+                return `<center><span class="label lbl-violetBoots">${d.estatus_particular}</span><center>`;
             } },
             {   data: function (d) {
                 if (d.tipo == 0){

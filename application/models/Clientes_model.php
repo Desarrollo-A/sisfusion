@@ -1130,7 +1130,7 @@ function getStatusMktdPreventa(){
     }
 
     function getChangelog($prospecto){
-        return $this->db->query("SELECT CONVERT(VARCHAR,fecha_creacion, 120) AS fecha_creacion, isNULL(creador, cambios.creado_por) creador, UPPER(parametro_modificado) AS parametro_modificado,UPPER((
+        return $this->db->query("SELECT CONVERT(VARCHAR,fecha_creacion,20) AS fecha_creacion, isNULL(creador, cambios.creado_por) creador, UPPER(parametro_modificado) AS parametro_modificado,UPPER((
             CASE 
                 WHEN parametro_modificado = 'Nacionalidad' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 11)
                 WHEN parametro_modificado = 'Personalidad jurídica' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 10)
@@ -4473,5 +4473,21 @@ function getStatusMktdPreventa(){
         $query = $this->db->query("SELECT * FROM clientes WHERE id_cliente = $idCliente");
 
         return $query->row();
+    }
+
+    public function actualizarProspectosPorPropietario($idOwner, $data)
+    {
+        $set = '';
+
+        foreach (array_keys($data) as $key) {
+            if (empty($set)) {
+                $set .= "$key = $data[$key]";
+                continue;
+            }
+
+            $set .= ", $key = $data[$key]";
+        }
+
+        $this->db->query("UPDATE prospectos SET $set WHERE id_asesor = $idOwner AND becameClient IS NULL");
     }
 }

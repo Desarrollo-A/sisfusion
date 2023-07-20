@@ -16,6 +16,8 @@ function validateEmptyFields(){
 
 $("#my_authorization_form").on('submit', function(e){
     e.preventDefault();
+    $('#spiner-loader').removeClass('hide');
+
     $.ajax({
         type: 'POST',
         url: general_base_url+'asesor/addAutorizacionSbmt',
@@ -23,27 +25,19 @@ $("#my_authorization_form").on('submit', function(e){
         contentType: false,
         cache: false,
         processData:false,
-        beforeSend: function(){
-            $('#btnSubmit').attr("disabled","disabled");
-            $('#btnSubmit').css("opacity",".5");
-
-        },
         success: function(data) {
             if (data == 'true') {
-                $('#btnSubmit').prop('disabled', false);
-                $('#btnSubmit').css("opacity","1");
                 $('#solicitarAutorizacion').modal("hide");
                 alerts.showNotification('top', 'right', 'Se enviaron las autorizaciones correctamente', 'success');
             } else {
-                $('#btnSubmit').prop('disabled', false);
-                $('#btnSubmit').css("opacity","1");
                 alerts.showNotification('top', 'right', 'Asegúrate de haber llenado todos los campos mínimos requeridos', 'danger');
             }
         },
         error: function(){
-            $('#btnSubmit').prop('disabled', false);
-            $('#btnSubmit').css("opacity","1");
             alerts.showNotification('top', 'right', 'Oops! Algo salió mal, inténtalo de nuevo.', 'danger');
+        },
+        complete: function () {
+            $('#spiner-loader').addClass('hide');
         }
     });
 });
@@ -126,6 +120,7 @@ $(document).ready (function() {
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
+            title: 'Autorizaciones' ,
             exportOptions: {
                 columns: num_colum_autorizaciones,
                 format: {
@@ -140,6 +135,7 @@ $(document).ready (function() {
             text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
             className: 'btn buttons-pdf',
             titleAttr: 'Descargar archivo PDF',
+            title: 'Autorizaciones' ,
             orientation: 'landscape',
             exportOptions: {
                 columns: num_colum_autorizaciones,
@@ -206,19 +202,18 @@ $('#addExp').on('draw.dt', function() {
 let titulos_solicitud = [];
 let num_colum_solicitud = [];
 $('#sol_aut thead tr:eq(0) th').each( function (i) {
-    var title = $(this).text();
-    $(this).html(`<input type="text" class="textoshead"data-toggle="tooltip" data-placement="top"title="${title}" placeholder="${title}"/>`);
-    titulos_solicitud.push(title);
-    num_colum_solicitud.push(i);
-    $( 'input', this ).on('keyup change', function () {
-        if ($('#sol_aut').DataTable().column(i).search() !== this.value ) {
-            $('#sol_aut').DataTable()
-                .column(i)
-                .search(this.value)
-                .draw();
-        }
-    });
+var title = $(this).text();
+$(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
+titulos_solicitud.push(title);
+num_colum_solicitud.push(i);
+$( 'input', this ).on('keyup change', function () {
+if ($('#sol_aut').DataTable().column(i).search() !== this.value ) {
+$('#sol_aut').DataTable().column(i).search(this.value).draw();
+}
 });
+$('[data-toggle="tooltip"]').tooltip();
+    });
+
 //Eliminamos la ultima columna "ACCIONES" donde se encuentra un elemento de tipo boton (para omitir en excel o pdf).
 num_colum_solicitud.pop();
 
@@ -254,6 +249,7 @@ $(document).ready (function() {
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
+            title: 'Solicitud de autorizaciones' ,
             exportOptions: {
                 columns: num_colum_solicitud,
                 format: {
@@ -268,6 +264,7 @@ $(document).ready (function() {
             text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
             className: 'btn buttons-pdf',
             titleAttr: 'Descargar archivo PDF',
+            title: 'Solicitud de autorizaciones' ,
             orientation: 'landscape',
             exportOptions: {
                 columns: num_colum_solicitud,

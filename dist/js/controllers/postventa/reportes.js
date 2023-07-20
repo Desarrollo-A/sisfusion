@@ -1,4 +1,5 @@
-sp = { // MJ: SELECT PICKER
+$('[data-toggle="tooltip"]').tooltip(); 
+sp = { 
     initFormExtendedDatetimepickers: function () {
         var today = new Date();
         var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
@@ -23,7 +24,7 @@ sp = { // MJ: SELECT PICKER
     }
 }
 
-sp2 = { // CHRIS: SELECT PICKER
+sp2 = {
     initFormExtendedDatetimepickers: function () {
         $('.datepicker2').datetimepicker({
             format: 'DD/MM/YYYY LT',
@@ -44,14 +45,7 @@ sp2 = { // CHRIS: SELECT PICKER
     }
 }
 
-
-
-
-
-
 $(document).ready(function () {
-
-
     sp.initFormExtendedDatetimepickers();
     sp2.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({ locale: 'es' });
@@ -166,46 +160,52 @@ function dynamicColumns(columnData) {
     
 }
 
- 
-
 function buildTable(columns, data) {
     reportsTable = $('#reports-datatable').DataTable({
-        dom: 'Brt' + "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
-        width: "auto",
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: "100%",
         pagingType: "full_numbers",
+        //scrollX: true,
         buttons: [{ 
-            extend: 'excelHtml5',
-          text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-          className: 'btn buttons-excel',
-          titleAttr: 'Descargar archivo de Excel',
-          exportOptions: {
-            columns: [0,1,2,3,4,5,6,7,8,9],
+        extend: 'excelHtml5',
+        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+        className: 'btn buttons-excel',
+        titleAttr: 'Descargar archivo de Excel',
+        exportOptions: {
+            columns: [0,1,2,3,4,5,6,7,8,9,10,11,12],
             format: {
-                header:  function (d, columnIdx) {
+                    header:  function (d, columnIdx) {
                     if(columnIdx == 0){
                         return ' ID SOLICITUD ';
                     }else if(columnIdx == 1){
-                        return 'LOTE';
+                        return 'REFERENCIA';
                     }else if(columnIdx == 2){
-                        return 'CONDOMINIO';
+                        return 'LOTE';
                     }else if(columnIdx == 3){
-                        return 'RESIDENCIAL';
+                        return 'CONDOMINIO';
                     }else if(columnIdx == 4){
-                        return 'CLIENTE';
+                        return 'RESIDENCIAL';
                     }else if(columnIdx == 5){
-                        return 'ESTATUS';
+                        return 'CLIENTE';
                     }else if(columnIdx == 6){
-                        return 'ÁREA';
+                        return 'NOMBRE A ESCRITURAR';
                     }else if(columnIdx == 7){
-                        return 'VIGENCIA';
+                        return 'ESTATUS';
                     }else if(columnIdx == 8){
-                        return 'DÍAS DE ATRASO';
+                        return 'ÁREA';
                     }else if(columnIdx == 9){
-                        return 'FECHA ESTATUS';
+                        return 'VIGENCIA';
+                    }else if(columnIdx == 10){
+                        return 'DÍAS TRANSCURRIDOS';
+                    }else if(columnIdx == 11){
+                        return 'FECHA ULTIMO ESTATUS';
+                    }else if(columnIdx ==12){
+                        return 'ULTIMO COMENTARIO';
                     }
+
                 }
             }
-          },
+        },
 
         }],
         language: {
@@ -215,7 +215,6 @@ function buildTable(columns, data) {
                 next: "<i class='fa fa-angle-right'>"
             }
         },
-        
         destroy: true,
         ordering: false,
         columns: columns,
@@ -229,27 +228,39 @@ function buildTable(columns, data) {
             targets: 0,
             render: function (data, type, full, meta) {
                 return `<div><button id="details" class="btn-unstyled details w-50" data-toggle="tooltip" data-placement="top" title="Desglose detallado"><i class="fas fa-caret-right"></i></button><a class="w-50">${data}</a></div>`;
-
             }
-        }],
-        fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-            console.log('atrasado', aData['atrasado']);
+        },
+        {
+            targets: 1,
+            visible: false
+        }
+        ,
+        {
+            targets: 6,
+            visible: false
+        }
+    ],
+        fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {            
         },
         initComplete: function(settings, json) {
             $('#reports-datatable thead tr:eq(0) th').each( function (i) {
                 var title = $(this).text();
-                $(this).html('<input class="textoshead"  placeholder="'+title+'"/>' );
+                $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" placeholder="${title}"  title="${title}"/>` );
                 $( 'input', this ).on('keyup change', function () {
                     if ($('#reports-datatable').DataTable().column(i).search() !== this.value ) {
                         $('#reports-datatable').DataTable().column(i).search(this.value).draw();
                     }
                 });
+                $('[data-toggle="tooltip"]').tooltip(); 
             });
         }
     });
 }
 
+
+
 function createDocRow(row, tr, thisVar) {
+    
     if (row.child.isShown()) {
         row.child.hide();
         tr.removeClass('shown');
@@ -270,24 +281,30 @@ function createDocRow(row, tr, thisVar) {
 }
 
 function buildTableDetail(data) {
+    
     var solicitudes = '<table class="table subBoxDetail">';
     solicitudes += '<tr style="border-bottom: 1px solid #fff; color: #4b4b4b;">';
     solicitudes += '<td>' + '<b>' + '# ' + '</b></td>';
     solicitudes += '<td>' + '<b>' + 'ESTATUS' + '</b></td>';
-    solicitudes += '<td>' + '<b>' + 'AREA' + '</b></td>';
-    solicitudes += '<td>' + '<b>' + 'FECHA INICIAL ESTATUS' + '</b></td>';
-    solicitudes += '<td>' + '<b>' + 'FECHA FINAL ESTATUS' + '</b></td>';
+    solicitudes += '<td>' + '<b>' + 'ÁREA' + '</b></td>';
+    solicitudes += '<td>' + '<b>' + 'CREADO POR' + '</b></td>';
+    solicitudes += '<td>' + '<b>' + 'ACTIVIDAD' + '</b></td>';
+    solicitudes += '<td>' + '<b>' + 'COMENTARIO' + '</b></td>';
+    solicitudes += '<td>' + '<b>' + 'FECHA DEL ESTATUS' + '</b></td>';
+    //solicitudes += '<td>' + '<b>' + 'FECHA FINAL DEL ESTATUS' + '</b></td>';
     solicitudes += '<td>' + '<b>' + 'VIGENCIA ' + '</b></td>';
-    solicitudes += '<td>' + '<b>' + 'DÍAS DE ATRASO ' + '</b></td>';
+    solicitudes += '<td>' + '<b>' + 'DÍAS TRANSCURRIDOS ' + '</b></td>';
     solicitudes += '</tr>';
     $.each(data, function (i, v) {
-        //i es el indice y v son los valores de cada fila
         solicitudes += '<tr>';
         solicitudes += '<td> ' + i + ' </td>';
         solicitudes += '<td> ' + v.idStatus + ' </td>';
         solicitudes += '<td> ' + v.area + ' </td>';
-        solicitudes += '<td> ' + v.fechados + ' </td>';
-        solicitudes += '<td> ' + v.fecha_creacion + ' </td>';
+        solicitudes += '<td> ' + v.creado_por + ' </td>';
+        solicitudes += '<td> ' + v.nombre + ' </td>';
+        solicitudes += '<td> ' + (v.comentarios == null ? v.descripcion : v.comentarios) + ' </td>';
+        solicitudes += '<td> ' + moment(v.fechados.split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss') + ' </td>';
+        //solicitudes += '<td> ' + moment(v.fecha_creacion.split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss') + ' </td>';
         solicitudes += '<td> ' + v.atrasado + '</td>';
         solicitudes += '<td> ' + v.diferencia + '</td>';
     });

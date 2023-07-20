@@ -264,8 +264,8 @@ $(document).on('click','#searchByDateRange', function () {
                 let compartida =  d.banderaVC != null || d.banderaVC != undefined ? '<center><span class="label lbl-violetBoots">Compartida</span><center><p><p>' : '';
                 let registro = `<center><span class="label lbl-violetBoots">${d.registro}</span><center><p><p>`; 
                 return d.tipo_venta == null ?
-                    `<center><span class="label" style="background:#${d.background_sl}; color:#${d.color};">${d.descripcion_estatus}</span> ${libContraloria} <center>${compartida} ${registro}` :
-                    `<center><span class="label" style="background:#${d.background_sl}; color:#${d.color};">${d.descripcion_estatus}</span> <p><p> <span class="label lbl-green">${d.tipo_venta}</span> ${libContraloria} <center>${compartida} ${registro}`;
+                    `<center><span class="label" style="background:#${d.color}18; color:#${d.color};">${d.descripcion_estatus}</span> ${libContraloria} <center>${compartida} ${registro}` :
+                    `<center><span class="label" style="background:#${d.color}18; color:#${d.color};">${d.descripcion_estatus}</span> <p><p> <span class="label lbl-green">${d.tipo_venta}</span> ${libContraloria} <center>${compartida} ${registro}`;
             }
         },
         {

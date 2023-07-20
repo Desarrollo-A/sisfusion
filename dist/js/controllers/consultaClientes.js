@@ -5,13 +5,15 @@ $(document).ready(function() {
         var title = $(this).text();
         titulos_encabezado.push(title);
         num_colum_encabezado.push(i);
-        $(this).html(`<input type="text"style=" background:#143860!important; color:white; border: 0; font-weight: 500;"class="textoshead"data-toggle="tooltip" data-placement="top"title="${title}"placeholder="${title}"/>`);
+        $(this).html(`<input  data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
         $( 'input', this ).on('keyup change', function () {
             if ($('#clients-datatable').DataTable().column(i).search() !== this.value ) {
                 $('#clients-datatable').DataTable().column(i).search(this.value).draw();
             }
         });
-    });
+        $('[data-toggle="tooltip"]').tooltip();
+        });
+    
 
     //Eliminamos la ultima columna "ACCIONES" donde se encuentra un elemento de tipo boton (para omitir en excel o pdf).
     num_colum_encabezado.pop();

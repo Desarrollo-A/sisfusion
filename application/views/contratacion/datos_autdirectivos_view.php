@@ -2,6 +2,11 @@
 <link href="https://unpkg.com/intro.js/minified/introjs.min.css" rel="stylesheet" />
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 
+<style>
+    .radioOption i{
+        color: #c1c1c1!important;
+    }
+</style>
 <body>
 	<div class="wrapper">
 		<?php
@@ -85,41 +90,37 @@
                                 <div class="nav-tabs-custom">
                                     <div class="tab-content p-2">
                                         <div class="tab-pane active" id="autorizaciones">
-                                            <div class="card-content">
-                                                <h3 class="card-title center-align">Tus autorizaciones</h3>
-                                                <div class="form-group">
-                                                    <table id="addExp" class="table-striped table-hover">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>PROYECTO</th>
-                                                                <th>LOTE</th>
-                                                                <th>CLIENTE</th>
-                                                                <th>ASESOR(ES)</th>
-                                                                <th>GERENTE</th>
-                                                                <th>AUTORIZACIÓN</th>
-                                                            </tr>
-                                                        </thead>
-                                                    </table>
-                                                </div>
+                                            <h3 class="card-title center-align">Tus autorizaciones</h3>
+                                            <div class="form-group">
+                                                <table id="addExp" class="table-striped table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>PROYECTO</th>
+                                                            <th>LOTE</th>
+                                                            <th>CLIENTE</th>
+                                                            <th>ASESOR(ES)</th>
+                                                            <th>GERENTE</th>
+                                                            <th>ACCIONES</th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
                                             </div>
                                         </div>
                                         <div class="tab-pane" id="autorizaciones-verificacion">
-                                            <div class="card-content">
-                                                <h3 class="card-title center-align">Tus autorizaciones de verificación</h3>
-                                                <div class="form-group">
-                                                    <table id="aut-verificacion" class="table-striped table-hover">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>PROYECTO</th>
-                                                                <th>LOTE</th>
-                                                                <th>CLIENTE</th>
-                                                                <th>ASESOR(ES)</th>
-                                                                <th>GERENTE</th>
-                                                                <th>AUTORIZACIÓN</th>
-                                                            </tr>
-                                                        </thead>
-                                                    </table>
-                                                </div>
+                                            <h3 class="card-title center-align">Tus autorizaciones de verificación</h3>
+                                            <div class="form-group">
+                                                <table id="aut-verificacion" class="table-striped table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>PROYECTO</th>
+                                                            <th>LOTE</th>
+                                                            <th>CLIENTE</th>
+                                                            <th>ASESOR(ES)</th>
+                                                            <th>GERENTE</th>
+                                                            <th>ACCIONES</th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
                                             </div>
                                         </div>
                                     </div>
@@ -131,9 +132,8 @@
 			</div>
 		</div>
 		<?php $this->load->view('template/footer_legend');?>
-	</div><!--main-panel close-->
+	</div>
 	<?php $this->load->view('template/footer');?>
-	<!--DATATABLE BUTTONS DATA EXPORT-->
 	<script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
 	<script src="<?=base_url();?>dist/js/controllers/registro-cliente/autorizacionDirectivos.js"></script>
 </body>

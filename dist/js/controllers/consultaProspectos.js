@@ -229,6 +229,12 @@ function fillTable(transaction, beginDate, endDate, where) {
 
 }
 
+$('#prospects-datatable').on('draw.dt', function() {
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
+    });
+});
+
 $('#myEditModal').modalSteps();
 $('#myCoOwnerModal').modalSteps();
 
@@ -615,10 +621,10 @@ function validateMatrimonialRegime(type) {
     }
 }
 
+
 function getAdvisers(element) {
     sede = $('option:selected', element).attr('data-sede');
     $("#myselectasesor").find("option").remove();
-    $("#myselectasesor").append($('<option disabled>').val("0").text("Seleccione una opción"));
     $.post('getAdvisers/' + sede, function(data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
@@ -628,16 +634,38 @@ function getAdvisers(element) {
             $("#myselectasesor").append($('<option>').val(id).attr('data-sede', sede).text(name));
         }
         if (len <= 0) {
-            $("#myselectasesor").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+            $("#myselectasesor").append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
         }
         $("#myselectasesor").selectpicker('refresh');
     }, 'json');
 }
+var selectGerente ;
+var selectCoordinador;
+var selectAsesor;
+//SELECT gerente
+function getManagers(){
+    $("#myselectgerente2").find("option").remove();
+    $.post('getManagers/', function(data) {
+        var len = data.length;
+        for (var i = 0; i < len; i++) {
+            var id = data[i]['id_usuario'];
+            var name = data[i]['nombre'];
+            var sede = data[i]['id_sede'];
+            $("#myselectgerente2").append($('<option>').val(id).attr('data-sede', sede).text(name));
+            $("#myselectgerente2").selectpicker('refresh');  
+        }
+        if (len <= 0) {
+            $("#myselectgerente2").append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
+        }
+        $("#myselectgerente2").selectpicker('refresh'); 
+        selectGerente = $("#myselectgerente2").val();
+    }, 'json');
+}
 
+// SELECT coordinador
 function getCoordinatorsByManager(element) {
     gerente = $('option:selected', element).val();
     $("#myselectcoordinador").find("option").remove();
-    $("#myselectcoordinador").append($('<option disabled>').val("0").text("Seleccione una opción"));
     $.post('getCoordinatorsByManager/' + gerente, function(data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
@@ -647,16 +675,18 @@ function getCoordinatorsByManager(element) {
             $("#myselectcoordinador").append($('<option>').val(id).attr('data-sede', sede).text(name));
         }
         if (len <= 0) {
-            $("#myselectcoordinador").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+            $("#myselectcoordinador").append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
         }
         $("#myselectcoordinador").selectpicker('refresh');
+        selectCoordinador = $("#myselectcoordinador").val();
+
     }, 'json');
 }
 
+// SELECT ASESOR 
 function getAdvisersByCoordinator(element) {
     coordinador = $('option:selected', element).val();
     $("#myselectasesor3").find("option").remove();
-    $("#myselectasesor3").append($('<option disabled>').val("0").text("Seleccione una opción"));
     $.post('getAdvisersByCoordinator/' + coordinador, function(data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
@@ -666,9 +696,10 @@ function getAdvisersByCoordinator(element) {
             $("#myselectasesor3").append($('<option>').val(id).attr('data-sede', sede).text(name));
         }
         if (len <= 0) {
-            $("#myselectasesor3").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+            $("#myselectasesor3").append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
         }
         $("#myselectasesor3").selectpicker('refresh');
+        selectAsesor = $("#myselectasesor3").val();
     }, 'json');
 }
 
@@ -886,16 +917,23 @@ function validateEmptyFields(v, type) {
 }
 
 function fillTimeline(v) {
-    $("#comments-list").append('<li class="timeline-inverted">\n' +
-        '    <div class="timeline-badge info"></div>\n' +
-        '    <div class="timeline-panel">\n' +
-        '            <label><h6>' + v.creador + '</h6></label>\n' +
-        '            <br>' + v.observacion + '\n' +
-        '        <h6>\n' +
-        '            <span class="small text-gray"><i class="fa fa-clock-o mr-1"></i> ' + v.fecha_creacion + '</span>\n' +
-        '        </h6>\n' +
+    $("#comments-list").append(
+        '<li>\n' +
+        '    <div class="container-fluid">\n' +
+        '       <div class="row">\n' +
+        '           <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">\n' +
+        '               <a><small>Creador por: </small><b>' + v.creador + '</b></a><br>\n' +
+        '           </div>\n' +
+        '           <div class="float-end text-right">\n' +
+        '               <a>' + v.fecha_creacion + '</a>\n' +
+        '           </div>\n' +
+        '           <div class="col-md-12">\n' +
+    '                <p class="m-0"><small>Comentario: </small><b> ' + v.observacion + '</b></p>\n'+
+        '           </div>\n' +
+        '       </div>\n' +
         '    </div>\n' +
-        '</li>');
+        '</li>'
+    );
 }
 
 function fillChangelog(v) {
@@ -1094,6 +1132,7 @@ $(document).on('click', '.re-asign', function(e) {
     id_prospecto = $(this).attr("data-id-prospecto");
     if (id_rol_general == 3 || id_rol_general == 6) { // Gerente & asistente de ventas
         $("#myReAsignModalVentas").modal();
+        getManagers();
         $("#id_prospecto_re_asign_ve").val(id_prospecto);
     } else if (id_rol_general == 19) { // Subdirector MKTD
         $("#myReAsignModalSubMktd").modal();
@@ -1318,7 +1357,7 @@ function getStatusRecordatorio(){
             $("#estatus_recordatorio").append($('<option>').val(id).text(name));
         }
         if (len <= 0) {
-            $("#estatus_recordatorio").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+            $("#estatus_recordatorio").append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
         }
         $("#estatus_recordatorio").selectpicker('refresh');
     }, 'json'); 
@@ -1357,7 +1396,7 @@ function getOfficeAddresses(){
             $("#id_direccion").append($('<option>').val(id).text(direccion));
         }
         if (len <= 0) {
-        $("#id_direccion").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+        $("#id_direccion").append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
         }
         $("#id_direccion").selectpicker('refresh');
     }, 'json');

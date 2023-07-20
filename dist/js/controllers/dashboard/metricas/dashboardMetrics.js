@@ -934,7 +934,7 @@ function buildTableDisponibilidad(data){
                     .search(this.value).draw();
             }
         });
-            $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
+        $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
     });
 
     $("#tabledisponibilidad").DataTable({
@@ -974,8 +974,6 @@ function buildTableDisponibilidad(data){
         }],
     });
 }
-
-
 
 function buildTableLugarProspeccion(data){
     $('#tablelugar thead tr:eq(0) th').each(function (i) {
