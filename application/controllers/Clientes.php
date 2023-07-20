@@ -2258,7 +2258,7 @@ public function getStatusMktdPreventa(){
     public function changeProspectingPlace()
     {
         $this->load->view('template/header');
-        $this->load->view("clientes/change_lp.php");
+        $this->load->view("clientes/change_lp");
     }
 	
     public function getSedes()

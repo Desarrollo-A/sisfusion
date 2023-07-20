@@ -1949,6 +1949,10 @@ table .boxSBtns {
   width: fit-content;
 }
 
+.dataTables_scroll .dataTables_scrollHeadInner {
+  width: 100% !important;
+}
+
 .dataTables_scroll .container-fluid {
   padding-top: 5px;
   padding-bottom: 5px;
@@ -2088,19 +2092,19 @@ table .boxSBtns {
 }
 
 .radio-with-icon-autorizacones input[type="radio"]:checked ~ label .iAccepted {
-  color: #4caf50;
+  color: #1E8449;
 }
 
 .radio-with-icon-autorizacones input[type="radio"]:checked ~ label .iDenied {
-  color: #929292;
+  color: #B03A2E;
 }
 
 .radio-with-icon-autorizacones input[type="radio"]:checked ~ label .iSend {
-  color: #103f75;
+  color: #0a548b;
 }
 
 .radio-with-icon-autorizacones i {
-  color: #eaeaea;
+  color: #c1c1c1;
 }
 
 .radio-with-icon-autorizacones i:hover {

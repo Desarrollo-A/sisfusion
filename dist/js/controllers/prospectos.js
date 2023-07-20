@@ -66,16 +66,23 @@ $("#my-form").on('submit', function(e) {
 function validateFile() {
     var elementos_req = new Array('prospecting_place', 'sales_plaza');
     var exito_confirmar = false;
+    let flagErrors = 0;
     for (let index = 0; index < elementos_req.length; index++) {
         index_select = document.getElementById(elementos_req[index]).selectedIndex;
         if(index_select =! undefined && index_select > 0){
             $("#"+elementos_req[index]).parent('div').parent('div').removeClass('has-error');
-            exito_confirmar = true;
         }else{
             $("#"+elementos_req[index]).parent('div').parent('div').addClass('has-error');
-            exito_confirmar = false;
+            flagErrors = flagErrors+1;
         }
     }
+
+    if(flagErrors == 0){
+        exito_confirmar = true;
+    }else{
+        exito_confirmar = false;
+    }
+    
     if (!exito_confirmar) {
         alerts.showNotification('top', 'right', 'Debes ingresar los campos requeridos', 'danger');
     } else {

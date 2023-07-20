@@ -9,9 +9,8 @@
 <body id="mainDashboard">
     <div class="wrapper ">
         <?php
-            if(!isset($external)){
+            if(!ISSET($external))
                 $this->load->view('template/sidebar');
-            }
         ?>
 
         <div class="content boxContent pt-0">
@@ -88,7 +87,7 @@
 <script>
     userType = <?= $this->session->userdata('id_rol') ?> ;
     idUser = <?= $this->session->userdata('id_usuario') ?>;
-    let idLider = <?= $this->session->userdata('id_lider') ?>;
-    let  base_url = "<?=base_url()?>";
+    var idLider = <?= $this->session->userdata('id_lider') ?>;
+    var  base_url = "<?=base_url()?>";
     googleCode = "<?php echo $googleCode?>";
 </script>

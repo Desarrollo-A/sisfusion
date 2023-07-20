@@ -5861,7 +5861,7 @@ class RegistroCliente extends CI_Controller {
 		for($i=0; $i < $tamanoOfAuts; $i++){
 			$idAut = $_POST['idAutorizacion'.$i];
 
-			if (isset($_FILES["docArchivo".$i]["name"])) {
+			if (isset($_FILES["docArchivo".$i]["name"]) && !empty($_FILES["docArchivo".$i]["name"])) {
 				$aleatorio = rand(100,1000);
 				$expediente=preg_replace('[^A-Za-z0-9]', '',$_FILES["docArchivo".$i]["name"]);
 				$proyecto = str_replace(' ', '',$nombreResidencial);

@@ -214,21 +214,21 @@ class Usuarios_modelo extends CI_Model
 
 
             case '49': // CONSULTA (CAPITAL HUMANO DESCUENTOS UNIVERSIDAD)
-                return $this->db->query("SELECT CONVERT(varchar,u.fechaIngreso,103) fechaIngreso, u.estatus, u.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, u.correo,
-                u.telefono, 
-                CASE WHEN u.id_usuario IN (3, 5, 607, 4) THEN 'Director regional' WHEN u.nueva_estructura = 1 THEN oxcNE.nombre ELSE oxc.nombre END puesto, 
-                CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) jefe_directo, u.correo, oxc2.nombre forma_pago,
-                s.nombre sede, CASE WHEN DAY(u.fecha_creacion) >= 6 AND MONTH(u.fecha_creacion) = MONTH(GETDATE()) AND YEAR(u.fecha_creacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END as nuevo, 
+                return $this->db->query("SELECT CONVERT(varchar,u.fechaIngreso,120) fechaIngreso, u.estatus, u.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, UPPER(u.correo) AS correo,
+                u.telefono, UPPER(oxcN.nombre) AS nacionalidad,CONVERT(VARCHAR,u.fecha_creacion,20) AS fecha_alta,
+                UPPER(CASE WHEN u.id_usuario IN (3, 5, 607, 4) THEN 'Director regional' WHEN u.nueva_estructura = 1 THEN oxcNE.nombre ELSE oxc.nombre END) AS puesto, 
+                CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) jefe_directo, UPPER(oxc2.nombre) AS forma_pago,
+                UPPER(s.nombre) AS sede, CASE WHEN DAY(u.fecha_creacion) >= 6 AND MONTH(u.fecha_creacion) = MONTH(GETDATE()) AND YEAR(u.fecha_creacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END as nuevo, 
                 u.fecha_creacion, CASE WHEN du.id_usuario <> 0 THEN 1 ELSE 0 END as usuariouniv,
-                (SELECT (MAX(fecha_creacion)) FROM auditoria aud WHERE u.id_usuario = aud.id_parametro AND aud.tabla='usuarios' AND col_afect='estatus' and anterior='1' and (nuevo='0' OR nuevo='3')) as fecha_baja, u.nueva_estructura, u.simbolico
+                (SELECT (MAX(CONVERT(VARCHAR,fecha_creacion,20))) FROM auditoria aud WHERE u.id_usuario = aud.id_parametro AND aud.tabla='usuarios' AND col_afect='estatus' and anterior='1' and (nuevo='0' OR nuevo='3')) as fecha_baja, u.nueva_estructura, u.simbolico
                 FROM usuarios u 
                 LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
                 INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
                 LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = u.forma_pago AND oxc2.id_catalogo = 16
                 INNER JOIN sedes s ON s.id_sede = (CASE WHEN LEN (u.id_sede) > 1 THEN 2 ELSE u.id_sede END)
                 LEFT JOIN descuentos_universidad du ON du.id_usuario = u.id_usuario
-                --LEFT JOIN  (SELECT id_usuario FROM descuentos_universidad GROUP BY id_usuario) du ON du.id_usuario = u.id_usuario
                 LEFT JOIN opcs_x_cats oxcNE ON oxcNE.id_opcion = u.id_rol AND oxcNE.id_catalogo = 83
+                LEFT JOIN opcs_x_cats oxcN ON oxcN.id_opcion = u.nacionalidad AND oxcN.id_catalogo = 11
                 WHERE u.id_usuario not in (select id_usuario_d from relacion_usuarios_duplicados) AND (u.id_rol IN (3, 7, 9, 2) 
                 AND (u.rfc NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '' ) NOT LIKE '%test_%') AND u.id_usuario NOT IN (821, 1366, 1923, 4340, 4062, 4064, 4065, 4067, 4068, 4069, 6578, 712 , 9942, 4415, 3, 607)) OR u.id_usuario IN (9359, 9827)
                 ORDER BY nombre");
@@ -487,6 +487,7 @@ class Usuarios_modelo extends CI_Model
             case '70': // Ejecutivo de contraloría JR
             case '80': // CONTRALORÍA CORPORTATICA
             case '63': // CI
+            case '40': //Cobranza
                 $query = $this->db->query("SELECT CONVERT(VARCHAR,fecha_creacion,20) AS fecha_creacion, creador, 
                 (CASE col_afect 
                 WHEN 'id_lider' THEN 'líder'
@@ -560,7 +561,7 @@ class Usuarios_modelo extends CI_Model
                 WHERE id_parametro = $id_usuario AND col_afect NOT IN ('contrasena', 'tiene_hijos', 'sesion_activa', 'imagen_perfil', 'jerarquia_user', 'usuario') AND tabla = 'usuarios' ORDER BY fecha_creacion DESC");
                 break;
             case '49': // CAPITAL HUMANO
-                $query = $this->db->query("SELECT fecha_creacion, creador, col_afect parametro_modificado,(
+                $query = $this->db->query("SELECT CONVERT(VARCHAR,fecha_creacion,20) AS fecha_creacion, creador, col_afect parametro_modificado,(
                 CASE col_afect
                 WHEN 'estatus' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 3)
                 ELSE nuevo  

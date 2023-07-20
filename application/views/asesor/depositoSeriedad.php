@@ -113,7 +113,7 @@
                 </div>
                 <div class="modal-body">
                     <label>Comentario:</label>
-                    <textarea class="form-control" id="comentarioST3PV2" rows="3"></textarea>
+                    <textarea class="text-modal scroll-styles" id="comentarioST3PV2" rows="3" placeholder="Comentario"></textarea>
                     <br>
                 </div>
                 <div class="modal-footer">
@@ -126,7 +126,7 @@
     <!-- modal -->
 
     <!-- modal ENVÍO DE VERIFICACIONES -->
-    <div class="modal fade" id="autorizaciones-modal" data-backdrop="static" data-keyboard="false">
+    <div class="modal fade" id="autorizaciones-modal" data-backdrop="static" data-keyboard="false" >
         <div class="modal-dialog">
             <div class="modal-content" >
                 <div class="modal-header">
@@ -283,7 +283,7 @@
 
                             <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mt-2">
                                 <label>Comentario adicional (<small style="color: red;">*</small>)</label>
-                                <textarea class="text-modal" name="comentario" id="comentarioSol" rows="3" required></textarea>
+                                <textarea class="text-modal scroll-styles" name="comentario" id="comentarioSol" rows="3" placeholder="Comentario" required></textarea>
                             </div>
                         </div>
                     </div>
@@ -298,7 +298,7 @@
 
     <div class="content hide">
         <!-- modal  ENVIA A CONTRALORIA 5 por rechazo 1-->
-        <div class="modal fade" id="modal2" data-backdrop="static" data-keyboard="false">
+        <div class="modal fade in" id="modal2" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
                 <div class="modal-content" >
                     <div class="modal-header">
@@ -306,12 +306,12 @@
                     </div>
                     <div class="modal-body">
                         <label>Comentario:</label>
-                        <textarea class="form-control" id="comentario2" rows="3"></textarea>
+                            <textarea class="text-modal scroll-styles" name="comentario2" id="comentario2" rows="3" placeholder="Comentario" required></textarea>
                         <br>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
-                        <button type="button" id="save2" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="save2" class="btn btn-primary">Registrar</button>
                     </div>
                 </div>
             </div>
@@ -327,12 +327,12 @@
                     </div>
                     <div class="modal-body">
                         <label>Comentario:</label>
-                        <textarea class="text-modal scroll-styles" id="comentario3" rows="3"></textarea>
+                            <textarea class="text-modal scroll-styles" name="comentario3" id="comentario3" rows="3" placeholder="Comentario" required></textarea>
                         <br>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="button" id="save3" class="btn btn-primary"></i> Registrar</button>
+                        <button type="button" id="save3" class="btn btn-primary"> Registrar</button>
                     </div>
                 </div>
             </div>
@@ -348,7 +348,7 @@
                     </div>
                     <div class="modal-body">
                         <label>Comentario:</label>
-                        <textarea class="form-control" id="comentario4" rows="3"></textarea>
+                        <textarea class="text-modal scroll-styles" name="comentario4" id="comentario4" rows="3" placeholder="Comentario" required></textarea>
                         <br>
                     </div>
                     <div class="modal-footer">
@@ -369,7 +369,7 @@
                     </div>
                     <div class="modal-body">
                         <label>Comentario:</label>
-                        <textarea class="form-control" id="comentario5" rows="3"></textarea>
+                        <textarea class="text-modal scroll-styles" name="comentario5" id="comentario5" rows="3" placeholder="Comentario" required></textarea>
                         <br>
                     </div>
                     <div class="modal-footer">
@@ -390,7 +390,7 @@
                     </div>
                     <div class="modal-body">
                         <label>Comentario:</label>
-                        <textarea class="form-control" id="comentario6" rows="3"></textarea>
+                        <textarea class="text-modal scroll-styles" name="comentario6" id="comentario6" rows="3" placeholder="Comentario" required></textarea>
                         <br>
                     </div>
                     <div class="modal-footer">
@@ -411,12 +411,12 @@
                     </div>
                     <div class="modal-body">
                         <label>Comentario:</label>
-                        <textarea class="form-control" id="comentario7" rows="3"></textarea>
+                        <textarea class="text-modal scroll-styles" name="comentario7" id="comentario7" rows="3" placeholder="Comentario" required></textarea>
                         <br>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
-                        <button type="button" id="save7" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="save7" class="btn btn-primary">Registrar</button>
                     </div>
                 </div>
             </div>
@@ -424,20 +424,20 @@
         <!-- modal -->
 
         <!-- modal  ENVIA A JURIDICO por rechazo 2-->
-        <div class="modal fade" id="modal_return1" data-backdrop="static" data-keyboard="false">
+        <div class="modal fade" id="modal_return1" data-backdrop="static" data-keyboard="false" >
             <div class="modal-dialog">
                 <div class="modal-content" >
                     <div class="modal-header">
-                        <h4 class="modal-title text-center"><label>Integración de Expediente (Rechazo estatus 7 Jurídico) - <b><span class="lote"></span></b></label></h4>
+                        <h4 class="modal-title text-center"><label>Integración de Expediente (Rechazo estatus 7 Jurídico) -<b><span class="lote"></span></b></label></h4>
                     </div>
                     <div class="modal-body">
                         <label>Comentario:</label>
-                        <textarea class="form-control" id="comentario8" rows="3"></textarea>
+                        <textarea class="text-modal scroll-styles" name="comentario8" id="comentario8" rows="3" placeholder="Comentario" required></textarea>
                         <br>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
-                        <button type="button" id="b_return1" class="btn btn-success"><span class="material-icons" >send</span> </i> Registrar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="b_return1" class="btn btn-primary">Registrar</button>
                     </div>
                 </div>
             </div>

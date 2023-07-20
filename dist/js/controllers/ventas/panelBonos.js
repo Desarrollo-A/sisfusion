@@ -47,20 +47,29 @@ function numberTwoDecimal(x) {
 } 
 
 /**-------------------------  TABLA NUEVOS BONOS --------------------------- */
-$("#tabla_prestamos").ready(function() {
+$("#tabla_nuevos").ready(function() {
     let titulos = [];
-    $('#tabla_prestamos thead tr:eq(0) th').each( function (i) {
+    $('#tabla_nuevos thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
         $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
         $( 'input', this ).on('keyup change', function () {
-            if ($('#tabla_prestamos').DataTable().column(i).search() !== this.value ) {
-                $('#tabla_prestamos').DataTable().column(i).search(this.value).draw();
+            if ($('#tabla_nuevos').DataTable().column(i).search() !== this.value ) {
+                $('#tabla_nuevos').DataTable().column(i).search(this.value).draw();
             }
         });
         $('[data-toggle="tooltip"]').tooltip();
     });
 
-    tabla_nuevas = $("#tabla_prestamos").DataTable({
+    $('#tabla_nuevos').on('xhr.dt', function ( e, settings, json, xhr ) {
+        var total = 0;
+        $.each(json.data, function(i, v){
+            total += parseFloat(v.impuesto1);
+        });
+        var to = formatMoney(numberTwoDecimal(total));
+        document.getElementById("totalnuevos").textContent = to;
+    });
+
+    tabla_nuevas = $("#tabla_nuevos").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
@@ -183,10 +192,20 @@ $("#tabla_prestamos").ready(function() {
         },
         {
             "data": function(d) {
+                let abonoFinal;
 
                 if (d.estado == 1) {
+                    if(parseFloat(d.pago) == parseFloat(d.impuesto1)){
+                        abonoFinal = parseFloat(d.pago);
+                    }
+                    else{
+                        let iva = ((parseFloat(d.impuesto)/100)*d.pago);
+                        let pagar = parseFloat(d.pago) - iva;
+                        abonoFinal = parseFloat(pagar);
+                    }
+
                     return  '<div class="d-flex justify-center">'+
-                        '<button class="btn-data btn-green abonar" value="' + d.id_pago_bono + ',' + d.abono + '" data-toggle="tooltip" data-placement="top" title="AUTORIZAR">'+
+                        '<button class="btn-data btn-green abonar" value="' + d.id_pago_bono + ',' + parseFloat(abonoFinal) + '" data-toggle="tooltip" data-placement="top" title="AUTORIZAR">'+
                             '<i class="fas fa-check"></i>'+
                         '</button>' +
                         '<button class="btn-data btn-blueMaderas consulta_abonos" value="' + d.id_pago_bono + ','+d.nombre+'  "  data-impuesto="'+d.impuesto1+'" data-toggle="tooltip" data-placement="top" title="HISTORIAL" >'+
@@ -209,95 +228,96 @@ $("#tabla_prestamos").ready(function() {
         },
     });
 
-    $('#tabla_prestamos').on('draw.dt', function() {
+    $('#tabla_nuevos').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
         });
     });
 
-    $("#tabla_prestamos tbody").on("click", ".consulta_abonos", function() {
+
+    $("#tabla_nuevos tbody").on("click", ".consulta_abonos", function() {
         $('#spiner-loader').removeClass('hide');
         valores = $(this).val();
         let nuevos = valores.split(',');
         impuesto = $(this).attr("data-impuesto");
+
         let id= nuevos[0];
         let nombre=nuevos[1];
         $.getJSON(general_base_url + "Comisiones/getHistorialAbono2/" + id).done(function(data) {
+
             $("#modal_bonos .modal-header").html("");
             $("#modal_bonos .modal-body").html("");
             $("#modal_bonos .modal-footer").html("");
-            let estatus = '';
-            let color='';
-            if(data[0].estado == 1){
-                estatus=data[0].nombre;
-                color='27AE60';
-            }else if(data[0].estado == 2){
-                estatus=data[0].nombre;
-                color='E3A13C';
-            }else if(data[0].estado == 3){
-                estatus=data[0].nombre;
-                color='07DF9F';
-            }else if(data[0].estado == 4){
-                estatus=data[0].nombre;
-                color='C2A205';
-            }else if(data[0].estado == 5){
-                estatus='CANCELADO';
-                color='red';
-            }
-            
-            let f = data[0].fecha_movimiento.split('.');
-            $("#modal_bonos .modal-body").append(`<div class="row"><div class="col-md-3"><h6>PARA: <b>${nombre}</b></h6></div>
-            <div class="col-md-3"><h6>Abono: <b style="color:green;">${formatMoney(numberTwoDecimal(impuesto))}</b></h6></div>
-            <div class="col-md-3"><h6>Fecha: <b>${f[0]}</b></h6></div>
-            <div class="col-md-3"><span class="label label-danger" style="background:#${color}">${estatus}</span></h6></div>
-            </div>`);
+            let fechaComentario = data[0].fecha_movimiento.split('.')[0];
+            let estatus = 'NUEVO';
+            $("#modal_bonos .modal-body").append(`<div class="row"><div role="tabpanel">
+            <ul class="nav nav-tabs" role="tablist">
+                <h5 style="color: white;"><b>BITÁCORA DE CAMBIOS</b></h5>
 
-            $("#modal_bonos .modal-body").append(`<div role="tabpanel">
-                <ul class="nav nav-tabs" role="tablist" style="background: #71B85C;">
-                    <h5 style="color: white;"><b>BITÁCORA DE CAMBIOS</b></h5>
-                </ul>
-                <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane active" id="changelogTab">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="card card-plain">
-                                    <div class="card-content">
-                                        <ul class="timeline timeline-simple" id="comments-list-asimilados"></ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div class="row" style="color: white;"><div class="col-md-6"><h6>usuario bonificado: <b>${nombre}</b></h6></div>
+                    <div class="col-md-6"><h6>monto: <b>${formatMoney(numberTwoDecimal(impuesto))}</b></h6></div>
+                    <div class="col-md-6"><h6>Fecha: <b>${fechaComentario}</b></h6></div>
+                    <br><div class="col-md-6"><h6>Estatus: <b>${estatus}</b></h6></div>
+                  </div>
+            </ul>
+            <div class="tab-content">
+                      <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                          <div class="row">
+                              <div class="col-md-12">
+                                  <div class="card card-plain">
+                                      <div class="card-content">
+                                          <ul class="timeline timeline-simple" id="comments-list-asimilados"></ul>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
             </div>`);
 
             for (let index = 0; index < data.length; index++) {
                 let fechaComentario = data[index].fecha_movimiento.split('.')[0];
-                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><b style="color:#896597">'+fechaComentario+'</b><b style="color:gray;"> - '+data[index].nombre_usuario+'</b><br><i style="color:gray;">'+data[index].comentario+'</i></p><br></div>');   
-            }
-            $('#spiner-loader').addClass('hide');
+               $("#comments-list-asimilados").append('<div class="col-lg-12"><p><b>'+fechaComentario+'</b><b style="color:gray;"> - '+data[index].nombre_usuario+'</b><br>'+data[index].comentario+'</p><br></div>');   
+           }
+
+            $("#modal_bonos .modal-body").append(``);
+
             $("#modal_bonos").modal();
+            $('#spiner-loader').addClass('hide');
+
         });
     });
 
-    $("#tabla_prestamos tbody").on("click", ".abonar", function() {
-        bono = $(this).val();
-        var dat = bono.split(",");
-        $("#modal_abono .modal-body").append(`<div id="inputhidden">
-        <h6>¿Seguro que deseas autorizar el bono seleccionado de <b style="color:green;">${formatMoney(dat[1])}</b> ?</h6>
-        <input type='hidden' name="id_abono" id="id_abono" value="${dat[0]}"><input type='hidden' name="pago" id="pago" value="${dat[1]}">
-        <div class=" modal-footer">
-        <button type="button" class="btn btn-danger btn-simple" onclick="closeModalEng()" > CANCELAR</button>
-        <button type="submit" class="btn btn-primary" onclick=".abonar"> AUTORIZAR</button>
-        </div>
-        </div>`);
 
-        $("#modal_abono .modal-body").append(``);
-        $('#modal_abono').modal('show');
+        $("#tabla_nuevos tbody").on("click", ".abonar", function() {
+
+            $("#modal_abono .modal-header").html('');
+            $("#modal_abono .modal-body").html('');
+            $("#modal_abono .modal-footer").html('');
+
+            bono = $(this).val();
+            var dat = bono.split(",");
+            $("#modal_abono .modal-header").append(`<h3>Confirmación</h3>`);
+    
+            $("#modal_abono .modal-body").append(`
+            <h4>¿Está seguro de enviar el bono de <b>${formatMoney(dat[1])}</b> a revisión contraloría?</h4>
+            <input type='hidden' name="id_abono" id="id_abono" value="${dat[0]}">
+            <input type='hidden' name="pago" id="pago" value="${dat[1]}">
+            `);
+    
+            $("#modal_abono .modal-footer").append(`<div id="inputhidden">
+            <button type="button" class="btn btn-danger btn-simple" onclick="closeModalEng()" > CANCELAR</button>
+            <button type="submit" class="btn btn-primary" onclick=".abonar"> AUTORIZAR</button></div>`);
+    
+            $("#modal_abono .modal-header").append(``);
+            $("#modal_abono .modal-body").append(``);
+            $("#modal_abono .modal-footer").append(``);
+            $('#modal_abono').modal('show');
+
     });
 
     $(window).resize(function () {
-        tabla_prestamos.columns.adjust();
+        tabla_nuevos.columns.adjust();
     });
 });
 /** ------------------------ FIN TABLA NUEVOS BONOS ------------------------ */
@@ -317,6 +337,14 @@ $("#tabla_bono_revision").ready(function() {
         $('[data-toggle="tooltip"]').tooltip();
     });
 
+    $('#tabla_bono_revision').on('xhr.dt', function ( e, settings, json, xhr ) {
+        var total = 0;
+        $.each(json.data, function(i, v){
+            total += parseFloat(v.impuesto1);
+        });
+        var to = formatMoney(numberTwoDecimal(total));
+        document.getElementById("totalrevision").textContent = to;
+    });
 
     tabla_nuevas2 = $("#tabla_bono_revision").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -469,74 +497,57 @@ $("#tabla_bono_revision").ready(function() {
     });
 
     $("#tabla_bono_revision tbody").on("click", ".consulta_abonos", function() {
-        $('#spiner-loader').removeClass('hide');
-        valores = $(this).val();
-        let nuevos = valores.split(',');
-        impuesto = $(this).attr("data-impuesto");
-
-        let id= nuevos[0];
-        let nombre=nuevos[1];
-        $.getJSON(general_base_url + "Comisiones/getHistorialAbono2/" + id).done(function(data) {
-
-            $("#modal_bonos .modal-header").html("");
-            $("#modal_bonos .modal-body").html("");
-            $("#modal_bonos .modal-footer").html("");
-
-            let estatus = '';
-            let color='';
-
-            if(data[0].estado == 1){
-                estatus=data[0].nombre;
-                color='27AE60';
-            }else if(data[0].estado == 2){
-                estatus=data[0].nombre;
-                color='E3A13C';
-            }else if(data[0].estado == 3){
-                estatus=data[0].nombre;
-                color='07DF9F';
-            }else if(data[0].estado == 4){
-                estatus=data[0].nombre;
-                color='C2A205';
-            }else if(data[0].estado == 5){
-                estatus='CANCELADO';
-                color='red';
-            }
+            $('#spiner-loader').removeClass('hide');
+            valores = $(this).val();
+            let nuevos = valores.split(',');
+            impuesto = $(this).attr("data-impuesto");
     
-            let f = data[0].fecha_movimiento.split('.');
-            $("#modal_bonos .modal-body").append(`<div class="row"><div class="col-md-3"><h6>PARA: <b>${nombre}</b></h6></div>
-            <div class="col-md-3"><h6>Abono: <b style="color:green;">${formatMoney(numberTwoDecimal(impuesto))}</b></h6></div>
-            <div class="col-md-3"><h6>Fecha: <b>${f[0]}</b></h6></div>
-            <div class="col-md-3"><span class="label label-danger" style="background:#${color}">${estatus}</span></h6></div>
-            </div>`);
-
-            $("#modal_bonos .modal-body").append(`<div role="tabpanel">
-                <ul class="nav nav-tabs" role="tablist" style="background: #71B85C;">
+            let id= nuevos[0];
+            let nombre=nuevos[1];
+            $.getJSON(general_base_url + "Comisiones/getHistorialAbono2/" + id).done(function(data) {
+    
+                $("#modal_bonos .modal-header").html("");
+                $("#modal_bonos .modal-body").html("");
+                $("#modal_bonos .modal-footer").html("");
+                let fechaComentario = data[0].fecha_movimiento.split('.')[0];
+                let estatus = 'EN REVISIÓN';
+                $("#modal_bonos .modal-body").append(`<div class="row"><div role="tabpanel">
+                <ul class="nav nav-tabs" role="tablist">
                     <h5 style="color: white;"><b>BITÁCORA DE CAMBIOS</b></h5>
+    
+                    <div class="row" style="color: white;"><div class="col-md-6"><h6>usuario bonificado: <b>${nombre}</b></h6></div>
+                        <div class="col-md-6"><h6>monto: <b>${formatMoney(numberTwoDecimal(impuesto))}</b></h6></div>
+                        <div class="col-md-6"><h6>Fecha: <b>${fechaComentario}</b></h6></div>
+                        <br><div class="col-md-6"><h6>Estatus: <b>${estatus}</b></h6></div>
+                      </div>
                 </ul>
                 <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane active" id="changelogTab">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="card card-plain">
-                                    <div class="card-content">
-                                        <ul class="timeline timeline-simple" id="comments-list-asimilados"></ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>`);
-
-            for (let index = 0; index < data.length; index++) {
-                let fechaComentario = data[index].fecha_movimiento.split('.')[0];
-                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><b style="color:#896597">'+fechaComentario+'</b><b style="color:gray;"> - '+data[index].nombre_usuario+'</b><br><i style="color:gray;">'+data[index].comentario+'</i></p><br></div>');  
-            }
-
-            $("#modal_bonos").modal();   
-            $('#spiner-loader').addClass('hide');
+                          <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                              <div class="row">
+                                  <div class="col-md-12">
+                                      <div class="card card-plain">
+                                          <div class="card-content">
+                                              <ul class="timeline timeline-simple" id="comments-list-asimilados"></ul>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                </div>`);
+    
+                for (let index = 0; index < data.length; index++) {
+                    let fechaComentario = data[index].fecha_movimiento.split('.')[0];
+                   $("#comments-list-asimilados").append('<div class="col-lg-12"><p><b>'+fechaComentario+'</b><b style="color:gray;"> - '+data[index].nombre_usuario+'</b><br>'+data[index].comentario+'</p><br></div>');   
+               }
+    
+                $("#modal_bonos .modal-body").append(``);
+    
+                $("#modal_bonos").modal();
+                $('#spiner-loader').addClass('hide');
+    
+            });
         });
-    });
 
     $(window).resize(function () {
         tabla_bono_revision.columns.adjust();
@@ -545,21 +556,21 @@ $("#tabla_bono_revision").ready(function() {
 /**------------------------- FIN TABLA REVISONES---------------------------- */
 
 /**-----------------TABLA PAGADOS-------------------------------- */
-$("#tabla_bono_pagado").ready(function() {
+$("#tabla_bonos_porpagar").ready(function() {
     let titulos = [];
 
-    $('#tabla_bono_pagado thead tr:eq(0) th').each( function (i) {
+    $('#tabla_bonos_porpagar thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
         $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
         $( 'input', this ).on('keyup change', function () {
-            if ($('#tabla_bono_pagado').DataTable().column(i).search() !== this.value ) {
-                $('#tabla_bono_pagado').DataTable().column(i).search(this.value).draw();
+            if ($('#tabla_bonos_porpagar').DataTable().column(i).search() !== this.value ) {
+                $('#tabla_bonos_porpagar').DataTable().column(i).search(this.value).draw();
             }
         });
         $('[data-toggle="tooltip"]').tooltip();
     });
 
-    $('#tabla_bono_pagado').on('xhr.dt', function ( e, settings, json, xhr ) {
+    $('#tabla_bonos_porpagar').on('xhr.dt', function ( e, settings, json, xhr ) {
         var total = 0;
         $.each(json.data, function(i, v){
             total += parseFloat(v.impuesto1);
@@ -568,7 +579,7 @@ $("#tabla_bono_pagado").ready(function() {
         document.getElementById("totalp").textContent = to;
     });
 
-    tabla_nuevas3 = $("#tabla_bono_pagado").DataTable({
+    tabla_nuevas3 = $("#tabla_bonos_porpagar").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
@@ -706,46 +717,65 @@ $("#tabla_bono_pagado").ready(function() {
         },
     });
 
-    $("#tabla_bono_pagado tbody").on("click", ".consulta_abonos", function() {
-        $('#spiner-loader').removeClass('hide');
-        valores = $(this).val();
-        let nuevos = valores.split(',');
-        impuesto = $(this).attr("data-impuesto");
-
-        let id= nuevos[0];
-        let nombre=nuevos[1];
-        $.getJSON(general_base_url + "Comisiones/getHistorialAbono2/" + id).done(function(data) {
-            $("#modal_bonos .modal-header").html("");
-            $("#modal_bonos .modal-body").html("");
-            $("#modal_bonos .modal-footer").html("");
-
-            let fechaComentario = data[0].fecha_movimiento.split('.')[0];
-            let estatus = '';
-            let color='';
-            
-            color='1E8449';
-            estatus = 'PAGADO';
-            $("#modal_bonos .modal-body").append(`<div class="row"><div role="tabpanel">
-            <ul class="nav nav-tabs" role="tablist" style="background: #71B85C;">
-                <h5 style="color: white;"><b>BONOS PAGADOS</b></h5>
-            </ul>
-            </div>`);
-            $("#modal_bonos .modal-body").append(`<div class="col-md-3"><h6>PARA: <b>${nombre}</b></h6></div>
-            <div class="col-md-3"><h6>Abono: <b style="color:green;">${formatMoney(numberTwoDecimal(impuesto))}</b></h6></div>
-            <div class="col-md-3"><h6>Fecha: <b>${fechaComentario}</b></h6></div>
-            <br><div class="col-md-3"><span class="label lbl-green">${estatus}</span></h6></div>
-            </div>  `);
-
-            $("#modal_bonos").modal();
-            $('#spiner-loader').addClass('hide'); 
+    $("#tabla_bonos_porpagar tbody").on("click", ".consulta_abonos", function() {
+            $('#spiner-loader').removeClass('hide');
+            valores = $(this).val();
+            let nuevos = valores.split(',');
+            impuesto = $(this).attr("data-impuesto");
+    
+            let id= nuevos[0];
+            let nombre=nuevos[1];
+            $.getJSON(general_base_url + "Comisiones/getHistorialAbono2/" + id).done(function(data) {
+    
+                $("#modal_bonos .modal-header").html("");
+                $("#modal_bonos .modal-body").html("");
+                $("#modal_bonos .modal-footer").html("");
+                let fechaComentario = data[0].fecha_movimiento.split('.')[0];
+                let estatus = 'POR PAGAR';
+                $("#modal_bonos .modal-body").append(`<div class="row"><div role="tabpanel">
+                <ul class="nav nav-tabs" role="tablist">
+                    <h5 style="color: white;"><b>BITÁCORA DE CAMBIOS</b></h5>
+    
+                    <div class="row" style="color: white;"><div class="col-md-6"><h6>usuario bonificado: <b>${nombre}</b></h6></div>
+                        <div class="col-md-6"><h6>monto: <b>${formatMoney(numberTwoDecimal(impuesto))}</b></h6></div>
+                        <div class="col-md-6"><h6>Fecha: <b>${fechaComentario}</b></h6></div>
+                        <br><div class="col-md-6"><h6>Estatus: <b>${estatus}</b></h6></div>
+                      </div>
+                </ul>
+                <div class="tab-content">
+                          <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                              <div class="row">
+                                  <div class="col-md-12">
+                                      <div class="card card-plain">
+                                          <div class="card-content">
+                                              <ul class="timeline timeline-simple" id="comments-list-asimilados"></ul>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                </div>`);
+    
+                for (let index = 0; index < data.length; index++) {
+                    let fechaComentario = data[index].fecha_movimiento.split('.')[0];
+                   $("#comments-list-asimilados").append('<div class="col-lg-12"><p><b>'+fechaComentario+'</b><b style="color:gray;"> - '+data[index].nombre_usuario+'</b><br>'+data[index].comentario+'</p><br></div>');   
+               }
+    
+                $("#modal_bonos .modal-body").append(``);
+    
+                $("#modal_bonos").modal();
+                $('#spiner-loader').addClass('hide');
+    
+            });
         });
-    });
+         
 
     $(window).resize(function () {
-        tabla_bono_pagado.columns.adjust();
+        tabla_bonos_porpagar.columns.adjust();
     });
 
-    $('#tabla_bono_pagado').on('draw.dt', function() {
+    $('#tabla_bonos_porpagar').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
         });
@@ -913,7 +943,7 @@ $("#tabla_bono_otros").ready(function() {
         },
     });
 
-    $("#tabla_bono_otros tbody").on("click", ".consulta_abonos", function() {
+    $("#tabla_bono_otros tbody").on("click", ".consulta_abonos", function() {    
         $('#spiner-loader').removeClass('hide');
         valores = $(this).val();
         let nuevos = valores.split(',');
@@ -927,20 +957,38 @@ $("#tabla_bono_otros").ready(function() {
             $("#modal_bonos .modal-body").html("");
             $("#modal_bonos .modal-footer").html("");
             let fechaComentario = data[0].fecha_movimiento.split('.')[0];
-            let estatus = '';
-            let color='';
-            color='RED';
-            estatus = 'CANCELADO';
+            let estatus = 'CANCELADO';
             $("#modal_bonos .modal-body").append(`<div class="row"><div role="tabpanel">
-            <ul class="nav nav-tabs" role="tablist" style="background: #EA4335;">
-                <h5 style="color: white;"><b>BONOS CANCELADOS</b></h5>
+            <ul class="nav nav-tabs" role="tablist">
+                <h5 style="color: white;"><b>BITÁCORA DE CAMBIOS</b></h5>
+
+                <div class="row" style="color: white;"><div class="col-md-6"><h6>usuario bonificado: <b>${nombre}</b></h6></div>
+                    <div class="col-md-6"><h6>monto: <b>${formatMoney(numberTwoDecimal(impuesto))}</b></h6></div>
+                    <div class="col-md-6"><h6>Fecha: <b>${fechaComentario}</b></h6></div>
+                    <br><div class="col-md-6"><h6>Estatus: <b style="color:red;">${estatus}</b></h6></div>
+                  </div>
             </ul>
+            <div class="tab-content">
+                      <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                          <div class="row">
+                              <div class="col-md-12">
+                                  <div class="card card-plain">
+                                      <div class="card-content">
+                                          <ul class="timeline timeline-simple" id="comments-list-asimilados"></ul>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
             </div>`);
-            $("#modal_bonos .modal-body").append(`<div class="row"><div class="col-md-3"><h6>PARA: <b>${nombre}</b></h6></div>
-            <div class="col-md-3"><h6>Abono: <b style="color:green;">${formatMoney(numberTwoDecimal(impuesto))}</b></h6></div>
-            <div class="col-md-3"><h6>Fecha: <b>${fechaComentario}</b></h6></div>
-            <br><div class="col-md-3"><span class="label lbl-warning" >${estatus}</span></h6></div>
-            </div>`);
+
+            for (let index = 0; index < data.length; index++) {
+                let fechaComentario = data[index].fecha_movimiento.split('.')[0];
+               $("#comments-list-asimilados").append('<div class="col-lg-12"><p><b>'+fechaComentario+'</b><b style="color:gray;"> - '+data[index].nombre_usuario+'</b><br>'+data[index].comentario+'</p><br></div>');   
+           }
+
+            $("#modal_bonos .modal-body").append(``);
 
             $("#modal_bonos").modal();
             $('#spiner-loader').addClass('hide');
@@ -974,7 +1022,7 @@ $("#form_abono").on('submit', function(e) {
         success: function(data) {
             console.log(data);
             if (data == 1) {
-                $('#tabla_prestamos').DataTable().ajax.reload(null, false);
+                $('#tabla_nuevos').DataTable().ajax.reload(null, false);
                 $('#tabla_bono_revision').DataTable().ajax.reload(null, false);
                 
                 tabla_nuevas.ajax.reload();
@@ -985,14 +1033,14 @@ $("#form_abono").on('submit', function(e) {
                 document.getElementById("form_abono").reset();
 
             } else if (data == 2) {
-                $('#tabla_prestamos').DataTable().ajax.reload(null, false);
+                $('#tabla_nuevos').DataTable().ajax.reload(null, false);
                 $('#tabla_bono_revision').DataTable().ajax.reload(null, false);
                 closeModalEng();
             
                 alerts.showNotification("top", "right", "Pago liquidado.", "warning");
         
             } else if (data == 3) {
-                $('#tabla_prestamos').DataTable().ajax.reload(null, false);
+                $('#tabla_nuevos').DataTable().ajax.reload(null, false);
                 $('#tabla_bono_revision').DataTable().ajax.reload(null, false);
                 closeModalEng();
 
@@ -1005,4 +1053,21 @@ $("#form_abono").on('submit', function(e) {
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
+});
+
+
+$(window).resize(function(){
+    tabla_nuevas.columns.adjust();
+});
+
+$(window).resize(function(){
+    tabla_nuevas2.columns.adjust();
+});
+
+$(window).resize(function(){
+    tabla_nuevas3.columns.adjust();
+});
+
+$(window).resize(function(){
+    tabla_otros.columns.adjust();
 });

@@ -121,7 +121,7 @@ class Reporte_model extends CI_Model {
         INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         $filtroSt
-        WHERE cl.cancelacion_proceso = 2 AND ISNULL(noRecibo, '') != 'CANCELADO' AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 1 AND cl.id_asesor NOT IN (2541, 2562, 2583, 2551, 2572, 2593, 2591, 2570, 2549) AND cl.id_gerente NOT IN (6739) 
+        WHERE cl.cancelacion_proceso = 2 AND ISNULL(noRecibo, '') != 'CANCELADO' AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 1 AND cl.id_asesor NOT IN (2541, 2562, 2583, 2551, 2572, 2593, 2591, 2570, 2549, 12845) AND cl.id_gerente NOT IN (6739) 
         AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:00.000' $filtroEsp $generalFilters $generalFiltersExt
         GROUP BY MONTH(cl.fechaApartado), YEAR(cl.fechaApartado)) qu ON qu.mes = month(cte.DateValue) AND qu.año = year(cte.DateValue)
         GROUP BY Month(DateValue), YEAR(DateValue), cantidad, total";
