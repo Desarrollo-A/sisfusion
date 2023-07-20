@@ -455,6 +455,12 @@ if(id_estatus == 12){
         documentosObligatorios[indexidDocumentos].validado = action == 3 ? 1 : 2;
     }
 }
+if(action == 1){
+    if($("#uploadedDocument")[0].files[0].size > 50000000){
+      alerts.showNotification("top", "right", "No fue posible almacenar el archivo en el servidor, ya que supera los 50MB", "warning");
+      return false;
+    }
+}
         $.ajax({
             url: action == 1 ? "uploadFile" : action == 2 ? "deleteFile" : "validateFile",
             data: data,

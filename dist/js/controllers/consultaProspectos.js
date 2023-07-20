@@ -95,8 +95,8 @@ function fillTable(transaction, beginDate, endDate, where) {
                                 '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto + '" data-owner="' + d.id_asesor + '" data-source="' + d.source + '" data-editProspecto="' + d.editProspecto + '"  data-toggle="tooltip" data-placement="top" title="EDITAR INFORMACIÓN"><i class="fas fa-pencil-alt"></i></button>' +
                                 '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '" data-toggle="tooltip" data-placement="top" title="VER INFORMACIÓN"><i class="far fa-eye"></i></button>' +
                                 '<button class="btn-data btn-details-grey re-asign" data-id-prospecto="' + d.id_prospecto + '" data-toggle="tooltip" data-placement="top" title="RE - ASIGNAR"><i class="fab fa-rev"></i></button>';
-                            actions += `<button class="desplegable btn-data btn-blueMaderas" id="btn_${d.id_prospecto}" data-toggle="tooltip" data-placement="top" title="DESPLEGAR OPCIONES" onclick="javascript: $(this).addClass('hide');$('#cnt_${d.id_prospecto}').removeClass('hide');"> <i class="fas fa-chevron-down"></i> </button>`;
-                            actions += `<div class= "hide boxSBtns" id="cnt_${d.id_prospecto}"> ${group_buttons} <br> <button onclick="javascript: $('#btn_${d.id_prospecto}').removeClass('hide'); $('#cnt_${d.id_prospecto}').addClass('hide');" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="CERRAR OPCIONES"> <i class="fas fa-chevron-up"></i> </button> </div>`;
+                            actions += `<button class="desplegable btn-data btn-blueMaderas" id="btn_${d.id_prospecto}" data-toggle="tooltip" data-placement="top" title="DESPLEGAR OPCIONES" onclick="javascript: $(this).addClass('hide');$('#cnt_${d.id_prospecto}').removeClass('hide');"> <i class="fas fa-chevron-up"></i> </button>`;
+                            actions += `<div class= "hide boxSBtns" id="cnt_${d.id_prospecto}"> ${group_buttons} <br> <button onclick="javascript: $('#btn_${d.id_prospecto}').removeClass('hide'); $('#cnt_${d.id_prospecto}').addClass('hide');" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="CERRAR OPCIONES"> <i class="fas fa-chevron-down"></i> </button> </div>`;
                             actions += '<button class="btn-data btn-acidGreen update-status" '+'data-id-prospecto="' + d.id_prospecto + '" '+'data-telefono="'+d.telefono+'" '+'data-telefono2="'+d.telefono2+'" '+'data-toggle="tooltip"'+'data-placement="top"'+'title="ACTUALIZAR ESTATUS">'+'<i class="fas fa-redo"></i>' + change_buttons;
                             return '<center>'+actions+'<center>';
                         } else { // IS NOT ACTIVE
@@ -122,8 +122,8 @@ function fillTable(transaction, beginDate, endDate, where) {
                                         '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '" data-toggle="tooltip" data-placement="top" title="VER INFORMACIÓN"><i class="far fa-eye"></i></button>' +
                                         '<button class="btn-data btn-details-grey re-asign" data-id-prospecto="' + d.id_prospecto + '" data-toggle="tooltip" data-placement="top" title="RE - ASIGNAR"><i class="fab fa-rev"></i></button>';
                                     
-                                    actions += `<button class="desplegable btn-data btn-blueMaderas" id="btn_${d.id_prospecto}" data-toggle="tooltip" data-placement="top" title="DESPLEGAR OPCIONES" onclick="javascript: $(this).addClass('hide');$('#cnt_${d.id_prospecto}').removeClass('hide');"> <i class="fas fa-chevron-down"></i> </button>`;
-                                    actions += `<div class= "hide boxSBtns" id="cnt_${d.id_prospecto}"> ${group_buttons} <br> <button onclick="javascript: $('#btn_${d.id_prospecto}').removeClass('hide'); $('#cnt_${d.id_prospecto}').addClass('hide');" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="CERRAR OPCIONES"> <i class="fas fa-chevron-up"></i> </button> </div>`;
+                                    actions += `<button class="desplegable btn-data btn-blueMaderas" id="btn_${d.id_prospecto}" data-toggle="tooltip" data-placement="top" title="DESPLEGAR OPCIONES" onclick="javascript: $(this).addClass('hide');$('#cnt_${d.id_prospecto}').removeClass('hide');"> <i class="fas fa-chevron-up"></i> </button>`;
+                                    actions += `<div class= "hide boxSBtns" id="cnt_${d.id_prospecto}"> ${group_buttons} <br> <button onclick="javascript: $('#btn_${d.id_prospecto}').removeClass('hide'); $('#cnt_${d.id_prospecto}').addClass('hide');" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="CERRAR OPCIONES"> <i class="fas fa-chevron-down"></i> </button> </div>`;
 
                                     actions += '<button class="btn-data btn-acidGreen update-status" '+'data-id-prospecto="' + d.id_prospecto + '" '+'data-telefono="'+d.telefono+'" '+'data-telefono2="'+d.telefono2+'" '+'data-toggle="tooltip"'+'data-placement="top" '+'title="ACTUALIZAR ESTATUS">'+'<i class="fas fa-redo"></i>';
                                 }
@@ -139,8 +139,8 @@ function fillTable(transaction, beginDate, endDate, where) {
                                         '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '" data-toggle="tooltip" data-placement="top" title="VER INFORMACIÓN"><i class="far fa-eye"></i></button>' +
                                         '<button class="btn-data btn-details-grey re-asign" data-id-prospecto="' + d.id_prospecto + '" data-toggle="tooltip" data-placement="top" title="RE - ASIGNAR"><i class="fab fa-rev"></i></button>';
 
-                                    actions += `<button class="desplegable btn-data btn-blueMaderas" id="btn_${d.id_prospecto}" data-toggle="tooltip" data-placement="top" title="Desplegar opciones" onclick="javascript: $(this).addClass('hide');$('#cnt_${d.id_prospecto}').removeClass('hide');"> <i class="fas fa-chevron-down"></i> </button>`;
-                                    actions += `<div class= "hide boxSBtns" id="cnt_${d.id_prospecto}"> ${group_buttons} <br> <button onclick="javascript: $('#btn_${d.id_prospecto}').removeClass('hide'); $('#cnt_${d.id_prospecto}').addClass('hide');" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="CERRAR OPCIONES"> <i class="fas fa-chevron-up"></i> </button> </div>`;
+                                    actions += `<button class="desplegable btn-data btn-blueMaderas" id="btn_${d.id_prospecto}" data-toggle="tooltip" data-placement="top" title="Desplegar opciones" onclick="javascript: $(this).addClass('hide');$('#cnt_${d.id_prospecto}').removeClass('hide');"> <i class="fas fa-chevron-up"></i> </button>`;
+                                    actions += `<div class= "hide boxSBtns" id="cnt_${d.id_prospecto}"> ${group_buttons} <br> <button onclick="javascript: $('#btn_${d.id_prospecto}').removeClass('hide'); $('#cnt_${d.id_prospecto}').addClass('hide');" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="CERRAR OPCIONES"> <i class="fas fa-chevron-down"></i> </button> </div>`;
                                 }
                                 return '<center>'+actions+'</center>';
                             }
@@ -154,8 +154,8 @@ function fillTable(transaction, beginDate, endDate, where) {
                                     group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + '" data-toggle="tooltip" data-placement="top" title="INGRESAR COMENTARIO"><i class="far fa-comments"></i></button>' +
                                         '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto + '" data-owner="' + d.id_asesor + '" data-source="' + d.source + '" data-editProspecto="' + d.editProspecto + '" data-toggle="tooltip" data-placement="top" title="EDITAR INFORMACIÓN"><i class="fas fa-pencil-alt"></i></button>' +
                                         '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '" data-toggle="tooltip" data-placement="top" title="VER INFORMACIÓN"><i class="far fa-eye"></i></button>';
-                                    actions += `<button class="desplegable btn-data btn-blueMaderas" id="btn_${d.id_prospecto}" data-toggle="tooltip" data-placement="top" title="DESPLEGAR OPCIONES" onclick="javascript: $(this).addClass('hide');$('#cnt_${d.id_prospecto}').removeClass('hide');"> <i class="fas fa-chevron-down"></i> </button>`;
-                                    actions += `<div class= "hide boxSBtns" id="cnt_${d.id_prospecto}"> ${group_buttons} <br> <button onclick="javascript: $('#btn_${d.id_prospecto}').removeClass('hide'); $('#cnt_${d.id_prospecto}').addClass('hide');" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="CERRAR OPCIONES"> <i class="fas fa-chevron-up></i> </button> </div>`;
+                                    actions += `<button class="desplegable btn-data btn-blueMaderas" id="btn_${d.id_prospecto}" data-toggle="tooltip" data-placement="top" title="DESPLEGAR OPCIONES" onclick="javascript: $(this).addClass('hide');$('#cnt_${d.id_prospecto}').removeClass('hide');"> <i class="fas fa-chevron-up"></i> </button>`;
+                                    actions += `<div class= "hide boxSBtns" id="cnt_${d.id_prospecto}"> ${group_buttons} <br> <button onclick="javascript: $('#btn_${d.id_prospecto}').removeClass('hide'); $('#cnt_${d.id_prospecto}').addClass('hide');" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="CERRAR OPCIONES"> <i class="fas fa-chevron-down"></i> </button> </div>`;
 
                                     actions += '<button class="btn-data btn-acidGreen update-status"'+'data-id-prospecto="' + d.id_prospecto + '" '+'data-telefono="'+d.telefono+'" '+'data-telefono2="'+d.telefono2+'" '+'data-toggle="tooltip"'+'data-placement="top" '+'title="ACTUALIZAR ESTATUS">'+'<i class="fas fa-redo"></i>';
                                 }
@@ -169,10 +169,10 @@ function fillTable(transaction, beginDate, endDate, where) {
                                     group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + '" data-toggle="tooltip" data-placement="top" title="INGRESAR COMENTARIO"><i class="far fa-comments"></i></button>' +
                                         '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto + '" data-owner="' + d.id_asesor + '" data-source="' + d.source + '" data-editProspecto="' + d.editProspecto + '" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-pencil-alt"></i></button>' +
                                         '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '"><i class="material-icons" data-toggle="tooltip" data-placement="top" title="VER INFORMACIÓN">remove_red_eye</i></button>';
-                                    actions += '<button class="desplegable btn-blueMaderas" '+'id="btn_' + d.id_prospecto + '" '+'onclick="javascript: $(this).addClass(\'hide\');'+'$(\'#cnt_' + d.id_prospecto + '\').removeClass(\'hide\');">'+'<i class="fas fa-chevron-down"></i>'+'</button>';
+                                    actions += '<button class="desplegable btn-blueMaderas" '+'id="btn_' + d.id_prospecto + '" '+'onclick="javascript: $(this).addClass(\'hide\');'+'$(\'#cnt_' + d.id_prospecto + '\').removeClass(\'hide\');">'+'<i class="fas fa-chevron-up"></i>'+'</button>';
                                     actions += '<div class="hide boxSBtns" '+'id="cnt_' + d.id_prospecto + '">' + group_buttons + ''+'<br>'+
                                                     '<button onclick="javascript: $(\'#btn_' + d.id_prospecto + '\').removeClass(\'hide\');'+'$(\'#cnt_' + d.id_prospecto + '\').addClass(\'hide\');" '+'class="btn-data btn-blueMaderas">'+
-                                                        '<i class="fas fa-chevron-up"></i>'+
+                                                        '<i class="fas fa-chevron-down"></i>'+
                                                     '</button>'+
                                                 '</div>';
                                     if (d.vigencia >= 0) {
@@ -220,7 +220,13 @@ function fillTable(transaction, beginDate, endDate, where) {
                 "where": where
             }
         },
+        initComplete: function () {
+            $('[data-toggle="tooltip"]').tooltip({
+                trigger: "hover"
+            });
+        },
     });
+
 }
 
 $('#prospects-datatable').on('draw.dt', function() {

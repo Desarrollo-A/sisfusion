@@ -35,7 +35,7 @@ class Juridico_model extends CI_Model {
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
         concat(juridico.nombre,' ', juridico.apellido_paterno, ' ', juridico.apellido_materno) as juridico, se.nombre nombreSede
 		FROM lotes l
-        INNER JOIN clientes cl ON cl.idLote=l.idLote $whereOne
+        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote $whereOne
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial=res.idResidencial $whereTwo
 		INNER JOIN sedes se ON se.id_sede = l.ubicacion
@@ -76,7 +76,7 @@ class Juridico_model extends CI_Model {
 			concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
 	        concat(juridico.nombre,' ', juridico.apellido_paterno, ' ', juridico.apellido_materno) as juridico, se.nombre nombreSede
 			FROM lotes l
-			INNER JOIN clientes cl ON cl.idLote=l.idLote
+			INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote
 			INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
 			INNER JOIN residenciales res ON cond.idResidencial=res.idResidencial
 			INNER JOIN sedes se ON se.id_sede = l.ubicacion

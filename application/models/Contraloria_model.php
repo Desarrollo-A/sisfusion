@@ -62,7 +62,7 @@ class Contraloria_model extends CI_Model {
 		WHERE idHistorialLote =(SELECT MAX(idHistorialLote) FROM historial_lotes WHERE idLote IN (l.idLote) 
 		AND (perfil IN ('13', '32', 'contraloria', '17', '70')) AND status = 1)) as lastUc
         FROM lotes l
-        INNER JOIN clientes cl ON l.idLote=cl.idLote
+        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
 		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
@@ -130,7 +130,7 @@ class Contraloria_model extends CI_Model {
 		FROM historial_lotes left join usuarios on historial_lotes.usuario = usuarios.id_usuario
 		WHERE idHistorialLote = (SELECT MAX(idHistorialLote) FROM historial_lotes WHERE idLote IN (l.idLote) AND (perfil IN ('13', '32', 'contraloria', '17', '70')) AND status = 1)) as lastUc
 	    FROM lotes l
-        INNER JOIN clientes cl ON l.idLote=cl.idLote
+        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
 		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
@@ -161,16 +161,16 @@ class Contraloria_model extends CI_Model {
     }
 
     public function getCorreoSt ($idCliente) {
-        $query = $this->db-> query("SELECT STRING_AGG (correo, ', ') correos FROM (
+        $query = $this->db-> query("SELECT STRING_AGG (correo, ',') correos FROM (
 			/*ASESOR COORDINADOR GERENTE (TITULAR VENTA) */
-			SELECT c.id_cliente, CONCAT(u.correo, ', ', uu.correo, ', ', uuu.correo) correo FROM clientes c 
+			SELECT c.id_cliente, CONCAT(u.correo, ',', uu.correo, ',', uuu.correo) correo FROM clientes c 
 			LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor AND u.estatus = 1
 			LEFT JOIN usuarios uu ON uu.id_usuario = c.id_coordinador  AND uu.estatus = 1
 			LEFT JOIN usuarios uuu ON uuu.id_usuario = c.id_gerente  AND uuu.estatus = 1
 			WHERE c.id_cliente = ".$idCliente."
 			UNION ALL
 			/*ASESOR COORDINADOR GERENTE (VENTAS COMPARTIDAS) */
-			SELECT vc.id_cliente, CONCAT(u.correo, ', ', uu.correo, ', ', uuu.correo) correo FROM ventas_compartidas vc 
+			SELECT vc.id_cliente, CONCAT(u.correo, ',', uu.correo, ',', uuu.correo) correo FROM ventas_compartidas vc 
 			LEFT JOIN usuarios u ON u.id_usuario = vc.id_asesor AND u.estatus = 1
 			LEFT JOIN usuarios uu ON uu.id_usuario = vc.id_coordinador AND uu.estatus = 1 
 			LEFT JOIN usuarios uuu ON uuu.id_usuario = vc.id_gerente AND uuu.estatus = 1
@@ -239,7 +239,7 @@ class Contraloria_model extends CI_Model {
 		concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
 		cond.idCondominio
 		FROM lotes l
-		INNER JOIN clientes cl ON l.idLote=cl.idLote
+		INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote
 		INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
 		INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
 		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
@@ -416,7 +416,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,opx.nombre as RL,
 		cond.idCondominio, l.observacionContratoUrgente as vl, se.nombre as nombreSede
 		FROM lotes l
-		INNER JOIN clientes cl ON l.idLote=cl.idLote
+		INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote
 		INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
 		INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
 		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
@@ -473,7 +473,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		cond.idCondominio, l.observacionContratoUrgente as vl, se.nombre as nombreSede,
         CONVERT(VARCHAR(23), GETDATE(), 126) + 'Z' as fecha_arcus, cl.id_prospecto, l.totalNeto2, pro.id_arcus
 		FROM lotes l
-		INNER JOIN clientes cl ON l.idLote=cl.idLote
+		INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote
 		INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
 		INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
 		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
@@ -940,7 +940,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		WHERE idHistorialLote =(SELECT MAX(idHistorialLote) FROM historial_lotes WHERE idLote IN (l.idLote) 
 		AND (perfil IN ('13', '32', 'contraloria', '17') AND status = 1))) AS lastUc
 	    FROM lotes l
-        INNER JOIN clientes cl ON l.idLote=cl.idLote
+        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
 		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
