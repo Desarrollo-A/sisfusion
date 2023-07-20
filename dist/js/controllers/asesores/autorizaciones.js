@@ -16,6 +16,8 @@ function validateEmptyFields(){
 
 $("#my_authorization_form").on('submit', function(e){
     e.preventDefault();
+    $('#spiner-loader').removeClass('hide');
+
     $.ajax({
         type: 'POST',
         url: general_base_url+'asesor/addAutorizacionSbmt',
@@ -23,27 +25,19 @@ $("#my_authorization_form").on('submit', function(e){
         contentType: false,
         cache: false,
         processData:false,
-        beforeSend: function(){
-            $('#btnSubmit').attr("disabled","disabled");
-            $('#btnSubmit').css("opacity",".5");
-
-        },
         success: function(data) {
             if (data == 'true') {
-                $('#btnSubmit').prop('disabled', false);
-                $('#btnSubmit').css("opacity","1");
                 $('#solicitarAutorizacion').modal("hide");
                 alerts.showNotification('top', 'right', 'Se enviaron las autorizaciones correctamente', 'success');
             } else {
-                $('#btnSubmit').prop('disabled', false);
-                $('#btnSubmit').css("opacity","1");
                 alerts.showNotification('top', 'right', 'Asegúrate de haber llenado todos los campos mínimos requeridos', 'danger');
             }
         },
         error: function(){
-            $('#btnSubmit').prop('disabled', false);
-            $('#btnSubmit').css("opacity","1");
             alerts.showNotification('top', 'right', 'Oops! Algo salió mal, inténtalo de nuevo.', 'danger');
+        },
+        complete: function () {
+            $('#spiner-loader').addClass('hide');
         }
     });
 });

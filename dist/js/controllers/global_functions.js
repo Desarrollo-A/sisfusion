@@ -4,6 +4,7 @@ $(document).ready(function()
         $(".advertising").append($('<option disabled selected>').val("0").text("Seleccione una opción"));
 
         $("#estatus_particular2").append($('<option disabled selected>').val("0").text("Seleccione una opción"));
+        $("#estatus_particular").append($('<option disabled selected>').val("0").text("Seleccione una opción"));
         for (let i = 0; i < data.length; i++) {
             if (data[i]['id_catalogo'] == 5) // SALES PLAZA SELECT
             $("#sales_plaza").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre'])).selectpicker('refresh');

@@ -642,7 +642,7 @@ function update_estatus(){
       $validar_sede = $this->session->userdata('id_sede');
       $fecha_actual = strtotime($obtenerFechaSql);
       $fechaInicio = strtotime($consultaFechasCorte[0]['fechaInicio']);
-      $fechaFin = $id_rol == 8 ? strtotime($consultaFechasCorte[0]['fechaFinTijuana']) : ($consultaFechasCorte[0]['fechaFinGeneral']) ;
+      $fechaFin = $validar_sede == 8 ? strtotime($consultaFechasCorte[0]['fechaFinTijuana']) : strtotime($consultaFechasCorte[0]['fechaFinGeneral']) ;
 
       if($formaPagoUsuario == 3){
         $consultaCP = $this->Comisiones_model->consulta_codigo_postal($id_user_Vl)->result_array();
@@ -1045,7 +1045,7 @@ function update_estatus(){
     $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;   
     $fecha_actual = strtotime($obtenerFechaSql);
     $fechaInicio = strtotime($consultaFechasCorte[0]['fechaInicio']);
-    $fechaFin = $validar_sede == 8 ? strtotime($consultaFechasCorte[0]['fechaFinTijuana']) : ($consultaFechasCorte[0]['fechaFinGeneral']) ;
+    $fechaFin = $validar_sede == 8 ? strtotime($consultaFechasCorte[0]['fechaFinTijuana']) : strtotime($consultaFechasCorte[0]['fechaFinGeneral']) ;
       //fecha inicio
       if(($fecha_actual >= $fechaInicio && $fecha_actual <= $fechaFin) || ($validar_user == 7689))
           {
@@ -1258,7 +1258,7 @@ if( isset( $_FILES ) && !empty($_FILES) ){
       $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;   
       $fecha_actual = strtotime($obtenerFechaSql);
       $fechaInicio = strtotime($consultaFechasCorte[0]['fechaInicio']);
-      $fechaFin = $validar_sede == 8 ? strtotime($consultaFechasCorte[0]['fechaFinTijuana']) : ($consultaFechasCorte[0]['fechaFinGeneral']) ;
+      $fechaFin = $validar_sede == 8 ? strtotime($consultaFechasCorte[0]['fechaFinTijuana']) : strtotime($consultaFechasCorte[0]['fechaFinGeneral']) ;
 
       if(($fecha_actual >= $fechaInicio && $fecha_actual <= $fechaFin) )
           {

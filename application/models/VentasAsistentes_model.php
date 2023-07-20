@@ -195,16 +195,16 @@ class VentasAsistentes_model extends CI_Model {
 
 	public function getCorreoSt ($idCliente) {
 
-		$query = $this->db-> query("SELECT STRING_AGG (correo, ', ') correos FROM (
+		$query = $this->db-> query("SELECT STRING_AGG (correo, ',') correos FROM (
 			/*ASESOR COORDINADOR GERENTE (TITULAR VENTA) */
-			SELECT c.id_cliente, CONCAT(u.correo, ', ', uu.correo, ', ', uuu.correo) correo FROM clientes c 
+			SELECT c.id_cliente, CONCAT(u.correo, ',', uu.correo, ',', uuu.correo) correo FROM clientes c 
 			LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor 
 			LEFT JOIN usuarios uu ON uu.id_usuario = c.id_coordinador 
 			LEFT JOIN usuarios uuu ON uuu.id_usuario = c.id_gerente 
 			WHERE c.id_cliente = ".$idCliente."
 			UNION ALL
 			/*ASESOR COORDINADOR GERENTE (VENTAS COMPARTIDAS) */
-			SELECT vc.id_cliente, CONCAT(u.correo, ', ', uu.correo, ', ', uuu.correo) correo FROM ventas_compartidas vc 
+			SELECT vc.id_cliente, CONCAT(u.correo, ',', uu.correo, ',', uuu.correo) correo FROM ventas_compartidas vc 
 			LEFT JOIN usuarios u ON u.id_usuario = vc.id_asesor 
 			LEFT JOIN usuarios uu ON uu.id_usuario = vc.id_coordinador 
 			LEFT JOIN usuarios uuu ON uuu.id_usuario = vc.id_gerente 
