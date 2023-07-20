@@ -221,9 +221,10 @@ class Internomex_model extends CI_Model {
         ORDER BY au.fecha_creacion DESC");
     }
 
-    public function getInformacionContratos() {
+    public function getInformacionContratos($rows_number) {
         ini_set('memory_limit', -1);
-        return $this->db->query("SELECT lo.idLote, op1.nombre tipo_persona, 
+        $top_statement = $rows_number != '' ? "TOP $rows_number": "";
+        return $this->db->query("SELECT $top_statement lo.idLote, op1.nombre tipo_persona, 
         cl.ocupacion actividad_sector,
         UPPER(cl.nombre) nombre_denominacion, ISNULL(cl.apellido_paterno, '') apellido_paterno, ISNULL(cl.apellido_materno, '') apellido_materno, 
         ISNULL(convert(varchar, try_parse(fecha_nacimiento as date), 103), '') fecha_nacimiento_constitucion, 
@@ -232,23 +233,45 @@ class Internomex_model extends CI_Model {
         CASE WHEN co.tipo_lote = 0 THEN 'Habitacional' ELSE 'Comercial' END tipo_propiedad, 
         lo.nombreLote nombrePropiedad, lo.sup tamanio_terreno, 
         FORMAT(ISNULL(lo.totalNeto2, 0.00), 'C') costo, 
-        ISNULL(cf.plan_corrida, 'SIN ESPECIFICAR') forma_pago, FORMAT(ISNULL(lo.totalValidado, 0), 'C') monto_enganche, 
-        ISNULL(cm.fecha_comision, '') fecha_pago_comision, FORMAT(ISNULL(cm.comision_total, 0), 'C') monto_comision,
-        re.empresa, ISNULL(CONVERT(varchar, hl.modificado, 103), 'SIN ESPECIFICAR') fechaEstatus9, ISNULL(CONVERT(varchar, hl2.modificado, 103), 'SIN ESPECIFICAR') fechaEstatus7,
-		ISNULL(CONVERT(varchar, pc.ultima_dispersion, 103), 'SIN ESPECIFICAR') fecha_ultima_dispersion
+        REPLACE(CONCAT(oxc0.nombre, ',', oxc1.nombre, ',', oxc2.nombre, ',', oxc3.nombre, ',', oxc4.nombre, ',', oxc5.nombre), ',,', '') forma_pago, FORMAT(ISNULL(lo.totalValidado, 0), 'C') monto_enganche, 
+        MAX(hc.fecha_movimiento) fecha_pago_comision, FORMAT(ISNULL(pc.total_comision, 0), 'C') monto_comision,
+        re.empresa, ISNULL(CONVERT(varchar, hl.modificado, 103), 'SIN ESPECIFICAR') fechaEstatus9, ISNULL(CONVERT(varchar, hl2.modificado, 103), 'SIN ESPECIFICAR') fechaEstatus7
         FROM clientes cl
-        INNER JOIN lotes lo ON lo.idCliente = lo.idCliente AND lo.idLote = cl.idLote AND lo.status = 1 --AND lo.idLote IN (1003, 83975, 88537)
+        INNER JOIN lotes lo ON lo.idCliente = lo.idCliente AND lo.idLote = cl.idLote AND lo.status = 1 --AND lo.idLote IN (73474)
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
         LEFT JOIN corridas_financieras cf ON cf.id_lote = lo.idLote AND cf.id_cliente = cl.id_cliente AND cf.status = 1
-        LEFT JOIN (SELECT id_lote, idCliente, MAX(CONVERT(varchar, fecha_creacion, 103)) fecha_comision, SUM(comision_total) comision_total FROM comisiones 
-        GROUP BY id_lote, idCliente) cm ON cm.id_lote = lo.idLote AND cm.idCliente = cl.id_cliente
+		LEFT JOIN comisiones cm ON cm.id_lote = lo.idLote AND cm.idCliente = cl.id_cliente
 		LEFT JOIN pago_comision pc ON pc.id_lote = cm.id_lote
-        INNER JOIN opcs_x_cats op1 ON op1.id_opcion = cl.personalidad_juridica AND op1.id_catalogo = 10
+		INNER JOIN (SELECT * FROM pago_comision_ind WHERE estatus = 8) pci ON pci.id_comision = cm.id_comision
+		INNER JOIN historial_comisiones hc ON hc.id_pago_i = pci.id_pago_i AND hc.comentario IN ('CONTRALOÍA ENVIO A INTERNOMEX', 'CONTRALORIA ENVIO A INTERNOMEX', 'CONTRALORIA ENVÍO A INTERNOMEX', 'CONTRALORÍA ENVIO A INTERNOMEX', 'CONTRALORÍA ENVÍO A INTERNOMEX', 'CONTRALORÍA ENVÍO A INTERNOMEX ASIMILADO', 'CONTRALORÍA ENVÍO A INTERNOMEX FACTURA', 'CONTRALORÍA ENVÍO A INTERNOMEX REMANENTE', 'CONTRALORÍA ENVÍO PAGO A INTERNOMEX', 'Se envío a INTERNOMEX', 'SE ENVÍO PAGO A INTERNOMEX')
+		INNER JOIN opcs_x_cats op1 ON op1.id_opcion = cl.personalidad_juridica AND op1.id_catalogo = 10
         INNER JOIN opcs_x_cats op2 ON op2.id_opcion = cl.nacionalidad AND op2.id_catalogo = 11
 		LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39 AND status = 1 GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente 
         LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 7 AND idMovimiento = 37 AND status = 1 GROUP BY idLote, idCliente) hl2 ON hl2.idLote = lo.idLote AND hl2.idCliente = cl.id_cliente 
-        WHERE cl.status = 1")->result_array(); 
+		LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+		LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = u0.forma_pago AND oxc0.id_catalogo = 16
+        LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+		LEFT JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = u1.forma_pago AND oxc1.id_catalogo = 16
+        LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+		LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = u2.forma_pago AND oxc2.id_catalogo = 16
+        LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
+		LEFT JOIN opcs_x_cats oxc3 ON oxc3.id_opcion = u3.forma_pago AND oxc3.id_catalogo = 16
+        LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
+		LEFT JOIN opcs_x_cats oxc4 ON oxc4.id_opcion = u4.forma_pago AND oxc4.id_catalogo = 16
+        LEFT JOIN usuarios u5 ON u4.id_usuario = cl.id_regional_2
+		LEFT JOIN opcs_x_cats oxc5 ON oxc5.id_opcion = u5.forma_pago AND oxc5.id_catalogo = 16
+        WHERE cl.status = 1
+		GROUP BY lo.idLote, op1.nombre, cl.ocupacion,
+        UPPER(cl.nombre), ISNULL(cl.apellido_paterno, ''), ISNULL(cl.apellido_materno, ''), 
+        ISNULL(convert(varchar, try_parse(fecha_nacimiento as date), 103), ''), 
+        ISNULL(curp,''), ISNULL(cl.rfc, ''), op2.nombre, cl.domicilio_particular, 
+        CASE WHEN co.tipo_lote = 0 THEN 'Habitacional' ELSE 'Comercial' END, 
+        lo.nombreLote, lo.sup, 
+        FORMAT(ISNULL(lo.totalNeto2, 0.00), 'C'), 
+        ISNULL(cf.plan_corrida, 'SIN ESPECIFICAR'), FORMAT(ISNULL(lo.totalValidado, 0), 'C'), pc.total_comision,
+        re.empresa, ISNULL(CONVERT(varchar, hl.modificado, 103), 'SIN ESPECIFICAR'), ISNULL(CONVERT(varchar, hl2.modificado, 103), 'SIN ESPECIFICAR'),
+		ISNULL(CONVERT(varchar, pc.ultima_dispersion, 103), 'SIN ESPECIFICAR'), oxc0.nombre, oxc1.nombre, oxc2.nombre, oxc3.nombre, oxc4.nombre, oxc5.nombre")->result_array(); 
     }
 
 }
