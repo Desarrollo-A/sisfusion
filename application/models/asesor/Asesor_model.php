@@ -461,8 +461,8 @@ class Asesor_model extends CI_Model {
     {
         $query = $this->db->query("
             SELECT asesor.id_usuario, CONCAT(asesor.nombre,' ',asesor.apellido_paterno,' ',asesor.apellido_materno) AS nombreAsesor, 
-            CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno) AS nombreCoordinador,
-            CONCAT(gerente.nombre,' ',gerente.apellido_paterno) AS nombreGerente,
+            CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno,' ',coordinador.apellido_materno) AS nombreCoordinador,
+            CONCAT(gerente.nombre,' ',gerente.apellido_paterno,' ',gerente.apellido_materno) AS nombreGerente,
             asesor.id_lider, gerente.id_usuario, asesor.correo
             FROM clientes cl 
             LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
@@ -471,18 +471,22 @@ class Asesor_model extends CI_Model {
         return $query->result();
     }
     public function selectDSAsesor1($cliente){
-        return $query = $this->db->query("SELECT asesor.id_usuario, CONCAT(asesor.nombre,' ',asesor.apellido_paterno, ' ',asesor.apellido_materno) AS nombreAsesor, CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno) AS nombreCoordinador, CONCAT(gerente.nombre,' ',gerente.apellido_paterno) AS nombreGerente, asesor.id_lider, gerente.id_usuario, asesor.correo
+        return $query = $this->db->query("
+        SELECT asesor.id_usuario, CONCAT(asesor.nombre,' ',asesor.apellido_paterno,' ',asesor.apellido_materno) AS nombreAsesor, 
+        CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno,' ',coordinador.apellido_materno) AS nombreCoordinador,
+        CONCAT(gerente.nombre,' ',gerente.apellido_paterno,' ',gerente.apellido_materno) AS nombreGerente,
+        asesor.id_lider, gerente.id_usuario, asesor.correo
         FROM clientes cl 
         LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
         LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
-        LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario WHERE cl.id_cliente= " . $cliente . "");
+        LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario WHERE cl.id_cliente= ".$cliente."");
     }
     public function selectDSAsesorCompartido($cliente)
     {
         $query = $this->db->query("SELECT vc.id_asesor, 
             CONCAT(asesor.nombre,' ',asesor.apellido_paterno,' ',asesor.apellido_materno) AS nombreAsesor, asesor.id_lider, gerente.id_usuario, 
-            CONCAT(gerente.nombre,' ',gerente.apellido_paterno) AS  nombreGerente ,
-            CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno) AS  nombreCoordinador 
+            CONCAT(gerente.nombre,' ',gerente.apellido_paterno,' ',gerente.apellido_materno) AS  nombreGerente ,
+            CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno,' ',coordinador.apellido_materno) AS  nombreCoordinador 
             FROM clientes cl 
             LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente  
             LEFT JOIN usuarios asesor ON asesor.id_usuario = vc.id_asesor 
@@ -495,8 +499,8 @@ class Asesor_model extends CI_Model {
     {
         return $query = $this->db->query("SELECT vc.id_asesor, 
             CONCAT(asesor.nombre,' ',asesor.apellido_paterno,' ',asesor.apellido_materno) AS nombreAsesor, asesor.id_lider, gerente.id_usuario, 
-            CONCAT(gerente.nombre,' ',gerente.apellido_paterno) AS  nombreGerente ,
-            CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno) AS  nombreCoordinador 
+            CONCAT(gerente.nombre,' ',gerente.apellido_paterno,' ',gerente.apellido_materno) AS  nombreGerente ,
+            CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno,' ',coordinador.apellido_materno) AS  nombreCoordinador 
             FROM clientes cl 
             LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente  
             LEFT JOIN usuarios asesor ON asesor.id_usuario = vc.id_asesor 
@@ -529,8 +533,7 @@ class Asesor_model extends CI_Model {
         ORDER BY res.idResidencial");
         return $query->result();
     }
-    public function editaRegistroClienteDS($id_cliente, $arreglo_cliente, $arreglo_ds, $id_referencia1, $arreglo_referencia1, $id_referencia2, $arreglo_referencia2)
-    {
+    public function editaRegistroClienteDS($id_cliente, $arreglo_cliente, $arreglo_ds, $id_referencia1, $arreglo_referencia1, $id_referencia2, $arreglo_referencia2){
         $this->db->where("id_cliente",$id_cliente);
         $this->db->update('clientes',$arreglo_cliente);
         $this->db->where("id_cliente",$id_cliente);

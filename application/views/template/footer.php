@@ -304,6 +304,15 @@ if($this->session->userdata('id_rol') == 7 && $this->session->userdata('asesor_g
         localStorage.clear();
     });
 
+
+    $('body').tooltip({
+        selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
+        trigger: 'hover',
+        container: 'body'
+    }).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
+        $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
+    });
+
 </script>
 <?php }?>
 

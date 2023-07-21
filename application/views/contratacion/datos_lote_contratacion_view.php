@@ -4,7 +4,7 @@
 <body>
     <div class="wrapper">
         <?php
-			if (in_array($this->session->userdata('id_rol'), array(16, 6, 5, 13, 17, 32, 2, 3, 4, 9, 7, 33, 23, 35, 2, 11, 12, 15, 28, 19, 20, 50, 40, 53, 55, 47, 58, 61, 54, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 55, 63, 18)))
+			if (in_array($this->session->userdata('id_rol'), array(16, 6, 5, 13, 17, 32, 2, 3, 4, 9, 7, 33, 23, 35, 2, 11, 12, 15, 28, 19, 20, 50, 40, 53, 55, 47, 58, 61, 54, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 55, 63, 70, 71, 73, 18)))
             	$this->load->view('template/sidebar');
 			else
 				echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
@@ -137,20 +137,20 @@
                                 <h3 class="card-title center-align">Inventario lotes</h3>
                                 <div class="toolbar">
                                     <div class="row">
-                                        <div class="col-md-4 form-group overflow-hidden">
-                                            <div class="form-group">
+                                        <div class="col-md-4 form-group">
+                                            <div class="form-group overflow-hidden">
                                                 <label class="m-0" for="idResidencial">Proyecto</label>
                                                 <select id="idResidencial" name="idResidencial" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" size="5" data-container="body" required></select>
                                             </div>
                                         </div>
-                                        <div class="col-md-4 form-group overflow-hidden">
-                                            <div class="form-group">
+                                        <div class="col-md-4 form-group">
+                                            <div class="form-group overflow-hidden">
                                                 <label class="m-0" for="idCondominioInventario">Condominio</label>
                                                 <select name="idCondominioInventario" id="idCondominioInventario" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
                                             </div>
                                         </div>
-                                        <div class="col-md-4 form-group overflow-hidden">
-                                            <div class="form-group">
+                                        <div class="col-md-4 form-group">
+                                            <div class="form-group overflow-hidden">
                                                 <label class="m-0" for="idEstatus">Estatus</label>
                                                 <select name="idEstatus" id="idEstatus" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
                                             </div>
@@ -206,7 +206,6 @@
         </div>
         <?php $this->load->view('template/footer_legend');?>
     </div>
-    <!--main-panel close-->
     <?php $this->load->view('template/footer');?>
     <script src="<?= base_url() ?>dist/js/controllers/contratacion/datos_lote_contratacion.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
