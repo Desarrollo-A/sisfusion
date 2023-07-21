@@ -895,10 +895,10 @@ function checkBudgetInfo($idSolicitud){
             $queryExtra = "WHERE CONCAT(usuti.nombre, ' ' ,usuti.apellido_paterno ,' ',usuti.apellido_materno  )  like  "."'%$idUsu%' AND se.id_estatus not in(49) "; 
         }
         
-        $cmd = ("SELECT distinct(se.id_solicitud),se.id_titulacion, FORMAT(TRY_CAST(se.valor_contrato AS float),'C') valor_contrato, se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre nombreCondominio,
+        $cmd = ("SELECT distinct(se.id_solicitud),se.id_titulacion, FORMAT(TRY_CAST(se.valor_contrato AS float),'C') valor_contrato, se.id_estatus, CONVERT(VARCHAR,se.fecha_creacion,120) AS fecha_creacion, l.nombreLote, cond.nombre nombreCondominio,
         r.nombreResidencial, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) as cliente, n.pertenece, se.bandera_notaria, se.descuento, 
-        se.aportacion, ar.id_opcion as id_area, (CASE WHEN se.id_estatus IN (4,2,3) AND (se.bandera_admin IS NULL OR se.bandera_comite IS NULL) THEN 'Administración / Comité técnico' ELSE ar.nombre END) area,
-        cp.area_actual, cr.area_sig, CONCAT(cp.clave_actividad ,' - ', ae.nombre) AS nombre_estatus, cr.estatus_siguiente,
+        se.aportacion, ar.id_opcion as id_area, UPPER((CASE WHEN se.id_estatus IN (4,2,3) AND (se.bandera_admin IS NULL OR se.bandera_comite IS NULL) THEN 'Administración / Comité técnico' ELSE ar.nombre END)) area,
+        UPPER(cp.area_actual) AS area_actual, UPPER(cr.area_sig) AS area_sig, CONCAT(cp.clave_actividad ,' - ', ae.nombre) AS nombre_estatus, cr.estatus_siguiente,
         cr.nombre_estatus_siguiente, cr.tipo_permiso, se.bandera_comite, se.bandera_admin, se.estatus_construccion, se.nombre_a_escriturar,
         se.cliente_anterior, (CASE when cp.tipo_permiso = 3 THEN 'RECHAZO' ELSE '' END ) rechazo, concat((select[dbo].[DiasLaborales]( (dateadd(day,1,se.fecha_modificacion)) ,GETDATE())), ' día(s) de ',ae.dias_vencimiento) vencimiento,
         se.id_notaria, se.fecha_firma, a.descripcion actividad,

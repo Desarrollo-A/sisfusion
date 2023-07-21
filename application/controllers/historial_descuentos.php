@@ -125,8 +125,7 @@ $datos = array();
                                     <div class="table-responsive">
 
                                         <table class="table table-responsive table-bordered table-striped table-hover"
-                                               id="tabla_historial_descuentos" name="tabla_historial_descuentos" style="text-align:center;">
-
+                                            id="tabla_historial_descuentos" name="tabla_historial_descuentos" style="text-align:center;">
                                             <thead>
                                                 <tr>
                                                     <th style="font-size: .9em;">ID</th>                                

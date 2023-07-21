@@ -1454,10 +1454,10 @@
         return $query->result();
     }
 	public function reportLotesPost45(){
-		return $this->db->query("SELECT lotes.idLote, s.nombre AS nombreSede, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, lotes.nombreLote, 
-		lotes.idStatusContratacion, lotes.idMovimiento, lotes.modificado, CAST(lotes.comentario AS varchar(MAX)) as comentario, 
-		fechaVenc, lotes.perfil, residencial.nombreResidencial, cond.nombre as nombreCondominio, lotes.ubicacion, lotes.tipo_venta,
-		lotes.fechaSolicitudValidacion, lotes.firmaRL, lotes.validacionEnganche, cl.fechaApartado,
+		return $this->db->query("SELECT lotes.idLote, UPPER(s.nombre) AS nombreSede, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, lotes.nombreLote, 
+		lotes.idStatusContratacion, lotes.idMovimiento, lotes.modificado, UPPER(CAST(lotes.comentario AS varchar(MAX))) as comentario, 
+		convert(varchar,fechaVenc,120) AS fechaVenc, lotes.perfil, residencial.nombreResidencial, cond.nombre as nombreCondominio, lotes.ubicacion, lotes.tipo_venta,
+		lotes.fechaSolicitudValidacion, lotes.firmaRL, lotes.validacionEnganche, convert(varchar,cl.fechaApartado,120) as fechaApartado,
 		concat(us.nombre,' ', us.apellido_paterno, ' ', us.apellido_materno) as asesor, idAsesor,
 		concat(ge.nombre,' ', ge.apellido_paterno, ' ', ge.apellido_materno) as gerente, lotes.referencia,
 		lotes.validacionEnganche, lotes.status8Flag, cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta
@@ -1477,7 +1477,7 @@
 		residencial.nombreResidencial, cond.nombre, lotes.ubicacion, lotes.tipo_venta,
 		cl.id_gerente, cl.id_coordinador, concat(us.nombre,' ', us.apellido_paterno, ' ', us.apellido_materno),
 		concat(ge.nombre,' ', ge.apellido_paterno,' ', ge.apellido_materno), idAsesor, lotes.fechaSolicitudValidacion, lotes.firmaRL,
-		lotes.validacionEnganche, cl.fechaApartado, lotes.referencia, lotes.validacionEnganche, lotes. status8Flag")->result();
+		lotes.validacionEnganche, cl.fechaApartado, lotes.referencia, lotes.validacionEnganche, lotes. status8Flag,cl.id_cliente_reubicacion,cl.fechaAlta")->result();
 	}
 	public function getInventarioAllAd()
 	{

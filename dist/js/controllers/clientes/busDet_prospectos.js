@@ -459,7 +459,7 @@ function fillTimeline(v) {
         '               <a>' + v.fecha_creacion + '</a>\n' +
         '           </div>\n' +
         '           <div class="col-md-12">\n' +
-    '                <p class="m-0"><small>Obseravación: </small><b> ' + v.observacion + '</b></p>\n'+
+        '               <p class="m-0"><small>Obseravación: </small><b> ' + v.observacion + '</b></p>\n'+
         '           </div>\n' +
         '        <h6>\n' +
         '        </h6>\n' +
@@ -479,9 +479,9 @@ function fillChangelog(v) {
     '               <a>' + v.fecha_creacion + '</a>\n' +
     '           </div>\n' +
     '           <div class="col-md-12">\n' +
-'                <p class="m-0"><small>USUARIO: </small><b> ' + v.creador + '</b></p>\n'+
-'                <p class="m-0"><small>VALOR ANTERIOR: </small><b> ' + v.anterior + '</b></p>\n' +
-'                <p class="m-0"><small>VALOR NUEVO: </small><b> ' + v.nuevo + '</b></p>\n' +
+    '               <p class="m-0"><small>USUARIO: </small><b> ' + v.creador + '</b></p>\n'+
+    '               <p class="m-0"><small>VALOR ANTERIOR: </small><b> ' + v.anterior + '</b></p>\n' +
+    '               <p class="m-0"><small>VALOR NUEVO: </small><b> ' + v.nuevo + '</b></p>\n' +
     '           </div>\n' +
     '        <h6>\n' +
     '        </h6>\n' +

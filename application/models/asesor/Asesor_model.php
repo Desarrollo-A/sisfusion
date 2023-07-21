@@ -926,7 +926,7 @@ class Asesor_model extends CI_Model {
     }
     public function getCarpetas()
     {
-        return $this->db->query("SELECT * from archivos_carpetas");
+        return $this->db->query("SELECT id_archivo, nombre, UPPER(descripcion) AS descripcion, UPPER(archivo) AS archivo, estatus, usuario, CONVERT(VARCHAR,fecha_creacion,120) AS fecha_creacion, CONVERT(VARCHAR,fecha_modificacion,120) AS fecha_modificacion FROM archivos_carpetas");
     }
     function getInfoCarpeta($id_carpeta)
     {
