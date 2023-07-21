@@ -312,10 +312,13 @@
         return $this->db->query("SELECT detalle_paquete FROM corridas_x_lotes WHERE id_cxl IN ($cxl) AND estatus = 1")->row();
     }
     public function getDescById($id_descuento){
-        $query = $this->db->query("SELECT des.*, re.id_paquete, re.prioridad, re.id_descuento, re.msi_descuento, c.eng_top, c.apply, c.tdescuento 
+        $query = $this->db->query("SELECT
+            des.porcentaje, re.id_paquete, re.prioridad, c.apply, des.id_condicion, 
+            re.id_descuento,  re.msi_descuento, pq.descripcion as leyenda
         FROM relaciones re
         INNER JOIN descuentos des ON re.id_descuento = des.id_descuento
         INNER JOIN condiciones c ON c.id_condicion = des.id_condicion 
+        INNER JOIN paquetes pq ON pq.id_paquete = re.id_paquete
         WHERE des.id_descuento=".$id_descuento." ORDER BY prioridad");
         return $query->row();
     }
@@ -392,7 +395,6 @@
         INNER JOIN lotes l ON l.idLote = cf.id_lote
         INNER JOIN condominios c ON c.idCondominio = l.idCondominio
         INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
-        /*INNER JOIN clientes cl ON l.idCliente = cl.id_cliente*/
         $valInner
         INNER JOIN usuarios u ON u.id_usuario = cf.id_asesor WHERE id_lote=".$idLote." ".$condicion);
         return $query->result_array();
