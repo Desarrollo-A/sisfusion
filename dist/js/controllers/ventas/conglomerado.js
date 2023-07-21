@@ -806,54 +806,54 @@ function loadTable(tipoDescuento) {
         let meses = [
             {
                 id: '01',
-                mes:'Enero'
+                mes:'ENERO'
             },
             {
                 id:'02',
-                mes:'Febrero'
+                mes:'FEBRERO'
             },
             {
                 id:'03',
-                mes:'Marzo'
+                mes:'MARZO'
             },
             {
                 id:'04',
-                mes:'Abril'
+                mes:'ABRIL'
             },
             {
                 id:'05',
-                mes:'Mayo'
+                mes:'MAYO'
             },
             {
                 id:'06',
-                mes:'Junio'
+                mes:'JUNIO'
             },
             {
                 id:'07',
-                mes:'Julio'
+                mes:'JULIO'
             },
             {
                 id:'08',
-                mes:'Agosto'
+                mes:'AGOSTO'
             },
             {
                 id:'09',
-                mes:'Septiembre'
+                mes:'SEPTIEMBRE'
             },
             {
                 id:'10',
-                mes:'Octubre'
+                mes:'OCTUBRE'
             },
             {
                 id:'11',
-                mes:'Noviembre'
+                mes:'NOVIEMBRE'
             },
             {
                 id:'12',
-                mes:'Diciembre'
+                mes:'DICIEMBRE'
             }
         ];
-        let anios = [2019,2020,2021,2022];
+        let anios = [2019,2020,2021,2022,2023];
 
         $("#tabla-general tbody").on("click", ".consultar_historial_pagos", function (e) {
             e.preventDefault();

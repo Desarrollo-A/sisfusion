@@ -52,31 +52,16 @@
                                         <div class="row">
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                 <div class="form-group">
-                                                    <label class="m-0" for="mes">Año</label>
-                                                    <select name="anio" id="anio" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona año" data-size="7" required>
-                                                        <?php
-                                                        setlocale(LC_ALL, 'es_ES');
-                                                        for ($i = 2019; $i <= 2023; $i++) {
-                                                            $yearName  = $i;
-                                                            echo '<option value="' . $i . '">' . $yearName . '</option>';
-                                                        }
-                                                        ?>
+                                                    <label class="control-label" for="mes">Año (<span class="isRequired">*</span>)</label>
+                                                    <select name="anio" id="anio" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
+                                                        
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                 <div class="form-group">
-                                                    <label class="m-0" for="mes">Mes</label>
-                                                    <select name="mes" id="mes" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona mes" data-size="7" required>
-                                                        <?php
-                                                        setlocale(LC_ALL, 'es_ES');
-                                                        for ($i = 1; $i <= 12; $i++) {
-                                                            $monthNum  = $i;
-                                                            $dateObj   = DateTime::createFromFormat('!m', $monthNum);
-                                                            $monthName = strftime('%B', $dateObj->getTimestamp());
-                                                            echo '<option value="' . $i . '">' . $monthName . '</option>';
-                                                        }
-                                                        ?>
+                                                    <label class="control-label" for="mes">Mes</label>
+                                                    <select name="mes" id="mes" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
                                                     </select>
                                                 </div>
                                             </div>

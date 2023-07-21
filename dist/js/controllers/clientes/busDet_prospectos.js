@@ -1,6 +1,14 @@
+let titulosEvidence=[];
+$('#prospects-datatable_dir').on('draw.dt', function() {
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
+    });
+});
+
 $('#prospects-datatable_dir thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
-        $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
+    titulosEvidence.push(title);
+    $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
         $( 'input', this ).on('keyup change', function () {
             if ($('#prospects-datatable_dir').DataTable().column(i).search() !== this.value ) {
                 $('#prospects-datatable_dir').DataTable().column(i).search(this.value).draw();
@@ -229,7 +237,7 @@ $(document).ready(function () {
 });
 
 function updateTable(typeTransaction, busquedaParams, urlBusqueda){
-    var prospectsTable_dir = $('#prospects-datatable_dir').dataTable({
+    $('#prospects-datatable_dir').dataTable({
         dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
@@ -241,9 +249,9 @@ function updateTable(typeTransaction, busquedaParams, urlBusqueda){
         { 
             data: function (d) {
                 if (d.estatus == 1) {
-                    return '<center><span class="label label-danger" style="background:#27AE60">Vigente</span><center>';
+                    return '<center><span class="label lbl-green">VIGENTE</span><center>';
                 } else {
-                    return '<center><span class="label label-danger" style="background:#E74C3C">No vigente</span><center>';
+                    return '<center><span class="label lbl-warinig">NO VIGENTE</span><center>';
                 }
             }
         },
@@ -251,14 +259,15 @@ function updateTable(typeTransaction, busquedaParams, urlBusqueda){
             data: function (d) {
                 if( d.lugar_prospeccion == 'MKT digital (especificar)'){
                     if(d.otro_lugar != '0'){
-                        return '<center><span class="label label-danger" style="background:#2081a7">'+d.lugar_prospeccion+'</span><br><br><span class="label label-danger" style="background:#494e54">'+d.otro_lugar+'</span><center>';
+                        return '<center><span class="label lbl-sky">'+d.lugar_prospeccion+'</span>'+
+                                '<br><br><span class="label lbl-purple">'+d.otro_lugar+'</span><center>';
                     }
                     else{
-                        return '<center><span class="label label-danger" style="background:#2081a7">'+d.lugar_prospeccion+'</span><center>';
+                        return '<center><span class="label lbl-sky">'+d.lugar_prospeccion+'</span><center>';
                     }
                 }
                 else{
-                    return '<center><span class="label label-danger" style="background:#2081a7">'+d.lugar_prospeccion+'</span><center>';
+                    return '<center><span class="label label lbl-sky">'+d.lugar_prospeccion+'</span><center>';
                 }
             }
         },
@@ -305,7 +314,7 @@ function updateTable(typeTransaction, busquedaParams, urlBusqueda){
         ,
         { 
             data: function (d) {
-                return '<div class="d-flex justify-center"><button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '"><i class="material-icons">remove_red_eye</i></button></div>';
+                return '<div class="d-flex justify-center"><button  data-toggle="tooltip"  data-placement="top" title="VER INFORMACIÓN" class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '"><i class="material-icons">remove_red_eye</i></button></div>';
             }
         }],
         pagingType: "full_numbers",

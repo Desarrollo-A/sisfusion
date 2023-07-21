@@ -57,14 +57,13 @@ $('#tabla_deposito_seriedad thead tr:eq(0) th').each(function (i) {
 
 $(document).ready(function() {
     if (id_usuario_general == 9651) { // MJ: ERNESTO DEL PINO SILVA
+        $('#tabla_deposito_seriedad').addClass('hide');
         $.post(`${general_base_url}Contratacion/lista_proyecto`, function(data) {
             for(let i = 0; i < data.length; i++){
                 const id = data[i]['idResidencial'];
                 const name = data[i]['descripcion'];
-
                 $('#proyecto').append($('<option>').val(id).text(name.toUpperCase()));
             }
-
             $('#proyecto').selectpicker('refresh');
         }, 'json');
     } else { // MJ: PARA LOS DEMÁS SÍ CARGA EN EL READY
@@ -74,11 +73,9 @@ $(document).ready(function() {
     $('#subdirector').empty().selectpicker('refresh');
     $.get(`${general_base_url}Asesor/getSubdirectores`, function (data) {
         const subdirectores = JSON.parse(data);
-
         subdirectores.forEach(subdirector => {
             $('#subdirector').append($('<option>').val(subdirector.id_subdir).text(subdirector.nombre_subdir));
         });
-
         $('#subdirector').selectpicker('refresh');
     });
 });
@@ -86,28 +83,22 @@ $(document).ready(function() {
 $('#proyecto').change( function(){
     const proyecto = $(this).val();
     $("#condominio").html("");
-
     $(document).ready(function(){
         $.post(`${general_base_url}Contratacion/lista_condominio/`+proyecto, function(data) {
-            $('#condominio').append($('<option disabled selected>Selecciona un codominio</option>'));
-
             for(let i = 0; i < data.length; i++) {
                 const id = data[i]['idCondominio'];
                 const name = data[i]['nombre'];
-
                 $('#condominio').append($('<option>').val(id).text(name.toUpperCase()));
             }
-
             $("#condominio").selectpicker('refresh');
         }, 'json');
     });
 });
 
 $('#condominio').change( function(){
+    $('#tabla_deposito_seriedad').removeClass('hide');
     fillDataTable($(this).val());
 });
-
-
 
 $("#tabla_deposito_seriedad").ready( function(){
     $(document).on('click', '.abrir_prospectos', function () {

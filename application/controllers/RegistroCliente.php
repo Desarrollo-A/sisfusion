@@ -6260,6 +6260,9 @@ class RegistroCliente extends CI_Controller {
 	
     function getResultsClientsSerch()
     {
+    ini_set('max_execution_time', 900);
+    set_time_limit(900);
+    ini_set('memory_limit','2048M');
       $info_client = [];
       $this->input->post('nombre') !== ''
       ? $info_client["cl.nombre"] = $this->input->post('nombre')
