@@ -37,7 +37,7 @@ class Dispersion_automatica extends CI_Controller
     $QUERY_V = $this->db->query("SELECT MAX(idResidencial) DATA_V FROM residenciales ");
     $DAT = $QUERY_V->row()->DATA_V;
     $lotePruebas = 66018;
-    echo json_encode($this->ComisionesNeo_model->getStatusNeodata($lotePruebas)->result_array(),JSON_NUMERIC_CHECK);
+  //  echo json_encode($this->ComisionesNeo_model->getStatusNeodata($lotePruebas)->result_array(),JSON_NUMERIC_CHECK);
 
     for($j = 1; $j < $DAT+1; $j++){
       //  $datos = $this->ComisionesNeo_model->getLotesPagados($j)->result_array();
@@ -52,9 +52,9 @@ class Dispersion_automatica extends CI_Controller
         for($i = 0; $i < COUNT($datos); $i++){
             $data[$i] = $this->ComisionesNeo_model->getGeneralStatusFromNeodata($datos[$i]['referencia'], $datos[$i]['idResidencial']);
               // echo('<pre>');
-              
-               echo json_encode($datos[$i] );
+              echo json_encode($datos[$i] );
 
+              
               // echo('</pre>');
               echo('<pre>');
                 
@@ -73,10 +73,10 @@ class Dispersion_automatica extends CI_Controller
                     if($data[$i]->Aplicado > ($datos[$i]['ultimo_pago']+100)){
                       
                       // $d2 = $this->ComisionesNeo_model->getStatusNeodata($datos[$i]['id_lote']);   
-                      // echo json_encode($this->Dispersion_automatica_model->getDatosDispersion($datos[$i]['id_lote']));
-                      // echo('<pre>');
-                      // echo json_encode($d2 );
-                      // echo('</pre>');
+                      echo json_encode($this->Dispersion_automatica_model->getDatosDispersion($datos[$i]['id_lote']));
+                      echo('<pre>');
+                      echo json_encode($d2 );
+                      echo('</pre>');
                       
                             $this->ComisionesNeo_model->UpdateBanderaPagoComision($datos[$i]['id_lote'], $data[$i]->Bonificado, $data[$i]->FechaAplicado, $data[$i]->fpoliza, $data[$i]->Aplicado);
                       // $contador ++;

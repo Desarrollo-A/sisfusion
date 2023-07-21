@@ -5890,4 +5890,38 @@ public function descuentosCapitalHumano(){
         return $d;
     }
 
+
+    public function ultimoLlenado(){
+      $respuesta = $this->Comisiones_model->ultimoLlenado();
+      if($respuesta == FALSE  ){
+        $array_respuesta = array(
+          "response_code" => 400,
+          "response_type" => 'danger',
+          "message"       => 'Upss,Error en consulta favor volver a intentarlo.',
+          "date"          => 'Null'
+        );
+      }{
+        $array_respuesta = array(
+          "response_code" => 200,
+          "response_type" => 'success',
+          "message"       => 'ok',
+          "date"          => $respuesta
+        );
+      }
+
+     echo  json_encode( $array_respuesta);
+    }
+
+
+    public function nuevoLlenadoPlan(){
+      $fecha_reinicio = $this->input->post("fecha_reinicio");
+      $fecha_Sistema =  date('Y-m-d H:i:s');
+      if(strtotime($fecha_reinicio) <= strtotime($fecha_Sistema)){
+        $respuesta = $this->Comisiones_model->nuevoLlenadoPlan();
+      }else {
+        $respuesta = 300;
+      }
+  
+     echo  json_encode( $respuesta);
+    }
 }
