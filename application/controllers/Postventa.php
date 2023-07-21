@@ -2045,7 +2045,7 @@ function saveNotaria(){
     } 
     public function SolicitudesEscrituracion()
     {
-        $id_usuario       = $this->input->post('id_usuario');
+        $id_usuario = $this->input->post('id_usuario');
         $data['data'] =  $this->Postventa_model->SolicitudesEscrituracion($id_usuario);
       
         echo json_encode($data);

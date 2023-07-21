@@ -259,15 +259,14 @@ function updateTable(typeTransaction, busquedaParams, urlBusqueda){
             data: function (d) {
                 if( d.lugar_prospeccion == 'MKT digital (especificar)'){
                     if(d.otro_lugar != '0'){
-                        return '<center><span class="label lbl-sky">'+d.lugar_prospeccion+'</span>'+
-                                '<br><br><span class="label lbl-purple">'+d.otro_lugar+'</span><center>';
+                        return '<center><span class="label lbl-azure">'+d.lugar_prospeccion+'</span><br><br><span class="label label-danger" style="background:#494e54">'+d.otro_lugar+'</span><center>';
                     }
                     else{
-                        return '<center><span class="label lbl-sky">'+d.lugar_prospeccion+'</span><center>';
+                        return '<center><span class="label lbl-azure">'+d.lugar_prospeccion+'</span><center>';
                     }
                 }
                 else{
-                    return '<center><span class="label label lbl-sky">'+d.lugar_prospeccion+'</span><center>';
+                    return '<center><span class="label lbl-azure">'+d.lugar_prospeccion+'</span><center>';
                 }
             }
         },
@@ -468,7 +467,7 @@ function fillTimeline(v) {
         '               <a>' + v.fecha_creacion + '</a>\n' +
         '           </div>\n' +
         '           <div class="col-md-12">\n' +
-    '                <p class="m-0"><small>Obseravación: </small><b> ' + v.observacion + '</b></p>\n'+
+        '               <p class="m-0"><small>Obseravación: </small><b> ' + v.observacion + '</b></p>\n'+
         '           </div>\n' +
         '        <h6>\n' +
         '        </h6>\n' +
@@ -488,9 +487,9 @@ function fillChangelog(v) {
     '               <a>' + v.fecha_creacion + '</a>\n' +
     '           </div>\n' +
     '           <div class="col-md-12">\n' +
-'                <p class="m-0"><small>USUARIO: </small><b> ' + v.creador + '</b></p>\n'+
-'                <p class="m-0"><small>VALOR ANTERIOR: </small><b> ' + v.anterior + '</b></p>\n' +
-'                <p class="m-0"><small>VALOR NUEVO: </small><b> ' + v.nuevo + '</b></p>\n' +
+    '               <p class="m-0"><small>USUARIO: </small><b> ' + v.creador + '</b></p>\n'+
+    '               <p class="m-0"><small>VALOR ANTERIOR: </small><b> ' + v.anterior + '</b></p>\n' +
+    '               <p class="m-0"><small>VALOR NUEVO: </small><b> ' + v.nuevo + '</b></p>\n' +
     '           </div>\n' +
     '        <h6>\n' +
     '        </h6>\n' +
