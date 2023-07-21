@@ -99,6 +99,11 @@ $(document).ready(function () {
             }},
             { data: function (d) {
                 var labelEstatus;
+
+                if(d.penalizacion == 1 && d.bandera_penalizacion == 0){
+                    labelEstatus =`<p class="m-0"><b>Penalización ${d.dias_atraso} días</b></p><span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span>`;
+                }else{
+
                 if(d.totalNeto2 == null) {
                     labelEstatus ='<p class="m-0"><b>Sin Precio Lote</b></p>';
                 }else if(d.registro_comision == 2){
@@ -106,6 +111,7 @@ $(document).ready(function () {
                 }else {
                     labelEstatus =`<span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span>`;
                 }
+            }
                 return labelEstatus;
             }},
             { data: function (d) {
@@ -364,19 +370,6 @@ $(document).ready(function () {
                                             saldo1C = (total_comision1/4);
                                             break;
                                         }
-                                        // if(bandera_anticipo == 0){
-                                        //     // Entra a bandera 1
-                                        //     saldo1C = (saldo1/2);
-                                        //     console.log(saldo1);
-                                        // } else if(bandera_anticipo == 1){
-                                        //     // Entra a bandera 2
-                                        //     saldo1C = (saldo1/2);
-                                        //     console.log(saldo1);
-                                        // } else{
-                                        //     // Entra a bandera 0
-                                        //     saldo1C = saldo1;
-                                        //     console.log(saldo1);
-                                        // }
                                         
                                         total_comision = parseFloat(total_comision) + parseFloat(v.comision_total);
                                         abonado = parseFloat(abonado) +parseFloat(saldo1C);
