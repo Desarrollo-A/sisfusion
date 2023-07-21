@@ -464,18 +464,15 @@
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                             <div class="col-md-4 form-group">
-                                                <div class="form-group label-floating select-is-empty">
+                                                <div class="form-group select-is-empty">
                                                     <label class="control-label">Proyecto</label>
-                                                    <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="Selecciona un proyecto" data-size="7" data-live-search="true" required>
-                                                    </select>
+                                                    <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" required></select>
                                                 </div>
                                             </div>
                                             <div class="col-md-4 form-group">
-                                                <div class="form-group label-floating select-is-empty">
+                                                <div class="form-group select-is-empty">
                                                     <label class="control-label">Condominio</label>
-                                                    <select name="condominio" id="condominio" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="Selecciona condominio" data-size="7" data-live-search="true" required>
-                                                        <option disabled selected>Selecciona un condominio</option>
-                                                    </select>
+                                                    <select name="condominio" id="condominio" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" required></select>
                                                 </div>
                                             </div>
                                         </div>
