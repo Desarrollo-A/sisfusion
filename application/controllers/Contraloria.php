@@ -3118,4 +3118,10 @@ class Contraloria extends CI_Controller {
             echo json_encode(0);
         }
     }
+
+    public function getAllDsByLider()
+    {
+        $data = $this->Contraloria_model->getAllDsByLider($this->session->userdata('id_lider'));
+        echo json_encode($data);
+    }
 }
