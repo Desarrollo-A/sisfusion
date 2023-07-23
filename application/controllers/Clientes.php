@@ -2364,10 +2364,6 @@ public function getStatusMktdPreventa(){
             $typeTransaction = $this->input->post("typeTransaction");
             $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
             $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
-
-            echo($beginDate);
-
-
             $where = $this->input->post("where");
             $data['data'] = $this->Clientes_model->getProspectsAssignedList($typeTransaction, $beginDate, $endDate, $where);
             echo json_encode($data);

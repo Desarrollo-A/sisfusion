@@ -1853,6 +1853,7 @@ table {
   text-align: center;
   width: 100% !important;
   font-size: 13px;
+  text-transform: uppercase;
 }
 
 table tbody > tr.selected, table tbody > tr > .selected {

@@ -274,6 +274,7 @@ table{
     text-align: center;
     width: 100%!important;
     font-size: 13px;
+    text-transform: uppercase;
     tbody > tr.selected, tbody > tr > .selected {
         background-color: $goldMaderas!important;
         opacity: 0.6;

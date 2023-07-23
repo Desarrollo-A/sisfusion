@@ -1128,6 +1128,7 @@
   border-radius: 30px;
   padding: 7px 7px 7px 15px;
   display: flex;
+  align-items: center;
 }
 
 .file-gph .upload-btn {

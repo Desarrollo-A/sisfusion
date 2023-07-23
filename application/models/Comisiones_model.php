@@ -5015,7 +5015,7 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
    function getDatosNuevasCompartidas(){
     $filtro = " AND cl.id_asesor IN (SELECT id_usuario FROM usuarios WHERE id_sede IN (1,2,3,4,5,6) AND id_rol IN (7,9))  ";
 
-    return $this->db->query(" SELECT pci.id_usuario, lo.ubicacion_dos, plm.id_plan, s.nombre as sede, us.nombre, us.apellido_paterno, SUM(pci.abono_neodata) total, res.empresa, res.idResidencial, CAST(res.descripcion AS VARCHAR(MAX)) descripcion, cmktd.sede1, cmktd.sede2, s1.nombre as s1, s2.nombre as s2
+    return $this->db->query(" SELECT pci.id_usuario, lo.ubicacion_dos, plm.id_plan, s.nombre as sede, us.nombre, us.apellido_paterno, SUM(pci.abono_neodata) total, res.empresa, res.idResidencial, CAST(res.descripcion AS VARCHAR(MAX)) descripcion,cmktd.sede1, cmktd.sede2, s1.nombre as s1, s2.nombre as s2
                                FROM pago_comision_ind pci 
                                INNER JOIN comisiones com ON com.id_comision = pci.id_comision
                                INNER JOIN lotes lo ON lo.idLote = com.id_lote
