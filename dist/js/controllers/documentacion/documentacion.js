@@ -201,7 +201,7 @@ function cargarTabla(idLote, idCliente = '') {
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
-                titleAttr: 'Descargar archivo de Excel',
+                titleAttr: 'DESCARGAR ARCHIVO DE EXCEL',
                 title: 'DOCUMENTACION_LOTE',
                 exportOptions: {
                     columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
