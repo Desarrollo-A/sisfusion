@@ -29,7 +29,19 @@
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 						<div class="card">
 							<div class="card-header card-header-icon" data-background-color="goldMaderas">
-								<i class="fas fa-box fa-2x"></i>
+								<?php
+                                    if(in_array($this->session->userdata('id_rol'), array(7, 9, 3, 2, 1, 6, 5, 4))) {
+                                ?>
+                                    <a href="https://youtu.be/cfRUmAdELkU" class="align-center justify-center u2be" target="_blank">
+                                        <i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
+                                    </a>
+                                <?php
+                                    } else {
+                                ?>
+                                    <i class="fas fa-box"></i>
+                                <?php
+                                    }
+                                ?>
 							</div>
 							<div class="card-content">
 								<div class="encabezadoBox">
