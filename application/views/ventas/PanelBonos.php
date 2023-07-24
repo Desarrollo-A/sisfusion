@@ -73,7 +73,11 @@
                                                         <div class="row">
                                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                                 <div class="form-group d-flex justify-center align-center">
-                                                                    <h4 class="title-tot center-align m-0">Bonos Nuevos: </h4>
+                                                                    <h4 class="title-tot center-align m-0">Bonos Nuevos
+                                                                        <a href="https://youtu.be/wLDdDHQjCrw" target="_blank" style="color:red">
+                                                                            <i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
+                                                                        </a>
+                                                                    </h4>
                                                                     <p class="input-tot pl-1" name="totalnuevos" id="totalnuevos">$0.00</p>
                                                                 </div>
                                                             </div>
@@ -114,7 +118,11 @@
                                                             <div class="row">
                                                                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                                     <div class="form-group d-flex justify-center align-center">
-                                                                        <h4 class="title-tot center-align m-0">Bonos Revisión: </h4>
+                                                                        <h4 class="title-tot center-align m-0">Bonos Revisión
+                                                                            <a href="https://youtu.be/wLDdDHQjCrw" target="_blank" style="color:red">
+                                                                                <i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
+                                                                            </a>
+                                                                        </h4>
                                                                         <p class="input-tot pl-1" name="totalrevision" id="totalrevision">$0.00</p>
                                                                     </div>
                                                                 </div>
@@ -152,7 +160,11 @@
                                                     <div class="row">
                                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                             <div class="form-group d-flex justify-center align-center">
-                                                                <h4 class="title-tot center-align m-0">Bonos por pagar: </h4>
+                                                                <h4 class="title-tot center-align m-0">Bonos por pagar
+                                                                    <a href="https://youtu.be/wLDdDHQjCrw" target="_blank" style="color:red">
+                                                                        <i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
+                                                                    </a>
+                                                                </h4>
                                                                 <p class="input-tot pl-1" name="totalp" id="totalp">$0.00</p>
                                                             </div>
                                                         </div>
@@ -189,7 +201,11 @@
                                                     <div class="row">
                                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                             <div class="form-group d-flex justify-center align-center">
-                                                                <h4 class="title-tot center-align m-0">Bonos Otros (Cancelados, pausa): </h4>
+                                                                <h4 class="title-tot center-align m-0">Bonos Otros (Cancelados, pausa)
+                                                                    <a href="https://youtu.be/wLDdDHQjCrw" target="_blank" style="color:red">
+                                                                        <i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
+                                                                    </a>
+                                                                </h4>
                                                                 <p class="input-tot pl-1" name="totalo" id="totalo">$0.00</p>
                                                             </div>
                                                         </div>
