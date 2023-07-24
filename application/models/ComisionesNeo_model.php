@@ -325,5 +325,21 @@ class ComisionesNeo_model extends CI_Model {
         $this->db->query("UPDATE pago_comision SET pendiente = total_comision - abonado, modificado_por = 'NEO' WHERE total_comision not in (0) and bandera not in (100, 150, 110, 170) ");
     }
 
+    public function getLotesPagadosAutomatica($res){
+        $cmd = "SELECT p.id_lote, p.numero_dispersion, 
+        p.ultima_dispersion ,p.bandera,l.registro_comision, 
+        p.ultimo_pago,l.referencia,r.idResidencial 
+        FROM pago_comision p
+        INNER JOIN lotes l ON l.idLote = p.id_lote
+        INNER JOIN condominios c ON c.idCondominio = l.idCondominio
+        INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
+        WHERE p.bandera = 1 
+        AND l.registro_comision IN (1,5) 
+        AND l.idStatusContratacion = 15 
+        AND p.ultimo_pago > 0 
+        AND r.idResidencial = $res";
+        $query =  $this->db->query($cmd);
+        return $query->result_array();
+    }
 
 }

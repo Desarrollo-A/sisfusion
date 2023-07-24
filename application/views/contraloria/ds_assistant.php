@@ -6,12 +6,7 @@
     //se debe validar que tipo de perfil esta sesionado para poder asignarle el tipo de sidebar
     if($this->session->userdata('id_rol')=="6")//contratacion
     {
-      /*-------------------------------------------------------*/
-      $datos = array();
-      $datos = $datos4;
-      $datos = $datos2;
-      $datos = $datos3;  
-      $this->load->view('template/sidebar', $datos);
+      $this->load->view('template/sidebar');
     }
     else{
       echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
@@ -246,42 +241,10 @@
               </div>
               <div class="card-content">
                 <h3 class="card-title center-align">Depósitos de seriedad</h3>
-                <div class="toolbar">
-                  <div class="container-fluid p-0">
-                    <div class="row">
-                      <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                        <div class="form-group">
-                          <label class="m-0" for="filtro3">Proyecto</label>
-                          <select name="filtro3" id="filtro3" class="selectpicker select-gral" data-show-subtext="true" data-live-search="true" data-style="btn" title="Selecciona Proyecto" data-size="7" required>
-                            <?php
-                            if($residencial != NULL) :
-                              foreach($residencial as $fila) : ?>
-                                <option value= <?=$fila['idResidencial']?> > <?=$fila['nombreResidencial']?> </option>
-                              <?php endforeach;
-                            endif;
-                            ?>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                        <div class="form-group">
-                          <label class="m-0" for="filtro4">Condominio</label>
-                          <select id="filtro4" name="filtro4" class="selectpicker select-gral" data-show-subtext="true" data-live-search="true" data-style="btn" title="Selecciona Condominio" data-size="7"></select>
-                        </div>
-                      </div>
-                      <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                        <div class="form-group">
-                          <label class="m-0" for="filtro5">Lote</label>
-                          <select id="filtro5" name="filtro5" class="selectpicker select-gral" data-show-subtext="true" data-live-search="true"  data-style="btn" title="Selecciona Lote" data-size="7"></select>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
                 <div class="material-datatables">
                   <div class="form-group">
                     <div class="table-responsive">
-                      <table class="table-striped table-hover" id="tabla_deposito_seriedad" name="tabla_deposito_seriedad">
+                      <table class="table-striped table-hover" id="tabla_deposito_seriedad">
                         <thead>
                           <tr>
                             <th>PROYECTO</th>
@@ -292,7 +255,7 @@
                             <th>FECHA VENCIMIENTO</th>
                             <th>COMENTARIO</th>
                             <th>EXPEDIENTE</th>
-                            <th>DS</th>
+                            <th>ACCIONES</th>
                           </tr>
                         </thead>
                       </table>
@@ -323,6 +286,8 @@
     Shadowbox.init();
   </script>
   <script>
+    $('[data-toggle="tooltip"]').tooltip();
+
     var miArray = new Array(6);
     var miArrayAddFile = new Array(6);
 
@@ -353,140 +318,108 @@
         input.trigger('fileselect', [numFiles, label]);
       });
 
-      $('#filtro3').change(function(){
-        var valorSeleccionado = $(this).val();
-        $("#filtro4").empty().selectpicker('refresh');
-        $.ajax({
-          url: '<?=base_url()?>registroCliente/getCondominios/'+valorSeleccionado,
-          type: 'post',
-          dataType: 'json',
-          success:function(response){
-            var len = response.length;
-            for( var i = 0; i<len; i++){
-              var id = response[i]['idCondominio'];
-              var name = response[i]['nombre'];
-              $("#filtro4").append($('<option>').val(id).text(name));
-            }
-            $("#filtro4").selectpicker('refresh');
-          }
-        });
-      });
-
-      $('#filtro4').change(function(){
-        var residencial = $('#filtro3').val();
-        var valorSeleccionado = $(this).val();
-        
-        $("#filtro5").empty().selectpicker('refresh');
-        $.ajax({
-          url: '<?=base_url()?>Contraloria/getLotesAllAssistant/'+valorSeleccionado,
-          type: 'post',
-          dataType: 'json',
-          success:function(response){
-            var len = response.length;
-            for( var i = 0; i<len; i++){
-              var id = response[i]['idLote'];
-              var name = response[i]['nombreLote'];
-              $("#filtro5").append($('<option>').val(id).text(name));
-            }
-            $("#filtro5").selectpicker('refresh');
-          }
-        });
-      });
-
       $('#tabla_deposito_seriedad thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
-        $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
-        $( 'input', this ).on('keyup change', function () {
-          if (tabla_deposito_seriedad.column(i).search() !== this.value ) {
-            tabla_deposito_seriedad
-            .column(i)
-            .search(this.value)
-            .draw();
+        $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>`);
+        $('input', this).on('keyup change', function () {
+          if ($('#tabla_deposito_seriedad').DataTable().column(i).search() !== this.value) {
+              $('#tabla_deposito_seriedad').DataTable().column(i).search(this.value).draw();
           }
         });
+        $('[data-toggle="tooltip"]').tooltip();
       });
 
-      $('#filtro5').change(function(){
-        var valorSeleccionado = $(this).val();
-        $('#tabla_deposito_seriedad').DataTable({
-          ajax: {
-            "url": '<?=base_url()?>index.php/Contraloria/getAllDsByLote/'+valorSeleccionado,
-            "dataSrc": ""
-          },
-          dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
-          buttons: [{
-            extend: 'excelHtml5',
-            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-            className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
-          }],
-          pagingType: "full_numbers",
-          fixedHeader: true,
-          language: {
-              url: "<?=base_url()?>/static/spanishLoader_v2.json",
-              paginate: {
-                  previous: "<i class='fa fa-angle-left'>",
-                  next: "<i class='fa fa-angle-right'>"
-              }
-          },
-          destroy: true,
-          ordering: false,
-          columns: [{ 
-            "data": "nombreResidencial" 
-          },
-          { 
-            "data": "nombreCondominio" 
-          },
-          { 
-            "data": "nombreLote" 
-          },
+      $('#tabla_deposito_seriedad').DataTable(
           {
-            "data": function( d ){
-              return d.nombre+" "+d.apellido_paterno+" "+d.apellido_materno;
-            }
-          },
-          { 
-            "data": "fechaApartado"
-          },
-          { 
-            "data": "fechaVenc" 
-          },
-          {
-            "data": function( d ){
-              comentario = d.idMovimiento == 31 ? d.comentario + "<br> <span class='label label-success'>Nuevo apartado</span>":
-              d.idMovimiento == 85 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Contraloria estatus 2</span>":
-              d.idMovimiento == 20 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Contraloria estatus 5</span>":
-              d.idMovimiento == 63 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Contraloria estatus 6</span>":
-              d.idMovimiento == 73 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Ventas estatus 8</span>":
-              d.idMovimiento == 82 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Jurídico estatus 7</span>":
-              d.idMovimiento == 92 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Contraloria estatus 5</span>":
-              d.idMovimiento == 96 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Jurídico estatus 7</span>":
-              d.comentario;
-              
-              return comentario;
-            }
-          },
-          {
-            "data": function( d ){
-              buttonst = d.idMovimiento == 31 ?  '<a href="#" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2"><i class="material-icons" title= "Enviar estatus">check</i></a>':
-              d.idMovimiento == 85 ?  '<a href="#" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="getInfo2_2 btn-data btn-green"><i class="fas fa-check"></i></a>':
-              d.idMovimiento == 20 ?  '<a href="#" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo5"> <i class="fas fa-check"></i></a>':
-              d.idMovimiento == 63 ?  '<a href="#" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo6"><i class="fas fa-check" title= "Enviar estatus"></i></a>':
-              d.idMovimiento == 73 ?  '<a href="#" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="getInfo2_3 btn-data btn-green"><i class="fas fa-check"></i></a>':
-              d.idMovimiento == 82 ?  '<a href="#" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="getInfo2_7 btn-data btn-green"><i class="fas fa-check"></i></a':
-              d.idMovimiento == 92 ?  '<a href="#" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.modificado+'" class="getInfo5_2 btn-data btn-green"><i class="fas fa-check"></i></a>':
-              d.idMovimiento == 96 ?  '<a href="#" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green return1"><i class="fas fa-check" title= "Enviar estatus"></i></a>':
-              d.comentario;
-              return buttonst;
-            }
-          },
-          {
-            "data": function( d ){
-              return '<a class="btn-data btn-blueMaderas" href="<?=base_url()?>index.php/Asesor/deposito_seriedad/'+d.id_cliente+'/0" title= "Depósito de seriedad"><i class="fas fa-print"></i></a>';
-            }
-          }],
+            ajax: {
+                "url": '<?=base_url()?>index.php/Contraloria/getAllDsByLider',
+                "dataSrc": ""
+            },
+            dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+            buttons: [
+                {
+                    extend: 'excelHtml5',
+                    text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                    className: 'btn buttons-excel',
+                    titleAttr: 'Descargar archivo de Excel',
+                }
+            ],
+            pagingType: "full_numbers",
+            fixedHeader: true,
+            language: {
+                url: "<?=base_url()?>/static/spanishLoader_v2.json",
+                paginate: {
+                    previous: "<i class='fa fa-angle-left'>",
+                    next: "<i class='fa fa-angle-right'>"
+                }
+            },
+            destroy: true,
+            ordering: false,
+            width: '100%',
+            scrollX: true,
+            columns: [
+                {
+                    "data": "nombreResidencial"
+                },
+                {
+                    "data": "nombreCondominio"
+                },
+                {
+                    "data": "nombreLote"
+                },
+                {
+                    "data": function( d ){
+                        return d.nombre+" "+d.apellido_paterno+" "+d.apellido_materno;
+                    }
+                },
+                {
+                    "data": "fechaApartado"
+                },
+                {
+                    "data": "fechaVenc"
+                },
+                {
+                    "data": function( d ){
+                        comentario = d.idMovimiento == 31 ? d.comentario + "<br> <span class='label label-success'>Nuevo apartado</span>":
+                            d.idMovimiento == 85 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Contraloria estatus 2</span>":
+                                d.idMovimiento == 20 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Contraloria estatus 5</span>":
+                                    d.idMovimiento == 63 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Contraloria estatus 6</span>":
+                                        d.idMovimiento == 73 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Ventas estatus 8</span>":
+                                            d.idMovimiento == 82 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Jurídico estatus 7</span>":
+                                                d.idMovimiento == 92 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Contraloria estatus 5</span>":
+                                                    d.idMovimiento == 96 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Jurídico estatus 7</span>":
+                                                        d.comentario;
+
+                        return comentario;
+                    }
+                },
+                {
+                    "data": function( d ){
+                        buttonst = d.idMovimiento == 31 ?  '<a href="#" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo2" data-toggle="tooltip" data-placement="left" title="Enviar estatus"><i class="fas fa-check"></i></a>':
+                            d.idMovimiento == 85 ?  '<a href="#" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="getInfo2_2 btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Enviar estatus"><i class="fas fa-check"></i></a>':
+                                d.idMovimiento == 20 ?  '<a href="#" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo5" data-toggle="tooltip" data-placement="left" title="Enviar estatus"> <i class="fas fa-check"></i></a>':
+                                    d.idMovimiento == 63 ?  '<a href="#" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green getInfo6" data-toggle="tooltip" data-placement="left" title="Enviar estatus"><i class="fas fa-check"></i></a>':
+                                        d.idMovimiento == 73 ?  '<a href="#" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="getInfo2_3 btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Enviar estatus"><i class="fas fa-check"></i></a>':
+                                            d.idMovimiento == 82 ?  '<a href="#" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="getInfo2_7 btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Enviar estatus"><i class="fas fa-check"></i></a':
+                                                d.idMovimiento == 92 ?  '<a href="#" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.modificado+'" class="getInfo5_2 btn-data btn-green" data-toggle="tooltip" data-placement="left" title="Enviar estatus"><i class="fas fa-check"></i></a>':
+                                                    d.idMovimiento == 96 ?  '<a href="#" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="btn-data btn-green return1" data-toggle="tooltip" data-placement="left" title="Enviar estatus"><i class="fas fa-check"></i></a>':
+                                                        d.comentario;
+                        return `<div class="d-flex justify-center">${buttonst}</div>`;
+                    }
+                },
+                {
+                    "data": function( d ){
+                        return '<div class="d-flex justify-center"><a class="btn-data btn-blueMaderas" href="<?=base_url()?>index.php/Asesor/deposito_seriedad/'+d.id_cliente+'/0" data-toggle="tooltip" data-placement="left" title= "Depósito de seriedad"><i class="fas fa-print"></i></a></div>';
+                    }
+                }
+            ],
+            initComplete: function () {
+                $('[data-toggle="tooltip"]').tooltip({
+                  trigger: "hover"
+              });
+            },
         });
-      });/*document Ready*/
+
 
       $(document).on("click", ".getInfo2", function(e){
         e.preventDefault();
