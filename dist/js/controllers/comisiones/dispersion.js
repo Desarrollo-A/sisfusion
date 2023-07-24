@@ -18,6 +18,9 @@ $(document).ready(function () {
             var data = $('#tabla_dispersar_comisiones').DataTable().rows(index).data();
         });
     }});
+
+
+
     
     dispersionDataTable = $('#tabla_dispersar_comisiones').dataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -290,12 +293,53 @@ $(document).ready(function () {
                                 
                                 let labelPenalizacion = '';
                                 if(penalizacion == 1){labelPenalizacion = ' <b style = "color:orange">(Penalización + 90 días)</b>';}
-                                $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-12 text-center"><h3>Lote: <b>${row.data().nombreLote}${labelPenalizacion}</b></h3><l style='color:gray;'>Plan de venta: <b>${descripcion_plan}</b></l></div></div><div class="row"><div class="col-md-3 p-0"><h5>Precio lote: <b>$${formatMoney(totalNeto2)}</b></h5></div><div class="col-md-3 p-0"><h5>$ Neodata: <b style="color:${data[0].Aplicado <= 0 ? 'black' : 'blue'};">$${formatMoney(data[0].Aplicado)}</b></h5></div><div class="col-md-3 p-0"><h5>Disponible: <b style="color:green;">$${formatMoney(total0)}</b></h5></div><div class="col-md-3 p-0">${cadena}</div></div><br>`);
+                                $("#modal_NEODATA .modal-body").append(`
+                                    <div class="row">
+                                        <div class="col-md-12 text-center">
+                                            <h3>Lote: <b>${row.data().nombreLote}${labelPenalizacion}</b></h3>
+                                                <l style='color:gray;'>Plan de venta: <b>${descripcion_plan}</b></l>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3 p-0">
+                                            <h5>Precio lote: <b>$${formatMoney(totalNeto2)}</b></h5>
+                                        </div>
+                                        <div class="col-md-3 p-0">
+                                            <h5>$ Neodata: <b style="color:${data[0].Aplicado <= 0 ? 'black' : 'blue'};">$${formatMoney(data[0].Aplicado)}</b></h5>
+                                        </div>
+                                        <div class="col-md-3 p-0">
+                                            <h5>Disponible: <b style="color:green;">$${formatMoney(total0)}</b></h5>
+                                        </div>
+                                        <div class="col-md-3 p-0">${cadena}
+                                        </div>
+                                    </div>
+                                    <br>`);
  
                                 $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;"> Anticipo </b> diponible <i>'+row.data().nombreLote+'</i></h3></div></div><br><br>');
                           
                     
-                            $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-3"><p style="font-zise:10px;"><b>USUARIOS</b></p></div><div class="col-md-1"><b>%</b></div><div class="col-md-2"><b>TOT. COMISIÓN</b></div><div class="col-md-2"><b><b>ABONADO</b></div><div class="col-md-2"><b>PENDIENTE</b></div><div class="col-md-2"><b>DISPONIBLE</b></div></div>`);
+                            $("#modal_NEODATA .modal-body").append(`
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <p style="font-zise:10px;">
+                                                    <b>USUARIOS</b></p>
+                                            </div>
+                                            <div class="col-md-1">
+                                                <b>%</b>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <b>TOT. COMISIÓN</b>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <b><b>ABONADO</b>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <b>PENDIENTE</b>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <b>DISPONIBLE</b>
+                                            </div>
+                                        </div>`);
                             var_sum = 0;
                             let abonado=0;
                             let porcentaje_abono=0;
@@ -844,6 +888,7 @@ function checkDecimal(decimal) {
     return str;
 }
 
+
 $(document).on('click', '.update_bandera', function(e){
     // alert($(this).attr("data-idpagoc"));
     id_pagoc = $(this).attr("data-idpagoc");
@@ -954,6 +999,85 @@ $('#planes').change(function () {
    
 
 });
+$(document).on("click",".llenadoPlan", function (e){
+    $('#spiner-loader').removeClass('hide');
+    document.getElementById('llenadoPlan').disabled = true;
+    let bandera = 0;
+    $.ajax({
+        type: 'POST',
+        url: 'ultimoLlenado',
+        contentType: false,
+        cache: false,
+        dataType:'json',
+        success: function (data) {
+           let ban ;
+            console.log(data)
+           fecha_reinicio =  new Date(data.date[0].fecha_reinicio)
+
+        
+     
+        fechaSitema =  new Date();
+  
+        if (fechaSitema.getTime() >= fecha_reinicio.getTime())  {
+            bandera = 1;       
+            console.log('si es mas tarde de la ultima hora');
+            }else{
+                bandera = 0;
+            console.log('la hora aun no pasa la hora de reinicio')
+            }
+
+            if(bandera == 1 ){
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'nuevoLlenadoPlan',
+                    contentType: false,
+                    data: {
+                        "fecha_reinicio"    : fecha_reinicio
+                    },
+                    cache: false,
+                    dataType:'json',
+                    success: function (data) {
+                        console.log(data);
+                        if(data == true){
+                            $.ajax({
+                                type: 'POST',
+                                url: '../ScheduleTasks_dos/LlenadoPlan',
+                                contentType: false,
+                                cache: false,
+                                success: function (data) {
+                                    console.log('ddddddddddddddddddddddd');
+                                    alerts.showNotification("top", "right", "Se ha corrido la funcion para llenar los planes de venta.", "success");                      
+                                    $('#spiner-loader').addClass('hide');
+                                    $('#tabla_dispersar_comisiones').DataTable().ajax.reload(null, false );
+                                    $('#llenadoPlan').modal('toggle');
+                                    document.getElementById('llenadoPlan').disabled = false;
+                                }
+                                
+                            });                    
+                            
+                        }else{
+                            if(data == 300 ){
+                                alerts.showNotification("top", "right", "Ups, Error  300. aun no se cumple con las 6 horas de espera.", "warning");
+                            }else{
+                                alerts.showNotification("top", "right", "Ups,al guardar la información Error 315.", "warning");  
+                            }
+                            // a; marcar este error es debido a que no se pudo guardar la informacion en la base
+                            // al registrar un nuevo valor en historial llenado plan                        
+                        }
+
+                    }
+                });
+
+            }else {
+                alerts.showNotification("top", "right", "Ups, aún no se cumple el tiempo de espera para volver a ejecutar.", "warning");
+            }
+        }
+
+        });
+    });
+    
+
 
 
     function numerosDispersion(){
@@ -971,3 +1095,5 @@ $('#planes').change(function () {
             $('#lotes_label').append(data.lotes);
         }, 'json');
     }
+
+    

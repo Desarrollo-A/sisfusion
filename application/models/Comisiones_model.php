@@ -8037,4 +8037,35 @@ public function getDataDispersionPagoEspecial($val = '') {
             return $e->getMessage();
         }
     }
+
+
+
+    public function ultimoLlenado(){
+        $cmd = "SELECT  TOP 1 * FROM historial_llenado_plan  ORDER BY  id_hlp  DESC";
+        $query = $this->db->query($cmd);
+       
+        return  $query->num_rows() == 0 ?   FALSE  : $query->result_array()  ; 
+    }
+
+    public function nuevoLlenadoPlan(){
+
+        $id_usuario = $this->session->userdata('id_usuario');
+        $cmd = "INSERT INTO historial_llenado_plan VALUES(
+        GETDATE()
+        ,$id_usuario ,
+        DATEADD(HOUR, 4, GETDATE()) )";
+        $query = $this->db->query($cmd);
+        return $query;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
