@@ -206,7 +206,7 @@
                                                                 <th>RFC</th>
                                                                 <th>PUESTO</th>
                                                                 <th>FECHA DE ENVÍO</th>
-                                                                <th>MÁS</th>
+                                                                <th>ACCIONES</th>
                                                             </tr>
                                                         </thead>
                                                     </table>

@@ -84,43 +84,43 @@
                                 <div class="nav-tabs-custom">
                                     <div class="tab-content p-2">
                                         <div class="tab-pane active" id="nuevas-1">
-                                        <div class="card-content">
-                                    <div class="encabezadoBox">
-                                        <h3 class="card-title center-align" >Comisiones nuevas <b>Factura Extranjero</b></h3>
-                                        <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de Factura Extranjero)</p>
-                                    </div>
-                                    <div class="toolbar">
-                                        <div class="row">
-                                            <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-                                                <div class="form-group d-flex justify-center align-center">
-                                                    <h4 class="title-tot center-align m-0">Disponible:</h4>
-                                                    <p class="input-tot pl-1" name="totpagarextranjero" id="totpagarextranjero">$0.00</p>
+                                            <div class="card-content">
+                                            <div class="encabezadoBox">
+                                                <h3 class="card-title center-align" >Comisiones nuevas <b>Factura Extranjero</b></h3>
+                                                <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de Factura Extranjero)</p>
+                                            </div>
+                                            <div class="toolbar">
+                                            <div class="row">
+                                                <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                                                    <div class="form-group d-flex justify-center align-center">
+                                                        <h4 class="title-tot center-align m-0">Disponible:</h4>
+                                                        <p class="input-tot pl-1" name="totpagarextranjero" id="totpagarextranjero">$0.00</p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                                                    <div class="form-group d-flex justify-center align-center">
+                                                        <h4 class="title-tot center-align m-0">Autorizar:</h4>
+                                                        <p class="input-tot pl-1" name="totpagarPen" id="totpagarPen">$0.00</p>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-                                                <div class="form-group d-flex justify-center align-center">
-                                                    <h4 class="title-tot center-align m-0">Autorizar:</h4>
-                                                    <p class="input-tot pl-1" name="totpagarPen" id="totpagarPen">$0.00</p>
+                                            <div class="row">
+                                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">          
+                                                    <div class="form-group overflow-hidden">
+                                                        <label class="m-0" for="filtro33">Proyecto</label>
+                                                        <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-container="body" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" required>
+                                                            <option value="0">Seleccione todo</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">          
+                                                    <div class="form-group overflow-hidden">
+                                                        <label class="m-0" for="filtro44">Condominio</label>
+                                                        <select class="selectpicker select-gral" data-container="body" id="filtro44" name="filtro44[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required/></select>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">          
-                                                <div class="form-group">
-                                                    <label class="m-0" for="filtro33">Proyecto</label>
-                                                    <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona un proyecto" data-size="7" required>
-                                                        <option value="0">Seleccione todo</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">          
-                                                <div class="form-group">
-                                                    <label class="m-0" for="filtro44">Condominio</label>
-                                                    <select class="selectpicker select-gral" id="filtro44" name="filtro44[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona un condominio" data-size="7" required/></select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                     <div class="material-datatables">
                                         <div class="form-group">
                                             <table class="table-striped table-hover" id="tabla_extranjero" name="tabla_extranjero">
@@ -142,45 +142,44 @@
                                                         <th>RFC</th>
                                                         <th>PUESTO</th>
                                                         <th>FECHA DE ENVÍO</th>
-                                                        <th>MÁS</th>
+                                                        <th>ACCIONES</th>
                                                     </tr>
                                                 </thead>
                                             </table>
                                         </div>
                                     </div>
-                                </div>
-                                        </div>
+                                    </div>
+                                    </div>
                                         <div class="tab-pane" id="proceso-1">
                                             <div class="text-center">
                                                 <h3 class="card-title center-align">Comprobantes fiscales</h3>
                                                 <p class="card-title pl-1"> Correspondientes a usuarios con Nacionalidad Extranjera</p>
                                             </div>
-                                            <div class="toolbar">
-                                                <div class="container-fluid p-0">
-                                                    <div class="row">
-                                                        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                                                            <div class="form-group d-flex justify-center align-center">
-                                                                <h4 class="title-tot center-align m-0">Total</h4>
-                                                                <p class="input-tot pl-1" id="myText_proceso">$0.00</p>
+                                                <div class="toolbar">
+                                                    <div class="container-fluid p-0">
+                                                        <div class="row">
+                                                            <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                                                                <div class="form-group d-flex justify-center align-center">
+                                                                    <h4 class="title-tot center-align m-0">Total</h4>
+                                                                    <p class="input-tot pl-1" id="myText_proceso">$0.00</p>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="table-responsive">
-                                                <table class="table-striped table-hover" id="tabla_factura" name="tabla_factura">
-                                                <thead>
-                                                    <tr>
-                                                        <th>ID</th>
-                                                        <th>USUARIO</th>
-                                                        <th>RFC</th>
-                                                        <th>TOTAL</th>
-                                                        <th>FORMA DE PAGO</th>
-                                                        <th>NACIONALIDAD</th>
-                                                        <th>ESTATUS</th>
-                                                        <th>MÁS</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
+                                                    <table class="table-striped table-hover" id="tabla_factura" name="tabla_factura">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>ID</th>
+                                                                <th>USUARIO</th>
+                                                                <th>RFC</th>
+                                                                <th>TOTAL</th>
+                                                                <th>FORMA DE PAGO</th>
+                                                                <th>NACIONALIDAD</th>
+                                                                <th>ESTATUS</th>
+                                                                <th>ACCIONES</th>
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
                                                 </div>
                                             </div>
                                         </div>
@@ -191,9 +190,8 @@
                     </div>
                 </div>
             </div>
+        <?php $this->load->view('template/footer_legend');?>
         </div>
-    <?php $this->load->view('template/footer_legend');?>
-    </div>
     </div>
     <?php $this->load->view('template/footer');?>
     <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>

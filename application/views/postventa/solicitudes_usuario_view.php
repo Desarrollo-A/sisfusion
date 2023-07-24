@@ -15,8 +15,8 @@
                     <div class="modal-body" >
                         <div class="col-xs-12 col-sm-12 col-md-12 m-0"> 
                             <h6 class="text-gray textDescripcion" id="textDescripcion" name="textDescripcion"></h6>  
-                            <h6 class="text-gray anteriorTitu" >Anterior responsable de la tarea: </h6>  
-                            <h6 class="text-gray anteriorTitu" id="anteriorTitu" name="anteriorTitu"></h6>  
+                            <h6 class="text-gray anteriorTitu m-0" >Anterior responsable de la tarea: </h6>  
+                            <h6 class="text-gray anteriorTitu m-0" id="anteriorTitu" name="anteriorTitu"></h6>  
                         </div>
                         <div class="col-md-4" style="display:none;">
                             <div class="form-group">
@@ -28,9 +28,9 @@
                                 <input class="form-control" type="text" name="solicitud" id="solicitud" readonly>
                             </div>
                         </div>
-                        <div class="form-group col-xs-12 col-sm-12 col-md-12 m-0">
-                            <h6 class="text-gray">Nuevo  responsable de la tarea: </h6>       
-                            <select class="selectpicker titulares select-gral" title="SELECCIONA UNA OPCIÓN" name="titulares" id="titulares" required>
+                        <div class="form-group col-xs-12 col-sm-12 col-md-12 mb-2">
+                            <h6 class="text-gray m-0">Nuevo  responsable de la tarea: </h6>       
+                            <select class="selectpicker titulares select-gral m-0" title="SELECCIONA UNA OPCIÓN" name="titulares" id="titulares" required>
                                 <?php if(isset($titulaciones)){ foreach($titulaciones as $titulares){ ?>
                                     <option value="<?= $titulares['id_usuario'] ?>"><?= $titulares['nombre'] ?> </option>
                                 <?php } } ?>
@@ -38,7 +38,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <div class="col-lg-12 form-group p-0 d-flex justify-end">
+                        <div class="col-lg-12 form-group p-0 d-flex justify-end m-0">
                             <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                             <button type="submit" id="updateTitu" name="updateTitu" class="btn btn-primary updateTitu">Aceptar</button>
                         </div>
@@ -60,21 +60,19 @@
                                     <div class="row"> 
                                         <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                                             <div class="container-fluid p-0">
-                                                <div class="row">
-                                                    <div class="row">
-                                                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-06">
-                                                            <div class="form-group label-floating is-focused">
-                                                                <label class="control-label">Nombre de usuario titulación</label>
-                                                                <input id="claveusu" name="claveusu" class="form-control input-gral" type="text" >
-                                                            </div>
+                                                <div class="row d-flex align-end">
+                                                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-06">
+                                                        <div class="form-group label-floating is-focused">
+                                                            <label class="label-gral">Nombre de usuario titulación</label>
+                                                            <input id="claveusu" name="claveusu" class="form-control input-gral" type="text" >
                                                         </div>
-                                                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-06">
-                                                            <div class="form-group label-floating is-focused">
-                                                                <button class="btn-gral-data aportaciones" name="aportaciones" id="aportaciones" ><i class="fas fa-spinner fa-spin" style="display: none"></i><span class="btn-text">Buscar usuario.</span></button>
-                                                            </div>
+                                                    </div>
+                                                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-06">
+                                                        <div class="form-group label-floating is-focused">
+                                                            <button class="btn-gral-data aportaciones" name="aportaciones" id="aportaciones" ><i class="fas fa-spinner fa-spin" style="display: none"></i><span class="btn-text">Buscar usuario.</span></button>
                                                         </div>
-                                                    </div>  
-                                                </div>
+                                                    </div>
+                                                </div>  
                                             </div>
                                         </div>
                                         <div class="col-12 col-sm-12 col-md-12 col-lg-12">

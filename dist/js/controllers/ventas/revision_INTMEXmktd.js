@@ -47,7 +47,7 @@ $("#tabla_plaza_1").ready( function(){
             total += parseFloat(v.sum_abono_marketing);
         });
         var to = formatMoney(total);
-        document.getElementById("myText_nuevas").textContent = '$' + to;
+        document.getElementById("myText_nuevas").textContent = to;
     });
 
     plaza_1 = $("#tabla_plaza_1").DataTable({
@@ -113,17 +113,17 @@ $("#tabla_plaza_1").ready( function(){
         },
         {
             "data": function( d ){
-                return '<p class="m-0">$'+formatMoney(d.sum_abono_marketing)+'</p>';
+                return '<p class="m-0">'+formatMoney(d.sum_abono_marketing)+'</p>';
             }
         },
         {
             "data": function( d ){
-                return '<p class="m-0">$'+formatMoney(d.dcto)+'</p>';
+                return '<p class="m-0">'+formatMoney(d.dcto)+'</p>';
             }
         },
         {
             "data": function( d ){
-                return '<p class="m-0"><b>$'+formatMoney(d.impuesto)+'</b></p>';
+                return '<p class="m-0"><b>'+formatMoney(d.impuesto)+'</b></p>';
             }
         },
         {
@@ -162,7 +162,7 @@ $("#tabla_plaza_1").ready( function(){
             let suma_01 = parseFloat(data01[0].suma_f01);
             $("#modal_colaboradores .modal-body").html("");
             $("#modal_colaboradores .modal-footer").html("");
-            $("#modal_colaboradores .modal-body").append('<div class="row"><div class="col-lg-12"><p>Comisión total:&nbsp;&nbsp;<b>$'+formatMoney(suma_01)+'</b></p> </div></div>');
+            $("#modal_colaboradores .modal-body").append('<div class="row"><div class="col-lg-12"><p>Comisión total:&nbsp;&nbsp;<b>'+formatMoney(suma_01)+'</b></p> </div></div>');
             $("#modal_colaboradores .modal-body").append('<input type="hidden" name="total_comi" value="'+data01[0].suma_f01+'">');
             $("#modal_colaboradores .modal-body").append('<input type="hidden" name="num_plan" value="'+plen+'">');
             $("#modal_colaboradores .modal-body").append('<input type="hidden" name="valores_pago_i" value="'+data01[0].valor_obtenido+'">');
@@ -228,7 +228,7 @@ $("#tabla_plaza_2").ready( function(){
             total += parseFloat(v.pago_cliente);
         });
         var to = formatMoney(total);
-        document.getElementById("myText_proceso").textContent = '$' + to;
+        document.getElementById("myText_proceso").textContent = to;
     });
 
     plaza_2 = $("#tabla_plaza_2").DataTable({
@@ -305,7 +305,7 @@ $("#tabla_plaza_2").ready( function(){
         },
         {
             "data": function( d ){
-                return '<p class="m-0">$'+formatMoney(d.precio_lote)+'</p>';
+                return '<p class="m-0">'+formatMoney(d.precio_lote)+'</p>';
             }
         },
         {
@@ -315,17 +315,17 @@ $("#tabla_plaza_2").ready( function(){
         },
         {
             "data": function( d ){
-                return '<p class="m-0">$'+formatMoney(d.comision_total)+'</p>';
+                return '<p class="m-0">'+formatMoney(d.comision_total)+'</p>';
             }
         },
         {
             "data": function( d ){
-                return '<p class="m-0">$'+formatMoney(d.pago_neodata)+'</p>';
+                return '<p class="m-0">'+formatMoney(d.pago_neodata)+'</p>';
             }
         },
         {
             "data": function( d ){
-                return '<p class="m-0">$'+formatMoney(d.pago_cliente)+'</p>';
+                return '<p class="m-0">'+formatMoney(d.pago_cliente)+'</p>';
             }
         },
         {
@@ -509,7 +509,7 @@ function totalComisones(fecha1,fecha2,estatus){
             },
             {
                 "data": function( d ){
-                    return '<p style="font-size: .8em">$'+formatMoney(d.total_dispersado)+'</p>';
+                    return '<p style="font-size: .8em">'+formatMoney(d.total_dispersado)+'</p>';
                 }
             },
             {
@@ -553,16 +553,6 @@ $('#selectEstatusR').change( function(){
         totalComisonesR(fecha1,fecha2,estatus);  
     }
 }); 
-
-function formatMoney( n ) {
-    var c = isNaN(c = Math.abs(c)) ? 2 : c,
-    d = d == undefined ? "." : d,
-    t = t == undefined ? "," : t,
-    s = n < 0 ? "-" : "",
-    i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
-    j = (j = i.length) > 3 ? j % 3 : 0;
-    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
-};
 
 $(document).on( "click", ".subir_factura", function(){
     resear_formulario();
