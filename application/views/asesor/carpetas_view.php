@@ -19,7 +19,9 @@
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 						<div class="card">
 							<div class="card-header card-header-icon" data-background-color="goldMaderas">
-								<i class="fas fa-folder-open fa-2x"></i>
+								<a href="https://youtu.be/Am1fwW-vqoE" target="_blank">
+									<i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
+								</a>
 							</div>
 							<div class="card-content">
 								<h4 class="card-title">Carpetas</h4><br><br>
