@@ -1,15 +1,16 @@
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <body>
 <div class="wrapper">
-
 	<?php $this->load->view('template/sidebar'); ?>
-
 	<div class="content">
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 					<div class="card">
 						<div class="card-header card-header-icon" data-background-color="goldMaderas">
-							<i class="material-icons">reorder</i>
+							<a href="https://youtu.be/KhRGywKMQvs" target="_blank">
+                                <i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
+                            </a>
 						</div>
 						<div class="card-content">
 							<h4 class="card-title">Manuales</h4><br><br>

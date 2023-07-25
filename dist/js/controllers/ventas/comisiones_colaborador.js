@@ -228,9 +228,9 @@ $("#tabla_nuevas_comisiones").ready(function () {
         document.getElementById("myText_nuevas").textContent = '$' + to;
     });
     let boton_sol_pago = (forma_pago != 2) ? '' : 'hidden';
-    let boton_youtube = ([2, 3, 4, 5].includes(forma_pago) && [3, 7, 9].includes(id_rol_general))
+    /*let boton_youtube = ([2, 3, 4, 5].includes(forma_pago) && [3, 7, 9].includes(id_rol_general))
         ? ''
-        : 'hidden';
+        : 'hidden';*/
     tabla_nuevas = $("#tabla_nuevas_comisiones").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
@@ -336,21 +336,10 @@ $("#tabla_nuevas_comisiones").ready(function () {
         },
         {
             text: '<i class="fas fa-play"></i>',
-            className: `btn btn-dt-youtube buttons-youtube ${boton_youtube}`,
+            className: `btn btn-dt-youtube buttons-youtube`,
             titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de comisiones podrás visualizarlo en el siguiente tutorial',
             action: function (e, dt, button, config) {
-                if (forma_pago == 2) {
-                    window.open('https://youtu.be/YuZNsPk8-gY', '_blank');
-                }
-                if (forma_pago == 3) {
-                    window.open('https://youtu.be/LmmIdipDSEA', '_blank');
-                }
-                if (forma_pago == 4) {
-                    window.open('https://youtu.be/oRoJev_AZgs', '_blank');
-                }
-                if (forma_pago == 5) {
-                    window.open('https://youtu.be/4t0MNA8HxZ4', '_blank');
-                }
+                window.open('https://youtu.be/6W5B97MTOCghttps://youtu.be/6W5B97MTOCg', '_blank');
             }
         }],
         language: {
@@ -684,6 +673,14 @@ $("#tabla_revision_comisiones").ready(function () {
                     }
                 }
             },
+        },
+        {
+            text: '<i class="fas fa-play"></i>',
+            className: `btn btn-dt-youtube buttons-youtube`,
+            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de comisiones podrás visualizarlo en el siguiente tutorial',
+            action: function (e, dt, button, config) {
+                window.open('https://youtu.be/6W5B97MTOCghttps://youtu.be/6W5B97MTOCg', '_blank');
+            }
         }],
         pagingType: "full_numbers",
         fixedHeader: true,
@@ -870,6 +867,14 @@ $("#tabla_pagadas_comisiones").ready(function () {
                     }
                 }
             },
+        },
+        {
+            text: '<i class="fas fa-play"></i>',
+            className: `btn btn-dt-youtube buttons-youtube`,
+            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de comisiones podrás visualizarlo en el siguiente tutorial',
+            action: function (e, dt, button, config) {
+                window.open('https://youtu.be/6W5B97MTOCghttps://youtu.be/6W5B97MTOCg', '_blank');
+            }
         }],
         language: {
             url: `${general_base_url}static/spanishLoader_v2.json`,
@@ -1047,6 +1052,14 @@ $("#tabla_otras_comisiones").ready(function () {
                     }
                 }
             },
+        },
+        {
+            text: '<i class="fas fa-play"></i>',
+            className: `btn btn-dt-youtube buttons-youtube`,
+            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de comisiones podrás visualizarlo en el siguiente tutorial',
+            action: function (e, dt, button, config) {
+                window.open('https://youtu.be/6W5B97MTOCghttps://youtu.be/6W5B97MTOCg', '_blank');
+            }
         }],
         pagingType: "full_numbers",
         fixedHeader: true,
@@ -1206,6 +1219,14 @@ function fillCommissionTableWithoutPayment(proyecto, condominio) {
                     }
                 }
             },
+        },
+        {
+            text: '<i class="fas fa-play"></i>',
+            className: `btn btn-dt-youtube buttons-youtube`,
+            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de comisiones podrás visualizarlo en el siguiente tutorial',
+            action: function (e, dt, button, config) {
+                window.open('https://youtu.be/6W5B97MTOCghttps://youtu.be/6W5B97MTOCg', '_blank');
+            }
         }],
         pagingType: "full_numbers",
         fixedHeader: true,
