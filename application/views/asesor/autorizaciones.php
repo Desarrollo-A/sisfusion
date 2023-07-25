@@ -144,10 +144,7 @@
 												envió de correo electrónico a usuarios con rol "Subdirector" que se encuentren activos
 												(seleccionar usuario según sea el caso) con una solicitud de autorización
 												(dependiendo del estatus de la misma),
-												descarga de información en formatos: PDF y XLSX
-												<a href="https://youtu.be/1zcshxE2nP4" target="_blank" style="color: red">
-													<i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
-												</a>.
+												descarga de información en formatos: PDF y XLSX.
 											</p>
 											<table id="sol_aut" class="table-striped table-hover">
 												<thead>
@@ -174,10 +171,7 @@
 												A través de este panel(Autorizaciones) podrás realizar lo siguiente;
 												consulta de las solicitudes autorizadas,
 												visualización de los estatus correspondientes por cada una de las autorizaciones en proceso,
-												descarga de información en formatos: PDF y XLSX
-												<a href="https://youtu.be/1zcshxE2nP4" target="_blank" style="color: red">
-													<i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
-												</a>.
+												descarga de información en formatos: PDF y XLSX.
 												<br>
 											</p>
 											<table id="addExp" class="table-striped table-hover">

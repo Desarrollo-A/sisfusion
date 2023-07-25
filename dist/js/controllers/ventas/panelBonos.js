@@ -87,6 +87,14 @@ $("#tabla_nuevos").ready(function() {
                     }
                 }
             }
+        },
+        {
+            text: '<i class="fas fa-play"></i>',
+            className: `btn btn-dt-youtube buttons-youtube`,
+            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Bonos podrás visualizarlo en el siguiente tutorial',
+            action: function (e, dt, button, config) {
+                window.open('https://youtu.be/wLDdDHQjCrw', '_blank');
+            }
         }],
         pagingType: "full_numbers",
         fixedHeader: true,
@@ -364,6 +372,14 @@ $("#tabla_bono_revision").ready(function() {
                     }
                 }
             }
+        },
+        {
+            text: '<i class="fas fa-play"></i>',
+            className: `btn btn-dt-youtube buttons-youtube`,
+            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Bonos podrás visualizarlo en el siguiente tutorial',
+            action: function (e, dt, button, config) {
+                window.open('https://youtu.be/wLDdDHQjCrw', '_blank');
+            }
         }],
         pagingType: "full_numbers",
         fixedHeader: true,
@@ -597,6 +613,14 @@ $("#tabla_bonos_porpagar").ready(function() {
                     }
                 }
             }
+        },
+        {
+            text: '<i class="fas fa-play"></i>',
+            className: `btn btn-dt-youtube buttons-youtube`,
+            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Bonos podrás visualizarlo en el siguiente tutorial',
+            action: function (e, dt, button, config) {
+                window.open('https://youtu.be/wLDdDHQjCrw', '_blank');
+            }
         }],
         pagingType: "full_numbers",
         fixedHeader: true,
@@ -824,6 +848,14 @@ $("#tabla_bono_otros").ready(function() {
                         return ' ' + titulos[columnIdx] + ' ';
                     }
                 }
+            }
+        },
+        {
+            text: '<i class="fas fa-play"></i>',
+            className: `btn btn-dt-youtube buttons-youtube`,
+            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Bonos podrás visualizarlo en el siguiente tutorial',
+            action: function (e, dt, button, config) {
+                window.open('https://youtu.be/wLDdDHQjCrw', '_blank');
             }
         }],
         pagingType: "full_numbers",
