@@ -9180,7 +9180,8 @@
                         id_cliente: $scope.id_clienteP,
                         tipoIM: tipoIM,
                         condominio: condominio.idCondominio,
-                        customDate: customDate
+                        customDate: customDate,
+                        // fechaApartado: $scope.fechaApartado
                     }).then(
                         function(response){
 
