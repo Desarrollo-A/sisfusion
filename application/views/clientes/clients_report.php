@@ -22,7 +22,7 @@
 												<div class="row">
 													<div class="col-md-12 p-r">
 														<div class="form-group d-flex">
-															<input type="text" class="form-control datepicker"id="beginDate"/>
+															<input type="text" class="form-control datepicker" id="beginDate"/>
 															<input type="text" class="form-control datepicker" id="endDate"/>
 															<button class="btn btn-success btn-round btn-fab btn-fab-mini"id="searchByDateRange">
 																<span class="material-icons update-dataTable">search</span>
@@ -36,7 +36,7 @@
 								</div>
 								<div class="material-datatables">
 									<div class="form-group">
-											<table id="clients_report_datatable" class="table-striped table-hover">
+											<table id="clients_report_datatable" class="table-striped table-hover hide">
 												<thead>
 													<tr>
 														<th>PROYECTO</th>

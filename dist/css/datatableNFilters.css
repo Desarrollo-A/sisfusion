@@ -1871,7 +1871,7 @@ table tr.selected td.select-checkbox:after, table tr.selected th.select-checkbox
 }
 
 table thead tr {
-  background-color: #143860 !important;
+  background-color: #143860;
 }
 
 table thead tr th {
@@ -1886,7 +1886,7 @@ table thead tr th input {
   text-align: center;
   font-weight: 300;
   font-size: 10px !important;
-  background-color: #143860 !important;
+  background-color: #143860;
   text-transform: uppercase;
 }
 
@@ -1949,10 +1949,6 @@ table .boxSBtns {
   border-radius: 30px;
   padding: 10px;
   width: fit-content;
-}
-
-.dataTables_scroll .dataTables_scrollHeadInner {
-  width: 100% !important;
 }
 
 .dataTables_scroll .container-fluid {

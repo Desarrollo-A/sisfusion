@@ -624,7 +624,7 @@ function getStatusMktdPreventa(){
                                         CONCAT(uuu.nombre, ' ', uuu.apellido_paterno, ' ', uuu.apellido_materno) gerente,
                                         'Sin especificar' recomendado_por,
                                         'Sin especificar' lugar_prospeccion, 'Sin especificar' option_selected, 'Sin especificar' especificacion,
-                                        p.fecha_creacion, p.fecha_vencimiento, p.fecha_modificacion, p.tipo_recomendado
+                                        CONVERT(VARCHAR,p.fecha_creacion,20) AS fecha_creacion, CONVERT(VARCHAR,p.fecha_vencimiento,20) AS fecha_vencimiento, CONVERT(VARCHAR,p.fecha_modificacion,20) AS fecha_modificacion, p.tipo_recomendado
                                         FROM prospectos p
                                         INNER JOIN usuarios u ON u.id_usuario = p.id_asesor
                                         INNER JOIN usuarios uu ON uu.id_usuario = p.id_coordinador
@@ -637,7 +637,7 @@ function getStatusMktdPreventa(){
                                         CONCAT(uuu.nombre, ' ', uuu.apellido_paterno, ' ', uuu.apellido_materno) gerente,
                                         CONCAT(pp.nombre, ' ', pp.apellido_paterno, ' ', pp.apellido_materno) recomendado_por,
                                         pp.lugar_prospeccion, oxc.nombre option_selected, (CASE WHEN pp.lugar_prospeccion IN (3, 6, 7, 9, 10, 21) THEN pp.otro_lugar ELSE '' END) especificacion,
-                                        p.fecha_creacion, p.fecha_vencimiento, p.fecha_modificacion, p.tipo_recomendado
+                                        CONVERT(VARCHAR,p.fecha_creacion,20) AS fecha_creacion, CONVERT(VARCHAR,p.fecha_vencimiento,20) AS fecha_vencimiento, CONVERT(VARCHAR,p.fecha_modificacion,20) AS fecha_modificacion, p.tipo_recomendado
                                         FROM prospectos p
                                         INNER JOIN usuarios u ON u.id_usuario = p.id_asesor
                                         INNER JOIN usuarios uu ON uu.id_usuario = p.id_coordinador
@@ -655,7 +655,7 @@ function getStatusMktdPreventa(){
                                         CONCAT(uuu.nombre, ' ', uuu.apellido_paterno, ' ', uuu.apellido_materno) gerente,
                                         'Sin especificar' recomendado_por,
                                         'Sin especificar' lugar_prospeccion, 'Sin especificar' option_selected, 'Sin especificar' especificacion,
-                                        p.fecha_creacion, p.fecha_vencimiento, p.fecha_modificacion, p.tipo_recomendado
+                                        CONVERT(VARCHAR,p.fecha_creacion,20) AS fecha_creacion,CONVERT(VARCHAR,p.fecha_vencimiento,20) AS fecha_vencimiento, CONVERT(VARCHAR,p.fecha_modificacion,20) AS fecha_modificacion, p.tipo_recomendado
                                         FROM prospectos p
                                         INNER JOIN usuarios u ON u.id_usuario = p.id_asesor
                                         LEFT JOIN usuarios uu ON uu.id_usuario = p.id_coordinador
@@ -668,7 +668,7 @@ function getStatusMktdPreventa(){
                                         CONCAT(uuu.nombre, ' ', uuu.apellido_paterno, ' ', uuu.apellido_materno) gerente,
                                         CONCAT(pp.nombre, ' ', pp.apellido_paterno, ' ', pp.apellido_materno) recomendado_por,
                                         pp.lugar_prospeccion, oxc.nombre option_selected, (CASE WHEN pp.lugar_prospeccion IN (3, 6, 7, 9, 10, 21) THEN pp.otro_lugar ELSE '' END) especificacion,
-                                        p.fecha_creacion, p.fecha_vencimiento, p.fecha_modificacion, p.tipo_recomendado
+                                        CONVERT(VARCHAR,p.fecha_creacion,20) AS fecha_creacion, CONVERT(VARCHAR,p.fecha_vencimiento,20) AS fecha_vencimiento, CONVERT(VARCHAR,p.fecha_modificacion,20) AS fecha_modificacion, p.tipo_recomendado
                                         FROM prospectos p
                                         INNER JOIN usuarios u ON u.id_usuario = p.id_asesor
                                         LEFT JOIN usuarios uu ON uu.id_usuario = p.id_coordinador
@@ -3726,7 +3726,7 @@ function getStatusMktdPreventa(){
 
     function getCoincidencias($where, $where2)
     {
-        $query = $this->db->query("SELECT cl.id_cliente, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombre, cl.telefono1, cl.correo, cl.idLote, cl.fechaApartado, 
+        $query = $this->db->query("SELECT cl.id_cliente, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombre, cl.telefono1, cl.correo, cl.idLote, CONVERT(VARCHAR,cl.fechaApartado,20) AS fechaApartado, 
         REPLACE(ISNULL (oxc.nombre, 'Sin especificar'), ' (especificar)', '') nombre_lp, lo.nombreLote, CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno)
         nombreAsesor, CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno) nombreGerente,
         ISNULL (se.nombre, 'Sin especificar') sede, st.nombre nombreEstatus, cl.descuento_mdb
@@ -3737,7 +3737,7 @@ function getStatusMktdPreventa(){
         INNER JOIN usuarios ae ON ae.id_usuario = cl.id_asesor
         INNER JOIN usuarios ge ON ge.id_usuario = cl.id_gerente
         INNER JOIN sedes se ON CAST(se.id_sede AS VARCHAR(10)) = ae.id_sede
-        WHERE cl.status = 1 $where2 AND $where");
+        WHERE cl.status = 1 $where2 $where");
 
         return $query;
     }

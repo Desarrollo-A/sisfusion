@@ -4198,9 +4198,10 @@ return 1;
 
         function getDatosHistorialPostventa(){
             //MODIFICACION PENDIENTE
-            return $this->db->query("SELECT DISTINCT(lo.idLote), cm1.comision_total, cm2.abono_pagos, cm3.abono_pagos as abonados, pc.total_comision, lo.totalNeto2, 
+            return $this->db->query("SELECT DISTINCT(lo.idLote), cm.porcentaje_decimal, CONVERT(VARCHAR,cm.fecha_creacion,20) AS fecha_creacion, cm1.comision_total, cm2.abono_pagos, cm3.abono_pagos as abonados, pc.total_comision, lo.totalNeto2, 
             cl.fechaApartado, lo.nombreLote, cl.nombre, cl.apellido_paterno, cl.apellido_materno, 
-            lo.registro_comision, lo.totalNeto2, lo.referencia, cn.nombre as condominio, rs.nombreResidencial as proyecto
+            lo.registro_comision, lo.totalNeto2, lo.referencia, cn.nombre as condominio, rs.nombreResidencial as proyecto,
+            CONCAT(usu.nombre,' ',usu.apellido_paterno,' ',usu.apellido_materno) AS comisionista
                 FROM lotes lo
             
                 INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
@@ -4208,7 +4209,7 @@ return 1;
             INNER JOIN residenciales rs ON cn.idResidencial = rs.idResidencial
             INNER JOIN pago_comision pc ON pc.id_lote = lo.idLote
             INNER JOIN comisiones cm ON cm.id_lote = lo.idLote and cm.estatus = 1
-            
+            LEFT JOIN usuarios usu ON usu.id_usuario = cm.id_usuario
             LEFT JOIN (SELECT SUM(c0.comision_total) comision_total, c0.id_lote FROM comisiones c0 
             WHERE c0.estatus in (1) AND c0.id_usuario NOT IN (0) --AND c0.id_lote = 41536
             GROUP BY c0.id_lote ) cm1 ON cm1.id_lote = lo.idLote
@@ -5387,7 +5388,7 @@ com.estatus estado_comision, pac.bonificacion, u.estatus as activo, pci1.fecha_p
             $filtro = '  AND MONTH(pci1.fecha_pago_intmex) = '.$mes.' AND YEAR(pci1.fecha_pago_intmex) = '.$anio.'';
         
         return $this->db-> query("(SELECT pci1.id_pago_i, lo.nombreLote, re.empresa, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) user_names, 
-        CONVERT(VARCHAR,pci1.fecha_pago_intmex,20) AS fecha_pago_intmex, pci1.id_usuario, CASE WHEN cl.estructura = 1 THEN oprol2.nombre ELSE oprol.nombre END as puesto, pci1.abono_neodata, UPPER(se.nombre) AS sede, pci1.abono_neodata, 
+        CONVERT(VARCHAR,pci1.fecha_pago_intmex,20) AS fecha_pago_intmex, pci1.id_usuario, UPPER(CASE WHEN cl.estructura = 1 THEN oprol2.nombre ELSE oprol.nombre END) AS puesto, pci1.abono_neodata, UPPER(se.nombre) AS sede, pci1.abono_neodata, 
         CONCAT(cr.nombre, ' ',cr.apellido_paterno, ' ', cr.apellido_materno) creado
         FROM pago_comision_ind pci1
         INNER JOIN comisiones com ON pci1.id_comision = com.id_comision
