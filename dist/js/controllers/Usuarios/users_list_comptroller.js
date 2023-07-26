@@ -159,10 +159,10 @@ $('#all_users_datatable').DataTable({
         },
         { data: function (d) {
                 if (id_usuario_general == 2767 || id_usuario_general == 5957 || id_usuario_general == 4878) {
-                    return '<button class="btn btn-blueMaderas btn-round btn-fab btn-fab-mini edit-user-information" data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip" data-placement="top" title="CAMBIAR FORMA DE PAGO"><i class="fas fa-pencil-alt"></i></button>'+
-                    '<button class="btn btn-green btn-round btn-fab btn-fab-mini see-user-information" data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip" data-placement="top" title="VER HISTORIAL DE CAMBIOS"><i class="far fa-eye"></i></button>';
+                    return '<div class="d-flex"><button class="btn btn-blueMaderas btn-round btn-fab btn-fab-mini edit-user-information" data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip" data-placement="top" title="CAMBIAR FORMA DE PAGO"><i class="fas fa-pencil-alt"></i></button>'+
+                    '<button class="btn btn-green btn-round btn-fab btn-fab-mini see-user-information" data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip" data-placement="top" title="VER HISTORIAL DE CAMBIOS"><i class="far fa-eye"></i></button></div>';
                 } else {
-                    return '<center><button class="btn-data btn-green see-user-information" data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip" data-placement="top" title="VER HISTORIAL DE CAMBIOS"><i class="far fa-eye"></i></button></center>';
+                    return '<div class="d-flex justify-center"><button class="btn-data btn-green see-user-information" data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip" data-placement="top" title="VER HISTORIAL DE CAMBIOS"><i class="far fa-eye"></i></button>';
                 }
             }
         }

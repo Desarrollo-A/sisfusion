@@ -218,7 +218,7 @@ $(document).on('click', '#repartir', function () {
     anterior.innerHTML =   '<b>'+nombreTitular+'<b>'  ;
     var Descripcion = document.getElementById('textDescripcion');
     var comentarioDescrip = document.getElementById('textDescripcion');
-    comentarioDescrip.innerHTML = 'ID USUARIO :<b>'+idTitular +'</b><br>NOMBRE USUARIO: <b>'+ nombreTitular +'</b>';
+    comentarioDescrip.innerHTML = 'ID USUARIO :<b>'+idTitular +'</b><br><br>NOMBRE USUARIO: <b>'+ nombreTitular +'</b>';
     var myCommentsLote = document.getElementById('tituloModal');
     myCommentsLote.innerHTML = '';
     myCommentsLote.innerHTML = titulo;
@@ -242,8 +242,8 @@ $(document).on("click", ".updateTitu", function () {
                 dataType: "json",
                 data: {
                     "id_solicitud" : solicitud,
-                    "titulares" : titulares, //nuevo 
-                    "idTitular": idTitular,         //viejo  
+                    "titulares" : titulares, 
+                    "idTitular": idTitular,
                 }, 
                 success: function(data) {
                     alerts.showNotification("top", "right", "Actualizado con exito", ""+data.response_type+"");

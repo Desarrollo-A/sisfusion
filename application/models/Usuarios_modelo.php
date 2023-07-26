@@ -481,13 +481,14 @@ class Usuarios_modelo extends CI_Model
 
     function getChangelog($id_usuario)
     {
-        // $query = '';
+        // $query = "";
         switch ($this->session->userdata('id_rol')) {
             case '17': // SUBDIRECCIÓN CONTRALORÍA
             case '70': // Ejecutivo de contraloría JR
             case '80': // CONTRALORÍA CORPORTATICA
             case '63': // CI
-            case '40': //Cobranza
+            case '81': // POSTVENTA
+            case '73': // PRACTICANTE CONTRALORIA
                 $query = $this->db->query("SELECT CONVERT(VARCHAR,fecha_creacion,20) AS fecha_creacion, creador, 
                 (CASE col_afect 
                 WHEN 'id_lider' THEN 'líder'
