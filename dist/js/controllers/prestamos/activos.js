@@ -1,192 +1,438 @@
- $(document).ready(function () {
-    
-    let titulos_intxt = [];
+ 
 
-    $('#tabla_prestamos').on('xhr.dt', function(e, settings, json, xhr) {
-        var saldoActivos = 0;
-        var saldoAbonado = 0;
-        var saldoPendiente = 0;
+var totaPen = 0;
+var tr;
+$(document).ready(function () {
+    $("#rolesPrestamos").selectpicker("refresh");
+
+    $.post("lista_estatus_descuentos", function (data) {
+        var len = data.length;
+        for (var i = 0; i < len; i++) {
+            var id = data[i]['id_opcion'];
+            var name = data[i]['nombre'];
+            $("#tipo").append($('<option>').val(id).text(name.toUpperCase()));
+        }
+        $("#tipo").selectpicker('refresh');
+    }, 'json');
+
+    $.post("lista_estatus_descuentos", function (data) {
+        var len = data.length;
+        for (var i = 0; i < len; i++) {
+            var id = data[i]['id_opcion'];
+            var name = data[i]['nombre'];
+            $("#tipoD").append($('<option>').val(id).text(name.toUpperCase()));
+        }
+        $("#tipoD").selectpicker('refresh');
+    }, 'json');
+
+    $.post("getRoles",{catalogo:1,roles:"1,2,3,7,9"}, function (data) {
+        var len = data.length;
+        $("#rolesPrestamos").append($('<option disabled selected>').val("").text("SELECCIONA UNA OPCIÓN"));
+        for (var i = 0; i < len; i++) {
+            var id = data[i]['id_opcion'];
+            var name = data[i]['nombre'];
+            ObjRoles = {
+                "id":data[i]['id_opcion'],
+                "rol":data[i]['nombre']
+            }
+            $("#rolesPrestamos").append($('<option>').val(id).text(name.toUpperCase()));
+        }
+        if(len<=0){
+            $("#rolesPrestamos").append('<option selected="selected" disabled>NO SE HAN ENCONTRADOS REGISTROS</option>');
+        }
+        $("#rolesPrestamos").selectpicker('refresh');
+    }, 'json'); 
+//OBTENER ROLES PRESTAMOS
+
+$.post("getRoles",{catalogo:1,roles:"1,2,3,7,9,38"}, function (data) {
+    var len = data.length;
+    $("#rolesDescuentos").append($('<option disabled selected>').val("").text("SELECCIONA UNA OPCIÓN"));
+    for (var i = 0; i < len; i++) {
+        var id = data[i]['id_opcion'];
+        var name = data[i]['nombre'];
+        ObjRoles = {
+            "id":data[i]['id_opcion'],
+            "rol":data[i]['nombre']
+        }
+        $("#rolesDescuentos").append($('<option>').val(id).text(name.toUpperCase()));
+    }
+    if(len<=0){
+        $("#rolesDescuentos").append('<option selected="selected" disabled>NO SE HAN ENCONTRADOS REGISTROS</option>');
+    }
+    $("#rolesDescuentos").selectpicker('refresh');
+}, 'json'); 
+//OBTENER ROLES DESCUENTOS NUEVOS
+
+});
+
+$('#tipo').change(function (ruta) {
+    tipo = $('#tipo').val();
+    let m = $('#monto').val();
+    let texto = '';
+    if (tipo == 18) {
+        texto = 'Esté es un pago recurrente, el cual se hará cada mes hasta cubrir el monto prestado.'
+        document.getElementById("numeroP").value = 1;
+        if (m != '') {
+            verificar();
+        }
+    } else {
+        texto = 'Esté es un pago único que se hará en una sola exhibición.'
+        document.getElementById("numeroP").value = 1;
+        if (m != '') {
+            verificar();
+        }
+    }
+    document.getElementById("texto").innerHTML = texto;
+});
+
+function closeModalEng() {
+    document.getElementById("form_prestamos").reset();
+    $("#tipo").selectpicker("refresh");
+    $("#rolesPrestamos").selectpicker("refresh");
+    document.getElementById("usuarioSelectPrestamos").innerHTML = '';
+    $("#prestamosModal").modal('toggle');
+}
+
+function replaceAll(text, busca, reemplaza) {
+    while (text.toString().indexOf(busca) != -1)
+        text = text.toString().replace(busca, reemplaza);
+    return text;
+}
+
+$("#form_prestamos").on('submit', function (e) {
+
+    e.preventDefault();
+    let formData = new FormData(document.getElementById("form_prestamos"));
+    $.ajax({
+        url: 'savePrestamo',
+        data: formData,
+        method: 'POST',
+        contentType: false,
+        cache: false,
+        processData: false,
+        success: function (data) {
+            if (data == 1) {
+                $('#tabla_prestamos').DataTable().ajax.reload(null, false);
+                closeModalEng();
+                $('#prestamosModal').modal('hide');
+                alerts.showNotification("top", "right", "Préstamo registrado con éxito.", "success");
+            } else if (data == 2) {
+                $('#tabla_prestamos').DataTable().ajax.reload(null, false);
+                closeModalEng();
+                $('#prestamosModal').modal('hide');
+                alerts.showNotification("top", "right", "Pago liquidado.", "warning");
+            } else if (data == 3) {
+                closeModalEng();
+                $('#prestamosModal').modal('hide');
+                alerts.showNotification("top", "right", "El usuario seleccionado ya tiene un préstamo activo.", "warning");
+            }
+            else if (data == 4) {
+                closeModalEng();
+                $('#prestamosModal').modal('hide');
+                alerts.showNotification("top", "right", "ErroR al subir el archivo activo.", "warning");
+            }
+        },
+        error: function () {
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+});
+
+$("#form_delete").on('submit', function (e) {
+    e.preventDefault();
+    let formData = new FormData(document.getElementById("form_delete"));
+    $.ajax({
+        url: 'BorrarPrestamo',
+        data: formData,
+        method: 'POST',
+        contentType: false,
+        cache: false,
+        processData: false,
+        success: function (data) {
+            if (data == 1) {
+                $('#tabla_prestamos').DataTable().ajax.reload(null, false);
+                $('#myModalDelete').modal('hide');
+                alerts.showNotification("top", "right", "Préstamo eliminado.", "success");
+                document.getElementById("form_delete").reset();
+            } else {
+                $('#myModalDelete').modal('hide');
+                alerts.showNotification("top", "right", "Error.", "warning");
+            }
+        },
+        error: function () {
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+});
+
+
+
+
+$("#form_descuentos").on('submit', function(e){ 
+    $("#idloteorigen").prop("disabled", false);
+    e.preventDefault();
+    document.getElementById('btn_abonarNuevos').disabled=true;
+    let formData = new FormData(document.getElementById("form_descuentos"));
+    $.ajax({
+        url: 'saveDescuento/'+1,
+        data: formData,
+        method: 'POST',
+        contentType: false,
+        cache: false,
+        processData:false,
+        success: function(data) {
+            if (data == 1) {
+                document.getElementById("form_descuentos").reset();
+                // $('#tabla_descuentos').DataTable().ajax.reload(null, false);
+                $('#descuentosNuevosModal').modal('hide');
+                $('#idloteorigen option').remove();
+                $("#roles").selectpicker("refresh");
+                $('#usuarioNuevos').val('default');
+                $("#usuarioNuevos").selectpicker("refresh");
+                document.getElementById('sumaReal').innerHTML = '';
+                document.getElementById('btn_abonarNuevos').disabled=false;
+                alerts.showNotification("top", "right", "Descuento registrado con exito.", "success");
+            }
+            else if(data == 2) {
+                document.getElementById('btn_abonarNuevos').disabled=false;
+
+                // $('#tabla_descuentos').DataTable().ajax.reload(null, false);
+                $('#descuentosNuevosModal').modal('hide');
+                alerts.showNotification("top", "right", "Ocurrio un error.", "warning");
+                $(".directorSelect2").empty();
+            }
+            else if(data == 3){
+                document.getElementById('btn_abonarNuevos').disabled=false;
+
+                // $('#tabla_descuentos').DataTable().ajax.reload(null, false);
+                $('#descuentosNuevosModal').modal('hide');
+                alerts.showNotification("top", "right", "El usuario seleccionado ya tiene un pago activo.", "warning");
+                $(".directorSelect2").empty();
+            }
+        },
+        error: function(){
+            document.getElementById('btn_abonarNuevos').disabled=false;
+            $('#descuentosNuevosModal').modal('hide');
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+});
+
+$("#tabla_prestamos").ready(function () {
+    let titulos = [];
+
+    $('#tabla_prestamos thead tr:eq(0) th').each(function (i) {
+        if (i != 12) {
+            var title = $(this).text();
+            titulos.push(title);
+            $(this).html('<input type="text" class="textoshead" placeholder="' + title + '"/>');
+            $('input', this).on('keyup change', function () {
+                if (tabla_nuevas.column(i).search() !== this.value) {
+                    tabla_nuevas.column(i).search(this.value).draw();
+                    var total = 0;
+                    var totalAbonado = 0;
+                    var totalPendiente = 0;
+                    var index = tabla_nuevas.rows({ selected: true, search: 'applied' }).indexes();
+                    var data = tabla_nuevas.rows(index).data();
+
+                    $.each(data, function (i, v) {
+                        total += parseFloat(v.monto);
+                        totalPendiente += v.monto - v.total_pagado;
+                        if (v.total_pagado == null) {
+                            totalAbonado += 0;
+                        } else {
+                            totalAbonado += parseFloat(v.total_pagado);
+                        }
+                    });
+                    var to1 = formatMoney(total);
+                    var to2 = formatMoney(totalAbonado);
+                    var to3 = formatMoney(totalPendiente);
+
+                    document.getElementById("totalPendiente").textContent = '$' + to3;
+                    document.getElementById("totalp").textContent = '$' + to1;
+                    document.getElementById("totalAbonado").textContent = '$' + to2;
+                }
+            });
+        }
+    });
+
+    $('#tabla_prestamos').on('xhr.dt', function (e, settings, json, xhr) {
+        var total = 0;
+        var total2 = 0;
+        var total3 = 0;
+        var total4 = 0;
+        var abonado = 0;
 
         $.each(json.data, function (i, v) {
 
-            saldoActivos += parseFloat(v.monto);
-
-            saldoPendiente += v.monto - v.total_pagado;
+            total += parseFloat(v.monto);
+            total3 += v.monto - v.total_pagado;
             if (v.total_pagado == null) {
-                saldoAbonado += 0;
+                total2 += 0;
             } else {
-                saldoAbonado += parseFloat(v.total_pagado);
+                total2 += parseFloat(v.total_pagado);
             }
         });
 
-        var saldoActivos = formatMoney(saldoActivos);
-        var saldoAbonado = formatMoney(saldoAbonado);
-        var saldoPendiente = formatMoney(saldoPendiente);
-        document.getElementById("saldoActivos").textContent = '$' + saldoActivos;
-        document.getElementById("saldoAbonado").textContent = '$' + saldoAbonado;
-        document.getElementById("saldoPendiente").textContent = '$' + saldoPendiente;
-
+        var to = formatMoney(total);
+        var to2 = formatMoney(total2);
+        var to3 = formatMoney(total3);
+        document.getElementById("totalPendiente").textContent = '$' + to3;
+        document.getElementById("totalp").textContent = '$' + to;
+        document.getElementById("totalAbonado").textContent = '$' + to2;
     });
 
 
-$('#tabla_prestamos thead tr:eq(0) th').each( function (i) {
-$(this).css('text-align', 'center');
-var title = $(this).text();
-titulos_intxt.push(title);
-if (i != 12) {
-    $(this).html('<input type="text" class="textoshead"  placeholder="'+title+'"/>' );
-    $( 'input', this ).on('keyup change', function () {
-        if ($('#tabla_prestamos').DataTable().column(i).search() !== this.value ) {
-            $('#tabla_prestamos').DataTable().column(i).search(this.value).draw();
-        }
-        var index = $('#tabla_prestamos').DataTable().rows({
-        selected: true,
-        search: 'applied'
-    }).indexes();
-    var data = $('#tabla_prestamos').DataTable().rows(index).data();
-});
-}});
-
-prestamosActivosDataTable = $('#tabla_prestamos').dataTable({
-    dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-    width: '100%',
-    scrollX: true,
-    buttons: [
-        {
+    tabla_nuevas = $("#tabla_prestamos").DataTable({
+        dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: 'auto',
+        buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
-            title: 'Préstamos, descuentos y penalizaciones',
+            title: 'PRÉSTAMOS Y PENALIZACIONES',
             exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                 format: {
-                    header:  function (d, columnIdx) {
-                        return ' ' + titulos_intxt[columnIdx] + ' ';
+                    header: function (d, columnIdx) {
+                        if (columnIdx >= 0) {
+                            return ' ' + titulos[columnIdx] + ' ';
                         }
                     }
+                }
             }
-        }
-    ],
-    pagingType: "full_numbers",
-    fixedHeader: true,
-    lengthMenu: [
-        [10, 25, 50, -1],
-        [10, 25, 50, "Todos"]
-    ],
-    language: {
-        url: `${general_base_url}static/spanishLoader_v2.json`,
-        paginate: {
-            previous: "<i class='fa fa-angle-left'>",
-            next: "<i class='fa fa-angle-right'>"
-        }
-    },
-    scrollX: true,
-    destroy: true,
-    ordering: false,
-    columns: [
-        {data: 'id_prestamo'},
-        {data: 'id_usuario'},
-        {data: 'nombre'},
-        { data: function (d) {
-                let labelMonto
-                labelMonto = `<p class="m-0">$${formatMoney(d.monto)} </p> `;
-                return labelMonto;
+        }],
+        pagingType: "full_numbers",
+        fixedHeader: true,
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, "Todos"]
+        ],
+        scrollX: true,
+        language: {
+            url: general_base_url + "/static/spanishLoader_v2.json",
+            paginate: {
+                previous: "<i class='fa fa-angle-left'>",
+                next: "<i class='fa fa-angle-right'>"
+            }
+        },
+        scrollX: true,
+        destroy: true,
+        ordering: false,
+        columns: [
+            { data: 'id_prestamo' },
+            { data: 'id_usuario' },
+            { data: 'nombre' },
+            { data: function (d) {
+                let formato
+                formato = `<p class="m-0">$${formatMoney(d.monto)} </p> `;
+                return formato;
             }},
-        { data: 'num_pagos' },
-        { data: function (d) {
-                let labelIndividual
-                labelIndividual = `<p class="m-0">$${formatMoney(d.pago_individual)} </p> `;
-                return labelIndividual;
-        }},
-        { data: function (d) {
-                let labelPagado
-                labelPagado = `<p class="m-0">$${formatMoney(d.total_pagado)} </p> `;
-                return labelPagado;
-        }},
-        { data: function (d) {
+            { data: 'num_pagos' },
+            { data: function (d) {
+                let formato
+                formato = `<p class="m-0">$${formatMoney(d.pago_individual)} </p> `;
+                return formato;
+            }},
+            {data: function (d) {
+                let formato
+                formato = `<p class="m-0">$${formatMoney(d.total_pagado)} </p> `;
+                return formato;
+            }},
+            {data: function (d) {
+                let formato
                 let color = 'lbl-gral';
                 let resultado = d.monto - d.total_pagado;
+                
                 if (resultado > 0.5) {
                     color = 'lbl-orangeYellow';
-                } if (resultado < 0.0) {
+                }
+                if (resultado < 0.0) {
                     resultado = 0;
                 }
                 return '<span class="m-0 ' + color + '">$' + formatMoney(resultado) + '</span>';
-        }},
-        { data: 'comentario' },
-        { data: function (d) {
+            }},
+            { data: 'comentario' },
+            {data: function (d) {
                 if (d.estatus == 1) {
-                    labelEstatus = '<span class="label lbl-blueMaderas " >ACTIVO</span>';
+                    formato = '<span class="label lbl-blueMaderas " >ACTIVO</span>';
                 } else if (d.estatus == 3 || d.estatus == 2) {
-                    labelEstatus = '<span class="label lbl-green" >LIQUIDADO</span>';
+                    formato = '<span class="label lbl-green" >LIQUIDADO</span>';
                 } else if (d.estatus == 0) {
-                    labelEstatus = '<span class="label lbl-warning" >CANCELADO</span>';
+                    formato = '<span class="label lbl-warning" >CANCELADO</span>';
                 }
-                return labelEstatus;
-        }},
-        { data: function (d) {
-            if (d.id_opcion == 18) {
-                color = 'lbl-green';
-            } else if (d.id_opcion == 19) { //SCIO
-                color = 'lbl-azure';
-            } else if (d.id_opcion == 20) { //PLAZA
-                color = 'lbl-sky';
-            } else if (d.id_opcion == 21) { //LINEA TELEFÓNICA
-                color = 'lbl-violetDeep';
-            } else if (d.id_opcion == 22) { //MANTENIMIENTO
-                color = 'lbl-violetDeep';
-            } else if (d.id_opcion == 23) { //NÓMINA - ANALISTAS DE COMISIONES
-                color = 'lbl-violetChin';
-            } else if (d.id_opcion == 24) { //NÓMINA - ASISTENTES CDMX
-                color = 'lbl-orangeYellow';
-            } else if (d.id_opcion == 25) { //NÓMINA - IMSS
-                color = 'lbl-acidGreen';
-            } else if (d.id_opcion == 26) { //NÓMINA -LIDER DE PROYECTO E INNOVACIÓN
-                color = 'lbl-gray';
-            } else{
-                color = 'lbl-blueMaderas';
-            }
-            return '<p><span class="label ' + color + '" >' + d.tipo + '</span></p>';
-        }},
-        { data: function (d) {
-            if (d.fecha_creacion_referencia !== null && d.estatus == 1) {
-                const fecha = new Date(d.fecha_creacion_referencia);
-                const now = new Date();
-                const mesesDif = monthDiff(fecha, now);
+                return formato;
+            }},
+            {
+                "width": "8%",
+                "data": function (d) {
+                    let etiqueta = '';
+                    color = 'lbl-blueMaderas';
+                    if (d.id_opcion == 18) { //PRESTAMO
+                        color = 'lbl-green';
+                    } else if (d.id_opcion == 19) { //SCIO
+                        color = 'lbl-azure';
+                    } else if (d.id_opcion == 20) { //PLAZA
+                        color = 'lbl-sky';
+                    } else if (d.id_opcion == 21) { //LINEA TELEFÓNICA
+                        color = 'lbl-violetDeep';
+                    } else if (d.id_opcion == 22) { //MANTENIMIENTO
+                        color = 'lbl-violetDeep';
+                    } else if (d.id_opcion == 23) { //NÓMINA - ANALISTAS DE COM
+                        color = 'lbl-violetChin';
+                    } else if (d.id_opcion == 24) { //NÓMINA - ASISTENTES CDMX
+                        color = 'lbl-orangeYellow';
+                    } else if (d.id_opcion == 25) { //NÓMINA - IMSS
+                        color = 'lbl-acidGreen';
+                    } else if (d.id_opcion == 26) { //NÓMINA -LIDER DE PROYECTO E INNOVACIÓN
+                        color = 'lbl-gray';
+                    }
+                    return '<p><span class="label ' + color + '" >' + d.tipo + '</span></p>';
+            }},
+            {data: function (d) {
+                if (d.fecha_creacion_referencia !== null && d.estatus == 1) {
+                    const fecha = new Date(d.fecha_creacion_referencia);
+                    const now = new Date();
+                    const mesesDif = monthDiff(fecha, now);
+                    
+                    if (mesesDif >= 2) {
+                        return `<p>${d.fecha_creacion_referencia.split('.')[0]}<span class="label" style="background: orange">Sin saldo en ${mesesDif} meses</label></p>`;
+                    }
+                }
                 
-                if (mesesDif >= 2) {
-                    return `<p>${d.fecha_creacion_referencia.split('.')[0]}<span class="label" style="background: orange">Sin saldo en ${mesesDif} meses</label></p>`;
-                }
-            }
-            return '<p class="m-0">' + d.fecha_creacion.split('.')[0] + '</p>';
-        }},
-        { data: function (d) {
-            var botonesModal = '';
-            botonesModal += `<button href="#" value="${d.id_prestamo}" class="btn-data btn-blueMaderas detalle-prestamo" title="Historial"><i class="fas fa-info"></i></button>`;
-            
-            if (d.evidencia != null) {
-                botonesModal += `<button href="#" value="${d.id_prestamo}"  id="preview" data-doc="${d.evidencia}"  d.evidencia class="btn-data btn-violetDeep " title="Autorización"><i class="fas fa-folder-open"></i></button>`;
-            } if (d.id_prestamo2 == null && d.estatus == 1) {
-                botonesModal += `<button href="#" value="${d.id_prestamo}" data-name="${d.nombre}" class="btn-data btn-warning delete-prestamo" title="Eliminar"><i class="fas fa-trash"></i></button>`;
-            } if (d.estatus == 1 && d.total_pagado == null) {
-                botonesModal += `<button href="#" value="${d.id_prestamo}" data-idPrestamo="${d.id_prestamo}" data-tipo="${d.tipo}" data-idtipo="${d.id_opcion}"  data-name="${d.nombre}" data-comentario="${d.comentario}" data-individual="${d.pago_individual}" data-npagos="${d.num_pagos}" data-monto="${d.monto}" class="btn-data btn-sky edit-prestamo" title="Editar"><i class="fas fa-pen-nib"></i></button>`;
-            }
-            return '<div class="d-flex justify-center">' + botonesModal + '<div>';
-        }}
-    ],
-    columnDefs: [{
-        visible: false,
-        searchable: false
-    }],
-    ajax: {
-        url: 'getPrestamos',
-        type: "POST",
-        cache: false,
-        data: function( d ){}
-    }}) 
+                return '<p class="m-0">' + d.fecha_creacion.split('.')[0] + '</p>';
+            }},
+            {
+                "orderable": false,
+                data: function (d) {
+                    var botonesModal = '';
+                    botonesModal += `<button href="#" value="${d.id_prestamo}" class="btn-data btn-blueMaderas detalle-prestamo" title="Historial"><i class="fas fa-info"></i></button>`;
+                    
+                    if (d.evidencia != null) {
+                        botonesModal += `<button href="#" value="${d.id_prestamo}" id="preview" data-doc="${d.evidencia}"  d.evidencia class="btn-data btn-violetDeep " title="Autorización"><i class="fas fa-folder-open"></i></button>`;
+                    }
+                    if (d.id_prestamo2 == null && d.estatus == 1) {
+                        botonesModal += `<button href="#" value="${d.id_prestamo}" data-name="${d.nombre}" class="btn-data btn-warning delete-prestamo" title="Eliminar"><i class="fas fa-trash"></i></button>`;
+                    }
+                    if (d.estatus == 1 && d.total_pagado == null) {
+                        botonesModal += `<button href="#" value="${d.id_prestamo}" data-idPrestamo="${d.id_prestamo}" 
+                        data-tipo="${d.tipo}" data-idtipo="${d.id_opcion}"  data-name="${d.nombre}" 
+                        data-comentario="${d.comentario}" data-individual="${d.pago_individual}" 
+                        data-npagos="${d.num_pagos}" data-monto="${d.monto}" class="btn-data btn-sky edit-prestamo" title="Editar"><i class="fas fa-pen-nib"></i></button>`;
+                    }
 
- 
+                    return '<div class="d-flex justify-center">' + botonesModal + '<div>';
+            }}],
+        ajax: {
+            url: "getPrestamos",
+            type: "POST",
+            cache: false,
+            data: function (d) {
+            }
+        },
+    });
+
     $('#tabla_prestamos tbody').on('click', '.delete-prestamo', function () {
         const idPrestamo = $(this).val();
         const nombreUsuario = $(this).attr("data-name");
@@ -195,11 +441,9 @@ prestamosActivosDataTable = $('#tabla_prestamos').dataTable({
         Modalbody.html('');
         Modalfooter.html('');
 
-        Modalbody.append(`<input type="hidden" value="${idPrestamo}" name="idPrestamo" id="idPrestamo"> <h4>¿Ésta seguro que desea borrar el préstamo de ${nombreUsuario}?</h4>`);
-        Modalfooter.append(`
-                <button type="button"  class="btn btn-danger btn-simple " data-dismiss="modal" >Cerrar</button>
-				<button  type="submit" name=/"disper_btn"  id="dispersar" class="btn btn-gral-data">Aceptar</button>
-			                        `);
+        Modalbody.append(`<input type="hidden" value="${idPrestamo}" name="idPrestamo" id="idPrestamo"> <h4>¿Está seguro de eliminar el descuento correspondiente a ${nombreUsuario}?</h4>`);
+        Modalfooter.append(`<button type="button"  class="btn btn-danger btn-simple " data-dismiss="modal" >Cerrar</button><button type="submit" name=/"disper_btn"  id="dispersar" class="btn btn-gral-data">Aceptar</button>`);
+
         $("#myModalDelete").modal();
     });
 
@@ -214,7 +458,6 @@ prestamosActivosDataTable = $('#tabla_prestamos').dataTable({
         const comentario = $(this).attr("data-comentario");
         const tipo = $(this).attr("data-tipo");
         const id_tipo = $(this).attr("data-idtipo");
-
         document.getElementById("montoPagos").value = '';
         document.getElementById("numeroPagos").value = '';
         document.getElementById("pagoEdit").value = '';
@@ -222,9 +465,7 @@ prestamosActivosDataTable = $('#tabla_prestamos').dataTable({
         document.getElementById("prestamoId").value = '';
 
         $("#tipoD").val(id_tipo).selectpicker('refresh');
-        console.log('tipoD');
-        console.log(id_tipo);
-        
+
         document.getElementById("montoPagos").value = pagoEdit;
         document.getElementById("numeroPagos").value = numeroPagos;
         document.getElementById("pagoEdit").value = montoPagos;
@@ -241,10 +482,9 @@ prestamosActivosDataTable = $('#tabla_prestamos').dataTable({
         // console.log(comentario);
         // console.log('prestamo');
         // console.log(prestamoId);
-
         $("#ModalEdit").modal();
-
     });
+
     $(document).on("click", ".updatePrestamo", function () {
 
         montoPagos = document.getElementById("montoPagos").value;
@@ -264,7 +504,7 @@ prestamosActivosDataTable = $('#tabla_prestamos').dataTable({
                 console.log(tipoD)
                 console.log(tipoD)
                 $.ajax({
-                    url: 'updatePrestamos',
+                    url: 'editarPrestamo',
                     type: 'POST',
                     dataType: "json",
                     data: {
@@ -277,27 +517,23 @@ prestamosActivosDataTable = $('#tabla_prestamos').dataTable({
                     },
 
                     success: function (data) {
-
                         alerts.showNotification("top", "right", "" + data.message + "", "" + data.response_type + "");
-
                         $('#tabla_prestamos').DataTable().ajax.reload(null, false);
-
                         $('#ModalEdit').modal('toggle');
                     },
                     error: (a, b, c) => {
-                        alerts.showNotification("top", "right", "Descuento No actualizado .", "error");
+                        alerts.showNotification("top", "right", "Descuento no actualizado .", "error");
                     }
                 });
-
+            
             } else {
                 alerts.showNotification("top", "right", "Asegúrese que no existan valores negativos.", "error");
             }
-
         } else {
             alerts.showNotification("top", "right", "Es necesario revisar que no se tenga valores vacios.", "error");
         }
     });
-
+ 
     $('#montoPagos').change(function () {
         const bandera = true;
         Monto = document.getElementById("montoPagos").value;
@@ -327,10 +563,11 @@ prestamosActivosDataTable = $('#tabla_prestamos').dataTable({
            
             document.getElementById("pagoEdit").value = (formatMoney(NuevasMensualidades.toFixed(3)));
         } else {
-            alerts.showNotification("top", "right", "Todos los campos deben de estar llenos.", "error");
+            alerts.showNotification("top", "right", "Todos los campos deben estar llenos.", "error");
 
         }
     });
+
     $('#numeroPagos').change(function () {
         const bandera = true;
         Monto = document.getElementById("montoPagos").value;
@@ -339,7 +576,6 @@ prestamosActivosDataTable = $('#tabla_prestamos').dataTable({
         comentario = document.getElementById("informacionText").value;
         var input1=  document.getElementById('montoPagos');
         var input2=  document.getElementById('numeroPagos');
-
 
         input1.addEventListener('input',function(){
         if (this.value.length > 12) 
@@ -353,15 +589,13 @@ prestamosActivosDataTable = $('#tabla_prestamos').dataTable({
             bandera = false;
         }
         if (Monto == null || Monto == '') {
-
             bandera = false;
         }
         if (bandera) {
             NuevasMensualidades = Monto / numeroPagos;
             document.getElementById("pagoEdit").value = (formatMoney(NuevasMensualidades.toFixed(3)));
         } else {
-            alerts.showNotification("top", "right", "Todos los campos deben de estar llenos.", "error");
-
+            alerts.showNotification("top", "right", "Todos los campos deben estar llenos.", "error");
         }
     });
 
@@ -373,7 +607,7 @@ prestamosActivosDataTable = $('#tabla_prestamos').dataTable({
 
         const idPrestamo = $(this).val();
         let importacion = '';
-        $.getJSON(`${general_base_url}Prestamos/getDetallePrestamo/${idPrestamo}`).done(function (data) {
+        $.getJSON(`getDetallePrestamo/${idPrestamo}`).done(function (data) {
             const { general, detalle } = data;
             $('#spiner-loader').addClass('hide');
 
@@ -382,7 +616,6 @@ prestamosActivosDataTable = $('#tabla_prestamos').dataTable({
             } else {
                 const detalleHeaderModal = $('#detalle-prestamo-modal .modal-header');
                 const detalleBodyModal = $('#detalle-prestamo-modal .modal-body');
-
                 const importaciones = [20, 19, 18, 17, 16, 15, 14, 13, 12, 11];
 
                 if (importaciones.indexOf(parseInt(idPrestamo)) >= 0) {
@@ -482,23 +715,44 @@ prestamosActivosDataTable = $('#tabla_prestamos').dataTable({
                 var tableDetalles = $('#table_detalles').DataTable({
                     dom: 'Brt' + "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
                     width: 'auto',
-                    buttons: [
-                        {
-                            extend: 'excelHtml5',
-                            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                            className: 'btn buttons-excel',
-                            titleAttr: 'Descargar archivo de Excel',
-                            title: 'Préstamos, descuentos y penalizaciones',
-                            exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-                                format: {
-                                    header:  function (d, columnIdx) {
-                                        return ' ' + titulos_intxt[columnIdx] + ' ';
-                                        }
+                    buttons: [{
+                        extend: 'excelHtml5',
+                        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                        className: 'btn buttons-excel',
+                        titleAttr: 'Descargar archivo de Excel',
+                        title: 'PRÉSTAMOS Y PENALIZACIONES',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                            format: {
+                                header: function (d, columnIdx) {
+                                    if (columnIdx == 0) {
+                                        return ' USUARIOS ';
+                                    } else if (columnIdx == 1) {
+                                        return 'SEDE';
+                                    } else if (columnIdx == 2) {
+                                        return 'TIPO';
+                                    } else if (columnIdx == 3) {
+                                        return '#';
+                                    } else if (columnIdx == 4) {
+                                        return 'PROYECTO';
+                                    } else if (columnIdx == 5) {
+                                        return 'LOTE';
+                                    } else if (columnIdx == 6) {
+                                        return 'ID PAGO';
+                                    } else if (columnIdx == 7) {
+                                        return 'COMENTARIO';
+                                    } else if (columnIdx == 8) {
+                                        return 'FECHA';
+                                    } else if (columnIdx == 9) {
+                                        return 'MONTO';
+                                    } else if (columnIdx == 10) {
+                                        return 'ESTATUS';
                                     }
+
+                                }
                             }
                         }
-                    ],
+                    }],
                     width: 'auto',
                     ordering: false,
                     "pageLength": 5,
@@ -518,7 +772,13 @@ prestamosActivosDataTable = $('#tabla_prestamos').dataTable({
             }
         });
     });
- 
+});
+
+
+$(window).resize(function () {
+    tabla_nuevas.columns.adjust();
+});
+
 function formatMoney(n) {
     var c = isNaN(c = Math.abs(c)) ? 2 : c,
         d = d == undefined ? "." : d,
@@ -529,161 +789,264 @@ function formatMoney(n) {
     return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
 }
 
-
-$("#roles").change(function () {
+//ROLES CHANGE PRESTAMOS
+$("#rolesPrestamos").change(function () {
     var parent = $(this).val();
-    document.getElementById("users").innerHTML = '';
+    document.getElementById("usuarioSelectPrestamos").innerHTML = '';
 
-    $('#users').append(` 
-    <label class="label">Usuario</label>   
-    <select id="usuarioid" name="usuarioid" class="form-control directorSelect ng-invalid ng-invalid-required" required data-live-search="true">
-    </select>
-    `);
+    $('#usuarioSelectPrestamos').append(`<label class="control-label">Usuario (<b class="text-danger">*</b>)</label>
+    <select class="selectpicker select-gral" name="usuarioPrestamos" id="usuarioPrestamos" title="SELECCIONA UNA OPCIÓN" required data-live-search="true"></select>`);
+
     $.post('getUsuariosRol/' + parent + '/1', function (data) {
-        $("#usuarioid").append($('<option disabled selected>').val("").text("SELECCIONA UNA OPCIÓN"))
+        $("#usuarioPrestamos").append($('<option disabled selected>').val("").text("SELECCIONA UNA OPCIÓN"))
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_usuario'];
             var name = data[i]['id_usuario'] +' - '+ data[i]['name_user'];
-            $("#usuarioid").append($('<option>').val(id).attr('data-value', id).text(name));
+            $("#usuarioPrestamos").append($('<option>').val(id).attr('data-value', id).text(name));
         }
-
         if (len <= 0) {
-            $("#usuarioid").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+            $("#usuarioPrestamos").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
         }
 
-        $("#usuarioid").selectpicker('refresh');
+        $("#usuarioPrestamos").selectpicker('refresh');
     }, 'json');
-});
+}); 
+//ROLES CHANGE PRESTAMOS END
 
-
+//ROLES CHANGE NUEVOS
+$("#rolesDescuentos").change(function () {
+    var parent = $(this).val();
+    document.getElementById("usuarioNuevos").innerHTML = '';
  
-    $.post(general_base_url + "/Prestamos/lista_estatus_descuentos", function (data) {
+    $.post('getUsuariosRol/' + parent + '/1', function (data) {
+        $("#usuarioNuevos").append($('<option disabled selected>').val("").text("SELECCIONA UNA OPCIÓN"))
         var len = data.length;
         for (var i = 0; i < len; i++) {
-            var id = data[i]['id_opcion'];
-            var name = data[i]['nombre'];
-            $("#tipo").append($('<option>').val(id).text(name.toUpperCase()));
-          
+            var id = data[i]['id_usuario'];
+            var name = data[i]['id_usuario'] +' - '+ data[i]['name_user'];
+            $("#usuarioNuevos").append($('<option>').val(id).attr('data-value', id).text(name));
         }
-        $("#tipo").selectpicker('refresh');
+        if (len <= 0) {
+            $("#usuarioNuevos").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+        }
 
+        $("#usuarioNuevos").selectpicker('refresh');
     }, 'json');
-});
+}); 
+//ROLES CHANGE NUEVOS END
 
 
-$('#tipo').change(function (ruta) {
-    tipo = $('#tipo').val();
-    let m = $('#monto').val();
-    let texto = '';
-    if (tipo == 18) {
+// SELECT MULTIPLE DE LOTES PARA DESCUENTOS NUEVOS
+$("#idloteorigen").select2({dropdownParent:$('#descuentosNuevosModal')});
+// $("#idloteorigen2").select2({dropdownParent:$('#miModal2')});
 
-        //PRESTAMO
-        texto = 'Esté es un pago recurrente, el cual se hará cada mes hasta cubrir el monto prestado.'
-        document.getElementById("numeroP").value = 1;
-        if (m != '') {
-            verificar();
-        }
+/**-----------------------------LOTES----------------------- */   
+$("#usuarioNuevos").change(function() {
+        document.getElementById('montoNuevo').value = ''; 
+        document.getElementById('idmontodisponible').value = ''; 
+        document.getElementById('comentario').value = '';
+        document.getElementById('montodisponible').innerHTML = '';
+        document.getElementById('sumaReal').innerHTML = '';
+        
+        var user = $(this).val();
+        $('#idloteorigen option').remove(); // clear all values
+        $.post('getLotesOrigen/'+user+'/'+1, function(data) {
+            $("#idloteorigen").append($('<option disabled>').val("default").text("Seleccione una opción"));
+            var len = data.length;
+            for( var i = 0; i<len; i++){
+                var name = data[i]['nombreLote'];
+                var comision = data[i]['id_pago_i'];
+                var pago_neodata = data[i]['pago_neodata'];
+                let comtotal = data[i]['comision_total'] -data[i]['abono_pagado'];
+    
+                
+                $("#idloteorigen").append(`<option value='${comision},${comtotal.toFixed(3)},${pago_neodata}'>${name}  -   $${ formatMoney(comtotal.toFixed(3))}</option>`);
+            }
+    
+            if(len<=0){
+                $("#idloteorigen").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+            }else{
+                $("#idloteorigen").prop("disabled", true);
+                
+            }
+            $("#idloteorigen").selectpicker('refresh');
+        }, 'json');     
+        document.getElementById("montoNuevo").focus();
+        alerts.showNotification("top", "right", "Debe ingresar el monto a descontar, antes de seleccionar pagos.", "warning"); 
+    });
 
-
-    } else {
-        texto = 'Esté es un pago único que se hará en una sola exhibición.'
-        document.getElementById("numeroP").value = 1;
-        if (m != '') {
-            verificar();
+$("#idloteorigen").change(function() {
+    let cuantos = $('#idloteorigen').val().length;
+    let suma =0;
+//   alert("entra a lotes"+cuantos);
+    if(cuantos > 1){
+        var comision = $(this).val();
+        for (let index = 0; index < $('#idloteorigen').val().length; index++) {
+            datos = comision[index].split(',');
+            let id = datos[0];
+            let monto = datos[1];                    
+            $.post('getInformacionData/'+id+'/'+1, function(data) {
+                var disponible = (data[0]['comision_total']-data[0]['abono_pagado']);
+                var idecomision = data[0]['id_pago_i'];
+                suma = suma + disponible;
+                console.log(disponible);
+                document.getElementById('montodisponible').innerHTML = '';
+                document.getElementById('sumaReal').innerHTML = 'Suma real:'+suma;
+                $("#idmontodisponible").val('$'+formatMoney(suma));
+                $("#montodisponible").append('<input type="hidden" name="valor_comision" id="valor_comision" value="'+suma+'">');
+                $("#montodisponible").append('<input type="hidden" name="ide_comision" id="ide_comision" value="'+idecomision+'">');
+    
+                var len = data.length;
+                if(len<=0){
+                    $("#idmontodisponible").val('$'+formatMoney(0));
+                }
+                
+                $("#montodisponible").selectpicker('refresh');
+                verificarMontos();
+            }, 'json');
         }
     }
-    document.getElementById("texto").innerHTML = texto;
+    else if(cuantos == 1){
+        var comision = $(this).val();
+        datos = comision[0].split(',');
+        let id = datos[0];
+        let monto = datos[1];
+        $.post('getInformacionData/'+id+'/'+1, function(data) {
+            var disponible = (data[0]['comision_total']-data[0]['abono_pagado']);
+            var idecomision = data[0]['id_pago_i'];
+        
+            document.getElementById('montodisponible').innerHTML = '';
+            document.getElementById('sumaReal').innerHTML = 'Suma real:'+disponible;
+            $("#montodisponible").append('<input type="hidden" name="valor_comision" id="valor_comision" value="'+disponible+'">');
+            $("#idmontodisponible").val('$'+formatMoney(disponible));
+        
+            $("#montodisponible").append('<input type="hidden" name="ide_comision" id="ide_comision" value="'+idecomision+'">');
+                        
+            var len = data.length;
+            if(len<=0){
+                $("#idmontodisponible").val('$'+formatMoney(0));
+            }
+
+            $("#montodisponible").selectpicker('refresh');
+            verificarMontos();
+        }, 'json'); 
+    }else {
+        document.getElementById('montodisponible').innerHTML = '';
+            document.getElementById('sumaReal').innerHTML = '';
+        $("#montodisponible").append('');
+        $("#idmontodisponible").val(0);
+    }
 
 });
-function closeModalEng() {
-    document.getElementById("form_prestamos").reset();
-    $("#tipo").selectpicker("refresh");
-    $("#roles").selectpicker("refresh");
-    document.getElementById("users").innerHTML = '';
-    $("#miModal").modal('toggle');
-}
 
-function replaceAll(text, busca, reemplaza) {
-    while (text.toString().indexOf(busca) != -1)
-        text = text.toString().replace(busca, reemplaza);
-    return text;
-}
+$("#numeroPDU").change(function(){
+    let monto = parseFloat($('#monto').val());
+    let cantidad = parseFloat($('#numeroPDU').val());
+    let resultado=0;
 
-$("#form_prestamos").on('submit', function (e) {
+    if (isNaN(monto)) {
+        alerts.showNotification("top", "right", "Debe ingresar un monto valido.", "warning");
+        $('#pago').val(resultado);
+        document.getElementById('btn_abonarNuevos').disabled=true;
+    }
+    else{
+        resultado = monto /cantidad;
 
-    e.preventDefault();
-    let formData = new FormData(document.getElementById("form_prestamos"));
-
-    $.ajax({
-        url: 'savePrestamo',
-        data: formData,
-        method: 'POST',
-        contentType: false,
-        cache: false,
-        processData: false,
-        success: function (data) {
-            if (data == 1) {
-                $('#tabla_prestamos').DataTable().ajax.reload(null, false);
-                closeModalEng();
-                $('#miModal').modal('hide');
-                alerts.showNotification("top", "right", "Préstamo registrado con éxito.", "success");
-            } else if (data == 2) {
-                $('#tabla_prestamos').DataTable().ajax.reload(null, false);
-                closeModalEng();
-                $('#miModal').modal('hide');
-                alerts.showNotification("top", "right", "Pago liquidado.", "warning");
-            } else if (data == 3) {
-                closeModalEng();
-                $('#miModal').modal('hide');
-                alerts.showNotification("top", "right", "El usuario seleccionado ya tiene un préstamo activo.", "warning");
-            }
-            else if (data == 4) {
-                closeModalEng();
-                $('#miModal').modal('hide');
-                alerts.showNotification("top", "right", "Erro al subir el archivo activo.", "warning");
-            }
-        },
-        error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        if(resultado > 0){
+            document.getElementById('btn_abonarNuevos').disabled=false;
+            $('#pago').val(formatMoney(resultado));
         }
-    });
-});
-$("#form_delete").on('submit', function (e) {
-    e.preventDefault();
-    let formData = new FormData(document.getElementById("form_delete"));
-    $.ajax({
-        url: 'BorrarPrestamo',
-        data: formData,
-        method: 'POST',
-        contentType: false,
-        cache: false,
-        processData: false,
-        success: function (data) {
-            if (data == 1) {
-                $('#tabla_prestamos').DataTable().ajax.reload(null, false);
-                $('#myModalDelete').modal('hide');
-                alerts.showNotification("top", "right", "Préstamo eliminado con éxito.", "success");
-                document.getElementById("form_delete").reset();
-
-            } else {
-                $('#myModalDelete').modal('hide');
-                alerts.showNotification("top", "right", "Error.", "warning");
-            }
-        },
-        error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        else{
+            document.getElementById('btn_abonarNuevos').disabled=true;
+            $('#pago').val(formatMoney(0));
         }
-    });
- 
-
+    }
 });
+
+
+function verificarMontos(){
+            
+    // let disponible = parseFloat($('#valor_comision').val()).toFixed(2);
+     let disponible = replaceAll($('#valor_comision').val(), '$', '');
+     disponible = replaceAll(disponible, ',', '');
+    // let monto = parseFloat($('#monto').val()).toFixed(2);
+     let monto = replaceAll($('#montoNuevo').val(), ',', '');
+     //monto = replaceAll(monto, ',', '');
+     let cuantos = $('#idloteorigen').val().length;
+     console.log(monto);
+     console.log(disponible);
+     if(parseFloat(monto) <= parseFloat(disponible) ){
+         $("#idloteorigen").prop("disabled", true);
+         $("#btn_abonarNuevos").prop("disabled", false);    
+             let cantidad = parseFloat($('#numeroPDU').val());
+             resultado = monto /cantidad;
+             $('#pago').val(formatMoney(resultado));
+             document.getElementById('btn_abonarNuevos').disabled=false;
+
+           
+             let cadena = '';
+             var data = $('#idloteorigen').select2('data')
+             for (let index = 0; index < cuantos; index++) {
+                 let datos = data[index].id;
+                 let montoLote = datos.split(',');
+                 /*let abono_neo = montoLote[1];
+                 if(parseFloat(abono_neo) > parseFloat(monto) && cuantos > 1){
+                     document.getElementById('msj2').innerHTML="El monto ingresado se cubre con la comisión "+data[index].text;
+                     document.getElementById('btn_abonarNuevos').disabled=true; 
+                     break;  
+                 }*/
+                 cadena = cadena+' , '+data[index].text;
+                 document.getElementById('msj2').innerHTML='';
+             }
+             $('#comentario').val('Lotes involucrados en el descuento: '+cadena+'. Por la cantidad de: $'+formatMoney(monto));
+         }
+         else if(parseFloat(monto) > parseFloat(disponible) ){
+            // alerts.showNotification("top", "right", "Monto a descontar mayor a lo disponible", "danger");
+             
+             //document.getElementById('monto').value = ''; 
+             document.getElementById('btn_abonarNuevos').disabled=true; 
+         }
+ }
+
+
+// function verificarMontos(){
+    
+//     let disponible = remplazarCaracter($('#valor_comision').val(), '$', '');
+//     disponible = remplazarCaracter(disponible, ',', '');
+//     let monto = remplazarCaracter($('#monto').val(), ',', '');
+//     let cuantos = $('#idloteorigen').val().length;
+//     if(parseFloat(monto) <= parseFloat(disponible) ){
+//         $("#idloteorigen").prop("disabled", true);
+//         $("#btn_abonarNuevos").prop("disabled", false);    
+//             let cantidad = parseFloat($('#numeroPDU').val());
+//             resultado = monto /cantidad;
+//             $('#pago').val(formatMoney(resultado));
+//             document.getElementById('btn_abonarNuevos').disabled=false;
+
+          
+//             let cadena = '';
+//             var data = $('#idloteorigen').select2('data')
+//             for (let index = 0; index < cuantos; index++) {
+//                 let datos = data[index].id;
+//                 let montoLote = datos.split(',');
+
+//                 cadena = cadena+' , '+data[index].text;
+//                 document.getElementById('msj2').innerHTML='';
+//             }
+//             $('#comentario').val('Lotes involucrados en el descuento: '+cadena+'. Por la cantidad de: $'+formatMoney(monto));
+//         }
+//         else if(parseFloat(monto) > parseFloat(disponible) ){
+//                                  document.getElementById('btn_abonarNuevos').disabled=true; 
+//         }
+// }
+// END SELECT MULTIPLE DE LOTES PARA DESCUENTOS NUEVOS
+
 
 function verificar() {
 
     var input1=  document.getElementById('monto');
-    var input2=  document.getElementById('numeroP');
-    
+    var input2=  document.getElementById('numeroPDU');
     let monto = parseFloat(replaceAll($('#monto').val(), ',', ''));
     input1.addEventListener('input',function(){
         if (this.value.length > 12) 
@@ -694,30 +1057,74 @@ function verificar() {
                 this.value = this.value.slice(0,3); 
             })
             
-    if ($('#numeroP').val() != '') {
+    if ($('#numeroPDU').val() != '') {
         if (monto < 1 || isNaN(monto)) {
-            alerts.showNotification("top", "right", "Debe ingresar un monto valido.", "warning");
+            alerts.showNotification("top", "right", "Ingresar un monto valido.", "warning");
             document.getElementById('btn_abonar').disabled = true;
         }
         else {
-
-
-            let cantidad = parseFloat(replaceAll($('#numeroP').val(), ',', ''));
-
+            let cantidad = parseFloat(replaceAll($('#numeroPDU').val(), ',', ''));
             resultado = parseFloat(monto / cantidad);
             $('#pago').val(formatMoney(parseFloat(resultado)));
-
             document.getElementById('btn_abonar').disabled = false;
         }
     }
-
 }
+
+//verificar proceso de descuentos pagos nuevos
+function verificarNuevo(){
+    console.log($('#usuarioNuevos').val());
+    console.log($('#montoNuevo').val());
+    document.getElementById("montoNuevo").disabled = false;
+    let disponible = $('#valor_comision').val();
+    let montoNuevo = remplazarCaracter($('#usuarioNuevos').val(), ',', '');
+    montoNuevo = remplazarCaracter(montoNuevo, '$', '');
+     if(montoNuevo < 1 || isNaN(montoNuevo)){
+         alerts.showNotification("top", "right", "Debe ingresar un monto mayor a 0.", "warning");
+         document.getElementById('btn_abonarNuevos').disabled=true; 
+     }
+     else{
+        if(disponible !== '' && disponible !== undefined && disponible !== 'undefined'){
+            disponible = remplazarCaracter($('#valor_comision').val(), '$', '');
+            disponible = remplazarCaracter(disponible, ',', '');
+            if(parseFloat(disponible) >= parseFloat(montoNuevo)){
+            $("#idloteorigen").prop("disabled", true);
+            document.getElementById('btn_abonarNuevos').disabled=false; 
+            }else{
+                $("#idloteorigen").prop("disabled", false);
+                document.getElementById('btn_abonarNuevos').disabled=true; 
+            }
+        }else{
+            $("#idloteorigen").prop("disabled", false);
+        }       
+     }      
+ }
+
+
 $(document).on('input', '.monto', function () {
     verificar();
 });
+
+$(document).on("click", "#preview", function () {
+    var itself = $(this);
+    var folder;
+
+    Shadowbox.open({
+        content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;z-index:999999!important;" src="${general_base_url}static/documentos/evidencia_prestamo_auto/${itself.attr('data-doc')}"></iframe></div>`,
+        player: "html",
+        title: `Visualizando archivo: evidencia `,
+        width: 985,
+        height: 660
+    });
+});
+
 
 function monthDiff(dateFrom, dateTo) {
     return dateTo.getMonth() - dateFrom.getMonth() + (12 * (dateTo.getFullYear() - dateFrom.getFullYear()))
 }
 
-
+function remplazarCaracter(text, busca, reemplaza) {
+    while (text.toString().indexOf(busca) != -1)
+      text = text.toString().replace(busca, reemplaza);
+    return text;
+  }

@@ -86,6 +86,14 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
                         }
                     }
                 }
+            },
+            {
+                text: '<i class="fas fa-play"></i>',
+                className: `btn btn-dt-youtube buttons-youtube`,
+                titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Consulta pago final podrás visualizarlo en el siguiente tutorial',
+                action: function (e, dt, button, config) {
+                    window.open('https://youtu.be/6W5B97MTOCghttps://youtu.be/6W5B97MTOCg', '_blank');
+                }
             }
         ],
         pagingType: "full_numbers",
@@ -401,14 +409,11 @@ function generateJWT(excelData) {
     var secret = "thisismysecretkeytest";
     var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header));
     var encodedHeader = base64url(stringifiedHeader);
-    //document.getElementById("header").innerText = encodedHeader;
     var stringifiedData = CryptoJS.enc.Utf8.parse(JSON.stringify(data));
     var encodedData = base64url(stringifiedData);
-    //document.getElementById("payload").innerText = encodedData;
     var signature = encodedHeader + "." + encodedData;
     signature = CryptoJS.HmacSHA256(signature, secret);
     signature = base64url(signature);
-    //document.getElementById("signature").innerText = signature;
     return encodedHeader + '.' + encodedData +  '.' + signature;
 }
 

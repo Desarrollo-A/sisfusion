@@ -166,7 +166,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 d-flex align-end text-center">
-                                                <a data-target="#myModal" data-toggle="modal" class="btn-gral-data" id="MainNavHelp" href="#myModal" style="color:white"> Más detalle</a>
+                                                <a data-target="#myModal" data-toggle="modal" class="btn-gral-data" id="MainNavHelp" href="#myModal" style="color:white"> MÁS DETALLE</a>
                                             </div>
                                         </div>
                                     </div>

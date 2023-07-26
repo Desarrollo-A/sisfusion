@@ -188,7 +188,6 @@ class Reporte extends CI_Controller {
             
 
             $data['data'] = $this->Reporte_model->getGeneralLotesInformation($beginDate, $endDate, $typeSale, $typeLote, $typeConstruccion, $estatus, $rol, $id_usuario, $render, $type, $sede, $leader, [$asesor, $coordinador, $gerente, $subdirector, $regional])->result_array();
-
             for ( $x = 0; $x < count($data['data']); $x++ ){
                 $fechaUltimoStatus = $data['data'][$x]['fechaUltimoStatus'];
                 $fechaApartado = $data['data'][$x]['fechaApartado'];
@@ -199,7 +198,7 @@ class Reporte extends CI_Controller {
                 if ( $fechaStatus9 != null){
                     $diasStatus9 = $this->formatter->validarDiasHabiles($fechaApartado, $fechaStatus9);
                 }
-                else $diasStatus9 = 'No aplica';
+                else $diasStatus9 = 'NO APLICA';
 
                 $data['data'][$x]['diasUltimoStatus'] = $diasUltimoStatus;
                 $data['data'][$x]['diasStatus9'] = $diasStatus9;

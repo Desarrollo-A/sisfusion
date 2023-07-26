@@ -4,8 +4,7 @@ class Asesor_model extends CI_Model {
     {
         parent::__construct();
     }
-    function getinfoCliente($id_cliente)
-{
+    function getinfoCliente($id_cliente) {
         return $this->db->query("SELECT cl.correo, cl.nombre, cl.apellido_paterno, oc3.nombre as regimen_valor, oc2.nombre as estado_valor, cl.domicilio_particular, oc.nombre as 
             nacionalidad_valor, cl.apellido_materno, cl.rfc, cl.personalidad_juridica, cl.fecha_nacimiento, cl.telefono_empresa, cl.tipo_vivienda, cl.telefono1, cl.telefono2, cl.telefono3, 
             cl.correo, lot.idLote, lot.nombreLote, lot.sup, lot.precio, res.nombreResidencial, con.nombre as nombreCondominio, con.idCondominio, ds.id as idDeposito, ds.clave,res.idResidencial as desarrollo, 
@@ -24,14 +23,14 @@ class Asesor_model extends CI_Model {
         LEFT JOIN opcs_x_cats oc4 ON oc4.id_opcion = cl.regimen_fac AND oc4.id_catalogo = 92  
         WHERE cl.id_cliente = $id_cliente");
     }
+
     function getinfoCopropietario($id_cliente){
         return $this->db->query("SELECT id_copropietario, id_cliente, regimen_matrimonial as regimen_valor, estado_civil as estado_valor, co.nacionalidad as nacionalidad_valor, co.nombre as nombre_cop, apellido_paterno, apellido_materno, telefono, telefono_2, correo, fecha_nacimiento, originario_de, conyuge, domicilio_particular, personalidad_juridica, ocupacion, empresa, posicion,  antiguedad, edadFirma, direccion, tipo_vivienda, rfc
         FROM copropietarios co 
         WHERE co.estatus = 1 AND co.id_cliente =" . $id_cliente);
     }
-/*----------------------------------CONSULTAS PARA OBTENER EL MENU------------------------*/
-	function getMenu($rol)
-	{
+
+	function getMenu($rol) {
         $idUsuario = $this->session->userdata('id_usuario');
         if ($this->existeUsuarioMenuEspecial($idUsuario)) {
             return $this->getMenuPadreEspecial($idUsuario);
@@ -43,6 +42,7 @@ class Asesor_model extends CI_Model {
                         return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $rol . " AND estatus = 1 ORDER BY orden ASC");           
         }
     }
+
     function getMenuHijos($rol)
     {
         $idUsuario = $this->session->userdata('id_usuario');
@@ -51,8 +51,8 @@ class Asesor_model extends CI_Model {
         }
         return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $rol . " AND padre > 0 AND estatus = 1  order by orden asc");
     }
-    function getActiveBtn($var, $rol)
-    {
+
+    function getActiveBtn($var, $rol) {
         return $this->db->query("SELECT padre FROM Menu2 WHERE pagina='" . $var . "' AND rol=" . $rol . " ");
     }
     public function existeUsuarioMenuEspecial($idUsuario)
@@ -76,7 +76,7 @@ class Asesor_model extends CI_Model {
     public function getDataDs1($id_cliente) { // DATA FROM DEPOSITO_SERIEDAD
         ini_set('max_execution_time', 300);
         set_time_limit(300);
-        $query = $this->db->query("SELECT '1' qry, '1' dsType, cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.correo, cl.telefono1,
+        $query = $this->db->query("SELECT '1' qry, '1' dsType, cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.correo, cl.telefono2,
         UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, cl.status ,cl.idLote, convert(varchar,fechaApartado,20) as fechaApartado, fechaVencimiento, cl.usuario, cond.idCondominio, cl.fecha_creacion, 
         cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial,
         cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, convert(varchar,lotes.fechaVenc,20) as fechaVenc, lotes.modificado, lotes.observacionContratoUrgente as vl, lotes.idStatusContratacion, cl.concepto, cl.id_prospecto,
@@ -107,7 +107,7 @@ class Asesor_model extends CI_Model {
         LEFT JOIN codigo_autorizaciones acs ON cl.id_cliente = acs.id_cliente AND acs.tipo = 3
         LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
             FROM autorizaciones
-            WHERE id_tipo = 1 AND estatus = 0
+            WHERE id_tipo = 2 AND estatus = 0
             GROUP BY idCliente, idLote) tipo_correo_aut ON tipo_correo_aut.idCliente = $id_cliente AND tipo_correo_aut.idLote = lotes.idLote
         
         LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
@@ -142,7 +142,7 @@ class Asesor_model extends CI_Model {
     { // DATA FROM DEPOSITO_SERIEDAD_CONSULTA
         ini_set('max_execution_time', 300);
         set_time_limit(300);
-        $query = $this->db->query("SELECT '2' qry, '2' dsType, cl.idCliente as id_cliente, cl.idAsesor id_asesor, '0' id_coordinador,cl.idGerente id_gerente, '0' id_sede, CONCAT(cl.primerNombre, ' ', cl.segundoNombre) nombre, cl.apellidoPaterno apellido_paterno, cl.correo, cl.telefono1, 
+        $query = $this->db->query("SELECT '2' qry, '2' dsType, cl.idCliente as id_cliente, cl.idAsesor id_asesor, '0' id_coordinador,cl.idGerente id_gerente, '0' id_sede, CONCAT(cl.primerNombre, ' ', cl.segundoNombre) nombre, cl.apellidoPaterno apellido_paterno, cl.correo, cl.telefono2, 
         cl.apellidoMaterno apellido_materno, cl.status ,cl.idLote, convert(varchar,cl.fechaApartado,20) as fechaApartado, convert(varchar,cl.fechaVencimiento,20) as fechaVencimiento, cl.usuario, cond.idCondominio, cl.fechaApartado fecha_creacion, 
         cl.creado_por, cl.fechaApartado fecha_modificacion, cl.usuario modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial,
         cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, convert(varchar,lotes.fechaVenc,20) as fechaVenc, lotes.modificado, lotes.observacionContratoUrgente as vl, lotes.idStatusContratacion, cl.concepto, '666' as id_prospecto,
@@ -163,7 +163,7 @@ class Asesor_model extends CI_Model {
         LEFT JOIN codigo_autorizaciones acs ON cl.idCliente = acs.id_cliente AND acs.tipo = 3
 		LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
             FROM autorizaciones
-            WHERE id_tipo = 1 AND estatus = 0
+            WHERE id_tipo = 2 AND estatus = 0
             GROUP BY idCliente, idLote) tipo_correo_aut ON tipo_correo_aut.idCliente = $id_cliente AND tipo_correo_aut.idLote = lotes.idLote
         
         LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
@@ -197,7 +197,7 @@ class Asesor_model extends CI_Model {
     { // DATA FROM DEPOSITO_SERIEDAD WHEN NO ENCONTRÓ NOTHING IN getDataDs1 & getDataDs2
         ini_set('max_execution_time', 300);
         set_time_limit(300);
-        $query = $this->db->query("SELECT '3' qry, '1' dsType, cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.correo, cl.telefono1,
+        $query = $this->db->query("SELECT '3' qry, '1' dsType, cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.correo, cl.telefono2,
         UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
         cl.status ,cl.idLote, convert(varchar,fechaApartado,20) as fechaApartado , convert(varchar,fechaVencimiento,20) as fechaVencimiento, cl.usuario, cond.idCondominio, convert(varchar,cl.fecha_creacion,20) as fecha_creacion, 
         cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, convert(varchar,lotes.fechaVenc,20) as fechaVenc , lotes.modificado, lotes.observacionContratoUrgente as vl, lotes.idStatusContratacion, cl.concepto, cl.id_prospecto,
@@ -229,7 +229,7 @@ class Asesor_model extends CI_Model {
         LEFT JOIN codigo_autorizaciones acs ON cl.id_cliente = acs.id_cliente AND acs.tipo = 3
 		LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
             FROM autorizaciones
-            WHERE id_tipo = 1 AND estatus = 0
+            WHERE id_tipo = 2 AND estatus = 0
             GROUP BY idCliente, idLote) tipo_correo_aut ON tipo_correo_aut.idCliente = $id_cliente AND tipo_correo_aut.idLote = lotes.idLote
         
         LEFT JOIN (SELECT COUNT(*) AS total, idCliente, idLote
@@ -827,7 +827,7 @@ class Asesor_model extends CI_Model {
     }
     public function insertAutorizacion($data)
     {
-        $this->db->insert('autorizaciones', $data);
+        return $this->db->insert('autorizaciones', $data);
     }
     public function registroClienteDS($id_condominio) {
         ini_set('max_execution_time', 300);
@@ -887,7 +887,7 @@ class Asesor_model extends CI_Model {
         $query = $this->db->query(
             'SELECT residencial.nombreResidencial, condominio.nombre as nombreCondominio, 
             lotes.nombreLote, autorizaciones.estatus, autorizaciones.autorizacion,
-            autorizaciones.fecha_creacion, users.usuario as sol, 
+            CONVERT(VARCHAR,autorizaciones.fecha_creacion,20) AS fecha_creacion, users.usuario as sol, 
             users1.usuario as aut, id_autorizacion, autorizaciones.idLote
 		    FROM autorizaciones 
             INNER JOIN lotes on lotes.idLote = autorizaciones.idLote 

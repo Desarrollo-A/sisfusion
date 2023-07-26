@@ -162,7 +162,7 @@ $(document).ready (function() {
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
-                title: ' Tus autorizaciones de verificación',
+                title: 'Tus autorizaciones de verificación',
                 exportOptions: {
                     columns: [0,1,2,3,4],
                     format: {
@@ -179,7 +179,7 @@ $(document).ready (function() {
                 text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
                 className: 'btn buttons-pdf',
                 titleAttr: 'Descargar archivo PDF',
-                title: ' Tus autorizaciones de verificación',
+                title: 'Tus autorizaciones de verificación',
                 orientation: 'landscape',
                 pageSize: 'LEGAL',
                 exportOptions: {
@@ -235,7 +235,8 @@ $(document).ready (function() {
                         </div>
                     `;
                 }
-            }]
+            }
+        ]
     });
 
     $('#aut-verificacion').on('draw.dt', function() {
@@ -277,7 +278,7 @@ $(document).ready (function() {
                     : `<p class="radioOption-Item m-0 pl-1">
                         <input type="radio" name="accion${i}" id="send${i}" value="3" class="d-none" aria-invalid="false">
                         <label for="send${i}" class="cursor-point m-0">
-                            <i class="fas fa-paper-plane iSend" style="font-size:15px" data-toggle="tooltip" data-placement="bottom" title="Enviar a DC"></i>
+                            <i class="fas fa-paper-plane iSend" style="font-size:15px" data-toggle="tooltip" data-placement="top" title="ENVIAR A DC"></i>
                         </label>
                     </p>`;
 
@@ -294,17 +295,16 @@ $(document).ready (function() {
                             <div class="w-20">
                                 <div class="radio-with-icon-autorizacones d-flex justify-end">
                                     <p class="radioOption-Item m-0">
-                                        <input type="radio" name="accion${i}" id="accept${i}" value="0" class="d-none" aria-invalid="false" checked>
+                                        <input type="radio" name="accion${i}" id="accept${i}" value="0" class="d-none" aria-invalid="false">
                                         <label for="accept${i}" class="cursor-point m-0">
-                                            <i class="fas fa-thumbs-up iAccepted" style="font-size:15px" data-toggle="tooltip" 
-                                                data-placement="bottom" title="Aceptar"></i>
+                                            <i class="fas fa-thumbs-up iAccepted" style="font-size:15px" data-toggle="tooltip" data-placement="top" title="ACEPTAR"></i>
                                         </label>
                                     </p>
                                     <p class="radioOption-Item m-0 pl-1">
                                         <input type="radio" name="accion${i}" id="denied${i}" value="2" class="d-none" aria-invalid="false">
                                         <label for="denied${i}" class="cursor-point m-0">
                                             <i class="fas fa-thumbs-down iDenied" style="font-size:15px" data-toggle="tooltip" 
-                                                data-placement="bottom" title="Rechazar"></i>
+                                                data-placement="top" title="RECHAZAR"></i>
                                         </label>
                                     </p>
                                     ${opcionDenegado}
@@ -337,8 +337,12 @@ $(document).ready (function() {
             $('#numeroDeRow').val(p);
             $('#addFile').modal('show');
             $('#spiner-loader').addClass('hide');
+            $('[data-toggle="tooltip"]').tooltip({
+                trigger: "hover"
+            });
         });
     });
+
 
     $("#aut-verificacion tbody").on("click", ".infoAut", function(e) {
         e.preventDefault();
@@ -381,17 +385,16 @@ $(document).ready (function() {
                             <div class="w-20">
                                 <div class="radio-with-icon-autorizacones d-flex justify-end">
                                     <p class="radioOption-Item m-0">
-                                        <input type="radio" name="accion${i}" id="acceptAut${i}" value="0" class="d-none" aria-invalid="false" checked>
+                                        <input type="radio" name="accion${i}" id="acceptAut${i}" value="0" class="d-none" aria-invalid="false">
                                         <label for="acceptAut${i}" class="cursor-point m-0">
-                                            <i class="fas fa-thumbs-up iAccepted" style="font-size:15px" data-toggle="tooltip" 
-                                                data-placement="bottom" title="Aceptar"></i>
+                                            <i class="fas fa-thumbs-up iAccepted" style="font-size:15px" data-toggle="tooltip" data-placement="top" title="ACEPTAR"></i>
                                         </label>
                                     </p>
                                     <p class="radioOption-Item m-0 pl-1">
                                         <input type="radio" name="accion${i}" id="deniedAut${i}" value="2" class="d-none" aria-invalid="false">
                                         <label for="deniedAut${i}" class="cursor-point m-0">
                                             <i class="fas fa-thumbs-down iDenied" style="font-size:15px" data-toggle="tooltip" 
-                                                data-placement="bottom" title="Rechazar"></i>
+                                                data-placement="top" title="RECHAZAR"></i>
                                         </label>
                                     </p>
                                 </div>
@@ -416,6 +419,9 @@ $(document).ready (function() {
             $('#numeroDeRowAut').val(p);
             $('#autCliente').modal('show');
             $('#spiner-loader').addClass('hide');
+            $('[data-toggle="tooltip"]').tooltip({
+                trigger: "hover"
+            });
         });
     });
 });
@@ -435,7 +441,15 @@ $("#filtro4").on("change", function(){
 
 $("#sendAutsFromD").on('submit', function(e){
     e.preventDefault();
+
+    if (parseInt($('#numeroDeRow').val()) !== $('#autClienteForm input:radio:checked').length) {
+        alerts.showNotification("top", "right", "Debe APROBAR o RECHAZAR o ENVIAR A DC todas las solicitudes.", "warning");
+        return;
+    }
+
     let formData = new FormData(this);
+    $('#spiner-loader').removeClass('hide');
+
     $.ajax({
         type: 'POST',
         url: `${general_base_url}RegistroCliente/updateAutsFromsDC`,
@@ -450,12 +464,22 @@ $("#sendAutsFromD").on('submit', function(e){
         },
         error: function(){
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        },
+        complete: function () {
+            $('#spiner-loader').addClass('hide');
         }
     });
 });
 
 $('#autClienteForm').on('submit', function (e) {
     e.preventDefault();
+
+    if (parseInt($('#numeroDeRowAut').val()) !== $('#autClienteForm input:radio:checked').length) {
+        alerts.showNotification("top", "right", "Debe APROBAR o RECHAZAR todas las solicitudes.", "warning");
+        return;
+    }
+
+    $('#spiner-loader').removeClass('hide');
 
     $.ajax({
         type: 'POST',
@@ -471,6 +495,9 @@ $('#autClienteForm').on('submit', function (e) {
         },
         error: function(){
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        },
+        complete: function () {
+            $('#spiner-loader').addClass('hide');
         }
     });
 });

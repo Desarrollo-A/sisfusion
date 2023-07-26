@@ -15,22 +15,25 @@ $('#tabla_ingresar_6 thead tr:eq(0) th').each( function (i) {
     });
 });
 
-$("#fecha").change( function (){
-    let fecha_inicio = $("#fecha").val();
-
+$("#calendarioDay").change( function (){
+    let fecha_inicio = $("#calendarioDay").val();
+    if(fecha_inicio ==""){
+    
+    }else{
     $("#tabla_ingresar_6").ready( function(){
         tabla_6 = $("#tabla_ingresar_6").DataTable({
             "ajax": {
-                "url": general_base_url + "contraloria/getRegistroDiarioPorFecha/"+fecha_inicio,
+                "url": general_base_url + "contraloria/getRegistroDiarioPorFecha/",
                 "dataSrc": "",
                 "type": "POST",
                 cache: false,
-                "data": function( d ){
+                data: {
+                    "fecha_inicio": fecha_inicio
                 }
             },
             destroy: true,
             dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-            width: 'auto',
+            width: '100%',
             buttons: [
                 {
                     extend: 'excelHtml5',
@@ -228,6 +231,7 @@ $("#fecha").change( function (){
 
         });
     });
+}
 });
 
 $(document).ready(function(){
@@ -571,7 +575,7 @@ $("#guardar").click(function () {
         type: 'POST',
         data: parametros,
         success: function(data){
-          response = JSON.parse(data);
+            response = JSON.parse(data);
             if(response.message == 'OK') {
                 $('#guardar').prop('disabled', false);
                 $('#rechazarStatus').modal('hide');
@@ -588,15 +592,15 @@ $("#guardar").click(function () {
                 $('#tabla_ingresar_6').DataTable().ajax.reload();
                 alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
             }
-          },
-          error: function( data ){
-                $('#guardar').prop('disabled', false);
-                $('#rechazarStatus').modal('hide');
-                $('#tabla_ingresar_6').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
-          }
+        },
+        error: function( data ){
+            $('#guardar').prop('disabled', false);
+            $('#rechazarStatus').modal('hide');
+            $('#tabla_ingresar_6').DataTable().ajax.reload();
+            alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+        }
     });
-  }
+    }
 });
 
 $(document).on('click', '.noCorrida', function(e){
@@ -827,7 +831,6 @@ $(document).on('click', '#savecs', function(e) {
         });
     }
 });
-
 
 jQuery(document).ready(function(){
     jQuery('#regCorrElab').on('hidden.bs.modal', function (e) {

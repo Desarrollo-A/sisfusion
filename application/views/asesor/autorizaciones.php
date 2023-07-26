@@ -15,8 +15,8 @@
 						<h4 class="modal-title">Revisión Status (6. Corrida elaborada)</h4>
 					</div>
 					<div class="modal-body">
-						<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-							<div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
+						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
 								<label>Lote:</label>
 								<input type="text" class="form-control" id="nomLoteFakeenvARevCE" disabled>
 
@@ -28,7 +28,7 @@
 									<option value="6">  6. Corrida elaborada (Contraloría) </option>
 								</select>
 							</div>
-							<div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
+							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
 								<label>Comentario:</label>
 								<input type="text" class="form-control" name="comentario" id="comentarioenvARevCE">
 								<br><br>
@@ -61,7 +61,7 @@
 						<div class="modal-body">
 							<div class="row aligned-row">
 								<div class="col-sm-10 col-md-10 col-lg-10">
-									<label>Autoriza</label>
+									<label>Autoriza (<span class="isRequired">*</span>)</label>
 									<select name="id_aut" id="dirAutoriza" class="selectpicker select-gral m-0" data-style="btn btn-round" data-live-search="true" title="Selecciona una opción" data-size="7"></select>
 								</div>
 								<div class="col-sm-2 col-md-2 col-lg-2 d-flex align-end">
@@ -76,7 +76,7 @@
 							</div>
 							<div class="row">
 								<div id="functionAdd" class="col-sm-12 col-md-12 col-lg-12 mt-2">
-									<label>Observaciones: (<span class="isRequired">*</span> )</label>
+									<label>Observaciones: (<span class="isRequired">*</span>)</label>
 								</div>
 								<div class="col-sm-12 col-md-12 col-lg-12">
 									<textarea	class="text-modal " id="comentario_0" name="comentario_0" rows="3" placeholder="Ingresa tu comentario" maxlength="100" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
@@ -100,7 +100,6 @@
 							</a>
 							<button type="submit" id="btnSubmitEnviar" class="btn btn-success hidden" data-dismiss="modal">
 							</button>
-							
 						</div>
 					</form>
 				</div>
@@ -119,7 +118,7 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CERRAR</button>
 					</div>
 				</div>
 			</div>
@@ -128,7 +127,7 @@
 		<div class="content boxContent">
 			<div class="container-fluid">
 				<div class="row">
-					<div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 						<ul class="nav nav-tabs nav-tabs-cm">
 							<li class="active"><a href="#soli" data-toggle="tab" onclick="javascript:$('#sol_aut').DataTable().ajax.reload();">Solicitud</a></li>
 							<li><a href="#aut" data-toggle="tab" onclick="javascript:$('#addExp').DataTable().ajax.reload();">Autorizaciones</a></li>
@@ -143,8 +142,8 @@
 												A través de este panel(Solicitud) podrás realizar lo siguiente;
 												consulta de las solicitudes previas a su autorización,
 												envió de correo electrónico a usuarios con rol "Subdirector" que se encuentren activos
-													(seleccionar usuario según sea el caso) con una solicitud de autorización
-													(dependiendo del estatus de la misma),
+												(seleccionar usuario según sea el caso) con una solicitud de autorización
+												(dependiendo del estatus de la misma),
 												descarga de información en formatos: PDF y XLSX.
 											</p>
 											<table id="sol_aut" class="table-striped table-hover">
@@ -159,7 +158,7 @@
 														<th>SUBDIRECTOR</th>
 														<th>DIRECTOR REGIONAL</th>
 														<th>DIRECTOR REGIONAL 2</th>
-														<th>FECHA APARTADO</th>
+														<th>FECHA DE APARTADO</th>
 														<th>ACCIONES</th>
 													</tr>
 												</thead>
@@ -172,7 +171,8 @@
 												A través de este panel(Autorizaciones) podrás realizar lo siguiente;
 												consulta de las solicitudes autorizadas,
 												visualización de los estatus correspondientes por cada una de las autorizaciones en proceso,
-												descarga de información en formatos: PDF y XLSX.<br>
+												descarga de información en formatos: PDF y XLSX.
+												<br>
 											</p>
 											<table id="addExp" class="table-striped table-hover">
 												<thead>

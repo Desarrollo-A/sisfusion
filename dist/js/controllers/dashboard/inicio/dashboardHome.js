@@ -31,7 +31,7 @@ var optionsTotalVentas = {
                     offsetY: 120,
                     formatter: function (w) {
                         // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
-                        
+
                         let val = w.globals.labels[0];
                         return `${val.toLocaleString('es-MX')}`;
                     }
@@ -91,7 +91,7 @@ var optionsProspectos = {
             colorStops: []
         }
     },
-    tooltip: { 
+    tooltip: {
         enabled: true,
         y: {
             formatter: (value) => value.toLocaleString('es-MX'),
@@ -157,7 +157,7 @@ var optionsProspClients = {
             colorStops: []
         }
     },
-    tooltip: { 
+    tooltip: {
         enabled: true,
         y: {
             formatter: (value) => value.toLocaleString('es-MX'),
@@ -213,7 +213,7 @@ var optionsWeekly = {
         categories: ['Prospectos nuevos','Prospectos c/cita','Ventas totales','Ventas contratadas',
         'Ventas apartadas','Cancelados contratados','Cancelados apartados']
     },
-    tooltip: { 
+    tooltip: {
         enabled: true,
         y: {
             formatter: (value) => value.toLocaleString('es-MX'),
@@ -253,7 +253,7 @@ var optionsFunnel = {
     legend: {
         show: false
     },
-    tooltip: { 
+    tooltip: {
         enabled: true,
         y: {
             formatter: (value) => value.toLocaleString('es-MX'),
@@ -332,11 +332,11 @@ function loadInit(){
         typeTransaction = validateMainFilters();
         var com2 = new FormData();
         com2.append("typeTransaction", typeTransaction);
-        getProspectsByYear(com2); 
+        getProspectsByYear(com2);
         getSalesByYear(com2);
-        generalMetrics(typeTransaction); 
+        generalMetrics(typeTransaction);
         cicloVenta(com2);
-        getClientsAndProspectsByYear(); 
+        getClientsAndProspectsByYear();
 }
 
 function getSalesByYear(com2){
@@ -396,13 +396,11 @@ function getProspectsByYear(com2) {
                 name: 'Prospectos',
                 data: data
             }])
-
             prospectosChart.updateOptions({
                 xaxis: {
-                   categories: months
+                    categories: months
                 },
-             });
-
+                });
             $('#numberGraphic').text(count.toLocaleString('es-MX'));
             document.getElementById('numberGraphic').title = count.toLocaleString('es-MX');
             $('.loadProspectosChart').addClass('d-none');
@@ -433,19 +431,16 @@ function getClientsAndProspectsByYear(type = 1, beginDate = null, endDate= null)
             let dataC = [];
             let countC = 0;
             let countP = 0;
-
             response.Clientes.forEach(element => {
                 monthsP.push(`${element.MONTH} ${element.año}`);
                 dataC.push(element.counts);
                 countC = countC + element.counts;
             });
-
             response.Prospectos.forEach(element => {
                 monthsC.push(`${element.MONTH} ${element.año}`);
                 dataP.push(element.counts);
                 countP = countP + element.counts;
             });
-
             chartProspClients.updateSeries([{
                 name: 'Prospectos',
                 data: dataP
@@ -453,7 +448,6 @@ function getClientsAndProspectsByYear(type = 1, beginDate = null, endDate= null)
                 name: 'Clientes',
                 data: dataC
             }])
-
             chartProspClients.updateOptions({
                 xaxis: {
                     categories: monthsP.length >= monthsC.length ? monthsP:monthsC
@@ -518,7 +512,6 @@ function getDataFromDates(com2){
                 data: suma > 0 ? [response.prospNuevos, response.prosCita, response.totalVentas, response.totalConT,
                 response.totalAT, response.totalCanC, response.totalCanA] : []
             }]);
-
             addTextFields(response);
             $('.loadChartWeekly').addClass('d-none');
         }
@@ -537,10 +530,10 @@ function cicloVenta(com2){
         dataType: 'json',
         success : function (response) {
             chartFunnel.updateSeries([
-               response.totalProspectosCita, response.totalProspectosCitaSeguimiento, 
+                response.totalProspectosCita, response.totalProspectosCitaSeguimiento,
                 response.totalApartados, response.prospectosNoInteresados
             ]);
-            
+
             addTextFields2(response);
             $('.loadChartFunnel').addClass('d-none');
         }
@@ -750,15 +743,15 @@ async function prospectsTable(){
         $('.datepicker').datetimepicker({locale: 'es'});
         setInitialValues2();
     }
-
     $('#tablePR thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
-        $(this).html('<input type="text" style="width:100%; background:#003D82; color:white; border: 0; font-weight: 500;" class="textoshead"  placeholder="'+title+'"/>' );
-        $( 'input', this ).on('keyup change', function () {
+        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}"placeholder="${title}"/>`);
+            $( 'input', this ).on('keyup change', function () {
             if ($('#tablePR').DataTable().column(i).search() !== this.value ) {
                 $('#tablePR').DataTable().column(i).search(this.value).draw();
             }
         });
+        $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
     });
 }
 
@@ -785,28 +778,42 @@ function getRolDR(idUser){
     });
 }
 
+/* Función para cambiar icono y cerrar o abrir tabla*/
+
+function changeIcon(anchor) {
+    anchor.closest('.wrapper .boxTabla').classList.toggle('active');
+    $(document).off('click', '.accordionToggle').on('click', '.accordionToggle', function () {
+        $(this).parent().next().slideToggle(200);
+        $(this).toggleClass('open', 200);
+    });
+}
+
+
 function createAccordionsPR(option, render, rol) {
     let tittle = getTitle(option);
     let html = '';
-    html = `<div data-rol="${rol}" class="bk ${render == 1 ? 'parentTable': 'childTable'}">
-                <div class="card p-2 h-auto">
-                    <div class="d-flex justify-between align-center">   
+    html = `<div class="bk ${render == 1 ? 'parentTable': 'childTable'}">
+                <div class="card p-2 h-auto boxTabla">
+                    <div class="d-flex justify-between align-center">
                         <div class="cursor-point accordionToggle">
-                            <i class="fas fa-angle-down"></i>
+                            <a class="purple-head hover-black" onclick="changeIcon(this)" id="myBtn">
+                            <i class="less fas fa-angle-down"></i>
+                            <i class="more fas fa-angle-up "></i>
+                            </a>
                         </div>
                         <div>
                             <h4 class="p-0 accordion-title js-accordion-title">`+tittle+`</h4>
                         </div>
                         <div class="cursor-point">
-                            ${render == 1 ? '': '<i class="fas fa-times deleteTable"></i>'}
+                            <a onClick="prospectsTable()">${render == 1 ? '': '<i class="fas fa-times deleteTable"></i>'}</a>
                         </div>
                     </div>
                     <div class="toolbar">
                         <div class="row">
-                            <div id="filterContainer" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 pb-3"></div>
+                            <div id="filterContainer"></div>
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
                                 <div class="w-30">
-                                    <div class="form-group d-flex">
+                                    <div class="form-group d-flex m-0">
                                         <input type="text" class="form-control datepicker beginDates" id="beginDate3"  />
                                         <input type="text" class="form-control datepicker endDates" id="endDate3"  />
                                         <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRangePR">
@@ -816,33 +823,32 @@ function createAccordionsPR(option, render, rol) {
                                 </div>
                             </div>
                         </div>
-                        <div class="accordion-content pb-3">
+                        <div class="accordion-content">
                             <div class="material-datatables">
                                 <div class="form-group">
-                                    <div class="table-responsive">
-                                        <table class="table-responsive table-striped table-hover" id="tablePR" name="table`+option+`"><!--anterior:tablePR + option + -->
-                                            <thead>
-                                                <tr>
-                                                    <th>ESTADO</th>
-                                                    <th>ETAPA</th>
-                                                    <th>TIPO</th>
-                                                    <th>PROSPECTO</th>
-                                                    <th>ASESOR</th>
-                                                    <th>COORDINADOR</th>
-                                                    <th>GERENTE</th>
-                                                    <th>LUGAR PROSPECCIÓN</th>
-                                                    <th>TELÉFONO</th>
-                                                    <th>CREACIÓN</th>
-                                                    <th>VENCIMIENTO</th>
-                                                </tr>
-                                            </thead>
-                                        </table>
-                                    </div>
+                                    <table class="table-striped table-hover hide" id="tablePR">
+                                        <thead>
+                                            <tr>
+                                                <th>ESTADO</th>
+                                                <th>ETAPA</th>
+                                                <th>TIPO</th>
+                                                <th>PROSPECTO</th>
+                                                <th>ASESOR</th>
+                                                <th>COORDINADOR</th>
+                                                <th>GERENTE</th>
+                                                <th>LUGAR DE PROSPECCIÓN</th>
+                                                <th>TELÉFONO</th>
+                                                <th>CREACIÓN</th>
+                                                <th>VENCIMIENTO</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>`;
+                </div>
+            </div>`;
     $(".table-dinamic").append(html);
 }
 
@@ -859,7 +865,6 @@ function multirol(){
                 items_activos.push('asesors');
                 createFilters(1, items_activos);
                 loadSbdir();
-
             }
             break;
         case 2:
@@ -872,6 +877,7 @@ function multirol(){
                     items_activos.push('gerente');
                     items_activos.push('coordinadors');
                     items_activos.push('asesors');
+                    loadSbdir();
                     createFilters(59, items_activos);
                     getFirstFilter(59, 2);
                 }else{
@@ -902,8 +908,8 @@ function multirol(){
             let finalEndDate = $("#endDate3").val();
             $('#tablePR thead tr:eq(0) th').each( function (i) {
                 var title = $(this).text();
-                $(this).html('<input type="text" style="width:100%; background:#003D82; color:white; border: 0; font-weight: 500;" class="textoshead"  placeholder="'+title+'"/>' );
-                $( 'input', this ).on('keyup change', function () {
+                $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}"placeholder="${title}"/>`);
+                $( 'input', this).on( 'keyup change', function () {
                     if ($('#tablePR').DataTable().column(i).search() !== this.value ) {
                         $('#tablePR').DataTable().column(i).search(this.value).draw();
                     }
@@ -918,7 +924,6 @@ function loadSbdir(){
     $("#subdirector").empty().selectpicker('refresh');
     $.post('../Clientes/getSubdirs/', function(data) {
         var len = data.length;
-        $("#subdirector").append($('<option>').val('').text('SELECCIONA UN SUBDIRECTOR'));
         for( var i = 0; i<len; i++)
         {
             var id = data[i]['id_usuario'];
@@ -927,7 +932,7 @@ function loadSbdir(){
         }
         if(len<=0)
         {
-            $("#subdirector").append('<option selected="selected" disabled>NINGUN SUBDIRECTOR</option>');
+            $("#subdirector").append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
         }
         $("#subdirector").selectpicker('refresh');
     }, 'json');
@@ -944,9 +949,9 @@ function loadCoord(){
     $.post('../Clientes/getCoordsByGrs/'+id_usuario, function(data) {
         var len = data.length;
         if(len<=0){
-            $("#coordinadors").append('<option selected="selected" disabled>NINGUN COORDINADOR</option>');
+            $("#coordinadors").append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
         }{
-            $("#coordinadors").append('<option selected="selected">SELECCIONA COORDINADOR</option>');
+            $("#coordinadors").append('<option selected="selected">SELECCIONA UNA OPCIÓN</option>');
         }
 
         for( var i = 0; i<len; i++){
@@ -966,7 +971,7 @@ function loadAsesores(){
             $("#asesors").append('<option selected="selected" disabled>NINGUN COORDINADOR</option>');
         }
         else{
-            $("#asesors").append('<option selected="selected">SELECCIONA ASESOR</option>');
+            $("#asesors").append('<option selected="selected">SELECCIONA UNA OPCIÓN</option>');
         }
         for( var i = 0; i<len; i++){
             var id = data[i]['id_usuario'];
@@ -990,21 +995,19 @@ function createSelect(dataDinamic){
         dataMaks = dataDinamic;
     }
 
-    let html_select ='<div class="col-md-3 form-group"><div id="'+nombreID+'" class="form-group label-floating select-is-empty"><label class="control-label">'+dataMaks+'</label></div></div>';
+    let html_select ='<div class="col-md-3 form-group m-0"><div id="'+nombreID+'" class="form-group overflow-hidden"><label class="control-label">'+dataMaks.toUpperCase()+'</label></div></div>';
     var $selectSub = $('<select/>', {
         'class':"selectpicker select-gral m-0",
         'id': dataDinamic,
         'name': dataDinamic,
         'data-style':"btn",
         'data-show-subtext':"true",
-        'data-live-search':"true"
-    }).append($('<option/>',{
-        'value': 'default',
-        'text': 'Selecciona el '+dataMaks,
-        'selected': true,
-        'disabled': true
-    }));
+        'data-live-search':"true",
+        'data-container':"body",
+        'title': 'SELECCIONA UNA OPCIÓN'
+    });
         $('#filterContainer').append(html_select);
+
     return $selectSub;
 }
 
@@ -1017,13 +1020,6 @@ function createFilters(rol, selects){
 
 function getFirstFilter(rol, secondRol){
     $(`#${rol == 59 ? 'subdirector':'gerente'}`).empty().selectpicker('refresh');
-    var $option = $('<option/>',{
-        'value': 'default',
-        'text': 'Selecciona el subdirector',
-        'selected': true,
-        'disabled': true
-    });
-    $(`#${rol == 59 ? 'subdirector':'gerente'}`).append($option);
     $.post('../General/getUsersByLeader', {rol: rol, secondRol:secondRol},function(data) {
         var len = data.length;
         for( var i = 0; i<len; i++)
@@ -1033,7 +1029,7 @@ function getFirstFilter(rol, secondRol){
             $(`#${rol == 59 ? 'subdirector':'gerente'}`).append($('<option>').val(id).text(name));
         }
         if(len<=0){
-            $(`#${rol == 59 ? 'subdirector':'gerente'}`).append('<option selected="selected" disabled>NINGÚN GERENTE</option>');
+            $(`#${rol == 59 ? 'subdirector':'gerente'}`).append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
         }
         $(`#${rol == 59 ? 'subdirector':'gerente'}`).selectpicker('refresh');
     }, 'json');
@@ -1102,16 +1098,8 @@ function newRoles(option) {
     return rol;
 }
 
-$(document).off('click', '.accordionToggle').on('click', '.accordionToggle', function () {
-    $(this).parent().next().slideToggle(200);
-    $(this).toggleClass('open', 200);
-});
-
-
 $(document).on('change','#subdirector', function () {
     var subdir = $("#subdirector").val();
-
-    //gerente
     $("#gerente").empty().selectpicker('refresh');
     $("#coordinadors").empty().selectpicker('refresh');
     $("#asesor").empty().selectpicker('refresh');
@@ -1121,9 +1109,7 @@ $(document).on('change','#subdirector', function () {
         var len = data.length;
         if(len<=0)
         {
-            $("#gerente").append('<option selected="selected" disabled>NINGUN GERENTE</option>');
-        }else{
-            $("#gerente").append($('<option selected="selected">').val('').text('SELECCIONA GERENTE'));
+            $("#gerente").append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
         }
         for( var i = 0; i<len; i++)
         {
@@ -1149,10 +1135,7 @@ $(document).on('change', '#gerente', function () {
     $.post('../Clientes/getCoordsByGrs/'+gerente, function(data) {
         var len = data.length;
         if(len<=0){
-            $("#coordinadors").append('<option selected="selected" disabled>NINGUN COORDINADOR</option>');
-        }
-        {
-            $("#coordinadors").append('<option selected="selected">SELECCIONA COORDINADOR</option>');
+            $("#coordinadors").append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
         }
         for( var i = 0; i<len; i++){
             var id = data[i]['id_usuario'];
@@ -1161,9 +1144,6 @@ $(document).on('change', '#gerente', function () {
         }
         $("#coordinadors").selectpicker('refresh');
     }, 'json');
-
-
-
     /**///carga tabla
     var url = general_base_url+"Clientes/getProspectsListByGerente/"+gerente;
     let finalBeginDate = $("#beginDate3").val();
@@ -1181,9 +1161,7 @@ $(document).on('change', '#coordinadors', function () {
         var len = data.length;
         if(len<=0)
         {
-            $("#asesors").append('<option selected="selected" disabled>NINGUN COORDINADOR</option>');
-        }else{
-            $("#asesors").append('<option selected="selected">SELECCIONA ASESOR</option>');
+            $("#asesors").append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
         }
 
         for( var i = 0; i<len; i++){
@@ -1223,7 +1201,7 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
     let monthP = ((newDate.getMonth()+1)<10) ? '0'+(newDate.getMonth()+1) : (newDate.getMonth()+1);
     let dayP = (newDate.getDate()<10) ? '0'+ newDate.getDate() : newDate.getDate();
 
-    beginDate = dayP+'-'+monthP+'-'+yearP;
+    beginDate = dayP+'/'+monthP+'/'+yearP;
 
     let oldDateend = endDate.split('/');
     let newDateEnd = new Date(oldDateend[1]+'-'+oldDateend[0]+'-'+oldDateend[2]).toISOString();
@@ -1231,10 +1209,12 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
     let yearPE = newDateEnd.getFullYear();
     let monthPE = ((newDateEnd.getMonth()+1)<10) ? '0'+(newDateEnd.getMonth()+1) : (newDateEnd.getMonth()+1);
     let dayPE = (newDateEnd.getDate()<10) ? '0'+ newDateEnd.getDate() : newDateEnd.getDate();
-    endDate = dayPE+'-'+monthPE+'-'+yearPE;
+    endDate = dayPE+'/'+monthPE+'/'+yearPE;
 
     prospectsTables = $('#tablePR').dataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',
+        scrollX:true,
         ordering: false,
         buttons: [
             {
@@ -1303,9 +1283,9 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
         columns: [
             { data: function (d) {
                 if (d.estatus == 1)
-                    return '<center><span class="label" style="background: #A9DFBF; color: #145A32">Vigente</span><center>';
+                    return '<center><span class="label lbl-green">Vigente</span><center>';
                 else
-                    return '<center><span class="label" style="background: #E6B0AA; color: #641E16">Sin vigencia</span><center>';
+                    return '<center><span class="label lbl-warning">Sin vigencia</span><center>';
             } },
             { data: function (d) {
                 if(d.estatus_particular == 1) // DESCARTADO
@@ -1322,13 +1302,13 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
                     estatus_particular = 'Preventa';
                 else if (d.estatus_particular == 3) // CLIENTE
                     estatus_particular = 'Cliente';
-                return `<center><span class="label" style="background: #D2B4DE; color: #4A235A">${estatus_particular}</span><center>`;
+                return `<center><span class="label lbl-violetBoots">${d.estatus_particular}</span><center>`;
             } },
             {   data: function (d) {
                 if (d.tipo == 0){
-                    return '<center><span class="label" style="background: #F9E79F; color: #7D6608">Prospecto</span></center>';
+                    return '<center><span class="label lbl-yellow">Prospecto</span></center>';
                 } else {
-                    return '<center><span class="label" style="background: #A3E4D7; color: #0E6251">Cliente</span></center>';
+                    return '<center><span class="label lbl-oceanGreen">Cliente</span></center>';
                 }
             } },
             { data: function (d) {
@@ -1380,9 +1360,18 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
                 "endDate": endDate,
                 "where": where
             }
+        },
+        columnDefs: [{
+            "searchable": true,
+            "orderable": false,
+            "targets": 0
+        }],
+        drawCallback: function (settings) {
+            $('[data-toggle="tooltip"]').tooltip();
         }
     })
     $('#spiner-loader').addClass('hide');
+    $('#tablePR').removeClass('hide');
 }
 
 $(document).on("click", "#searchByDateRangePR", function () {
@@ -1402,6 +1391,8 @@ $(document).on("click", "#searchByDateRangePR", function () {
         url_inter = "../Clientes/getProspectsListByAsesor/"+idUser;
     }else if(gerente == undefined && coordinador!=undefined && asesor!=undefined){
         url_inter = "../Clientes/getProspectsListByAsesor/"+asesor;
+    }else if(gerente == undefined && coordinador!=undefined && asesor==undefined){
+        url_inter = "../Clientes/getProspectsListByCoord/"+coordinador;
     }
 
     updateTable(url_inter, 3, finalBeginDate, finalEndDate, 0);

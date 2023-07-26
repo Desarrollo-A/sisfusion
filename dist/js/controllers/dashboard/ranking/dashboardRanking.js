@@ -82,7 +82,6 @@ function recreatApexChartRanking(estado, opts){
     if(estado){
         $(".boxChartRanking").html('');
         buildChartsID();
-      
         chartApartados = new ApexCharts(document.querySelector('#chart'), setOptionsChartRanking(opts.seriesA[0], opts.categoriesA));
         chartApartados.render();
         
@@ -104,7 +103,6 @@ function recreatApexChartRanking(estado, opts){
         chartSinenganche = new ApexCharts(document.querySelector('#chart4'), options);
         chartSinenganche.render();
     }
-  
 }
 
 function buildChartsID(){
@@ -236,7 +234,7 @@ function getRankings(general = false, typeRanking = null){
         dataType: 'json',
         cache: false,
         beforeSend: function() {
-          $('#spiner-loader').removeClass('hide');
+            $('#spiner-loader').removeClass('hide');
         },
         success: function(data) {
             
@@ -248,8 +246,8 @@ function getRankings(general = false, typeRanking = null){
             $('#spiner-loader').addClass('hide');
         },
         error: function() {
-          $('#spiner-loader').addClass('hide');
-          alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            $('#spiner-loader').addClass('hide');
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
 }
@@ -275,13 +273,14 @@ function divideRankingArrays(data){
 function buildTableApartados(data){
     $('#tableApartados thead tr:eq(0) th').each(function (i) {
         const title = $(this).text();
-        $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
+        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);  
         $('input', this).on('keyup change', function () {
             if ($("#tableApartados").DataTable().column(i).search() !== this.value) {
                 $("#tableApartados").DataTable().column(i)
                     .search(this.value).draw();
             }
         });
+        $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
     });
 
     $("#tableApartados").DataTable({
@@ -290,7 +289,7 @@ function buildTableApartados(data){
         pageLength : 10,
         width: '100%',
         destroy: true,
-        ordering: false,
+        ordering: true,
         scrollX: true,
         language: {
             url: `${base_url}static/spanishLoader_v2.json`,
@@ -299,6 +298,7 @@ function buildTableApartados(data){
                 next: "<i class='fa fa-angle-right'>"
             }
         },
+        order: [[2, "desc"]],
         data: data,
         columns: [{
             title: 'Ranking',
@@ -308,7 +308,7 @@ function buildTableApartados(data){
         },{
             title: 'Totales',
             data: function(d){
-                return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="1" data-asesor="${d.id_asesor}" class="btnModalDetailsRanking">${d.totalAT}</button>`; // APARTADOS
+                return `<button style=" border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="1" data-asesor="${d.id_asesor}" class="btnModalDetailsRanking label lbl-gray">${d.totalAT}</button>`; // APARTADOS
                 //return d.totalAT
             }
         },
@@ -327,7 +327,7 @@ function buildTableApartados(data){
         {
             title: 'Puesto',
             data: function(d){
-                return d.rol
+                return d.rol.toUpperCase();
             }
         },
         {
@@ -337,22 +337,26 @@ function buildTableApartados(data){
             }
         }],
         columnDefs: [{
-            visible: false,
-            searchable: false
+            visible: true,
+            searchable: true
         }],
+        drawCallback: function (settings) {
+            $('[data-toggle="tooltip"]').tooltip();
+        }
     });
 }
 
 function buildTableContratados(data){
     $('#tableContratados thead tr:eq(0) th').each(function (i) {
         const title = $(this).text();
-        $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
+        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);  
         $('input', this).on('keyup change', function () {
             if ($("#tableContratados").DataTable().column(i).search() !== this.value) {
                 $("#tableContratados").DataTable().column(i)
                     .search(this.value).draw();
             }
         });
+        $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
     });
 
     $("#tableContratados").DataTable({
@@ -380,7 +384,7 @@ function buildTableContratados(data){
         },{
             title: 'Totales',
             data: function(d){
-                return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="2" data-asesor="${d.id_asesor}" class="btnModalDetailsRanking">${d.totalConT}</button>`; // CONTRATADOS
+                return `<button style="border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="2" data-asesor="${d.id_asesor}" class="btnModalDetailsRanking label lbl-gray">${d.totalConT}</button>`; // CONTRATADOS
                 //return d.totalConT
             }
         },
@@ -399,7 +403,7 @@ function buildTableContratados(data){
         {
             title: 'Puesto',
             data: function(d){
-                return d.rol
+                return d.rol.toUpperCase();
             }
         },
         {
@@ -418,7 +422,7 @@ function buildTableContratados(data){
 function buildTableConEnganche(data){
     $('#tableConEnganche thead tr:eq(0) th').each(function (i) {
         const title = $(this).text();
-        $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
+        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);  
         $('input', this).on('keyup change', function () {
             if ($("#tableConEnganche").DataTable().column(i).search() !== this.value) {
                 $("#tableConEnganche").DataTable().column(i)
@@ -452,8 +456,7 @@ function buildTableConEnganche(data){
         },{
             title: 'Totales',
             data: function(d){
-                return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="3" data-asesor="${d.id_asesor}" class="btnModalDetailsRanking">${d.cuantos}</button>`; // CON ENGANCHE
-                //return d.cuantos
+                return `<button style="border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="3" data-asesor="${d.id_asesor}" class="btnModalDetailsRanking label lbl-gray">${d.cuantos}</button>`; // CON ENGANCHE
             }
         },
         {
@@ -471,7 +474,7 @@ function buildTableConEnganche(data){
         {
             title: 'Puesto',
             data: function(d){
-                return d.rol
+                return d.rol.toUpperCase();
             }
         },
         {
@@ -497,6 +500,7 @@ function buildTableSinEnganche(data){
                     .search(this.value).draw();
             }
         });
+        $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
     });
 
     $("#tablesinEnganche").DataTable({
@@ -524,8 +528,7 @@ function buildTableSinEnganche(data){
         },{
             title: 'Totales',
             data: function(d){
-                return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="4" data-asesor="${d.id_asesor}" class="btnModalDetailsRanking">${d.cuantos}</button>`; // SIN ENGANCHE
-                //return d.cuantos
+                return `<button style="border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="4" data-asesor="${d.id_asesor}" class="btnModalDetailsRanking label lbl-gray">${d.cuantos}</button>`; // SIN ENGANCHE
             }
         },
         {
@@ -543,7 +546,7 @@ function buildTableSinEnganche(data){
         {
             title: 'Puesto',
             data: function(d){
-                return d.rol
+                return d.rol.toUpperCase();
             }
         },
         {
@@ -741,8 +744,8 @@ function getDates(typeRanking){
     let beginDate, endDate;
     switch (typeRanking) {
         case 'general':
-           beginDate = null;
-           endDate = null;
+            beginDate = null;
+            endDate = null;
             break;
         case 'Apartados':
             beginDate = $('#beginDateApartados').val();
@@ -774,14 +777,14 @@ function getSedesRanking(){
         dataType: 'json',
         cache: false,
         beforeSend: function() {
-          $('#spiner-loader').removeClass('hide');
+            $('#spiner-loader').removeClass('hide');
         },
         success: function(data) {
             // response = data;
         },
         error: function() {
-          $('#spiner-loader').addClass('hide');
-          alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            $('#spiner-loader').addClass('hide');
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
 }
@@ -791,11 +794,12 @@ function buildSelectSedes(dataSedes, selectsSede){
     var boxSedes = document.getElementsByClassName("boxSedes");
     for ( var i = 0; i<boxSedes.length; i++ ){
         var id = boxSedes[i].id;
-        var html = `<select id="sedes`+(id.replace(/\D/g, ""))+`" name="sedes" class="selectMini sedes w-100 m-0">Sedes</select>`;
+        var html = `
+                    <select  id="sedes`+(id.replace(/\D/g, ""))+`" name="sedes" class="selectMini sedes m-0 " data-container="body">Sedes</select>
+                    `;
         $('#'+id).append(html);
     }
 
-    $(".sedes").append($('<option disabled>').val("0").text("Seleccione una opción"));
     for( var i =0; i<dataSedes.length; i++ ){
         var id_sede = dataSedes[i]['id_sede'];
         var nombre = dataSedes[i]['nombre'];
@@ -863,25 +867,24 @@ function formatDate(date) {
 
 function getCacheOptions(){
     let obj = 
-       {
+        {
             seriesA: chartApartados.w.config.series,
             categoriesA: chartApartados.w.config.xaxis.categories,
-           
+
             seriesC: chartContratados.w.config.series,
             categoriesC: chartContratados.w.config.xaxis.categories,
-          
+
             seriesE: chartEnganche.w.config.series,
             categoriesE: chartEnganche.w.config.xaxis.categories,
-           
+
             seriesS: chartSinenganche.w.config.series,
             categoriesS: chartSinenganche.w.config.xaxis.categories,
-          
-    }
+        }
     return obj;
 }
 
 function getCacheDates(){
-   let obj ={ 
+    let obj ={ 
         beginDateApartados : $('#beginDateApartados').val(),
         endDateApartados : $('#endDateApartados').val(),
 
@@ -894,7 +897,6 @@ function getCacheDates(){
         beginDateSinEnganche : $('#beginDateSinEnganche').val(),
         endDateSinEnganche : $('#endDateSinEnganche').val()
     }
-           
     return obj;
 }
 
@@ -915,24 +917,24 @@ function buildDatePikcer(dates){
         }
     });
 
-     $('#beginDateApartados').val(dates.beginDateApartados),
-     $('#endDateApartados').val(dates.endDateApartados),
+    $('#beginDateApartados').val(dates.beginDateApartados),
+    $('#endDateApartados').val(dates.endDateApartados),
 
-     $('#beginDateContratados').val(dates.beginDateContratados),
-     $('#endDateContratados').val(dates.endDateContratados),
+    $('#beginDateContratados').val(dates.beginDateContratados),
+    $('#endDateContratados').val(dates.endDateContratados),
 
-     $('#beginDateConEnganche').val(dates.beginDateConEnganche),
-     $('#endDateConEnganche').val(dates.endDateConEnganche),
+    $('#beginDateConEnganche').val(dates.beginDateConEnganche),
+    $('#endDateConEnganche').val(dates.endDateConEnganche),
 
-     $('#beginDateSinEnganche').val(dates.beginDateSinEnganche),
-     $('#endDateSinEnganche').val(dates.endDateSinEnganche)
+    $('#beginDateSinEnganche').val(dates.beginDateSinEnganche),
+    $('#endDateSinEnganche').val(dates.endDateSinEnganche)
 }
 
 function getSede(typeRanking){
     let sede;
     switch (typeRanking) {
         case 'general':
-           sede = 2;
+            sede = 2;
             break;
         case 'Apartados':
             sede = $('#sedes1').val();
@@ -969,7 +971,7 @@ $(document).on('click', '.btnModalDetailsRanking', function () {
 
 $('#lotesInformationTableRanking thead tr:eq(0) th').each(function (i) {
     const title = $(this).text();
-    $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
+    $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
     $('input', this).on('keyup change', function () {
         if(i != 0){
             if ($("#lotesInformationTableRanking").DataTable().column(i).search() !== this.value) {
@@ -977,6 +979,9 @@ $('#lotesInformationTableRanking thead tr:eq(0) th').each(function (i) {
                     .search(this.value).draw();
             }
         }
+    });
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
     });
 });
 
@@ -990,37 +995,38 @@ function fillTable(dataObject) {
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
+                title: 'Desglose de lotes',
                 exportOptions: {
                     columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
                     format: {
                         header: function (d, columnIdx) {
                             switch (columnIdx) {
                                 case 0:
-                                    return 'Proyecto';
+                                    return 'PROYECTO';
                                     break;
                                 case 1:
-                                    return 'Condominio';
+                                    return 'CONDOMINIO';
                                     break;
                                 case 2:
-                                    return 'Lote'
+                                    return 'LOTE'
                                     break;
                                 case 3:
-                                    return 'Precio';
+                                    return 'PRECIO';
                                     break;
                                 case 4:
-                                    return 'Cliente';
+                                    return 'CLIENTE';
                                     break;
                                 case 5:
-                                    return 'Asesor';
+                                    return 'ASESOR';
                                     break;
                                 case 6:
-                                    return 'Fecha de apartado';
+                                    return 'FECHA DE APARTADO';
                                     break;
                                 case 7:
-                                    return 'Estatus contratación';
+                                    return 'ESTATUS DE CONTRATACIÓN';
                                     break;
                                 case 8:
-                                    return 'Estatus lote';
+                                    return 'ESTATUS DEL LOTE';
                                     break;
                             }
                         }

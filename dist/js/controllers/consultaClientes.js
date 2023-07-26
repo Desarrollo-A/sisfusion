@@ -5,13 +5,15 @@ $(document).ready(function() {
         var title = $(this).text();
         titulos_encabezado.push(title);
         num_colum_encabezado.push(i);
-        $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>` );
+        $(this).html(`<input  data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
         $( 'input', this ).on('keyup change', function () {
             if ($('#clients-datatable').DataTable().column(i).search() !== this.value ) {
                 $('#clients-datatable').DataTable().column(i).search(this.value).draw();
             }
         });
-    });
+        $('[data-toggle="tooltip"]').tooltip();
+        });
+    
 
     //Eliminamos la ultima columna "ACCIONES" donde se encuentra un elemento de tipo boton (para omitir en excel o pdf).
     num_colum_encabezado.pop();
@@ -230,20 +232,21 @@ function fillFields(v, type) {
         $("#phone_number_ed").val(v.telefono);
     }
 }
+
 function fillChangelog(v) {
     $("#changelog").append('<li>\n' +
         '    <div class="container-fluid">\n' +
         '       <div class="row">\n' +
         '           <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">\n' +
-        '               <a><small>Campo: </small><b>' + v.parametro_modificado + '</b></a><br>\n' +
+        '               <a><small>Campo: </small><b>' + v.parametro_modificado.toUpperCase() + '</b></a><br>\n' +
         '           </div>\n' +
         '           <div class="float-end text-right">\n' +
         '               <a>' + v.fecha_creacion + '</a>\n' +
         '           </div>\n' +
         '           <div class="col-md-12">\n' +
-    '                <p class="m-0"><small>USUARIO: </small><b> ' + v.creador + '</b></p>\n'+
-    '                <p class="m-0"><small>VALOR ANTERIOR: </small><b> ' + v.anterior + '</b></p>\n' +
-    '                <p class="m-0"><small>VALOR NUEVO: </small><b> ' + v.nuevo + '</b></p>\n' +
+    '                <p class="m-0"><small>Usuario: </small><b> ' + v.creador.toUpperCase() + '</b></p>\n'+
+    '                <p class="m-0"><small>Valor anterior: </small><b> ' + v.anterior.toUpperCase() + '</b></p>\n' +
+    '                <p class="m-0"><small>Valor Nuevo: </small><b> ' + v.nuevo.toUpperCase() + '</b></p>\n' +
         '           </div>\n' +
         '        <h6>\n' +
         '        </h6>\n' +
@@ -259,7 +262,6 @@ function cleanComments() {
     var myChangelog = document.getElementById('changelog');
     myChangelog.innerHTML = '';
 }
-
 
 function fillTimeline(v, counter) {
     if(counter > 0){

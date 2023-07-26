@@ -105,7 +105,6 @@ var optionsDisponibilidad = {
     dataLabels: {
         formatter: function (val, opt) {
             const goals = opt.w.config.series[opt.seriesIndex].data[opt.dataPointIndex].goals;
-
             if (goals && goals.length) {
                 return `${val.toLocaleString('es-MX')} / ${(goals[0].value).toLocaleString('es-MX')}`
             }
@@ -259,10 +258,10 @@ var optionsMedio = {
     dataLabels: {
         enabled: false,
         formatter: function (val) {
-          return val.toLocaleString('es-MX');
+            return val.toLocaleString('es-MX');
         }
-      },
-      responsive: [{
+    },
+    responsive: [{
         breakpoint: 500,
         options: {
             chart: {
@@ -273,7 +272,7 @@ var optionsMedio = {
             },
             yaxis: {
                 show: false
-              },
+            },
         }
     }],
     tooltip: { 
@@ -312,7 +311,7 @@ var optionsVentasMetros = {
         show: true,
     },
     tooltip: {
-      show: false
+        show: false
     },
     grid: {
         show: true,
@@ -392,7 +391,7 @@ var optionsPromedio = {
             }
         }
     },
-  };
+};
 
 
 function readyMetrics(){
@@ -576,7 +575,7 @@ function formatMetrosData(data){
 
     metrosChart.updateOptions({
         xaxis: {
-           categories: categories
+            categories: categories
         },
     });
 }
@@ -878,12 +877,18 @@ function getProyectos(idSede = null, idProyecto = null){
 function buildTableMetros(data){
     $('#tablemetros thead tr:eq(0) th').each(function (i) {
         const title = $(this).text();
-        $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
+        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
         $('input', this).on('keyup change', function () {
             if ($("#tablemetros").DataTable().column(i).search() !== this.value) {
                 $("#tablemetros").DataTable().column(i)
                     .search(this.value).draw();
             }
+        });
+    });
+
+    $('#tablemetros').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
         });
     });
 
@@ -922,13 +927,14 @@ function buildTableMetros(data){
 function buildTableDisponibilidad(data){
     $('#tabledisponibilidad thead tr:eq(0) th').each(function (i) {
         const title = $(this).text();
-        $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
+        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
         $('input', this).on('keyup change', function () {
             if ($("#tabledisponibilidad").DataTable().column(i).search() !== this.value) {
                 $("#tabledisponibilidad").DataTable().column(i)
                     .search(this.value).draw();
             }
         });
+        $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
     });
 
     $("#tabledisponibilidad").DataTable({
@@ -972,13 +978,14 @@ function buildTableDisponibilidad(data){
 function buildTableLugarProspeccion(data){
     $('#tablelugar thead tr:eq(0) th').each(function (i) {
         const title = $(this).text();
-        $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
+        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
         $('input', this).on('keyup change', function () {
             if ($("#tablelugar").DataTable().column(i).search() !== this.value) {
                 $("#tablelugar").DataTable().column(i)
                     .search(this.value).draw();
             }
         });
+        $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
     });
 
     $("#tablelugar").DataTable({
@@ -1014,16 +1021,16 @@ function buildTableLugarProspeccion(data){
 }
 
 function buildTableMedio(data){
-    debugger;
     $('#tablemedio thead tr:eq(0) th').each(function (i) {
         const title = $(this).text();
-        $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
+        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
         $('input', this).on('keyup change', function () {
             if ($("#tablemedio").DataTable().column(i).search() !== this.value) {
                 $("#tablemedio").DataTable().column(i)
                     .search(this.value).draw();
             }
         });
+        $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
     });
 
     $("#tablemedio").DataTable({
@@ -1078,7 +1085,6 @@ function recreatApexChartMetrics(estado){
     if(estado){
         $(".boxChartMetrics").html('');
         buildChartsIDMetrics();
-      
         metrosChart = new ApexCharts(document.querySelector("#metrosChart"), optionBarInit);
         metrosChart.render();
         formatMetrosData( dataMetros );     
@@ -1249,8 +1255,6 @@ function toggleDatatablePromedio(e){
     }
 }
 
-
-
 function buildTablePromedio(data){
     $('#tablepromedio thead tr:eq(0) th').each(function (i) {
         const title = $(this).text();
@@ -1304,23 +1308,23 @@ function buildTablePromedio(data){
 
 function getCacheDates(){
     let obj ={ 
-         beginDate_Promedio : $('#tableBegin_promedio').val(),
-         endDate_Promedio : $('#tableEnd_promedio').val(),
-     }
+        beginDate_Promedio : $('#tableBegin_promedio').val(),
+        endDate_Promedio : $('#tableEnd_promedio').val(),
+    }
             
-     return obj;
- }
+    return obj;
+}
 
- function getCacheSelectedOptions(){
+function getCacheSelectedOptions(){
     let obj ={ 
-         sede_promedio : $('#sedes').val(),
-         proyecto_promedio : $('#proyecto2').val(),
-     }
+        sede_promedio : $('#sedes').val(),
+        proyecto_promedio : $('#proyecto2').val(),
+    }
             
-     return obj;
- }
+    return obj;
+}
 
- function buildDatePikcer(dates){
+function buildDatePikcer(dates){
     $('.datepicker').datetimepicker({
         format: 'DD/MM/YYYY',
         icons: {
@@ -1337,15 +1341,15 @@ function getCacheDates(){
         }
     });
 
-     $('#tableBegin_promedio').val(dates.beginDate_Promedio);
-     $('#tableEnd_promedio').val(dates.endDate_Promedio);
+    $('#tableBegin_promedio').val(dates.beginDate_Promedio);
+    $('#tableEnd_promedio').val(dates.endDate_Promedio);
 }
 
 function buildSelect(selected, dataSelect){
     $('.sedes_box').html('');
-    $('.sedes_box').append(`<select class="selectpicker select-gral m-0 proyecto" id="sedes" name="sedes" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una sede" data-size="7" data-container="body" required style="height:100%!important"></select>`);
+    $('.sedes_box').append(`<select class="selectpicker select-gral m-0 proyecto" id="sedes" name="sedes" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required style="height:100%!important"></select>`);
     $('.proyecto_box').html('');
-    $('.proyecto_box').append(`<select class="selectpicker select-gral m-0 proyecto" id="proyecto2" name="proyecto" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un proyecto" data-size="7" data-container="body" required style="height:100%!important"></select>`);
+    $('.proyecto_box').append(`<select class="selectpicker select-gral m-0 proyecto" id="proyecto2" name="proyecto" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required style="height:100%!important"></select>`);
     getSedes(selected.sede_promedio);
     $('#sedes').selectpicker('refresh');
     getProyectos(selected.sede_promedio, selected.proyecto_promedio);
@@ -1357,11 +1361,39 @@ function buildSelect(selected, dataSelect){
     $('#proyecto2').selectpicker('refresh');
 }
 
+let titulosMetricas = [];
+$('#lotesDetailTableMetricas thead tr:eq(0) th').each(function (i) {
+    let title = $(this).text();
+    titulosMetricas.push(title);
+    $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
+    $( 'input', this).on('keyup change', function () {
+        if ($('#lotesDetailTableMetricas').DataTable().column(i).search() !== this.value) {
+            $('#lotesDetailTableMetricas').DataTable().column(i).search(this.value).draw();
+        }   
+    });
+});
+
 function fillTableMetrics(dataObject) {
     generalDataTable = $('#lotesDetailTableMetricas').dataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
-   
+        buttons:[
+            {
+                extend: 'excelHtml5',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true" title="DESCARGAR ARCHIVO DE EXCEL"></i>',
+                className: 'btn buttons-excel',
+                titleAttr: 'DESCARGAR ARCHIVO DE EXCEL',
+                title: 'Desglose de lotes',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4,5,6,7,8,9,10,11],
+                    format: {
+                        header: function (d, columnIdx) {
+                            return ' ' + titulosMetricas[columnIdx] + ' ';
+                        }
+                    }
+                }
+            }
+        ],
         pagingType: "full_numbers",
         lengthMenu: [
             [10, 25, 50, -1],

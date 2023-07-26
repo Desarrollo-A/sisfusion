@@ -295,3 +295,8 @@ function convertDateDDMMYYYYToYYYYMMDD(date)
   const parts = date.split('/');
   return `${parts[2]}-${parts[1]}-${parts[0]}`;
 }
+
+/** Función para dejar solo dos decimales */
+function numberTwoDecimal(x) {
+  return parseFloat(x).toFixed(2);
+} 

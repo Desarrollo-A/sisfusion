@@ -110,7 +110,7 @@ class Suma_model extends CI_Model
         return $query->row();
     }
     function getHistorial($idPago){
-        $result = $this->db->query("SELECT hs.fecha_movimiento, hs.comentario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) modificado_por
+        $result = $this->db->query("SELECT CONVERT(VARCHAR,hs.fecha_movimiento,20) AS fecha_movimiento, hs.comentario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) modificado_por
         FROM historial_suma hs
         INNER JOIN usuarios u ON u.id_usuario = hs.id_usuario 
         WHERE id_pago = $idPago
@@ -267,7 +267,7 @@ class Suma_model extends CI_Model
         ORDER BY u.nombre");
     }
     function get_solicitudes_factura($usuario){
-        return $this->db->query("SELECTT ps.total_comision, cm.referencia, ps.id_pago_suma
+        return $this->db->query("SELECT ps.total_comision, cm.referencia, ps.id_pago_suma
         FROM pagos_suma ps 
         INNER JOIN comisiones_suma cm ON ps.referencia = cm.referencia  
         INNER JOIN usuarios u ON u.id_usuario = ps.id_usuario AND u.id_usuario = $usuario

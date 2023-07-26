@@ -357,9 +357,14 @@ table{
         width: fit-content;
     }
 }
-.dataTables_scroll .container-fluid{
+.dataTables_scroll{
+    .dataTables_scrollHeadInner{
+        width: 100% !important; 
+    }
+    .container-fluid{
     padding-top: 5px;
     padding-bottom: 5px;
+    }
 }
 .dataTables_scrollBody::-webkit-scrollbar-track{
     border-radius: 10px;
@@ -472,19 +477,19 @@ table{
     }
 
 .radio-with-icon-autorizacones input[type="radio"]:checked ~ label .iAccepted {
-    color: #4caf50;
+    color: $green;
 }
 
 .radio-with-icon-autorizacones input[type="radio"]:checked ~ label .iDenied {
-    color: #929292;
+    color: $red;
 }
 
 .radio-with-icon-autorizacones input[type="radio"]:checked ~ label .iSend {
-    color: #103f75;
+    color: $blueMaderas;
 }
 
 .radio-with-icon-autorizacones i {
-    color: #eaeaea;
+    color: $platinumScroll;
 }
 
 .radio-with-icon-autorizacones i:hover {

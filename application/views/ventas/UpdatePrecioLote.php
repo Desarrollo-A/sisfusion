@@ -253,7 +253,7 @@ if ($this->session->userdata('id_rol') == "13"  || $this->session->userdata('id_
  
 
                                                                 <!-- <div class="col xol-xs-2 col-sm-2 col-md-2 col-lg-2">
-                                                                    <p class="category"><b><a data-target="#myModal" data-toggle="modal" class="MainNavText" id="MainNavHelp" href="#myModal">> Más detalle</a> </b></p>
+                                                                    <p class="category"><b><a data-target="#myModal" data-toggle="modal" class="MainNavText" id="MainNavHelp" href="#myModal">> MÁS DETALLE</a> </b></p>
                                                                 </div> -->
 
                                                             </div>

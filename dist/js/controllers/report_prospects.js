@@ -2,7 +2,6 @@ $(document).ready(function() {
     //Vrb generales
     getAsesores();
     getSedes();
-
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
 
@@ -76,10 +75,8 @@ sp = { //  SELECT PICKER
     }
 }
 
-
     function fillTable() {
         let asesor = $('#asesores').val();
-
         prospectsTable = $('#clients-datatable').DataTable({
             dom: 'rt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
             width: 'auto',

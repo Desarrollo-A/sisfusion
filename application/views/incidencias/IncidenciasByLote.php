@@ -17,6 +17,7 @@ hr {
             switch ($this->session->userdata('id_usuario')) {
                 case 1: // corporativa
                 case 2815: // admin
+                case 12931:
                 default:
                     if ($this->session->userdata('id_rol') == 17) {
                         $this->load->view('template/sidebar');

@@ -28,7 +28,7 @@ $("#tabla_prestamos").ready(function() {
             total += parseFloat(v.pago);
         });
         var to = formatMoney(total);
-        document.getElementById("totaln").textContent = '$' + to;
+        document.getElementById("totaln").textContent = to;
     });
 
 
@@ -49,6 +49,14 @@ $("#tabla_prestamos").ready(function() {
                         return ' ' + titulos[columnIdx] + ' ';
                     }
                 }
+            }
+        },
+        {
+            text: '<i class="fas fa-play"></i>',
+            className: `btn btn-dt-youtube buttons-youtube`,
+            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Historial bonos podrás visualizarlo en el siguiente tutorial',
+            action: function (e, dt, button, config) {
+                window.open('https://youtu.be/wLDdDHQjCrw', '_blank');
             }
         }],
         pagingType: "full_numbers",
@@ -79,7 +87,7 @@ $("#tabla_prestamos").ready(function() {
         },
         {
             "data": function(d) {
-                return '<p class="m-0">$' + formatMoney(d.monto) + '</p>';
+                return '<p class="m-0">' + formatMoney(d.monto) + '</p>';
             }
         },
         {
@@ -90,7 +98,7 @@ $("#tabla_prestamos").ready(function() {
                 }else{
                     abonado =d.n_p*d.pago;
                 }
-                return '<p class="m-0"><b>$' + formatMoney(abonado) + '</b></p>';
+                return '<p class="m-0"><b>' + formatMoney(abonado) + '</b></p>';
             }
         },
         {
@@ -101,7 +109,7 @@ $("#tabla_prestamos").ready(function() {
                 }else{
                     pendiente = d.monto - (d.n_p*d.pago);
                 }
-                return '<p class="m-0"><b>$' + formatMoney(pendiente) + '</b></p>';
+                return '<p class="m-0"><b>' + formatMoney(pendiente) + '</b></p>';
             }
         },
         {
@@ -111,7 +119,7 @@ $("#tabla_prestamos").ready(function() {
         },
         {
             "data": function(d) {
-                return '<p class="m-0">$' + formatMoney(d.pago) + '</p>';
+                return '<p class="m-0">' + formatMoney(d.pago) + '</p>';
             }
         },
         {
@@ -128,12 +136,12 @@ $("#tabla_prestamos").ready(function() {
         {
             "data": function(d) {
                 if(parseFloat(d.pago) == parseFloat(d.impuesto1)){
-                    return '<p class="m-0"><b>$' + formatMoney(d.pago) + '</b></p>';
+                    return '<p class="m-0"><b>' + formatMoney(d.pago) + '</b></p>';
                 }
                 else{
                     let iva = ((parseFloat(d.impuesto)/100)*d.pago);
                     let pagar = parseFloat(d.pago) - iva;
-                    return '<p class="m-0"><b>$' + formatMoney(pagar) + '</b></p>';
+                    return '<p class="m-0"><b>' + formatMoney(pagar) + '</b></p>';
                 }
             }
         },
@@ -220,7 +228,7 @@ $("#tabla_prestamos").ready(function() {
             let f = data[0].fecha_movimiento.split('.');
 
             $("#modal_bonos .modal-body").append(`<div class="row"><div class="col-md-3"><h6>PARA: <b>${nombre}</b></h6></div>
-            <div class="col-md-3"><h6>Abono: <b style="color:green;">$${formatMoney(impuesto)}</b></h6></div>
+            <div class="col-md-3"><h6>Abono: <b style="color:green;">${formatMoney(impuesto)}</b></h6></div>
             <div class="col-md-3"><h6>Fecha: <b>${f[0]}</b></h6></div>
             <div class="col-md-3"><span class="label label-danger" style="background:#${color}">${estatus}</span></h6></div>
             </div>`);

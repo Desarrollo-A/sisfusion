@@ -114,10 +114,6 @@ $('#reporteLotesPorComisionista').on('xhr.dt', function (e, settings, json, xhr)
 });
 
 function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
-    console.log(beginDate);
-    console.log(endDate);
-    console.log(comisionista);
-    console.log(tipoUsuario);
     generalDataTable = $('#reporteLotesPorComisionista').dataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
@@ -235,22 +231,22 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
                     if (d.rec == 8 && d.comisionTotal == '0.0')
                         return '-';
                     else
-                        return '$' + formatMoney(d.pagoCliente);
+                        return formatMoney(d.pagoCliente);
                 }
             },
             {
                 data: function (d) {
-                    return '$' + formatMoney(d.comisionTotal);
+                    return formatMoney(d.comisionTotal);
                 }
             },
             {
                 data: function (d) {
-                    return '$' + formatMoney(d.abonoDispersado);
+                    return formatMoney(d.abonoDispersado);
                 }
             },
             {
                 data: function (d) {
-                    return '$' + formatMoney(d.abonoPagado);
+                    return formatMoney(d.abonoPagado);
                 }
             },
             { data: 'lugar_prospeccion' }
@@ -274,7 +270,7 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
 }
 
 $(document).on("click", "#searchByDateRange", function () {
-    $('#reporteLotesPorComisionista').removeClass('hide');
+    $('#box-reporteLotesPorComisionista').removeClass('hide');
     if ($("#comisionista").val() != '' && $("#tipoUsuario").val() != '') {
         colocarValoresTotales('0.00', '0.00', '0.00');
         let finalBeginDate = $("#beginDate").val();
@@ -289,6 +285,7 @@ $(document).on("click", "#searchByDateRange", function () {
 });
 
 $(document).on("click", "#detailComisionistaBtn", function () {
+    $('#spiner-loader').removeClass('hide');
     $(".timelineR").html('');
     var idComisionista = `${$("#comisionista").val() == '' ? id_usuario_general : $("#comisionista").val()}`;
     let orderedArray = [];
@@ -349,11 +346,12 @@ $(document).on("click", "#detailComisionistaBtn", function () {
                 </div>`;
         $(".timelineR").append(html);
         $("#detailComisionistaModal").modal();
+        $('#spiner-loader').addClass('hide');
     }, 'json');
 });
 
 function colocarValoresTotales(total, totalAbonado, totalPagado) {
-    document.getElementById("txt_totalComision").textContent = '$' + formatMoney(total);
-    document.getElementById("txt_totalAbonado").textContent = '$' + formatMoney(totalAbonado);
-    document.getElementById("txt_totalPagado").textContent = '$' + formatMoney(totalPagado);
+    document.getElementById("txt_totalComision").textContent = formatMoney(total);
+    document.getElementById("txt_totalAbonado").textContent = formatMoney(totalAbonado);
+    document.getElementById("txt_totalPagado").textContent = formatMoney(totalPagado);
 }

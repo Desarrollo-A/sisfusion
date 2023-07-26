@@ -41,15 +41,28 @@
 <script src="<?=base_url()?>dist/js/demo.js"></script>
 
 <script src="<?=base_url()?>dist/js/alerts.js"></script>
-
 <script src="<?=base_url()?>dist/js/funciones-generales.js"></script>
 
 <script src="<?=base_url()?>dist/js/controllers/select2/select2.full.min.js"></script>
 <script src="<?=base_url()?>dist/js/fullcalendar/main.js"></script>
 <script src="<?=base_url()?>dist/js/fullcalendar/locales-all.js"></script>
+<script src="<?=base_url()?>dist/js/controllers/general/main_services.js"></script>
+
+
+<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="<?= base_url() ?>dist/js/moment.min.js"></script>
+
+
 <!-- <script async defer src="https://apis.google.com/js/api.js" onload="this.onload=function(){};handleClientLoad()" onreadystatechange="if (this.readyState === 'complete') this.onload()"></script> -->
 <!-- <script src="<?=base_url()?>dist/js/controllers/dashboard/agenda/side_calendar.js"></script> -->
 <!-- <script src="<?=base_url()?>dist/js/controllers/dashboard/agenda/googleCalendarConnection.js"></script> -->
+
 <script type="text/javascript">
     var url2 = "<?=base_url()?>index.php/";
     var general_base_url = "<?=base_url()?>";

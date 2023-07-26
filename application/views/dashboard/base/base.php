@@ -9,9 +9,8 @@
 <body id="mainDashboard">
     <div class="wrapper ">
         <?php
-            if(!isset($external)){
+            if(!ISSET($external))
                 $this->load->view('template/sidebar');
-            }
         ?>
 
         <div class="content boxContent pt-0">
@@ -51,18 +50,17 @@
 
                         echo $liVideo;
                     } ?>
-                           
                 </ul>
                 <div class="tab-content">
 
                 <?php 
-                     $div = '';
-                     foreach($sub_menu as $menu){
-                         $activeClass = $menu->active == 1 ? 'tab-pane active':'tab-pane';
-                         $div .= "<div class='$activeClass' id='$menu->id_content'>";
-                         $div .= "</div>";
-                     }      
-                     echo $div;
+                    $div = '';
+                    foreach($sub_menu as $menu){
+                        $activeClass = $menu->active == 1 ? 'tab-pane active':'tab-pane';
+                        $div .= "<div class='$activeClass' id='$menu->id_content'>";
+                        $div .= "</div>";
+                    }      
+                    echo $div;
                 ?>
                 </div>
             </div>
@@ -76,6 +74,8 @@
 <?php $this->load->view('dashboard/metricas/common_modals'); ?>
 
 <?php $this->load->view('template/footer');?>
+<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 <!--  Plugin for Date Time Picker and Full Calendar Plugin-->
 <script src="<?= base_url() ?>dist/js/moment.min.js"></script>
 <script src="<?= base_url() ?>dist/js/es.js"></script>
@@ -87,7 +87,7 @@
 <script>
     userType = <?= $this->session->userdata('id_rol') ?> ;
     idUser = <?= $this->session->userdata('id_usuario') ?>;
-    let idLider = <?= $this->session->userdata('id_lider') ?>;
-    let  base_url = "<?=base_url()?>";
+    var idLider = <?= $this->session->userdata('id_lider') ?>;
+    var  base_url = "<?=base_url()?>";
     googleCode = "<?php echo $googleCode?>";
 </script>

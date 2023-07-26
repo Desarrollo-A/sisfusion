@@ -115,7 +115,7 @@ function fillTable(fechaInicio, fechaFin) {
             { "data": "regional" },
             { "data": "regional2" },
             { "data": "fechaApartado" },
-            { "data": "fechaAlata" }
+            { "data": "fechaAlta" }
         ],
         ajax: {
             url: `${general_base_url}clientes/getLotesApartadosReubicacion`,

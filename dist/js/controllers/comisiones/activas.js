@@ -111,27 +111,15 @@ $(document).ready(function () {
                 }
                 return labelEstatus;
             }},
+            
             { data: function (d) {
-                var fechaSistema;
-                if(d.fecha_sistema <= '01 OCT 20' || d.fecha_sistema == null ) {
-                    fechaSistema ='<span class="label lbl-deepGray">Sin Definir</span>';
+                var ultima_dispersion;
+                if( d.ultima_dispersion == null ) {
+                    ultima_dispersion ='<span class="label lbl-deepGray">Sin Definir</span>';
                 }else {
-                    fechaSistema = '<br><span class="label lbl-lightBlue">'+d.fecha_sistema+'</span>';
+                    ultima_dispersion = '<br><span class="label lbl-lightBlue">'+d.ultima_dispersion+'</span>';
                 }
-                return fechaSistema;
-            }},
-            { data: function (d) {
-                var fechaNeodata;
-                var rescisionLote;
-                fechaNeodata = '<br><span class="label lbl-lightBlue">'+d.fecha_neodata+'</span>';
-                rescisionLote = '';
-                if(d.fecha_neodata <= '01 OCT 20' || d.fecha_neodata == null ) {
-                    fechaNeodata = '<span class="label lbl-deepGray">Sin Definir</span>';
-                } 
-                if (d.registro_comision == 8){
-                    rescisionLote = '<br><span class="label lbl-peach">Recisión Nueva Venta</span>';
-                }
-                return fechaNeodata+rescisionLote;
+                return ultima_dispersion;
             }},
             { data: function (d) {
                 var BtnStats = '';
@@ -158,7 +146,7 @@ $(document).ready(function () {
                             }
             
                             BtnStats += `
-                                    <button href="#" value="${d.idLote}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas btn-detener btn-warning" title="Detener"><i class="material-icons">block</i></button>
+                                    <button href="#" value="${d.idLote}" data-value="${d.nombreLote}" data-idLote="${d.idLote}" class="btn-data btn-blueMaderas btn-detener btn-warning" title="Detener"><i class="material-icons">block</i></button>
                                 `;
                             BtnStats += '<button href="#" value="'+d.idLote+'" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata" title="Verificar en NEODATA">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
                         }
@@ -213,6 +201,8 @@ $(document).ready(function () {
             const idLote = $(this).val();
             const nombreLote = $(this).attr("data-value");
             const statusLote = $(this).attr("data-statusLote");
+  
+            $('#idLote').val(idLote);
             $('#id-lote-detenido').val(idLote);
             $('#statusLote').val(statusLote);
             $("#detenciones-modal .modal-header").html("");

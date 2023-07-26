@@ -1,4 +1,5 @@
 <link href="<?= base_url() ?>dist/css/inicioDashboard.css" rel="stylesheet"/>
+
 <div class="container-fluid" >
     <div class="row" id="buttonsCoord">
         <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
@@ -73,7 +74,7 @@
                             <div class="container-fluid h-100">
                                 <div class="row h-100">
                                     <div class="col-md-12 h-30 pl-2 pt-2 pr-2 d-flex justify-between align-center cursor-point"
-                                         onClick="prospectsTable()" data-toggle="tooltip" data-placement="top" title="Más detalle">
+                                         onClick="prospectsTable()" data-toggle="tooltip" data-placement="top" title="MÁS DETALLE">
                                         <div class="w-40 d-flex align-center" >
                                             <span class="boxIcoProsp"><i class="fas fa-user"></i></span>
                                             <p class="m-0 overflow-text numberGraphic" id="numberGraphic" rel="tooltip" data-placement="left" title="">
@@ -291,4 +292,4 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/multi-select/0.9.12/js/jquery.multi-select.min.js"></script>s
+<script src="https://cdnjs.cloudflare.com/ajax/libs/multi-select/0.9.12/js/jquery.multi-select.min.js"></script>

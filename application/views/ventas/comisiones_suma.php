@@ -151,7 +151,7 @@
                                                     <input type="text" class="form-control" id="total" name="total" placeholder="Total" value="" required>
                                                 </div>
                                                 <div class="col-lg-3 form-group">
-                                                    <label for="formaPago">Forma de Pago:</label>
+                                                    <label for="formaPago">Forma de pago:</label>
                                                     <input type="text" class="form-control" placeholder="Forma de Pago" id="formaPago" name="formaPago" value="">
                                                 </div>
                                                 <div class="col-lg-3 form-group">
@@ -291,7 +291,7 @@
                                                         </p>
                                                     </div>
                                                     <?php if ($this->session->userdata('forma_pago') == 3) { ?>
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-12">
                                                             <p style="color:#0a548b;"><i class="fa fa-info-circle" aria-hidden="true"></i> Al monto mostrado habrá que descontar el <b>impuesto estatal</b> del
                                                                 <?php
                                                                 $sede = $this->session->userdata('id_sede');
@@ -305,35 +305,8 @@
                                                             </p>
                                                         </div>
                                                     <?php } else if ($this->session->userdata('forma_pago') == 4) { ?>
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-12 m-1">
                                                             <p style="color:#0a548b;"><i class="fa fa-info-circle" aria-hidden="true"></i> La cantidad mostrada es menos las deducciones aplicables para el régimen de <b>Remanente Distribuible.</b>
-                                                        </div>
-                                                    <?php } ?>
-                                                    <?php if (($this->session->userdata('forma_pago') == 2 ||
-                                                            $this->session->userdata('forma_pago') == 3 ||
-                                                            $this->session->userdata('forma_pago') == 4 ||
-                                                            $this->session->userdata('forma_pago') == 5) &&
-                                                        ($this->session->userdata('id_rol') == 3 ||
-                                                            $this->session->userdata('id_rol') == 7 ||
-                                                            $this->session->userdata('id_rol') == 9)
-                                                    ) { ?>
-
-                                                        <div class="col-md-12">
-                                                            <p class="card-title m-1">
-                                                                Para consultar más detalles sobre el uso y funcionalidad del apartado de comisiones podrás visualizarlo en el siguiente tutorial
-                                                                <?php if ($this->session->userdata('forma_pago') == 2) { ?>
-                                                                    <a href="https://youtu.be/YuZNsPk8-gY" target="_blank"><u>clic aquí</u></a>
-                                                                <?php } ?>
-                                                                <?php if ($this->session->userdata('forma_pago') == 3) { ?>
-                                                                    <a href="https://youtu.be/LmmIdipDSEA" target="_blank"><u>clic aquí</u></a>
-                                                                <?php } ?>
-                                                                <?php if ($this->session->userdata('forma_pago') == 4) { ?>
-                                                                    <a href="https://youtu.be/oRoJev_AZgs" target="_blank"><u>clic aquí</u></a>
-                                                                <?php } ?>
-                                                                <?php if ($this->session->userdata('forma_pago') == 5) { ?>
-                                                                    <a href="https://youtu.be/4t0MNA8HxZ4" target="_blank"><u>clic aquí</u></a>
-                                                                <?php } ?>
-                                                            </p>
                                                         </div>
                                                     <?php } ?>
 
@@ -517,17 +490,6 @@
     </div><!-- main-panel close -->
     <?php $this->load->view('template/footer'); ?>
     <!--DATATABLE BUTTONS DATA EXPORT-->
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <script type="text/javascript" src="<?= base_url() ?>dist/js/shadowbox.js"></script>
-    <script>
-        forma_pago = <?= $this->session->userdata('forma_pago') ?>;
-        Shadowbox.init();
-    </script>
     <script src="<?= base_url() ?>dist/js/controllers/suma/comisionesSuma.js"></script>
 </body>

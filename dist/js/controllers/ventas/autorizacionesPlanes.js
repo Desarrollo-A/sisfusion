@@ -471,7 +471,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         }, 'json');
     
         //Función para mandar parametros por defecto en filtros de fecha
-        setIniDatesXMonth("#fechainicio", "#fechafin");
+        setIniDatesXMonth("#beginDate", "#endDate");
         //Función para mandar estatus vacio por defecto 
         sinPlanesDiv();
     });
@@ -751,7 +751,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
     }
     
     async function GenerarCard(){
-        if($('#sede').val() != '' && $('#residencial').val() != '' && $('input[name="tipoLote"]').is(':checked') && $('#fechainicio').val() != '' && $('#fechafin').val() != '' && $('input[name="superficie"]').is(':checked') ){
+        if($('#sede').val() != '' && $('#residencial').val() != '' && $('input[name="tipoLote"]').is(':checked') && $('#beginDate').val() != '' && $('#endDate').val() != '' && $('input[name="superficie"]').is(':checked') ){
             var indexActual = document.getElementById('index');
             var indexNext = (document.getElementById('index').value - 1) + 2;
             indexActual.value = indexNext;
@@ -823,15 +823,15 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
     //Fn para consultar los planes de ventas existente según parametros seleccionados
     async function ConsultarPlanes(){
         $('#paquetes').val() == '' ? $('#spiner-loader').removeClass('hide'): '';
-        if($('#sede').val() != '' && $('#residencial').val() != '' && $('input[name="tipoLote"]').is(':checked') && $('#fechainicio').val() != '' && $('#fechafin').val() != '' && $('input[name="superficie"]').is(':checked') ){
+        if($('#sede').val() != '' && $('#residencial').val() != '' && $('input[name="tipoLote"]').is(':checked') && $('#beginDate').val() != '' && $('#endDate').val() != '' && $('input[name="superficie"]').is(':checked') ){
             let params = {
                 'sede':$('#sede').val(),
                 'residencial':$('#residencial').val(),
                 'superficie':$('#super').val(),
                 'fin':$('#fin').val(),
                 'tipolote':$('#tipo_l').val(),
-                'fechaInicio':$('#fechainicio').val(),
-                'fechaFin':$('#fechafin').val(),
+                'fechaInicio':$('#beginDate').val(),
+                'fechaFin':$('#endDate').val(),
                 'paquetes':$('#paquetes').val(),
                 'accion':$('#accion').val()};
             ClearAll2();
@@ -1123,8 +1123,8 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         if(origen == 1){
             $('#tipo_l').val(tipo_l);
         }
-        var dinicio = $('#fechainicio').val();
-        var dfin = $('#fechafin').val();
+        var dinicio = $('#beginDate').val();
+        var dfin = $('#endDate').val();
         var sede = $('#sede').val();
         var proyecto = $('#residencial').val();
         var containerTipoLote = document.querySelector('.boxTipoLote');

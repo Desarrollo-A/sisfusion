@@ -4,16 +4,19 @@ const excluir_column = ['MÁS', ''];
 let titulos_encabezado = [];
 let num_colum_encabezado = [];
 
+let forma_pago = 'forma_pago'
+Shadowbox.init();
+
 // Selección de CheckBox
 $(document).on("click", ".individualCheck", function() {
-    var totaPen = 0;
+    totaPen = 0;
     tabla_nuevas.$('input[type="checkbox"]').each(function () {
         let totalChecados = tabla_nuevas.$('input[type="checkbox"]:checked') ;
         let totalCheckbox = tabla_nuevas.$('input[type="checkbox"]');
         if(this.checked){
             tr = this.closest('tr');
             row = tabla_nuevas.row(tr).data();
-            totaPen += row.impuesto; 
+            totaPen += parseFloat(row.impuesto); 
         }
         // Al marcar todos los CheckBox Marca CB total
         if( totalChecados.length == totalCheckbox.length )
@@ -21,7 +24,7 @@ $(document).on("click", ".individualCheck", function() {
         else 
             $("#all").prop("checked", false); // si se desmarca un CB se desmarca CB total
     });
-    $("#totpagarPen").html('$ ' + formatMoney(totaPen));
+    $("#totpagarPen").html(formatMoney(totaPen));
 });
     // Función de selección total
 function selectAll(e) {
@@ -30,12 +33,12 @@ function selectAll(e) {
         $(tabla_nuevas.$('input[type="checkbox"]')).each(function (i, v) {
             tr = this.closest('tr');
             row = tabla_nuevas.row(tr).data();
-            tota2 += row.impuesto;
+            tota2 += parseFloat(row.impuesto);
             if(v.checked == false){
                 $(v).prop("checked", true);
             }
         }); 
-        $("#totpagarPen").html('$ ' + formatMoney(tota2));
+        $("#totpagarPen").html(formatMoney(tota2));
     }
     if(e.checked == false){
         $(tabla_nuevas.$('input[type="checkbox"]')).each(function (i, v) {
@@ -43,7 +46,7 @@ function selectAll(e) {
                 $(v).prop("checked", false);
             }
         }); 
-        $("#totpagarPen").html('$ ' + formatMoney(0));
+        $("#totpagarPen").html(formatMoney(0));
     }
 }
 
@@ -65,7 +68,7 @@ $(document).on("click", ".subir-archivo", function (e) {
         dataType: 'JSON',
         success: function (data) {
             $('#total-comision').html("");
-            $('#total-comision').append(`Total: $${formatMoney(data.total)}`);
+            $('#total-comision').append(`Total: ${formatMoney(data.total)}`);
             $('#addFileExtranjero').modal('show');
         }
     });
@@ -165,7 +168,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     $.each(data, function (i, v) {
                         total += parseFloat(v.total_comision);
                     });
-                    document.getElementById("myText_nuevas").textContent = '$' + formatMoney(total);
+                    document.getElementById("myText_nuevas").textContent = formatMoney(total);
                 }
             });
         }
@@ -180,7 +183,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
             total += parseFloat(v.total_comision);
         });
         var to = formatMoney(total);
-        document.getElementById("myText_nuevas").textContent = '$' + to;
+        document.getElementById("myText_nuevas").textContent = to;
     });
 
     tabla_nuevas = $("#tabla_nuevas_comisiones").DataTable({
@@ -211,11 +214,15 @@ $("#tabla_nuevas_comisiones").ready(function () {
                                     $('#spiner-loader').addClass('hide');
                                     $("#totpagarPen").html(formatMoney(0));
                                     $("#all").prop('checked', false);
-                                    var fecha = new Date();
                                     alerts.showNotification("top", "right", "Las comisiones se han enviado exitosamente a revisión.", "success");
                                     tabla_nuevas.ajax.reload();
                                     tabla_revision.ajax.reload();
-                                } else {
+                                } 
+                                else if (data == 2){
+                                    $('#spiner-loader').addClass('hide');
+                                    alerts.showNotification("top", "right", "No ha agregado un documento fiscal antes de solicitar su pago", "warning");
+                                }
+                                else{
                                     $('#spiner-loader').addClass('hide');
                                     alerts.showNotification("top", "right", "Error al enviar comisiones, intentalo más tarde", "danger");
                                 }
@@ -251,7 +258,16 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     }
                 }
             },
-        }],
+        },
+        {
+            text: '<i class="fas fa-play"></i>',
+            className: `btn btn-dt-youtube buttons-youtube`,
+            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Solicitudes SUMA podrás visualizarlo en el siguiente tutorial',
+            action: function (e, dt, button, config) {
+                window.open('https://youtu.be/6W5B97MTOCghttps://youtu.be/6W5B97MTOCg', '_blank');
+            }
+        }
+    ],
         pagingType: "full_numbers",
         fixedHeader: true,
         language: {
@@ -292,12 +308,12 @@ $("#tabla_nuevas_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$ ' + formatMoney(d.total_comision) + '</p>';
+                return '<p class="m-0"> ' + formatMoney(d.total_comision) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$ ' + formatMoney(d.impuesto) + '</p>';
+                return '<p class="m-0"> ' + formatMoney(d.impuesto) + '</p>';
             }
         },
         {
@@ -426,17 +442,6 @@ $("#tabla_nuevas_comisiones").ready(function () {
     });
 });
 
-$(document).on("click", ".individualCheck", function () {
-    tr = $(this).closest('tr');
-    var row = tabla_nuevas.row(tr).data();
-
-    if ($(this).prop('checked')) totaPen += parseFloat(row.impuesto);
-    else totaPen -= parseFloat(row.impuesto);
-
-    $("#totpagarPen").html('$ ' + formatMoney(totaPen));
-});
-/* End table nuevas */
-
 /* Table revisión */
 $("#tabla_revision_comisiones").ready(function () {
     titulos_encabezado.length = 0;
@@ -464,7 +469,7 @@ $("#tabla_revision_comisiones").ready(function () {
                 $.each(data, function (i, v) {
                     total += parseFloat(v.total_comision);
                 });
-                document.getElementById("myText_revision").textContent = '$' + formatMoney(total);
+                document.getElementById("myText_revision").textContent = formatMoney(total);
             }
         });
     });
@@ -475,7 +480,7 @@ $("#tabla_revision_comisiones").ready(function () {
             total += parseFloat(v.total_comision);
         });
         var to = formatMoney(total);
-        document.getElementById("myText_revision").textContent = '$' + to;
+        document.getElementById("myText_revision").textContent = to;
     });
 
     tabla_revision = $("#tabla_revision_comisiones").DataTable({
@@ -496,6 +501,14 @@ $("#tabla_revision_comisiones").ready(function () {
                     }
                 }
             },
+        },
+        {
+            text: '<i class="fas fa-play"></i>',
+            className: `btn btn-dt-youtube buttons-youtube`,
+            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Solicitudes SUMA podrás visualizarlo en el siguiente tutorial',
+            action: function (e, dt, button, config) {
+                window.open('https://youtu.be/6W5B97MTOCghttps://youtu.be/6W5B97MTOCg', '_blank');
+            }
         }],
         pagingType: "full_numbers",
         fixedHeader: true,
@@ -535,12 +548,12 @@ $("#tabla_revision_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$ ' + formatMoney(d.total_comision) + '</p>';
+                return '<p class="m-0"> ' + formatMoney(d.total_comision) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$ ' + formatMoney(d.impuesto) + '</p>';
+                return '<p class="m-0"> ' + formatMoney(d.impuesto) + '</p>';
             }
         },
         {
@@ -550,31 +563,7 @@ $("#tabla_revision_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                switch (d.id_forma_pago) {
-                    case '1': //SIN DEFINIR
-                    case 1: //SIN DEFINIr
-                        return '<p class="mb-1"><span class="label lbl-dark-blue">SIN DEFINIR FORMA DE PAGO </span><br><span class="label lbl-dark-cyan">REVISAR CON RH</span></p>';
-
-                    case '2': //FACTURA
-                    case 2: //FACTURA
-                        return '<p class="mb-1"><span class="label lbl-dark-blue">FACTURA </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">SUBIR XML</span></p>';
-
-                    case '3': //ASIMILADOS
-                    case 3: //ASIMILADOS
-                        return '<p class="mb-1"><span class="label lbl-dark-blue">ASIMILADOS </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">LISTA PARA APROBAR</span></p>';
-                    case '4': //RD
-                    case 4: //RD
-                        return '<p class="mb-1"><span class="label lbl-dark-blue">REMANENTE DIST. </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">LISTA PARA APROBAR</span></p>';
-
-                    case '5':
-                    case 5:
-                        return `
-                            <p class="mb-1">
-                                <span class="label lbl-dark-blue">FACTURA EXTRANJERO</span>
-                            </p>`;
-                    default:
-                        return '<p class="mb-1"><span class="label lbl-dark-blue">DOCUMENTACIÓN FALTANTE </span><br><span class="label lbl-dark-cyan">REVISAR CON RH</span></p>';
-                }
+                return '<p class="mb-0"><span class="label lbl-dark-blue">REVISIÓN CONTRALORÍA</span></p>';
             }
         },
         {
@@ -650,8 +639,7 @@ $("#tabla_pagadas_comisiones").ready(function () {
                 $.each(data, function (i, v) {
                     total += parseFloat(v.total_comision);
                 });
-                var to1 = formatMoney(total);
-                document.getElementById("myText_pagadas").textContent = '$' + formatMoney(total);
+                document.getElementById("myText_pagadas").textContent = formatMoney(total);
             }
         });
     });
@@ -662,7 +650,7 @@ $("#tabla_pagadas_comisiones").ready(function () {
             total += parseFloat(v.total_comision);
         });
         var to = formatMoney(total);
-        document.getElementById("myText_pagadas").textContent = '$' + to;
+        document.getElementById("myText_pagadas").textContent = to;
     });
 
     tabla_pagadas = $("#tabla_pagadas_comisiones").DataTable({
@@ -683,6 +671,14 @@ $("#tabla_pagadas_comisiones").ready(function () {
                     }
                 }
             },
+        },
+        {
+            text: '<i class="fas fa-play"></i>',
+            className: `btn btn-dt-youtube buttons-youtube`,
+            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Solicitudes SUMA podrás visualizarlo en el siguiente tutorial',
+            action: function (e, dt, button, config) {
+                window.open('https://youtu.be/6W5B97MTOCghttps://youtu.be/6W5B97MTOCg', '_blank');
+            }
         }],
         pagingType: "full_numbers",
         fixedHeader: true,
@@ -722,12 +718,12 @@ $("#tabla_pagadas_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$' + formatMoney(d.total_comision) + '</p>';
+                return '<p class="m-0">' + formatMoney(d.total_comision) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$' + formatMoney(d.impuesto) + '</p>';
+                return '<p class="m-0">' + formatMoney(d.impuesto) + '</p>';
             }
         },
         {
@@ -840,7 +836,7 @@ $("#tabla_pausadas_comisiones").ready(function () {
                     total += parseFloat(v.total_comision);
                 });
 
-                document.getElementById("myText_pausadas").textContent = '$' + formatMoney(total);
+                document.getElementById("myText_pausadas").textContent = formatMoney(total);
             }
         });
     });
@@ -851,7 +847,7 @@ $("#tabla_pausadas_comisiones").ready(function () {
             total += parseFloat(v.total_comision);
         });
         var to = formatMoney(total);
-        document.getElementById("myText_pausadas").textContent = '$' + to;
+        document.getElementById("myText_pausadas").textContent = to;
     });
 
     tabla_pausadas = $("#tabla_pausadas_comisiones").DataTable({
@@ -872,6 +868,14 @@ $("#tabla_pausadas_comisiones").ready(function () {
                     }
                 }
             },
+        },
+        {
+            text: '<i class="fas fa-play"></i>',
+            className: `btn btn-dt-youtube buttons-youtube`,
+            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Solicitudes SUMA podrás visualizarlo en el siguiente tutorial',
+            action: function (e, dt, button, config) {
+                window.open('https://youtu.be/6W5B97MTOCghttps://youtu.be/6W5B97MTOCg', '_blank');
+            }
         }],
         pagingType: "full_numbers",
         fixedHeader: true,
@@ -911,12 +915,12 @@ $("#tabla_pausadas_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$' + formatMoney(d.total_comision) + '</p>';
+                return '<p class="m-0">' + formatMoney(d.total_comision) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$' + formatMoney(d.impuesto) + '</p>';
+                return '<p class="m-0">' + formatMoney(d.impuesto) + '</p>';
             }
         },
         {
@@ -1353,7 +1357,7 @@ function sumCheck() {
         }
     }
     var myCommentsList = document.getElementById('sumacheck');
-    myCommentsList.innerHTML = 'Suma seleccionada: $ ' + formatMoney(suma.toFixed(3));
+    myCommentsList.innerHTML = 'Suma seleccionada: ' + formatMoney(suma.toFixed(3));
 }
 
 function disabled() {

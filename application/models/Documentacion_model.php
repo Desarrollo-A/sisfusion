@@ -68,9 +68,9 @@ class Documentacion_model extends CI_Model {
     function getReasonsForRejectionByDocument($id_documento, $tipo_proceso) {
         return $this->db->query("SELECT id_motivo, 
         CASE WHEN oxc.descripcion IS NULL THEN 'POR SOLICITUD' ELSE oxc.descripcion END nombre_documento, 
-        mr.motivo, mr.estatus,
-        CASE mr.estatus WHEN 1 THEN '<span class=\"label\" style=\"background:#81C784\">ACTIVO</span>'
-        ELSE '<span class=\"label\" style=\"background:#E57373\">INACTIVO</span>' END estatus_motivo
+        UPPER(mr.motivo) AS motivo, mr.estatus,
+        CASE mr.estatus WHEN 1 THEN '<span class=\"label lbl-green\">ACTIVO</span>'
+        ELSE '<span class=\"label lbl-warning\">INACTIVO</span>' END estatus_motivo
         FROM motivos_rechazo mr 
         LEFT JOIN documentacion_escrituracion oxc ON oxc.id_documento = mr.tipo_documento 
         WHERE mr.tipo_documento = $id_documento AND mr.tipo_proceso = $tipo_proceso");

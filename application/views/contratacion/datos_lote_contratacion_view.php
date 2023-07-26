@@ -23,10 +23,10 @@
                         <div role="tabpanel">
                             <ul class="nav nav-tabs" role="tablist" style="background: #003d82;">
                                 <li role="presentation" class="active">
-                                    <a href="#tabHistoriaContratacion" aria-controls="tabHistoriaContratacion" role="tab" data-toggle="tab">Historial contratación</a>
+                                    <a href="#tabHistoriaContratacion" aria-controls="tabHistoriaContratacion" role="tab" data-toggle="tab">Historial de contratación</a>
                                 </li>
                                 <li role="presentation">
-                                    <a href="#tabHistoriaLiberacion" aria-controls="tabHistoriaLiberacion" role="tab" data-toggle="tab">Historial liberación</a>
+                                    <a href="#tabHistoriaLiberacion" aria-controls="tabHistoriaLiberacion" role="tab" data-toggle="tab">Historial de liberación</a>
                                 </li>
                                 <li role="presentation">
                                     <a href="#tabVentasCompartidas" aria-controls="tabVentasCompartidas" role="tab" data-toggle="tab">Ventas compartidas</a>
@@ -131,7 +131,19 @@
                     <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon fa-2x" data-background-color="goldMaderas">
-                                <i class="fas fa-box"></i>
+                                <?php
+                                    if(in_array($this->session->userdata('id_rol'), array(7, 9, 3, 2, 1, 6, 5, 4))) {
+                                ?>
+                                    <a href="https://youtu.be/cfRUmAdELkU" class="align-center justify-center u2be" target="_blank">
+                                        <i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
+                                    </a>
+                                <?php
+                                    } else {
+                                ?>
+                                    <i class="fas fa-box"></i>
+                                <?php
+                                    }
+                                ?>
                             </div>
                             <div class="card-content">
                                 <h3 class="card-title center-align">Inventario lotes</h3>
@@ -158,46 +170,45 @@
                                     </div>
                                 </div>
                                 <div class="material-datatables">
-                                    <div class="form-group">
-                                        <table class="table-striped table-hover hide" id="tablaInventario" name="tablaInventario">
-                                            <thead>
-                                                <tr>
-                                                    <th>PROYECTO</th>
-                                                    <th>CONDOMINIO</th>
-                                                    <th>LOTE</th>
-                                                    <th>ID LOTE</th>
-                                                    <th>SUPERFICIE</th>
-                                                    <th>PRECIO DE LISTA</th>
-                                                    <th>TOTAL CON DESCUENTOS</th>
-                                                    <th>M2</th>
-                                                    <th>REFERENCIA</th>
-                                                    <th>MSI</th>
-                                                    <th>ASESOR</th>
-                                                    <th>COORDINADOR</th>
-                                                    <th>GERENTE</th>
-                                                    <th>SUBDIRECTOR</th>
-                                                    <th>DIRECTOR REGIONAL</th>
-                                                    <th>DIRECTOR REGIONAL 2</th>
-                                                    <th>ESTATUS</th>
-                                                    <th>APARTADO</th>
-                                                    <th>COMENTARIO</th>
-                                                    <th>LUGAR DE PROSPECCIÓN</th>
-                                                    <th>FECHA DE VALIDACIÓN ENGANCHE</th>
-                                                    <th>CANTIDAD DE ENGANCHE PAGADO</th>
-                                                    <th>ESTATUS DE LA CONTRATACIÓN</th>
-                                                    <th>CLIENTE</th>
-                                                    <th>COPROPIETARIO (S)</th>
-                                                    <th>COMENTARIO DE NEODATA</th>
-                                                    <th>FECHA DE APERTURA</th>
-                                                    <th>APARTADO DE REUBICACIÓN</th>
-                                                    <th>FECHA DE ALTA</th>
-                                                    <th>VENTA COMPARTIDA</th>
-                                                    <th>UBICACIÓN DE LA VENTA</th>
-                                                    <th>ACCIONES</th>
-                                                </tr>
-                                            </thead>
-                                        </table>
-                                    </div>
+                                    <table class="table-striped table-hover hide" id="tablaInventario" name="tablaInventario">
+                                        <thead>
+                                            <tr>
+                                                <th>PROYECTO</th>
+                                                <th>CONDOMINIO</th>
+                                                <th>LOTE</th>
+                                                <th>ID LOTE</th>
+                                                <th>SUPERFICIE</th>
+                                                <th>PRECIO DE LISTA</th>
+                                                <th>TOTAL CON DESCUENTOS</th>
+                                                <th>M2</th>
+                                                <th>REFERENCIA</th>
+                                                <th>MSI</th>
+                                                <th>ASESOR</th>
+                                                <th>COORDINADOR</th>
+                                                <th>GERENTE</th>
+                                                <th>SUBDIRECTOR</th>
+                                                <th>DIRECTOR REGIONAL</th>
+                                                <th>DIRECTOR REGIONAL 2</th>
+                                                <th>ESTATUS</th>
+                                                <th>ESTATUS DE CONTRATACIÓN</th>
+                                                <th>APARTADO</th>
+                                                <th>COMENTARIO</th>
+                                                <th>LUGAR DE PROSPECCIÓN</th>
+                                                <th>FECHA DE VALIDACIÓN ENGANCHE</th>
+                                                <th>CANTIDAD DE ENGANCHE PAGADO</th>
+                                                <th>ESTATUS DE LA CONTRATACIÓN</th>
+                                                <th>CLIENTE</th>
+                                                <th>COPROPIETARIO (S)</th>
+                                                <th>COMENTARIO DE NEODATA</th>
+                                                <th>FECHA DE APERTURA</th>
+                                                <th>APARTADO DE REUBICACIÓN</th>
+                                                <th>FECHA DE ALTA</th>
+                                                <th>VENTA COMPARTIDA</th>
+                                                <th>UBICACIÓN DE LA VENTA</th>
+                                                <th>ACCIONES</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -207,17 +218,8 @@
         </div>
         <?php $this->load->view('template/footer_legend');?>
     </div>
-    </div>
     <!--main-panel close-->
     <?php $this->load->view('template/footer');?>
-    <!--DATATABLE BUTTONS DATA EXPORT-->
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/contratacion/datos_lote_contratacion.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
 </body>

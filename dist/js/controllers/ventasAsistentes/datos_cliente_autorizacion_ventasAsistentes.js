@@ -146,10 +146,9 @@ $('#lote').change( function() {
 
 $("#tabla_autorizaciones_ventas tbody").on("click", ".agregar_autorizacion", function(){
 
-var tr = $(this).closest('tr');
-var row = tabla_autorizaciones.row( tr );
-
-idautopago = $(this).val();
+    var tr = $(this).closest('tr');
+    var row = tabla_autorizaciones.row( tr );
+    idautopago = $(this).val();
 
     $('#idCliente').val($(this).attr("data-id_cliente"));//data-id_cliente
     $('#idClienteHistorial').val($(this).attr("data-idclientehistorial"));//data-idclientehistorial
@@ -161,8 +160,9 @@ idautopago = $(this).val();
     $('#nombreCondominio').val($(this).attr("data-nomCondominio"));
 
     $("#modal_autorizacion .modal-body").html("");
-    $("#modal_autorizacion .modal-body").append('<div class="file-gph"><input class="d-none" type="file" id="expediente${i}" name="expediente${i}" onchange="changeName(this)"><input class="file-name" type="text" placeholder="No has seleccionada nada aún" readonly required><label class="upload-btn m-0" for="expediente${i}" readonly><span>Buscar</span><i class="fas fa-search text-right"></i></label></div>');
+    $("#modal_autorizacion .modal-body").append(`<div class="file-gph"><input class="d-none" type="file" id="expediente" name="expediente" onchange="changeName(this)"><input class="file-name" type="text" placeholder="No has seleccionado nada aún" readonly required><label class="upload-btn m-0" for="expediente" readonly><span>Buscar</span><i class="fas fa-search text-right"></i></label></div>`);
     $("#modal_autorizacion").modal();
+    
 });
 
 });
@@ -172,6 +172,42 @@ function changeName(e){
     let relatedTarget = $( e ).closest( '.file-gph' ).find( '.file-name' );
     relatedTarget[0].value = fileName;
 }
+
+
+$(document).on("submit", "#envioAutorizacion", function (e) { 
+    
+    e.preventDefault();
+    let data = new FormData($(this)[0]);
+    const uploadedDocument = $("#expediente")[0].files[0];
+
+    if (uploadedDocument == undefined) {
+        alerts.showNotification("top", "right", "Asegúrate de haber seleccionado un archivo antes de guardar.", "warning");
+        return;
+    }
+  
+    $.ajax({
+      url: "alta_autorizacionVentas",
+      data: data,
+      cache: false,
+      contentType: false,
+      processData: false,
+      type: "POST",
+      success: function (response) {
+        const res = JSON.parse(response);
+
+        $("#sendRequestButton").prop("disabled", false);
+
+        if (res.message === "OK") {
+            alerts.showNotification("top", "right", `El documento se ha subido con éxito.`, "success");
+            $("#modal_autorizacion").modal("hide");
+        }
+        
+      },error: function () {
+        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+      }
+    });
+});
+
 
 let titulos = [];
 $('#tabla_autorizaciones_ventas thead tr:eq(0) th').each(function (i) {
