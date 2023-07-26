@@ -7,11 +7,11 @@ class PaquetesCorrida extends CI_Controller
     public function __construct()
     {
       parent::__construct();
-      $this->load->model(array('PaquetesCorrida_model', 'asesor/Asesor_model', 'General_model'));
+      $this->load->model(array('PaquetesCorrida_model', 'asesor/Asesor_model', 'General_model', 'registrolote_modelo'));
       $this->load->library(array('session', 'form_validation', 'get_menu'));
       $this->load->helper(array('url', 'form'));
       $this->load->database('default');
-      $this->programacion = $this->load->database('default', TRUE);
+//      $this->programacion = $this->load->database('default', TRUE);
       $this->id_rol = $this->session->userdata('id_rol');
 
       $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
@@ -27,8 +27,9 @@ class PaquetesCorrida extends CI_Controller
  
     public function Planes()
     {
+      $datos["residencial"] = $this->registrolote_modelo->getResidencialQro();
       $this->load->view('template/header');
-      $this->load->view("ventas/Planes");
+      $this->load->view("ventas/Planes", $datos);
     }
     function getResidencialesList($id_sede)
     {
