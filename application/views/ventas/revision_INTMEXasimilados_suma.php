@@ -7,9 +7,8 @@
         $this->load->view('template/sidebar');
         ?>
 
-        <!-- Modals -->
         <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
@@ -27,7 +26,7 @@
                                         <div class="col-md-12">
                                             <div class="card card-plain">
                                                 <div class="card-content">
-                                                    <ul class="timeline timeline-simple" id="comments-list-asimilados"></ul>
+                                                    <ul class="timeline-3" id="comments-list-asimilados"></ul>
                                                 </div>
                                             </div>
                                         </div>
@@ -42,7 +41,6 @@
                 </div>
             </div>
         </div>
-
         <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -52,8 +50,6 @@
                 </div>
             </div>
         </div>
-
-
         <div class="modal fade modal-alertas" id="modal_refresh" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -63,7 +59,6 @@
                 </div>
             </div>
         </div>
-
         <div class="modal fade modal-alertas" id="modal_multiples" role="dialog">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
@@ -75,7 +70,6 @@
                 </div>
             </div>
         </div>
-
         <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -83,7 +77,6 @@
                 </div>
             </div>
         </div>
-
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -138,25 +131,23 @@
                                 </div>
                                 <div class="material-datatables">
                                     <div class="form-group">
-                                        <div class="table-responsive">
-                                            <table class="table-striped table-hover" id="tabla_asimilados" name="tabla_asimilados">
-                                                <thead>
-                                                    <tr>
-                                                        <th></th>
-                                                        <th>ID PAGO</th>
-                                                        <th>REFERENCIA</th>
-                                                        <th>PUESTO</th>
-                                                        <th>NOMBRE</th>
-                                                        <th>SEDE</th>
-                                                        <th>TOTAL COMISIÓN</th>
-                                                        <th>IMPUESTO</th>
-                                                        <th>% COMISIÓN</th>
-                                                        <th>ESTATUS</th>
-                                                        <th>MÁS</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
-                                        </div>
+                                        <table class="table-striped table-hover" id="tabla_asimilados" name="tabla_asimilados">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>ID PAGO</th>
+                                                    <th>REFERENCIA</th>
+                                                    <th>PUESTO</th>
+                                                    <th>NOMBRE</th>
+                                                    <th>SEDE</th>
+                                                    <th>TOTAL COMISIÓN</th>
+                                                    <th>IMPUESTO</th>
+                                                    <th>% COMISIÓN</th>
+                                                    <th>ESTATUS</th>
+                                                    <th>ACCIONES</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -167,15 +158,7 @@
         </div>
         <?php $this->load->view('template/footer_legend');?>
     </div>
-    </div><!--main-panel close-->
+    </div>
     <?php $this->load->view('template/footer');?>
-    <!--DATATABLE BUTTONS DATA EXPORT-->
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <script src="<?=base_url()?>dist/js/controllers/suma/revisionAsimiladosIntMex.js"></script>
 </body>

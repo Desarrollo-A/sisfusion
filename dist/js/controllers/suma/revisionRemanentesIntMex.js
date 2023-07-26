@@ -18,7 +18,6 @@ $(document).ready(function() {
         }
         $("#filtro33").selectpicker('refresh');
     }, 'json');
-
 });
 
 $('#filtro33').change(function(){
@@ -38,7 +37,7 @@ $('#filtro33').change(function(){
             $("#filtro44").selectpicker('refresh');
         }
     });
- });
+});
 
 $('#filtro44').change( function() {
     idRol = $('#filtro33').val();
@@ -49,14 +48,15 @@ $('#filtro44').change( function() {
     getRemanentesCommissions(idRol, idUsuario);
 });
 
+let titulos = [];
 $('#tabla_remanentes thead tr:eq(0) th').each( function (i) {
     if(i != 0){
         var title = $(this).text();
-        $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>');
+        titulos.push(title);
+        $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
         $('input', this).on('keyup change', function() {
             if (tabla_remanentes.column(i).search() !== this.value) {
                 tabla_remanentes.column(i).search(this.value).draw();
-
                 var total = 0;
                 var index = tabla_remanentes.rows({
                     selected: true,
@@ -66,7 +66,6 @@ $('#tabla_remanentes thead tr:eq(0) th').each( function (i) {
                 $.each(data, function(i, v) {
                     total += parseFloat(v.impuesto);
                 });
-
                 document.getElementById("totpagarRemanentes").textContent = '$' + formatMoney(total);
             }
         });
@@ -98,8 +97,9 @@ function getRemanentesCommissions(idRol, idUsuario){
 
     $("#tabla_remanentes").prop("hidden", false);
     tabla_remanentes = $("#tabla_remanentes").DataTable({
-        dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
-        width: 'auto',
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',
+        scrollX: true,
         buttons: [{
             text: '<div class="d-flex"><i class="fa fa-check "></i><p class="m-0 pl-1">Marcar como pagado</p></div>',
             action: function() {
@@ -235,13 +235,13 @@ function getRemanentesCommissions(idRol, idUsuario){
         {
             "width": "9%",
             "data": function(d) {
-                return '<p class="m-0">$' + formatMoney(d.total_comision) + '</p>';
+                return '<p class="m-0">' + formatMoney(d.total_comision) + '</p>';
             }
         },
         {
             "width": "9%",
             "data": function(d) {
-                return '<p class="m-0">$' + formatMoney(d.impuesto) + '</p>';
+                return '<p class="m-0">' + formatMoney(d.impuesto) + '</p>';
             }
         },
         {
@@ -298,19 +298,24 @@ function getRemanentesCommissions(idRol, idUsuario){
         }
     });
 
+    $('#tabla_remanentes').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
+    });
+
     $("#tabla_remanentes tbody").on("click", ".consultar_logs_remanentes", function(e){
         e.preventDefault();
         e.stopImmediatePropagation();
         id_pago = $(this).val();
         referencia = $(this).attr("data-referencia");
-    
-        $("#seeInformationModalAsimilados").modal();
+        $("#seeInformationModalRemanentes").modal();
         $("#nameLote").html("");
         $("#comments-list-remanentes").html("");
         $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DE LA REFERENCIA <b style="color:#39A1C0; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">'+referencia+'</b></h5></p>');
         $.getJSON("getHistorial/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
-                $("#comments-list-remanentes").append('<div class="col-lg-12"><p><i style="color:39A1C0;">'+v.comentario+'</i><br><b style="color:#39A1C0">'+v.fecha_movimiento+'</b><b style="color:gray;"> - '+v.modificado_por+'</b></p></div>');
+                $("#comments-list-remanentes").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>COMENTARIO: </small><b>' + v.comentario + '</b></a><br></div><div class="float-end text-right"><a>'+v.fecha_movimiento+'</a></div><div class="col-md-12"><p class="m-0"><small>MODIFICADO POR: </small><b> ' +v.modificado_por+ '</b></p></div><h6></h6></div></div></li>');
             });
         });
     });
@@ -367,7 +372,6 @@ $("#form_interes").submit( function(e) {
                     }, 3000);
                 }else{
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
-
                 }
             },error: function( ){
                 alert("ERROR EN EL SISTEMA");
@@ -390,8 +394,7 @@ $(document).on("click", ".Pagar", function() {
     $("#modal_multiples .modal-header").append('<h4 class="card-title"><b>Marcar pagadas</b></h4>');
     $("#modal_multiples .modal-footer").append(`<div class="row" id="borrarProyect"><center><input type="submit" disabled id="btn-aceptar" class="btn btn-primary" value="ACEPTAR"><button type="button" class="btn btn-danger" data-dismiss="modal" onclick="CloseModalDelete2()">CANCELAR</button></center></div>`);
 
-    $("#modal_multiples .modal-header").append(`<div class="row">
-    <div class="col-md-12"><select id="desarrolloSelect" name="desarrolloSelect" class="form-control desarrolloSelect ng-invalid ng-invalid-required" required data-live-search="true"></select></div></div>`);
+    $("#modal_multiples .modal-header").append(`<div class="row"><div class="col-md-12"><select id="desarrolloSelect" name="desarrolloSelect" class="form-control desarrolloSelect ng-invalid ng-invalid-required" required data-live-search="true"></select></div></div>`);
     $.post('getDesarrolloSelectINTMEX/'+3, function(data) {
         $("#desarrolloSelect").append($('<option disabled>').val("default").text("Seleccione una opción"))
         var len = data.length;

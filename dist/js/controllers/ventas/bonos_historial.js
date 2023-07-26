@@ -224,7 +224,7 @@ function getBonusCommissions(roles, users){
             estatus=d.est;
             color='4D7FA1';
         }
-        return '<span class="label label-danger" style="background:#'+color+'">'+estatus+'</span>';
+        return '<span class="label" style="background:#'+color+'">'+estatus+'</span>';
         }
     },
     {
@@ -330,7 +330,6 @@ function closeModalEng(){
     $("#modal_abono").modal('toggle');
 }
 
-// FUNCTION MORE
 $(window).resize(function(){
     tabla_bonos1.columns.adjust();
 });

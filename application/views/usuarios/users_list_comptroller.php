@@ -16,11 +16,9 @@
                     </div>
                     <div class="modal-body">
                         <div role="tabpanel">
-                            <!-- Nav tabs -->
                             <ul class="nav nav-tabs" role="tablist" style="background: #003d82;">
                                 <li role="presentation" class="active"><a href="#changelogUsersTab" aria-controls="changelogUsersTab" role="tab" data-toggle="tab">Bitácora de cambios</a></li>
                             </ul>
-                            <!-- Tab panes -->
                             <div class="tab-content">
                                 <div role="tabpanel" class="tab-pane active" id="changelogUsersTab">
                                     <div class="row">
@@ -57,8 +55,7 @@
                             <div class="col-sm-12">
                                 <div class="form-group select-is-empty div_payment_method m-0">
                                     <label class="control-label">Forma de pago (<span style="color: red;">*</span>)</label>
-                                    <select class="selectpicker select-gral m-0"id="payment_method" name="payment_method" data-style="btn btn-primary "data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
-                                    </select>
+                                    <select class="selectpicker select-gral m-0"id="payment_method" name="payment_method" data-style="btn btn-primary "data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                 </div>
                             </div>
                         </div>
@@ -72,33 +69,31 @@
         </div>
 
         <div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-                <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                                <i class="material-icons" onclick="cleanComments()">clear</i>
-                            </button>
-                            <h4 class="modal-title">Bitácora de cambios</h4>
-                        </div>
-                        <div class="modal-body">                      
-                                <div class="container-fluid p-0" id="changelogTab">
-                                    <div class="row">
-                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 scroll-styles" style="height: 350px; overflow: auto">
-                                            <ul class="timeline-3" id="changelog"></ul>
-                                        </div>
+            <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <i class="material-icons" onclick="cleanComments()">clear</i>
+                        </button>
+                        <h4 class="modal-title">Bitácora de cambios</h4>
+                    </div>
+                    <div class="modal-body">                      
+                            <div class="container-fluid p-0" id="changelogTab">
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 scroll-styles" style="height: 350px; overflow: auto">
+                                        <ul class="timeline-3" id="changelog"></ul>
                                     </div>
                                 </div>
-                            <input type="hidden" name="prospecto_lbl" id="prospecto_lbl">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanComments()">Cerrar</button>
-                        </div>
+                            </div>
+                        <input type="hidden" name="prospecto_lbl" id="prospecto_lbl">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanComments()">Cerrar</button>
                     </div>
                 </div>
+            </div>
         </div>
-        <!-- END MODALS -->
 
-        <!--TABLE-->
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
