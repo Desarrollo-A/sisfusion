@@ -3196,8 +3196,10 @@
 				}
 				else if ($id_usuario == 29 || $id_usuario == 7934) // MJ: FERNANDA MONJARAZ VE CINTHYA TANDAZO
 					$where = "(SELECT id_usuario FROM usuarios WHERE (id_rol = 3 AND id_sede IN ('$id_sede', '12')) OR id_usuario = 666)";
-				else if ($id_usuario == 4888 || $id_usuario == 546) // MJ: ADRIANA PEREZ Y DIRCE
-					$where = "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('$id_sede', '11'))";
+				else if ($id_usuario == 4888 || $id_usuario == 546){ // MJ: ADRIANA PEREZ Y DIRCE
+					$validacionDirce = $id_usuario == 546 ? 'OR id_usuario=681' : '';
+					$where = "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('$id_sede', '11') $validacionDirce )";
+				} 
 				else if ($id_usuario == 6831) // MJ: YARETZI MARICRUZ ROSALES HERNANDEZ VE ITZEL ALVAREZ MATA
 					$where = "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('$id_sede') OR id_usuario = 690)";
 				else

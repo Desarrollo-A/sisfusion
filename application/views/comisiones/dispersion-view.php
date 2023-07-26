@@ -25,7 +25,7 @@
         <div id="myModal" class="modal fade" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header alcenter-align">
+                    <div class="modal-header alcenter-align"> 
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                             <h4 class="modal-title  center-align" ><b>Reporte dispersión</b></h4>
                             <div class="row">
@@ -39,6 +39,47 @@
                             </div>
                         <div class="modal-body"></div>
                     <div class="modal-footer"><button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button></div>
+                </div>
+            </div>
+        </div>
+
+        
+        <div id="llenadoPlan" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header alcenter-align">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title  center-align" ><b>Llenado de Plan</b></h4>
+                    </div>
+                    <div class="modal-body">
+                        <label class="lbl-gray">Atención:</label>
+                        
+                        <span class="lbl-gray">La siguiente accion llenará los planes de venta de los lotes que cumplan con las condiciones. considere que esta acción solo se podra realizar cada 4 horas.</span>
+               
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-gral-data llenadoPlan" id="llenadoPlan" name="llenadoPlan" >Llenado de plan</button>
+                        <div class="spiner-loader hide" id="spiner-loader">
+                            <div class="backgroundLS">
+                                <div class="contentLS">
+                                    <div class="center-align">
+                                        Este proceso puede demorar algunos segundos
+                                    </div>
+                                    <div class="inner">
+                                        <div class="load-container load1">
+                                            <div class="loader">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -291,20 +332,21 @@
                                                     </p>
                                                 </div>
                                             </div>
-
-                                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 d-flex align-end text-center">
+                                            <br>
+                                            <br>
+                                            <br><br>
+                                            <div class="col-xs-4 col-sm-3 col-md-4 col-lg-4 d-flex align-end text-center">
+                                                    <a data-target="#llenadoPlan" data-toggle="modal" class="btn-gral-data" id="MainNavHelp" 
+                                                    href="#llenadoPlan" style="color:white"> Llenado de plan</a>
                                             </div>
-                                            <br>
-                                            <br>
-                                            <br>
-                                            <br>
-                                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 d-flex align-end text-center">
+                                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 d-flex align-end text-center">
                                                 <a data-target="#myModal" data-toggle="modal" class="btn-gral-data" id="MainNavHelp" 
                                                 href="#myModal" style="color:white"> Reporte dispersión</a>
                                             </div>
-                                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 d-flex align-end text-center">
+                                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 d-flex align-end text-center">
                                                 <button class="btn-gral-data" id="btn-detalle-plan" style="color:white; ">Planes</button>
                                             </div>
+                                            
                                         </div>
                                     </div>
                                 </div>
@@ -342,7 +384,7 @@
     </div>
     </div><!--main-panel close-->
     <?php $this->load->view('template/footer');?>
-
+    <script src="http://momentjs.com/downloads/moment.min.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/dispersion.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>

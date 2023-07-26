@@ -849,7 +849,7 @@
                                                     </li>
                                                 </div>
 
-                                                <div ng-if="day == 15">
+                                                <div ng-if="day == 15"  >
                                                     <div ng-if="descuento.apply == 0">
                                                         <li class="list-group-item">
                                                             <input type="checkbox" checklist-model="selected.descuentos"
@@ -2584,6 +2584,7 @@
 
                                         $scope.age_plan = <?php echo $data_corrida-> anio?>;
                                         $scope.fechaPM = ' <?php echo $data_corrida-> primer_mensualidad?>';
+                                        console.log('fecha_inicio_mensualidad', $scope.fechaPM);
 
                                         // $scope.age_plan = $scope.yearplan.yearplan;
                                         descuentosAplicados = [];
@@ -2765,13 +2766,14 @@
                                         console.log('Fecha Apartado ii:', '<?php echo $data_corrida->fechaApartado;?>');
 
 
-                                        let fechaApartadoProcess = ('<?php echo $data_corrida->fechaApartadoCF;?>' == 0) ? '<?php echo $data_corrida->fechaApartado;?>': '<?php echo $data_corrida->fechaApartadoCF;?>';
+                                        let fechaApartadoProcess = ('<?php echo $data_corrida->fechaApartadoCF;?>' == 0) ? ('<?php echo $data_corrida->fechaApartado;?>'==null ? 0 : '<?php echo $data_corrida->fechaApartado;?>'): '<?php echo $data_corrida->fechaApartadoCF;?>';
 
-                                        let fecha_pre = new Date(fechaApartadoProcess);
+                                        let fecha_pre = (fechaApartadoProcess==0) ? new Date() : new Date(fechaApartadoProcess);
                                         let dia_final = (fecha_pre.getDate() < 10 ) ? '0'+fecha_pre.getDate() : fecha_pre.getDate();
                                         let mes_final = ((fecha_pre.getMonth()-1) < 10) ? '0'+(fecha_pre.getMonth()-1) : (fecha_pre.getMonth()-1);
                                         let fecha_final = fecha_pre.getFullYear()+'-'+ mes_final +'-'+ dia_final;
                                         $scope.fechaApartado = fecha_pre;
+                                        console.log('te digo', $scope.fechaApartado);
 
 
                                         // $scope.fechaApartado = (fechaApartadoProcess != undefined || fechaApartadoProcess !='NULL' || fechaApartadoProcess !='') ? response.data[0].fechaApartado : fechaApartadoProcess;
@@ -3611,11 +3613,34 @@
 
                 //INICIO FECHA
                 var day;
-                var month = (new Date($scope.fechaApartado).getMonth() + 1);
-                var yearc = new Date($scope.fechaApartado).getFullYear();
+                var month;
+                var yearc;
+                if($scope.fechaApartado==null){
+                    day = new Date( '<?php echo $data_corrida->primer_mensualidad; ?>').getDate()+1;
+                    month = (new Date( '<?php echo $data_corrida->primer_mensualidad; ?>').getMonth() + 1);
+                    yearc = new Date( '<?php echo $data_corrida->primer_mensualidad; ?>').getFullYear();
+                    console.log('$scope.fechaApartado null', $scope.fechaApartado);
+                }else{
+
+                    <?php
+
+                        if($data_corrida->tipoPM == 3){?>
+                        day = new Date( '<?php echo $data_corrida->fechaInicioPM; ?>').getDate()+1;
+                        month = (new Date('<?php echo $data_corrida->fechaInicioPM; ?>').getMonth() + 1);
+                        yearc = new Date('<?php echo $data_corrida->fechaInicioPM; ?>').getFullYear();
+                        <?php }else{?>
+                        day = new Date('<?php echo $data_corrida->primer_mensualidad; ?>').getDate()+1;
+                        month = (new Date('<?php echo $data_corrida->primer_mensualidad; ?>').getMonth() + 1);
+                        yearc = new Date('<?php echo $data_corrida->primer_mensualidad; ?>').getFullYear();
+                        console.log(<?php echo $data_corrida->primer_mensualidad; ?>);
+                    <?php }?>
+                    
+
+                }
 
 
-                if (month == 1) {
+
+                /*if (month == 1) {
                     day = '0' + 1;
                 }
                 if (month == 2) {
@@ -3718,7 +3743,7 @@
                 }
                 if (month == 12) {
                     day = 17;
-                }
+                }*/
 
 
                 if ($scope.descDateEnero == 0 && $scope.descDateOctubre == 0 && $scope.descDateMayoMerida == 0 && $scope.descDateSeptiembreMerida == 0 && $scope.descDateEneroMerida == 0

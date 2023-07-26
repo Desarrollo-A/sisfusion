@@ -171,7 +171,8 @@
 												A través de este panel(Autorizaciones) podrás realizar lo siguiente;
 												consulta de las solicitudes autorizadas,
 												visualización de los estatus correspondientes por cada una de las autorizaciones en proceso,
-												descarga de información en formatos: PDF y XLSX.<br>
+												descarga de información en formatos: PDF y XLSX.
+												<br>
 											</p>
 											<table id="addExp" class="table-striped table-hover">
 												<thead>

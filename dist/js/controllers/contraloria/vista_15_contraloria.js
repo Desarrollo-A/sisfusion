@@ -267,11 +267,11 @@ $(document).on('click', '#save1', function (e) {
     dataExp1.append("comentario", comentario);
     dataExp1.append("fechaVenc", getInfo1[6]);
 
-    if(getInfo1[10] > 0 && getInfo1[10] !== 0){
+    if(getInfo1[10] !== '' && getInfo1[10].trim() !== ''){
         dataArcus = {
             "id": getInfo1[9], // idProspecto
             "propiedadRelacionada": getInfo1[5], // idLote
-            "montoDelNegocio": getInfo1[11], // totalNeto2
+            "montoDelNegocio": parseFloat(getInfo1[11]), // totalNeto2
             "fechaDeCompra": getInfo1[8], // fechaArcus
             "uid": getInfo1[10] // idArcus
         };
@@ -445,7 +445,6 @@ async function sendInfoArcus(dataArcus) {
             body: JSON.stringify(dataArcus)
         }
         const response = await fetch(`${general_base_url}Api/sendLeadInfoRecord`, requestArcus);
-        console.log(response);
         if (response.ok) {
             return response.json();
         }else{

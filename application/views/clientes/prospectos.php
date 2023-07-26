@@ -1,3 +1,4 @@
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <body>
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
@@ -42,6 +43,9 @@
                 margin: 0 3px;
             }
 
+            .u2be i{
+                color: red;
+            }
         </style>
 
         <div class="content">
@@ -53,7 +57,11 @@
                             <form id="my-form" name="my-form" method="post">
                                 <div class="wizard-header">
                                     <h3 class="wizard-title">Construye su perfil</h3>
-                                    <h5>Esta información nos permitirá saber más sobre él.</h5>
+                                    <h5>Esta información nos permitirá saber más sobre él.
+                                        <a href="https://youtu.be/pj80dBMw6y4" class="p-0 ml-3 d-flex align-center justify-center u2be" target="_blank">
+                                            <i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
+                                        </a>
+                                    </h5>
                                 </div>
                                 <div class="wizard-navigation" id="wiz-nav" name="wiz-nav">
                                     <ul>

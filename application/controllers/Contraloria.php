@@ -2350,7 +2350,7 @@ class Contraloria extends CI_Controller {
         switch ($typeTranscation){
             case 1://condominios
                 $longitud_array = count($arrayMsi);
-                $flag = 1;
+                $flag = 0;
                 $fecha_insercion = date('Y-m-d H:i:s');
                 foreach ($arrayMsi as $index => $result){
                     $insert_aut = array(
@@ -2367,7 +2367,6 @@ class Contraloria extends CI_Controller {
                         "modificado_por" => $this->session->userdata('id_usuario')
                     );
                     $resultado = $this->General_model->addRecord('autorizaciones_msi', $insert_aut);
-
                     //se inserta en el historial
                     $last_id = $this->db->insert_id(); //ultimo ID insertado //
                     $insert_ha = array(
@@ -2383,6 +2382,7 @@ class Contraloria extends CI_Controller {
                     $flag++;
 
                     if(($resultado && $resultado_historial) && $flag == $longitud_array){
+
                         $data['message'] = 'OK';
                         echo json_encode($data);
                     }
@@ -3119,5 +3119,11 @@ class Contraloria extends CI_Controller {
         }else {
             echo json_encode(0);
         }
+    }
+
+    public function getAllDsByLider()
+    {
+        $data = $this->Contraloria_model->getAllDsByLider($this->session->userdata('id_lider'));
+        echo json_encode($data);
     }
 }

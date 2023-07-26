@@ -255,7 +255,16 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     }
                 }
             },
-        }],
+        },
+        {
+            text: '<i class="fas fa-play"></i>',
+            className: `btn btn-dt-youtube buttons-youtube`,
+            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Solicitudes SUMA podrás visualizarlo en el siguiente tutorial',
+            action: function (e, dt, button, config) {
+                window.open('https://youtu.be/6W5B97MTOCghttps://youtu.be/6W5B97MTOCg', '_blank');
+            }
+        }
+    ],
         pagingType: "full_numbers",
         fixedHeader: true,
         language: {
@@ -489,6 +498,14 @@ $("#tabla_revision_comisiones").ready(function () {
                     }
                 }
             },
+        },
+        {
+            text: '<i class="fas fa-play"></i>',
+            className: `btn btn-dt-youtube buttons-youtube`,
+            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Solicitudes SUMA podrás visualizarlo en el siguiente tutorial',
+            action: function (e, dt, button, config) {
+                window.open('https://youtu.be/6W5B97MTOCghttps://youtu.be/6W5B97MTOCg', '_blank');
+            }
         }],
         pagingType: "full_numbers",
         fixedHeader: true,
@@ -675,6 +692,14 @@ $("#tabla_pagadas_comisiones").ready(function () {
                     }
                 }
             },
+        },
+        {
+            text: '<i class="fas fa-play"></i>',
+            className: `btn btn-dt-youtube buttons-youtube`,
+            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Solicitudes SUMA podrás visualizarlo en el siguiente tutorial',
+            action: function (e, dt, button, config) {
+                window.open('https://youtu.be/6W5B97MTOCghttps://youtu.be/6W5B97MTOCg', '_blank');
+            }
         }],
         pagingType: "full_numbers",
         fixedHeader: true,
@@ -864,6 +889,14 @@ $("#tabla_pausadas_comisiones").ready(function () {
                     }
                 }
             },
+        },
+        {
+            text: '<i class="fas fa-play"></i>',
+            className: `btn btn-dt-youtube buttons-youtube`,
+            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Solicitudes SUMA podrás visualizarlo en el siguiente tutorial',
+            action: function (e, dt, button, config) {
+                window.open('https://youtu.be/6W5B97MTOCghttps://youtu.be/6W5B97MTOCg', '_blank');
+            }
         }],
         pagingType: "full_numbers",
         fixedHeader: true,
