@@ -1743,7 +1743,7 @@ class Caja_outside extends CI_Controller {
         $query_superdicie = $getCurrentLoteStatus->sup < 200 ?  "AND sup < 200" : "AND sup >= 200";
         $desarrollos = $getCurrentLoteStatus->idResidencial;
         $getPaquetesDescuentos = $this->PaquetesCorrida_model->getPaquetes($query_tipo_lote,$query_superdicie,$desarrollos, $inicio, $fin);
-        if(count($getPaquetesDescuentos) == 0){
+        if(count($getPaquetesDescuentos) == 0 || $getPaquetesDescuentos[0]['id_paquete'] == NULL){
             $descuentos = NULL;
         }else{
             $descuentos = $getPaquetesDescuentos[0]['id_paquete'];

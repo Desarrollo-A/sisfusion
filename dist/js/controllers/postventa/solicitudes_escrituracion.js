@@ -80,7 +80,7 @@ sp = {
 sp2 = {
   initFormExtendedDatetimepickers: function () {
     $(".datepicker2").datetimepicker({
-      format: "DD/MM/YYYY LT",
+      format: "DD/MM/YYYY",
       icons: {
         time: "fa fa-clock-o",
         date: "fa fa-calendar",
@@ -1305,6 +1305,7 @@ function crearTablas(datosTablas,numTabla = ''){
     
                             case 1: 
                               if(d.creado_por == idUser){
+                                group_buttons +=`<button id="borrarSolicitud" data-idLote="${d.id_lote}" data-idCliente="${d.id_cliente}" data-banderaEscrituracion="${d.banderaEscrituracion}" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Borrar solicitud"><i class="fa fa-trash"></i></button>`;
                                 bandera_request = userType == 55 ? 1 : 0;
                               }
                             break;
@@ -1330,7 +1331,7 @@ function crearTablas(datosTablas,numTabla = ''){
                             break;
                             case 3:
                                 //ADMINISTRACIÓN Y COMITÉ TÉCNICO YA DIERON SU ESTATUS
-                                if (userType == 55 && d.creado_por == idUser && idUser == d.creado_por && d.bandera_admin == 1 && d.bandera_comite == 1) {
+                                if (userType == 55 && d.creado_por == idUser && d.bandera_admin == 1 && d.bandera_comite == 1) {
                                     /**COMITÉ Y ADMIN DIERON SU ESTATUS, ADMIN FUE EL ULTIMO EN DAR ESTATUS */
                                       // BOTON APROBAR    
                                     bandera_request = d.contrato == 1 ? 1 : 0;
@@ -1347,7 +1348,7 @@ function crearTablas(datosTablas,numTabla = ''){
                               break;
                             case 4:
                                 //ADMINISTRACIÓN Y COMITÉ TÉCNICO YA DIERON SU ESTATUS
-                                if (userType == 55 && d.creado_por == idUser && idUser == d.creado_por && d.bandera_admin == 1 && d.bandera_comite == 1) {      
+                                if (userType == 55 && d.creado_por == idUser && d.bandera_admin == 1 && d.bandera_comite == 1) {      
                                     /**COMITÉ Y ADMIN DIERON SU ESTATUS, COMITÉ FUE EL ULTIMO EN DAR ESTATUS */
                                     // BOTON APROBAR  
                                     group_buttons += `<button id="docs${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control-otros" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
@@ -1381,7 +1382,7 @@ function crearTablas(datosTablas,numTabla = ''){
                             case 6:
                             case 8:
                             case 10:
-                                if (userType == 55 && d.creado_por == idUser && idUser == d.creado_por && d.bandera_admin == 1 && d.bandera_comite == 1) {
+                                if (userType == 55 && d.creado_por == idUser && d.bandera_admin == 1 && d.bandera_comite == 1) {
                                     group_buttons += `<button id="docs${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control-otros" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
                                     group_buttons +=`<button id="informacion" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información Cliente"><i class="fa fa-file"></i></button>`;
                                     bandera_reject = d.id_estatus == 10 ? 1 : 0; 
@@ -1605,6 +1606,7 @@ function crearTablas(datosTablas,numTabla = ''){
                             break;
                             case 54: 
                                 if (d.creado_por == idUser) { 
+                                    numTable=3;
                                     bandera_request = 1;
                                 }
                             break;
@@ -1715,7 +1717,7 @@ var arrayTables = [
     
     $('#beginDate').val(finalBeginDate2);
     $('#endDate').val(finalEndDate2);
-    $('#startDate').val(finalBeginDate);
+    $('#startDate').val(finalBeginDate2);
     $('#finalDate').val(finalEndDate2);
 /*cuando se carga por primera vez, se mandan los valores en cero, para no filtar por mes*/
 console.log(arrayTables.length)

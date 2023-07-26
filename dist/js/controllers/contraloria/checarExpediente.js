@@ -74,7 +74,8 @@ function llenarClientes(idLote){
                     data = JSON.parse(data);
                     datosTable = data;
                     let datosSelect = data.data;
-                    let len = datosSelect.length;
+                   // let len = datosSelect.length;
+                    console.log(datosSelect)
 
                     $('#spiner-loader').addClass('hide');  
         },
@@ -390,7 +391,6 @@ $(document).on('click', '.editButton', function(){
 
 
 function RegresarExpo(datos){
-
     let idLote = $('#lotes').val();
     let accion = $('#accion').val();
     datos.append("idLote",idLote);
@@ -403,7 +403,6 @@ function RegresarExpo(datos){
         contentType: false, 
         success: function(data){
             data = JSON.parse(data);
-            $('#spiner-loader').addClass('hide');
             $('#tempIDC').val(0);
             $('#idLote').val(0);
             $('#accion').val(0);
@@ -415,6 +414,7 @@ function RegresarExpo(datos){
                 alerts.showNotification("top", "right", "Ha ocurrido un error intentalo nuevamente.", "danger");
             }
             $('#modalConfirmRegExp').modal('hide');
+            $('#spiner-loader').addClass('hide');
         },
         async:   false,
         error: function() {
@@ -428,6 +428,7 @@ function RegresarExpo(datos){
 
 $(document).on("submit", "#formEdit", function (e) {
     e.preventDefault();
+    $('#spiner-loader').removeClass('hide');
     let datos = new FormData($(this)[0]);
     RegresarExpo(datos);
 
@@ -448,6 +449,7 @@ $('#modalConfirmRegExp').modal();
 });
 
 $(document).on('click', '.acepta_regreso', function(e){
+    $('#spiner-loader').removeClass('hide');
         let idCliente = $('#tempIDC').val();
         datos = new FormData();
         datos.append("idCliente", idCliente);
