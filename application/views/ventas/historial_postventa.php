@@ -33,7 +33,6 @@
                                             <tr>
                                                 <th></th>
                                                 <th>ID LOTE</th>
-                                                <th>COMISIONISTA</th>
                                                 <th>PROYECTO</th>
                                                 <th>CONDOMINIO</th>
                                                 <th>LOTE</th>

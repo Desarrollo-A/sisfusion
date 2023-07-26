@@ -298,6 +298,7 @@ function fillTable(index_proyecto, index_condominio) {
             row.child(informacion_adicional).show();
             tr.addClass('shown');
             $(this).parent().find('.animacion').removeClass("fa-caret-right").addClass("fa-caret-down");
+            console.log('cambio');
         }
     });
 }

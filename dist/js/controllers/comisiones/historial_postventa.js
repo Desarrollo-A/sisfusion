@@ -79,11 +79,6 @@ $("#tabla_ingresar_9").ready(function () {
             },
             {
                 data: function (d) {
-                    return '' + d.comisionista + '';
-                }
-            },
-            {
-                data: function (d) {
                     return '' + d.proyecto + '';
                 }
             },
@@ -164,23 +159,28 @@ $("#tabla_ingresar_9").ready(function () {
     $('#tabla_ingresar_9 tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
         var row = tabla_1.row(tr);
+        var idLote = row.data().idLote;
+        console.log(idLote);
         if (row.child.isShown()) {
             row.child.hide();
             tr.removeClass('shown');
             $(this).parent().find('.animacion').removeClass("fas fa-chevron-up").addClass("fas fa-chevron-down");
         } else {
-            var informacion_adicional = '<div class="container subBoxDetail">';
-                informacion_adicional += '  <div class="row">';
-                informacion_adicional += '      <div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px">';
-                informacion_adicional += '          <label><b>Información adicional</b></label>';
-                informacion_adicional += '      </div>';
-                informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>PORCENTAJE A COMISIONAR: </b>'+ row.data().porcentaje_decimal +'%</label></div>';
-                informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>FECHA PAGO: </b> ' + row.data().fecha_creacion + '</label></div>';
-                informacion_adicional += '  </div>';
-                informacion_adicional += '</div>';
-            row.child(informacion_adicional).show();
-            tr.addClass('shown');
-            $(this).parent().find('.animacion').removeClass("fas fa-chevron-down").addClass("fas fa-chevron-up");
+            $.post( general_base_url + "Comisiones/comisionistasPorLote/"+idLote ,function( data ){
+                var informacion_adicional = '<div class="container subBoxDetail">';
+                    informacion_adicional += '  <div class="row">';
+                    informacion_adicional += '      <div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px">';
+                    informacion_adicional += '          <label><b>Información adicional</b></label>';
+                    informacion_adicional += '      </div>';
+                    informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Porcentaje a comisionar: </b>'+ row.data().porcentaje_decimal +'%</label></div>';
+                    informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Fecha de pago: </b> ' + row.data().fechaCreacion + '</label></div>';
+                    informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Comisionista: </b> ' + row.data().comisionista + '</label></div>';
+                    informacion_adicional += '  </div>';
+                    informacion_adicional += '</div>';
+                row.child(informacion_adicional).show();
+                tr.addClass('shown');
+                $(this).parent().find('.animacion').removeClass("fas fa-chevron-down").addClass("fas fa-chevron-up");
+            });
         }
     });
 });
