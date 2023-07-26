@@ -30,34 +30,32 @@ $(document).ready(function() {
 
 let titulos = [];
 $('#tabla-general thead tr:eq(0) th').each(function (i) {
-    if (i !== 15) {
-        const title = $(this).text();
-        titulos.push(title);
-        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
-        $('input', this).on('keyup change', function () {
-            if (tablaGeneral.column(i).search() !== this.value) {
-                tablaGeneral.column(i).search(this.value).draw();
-                let totalDescuento = 0;
-                let totalAbonado = 0;
-                let totalPendiente = 0;
-                const index = tablaGeneral.rows({selected: true, search: 'applied'}).indexes();
-                const data = tablaGeneral.rows(index).data();
-                $.each(data, function (i, v) {
-                    totalDescuento += parseFloat(v.monto);
-                    if (v.aply == null || v.aply <= 1) {
-                        totalAbonado += parseFloat(v.pagado_caja);
-                    } else {
-                        totalAbonado += parseFloat(v.aply);
-                    }
-                    totalPendiente += parseFloat(v.monto - v.aply);
-                });
-                const tipoDescuento = $('#tipo_descuento').val();
-                document.getElementById(getInputTotalId(tipoDescuento)).value = formatMoney(numberTwoDecimal(totalDescuento));
-                document.getElementById(getInputAbonadoId(tipoDescuento)).value = formatMoney(numberTwoDecimal(totalAbonado));
-                document.getElementById(getInputPendienteId(tipoDescuento)).value = formatMoney(numberTwoDecimal(totalPendiente));
-            }
-        });
-    }
+    const title = $(this).text();
+    titulos.push(title);
+    $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
+    $('input', this).on('keyup change', function () {
+        if (tablaGeneral.column(i).search() !== this.value) {
+            tablaGeneral.column(i).search(this.value).draw();
+            let totalDescuento = 0;
+            let totalAbonado = 0;
+            let totalPendiente = 0;
+            const index = tablaGeneral.rows({selected: true, search: 'applied'}).indexes();
+            const data = tablaGeneral.rows(index).data();
+            $.each(data, function (i, v) {
+                totalDescuento += parseFloat(v.monto);
+                if (v.aply == null || v.aply <= 1) {
+                    totalAbonado += parseFloat(v.pagado_caja);
+                } else {
+                    totalAbonado += parseFloat(v.aply);
+                }
+                totalPendiente += parseFloat(v.monto - v.aply);
+            });
+            const tipoDescuento = $('#tipo_descuento').val();
+            document.getElementById(getInputTotalId(tipoDescuento)).value = formatMoney(numberTwoDecimal(totalDescuento));
+            document.getElementById(getInputAbonadoId(tipoDescuento)).value = formatMoney(numberTwoDecimal(totalAbonado));
+            document.getElementById(getInputPendienteId(tipoDescuento)).value = formatMoney(numberTwoDecimal(totalPendiente));
+        }
+    });
 })
 
 $('#tabla-general').on('draw.dt', function() {
@@ -107,7 +105,7 @@ function loadTable(tipoDescuento) {
                 }
                 pendiente += parseFloat(v.monto - v.aply);
             });
-            document.getElementById(getInputTotalId(tipoDescuento)).value = formatMoney(numberTwoDecimal(total));
+            document.getElementById(getInputTotalId(tipoDescuento)).value = (formatMoney(numberTwoDecimal(total)));
             document.getElementById(getInputAbonadoId(tipoDescuento)).value = formatMoney(numberTwoDecimal(abonado));
             document.getElementById(getInputPendienteId(tipoDescuento)).value = formatMoney(numberTwoDecimal(pendiente));
         });
@@ -187,15 +185,15 @@ function loadTable(tipoDescuento) {
                     data: function (d) {
                         if (d.id_sede == 6){
                             if (d.abono_nuevo < 15000) {
-                                return `<p style="font-size: 1em; color:gray">${formatMoney(d.abono_nuevo)}</p>`;
+                                return `<p style="font-size: 1em; color:gray">${formatMoney(numberTwoDecimal(d.abono_nuevo))}</p>`;
                             } else {
-                                return `<p style="font-size: 1em; color:blue"><b>${formatMoney(d.abono_nuevo)}</b></p>`;
+                                return `<p style="font-size: 1em; color:blue"><b>${formatMoney(numberTwoDecimal(d.abono_nuevo))}</b></p>`;
                             }
                         }else{
                             if (d.abono_nuevo < 12500) {
                                 return `<p style="font-size: 1em; color:gray">${formatMoney(d.abono_nuevo)}</p>`;
                             } else {
-                                return `<p style="font-size: 1em; color:blue"><b>${formatMoney(d.abono_nuevo)}</b></p>`;
+                                return `<p style="font-size: 1em; color:blue"><b>${formatMoney(numberTwoDecimal(d.abono_nuevo))}</b></p>`;
                             }
                         }
                     }
@@ -203,16 +201,16 @@ function loadTable(tipoDescuento) {
                 {
                     // Descuento
                     data: function (d) {
-                        return `<p style="font-size: 1em"><b>${formatMoney(d.monto)}</b></p>`;
+                        return `<p style="font-size: 1em"><b>${formatMoney(numberTwoDecimal(d.monto))}</b></p>`;
                     }
                 },
                 {
                     // Aplicado
                     data: function (d) {
                         if (d.aply == null || d.aply <= 1) {
-                            return `<p style="font-size: 1em">${formatMoney(d.pagado_caja)}</p>`;
+                            return `<p style="font-size: 1em">${formatMoney(numberTwoDecimal(d.pagado_caja))}</p>`;
                         } else {
-                            return `<p style="font-size: 1em">${formatMoney(d.aply)}</p>`;
+                            return `<p style="font-size: 1em">${formatMoney(numberTwoDecimal(d.aply))}</p>`;
                         }
                     }
                 },
@@ -220,13 +218,13 @@ function loadTable(tipoDescuento) {
                     // Pendiente general
                     data: function (d) {
                         let pendiente = parseFloat(d.monto - d.aply);
-                        return `<p style="font-size: 1em; color:gray">${formatMoney(pendiente)}</p>`;
+                        return `<p style="font-size: 1em; color:gray">${formatMoney(numberTwoDecimal(pendiente))}</p>`;
                     }
                 },
                 {
                     // Pago mensual
                     data: function (d) {
-                        return `<p style="font-size: 1em">${formatMoney(d.pago_individual)}</p>`;
+                        return `<p style="font-size: 1em">${formatMoney(numberTwoDecimal(d.pago_individual))}</p>`;
                     }
                 },
                 {
@@ -283,9 +281,9 @@ function loadTable(tipoDescuento) {
                             OP2 = OK;
                         }
                         if (OP2 < 1) {
-                            return `<p style=" color:gray">${formatMoney(0)}</p>`;
+                            return `<p style=" color:gray">${formatMoney(numberTwoDecimal(0))}</p>`;
                         }
-                        return `<p style=" color:red"><b>${formatMoney(OP2)}</b></p>`;
+                        return `<p style=" color:red"><b>${formatMoney(numberTwoDecimal(OP2))}</b></p>`;
                     }
                 },
                 {
@@ -901,7 +899,7 @@ function loadTable(tipoDescuento) {
                                                     '</div>'+
                                                     '<input type="hidden" name="id_pago" value="' + row.data().id_usuario + '">'+
                                                     '<div class="row">'+
-                                                        '<div class="modal-footer">'+
+                                                        '<div class="modal-footer p-0">'+
                                                             '<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CANCELAR</button>'+
                                                             '<input type="submit" id="btn_topar" class="btn btn-primary" value="DETENER" style="margin: 15px;">'+
                                                         '</div>'+
@@ -1078,7 +1076,12 @@ $('#numero-pagos-update').change(function () {
 function getPagosByUser(user,mes, anio){
     document.getElementById('montito').innerHTML = 'Cargando...';
     $.getJSON("getPagosByUser/" + user+"/"+mes+"/"+anio).done(function (data) {
-        document.getElementById('montito').innerHTML = formatMoney(data[0].suma);
+        let suma = data[0].suma;
+        if(suma != null){
+        document.getElementById('montito').innerHTML = formatMoney(numberTwoDecimal(suma));
+        }
+        else
+        document.getElementById('montito').innerHTML = '$0.00';
     });
 }
 
@@ -1568,7 +1571,7 @@ $(document).on("click", ".uniAdd", function () {
     informacion_adicional += '      <div class="col-xs-4 col-sm-4 col-md-4">';
     informacion_adicional += '        <div class="form-group text-left">';
     informacion_adicional += '          <label class="control-label">Pagos repartidos (<span class="isRequired">*</span>)</label> ';
-    informacion_adicional += '          <select class="form-control mensualidadesC" name="mensualidadesC" id="mensualidadesC" title="SELECCIONA UNA OPCIÓN" required>';
+    informacion_adicional += '          <select class="selectpicker select-gral" name="mensualidadesC" id="mensualidadesC" title="SELECCIONA UNA OPCIÓN" required>';
     informacion_adicional += '              <option value="1">1</option>';
     informacion_adicional += '              <option value="2">2</option>';
     informacion_adicional += '              <option value="3">3</option>';

@@ -3,7 +3,6 @@ let evidenceTable;
 $(document).ready(function () {
     fillevidenceTable();
     getAsesoresList();
-
     $("input:file").on("change", function () {
         var target = $(this);
         var relatedTarget = target.siblings(".file-name");
@@ -14,16 +13,17 @@ $(document).ready(function () {
 });
 
 let titulosEvidence = [];
-$('#evidenceTable thead tr:eq(0) th').each(function (i) {
-    let title = $(this).text();
+$('#evidenceTable thead tr:eq(0) th').each( function (i) {
+    var title = $(this).text();
     titulosEvidence.push(title);
-    $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
-    $( 'input', this).on('keyup change', function () {
-        if ($('#evidenceTable').DataTable().column(i).search() !== this.value) {
+    $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
+    $( 'input', this ).on('keyup change', function () {
+        if ($('#evidenceTable').DataTable().column(i).search() !== this.value ) {
             $('#evidenceTable').DataTable().column(i).search(this.value).draw();
-        }   
+        }
     });
-});
+    $('[data-toggle="tooltip"]').tooltip();
+    })
 
 function fillevidenceTable() {
     evidenceTable = $("#evidenceTable").dataTable({
@@ -73,7 +73,7 @@ function fillevidenceTable() {
                     if(d.id_lote != null){
                         lote = d.id_lote;
                     }else{
-                        lote = "--";
+                        lote = "SIN ESPECIFICAR";
                     }
                     return lote;
                 }
@@ -84,7 +84,7 @@ function fillevidenceTable() {
                     if(d.nombreLote != null){
                         nombreLote = d.nombreLote;
                     }else{
-                        nombreLote = "--";
+                        nombreLote = "SIN ESPECIFICAR";
                     }
                     return nombreLote;
                 }
@@ -95,7 +95,7 @@ function fillevidenceTable() {
                     if(d.nombreCliente != "  "){
                         cliente = d.nombreCliente;
                     }else{
-                        cliente = "--";
+                        cliente = "SIN ESPECIFICAR";
                     }
                     return cliente;
                 }
@@ -106,7 +106,7 @@ function fillevidenceTable() {
                     if(d.fechaApartado != null){
                         fecha_apartado = d.fechaApartado;
                     }else{
-                        fecha_apartado = "--";
+                        fecha_apartado = "SIN ESPECIFICAR";
                     }
                     return fecha_apartado;
                 }
@@ -145,10 +145,9 @@ function fillevidenceTable() {
                 }
             },
             {
-                
                 data: function (d) {
                     let btns = `<div class="d-flex align-center justify-center">`;
-                    btns += `<button class="btn-data btn-gray reviewEvidence" data-lote ="${d.nombreLote}" data-type="${d.type}" data-nombre-archivo="${d.nombre_archivo}" data-toggle="tooltip"  data-placement="top" title="VER EVIDENCIA"></body><i class="fas fa-eye"></i></button>`;
+                    btns += `<button class="btn-data btn-blueMaderas reviewEvidence" data-lote ="${d.nombreLote}" data-type="${d.type}" data-nombre-archivo="${d.nombre_archivo}" data-toggle="tooltip"  data-placement="top" title="VER EVIDENCIA"></body><i class="fas fa-eye"></i></button>`;
                     if (d.currentRol == 3 && d.type == 1)
                         btns += `<button class="btn-data btn-green setToken" data-token-name="${d.token}" data-toggle="tooltip"  data-placement="top" title="COPIAR TOKEN"><i class="fas fa-copy"></i></button>`;
                     if (d.currentRol != 3){
@@ -172,16 +171,15 @@ function fillevidenceTable() {
             type: "POST",
             cache: false
         }
-        
     });
-
-   
 }
 
-$('#evidenceTable').on('draw.dt', function() {
-    $('[data-toggle="tooltip"]').tooltip({
-        trigger: "hover"
-    });
+$('body').tooltip({
+    selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
+    trigger: 'hover',
+    container: 'body'
+}).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
+    $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
 });
 
 $(document).on("click", "#generateToken", function () {

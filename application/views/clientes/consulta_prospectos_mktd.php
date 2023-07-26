@@ -2,9 +2,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <body>
 <div class="wrapper">
-
 	<?php $this->load->view('template/sidebar'); ?>
-
     <div class="content boxContent">
         <div class="container-fluid">
             <div class="row">
@@ -24,26 +22,14 @@
                                         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <div class="form-group label-floating select-is-empty">
                                                 <label class="control-label">Subdirector</label>
-                                                <select name="subDir" id="subDir"
-                                                        class="selectpicker select-gral m-0"
-                                                        data-show-subtext="true"
-                                                        data-live-search="true"
-                                                        data-style="btn"
-                                                        title="Selecciona subdirector" data-size="7" required>
-                                                </select>
+                                                <select name="subDir" id="subDir" class="selectpicker select-gral m-0" data-show-subtext="true" data-live-search="true" data-style="btn" title="Selecciona subdirector" data-size="7" required></select>
                                             </div>
                                         </div>
                                     <?php } ?>
                                     <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                         <div class="form-group label-floating select-is-empty">
                                             <label class="control-label">Gerente</label>
-                                            <select name="gerente" id="gerente"
-                                                    class="selectpicker select-gral m-0"
-                                                    data-show-subtext="true"
-                                                    data-live-search="true"
-                                                    data-style="btn"
-                                                    title="Selecciona gerente" data-size="7" required>
-                                            </select>
+                                            <select name="gerente" id="gerente" class="selectpicker select-gral m-0" data-show-subtext="true" data-live-search="true" data-style="btn" title="Selecciona gerente" data-size="7" required></select>
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4" id="filter_date">
@@ -88,101 +74,16 @@
         </div>
     </div>
 
-	<div class="content hide">
-		<div class="container-fluid">
-			<div class="row">
-				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-					<div class="block full">
-						<div class="row">
-							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-								<div class="card">
-									<div class="card-header card-header-icon" data-background-color="goldMaderas">
-										<i class="material-icons">list</i>
-									</div>
-									<div class="card-content">
-										<div class="row">
-											<h4 class="card-title">Listado general de prospectos</h4>
-											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-												<?php if($this->session->userdata('id_rol') != 19){?>
-												<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-													<select name="subDir" id="subDir" class="selectpicker"
-															data-style="btn " title="SUBDIRECTOR" data-size="7">
-													</select>
-												</div>
-												<?php } ?>
-												<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-													<select name="gerente" id="gerente" class="selectpicker"
-															data-style="btn " title="GERENTE" data-size="7">
-													</select>
-												</div>
-												<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-													<label id="external_filter_container18">Búsqueda por Fecha</label>
-													<br>
-													<div id="external_filter_container7"></div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-md-12">
-								<div class="card">
-									
-									<div class="card-content">
-										<div class="row">
-											<div class="table-responsive">
-												<div class="material-datatables">
-													<table id="prospects-datatable_dir" class="table table-striped table-no-bordered table-hover" >
-														<thead>
-														<tr>
-															<th>Estado</th>
-															<th>Etapa</th>
-															<th>Nombre</th>
-															<th>Asesor</th>
-															<th>Gerente</th>
-															<th>Subdirector</th>
-															<th>Creación</th>
-															<th>Vencimiento</th>
-															<th>Acciones</th>
-														</tr>
-														</thead>
-														<tbody>
-														</tbody>
-													</table>
-													<?php include 'common_modals.php' ?>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+	
 	<?php $this->load->view('template/footer_legend');?>
 </div>
-</div><!--main-panel close-->
 </body>
 <?php $this->load->view('template/footer');?>
-<!--DATATABLE BUTTONS DATA EXPORT-->
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-<!--<script src="--><?//=base_url()?><!--dist/js/jquery.validate.js"></script>-->
+
 <script src="<?= base_url() ?>dist/js/es.js"></script>
-<!-- DateTimePicker Plugin -->
 <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
-<!--  Full Calendar Plugin    -->
 <script src="<?= base_url() ?>dist/js/fullcalendar.min.js"></script>
-<!-- MODAL WIZARD -->
 <script src="<?=base_url()?>dist/js/modal-steps.min.js"></script>
-<!-- <script src="<?=base_url()?>dist/js/controllers/general-1.1.0.js"></script> -->
+<script src="<?=base_url()?>dist/js/controllers/general-1.1.0.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/clientes/consultaProspectosMKTD.js"></script>
 </html>

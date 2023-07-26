@@ -57,7 +57,7 @@
                         </div>
                         <div class="card-content">
                             <div class="encabezadoBox">
-                                <h3 class="card-title center-align">Reporte pagos</h3>
+                                <h3 class="card-title center-align">Reporte de pagos</h3>
                             </div>
                             <div class="toolbar">
                                 <div class="row">
@@ -100,7 +100,7 @@
                                                 <th>PUESTO</th>
                                                 <th>DETALLE</th>
                                                 <th>ESTATUS</th>
-                                                <th>MÁS</th>
+                                                <th>ACCIONES</th>
                                             </tr>
                                         </thead>
                                     </table>

@@ -3541,6 +3541,9 @@ echo json_encode($respuesta);
 
    public function getDatosHistorialPostventa()
   {
+    ini_set('max_execution_time', "900");
+    set_time_limit(900);
+    ini_set('memory_limit','2048M');
    $res["data"] = $this->Comisiones_model->getDatosHistorialPostventa()->result_array();
 
     echo json_encode($res);
