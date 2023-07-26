@@ -293,6 +293,7 @@ $tv                 : "(min-width: 1280px)";
     background-color: #f4433618 !important;
     border-radius: 27px;
     margin: 0;
+    color: $redLight !important;
 }
 .color-letter{
     color: $greenExcel;
@@ -301,6 +302,7 @@ $tv                 : "(min-width: 1280px)";
     color: $redLight;
 }
 .buttons-pdf:hover {
+    color: $white !important;
     background-color: $redLight !important;
 }
 .buttons-pdf:hover i {
