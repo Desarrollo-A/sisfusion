@@ -1400,6 +1400,10 @@ class Postventa extends CI_Controller
                                                     ' . ($data->cliente_anterior == 1 ? 'Si':'NO') . '
                                                 </td>
                                             <td style="font-size: 1em;">
+                                                <b>Valor de operación de contrato:</b><br>
+                                                ' .$data->valor_contrato. '
+                                            </td>
+                                             <td style="font-size: 1em;">
                                                 <b>Valor a escriturar:</b><br>
                                                 ' .$data->valor_escriturar. '
                                             </td>
@@ -1708,9 +1712,9 @@ class Postventa extends CI_Controller
             $a = 0;
             $dias = $data[$i]['dias_vencimiento'];
             $fechados = explode(" ",$data[$i]['fechados']);
-            $data[$i]['fecha_creacion'] = date("Y-m-d",strtotime($fechados[0]."+ ".$dias." days")) . " ".$fechados[1]; ; 
+            $data[$i]['fecha_creacion'] = date("Y-m-d",strtotime($fechados[0]."+ ".$dias." days")) . " ".$fechados[1];  
             
-            if ( $data[$i]['tiempo'] != 0 && $data[$i]['tiempo'] != null){
+            if ($data[$i]['tiempo'] != 0 && $data[$i]['tiempo'] != null){
                 $startDate = $data[$i]['fecha_creacion'];
                 $endDate = ( $i+1 < count($data) ) ? $data[$i+1]['fecha_creacion'] : date('Y-m-d h:i:s');
 
@@ -2333,7 +2337,7 @@ function saveNotaria(){
                     ],
                     [
                         "title" => 'Referencia',
-                        "data" => 'referencia'
+                        "data" => 'referencia' 
                     ],
                     [
                         "title" => 'Lote',
@@ -2460,6 +2464,18 @@ function saveNotaria(){
                 $data[$i]['atrasado'] = "EN TIEMPO";
                 $data[$i]['diferencia'] = 0;
             }
+
+            if($data[$i]['nombreLote'] == null){
+                $data[$i]['nombre_a_escriturar'] = 'SOLICITUD ELIMINADA';
+                $data[$i]['nombreLote'] =  'SOLICITUD ELIMINADA';
+                $data[$i]['nombreCondominio'] =  'SOLICITUD ELIMINADA';
+                $data[$i]['nombreResidencial'] =  'SOLICITUD ELIMINADA';
+                $data[$i]['nombre'] =  'SOLICITUD ELIMINADA';
+                $data[$i]['estatus'] =  'SOLICITUD ELIMINADA';
+                $data[$i]['area'] =  'SOLICITUD ELIMINADA';
+                $data[$i]['dias_vencimiento'] =  0;
+            }
+            
         }
 
         $array = [
