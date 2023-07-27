@@ -631,7 +631,7 @@ class Usuarios_modelo extends CI_Model
     }
 
     public function getChangeLogUsers($id_usuario){
-        $query =  $this->db->query("SELECT fecha_creacion, creador, col_afect,(
+        $query =  $this->db->query("SELECT CONVERT(varchar, fecha_creacion, 120) AS fecha_creacion, creador, col_afect,(
                     CASE 
                         WHEN col_afect = 'usuario' OR col_afect = 'id_lider' THEN (SELECT CONCAT( apellido_paterno,' ',apellido_materno,' ',nombre) as nombre FROM usuarios WHERE id_usuario = nuevo)
                         WHEN col_afect = 'personalidad_juridica' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 10)
@@ -653,7 +653,7 @@ class Usuarios_modelo extends CI_Model
                     END) AS anterior
                     FROM auditoria
                     INNER JOIN (SELECT id_usuario AS id_creador, CONCAT(nombre, ' ', apellido_paterno,' ',apellido_materno) AS creador  FROM usuarios) AS creadores ON CAST(id_creador AS VARCHAR(45)) = CAST(creado_por AS VARCHAR(45))
-                    WHERE id_parametro = $id_usuario AND tabla = 'usuarios' ORDER BY fec_creacion DESC");
+                    WHERE id_parametro = $id_usuario AND tabla = 'usuarios' ORDER BY fecha_creacion DESC");
         return $query->result_array();
     }
 
@@ -730,137 +730,6 @@ class Usuarios_modelo extends CI_Model
         return   $row;
     }
 
-    public function UpdateProspect($id_usuario, $id_lider, $rol_seleccionado, $rol_actual, $sedeCH, $sucursal, $datosCH)
-    {
-        $resultado = 0;
-        //$url='https://prueba.gphsis.com/RHCV/index.php/WS/movimiento_interno_asesor';
-        //RUTA DE PRUEBAS
-        $url = "https://prueba.gphsis.com/RHCV/index.php/WS/movimiento_interno_asesor_v2";
-        //RUTA DE PRODUCCIÓN
-        //$url="https://rh.gphsis.com/index.php/WS/movimiento_interno_asesor";
-        if ($rol_seleccionado == $rol_actual) {
-            //ENTONCES NO HUBO UN CAMBIO DE ROL
-            $query = $this->db->query("SELECT * FROM usuarios WHERE id_usuario = " . $id_usuario . " and id_lider=" . $id_lider . " ")->result_array();
-            if (count($query) == 0) {
-                //ENTONCES SI CAMBIO DE LIDER
-                
-                $getLider = $this->db->query("SELECT u.id_usuario as lider,u2.id_usuario as lider2 FROM usuarios u inner join usuarios u2 on u.id_lider=u2.id_usuario WHERE u.id_usuario = " . $id_lider . " ")->result_array();
-                if ($rol_actual == 7) {
-                    //ASESOR, CONSULTAR LOS PROSPECTOS QUE TIENE ASIGNADOS DE TIPO 0 
-
-                    $datosCH['dcontrato']['idpuesto'] = 7;
-                    $datosCH['dcontrato']['idgerente'] = $getLider[0]['lider2'];
-                    $datosCH['dcontrato']['idcoordinador'] = $id_lider;
-                    $datosCH['dcontrato']['idsedech'] = $sedeCH;
-                    $datosCH['dcontrato']['idsucursalch'] = $sucursal;
-
-
-                    $resultado = $this->Usuarios_modelo->ServicePostCH($url, $datosCH);
-                } else if ($rol_actual == 9) {
-;
-                    $resultado = $this->Usuarios_modelo->ServicePostCH($url, $datosCH);
-                    $datosCH['dcontrato']['idpuesto'] = 9;
-                    $datosCH['dcontrato']['idgerente'] = $id_lider;
-                    $datosCH['dcontrato']['idcoordinador'] = $id_usuario;
-                    $datosCH['dcontrato']['idsedech'] = $sedeCH;
-                    $datosCH['dcontrato']['idsucursalch'] = $sucursal;
-                } else if ($rol_actual == 3) {
-
-                    $datosCH['dcontrato']['idpuesto'] = 3;
-                    $datosCH['dcontrato']['idgerente'] = $id_usuario;
-                    $datosCH['dcontrato']['idcoordinador'] = $id_usuario;
-                    $datosCH['dcontrato']['idsedech'] = $sedeCH;
-                    $datosCH['dcontrato']['idsucursalch'] = $sucursal;
-                    $resultado = $this->Usuarios_modelo->ServicePostCH($url, $datosCH);
-                }
-            } else {
-                //NO CAMBIO DE LIDER Y TERMINA EL PROCESO, (SOLO SE ACTUALIZA SU INFO)
-                $getLider = $this->db->query("SELECT u.id_usuario as lider,u2.id_usuario as lider2 FROM usuarios u inner join usuarios u2 on u.id_lider=u2.id_usuario WHERE u.id_usuario = " . $id_lider . " ")->result_array();
-                $datosCH['dcontrato']['idpuesto'] = $rol_actual;
-                $datosCH['dcontrato']['idgerente'] = $getLider[0]['lider2'];
-                $datosCH['dcontrato']['idcoordinador'] = $id_lider;
-                $datosCH['dcontrato']['idsedech'] = $sedeCH;
-                $datosCH['dcontrato']['idsucursalch'] = $sucursal;
-                $resultado = $this->Usuarios_modelo->ServicePostCH($url, $datosCH);
-            }
-        } else {
-            //$resultado=false;
-            $getLider = $this->db->query("SELECT u.id_usuario as lider,u2.id_usuario as lider2 FROM usuarios u inner join usuarios u2 on u.id_lider=u2.id_usuario WHERE u.id_usuario = " . $id_lider . " ")->result_array();
-            //SI HUBO UN CAMBIO DE ROL
-            if ($rol_actual == 7 && $rol_seleccionado == 9) {
-                //SE CAMBIO DE ASESOR A COORDINADOR
-                $datosCH['dcontrato']['idpuesto'] = 9;
-                $datosCH['dcontrato']['idgerente'] = $id_lider;
-                $datosCH['dcontrato']['idcoordinador'] = $id_usuario;
-                $datosCH['dcontrato']['idsedech'] = $sedeCH;
-                $datosCH['dcontrato']['idsucursalch'] = $sucursal;
-
-                $resultado = $this->Usuarios_modelo->ServicePostCH($url, $datosCH);
-            } else if ($rol_actual == 7 && $rol_seleccionado == 3) {
-                //SE CAMBIO DE ASESOR A GERENTE
-                $datosCH['dcontrato']['idpuesto'] = 3;
-                $datosCH['dcontrato']['idgerente'] = $id_usuario;
-                $datosCH['dcontrato']['idcoordinador'] = $id_usuario;
-                $datosCH['dcontrato']['idsedech'] = $sedeCH;
-                $datosCH['dcontrato']['idsucursalch'] = $sucursal;
-
-                $resultado = $this->Usuarios_modelo->ServicePostCH($url, $datosCH);
-            } else if ($rol_actual == 9 && $rol_seleccionado == 7) {
-                //SE CAMBIO DE COORDINADOR A ASESOR
-                $datosCH['dcontrato']['idpuesto'] = 7;
-                $datosCH['dcontrato']['idgerente'] = $getLider[0]['lider2'];
-                $datosCH['dcontrato']['idcoordinador'] = $id_lider;
-                $datosCH['dcontrato']['idsedech'] = $sedeCH;
-                $datosCH['dcontrato']['idsucursalch'] = $sucursal;
-
-                $resultado = $this->Usuarios_modelo->ServicePostCH($url, $datosCH);
-            } else if ($rol_actual == 9 && $rol_seleccionado == 3) {
-                //SE CAMBIO DE COORDINADOR A GERENTE
-                $datosCH['dcontrato']['idpuesto'] = 3;
-                $datosCH['dcontrato']['idgerente'] = $id_usuario;
-                $datosCH['dcontrato']['idcoordinador'] = $id_usuario;
-                $datosCH['dcontrato']['idsedech'] = $sedeCH;
-                $datosCH['dcontrato']['idsucursalch'] = $sucursal;
-
-
-                $resultado = $this->Usuarios_modelo->ServicePostCH($url, $datosCH);
-            } else if ($rol_actual == 3 && $rol_seleccionado == 9) {
-                //SE CAMBIO DE GERENTE A COORDINADOR
-                $datosCH['dcontrato']['idpuesto'] = 9;
-                $datosCH['dcontrato']['idgerente'] = $id_lider;
-                $datosCH['dcontrato']['idcoordinador'] = $id_usuario;
-                $datosCH['dcontrato']['idsedech'] = $sedeCH;
-                $datosCH['dcontrato']['idsucursalch'] = $sucursal;
-                $resultado = $this->Usuarios_modelo->ServicePostCH($url, $datosCH);
-            }
-            else if ($rol_actual == 3 && $rol_seleccionado == 7) {
-                //SE CAMBIO DE GERENTE A ASESOR
-                $datosCH['dcontrato']['idpuesto'] = 7;
-                $datosCH['dcontrato']['idgerente'] = $getLider[0]['lider2'];
-                $datosCH['dcontrato']['idcoordinador'] = $id_lider;
-                $datosCH['dcontrato']['idsedech'] = $sedeCH;
-                $datosCH['dcontrato']['idsucursalch'] = $sucursal;
-                $resultado = $this->Usuarios_modelo->ServicePostCH($url, $datosCH);
-            }
-        }
-
-
-
-
-
-        //  print_r($resultado);
-        $r = json_decode($resultado);
-        //  print_r($r);
-        if (isset($r->resultado)) {
-            if ($r->resultado == 1) {
-                return json_decode($r->resultado);
-            } else {
-                return json_decode(0);
-            }
-        } else {
-            return json_decode(0);
-        }
-    }
     function DatosProsp($id_usuario)
     {
         $query = $this->db->query("SELECT 
@@ -965,5 +834,38 @@ class Usuarios_modelo extends CI_Model
         $response = $this->db->query("UPDATE opinion_cumplimiento SET estatus = 0 WHERE id_opn = $idDocumento");
 
         return $response;
+    }
+
+    function obtenerLideresPorIdUsuario($idUsuario, $idLiderNuevo, $idSedeNueva, $idRolNuevo)
+    {
+        $idCoordinador = ($idRolNuevo == 7) ? $idLiderNuevo : 'u0.id_lider';
+        $idGerente = ($idRolNuevo == 9) ? $idLiderNuevo : 'u1.id_lider';
+        $idSubdirector = ($idRolNuevo == 3) ? $idLiderNuevo : 'u2.id_lider';
+        $idRegional = ($idRolNuevo == 2 ) ? $idLiderNuevo : 'u3.id_lider';
+
+        $query = $this->db->query("SELECT u0.id_usuario as id_asesor, 
+                $idLiderNuevo as id_coordinador,
+                (CASE u1.id_rol WHEN 3 THEN u1.id_usuario ELSE u2.id_usuario END) id_gerente,
+                (CASE u1.id_rol WHEN 3 THEN u1.id_lider ELSE u3.id_usuario END) id_subdirector,
+                (CASE u1.id_rol WHEN 3 THEN (CASE WHEN u2.id_lider = 2 THEN 0 ELSE u2.id_lider END) ELSE CASE 
+                WHEN u3.id_usuario = 7092 THEN 3 
+                WHEN u3.id_usuario IN (9471, 681, 609, 690) THEN 607 
+                WHEN u3.id_usuario = 692 THEN u3.id_lider
+                WHEN u3.id_usuario = 703 THEN 4
+                WHEN u3.id_usuario = 7886 THEN 5
+                ELSE 0 END END) id_regional,
+                CASE 
+                WHEN (($idSedeNueva = '13' AND u3.id_lider = 7092) OR ($idSedeNueva = '13' AND u2.id_lider = 7092)) THEN 3
+	            WHEN (($idSedeNueva = '13' AND u3.id_lider = 3) OR ($idSedeNueva = '13' AND u2.id_lider = 3)) THEN 7092
+                ELSE 0 END id_regional_2
+            FROM usuarios u0 -- asesor
+            LEFT JOIN usuarios u1 ON u1.id_usuario = $idCoordinador -- coordinador 
+            LEFT JOIN usuarios u2 ON u2.id_usuario = $idGerente -- gerencia
+            LEFT JOIN usuarios u3 ON u3.id_usuario = $idSubdirector -- subdirector
+            LEFT JOIN usuarios u4 ON u4.id_usuario = $idRegional -- id_regional
+            LEFT JOIN usuarios u5 ON u5.id_usuario = u4.id_lider -- id_regional_2
+            WHERE u0.id_usuario = $idUsuario");
+
+        return $query->row();
     }
 }
