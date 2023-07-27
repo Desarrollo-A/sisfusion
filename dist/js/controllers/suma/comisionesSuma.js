@@ -264,7 +264,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
             className: `btn btn-dt-youtube buttons-youtube`,
             titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Solicitudes SUMA podrás visualizarlo en el siguiente tutorial',
             action: function (e, dt, button, config) {
-                window.open('https://youtu.be/6W5B97MTOCghttps://youtu.be/6W5B97MTOCg', '_blank');
+                window.open('https://youtu.be/S7HO2QTLaL0', '_blank');
             }
         }
     ],
@@ -507,7 +507,7 @@ $("#tabla_revision_comisiones").ready(function () {
             className: `btn btn-dt-youtube buttons-youtube`,
             titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Solicitudes SUMA podrás visualizarlo en el siguiente tutorial',
             action: function (e, dt, button, config) {
-                window.open('https://youtu.be/6W5B97MTOCghttps://youtu.be/6W5B97MTOCg', '_blank');
+                window.open('https://youtu.be/S7HO2QTLaL0', '_blank');
             }
         }],
         pagingType: "full_numbers",
@@ -677,7 +677,7 @@ $("#tabla_pagadas_comisiones").ready(function () {
             className: `btn btn-dt-youtube buttons-youtube`,
             titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Solicitudes SUMA podrás visualizarlo en el siguiente tutorial',
             action: function (e, dt, button, config) {
-                window.open('https://youtu.be/6W5B97MTOCghttps://youtu.be/6W5B97MTOCg', '_blank');
+                window.open('https://youtu.be/S7HO2QTLaL0', '_blank');
             }
         }],
         pagingType: "full_numbers",
@@ -874,7 +874,7 @@ $("#tabla_pausadas_comisiones").ready(function () {
             className: `btn btn-dt-youtube buttons-youtube`,
             titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Solicitudes SUMA podrás visualizarlo en el siguiente tutorial',
             action: function (e, dt, button, config) {
-                window.open('https://youtu.be/6W5B97MTOCghttps://youtu.be/6W5B97MTOCg', '_blank');
+                window.open('https://youtu.be/S7HO2QTLaL0', '_blank');
             }
         }],
         pagingType: "full_numbers",
