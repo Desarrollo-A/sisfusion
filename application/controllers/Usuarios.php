@@ -225,12 +225,11 @@ class Usuarios extends CI_Controller
             $resultadoCH  =  $this->Usuarios_modelo->ServicePostCH($ruta, $dataCH);
             $res = json_decode($resultadoCH);
             $resultadoCH = $res->resultado;
-        }
-        else {
+        } else {
 
             $sedeCH = 0;
             $sucursal = 0;
-            if ($_POST['member_type'] == 3 || $_POST['member_type'] == 7 || $_POST['member_type'] == 9) {
+            if ($_POST['member_type'] == 3 || $_POST['member_type'] == 7 || $_POST['member_type'] == 9 || $_POST['member_type'] == 2) {
                 $usersCH = 1;
                 #actualizar los registros en caso de que haya modificado de lider o tipo de miembro
                 /* 
@@ -243,7 +242,7 @@ class Usuarios extends CI_Controller
                 3 -- slp
                 11 -- tijuana 
                 */
-                $sedeCH = $_POST['sedech'];
+                $sedeCH = $_POST['sedech'] ?? 0;
                 $sucursal = !isset($_POST['sucursal']) ? 0 : $_POST['sucursal'];
                 $datosCH = array(
                     "dpersonales" => array(
@@ -252,42 +251,18 @@ class Usuarios extends CI_Controller
                         "apellido_materno_persona" => $this->formatter->eliminar_tildes(strtoupper(trim($_POST['mothers_last_name']))),
                         "RFC" => strtoupper(trim($_POST['rfc'])),
                         "telefono1" => $_POST['phone_number'],
-                        //"paramPrueba"=>00,
                         "email_empresarial" => strtoupper(trim($_POST['email']))
                     ),
-                    "dcontrato" => array(),
+                    "dcontrato" => [
+                        'idsedech' => $sedeCH
+                    ],
                     "idasesor" => $this->input->post("id_usuario")
                 );
 
-                $resultadoCH = $this->Usuarios_modelo->UpdateProspect($this->input->post("id_usuario"), $_POST['leader'], $_POST['member_type'], $_POST['rol_actual'], $sedeCH, $sucursal, $datosCH);
+                $resultadoCH = $this->actualizarProspecto($this->input->post("id_usuario"), $_POST['leader'], $_POST['member_type'], $_POST['rol_actual'], $_POST['headquarter'], $sucursal, $datosCH);
             }
             $nueva_estructura = (isset($_POST['nueva_estructura'])) ? $_POST['nueva_estructura'] : 0;
-            /* $getLider = $this->Services_model->getLider($_POST['leader'], $_POST['member_type']);
-            $id_lider = 0;
-            $id_gerente = 0;
-            $id_subdirector = 0;
-            $id_regional = 0;
-            
-            if ($_POST['member_type'] == 7) {
-                //Asesor
-                $id_lider = $_POST['leader'];
-                $id_gerente = $getLider[0]['id_gerente'];
-                $id_subdirector = $getLider[0]['id_subdirector'];
-                $id_regional = $getLider[0]['id_regional'];
-            } else if ($_POST['member_type'] == 9) {
-                //Coordinador
-                $id_lider = 0;
-                $id_gerente = $_POST['leader'];
-                $id_subdirector = $getLider[0]['id_subdirector'];
-                $id_regional = $getLider[0]['id_regional'];
-            } else if ($_POST['member_type'] == 3) {
-                //Gerente
-                $id_lider = 0;
-                $id_gerente = 0;
-                $id_subdirector = $_POST['leader']; //$getLider[0]['id_subdirector'];
-                $id_regional = $getLider[0]['id_lider'];
-            }*/
-            $simbolicoPropiedad = '';
+
             if(isset($_POST["simbolicoType"])){
                 $simbolicoPropiedad = $_POST["simbolicoType"];
             }else{
@@ -314,28 +289,12 @@ class Usuarios extends CI_Controller
                 "simbolico" => $simbolicoPropiedad
             );
         }
-        switch ($_POST['member_type']) {
-            case 7:
-                $tipo = "id_asesor";
-                break;
-            case 9:
-                $tipo = "id_coordinador";
-                break;
-            case 3:
-                $tipo = "id_gerente";
-                break;
-
-            default:
-                $tipo = '';
-                break;
-        }
-
 
         if ($usersCH == 0) {
             $response = $this->Usuarios_modelo->updateUser($data, $this->input->post("id_usuario"));
         } else {
-            // $result = json_decode($resultadoCH); se comenta por no dejar pasar VER!!!! HAY QUE DESCOMENTAR DESPUES
-            $result = json_decode(1);
+            $result = json_decode($resultadoCH);
+            // $result = json_decode(1);
             if ($result == 1) {
                 $response = $this->Usuarios_modelo->updateUser($data, $this->input->post("id_usuario"));
             } else {
@@ -343,20 +302,6 @@ class Usuarios extends CI_Controller
             }
         }
 
-        $props = $this->Usuarios_modelo->DatosProsp($this->input->post("id_usuario"))->row();
-        if ($props) {
-
-            $arrProp = array(
-                "id_coordinador" => $props->id_coordinador,
-                "id_gerente" => $props->id_gerente,
-                "id_subdirector" => $props->id_subdirector,
-                "id_regional" => $props->id_regional,
-                "id_sede" => $sedeCH,
-                "fecha_modificacion" => date("Y-m-d H:i:s"),
-                "modificado_por" => $this->session->userdata('id_usuario')
-            );
-            $this->db->update('prospectos', $arrProp, "$tipo =". $this->input->post("id_usuario") ." AND tipo = 0");
-        }
         echo json_encode($response);
     }
 
@@ -552,5 +497,98 @@ class Usuarios extends CI_Controller
             echo json_encode(array("status" => 200, "message" => "Se ha realizado la acción de manera exitosa"));
         else
             echo json_encode(array("status" => 503, "message" => "Oops, algo salió mal. No se ha podido realizar la acción solicitada."));
+    }
+
+    public function actualizarProspecto($idUsuario, $idLiderNuevo, $rolNuevo, $rolActual, $sedeNueva, $sucursal, $datosCH)
+    {
+        //RUTA DE PRUEBAS
+        $url = "https://prueba.gphsis.com/RHCV/index.php/WS/movimiento_interno_asesor_v2";
+        //RUTA DE PRODUCCIÓN
+        //$url="https://rh.gphsis.com/index.php/WS/movimiento_interno_asesor";
+
+        $coordAndGerente = $this->actualizarProspectoPorRol($idUsuario, $rolNuevo, $rolActual, $idLiderNuevo, $sedeNueva);
+
+        $datosCH['dcontrato']['idsucursalch'] = $sucursal;
+        $datosCH['dcontrato']['idpuesto'] = $rolNuevo;
+        $datosCH['dcontrato']['idcoordinador'] = $coordAndGerente->id_coordinador;
+        $datosCH['dcontrato']['idgerente'] = $coordAndGerente->id_gerente;
+
+        /*$resultado = $this->Usuarios_modelo->ServicePostCH($url, $datosCH);
+        $r = json_decode($resultado);
+        if (isset($r->resultado)) {
+            if ($r->resultado == 1) {
+                return json_decode($r->resultado);
+            } else {
+                return json_decode(0);
+            }
+        } else {
+            return json_decode(0);
+        }*/
+
+        return json_decode(1);
+    }
+
+    private function actualizarProspectoPorRol($idOwner, $rolNuevo, $rolActual, $idLiderNuevo, $sede): object
+    {
+        $dataProspecto = [
+            'id_sede' => $sede,
+            'modificado_por' => $this->session->userdata('id_usuario')
+        ];
+
+        $infoLineaVenta = $this->Usuarios_modelo->obtenerLideresPorIdUsuario($idOwner, $idLiderNuevo, $sede, $rolNuevo);
+
+        if (
+            ($rolActual == 7 && $rolNuevo == 9) || // De asesor pasa a coordinador
+            ($rolActual == 2 && $rolNuevo == 9) || // De subdirector pasa a coordinador
+            ($rolActual == 3 && $rolNuevo == 9) || // De gerente pasa a coordinador
+            ($rolActual == 9 && $rolNuevo == 9) // Se queda en coordinador
+        ) {
+            $dataProspecto['id_coordinador'] = $idOwner;
+            $dataProspecto['id_gerente'] = $infoLineaVenta->id_gerente;
+            $dataProspecto['id_subdirector'] = $infoLineaVenta->id_subdirector;
+            $dataProspecto['id_regional'] = $infoLineaVenta->id_regional;
+            $dataProspecto['id_regional_2'] = $infoLineaVenta->id_regional_2;
+        } else if (
+            ($rolActual == 7 && $rolNuevo == 3) || // De asesor pasa a gerente
+            ($rolActual == 9 && $rolNuevo == 3) || // De coordinador pasa a gerente
+            ($rolActual == 2 && $rolNuevo == 3) || // De subdirector pasa a gerente
+            ($rolActual == 3 && $rolNuevo == 3) // Se queda en gerente
+        ) {
+            $dataProspecto['id_coordinador'] = $idOwner;
+            $dataProspecto['id_gerente'] = $idOwner;
+            $dataProspecto['id_subdirector'] = $infoLineaVenta->id_subdirector;
+            $dataProspecto['id_regional'] = $infoLineaVenta->id_regional;
+            $dataProspecto['id_regional_2'] = $infoLineaVenta->id_regional_2;
+        } else if (
+            ($rolActual == 7 && $rolNuevo == 2) || // De asesor pasa a subdirector
+            ($rolActual == 9 && $rolNuevo == 2) || // De coordinador pasa a subdirector
+            ($rolActual == 3 && $rolNuevo == 2) || // De gerente pasa a subdirector
+            ($rolActual == 2 && $rolNuevo == 2) // Se queda en subdirector
+        ) {
+            $dataProspecto['id_coordinador'] = $idOwner;
+            $dataProspecto['id_gerente'] = $idOwner;
+            $dataProspecto['id_subdirector'] = $idOwner;
+            $dataProspecto['id_regional'] = $infoLineaVenta->id_regional;
+            $dataProspecto['id_regional_2'] = $infoLineaVenta->id_regional_2;
+        } else if ($idLiderNuevo == 832) { // Son asesores
+                $dataProspecto['id_coordinador'] = $idLiderNuevo;
+                $dataProspecto['id_gerente'] = $idLiderNuevo;
+                $dataProspecto['id_subdirector'] = $infoLineaVenta->id_subdirector;
+                $dataProspecto['id_regional'] = $infoLineaVenta->id_regional;
+                $dataProspecto['id_regional_2'] = $infoLineaVenta->id_regional_2;
+        } else {
+            $dataProspecto['id_coordinador'] = $infoLineaVenta->id_coordinador;
+            $dataProspecto['id_gerente'] = $infoLineaVenta->id_gerente;
+            $dataProspecto['id_subdirector'] = $infoLineaVenta->id_subdirector;
+            $dataProspecto['id_regional'] = $infoLineaVenta->id_regional;
+            $dataProspecto['id_regional_2'] = $infoLineaVenta->id_regional_2;
+        }
+
+        $this->Clientes_model->actualizarProspectosPorPropietario($idOwner, $dataProspecto);
+
+        return (object)[
+            'id_coordinador' => $dataProspecto['id_coordinador'],
+            'id_gerente' => $dataProspecto['id_gerente']
+        ];
     }
 }
