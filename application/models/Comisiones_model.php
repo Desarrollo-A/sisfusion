@@ -4199,18 +4199,15 @@ return 1;
 
         function getDatosHistorialPostventa(){
             //MODIFICACION PENDIENTE
-            return $this->db->query("SELECT DISTINCT(lo.idLote), cm.porcentaje_decimal, CONVERT(VARCHAR,cm.fecha_creacion,20) AS fecha_creacion, cm1.comision_total, cm2.abono_pagos, cm3.abono_pagos as abonados, pc.total_comision, lo.totalNeto2, 
+            return $this->db->query("SELECT DISTINCT(lo.idLote),cm1.comision_total, cm2.abono_pagos, cm3.abono_pagos as abonados, pc.total_comision, lo.totalNeto2, 
             cl.fechaApartado, lo.nombreLote, cl.nombre, cl.apellido_paterno, cl.apellido_materno, 
-            lo.registro_comision, lo.totalNeto2, lo.referencia, cn.nombre as condominio, rs.nombreResidencial as proyecto,
-            CONCAT(usu.nombre,' ',usu.apellido_paterno,' ',usu.apellido_materno) AS comisionista
-                FROM lotes lo
-            
-                INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
+            lo.registro_comision, lo.totalNeto2, lo.referencia, cn.nombre as condominio, rs.nombreResidencial as proyecto
+            FROM lotes lo
+            INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
             INNER JOIN condominios cn ON lo.idCondominio=cn.idCondominio
             INNER JOIN residenciales rs ON cn.idResidencial = rs.idResidencial
             INNER JOIN pago_comision pc ON pc.id_lote = lo.idLote
             INNER JOIN comisiones cm ON cm.id_lote = lo.idLote and cm.estatus = 1
-            LEFT JOIN usuarios usu ON usu.id_usuario = cm.id_usuario
             LEFT JOIN (SELECT SUM(c0.comision_total) comision_total, c0.id_lote FROM comisiones c0 
             WHERE c0.estatus in (1) AND c0.id_usuario NOT IN (0) --AND c0.id_lote = 41536
             GROUP BY c0.id_lote ) cm1 ON cm1.id_lote = lo.idLote
@@ -4230,10 +4227,16 @@ return 1;
             ORDER BY lo.idLote");  
         }
 
- 
+        function comisionistasPorLote($idLote){
+            return $this->db->query("SELECT porcentaje_decimal, CONVERT(VARCHAR,cm.fecha_creacion,20) AS fechaCreacion,
+            CONCAT(nombre,' ',apellido_paterno,' ',apellido_materno) AS nombre  
+            from lotes lo
+            INNER JOIN comisiones cm ON cm.id_lote = lo.idLote and cm.estatus = 1
+            INNER JOIN usuarios usu ON usu.id_usuario = cm.id_usuario
+            WHERE lo.idLote = $idLote");
+        }
 
         /**----------------------------------------BONOS Y PRESTAMOS------------------------------- */
-
         function getHistorialAbono($id){
              $this->db->query("SET LANGUAGE Español;");
             return $this->db->query("SELECT b.*,p.*,x.nombre as est, b.comentario as motivo, convert(nvarchar, p.fecha_abono, 6) date_final, CONCAT(us.nombre, ' ',us.apellido_paterno, ' ',us.apellido_materno) AS creado_por

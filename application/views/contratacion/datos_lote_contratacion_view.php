@@ -151,19 +151,19 @@
                                     <div class="row">
                                         <div class="col-md-4 form-group">
                                             <div class="form-group overflow-hidden">
-                                                <label class="m-0" for="idResidencial">Proyecto</label>
+                                                <label class="control-label" for="idResidencial">Proyecto</label>
                                                 <select id="idResidencial" name="idResidencial" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" size="5" data-container="body" required></select>
                                             </div>
                                         </div>
                                         <div class="col-md-4 form-group">
                                             <div class="form-group overflow-hidden">
-                                                <label class="m-0" for="idCondominioInventario">Condominio</label>
+                                                <label class="control-label" for="idCondominioInventario">Condominio</label>
                                                 <select name="idCondominioInventario" id="idCondominioInventario" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
                                             </div>
                                         </div>
                                         <div class="col-md-4 form-group">
                                             <div class="form-group overflow-hidden">
-                                                <label class="m-0" for="idEstatus">Estatus</label>
+                                                <label class="control-label" for="idEstatus">Estatus</label>
                                                 <select name="idEstatus" id="idEstatus" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
                                             </div>
                                         </div>

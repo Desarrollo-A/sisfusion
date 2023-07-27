@@ -1,7 +1,7 @@
 $(document).ready(function () {
     $.post(`${general_base_url}Contratacion/lista_proyecto`, function (data) {
         for (var i = 0; i < data.length; i++) {
-            $("#idResidencial").append($('<option>').val(data[i]['idResidencial']).text(data[i]['nombreResidencial'] + ' - ' + data[i]['descripcion']));
+            $("#idResidencial").append($('<option>').val(data[i]['idResidencial']).text(data[i]['descripcion']));
         }
         $("#idResidencial").selectpicker('refresh');
     }, 'json');
