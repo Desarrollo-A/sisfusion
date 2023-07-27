@@ -794,7 +794,7 @@ function fillChangelogUsers(v) {
     '               <a><small>Campo: </small><b> ' +v.col_afect.toUpperCase()+ '</b></a><br>\n' +
     '           </div>\n' +
     '<div class="float-end text-right">\n' +
-    '               <a>' + v.fec_creacion + '</a>\n' +
+    '               <a>' + v.fecha_creacion + '</a>\n' +
     '           </div>\n' +
     '           <div class="col-md-12">\n' +
     '                <p class="m-0"><small>USUARIO: </small><b> ' + v.creador + '</b></p>\n'+

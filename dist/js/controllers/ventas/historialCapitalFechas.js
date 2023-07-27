@@ -23,36 +23,32 @@ $('#anio').change(function() {
     $('#tabla_historialGral').removeClass('hide');
 });
 
-//INICIO TABLA QUERETARO********************************************
 var tr;
 var tabla_historialGral2 ;
 var totaPen = 0;
-let rol  = "<?=$this->session->userdata('id_rol')?>";
 //INICIO TABLA QUERETARO***************************************
 let titulos = [];
 
 $('#tabla_historialGral thead tr:eq(0) th').each( function (i) {
-    if(i != 10){
-        var title = $(this).text();
-        titulos.push(title);
-        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
-        $('input', this).on('keyup change', function() {
-            if (tabla_historialGral2.column(i).search() !== this.value) {
-                tabla_historialGral2.column(i).search(this.value).draw();
-                var total = 0;
-                var index = tabla_historialGral2.rows({
-                    selected: true,
-                    search: 'applied'
-                }).indexes();
-                var data = tabla_historialGral2.rows(index).data();
-                $.each(data, function(i, v) {
-                    total += parseFloat(v.abono_neodata);
-                });
-                var to1 = formatMoney(total);
-                document.getElementById("myText_desU").value = to1;
-            }
-        });
-    }  
+    var title = $(this).text();
+    titulos.push(title);
+    $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
+    $('input', this).on('keyup change', function() {
+        if (tabla_historialGral2.column(i).search() !== this.value) {
+            tabla_historialGral2.column(i).search(this.value).draw();
+            var total = 0;
+            var index = tabla_historialGral2.rows({
+                selected: true,
+                search: 'applied'
+            }).indexes();
+            var data = tabla_historialGral2.rows(index).data();
+            $.each(data, function(i, v) {
+                total += parseFloat(v.abono_neodata);
+            });
+            var to1 = formatMoney(numberTwoDecimal(total));
+            document.getElementById("myText_desU").value = to1;
+        }
+    });
 });
 
 function getAssimilatedCommissions(mes, anio) {
@@ -61,8 +57,8 @@ function getAssimilatedCommissions(mes, anio) {
         $.each(json.data, function(i, v) {
             total += parseFloat(v.abono_neodata);
         });
-        var to = formatMoney(total);
-        document.getElementById("myText_desU").textContent = '$' + to;
+        var to = formatMoney(numberTwoDecimal(total));
+        document.getElementById("myText_desU").textContent = to;
     });
 
     $("#tabla_historialGral").prop("hidden", false);
@@ -135,7 +131,7 @@ function getAssimilatedCommissions(mes, anio) {
         },
         {
             data: function( d ){
-                return '<p class="m-0"><b>$'+formatMoney(d.abono_neodata)+'</b></p>';
+                return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.abono_neodata))+'</b></p>';
             }
         }, 
         {
@@ -155,8 +151,8 @@ function getAssimilatedCommissions(mes, anio) {
         {
             data: function( data ){
                 var BtnStats = '';
-                if(rol == 49){
-                BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.nombreLote+'" data-nameuser="'+data.user_names+'" data-puesto="'+data.puesto+'" data-monto="'+data.abono_neodata+'" data-code="'+data.cbbtton+'" class="btn-data btn-sky regresarpago" data-toggle="tooltip"  data-placement="top" title="CANCELAR DESCUENTTO"><i class="fas fa-sync-alt"></i></button>';
+                if(id_rol_general == 49){
+                BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.nombreLote+'" data-nameuser="'+data.user_names+'" data-puesto="'+data.puesto+'" data-monto="'+data.abono_neodata+'" data-code="'+data.cbbtton+'" class="btn btn-round btn-fab btn-fab-mini btn-data btn-sky regresarpago" data-toggle="tooltip"  data-placement="top" title="CANCELAR DESCUENTTO"><i class="fas fa-sync-alt"></i></button>';
                 }else{
                     BtnStats = '<p class="m-0">NO APLICA</p>'
                 }
@@ -193,7 +189,7 @@ function getAssimilatedCommissions(mes, anio) {
         puesto = $(this).attr("data-puesto");
         monto = $(this).attr("data-monto");
         $("#seeInformationModalAsimilados .modal-body").append(`
-        <div style="background-color: crimson;" ><h4 class="card-title" style ="color: white; text-align: center"><b>Cancelar descuento</b></h4></div>
+        <div><h4 class="card-title" text-align: center"><b>Cancelar descuento</b></h4></div>
         <p>¿Está seguro que desea cancelar el descuento del <b>${puesto} ${nameuser}</b>?</p>
         <div class="form-group">
         <input type="hidden" name="id_pago" id="id_pago" value="${id_pago}">
@@ -216,7 +212,7 @@ function getAssimilatedCommissions(mes, anio) {
 
 }
 
-//FIN TABLA  ****************************************************************************************
+//FIN TABLA  
 
 $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
     $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
@@ -226,15 +222,74 @@ $(window).resize(function() {
     tabla_historialGral2.columns.adjust();
 });
 
-function formatMoney(n) {
-    var c = isNaN(c = Math.abs(c)) ? 2 : c,
-        d = d == undefined ? "." : d,
-        t = t == undefined ? "," : t,
-        s = n < 0 ? "-" : "",
-        i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
-        j = (j = i.length) > 3 ? j % 3 : 0;
-    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
-};
+let meses = [
+    {
+        id: '01',
+        mes:'ENERO'
+    },
+    {
+        id:'02',
+        mes:'FEBRERO'
+    },
+    {
+        id:'03',
+        mes:'MARZO'
+    },
+    {
+        id:'04',
+        mes:'ABRIL'
+    },
+    {
+        id:'05',
+        mes:'MAYO'
+    },
+    {
+        id:'06',
+        mes:'JUNIO'
+    },
+    {
+        id:'07',
+        mes:'JULIO'
+    },
+    {
+        id:'08',
+        mes:'AGOSTO'
+    },
+    {
+        id:'09',
+        mes:'SEPTIEMBRE'
+    },
+    {
+        id:'10',
+        mes:'OCTUBRE'
+    },
+    {
+        id:'11',
+        mes:'NOVIEMBRE'
+    },
+    {
+        id:'12',
+        mes:'DICIEMBRE'
+    }
+];
+let anios = [2019,2020,2021,2022,2023];
+let datos = '';
+let datosA = '';
+
+for (let index = 0; index < anios.length; index++) {
+    datosA = datosA + `<option value="${anios[index]}">${anios[index]}</option>`;
+}
+$('#anio').html(datosA);
+$('#anio').selectpicker('refresh');
+
+$('#anio').change(function () {
+    for (let index = 0; index < meses.length; index++) {
+    datos = datos + `<option value="${meses[index]['id']}">${meses[index]['mes']}</option>`;
+    $('#mes').html(datos);
+    $('#mes').selectpicker('refresh');
+}
+});
+
 
 function cleanCommentsAsimilados() {
     $('#seeInformationModalAsimilados').modal('hide');

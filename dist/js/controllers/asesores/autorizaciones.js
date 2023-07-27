@@ -210,17 +210,17 @@ $('#addExp').on('draw.dt', function() {
 let titulos_solicitud = [];
 let num_colum_solicitud = [];
 $('#sol_aut thead tr:eq(0) th').each( function (i) {
-var title = $(this).text();
-$(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
-titulos_solicitud.push(title);
-num_colum_solicitud.push(i);
-$( 'input', this ).on('keyup change', function () {
-if ($('#sol_aut').DataTable().column(i).search() !== this.value ) {
-$('#sol_aut').DataTable().column(i).search(this.value).draw();
-}
-});
-$('[data-toggle="tooltip"]').tooltip();
+    var title = $(this).text();
+    $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
+    titulos_solicitud.push(title);
+    num_colum_solicitud.push(i);
+    $( 'input', this ).on('keyup change', function () {
+        if ($('#sol_aut').DataTable().column(i).search() !== this.value ) {
+            $('#sol_aut').DataTable().column(i).search(this.value).draw();
+        }
     });
+    $('[data-toggle="tooltip"]').tooltip();
+});
 
 //Eliminamos la ultima columna "ACCIONES" donde se encuentra un elemento de tipo boton (para omitir en excel o pdf).
 num_colum_solicitud.pop();

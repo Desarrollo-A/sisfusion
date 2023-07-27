@@ -2,52 +2,48 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 
 <style>
-.bckSpan{
-    padding: 4px;
-    background-color: #ecf5ff;
-    border-radius: 41px;
-}
-.subSpan{
-    border: 2px dotted #d5d5d5;
-    border-radius: 39px;
-    padding: 0 10px;
-}
-.subSpan input{
-    background-image: none!important;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-.subSpan input::-webkit-input-placeholder {
-   font-style: italic;
-}
-
-
-.subSpan button{
-    background-color: transparent;
-    border: none;
-}
-.subSpan button:hover i{
-    color: #333;
-}
-.subSpan i{
-    color: #999999;
-}
-#reviewTokenEvidence .modal-content{
-    background-color: #00000087;
-    padding: 10px 20px;
-}
+    .bckSpan{
+        padding: 4px;
+        background-color: #ecf5ff;
+        border-radius: 41px;
+    }
+    .subSpan{
+        border: 2px dotted #d5d5d5;
+        border-radius: 39px;
+        padding: 0 10px;
+    }
+    .subSpan input{
+        background-image: none!important;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .subSpan input::-webkit-input-placeholder {
+    font-style: italic;
+    }
+    .subSpan button{
+        background-color: transparent;
+        border: none;
+    }
+    .subSpan button:hover i{
+        color: #333;
+    }
+    .subSpan i{
+        color: #999999;
+    }
+    #reviewTokenEvidence .modal-content{
+        background-color: #00000087;
+        padding: 10px 20px;
+    }
 </style>
 
-<body class="">
+<body>
 <div class="wrapper">
-
     <?php $this->load->view('template/sidebar'); ?>
-
     <div class="content boxContent">
         <div class="container-fluid">
             <div class="row">
-                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="card">
                         <div class="card-header card-header-icon" data-background-color="goldMaderas">
                             <i class="fas fa-shield-alt fa-2x"></i>
@@ -68,16 +64,14 @@
                                             </span>
                                         </div>
                                     </div>
-                                    
-                                    <div class="col col-xs-1 col-sm-1 col-md-1 col-lg-1 d-flex align-center justify-evenly">
+                                    <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 d-flex align-center justify-evenly">
                                         <button class="btn-rounded btn-s-greenLight" id="generateToken" data-toggle="tooltip"  data-placement="top" title="GENERAR TOKEN">
                                             <i class="fas fa-plus" ></i>
                                         </button> <!-- GENERATE TOKEN -->
                                     </div>
                                 </div>
                             </div>
-                            <table id="evidenceTable" name="evidenceTable"
-                                    class="table-striped table-hover">
+                            <table id="evidenceTable" name="evidenceTable"class="table-striped table-hover">
                                 <thead>
                                     <tr>
                                         <th>TIPO</th>
@@ -102,17 +96,7 @@
     <?php $this->load->view('token/common_modals'); ?>
     <?php $this->load->view('template/footer_legend'); ?>
 </div>
-</div>
-
 <?php $this->load->view('template/footer'); ?>
-<!--DATATABLE BUTTONS DATA EXPORT-->
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script type="text/javascript" src="//unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/apartado/generateToken.js"></script>

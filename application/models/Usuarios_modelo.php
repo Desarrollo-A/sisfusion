@@ -481,13 +481,14 @@ class Usuarios_modelo extends CI_Model
 
     function getChangelog($id_usuario)
     {
-        // $query = '';
+        // $query = "";
         switch ($this->session->userdata('id_rol')) {
             case '17': // SUBDIRECCIÓN CONTRALORÍA
             case '70': // Ejecutivo de contraloría JR
             case '80': // CONTRALORÍA CORPORTATICA
             case '63': // CI
-            case '40': //Cobranza
+            case '81': // POSTVENTA
+            case '73': // PRACTICANTE CONTRALORIA
                 $query = $this->db->query("SELECT CONVERT(VARCHAR,fecha_creacion,20) AS fecha_creacion, creador, 
                 (CASE col_afect 
                 WHEN 'id_lider' THEN 'líder'
@@ -654,10 +655,9 @@ class Usuarios_modelo extends CI_Model
                     END) AS anterior
                     FROM auditoria
                     INNER JOIN (SELECT id_usuario AS id_creador, CONCAT(nombre, ' ', apellido_paterno,' ',apellido_materno) AS creador  FROM usuarios) AS creadores ON CAST(id_creador AS VARCHAR(45)) = CAST(creado_por AS VARCHAR(45))
-                    WHERE id_parametro = $id_usuario AND tabla = 'usuarios' ORDER BY fec_creacion DESC");
+                    WHERE id_parametro = $id_usuario AND tabla = 'usuarios' ORDER BY fecha_creacion DESC");
         return $query->result_array();
     }
-
 
     function getCatalogs()
     {
@@ -693,8 +693,8 @@ class Usuarios_modelo extends CI_Model
             else
                 $where = " AND u.id_sede IN ('2', '3', '4', '6')";
         }
-        return $this->db->query("SELECT u.estatus, u.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, u.correo,
-        u.telefono, oxc.nombre puesto, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) jefe_directo, s.nombre sede,
+        return $this->db->query("SELECT u.estatus, u.id_usuario, UPPER(CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) AS nombre, u.correo,
+        u.telefono, UPPER(oxc.nombre) AS puesto, UPPER(CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS jefe_directo, UPPER(s.nombre) sede,
         CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) jefe_directo2, 0 nuevo, u.fecha_creacion, u.ismktd FROM usuarios u 
         INNER JOIN sedes s ON CAST(s.id_sede as VARCHAR(45)) = u.id_sede
         LEFT JOIN usuarios us ON us.id_usuario = u.id_lider

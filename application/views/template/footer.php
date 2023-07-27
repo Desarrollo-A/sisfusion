@@ -110,7 +110,6 @@ if($this->session->userdata('id_rol') == 7 && $this->session->userdata('asesor_g
         async: false
     })
     var mySound = new Audio('../static/tono-mensaje.mp3');
-   
     let im = '<?=base_url()?>static/images/perfil/'+perfil[0].id_usuario+'/'+perfil[0].foto;
     if ($(window).width() < 996){
         console.log("chico");
@@ -302,6 +301,15 @@ if($this->session->userdata('id_rol') == 7 && $this->session->userdata('asesor_g
 
     $(document).on('click', '.session_close_btn_clean', function(){
         localStorage.clear();
+    });
+
+
+    $('body').tooltip({
+        selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
+        trigger: 'hover',
+        container: 'body'
+    }).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
+        $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
     });
 
 </script>

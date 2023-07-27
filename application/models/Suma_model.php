@@ -262,7 +262,7 @@ class Suma_model extends CI_Model
         INNER JOIN usuarios u ON u.id_usuario = pci1.id_usuario  
         INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 74 
         INNER JOIN opinion_cumplimiento opn ON opn.id_usuario = u.id_usuario  and opn.estatus IN (2) 
-        left JOIN facturas_suma fa ON fa.id_pago_suma = pci1.id_pago_suma
+        INNER JOIN facturas_suma fa ON fa.id_pago_suma = pci1.id_pago_suma
         GROUP BY  u.nombre, u.apellido_paterno, u.apellido_materno, u.forma_pago, oxcest.id_opcion, opn.estatus, opn.archivo_name, fa.uuid,fa.nombre_archivo,fa.bandera, u.rfc, pci1.id_usuario
         ORDER BY u.nombre");
     }

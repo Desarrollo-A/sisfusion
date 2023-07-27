@@ -4,15 +4,12 @@
 <body class="">
 <div class="wrapper ">
     <?php
-
     if (in_array($this->session->userdata('id_rol'), array('33', '17', '74', '75', '76', '77', '78', '79', '80', '81', '82', '83'))) {
         $this->load->view('template/sidebar');
     } else {
         echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
     }
     ?>
-    <!--Contenido de la página-->
-
 
     <div class="content boxContent">
         <div class="container-fluid">
@@ -40,8 +37,8 @@
                                                 <th>CONDOMINIO</th>
                                                 <th>LOTE</th>
                                                 <th>REFERENCIA</th>
-                                                <th>PRECIO LOTE</th>
-                                                <th>TOTAL COM. ($)</th>
+                                                <th>PRECIO DEL LOTE</th>
+                                                <th>TOTAL DE LA COMISIÓN</th>
                                                 <th>ABONADO</th>
                                                 <th>PAGADO</th>
                                                 <th>CLIENTE</th>
@@ -58,20 +55,10 @@
         </div>
     </div>
     <?php $this->load->view('template/footer_legend'); ?>
-</div>
-</div>
-
 </div><!--main-panel close-->
 </body>
 <?php $this->load->view('template/footer'); ?>
-<!--DATATABLE BUTTONS DATA EXPORT-->
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
+
 <script src="<?= base_url() ?>dist/js/controllers/comisiones/historial_postventa.js"></script>
 
 

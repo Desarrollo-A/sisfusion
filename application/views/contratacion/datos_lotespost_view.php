@@ -3,7 +3,6 @@
 <body class="">
     <div class="wrapper ">
         <?php $this->load->view('template/sidebar'); ?>
-        
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -15,35 +14,32 @@
                             <div class="card-content">
                                 <h3 class="card-title center-align " id="showDate"> </h3>
                                 <div class="toolbar">
-                                    <div class="row">
-                                    </div>
+                                    <div class="row"></div>
                                 </div>
                                 <div class="material-datatables">
                                     <div class="form-group">
-                                        <div class="table-responsive">
-                                            <table id="Jtabla" class="table-striped table-hover">
-                                                <thead>
-                                                    <tr>
-                                                        <th>PROYECTO</th>
-                                                        <th>CONDOMINIO</th>
-                                                        <th>LOTE</th>
-                                                        <th>SEDE</th>
-                                                        <th>REFERENCIA</th>
-                                                        <th>GERENTE</th>
-                                                        <th>ASESOR(ES)</th>
-                                                        <th>ESTATUS</th>
-                                                        <th>PROCESO CONTRATACIÓN</th>
-                                                        <th>COMENTARIO</th>
-                                                        <th>FECHA APARTADO</th>
-                                                        <th>DÍAS VENCIDOS</th>
-                                                        <th>REUBICACIÓN</th>
-                                                        <th>FECHA REUBICACIÓN</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                        <table id="Jtabla" class="table-striped table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>PROYECTO</th>
+                                                    <th>CONDOMINIO</th>
+                                                    <th>LOTE</th>
+                                                    <th>SEDE</th>
+                                                    <th>REFERENCIA</th>
+                                                    <th>GERENTE</th>
+                                                    <th>ASESOR(ES)</th>
+                                                    <th>ESTATUS</th>
+                                                    <th>PROCESO DE CONTRATACIÓN</th>
+                                                    <th>COMENTARIO</th>
+                                                    <th>FECHA DE APARTADO</th>
+                                                    <th>DÍAS DE VENCIDOS</th>
+                                                    <th>REUBICACIÓN</th>
+                                                    <th>FECHA DE REUBICACIÓN</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -56,15 +52,6 @@
     </div>
     </div>
     </div>
-    <!--main-panel close-->
 </body>
 <?php $this->load->view('template/footer');?>
-<!--DATATABLE BUTTONS DATA EXPORT-->
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/contratacion/datos_lotespost.js"></script>

@@ -12,8 +12,9 @@
                     <h4 class="modal-title">¿Realmente desea asignar este prospecto al cliente?</h4>
                     <div class="modal-footer">
                     <button type="button" class="btn btn-danger btn-simple" id="cancelar" data-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary" id="asignar_prospecto" data-dismiss="modal">ASIGNAR
-                            <div class="ripple-container"></div></button>
+                    <button type="button" class="btn btn-primary" id="asignar_prospecto" data-dismiss="modal">ASIGNAR
+                        <div class="ripple-container"></div>
+                    </button>
                     </div>
                 </div>
             </div>
@@ -35,8 +36,8 @@
         </div>
     </div>
 
-    <div class="modal fade overflow-hiden " id="asignar_prospecto_a_cliente" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
-        data-backdrop="static" data-keyboard="false" >
+    <div class="modal fade" id="asignar_prospecto_a_cliente" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+        data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -123,7 +124,6 @@
             </div>
         </div>
     </div>
-    <!-- modal -->
 
     <!-- modal ENVÍO DE VERIFICACIONES -->
     <div class="modal fade" id="autorizaciones-modal" data-backdrop="static" data-keyboard="false" >
@@ -298,7 +298,7 @@
 
     <div class="content hide">
         <!-- modal  ENVIA A CONTRALORIA 5 por rechazo 1-->
-        <div class="modal fade in" id="modal2" data-backdrop="static" data-keyboard="false">
+        <div class="modal fade" id="modal2" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
                 <div class="modal-content" >
                     <div class="modal-header">
@@ -327,7 +327,7 @@
                     </div>
                     <div class="modal-body">
                         <label>Comentario:</label>
-                            <textarea class="text-modal scroll-styles" name="comentario3" id="comentario3" rows="3" placeholder="Comentario" required></textarea>
+                        <textarea class="text-modal scroll-styles" name="comentario3" id="comentario3" rows="3" placeholder="Comentario" required></textarea>
                         <br>
                     </div>
                     <div class="modal-footer">
@@ -442,7 +442,6 @@
                 </div>
             </div>
         </div>
-        <!-- modal -->
     </div>
 
     <div class="content boxContent">
@@ -467,18 +466,15 @@
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                             <div class="col-md-4 form-group">
-                                                <div class="form-group label-floating select-is-empty">
+                                                <div class="form-group select-is-empty">
                                                     <label class="control-label">Proyecto</label>
-                                                    <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="Selecciona un proyecto" data-size="7" data-live-search="true" required>
-                                                    </select>
+                                                    <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" required></select>
                                                 </div>
                                             </div>
                                             <div class="col-md-4 form-group">
-                                                <div class="form-group label-floating select-is-empty">
+                                                <div class="form-group select-is-empty">
                                                     <label class="control-label">Condominio</label>
-                                                    <select name="condominio" id="condominio" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="Selecciona condominio" data-size="7" data-live-search="true" required>
-                                                        <option disabled selected>Selecciona un condominio</option>
-                                                    </select>
+                                                    <select name="condominio" id="condominio" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" required></select>
                                                 </div>
                                             </div>
                                         </div>
