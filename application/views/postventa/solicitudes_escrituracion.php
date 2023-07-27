@@ -54,7 +54,7 @@
                                                 <div class="row">
                                                     <div class="col-12 col-sm-4 col-md-4 col-lg-4">
                                                         <div class="form-group label-floating select-is-empty">
-                                                            <select id="estatusE" name="estatusE" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un estatus" data-size="7" required>
+                                                            <select id="estatusE" name="estatusE" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" data-toggle="tooltip" data-placement="top" title="Selecciona un estatus" data-size="7" required>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -65,9 +65,9 @@
                                                             <div class="row">
                                                                 <div class="col-md-12 p-r">
                                                                     <div class="form-group d-flex">
-                                                                        <input type="text" class="form-control datepicker" id="beginDate" value="" autocomplete='off' />
-                                                                        <input type="text" class="form-control datepicker" id="endDate" value="" autocomplete='off' />
-                                                                        <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
+                                                                        <input type="text" class="form-control datepicker" data-toggle="tooltip" data-placement="top" title="Fecha inicio" id="beginDate" value="" autocomplete='off' />
+                                                                        <input type="text" class="form-control datepicker" data-toggle="tooltip" data-placement="top" title="Fecha fin" id="endDate" value="" autocomplete='off' />
+                                                                        <button class="btn btn-success btn-round btn-fab btn-fab-mini" data-toggle="tooltip" data-placement="top" title="Buscar" id="searchByDateRange">
                                                                             <span class="material-icons update-dataTable">search</span>
                                                                         </button>
                                                                     </div>
@@ -120,9 +120,9 @@
                                                             <div class="row">
                                                                 <div class="col-md-12 p-r">
                                                                     <div class="form-group d-flex">
-                                                                        <input type="text" class="form-control datepicker" id="startDate" value="" autocomplete='off' />
-                                                                        <input type="text" class="form-control datepicker" id="finalDate" value="" autocomplete='off' />
-                                                                        <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateTest">
+                                                                        <input type="text" class="form-control datepicker" data-toggle="tooltip" data-placement="top" title="Fecha inicio" id="startDate" value="" autocomplete='off' />
+                                                                        <input type="text" class="form-control datepicker" data-toggle="tooltip" data-placement="top" title="Fecha fin" id="finalDate" value="" autocomplete='off' />
+                                                                        <button class="btn btn-success btn-round btn-fab btn-fab-mini" data-toggle="tooltip" data-placement="top" title="Buscar"  id="searchByDateTest">
                                                                             <span class="material-icons update-dataTable">search</span>
                                                                         </button>
                                                                     </div>

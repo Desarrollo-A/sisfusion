@@ -1732,6 +1732,7 @@ console.log(arrayTables.length)
              crearTablas(arrayTables[z]);
             console.log(arrayTables[z].data.endDate)
     }
+    $('[data-toggle="tooltip"]').tooltip();
 
 }
 
@@ -3509,7 +3510,7 @@ $(document).on("click", "#bajarConMotivo", function () {
 
 
 
-    
+
         
 
         $(window).resize(function(){
