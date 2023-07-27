@@ -142,37 +142,39 @@ $(document).ready (function() {
                     switch(id_rol_general) {
                         case 5:
                             if (d.estatus_id == 1) {
-                                botones += botonesPermiso(1, 1, 1, 0, d.id_autorizacion, d.estatus);
+                                botones += botonesPermiso(1, 1, 1, 0, d.id_autorizacion, d.estatus, d.lote);
                             }
                             if (d.estatus_id == 3) {
-                                botones += botonesPermiso(1, 0, 0, 0, d.id_autorizacion, d.estatus);
+                                botones += botonesPermiso(1, 0, 0, 0, d.id_autorizacion, d.estatus, d.lote);
                             }
                             if (d.estatus_id == 4) {
-                                botones += botonesPermiso(1, 1, 1, 0, d.id_autorizacion, d.estatus);
+                                botones += botonesPermiso(1, 1, 1, 0, d.id_autorizacion, d.estatus, d.lote);
                             }
                             break;
                         case 17:
 
                             if (d.estatus_id == 2) {
-                                botones += botonesPermiso(1, 0, 1, 1, d.id_autorizacion, d.estatus);
+                                botones += botonesPermiso(1, 0, 1, 1, d.id_autorizacion, d.estatus, d.lote);
                             }
                             if (d.estatus_id == 4) {
-                                botones += botonesPermiso(1, 0, 0, 0, d.id_autorizacion, d.estatus);
+                                botones += botonesPermiso(1, 0, 0, 0, d.id_autorizacion, d.estatus, d.lote);
                             }
                             break;
                         case 70:
 
                             if (d.estatus_id == 2) {
-                                botones += botonesPermiso(1, 0, 1, 1, d.id_autorizacion, d.estatus);
+                                botones += botonesPermiso(1, 0, 1, 1, d.id_autorizacion, d.estatus, d.lote);
                             }
                             if (d.estatus_id == 4) {
-                                botones += botonesPermiso(1, 0, 0, 0, d.id_autorizacion, d.estatus);
+                                botones += botonesPermiso(1, 0, 0, 0, d.id_autorizacion, d.estatus, d.lote);
                             }
                             break;
                         default:
                             break;
                     }
-                    botones += '<button data-idAutorizacion="'+d.id_autorizacion+'"  class="btn-data btn-gray btnHistorial" data-toggle="tooltip" data-placement="top" title="Historial"><i class="fas fa-info"></i></button>';
+                    let autTipo = isNum(d.lote);
+                    let valor = (autTipo) ? 2 : 1;
+                    botones += '<button data-idAutorizacion="'+d.id_autorizacion+'" data-accion="'+valor+'"  class="btn-data btn-gray btnHistorial" data-toggle="tooltip" data-placement="top" title="Historial"><i class="fas fa-info"></i></button>';
                     return '<div class="d-flex justify-center">' + botones + '<div>';
                 }
             },
@@ -577,7 +579,7 @@ jQuery(document).ready(function(){
     })
 })
 
-function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechazar,idAutorizacion,estatus){
+function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechazar,idAutorizacion,estatus, lote){
     let botones = '';
     /**Permisos - FUNCIÓN PARA OBTENER LOS BOTONES POR PERMISOS DE LA DATATABLE
      * 1.- vista
@@ -585,29 +587,35 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
      * 3.- Avanzar
      * 4.- Rechazar
      **/
-    if(permisoVista == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}"  class="btn-data btn-sky btnVer" data-toggle="tooltip" data-placement="top" title="Ver"><i class="fas fa-eye"></i></button>`;   }
-    if(permisoEditar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}"  class="btn-data btn-yellow btnEditar" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-edit"></i></button>`; }
+    let autTipo = isNum(lote);
+    let valor = (autTipo) ? 2 : 1;
+    if(permisoVista == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-accion="${valor}"  class="btn-data btn-sky btnVer" data-toggle="tooltip" data-placement="top" title="Ver"><i class="fas fa-eye"></i></button>`;   }
+    if(permisoEditar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-accion="${valor}" class="btn-data btn-yellow btnEditar" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-edit"></i></button>`; }
     if(permisoAvanzar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="1" data-estatus="${estatus}" class="btn-data btn-green btnAvanzar" data-toggle="tooltip" data-placement="top" title="Avanzar"><i class="fas fa-thumbs-up"></i></button>`;  }
     if(permisoRechazar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="2" data-estatus="${estatus}" class="btn-data btn-warning btnRechazar" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-thumbs-down"></i></button>`;  }
     return  botones;
+}
+function isNum(val){
+    return !isNaN(val)
 }
 
 $(document).on('click', '.btnVer', function(e){
     let data = [];
     data["tb"] = 2;
     let id_aut = $(this).attr('data-idautorizacion');
+    let accion = $(this).attr('data-accion');
     // $('.anclaClass').attr('placeholder', 'ID CONDOMINIO');
 
     let arr = id_aut.split(' ');
 
 
-    if(arr.length <= 1){
+    if(accion == 1){
         let id = parseInt(id_aut);
         console.log('id', id);
         data["url"] = general_base_url+'Contraloria/getAutVis/'+id+'/1';
         data['edit'] = 0;
         $('.anclaClass2').attr('placeholder', 'ID LOTE');
-    }else if(arr.length > 1){
+    }else if(accion == 2){
         // let id = 'residencial';
         console.log('id_aut', id_aut);
 
@@ -756,11 +764,12 @@ $(document).on('click', '.btnHistorial', function () {
     document.getElementById('historialAut').innerHTML = '';
     //neuvo
     let id_aut = $(this).attr('data-idautorizacion');
+    let accion = $(this).attr('data-accion');
 
     let arr = id_aut.split(' ');
 
 
-    if(arr.length <= 1){
+    if(accion == 1){
         let url_action = general_base_url+'Contraloria/getHistorialAutorizacionMSI';
         $.post(url_action, {
             id_autorizacion: idAutorizacion,
@@ -798,7 +807,7 @@ $(document).on('click', '.btnHistorial', function () {
             }
         }, 'json');
     }
-    else if(arr.length > 1){
+    else if(accion == 2){
         let url_action = general_base_url+'Contraloria/getHistorialAutorizacionMSI';
         $.post(url_action, {
             id_autorizacion: idAutorizacion,
@@ -932,17 +941,18 @@ $(document).on('submit', '#cambiosMSIF', function(e) {
 
 $(document).on('click', '.btnEditar', function(e){
     let id_aut = $(this).attr('data-idautorizacion');
+    let accion = $(this).attr('data-accion');
     let data = [];
     // console.log(id_aut);
     let arr = id_aut.split(' ');
 
-    if(arr.length <= 1){
+    if(accion == 1){
         let id = parseInt(id_aut);
         data["url"] = general_base_url+'Contraloria/getAutVis/'+id+'/1';
         data['edit'] = 1;
         dataUpdateGeneral[0] = id_aut;
         dataUpdateGeneral[1] = 1;//tipo_update
-    }else if(arr.length > 1){
+    }else if(accion == 2){
         data["url"] = general_base_url+'Contraloria/getAutVis/'+id_aut+'/2';
         data['edit'] = 1;
         dataUpdateGeneral[0] = id_aut;

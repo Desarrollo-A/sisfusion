@@ -309,33 +309,6 @@
                                                             <p style="color:#0a548b;"><i class="fa fa-info-circle" aria-hidden="true"></i> La cantidad mostrada es menos las deducciones aplicables para el régimen de <b>Remanente Distribuible.</b>
                                                         </div>
                                                     <?php } ?>
-                                                    <?php if (($this->session->userdata('forma_pago') == 2 ||
-                                                            $this->session->userdata('forma_pago') == 3 ||
-                                                            $this->session->userdata('forma_pago') == 4 ||
-                                                            $this->session->userdata('forma_pago') == 5) &&
-                                                        ($this->session->userdata('id_rol') == 3 ||
-                                                            $this->session->userdata('id_rol') == 7 ||
-                                                            $this->session->userdata('id_rol') == 9)
-                                                    ) { ?>
-
-                                                        <div class="col-md-12">
-                                                            <p class="card-title m-1">
-                                                                Para consultar más detalles sobre el uso y funcionalidad del apartado de comisiones podrás visualizarlo en el siguiente tutorial
-                                                                <?php if ($this->session->userdata('forma_pago') == 2) { ?>
-                                                                    <a href="https://youtu.be/YuZNsPk8-gY" target="_blank"><u>clic aquí</u></a>
-                                                                <?php } ?>
-                                                                <?php if ($this->session->userdata('forma_pago') == 3) { ?>
-                                                                    <a href="https://youtu.be/LmmIdipDSEA" target="_blank"><u>clic aquí</u></a>
-                                                                <?php } ?>
-                                                                <?php if ($this->session->userdata('forma_pago') == 4) { ?>
-                                                                    <a href="https://youtu.be/oRoJev_AZgs" target="_blank"><u>clic aquí</u></a>
-                                                                <?php } ?>
-                                                                <?php if ($this->session->userdata('forma_pago') == 5) { ?>
-                                                                    <a href="https://youtu.be/4t0MNA8HxZ4" target="_blank"><u>clic aquí</u></a>
-                                                                <?php } ?>
-                                                            </p>
-                                                        </div>
-                                                    <?php } ?>
 
                                                     <?php if ($this->session->userdata('forma_pago') == 5) { ?>
                                                         <div class="col-md-6">

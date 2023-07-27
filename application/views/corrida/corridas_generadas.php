@@ -23,41 +23,14 @@
 <div class="wrapper ">
     <?php
     //se debe validar que tipo de perfil esta sesionado para poder asignarle el tipo de sidebar
-    switch ($this->session->userdata('id_rol')) {
-        case '2': // SUB VENTAS
-        case '3': // GERENTE VENTAS
-        case '4': // ASISTENTE DIRECCIÓN COMERCIAL
-        case '5': // ASISTENTE SUBDIRECCIÓN COMERCIAL
-        case '6': // ASISTENTE GERENCIA COMERCIAL
-        case '7': // ASESOR
-        case '9': // COORDINADOR
-        case '11': // ADMINISTRACIÓN
-        case '12': // CAJA
-        case '13': // CONTRALORÍA
-        case '15': // JURÍDICO
-        case '16': // CONTRATACIÓN
-        case '17': // contraloria
-        case '28': // EJECUTIVO ADMINISTRATIVO MKTD
-        case '32': // CONTRALORÍA CORPORATIVA
-        case '33': // CONSULTA
-        case '34': // FACTURACIÓN
-        case '39': // CONTABILIDAD
-        case '50': // GENERALISTA MKTD
-        case '40': // COBRANZA
-        case '53': // analista comisisones
-            $datos = array();
-            $datos = $datos4;
-            $datos = $datos2;
-            $datos = $datos3;
-            $this->load->view('template/sidebar', $datos);
-            break;
-
-        default:
-            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
-            break;
-    }
+    if(
+        in_array($this->session->userdata('id_rol'), array(2, 3, 4, 5, 6, 7, 9, 11, 12, 13, 15, 16, 17, 19, 28, 32, 33, 34, 39, 40, 47, 50, 53, 54, 55, 58, 65, 70, 71, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83)) ||
+        ($this->session->userdata('id_rol') == 11 && $this->session->userdata('id_usuario') == 2755) || $this->session->userdata('id_usuario') == 2748
+    )
+        $this->load->view('template/sidebar');
+    else
+        echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
     ?>
-    <!--Contenido de la página-->
 
 
 
@@ -407,11 +380,9 @@
                             },
                         },
                         {
-                            // data: 'creacion_corrida'
                             data: null,
                             render: function ( data, type, row )
                             {
-                                // return data.creacion_corrida;
                                 let d = new Date(data.creacion_corrida);
                                 let month = (d.getMonth() + 1).toString().padStart(2, '0');
                                 let day = d.getDate().toString().padStart(2, '0');
@@ -424,7 +395,6 @@
                                 return fecha+' '+hrs;
                             },
                         },
-                        /*{data: 'ubic'},*/
                         {
                             data: null,
                             render: function ( data, type, row )
@@ -450,9 +420,6 @@
                                 <?php }?>
 
 
-                                //container_btnc =  '<center><a href="<?php //echo base_url()?>//Corrida/editacf/'+ data.id_corrida +'" target="_blank" style="padding:10px 0px"><button class="btn-data btn-green ' +
-                                //     'btn-fab btn-fab-mini"><i class="fas fa-money-check-alt"></i></button></a></center>';
-
                                 return container_btnc;
                             }
                         },
@@ -468,7 +435,21 @@
                                 if(data.status==1){
                                     button_action = '<button class="btn-data-gral btn-warning  desactivar_corrida" data-idCorrida="'+data.id_corrida+'" data-idLote="'+data.idLote+'">Desactivar</button>';
                                 }else{
-                                    button_action = '<button class="btn-data-gral btn-green activar_corrida" data-idCorrida="'+data.id_corrida+'" data-idLote="'+data.idLote+'">Activar</button>';
+
+                                    if(data.idMovimiento == 31 || data.idMovimiento == 85 || data.idMovimiento == 20 || data.idMovimiento == 63 || data.idMovimiento == 73 || data.idMovimiento == 82
+                                        || data.idMovimiento == 92 || data.idMovimiento == 96 || data.idMovimiento == 99 || data.idMovimiento == 102 || data.idMovimiento == 104 || data.idMovimiento == 104
+                                        || data.idMovimiento == 107 || data.idMovimiento == 108 || data.idMovimiento == 109 || data.idMovimiento == 111){
+
+                                        button_action = '<button class="btn-data-gral btn-green activar_corrida" data-idCorrida="'+data.id_corrida+'" data-idLote="'+data.idLote+'">Activar</button>';
+                                    }else{
+                                        button_action = '<button class="" disabled ' +
+                                            'style="width: 100%;\n' +
+                                            '    border-radius: 27px;\n' +
+                                            '    border: none;\n' +
+                                            '    padding: 10px 0;\n' +
+                                            '    box-shadow: 0px 8px 15px RGB(0, 0, 0, 0.3);background-color: #a3a3a3; cursor:not-allowed;opacity: 0.6;\n">Activar</button><br>' +
+                                            '<center><small>El lote no se encuentra en el estatus para asignación de CF</small></center>';
+                                    }
                                 }
                                 return '<center>' + button_action + '</center>';
                             }
