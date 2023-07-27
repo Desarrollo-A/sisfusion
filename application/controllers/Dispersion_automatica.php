@@ -30,55 +30,46 @@ class Dispersion_automatica extends CI_Controller
     redirect(base_url());
   }
   
-
-
   public function prueba  (){
   
     $QUERY_V = $this->db->query("SELECT MAX(idResidencial) DATA_V FROM residenciales ");
     $DAT = $QUERY_V->row()->DATA_V;
     $lotePruebas = 66018;
-  //  echo json_encode($this->ComisionesNeo_model->getStatusNeodata($lotePruebas)->result_array(),JSON_NUMERIC_CHECK);
-
+    //  echo json_encode($this->ComisionesNeo_model->getStatusNeodata($lotePruebas)->result_array(),JSON_NUMERIC_CHECK);
     for($j = 1; $j < $DAT+1; $j++){
-      //  $datos = $this->ComisionesNeo_model->getLotesPagados($j)->result_array();
-      $datos = $this->ComisionesNeo_model->getLotesPagadosAutomatica($j);
-       
-       if(count($datos) > 0){
+      $datos = $this->ComisionesNeo_model->getLotesPagados($j)->result_array();
+    if(count($datos) > 0){
         $data = array();
+         $datos = $this->ComisionesNeo_model->getLotesPagadosAutomatica($j);
         $final_data = array();                     
-        // echo('<pre>');
+         echo($j);
         //     echo json_encode($datos[$i] );
         //     echo('</pre>');
         for($i = 0; $i < COUNT($datos); $i++){
             $data[$i] = $this->ComisionesNeo_model->getGeneralStatusFromNeodata($datos[$i]['referencia'], $datos[$i]['idResidencial']);
               // echo('<pre>');
               echo json_encode($datos[$i] );
-
-              
+              echo('datos');
               // echo('</pre>');
               echo('<pre>');
-                
                 echo json_encode($data[$i] );
-      
               echo('</pre>');
-
+              echo('data');
             if(!empty($data)){
-              // echo('<pre>');
+                echo('pre!!!!!!!!!!!!!!!!!!!!!!!!!!');
               // echo json_encode($datos[$i] );
               // echo('</pre>');
-
-             
                 if($data[$i]->Marca == 1){
-               
+                  echo('lollll!!!!!!!!!!!!!!!!!!!!!!l.!!!!');
                     if($data[$i]->Aplicado > ($datos[$i]['ultimo_pago']+100)){
-                      
+
                       // $d2 = $this->ComisionesNeo_model->getStatusNeodata($datos[$i]['id_lote']);   
-                      echo json_encode($this->Dispersion_automatica_model->getDatosDispersion($datos[$i]['id_lote']));
+                     
                       echo('<pre>');
-                      echo json_encode($d2 );
+                     
                       echo('</pre>');
                       
-                            $this->ComisionesNeo_model->UpdateBanderaPagoComision($datos[$i]['id_lote'], $data[$i]->Bonificado, $data[$i]->FechaAplicado, $data[$i]->fpoliza, $data[$i]->Aplicado);
+                        //   $this->ComisionesNeo_model->UpdateBanderaPagoComision($datos[$i]['id_lote'], $data[$i]->Bonificado, $data[$i]->FechaAplicado, $data[$i]->fpoliza, $data[$i]->Aplicado);
                       // $contador ++;
                     }else{
                //         $this->ComisionesNeo_model->UpdateBanderaPagoComisionNO($datos[$i]['id_lote']);
@@ -86,8 +77,8 @@ class Dispersion_automatica extends CI_Controller
                 }else{
                     // $this->ComisionesNeo_model->UpdateBanderaPagoComisionNO($datos[$i]['id_lote']);
                 }
-            }else{
                 // $this->ComisionesNeo_model->UpdateBanderaPagoComisionNO($datos[$i]['id_lote']);
+              }else{
             }
         }
 
@@ -125,6 +116,13 @@ class Dispersion_automatica extends CI_Controller
     echo ('Dispersión automatica');
 
   }
+
+
+  
+
+
+
+
 
   public function InsertNeo(){
     $lote_1 =  $this->input->post("idLote");
