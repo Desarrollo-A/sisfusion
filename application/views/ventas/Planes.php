@@ -411,7 +411,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="modal fade " id="subirMeses" data-backdrop="static" data-keyboard="false">
-                                                        <div class="modal-dialog modal-xl">
+                                                        <div class="modal-dialog modal-lg">
                                                             <div class="modal-content" >
                                                                 <div class="modal-body">
                                                                     <!-- Esto se debe pasar al modal-->

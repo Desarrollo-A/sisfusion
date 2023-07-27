@@ -74,7 +74,7 @@ $(document).ready (function() {
 
     }
     tablaAut = $('#tabla_aut').DataTable({
-        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
         buttons: button_excel,
@@ -142,31 +142,31 @@ $(document).ready (function() {
                     switch(id_rol_general) {
                         case 5:
                             if (d.estatus_id == 1) {
-                                botones += botonesPermiso(1, 1, 1, 0, d.id_autorizacion, d.estatus, d.lote);
+                                botones += botonesPermisoMSI(1, 1, 1, 0, d.id_autorizacion, d.estatus, d.lote);
                             }
                             if (d.estatus_id == 3) {
-                                botones += botonesPermiso(1, 0, 0, 0, d.id_autorizacion, d.estatus, d.lote);
+                                botones += botonesPermisoMSI(1, 0, 0, 0, d.id_autorizacion, d.estatus, d.lote);
                             }
                             if (d.estatus_id == 4) {
-                                botones += botonesPermiso(1, 1, 1, 0, d.id_autorizacion, d.estatus, d.lote);
+                                botones += botonesPermisoMSI(1, 1, 1, 0, d.id_autorizacion, d.estatus, d.lote);
                             }
                             break;
                         case 17:
 
                             if (d.estatus_id == 2) {
-                                botones += botonesPermiso(1, 0, 1, 1, d.id_autorizacion, d.estatus, d.lote);
+                                botones += botonesPermisoMSI(1, 0, 1, 1, d.id_autorizacion, d.estatus, d.lote);
                             }
                             if (d.estatus_id == 4) {
-                                botones += botonesPermiso(1, 0, 0, 0, d.id_autorizacion, d.estatus, d.lote);
+                                botones += botonesPermisoMSI(1, 0, 0, 0, d.id_autorizacion, d.estatus, d.lote);
                             }
                             break;
                         case 70:
 
                             if (d.estatus_id == 2) {
-                                botones += botonesPermiso(1, 0, 1, 1, d.id_autorizacion, d.estatus, d.lote);
+                                botones += botonesPermisoMSI(1, 0, 1, 1, d.id_autorizacion, d.estatus, d.lote);
                             }
                             if (d.estatus_id == 4) {
-                                botones += botonesPermiso(1, 0, 0, 0, d.id_autorizacion, d.estatus, d.lote);
+                                botones += botonesPermisoMSI(1, 0, 0, 0, d.id_autorizacion, d.estatus, d.lote);
                             }
                             break;
                         default:
@@ -579,7 +579,7 @@ jQuery(document).ready(function(){
     })
 })
 
-function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechazar,idAutorizacion,estatus, lote){
+function botonesPermisoMSI(permisoVista,permisoEditar,permisoAvanzar,permisoRechazar,idAutorizacion,estatus, lote){
     let botones = '';
     /**Permisos - FUNCIÓN PARA OBTENER LOS BOTONES POR PERMISOS DE LA DATATABLE
      * 1.- vista
@@ -589,8 +589,8 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
      **/
     let autTipo = isNum(lote);
     let valor = (autTipo) ? 2 : 1;
-    if(permisoVista == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-accion="${valor}"  class="btn-data btn-sky btnVer" data-toggle="tooltip" data-placement="top" title="Ver"><i class="fas fa-eye"></i></button>`;   }
-    if(permisoEditar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-accion="${valor}" class="btn-data btn-yellow btnEditar" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-edit"></i></button>`; }
+    if(permisoVista == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-accion="${valor}"  class="btn-data btn-sky btnVerMA" data-toggle="tooltip" data-placement="top" title="Ver"><i class="fas fa-eye"></i></button>`;   }
+    if(permisoEditar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-accion="${valor}" class="btn-data btn-yellow btnEditarMA" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-edit"></i></button>`; }
     if(permisoAvanzar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="1" data-estatus="${estatus}" class="btn-data btn-green btnAvanzarAM" data-toggle="tooltip" data-placement="top" title="Avanzar"><i class="fas fa-thumbs-up"></i></button>`;  }
     if(permisoRechazar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="2" data-estatus="${estatus}" class="btn-data btn-warning btnRechazarAM" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-thumbs-down"></i></button>`;  }
     return  botones;
@@ -599,7 +599,7 @@ function isNum(val){
     return !isNaN(val)
 }
 
-$(document).on('click', '.btnVer', function(e){
+$(document).on('click', '.btnVerMA', function(e){
     let data = [];
     data["tb"] = 2;
     let id_aut = $(this).attr('data-idautorizacion');
@@ -939,7 +939,7 @@ $(document).on('submit', '#cambiosMSIF', function(e) {
 
 });
 
-$(document).on('click', '.btnEditar', function(e){
+$(document).on('click', '.btnEditarMA', function(e){
     let id_aut = $(this).attr('data-idautorizacion');
     let accion = $(this).attr('data-accion');
     let data = [];
