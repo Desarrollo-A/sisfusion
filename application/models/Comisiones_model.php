@@ -4229,12 +4229,11 @@ return 1;
 
         function comisionistasPorLote($idLote){
             return $this->db->query("SELECT porcentaje_decimal, CONVERT(VARCHAR,cm.fecha_creacion,20) AS fechaCreacion,
-            CONCAT(nombre,' ',apellido_paterno,' ',apellido_materno) AS comisionista  
+            CONCAT(nombre,' ',apellido_paterno,' ',apellido_materno) AS nombre  
             from lotes lo
             INNER JOIN comisiones cm ON cm.id_lote = lo.idLote and cm.estatus = 1
             INNER JOIN usuarios usu ON usu.id_usuario = cm.id_usuario
-            WHERE lo.idLote = $idLote
-            ");
+            WHERE lo.idLote = $idLote");
         }
 
         /**----------------------------------------BONOS Y PRESTAMOS------------------------------- */

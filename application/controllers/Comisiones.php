@@ -3548,7 +3548,8 @@ echo json_encode($respuesta);
   }
 
   public function comisionistasPorLote($idLote){
-    $res["data"] = $this->Comisiones_model->comisionistasPorLote()->result_array();
+    $res = $this->Comisiones_model->comisionistasPorLote($idLote)->result_array();
+    echo json_encode($res);
   }
 
 
