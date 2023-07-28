@@ -91,3 +91,94 @@
     </div>
 </div>
 
+
+<!-- modales de autorizaciones msi-->
+<div class="modal fade" id="addFile" style="z-index: 9999;" >
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="modal-header">
+                <center><h3 class="modal-title" id="myModalLabel"><span class="lote"></span></h3></center>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label class="input-group-btn">
+								<span class="btn btn-primary btn-file">
+								Seleccionar archivo&hellip;<input type="file" name="file_msni" id="file_msni" style="display: none;">
+								</span>
+                    </label>
+                    <input type="text" class="form-control" id= "txtexp" readonly>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                <button type="button" id="sendFile" class="btn btn-primary">Actualizar </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="verAut" style="z-index: 9999;" >
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" >
+            <div class="modal-header">
+                <center><h3 class="modal-title" id="myModalLabel"><span class="lote"></span></h3></center>
+            </div>
+            <form name="cambiosMSIF" id="cambiosMSIF" method="post">
+                <div class="modal-body">
+                    <div class="material-datatables">
+                        <div class="form-group">
+                            <table class="table-striped table-hover" id="tabla_msni_visualizacion" name="tabla_msni_visualizacion">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>NOMBRE</th>
+                                    <th>MSI</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary no-shadow rounded-circle" id="cambiosGuardaMSI">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalHistorialAM" style="z-index: 9999;" >
+    <div class="modal-dialog ">
+        <div class="modal-content" >
+            <div class="modal-header">
+                <center><h3 class="modal-title" id="myModalLabelAM">HISTORIAL</h3></center>
+            </div>
+            <div class="modal-body" style="height: 550px;overflow-x: auto;">
+                <div id="historialAutAM" >
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="avanzarAutAM" style="z-index: 9999;" >
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="modal-header">
+                <center><h3 class="modal-title" id="tittleModalAM"></h3><h5 id="leyendaAdvAM"></h5></center>
+            </div>
+            <div class="modal-body">
+                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <label>Comentario:</label>
+                    <textarea class="text-modal" name="comentarioAvance" id="comentarioAvanceAM" rows="3"></textarea>
+                    <br>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary no-shadow" id="enviarAutBtnAM">Enviar</button>
+            </div>
+        </div>
+    </div>
+</div>
