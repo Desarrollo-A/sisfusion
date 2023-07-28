@@ -5,10 +5,10 @@ if (!defined('BASEPATH')) {
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
-
 class Dispersion_automatica extends CI_Controller
 {
   private $gph;
+
   public function __construct()
   {
     parent::__construct();
@@ -31,7 +31,6 @@ class Dispersion_automatica extends CI_Controller
   }
   
   public function prueba  (){
-  
     $QUERY_V = $this->db->query("SELECT MAX(idResidencial) DATA_V FROM residenciales ");
     $DAT = $QUERY_V->row()->DATA_V;
     $lotePruebas = 66018;
@@ -43,8 +42,6 @@ class Dispersion_automatica extends CI_Controller
          $datos = $this->ComisionesNeo_model->getLotesPagadosAutomatica($j);
         $final_data = array();                     
          echo($j);
-        //     echo json_encode($datos[$i] );
-        //     echo('</pre>');
         for($i = 0; $i < COUNT($datos); $i++){
             $data[$i] = $this->ComisionesNeo_model->getGeneralStatusFromNeodata($datos[$i]['referencia'], $datos[$i]['idResidencial']);
               // echo('<pre>');
@@ -61,14 +58,10 @@ class Dispersion_automatica extends CI_Controller
               // echo('</pre>');
                 if($data[$i]->Marca == 1){
                   echo('lollll!!!!!!!!!!!!!!!!!!!!!!l.!!!!');
-                    if($data[$i]->Aplicado > ($datos[$i]['ultimo_pago']+100)){
-
+                  if($data[$i]->Aplicado > ($datos[$i]['ultimo_pago']+100)){
                       // $d2 = $this->ComisionesNeo_model->getStatusNeodata($datos[$i]['id_lote']);   
-                     
                       echo('<pre>');
-                     
-                      echo('</pre>');
-                      
+                      echo('</pre>');             
                         //   $this->ComisionesNeo_model->UpdateBanderaPagoComision($datos[$i]['id_lote'], $data[$i]->Bonificado, $data[$i]->FechaAplicado, $data[$i]->fpoliza, $data[$i]->Aplicado);
                       // $contador ++;
                     }else{
@@ -81,7 +74,6 @@ class Dispersion_automatica extends CI_Controller
               }else{
             }
         }
-
         //  for($i = 0; $i < COUNT($datos); $i++){
         //     $data[$i] = $this->ComisionesNeo_model->getGeneralStatusFromNeodata($datos[$i]['referencia'], $datos[$i]['idResidencial']);
         //     if(!empty($data)){
@@ -95,26 +87,16 @@ class Dispersion_automatica extends CI_Controller
         //          echo NULL;
         //     }
         // }
-
     }else{
         echo NULL;
     }
        }
-
     $informacion_de_dispersion = array();
-
     // if(count($informacion_de_dispersion) > 0){
- 
     //   // switch (){
-
     //   // }
-
-
-
-
     // }
     echo ('Dispersión automatica');
-
   }
 
 
