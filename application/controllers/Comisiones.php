@@ -5470,7 +5470,7 @@ for ($d=0; $d <count($dos) ; $d++) {
     }
     public function updateBandera(){
       $id_pagoc     = $this->input->post('id_pagoc');
-      $param   = $this->session->userdata('param');
+      $param   = $this->input->post('param');
 
       $response = $this->Comisiones_model->updateBandera( $param, $id_pagoc);
       echo json_encode($response);

@@ -497,13 +497,9 @@ $(document).on('click', '.edit-user-information', function(e){
             }else{
                 $('#btn_acept').removeClass('hide');
             }
-            let leader;
-            if (v.id_rol == 9)
-                leader = v.gerente_id
-            else if (v.id_rol == 3)
-                leader = v.subdirector_id
-            else
-                leader = v.id_lider;
+
+            let leader = v.id_lider;
+
             if (v.id_rol == '7' || v.id_rol == '9' || v.id_rol == '3') { // ASESOR || COORDINADOR || GERENTE
                 var row = $('.col-estructura');
                 row.append(`
@@ -794,7 +790,7 @@ function fillChangelogUsers(v) {
     '               <a><small>Campo: </small><b> ' +v.col_afect.toUpperCase()+ '</b></a><br>\n' +
     '           </div>\n' +
     '<div class="float-end text-right">\n' +
-    '               <a>' + v.fec_creacion + '</a>\n' +
+    '               <a>' + v.fecha_creacion + '</a>\n' +
     '           </div>\n' +
     '           <div class="col-md-12">\n' +
     '                <p class="m-0"><small>USUARIO: </small><b> ' + v.creador + '</b></p>\n'+
