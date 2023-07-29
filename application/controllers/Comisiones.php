@@ -5474,13 +5474,12 @@ for ($d=0; $d <count($dos) ; $d++) {
             'detalle' => $detalle
         ));
     }
+    
     public function updateBandera(){
-      $id_pagoc     = $this->input->post('id_pagoc');
-      $param   = $this->session->userdata('param');
-
-      $response = $this->Comisiones_model->updateBandera( $param, $id_pagoc);
+      $response = $this->Comisiones_model->updateBandera( $_POST['id_pagoc'], $_POST['param']);
       echo json_encode($response);
     }
+
     public function updateBanderaDetenida() {
       $idLote     = $this->input->post('idLote');
       $bandera     = true;

@@ -86,12 +86,7 @@ class Postventa extends CI_Controller
             redirect(base_url());
         }
         switch ($this->session->userdata('id_rol')){
-            case '11': //ADMON
-            case '17': //CONTRALORIA
-            case '55': //POSTVENTA
-            case '56': //COMITE TECNICO
             case '57': //TITULACION
-            case '62': //Proyectos
             $this->load->view('template/header');
             $this->load->view("postventa/notaria");
             break;

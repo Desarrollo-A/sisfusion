@@ -56,7 +56,7 @@
                                     </div>
                                 </div>
                                 <div class="material-datatables">
-                                    <table id="estatusNueveTable" name="estatusNueveTable" class="table-striped table-hover hide">
+                                    <table id="estatusNueveTable" name="estatusNueveTable" class="table-striped table-hover">
                                         <thead>
                                             <tr>
                                                 <th>PROYECTO</th>
@@ -66,11 +66,11 @@
                                                 <th>GERENTE</th>
                                                 <th>ENGANCHE</th>
                                                 <th>TOTAL</th>
-                                                <th>FECHA ESTATUS 9</th>
+                                                <th>FECHA DE ESTATUS 9</th>
                                                 <th>USUARIO</th>
                                                 <th>FECHA APARTADO</th>
                                                 <th>REUBICACIÓN</th>
-                                                <th>FECHA REUBICACIÓN</th>
+                                                <th>FECHA DE REUBICACIÓN</th>
                                             </tr>
                                         </thead>
                                     </table>

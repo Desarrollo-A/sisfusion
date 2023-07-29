@@ -2557,7 +2557,6 @@ function update_pago_dispersion($suma, $ideLote, $pago){
 
 public function getDataLiquidadasPago($val = '') {
     ini_set('memory_limit', -1);
-     
     $query = $this->db->query("SELECT DISTINCT(l.idLote), l.nombreLote,  res.nombreResidencial, cond.nombre as nombreCondominio,
     CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombreCliente, l.tipo_venta, 
     vc.id_cliente AS compartida, l.idStatusContratacion, cl.id_cliente, l.tipo_venta,  
@@ -7453,13 +7452,10 @@ public function getDataDispersionPagoEspecial($val = '') {
     }
 
     function updateBandera($id_pagoc, $param) {
-        // $response = $this->db->update("pago_comision", $data, "id_pagoc = $id_pagoc");
         $response = $this->db->query("UPDATE pago_comision SET bandera = ".$param." WHERE id_lote IN (".$id_pagoc.")");
-
         if($param == 55){
-          $response = $this->db->query("UPDATE lotes SET registro_comision = 1 WHERE idLote IN (".$id_pagoc.")");
+            $response = $this->db->query("UPDATE lotes SET registro_comision = 1 WHERE idLote IN (".$id_pagoc.")");
         }
-
         if (! $response ) {
             return $finalAnswer = 0;
         } else {

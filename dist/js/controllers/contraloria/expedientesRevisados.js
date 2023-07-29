@@ -110,6 +110,7 @@ function fillDataTable(typeTransaction, beginDate, endDate, where)
                 title: "Estatus 5. Revisión 100%",
                 orientation: 'landscape',
                 pageSize: 'LEGAL',
+                bAutoWidth: true,
                 exportOptions: {
                     columns: [0,1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                     format: {
@@ -128,25 +129,21 @@ function fillDataTable(typeTransaction, beginDate, endDate, where)
             {
                 data: function (data) {
                     return myFunctions.validateEmptyField(data.nombreUsuario);
-
                 }
             },
             {
                 data: function (data) {
                     return myFunctions.validateEmptyField(data.asesor);
-
                 }
             },
             {
                 data: function (data) {
                     return myFunctions.validateEmptyField(data.coordinador);
-
                 }
             },
             {
                 data: function (data) {
                     return myFunctions.validateEmptyField(data.gerente);
-
                 }
             },
             {

@@ -689,7 +689,7 @@ class Usuarios_modelo extends CI_Model
             $where = " AND u.id_sede IN ('" . $this->session->userdata('id_sede') . "')";
         else {
             if ($this->session->userdata('id_usuario') == 1988)
-                $where = " AND u.getUsersListByLeaderid_sede IN ('5')";
+                $where = " AND u.id_sede IN ('5')";
             else
                 $where = " AND u.id_sede IN ('2', '3', '4', '6')";
         }
