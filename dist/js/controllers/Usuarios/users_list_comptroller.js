@@ -163,7 +163,7 @@ $('#all_users_datatable').DataTable({
             }
         },
         { data: function (d) {
-            return d.fecha_alta; 
+            return d.fecha_creacion;
             }
         },
         { 
@@ -270,7 +270,6 @@ $("#editUserForm").on('submit', function(e){
 $(document).on('click', '.see-changes-log', function(){
     id_usuario = $(this).attr("data-id-usuario");
     $.post("getChangeLogUsers/"+id_usuario).done( function( data ){
-        console.log("aqui es: " + data);
         $("#changesRegsUsers").modal();
         $.each( JSON.parse(data), function(i, v){
             fillChangelogUsers(v);

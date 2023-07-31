@@ -4,11 +4,10 @@
 <body class="">
 <div class="wrapper ">
     <?php
-    if (in_array($this->session->userdata('id_rol'), array('33', '17', '74', '75', '76', '77', '78', '79', '80', '81', '82', '83'))) {
+    if (in_array($this->session->userdata('id_rol'), array('33', '17', '74', '75', '76', '77', '78', '79', '80', '81', '82', '83', '55')))
         $this->load->view('template/sidebar');
-    } else {
+    else
         echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-    }
     ?>
 
     <div class="content boxContent">
@@ -20,15 +19,14 @@
                             <i class="fas fa-user-circle fa-2x"></i>
                         </div>
                         <div class="card-content">
-                            <h3 class="card-title center-align">Comisiones - Pagado por lote</h3>
+                            <h3 class="card-title center-align">Comisiones pagadas por lote</h3>
                             <div class="toolbar">
                                 <div class="row">
                                 </div>
                             </div>
                             <div class="material-datatables">
                                 <div class="form-group">
-                                    <table id="tabla_ingresar_9" name="tabla_ingresar_9"
-                                            class="table-striped table-hover" style="text-align:center;">
+                                    <table id="tabla_ingresar_9" name="tabla_ingresar_9" class="table-striped table-hover">
                                         <thead>
                                             <tr>
                                                 <th></th>
@@ -55,10 +53,7 @@
         </div>
     </div>
     <?php $this->load->view('template/footer_legend'); ?>
-</div><!--main-panel close-->
+</div>
 </body>
 <?php $this->load->view('template/footer'); ?>
-
 <script src="<?= base_url() ?>dist/js/controllers/comisiones/historial_postventa.js"></script>
-
-

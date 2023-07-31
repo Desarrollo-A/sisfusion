@@ -77,7 +77,7 @@
                         <h4 class="modal-title">Bitácora de cambios</h4>
                     </div>
                     <div class="modal-body">                      
-                        <div class="container-fluid p-0" id="changelogTab">
+                        <div class="container-fluid" id="changelogTab">
                             <div class="row">
                                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 scroll-styles" style="height: 350px; overflow: auto">
                                     <ul class="timeline-3" id="changelog"></ul>

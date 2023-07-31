@@ -5,14 +5,13 @@ class Usuarios extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(array('Usuarios_modelo', 'Services_model'));
+        $this->load->model(array('Usuarios_modelo'));
         $this->load->model('asesor/Asesor_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
         $this->load->model('Clientes_model');
-        $this->load->model('General_model');
         //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
-        $this->load->library(array('session', 'form_validation', 'get_menu'));
-        $this->load->library(array('session', 'form_validation', 'formatter'));
-        $this->load->helper(array('url', 'form'));
+        $this->load->library(array('session','form_validation', 'get_menu'));
+        $this->load->library(array('session','form_validation','formatter'));
+        $this->load->helper(array('url','form'));
         $this->load->database('default');
         $this->validateSession();
 
@@ -117,8 +116,20 @@ class Usuarios extends CI_Controller
         echo json_encode($data);
     }
 
-    public function getPaymentMethod()
+    public function usersAsesor()
     {
+        $this->load->view('template/header');
+        $this->load->view("asesor/viewUser");
+    }
+
+    public function getUsersListAsesor()
+    {
+        $data['data'] = $this->Usuarios_modelo->getUserPassword()->result_array();
+        $data['data'][0]['contrasena'] = desencriptar($data['data'][0]['contrasena']);
+        echo json_encode($data);
+    }
+
+    public function getPaymentMethod(){
         echo json_encode($this->Usuarios_modelo->getPaymentMethod()->result_array());
     }
 
@@ -203,11 +214,8 @@ class Usuarios extends CI_Controller
 
     public function updateUser()
     {
-        //RUTA DE PRUEBAS
         $usersCH = 0;
         $ruta = "https://prueba.gphsis.com/RHCV/index.php/WS/movimiento_interno_asesor_v2";
-        //RUTA DE PRODUCCIÓN
-        //$ruta="https://rh.gphsis.com/index.php/WS/movimiento_interno_asesor";
         if ($this->session->userdata('id_rol') == 32 || $this->session->userdata('id_rol') == 17 || $this->session->userdata('id_rol') == 13) {
             $data = array(
                 "forma_pago" => $_POST['payment_method'],
@@ -262,31 +270,6 @@ class Usuarios extends CI_Controller
                 $resultadoCH = $this->Usuarios_modelo->UpdateProspect($this->input->post("id_usuario"), $_POST['leader'], $_POST['member_type'], $_POST['rol_actual'], $sedeCH, $sucursal, $datosCH);
             }
             $nueva_estructura = (isset($_POST['nueva_estructura'])) ? $_POST['nueva_estructura'] : 0;
-            /* $getLider = $this->Services_model->getLider($_POST['leader'], $_POST['member_type']);
-            $id_lider = 0;
-            $id_gerente = 0;
-            $id_subdirector = 0;
-            $id_regional = 0;
-            
-            if ($_POST['member_type'] == 7) {
-                //Asesor
-                $id_lider = $_POST['leader'];
-                $id_gerente = $getLider[0]['id_gerente'];
-                $id_subdirector = $getLider[0]['id_subdirector'];
-                $id_regional = $getLider[0]['id_regional'];
-            } else if ($_POST['member_type'] == 9) {
-                //Coordinador
-                $id_lider = 0;
-                $id_gerente = $_POST['leader'];
-                $id_subdirector = $getLider[0]['id_subdirector'];
-                $id_regional = $getLider[0]['id_regional'];
-            } else if ($_POST['member_type'] == 3) {
-                //Gerente
-                $id_lider = 0;
-                $id_gerente = 0;
-                $id_subdirector = $_POST['leader']; //$getLider[0]['id_subdirector'];
-                $id_regional = $getLider[0]['id_lider'];
-            }*/
             $simbolicoPropiedad = '';
             if(isset($_POST["simbolicoType"])){
                 $simbolicoPropiedad = $_POST["simbolicoType"];
@@ -360,8 +343,7 @@ class Usuarios extends CI_Controller
         echo json_encode($response);
     }
 
-    public function getUserInformation($id_usuario)
-    {
+    public function getUserInformation($id_usuario){
         $data = $this->Usuarios_modelo->getUserInformation($id_usuario);
         $data[0]['contrasena'] = desencriptar($data[0]['contrasena']);
         echo json_encode($data);
@@ -527,19 +509,6 @@ class Usuarios extends CI_Controller
     public function getUsersListByLeader()
     {
         $data['data'] = $this->Usuarios_modelo->getUsersListByLeader($this->session->userdata('id_usuario'))->result_array();
-        echo json_encode($data);
-    }
-
-    public function usersAsesor()
-    {
-        $this->load->view('template/header');
-        $this->load->view("asesor/viewUser");
-    }
-
-    public function getUsersListAsesor()
-    {
-        $data['data'] = $this->Usuarios_modelo->getUserPassword()->result_array();
-        $data['data'][0]['contrasena'] = desencriptar($data['data'][0]['contrasena']);
         echo json_encode($data);
     }
 
