@@ -116,7 +116,7 @@
                                                 <div class="row">
                                                     <h3 class="card-title center-align">Historial activos</h3>
                                                     <p class="card-title pl-1">(Listado de todos los pagos aplicados, en proceso de lotes contratados y activos)
-                                                        <a href="https://youtu.be/6W5B97MTOCghttps://youtu.be/6W5B97MTOCg" style="color:red" target="_blank">
+                                                        <a href="https://youtu.be/S7HO2QTLaL0" style="color:red" target="_blank">
                                                             <i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
                                                         </a>
                                                     </p>
@@ -180,7 +180,7 @@
                                                 <div class="row">
                                                     <h3 class="card-title center-align">Historial canceladas</h3>
                                                     <p class="card-title pl-1">(Listado de todos los pagos aplicados, en proceso de lotes cancelados con recisión)
-                                                        <a href="https://youtu.be/6W5B97MTOCghttps://youtu.be/6W5B97MTOCg" style="color:red" target="_blank">
+                                                        <a href="https://youtu.be/S7HO2QTLaL0" style="color:red" target="_blank">
                                                             <i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
                                                         </a>
                                                     </p>
@@ -244,7 +244,7 @@
                                         <div class="tab-pane <?php if($this->session->userdata('id_rol') == 66){ ?> active <?php } ?>" id="solicitudesSUMA">
                                                 <div class="encabezadoBox">
                                                     <h3 class="card-title center-align">Historial general SUMA
-                                                        <a href="https://youtu.be/6W5B97MTOCghttps://youtu.be/6W5B97MTOCg" style="color:red" target="_blank">
+                                                        <a href="https://youtu.be/S7HO2QTLaL0" style="color:red" target="_blank">
                                                             <i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
                                                         </a>
                                                     </h3>

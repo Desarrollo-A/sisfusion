@@ -4264,6 +4264,8 @@ function getStatusMktdPreventa(){
             $set .= ", $key = $data[$key]";
         }
 
+        $set .= ', fecha_modificacion = GETDATE()';
+
         $this->db->query("UPDATE prospectos SET $set WHERE id_asesor = $idOwner AND becameClient IS NULL");
     }
 }

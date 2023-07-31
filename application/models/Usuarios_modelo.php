@@ -616,7 +616,7 @@ class Usuarios_modelo extends CI_Model
     }
 
     public function getChangeLogUsers($id_usuario){
-        $query =  $this->db->query("SELECT fecha_creacion, creador, col_afect,(
+        $query =  $this->db->query("SELECT CONVERT(varchar, fecha_creacion, 120) AS fecha_creacion, creador, col_afect,(
                     CASE 
                         WHEN col_afect = 'usuario' OR col_afect = 'id_lider' THEN (SELECT CONCAT( apellido_paterno,' ',apellido_materno,' ',nombre) as nombre FROM usuarios WHERE id_usuario = nuevo)
                         WHEN col_afect = 'personalidad_juridica' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 10)

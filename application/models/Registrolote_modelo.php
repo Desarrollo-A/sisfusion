@@ -3292,15 +3292,21 @@
 				$sede = "";
 				if ($this->session->userdata('id_usuario') == 11656) // Dulce María Facundo Torres VERÁ USUARIOS DE LA GERENCIA ACTUAL (7886 JESSIKA GUADALUPE NEAVES FLORES) Y LO DE SU ANTERIOR GERENCIA (106 ANA KARINA ARTEAGA LARA)
                         $id_lider = $this->session->userdata('id_lider') . ', 106';
-				else if ($this->session->userdata('id_usuario') == 10795) { // ALMA GALICIA ACEVEDO QUEZADA
+				else if ($this->session->userdata('id_usuario') == 10795) { // ALMA GALICIA ACEVEDO QUEZADA 
 					$id_lider = $id_lider . ', 671';
 					$sede = "AND clientes.id_sede = 12";
-				} else if ($this->session->userdata('id_usuario') == 12449) { // MARCELA CUELLAR MORON
+				}	
+				else if ($this->session->userdata('id_usuario') == 12449) { // MARCELA CUELLAR MORON
 					$id_lider = $id_lider . ', 654';
 					$sede = "AND clientes.id_sede = 12";
-				} else if ($this->session->userdata('id_usuario') == 10270) { // ANDRES BARRERA VENEGAS
+				}
+				else if ($this->session->userdata('id_usuario') == 10270) { // ANDRES BARRERA VENEGAS
 					$id_lider = $id_lider . ', 113';
 					$sede = "AND clientes.id_sede IN (4, 13)";
+				}
+				else if ($this->session->userdata('id_usuario') == 12318) { // EMMA CECILIA MALDONADO RAMÍREZ
+					$id_lider = $id_lider . ', 11196, 5637';
+					$sede = "";
 				}
                 $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor, '1' venta_compartida  FROM lotes
                 INNER JOIN clientes ON clientes.idLote = lotes.idLote $sede

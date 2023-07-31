@@ -226,7 +226,7 @@
 			</div>
 		</div>
 
-		<div class="cargarPlan">
+		<div class="cargarPlan"><!--main de las tabs-->
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">  
@@ -237,6 +237,9 @@
                             <li id="li-plan" class="">
 								<a href="#nuevas-2" role="tab" data-toggle="tab">CARGAR PLAN</a>
 							</li>
+                            <li id="autorizacionesMsiPanel" class="">
+                                <a href="#autorizacionesTab" role="tab" data-toggle="tab">AUTORIZACIONES MSI</a>
+                            </li>
                         </ul>
 
 						<div class="card no-shadow m-0">
@@ -382,6 +385,115 @@
 											</div>
 										</form>
 									</div>
+                                    <div class="tab-pane" id="autorizacionesTab">
+                                        <div class="content boxContent">
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                        <h3 class="card-title center-align" >Meses sin intereses</h3>
+                                                        <div class="toolbar">
+                                                            <div class="container-fluid p-0"></div>
+                                                        </div>
+                                                        <div class="material-datatables">
+                                                            <div class="form-group">
+                                                                <table class="table-striped table-hover" id="tabla_aut" name="tabla_aut_name">
+                                                                    <thead>
+                                                                    <tr>
+                                                                        <th>ID</th>
+                                                                        <th>COMENTARIO</th>
+                                                                        <th>ESTATUS AUTORIZACIÓN</th>
+                                                                        <th>ÚLT. MODIFICACIÓN</th>
+                                                                        <th>ACCIONES</th>
+                                                                    </tr>
+                                                                    </thead>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal fade " id="subirMeses" data-backdrop="static" data-keyboard="false">
+                                                        <div class="modal-dialog modal-lg">
+                                                            <div class="modal-content" >
+                                                                <div class="modal-body">
+                                                                    <!-- Esto se debe pasar al modal-->
+                                                                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                                        <div class="card">
+                                                                            <div class="card-content">
+                                                                                <h3 class="card-title center-align" >Meses sin intereses</h3>
+                                                                                <div class="toolbar">
+                                                                                    <div class="container-fluid p-0">
+                                                                                        <div class="row aligned-row d-flex align-end">
+                                                                                            <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                                                                <label style="font-size: small">Elige el modo para subir los meses sin interés:</label>
+                                                                                            </div>
+                                                                                            <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4 pb-3">
+                                                                                                <div class="radio_container w-100">
+                                                                                                    <input class="d-none generate" type="radio" name="modoSubida" id="condominioM" checked value="1">
+                                                                                                    <label for="condominioM" class="w-50">Por Condominio</label>
+                                                                                                    <input class="d-none find-results" type="radio" name="modoSubida" id="loteM" value="0">
+                                                                                                    <label for="loteM" class="w-50">Por lote</label>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="row aligned-row d-flex align-end">
+                                                                                            <div class="col col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                                                                                                <label class="m-0" for="filtro3">Proyecto</label>
+                                                                                                <select name="filtro3" id="filtro3" class="selectpicker select-gral mb-0"
+                                                                                                        data-show-subtext="true" data-live-search="true"  data-style="btn"
+                                                                                                        onchange="changeCondominio()" title="Selecciona Proyecto" data-size="4" required>
+                                                                                                    <?php
+                                                                                                    if($residencial != NULL) :
+                                                                                                        foreach($residencial as $fila) : ?>
+                                                                                                            <option value= <?=$fila['idResidencial']?> data-nombre='<?=$fila['nombreResidencial']?>' style="text-transform: uppercase"> <?=$fila['descripcion']?> </option>
+                                                                                                        <?php endforeach;
+                                                                                                    endif;
+                                                                                                    ?>
+                                                                                                </select>
+                                                                                            </div>
+                                                                                            <div class="col col-xs-12 col-sm-4 col-md-4 col-lg-4 hide" id="contenedor-condominio">
+                                                                                                <label class="m-0" for="filtro4">Condominio</label>
+                                                                                                <select name="filtro4" id="filtro4" class="selectpicker select-gral mb-0"
+                                                                                                        data-show-subtext="true" data-live-search="true"  data-style="btn"
+                                                                                                        title="Selecciona Condominio" data-size="4" required onChange="loadLotes()">
+                                                                                                </select>
+                                                                                            </div>
+                                                                                            <input id="typeTransaction" type="hidden" value="1">
+                                                                                            <div class="col col-xs-12 col-sm-4 col-md-4 col-lg-4 mt-2">
+                                                                                                <button type="button" id="loadFile" class="btn-data-gral btn-success d-flex justify-center align-center">Cargar información<i class="fas fa-paper-plane pl-1"></i>
+                                                                                                </button>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="material-datatables">
+                                                                                    <div class="form-group">
+                                                                                        <div class="table-responsive">
+                                                                                            <table class="table-striped table-hover" id="tabla_msni" name="tabla_msni_name">
+                                                                                                <thead>
+                                                                                                <tr>
+                                                                                                    <th>ID CONDOMINIO</th>
+                                                                                                    <th>NOMBRE</th>
+                                                                                                    <th>MSI</th>
+                                                                                                </tr>
+                                                                                                </thead>
+                                                                                            </table>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
+                                                                    <!--                                <button type="button" id="guardar" class="btn btn-primary">Registrar</button>-->
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 									<?php include 'modalsPventas.php' ?>
 								</div>
 							</div>
@@ -404,4 +516,9 @@
 	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 	<script src="<?= base_url() ?>dist/js/funciones-generales.js"></script>
 	<script src="<?=base_url()?>dist/js/controllers/ventas/autorizacionesPlanes.js"></script>
+    <script type="text/javascript" src="//unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+    <!-- autorizaciones de msi -->
+    <script src="<?= base_url() ?>dist/js/controllers/contraloria/meses_sin_intereses.js"></script>
+
+
 </body>
