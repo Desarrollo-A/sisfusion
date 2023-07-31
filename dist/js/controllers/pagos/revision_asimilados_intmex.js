@@ -446,8 +446,6 @@ function getAssimilatedCommissions(proyecto, condominio){
             data: {
                 proyecto:    proyecto,
                 condominio: condominio
-            },
-            data: function( d ){
             }
         },
     });
