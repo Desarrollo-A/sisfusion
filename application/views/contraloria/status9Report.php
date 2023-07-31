@@ -90,10 +90,6 @@
 </body>
 <?php $this->load->view('template/footer');?>
 <script src="<?=base_url()?>dist/js/controllers/contraloria/status9Report.js"></script>
-<script src="<?= base_url() ?>dist/js/dataTables.select.js"></script>
-<script src="<?= base_url() ?>dist/js/dataTables.select.min.js"></script>
-<script src="<?= base_url() ?>dist/js/moment.min.js"></script>
 <script src="<?= base_url() ?>dist/js/es.js"></script>
 <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
-<script src="<?= base_url() ?>dist/js/nouislider.min.js"></script>
 <script src="<?= base_url() ?>dist/js/fullcalendar.min.js"></script>

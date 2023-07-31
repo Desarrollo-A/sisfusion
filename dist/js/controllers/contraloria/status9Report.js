@@ -28,15 +28,17 @@ sp = { // MJ: SELECT PICKER
 }
 
 let titulos = [];
-$('#estatusNueveTable thead tr:eq(0) th').each(function (i) {
+$('#estatusNueveTable thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
     titulos.push(title);
-    $(this).html(`<input type="text" class="textoshead" placeholder="${title}"/>`);
-    $('input', this).on('keyup change', function () {
-        if ($('#estatusNueveTable').DataTable().column(i).search() !== this.value)
+    $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
+    $( 'input', this ).on('keyup change', function () {
+        if ($('#estatusNueveTable').DataTable().column(i).search() !== this.value ) {
             $('#estatusNueveTable').DataTable().column(i).search(this.value).draw();
+        }
     });
-});
+    $('[data-toggle="tooltip"]').tooltip();
+})
 
 function fillTable(typeTransaction, beginDate, endDate) {
     generalDataTable = $('#estatusNueveTable').dataTable({
@@ -48,7 +50,7 @@ function fillTable(typeTransaction, beginDate, endDate) {
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn btn-success buttons-excel',
-                titleAttr: 'Reporte estatus 9',
+                titleAttr: 'REPORTE ESTATUS 9',
                 title: 'Reporte estatus 9',
                 exportOptions: {
                     columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
@@ -61,7 +63,7 @@ function fillTable(typeTransaction, beginDate, endDate) {
             },
             {
                 text: "<i class='fas fa-sync' aria-hidden='true'></i>",
-                titleAttr: 'Cargar vista inicial',
+                titleAttr: 'CARGAR VISTA INICIAL',
                 className: 'btn btn-success buttons-excel reset-initial-values',
             }
         ],
@@ -144,4 +146,12 @@ $(document).on("click", ".reset-initial-values", function () {
     $("#beginDate").val(convertDate(beginDate));
     $("#endDate").val(convertDate(endDate));
     fillTable(1, finalBeginDate, finalEndDate);
+});
+
+$('body').tooltip({
+    selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
+    trigger: 'hover',
+    container: 'body'
+}).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
+    $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
 });

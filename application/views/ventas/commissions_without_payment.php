@@ -13,7 +13,7 @@
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="co-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
                                 <i class="fas fa-wallet fa-2x"></i>
@@ -70,10 +70,6 @@
         </div>
         <?php $this->load->view('template/footer_legend'); ?>
     </div>
-    </div>
-    <!--main-panel close-->
     <?php $this->load->view('template/footer'); ?>
-    <!--DATATABLE BUTTONS DATA EXPORT-->
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/commissions_without_payment.js"></script>
-
 </body>

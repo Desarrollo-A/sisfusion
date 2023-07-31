@@ -40,18 +40,19 @@ $('#condominio').change( function(){
 var totaPen = 0;
 var tr;
 
-$('#tabla_comisiones_sin_pago thead tr:eq(0) th').each(function (i) {
+let titulos = [];
+$('#tabla_comisiones_sin_pago thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
+    titulos.push(title);
     $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
-    $('input', this).on('keyup change', function () {
-        if ($('#tabla_comisiones_sin_pago').DataTable().column(i).search() !== this.value) {
-            $('#tabla_comisiones_sin_pago').DataTable()
-                .column(i)
-                .search(this.value)
-                .draw();
+    $( 'input', this ).on('keyup change', function () {
+        if ($('#tabla_comisiones_sin_pago').DataTable().column(i).search() !== this.value ) {
+            $('#tabla_comisiones_sin_pago').DataTable().column(i).search(this.value).draw();
         }
     });
-});
+    $('[data-toggle="tooltip"]').tooltip();
+    })
+
 
 function fillCommissionTableWithoutPayment (proyecto, condominio) {
     tabla_comisiones_sin_pago = $("#tabla_comisiones_sin_pago").DataTable({
@@ -78,6 +79,14 @@ function fillCommissionTableWithoutPayment (proyecto, condominio) {
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
                 title:'Estatus comisiones',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7],
+                    format: {
+                        header: function (d, columnIdx) {
+                            return ' ' + titulos[columnIdx] + ' ';
+                        }
+                    }
+                }
         }],
         columns: [{
             data: function(d) {
