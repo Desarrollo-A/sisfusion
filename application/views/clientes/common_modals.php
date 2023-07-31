@@ -1,4 +1,3 @@
-<link href="<?= base_url() ?>dist/scss/_base.scss" rel="stylesheet"/>
 <div class="modal fade" id="myCommentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -32,7 +31,7 @@
                             <h4 class="modal-title">¿Qué estatus asignarás a este prospecto?</h4>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0 overflow-hidden">
-                            <select class="selectpicker select-gral m-0" name="estatus_particular" id="estatus_particular" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body"></select>
+                            <select class="selectpicker select-gral m-0" name="estatus_particular" id="estatus_particular" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="5" data-container="body"></select>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end pt-1">
                             <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanSelects()">Cancelar</button>
@@ -692,7 +691,7 @@
         </div>
     </div>
 </div>
-
+<!-- MODAL-->
 <div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
         <div class="modal-content">
@@ -831,7 +830,6 @@
             </div>
         </div>
     </div>
-</div>
 
 <div class="modal fade" id="agendaInsert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-md">

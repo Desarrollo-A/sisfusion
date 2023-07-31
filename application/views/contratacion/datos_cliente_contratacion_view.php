@@ -95,13 +95,13 @@
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 overflow-hidden">
                                             <div class="form-group">
-                                                <label class="m-0" for="proyecto">Proyecto</label>
+                                                <label class="control-label" for="proyecto">Proyecto</label>
                                                 <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                             <div class="form-group">
-                                                <label class="m-0" for="proyecto">Condominio</label>
+                                                <label class="control-label" for="proyecto">Condominio</label>
                                                 <select name="condominio" id="condominio" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
                                             </div>
                                         </div>
@@ -113,7 +113,7 @@
                                             <thead>
                                                 <tr>
                                                     <th>MÁS</th>
-                                                    <th>ID LOTE</th>
+                                                    <th>ID CLIENTE</th>
                                                     <th>PROYECTO</th>
                                                     <th>CONDOMINIO</th>
                                                     <th>LOTE</th>

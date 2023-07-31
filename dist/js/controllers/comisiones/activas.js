@@ -639,6 +639,8 @@ $('#fecha2').change( function(){
 });
 
 $("#my_updatebandera_form").on('submit', function(e){
+    var formulario =  new FormData(this)
+
     e.preventDefault();
     $.ajax({
         type: 'POST',
@@ -660,6 +662,7 @@ $("#my_updatebandera_form").on('submit', function(e){
             }
         },
         error: function(){
+            console.log(formulario);
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
@@ -741,7 +744,7 @@ $(document).on('click', '.update_bandera', function(e){
         $("#myUpdateBanderaModal .modal-body").append('<input type="hidden" name="id_pagoc" id="id_pagoc"><input type="hidden" name="param" id="param">');
         $("#myUpdateBanderaModal").modal();
     $("#id_pagoc").val(id_pagoc);
-    $("#param").val(0);
+    $("#param").val(param);
 });
 
 

@@ -1803,6 +1803,9 @@ public function getStatusMktdPreventa(){
 
     public function getProspectsListByGerente($id_gerente)
     {
+    ini_set('max_execution_time', 900);
+    set_time_limit(900);
+    ini_set('memory_limit','2048M');
         if ($this->session->userdata('id_rol') == 19) { // IS SUBDIRECTOR MKTD
             $typeTransaction = $this->input->post("typeTransaction");
             $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
@@ -1879,6 +1882,11 @@ public function getStatusMktdPreventa(){
     /********************/
     function getResultsProspectsSerch()
     {
+
+    ini_set('max_execution_time', 900);
+    set_time_limit(900);
+    ini_set('memory_limit','2048M');
+
         $name_prospect = $this->input->post('nombre');
         $correo_prospect = $this->input->post('correo');
         $telefono_prospect = $this->input->post('telefono');
@@ -1911,12 +1919,6 @@ public function getStatusMktdPreventa(){
         {
             $data['data'] = $this->Clientes_model->getProspByAp_Materno($ap_materno_prospect);
         }
-
-
-
-
-
-
         /**Telefono, ap_paterno, ap_materno vacío,  ----correo y nombre**/
         if(!empty($name_prospect) && !empty($correo_prospect) && empty($telefono_prospect) && empty($ap_paterno_prospect)
             && empty($ap_materno_prospect))
@@ -1977,15 +1979,12 @@ public function getStatusMktdPreventa(){
         {
             $data['data'] = $this->Clientes_model->getProspByApMaternoTel($ap_materno_prospect, $telefono_prospect);
         }
-        /*****************/
-
         // buscar todos
         if(!empty($name_prospect) && !empty($correo_prospect) && !empty($telefono_prospect) && !empty($ap_paterno_prospect)
             && !empty($ap_materno_prospect))
         {
             $data['data'] = $this->Clientes_model->getProspByAllFiels($name_prospect, $correo_prospect, $telefono_prospect, $ap_paterno_prospect, $ap_materno_prospect);
         }
-        /*********************************************/
         /**correo, telefono  vacío, ---- nombre, ap_paterno y ap_materno**/
         if(!empty($name_prospect) && empty($correo_prospect) && empty($telefono_prospect) && !empty($ap_paterno_prospect)
             && !empty($ap_materno_prospect))
@@ -1998,7 +1997,6 @@ public function getStatusMktdPreventa(){
         {
             $data['data'] = $this->Clientes_model->getProspByNameApPaternoApMaternoCorreo($name_prospect, $ap_paterno_prospect, $ap_materno_prospect, $correo_prospect);
         }
-
         /*********combs telefono********/
         /** telefono  vacío, ---- nombre, ap_paterno y ap_materno, correo**/
         if(empty($name_prospect) && !empty($correo_prospect) && !empty($telefono_prospect) && empty($ap_paterno_prospect)
@@ -2077,7 +2075,6 @@ public function getStatusMktdPreventa(){
         {
             $data['data'] = $this->Clientes_model->getProspByApMaternoTelApPaterno($ap_materno_prospect, $ap_paterno_prospect, $telefono_prospect);
         }
-
         if($data != null) {
             echo json_encode($data);
         } else {
@@ -2258,7 +2255,7 @@ public function getStatusMktdPreventa(){
     public function changeProspectingPlace()
     {
         $this->load->view('template/header');
-        $this->load->view("clientes/change_lp.php");
+        $this->load->view("clientes/change_lp");
     }
 	
     public function getSedes()
@@ -2345,8 +2342,10 @@ public function getStatusMktdPreventa(){
     public function getClientsReportMktd(){
         if (isset($_POST) && !empty($_POST)) {
             $typeTransaction = $this->input->post("typeTransaction");
-            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+            $fechaInicio = explode('/', $this->input->post("beginDate"));
+            $fechaFin = explode('/', $this->input->post("endDate"));
+            $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+            $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
             $where = $this->input->post("where");
             $data['data'] = $this->Clientes_model->getClientsReportMktd($typeTransaction, $beginDate, $endDate, $where)->result_array();
             echo json_encode($data);

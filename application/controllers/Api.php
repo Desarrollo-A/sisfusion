@@ -38,9 +38,9 @@ class Api extends CI_Controller
                     $data = array(
                         "iat" => $time, // Tiempo en que inició el token
                         "exp" => $time + (24 * 60 * 60), // Tiempo en el que expirará el token (24 horas)
-                        "data" => array("username" => '9m1%6n7DfR', "password" => '7%5bea3K&B^fMhfOw8Rj'),
+                        "data" => array("username" => 'caja'),
                     );
-                    $token = JWT::encode($data, 'jj^ACArQLz#&26MNs4Y994PJP');
+                    $token = JWT::encode($data, '977929_5117+8773_');
                     echo json_encode(array("id_token" => $token));
                 } else
                     echo json_encode(array("status" => 403, "message" => "Usuario o contraseña inválido."), JSON_UNESCAPED_UNICODE);
@@ -382,7 +382,7 @@ class Api extends CI_Controller
         }
     }
 
-    function consultaInformacionContratos() {
+    function consultaInformacionContratos($rows_number = '') {
         if (!isset(apache_request_headers()["Authorization"]))
             echo json_encode(array("status" => -1, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
         else {
@@ -410,7 +410,7 @@ class Api extends CI_Controller
                         echo json_encode(array("status" => -1, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
                     }
                     if(!empty($checkSingup) && json_decode($checkSingup)->status == 200){
-                        $dbTransaction = $this->Internomex_model->getInformacionContratos();
+                        $dbTransaction = $this->Internomex_model->getInformacionContratos($rows_number);
                         $data2 = array();
                         for ($i = 0; $i < COUNT($dbTransaction); $i++) {
                             $data2[$i]['cliente']['tipo_persona'] = $dbTransaction[$i]['tipo_persona'];
@@ -430,11 +430,10 @@ class Api extends CI_Controller
                             $data2[$i]['propiedad']['empresa'] = $dbTransaction[$i]['empresa'];
                             $data2[$i]['propiedad']['fechaEstatus9'] = $dbTransaction[$i]['fechaEstatus9'];
                             $data2[$i]['propiedad']['fechaEstatus7'] = $dbTransaction[$i]['fechaEstatus7'];
-                            $data2[$i]['pagos']['forma_pago'] = $dbTransaction[$i]['forma_pago'];
+                            $data2[$i]['pagos']['forma_pago'] = implode(', ', array_unique(explode(',', $dbTransaction[$i]['forma_pago'])));
                             $data2[$i]['pagos']['monto_enganche'] = $dbTransaction[$i]['monto_enganche'];
                             $data2[$i]['pagos']['fecha_pago_comision'] = $dbTransaction[$i]['fecha_pago_comision'];
                             $data2[$i]['pagos']['monto_comision'] = $dbTransaction[$i]['monto_comision'];
-                            $data2[$i]['pagos']['fecha_ultima_dispersion'] = $dbTransaction[$i]['fecha_ultima_dispersion'];
                         }
                         if ($dbTransaction) // SUCCESS TRANSACTION
                             echo json_encode(array("status" => 1, "message" => "Consulta realizada con éxito.", "data" => $data2), JSON_UNESCAPED_UNICODE);
@@ -722,10 +721,14 @@ class Api extends CI_Controller
                                             "desarrollo_interes"   =>  $data->desarrolloInteres
                                         );
                                         $dbTransaction = $this->General_model->addRecord("prospectos", $data); // MJ: LLEVA 2 PARÁMETROS $table, $data
-                                        if ($dbTransaction) // SUCCESS TRANSACTION
+                                        if ($dbTransaction){ // SUCCESS TRANSACTION
                                             echo json_encode(array("status" => 1, "message" => "Registro guardado con éxito."), JSON_UNESCAPED_UNICODE);
-                                        else // ERROR TRANSACTION
+                                            header('Content-Type: application/json');
+                                        }
+                                        else{ // ERROR TRANSACTION
                                             echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+                                            header('Content-Type: application/json');
+                                        }
                                     }
                                 }
                             }
@@ -733,6 +736,7 @@ class Api extends CI_Controller
                     } 
                     else
                         echo ($checkSingup);
+                        header('Content-Type: application/json');
                 }
             }
         }
@@ -750,14 +754,16 @@ class Api extends CI_Controller
                 "exp" => $time + (24 * 60 * 60), // Tiempo en el que expirará el token (24 horas)
                 "data" => array("username" => "9m1%6n7DfR", "password" => "7%5bea3K&B^fMhfOw8Rj"),
             );
-            $token = JWT::encode($datos, $JwtSecretKey);
-            //$url = curl_init('https://prueba.gphsis.com/sisfusion/api/exitoArcus');
-            $url = curl_init('https://hook.us1.make.com/r7a27he3kxb9tpreykkakq9zxj6lvpdh');
+            $token = '';
+            // $url = curl_init('https://prueba.gphsis.com/sisfusion/api/exitoArcus');
+            $url = curl_init();
+            curl_setopt($url, CURLOPT_URL, 'https://hook.us1.make.com/l3mh2xcfdsxob8l2ip28iv53ctikfwbm');
             curl_setopt($url, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($url, CURLOPT_HTTPHEADER, array(
                 'Content-Type: application/json',
                 'Authorization:'. $token
             ));
+            $data->montoDelNegocio = doubleval($data->montoDelNegocio);
             curl_setopt($url, CURLOPT_POSTFIELDS, json_encode($data));
             $response = curl_exec($url);
             $status = curl_getinfo($url, CURLINFO_HTTP_CODE);

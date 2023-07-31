@@ -35,14 +35,6 @@ const ESTATUS_AUTORIZACION = Object.freeze({
 });
 const STATUS_CONTRATACION = 1;
 
-$('body').tooltip({
-    selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
-    trigger: 'hover',
-    container: 'body'
-}).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
-    $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
-});
-
 $('#tabla_deposito_seriedad thead tr:eq(0) th').each(function (i) {
     const title = $(this).text();
     titulos_intxt.push(title);
@@ -57,6 +49,7 @@ $('#tabla_deposito_seriedad thead tr:eq(0) th').each(function (i) {
 
 $(document).ready(function() {
     if (id_usuario_general == 9651) { // MJ: ERNESTO DEL PINO SILVA
+        $('#tabla_deposito_seriedad').addClass('hide');
         $.post(`${general_base_url}Contratacion/lista_proyecto`, function(data) {
             for(let i = 0; i < data.length; i++){
                 const id = data[i]['idResidencial'];
@@ -82,7 +75,6 @@ $(document).ready(function() {
 $('#proyecto').change( function(){
     const proyecto = $(this).val();
     $("#condominio").html("");
-
     $(document).ready(function(){
         $.post(`${general_base_url}Contratacion/lista_condominio/`+proyecto, function(data) {
             $('#condominio').append($('<option disabled selected>Selecciona un codominio</option>'));
@@ -97,6 +89,7 @@ $('#proyecto').change( function(){
 });
 
 $('#condominio').change( function(){
+    $('#tabla_deposito_seriedad').removeClass('hide');
     fillDataTable($(this).val());
 });
 

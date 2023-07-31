@@ -1,4 +1,5 @@
 <link href="<?= base_url() ?>dist/css/inicioDashboard.css" rel="stylesheet"/>
+
 <div class="container-fluid" >
     <div class="row" id="buttonsCoord">
         <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
@@ -291,4 +292,4 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/multi-select/0.9.12/js/jquery.multi-select.min.js"></script>s
+<script src="https://cdnjs.cloudflare.com/ajax/libs/multi-select/0.9.12/js/jquery.multi-select.min.js"></script>

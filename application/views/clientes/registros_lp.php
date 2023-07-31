@@ -12,7 +12,7 @@
                                 <i class="fas fa-address-book fa-2x"></i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Registro desde Landing Page</h3>
+                                <h3 class="card-title center-align">Registro desde landing page</h3>
                                 <div class="material-datatables">
                                     <div class="form-group">
                                         <table id="registros-datatable" class="table-striped table-hover">
@@ -40,7 +40,7 @@
         </div>
     <?php $this->load->view('template/footer_legend');?>
     </div>
-</div><!--main-panel close-->
+</div>
 <?php $this->load->view('template/footer');?>
 <script src="<?=base_url()?>dist/js/modal-steps.min.js"></script>
 <script src="<?= base_url() ?>dist/js/moment.min.js"></script>

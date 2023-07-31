@@ -50,6 +50,14 @@ $("#tabla_prestamos").ready(function() {
                     }
                 }
             }
+        },
+        {
+            text: '<i class="fas fa-play"></i>',
+            className: `btn btn-dt-youtube buttons-youtube`,
+            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Historial bonos podrás visualizarlo en el siguiente tutorial',
+            action: function (e, dt, button, config) {
+                window.open('https://youtu.be/wLDdDHQjCrw', '_blank');
+            }
         }],
         pagingType: "full_numbers",
         fixedHeader: true,

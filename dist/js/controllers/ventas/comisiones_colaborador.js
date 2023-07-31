@@ -1,5 +1,6 @@
 const excluir_column = ['MÁS', ''];
 let columnas_datatable = {};
+let fin = userSede == 8 ? 16 : 13;
 $("#file-upload-extranjero").on('change', function () {
     $('#archivo-extranjero').val('');
     v2 = document.getElementById("file-upload-extranjero").files[0].name;
@@ -144,12 +145,12 @@ $(document).ready(function () {
     ((mes == 4 && dia == 10) || (mes == 4 && dia == 11 && hora <= 13)) ||
     ((mes == 5 && dia == 8) || (mes == 5 && dia == 9 && hora <= 13)) ||
     ((mes == 6 && dia == 12) || (mes == 6 && dia == 13 && hora <= 13)) ||
-    ((mes == 7 && dia == 10) || (mes == 7 && dia == 11 && hora <= 13)) ||
-    ((mes == 8 && dia == 7) || (mes == 8 && dia == 8 && hora <= 13)) ||
-    ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= 13)) ||
-    ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= 13)) ||
-    ((mes == 11 && dia == 13) || (mes == 11 && dia == 14 && hora <= 13)) ||
-    ((mes == 12 && dia == 11) || (mes == 12 && dia == 12 && hora <= 13)))) {
+    ((mes == 7 && dia == 10) || (mes == 7 && dia == 11 && hora <= fin )) ||
+    ((mes == 8 && dia == 7) || (mes == 8 && dia == 8 && hora <= fin)) ||
+    ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= fin)) ||
+    ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= fin)) ||
+    ((mes == 11 && dia == 13) || (mes == 11 && dia == 14 && hora <= fin)) ||
+    ((mes == 12 && dia == 11) || (mes == 12 && dia == 12 && hora <= fin)))) {
         requestCodigoPostal();
     }
 });
@@ -218,9 +219,9 @@ $("#tabla_nuevas_comisiones").ready(function () {
         document.getElementById("myText_nuevas").textContent = '$' + to;
     });
     let boton_sol_pago = (forma_pago != 2) ? '' : 'hidden';
-    let boton_youtube = ([2, 3, 4, 5].includes(forma_pago) && [3, 7, 9].includes(id_rol_general))
+    /*let boton_youtube = ([2, 3, 4, 5].includes(forma_pago) && [3, 7, 9].includes(id_rol_general))
         ? ''
-        : 'hidden';
+        : 'hidden';*/
     tabla_nuevas = $("#tabla_nuevas_comisiones").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
@@ -258,12 +259,12 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     ((mes == 4 && dia == 10) || (mes == 4 && dia == 11 && hora <= 13)) ||
                     ((mes == 5 && dia == 8) || (mes == 5 && dia == 9 && hora <= 13)) ||
                     ((mes == 6 && dia == 12) || (mes == 6 && dia == 13 && hora <= 13)) ||
-                    ((mes == 7 && dia == 10) || (mes == 7 && dia == 11 && hora <= 13)) ||
-                    ((mes == 8 && dia == 7) || (mes == 8 && dia == 8 && hora <= 13)) ||
-                    ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= 13)) ||
-                    ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= 13)) ||
-                    ((mes == 11 && dia == 13) || (mes == 11 && dia == 14 && hora <= 13)) ||
-                    ((mes == 12 && dia == 11) || (mes == 12 && dia == 12 && hora <= 13)) ||
+                    ((mes == 7 && dia == 10) || (mes == 7 && dia == 11 && hora <= fin)) ||
+                    ((mes == 8 && dia == 7) || (mes == 8 && dia == 8 && hora <= fin)) ||
+                    ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= fin)) ||
+                    ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= fin)) ||
+                    ((mes == 11 && dia == 13) || (mes == 11 && dia == 14 && hora <= fin)) ||
+                    ((mes == 12 && dia == 11) || (mes == 12 && dia == 12 && hora <= fin)) ||
                     (id_usuario_general == 7689)) {
                     if ($('input[name="idT[]"]:checked').length > 0) {
                         $('#spiner-loader').removeClass('hide');
@@ -325,21 +326,10 @@ $("#tabla_nuevas_comisiones").ready(function () {
         },
         {
             text: '<i class="fas fa-play"></i>',
-            className: `btn btn-dt-youtube buttons-youtube ${boton_youtube}`,
+            className: `btn btn-dt-youtube buttons-youtube`,
             titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de comisiones podrás visualizarlo en el siguiente tutorial',
             action: function (e, dt, button, config) {
-                if (forma_pago == 2) {
-                    window.open('https://youtu.be/YuZNsPk8-gY', '_blank');
-                }
-                if (forma_pago == 3) {
-                    window.open('https://youtu.be/LmmIdipDSEA', '_blank');
-                }
-                if (forma_pago == 4) {
-                    window.open('https://youtu.be/oRoJev_AZgs', '_blank');
-                }
-                if (forma_pago == 5) {
-                    window.open('https://youtu.be/4t0MNA8HxZ4', '_blank');
-                }
+                window.open('https://youtu.be/S7HO2QTLaL0', '_blank');
             }
         }],
         language: {
@@ -476,12 +466,12 @@ $("#tabla_nuevas_comisiones").ready(function () {
                         ((mes == 4 && dia == 10) || (mes == 4 && dia == 11 && hora <= 13)) ||
                         ((mes == 5 && dia == 8) || (mes == 5 && dia == 9 && hora <= 13)) ||
                         ((mes == 6 && dia == 12) || (mes == 6 && dia == 13 && hora <= 13)) ||
-                        ((mes == 7 && dia == 10) || (mes == 7 && dia == 11 && hora <= 13)) ||
-                        ((mes == 8 && dia == 7) || (mes == 8 && dia == 8 && hora <= 13)) ||
-                        ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= 13)) ||
-                        ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= 13)) ||
-                        ((mes == 11 && dia == 13) || (mes == 11 && dia == 14 && hora <= 13)) ||
-                        ((mes == 12 && dia == 11) || (mes == 12 && dia == 12 && hora <= 13)) ||
+                        ((mes == 7 && dia == 10) || (mes == 7 && dia == 11 && hora <= fin)) ||
+                        ((mes == 8 && dia == 7) || (mes == 8 && dia == 8 && hora <= fin)) ||
+                        ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= fin)) ||
+                        ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= fin)) ||
+                        ((mes == 11 && dia == 13) || (mes == 11 && dia == 14 && hora <= fin)) ||
+                        ((mes == 12 && dia == 11) || (mes == 12 && dia == 12 && hora <= fin)) ||
                         (id_usuario_general == 7689)){
                         switch (full.forma_pago) {
                             case '1': //SIN DEFINIR
@@ -613,6 +603,14 @@ $("#tabla_revision_comisiones").ready(function () {
                     }
                 }
             },
+        },
+        {
+            text: '<i class="fas fa-play"></i>',
+            className: `btn btn-dt-youtube buttons-youtube`,
+            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de comisiones podrás visualizarlo en el siguiente tutorial',
+            action: function (e, dt, button, config) {
+                window.open('https://youtu.be/S7HO2QTLaL0', '_blank');
+            }
         }],
         pagingType: "full_numbers",
         fixedHeader: true,
@@ -794,6 +792,14 @@ $("#tabla_pagadas_comisiones").ready(function () {
                     }
                 }
             },
+        },
+        {
+            text: '<i class="fas fa-play"></i>',
+            className: `btn btn-dt-youtube buttons-youtube`,
+            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de comisiones podrás visualizarlo en el siguiente tutorial',
+            action: function (e, dt, button, config) {
+                window.open('https://youtu.be/S7HO2QTLaL0', '_blank');
+            }
         }],
         language: {
             url: `${general_base_url}static/spanishLoader_v2.json`,
@@ -970,6 +976,14 @@ $("#tabla_otras_comisiones").ready(function () {
                     }
                 }
             },
+        },
+        {
+            text: '<i class="fas fa-play"></i>',
+            className: `btn btn-dt-youtube buttons-youtube`,
+            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de comisiones podrás visualizarlo en el siguiente tutorial',
+            action: function (e, dt, button, config) {
+                window.open('https://youtu.be/S7HO2QTLaL0', '_blank');
+            }
         }],
         pagingType: "full_numbers",
         fixedHeader: true,
@@ -1124,6 +1138,14 @@ function fillCommissionTableWithoutPayment(proyecto, condominio) {
                     }
                 }
             },
+        },
+        {
+            text: '<i class="fas fa-play"></i>',
+            className: `btn btn-dt-youtube buttons-youtube`,
+            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de comisiones podrás visualizarlo en el siguiente tutorial',
+            action: function (e, dt, button, config) {
+                window.open('https://youtu.be/S7HO2QTLaL0', '_blank');
+            }
         }],
         pagingType: "full_numbers",
         fixedHeader: true,
@@ -1355,7 +1377,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
     ((mes == 4 && dia == 10) || (mes == 4 && dia == 11 && hora <= 13)) ||
     ((mes == 5 && dia == 8) || (mes == 5 && dia == 9 && hora <= 13)) ||
     ((mes == 6 && dia == 12) || (mes == 6 && dia == 13 && hora <= 13)) ||
-    ((mes == 7 && dia == 10) || (mes == 7 && dia == 11 && hora <= 13)) ||
+    ((mes == 7 && dia == 10) || (mes == 7 && dia == 11 && hora <= fin)) ||
     ((mes == 8 && dia == 7) || (mes == 8 && dia == 8 && hora <= 13)) ||
     ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= 13)) ||
     ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= 13)) ||
@@ -1408,6 +1430,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
                         <div class="col-md-1"><input type="checkbox" class="form-control" onclick="todos();" id="btn_all"></div><div class="col-md-10 text-left"><b>MARCAR / DESMARCAR TODO</b></div>`);
                     }
                     $.each(data, function (i, v) {
+                        c++;
                         abono_asesor = (v.abono_neodata);
                         $("#modal_multiples .modal-body").append('<div class="row">' +
                             '<div class="col-md-1"><input type="checkbox" class="form-control ng-invalid ng-invalid-required data1 checkdata1" onclick="sumCheck()" id="comisiones_facura_mult' + i + '" name="comisiones_facura_mult"></div><div class="col-md-4"><input id="data1' + i + '" name="data1' + i + '" value="' + v.nombreLote + '" class="form-control data1 ng-invalid ng-invalid-required" required placeholder="%"></div><div class="col-md-4"><input type="hidden" id="idpago-' + i + '" name="idpago-' + i + '" value="' + v.id_pago_i + '"><input id="data2' + i + '" name="data2' + i + '" value="' + "" + parseFloat(abono_asesor).toFixed(2) + '" class="form-control data1 ng-invalid ng-invalid-required" readonly="" required placeholder="%"></div></div>');
@@ -1692,6 +1715,7 @@ function save2() {
                 alert("LA FACTURA SE SUBIO CORRECTAMENTE");
                 $("#modal_multiples").modal('toggle');
                 tabla_nuevas.ajax.reload();
+                tabla_revision.ajax.reload();
                 $("#modal_multiples .modal-body").html("");
                 $("#modal_multiples .header").html("");
             } else if (data == 3) {

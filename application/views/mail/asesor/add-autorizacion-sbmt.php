@@ -1,7 +1,7 @@
 <div class="text-center">
     <h1>SOLICITUD DE AUTORIZACION</h1>
 
-    <p><?=$comentario?></p>
+    <p><?=(empty($comentario)) ? '' : $comentario?></p>
 </div>
 
 <div>

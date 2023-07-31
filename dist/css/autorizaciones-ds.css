@@ -595,6 +595,7 @@
   background-color: #f4433618 !important;
   border-radius: 27px;
   margin: 0;
+  color: #f44336 !important;
 }
 
 .color-letter {
@@ -606,6 +607,7 @@
 }
 
 .buttons-pdf:hover {
+  color: #ffffff !important;
   background-color: #f44336 !important;
 }
 
@@ -1128,6 +1130,7 @@
   border-radius: 30px;
   padding: 7px 7px 7px 15px;
   display: flex;
+  align-items: center;
 }
 
 .file-gph .upload-btn {
@@ -1531,7 +1534,13 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
   display: none;
 }
 
-/*CALENDARIO */
+#calendarioDay {
+  width: 170px;
+  outline: none;
+  border: 1px solid #aaa;
+  padding: 6px 28px;
+}
+
 .checkAut .boxChecks {
   background-color: #eeeeee;
   width: 100%;

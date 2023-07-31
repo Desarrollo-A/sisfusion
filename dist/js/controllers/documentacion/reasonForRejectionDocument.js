@@ -43,33 +43,37 @@ function fillTable(id_documento) {
                 next: "<i class='fa fa-angle-right'>"
             }
         },
-            destroy: true,
-            ordering: false,
-            columns: [{
-                data: function (d) {
-                    return d.id_motivo;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.motivo;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.estatus_motivo;
-                }
-            },
-            {
-                data: function (d) {
-                    let btns = '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas apply-action" data-action="1" data-id-motivo="' + d.id_motivo + '" data-nombre-documento="' + d.nombre_documento + '" data-motivo="' + d.motivo + '" data-toggle="tooltip" data-placement="left" title="EDITAR"><i class="fas fa-pen"></i></button>';
-                    btns += `<button class="btn-data btn-${d.estatus == 1 ? 'warning' : 'green'} apply-action" data-action="${d.estatus == 1 ? 2 : 3}" data-id-motivo="${d.id_motivo}" data-nombre-documento="${d.nombre_documento}" data-motivo="${d.motivo}"  data-toggle="tooltip" data-placement="left" title="${d.estatus == 1 ? 'DESACTIVAR' : 'ACTIVAR'}"><i class="fas fa-${d.estatus == 1 ? 'lock' : 'unlock'}"></i></button>`;
-                    btns += '</div>';
-                    $('[data-toggle="tooltip"]').tooltip();
-                    return btns;
-                }
+        destroy: true,
+        ordering: false,
+        columns: [{
+            data: function (d) {
+                return d.id_motivo;
             }
-        ],
+        },
+        {
+            data: function (d) {
+                return d.motivo;
+            }
+        },    
+        {
+            data: function (d) {
+                return d.motivo;
+            }
+        },
+        {
+            data: function (d) {
+                return d.estatus_motivo;
+            }
+        },
+        {
+            data: function (d) {
+                let btns = '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas apply-action" data-action="1" data-id-motivo="' + d.id_motivo + '" data-nombre-documento="' + d.nombre_documento + '" data-motivo="' + d.motivo + '" data-toggle="tooltip" data-placement="left" title="EDITAR"><i class="fas fa-pen"></i></button>';
+                btns += `<button class="btn-data btn-${d.estatus == 1 ? 'warning' : 'green'} apply-action" data-action="${d.estatus == 1 ? 2 : 3}" data-id-motivo="${d.id_motivo}" data-nombre-documento="${d.nombre_documento}" data-motivo="${d.motivo}"  data-toggle="tooltip" data-placement="left" title="${d.estatus == 1 ? 'DESACTIVAR' : 'ACTIVAR'}"><i class="fas fa-${d.estatus == 1 ? 'lock' : 'unlock'}"></i></button>`;
+                btns += '</div>';
+                $('[data-toggle="tooltip"]').tooltip();
+                return btns;
+            }
+        }],
         columnDefs: [{
             visible: false
         }],

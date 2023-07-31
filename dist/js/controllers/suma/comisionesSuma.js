@@ -4,9 +4,6 @@ const excluir_column = ['MÁS', ''];
 let titulos_encabezado = [];
 let num_colum_encabezado = [];
 
-let forma_pago = 'forma_pago'
-Shadowbox.init();
-
 // Selección de CheckBox
 $(document).on("click", ".individualCheck", function() {
     totaPen = 0;
@@ -258,7 +255,16 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     }
                 }
             },
-        }],
+        },
+        {
+            text: '<i class="fas fa-play"></i>',
+            className: `btn btn-dt-youtube buttons-youtube`,
+            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Solicitudes SUMA podrás visualizarlo en el siguiente tutorial',
+            action: function (e, dt, button, config) {
+                window.open('https://youtu.be/S7HO2QTLaL0', '_blank');
+            }
+        }
+    ],
         pagingType: "full_numbers",
         fixedHeader: true,
         language: {
@@ -492,6 +498,14 @@ $("#tabla_revision_comisiones").ready(function () {
                     }
                 }
             },
+        },
+        {
+            text: '<i class="fas fa-play"></i>',
+            className: `btn btn-dt-youtube buttons-youtube`,
+            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Solicitudes SUMA podrás visualizarlo en el siguiente tutorial',
+            action: function (e, dt, button, config) {
+                window.open('https://youtu.be/S7HO2QTLaL0', '_blank');
+            }
         }],
         pagingType: "full_numbers",
         fixedHeader: true,
@@ -546,7 +560,31 @@ $("#tabla_revision_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="mb-0"><span class="label lbl-dark-blue">REVISIÓN CONTRALORÍA</span></p>';
+                switch (d.id_forma_pago) {
+                    case '1': //SIN DEFINIR
+                    case 1: //SIN DEFINIr
+                        return '<p class="mb-1"><span class="label lbl-dark-blue">SIN DEFINIR FORMA DE PAGO </span><br><span class="label lbl-dark-cyan">REVISAR CON RH</span></p>';
+
+                    case '2': //FACTURA
+                    case 2: //FACTURA
+                        return '<p class="mb-1"><span class="label lbl-dark-blue">FACTURA </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">SUBIR XML</span></p>';
+
+                    case '3': //ASIMILADOS
+                    case 3: //ASIMILADOS
+                        return '<p class="mb-1"><span class="label lbl-dark-blue">ASIMILADOS </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">LISTA PARA APROBAR</span></p>';
+                    case '4': //RD
+                    case 4: //RD
+                        return '<p class="mb-1"><span class="label lbl-dark-blue">REMANENTE DIST. </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">LISTA PARA APROBAR</span></p>';
+
+                    case '5':
+                    case 5:
+                        return `
+                            <p class="mb-1">
+                                <span class="label lbl-dark-blue">FACTURA EXTRANJERO</span>
+                            </p>`;
+                    default:
+                        return '<p class="mb-1"><span class="label lbl-dark-blue">DOCUMENTACIÓN FALTANTE </span><br><span class="label lbl-dark-cyan">REVISAR CON RH</span></p>';
+                }
             }
         },
         {
@@ -654,6 +692,14 @@ $("#tabla_pagadas_comisiones").ready(function () {
                     }
                 }
             },
+        },
+        {
+            text: '<i class="fas fa-play"></i>',
+            className: `btn btn-dt-youtube buttons-youtube`,
+            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Solicitudes SUMA podrás visualizarlo en el siguiente tutorial',
+            action: function (e, dt, button, config) {
+                window.open('https://youtu.be/S7HO2QTLaL0', '_blank');
+            }
         }],
         pagingType: "full_numbers",
         fixedHeader: true,
@@ -843,6 +889,14 @@ $("#tabla_pausadas_comisiones").ready(function () {
                     }
                 }
             },
+        },
+        {
+            text: '<i class="fas fa-play"></i>',
+            className: `btn btn-dt-youtube buttons-youtube`,
+            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Solicitudes SUMA podrás visualizarlo en el siguiente tutorial',
+            action: function (e, dt, button, config) {
+                window.open('https://youtu.be/S7HO2QTLaL0', '_blank');
+            }
         }],
         pagingType: "full_numbers",
         fixedHeader: true,

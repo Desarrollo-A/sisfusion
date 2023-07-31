@@ -7,7 +7,7 @@
 
     ?>
     <?php
-        if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_usuario') == 2752 || $this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2810 || $this->session->userdata('id_usuario') == 2855 || $this->session->userdata('id_usuario') == 2815 || $this->session->userdata('id_usuario') == 5957 || $this->session->userdata('id_usuario') == 6390 || $this->session->userdata('id_usuario') == 4857 || $this->session->userdata('id_usuario') == 2834 || $this->session->userdata('id_usuario') == 9775 || $this->session->userdata('id_usuario') == 12377 || $this->session->userdata('id_usuario') == 2799 AND $onlyView==0){
+        if(in_array($this->session->userdata('id_rol'), array(7, 9, 3, 6, 2)) || in_array($this->session->userdata('id_usuario'), array(2752, 2826, 2810, 2855, 2815, 5957, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012, 12931)) AND $onlyView==0){
             $readOnly = '';
             $statsInput = '';
             $html_action = '<form id="deposito-seriedad-form">';
@@ -30,7 +30,7 @@
     <div class="container" id="mainBoxDS">
         <div class="card">
 			<?php echo $html_action;?> 
-            <?php if( $this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_usuario') == 2752 || $this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2810 || $this->session->userdata('id_usuario') == 2855 || $this->session->userdata('id_usuario') == 2815 || $this->session->userdata('id_usuario') == 5957 || $this->session->userdata('id_usuario') == 6390 || $this->session->userdata('id_usuario') == 4857 || $this->session->userdata('id_usuario') == 2834 || $this->session->userdata('id_usuario') == 9775 || $this->session->userdata('id_usuario') == 12377 || $this->session->userdata('id_usuario') == 2799 AND $onlyView==0){?>
+            <?php if(in_array($this->session->userdata('id_rol'), array(7, 9, 3, 6, 2)) || in_array($this->session->userdata('id_usuario'), array(2752, 2826, 2810, 2855, 2815, 5957, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012, 12931)) AND $onlyView==0){?>
                 <section id="sectionBtns">
                     <button type="submit" id="depositoSeriedadGuardar" name="guardarC" class="btn btnAction">GUARDAR CAMBIOS</button>
                 </section>
@@ -62,7 +62,7 @@
                         <h6 class="label-on-left mb-0">DESARROLLO</h6>
                         <div class="radio_container">
                             <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?>
-                            <?php if ($cliente[0]->desarrollo == 1 || $cliente[0]->desarrollo == 2 || $cliente[0]->desarrollo == 5 || $cliente[0]->desarrollo == 6 || $cliente[0]->desarrollo == 7 || $cliente[0]->desarrollo == 8 || $cliente[0]->desarrollo == 11 || $cliente[0]->desarrollo == 21 || $cliente[0]->desarrollo == 26 || $cliente[0]->desarrollo == 29 || $cliente[0]->desarrollo == 34 || $cliente[0]->desarrollo == 32 || $cliente[0]->desarrollo == 33 || $cliente[0]->desarrollo == 36 || $cliente[0]->desarrollo == 35) {echo "checked=true";} ?>  value="1"/>
+                            <?php if ($cliente[0]->desarrollo == 1 || $cliente[0]->desarrollo == 2 || $cliente[0]->desarrollo == 5 || $cliente[0]->desarrollo == 6 || $cliente[0]->desarrollo == 7 || $cliente[0]->desarrollo == 8 || $cliente[0]->desarrollo == 11 || $cliente[0]->desarrollo == 21 || $cliente[0]->desarrollo == 26 || $cliente[0]->desarrollo == 29 || $cliente[0]->desarrollo == 34 || $cliente[0]->desarrollo == 33 || $cliente[0]->desarrollo == 36 || $cliente[0]->desarrollo == 35) {echo "checked=true";} ?>  value="1"/>
                             <label for="one">QRO</label>
                             <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?> <?php if ($cliente[0]->desarrollo == 3 || $cliente[0]->desarrollo == 13 || $cliente[0]->desarrollo == 22 || $cliente[0]->desarrollo == 31) { echo "checked=true"; } ?>  value="2"/>
                             <label for="two">LN</label>
@@ -79,7 +79,7 @@
                             <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?> <?php if ($cliente[0]->desarrollo == 23) { echo "checked=true"; } ?> value="5"/>
                             <label for="six">SMA</label>
                             
-                            <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?> <?php if ($cliente[0]->desarrollo == 27) { echo "checked=true"; } ?> value="5"/> 
+                            <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?> <?php if ($cliente[0]->desarrollo == 27 || $cliente[0]->desarrollo == 32) { echo "checked=true"; } ?> value="5"/> 
                             <label for="seven">CNC</label>
                         </div>
                     </div>
@@ -434,7 +434,7 @@
 
                 <div class="row" id="viviendaDSP">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <label class="label-on-left m-0">VIVE EN CASA</label>
+                        <label class="label-on-left m-0">VIVE EN CASA (<small style="color: red;">*</small>)</label>
                         <div class="radio_container">
                             <input type="radio" id="tipo_vivienda_1" <?php echo $statsInput; ?> name="tipo_vivienda" <?php if ($cliente[0]->tipo_vivienda == 1) { echo "checked=true"; } ?>  value="1"/>
                             <label for="tipo_vivienda_1">PROPIA</label>

@@ -495,13 +495,9 @@ $(document).on('click', '.edit-user-information', function(e){
             }else{
                 $('#btn_acept').removeClass('hide');
             }
-            let leader;
-            if (v.id_rol == 9)
-                leader = v.gerente_id
-            else if (v.id_rol == 3)
-                leader = v.subdirector_id
-            else
-                leader = v.id_lider;
+
+            let leader = v.id_lider;
+
             if (v.id_rol == '7' || v.id_rol == '9' || v.id_rol == '3') { // ASESOR || COORDINADOR || GERENTE
                 var row = $('.col-estructura');
                 row.append(`

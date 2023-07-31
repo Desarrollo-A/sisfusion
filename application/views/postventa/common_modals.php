@@ -27,6 +27,7 @@
                     <input type="hidden" name="idCliente" id="idCliente">
                     <input type="hidden" name="idLote" id="idLote">
                     <input type="hidden" name="accion" id="accion">
+                    <input type="hidden" name="id_est" id="id_est">
                     <input type="hidden" name="banderaCliente" id="banderaCliente">
 
                 </div>
@@ -210,10 +211,16 @@
                                     <input id="nombrePresupuesto" name="nombrePresupuesto" class="form-control input-gral" type="text" disabled>
                                 </div>
                             </div>
-                            <div class="col-md-8 pr-0 pr-0">
+                            <div class="col-md-7 pr-0 pr-0">
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0"><span class="isRequired">*</span> Nombre a quien escritura</label>
                                     <input id="nombrePresupuesto2" name="nombrePresupuesto2" class="form-control input-gral" type="text" required>
+                                </div>
+                            </div>
+                            <div class="col-md-1 pr-0 pr-0">
+                                <div class="form-group mr-1 justify-center">
+                                    <input type="hidden" id="indexCo" name="indexCo" value="0">
+                                    <button class="btn-data btn-green" type="button" id="btnCopropietario" data-toggle="tooltip" data-placement="top" title="Agregar copropietario"><i class="fas fa-user-plus"></i></button>
                                 </div>
                             </div>
                             <div class="col-md-4 pr-0 pr-0">
@@ -222,6 +229,11 @@
                                     <input id="valor_escri" name="valor_escri" class="form-control input-gral" type="text" required>
                                 </div>
                             </div>
+                            <div class="col-md-12">
+                                <div class="aligned-row row" id="copropietarios">
+                                </div>
+                            </div>  
+
                             <div class="col-md-12 pr-0">
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0"><span class="isRequired">*</span> Tipo de escrituración</label>
@@ -307,14 +319,16 @@
                         </div>
                         <!--INFORMACIÓN DE NOTARÍA-->
                          <!----------------------------->
-                         <div class="col-md-12 pr-0" >
-                                    <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral">Tipo de Notaría</label>
-                                        <select class="selectpicker m-0" data-style="btn btn-round" title="Tipo de notaría" data-size="7" id="tipoNotaria" name="tipoNotaria" data-live-search="true" required !important>
-                                        <option value="" disabled selected>Selecciona una opción</option>
-                                        <option value="1">Interna</option>
-                                        <option value="2">Externa</option>
-                                        </select>
+                                <div class="row">
+                                    <div class="col-md-12 pr-0" >
+                                        <div class="form-group text-left m-0">
+                                        <label class="control-label label-gral">Tipo de Notaría</label>
+                                            <select class="selectpicker m-0" data-style="btn btn-round" title="Tipo de notaría" data-size="7" id="tipoNotaria" name="tipoNotaria" data-live-search="true" required !important>
+                                            <option value="" disabled selected>Selecciona una opción</option>
+                                            <option value="1">Interna</option>
+                                            <option value="2">Externa</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -374,7 +388,7 @@
                        
                         <div class="row">
                             <div class="col-md-12 d-flex justify-end p-0">
-                                <button type="button" class="btn btn-danger btn-simple mt-2" data-dismiss="modal">Cancelar</button>
+                                <button type="button" class="btn btn-danger btn-simple mt-2" onclick="clearCopropietario();" data-dismiss="modal">Cancelar</button>
                                 <button type="submit" id="RequestPresupuesto" class="btn btn-primary mt-2">Guardar</button>
                             </div>
                         </div>

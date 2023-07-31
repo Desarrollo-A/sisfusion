@@ -115,13 +115,17 @@
                                             <div class="encabezadoBox">
                                                 <div class="row">
                                                     <h3 class="card-title center-align">Historial activos</h3>
-                                                    <p class="card-title pl-1">(Listado de todos los pagos aplicados, en proceso de lotes contratados y activos)</p>
+                                                    <p class="card-title pl-1">(Listado de todos los pagos aplicados, en proceso de lotes contratados y activos)
+                                                        <a href="https://youtu.be/S7HO2QTLaL0" style="color:red" target="_blank">
+                                                            <i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
+                                                        </a>
+                                                    </p>
                                                 </div>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="row">
-                                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0 overflow-hidden">
-                                                        <div class="form-group select-is-empty">
+                                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0">
+                                                        <div class="form-group select-is-empty overflow-hidden">
                                                             <label class="control-label">AÑO</label>
                                                             <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-container="body" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
                                                                 <?php
@@ -175,13 +179,17 @@
                                             <div class="encabezadoBox">
                                                 <div class="row">
                                                     <h3 class="card-title center-align">Historial canceladas</h3>
-                                                    <p class="card-title pl-1">(Listado de todos los pagos aplicados, en proceso de lotes cancelados con recisión)</p>
+                                                    <p class="card-title pl-1">(Listado de todos los pagos aplicados, en proceso de lotes cancelados con recisión)
+                                                        <a href="https://youtu.be/S7HO2QTLaL0" style="color:red" target="_blank">
+                                                            <i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
+                                                        </a>
+                                                    </p>
                                                 </div>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="row">
-                                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0 overflow-hidden">
-                                                        <div class="form-group">
+                                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0">
+                                                        <div class="form-group overflow-hidden">
                                                             <label for="proyecto">Año</label>
                                                             <select name="filtro35" id="filtro35" class="selectpicker select-gral" data-container="body" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
                                                                 <?php
@@ -235,7 +243,11 @@
                                         <?php if( $this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 66 ) { ?>
                                         <div class="tab-pane <?php if($this->session->userdata('id_rol') == 66){ ?> active <?php } ?>" id="solicitudesSUMA">
                                                 <div class="encabezadoBox">
-                                                    <h3 class="card-title center-align">Historial general SUMA</h3>
+                                                    <h3 class="card-title center-align">Historial general SUMA
+                                                        <a href="https://youtu.be/S7HO2QTLaL0" style="color:red" target="_blank">
+                                                            <i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
+                                                        </a>
+                                                    </h3>
                                                 </div>
                                                 <div class="toolbar">
                                                     <div class="row">
@@ -282,14 +294,6 @@
     </div>
 
     <?php $this->load->view('template/footer'); ?>
-    <!--DATATABLE BUTTONS DATA EXPORT-->
     <script src="<?= base_url()?>dist/js/funciones-generales.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/historial_colaborador.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 </body>

@@ -35,7 +35,7 @@ class Juridico_model extends CI_Model {
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
         concat(juridico.nombre,' ', juridico.apellido_paterno, ' ', juridico.apellido_materno) as juridico, se.nombre nombreSede
 		FROM lotes l
-        INNER JOIN clientes cl ON cl.idLote=l.idLote $whereOne
+        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote $whereOne
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial=res.idResidencial $whereTwo
 		INNER JOIN sedes se ON se.id_sede = l.ubicacion
@@ -76,7 +76,7 @@ class Juridico_model extends CI_Model {
 			concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
 	        concat(juridico.nombre,' ', juridico.apellido_paterno, ' ', juridico.apellido_materno) as juridico, se.nombre nombreSede
 			FROM lotes l
-			INNER JOIN clientes cl ON cl.idLote=l.idLote
+			INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote
 			INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
 			INNER JOIN residenciales res ON cond.idResidencial=res.idResidencial
 			INNER JOIN sedes se ON se.id_sede = l.ubicacion
@@ -134,16 +134,16 @@ class Juridico_model extends CI_Model {
 
 	public function getCorreoSt ($idCliente) {
 
-		$query = $this->db-> query("SELECT STRING_AGG (correo, ', ') correos FROM (
+		$query = $this->db-> query("SELECT STRING_AGG (correo, ',') correos FROM (
 			/*ASESOR COORDINADOR GERENTE (TITULAR VENTA) */
-			SELECT c.id_cliente, CONCAT(u.correo, ', ', uu.correo, ', ', uuu.correo) correo FROM clientes c 
+			SELECT c.id_cliente, CONCAT(u.correo, ',', uu.correo, ',', uuu.correo) correo FROM clientes c 
 			LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor 
 			LEFT JOIN usuarios uu ON uu.id_usuario = c.id_coordinador 
 			LEFT JOIN usuarios uuu ON uuu.id_usuario = c.id_gerente 
 			WHERE c.id_cliente = ".$idCliente."
 			UNION ALL
 			/*ASESOR COORDINADOR GERENTE (VENTAS COMPARTIDAS) */
-			SELECT vc.id_cliente, CONCAT(u.correo, ', ', uu.correo, ', ', uuu.correo) correo FROM ventas_compartidas vc 
+			SELECT vc.id_cliente, CONCAT(u.correo, ',', uu.correo, ',', uuu.correo) correo FROM ventas_compartidas vc 
 			LEFT JOIN usuarios u ON u.id_usuario = vc.id_asesor 
 			LEFT JOIN usuarios uu ON uu.id_usuario = vc.id_coordinador 
 			LEFT JOIN usuarios uuu ON uuu.id_usuario = vc.id_gerente 

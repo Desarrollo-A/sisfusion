@@ -78,7 +78,7 @@ class VentasAsistentes_model extends CI_Model {
                                         CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
                                         cond.idCondominio, cl.expediente
                                     FROM lotes l
-                                        INNER JOIN clientes cl ON l.idLote=cl.idLote
+                                        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote
                                         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
                                         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
                                         LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
@@ -102,9 +102,9 @@ class VentasAsistentes_model extends CI_Model {
         $id_usuario = $this->session->userdata('id_usuario');
         if (in_array($id_rol, array(17, 70))) { // MJ: ES CONTRALORÍA Y EJECUTIVO DE CONTRALORÍA JR
             $filtroUsuarioBR = '';
-            if($id_usuario == 2815)
+            if($id_usuario == 2815 || $id_usuario == 12931)
                 $filtroUsuarioBR = ' AND (l.tipo_venta IN (4, 6) OR cl.id_asesor IN (2549, 2570, 2591))';
-            else if ($id_usuario == 12377 || $id_usuario == 2799) // MIRIAM PAOLA JIMENEZ FIGUEROA o LADY SKARLETT LOPEZ VEN REUBICACIONES
+            else if (in_array($id_usuario, array(12377, 2799, 10088, 2827, 6012))) // MIRIAM PAOLA JIMENEZ FIGUEROA o LADY SKARLETT LOPEZ VEN REUBICACIONES
                 $filtroUsuarioBR = ' AND l.tipo_venta IN (6)';
             else
                 $filtroUsuarioBR = ' AND l.tipo_venta IN (4, 6)';
@@ -126,6 +126,10 @@ class VentasAsistentes_model extends CI_Model {
             if ($id_usuario == 6831) { // YARETZI MARICRUZ ROSALES HERNANDEZ
                 $filtroGerente = "AND cl.id_gerente = 690";
                 $filtroSede = "";
+            } else if ($id_usuario == 12318) { // EMMA CECILIA MALDONADO RAMÍREZ
+                $id_lider = $this->session->userdata('id_lider');
+                $filtroGerente = "AND cl.id_gerente IN ($id_lider, 11196, 5637)";
+                $filtroSede = "";
             } else if (in_array($id_usuario, array(7097, 7096, 10924, 7324, 5620))) // GRISELL MALAGON, EDGAR AGUILAR Y DALIA PONCE
                 $filtroSede = "AND l.ubicacion IN ('4', '9', '13', '14')"; // Ciudad de México, San Miguel de Allende, Estado de México Occidente y Estado de México Norte
             
@@ -141,7 +145,7 @@ class VentasAsistentes_model extends CI_Model {
         CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
         cond.idCondominio, cl.expediente, UPPER(mo.descripcion) AS descripcion
         FROM lotes l
-        INNER JOIN clientes cl ON l.idLote=cl.idLote and cl.status = 1
+        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote and cl.status = 1
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
         INNER JOIN movimientos mo ON mo.idMovimiento = l.idMovimiento
@@ -195,16 +199,16 @@ class VentasAsistentes_model extends CI_Model {
 
 	public function getCorreoSt ($idCliente) {
 
-		$query = $this->db-> query("SELECT STRING_AGG (correo, ', ') correos FROM (
+		$query = $this->db-> query("SELECT STRING_AGG (correo, ',') correos FROM (
 			/*ASESOR COORDINADOR GERENTE (TITULAR VENTA) */
-			SELECT c.id_cliente, CONCAT(u.correo, ', ', uu.correo, ', ', uuu.correo) correo FROM clientes c 
+			SELECT c.id_cliente, CONCAT(u.correo, ',', uu.correo, ',', uuu.correo) correo FROM clientes c 
 			LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor 
 			LEFT JOIN usuarios uu ON uu.id_usuario = c.id_coordinador 
 			LEFT JOIN usuarios uuu ON uuu.id_usuario = c.id_gerente 
 			WHERE c.id_cliente = ".$idCliente."
 			UNION ALL
 			/*ASESOR COORDINADOR GERENTE (VENTAS COMPARTIDAS) */
-			SELECT vc.id_cliente, CONCAT(u.correo, ', ', uu.correo, ', ', uuu.correo) correo FROM ventas_compartidas vc 
+			SELECT vc.id_cliente, CONCAT(u.correo, ',', uu.correo, ',', uuu.correo) correo FROM ventas_compartidas vc 
 			LEFT JOIN usuarios u ON u.id_usuario = vc.id_asesor 
 			LEFT JOIN usuarios uu ON uu.id_usuario = vc.id_coordinador 
 			LEFT JOIN usuarios uuu ON uuu.id_usuario = vc.id_gerente 
@@ -256,9 +260,9 @@ class VentasAsistentes_model extends CI_Model {
         $id_sede = $this->session->userdata('id_sede');
         if (in_array($id_rol, array(17, 70))){ // MJ: ES CONTRALORÍA Y EJECUTIVO CONTRALORÍA JR
             $filtroUsuarioBR = '';
-            if($id_usuario == 2815)
+            if($id_usuario == 2815 || $id_usuario == 12931)
                 $filtroUsuarioBR = ' AND (l.tipo_venta IN (4, 6) OR cl.id_asesor IN (2549, 2570, 2591))';
-            else if ($id_usuario == 12377 || $id_usuario == 2799) // MIRIAM PAOLA JIMENEZ FIGUEROA o LADY SKARLETT LOPEZ VEN REUBICACIONES
+            else if (in_array($id_usuario, array(12377, 2799, 10088, 2827, 6012))) // MIRIAM PAOLA JIMENEZ FIGUEROA o LADY SKARLETT LOPEZ VEN REUBICACIONES
                 $filtroUsuarioBR = ' AND l.tipo_venta IN (6)';
             else
                 $filtroUsuarioBR = ' AND l.tipo_venta IN (4, 6)';
@@ -280,6 +284,10 @@ class VentasAsistentes_model extends CI_Model {
             if ($id_usuario == 6831) { // YARETZI MARICRUZ ROSALES HERNANDEZ
                 $filtroGerente = "AND cl.id_gerente = 690";
                 $filtroSede = "";
+            } else if ($id_usuario == 12318) { // EMMA CECILIA MALDONADO RAMÍREZ
+                $id_lider = $this->session->userdata('id_lider');
+                $filtroGerente = "AND cl.id_gerente IN ($id_lider, 11196, 5637)";
+                $filtroSede = "";
             } else if (in_array($id_usuario, array(7097, 7096, 10924, 7324, 5620))) // GRISELL MALAGON, EDGAR AGUILAR Y DALIA PONCE
                 $filtroSede = "AND l.ubicacion IN ('4', '9', '13', '14')"; // Ciudad de México, San Miguel de Allende, Estado de México Occidente y Estado de México Norte
             
@@ -295,7 +303,7 @@ class VentasAsistentes_model extends CI_Model {
         CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) AS gerente,
         cond.idCondominio, l.observacionContratoUrgente AS vl, sd.nombre as nombreSede
         FROM lotes l
-        INNER JOIN clientes cl ON l.idLote=cl.idLote
+        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
         LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario

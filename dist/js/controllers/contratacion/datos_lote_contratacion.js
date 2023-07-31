@@ -1,11 +1,16 @@
 $(document).ready(function () {
-    $('#spiner-loader').removeClass('hide');
     $.post(`${general_base_url}Contratacion/lista_proyecto`, function (data) {
         for (var i = 0; i < data.length; i++) {
-            $("#idResidencial").append($('<option>').val(data[i]['idResidencial']).text(data[i]['descripcion'].toUpperCase()));
+            $("#idResidencial").append($('<option>').val(data[i]['idResidencial']).text(data[i]['descripcion']));
         }
         $("#idResidencial").selectpicker('refresh');
-        $('#spiner-loader').addClass('hide');
+    }, 'json');
+
+    $.post(`${general_base_url}Contratacion/lista_estatus`, function (data) {
+        for (var i = 0; i < data.length; i++) {
+            $("#idEstatus").append($('<option>').val(data[i]['idStatusLote']).text(data[i]['nombre']));
+        }
+        $("#idEstatus").selectpicker('refresh');
     }, 'json');
 });
 
@@ -22,32 +27,7 @@ $('#idResidencial').change(function () {
             $("#idCondominioInventario").selectpicker('refresh');
             $('#spiner-loader').addClass('hide');
         }, 'json');
-        tablaInventario(index_idResidencial,0,0);
     });    
-});
-
-$('#idCondominioInventario').change(function (){
-    $('#spiner-loader').removeClass('hide');
-    index_CondominioInventario = $(this).val();
-    $(document).ready(function () {
-    $.post(`${general_base_url}Contratacion/lista_estatus/${index_CondominioInventario}`, function (data) {
-        for (var i = 0; i < data.length; i++) {
-            $("#idEstatus").append($('<option>').val(data[i]['idStatusLote']).text(data[i]['nombre']));
-        }
-        $("#idEstatus").selectpicker('refresh');
-        $('#spiner-loader').addClass('hide');
-    }, 'json');
-    tablaInventario(index_idResidencial,index_CondominioInventario,0);
-    });
-});
-
-$('#idEstatus').change(function (){
-    $('#spiner-loader').removeClass('hide');
-    index_idEstatus = $(this).val();
-    $(document).ready(function () {
-    tablaInventario(index_idResidencial,index_CondominioInventario,index_idEstatus);
-    $('#spiner-loader').addClass('hide');
-    });
 });
 
 let titulosInventario = [];
@@ -62,7 +42,10 @@ $('#tablaInventario thead tr:eq(0) th').each(function (i) {
     });
 });
 
-function tablaInventario(ix_idResidencial = 0,ix_idCondominio = 0,ix_idEstatus = 0){
+$(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', function () {
+    ix_idResidencial = ($("#idResidencial").val().length <= 0) ? 0 : $("#idResidencial").val();
+    ix_idCondominio = $("#idCondominioInventario").val() == '' ? 0 : $("#idCondominioInventario").val();
+    ix_idEstatus = $("#idEstatus").val() == '' ? 0 : $("#idEstatus").val();
     tabla_inventario = $("#tablaInventario").DataTable({
         dom: "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'B><'col-12 col-sm-12 col-md-6 col-lg-6 p-0'f>rt>"+"<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
@@ -78,7 +61,7 @@ function tablaInventario(ix_idResidencial = 0,ix_idCondominio = 0,ix_idEstatus =
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
-            title: 'MADERAS_CRM_INVENTARIO',
+            title: 'Inventario lotes',
             exportOptions: {
                 columns: coordinador = id_rol_general == 11 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 27, 28, 29, 30, 31],
                 format: {
@@ -93,6 +76,7 @@ function tablaInventario(ix_idResidencial = 0,ix_idCondominio = 0,ix_idEstatus =
             text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i>',
             className: 'btn buttons-pdf',
             titleAttr: 'PDF',
+            title: 'Inventario lotes',
             orientation: 'landscape',
             pageSize: 'LEGAL',
             exportOptions: {
@@ -305,13 +289,10 @@ function tablaInventario(ix_idResidencial = 0,ix_idCondominio = 0,ix_idEstatus =
                 return `<center><button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-tipo-venta="${d.tipo_venta}" data-toggle="tooltip" data-placement="left" title="VER MÁS INFORMACIÓN"><i class="fas fa-history"></i></button></center>`;
             }
         }],
+        initComplete: function() {
+            $('[data-toggle="tooltip"]').tooltip();
+        }
     });  
-}
-
-$('#tablaInventario').on('draw.dt', function() {
-    $('[data-toggle="tooltip"]').tooltip({
-        trigger: "hover"
-    });
 });
 
 $(document).on("click", ".ver_historial", function () {

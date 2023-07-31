@@ -24,9 +24,9 @@
                                                 <div class="row">
                                                     <div class="col-md-12 p-r">
                                                         <div class="form-group d-flex">
-                                                            <input type="text" class="form-control datepicker" id="beginDate" value="" autocomplete='off' />
-                                                            <input type="text" class="form-control datepicker" id="endDate" value="" autocomplete='off' />
-                                                            <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
+                                                            <input type="text" data-toggle="tooltip" data-placement="top" title="Fecha fin" class="form-control datepicker" id="beginDate" value="" autocomplete='off' />
+                                                            <input type="text" data-toggle="tooltip" data-placement="top" title="Fecha fin" class="form-control datepicker" id="endDate" value="" autocomplete='off' />
+                                                            <button data-toggle="tooltip" data-placement="top" title="Buscar" class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
                                                                 <span class="material-icons update-dataTable">search</span>
                                                             </button>
                                                         </div>
@@ -38,11 +38,11 @@
                                 </div>
                                 <div class="material-datatables">
                                     <div class="form-group">
-                                    <div class="table-responsive">
-                                            <table class="table-striped table-hover" id="reports-datatable"
+                                            <div class="table-responsive">
+                                                <table class="table-striped table-hover" id="reports-datatable"
                                                 name="reports-datatable">
-                                            </table>
-                                        </div>
+                                                </table>
+                                            </div>
                                     </div>
                                 </div>
                             </div>
@@ -66,11 +66,7 @@
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script type="text/javascript" src="<?= base_url() ?>dist/js/shadowbox.js"></script>
 <script>
-    userType = <?= $this->session->userdata('id_rol') ?>;
-    idUser = <?= $this->session->userdata('id_usuario') ?>;
-    typeTransaction = 1;
     Shadowbox.init();
-    base_url = "<?= base_url() ?>";
 </script>
 
 <!-- MODAL WIZARD -->

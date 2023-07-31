@@ -2866,7 +2866,6 @@ class Asesor extends CI_Controller
         }
     }
 
-    /*autorizaciones*/
     public function autorizaciones()
     {
         $this->load->view('template/header');
@@ -2893,6 +2892,8 @@ class Asesor extends CI_Controller
     }
     public function addAutorizacionSbmt()
     {
+        $this->db->trans_begin();
+
         $data = array();
         $tamanoArreglo = $this->input->post('tamanocer');
         $idCliente = $this->input->post('idCliente');
@@ -2916,44 +2917,56 @@ class Asesor extends CI_Controller
                 'estatus' => 1,
                 'autorizacion' => $this->input->post('comentario_' . $n)
             );
-            $dataInsert = $this->Asesor_model->insertAutorizacion($data);
-            $n > 0 ? $comentario .= "<br>-".$this->input->post('comentario_' . $n) : $comentario .= '-'.$this->input->post('comentario_' . $n);
+            $this->Asesor_model->insertAutorizacion($data);
+            if (!empty($this->input->post('comentario_' . $n))) {
+                ($n > 0 && !empty($comentario)) ? $comentario .= "<br>-".$this->input->post('comentario_' . $n) : $comentario .= '-'.$this->input->post('comentario_' . $n);
+            }
             $autorizacionComent .= $this->input->post('comentario_' . $n) . ". ";
         }
-        if ($dataInsert == 1) {
 
-            $encabezados = [
-                'nombreResidencial' => 'PROYECTO',
-                'nombreCondominio'  => 'CONDOMINIO',
-                'nombreLote'        => 'LOTE',
-                'motivoAut'         => 'AUTORIZACIÓN',
-                'fechaHora'         => 'FECHA/HORA'
-            ];
-            $info[0] = [
-                'nombreResidencial'   =>  $nombreResidencial,
-                'nombreCondominio'    =>  $nombreCondominio,
-                'nombreLote'          =>  $nombreLote,
-                'motivoAut'           =>  $autorizacionComent,
-                'fechaHora'           =>  date("Y-m-d H:i:s")
-            ];
-
-            $this->email
-                ->initialize()
-                ->from('Ciudad Maderas')
-                ->to('tester.ti2@ciudadmaderas.com')
-                // -to($correoDir)
-                ->subject('SOLICITUD DE AUTORIZACIÓN - CONTRATACIÓN')
-                ->view($this->load->view('mail/asesor/add-autorizacion-sbmt', [
-                    'encabezados' => $encabezados,
-                    'contenido' => $info,
-                    'comentario' => $comentario
-                ], true));
-
-            $this->email->send();
-            echo json_encode($dataInsert);
-        } else {
-            echo json_encode($dataInsert);
+        if ($this->db->trans_status() === false) {
+            $this->db->trans_rollback();
+            echo json_encode(false);
+            return;
         }
+
+        $dataUser = $this->Asesor_model->getInfoUserById($id_aut);
+
+        $encabezados = [
+            'nombreResidencial' => 'PROYECTO',
+            'nombreCondominio'  => 'CONDOMINIO',
+            'nombreLote'        => 'LOTE',
+            'motivoAut'         => 'AUTORIZACIÓN',
+            'fechaHora'         => 'FECHA/HORA'
+        ];
+        $info[0] = [
+            'nombreResidencial'   =>  $nombreResidencial,
+            'nombreCondominio'    =>  $nombreCondominio,
+            'nombreLote'          =>  $nombreLote,
+            'motivoAut'           =>  $autorizacionComent,
+            'fechaHora'           =>  date("Y-m-d H:i:s")
+        ];
+
+        $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to('tester.ti2@ciudadmaderas.com')
+            // ->to($dataUser[0]->correo)
+            ->subject('SOLICITUD DE AUTORIZACIÓN - CONTRATACIÓN')
+            ->view($this->load->view('mail/asesor/add-autorizacion-sbmt', [
+                'encabezados' => $encabezados,
+                'contenido' => $info,
+                'comentario' => $comentario
+            ], true));
+
+        if ($this->email->send()) {
+            $this->db->trans_commit();
+            echo json_encode(true);
+        } else {
+            $this->db->trans_rollback();
+            echo json_encode(false);
+        }
+
     }
     public function intExpAsesor()
     {
@@ -3327,52 +3340,68 @@ class Asesor extends CI_Controller
             echo json_encode($data);
         }
     }
-    public function editar_registro_loteRevision_asistentesAContraloria_proceceso2()
-    {
+    
+    public function editar_registro_loteRevision_asistentesAContraloria_proceceso2() {
+
         $idLote = $this->input->post('idLote');
         $idCondominio = $this->input->post('idCondominio');
         $nombreLote = $this->input->post('nombreLote');
         $idCliente = $this->input->post('idCliente');
         $comentario = $this->input->post('comentario');
         $fechaVenc = $this->input->post('fechaVenc');
+        $tipo_comprobante = $this->input->post('tipo_comprobante');
         $dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
-        if ($this->session->userdata('id_rol') == 32) {
+        $id_rol = $this->session->userdata('id_rol');
+
+        if (in_array($id_rol, array(13, 32, 17, 70)))
             $documentsNumber = 3;
-        } else {
-            $documentsNumber = 4;
-        }
-        $documentsValidation = $this->Asesor_model->validateDocumentation($idLote, $dataClient[0]['personalidad_juridica']);
-        $dataBackTest = $this->Asesor_model->getWstatus1($idLote);
+        else
+            $documentsNumber = $tipo_comprobante == 1 ? 3 : 4; //se valida si quiere la carta de domicilio para que  no valide el comp de domicilio
+
+        $documentsValidation = $this->Asesor_model->validateDocumentation($idLote, $dataClient[0]['personalidad_juridica'], $tipo_comprobante);
+
         if (COUNT($documentsValidation) < $documentsNumber) {
             $data['message'] = 'MISSING_DOCUMENTS';
             echo json_encode($data);
-        } elseif(count($dataBackTest)<=0){
-            $data['message'] = 'PENDIENT_AUTHORIZATION';
-            echo json_encode($data);
-        }
-        else {
+        } else {
             $arreglo = array();
-            $arreglo["idStatusContratacion"] = 2;
-            $arreglo["idMovimiento"] = 4;
+            $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
+            $statusContratacion = 2;
+            $idMovimiento = 4;
+            if($valida_tventa[0]['tipo_venta'] == 1) {
+                if($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 20) {
+                    $statusContratacion = 3;
+                    $idMovimiento = 98;
+                }
+            }
+
+            $arreglo["idStatusContratacion"] = $statusContratacion;
+            $arreglo["idMovimiento"] = $idMovimiento;
             $arreglo["comentario"] = $comentario;
             $arreglo["usuario"] = $this->session->userdata('id_usuario');
             $arreglo["perfil"] = $this->session->userdata('id_rol');
             $arreglo["modificado"] = date("Y-m-d H:i:s");
+
             date_default_timezone_set('America/Mexico_City');
             $horaActual = date('H:i:s');
             $horaInicio = date("08:00:00");
             $horaFin = date("16:00:00");
+
             if ($horaActual > $horaInicio and $horaActual < $horaFin) {
+
                 $fechaAccion = date("Y-m-d H:i:s");
                 $hoy_strtotime2 = strtotime($fechaAccion);
                 $sig_fecha_dia2 = date('D', $hoy_strtotime2);
                 $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+
                 if ($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
                     $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
                     $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
                     $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
                     $sig_fecha_feriado2 == "25-12") {
+
                     $fecha = $fechaAccion;
+
                     $i = 0;
                     while ($i <= 0) {
                         $hoy_strtotime = strtotime($fecha);
@@ -3380,6 +3409,7 @@ class Asesor extends CI_Controller
                         $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
                         $sig_fecha_dia = date('D', $sig_strtotime);
                         $sig_fecha_feriado = date('d-m', $sig_strtotime);
+
                         if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
                             $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
                             $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
@@ -3390,9 +3420,11 @@ class Asesor extends CI_Controller
                             $i++;
                         }
                         $fecha = $sig_fecha;
+
                     }
                     $arreglo["fechaVenc"] = $fecha;
                 } else {
+
                     $fecha = $fechaAccion;
                     $i = 0;
                     while ($i <= -1) {
@@ -3401,6 +3433,7 @@ class Asesor extends CI_Controller
                         $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
                         $sig_fecha_dia = date('D', $sig_strtotime);
                         $sig_fecha_feriado = date('d-m', $sig_strtotime);
+
                         if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
                             $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
                             $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
@@ -3413,26 +3446,33 @@ class Asesor extends CI_Controller
                         $fecha = $sig_fecha;
                     }
                     $arreglo["fechaVenc"] = $fecha;
+
                 }
-            }
-            elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
+
+            } elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
+
                 $fechaAccion = date("Y-m-d H:i:s");
                 $hoy_strtotime2 = strtotime($fechaAccion);
                 $sig_fecha_dia2 = date('D', $hoy_strtotime2);
                 $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+
                 if ($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
                     $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
                     $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
                     $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
                     $sig_fecha_feriado2 == "25-12") {
+
                     $fecha = $fechaAccion;
                     $i = 0;
+
                     while ($i <= 0) {
                         $hoy_strtotime = strtotime($fecha);
                         $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
                         $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
                         $sig_fecha_dia = date('D', $sig_strtotime);
                         $sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+
                         if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
                             $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
                             $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
@@ -3446,7 +3486,9 @@ class Asesor extends CI_Controller
                     }
                     $arreglo["fechaVenc"] = $fecha;
                 } else {
+
                     $fecha = $fechaAccion;
+
                     $i = 0;
                     while ($i <= 0) {
                         $hoy_strtotime = strtotime($fecha);
@@ -3454,6 +3496,7 @@ class Asesor extends CI_Controller
                         $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
                         $sig_fecha_dia = date('D', $sig_strtotime);
                         $sig_fecha_feriado = date('d-m', $sig_strtotime);
+
                         if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
                             $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
                             $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
@@ -3468,9 +3511,11 @@ class Asesor extends CI_Controller
                     $arreglo["fechaVenc"] = $fecha;
                 }
             }
+
+
             $arreglo2 = array();
-            $arreglo2["idStatusContratacion"] = 2;
-            $arreglo2["idMovimiento"] = 4;
+            $arreglo2["idStatusContratacion"] = $statusContratacion;
+            $arreglo2["idMovimiento"] = $idMovimiento;
             $arreglo2["nombreLote"] = $nombreLote;
             $arreglo2["comentario"] = $comentario;
             $arreglo2["usuario"] = $this->session->userdata('id_usuario');
@@ -3480,7 +3525,9 @@ class Asesor extends CI_Controller
             $arreglo2["idLote"] = $idLote;
             $arreglo2["idCondominio"] = $idCondominio;
             $arreglo2["idCliente"] = $idCliente;
+
             $validate = $this->Asesor_model->validateSt2($idLote);
+
             if ($validate == 1) {
                 if ($this->Asesor_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) {
                     $data['message'] = 'OK';
@@ -3495,6 +3542,7 @@ class Asesor extends CI_Controller
             }
         }
     }
+    
     public function envioRevisionAsesor2aJuridico7()
     {
         $idCliente = $this->input->post('idCliente');

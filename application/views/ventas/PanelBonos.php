@@ -19,6 +19,8 @@
         <div class="modal fade modal-alertas " id="modal_abono" data-backdrop="static" data-keyboard="false" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
+                <div class="modal-header"></div>
+
                     <form method="post" id="form_abono">
                         <div class="modal-body"></div>
                         <div class="modal-footer"></div>
@@ -33,22 +35,22 @@
                         <ul class="nav nav-tabs nav-tabs-cm">
                             <li class="active">
                                 <a href="#nuevas-1" role="tab" data-toggle="tab">
-                                    <i class="fas fa-star pr-1 fa-lg"></i>NUEVOS
+                                    NUEVOS
                                 </a>
                             </li>
                             <li>
                                 <a href="#proceso-1" role="tab" data-toggle="tab">
-                                    <i class="fas fa-clipboard pr-1 fa-lg"></i> EN REVISIÓN
+                                    EN REVISIÓN
                                 </a>
                             </li>
                             <li>
                                 <a href="#proceso-2" role="tab" data-toggle="tab">
-                                    <i class="fas fa-hand-holding-usd pr-1 fa-lg"></i> POR PAGAR
+                                    POR PAGAR
                                 </a>
                             </li>
                             <li>
                                 <a href="#proceso-3" role="tab" data-toggle="tab">
-                                    <i class="fas fa-exclamation-triangle  pr-1 fa-lg"></i>OTROS
+                                    OTROS
                                 </a>
                             </li>
                         </ul>
@@ -56,11 +58,29 @@
                             <div class="card-content p-0">
                                 <div class="nav-tabs-custom">
                                     <div class="tab-content p-2">
+
+                                    <!-- TABLA NUEVOS -->
                                         <div class="tab-pane active" id="nuevas-1">
-                                            <h3 class="card-title center-align">Nuevos bonos</h3>
-                                            <div class="material-datatables">
-                                                <div class="form-group">
-                                                    <table class="table-striped table-hover" id="tabla_prestamos" name="tabla_prestamos">
+                                            
+                                        <div class="material-datatables">
+                                            <div class="form-group">
+                                                <div class="toolbar">
+                                                    <div class="container-fluid p-0">
+                                                        <div class="row">
+                                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                                <div class="form-group d-flex justify-center align-center">
+                                                                    <h4 class="title-tot center-align m-0">Bonos Nuevos
+                                                                        <a href="https://youtu.be/wLDdDHQjCrw" target="_blank" style="color:red">
+                                                                            <i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
+                                                                        </a>
+                                                                    </h4>
+                                                                    <p class="input-tot pl-1" name="totalnuevos" id="totalnuevos">$0.00</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <table class="table-striped table-hover" id="tabla_nuevos" name="tabla_nuevos">
                                                         <thead>
                                                             <tr>
                                                                 <th>ID</th>
@@ -82,40 +102,65 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tab-pane" id="proceso-1">
-                                            <h3 class="card-title center-align">Bonos en revisión</h3>
+                                    <!-- TABLA NUEVOS FINAL-->
+
+                                    <!-- TABLA REVISIÓN -->
+                                    <div class="tab-pane" id="proceso-1">
+                                            
                                             <div class="material-datatables">
                                                 <div class="form-group">
+                                                    <div class="toolbar">
+                                                        <div class="container-fluid p-0">
+                                                            <div class="row">
+                                                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                                    <div class="form-group d-flex justify-center align-center">
+                                                                        <h4 class="title-tot center-align m-0">Bonos Revisión
+                                                                            <a href="https://youtu.be/wLDdDHQjCrw" target="_blank" style="color:red">
+                                                                                <i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
+                                                                            </a>
+                                                                        </h4>
+                                                                        <p class="input-tot pl-1" name="totalrevision" id="totalrevision">$0.00</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                         
                                                     <table class="table-striped table-hover" id="tabla_bono_revision" name="tabla_bono_revision">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>ID</th>
-                                                                <th>USUARIO</th>
-                                                                <th>PUESTO</th>
-                                                                <th>MONTO DEL BONO</th>
-                                                                <th>ABONADO</th>
-                                                                <th>PENDIENTE</th>
-                                                                <th>TOTAL DE PAGOS</th>
-                                                                <th>PAGO INDIVIDUAL</th>
-                                                                <th>IMPUESTO</th>
-                                                                <th>TOTAL A PAGAR</th>
-                                                                <th>ESTATUS</th>
-                                                                <th>FECHA DE REGISTRO</th>
-                                                                <th>OPCIONES</th>
-                                                            </tr>
-                                                        </thead>
-                                                    </table>
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>ID</th>
+                                                                    <th>USUARIO</th>
+                                                                    <th>PUESTO</th>
+                                                                    <th>MONTO DEL BONO</th>
+                                                                    <th>ABONADO</th>
+                                                                    <th>PENDIENTE</th>
+                                                                    <th>TOTAL DE PAGOS</th>
+                                                                    <th>PAGO INDIVIDUAL</th>
+                                                                    <th>IMPUESTO</th>
+                                                                    <th>TOTAL A PAGAR</th>
+                                                                    <th>ESTATUS</th>
+                                                                    <th>FECHA DE REGISTRO</th>
+                                                                    <th>OPCIONES</th>
+                                                                </tr>
+                                                            </thead>
+                                                        </table>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        <!-- TABLA REVISIÓN FINAL-->
+
                                         <div class="tab-pane" id="proceso-2">
-                                            <h3 class="card-title center-align">Bonos pagados</h3>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
                                                     <div class="row">
                                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                             <div class="form-group d-flex justify-center align-center">
-                                                                <h4 class="title-tot center-align m-0">Bonos pagados</h4>
+                                                                <h4 class="title-tot center-align m-0">Bonos por pagar
+                                                                    <a href="https://youtu.be/wLDdDHQjCrw" target="_blank" style="color:red">
+                                                                        <i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
+                                                                    </a>
+                                                                </h4>
                                                                 <p class="input-tot pl-1" name="totalp" id="totalp">$0.00</p>
                                                             </div>
                                                         </div>
@@ -124,7 +169,7 @@
                                             </div>
                                             <div class="material-datatables">
                                                 <div class="form-group">
-                                                    <table class="table-striped table-hover" id="tabla_bono_pagado" name="tabla_bono_pagado">
+                                                    <table class="table-striped table-hover" id="tabla_bonos_porpagar" name="tabla_bonos_porpagar">
                                                         <thead>
                                                             <tr>
                                                                 <th>ID</th>
@@ -147,13 +192,16 @@
                                             </div>
                                         </div>
                                         <div class="tab-pane" id="proceso-3">
-                                            <h3 class="card-title center-align">Otros</h3>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
                                                     <div class="row">
                                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                             <div class="form-group d-flex justify-center align-center">
-                                                                <h4 class="title-tot center-align m-0">Bonos</h4>
+                                                                <h4 class="title-tot center-align m-0">Bonos Otros (Cancelados, pausa)
+                                                                    <a href="https://youtu.be/wLDdDHQjCrw" target="_blank" style="color:red">
+                                                                        <i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
+                                                                    </a>
+                                                                </h4>
                                                                 <p class="input-tot pl-1" name="totalo" id="totalo">$0.00</p>
                                                             </div>
                                                         </div>

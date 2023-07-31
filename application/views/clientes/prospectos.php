@@ -1,3 +1,4 @@
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <body>
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
@@ -32,22 +33,18 @@
                 color: #929292;
             }
 
-            .pl-3 {
-                padding-left: 30px;
-            }
-            .pr-3{
-                padding-right: 30px;
-            } 
-            .pb-2{
-                padding-bottom: 20px;
-            }
-            .m-0 {
-                margin: 0 !important;
-            }
-
             @keyframes progress-indeterminate {
                 from { left: -25%; width: 25%; }
                 to { left: 100%; width: 25%;}
+            }
+
+            .isRequired{
+                color: #EA4335;
+                margin: 0 3px;
+            }
+
+            .u2be i{
+                color: red;
             }
         </style>
 
@@ -60,7 +57,11 @@
                             <form id="my-form" name="my-form" method="post">
                                 <div class="wizard-header">
                                     <h3 class="wizard-title">Construye su perfil</h3>
-                                    <h5>Esta información nos permitirá saber más sobre él.</h5>
+                                    <h5>Esta información nos permitirá saber más sobre él.
+                                        <a href="https://youtu.be/pj80dBMw6y4" class="p-0 ml-3 d-flex align-center justify-center u2be" target="_blank">
+                                            <i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
+                                        </a>
+                                    </h5>
                                 </div>
                                 <div class="wizard-navigation" id="wiz-nav" name="wiz-nav">
                                     <ul>
@@ -91,7 +92,7 @@
                                                 <div class="col-sm-3">
                                                     <div class="form-group  select-is-empty">
                                                         <label class="control-label">
-                                                            * Nacionalidad<small> (requerido)</small>
+                                                            Nacionalidad (<span class="isRequired">*</span>)
                                                         </label>
                                                         <select id="nationality" 
                                                                 name="nationality"
@@ -109,7 +110,7 @@
                                                 </div>
                                                 <div class="col-sm-3">
                                                     <div class="form-group  select-is-empty">
-                                                        <label class="control-label">* Personalidad jurídica<small> (requerido)</small></label>
+                                                        <label class="control-label">Personalidad jurídica (<span class="isRequired">*</span>)</label>
                                                         <select id="legal_personality" 
                                                                 name="legal_personality"
                                                                 class="selectpicker select-gral m-0"
@@ -153,7 +154,7 @@
                                             <div class="col-sm-12 pl-3 pr-3 pb-2">
                                                 <div class="col-sm-3">
                                                     <div class="form-group ">
-                                                        <label class="control-label">* Nombre / Razón social<small> (requerido)</small></label>
+                                                        <label class="control-label">Nombre / Razón social (<span class="isRequired">*</span>)</label>
                                                         <input  id="name"
                                                                 name="name"
                                                                 type="text"
@@ -219,7 +220,7 @@
                                                 </div>
                                                 <div class="col-sm-3">
                                                     <div class="form-group ">
-                                                        <label class="control-label">* Teléfono celular<small> (requerido)</small></label>
+                                                        <label class="control-label">Teléfono celular (<span class="isRequired">*</span>)</label>
                                                         <input  id="phone_number"
                                                                 name="phone_number"
                                                                 type="number"
@@ -428,7 +429,7 @@
                                             <div class="col-sm-12 pl-3 pr-3"> 
                                                 <div class="col-sm-4">
                                                     <div class="form-group  select-is-empty">
-                                                        <label class="control-label">¿Cómo nos contactaste?<small> (requerido)</small></label>
+                                                        <label class="control-label">¿Cómo nos contactaste? (<span class="isRequired">*</span>)</label>
                                                         <select id="prospecting_place"
                                                                 name="prospecting_place"
                                                                 class="selectpicker select-gral m-0"
@@ -437,6 +438,7 @@
                                                                 data-live-search="true"
                                                                 title="Selecciona una opción"
                                                                 data-size="7"
+                                                                data-container="body"
                                                                 onchange="validateProspectingPlace(), validateSelect('prospecting_place')"
                                                                 required>
                                                         </select>
@@ -446,18 +448,8 @@
                                                     <div class="form-group  select-is-empty">
                                                         <label class="control-label">Específique cuál</label>
                                                         <input id="specify" name="specify" type="text" class="form-control input-gral" readonly onkeyup="javascript:this.value=this.value.toUpperCase();">
-                                                        <div    id="specify_mkt_div"
-                                                                name="specify_mkt_div"
-                                                                style="display: none;">
-                                                            <select id="specify_mkt"
-                                                                    name="specify_mkt" 
-                                                                    class="selectpicker select-gral m-0"                                                             
-                                                                    data-style="btn"
-                                                                    data-show-subtext="true"
-                                                                    data-live-search="true"
-                                                                    title="Selecciona una opción"
-                                                                    data-size="7"
-                                                                    style="display: none;">
+                                                        <div id="specify_mkt_div" name="specify_mkt_div" style="display: none;">
+                                                            <select id="specify_mkt"name="specify_mkt" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" style="display: none;">
                                                                 <option value="01 800">01 800</option>
                                                                 <option value="Chat">Chat</option>
                                                                 <option value="Contacto web">Contacto web</option>
@@ -467,28 +459,14 @@
                                                                 <option value="WhatsApp">WhatsApp</option>
                                                             </select>
                                                         </div>
-                                                        <select id="specify_recommends"
-                                                                name="specify"
-                                                                class="form-control input-gral"
-                                                                required data-live-search="true"
-                                                                style="display: none; width: 100%"
-                                                                onchange="getRecommendationData()">
+                                                        <select id="specify_recommends" name="specify" class="form-control input-gral" required data-live-search="true" style="display: none; width: 100%" onchange="getRecommendationData()">
                                                         </select>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <div class="form-group  select-is-empty">
-                                                        <label class="control-label">Plaza de venta<small> (requerido)</small></label>
-                                                        <select id="sales_plaza"
-                                                                name="sales_plaza"
-                                                                class="selectpicker select-gral m-0"
-                                                                data-style="btn"
-                                                                data-show-subtext="true"
-                                                                data-live-search="true"
-                                                                title="Selecciona una opción"
-                                                                data-size="7"
-                                                                onchange="validateSelect('sales_plaza')"
-                                                                required>
+                                                        <label class="control-label">Plaza de venta (<span class="isRequired">*</span>)</label>
+                                                        <select id="sales_plaza" name="sales_plaza" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" data-container="body" title="Selecciona una opción" data-size="7" onchange="validateSelect('sales_plaza')" required>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -497,21 +475,14 @@
                                                 <div class="col-sm-12">
                                                     <div class="form-group ">
                                                         <label class="control-label">Observaciones</label>
-                                                        <textarea   type="password"
-                                                                    id="observations"
-                                                                    name="observations"
-                                                                    class="form-control input-gral"
-                                                                    onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
+                                                        <textarea   type="password" id="observations" name="observations" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-sm-12 pl-3 pr-3">
                                                 <div class="col-sm-12">
                                                     <div class="form-group ">
-                                                        <input  id="type_recomendado"
-                                                                name="type_recomendado"
-                                                                type="hidden"
-                                                                class="form-control input-gral">
+                                                        <input  id="type_recomendado" name="type_recomendado" type="hidden" class="form-control input-gral">
                                                     </div>
                                                 </div>
                                             </div>
@@ -521,29 +492,15 @@
                                 <div class="wizard-footer">
                                     <div class="col-md-12" id="savingProspect"></div>
                                     <div class="pull-right">
-                                        <input  type="hidden"
-                                                name="asesor_prospecto"
-                                                id="asesor_prospecto"
-                                                value="0">
+                                        <input  type="hidden" name="asesor_prospecto" id="asesor_prospecto" value="0">
                                         
-                                        <input  type='button'
-                                                class='btn btn-next btn-fill btn-wd'
-                                                name='next'
-                                                value='Siguiente'
-                                                style="background-color: #4caf50"/>
+                                        <input  type='button' class='btn btn-next btn-fill btn-wd' name='next' value='Siguiente' style="background-color: #4caf50"/>
                                         
-                                        <button type='button'
-                                                class='btn btn-finish btn-fill btn-wd'
-                                                name='finish'
-                                                id="finish"
-                                                value='Finalizar'
-                                                style="background-color: #4caf50">
+                                        <button type='button' class='btn btn-finish btn-fill btn-wd' name='finish' id="finish" value='Finalizar' style="background-color: #4caf50">
                                             Finalizar
                                         </button>
 
-                                        <button type="submit"
-                                                id="submt"
-                                                class="hide">
+                                        <button type="submit" id="submt" class="hide">
                                             Enviar final
                                         </button>
 

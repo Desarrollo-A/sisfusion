@@ -5861,7 +5861,7 @@ class RegistroCliente extends CI_Controller {
 		for($i=0; $i < $tamanoOfAuts; $i++){
 			$idAut = $_POST['idAutorizacion'.$i];
 
-			if (isset($_FILES["docArchivo".$i]["name"])) {
+			if (isset($_FILES["docArchivo".$i]["name"]) && !empty($_FILES["docArchivo".$i]["name"])) {
 				$aleatorio = rand(100,1000);
 				$expediente=preg_replace('[^A-Za-z0-9]', '',$_FILES["docArchivo".$i]["name"]);
 				$proyecto = str_replace(' ', '',$nombreResidencial);
@@ -6260,6 +6260,9 @@ class RegistroCliente extends CI_Controller {
 	
     function getResultsClientsSerch()
     {
+    ini_set('max_execution_time', 900);
+    set_time_limit(900);
+    ini_set('memory_limit','2048M');
       $info_client = [];
       $this->input->post('nombre') !== ''
       ? $info_client["cl.nombre"] = $this->input->post('nombre')
