@@ -26,7 +26,6 @@ $("#my_authorization_form").on('submit', function(e){
         beforeSend: function(){
             $('#btnSubmit').attr("disabled","disabled");
             $('#btnSubmit').css("opacity",".5");
-
         },
         success: function(data) {
             if (data == 'true') {
@@ -74,7 +73,6 @@ var getInfo6A = new Array(7);
 var getInfo2_3A = new Array(7);
 var getInfo2_7A = new Array(7);
 var aut;
-
 let titulos_autorizaciones = [];
 let num_colum_autorizaciones = [];
 $('#addExp thead tr:eq(0) th').each( function (i) {
@@ -84,36 +82,26 @@ $('#addExp thead tr:eq(0) th').each( function (i) {
     num_colum_autorizaciones.push(i);
     $( 'input', this ).on('keyup change', function () {
         if ($('#addExp').DataTable().column(i).search() !== this.value ) {
-            $('#addExp').DataTable()
-                .column(i)
-                .search(this.value)
-                .draw();
+            $('#addExp').DataTable().column(i).search(this.value).draw();
         }
     });
 });
-//Se elimina la columna de autorización (donde se encuentra el boton de vizualizar)
 num_colum_autorizaciones.pop();
 
 $(document).ready (function() {
-    /* Llenado de tabla para la tab de "AUTORIZACIONES" */
     var table;
     table = $('#addExp').DataTable( {
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
+        bAutoWidth: true,
         initComplete: function () {
             this.api().columns().every( function () {
                 var column = this;
-                var select = $('<select><option value=""></option></select>')
-                    .appendTo( $(column.footer()).empty() )
-                    .on( 'change', function () {
-                        var val = $.fn.dataTable.util.escapeRegex(
-                            $(this).val()
-                        );
-                        column
-                            .search( val ? '^'+val+'$' : '', true, false )
-                            .draw();
-                    } );
+                var select = $('<select><option value=""></option></select>').appendTo( $(column.footer()).empty() ).on( 'change', function () {
+                var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                        column.search( val ? '^'+val+'$' : '', true, false ).draw();
+                    });
                 column.data().unique().sort().each( function ( d, j ) {
                     select.append( '<option value="'+d+'">'+d+'</option>' )
                 } );
@@ -174,17 +162,7 @@ $(document).ready (function() {
             { "data": "aut" },
             {
                 "data": function( d ){
-                    acciones = `<center>
-                                    <a  href="#" 
-                                        class="btn-data btn-blueMaderas seeAuts"
-                                        data-id_autorizacion="${d.id_autorizacion}" 
-                                        data-idLote="${d.idLote}"
-                                        data-toggle="tooltip" 
-                                        data-placement="top"
-                                        title="VISUALIZAR">
-                                        <i class='fas fa-eye'></i>
-                                    </a>
-                                </center>`;
+                    acciones = `<a  href="#" class="btn-data btn-blueMaderas seeAuts" data-id_autorizacion="${d.id_autorizacion}" data-idLote="${d.idLote}" data-toggle="tooltip" data-placement="top" title="VISUALIZAR"><i class='fas fa-eye'></i></a></div>`;
                     return '<div class="d-flex justify-center">'+acciones+'</div>';
                 }
             }
@@ -212,18 +190,13 @@ $('#sol_aut thead tr:eq(0) th').each( function (i) {
     num_colum_solicitud.push(i);
     $( 'input', this ).on('keyup change', function () {
         if ($('#sol_aut').DataTable().column(i).search() !== this.value ) {
-            $('#sol_aut').DataTable()
-                .column(i)
-                .search(this.value)
-                .draw();
+            $('#sol_aut').DataTable().column(i).search(this.value).draw();
         }
     });
 });
-//Eliminamos la ultima columna "ACCIONES" donde se encuentra un elemento de tipo boton (para omitir en excel o pdf).
 num_colum_solicitud.pop();
 
 $(document).ready (function() {
-    /* Llenado de tabla para la tab de "SOLICITUD" */
     var table2;
     table2 = $('#sol_aut').DataTable( {
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -232,15 +205,11 @@ $(document).ready (function() {
         initComplete: function () {
             this.api().columns().every( function () {
                 var column = this;
-                var select = $('<select><option value=""></option></select>')
-                    .appendTo( $(column.footer()).empty() )
-                    .on( 'change', function () {
+                var select = $('<select><option value=""></option></select>').appendTo( $(column.footer()).empty() ).on( 'change', function () {
                         var val = $.fn.dataTable.util.escapeRegex(
                             $(this).val()
                         );
-                        column
-                            .search( val ? '^'+val+'$' : '', true, false )
-                            .draw();
+                        column.search( val ? '^'+val+'$' : '', true, false ).draw();
                     } );
                 column.data().unique().sort().each( function ( d, j ) {
                     select.append( '<option value="'+d+'">'+d+'</option>' )
@@ -322,19 +291,7 @@ $(document).ready (function() {
             "data": function( d ){
                 if((d.idStatusContratacion == 1 || d.idStatusContratacion == 2 || d.idStatusContratacion == 3) && (d.idMovimiento == 31 || d.idMovimiento == 85 || d.idMovimiento == 20 || d.idMovimiento == 63 || d.idMovimiento == 73 || d.idMovimiento == 82 || d.idMovimiento == 92 || d.idMovimiento == 96)){
                     aut =
-                        `<a  href="#"
-                            class="btn-data btn-blueMaderas addAutorizacionAsesor"
-                            data-idCliente="${d.id_cliente}"
-                            data-nombreResidencial="${d.nombreResidencial}"
-                            data-nombreCondominio="${d.nombreCondominio}"
-                            data-nombreLote="${d.nombreLote}"
-                            data-idCondominio="${d.idCondominio}"
-                            data-idLote="${d.idLote}" 
-                            data-toggle="tooltip" 
-                            data-placement="top"
-                            title="ACCIONES">
-                            <i class="fas fa-redo"></i>
-                        </a>`;
+                        `<a href="#" class="btn-data btn-blueMaderas addAutorizacionAsesor" data-idCliente="${d.id_cliente}" data-nombreResidencial="${d.nombreResidencial}" data-nombreCondominio="${d.nombreCondominio}" data-nombreLote="${d.nombreLote}" data-idCondominio="${d.idCondominio}" data-idLote="${d.idLote}" data-toggle="tooltip" data-placement="top" title="ACCIONES"><i class="fas fa-redo"></i></a>`;
                     return '<div class="d-flex justify-center">'+aut+'</div>';
                 }
                 else{
@@ -361,15 +318,11 @@ $(document).on('click', '.addAutorizacionAsesor', function(e) {
     contador=1;
     e.preventDefault();
     var $itself = $(this);
-
-    /**********/
     $("#dirAutoriza").val('default');
     $('#dirAutoriza').selectpicker("refresh");
     $('#autorizacionesExtra').html('');
     validateNumsOfAutorizacion();
     $('#comentario_0').val('');
-    /**********/
-
     $('#idCliente').val($itself.attr('data-idCliente'));
     $('#idLote').val($itself.attr('data-idLote'));
     $('#nombreCondominio').val($itself.attr('data-nombreCondominio'));
@@ -444,7 +397,6 @@ function agregarAutorizacion (){
         '</textarea></div>');
     contador = contador + 1;
     $('#tamanocer').val(contador);
-
     validateNumsOfAutorizacion();
 }
 
@@ -452,7 +404,6 @@ function eliminaAutorizacion(contenedor){
     $('#cnt-'+contenedor).remove();
     contador = contador - 1;
     $('#tamanocer').val(contador);
-
     validateNumsOfAutorizacion();
 }
 
@@ -469,20 +420,14 @@ function validateNumsOfAutorizacion(){
 }
 
 $(document).ready(function () {
-    validateNumsOfAutorizacion();
-
-    
+    validateNumsOfAutorizacion();    
     if(id_usuario_general == 1){
         alerts.showNotification("top", "right", "Se enviaron las autorizaciones correctamente", "success");
-        // $this->session->unset_userdata('success');
-
     }
     else if( id_usuario_general == 99){
         alerts.showNotification("top", "right", "Ocurrio un error al enviar la autorización", "warning");
-        // $this->session->unset_userdata('error');
     }
     
-
     $("#dirAutoriza").empty().selectpicker('refresh');
     $.ajax({
         url: general_base_url+'registroCliente/getActiveDirs/',
@@ -497,7 +442,6 @@ $(document).ready(function () {
                 $("#dirAutoriza").append($('<option>').val(id).text(name));
             }
             $("#dirAutoriza").selectpicker('refresh');
-
         }
     });
 });

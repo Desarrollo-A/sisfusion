@@ -211,9 +211,7 @@ function fillUsersTable() {
 }
 
 $('#all_users_datatable').on('draw.dt', function() {
-    $('[data-toggle="tooltip"]').tooltip({
-        trigger: "hover"
-    });
+    $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
 });
 
 function showPassword() {

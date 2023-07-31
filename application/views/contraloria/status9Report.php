@@ -56,7 +56,7 @@
                                     </div>
                                 </div>
                                 <div class="material-datatables">
-                                    <table id="estatusNueveTable" name="estatusNueveTable" class="table-striped table-hover hide">
+                                    <table id="estatusNueveTable" name="estatusNueveTable" class="table-striped table-hover">
                                         <thead>
                                             <tr>
                                                 <th>PROYECTO</th>
@@ -84,9 +84,7 @@
         <?php $this->load->view('template/footer_legend'); ?>
     </div>
     </div>
-
     </div>
-    <!--main-panel close-->
 </body>
 <?php $this->load->view('template/footer');?>
 <script src="<?=base_url()?>dist/js/controllers/contraloria/status9Report.js"></script>

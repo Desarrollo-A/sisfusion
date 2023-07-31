@@ -24,10 +24,7 @@
                                 <div class="file-gph">
                                     <input class="d-none" type="file" id="fileElm">
                                     <input class="file-name" id="file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
-                                    <label class="upload-btn m-0" for="fileElm">
-                                        <span>Seleccionar</span>
-                                        <i class="fas fa-folder-open"></i>
-                                    </label>
+                                    <label class="upload-btn m-0" for="fileElm"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>
                                 </div>
                             </div>
                         </div>
@@ -60,7 +57,6 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -100,19 +96,13 @@
                                         <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <div class="form-group select-is-empty overflow-hidden">
                                                 <label class="control-label">Condominio</label>
-                                                <select id="idCondominio" name="idCondominio" class="selectpicker select-gral m-0"
-                                                    data-style="btn" data-show-subtext="true" data-live-search="true"
-                                                    title="SELECCIONA UNA OPCIÓN" data-size="7" data-container='body' required>
-                                                </select>
+                                                <select id="idCondominio" name="idCondominio" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container='body' required></select>
                                             </div>
                                         </div>
                                         <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <div class="form-group select-is-empty overflow-hidden">
                                                 <label class="control-label">Lote</label>
-                                                <select id="idLote" name="idLote" class="selectpicker select-gral m-0"
-                                                    data-style="btn" data-show-subtext="true" data-live-search="true"
-                                                    title="SELECCIONA UNA OPCIÓN" data-size="7" data-container='body' required>
-                                                </select>
+                                                <select id="idLote" name="idLote" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container='body' required></select>
                                             </div>
                                         </div>
                                     </div>
@@ -148,17 +138,7 @@
         <?php $this->load->view('template/footer_legend');?>
     </div>
     </div>
-    <!--main-panel close-->
-
     <?php $this->load->view('template/footer');?>
-    <!--DATATABLE BUTTONS DATA EXPORT-->
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
     <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>

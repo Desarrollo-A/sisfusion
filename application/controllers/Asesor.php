@@ -743,7 +743,6 @@ class Asesor extends CI_Controller
             echo json_encode(array());
         }
     }
-    /****nuevo en modelo 28-10-20*****/
     public function get_info_prospectos()
     {
         $id_asesor = $this->session->userdata('id_usuario');
@@ -811,7 +810,6 @@ class Asesor extends CI_Controller
         $datos["cliente"][0]->tipo_nc = ( is_null($datos["cliente"][0]->tipo_nc) || $datos["cliente"][0]->tipo_nc === '' )
             ? 3
             : $datos["cliente"][0]->tipo_nc;
-
         $datos["referencias"] = $this->Asesor_model->selectDSR($id_cliente);
         if (count($datos["referencias"]) < 1) {
             $emptyReferencias = [

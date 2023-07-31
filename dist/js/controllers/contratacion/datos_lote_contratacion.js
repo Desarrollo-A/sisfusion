@@ -57,7 +57,7 @@ $('#tablaInventario thead tr:eq(0) th').each(function (i) {
     $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
     $('input', this).on('keyup change', function () {
         if ($('#tablaInventario').DataTable().column(i).search() !== this.value) {
-            $('#tablaInventario').DataTable().column(i).search(this.value).draw();
+            $('#tablaInventario').DataTable().column(i).search(this.value).draw(); 
         }
     });
 });
@@ -327,9 +327,7 @@ $(document).on("click", ".ver_historial", function () {
         element.classList.add("hide");
         $('#clauses_content').html('');
     }
-
     $("#seeInformationModal").modal();
-
     // LLENA LA TABLA CON EL HISTORIAL DEL PROCESO DE CONTRATACIÓN DEL LOTE X
     consultarHistoriaContratacion(idLote);
     // LLENA LA TABLA CON EL HISTORIAL DE LIBERACIÓN DEL LOTE X
@@ -395,9 +393,6 @@ function consultarHistoriaContratacion(idLote) {
             url: `${general_base_url}Contratacion/historialProcesoLoteOp/${idLote}`,
             dataSrc: ""
         },
-        initComplete: function() {
-            $('[data-toggle="tooltip"]').tooltip();
-        }
     });
 }
 

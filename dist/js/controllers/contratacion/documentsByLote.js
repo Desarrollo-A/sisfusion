@@ -73,7 +73,6 @@ $(document).ready (function() {
                             render: function ( data, type, row )
                             {
                                 datos = data.id_asesor;
-
                                 if (getFileExtension(data.expediente) == "pdf") {
                                     if(data.tipo_doc == 8){
                                         file = '<a class="pdfLink3 btn-data btn-warning" data-Pdf="'+data.expediente+'" data-toggle="tooltip" data-placement="top" title= "VER ARCHIVO" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a>';
@@ -87,7 +86,7 @@ $(document).ready (function() {
                                         } else {
                                             file = '<a class="pdfLink btn-data btn-warning" data-Pdf="'+data.expediente+'" data-toggle="tooltip" data-placement="top" title= "VER ARCHIVO" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a>';
                                         }
-                                         } else {
+                                        } else {
                                             file = '<a class="pdfLink btn-data btn-warning" data-Pdf="'+data.expediente+'" data-toggle="tooltip" data-placement="top" title= "VER ARCHIVO" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a>';
                                         }
                                     }
@@ -127,13 +126,11 @@ $(document).ready (function() {
                                 {
                                     if(id_rol_general == 7 || id_rol_general == 9 || id_rol_general == 3){
                                     if(data.idMovimiento == 31 || data.idMovimiento == 85 || data.idMovimiento == 20 || data.idMovimiento == 63 || data.idMovimiento == 73 || data.idMovimiento == 82 || data.idMovimiento == 92 || data.idMovimiento == 96 && (id_rol_current==7 || id_rol_current==9 || id_rol_current==3) ){
-
                                         if(data.tipo_doc == 66){
                                             file = '<a class="verEVMKTD" data-expediente="'+data.expediente+'" data-toggle="tooltip" data-placement="top" title= "VER ARCHIVO" style="cursor:pointer;" data-nomExp="'+data.movimiento+'" data-nombreCliente="'+data.primerNom+'"><img src= general_base_url + "static/images/image-file.png" style="cursor:pointer;width:42px"/></a>';
                                         }else{
                                             file = '<a class="pdfLink" data-Pdf="'+data.expediente+'" data-nomExp="'+data.expediente+'"><img src= general_base_url + "static/documentos/cliente/expediente/'+data.expediente+'" style="cursor:pointer;" width="25" height="23"/></a><button type="button" data-toggle="tooltip" data-placement="top" title= "ELIMINAR ARCHIVO" id="deleteDoc" class="btn-data btn-warning delete" data-tipodoc="'+data.movimiento+'" data-iddoc="'+data.idDocumento+'" ><i class="fas fa-trash"></i></button>';
                                         }
-
                                     } else {
                                         if(data.tipo_doc == 66){
                                             file = '<a class="verEVMKTD" data-expediente="'+data.expediente+'" data-toggle="tooltip" data-placement="top" title= "VER ARCHIVO" style="cursor:pointer;" data-nomExp="'+data.movimiento+'" data-nombreCliente="'+data.primerNom+'"><img src= general_base_url + "static/images/image-file.png" style="cursor:pointer;width:42px"/></a>';
@@ -146,7 +143,6 @@ $(document).ready (function() {
                                         file = '<a class="verEVMKTD" data-expediente="'+data.expediente+'" data-toggle="tooltip" data-placement="top" title= "VER ARCHIVO" style="cursor:pointer;" data-nomExp="'+data.movimiento+'" data-nombreCliente="'+data.primerNom+'"><img src= general_base_url + "static/images/image-file.png" style="cursor:pointer;width:42px"/></a>';
                                     }else{
                                         file = '<a class="pdfLink btn-data btn-acidGreen" data-Pdf="'+data.expediente+'" data-nomExp="'+data.expediente+'"><i class="fas fa-image"></i></a>';
-
                                     }
                                 }
                             }
@@ -263,7 +259,6 @@ $(document).on('click', '.verEVMKTD', function () {
         title:      "Visualizando Evidencia MKTD: " + $itself.attr('data-nombreCliente'),
         width:      985,
         height:     660
-
     });
 });
 

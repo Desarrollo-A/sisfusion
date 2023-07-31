@@ -22,8 +22,7 @@
 						<div class="container-fluid">
 							<div class="row">
 								<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-									<div id="auts-loads">
-									</div>
+									<div id="auts-loads"></div>
 								</div>
 							</div>
 						</div>
@@ -34,7 +33,6 @@
 				</div>
 			</div>
 		</div>
-
 		<div class="content boxContent">
 			<div class="container-fluid">
 				<div class="row">
