@@ -46,8 +46,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- autorizaciones-->
         <div class="modal fade" id="verAutorizacionesAsesor">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -70,8 +68,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Modals -->
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -128,9 +124,6 @@
                                         </div>
                                     </div>
                                 <?php } ?>
-                                <!-- FIN FILTRO POR DEFECTO -->
-
-                                <!-- FILTROS 1 (Proyecto, Condominio, Lote y Cliente) -->
                                 <?php if ($tipoFiltro == 1) { ?>
                                     <div class="toolbar">
                                         <h3 class="card-title center-align">Documentación por lote</h3>
@@ -180,11 +173,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <!--        Here you can write extra buttons/accions for the toolbar              -->
                                     </div>
                                 <?php } ?>
-                                <!-- FIN FILTRO 1 -->
-
                                 <?php if ($tipoFiltro == 2) { ?>
                                     <div class="toolbar">
                                         <h3 class="card-title center-align">Documentación por lote</h3>
@@ -203,7 +193,6 @@
                                         </div>
                                     </div>
                                 <?php } ?>
-
                                 <table id="tableDoct" class="table-striped table-hover hide">
                                     <thead>
                                         <tr>

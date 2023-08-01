@@ -109,7 +109,6 @@ $('#idLote').change(function () {
     const seleccion = $(this).val();
     const datos = seleccion.split(',');
     const idLote = datos[0];
-
     if (document.getElementById('idCliente')) {
         $('#spiner-loader').removeClass('hide');
         $("#idCliente").empty().selectpicker('refresh');
@@ -136,7 +135,6 @@ $('#idLote').change(function () {
         });
         return;
     }
-
     cargarTabla(idLote);
 });
 
@@ -144,11 +142,9 @@ $('#idCliente').change(function () {
     const loteVal = $("#idLote").val();
     const loteValues = loteVal.split(',');
     const idLote = loteValues[0];
-
     const seleccionCliente = $(this).val();
     const datosCliente = seleccionCliente.split(',');
     const idCliente = datosCliente[0];
-
     cargarTabla(idLote, idCliente);
 });
 
@@ -158,18 +154,15 @@ $(".find_doc").click(function () {
         alerts.showNotification('top', 'right', 'Ingresa el ID de lote', 'danger');
         return;
     }
-
     cargarTabla(idLote);
 });
 
 function cargarTabla(idLote, idCliente = '') {
     $('#tableDoct').removeClass('hide');
-
     $('#tableDoct thead tr:eq(0) th').each(function (i) {
         $(this).css('text-align', 'center');
         const title = $(this).text();
         titulos.push(title);
-
         $(this).html('<input type="text" data-toggle="tooltip" data-placement="top" title="' + title + '" class="textoshead"  placeholder="' + title + '"/>');
         $('input', this).on('keyup change', function () {
             if ($('#tableDoct').DataTable().column(i).search() !== this.value) {
@@ -177,7 +170,6 @@ function cargarTabla(idLote, idCliente = '') {
             }
         });
     });
-
     documentacionLoteTabla = $('#tableDoct').DataTable({
         destroy: true,
         ajax: {
@@ -280,7 +272,6 @@ function cargarTabla(idLote, idCliente = '') {
                         }
                         return `<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`;
                     }
-
                     if (data.tipo_doc == TipoDoc.CARTA_DOMICILIO) { // CARTA DOMICILIO
                         if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
                             buttonMain = (
@@ -669,7 +660,6 @@ function getAtributos(type) {
         buttonIcono = 'fas fa-trash';
         buttonTipoAccion = '2';
     }
-
     return [buttonTitulo, buttonEstatus, buttonClassColor, buttonClassAccion, buttonTipoAccion, buttonIcono]
 }
 
