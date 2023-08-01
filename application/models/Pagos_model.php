@@ -75,11 +75,16 @@ class Pagos_model extends CI_Model {
 // //  VALUES (".$usuarioid.", ".$monto.",".$numeroP.",".$pago.",'".$comentario."',1,0,".$this->session->userdata('id_usuario').",GETDATE(),".$this->session->userdata('id_usuario').",GETDATE(),$tipo)");
 // $afftectedRows = $this->db->affected_rows();
 
-    public function update_acepta_contraloria($data , $idsol){
+    public function update_acepta_contraloria($data , $clave){
      
       try {
-          $this->db->where_in('id_pago_i', $clave);
-          if($this->db->update('pago_comision_ind', $data))
+        //   $this->db->where_in("id_pago_i", $clave);
+        //   $this->db->update("pago_comision_ind", $data);
+        $id_user_Vl = $this->session->userdata('id_usuario');
+          $cmd = "UPDATE pago_comision_ind SET estatus = 8, modificado_por =  $id_user_Vl  WHERE id_pago_i IN  ($clave) ";
+          $query = $this->db->query($cmd);
+          
+          if($this->db->affected_rows() > 0 )
           {
               return TRUE;
           }else{
@@ -94,11 +99,12 @@ class Pagos_model extends CI_Model {
 
 
     public function consulta_comisiones($sol){
-        $cmd = "SELECT id_pago_i FROM pago_comision_ind where id_pago_i IN ($sol)";
+        $cmd = ("SELECT id_pago_i FROM pago_comision_ind where id_pago_i IN (".$sol.")");
+       // var_dump($cmd);
         $query = $this->db->query($cmd);
-        $afftectedRows =  $query->affected_rows();
-
-        return $afftectedRows > 0 ? $query->result_array() : FALSE ;
+        // var_dump( count($query->db->result_array()));
+       
+         return  count($query->result_array()) > 0 ? $query->result_array() : FALSE ;
 
     }
 
@@ -166,7 +172,7 @@ class Pagos_model extends CI_Model {
         GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci1.estatus, pci1.fecha_pago_intmex,
         pci1.id_usuario, u.forma_pago, pci1.id_pago_i, pac.porcentaje_abono, u.nombre, u.apellido_paterno,u.apellido_materno, oprol.nombre, cp1.codigo_postal, oxcest.nombre, oxcest.id_opcion, re.empresa, co.nombre, lo.referencia,sed.impuesto, u.rfc, oprol2.nombre, cl.estructura)";
 
- 
+
         $query = $this->db->query($cmd); 
 
         return $query->result_array();
@@ -276,7 +282,7 @@ class Pagos_model extends CI_Model {
         function consultaComisiones ($id_pago_is){
             $cmd = "SELECT id_pago_i FROM pago_comision_ind where id_pago_i IN ($id_pago_is)";
             $query = $this->db->query($cmd);
-            return $query->num_rows > 0 ? $query->result_array() : FALSE ; 
+            return count($query->result()) > 0 ? $query->result_array() : 0 ; 
         }
 
         public function report_empresa(){
@@ -912,5 +918,9 @@ function update_estatus_pausaM($id_pago_i, $obs) {
                 
                 
                 }
-                
+                public function getFormasPago()
+                {
+                    $query = $this->db->query("SELECT id_opcion, nombre, estatus FROM opcs_x_cats WHERE id_catalogo = 16");
+                    return $query->result_array();
+                }
 }
