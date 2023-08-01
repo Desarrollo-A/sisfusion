@@ -461,6 +461,8 @@ function getStatusMktdPreventa(){
                 $where = "pr.id_gerente IN ($id_lider, 654) AND pr.id_sede = 12";
             else if ($id_usuario == 10270) // ANDRES BARRERA VENEGAS
                 $where = "pr.id_gerente IN ($id_lider, 113) AND pr.id_sede IN (4, 13)";
+            else if ($id_usuario == 12318) // EMMA CECILIA MALDONADO RAMÍREZ
+                $where = "pr.id_gerente IN ($id_lider, 11196, 5637) AND pr.id_sede IN (8, 10)";
             else
                 $where = "pr.id_gerente = $id_lider";
         }
