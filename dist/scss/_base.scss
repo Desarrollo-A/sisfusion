@@ -938,6 +938,7 @@ $tv                 : "(min-width: 1280px)";
         color: $white;
         background-color: $gray;
         width: fit-content;
+        text-transform: uppercase !important;
     }
 }
 .tooltip.top .tooltip-arrow {

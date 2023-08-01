@@ -376,7 +376,7 @@
 	}
 // filtro de condominios por residencial PARA SUR Y SAN LUIS
 	public function getResidencialQro() {
-		$query = $this->db-> query("SELECT CONCAT(nombreResidencial, ' - ', UPPER(CONVERT(VARCHAR, descripcion))) nombreResidencial, idResidencial, descripcion, 
+		$query = $this->db-> query("SELECT CONCAT(nombreResidencial, ' - ', UPPER(CONVERT(VARCHAR(50), descripcion))) nombreResidencial, idResidencial, descripcion, 
 		ciudad, empresa, clave_residencial, abreviatura, active_comission, sede_residencial, sede FROM residenciales WHERE status = 1");
 		return $query->result_array();
 	}
@@ -3303,6 +3303,9 @@
 				else if ($this->session->userdata('id_usuario') == 10270) { // ANDRES BARRERA VENEGAS
 					$id_lider = $id_lider . ', 113';
 					$sede = "AND clientes.id_sede IN (4, 13)";
+				}else if ($this->session->userdata('id_usuario') == 479) { // MARBELLA DEL SOCORRO DZUL CALÁN
+					$id_lider = $id_lider . ', 4223';
+					$sede = "";
 				}
 				else if ($this->session->userdata('id_usuario') == 12318) { // EMMA CECILIA MALDONADO RAMÍREZ
 					$id_lider = $id_lider . ', 11196, 5637';

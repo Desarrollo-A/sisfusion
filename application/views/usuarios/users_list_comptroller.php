@@ -57,6 +57,11 @@
                                     <select class="selectpicker select-gral m-0"id="payment_method" name="payment_method" data-style="btn btn-primary "data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                 </div>
                             </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <input id="id_usuario" name="id_usuario" type="hidden" class="form-control">
+                                </div>
+                            </div>
                         </div>
                         <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>

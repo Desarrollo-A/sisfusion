@@ -80,8 +80,10 @@
                             <div class="tab-content">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div class="card-content card card-plain">
-                                            <ul class="timeline-3" id="comments-list-asimilados" style="height: 500px;;"></ul>
+                                        <div class="card card-plain">
+                                            <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                                <ul class="timeline-3" id="comments-list-asimilados"></ul>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

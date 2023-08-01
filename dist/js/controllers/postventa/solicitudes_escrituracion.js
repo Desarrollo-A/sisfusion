@@ -681,7 +681,10 @@ $(document).on("click", ".comentariosModel", function (e) {
   $.getJSON("getDetalleNota/" + id_solicitud).done(function (data) {
     if (data != "") {
       $.each(data, function (i, v) {
-        $("#comments-list-asimilados").append(`<li><div class="d-flex justify-between"><a style="color:${v.color};">${v.nombre}</a>&nbsp;<a style="color:${v.color}" class="float-right"><b>${v.fecha_creacion}</b></a></div><p>${v.descripcion}</p></li>`);
+        let fecha_creacion = moment(v.fecha_creacion.split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss')
+        $("#comments-list-asimilados").append(
+          `<div class="col-lg-12" style="padding-left:40px;"><li><a style="color:${v.color};">${v.nombre}</a>&nbsp;<a style="color:${v.color}" class="float-right"><b>${fecha_creacion}</b></a><p>${v.descripcion}</p></li></div>`
+        );
       });
     } else {
       $("#comments-list-asimilados").append(
@@ -1193,7 +1196,8 @@ function crearTablas(datosTablas,numTabla = ''){
             },
             {
                 data: function (d) {
-                    return d.fecha_creacion;
+                  let fecha_inicio = moment(d.fecha_creacion.split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss')
+                    return fecha_inicio;
                 }
             },
             {
@@ -1227,7 +1231,7 @@ function crearTablas(datosTablas,numTabla = ''){
             },
             {
                 data: function (d) {
-                    return  `<span class="label" style="background:#F5B7B1; color:#78281F;">${d.rechazo}</span><span class="label" style="background:#A9CCE3; color:#154360;">${d.vencimiento}</span>`;
+                    return  `<span class="label lbl-sky">${d.rechazo}</span><span class="label lbl-sky" >${d.vencimiento}</span>`;
                 }
             },
             {   
@@ -1591,7 +1595,8 @@ function crearTablas(datosTablas,numTabla = ''){
         escrituracionTable = $('#escrituracion-datatable').DataTable();
         escrituracionTableTest = $('#carga-datatable').DataTable();
         escrituracionPausadas = $('#pausadas_tabla').DataTable();
-    }     
+    }   
+
 }
 
 function email(idSolicitud, action, notaria = null, valuador= null) {
@@ -1668,6 +1673,7 @@ console.log(arrayTables.length)
         };
             crearTablas(arrayTables[z]);
     }
+    $('[data-toggle="tooltip"]').tooltip();
 
 }
 
@@ -2104,7 +2110,8 @@ function buildTableDetail(data, permisos,proceso = 0) {
         solicitudes += '<td> ' + (i + 1) + ' </td>';
         solicitudes += '<td> ' + documento + ' </td>';
         solicitudes += '<td> ' + v.documento_creado_por + ' </td>';
-        solicitudes += '<td> ' + v.fecha_creacion + ' </td>';
+        let fecha_inicio = moment(v.fecha_creacion.split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss')
+        solicitudes += '<td> ' + fecha_inicio + ' </td>';
         solicitudes += '<td> ' + v.motivos_rechazo + ' </td>';
         solicitudes += '<td> ' + v.validado_por + ' </td>';
         solicitudes += `<td> <span class="label" style="background:${v.colour}">${v.estatus_validacion}</span></span>${v.editado == 1 ? `<br><span class="label" style="background:#C0952B">EDITADO</span>`:``} </td>`;
