@@ -4208,17 +4208,17 @@ return 1;
             INNER JOIN pago_comision pc ON pc.id_lote = lo.idLote
             INNER JOIN comisiones cm ON cm.id_lote = lo.idLote and cm.estatus = 1
             LEFT JOIN (SELECT SUM(c0.comision_total) comision_total, c0.id_lote FROM comisiones c0 
-            WHERE c0.estatus in (1) AND c0.id_usuario NOT IN (0) --AND c0.id_lote = 41536
+            WHERE c0.estatus in (1) AND c0.id_usuario NOT IN (0)
             GROUP BY c0.id_lote ) cm1 ON cm1.id_lote = lo.idLote
             
             LEFT JOIN (SELECT SUM(p0.abono_neodata) abono_pagos, c0.id_lote FROM comisiones c0 
             LEFT JOIN pago_comision_ind p0 ON p0.id_comision = c0.id_comision
-            WHERE c0.estatus in (1) AND c0.id_usuario NOT IN (0) --AND c0.id_lote = 41536
+            WHERE c0.estatus in (1) AND c0.id_usuario NOT IN (0)
             GROUP BY c0.id_lote ) cm3 ON cm3.id_lote = lo.idLote
                 
             LEFT JOIN (SELECT SUM(p0.abono_neodata) abono_pagos, c0.id_lote FROM comisiones c0 
             LEFT JOIN pago_comision_ind p0 ON p0.id_comision = c0.id_comision AND (p0.estatus in (11,3,4,88) OR p0.descuento_aplicado = 1)
-            WHERE c0.estatus in (1) AND c0.id_usuario NOT IN (0) --AND c0.id_lote = 41536
+            WHERE c0.estatus in (1) AND c0.id_usuario NOT IN (0)
             GROUP BY c0.id_lote ) cm2 ON cm2.id_lote = lo.idLote
             
             LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision

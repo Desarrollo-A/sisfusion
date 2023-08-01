@@ -12,7 +12,7 @@ $(document).ready (function() {
         button_excel = [
             {
                 className: 'btn buttons-excel color-letter',
-                text: 'DESCARGAR',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 extend: 'csvHtml5',
                 titleAttr: 'DESCARGAR',
                 title:'Autorizaciones',
@@ -41,7 +41,7 @@ $(document).ready (function() {
         button_excel = [
             {
                 className: 'btn buttons-excel color-letter',
-                text: 'DESCARGAR',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 extend: 'csvHtml5',
                 titleAttr: 'DESCARGAR',
                 title:'Autorizaciones',
@@ -74,7 +74,7 @@ $(document).ready (function() {
 
     }
     tablaAut = $('#tabla_aut').DataTable({
-        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
         buttons: button_excel,
@@ -112,16 +112,16 @@ $(document).ready (function() {
                     let color_estatus;
                     switch(data.estatus_id){
                         case 1: //autorizacion activa
-                            color_estatus='background:#AED6F1; color:#1B4F72;';
+                            color_estatus='background:#0067d418; color:#0067d4;';
                             break;
                         case 2://autorizacion enviada a contraloria
-                            color_estatus='background:#AED6F1; color:#1B4F72;';
+                            color_estatus='background:#0067d418; color:#0067d4;';
                             break;
                         case 3://autorizacion aprobada
-                            color_estatus='background: #A5D6A7;color: #1B5E20;';
+                            color_estatus='background: #1E844918;color: #1E8449;';
                             break;
                         case 4://autorizacion rechazada
-                            color_estatus='background: #F5B7B1;color: #78281F;';
+                            color_estatus='background: #B03A2E18;color: #78281F;';
                             break;
                     }
 
@@ -142,31 +142,31 @@ $(document).ready (function() {
                     switch(id_rol_general) {
                         case 5:
                             if (d.estatus_id == 1) {
-                                botones += botonesPermiso(1, 1, 1, 0, d.id_autorizacion, d.estatus, d.lote);
+                                botones += botonesPermisoMSI(1, 1, 1, 0, d.id_autorizacion, d.estatus, d.lote);
                             }
                             if (d.estatus_id == 3) {
-                                botones += botonesPermiso(1, 0, 0, 0, d.id_autorizacion, d.estatus, d.lote);
+                                botones += botonesPermisoMSI(1, 0, 0, 0, d.id_autorizacion, d.estatus, d.lote);
                             }
                             if (d.estatus_id == 4) {
-                                botones += botonesPermiso(1, 1, 1, 0, d.id_autorizacion, d.estatus, d.lote);
+                                botones += botonesPermisoMSI(1, 1, 1, 0, d.id_autorizacion, d.estatus, d.lote);
                             }
                             break;
                         case 17:
 
                             if (d.estatus_id == 2) {
-                                botones += botonesPermiso(1, 0, 1, 1, d.id_autorizacion, d.estatus, d.lote);
+                                botones += botonesPermisoMSI(1, 0, 1, 1, d.id_autorizacion, d.estatus, d.lote);
                             }
                             if (d.estatus_id == 4) {
-                                botones += botonesPermiso(1, 0, 0, 0, d.id_autorizacion, d.estatus, d.lote);
+                                botones += botonesPermisoMSI(1, 0, 0, 0, d.id_autorizacion, d.estatus, d.lote);
                             }
                             break;
                         case 70:
 
                             if (d.estatus_id == 2) {
-                                botones += botonesPermiso(1, 0, 1, 1, d.id_autorizacion, d.estatus, d.lote);
+                                botones += botonesPermisoMSI(1, 0, 1, 1, d.id_autorizacion, d.estatus, d.lote);
                             }
                             if (d.estatus_id == 4) {
-                                botones += botonesPermiso(1, 0, 0, 0, d.id_autorizacion, d.estatus, d.lote);
+                                botones += botonesPermisoMSI(1, 0, 0, 0, d.id_autorizacion, d.estatus, d.lote);
                             }
                             break;
                         default:
@@ -507,7 +507,7 @@ function loadTable(dataVariable){
         width: 'auto',
         buttons: [{
             className: 'btn buttons-excel color-letter',
-            text: 'DESCARGAR PLANTILLA',
+            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             extend: 'csvHtml5',
             titleAttr: 'DESCARGAR PLANTILLA',
             title:dataVariable['tituloArchivo'],
@@ -579,7 +579,7 @@ jQuery(document).ready(function(){
     })
 })
 
-function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechazar,idAutorizacion,estatus, lote){
+function botonesPermisoMSI(permisoVista,permisoEditar,permisoAvanzar,permisoRechazar,idAutorizacion,estatus, lote){
     let botones = '';
     /**Permisos - FUNCIÓN PARA OBTENER LOS BOTONES POR PERMISOS DE LA DATATABLE
      * 1.- vista
@@ -589,17 +589,17 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
      **/
     let autTipo = isNum(lote);
     let valor = (autTipo) ? 2 : 1;
-    if(permisoVista == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-accion="${valor}"  class="btn-data btn-sky btnVer" data-toggle="tooltip" data-placement="top" title="Ver"><i class="fas fa-eye"></i></button>`;   }
-    if(permisoEditar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-accion="${valor}" class="btn-data btn-yellow btnEditar" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-edit"></i></button>`; }
-    if(permisoAvanzar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="1" data-estatus="${estatus}" class="btn-data btn-green btnAvanzar" data-toggle="tooltip" data-placement="top" title="Avanzar"><i class="fas fa-thumbs-up"></i></button>`;  }
-    if(permisoRechazar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="2" data-estatus="${estatus}" class="btn-data btn-warning btnRechazar" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-thumbs-down"></i></button>`;  }
+    if(permisoVista == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-accion="${valor}"  class="btn-data btn-sky btnVerMA" data-toggle="tooltip" data-placement="top" title="Ver"><i class="fas fa-eye"></i></button>`;   }
+    if(permisoEditar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-accion="${valor}" class="btn-data btn-yellow btnEditarMA" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-edit"></i></button>`; }
+    if(permisoAvanzar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="1" data-estatus="${estatus}" class="btn-data btn-green btnAvanzarAM" data-toggle="tooltip" data-placement="top" title="Avanzar"><i class="fas fa-thumbs-up"></i></button>`;  }
+    if(permisoRechazar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="2" data-estatus="${estatus}" class="btn-data btn-warning btnRechazarAM" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-thumbs-down"></i></button>`;  }
     return  botones;
 }
 function isNum(val){
     return !isNaN(val)
 }
 
-$(document).on('click', '.btnVer', function(e){
+$(document).on('click', '.btnVerMA', function(e){
     let data = [];
     data["tb"] = 2;
     let id_aut = $(this).attr('data-idautorizacion');
@@ -761,7 +761,7 @@ $('#tabla_msni_visualizacion thead tr:eq(0) th').each( function (i) {
 
 $(document).on('click', '.btnHistorial', function () {
     let idAutorizacion = $(this).attr('data-idautorizacion');
-    document.getElementById('historialAut').innerHTML = '';
+    document.getElementById('historialAutAM').innerHTML = '';
     //neuvo
     let id_aut = $(this).attr('data-idautorizacion');
     let accion = $(this).attr('data-accion');
@@ -791,7 +791,7 @@ $(document).on('click', '.btnHistorial', function () {
                     color_icono= '#c01313';
                     bg_color = '#c0131318';
                 }
-                $('#historialAut').append(`
+                $('#historialAutAM').append(`
                         <div class="d-flex mb-2">
                             <div class="w-10 d-flex justify-center align-center">
                                 <span style="width:40px; height:40px; display:flex; justify-content:center; align-items:center; border-radius:27px; background-color: `+bg_color+`">
@@ -880,7 +880,7 @@ $(document).on('click', '.btnHistorial', function () {
                         </div>
                     </div>`;
 
-            $('#historialAut').append(contenido_acordeon);
+            $('#historialAutAM').append(contenido_acordeon);
         }, 'json');
     }
     //neuvo
@@ -890,7 +890,7 @@ $(document).on('click', '.btnHistorial', function () {
 
 
 
-    $("#modalHistorial").modal();
+    $("#modalHistorialAM").modal();
 });
 
 
@@ -939,7 +939,7 @@ $(document).on('submit', '#cambiosMSIF', function(e) {
 
 });
 
-$(document).on('click', '.btnEditar', function(e){
+$(document).on('click', '.btnEditarMA', function(e){
     let id_aut = $(this).attr('data-idautorizacion');
     let accion = $(this).attr('data-accion');
     let data = [];
@@ -999,10 +999,10 @@ function createArrayEvents(params){
     return array;
 }
 
-$(document).on('click', '.btnAvanzar', function(){
+$(document).on('click', '.btnAvanzarAM', function(){
     //$modo 1: LOTE 2:CONDOMINIO
     let id_aut = $(this).attr('data-idautorizacion');
-    document.getElementById('comentarioAvance').value=''; //limpiar campo texto
+    document.getElementById('comentarioAvanceAM').value=''; //limpiar campo texto
     let arr = id_aut.split(' ');
     if(arr.length <= 1){
         dataUpdateGeneral[2] = 1; //modo al cual de va avanzar
@@ -1017,23 +1017,23 @@ $(document).on('click', '.btnAvanzar', function(){
     dataUpdateGeneral[0] = id_aut;
     if(id_rol_general==17 || id_rol_general==70){//revisar si es contraloria
         dataUpdateGeneral[1] = 3; //estatus de autorizacion a actualizar
-        $('#tittleModal').text('¿Deseas autorizar los meses sin intereses?');
-        $('#leyendaAdv').text('Al aceptar se renovarán los MSI autorizados');
+        $('#tittleModalAM').text('¿Deseas autorizar los meses sin intereses?');
+        $('#leyendaAdvAM').text('Al aceptar se renovarán los MSI autorizados');
     }else{
         dataUpdateGeneral[1] = 2; //estatus de autorizacion a actualizar
-        $('#tittleModal').text('Avanzar autorización');
+        $('#tittleModalAM').text('Avanzar autorización');
     }
 
-    $('#avanzarAut').modal('show');
+    $('#avanzarAutAM').modal('show');
 });
-$(document).on('click', '#enviarAutBtn', ()=>{
+$(document).on('click', '#enviarAutBtnAM', ()=>{
     let id_aut = dataUpdateGeneral[0];
-    let comentario = $('#comentarioAvance').val();
+    let comentario = $('#comentarioAvanceAM').val();
     let estatus_autorizacion = dataUpdateGeneral[1];
     let modo = dataUpdateGeneral[2];
     if(comentario==' ' || comentario.length==0){
         alerts.showNotification("top", "right",'Ingresa un comentario', "danger");
-        $('#comentarioAvance').focus();
+        $('#comentarioAvanceAM').focus();
     }else{
         let data = new FormData();
         data.append("id_aut", id_aut);
@@ -1056,9 +1056,9 @@ $(document).on('click', '#enviarAutBtn', ()=>{
                 if(data.message == 'OK'){
                     $('#spiner-loader').addClass('hide');
                     $('#tabla_aut').DataTable().ajax.reload();
-                    $('#comentarioAvance').val();
+                    $('#comentarioAvanceAM').val();
                     alerts.showNotification("top", "right",'Se ha enviado la autorización correctamente', "success");
-                    $('#avanzarAut').modal('hide');
+                    $('#avanzarAutAM').modal('hide');
                 }else if(data.message == 'ERROR'){
                     $('#spiner-loader').addClass('hide');
                     alerts.showNotification("top", "right",'Ha ocurrido un error al avanzar' +
@@ -1078,9 +1078,9 @@ $(document).on('click', '#enviarAutBtn', ()=>{
 
 
 /*Rechazar autorizacion CN*/
-$(document).on('click', '.btnRechazar', function(){
+$(document).on('click', '.btnRechazarAM', function(){
     let id_aut = $(this).attr('data-idautorizacion');
-    document.getElementById('comentarioAvance').value=''; //limpiar campo texto
+    document.getElementById('comentarioAvanceAM').value=''; //limpiar campo texto
 
     let arr = id_aut.split(' ');
     if(arr.length <= 1){
@@ -1095,7 +1095,7 @@ $(document).on('click', '.btnRechazar', function(){
     dataUpdateGeneral[0] = id_aut;
     dataUpdateGeneral[1] = 4; //estatus de autorizacion a actualizar
 
-    $('#tittleModal').text('Rechazar autorización');
-    $('#leyendaAdv').text('');
-    $('#avanzarAut').modal('show');
+    $('#tittleModalAM').text('Rechazar autorización');
+    $('#leyendaAdvAM').text('');
+    $('#avanzarAutAM').modal('show');
 });

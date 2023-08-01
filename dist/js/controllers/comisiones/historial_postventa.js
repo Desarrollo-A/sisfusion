@@ -59,7 +59,7 @@ $("#tabla_ingresar_9").ready(function () {
             defaultContent: "",
             targets: "_all",
             searchable: true,
-            orderable: false,
+            orderable: false
         }],
         destroy: true,
         ordering: false,
@@ -166,15 +166,10 @@ $("#tabla_ingresar_9").ready(function () {
             $(this).parent().find('.animacion').removeClass("fas fa-chevron-up").addClass("fas fa-chevron-down");
         } else {
             $.post( general_base_url + "Comisiones/comisionistasPorLote/"+idLote ,function( d ){
-                
-                
                 row.child(buildDatatable(d)).show();
-                // tr.addClass('shown');
-                // $(this).parent().find('.animacion').removeClass("fas fa-chevron-down").addClass("fas fa-chevron-up");
             });
         }
     });
-
 
     function buildDatatable(jsonComisionistas){
         let informacion_adicional ;

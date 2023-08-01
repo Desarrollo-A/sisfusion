@@ -595,6 +595,7 @@
   background-color: #f4433618 !important;
   border-radius: 27px;
   margin: 0;
+  color: #f44336 !important;
 }
 
 .color-letter {
@@ -606,6 +607,7 @@
 }
 
 .buttons-pdf:hover {
+  color: #ffffff !important;
   background-color: #f44336 !important;
 }
 
@@ -1335,6 +1337,7 @@
   color: #ffffff;
   background-color: #333333;
   width: fit-content;
+  text-transform: uppercase !important;
 }
 
 .tooltip.top .tooltip-arrow {

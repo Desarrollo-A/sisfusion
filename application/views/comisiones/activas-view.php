@@ -63,9 +63,11 @@
                 <div class="modal-content">
                     <form id="my_updatebandera_form" name="my_updatebandera_form" method="post">
                     <div class="modal-header bg-red">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> <i class="material-icons">clear</i></button>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> 
+                            <i class="material-icons">clear</i></button>
                     </div>
-                        <div class="modal-body" style="text-align: center;"></div>
+                        <div class="modal-body" style="text-align: center;">
+                        </div>
                         <div class="modal-footer">
                         <div class="col-lg-12">
                             <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>

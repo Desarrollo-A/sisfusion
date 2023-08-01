@@ -1338,6 +1338,11 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         WHERE id_usuario in(6482, 5, 7092) AND estatus = 1   AND ISNULL(correo, '') NOT LIKE '%SINCO%' AND ISNULL(correo, '') NOT LIKE '%test_%')")->result();
      }
      public function EditarInventario($datos){
+        $query = $this->db->query("SELECT * FROM comisiones WHERE idCliente=".$datos['id_cliente'])->result_array();
+        if(count($query) > 0){
+            echo json_encode(2);
+            exit;
+        }
         $this->db->trans_begin();
         $id_cliente = $datos['id_cliente'];
         $id_asesor = $datos['id_asesor'];

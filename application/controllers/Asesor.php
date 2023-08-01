@@ -2868,7 +2868,6 @@ class Asesor extends CI_Controller
         }
     }
 
-    /*autorizaciones*/
     public function autorizaciones()
     {
         $this->load->view('template/header');

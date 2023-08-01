@@ -286,7 +286,7 @@ function fillCommissionTableNUEVAS(proyecto,condominio){
                                         $("#all").prop('checked', false);
                                         var fecha = new Date();
                                         alerts.showNotification("top", "right", "Las comisiones se han enviado exitosamente a Contraloría.", "success");
-                                        tabla_nuevas.ajax.reload();
+                                        tabla_nuevas.ajax.reload(null,false);
                                         tabla_revision.ajax.reload();
                                     }
                                     else {
@@ -361,7 +361,7 @@ function fillCommissionTableNUEVAS(proyecto,condominio){
 
                                     alerts.showNotification("top", "right", "Las comisiones se han enviado exitosamente a Resguardo.", "success");
 
-                                    tabla_nuevas.ajax.reload();
+                                    tabla_nuevas.ajax.reload(null,false);
                                     tabla_revision.ajax.reload();
                                 } else {
                                     $('#spiner-loader').addClass('hide');
@@ -1863,7 +1863,7 @@ function save2() {
             if (data.resultado) {
                 alert("LA FACTURA SE SUBIO CORRECTAMENTE");
                 $("#modal_multiples").modal('toggle');
-                tabla_nuevas.ajax.reload();
+                tabla_nuevas.ajax.reload(null,false);
                 tabla_revision.ajax.reload();
                 $("#modal_multiples .modal-body").html("");
                 $("#modal_multiples .header").html("");
@@ -1871,7 +1871,7 @@ function save2() {
                 alert("ESTAS FUERA DE TIEMPO PARA ENVIAR TUS SOLICITUDES");
                 $('#loader').addClass('hidden');
                 $("#modal_multiples").modal('toggle');
-                tabla_nuevas.ajax.reload();
+                tabla_nuevas.ajax.reload(null,false);
                 $("#modal_multiples .modal-body").html("");
                 $("#modal_multiples .header").html("");
 
@@ -1906,7 +1906,7 @@ $("#frmnewsol").submit(function(e) {
                 if (data.resultado) {
                     alert("LA FACTURA SE SUBIO CORRECTAMENTE");
                     $("#modal_formulario_solicitud").modal('toggle');
-                    tabla_nuevas.ajax.reload();
+                    tabla_nuevas.ajax.reload(null,false);
                 } else {
                     alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
                 }
@@ -1938,7 +1938,7 @@ $("#frmnewsol2").submit(function(e) {
                 if (data.resultado) {
                     alert("LA FACTURA SE SUBIO CORRECTAMENTE");
                     $("#modal_formulario_solicitud").modal('toggle');
-                    tabla_nuevas.ajax.reload();
+                    tabla_nuevas.ajax.reload(null,false);
                 } else {
                     alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
                 }

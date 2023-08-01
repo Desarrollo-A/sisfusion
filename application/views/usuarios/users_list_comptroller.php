@@ -1,6 +1,5 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
-
 <body>
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
@@ -58,6 +57,11 @@
                                     <select class="selectpicker select-gral m-0"id="payment_method" name="payment_method" data-style="btn btn-primary "data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                 </div>
                             </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <input id="id_usuario" name="id_usuario" type="hidden" class="form-control">
+                                </div>
+                            </div>
                         </div>
                         <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
@@ -78,13 +82,13 @@
                         <h4 class="modal-title">Bitácora de cambios</h4>
                     </div>
                     <div class="modal-body">                      
-                            <div class="container-fluid p-0" id="changelogTab">
-                                <div class="row">
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 scroll-styles" style="height: 350px; overflow: auto">
-                                        <ul class="timeline-3" id="changelog"></ul>
-                                    </div>
+                        <div class="container-fluid" id="changelogTab">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 scroll-styles" style="height: 350px; overflow: auto">
+                                    <ul class="timeline-3" id="changelog"></ul>
                                 </div>
                             </div>
+                        </div>
                         <input type="hidden" name="prospecto_lbl" id="prospecto_lbl">
                     </div>
                     <div class="modal-footer">
@@ -137,7 +141,6 @@
                 </div>
             </div>
         </div>
-        <!--END TABLE-->
         <?php $this->load->view('template/footer_legend');?>
     </div>
 </body>

@@ -80,7 +80,7 @@ sp = {
 sp2 = {
   initFormExtendedDatetimepickers: function () {
     $(".datepicker2").datetimepicker({
-      format: "DD/MM/YYYY LT",
+      format: "DD/MM/YYYY",
       icons: {
         time: "fa fa-clock-o",
         date: "fa fa-calendar",
@@ -702,8 +702,9 @@ $(document).on("click", ".comentariosModel", function (e) {
   $.getJSON("getDetalleNota/" + id_solicitud).done(function (data) {
     if (data != "") {
       $.each(data, function (i, v) {
+        let fecha_creacion = moment(v.fecha_creacion.split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss')
         $("#comments-list-asimilados").append(
-          `<div class="col-lg-12" style="padding-left:40px;"><li><a style="color:${v.color};">${v.nombre}</a>&nbsp;<a style="color:${v.color}" class="float-right"><b>${v.fecha_creacion}</b></a><p>${v.descripcion}</p></li></div>`
+          `<div class="col-lg-12" style="padding-left:40px;"><li><a style="color:${v.color};">${v.nombre}</a>&nbsp;<a style="color:${v.color}" class="float-right"><b>${fecha_creacion}</b></a><p>${v.descripcion}</p></li></div>`
         );
       });
     } else {
@@ -1249,7 +1250,8 @@ function crearTablas(datosTablas,numTabla = ''){
             },
             {
                 data: function (d) {
-                    return d.fecha_creacion;
+                  let fecha_inicio = moment(d.fecha_creacion.split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss')
+                    return fecha_inicio;
                 }
             },
             {
@@ -1284,7 +1286,7 @@ function crearTablas(datosTablas,numTabla = ''){
             },
             {
                 data: function (d) {
-                    return  `<span class="label" style="background:#F5B7B1; color:#78281F;">${d.rechazo}</span><span class="label" style="background:#A9CCE3; color:#154360;">${d.vencimiento}</span>`;
+                    return  `<span class="label lbl-sky">${d.rechazo}</span><span class="label lbl-sky" >${d.vencimiento}</span>`;
                 }
             },
             {   
@@ -1305,6 +1307,7 @@ function crearTablas(datosTablas,numTabla = ''){
     
                             case 1: 
                               if(d.creado_por == idUser){
+                                group_buttons +=`<button id="borrarSolicitud" data-idLote="${d.id_lote}" data-idCliente="${d.id_cliente}" data-banderaEscrituracion="${d.banderaEscrituracion}" class="btn-data btn-warning" data-toggle="tooltip" data-placement="left" title="Borrar solicitud"><i class="fa fa-trash"></i></button>`;
                                 bandera_request = userType == 55 ? 1 : 0;
                               }
                             break;
@@ -1330,7 +1333,7 @@ function crearTablas(datosTablas,numTabla = ''){
                             break;
                             case 3:
                                 //ADMINISTRACIÓN Y COMITÉ TÉCNICO YA DIERON SU ESTATUS
-                                if (userType == 55 && d.creado_por == idUser && idUser == d.creado_por && d.bandera_admin == 1 && d.bandera_comite == 1) {
+                                if (userType == 55 && d.creado_por == idUser && d.bandera_admin == 1 && d.bandera_comite == 1) {
                                     /**COMITÉ Y ADMIN DIERON SU ESTATUS, ADMIN FUE EL ULTIMO EN DAR ESTATUS */
                                       // BOTON APROBAR    
                                     bandera_request = d.contrato == 1 ? 1 : 0;
@@ -1347,7 +1350,7 @@ function crearTablas(datosTablas,numTabla = ''){
                               break;
                             case 4:
                                 //ADMINISTRACIÓN Y COMITÉ TÉCNICO YA DIERON SU ESTATUS
-                                if (userType == 55 && d.creado_por == idUser && idUser == d.creado_por && d.bandera_admin == 1 && d.bandera_comite == 1) {      
+                                if (userType == 55 && d.creado_por == idUser && d.bandera_admin == 1 && d.bandera_comite == 1) {      
                                     /**COMITÉ Y ADMIN DIERON SU ESTATUS, COMITÉ FUE EL ULTIMO EN DAR ESTATUS */
                                     // BOTON APROBAR  
                                     group_buttons += `<button id="docs${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control-otros" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
@@ -1381,7 +1384,7 @@ function crearTablas(datosTablas,numTabla = ''){
                             case 6:
                             case 8:
                             case 10:
-                                if (userType == 55 && d.creado_por == idUser && idUser == d.creado_por && d.bandera_admin == 1 && d.bandera_comite == 1) {
+                                if (userType == 55 && d.creado_por == idUser && d.bandera_admin == 1 && d.bandera_comite == 1) {
                                     group_buttons += `<button id="docs${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control-otros" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
                                     group_buttons +=`<button id="informacion" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información Cliente"><i class="fa fa-file"></i></button>`;
                                     bandera_reject = d.id_estatus == 10 ? 1 : 0; 
@@ -1605,6 +1608,7 @@ function crearTablas(datosTablas,numTabla = ''){
                             break;
                             case 54: 
                                 if (d.creado_por == idUser) { 
+                                    numTable=3;
                                     bandera_request = 1;
                                 }
                             break;
@@ -1652,7 +1656,8 @@ function crearTablas(datosTablas,numTabla = ''){
         escrituracionTable = $('#escrituracion-datatable').DataTable();
         escrituracionTableTest = $('#carga-datatable').DataTable();
         escrituracionPausadas = $('#pausadas_tabla').DataTable();
-    }     
+    }   
+
 }
 function email(idSolicitud, action, notaria = null, valuador= null) {
     $('#spiner-loader').removeClass('hide');
@@ -1715,7 +1720,7 @@ var arrayTables = [
     
     $('#beginDate').val(finalBeginDate2);
     $('#endDate').val(finalEndDate2);
-    $('#startDate').val(finalBeginDate);
+    $('#startDate').val(finalBeginDate2);
     $('#finalDate').val(finalEndDate2);
 /*cuando se carga por primera vez, se mandan los valores en cero, para no filtar por mes*/
 console.log(arrayTables.length)
@@ -1730,6 +1735,7 @@ console.log(arrayTables.length)
              crearTablas(arrayTables[z]);
             console.log(arrayTables[z].data.endDate)
     }
+    $('[data-toggle="tooltip"]').tooltip();
 
 }
 
@@ -2207,10 +2213,11 @@ function buildTableDetail(data, permisos,proceso = 0) {
         solicitudes += '<td> ' + (i + 1) + ' </td>';
         solicitudes += '<td> ' + documento + ' </td>';
         solicitudes += '<td> ' + v.documento_creado_por + ' </td>';
-        solicitudes += '<td> ' + v.fecha_creacion + ' </td>';
+        let fecha_inicio = moment(v.fecha_creacion.split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss')
+        solicitudes += '<td> ' + fecha_inicio + ' </td>';
         solicitudes += '<td> ' + v.motivos_rechazo + ' </td>';
         solicitudes += '<td> ' + v.validado_por + ' </td>';
-        solicitudes += `<td> <span class="label" style="background:${v.colour}">${v.estatus_validacion}</span></span>${v.editado == 1 ? `<br><span class="label" style="background:#C0952B">EDITADO</span>`:``} </td>`;
+        solicitudes += `<td> <span class="label" style="background:${v.colour}">${v.estatus_validacion}</span></span>${v.editado == 1 ? `<br><span class="label lbl-yellow">EDITADO</span>`:``} </td>`;
 
         solicitudes += '<td><div class="d-flex justify-center">';
         // PERMISO DE ESCRITURA TIENE PERMISOS (ESCRITURA) DOCUMENTOS: CONTRATO, PRESUPUESTOS, FORMAS DE PAGO, SOLO SE VALIDAN LOS PRESUPUESTOS LOS OTROS SOLO LECTURA
@@ -3507,7 +3514,7 @@ $(document).on("click", "#bajarConMotivo", function () {
 
 
 
-    
+
         
 
         $(window).resize(function(){
