@@ -116,6 +116,8 @@ $(document).ready(function getAssimilatedCommissions(){
                             $("#myModalEnviadas .modal-body").append("<center><P>ERROR AL ENVIAR COMISIONES </P><BR><i style='font-size:12px;'>NO SE HA PODIDO EJECUTAR ESTA ACCIÓN, INTÉNTALO MÁS TARDE.</i></P></center>");
                         }
                     });
+                }else{
+                    alerts.showNotification("top", "right", "No se han seleccionado comisiones.", "warning");
                 }
             },
             attr: {
