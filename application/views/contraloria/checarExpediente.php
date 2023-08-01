@@ -17,7 +17,7 @@
             display: block;
             color: red;
         }
- </style>
+</style> 
     <!-- Modals -->
     <div class="modal fade " id="modalConfirmRegExp" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-md">
@@ -26,8 +26,9 @@
                     <div class="modal-body text-center">
                         <h3>¿Estás seguro que desea regresar el expediente <b id="loteName"></b> ?</h3>
                         <p><small>El cambio no podrá ser revertido.</small></p>
-                        <input type="hidden" value="" id="tempIDC">
-                        <input type="hidden" value="" id="idLote">
+                        <input type="hidden" value="" id="tempIDC" name="tempIDC">
+                        <input type="hidden" value="" id="idLote" name="idLote">
+                        <input type="hidden" value="" id="tipoV" name="tipoV">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -49,7 +50,6 @@
                         </div>
                         <input type="hidden" name="idCliente" id="idCliente">
                         <div id="camposEditar">
-
                         </div>
                     </div>
                     <div class="modal-footer">

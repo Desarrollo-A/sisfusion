@@ -1,6 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
 class Postventa extends CI_Controller
 {
 
@@ -14,9 +15,44 @@ class Postventa extends CI_Controller
         date_default_timezone_set('America/Mexico_City');
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+    /*echo $_SERVER['HTTP_ACCEPT'];
+        echo "<br>";
+        echo $_SERVER['AUTH_TYPE'];
+        echo "<br>";
+        echo $_SERVER['PATH_INFO'];*/
+      /*  if($_SERVER['HTTP_ACCEPT']){
+            echo "Entra aqui";
+            $_SESSION['rutaActual'];
+            $menuGral = $this->session->userdata('datos');
+            $ruta = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
+            $ruta[1];
+    
+            $existe = 0;
+            foreach ($menuGral['datos2'] as $key => $objeto) {
+                    if($objeto->pagina == $ruta[1]){
+                        $existe = 1;
+                    }    
+            }
+            if($existe == 0 && $this->session->userdata('controlador') != $ruta[1] ){
+                echo "entra";
+                //echo '<script> llamar(); </script>';
+                redirect(base_url() .$this->session->userdata('controlador'),'location');
+            }
+        }*/
 
-        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+
+        //PRUEBAS
+/*   prueba.gphsis.com
+/sisfusion/Ventas
+
+LOCAL
+localhost
+/sisfusion/Postventa/solicitudes_escrituracion
+PRODUCCION
+maderascrm.gphsis.com
+/Chat/Chat
+
+*/
     }
 
     public function index()
@@ -34,6 +70,25 @@ class Postventa extends CI_Controller
         if ($this->session->userdata('id_usuario') == "" || $this->session->userdata('id_rol') == "") {
             redirect(base_url() . "index.php/login");
         }
+    }
+    public function validarMenu(){
+            $rutaAc = $this->input->post('ruta');
+            // echo $_SESSION['rutaActual'];
+            // echo "<br>";
+            // $menuGral = $this->session->userdata('datos');
+            // $ruta = explode($_SESSION['rutaActual'], $rutaAc);
+            // echo  $ruta[1];
+            $existe = 0;
+            foreach ($menuGral['datos2'] as $key => $objeto) {
+                    if($objeto->pagina == $rutaAc){
+                        $existe = 1;
+                    }    
+            }
+            if($existe == 0 && $this->session->userdata('controlador') != $ruta[1] ){
+                echo json_encode(0);
+            }else{
+                echo json_encode(3);
+            }
     }
 
     

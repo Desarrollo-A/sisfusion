@@ -15,14 +15,14 @@
                 $menu = $this->session->userdata('datos');
                 $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
                 $menu2 = $this->session->userdata('datos');
-                     $menu2 = $menu2['datos3'];
-                     $existe = -1;
-                     foreach ($menu2 as $key => $objeto) {
-                         if ($objeto->pagina == str_replace('' . base_url() . '', '', $val)) {
-                             $_SESSION['datos4'] = (object)array($objeto);
-                             $existe = $key;
-                         }
-                     }  
+                $menu2 = $menu2['datos3'];
+                $existe = -1;
+                foreach ($menu2 as $key => $objeto) {
+                    if ($objeto->pagina == str_replace('' . base_url() . '', '', $val)) {
+                        $_SESSION['datos4'] = (object)array($objeto);
+                        $existe = $key;
+                    }
+                }  
                 $_SESSION['datos4'] = $existe == -1 ? [] :  $_SESSION['datos4'];
                 $certificado = $this->session->userdata('certificado');
                 $url = $certificado.$_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];		
@@ -68,10 +68,10 @@
                                             <?php
                                                 foreach ($datos3 as $hijos) {
                                                     if($hijos->orden >= $datos->orden && $hijos->orden <= $datos->orden +1)	
-                                                        {		
+                                                        {		//href="<?= base_url().$hijos->pagina?>"
                                             ?>
                                                             <li class="<?php if ($url == base_url().$hijos->pagina) {echo 'active';} ?>">
-                                                                <a href="<?= base_url().$hijos->pagina?>  "><?=$hijos->nombre?></a>
+                                                                <a href="#" onclick="validarMenu('<?=$hijos->pagina?>')"><?=$hijos->nombre?></a>
                                                             </li>
                                             <?php
                                                         }
@@ -264,4 +264,38 @@
             newtab.document.write(data);
         }, 'json');
     }
+    var general_base_url_sidebar = "<?=base_url()?>";
+    //console.log(general_base_url_sidebar)
+
+    function validarMenu(pagina){
+            $.post(general_base_url_sidebar+'Postventa/validarMenu', {ruta:urls }, function (data) {
+                console.log(data);
+                if(data == 0){
+                    window.location.replace(general_base_url_sidebar);
+                }else{
+                    let nuevaRuta = general_base_url_sidebar + pagina;
+                    window.location.replace(nuevaRuta);
+                }
+            }, 'json');
+    }
+    let urls = "<?=$_SERVER["REQUEST_URI"]?>";
+    let urlActual = "<?=$_SESSION['rutaActual']?>";
+    console.log(urls);
+    console.log(urlActual);
+    /*window.onload = function(){
+        let urls = "<?=$_SERVER["REQUEST_URI"]?>";
+        let urlActual = "<?=$_SESSION['rutaActual']?>";
+        let controlador = "<?=$this->session->userdata('controlador')?>";
+        console.log(urls);
+        console.log(urlActual);
+        console.log(controlador);
+        var URLactual = jQuery(location).attr('href');
+        //window.location.replace(<?=base_url()?>);
+        $.post(general_base_url_sidebar+'Postventa/validarMenu', {ruta:urls }, function (data) {
+            console.log(data);
+            if(data == 4){
+                window.location.replace(general_base_url_sidebar);
+            }
+    }, 'json');
+    }*/
 </script>
