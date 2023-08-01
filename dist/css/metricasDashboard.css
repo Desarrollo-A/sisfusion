@@ -1337,6 +1337,7 @@
   color: #ffffff;
   background-color: #333333;
   width: fit-content;
+  text-transform: uppercase !important;
 }
 
 .tooltip.top .tooltip-arrow {

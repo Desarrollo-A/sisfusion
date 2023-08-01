@@ -22,6 +22,7 @@
     border: 0px;
     width: 100%;
 }
+
 </style>
 <body>
     <div class="wrapper"> 
