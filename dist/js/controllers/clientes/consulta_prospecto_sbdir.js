@@ -290,11 +290,15 @@ $(document).on("click", "#searchByDateRange", function () {
     var url_interno;
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
+    var subdirector = $("#subdirector").val();
     var gerente = $("#gerente").val();
     var coordinador = $("#coordinador").val();
     var asesor = $("#asesores").val();
 
-    if(gerente != '' && coordinador == '' && asesor==''){
+    if(subdirector != '' && gerente == '' && coordinador == '' && asesor==''){
+        url_interno =general_base_url + 'index.php/Clientes/getProspectsListBySubdirector/';
+    }
+    else if(gerente != '' && coordinador == '' && asesor==''){
         url_interno = general_base_url + 'index.php/Clientes/getProspectsListByGerente/' + gerente;
     }else if(gerente != '' && coordinador != '' && asesor == ''){
         url_interno = general_base_url + 'index.php/Clientes/getProspectsListByCoord/' + coordinador;

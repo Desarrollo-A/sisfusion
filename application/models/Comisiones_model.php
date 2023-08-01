@@ -2103,7 +2103,7 @@ return $this->db->query("SELECT hc.comentario, hc.id_pago_i, hc.id_usuario,
 convert(varchar, hc.fecha_movimiento, 120) date_final, convert(varchar,hc.fecha_movimiento,120) as fecha_movimiento, 
 CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario FROM historial_comisiones hc 
 INNER JOIN pago_comision_ind pci ON pci.id_pago_i = hc.id_pago_i 
-INNER JOIN usuarios u ON u.id_usuario = hc.id_usuario WHERE hc.id_pago_i = 2646550 
+INNER JOIN usuarios u ON u.id_usuario = hc.id_usuario WHERE hc.id_pago_i = $pago 
 GROUP BY hc.comentario, hc.id_pago_i, hc.id_usuario, hc.fecha_movimiento, hc.fecha_movimiento,u.nombre, u.apellido_paterno, u.apellido_materno, hc.id_log
 ORDER BY hc.id_log DESC");
 
