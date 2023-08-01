@@ -12,13 +12,14 @@ $(document).ready(function () {
     var dateTime = date + ' ' + time;
     
     $('#Jtabla').DataTable({
-         ajax: {
-             url: `${general_base_url}/registroLote/getLotesContratados`,
+        ajax: {
+            url: `${general_base_url}/registroLote/getLotesContratados`,
             dataSrc: ""
-         },
-         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-         width: "100%",
-         scrollX: true,
+        },
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: "100%",
+        scrollX: true,
+        bAutoWidth: true,
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
@@ -127,7 +128,3 @@ $('#Jtabla thead tr:eq(0) th').each(function (i) {
     });
             $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
 });
-
-// $('#Upper').toUpperCase(function(){
-
-// });

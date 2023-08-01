@@ -9,9 +9,7 @@ const movimientosPermitidosCartaDomicilio = [37, 7, 64, 66, 77, 41];
 const rolesPermitidosCartaDomicilio = [5, 2, 6];
 const movimientosPermitidosEstatus2 = [31, 85, 20, 63, 73, 82, 92, 96, 99, 102, 104, 107, 108, 109, 111];
 const rolesPermitidosEstatus2 = [7, 9, 3, 2];
-
 const rolesPermitidosEstatus2AsesorInactivo = [6];
-
 const AccionDoc = {
     DOC_NO_CARGADO: 1, // NO HAY DOCUMENTO CARGADO
     DOC_CARGADO: 2, // LA RAMA TIENE UN DOCUMENTO CARGADO
@@ -32,16 +30,13 @@ const TipoDoc = {
 };
 
 const observacionContratoUrgente = 1; // Bandera para inhabilitar
-
 /**
  * Bandera para inhabilitar el eliminado del contrato cuando ya hizo el movimiento asistentes de gerentes
  * @type {number}
  */
 const status8Flag = 1;
-
 let documentacionLoteTabla = null;
 let titulos = [];
-
 Shadowbox.init();
 
 $(document).ready(function () {
@@ -49,7 +44,6 @@ $(document).ready(function () {
         $('#fileElm').val(null);
         $('#file-name').val('');
     })
-
     $("input:file").on("change", function () {
         const target = $(this);
         const relatedTarget = target.siblings(".file-name");
@@ -180,6 +174,7 @@ function cargarTabla(idLote, idCliente = '') {
         width: '100%',
         scrollX: true,
         ordering: false,
+        bAutoWidth: true,
         pageLength: 20,
         buttons: [
             {
