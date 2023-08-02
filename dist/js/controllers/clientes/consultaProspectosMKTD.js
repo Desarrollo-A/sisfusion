@@ -1,16 +1,14 @@
 let titulosEvidence = [];
 
 $('#prospects-datatable_dir thead tr:eq(0) th').each(function (i) {
-    if (i != 8) {
-        var title = $(this).text();
-        titulosEvidence.push(title);
-        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
-        $('input', this).on('keyup change', function () {
-            if ($('#prospects-datatable_dir').DataTable().column(i).search() !== this.value) {
-                $('#prospects-datatable_dir').DataTable().column(i).search(this.value).draw();
-            }
-        });
-    }
+    var title = $(this).text();
+    titulosEvidence.push(title);
+    $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
+    $('input', this).on('keyup change', function () {
+        if ($('#prospects-datatable_dir').DataTable().column(i).search() !== this.value) {
+            $('#prospects-datatable_dir').DataTable().column(i).search(this.value).draw();
+        }
+    });
 });
 
 $('#prospects-datatable_dir').on('draw.dt', function() {
@@ -20,10 +18,11 @@ $('#prospects-datatable_dir').on('draw.dt', function() {
 });
 
 $(document).ready(function () {
-    /*primera carga*/
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
-    setInitialValues();
+    setIniDatesXMonth("#beginDate", "#endDate");
+    let finalBeginDate2 = $("#beginDate").val();
+    let finalEndDate2 = $("#endDate").val();
     if(id_rol_general == 18){
     $("#subDir").empty().selectpicker('refresh');
         $('#spiner-loader').removeClass('hide');
@@ -44,7 +43,6 @@ $(document).ready(function () {
     }
     else if (id_rol_general == 19){
         var subdir = id_usuario_general;
-        //gerente
         $("#gerente").empty().selectpicker('refresh');
         $("#coordinador").empty().selectpicker('refresh');
         $("#asesores").empty().selectpicker('refresh');
@@ -62,7 +60,6 @@ $(document).ready(function () {
             }
             $("#gerente").selectpicker('refresh');
         }, 'json');
-        /*carga la tabla*/
         var url = general_base_url+'Clientes/getProspectsListByGerente/'+subdir;
         let finalBeginDate = $("#beginDate").val();
         let finalEndDate = $("#endDate").val();
@@ -99,22 +96,7 @@ sp = {
     },
 };
 
-    sp.initFormExtendedDatetimepickers();
-function setInitialValues() {
-    const fechaInicio = new Date();
-    // Iniciar en este año, este mes, en el día 1
-    const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
-    // END DATE
-    const fechaFin = new Date();
-    // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
-    const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
-    finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
-    finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
-    finalBeginDate2 = [('0' + beginDate.getDate()).slice(-2), ('0' + (beginDate.getMonth() + 1)).slice(-2), beginDate.getFullYear()].join('/');
-    finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
-    $('#beginDate').val(finalBeginDate2);
-    $('#endDate').val(finalEndDate2);
-}
+sp.initFormExtendedDatetimepickers();
 
 if(id_rol_general != 19){
     $('#subDir').on('change', function () {
@@ -137,7 +119,6 @@ if(id_rol_general != 19){
             }
             $("#gerente").selectpicker('refresh');
         }, 'json');
-        /*carga la tabla*/
         var url = general_base_url+'Clientes/getProspectsListByGerente/'+subdir;
         let finalBeginDate = $("#beginDate").val();
         let finalEndDate = $("#endDate").val();
@@ -169,7 +150,6 @@ $(document).on("click", "#searchByDateRange", function () {
     }else{
         var subdir = $('#subDir').val();
         if(gerente=='' && subdir != ''){
-            /*carga la tabla*/
             var url = general_base_url+'Clientes/getProspectsListByGerente/'+subdir;
             let finalBeginDate = $("#beginDate").val();
             let finalEndDate = $("#endDate").val();
@@ -178,7 +158,6 @@ $(document).on("click", "#searchByDateRange", function () {
             let finalBeginDate = $("#beginDate").val();
             let finalEndDate = $("#endDate").val();
             var gerente = $("#gerente").val();
-            /**///carga tabla
             var url = general_base_url+"Clientes/getProspectsListByCoord/"+gerente;
             updateTable(url, 3, finalBeginDate, finalEndDate, 0);
         }
@@ -187,9 +166,10 @@ $(document).on("click", "#searchByDateRange", function () {
 
 function updateTable(url, typeTransaction, beginDate, endDate, where){
         prospectsTable = $('#prospects-datatable_dir').dataTable({
-            dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+            dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
             width: "100%",
             scrollX: true,
+            bAutoWidth: true,
             pagingType: "full_numbers",
             lengthMenu: [
             [10, 25, 50, -1],
@@ -290,7 +270,7 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
                 },
                 { 
                     data: function (d) {
-                    if (d.estatus == 1) { // IS ACTIVE
+                    if (d.estatus == 1) { 
                         var actions = '';
                         var group_buttons = '';
                         group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto +'" style="margin-right: 3px" data-toggle="tooltip"  data-placement="top" title="IINGRESA UN COMENTARIO"><i class="fas fa-comment-alt"></i></button>' +
@@ -329,9 +309,6 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
     })
 }
 
-/**
- * Botón para editar información
- */
 $(document).on('click', '.edit-information', function(e) {
     id_prospecto = $(this).attr("data-id-prospecto");
     source = $(this).attr("data-source");
@@ -339,23 +316,16 @@ $(document).on('click', '.edit-information', function(e) {
     owner = $(this).attr("data-owner");
     $.getJSON("getProspectInformation/" + id_prospecto).done(function(data) {
         $.each(data, function(i, v) {
-            /*Llenado de campos en automatico */
-                //Nacionalidad
                 $("#nationality option[value="+v.nacionalidad+"]").attr("selected", true);
                 $("#nationality").selectpicker("refresh");
-                //Personalidad Juridica
                 $("#legal_personality option[value="+v.personalidad_juridica+"]").attr("selected", true);
                 $("#legal_personality").selectpicker("refresh");
-                //Estado civil
                 $("#civil_status option[value="+v.estado_civil+"]").attr("selected", true);
                 $("#civil_status").selectpicker("refresh");
-                //Regimen Matrimonial
                 $("#matrimonial_regime option[value="+v.regimen_matrimonial+"]").attr("selected", true);
                 $("#matrimonial_regime").selectpicker("refresh");
-                //Lugar de Prospeccion
                 $("#prospecting_place option[value="+v.lugar_prospeccion+"]").attr("selected", true);
                 $("#prospecting_place").selectpicker("refresh");
-                //Plaza de venta
                 $("#sales_plaza option[value="+v.plaza_venta+"]").attr("selected", true);
                 $("#sales_plaza").selectpicker("refresh");
                 $("#myEditModal").modal();

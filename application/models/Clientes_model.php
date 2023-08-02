@@ -3320,15 +3320,12 @@ function getStatusMktdPreventa(){
         LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
         LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
         LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
-
         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion and oxc.id_catalogo = 9
         LEFT JOIN usuarios sub ON uss.id_lider = sub.id_usuario and sub.id_rol = 2
         WHERE c.lugar_prospeccion = $lugar and uss.id_usuario = $id_gte and c.tipo = 0 
         ".$filter."
         ORDER BY c.fecha_creacion DESC;");
-
         }
-
         return $query->result();
     }
 

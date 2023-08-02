@@ -464,15 +464,25 @@ function cleanComments(){
 
 function selectAll(e) {
     tota2 = 0;
-    $(tabla_remanentes.$('input[type="checkbox"]')).each(function (i, v) {
-        if (!$(this).prop("checked")) {
-            $(this).prop("checked", true);
-            tota2 += parseFloat(tabla_remanentes.row($(this).closest('tr')).data().impuesto);
-        } else {
-            $(this).prop("checked", false);
-        }
+    if(e.checked == true){
+        $(tabla_remanentes.$('input[type="checkbox"]')).each(function (i, v) {
+            tr = this.closest('tr');
+            row = tabla_remanentes.row(tr).data();
+            tota2 += parseFloat(row.impuesto);
+            if(v.checked == false){
+                $(v).prop("checked", true);
+            }
+        }); 
         $("#totpagarPen").html(formatMoney(tota2));
-    });
+    }
+    if(e.checked == false){
+        $(tabla_remanentes.$('input[type="checkbox"]')).each(function (i, v) {
+            if(v.checked == true){
+                $(v).prop("checked", false);
+            }
+        }); 
+        $("#totpagarPen").html(formatMoney(0));
+    }
 }
 
 $(document).ready( function(){
