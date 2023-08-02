@@ -11,6 +11,14 @@ $(document).ready(function() {
     }, 'json');
 });
 
+$('body').tooltip({
+    selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
+    trigger: 'hover',
+    container: 'body'
+}).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
+    $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
+});
+
 $('#filtro33').change(function(ruta){
     residencial = $('#filtro33').val();
     $("#filtro44").empty().selectpicker('refresh');
@@ -30,12 +38,15 @@ $('#filtro33').change(function(ruta){
     });
 });
 
+
 $('#filtro33').change(function(ruta){
     proyecto = $('#filtro33').val();
     condominio = $('#filtro44').val();
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
+    console.log(proyecto);
+    console.log(condominio);
     getAssimilatedCommissions(proyecto, condominio);
 });
 
@@ -54,7 +65,7 @@ var totaPen = 0;
 
 let titulos = [];
   //INICIO TABLA QUERETARO
-$('#tabla_extranjero thead tr:eq(0) th').each( function (i) {
+  $('#tabla_extranjero thead tr:eq(0) th').each( function (i) {
     if(i != 0){
         var title = $(this).text();
         titulos.push(title);
@@ -76,7 +87,7 @@ $('#tabla_extranjero thead tr:eq(0) th').each( function (i) {
         });
     }
     else {
-        $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAll(this)"/>');
+        $(this).html('<input id="all" type="checkbox" class="hide" style="width:20px; height:20px;" onchange="selectAll(this)"/>');
     }
 });
 
@@ -86,8 +97,8 @@ function getAssimilatedCommissions(proyecto, condominio){
         $.each(json.data, function(i, v) {
             total += parseFloat(v.impuesto);
         });
-        var to = formatMoney(total);
-        document.getElementById("totpagarextranjero").textContent = '$' + to;
+        var to = formatMoney(numberTwoDecimal(total));
+        document.getElementById("totpagarextranjero").textContent = to;
     });
 
     $("#tabla_extranjero").prop("hidden", false);
@@ -149,8 +160,8 @@ function getAssimilatedCommissions(proyecto, condominio){
                 }
             },
             attr: {
-                class: 'btn btn-azure',
-                style: 'position: relative; float: right;',
+                class: 'btn btn-azure hide',
+                style: 'position: relative;',
             }
         },
         {
@@ -163,7 +174,7 @@ function getAssimilatedCommissions(proyecto, condominio){
                 columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
                 format: {
                     header: function (d, columnIdx) {
-                        return ' ' + titulos[columnIdx] + ' ';
+                        return ' ' + titulos[columnIdx-1] + ' ';
                     }
                 }
             },
@@ -223,12 +234,12 @@ function getAssimilatedCommissions(proyecto, condominio){
         },
         {
             data: function( d ){
-                return '<p class="m-0">$'+formatMoney(numberTwoDecimal(d.pago_neodata))+'</p>';
+                return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.pago_neodata))+'</p>';
             }
         },
         {
             data: function( d ){
-                return '<p class="m-0"><b>$'+formatMoney(numberTwoDecimal(d.impuesto))+'</b></p>';
+                return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.impuesto))+'</b></p>';
             }
         },
         {
@@ -268,8 +279,8 @@ function getAssimilatedCommissions(proyecto, condominio){
             "orderable": false,
             data: function( data ){
                 var BtnStats;
-                BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_extranjero" title="Detalles">' +'<i class="fas fa-info"></i></button>'+
-                '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.id_pago_i+'" data-code="'+data.cbbtton+'" ' + 'class="btn-data btn-warning cambiar_estatus" title="Pausar solicitud">' + '<i class="fas fa-ban"></i></button>';
+                BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_extranjero" data-toggle="tooltip"  data-placement="top" title="DETALLES">' +'<i class="fas fa-info"></i></button>'+
+                '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.id_pago_i+'" data-code="'+data.cbbtton+'" ' + 'class="btn-data btn-warning cambiar_estatus" data-toggle="tooltip"  data-placement="top" title="PAUSAR SOLICITUD">' + '<i class="fas fa-ban"></i></button>';
                 return '<div class="d-flex justify-center">'+BtnStats+'</div>';
             }
         }],
@@ -309,16 +320,34 @@ function getAssimilatedCommissions(proyecto, condominio){
     });
 
     $("#tabla_extranjero tbody").on("click", ".consultar_logs_extranjero", function(e){
+        $('#spiner-loader').removeClass('hide');
         e.preventDefault();
         e.stopImmediatePropagation();
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
         $("#seeInformationModalExtranjero").modal();
-        $("#nameLote").append('<p><h5">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
+        $("#nameLote").append('<p><h5>HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $.getJSON(general_base_url+"Pagos/getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
-                $("#comments-list-extranjero").append('<div class="col-lg-12"><p><i style="color:gray;">'+v.comentario+'</i><br><b style="color:#3982C0">'+v.fecha_movimiento+'</b><b style="color:gray;"> - '+v.nombre_usuario+'</b></p></div>');
+                $("#comments-list-extranjeros").append('<li>\n' +
+                '  <div class="container-fluid">\n' +
+                '    <div class="row">\n' +
+                '      <div class="col-md-6">\n' +
+                '        <a><b> ' +v.comentario.toUpperCase()+ '</b></a><br>\n' +
+                '      </div>\n' +
+                '      <div class="float-end text-right">\n' +
+                '        <a>' + v.fecha_movimiento.split(".")[0] + '</a>\n' +
+                '      </div>\n' +
+                '      <div class="col-md-12">\n' +
+                '        <p class="m-0"><small>Usuario: </small><b> ' + v.nombre_usuario + '</b></p>\n'+
+                '      </div>\n' +
+                '    <h6>\n' +
+                '    </h6>\n' +
+                '    </div>\n' +
+                '  </div>\n' +
+                '</li>');
             });
+        $('#spiner-loader').addClass('hide');
         });
     });
 
@@ -334,7 +363,7 @@ function getAssimilatedCommissions(proyecto, condominio){
             totaPen -= parseFloat(row.pa);
             row.pa = 0;
         }
-        $("#totpagarPen").html(formatMoney(totaPen));
+        $("#totpagarPen").html(formatMoney(numberTwoDecimal(totaPen)));
     });
 
     $("#tabla_extranjero tbody").on("click", ".cambiar_estatus", function(){
@@ -343,29 +372,77 @@ function getAssimilatedCommissions(proyecto, condominio){
         id_pago_i = $(this).val();
         $("#modal_nuevas .modal-body").html("");
         $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><p>¿Está seguro de pausar la comisión de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b> <i>'+row.data().usuario+'</i>?</p></div></div>');
-        $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><input type="hidden" name="value_pago" value="1"><input type="hidden" name="estatus" value="6"><input type="text" class="form-control observaciones" name="observaciones" required placeholder="Describe mótivo por el cual se va activar nuevamente la solicitud"></input></div></div>');
+        $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><input type="hidden" name="value_pago" value="1"><input type="hidden" name="estatus" value="6"><input type="text" class="text-modal observaciones" name="observaciones" row="3" required placeholder="Describe mótivo por el cual se va activar nuevamente la solicitud"></input></div></div>');
         $("#modal_nuevas .modal-body").append('<input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'">');
-        $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-md-6"></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="PAUSAR"></div><div class="col-md-3"><button type="button" class="btn btn-danger" data-dismiss="modal">CANCELAR</button></div></div>');
+        $("#modal_nuevas .modal-body").append(`<div class="row">
+        <div class="col-md-6"></div>
+        <div class="d-flex justify-end">
+            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CANCELAR</button>
+            <button type="submit" class="btn btn-primary" value="PAUSAR">PAUSAR</button>
+        </div>
+    </div>`);
         $("#modal_nuevas").modal();
     });
+
+    $("#form_interes").submit( function(e) {
+        e.preventDefault();
+        }).validate({
+        submitHandler: function( form ) {
+        var data = new FormData( $(form)[0] );
+        console.log(data);
+        data.append("id_pago_i", id_pago_i);
+        $.ajax({
+            url: general_base_url + "Pagos/despausar_solicitud/",
+            data: data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            method: 'POST',
+            type: 'POST', // For jQuery < 1.9
+            success: function(data){
+            if( data[0] ){
+                $("#modal_nuevas").modal('toggle' );
+                alerts.showNotification("top", "right", "Se ha pausado la comisión exitosamente", "success");
+                setTimeout(function() {
+                tabla_extranjero2.ajax.reload();
+                }, 3000);
+            }
+            else{
+                alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
+            }
+            },error: function( ){
+            alert("ERROR EN EL SISTEMA");
+            }
+        });
+        }
+        });
+        
+        
 }
-//FIN TABLA  ****************************************************************************************
+//FIN TABLA  
+
+
 
 $('#tabla_factura').ready(function () {
-    let titulos = [];
-    $('#tabla_factura thead tr:eq(0) th').each(function (i) {
-        if (i !== 4 || i !== 5) {
-            const title = $(this).text();
-            titulos.push(title);
-        }
-    });
+    $('#tabla_factura thead tr:eq(0) th').each( function (i) {
+        var title = $(this).text();
+        titulos.push(title);
+        $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
+        $( 'input', this ).on('keyup change', function () {
+            if ($('#tabla_factura').DataTable().column(i).search() !== this.value ) {
+                $('#tabla_factura').DataTable().column(i).search(this.value).draw();
+            }
+        });
+        $('[data-toggle="tooltip"]').tooltip();
+    })
 
     $('#tabla_factura').on('xhr.dt', function (e, settings, json, xhr) {
         let total = 0;
         $.each(json.data, function (i, v) {
             total += parseFloat(v.total);
         });
-        document.getElementById('myText_proceso').textContent = `$${formatMoney(total)}`;
+        document.getElementById('myText_proceso').textContent = `${formatMoney(numberTwoDecimal(total))}`;
     });
 
     $('#tabla_factura').DataTable({
@@ -412,8 +489,13 @@ $('#tabla_factura').ready(function () {
                 }
             },
             {
+                data: function(d) {
+                    return `<p class="m-0">${d.rfc}</p>`;
+                }
+            },
+            {
                 data: function (d) {
-                    return `<p class="m-0">$${formatMoney(numberTwoDecimal(d.total))}</p>`;
+                    return `<p class="m-0">${formatMoney(numberTwoDecimal(d.total))}</p>`;
                 }
             },
             {
@@ -583,7 +665,6 @@ $("#form_MKTD").submit( function(e) {
                 if( data.resultado ){
                     alert("LA FACTURA SE SUBIO CORRECTAMENTE");
                         $("#modal_mktd").modal( 'toggle' );
-                    //  tabla_nuevas.ajax.reload();
                 }else{
                     alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
                 }

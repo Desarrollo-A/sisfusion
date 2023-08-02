@@ -13,6 +13,17 @@
             }
         ?>
         <!-- Modals -->
+
+        <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post" id="form_interes">
+                        <div class="modal-body"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade modal-alertas" id="modal_colaboradores" role="dialog">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
@@ -41,7 +52,7 @@
             </div>
         </div>
 
-        <div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal fade" id="seeInformationModalExtranjero" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -51,7 +62,7 @@
                     </div>
                     <div class="modal-body">
                         <div role="tabpanel">
-                            <ul class="nav nav-tabs" role="tablist" style="background: #949494;">
+                            <ul>
                                 <div id="nameLote"></div>
                             </ul>
                             <div class="tab-content">
@@ -59,8 +70,8 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="card card-plain">
-                                                <div class="card-content">
-                                                    <ul class="timeline timeline-simple" id="comments-list-asimilados"></ul>
+                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                                    <ul class="timeline-3" id="comments-list-extranjeros"></ul>
                                                 </div>
                                             </div>
                                         </div>
@@ -105,8 +116,8 @@
                                                         </div>
                                                         <div class="col-12 col-sm-12 col-md-12 col-lg-6">
                                                             <div class="form-group d-flex justify-center align-center">
-                                                                <h4 class="title-tot center-align m-0">Autorizar:</h4>
-                                                                <p class="input-tot pl-1" name="totpagarPen" id="totpagarPen">$0.00</p>
+                                                                <h4 class="title-tot center-align m-0 hide">Autorizar:</h4>
+                                                                <p class="input-tot pl-1 hide" name="totpagarPen" id="totpagarPen">$0.00</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -133,20 +144,20 @@
                                                                 <tr>
                                                                     <th></th>
                                                                     <th>ID</th>
-                                                                    <th>PROY.</th>
+                                                                    <th>PROYECTO</th>
                                                                     <th>CONDOMINIO</th>
                                                                     <th>LOTE</th>
                                                                     <th>REFERENCIA</th>
-                                                                    <th>PRECIO LOTE</th>
-                                                                    <th>EMP.</th>
-                                                                    <th>TOT. COM.</th>
-                                                                    <th>P. CLIENTE</th>
+                                                                    <th>PRECIO DE LOTE</th>
+                                                                    <th>EMPRESA</th>
+                                                                    <th>TOTAL DE LA COMPRA</th>
+                                                                    <th>PAGO DEL CLIENTE</th>
                                                                     <th>A PAGAR</th>
-                                                                    <th>TIPO VENTA</th>
+                                                                    <th>TIPO DE VENTA</th>
                                                                     <th>USUARIO</th>
                                                                     <th>RFC</th>
                                                                     <th>PUESTO</th>
-                                                                    <th>FEC. ENVÍO</th>
+                                                                    <th>FECHA DE ENVÍO</th>
                                                                     <th>MÁS</th>
                                                                 </tr>
                                                             </thead>
