@@ -72,7 +72,7 @@
                     </div>
                     <div class="modal-body">
                         <div role="tabpanel">
-                            <ul class="nav nav-tabs" role="tablist" style="background: #949494;">
+                            <ul>
                                 <div id="nameLote"></div>
                             </ul>
                             <div class="tab-content">
@@ -80,8 +80,8 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="card card-plain">
-                                                <div class="card-content">
-                                                    <ul class="timeline timeline-simple" id="comments-list-asimilados"></ul>
+                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                                    <ul class="timeline-3" id="comments-list-asimilados"></ul>
                                                 </div>
                                             </div>
                                         </div>

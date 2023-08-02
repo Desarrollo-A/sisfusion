@@ -1,6 +1,14 @@
 var totaPen = 0;
 var tr;
 
+$('body').tooltip({
+    selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
+    trigger: 'hover',
+    container: 'body'
+}).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
+    $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
+});
+
 $.post(general_base_url + "index.php/Comisiones/getEstatusPagosMktd", function (data) {
     var len = data.length;
     for (var i = 0; i < len; i++) {
@@ -249,7 +257,7 @@ $("#tabla_plaza_2").ready( function(){
             },
             attr: {
                 class: 'btn btn-azure',
-                style: 'position: relative; float: right;'
+                style: 'position: relative;'
             }
         },
         {
@@ -259,11 +267,11 @@ $("#tabla_plaza_2").ready( function(){
             titleAttr: 'Descargar archivo de Excel',
             title: 'ASIMILADOS_CONTRALORÍA_SISTEMA_COMISIONES',
             exportOptions: {
-                columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
+                columns: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
                 format: 
                 {
                     header:  function (d, columnIdx) {
-                        return ' ' + titulos[columnIdx-1]  + ' ';
+                        return ' ' + titulos[columnIdx]  + ' ';
                     }
                 }
             },
@@ -365,7 +373,7 @@ $("#tabla_plaza_2").ready( function(){
             "orderable": false,
             data: function( data ){
                 var BtnStats;
-                BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_asimilados" title="Detalles">' +'<i class="fas fa-info"></i></button>';
+                BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_asimilados" data-toggle="tooltip"  data-placement="top" title="Detalles">' +'<i class="fas fa-info"></i></button>';
                 return BtnStats;
             }
         }],
@@ -390,16 +398,34 @@ $("#tabla_plaza_2").ready( function(){
 
         
     $("#tabla_plaza_2 tbody").on("click", ".consultar_logs_asimilados", function(e){
+        $('#spiner-loader').removeClass('hide');
         e.preventDefault();
         e.stopImmediatePropagation();
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
         $("#seeInformationModal").modal();
-        $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
+        $("#nameLote").append('<p><h5>HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $.getJSON("getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
-                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:gray;">'+v.comentario+'</i><br><b style="color:#3982C0">'+v.fecha_movimiento+'</b><b style="color:gray;"> - '+v.nombre_usuario+'</b></p></div>');
-            });
+                $("#comments-list-asimilados").append('<li>\n' +
+                '  <div class="container-fluid">\n' +
+                '    <div class="row">\n' +
+                '      <div class="col-md-6">\n' +
+                '        <a><b> ' +v.comentario.toUpperCase()+ '</b></a><br>\n' +
+                '      </div>\n' +
+                '      <div class="float-end text-right">\n' +
+                '        <a>' + v.fecha_movimiento.split(".")[0] + '</a>\n' +
+                '      </div>\n' +
+                '      <div class="col-md-12">\n' +
+                '        <p class="m-0"><small>Usuario: </small><b> ' + v.nombre_usuario + '</b></p>\n'+
+                '      </div>\n' +
+                '    <h6>\n' +
+                '    </h6>\n' +
+                '    </div>\n' +
+                '  </div>\n' +
+                '</li>');
+            });;
+            $('#spiner-loader').addClass('hide');
         });
     });
 });

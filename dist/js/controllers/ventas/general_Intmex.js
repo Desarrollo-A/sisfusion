@@ -221,25 +221,23 @@ $("#tabla_plaza_1").ready( function(){
         $("#nameLote").append('<p><h5">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $.getJSON("getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
-                $.each( data, function(i, v){
-                    $("#comments-list-asimilados").append('<li>\n' +
-                    '  <div class="container-fluid">\n' +
-                    '    <div class="row">\n' +
-                    '      <div class="col-md-6">\n' +
-                    '        <a><b> ' +v.comentario.toUpperCase()+ '</b></a><br>\n' +
-                    '      </div>\n' +
-                    '      <div class="float-end text-right">\n' +
-                    '        <a>' + v.fecha_movimiento.split(".")[0] + '</a>\n' +
-                    '      </div>\n' +
-                    '      <div class="col-md-12">\n' +
-                    '        <p class="m-0"><small>Usuario: </small><b> ' + v.nombre_usuario + '</b></p>\n'+
-                    '      </div>\n' +
-                    '    <h6>\n' +
-                    '    </h6>\n' +
-                    '    </div>\n' +
-                    '  </div>\n' +
-                    '</li>');
-                });
+                $("#comments-list-asimilados").append('<li>\n' +
+                '  <div class="container-fluid">\n' +
+                '    <div class="row">\n' +
+                '      <div class="col-md-6">\n' +
+                '        <a><b> ' +v.comentario.toUpperCase()+ '</b></a><br>\n' +
+                '      </div>\n' +
+                '      <div class="float-end text-right">\n' +
+                '        <a>' + v.fecha_movimiento.split(".")[0] + '</a>\n' +
+                '      </div>\n' +
+                '      <div class="col-md-12">\n' +
+                '        <p class="m-0"><small>Usuario: </small><b> ' + v.nombre_usuario + '</b></p>\n'+
+                '      </div>\n' +
+                '    <h6>\n' +
+                '    </h6>\n' +
+                '    </div>\n' +
+                '  </div>\n' +
+                '</li>');
             });
             $('#spiner-loader').addClass('hide');
         });
