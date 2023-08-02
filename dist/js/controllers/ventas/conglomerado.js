@@ -1515,7 +1515,7 @@ function open_Mb() {
 $('#ModalBonos').on('hidden.bs.modal', function() {
     $('#form_nuevo').trigger('reset');
 });
-
+let pagosRepartidos = [1,2,3,4,5,6,7,8,9];
 $(document).on("click", ".uniAdd", function () {
     let banderaLiquidados = false;
     $("#modalUni").modal();
@@ -1569,7 +1569,7 @@ $(document).on("click", ".uniAdd", function () {
     informacion_adicional += '      <div class="col-xs-4 col-sm-4 col-md-4">';
     informacion_adicional += '        <div class="form-group text-left">';
     informacion_adicional += '          <label class="control-label">Pagos repartidos (<span class="isRequired">*</span>)</label> ';
-    informacion_adicional += '          <select class="form-control" name="mensualidadesC" id="mensualidadesC" title="SELECCIONA UNA OPCIÓN" required>';
+    informacion_adicional += '          <select class="selectpicker select-gral" name="mensualidadesC" id="mensualidadesC" title="SELECCIONA UNA OPCIÓN" required>';
     informacion_adicional += '              <option value="1">1</option>';
     informacion_adicional += '              <option value="2">2</option>';
     informacion_adicional += '              <option value="3">3</option>';
@@ -1591,6 +1591,12 @@ $(document).on("click", ".uniAdd", function () {
     informacion_adicional += '               required />';
     informacion_adicional += '         </div>';
     informacion_adicional += '      </div>';
+
+    // $("#mensualidadesC").append($('<option disabled selected>').val("").text("SELECCIONA UNA OPCIÓN"));
+    // for (var i = 0; i < 10; i++) {
+    //     $("#mensualidadesC").append($('<option>').val(pagosRepartidos).attr('data-value', pagosRepartidos));
+    // }
+    $("#mensualidadesC").selectpicker('refresh');
 
     var cuerpoModalUni = document.getElementById('cuerpoModalUni');
     cuerpoModalUni.innerHTML = informacion_adicional;
@@ -1631,12 +1637,13 @@ $(document).on("click", ".uniAdd", function () {
         // mensualidadesFaltantes
     }
     if(banderaLiquidados){
-        document.getElementById("mensualidadesC").value = 1;
+        // document.getElementById("mensualidadesC").value = 1;
         mensualidadesFaltantesMostrar = 1;
         mensualidadesFaltantes = 1;
     }else{
         mensualidadesFaltantesMostrar = valorPendiente  / pago_mensual ;
-        document.getElementById("mensualidadesC").value = Math.trunc( mensualidadesFaltantesMostrar);
+        // document.getElementById("mensualidadesC").value = Math.trunc( mensualidadesFaltantesMostrar);
+
     }
     ultimaMensualidad = document.getElementById("mensualidadesC").value
     Total_a_pagar = ultimaMensualidad * pago_mensual;

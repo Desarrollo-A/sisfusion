@@ -21,6 +21,7 @@
                 </div>
             </div>
         </div>
+
         <div class="modal fade modal-alertas" id="modal_colaboradores" role="dialog">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
@@ -31,6 +32,7 @@
                 </div>
             </div>
         </div>
+        
         <div class="modal fade modal-alertas" id="modal_mktd" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -45,6 +47,7 @@
                 </div>
             </div>
         </div>
+
         <div class="modal fade modal-alertas" id="modalParcialidad" role="dialog">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -58,6 +61,7 @@
                 </div>
             </div>
         </div>
+
         <div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
@@ -92,6 +96,7 @@
                 </div>
             </div>
         </div>
+
         <div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
             <div class="modal-dialog" style="width:800px; margin-top:20px">
                 <div class="modal-content">
@@ -101,6 +106,7 @@
                 </div>
             </div>
         </div>
+
         <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -108,9 +114,11 @@
                 </div>
             </div>
         </div>
+
         <div class="modal fade modal-alertas" id="documento_preview" role="dialog">
             <div class="modal-dialog" style= "margin-top:20px;"></div>
         </div>
+        
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -156,7 +164,7 @@
                                                                 <th>ID USUARIO</th>
                                                                 <th>USUARIO</th>
                                                                 <th>RFC</th>
-                                                                <th>SEDE USUARIO</th>
+                                                                <th>SEDE DEL USUARIO</th>
                                                                 <th>EMPRESA</th>
                                                                 <th>IMPUESTO %</th>
                                                                 <th>ABONO DISPERSADO</th>
@@ -198,10 +206,10 @@
                                                                 <th>REFERENCIA</th>
                                                                 <th>PRECIO DE LOTE</th>
                                                                 <th>EMPRESA</th>
-                                                                <th>TOTAL COMISION</th>
-                                                                <th>PAGADO CLIENTE</th>
+                                                                <th>TOTAL DE LA COMISION</th>
+                                                                <th>PAGADO DEL CLIENTE</th>
                                                                 <th>SOLICITADO</th>
-                                                                <th>TIPO VENTA</th>
+                                                                <th>TIPO DE VENTA</th>
                                                                 <th>USUARIO</th>
                                                                 <th>RFC</th>
                                                                 <th>PUESTO</th>
