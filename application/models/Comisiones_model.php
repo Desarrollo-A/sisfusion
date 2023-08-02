@@ -4250,21 +4250,18 @@ return 1;
  
 
 
-         function getHistorialAbono2($pago){
- 
-$this->db->query("SET LANGUAGE Español;");
-return $this->db->query(" SELECT DISTINCT(hc.comentario), hc.id_pago_b, hc.id_usuario, 
-convert(nvarchar(20), hc.fecha_creacion, 113) date_final,
-hc.fecha_creacion as fecha_movimiento,
-CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario
-FROM historial_bonos hc 
-INNER JOIN pagos_bonos_ind pci ON pci.id_pago_bono = hc.id_pago_b
-INNER JOIN usuarios u ON u.id_usuario = hc.id_usuario 
-WHERE hc.id_pago_b = $pago
-ORDER BY hc.fecha_creacion DESC");
-
-
-}
+        function getHistorialAbono2($pago){
+        $this->db->query("SET LANGUAGE Español;");
+        return $this->db->query("SELECT DISTINCT(hc.comentario), hc.id_pago_b, hc.id_usuario, 
+        convert(nvarchar(20), hc.fecha_creacion, 113) date_final,
+        hc.fecha_creacion as fecha_movimiento, pci.abono, CONVERT(VARCHAR,pci.fecha_abono,20) AS fecha_abono,
+        CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario
+        FROM historial_bonos hc 
+        INNER JOIN pagos_bonos_ind pci ON pci.id_pago_bono = hc.id_pago_b
+        INNER JOIN usuarios u ON u.id_usuario = hc.id_usuario 
+        WHERE hc.id_pago_b = 3
+        ORDER BY hc.fecha_creacion DESC");
+        }
 
 
 
