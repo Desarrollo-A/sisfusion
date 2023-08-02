@@ -43,7 +43,7 @@
             </div>
             <div class="modal-body">
               <div role="tabpanel">
-                <ul class="nav nav-tabs" role="tablist" style="background: #949494;">
+                <ul>
                   <div id="nameLote"></div>
                 </ul>
                 <div class="tab-content">
@@ -51,7 +51,7 @@
                     <div class="row">
                       <div class="col-md-12">
                         <div class="card card-plain">
-                          <div class="card-content">
+                          <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
                             <ul class="timeline-3" id="comments-list-asimilados"></ul>
                           </div>
                         </div>
@@ -106,7 +106,7 @@
                     <div class="row">
                       <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 overflow-hidden">
                         <div class="form-group">
-                          <label class="m-0" for="roles">Puesto</label>
+                          <label class="control-label" for="roles">Puesto</label>
                           <select class="selectpicker select-gral" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" name="roles" id="roles" required>
                             <?php
                             if($this->session->userdata('id_rol') == 18){
@@ -114,11 +114,11 @@
                             } 
                             else{
                               echo '
-                              <option value="7">Asesor</option>
-                              <option value="9">Coordinador</option>
-                              <option value="3">Gerente</option>
-                              <option value="2">Sub director</option>   
-                              <option value="20">Marketing Digital</option> 
+                              <option value="7">ASESOR</option>
+                              <option value="9">COORDINADOR</option>
+                              <option value="3">GERENTE</option>
+                              <option value="2">SUBDIRECTOR</option>   
+                              <option value="20">MARKETING DIGITAL</option> 
                               ';
                             }
                             ?>
@@ -127,7 +127,7 @@
                       </div>
                       <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 overflow-hidden">
                         <div class="form-group">
-                          <label class="m-0" for="users">Usuario</label>
+                          <label class="control-label" for="users">Usuario</label>
                           <select class="selectpicker select-gral" id="users" name="users" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                         </div>
                       </div>
@@ -144,7 +144,7 @@
                         <th>USUARIO</th>
                         <th>RFC</th>
                         <th>PUESTO</th>
-                        <th>MONTO BONO</th>
+                        <th>MONTO DEL BONO</th>
                         <th>ABONADO</th>
                         <th>PENDIENTE</th>
                         <th># PAGOS</th>
