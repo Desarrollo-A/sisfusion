@@ -4,7 +4,6 @@
 <div class="wrapper ">
     <?php $this->load->view('template/sidebar'); ?>
 
-    <!-- Modals -->
     <div class="modal fade" id="addFile" style="z-index: 9999;" >
         <div class="modal-dialog">
             <div class="modal-content" >
@@ -28,8 +27,6 @@
             </div>
         </div>
     </div>
-    <!-- END Modals -->
-    <!-- Modals -->
     <div class="modal fade" id="verAut" style="z-index: 9999;" >
         <div class="modal-dialog modal-lg">
             <div class="modal-content" >
@@ -60,14 +57,14 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="modalHistorial" style="z-index: 9999;" >
+    <div class="modal fade" id="modalHistorialAM" style="z-index: 9999;" >
         <div class="modal-dialog ">
             <div class="modal-content" >
                 <div class="modal-header">
-                    <center><h3 class="modal-title" id="myModalLabel">HISTORIAL</h3></center>
+                    <center><h3 class="modal-title" id="myModalLabelAM">HISTORIAL</h3></center>
                 </div>
                 <div class="modal-body" style="height: 550px;overflow-x: auto;">
-                    <div id="historialAut" >
+                    <div id="historialAutAM" >
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -76,29 +73,26 @@
             </div>
         </div>
     </div>
-
-
-    <div class="modal fade" id="avanzarAut" style="z-index: 9999;" >
+    <div class="modal fade" id="avanzarAutAM" style="z-index: 9999;" >
         <div class="modal-dialog">
             <div class="modal-content" >
                 <div class="modal-header">
-                    <center><h3 class="modal-title" id="tittleModal"></h3><h5 id="leyendaAdv"></h5></center>
+                    <center><h3 class="modal-title" id="tittleModalAM"></h3><h5 id="leyendaAdvAM"></h5></center>
                 </div>
                 <div class="modal-body">
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <label>Comentario:</label>
-                        <textarea class="text-modal" name="comentarioAvance" id="comentarioAvance" rows="3"></textarea>
+                        <textarea class="text-modal" name="comentarioAvance" id="comentarioAvanceAM" rows="3"></textarea>
                         <br>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary no-shadow" id="enviarAutBtn">Enviar</button>
+                    <button type="submit" class="btn btn-primary no-shadow" id="enviarAutBtnAM">Enviar</button>
                 </div>
             </div>
         </div>
     </div>
-    <!-- END Modals -->
 
     <div class="content boxContent">
         <div class="container-fluid">
@@ -134,7 +128,7 @@
 
 
                 <div class="modal fade " id="subirMeses" data-backdrop="static" data-keyboard="false">
-                    <div class="modal-dialog modal-xl">
+                    <div class="modal-dialog modal-lg">
                         <div class="modal-content" >
                             <div class="modal-body">
                                 <!-- Esto se debe pasar al modal-->

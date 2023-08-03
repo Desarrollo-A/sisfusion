@@ -1007,21 +1007,16 @@ $(document).on("click",".llenadoPlan", function (e){
            let ban ;
             console.log(data)
            fecha_reinicio =  new Date(data.date[0].fecha_reinicio)
-
-        
-     
         fechaSitema =  new Date();
-  
         if (fechaSitema.getTime() >= fecha_reinicio.getTime())  {
             bandera = 1;       
             console.log('si es mas tarde de la ultima hora');
             }else{
                 bandera = 0;
+                document.getElementById('llenadoPlan').disabled = false;
             console.log('la hora aun no pasa la hora de reinicio')
             }
-
             if(bandera == 1 ){
-
                 $.ajax({
                     type: 'POST',
                     url: 'nuevoLlenadoPlan',
@@ -1040,34 +1035,34 @@ $(document).on("click",".llenadoPlan", function (e){
                                 contentType: false,
                                 cache: false,
                                 success: function (data) {
-                                    console.log('ddddddddddddddddddddddd');
-                                    alerts.showNotification("top", "right", "Se ha corrido la funcion para llenar los planes de venta.", "success");                      
                                     $('#spiner-loader').addClass('hide');
+                                    alerts.showNotification("top", "right", "Se ha corrido la funcion para llenar los planes de venta.", "success");                      
+                                   
                                     $('#tabla_dispersar_comisiones').DataTable().ajax.reload(null, false );
                                     $('#llenadoPlan').modal('toggle');
                                     document.getElementById('llenadoPlan').disabled = false;
                                 }
-                                
-                            });                    
-                            
+                            });                                       
                         }else{
                             if(data == 300 ){
-                                alerts.showNotification("top", "right", "Ups, Error  300. aun no se cumple con las 6 horas de espera.", "warning");
+                                $('#spiner-loader').addClass('hide');
+                                alerts.showNotification("top", "right", "Ups, Error  300. aun no se cumple con las 4 horas de espera.", "warning");
                             }else{
+                                $('#spiner-loader').addClass('hide');
                                 alerts.showNotification("top", "right", "Ups,al guardar la información Error 315.", "warning");  
                             }
                             // a; marcar este error es debido a que no se pudo guardar la informacion en la base
                             // al registrar un nuevo valor en historial llenado plan                        
                         }
-
                     }
                 });
 
             }else {
+                $('#spiner-loader').addClass('hide');
+                document.getElementById('llenadoPlan').disabled = false;
                 alerts.showNotification("top", "right", "Ups, aún no se cumple el tiempo de espera para volver a ejecutar.", "warning");
             }
         }
-
         });
     });
     

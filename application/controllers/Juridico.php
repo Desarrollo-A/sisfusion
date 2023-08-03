@@ -548,7 +548,7 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
     $arreglo2["idStatusContratacion"]=5;
     $arreglo2["idMovimiento"]=22;
     $arreglo2["nombreLote"]=$nombreLote;
-    $arreglo2["comentario"]=$comentario;
+    $arreglo2["comentario   "]=$comentario;
     $arreglo2["usuario"]=$this->session->userdata('id_usuario');
     $arreglo2["perfil"]=$this->session->userdata('id_rol');
     $arreglo2["modificado"]=date("Y-m-d H:i:s");
@@ -594,7 +594,7 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
           $idStatusContratacion = 1;
           $idMovimiento = 109;
       }else{
-          $idStatusContratacion = 3;
+          $idStatusContratacion = 1;
           $idMovimiento = 82;
       }
 

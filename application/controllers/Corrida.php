@@ -153,6 +153,7 @@ class Corrida extends CI_Controller {
         $tipoIM = $objDatos->tipoIM;
         $arreglo["tipoPM"] = $tipoIM;
         $arreglo["fechaInicioPM"] = $objDatos->customDate;
+//        $arreglo["fechaApartado"] = (isset($objDatos->fechaApartado)) ? $objDatos->customDate : $objDatos->fechaApartado;
         $clienteID = ($objDatos->id_cliente!=null || $objDatos->id_cliente!='') ?  $objDatos->id_cliente: 0;
 
         if($tipoIM == 3 && $clienteID>0){
@@ -2720,6 +2721,8 @@ legend {
             "nombre" => 'LOTE TEST'
         );
         $data_corrida['data_corrida'] = $this -> Corrida_model -> getInfoCorridaByID($id_corrida);
+        $fecha_formateada = explode('-', $data_corrida['data_corrida']->primer_mensualidad );
+        $data_corrida['data_corrida']->primer_mensualidad = $fecha_formateada[2].'-'.$fecha_formateada[1].'-'.$fecha_formateada[0];
         $this->load->view("corrida/editar_corrida", $data_corrida);
     }
     function update_financialR(){
@@ -2890,12 +2893,12 @@ legend {
                 for( $c = 0; $c < count($paquetes_data[$i]->descuentos); $c++ ){
                     $data_descuento = $this->Corrida_model->getDescById($paquetes_data[$i]->descuentos[$c]->id_descuento);
                     $paquete_view[$i]['response'][$c]['id_descuento'] = $data_descuento->id_descuento;
-                    $paquete_view[$i]['response'][$c]['id_tdescuento'] = $data_descuento->id_tdescuento;
-                    $paquete_view[$i]['response'][$c]['inicio'] = $data_descuento->inicio;
-                    $paquete_view[$i]['response'][$c]['fin'] = $data_descuento->fin;
+//                    $paquete_view[$i]['response'][$c]['id_tdescuento'] = $data_descuento->id_tdescuento;
+//                    $paquete_view[$i]['response'][$c]['inicio'] = $data_descuento->inicio;
+//                    $paquete_view[$i]['response'][$c]['fin'] = $data_descuento->fin;
                     $paquete_view[$i]['response'][$c]['id_condicion'] = $data_descuento->id_condicion;
                     $paquete_view[$i]['response'][$c]['porcentaje'] = (int)$data_descuento->porcentaje;
-                    $paquete_view[$i]['response'][$c]['eng_top'] = $data_descuento->eng_top;
+//                    $paquete_view[$i]['response'][$c]['eng_top'] = $data_descuento->eng_top;
                     $paquete_view[$i]['response'][$c]['apply'] = $data_descuento->apply;
                     $paquete_view[$i]['response'][$c]['leyenda'] = $data_descuento->leyenda;
                     $paquete_view[$i]['response'][$c]['prioridad'] = $data_descuento->prioridad;
