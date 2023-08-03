@@ -134,7 +134,7 @@
                                                 </div>
                                             </div>
 											<div class="row">
-                                                <div class="col-sm-12 col-md-4 col-lg-4 mb-2">
+                                                <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
                                                     <label class="control-label m-0">AÑO (<span class="isRequired">*</span>)</label>
                                                     <select class="selectpicker select-gral m-0" title="SELECCIONA UNA OPCIÓN" id="anio" required> 
                                                         <option value="2020">2020</option>
@@ -143,7 +143,7 @@
                                                         <option value="2023">2023</option>
                                                     </select>
                                                 </div>
-                                                <div class="col-sm-12 col-md-6 col-lg-6 mb-2">
+                                                <div class="col-sm-12 col-md-6 col-lg-6 p-2">
                                                     <div class="file-gph">
                                                         <input class="d-none" type="file" id="fileElm">
                                                         <input class="file-name" type="text" placeholder="NO HAS SELECCIONADO NINGÚN ARCHIVO" readonly="">
@@ -194,5 +194,4 @@
     <?php $this->load->view('template/footer');?>
     <script src="<?= base_url() ?>dist/js/controllers/clientes/xlsx.core.min.js"></script>
     <script src="<?=base_url()?>dist/js/controllers/clientes/coincidenciasProspectos.js"></script>
-
 </body>
