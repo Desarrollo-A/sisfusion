@@ -103,7 +103,7 @@ $(document).ready(function () {
             { data: function (d) {
                 var labelEstatus;
 
-                if(d.penalizacion == 1 && d.bandera_penalizacion == 0){
+                if(d.penalizacion == 1 && (d.bandera_penalizacion == 0 || d.bandera_penalizacion == 1) ){
                     labelEstatus =`<p class="m-0"><b>Penalización ${d.dias_atraso} días</b></p><span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span>`;
                 }else{
 
@@ -162,7 +162,7 @@ $(document).ready(function () {
                         if(d.fecha_modificacion != null && d.registro_comision != 8 ) {
                             RegresaActiva = '<button href="#" data-param="1" data-idpagoc="' + d.idLote + '" data-nombreLote="' + d.nombreLote + '"  ' +'class="btn-data btn-violetChin update_bandera" title="Regresar a activas">' +'<i class="fas fa-undo-alt"></i></button>';
                         }
-                        BtnStats = '<button href="#" value="'+d.idLote+'" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'"  data-penalizacion="'+d.penalizacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata" title="Verificar en NEODATA">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
+                        BtnStats = '<button href="#" value="'+d.idLote+'" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'"  data-penalizacion="'+d.penalizacion+'" data-banderaPenalizacion="'+d.bandera_penalizacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata" title="Verificar en NEODATA">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
                         BtnStats += `<button href="#" value="${d.idLote}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas btn-detener btn-warning" title="Detener"> <i class="material-icons">block</i> </button>`;
                     }
                 }
@@ -265,7 +265,8 @@ $(document).ready(function () {
             plan_comision = $(this).attr("data-plan");
             descripcion_plan = $(this).attr("data-descplan");
             tipo_venta = $(this).attr("data-tipov");
-    
+            bandera_penalizacion = $(this).attr("data-banderaPenalizacion");
+
             if(parseFloat(totalNeto2) > 0){
                 
                 $("#modal_NEODATA .modal-body").html("");
@@ -279,7 +280,7 @@ $(document).ready(function () {
                             case 1:
                                 if(registro_comision == 0 || registro_comision ==8 || registro_comision == 2){
                                     //COMISION NUEVA
-                                    let total0 = parseFloat(data[0].Aplicado);
+                                    let total0 = parseFloat(10000);
                                     let total = 0;
                                     if(total0 > 0){
                                         total = total0;
@@ -379,6 +380,7 @@ $(document).ready(function () {
                                         porcentaje_abono = parseFloat(porcentaje_abono) + parseFloat(v.porcentaje_decimal);
                                         
                                         $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-3">
+                                        <input type="hidden" name="penalizacion" id="penalizacion" value="${penalizacion}">
                                                 <input id="id_usuario" type="hidden" name="id_usuario[]" value="${v.id_usuario}"><input id="id_rol" type="hidden" name="id_rol[]" value="${v.id_rol}"><input id="num_usuarios" type="hidden" name="num_usuarios[]" value="${v.num_usuarios}"> 
                                                 <input class="form-control ng-invalid ng-invalid-required" required readonly="true" value="${v.nombre}" style="font-size:12px;"><b><p style="font-size:12px;">${v.detail_rol}</p></b></div>
                                                 <div class="col-md-1"><input class="form-control ng-invalid ng-invalid-required" name="porcentaje[]"  required readonly="true" type="hidden" value="${v.porcentaje_decimal % 1 == 0 ? parseInt(v.porcentaje_decimal) : parseFloat(v.porcentaje_decimal)}"><input class="form-control ng-invalid ng-invalid-required" required readonly="true" value="${v.porcentaje_decimal % 1 == 0 ? parseInt(v.porcentaje_decimal) : v.porcentaje_decimal.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0]}%"></div>
@@ -689,8 +691,8 @@ $("#form_NEODATA").submit( function(e) {
                     function_totales();
                     $('#dispersar').prop('disabled', false);
                     document.getElementById('dispersar').disabled = false;
-                    console.log('data para mostrar:');
-                    console.log(formulario);
+                    // console.log('data para mostrar:');
+                    // console.log(formulario);
                     $.ajax({
                         url: general_base_url + 'Comisiones/ultimaDispersion',
                         data: formulario,
@@ -701,16 +703,10 @@ $("#form_NEODATA").submit( function(e) {
                         method: 'POST',
                         type: 'POST', 
                         success:function(data){
-                                console.log(data.response_code)
-                            numerosDispersion();
-                        
-                        
-                        
+                        // console.log(data.response_code)
+                        numerosDispersion();
                         }
                     })
-                 
-                    
-
                 } else if (data == 2) {
                     $('#spiner-loader').addClass('hidden');
                     alerts.showNotification("top", "right", "Ya se dispersó por otra persona o es una recisión", "warning");
