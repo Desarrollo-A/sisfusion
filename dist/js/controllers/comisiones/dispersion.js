@@ -268,7 +268,7 @@ $(document).ready(function () {
             tipo_venta = $(this).attr("data-tipov");
             bandera_penalizacion = $(this).attr("data-banderaPenalizacion");
 
-            if(parseFloat(totalNeto2) > 0){
+            if(parseFloat(totalNeto2) > 0 && registro_comision == 0){
                 
                 $("#modal_NEODATA .modal-body").html("");
                 $("#modal_NEODATA .modal-footer").html("");
