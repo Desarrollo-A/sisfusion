@@ -67,7 +67,13 @@ class Comisiones extends CI_Controller
       }
     }
     
+    public function updateBandera(){
+      $id_pagoc     = $this->input->post('id_pagoc');
+      $param   = $this->input->post('param');
 
+      $response = $this->Comisiones_model->updateBandera( $param, $id_pagoc);
+      echo json_encode($response);
+    }
 
   public function activas() {
     if ($this->session->userdata('id_rol') == FALSE)
@@ -2778,14 +2784,6 @@ public function LiquidarLote(){
 
       $dato = $this->Comisiones_model->getPrestamoxUser($IdUsuario ,$tipo)->result_array();
      
-      // if($_FILES["evidencia"]["name"] != '' && $_FILES["evidencia"]["name"] != null){
-      // $aleatorio = rand(100,1000);
-      // $namedoc  = preg_replace('[^A-Za-z0-9]', '',$_FILES["evidencia"]["name"]); 
-      // $date = date('dmYHis');
-      // $expediente = $date."_".$aleatorio."_prestamo";
-      // $ruta = "static/documentos/evidencia_prestamo_auto/";
-
-      // if (move_uploaded_file($_FILES["evidencia"]["tmp_name"], $ruta.$expediente)) {
       if(empty($dato)){
               $pesos=str_replace("$", "", $monto);
         $comas =str_replace(",", "", $pesos);
@@ -5347,13 +5345,7 @@ for ($d=0; $d <count($dos) ; $d++) {
             'detalle' => $detalle
         ));
     }
-    public function updateBandera(){
-      $id_pagoc     = $this->input->post('id_pagoc');
-      $param   = $this->input->post('param');
 
-      $response = $this->Comisiones_model->updateBandera( $param, $id_pagoc);
-      echo json_encode($response);
-    }
     public function updateBanderaDetenida() {
       $idLote     = $this->input->post('idLote');
       $bandera     = true;
