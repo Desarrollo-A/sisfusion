@@ -73,11 +73,7 @@ $('#tabla_asimilados thead tr:eq(0) th').each( function (i) {
         $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>');
         $('input', this).on('keyup change', function() {
             if (tabla_asimilados2.column(i).search() !== this.value) {
-                tabla_asimilados2
-                .column(i)
-                .search(this.value)
-                .draw();
-
+                tabla_asimilados2.column(i).search(this.value).draw();
                 var total = 0;
                 var index = tabla_asimilados2.rows({
                 selected: true,
@@ -107,7 +103,6 @@ function getAssimilatedCommissions(proyecto, condominio){
         var to = formatMoney(total);
         document.getElementById("totpagarAsimilados").textContent = '$' + to;
     });
-
     $("#tabla_asimilados").prop("hidden", false);
     tabla_asimilados2 = $("#tabla_asimilados").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -255,13 +250,11 @@ function getAssimilatedCommissions(proyecto, condominio){
             "width": "3%" 
         },
         {
-            "width": "5%",
             "data": function( d ){
                 return '<p class="m-0">'+d.id_pago_i+'</p>';
             }
         },
         {
-            "width": "3%",
             "data": function( d ){
                 return '<p class="m-0">'+d.proyecto+'</p>';
             }

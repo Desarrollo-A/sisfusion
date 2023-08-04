@@ -93,7 +93,7 @@ function fillTable(index_proyecto, index_condominio) {
         },
         processing: true,
         pageLength: 10,
-        bAutoWidth: false,
+        bAutoWidth: true,
         bLengthChange: false,
         scrollX: true,
         bInfo: true,

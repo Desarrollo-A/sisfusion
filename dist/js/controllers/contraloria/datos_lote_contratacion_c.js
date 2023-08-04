@@ -339,29 +339,22 @@ $(document).on('change', '#proyecto, #condominio, #estatus', function () {
             },
             {
                 "data": function (d) {
-
-
                     if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10 || d.idStatusLote == 11 || d.idStatusLote == 4
                         || d.idStatusLote == 6 || d.idStatusLote == 7) {
-
                         if (d.motivo_change_status == 'NULL' || d.motivo_change_status == 'null' || d.motivo_change_status == null) {
                             return ' - ';
                         }
                         else {
                             return '<p>' + d.motivo_change_status + '</p>';
                         }
-
                     } else {
-
                         if (d.comentario == 'NULL' || d.comentario == 'null' || d.comentario == null) {
                             return ' - ';
                         }
                         else {
                             return '<p>' + d.comentario + '</p>';
                         }
-
                     }
-
                 }
             },
             {
@@ -408,14 +401,10 @@ $(document).on('change', '#proyecto, #condominio, #estatus', function () {
             },
             {
                 "data": function (d) {
-                    $('[data-toggle="tooltip"]').tooltip({
-                        trigger: "hover"
-                    });
                     return '<center><button class="btn-data btn-green ver_historial" value="' + d.idLote + '" data-nomLote="' + d.nombreLote + '"  data-tipo-venta="' + d.tipo_venta + '" data-toggle="tooltip" data-placement="top" title="Ver detalles generales"><i class="fas fa-history"></i></button></center>';
                 }
             }]      
     });
-
     $(window).resize(function () {
         tabla_inventario.columns.adjust();
     });
@@ -433,9 +422,7 @@ $(document).on("click", ".ver_historial", function () {
     var row = tabla_inventario.row(tr);
     idLote = $(this).val();
     var $itself = $(this);
-
     var element = document.getElementById("li_individual_sales");
-
     if ($itself.attr('data-tipo-venta') == 'Venta de particulares') {
         $.getJSON(`${general_base_url}Contratacion/getClauses/` + idLote).done(function (data) {
             $('#clauses_content').html(data[0]['nombre']);
@@ -445,28 +432,23 @@ $(document).on("click", ".ver_historial", function () {
         element.classList.add("hide");
         $('#clauses_content').html('');
     }
-
     $("#seeInformationModal").on("hidden.bs.modal", function () {
         $("#changeproces").html("");
         $("#changelog").html("");
         $('#nomLoteHistorial').html("");
     });
     $("#seeInformationModal").modal();
-
     var urlTableFred = '';
     $.getJSON(`${general_base_url}Contratacion/obtener_liberacion/` + idLote).done(function (data) {
         urlTableFred = `${general_base_url}Contratacion/obtener_liberacion/` + idLote;
         fillFreedom(urlTableFred);
     });
-
-
     var urlTableHist = '';
     $.getJSON(`${general_base_url}Contratacion/historialProcesoLoteOp/` + idLote).done(function (data) {
         $('#nomLoteHistorial').html($itself.attr('data-nomLote'));
         urlTableHist = `${general_base_url}Contratacion/historialProcesoLoteOp/` + idLote;
         fillHistory(urlTableHist);
     });
-
     var urlTableCSA = '';
     $.getJSON(`${general_base_url}Contratacion/getCoSallingAdvisers/` + idLote).done(function (data) {
         urlTableCSA = `${general_base_url}Contratacion/getCoSallingAdvisers/` + idLote;
@@ -508,7 +490,6 @@ function fillProceso(i, v) {
         '</h6>\n' +
         '</div>\n' +
         '</li>');
-
     // comentario, perfil, modificado,
 }
 
@@ -584,7 +565,6 @@ function fillHistory(urlTableHist) {
             { "data": "comentario" },
             { "data": "modificado" },
             { "data": "usuario" }
-
         ],
         "ajax":
         {
@@ -593,7 +573,7 @@ function fillHistory(urlTableHist) {
         },
         initComplete: function () {
             $('[data-toggle="tooltip"]').tooltip({
-                trigger: "hover"
+                trigger: "hover",
             });
         }
     });
@@ -616,7 +596,6 @@ $('#verDetBloqueo thead tr:eq(0) th').each(function (i) {
 function fillFreedom(urlTableFred) {
     tableHistorialBloqueo = $('#verDetBloqueo').DataTable({
         responsive: true,
-
         dom: "<'container-fluid pb-1 p-0'<'row'<'col-xs-12 col-sm-6 col-md-6 col-lg-6'B><'col-xs-12 col-sm-6 col-md-6 col-lg-6'f>>>" + "rt" + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width:"100%",
         buttons: [
@@ -672,7 +651,6 @@ function fillFreedom(urlTableFred) {
             { "data": "modificado" },
             { "data": "observacionLiberacion" },
             { "data": "userLiberacion" }
-
         ],
         "ajax":
         {
@@ -754,7 +732,6 @@ function fillCoSellingAdvisers(urlTableCSA) {
             { "data": "gerente" },
             { "data": "fecha_creacion" },
             { "data": "creado_por" }
-
         ],
         "ajax":
         {

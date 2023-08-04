@@ -33,7 +33,6 @@
 				</div>
 			</div>
 		</div>
-
 		<div class="content boxContent">
 			<div class="container-fluid">
 				<div class="row">
@@ -117,7 +116,6 @@
 	</div>
 	</div>
 	<?php $this->load->view('template/footer'); ?>
-	
 	<script src="<?= base_url() ?>dist/js/modal-steps.min.js"></script>
 	<?php if ($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 5) { ?>
 		<script src="<?= base_url() ?>dist/js/controllers/general-1.1.0.js"></script>

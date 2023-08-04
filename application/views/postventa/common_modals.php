@@ -70,12 +70,12 @@
 </div>
 
 <div class="modal fade" id="comentariosModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-body">
                 <div class="container mt-5 mb-5">
                     <div class="row">
-                        <div class="col-md-6 offset-md-3">
+                        <div class="col-md-8 offset-md-3">
                             <p id="titulo_comentarios"></p>
                             <div class="tab-content">
                                 <div class="row">

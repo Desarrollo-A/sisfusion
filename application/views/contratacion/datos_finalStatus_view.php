@@ -8,9 +8,7 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
-                            <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                <i class="fas fa-bookmark fa-2x"></i>
-                            </div>
+                            <div class="card-header card-header-icon" data-background-color="goldMaderas"><i class="fas fa-bookmark fa-2x"></i></div>
                             <div class="card-content">
                                 <h3 class="card-title center-align">Reporte último estatus </h3>
                                 <div  class="toolbar">
@@ -18,17 +16,11 @@
                                         <div class="row ">
                                             <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 overflow-hidden">
                                                 <label class="control-label">Sedes por proyecto</label>
-                                                <select name="sedes" id="sedes" class="selectpicker select-gral m-0"
-                                                        data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN"
-                                                        data-size="7" data-live-search="true" data-container="body" required>
-                                                </select>
+                                                <select name="sedes" id="sedes" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required></select>
                                             </div> 
                                             <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 overflow-hidden hide" id="div_proyectos">
                                                 <label class="control-label">Proyecto</label>
-                                                <select name="residenciales" id="residenciales" class="selectpicker select-gral m-0"
-                                                        data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" 
-                                                        data-size="7" data-live-search="true" data-container="body" >
-                                                </select>
+                                                <select name="residenciales" id="residenciales" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" ></select>
                                             </div>
                                         </div>
                                     </div>
@@ -72,10 +64,8 @@
             </div>
         </div>
         <?php $this->load->view('template/footer_legend');?>
-
     </div>
 <?php $this->load->view('template/footer');?>
-<!--DATATABLE BUTTONS DATA EXPORT-->
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>

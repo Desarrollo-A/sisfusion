@@ -169,7 +169,6 @@ function historialCampoHtml(data) {
         <div class="row p-0">
             <div class="col-md-12 offset-md-3 p-0 scroll-styles" style="height: 350px; overflow: auto">
                 <ul class="timeline-3">
-
             `;
 
     data.forEach(columna => {
@@ -183,11 +182,8 @@ function historialCampoHtml(data) {
             <p class="m-0">USUARIO: <b>${(cambio.usuario) ? cambio.usuario : ''} </b></p>
             <p class="m-0">CAMPO ANTERIOR:<b> ${(cambio.anterior != '') ? cambio.anterior : 'VACIO'} </b></p>
             <p class="m-0">CAMPO NUEVO:<b> ${cambio.nuevo}</b></p>
-
-          </li>
-       `;
+        </li>`;
         });
-
     });
     dataTable += '</ul></div></div></div>';
     return dataTable;
@@ -199,37 +195,29 @@ if(id_rol_general == 7 || id_usuario_general == 2752 || id_usuario_general == 28
         let valor_nacionalidad = $('select[name="nacionalidad"] option:selected').text();
         $(".datos_select").append('<input type="hidden" name="nac_select" id="nac_select" value="'+valor_nacionalidad+'">');
     });
-
     $("#estado_civil").change(function(){
         let valor_estado_civil = $('select[name="estado_civil"] option:selected').text();
         $(".datos_select").append('<input type="hidden" name="ecivil_select" id="ecivil_select" value="'+valor_estado_civil+'">');
     });
-
-
     $("#regimen_matrimonial").change(function(){
         let valor_regimen = $('select[name="regimen_matrimonial"] option:selected').text();
         $(".datos_select").append('<input type="hidden" name="regimen_select" id="regimen_select" value="'+valor_regimen+'">');
     });
-
     $("#parentezco").change(function(){
         let valor_parentezco = $('select[name="parentezco"] option:selected').text();
         $(".datos_select").append('<input type="hidden" name="parentezco_select1" id="parentezco_select1" value="'+valor_parentezco+'">');
     });
-
     $("#parentezco").change(function(){
         let valor_parentezco = $('select[name="parentezco"] option:selected').text();
         $(".datos_select").append('<input type="hidden" name="parentezco_select2" id="parentezco_select2" value="'+valor_parentezco+'">');
     });
-
     const checkbox = document.getElementById("rfc_check");
     const campo1 = document.getElementById("rfc");
     const campo2 = document.getElementById("rfcl");
     const campo3 = document.getElementById("regimenl");
     const campo5 = document.getElementById("codigol");
     const campo6 = document.getElementById("cp_fac");
-
     checkbox.addEventListener("change", function() {
-
         if (checkbox.checked) {
             $('#regimenFiscal').prop('required',true);
             $('#rfc').prop('required',true);
@@ -250,7 +238,6 @@ if(id_rol_general == 7 || id_usuario_general == 2752 || id_usuario_general == 28
             campo6.style.display = "none";
         }
     });
-
     window.onscroll = () => {
         const nav = document.querySelector('#sectionBtns');
         if(this.scrollY <= 10) nav.className = ''; else nav.className = 'scroll';
@@ -271,12 +258,10 @@ $(document).on('click', '#copropietario-collapse', function () {
 
 $(document).on('submit', '#deposito-seriedad-form', function (e) {
     e.preventDefault();
-
     if (!$("input[name='tipo_vivienda']").is(':checked')) {
         alerts.showNotification('top', 'right', 'Debes seleccionar un tipo de vivienda', 'danger');
         return;
     }
-
     if (!$("input[name='tipoNc_valor']").is(':checked')) {
         alerts.showNotification('top', 'right', 'Debes seleccionar el tipo de residencia', 'danger');
         $('#tipoNc_valor').focus();
@@ -288,7 +273,6 @@ $(document).on('submit', '#deposito-seriedad-form', function (e) {
         },1500);
         return;
     }
-
     if (!$("input[name='imprimePagare']").is(':checked')  && ($('input[name=tipoNc_valor]:checked').val() == 1)) {
             alerts.showNotification('top', 'right', 'Debes seleccionar la opción de pagares', 'danger');
             $('.imprimePagare').focus();
@@ -300,7 +284,6 @@ $(document).on('submit', '#deposito-seriedad-form', function (e) {
             }, 1500);
             return;
     }
-
     if (!$("input[name='tipo_comprobante']").is(':checked') && ($('input[name=tipoNc_valor]:checked').val() == 1)) {
         alerts.showNotification('top', 'right', 'Debes seleccionar si requieres la carta de domicilio', 'danger');
         $('.tipo_comprobante').focus();
@@ -312,15 +295,12 @@ $(document).on('submit', '#deposito-seriedad-form', function (e) {
         }, 1500);
         return;
     }
-
     const costoListaM2 = parseFloat($('#costoM2').val().replace('$', '').replace(',', ''));
     const costoFinalM2 = parseFloat($('#costom2f').val().replace('$', '').replace(',', ''));
-
     if (costoFinalM2 > costoListaM2 || costoFinalM2 < ((costoListaM2 * .80))) {
         alerts.showNotification('top', 'right', 'El COSTO POR M2 FINAL no debe ser superior al COSTO POR M2 LISTA ni debe ser inferior al 20% de descuento del COSTO POR M2 LISTA.', 'danger');
         return;
     }
-
     if (!validateInputArray('telefono2_cop[]', 'Celular')) {
         return;
     }
@@ -342,11 +322,8 @@ $(document).on('submit', '#deposito-seriedad-form', function (e) {
     if (!validateInputArray('edadFirma_cop[]', 'Edad firma')) {
         return;
     }
-
     const data = new FormData(this);
-
     $('#depositoSeriedadGuardar').attr('disabled', true);
-
     $.ajax({
         url: `${general_base_url}Asesor/editar_ds`,
         data: data,
@@ -357,15 +334,12 @@ $(document).on('submit', '#deposito-seriedad-form', function (e) {
         success: function (response) {
             const res = JSON.parse(response);
             $('#depositoSeriedadGuardar').attr('disabled', false);
-
             if (res.code === 200) {
                 alerts.showNotification("top", "right", 'Datos guardados con éxito', "success");
             }
-
             if (res.code === 400) {
                 alerts.showNotification("top", "right", res.message, "warning");
             }
-
             if (res.code === 500) {
                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
             }
@@ -390,6 +364,5 @@ function validateInputArray(input, campo) {
             result = false;
         }
     }
-
     return result;
 }
