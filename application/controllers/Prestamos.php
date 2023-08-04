@@ -61,7 +61,7 @@ class Prestamos extends CI_Controller
           'detalle' => $detalle
       ));
   }
-
+ 
   public function lista_estatus_descuentos()
   {
     echo json_encode($this->Prestamos_model->lista_estatus_descuentos()->result_array());
