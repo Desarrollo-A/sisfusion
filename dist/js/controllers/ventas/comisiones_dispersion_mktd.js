@@ -19,6 +19,9 @@ $("#tabla_plaza_1").ready( function(){
                 document.getElementById("myText_nuevas").textContent = formatMoney(total);
             }
         });
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
     }); 
     let c=0;
     $('#tabla_plaza_1').on('xhr.dt', function ( e, settings, json, xhr ) {
@@ -41,7 +44,7 @@ $("#tabla_plaza_1").ready( function(){
             titleAttr: 'Descargar archivo de Excel',
             title: 'LISTADO COMISIONES PLAZA 1',    
             exportOptions: {
-                columns: [0,1,2,3,6],
+                columns: [0,1,2,3,4,5,6],
                 format: 
                 {
                     header:  function (d, columnIdx) {
@@ -117,12 +120,6 @@ $("#tabla_plaza_1").ready( function(){
         },
     });
 
-    $('#tabla_plaza_1').on('draw.dt', function() {
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
-    });
-
     $("#tabla_plaza_1 tbody").on("click", ".dispersar_colaboradores", function(){
         $("#btnplz1").button({ disabled: false });
         var tr = $(this).closest('tr');
@@ -178,26 +175,30 @@ $("#tabla_plaza_1").ready( function(){
     });
 });
 
-$("#tabla_plaza_2").ready( function(){
-    let titulos = [];
-    $('#tabla_plaza_2 thead tr:eq(0) th').each( function (i) {
-        var title = $(this).text();
-        titulos.push(title);
-        $(this).html('<input type="text" data-toggle="tooltip" data-placement="top" title="' + title + '" class="textoshead" placeholder="'+title+'"/>' );
-        $( 'input', this ).on('keyup change', function () {
-            if (plaza_2.column(i).search() !== this.value ) {
-                plaza_2.column(i).search(this.value).draw();
-                var total = 0;
-                var index = plaza_2.rows({ selected: true, search: 'applied' }).indexes();
-                var data = plaza_2.rows( index ).data();
-                $.each(data, function(i, v){
-                    total += parseFloat(v.total);
-                });
-                var to1 = formatMoney(total);
-                document.getElementById("myText_proceso").textContent = formatMoney(total);
-            }
-        });
+let titulos = [];
+$('#tabla_plaza_2 thead tr:eq(0) th').each( function (i) {
+    var title = $(this).text();
+    titulos.push(title);
+    $(this).html('<input data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="'+title+'"/>' );
+    $( 'input', this ).on('keyup change', function () {
+        if (plaza_2.column(i).search() !== this.value) {
+            plaza_2.column(i).search(this.value).draw();    
+            var total = 0;
+            var index = plaza_2.rows({ selected: true, search: 'applied' }).indexes();
+            var data = plaza_2.rows( index ).data();
+            $.each(data, function(i, v){
+                total += parseFloat(v.total);
+            });
+            var to1 = formatMoney(total);
+            document.getElementById("myText_proceso").textContent = formatMoney(total);
+        }
     });
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
+    });
+});
+
+$("#tabla_plaza_2").ready( function(){
     let c=0;
     $('#tabla_plaza_2').on('xhr.dt', function ( e, settings, json, xhr ) {
         var total = 0;
@@ -295,10 +296,8 @@ $("#tabla_plaza_2").ready( function(){
         },
     });
 
-    $('#tabla_plaza_2').on('draw.dt', function() {
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
+        $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
     });
 
     $("#tabla_plaza_2 tbody").on("click", ".dispersar_colaboradores", function(){
@@ -361,7 +360,7 @@ $("#tabla_compartidas").ready( function(){
     $('#tabla_compartidas thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
         titulos.push(title);
-        $(this).html('<input type="text" data-toggle="tooltip" data-placement="top" title="' + title + '" class="textoshead" placeholder="'+title+'"/>' );
+        $(this).html('<input type="text" data-toggle="tooltip" data-placement="top" title="' + title + '" class="textoshead" placeholder="'+title+'"/>');
         $( 'input', this ).on('keyup change', function () {
             if (plaza_c.column(i).search() !== this.value ) {
                 plaza_c.column(i).search(this.value).draw();
@@ -374,6 +373,9 @@ $("#tabla_compartidas").ready( function(){
                 var to1 = formatMoney(total);
                 document.getElementById("myText_comp").textContent = formatMoney(total);
             }
+        });
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
         });
     });
     let c=0;
@@ -473,12 +475,6 @@ $("#tabla_compartidas").ready( function(){
         },
     });
 
-    $('#tabla_compartidas').on('draw.dt', function() {
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
-    });
-
     $("#tabla_compartidas tbody").on("click", ".dispersar_colaboradores", function(){
         $("#btnplz2").button({ disabled: false });
         var tr = $(this).closest('tr');
@@ -559,22 +555,23 @@ $("#tabla_compartidas").ready( function(){
 
 $("#tabla_planes").ready( function(){
     $('#tabla_planes thead tr:eq(0) th').each( function (i) {
-        if( i!=0 && i!=10){
-            var title = $(this).text();
-            $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
-            $( 'input', this ).on('keyup change', function () {
-                if (tabla_planes.column(i).search() !== this.value ) {
-                    tabla_planes.column(i).search(this.value).draw();
-                    var total = 0;
-                    var index = tabla_planes.rows({ selected: true, search: 'applied' }).indexes();
-                    var data = tabla_planes.rows( index ).data();
-                    $.each(data, function(i, v){
-                        total += parseFloat(v.pago_cliente);
-                    });
-                    var to1 = formatMoney(total);
-                }
-            });
-        }
+        var title = $(this).text();
+        $(this).html('<input type="text" data-toggle="tooltip" data-placement="top" title="' + title + '" class="textoshead" placeholder="'+title+'"/>');
+        $( 'input', this ).on('keyup change', function () {
+            if (tabla_planes.column(i).search() !== this.value ) {
+                tabla_planes.column(i).search(this.value).draw();
+                var total = 0;
+                var index = tabla_planes.rows({ selected: true, search: 'applied' }).indexes();
+                var data = tabla_planes.rows( index ).data();
+                $.each(data, function(i, v){
+                    total += parseFloat(v.pago_cliente);
+                });
+                var to1 = formatMoney(total);
+            }
+        });
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
     });
     $('#tabla_planes').on('xhr.dt', function ( e, settings, json, xhr ) {
         var total = 0;
@@ -584,7 +581,7 @@ $("#tabla_planes").ready( function(){
         var to = formatMoney(total);
     });
     tabla_planes = $("#tabla_planes").DataTable({
-        dom: 'rt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
         bAutoWidth: true,
@@ -704,7 +701,6 @@ $(document).on( "click", ".nuevo_plan", function(){
             +'<div class="col-md-2"><select id="plazaMKTDSelect'+i+'" name="plazaMKTDSelect[]" class="form-control plazaMKTDSelect select-gral" data-live-search="true"></select></div>'
             +'<div class="col-md-2"><select id="sedeMKTDSelect'+i+'" name="sedeMKTDSelect[]" class="form-control sedeMKTDSelect select-gral" data-live-search="true"></select></div></div>');
             $.post('getUserMk', function(data) {
-                $("#userMKTDSelect"+i+"").append($('<option disabled>').val("default").text("Seleccione una opción"));
                 var len = data.length;
                 for( var j = 0; j<len; j++){
                     var id = data[j]['id_usuario'];
@@ -719,7 +715,6 @@ $(document).on( "click", ".nuevo_plan", function(){
                 $("#userMKTDSelect"+i+"").selectpicker('refresh');
             }, 'json');
             $.post('getPlazasMk', function(data) {
-                $("#plazaMKTDSelect"+i+"").append($('<option disabled>').val("default").text("Seleccione una opción"))
                 var len = data.length;
                 for( var j = 0; j<len; j++){
                     var id = data[j]['id_opcion'];
@@ -733,7 +728,6 @@ $(document).on( "click", ".nuevo_plan", function(){
                 $("#plazaMKTDSelect"+i+"").selectpicker('refresh');
             }, 'json');
             $.post('getSedeMk', function(data) {
-                $("#sedeMKTDSelect"+i+"").append($('<option disabled>').val("default").text("Seleccione una opción"))
                 var len = data.length;
                 for( var j = 0; j<len; j++){
                     var id = data[j]['id_sede'];
@@ -755,7 +749,7 @@ $(document).on( "click", ".nuevo_plan", function(){
             }, 'json'); 
         });
     });
-    $("#modal_mktd .modal-footer").append('<br><div class="row"><div class="col-md-12"><center><input type="submit" id="btnsubmit" class="form-control input-gral" value="GUARDAR"></center></div></div>');
+    $("#modal_mktd .modal-footer").append('<br><div class="row d-flex align-center"><div class="col-md-9"><button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button></div><div class="col-md-3"><center><input type="submit" id="btnsubmit" class="btn btn-primary" value="GUARDAR"></center></div></div>');
     $("#modal_mktd").modal();
 });
 
@@ -956,11 +950,6 @@ function cleanComments(){
 $(window).resize(function(){
     plaza_1.columns.adjust();
     plaza_2.columns.adjust();
-});
-
-$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-    $($.fn.dataTable.tables(true)).DataTable()
-    .columns.adjust();
 });
 
 $(document).ready( function(){
