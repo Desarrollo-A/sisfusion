@@ -139,7 +139,7 @@ function generateToken(obj){
 }
 
 function buildURL(token){
-    let url = `${base_url}Evidencias/evidenciaUser/?jwt=${token}`;
+    let url = `${general_base_url}Evidencias/evidenciaUser/?jwt=${token}`;
     return url;
 }
 
