@@ -3190,7 +3190,7 @@
 				$where_sede = '';
 				if ($id_usuario == 30) // MJ: VALERIA PALACIOS VERÁ LO DE SLP + TIJUANA
 					$where = "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('$id_sede', '8'))";
-				else if (in_array($id_usuario, array(7096, 7097, 10924, 7324, 5620))) { // MJ: EDGAR, GRISELL Y DALIA VERÁN LO DE CDMX, SMA, EDOMEXO Y EDOMEXP
+				else if (in_array($id_usuario, array(7096, 7097, 10924, 7324, 5620, 13094))) { // MJ: EDGAR, GRISELL Y DALIA VERÁN LO DE CDMX, SMA, EDOMEXO Y EDOMEXP
 					$where_sede = 'AND clientes.id_sede IN(4, 9, 13, 14)';
 					$where = "(SELECT id_usuario FROM usuarios WHERE (id_rol = 3 AND id_sede IN ('$id_sede', '9', '13', '14')) OR id_usuario IN (7092, 690))";
 				}
