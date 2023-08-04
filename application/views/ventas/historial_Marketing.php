@@ -11,14 +11,14 @@
         }
         ?>
         <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons" onclick="cleanCommentsAsimilados()">clear</i></button>
                     </div>
                     <div class="modal-body">
                         <div role="tabpanel">
-                            <ul class="nav nav-tabs" role="tablist" style="background: #949494;">
+                            <ul class="nav" role="tablist">
                                 <div id="nameLote"></div>
                             </ul>
                             <div class="tab-content">
@@ -27,7 +27,7 @@
                                         <div class="col-md-12">
                                             <div class="card card-plain">
                                                 <div class="card-content">
-                                                    <ul class="timeline timeline-simple" id="comments-list-asimilados"></ul>
+                                                    <ul class="timeline-3" id="comments-list-asimilados"></ul>
                                                 </div>
                                             </div>
                                         </div>
@@ -57,10 +57,10 @@
                                 </div>
                                 <div class="toolbar">
                                     <div class="row">
-                                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                                        <div class="col-12 col-sm-12 col-md-12 col-lg-6 overflow-hidden">
                                             <div class="form-group">
                                                 <label for="proyecto">Proyecto</label>
-                                                <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona un proyecto" data-size="7" required> <option value="0">Seleccione todo</option>
+                                                <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-container="body" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" required> <option value="0">SELECCIONE TODO</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -75,27 +75,25 @@
                                                 <?php
                                             }
                                         ?>
-                                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                                        <div class="col-12 col-sm-12 col-md-12 col-lg-6 overflow-hidden">
                                             <div class="form-group">
                                                 <label>Condominio</label>
-                                                <select class="selectpicker select-gral" id="filtro44" name="filtro44[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona un condominio" data-size="7" required/>
-                                                </select>
+                                                <select class="selectpicker select-gral" id="filtro44" name="filtro44[]" data-style="btn " data-show-subtext="true" data-live-search="true" data-container="body" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="material-datatables">
                                     <div class="form-group">
-                                        <div class="table-responsive">
-                                            <table class="table-striped table-hover" id="tabla_historialGral" name="tabla_historialGral"><thead>
+                                        <table class="table-striped table-hover" id="tabla_historialGral" name="tabla_historialGral"><thead>
                                                 <tr>
-                                                    <th >ID</th>
-                                                    <th>PROY.</th>
+                                                    <th>ID</th>
+                                                    <th>PROYECTO</th>
                                                     <th>CONDOMINIO</th>
                                                     <th>LOTE</th>
-                                                    <th>REF.</th>
+                                                    <th>REFERENCIAS</th>
                                                     <th>PRECIO LOTE</th>
-                                                    <th>TOTAL COM.</th>
+                                                    <th>TOTAL COMISION</th>
                                                     <th>PAGO CLIENTE</th>
                                                     <th>DISPERSADO</th>
                                                     <th>PAGADO</th>
@@ -104,10 +102,10 @@
                                                     <th>PLAZA MKTD</th>
                                                     <th>DETALLE</th>
                                                     <th>ESTATUS</th>
-                                                    <th>MÁS</th>
+                                                    <th>ACCIONES</th>
                                                 </tr>
                                             </thead>
-                                        </table>  
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -115,9 +113,8 @@
                     </div>
                 </div>
             </div>
+            <?php $this->load->view('template/footer_legend');?>
         </div>
-        <?php $this->load->view('template/footer_legend');?>
-    </div>
     </div>
     <?php $this->load->view('template/footer');?>
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/historial_marketing.js"></script>

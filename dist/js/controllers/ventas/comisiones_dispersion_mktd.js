@@ -5,7 +5,7 @@ $("#tabla_plaza_1").ready( function(){
     $('#tabla_plaza_1 thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
         titulos.push(title);
-        $(this).html('<input type="text" class="textoshead" id="t-'+i+'"  placeholder="'+title+'"/>' );
+        $(this).html('<input type="text" data-toggle="tooltip" data-placement="top" class="textoshead" id="t-'+i+'" title="' + title + '" placeholder="'+title+'"/>' );
         $( 'input', this ).on('keyup change', function () {
             if (plaza_1.column(i).search() !== this.value ) {
                 plaza_1.column(i).search(this.value).draw();
@@ -99,7 +99,7 @@ $("#tabla_plaza_1").ready( function(){
         { 
             "orderable": false,
             "data": function( d ){
-                return '<div class="d-flex justify-center"><button class="btn-data btn-orangeYellow dispersar_colaboradores" id="btndispersar" title="PARCIALIDAD" value="' + d.id_plan +'" data-residencial="'+d.idResidencial+'" data-empresa="'+d.empresa+'" data-value="' + d.ubicacion_dos +'"><i class="fas fa-chart-pie"></i></button></div>';   
+                return '<div class="d-flex justify-center"><button class="btn-data btn-orangeYellow dispersar_colaboradores" id="btndispersar" data-toggle="tooltip" data-placement="top" title="PARCIALIDAD" value="' + d.id_plan +'" data-residencial="'+d.idResidencial+'" data-empresa="'+d.empresa+'" data-value="' + d.ubicacion_dos +'"><i class="fas fa-chart-pie"></i></button></div>';   
             }
         }],
         columnDefs: [{
@@ -115,6 +115,12 @@ $("#tabla_plaza_1").ready( function(){
             cache: false,
             data: function( d ){}
         },
+    });
+
+    $('#tabla_plaza_1').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
     });
 
     $("#tabla_plaza_1 tbody").on("click", ".dispersar_colaboradores", function(){
@@ -153,7 +159,7 @@ $("#tabla_plaza_1").ready( function(){
                 $.each( data1, function( i, v){
                     valor_money = (( parseFloat(v.porcentaje) /100)* parseFloat(suma_01))
                     $("#modal_colaboradores .modal-body #cuerpo").append('<div class="row"><input type="hidden" name="user_mktd[]" value="'+v.id_usuario+'"><div class="col-md-5"><b style="font-size:14px;"><p>'+v.colaborador+'</p></b><p style="font-size:12px;">'+v.rol+'</p></div>'
-                    +'<div class="col-md-2"><input type="text" name="porcentaje_mktd[]" readonly class="form-control ng-pristine ng-invalid ng-invalid-required ng-touched" value="'+v.porcentaje+'%'+'"></div>'+'<div class="col-md-1"><b><p style="text-align:right">$</p></b></div><div class="col-md-4"><input type="text" readonly name="abono_mktd[]" id="abono_mktd_'+i+'"  class="form-control ng-pristine ng-invalid ng-invalid-required ng-touched" value="'+parseFloat(valor_money.toFixed(3))+'"></div>'
+                    +'<div class="col-md-2"><input type="text" name="porcentaje_mktd[]" readonly class="form-control input-gral" value="'+v.porcentaje+'%'+'"></div>'+'<div class="col-md-1"><b><p style="text-align:right">$</p></b></div><div class="col-md-4"><input type="text" readonly name="abono_mktd[]" id="abono_mktd_'+i+'"  class="form-control ng-pristine input-gral" value="'+parseFloat(valor_money.toFixed(3))+'"></div>'
                     +'</div>');
                     var_sum +=  parseFloat(v.porcentaje);
                     c++;
@@ -166,7 +172,7 @@ $("#tabla_plaza_1").ready( function(){
                 $("#modal_colaboradores .modal-body #cuerpo").append('<div class="row"><div class="col-lg-12"><p>Suma: <b id="Sumto" style="color:red;"></b></p> </div></div>');
                 $("#modal_colaboradores .modal-body #cuerpo").append('<input type="hidden" name="cuantos" id="cuantos" value="'+c+'">');
             });
-            $("#modal_colaboradores .modal-footer").append('<br><div class="row"><div class="col-md-6"><center><input type="submit" id="btnplz1" class="btn btn-success" value="DISPERSAR"></center></div><div class="col-md-6"><center><input type="button" class="btn btn-danger"  data-dismiss="modal" value="CANCELAR"></center></div></div>');
+            $("#modal_colaboradores .modal-footer").append('<div class="row"><div class="col-md-10"><input type="button" class="btn btn-danger btn-simple"  data-dismiss="modal" value="CANCELAR"></div><div class="col-md-2"><input type="submit" id="btnplz1" class="btn btn-primary" value="DISPERSAR"></div></div>');
             $("#modal_colaboradores").modal();
         });
     });
@@ -177,7 +183,7 @@ $("#tabla_plaza_2").ready( function(){
     $('#tabla_plaza_2 thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
         titulos.push(title);
-        $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
+        $(this).html('<input type="text" data-toggle="tooltip" data-placement="top" title="' + title + '" class="textoshead" placeholder="'+title+'"/>' );
         $( 'input', this ).on('keyup change', function () {
             if (plaza_2.column(i).search() !== this.value ) {
                 plaza_2.column(i).search(this.value).draw();
@@ -271,7 +277,7 @@ $("#tabla_plaza_2").ready( function(){
         { 
             "orderable": false,
             "data": function( d ){
-                return '<div class="d-flex justify-center"><button class="btn-data btn-orangeYellow dispersar_colaboradores" id="btndispersar" title="PARCIALIDAD" value="' + d.id_plan +'" data-residencial="'+d.idResidencial+'" data-empresa="'+d.empresa+'" data-value="' + d.ubicacion_dos +'"><i class="fas fa-chart-pie"></i></div>';   
+                return '<div class="d-flex justify-center"><button class="btn-data btn-orangeYellow dispersar_colaboradores" id="btndispersar" data-toggle="tooltip" data-placement="top" title="PARCIALIDAD" value="' + d.id_plan +'" data-residencial="'+d.idResidencial+'" data-empresa="'+d.empresa+'" data-value="' + d.ubicacion_dos +'"><i class="fas fa-chart-pie"></i></div>';   
             }
         }],
         columnDefs: [{
@@ -288,6 +294,13 @@ $("#tabla_plaza_2").ready( function(){
             data: function( d ){}
         },
     });
+
+    $('#tabla_plaza_2').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
+    });
+
     $("#tabla_plaza_2 tbody").on("click", ".dispersar_colaboradores", function(){
         $("#btnplz2").button({ disabled: false });
         var tr = $(this).closest('tr');
@@ -324,7 +337,7 @@ $("#tabla_plaza_2").ready( function(){
                 $.each( data1, function( i, v){
                     valor_money = ((v.porcentaje/100)*suma_01)
                     $("#modal_colaboradores .modal-body #cuerpo").append('<div class="row"><input type="hidden" name="user_mktd[]" value="'+v.id_usuario+'"><div class="col-md-5"><b style="font-size:14px;"><p>'+v.colaborador+'</p></b><p style="font-size:12px;">'+v.rol+'</p></div>'
-                    +'<div class="col-md-2"><input type="text" name="porcentaje_mktd[]" readonly class="form-control ng-pristine ng-invalid ng-invalid-required ng-touched" value="'+v.porcentaje+'%'+'"></div>'+'<div class="col-md-1"><b><p style="text-align:right">$</p></b></div><div class="col-md-4"><input type="text" readonly name="abono_mktd[]" id="abono_mktd_'+i+'"  class="form-control ng-pristine ng-invalid ng-invalid-required ng-touched" value="'+parseFloat(valor_money.toFixed(3))+'"></div>'
+                    +'<div class="col-md-2"><input type="text" name="porcentaje_mktd[]" readonly class="form-control input-gral" value="'+v.porcentaje+'%'+'"></div>'+'<div class="col-md-1"><b><p style="text-align:right">$</p></b></div><div class="col-md-4 m-0"><input type="text" readonly name="abono_mktd[]" id="abono_mktd_'+i+'"  class="form-control input-gral" value="'+parseFloat(valor_money.toFixed(3))+'"></div>'
                     +'</div>');
                     var_sum +=  parseFloat(v.porcentaje);
                     c++;
@@ -337,7 +350,7 @@ $("#tabla_plaza_2").ready( function(){
                 $("#modal_colaboradores .modal-body #cuerpo").append('<div class="row"><div class="col-lg-12"><p>Suma: <b id="Sumto" style="color:red;"></b></p> </div></div>');
                 $("#modal_colaboradores .modal-body #cuerpo").append('<input type="hidden" name="cuantos" id="cuantos" value="'+c+'">');
             });
-            $("#modal_colaboradores .modal-footer").append('<br><div class="row"><div class="col-md-6"><center><input type="submit" id="btnplz2" class="btn btn-success" value="DISPERSAR"></center></div><div class="col-md-6"><center><input type="button" class="btn btn-danger"  data-dismiss="modal" value="CANCELAR"></center></div></div>');
+            $("#modal_colaboradores .modal-footer").append('<div class="row"><div class="col-md-10"><input type="button" class="btn btn-danger btn-simple"  data-dismiss="modal" value="CANCELAR"></div><div class="col-md-2"><input type="submit" id="btnplz2" class="btn btn-primary" value="DISPERSAR"></div></div>');
             $("#modal_colaboradores").modal();
         });
     });
@@ -348,7 +361,7 @@ $("#tabla_compartidas").ready( function(){
     $('#tabla_compartidas thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
         titulos.push(title);
-        $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
+        $(this).html('<input type="text" data-toggle="tooltip" data-placement="top" title="' + title + '" class="textoshead" placeholder="'+title+'"/>' );
         $( 'input', this ).on('keyup change', function () {
             if (plaza_c.column(i).search() !== this.value ) {
                 plaza_c.column(i).search(this.value).draw();
@@ -442,7 +455,7 @@ $("#tabla_compartidas").ready( function(){
         {
             "orderable": false,
             "data": function( d ){
-                return '<div class="d-flex justify-center"><button class="btn-data btn-orangeYellow dispersar_colaboradores" title="PARCIALIDAD" data-empresa="'+d.empresa+'" value="' + d.id_plan +','+d.sede1+','+d.sede2+'" data-value="' + d.ubicacion_dos +'"><i class="fas fa-chart-pie"></i></button></div>';   
+                return '<div class="d-flex justify-center"><button class="btn-data btn-orangeYellow dispersar_colaboradores" data-toggle="tooltip" data-placement="top" title="PARCIALIDAD" data-empresa="'+d.empresa+'" value="' + d.id_plan +','+d.sede1+','+d.sede2+'" data-value="' + d.ubicacion_dos +'"><i class="fas fa-chart-pie"></i></button></div>';   
             }
         }],
         columnDefs: [{
@@ -459,6 +472,13 @@ $("#tabla_compartidas").ready( function(){
             data: function( d ){}
         },
     });
+
+    $('#tabla_compartidas').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
+    });
+
     $("#tabla_compartidas tbody").on("click", ".dispersar_colaboradores", function(){
         $("#btnplz2").button({ disabled: false });
         var tr = $(this).closest('tr');
@@ -518,7 +538,7 @@ $("#tabla_compartidas").ready( function(){
                     
                     valor_money = ((porcentaje/100)*suma_01)
                     $("#modal_colaboradores .modal-body #cuerpo").append('<div class="row"><input type="hidden" name="user_mktd[]" value="'+v.id_usuario+'"><div class="col-md-5"><b style="font-size:14px;"><p>'+v.colaborador+'</p></b><p style="font-size:12px;">'+v.rol+'</p></div>'
-                    +'<div class="col-md-2"><input type="text" name="porcentaje_mktd[]" readonly class="form-control ng-pristine ng-invalid ng-invalid-required ng-touched" value="'+ porcentaje+'%'+'"></div>'+'<div class="col-md-1"><b><p style="text-align:right">$</p></b></div><div class="col-md-4"><input type="text" readonly name="abono_mktd[]" id="abono_mktd_'+i+'"  class="form-control ng-pristine ng-invalid ng-invalid-required ng-touched" value="'+parseFloat(valor_money.toFixed(3))+'"></div>'
+                    +'<div class="col-md-2"><input type="text" name="porcentaje_mktd[]" readonly class="form-control input-gral" value="'+ porcentaje+'%'+'"></div>'+'<div class="col-md-1"><b><p style="text-align:right">$</p></b></div><div class="col-md-4"><input type="text" readonly name="abono_mktd[]" id="abono_mktd_'+i+'"  class="form-control form-control input-gral" value="'+parseFloat(valor_money.toFixed(3))+'"></div>'
                     +'</div>');
                     var_sum +=  parseFloat(porcentaje);
                     c++;
@@ -531,7 +551,7 @@ $("#tabla_compartidas").ready( function(){
                 $("#modal_colaboradores .modal-body #cuerpo").append('<div class="row"><div class="col-lg-12"><p>Suma: <b id="Sumto" style="color:red;"></b></p> </div></div>');
                 $("#modal_colaboradores .modal-body #cuerpo").append('<input type="hidden" name="cuantos" id="cuantos" value="'+c+'">');
             });
-            $("#modal_colaboradores .modal-footer").append('<br><div class="row"><div class="col-md-6"><center><input type="submit" id="btnplzc" class="btn btn-success" value="DISPERSAR"></center></div><div class="col-md-6"><center><input type="button" class="btn btn-danger"  data-dismiss="modal" value="CANCELAR"></center></div></div>');
+            $("#modal_colaboradores .modal-footer").append('<div class="row"><div class="col-md-10"><input type="button" class="btn btn-danger btn-simple"  data-dismiss="modal" value="CANCELAR"></div><div class="col-md-2"><input type="submit" id="btnplzc" class="btn btn-primary" value="DISPERSAR"></div></div>');
             $("#modal_colaboradores").modal();
         });
     });
@@ -735,7 +755,7 @@ $(document).on( "click", ".nuevo_plan", function(){
             }, 'json'); 
         });
     });
-    $("#modal_mktd .modal-footer").append('<br><div class="row"><div class="col-md-12"><center><input type="submit" id="btnsubmit" class="btn btn-success" value="GUARDAR"></center></div></div>');
+    $("#modal_mktd .modal-footer").append('<br><div class="row"><div class="col-md-12"><center><input type="submit" id="btnsubmit" class="form-control input-gral" value="GUARDAR"></center></div></div>');
     $("#modal_mktd").modal();
 });
 
@@ -810,7 +830,6 @@ $("#form_colaboradores").submit( function(e) {
         $("#btnplz1").button({ disabled: true });
         $("#btnplz2").button({ disabled: true });
         $("#btnplzc").button({ disabled: true });
-        
         $('#spiner-loader').removeClass('hide');
         var data = new FormData( $(form)[0] );
         let sumat=0;
