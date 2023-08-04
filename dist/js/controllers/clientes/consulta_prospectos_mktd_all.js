@@ -339,7 +339,6 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
             }
         }
     })
-
     $('#prospects-datatable_dir').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
