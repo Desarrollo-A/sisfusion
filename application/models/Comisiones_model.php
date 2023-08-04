@@ -1794,7 +1794,7 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
     }
 
     public function getDatosAbonadoSuma11($idlote){
-        return $this->db->query("SELECT SUM(pci.abono_neodata) abonado, pac.total_comision, c2.abono_pagado, lo.totalNeto2, cl.lugar_prospeccion
+        return $this->db->query("SELECT SUM(pci.abono_neodata) abonado, pac.total_comision, c2.abono_pagado, lo.totalNeto2, cl.lugar_prospeccion 
         FROM lotes lo
         INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
         INNER JOIN comisiones c1 ON lo.idLote = c1.id_lote AND c1.estatus = 1
@@ -1802,7 +1802,7 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
         INNER JOIN pago_comision pac ON pac.id_lote = lo.idLote
         LEFT JOIN pago_comision_ind pci on pci.id_comision = c1.id_comision
         WHERE lo.status = 1 AND cl.status = 1 AND c1.estatus = 1 AND lo.idLote in ($idlote)
-        GROUP BY lo.idLote, lo.referencia, pac.total_comision, lo.totalNeto2, cl.lugar_prospeccion, c2.abono_pagado");
+        GROUP BY lo.idLote, lo.referencia, pac.total_comision, lo.totalNeto2, cl.lugar_prospeccion, c2.abono_pagado ");
         }
 
     
@@ -2542,22 +2542,42 @@ function insert_dispersion_individual($id_comision, $id_usuario, $abono_nuevo, $
         }
 }
 
-function insert_penalizacion_individual($id_comision, $id_usuario, $abono_nuevo, $pago, $idCliente){
-
-    $validar = $this->db->query("SELECT pa.id_prestamo, pa.monto, rp.total, (pa.monto-rp.total) pendiente FROM prestamos_aut pa
+function insert_penalizacion_individual($id_comision, $id_usuario, $rol, $abono_nuevo, $pago, $idCliente){
+     $validar = $this->db->query("SELECT pa.id_prestamo, pa.monto, rp.total, (pa.monto-rp.total) pendiente FROM prestamos_aut pa
     LEFT JOIN (SELECT SUM(pci.abono_neodata) total, rp.id_prestamo FROM relacion_pagos_prestamo rp
     INNER JOIN pago_comision_ind pci ON pci.id_pago_i = rp.id_pago_i AND pci.estatus = 28 GROUP BY rp.id_prestamo) rp ON rp.id_prestamo = pa.id_prestamo
     WHERE pa.id_cliente = $idCliente AND pa.id_usuario = $id_usuario
     GROUP BY pa.id_prestamo, pa.monto, rp.total");
 
-    if($validar->row()->pendiente>=1){
-        $stringInner = "  ";
-    }
+    $pendiente = $validar->row()->pendiente;
 
-    $respuesta = $this->db->query("INSERT INTO pago_comision_ind (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, estatus, pago_neodata, creado_por, comentario, modificado_por) VALUES (".$id_comision.", ".$id_usuario.", ".$abono_nuevo.", GETDATE(), GETDATE(), 1, ".$pago.", ".$this->session->userdata('id_usuario').", 'NUEVO PAGO','".$this->session->userdata('id_usuario')."')");
+    if($pendiente >= 0 && $pendiente <= $abono_nuevo){//ABONO es mayor a la PENALIZACION
+        $abonoNormal = $abono_nuevo - $pendiente;
+        $abonoPenalizacion = $pendiente;
+        $estatusPrestamo = 3;
+
+    }else if($pendiente > 0 && $pendiente > $abono_nuevo ){//ABONO es menor a la PENALIZACION
+        $abonoNormal = 0;
+        $abonoPenalizacion = $abono_nuevo;
+        $estatusPrestamo = 1;
+    }
+    $respuesta = $this->db->query("INSERT INTO pago_comision_ind (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, estatus, pago_neodata, creado_por, comentario, modificado_por) VALUES (".$id_comision.", ".$id_usuario.", ".$abonoNormal.", GETDATE(), GETDATE(), 1, ".$pago.", ".$this->session->userdata('id_usuario').", 'NUEVO PAGO','".$this->session->userdata('id_usuario')."')");
     $insert_id_2 = $this->db->insert_id();
     $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($insert_id_2, ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'DISPERSÓ PAGO DE COMISIÓN')");
 
+    if($abonoPenalizacion!=0){
+        $this->db->query("INSERT INTO pago_comision_ind (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, estatus, pago_neodata, creado_por, comentario, modificado_por, descuento_aplicado ) VALUES (".$id_comision.", ".$id_usuario.", ".$abonoPenalizacion.", GETDATE(), GETDATE(), 28 , ".$pago.",".$this->session->userdata('id_usuario').", 'PENALIZACIÓN N', ".$this->session->userdata('id_usuario').", 1)");
+
+        $insert_id_3 = $this->db->insert_id();
+        
+        $this->db->query("INSERT INTO  historial_comisiones VALUES ($insert_id_3, ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'DESCUENTO PENALIZACIÓN +90 DÍAS')");
+
+        $this->db->query("UPDATE prestamos_aut SET estatus = ".$estatusPrestamo.", pago_individual = pago_individual + ".$abonoPenalizacion." WHERE id_prestamo = ".$validar->row()->id_prestamo."");    
+
+        $this->db->query("INSERT INTO relacion_pagos_prestamo (id_prestamo, id_pago_i, estatus, creado_por, fecha_creacion, modificado_por, fecha_modificacion, np)
+        VALUES(".$validar->row()->id_prestamo.", $insert_id_3, 1, ".$this->session->userdata('id_usuario').", GETDATE(), ".$this->session->userdata('id_usuario').", GETDATE(), 1)");
+    }
+ 
     if (! $respuesta ) {
         return 0;
         } else {
@@ -5982,7 +6002,7 @@ function obtenerIDMK($id){
             }
         }
 
-        public function InsertNeoPenalizacion($idLote, $id_usuario, $TotComision,$user,$porcentaje,$abono,$pago,$rol,$idCliente,$tipo_venta){
+        public function InsertNeoPenalizacion($idLote, $id_usuario, $TotComision,$user,$porcentaje,$abono,$pago,$rol,$idCliente,$tipo_venta, $nombreLote){
  
             if($porcentaje != 0 && $porcentaje != ''){
             //consulta para traer los datos de la penalizacion
@@ -6036,12 +6056,12 @@ function obtenerIDMK($id){
                 $this->db->query("INSERT INTO pago_comision_ind (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, estatus, pago_neodata, creado_por, comentario, modificado_por, descuento_aplicado ) VALUES (".$insert_id.", ".$id_usuario.", ".$abonoPenalizacion.", GETDATE(), GETDATE(), 28 , ".$pago.",'$user', 'PAGO 1 - NEDOATA', '$user', 1)");
 
                 $insert_id_3 = $this->db->insert_id();
-                $this->db->query("INSERT INTO  historial_comisiones VALUES ($insert_id_3, ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'DESCUENTO PENALIZACIÓN +90 DÍAS')");
+                $this->db->query("INSERT INTO  historial_comisiones VALUES ($insert_id_3, ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'DESCUENTO ".$nombreLote."PENALIZACIÓN +90 DÍAS')");
 
                 $this->db->query("INSERT INTO prestamos_aut
                 (id_usuario, monto, num_pagos, pago_individual, comentario, estatus, pendiente, creado_por, fecha_creacion, modificado_por, 
                 fecha_modificacion, n_p, tipo, id_cliente)
-                VALUES ($id_usuario, $descuento90dias, 1, $abonoPenalizacion, 'PENALIZACIÓN 90 DÍAS', $estatusPrestamo, 0, $user, GETDATE(), $user, GETDATE(), 1, 28, $idCliente)");
+                VALUES ($id_usuario, $descuento90dias, 1, $abonoPenalizacion, 'PENALIZACIÓN ".$nombreLote." ´+90 DÍAS', $estatusPrestamo, 0, $user, GETDATE(), $user, GETDATE(), 1, 28, $idCliente)");
                 $insert_id_4 = $this->db->insert_id();
 
                 $this->db->query("INSERT INTO relacion_pagos_prestamo (id_prestamo, id_pago_i, estatus, creado_por, fecha_creacion, modificado_por, fecha_modificacion, np)

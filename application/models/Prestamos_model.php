@@ -40,7 +40,7 @@ class Prestamos_model extends CI_Model {
             JOIN usuarios u ON u.id_usuario = pa.id_usuario
             JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
             JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i 
-            AND pci.estatus IN(18,19,20,21,22,23,24,25,26,29) AND pci.descuento_aplicado = 1
+            AND pci.estatus IN(18,19,20,21,22,23,24,25,26,28,29) AND pci.descuento_aplicado = 1
             WHERE pa.id_prestamo = $idPrestamo
             GROUP BY u.nombre, u.apellido_paterno, u.apellido_materno, pa.monto, pa.pago_individual, pa.num_pagos, pa.n_p");
         return $query;
@@ -67,13 +67,13 @@ class Prestamos_model extends CI_Model {
                  ELSE u.id_sede END) and sed.estatus = 1
                 INNER JOIN opcs_x_cats pcs ON pcs.id_opcion=pa.tipo AND pcs.id_catalogo=23
                 INNER JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
-                INNER JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus IN(18,19,20,21,22,23,24,25,26,29) AND pci.descuento_aplicado = 1
+                INNER JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus IN(18,19,20,21,22,23,24,25,26,28,29) AND pci.descuento_aplicado = 1
                 INNER JOIN comisiones c ON c.id_comision = pci.id_comision
                 INNER JOIN lotes l ON l.idLote = c.id_lote
                 INNER JOIN condominios con ON con.idCondominio=l.idCondominio
                 INNER JOIN residenciales re ON re.idResidencial=con.idResidencial
                 INNER JOIN historial_comisiones hc ON hc.id_pago_i = rpp.id_pago_i 
-                and (hc.comentario like 'DESCUENTO POR%' or hc.comentario like '%, POR MOTIVO DE PRESTAMO' or hc.comentario like '%CONFERENCIA%' or hc.comentario like '%NOMINA%') and hc.estatus=1
+                and (hc.comentario like 'DESCUENTO POR%' or hc.comentario like '%, POR MOTIVO DE PRESTAMO' or hc.comentario like '%CONFERENCIA%' or hc.comentario like '%NOMINA%' or hc.comentario like '%PENALIZA%') and hc.estatus=1
                 WHERE pa.id_prestamo = $idPrestamo
                 ORDER BY np ASC");
         return $query;
