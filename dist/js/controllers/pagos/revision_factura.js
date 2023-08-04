@@ -166,7 +166,14 @@ function getAssimilatedCommissions(proyecto, condominio){
                                 tabla_remanente2.ajax.reload();
                                 $("#myModalEnviadas .modal-body").html("");
                                 $("#myModalEnviadas").modal();
-                                $("#myModalEnviadas .modal-body").append("<center><img style='width: 75%; height: 75%;' src='<?= base_url('dist/img/send_intmex.gif')?>'><p style='color:#676767;'>Comisiones de esquema <b>asimilados</b>, fueron enviadas a <b>INTERNOMEX</b> correctamente.</p></center>");
+                                $("#myModalEnviadas .modal-body").append(`
+                                    <center>
+                                        <img style='width: 75%; height: 75%;' src="${general_base_url}dist/img/send_intmex.gif" >
+                                            <p style='color:#676767;'>Comisiones de esquema 
+                                                <b>asimilados</b>, fueron enviadas a 
+                                                <b>INTERNOMEX</b> correctamente.
+                                            </p>
+                                    </center>`);
                             }
                             else {
                                 $('#spiner-loader').addClass('hide');
@@ -354,7 +361,7 @@ function getAssimilatedCommissions(proyecto, condominio){
             "data": function( data ){
                 var BtnStats;
             
-                BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_remanente" title="Detalles">' +'<i class="fas fa-info"></i>></button>'+
+                BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_remanente" title="Detalles">' +'<i class="fas fa-info"></i></button>'+
 
                 '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.id_pago_i+'" data-code="'+data.cbbtton+'" ' + 'class="btn-data btn-warning cambiar_estatus" title="Pausar solicitud">' + '<i class="fas fa-ban"></i></button>';
                 return '<div class="d-flex justify-center">'+BtnStats+'</div>';
