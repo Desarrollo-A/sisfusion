@@ -76,7 +76,7 @@ class Usuarios_modelo extends CI_Model
             case '5': // ASISTENTE SUBDIRECCIÓN
                 if($this->session->userdata('id_usuario') == 4888 || $this->session->userdata('id_usuario') == 546) // ADRIANA PEREZ && DIRCE 3 (MÉRIDA) Y 11 (MONTERREY)
                     $id_sede = "(usuarios.id_sede LIKE ('%3%') OR usuarios.id_sede LIKE '%11%')";
-                else if($this->session->userdata('id_usuario') == 10924 || $this->session->userdata('id_usuario') == 7097 || $this->session->userdata('id_usuario') == 7096 || $this->session->userdata('id_usuario') == 7324 || $this->session->userdata('id_usuario') == 5620) // GRISELL / EDGAR LEONARDO VE 4 (CIUDAD DE MÉXICO) Y 9 (SAN MIGUEL DE ALLENDE)
+                else if(in_array($this->session->userdata('id_usuario'), array(10924, 7097, 7096, 7324, 5620, 13094))) // GRISELL / EDGAR LEONARDO VE 4 (CIUDAD DE MÉXICO) Y 9 (SAN MIGUEL DE ALLENDE)
                     $id_sede = "(usuarios.id_sede LIKE '%4%' OR usuarios.id_sede LIKE '%9%' OR usuarios.id_sede LIKE '%13%') AND usuarios.id_usuario != ".$this->session->userdata('id_lider_2')."";
                 else if($this->session->userdata('id_usuario') == 29 || $this->session->userdata('id_usuario') == 7934) // 29 FERNANDA MONJARAZ VE LO DE LEÓN Y GUADALAJARA
                     $id_sede = "(usuarios.id_sede LIKE '%5%' OR usuarios.id_sede LIKE '%12%')";

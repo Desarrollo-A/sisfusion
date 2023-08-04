@@ -66,9 +66,6 @@
             </div>
         </div>
     </div>
-    <script>
-        googleEvents = <?php print_r(json_encode($googleEvents)) ?>;
-        googleBtn = '<?php echo $login_button ?>';
-    </script>
+
     <script src="<?=base_url()?>dist/js/controllers/dashboard/agenda/dashboardCalendar.js"></script>
     

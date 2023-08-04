@@ -1,15 +1,14 @@
 //jquery
-  $(document).on('change','#gerente', function(e){
+  $(document).on('change','#gerente', function(){
     let id = $("#gerente").val();
     getCoordinators(id);
     $("#coordinador").empty().selectpicker('refresh');
   });
 
   $(document).on('change', '#coordinador', function(e){
-    var idCoordinador = $("#coordinador").val();
-    getAsesores(idCoordinador, true).then( response => {
-      var arrayId = idCoordinador;
-      getEventos(arrayId).then( response => {
+    const idCoordinador = $("#coordinador").val();
+    getAsesores(idCoordinador, true).then( () => {
+      getEventos(idCoordinador).then( response => {
         setSourceEventCRM(response);
       }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
     }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
@@ -18,12 +17,11 @@
   });
 
   $(document).on('change','#asesor', function(e){
-    if(userType == 9) var arrayId = idUser + ', ' + $("#asesor").val();
-    else var arrayId = $("#coordinador").val() + ', ' +$("#asesor").val();
+    let arrayId = (userType == 9) ? idUser + ', ' + $("#asesor").val() : $("#coordinador").val() + ', ' +$("#asesor").val();
     
     getEventos(arrayId).then( response => {
       setSourceEventCRM(response);
-    }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger"); });;
+    }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger"); });
   });
 
 //funciones
@@ -32,10 +30,10 @@
     $.post(`${base_url}Calendar/getCoordinators`, {id: id}, function(data) {
       $("#labelCoord").show();
       $('#spiner-loader').addClass('hide');
-      var len = data.length;
-      for (var i = 0; i < len; i++) {
-          var id = data[i]['id_usuario'];
-          var nombre = data[i]['nombre'];
+      const len = data.length;
+      for (let i = 0; i < len; i++) {
+          const id = data[i]['id_usuario'];
+          const nombre = data[i]['nombre'];
           $("#coordinador").append($('<option>').val(id).text(nombre));
       }
       if (len <= 0) {
@@ -61,10 +59,10 @@
         $("#labelAses").show();
         $('#spiner-loader').addClass('hide');
         if(firstLoad){
-          var len = data.length;
-          for (var i = 0; i < len; i++) {
-            var id = data[i]['id_usuario'];
-            var nombre = data[i]['nombre'];
+          const len = data.length;
+          for (let i = 0; i < len; i++) {
+            const id = data[i]['id_usuario'];
+            const nombre = data[i]['nombre'];
             $("#asesor").append($('<option>').val(id).text(nombre));
           }
           if (len <= 0) {
@@ -95,7 +93,8 @@
       },
       success: function(data) {
         $('#spiner-loader').addClass('hide');
-        if(data.length == 0){
+
+        if(data.length == 0) {
           alerts.showNotification("top", "right", "Aún no hay ningún evento registrado", "success");
         }
       },
@@ -108,10 +107,10 @@
 
   function getGerentes(){
     $.post(`${base_url}Calendar/getManagers`, function(data) {
-      var len = data.length;
-      for (var i = 0; i < len; i++) {
-          var id = data[i]['id_usuario'];
-          var nombre = data[i]['nombre'];
+      const len = data.length;
+      for (let i = 0; i < len; i++) {
+          const id = data[i]['id_usuario'];
+          const nombre = data[i]['nombre'];
           $("#gerente").append($('<option>').val(id).text(nombre));
       }
       if (len <= 0) {
@@ -124,18 +123,15 @@
   function getUsersAndEvents(userType, idUser, firstLoad){
     if(userType == 2){ /* Subdirector */
       getGerentes();
-    }
-    else if(userType == 3){ /* Gerente */
+    } else if(userType == 3){ /* Gerente */
       getCoordinators(idUser, 1);
-    }
-    else if(userType == 7 ){
+    } else if(userType == 7 ){
       getEventos(idUser).then( response => {
         setSourceEventCRM(response);
       }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
-    }
-    else if(userType == 9){ /* Coordinador */
+    } else if(userType == 9){ /* Coordinador */
         getAsesores(idUser, firstLoad).then( response => {
-        var arrayId = idUser;
+        const arrayId = idUser;
         getEventos(arrayId).then( response => {
           setSourceEventCRM(response);
         }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
