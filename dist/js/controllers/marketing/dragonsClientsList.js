@@ -94,7 +94,7 @@ function fillDragonsClientsTable() {
 			},
 			{
 				data: function (d) {
-					return '$' + formatMoney(d.engancheCliente)
+					return formatMoney(d.engancheCliente)
 				}
 			},
 			{

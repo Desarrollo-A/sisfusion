@@ -17,7 +17,6 @@ $(document).ready(function() {
     }).done(function(data) {
         $('#showDate').append('(Envio de contrato a RL (Contraloría) al día de hoy: ' + data + ')');
     }).fail(function(){});
-
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
     setIniDatesXMonth("#beginDate", "#endDate");
@@ -61,7 +60,7 @@ function fillDataTable(typeTransaction, beginDate, endDate, where) {
             }
         },
         "pageLength": 10,
-        "bAutoWidth": false,
+        "bAutoWidth": true,
         "fixedColumns": true,
         language: {
             url: `${general_base_url}/static/spanishLoader_v2.json`,
@@ -127,35 +126,30 @@ function fillDataTable(typeTransaction, beginDate, endDate, where) {
                 data: function (data)
                 {
                     return myFunctions.validateEmptyField(data.nombreCliente);
-
                 }
             },
             {
                 data: function (data)
                 {
                     return myFunctions.validateEmptyField(data.nombreUsuario);
-
                 }
             },
             {
                 data: function (data)
                 {
                     return myFunctions.validateEmptyField(data.asesor);
-
                 }
             },
             {
                 data: function (data)
                 {
                     return myFunctions.validateEmptyField(data.coordinador);
-
                 }
             },
             {
                 data: function (data)
                 {
                     return myFunctions.validateEmptyField(data.gerente);
-
                 }
             },
             {

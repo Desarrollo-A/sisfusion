@@ -987,6 +987,12 @@
   background-color: #92929218;
 }
 
+.lbl-goldMaderas {
+  color: #96843D;
+  border: none;
+  background-color: #96843D18;
+}
+
 .lbl-gral {
   border-radius: 25px;
   padding: 7px 10px;
@@ -1001,7 +1007,7 @@
 .lbl-grayDark {
   color: #191B1C;
   border: none;
-  background-color: #28374718;
+  background-color: #191B1C18;
 }
 
 .lbl-green {
@@ -1026,6 +1032,12 @@
   color: #B9770E;
   border: none;
   background-color: #B9770E18;
+}
+
+.lbl-orange {
+  color: #DF7314;
+  border: none;
+  background-color: #DF731418;
 }
 
 .lbl-pink {
@@ -1079,25 +1091,25 @@
 .lbl-lightBlue {
   color: #1B4F72;
   border: none;
-  background: #AED6F1;
+  background-color: #1B4F7218;
 }
 
 .lbl-peach {
   color: #78281F;
   border: none;
-  background: #F5B7B1;
+  background-color: #78281F18;
 }
 
 .lbl-purple {
   color: #512E5F;
   border: none;
-  background: #D7BDE2;
+  background-color: #512E5F18;
 }
 
 .lbl-aqua {
-  color: #ffffff;
+  color: #54d2d2;
   border: none;
-  background: #11DFC6;
+  background: #11DFC618;
 }
 
 /* END Etiquetas */
@@ -1158,6 +1170,10 @@
   width: 77%;
   background-color: transparent;
   border: none;
+}
+
+.file-gph .file-name::placeholder {
+  color: red !important;
 }
 
 .file-gph input[type="file"] {

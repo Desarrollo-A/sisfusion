@@ -1,4 +1,3 @@
-
 $("#tabla_bonos").prop("hidden", true);
     $('#roles').change(function(ruta){
         roles = $('#roles').val();
@@ -219,12 +218,12 @@ function getBonusCommissions(roles, users){
             color='9129CC';
         }else if(d.estado == 5){
             estatus=d.est;
-            color='red';
+            color='B03A2E';
         }else if(d.estado == 6){
             estatus=d.est;
             color='4D7FA1';
         }
-        return '<span class="label" style="background:#'+color+'">'+estatus+'</span>';
+        return '<span class="label" style="color:#'+color+'; background:#'+color+'18;">'+estatus+'</span>';
         }
     },
     {
@@ -255,7 +254,7 @@ function getBonusCommissions(roles, users){
     id_pago = $(this).val();
     lote = $(this).attr("data-value");
     $("#modal_bonos").modal();
-    $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE BONO</b></h5></p>');
+    $("#nameLote").append('<p><h5>HISTORIAL DE BONO</b></h5></p>');
     $.getJSON("getHistorialAbono2/"+id_pago).done( function( data ){
         $.each( data, function(i, v){
         $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>COMENTARIO: </small><b>' + v.comentario + '</b></a><br></div><div class="float-end text-right"><a>' + v.date_final + '</a></div><div class="col-md-12"><p class="m-0"><small>USUARIO: </small><b> ' + v.nombre_usuario + '</b></p></div><h6></h6></div></div></li>');

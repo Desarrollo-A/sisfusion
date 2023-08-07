@@ -1,9 +1,3 @@
-var totalLeon = 0;
-var totalQro = 0;
-var totalSlp = 0;
-var totalMerida = 0;
-var totalCdmx = 0;
-var totalCancun = 0;
 var tr;
 var tabla_historialGral2;
 var totaPen = 0;
@@ -26,7 +20,6 @@ $(document).ready(function(){
         }
         $("#empresa").selectpicker('refresh');
     }, 'json');
-
     $.post(general_base_url + "Comisiones/listRegimen", function(data) {
         var len = data.length;
         $("#regimen").append($('<option value="0">TODOS</option>'));
@@ -78,8 +71,7 @@ $('#tabla_historialGral thead tr:eq(0) th').each(function(i) {
             $.each(data, function(i, v) {
                 total += parseFloat(v.dispersado);
             });
-            var to1 = formatMoney(total);
-            document.getElementById("myText_nuevas").textContent = formatMoney(total);
+            document.getElementById("myText_nuevas").textContent = formatMoney(numberTwoDecimal(total));
         }
     });
 });
@@ -90,8 +82,8 @@ function getAssimilatedCommissions(empresa, regimen) {
         $.each(json.data, function(i, v) {
             total += parseFloat(v.dispersado);
         });
-        var to = formatMoney(total);
-        document.getElementById("myText_nuevas").textContent = '$' + to;
+        var to = formatMoney(numberTwoDecimal(total));
+        document.getElementById("myText_nuevas").textContent = to;
     });
 
     $("#tabla_historialGral").prop("hidden", false);
@@ -104,9 +96,9 @@ function getAssimilatedCommissions(empresa, regimen) {
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
-            title: 'REPORTE COBRANZA APARTADOS',
+            title: 'Reporte de saldos',
             exportOptions: {
-                columns: [1, 2, 3, 4],
+                columns: [0,1, 2, 3, 4],
                 format: 
                 {
                     header:  function (d, columnIdx) {
@@ -127,29 +119,29 @@ function getAssimilatedCommissions(empresa, regimen) {
         destroy: true,
         ordering: false,
         columns: [{
-            "data": function(d) {
+            data: function(d) {
                 var lblStats;
                 lblStats = '<p class="m-0"><b>' + d.idResidencial + '</b></p>';
                 return lblStats;
             }
         },
         {
-            "data": function(d) {
+            data: function(d) {
                 return '<p class="m-0">' + d.proyecto + '</p>';
             }
         },
         {
-            "data": function(d) {
+            data: function(d) {
                 return '<p class="m-0">' + d.empresa + '</p>';
             }
         },
         {
-            "data": function(d) {
-                return '<p class="m-0"><b>' + formatMoney(d.dispersado)+ '</b></p>';
+            data: function(d) {
+                return '<p class="m-0"><b>' + formatMoney(numberTwoDecimal(d.dispersado))+ '</b></p>';
             }
         },
         {
-            "data": function(d) {
+            data: function(d) {
                 if(d.nombre == null){
                     return '<p class="m-0"> TODOS </p>';
                 }else{
@@ -172,7 +164,7 @@ function getAssimilatedCommissions(empresa, regimen) {
             "url": general_base_url + "Comisiones/getDatosSaldosIntmex/" + empresa + "/" + regimen,
             "type": "POST",
             cache: false,
-            "data": function(d) {}
+            data: function(d) {}
         },
     });
 

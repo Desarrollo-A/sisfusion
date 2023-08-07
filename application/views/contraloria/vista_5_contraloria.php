@@ -4,6 +4,12 @@
 <div class="wrapper ">
     <?php $this->load->view('template/sidebar'); ?>
 
+	<style>
+		.bs-searchbox .form-group{
+			padding-bottom: 0!important;
+    		margin: 0!important;
+		}
+	</style>
 	<!-- modal para revision status 5 100% -->
 	<div class="modal fade " id="envARevCE" data-backdrop="static" data-keyboard="false">
 		<div class="modal-dialog">
@@ -13,12 +19,12 @@
 				</div>
 				<div class="modal-body">
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-						<div class="col-xs-12 col-sm-12 col-md-6 col-lg-12">
+						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 							<label class="control-label">Comentario</label>
 							<input class="text-modal mb-1" name="comentario" id="comentarioenvARevCE" autocomplete="off">
 							<br>
 						</div>
-						<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 overflow-hidden"id="tipo-venta-options-div" hidden>
+						<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 overflow-hidden" id="tipo-venta-options-div" hidden>
 							<label class="control-label" id="tvLbl">Tipo de venta</label>
 							<select required="required" name="tipo_venta" id="tipo_ventaenvARevCE" class="selectpicker select-gral" data-style="btn" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-container="body" data-size="4">
 							</select>			

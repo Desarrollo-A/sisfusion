@@ -14,7 +14,6 @@ $(document).ready(function () {
     $('.datepicker').datetimepicker({locale: 'es'});
 });
 
-
 sp = { // MJ: SELECT PICKER
     initFormExtendedDatetimepickers: function () {
         $('.datepicker').datetimepicker({

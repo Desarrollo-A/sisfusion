@@ -299,7 +299,7 @@ function getAssimilatedCommissions(proyecto, condominio){
         $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $.getJSON("getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
-                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>NOMBRE DEL USUARIO: </small><b>'+v.nombre_usuario+' </b></a><br></div><div class="float-end text-right"><a> '+v.fecha_movimiento+' </a></div><div class="col-md-12"><p class="m-0"><small>COMENTARIOS: </small><b>'+v.comentario+'</b></p></div><h6></h6></div></div></li>');
+                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>Usuario: </small><b>'+v.nombre_usuario+' </b></a><br></div><div class="float-end text-right"><a> '+v.fecha_movimiento+' </a></div><div class="col-md-12"><p class="m-0"><small>Comentario: </small><b>'+v.comentario+'</b></p></div><h6></h6></div></div></li>');
                 $('#spiner-loader').addClass('hide');
             });
         });
