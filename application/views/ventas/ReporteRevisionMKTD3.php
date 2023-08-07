@@ -30,7 +30,7 @@
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                       <div class="form-group">
                         <label className="m-0" for="proyecto">Mes</label>
-                        <select name="mes" id="mes" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona mes" data-size="7" required>
+                        <select name="mes" id="mes" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" required>
                           <?php
                             setlocale(LC_ALL, 'es_ES');
                             for ($i=1; $i<=12; $i++) {
@@ -46,7 +46,7 @@
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                       <div class="form-group">
                         <label className="m-0">Año</label>
-                        <select name="anio" id="anio" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona año" data-size="7" required>
+                        <select name="anio" id="anio" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" required>
                           <?php
                             setlocale(LC_ALL, 'es_ES');
                             for ($i=2019; $i<=2021; $i++) {
