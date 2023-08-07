@@ -52,6 +52,7 @@ class Asesor extends CI_Controller
         $this->load->view('template/home');
         $this->load->view('template/footer');
     }
+
     public function deposito_seriedad_ds($idCliente, $onlyView){
         $this->validateSession();
         $datos["cliente"] = $this->registrolote_modelo->selectDS_ds($idCliente);
@@ -66,6 +67,7 @@ class Asesor extends CI_Controller
             $this->load->view('contraloria/dpform_c', $datos);
         }
     }
+
     public function tipo_venta(){
         echo json_encode($this->Asesor_model->get_datos_tipo()->result_array());
     }

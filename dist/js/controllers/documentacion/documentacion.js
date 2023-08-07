@@ -29,6 +29,7 @@ const TipoDoc = {
     CARTA_DOMICILIO: 29,
     CONTRATO_FIRMADO: 30,
     DS_NEW: 'ds_new',
+    DS_OLD: 'ds_old',
     EVIDENCIA_MKTD_OLD: 66, // EXISTE LA RAMA CON LA EVIDENCIA DE MKTD (OLD)
     AUTORIZACIONES: 'autorizacion',
     PROSPECTO: 'prospecto',
@@ -449,7 +450,7 @@ $(document).on('click', '.verDocumento', function () {
 
     let pathUrl = `${general_base_url}static/documentos/cliente/${obtenerPathDoc($itself.attr('data-tipoDocumento'))}`+$itself.attr('data-expediente');
 
-    if ($itself.attr('data-tipoDocumento') === TipoDoc.DS_NEW) {
+    if ($itself.attr('data-tipoDocumento') === TipoDoc.DS_NEW || $itself.attr('data-tipoDocumento') === TipoDoc.DS_OLD) {
         const idCliente = $itself.attr('data-idCliente');
         const urlDs = ($itself.attr('data-expediente') === 'Depósito de seriedad')
             ? 'deposito_seriedad' : 'deposito_seriedad_ds';
@@ -466,14 +467,6 @@ $(document).on('click', '.verDocumento', function () {
     if ($itself.attr('data-tipoDocumento') === TipoDoc.AUTORIZACIONES) {
         abrirModalAutorizaciones($itself.attr('data-idLote'));
         return;
-    }
-
-    if ($itself.attr('data-tipoDocumento') === TipoDoc.DS_NEW) {
-        const idCliente = $itself.attr('data-idCliente');
-        const urlDs = ($itself.attr('data-expediente') === 'Depósito de seriedad')
-            ? 'deposito_seriedad' : 'deposito_seriedad_ds';
-
-        pathUrl = `${general_base_url}asesor/${urlDs}/${idCliente}/1`;
     }
 
     if ($itself.attr('data-tipoDocumento') === TipoDoc.PROSPECTO) {

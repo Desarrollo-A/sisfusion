@@ -1,8 +1,8 @@
-var calendar;
-var appointment = '';
-var exists = 1;
-var eventsTable;
-var arrayEvents = [];
+let calendar;
+let appointment = '';
+let exists = 1;
+let eventsTable;
+let arrayEvents = [];
 
 function readyAgenda(){
   getUsersAndEvents(userType, idUser, true);    
@@ -10,8 +10,8 @@ function readyAgenda(){
 
 $('[data-toggle="tooltip"]').tooltip();
 
-var calendarEl = document.getElementById('calendar');
-calendar = new FullCalendar.Calendar(calendarEl, {   
+let calendarEl = document.getElementById('calendar');
+calendar = new FullCalendar.Calendar(calendarEl, {
   longPressDelay: 0,
   headerToolbar: {
     start: 'prev next today appointments googleBtn',
@@ -62,26 +62,49 @@ calendar = new FullCalendar.Calendar(calendarEl, {
 });
 
 calendar.render();
-googleBtnEvaluation();
+isSignInGoogle();
 
-function listUpcomingEvents() {
-  for(let i = 0; i < googleEvents.length; i++){
-    //Verificamos que no sea un evento insertado por el CRM, para dar la libertad de editarlo
-    var isFullcalendar = doesObjectHaveNestedKey( googleEvents[i], 'setByFullCalendar' );
-    if(!isFullcalendar){
-      eventTemplateGoogle(arrayEvents, googleEvents[i]);
+function listUpcomingEvents(tokenGoogleCalendar) {
+  $.ajax({
+    url: 'https://www.googleapis.com/calendar/v3/calendars/primary/events',
+    type: 'GET',
+    dataType: "json",
+    headers: {
+      Authorization: `Bearer ${tokenGoogleCalendar}`
+    },
+    data: {
+      timeMin: (new Date()).toISOString()
+    },
+    success: function (googleEvents) {
+      const { items } = googleEvents;
+
+      for(let i = 0; i < items.length; i++){
+        //Verificamos que no sea un evento insertado por el CRM, para dar la libertad de editarlo
+        const isFullcalendar = doesObjectHaveNestedKey( items[i], 'setByFullCalendar' );
+        if(!isFullcalendar){
+          eventTemplateGoogle(arrayEvents, items[i]);
+        }
+      }
+
+      if(typeof(calendar) != 'undefined'){
+        calendar.addEventSource({
+          title: 'sourceGoogle',
+          display:'block',
+          events: arrayEvents
+        });
+      }
+
+      calendar.refetchEvents();
+    },
+    error: function (err) {
+      const { code } = err.responseJSON.error;
+      if (code === 401) {
+        alerts.showNotification("top", "right", "Debe iniciar sesión de nuevo en google para mostrar tu agenda en el calendario", "warning");
+        $(".fc-googleBtn-button").append('<a id="signInGoogle"><i class="fab fa-google"></i></a>');
+        localStorage.removeItem('auth-google-token');
+      }
     }
-  }
-  
-  if(typeof(calendar) != 'undefined'){
-    calendar.addEventSource({
-      title: 'sourceGoogle',
-      display:'block',
-      events: arrayEvents
-    }); 
-  }
-
-  calendar.refetchEvents();
+  });
 }
 
 /* Search for existence of key in obj */
@@ -89,7 +112,7 @@ function doesObjectHaveNestedKey(obj, key) {
   if(obj === null || obj === undefined) {
     return false;
   }
-  
+
   for(const k of Object.keys(obj)) {
     if(k === key) {
       /* Search keys of obj for match and return true if match found */
@@ -138,22 +161,28 @@ function eventTemplateGoogle(arrayEvents, googleAppointments){
 }
 
 
-function googleBtnEvaluation(){
+function isSignInGoogle(){
   //Se es diferente de '' significa que se autorizó autentificación y pintaremos estos eventos.
-  if (googleCode != ''){
-    $(".fc-googleBtn-button").append(googleBtn);
-    listUpcomingEvents();
-  }
-  else{
-    $(".fc-googleBtn-button").append(googleBtn);
+  const googleToken = localStorage.getItem('auth-google-token');
+  if (googleToken !== null){
+    $(".fc-googleBtn-button").html('');
+    listUpcomingEvents(googleToken);
+  } else {
+    $(".fc-googleBtn-button").append('<a id="signInGoogle"><i class="fab fa-google"></i></a>');
   }
 }
 
+$(document).on('click', '#signInGoogle', function (e) {
+  e.preventDefault();
+
+  gisLoaded();
+});
+
 $.post(`${base_url}Calendar/getStatusRecordatorio`, function(data) {
-  var len = data.length;
-  for (var i = 0; i < len; i++) {
-      var id = data[i]['id_opcion'];
-      var name = data[i]['nombre'];
+  const len = data.length;
+  for (let i = 0; i < len; i++) {
+      const id = data[i]['id_opcion'];
+      const name = data[i]['nombre'];
       $("#estatus_recordatorio").append($('<option>').val(id).text(name));
       $("#estatus_recordatorio2").append($('<option>').val(id).text(name));
   }
@@ -167,12 +196,12 @@ $.post(`${base_url}Calendar/getStatusRecordatorio`, function(data) {
 }, 'json'); 
 
 $.post(`${base_url}Calendar/getProspectos`, function(data) {
-  var len = data.length;
-  for (var i = 0; i < len; i++) {
-      var id = data[i]['id_prospecto'];
-      var name = data[i]['nombre'];
-      var telefono = data[i]['telefono'];
-      var telefono2 = data[i]['telefono_2'];
+  const len = data.length;
+  for (let i = 0; i < len; i++) {
+      const id = data[i]['id_prospecto'];
+      const name = data[i]['nombre'];
+      const telefono = data[i]['telefono'];
+      const telefono2 = data[i]['telefono_2'];
       $("#prospecto").append($('<option data-telefono="'+telefono+'" data-telefono2="'+telefono2+'">').val(id).text(name));
   }
   if (len <= 0) {
@@ -221,21 +250,20 @@ document.querySelector('#insert_appointment_form').addEventListener('submit',asy
   e.preventDefault(); 
   const dataF = Object.fromEntries(
     new FormData(e.target)
-  )
-  rangeOfDates = validateDates(dataF);
-  emptyTitle = $("#evtTitle").val().replace(/\s/g, '').length ;
+  );
+  const rangeOfDates = validateDates(dataF);
+  const emptyTitle = $("#evtTitle").val().replace(/\s/g, '').length ;
 
-  if(!rangeOfDates || !emptyTitle){
+  if(!rangeOfDates || !emptyTitle) {
     if(!rangeOfDates)
       alerts.showNotification("top", "right", "Rango de fechas inválido", "danger");
     if(!emptyTitle)
       alerts.showNotification("top", "right", "Título inválido", "danger");
-  }
-  else{
-    if(gapi.auth2.getAuthInstance().isSignedIn.get() == true){
-      let inserted = await insertEventGoogle(dataF);
-      dataF['idGoogle'] = inserted;
+  } else {
+    if (localStorage.getItem('auth-google-token') !== null) {
+      dataF['idGoogle'] = await insertEventGoogle(dataF);
     }
+
     dataF['estatus_particular'] = $('#estatus_particular').val();
     dataF['id_prospecto_estatus_particular'] = $("#prospecto").val();
     $.ajax({
@@ -249,17 +277,21 @@ document.querySelector('#insert_appointment_form').addEventListener('submit',asy
         $('#spiner-loader').removeClass('hide');
       },
       success: function(data) {
-        if ( document.getElementById('asesor') != null && document.getElementById('asesor').value != '' )
+        if ( document.getElementById('asesor') != null && document.getElementById('asesor').value != '' ) {
           $('#asesor').trigger('change');
-        else getUsersAndEvents(userType, idUser, false);
-        
+        } else {
+          getUsersAndEvents(userType, idUser, false);
+        }
+
         data = JSON.parse(data);
         alerts.showNotification("top", "right", data["message"], (data["status" == 503]) ? "danger" : (data["status" == 400]) ? "warning" : "success");
         $('#agendaInsert').modal('toggle');
       },
       error: function() {
-        $('#spiner-loader').addClass('hide');
         alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+      },
+      complete: function () {
+        $('#spiner-loader').addClass('hide');
       }
     });
   }
@@ -403,7 +435,7 @@ $('#feedbackModal').on('hidden.bs.modal', function () {
 /* Event's structure sent to Google */
 function buildEventGoogle(data){
   const { dateEnd, dateStart, description, evtTitle } = data;
-  var evento = {
+  return {
     'summary': evtTitle,
     'description': description, 
     'start': {
@@ -427,13 +459,12 @@ function buildEventGoogle(data){
       ]
     }
   };
-  return evento;
 }
 /* Event's structure sent to Google */
 
 function insertEventGoogle(data){
-  var id = new Promise((resolve, reject) => {
-    var request = gapi.client.calendar.events.insert({
+  return new Promise((resolve, reject) => {
+    const request = gapi.client.calendar.events.insert({
       'calendarId': 'primary',
       'resource': buildEventGoogle(data)
     });
@@ -442,7 +473,6 @@ function insertEventGoogle(data){
       resolve(event.id);
     });
   });
-  return id;
 }
 
 async function updateEvent(data){
@@ -512,7 +542,7 @@ function setSourceEventCRM(events){
     title: 'sourceCRM',
     display:'block',
     events: events,
-  })
+  });
 }
 
 function disabledEditModal(value, estatus){
@@ -575,7 +605,7 @@ async function deleteEvent(idAgenda, idGoogle){
 }
 
 function deleteGoogleEvent(idGoogle){
-  var request = gapi.client.calendar.events.delete({
+  const request = gapi.client.calendar.events.delete({
     'calendarId': 'primary',
     'eventId': idGoogle
   });
@@ -700,7 +730,8 @@ $(document).on('submit', '#appointmentsForm', function(e) {
         $('#spiner-loader').removeClass('hide');
       },
       success: function(data) {
-        if(gapi.auth2.getAuthInstance().isSignedIn.get()) insertEventGoogle(dataF);
+        if(localStorage.getItem('auth-google-token') !== null) insertEventGoogle(dataF);
+
         removeCRMEvents();
         getUsersAndEvents(userType, idUser, false);
         $('#spiner-loader').addClass('hide');

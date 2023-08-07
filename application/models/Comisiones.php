@@ -2362,10 +2362,6 @@ public function getSettledCommissions(){
     }
 }
 
-public function porcentajes2($idLote){
-  echo json_encode($this->Comisiones_model->porcentajes2($idLote)->result_array(), JSON_NUMERIC_CHECK);
-}
- 
 
 public function getDatosNuevasXContraloria($proyecto,$condominio){
   $dat =  $this->Comisiones_model->getDatosNuevasXContraloria($proyecto,$condominio)->result_array();
@@ -4906,10 +4902,6 @@ public function getDatosHistorialPagoEstatus($proyecto, $condominio, $usuario) {
     
     }
  
-public function getUsersClient($lote,$compartida,$TipoVenta,$LupgarP,$mdb,$ismktd,$IdResidencial)
-{
-  echo json_encode($this->Comisiones_model->getUsersClient($lote,$compartida,$TipoVenta,$LupgarP,$mdb,$ismktd,$IdResidencial),JSON_NUMERIC_CHECK);
-}
  
 
      public function InsertNeo(){

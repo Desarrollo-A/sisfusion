@@ -303,55 +303,7 @@ $("#tabla_ingresar_9").ready( function(){
         $("#modal_pagadas").modal();
     });
 
-    /*$("#tabla_ingresar_9 tbody").on("click", ".pausar", function(){
-        var tr = $(this).closest('tr');
-        var row = tabla_1.row( tr );
-        idLote = $(this).val();
-
-        $("#modal_pagadas .modal-body").html("");
-        $("#modal_pagadas .modal-body").append('<h4 class="modal-title">¿Estás seguro de mandar a recisión este lote? <b style="color:red;" >'+row.data().nombreLote+'</b>?</h4>');
-        $("#modal_pagadas .modal-body").append(`<div class="form-group"><textarea name="Motivo" id="Motivo" class="form-control" placeholder="Describe brevemente el mótivo y detalles de fecha." cols="70" rows="3" required></textarea></div>
-                <input type="hidden" name="ideLotep" id="ideLotep" value="${idLote}"><input type="hidden" name="estatusL" id="estatusL" value="8">`);
-        $("#modal_pagadas .modal-body").append('<br><div class="row"><div class="col-md-12"><center><input type="submit" class="btn btn-success" value="ACEPTAR"></center></div></div>');
-        $("#modal_pagadas").modal();
-    });*/
-
-    /*$("#tabla_ingresar_9 tbody").on("click", ".liquidarPago", function(){
-        var tr = $(this).closest('tr');
-        var row = tabla_1.row( tr );
-        idLote = $(this).val();
-        var parametros = {
-            "lote" : idLote
-        };
-
-        $.ajax({
-            type: 'POST',
-            url: url2+'Comisiones/LiquidarLote',
-            data: parametros,
-            beforeSend: function(){
-            },
-            success: function(data) {
-                if (data == 1) {
-                    tabla_1.ajax.reload();
-                    alerts.showNotification("top", "right", "LIQUIDADO.", "success");
-                } else {
-                    alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
-                }
-            },
-            error: function(){
-                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-            }
-        });
-    });*/
-
-    /*async function VerificarUsers(idLote,compartida,tipo_venta,lugar_prospeccionLote,mdb,ismktd){
-        return new Promise(resolve => {
-            $.getJSON( url + "Comisiones/getUsersClient/"+idLote+"/"+compartida+"/"+tipo_venta+"/"+lugar_prospeccionLote+"/"+mdb+"/"+ismktd).done( function( data ){
-                resolve({data:data});
-            });
-        });
-    }*/
-
+    
     $("#tabla_ingresar_9 tbody").on("click", ".verify_neodata", async function(){ 
 
         subdirector = $(this).attr("data-subdirector");

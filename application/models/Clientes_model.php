@@ -4192,10 +4192,10 @@ function getStatusMktdPreventa(){
         return $query->row();
     }
 
-    public function getCancelacionesProceso($idUsuario, $idRol, $fechaInicio, $fechaFin) {
-        $condicion = ($idRol == 6)
-            ? "AND cl.id_gerente = $idUsuario"
-            : 'AND cl.cancelacion_proceso = 1';
+    public function getCancelacionesProceso($idLider, $idRol, $fechaInicio, $fechaFin) {
+        if ($this->session->userdata('id_usuario') == 10795) // ALMA GARCIA ACEVEDO QUEZADA
+            $idLider = $idLider . ", 671";
+        $condicion = ($idRol == 6) ? "AND cl.id_gerente IN ($idLider)" : "AND cl.cancelacion_proceso = 1";
 
         $query = $this->db->query("SELECT lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, 
         CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, co.nombre AS nombreCondominio, re.nombreResidencial,
@@ -4218,7 +4218,6 @@ function getStatusMktdPreventa(){
         LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
         INNER JOIN opcs_x_cats cp ON cp.id_opcion = cl.cancelacion_proceso AND cp.id_catalogo = 94
         WHERE lo.idStatusLote IN (2, 3) $condicion");
-
         return $query->result_array();
     }
 
