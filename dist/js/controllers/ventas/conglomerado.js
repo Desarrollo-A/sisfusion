@@ -1582,6 +1582,7 @@ $(document).on("click", ".uniAdd", function () {
     informacion_adicional += '              <option value="8">8 </option>';
     informacion_adicional += '              <option value="9">9 </option>';
     informacion_adicional += '              <option value="10">10</option>';
+    informacion_adicional += '              <option value="11">11</option>';
     informacion_adicional += '          </select>';
     informacion_adicional += '        </div>';
     informacion_adicional += '      </div>';
