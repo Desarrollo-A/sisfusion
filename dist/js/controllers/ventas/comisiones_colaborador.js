@@ -150,7 +150,7 @@ $(document).ready(function () {
     ((mes == 5 && dia == 8) || (mes == 5 && dia == 9 && hora <= 13)) ||
     ((mes == 6 && dia == 12) || (mes == 6 && dia == 13 && hora <= 13)) ||
     ((mes == 7 && dia == 10) || (mes == 7 && dia == 11 && hora <= fin )) ||
-    ((mes == 8 && dia == 7) || (mes == 8 && dia == 8 && hora <= fin)) ||
+    ((mes == 8 && dia == 09) || (mes == 8 && dia == 10 && hora <= fin)) ||
     ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= fin)) ||
     ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= fin)) ||
     ((mes == 11 && dia == 13) || (mes == 11 && dia == 14 && hora <= fin)) ||
@@ -270,7 +270,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     ((mes == 5 && dia == 8) || (mes == 5 && dia == 9 && hora <= 13)) ||
                     ((mes == 6 && dia == 12) || (mes == 6 && dia == 13 && hora <= 13)) ||
                     ((mes == 7 && dia == 10) || (mes == 7 && dia == 11 && hora <= fin)) ||
-                    ((mes == 8 && dia == 7) || (mes == 8 && dia == 8 && hora <= fin)) ||
+                    ((mes == 8 && dia == 09) || (mes == 8 && dia == 10 && hora <= fin)) ||
                     ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= fin)) ||
                     ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= fin)) ||
                     ((mes == 11 && dia == 13) || (mes == 11 && dia == 14 && hora <= fin)) ||
@@ -532,7 +532,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                         ((mes == 5 && dia == 8) || (mes == 5 && dia == 9 && hora <= 13)) ||
                         ((mes == 6 && dia == 12) || (mes == 6 && dia == 13 && hora <= 13)) ||
                         ((mes == 7 && dia == 10) || (mes == 7 && dia == 11 && hora <= fin)) ||
-                        ((mes == 8 && dia == 7) || (mes == 8 && dia == 8 && hora <= fin)) ||
+                        ((mes == 8 && dia == 09) || (mes == 8 && dia == 10 && hora <= fin)) ||
                         ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= fin)) ||
                         ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= fin)) ||
                         ((mes == 11 && dia == 13) || (mes == 11 && dia == 14 && hora <= fin)) ||

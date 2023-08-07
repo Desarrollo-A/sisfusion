@@ -82,6 +82,8 @@ class Usuarios_modelo extends CI_Model
                     $id_sede = "(usuarios.id_sede LIKE '%5%' OR usuarios.id_sede LIKE '%12%')";
                 else if($this->session->userdata('id_usuario') == 28) // 28	ADRIANA RODRIGUEZ
                     $id_sede = "(usuarios.id_sede IN ('2', '4', '13', '14', '15'))";
+                else if($this->session->userdata('id_usuario') == 30) // 30 VALERIA PALACIOS
+                    $id_sede = "(usuarios.id_sede IN ('1', '10', '11'))";
                 else 
                     $id_sede = "(usuarios.id_sede LIKE('%".$this->session->userdata('id_sede')."%'))";
 
