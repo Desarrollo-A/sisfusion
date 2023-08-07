@@ -997,6 +997,13 @@ $('#planes').change(function () {
    
 
 });
+ function llenado (){
+  
+     $("#llenadoPlan").modal();
+     $('#tiempoRestante').removeClass('hide');
+    // $("#tiempoRestante").html("111");
+
+ }
 $(document).on("click",".llenadoPlan", function (e){
     $('#spiner-loader').removeClass('hide');
     document.getElementById('llenadoPlan').disabled = true;
