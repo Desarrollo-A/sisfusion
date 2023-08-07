@@ -2736,19 +2736,16 @@ public function getStatusMktdPreventa(){
         $this->load->view('clientes/cancelaciones_proceso');
     }
 
-    public function infoCancelacionesProceso()
-    {
+    public function infoCancelacionesProceso() {
         if (!isset($_POST) || empty($_POST)) {
             echo json_encode([]);
             return;
         }
-
         $idRol = $this->session->userdata('id_rol');
-        $idUsuario = $this->session->userdata('id_lider');
+        $idLider = $this->session->userdata('id_lider');
         $fechaInicio = date("Y-m-d", strtotime($this->input->post("beginDate")));
         $fechaFin = date("Y-m-d", strtotime($this->input->post("endDate")));
-
-        $data = $this->Clientes_model->getCancelacionesProceso($idUsuario, $idRol, $fechaInicio, $fechaFin);
+        $data = $this->Clientes_model->getCancelacionesProceso($idLider, $idRol, $fechaInicio, $fechaFin);
         echo json_encode($data);
     }
 

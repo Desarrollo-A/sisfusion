@@ -869,7 +869,7 @@ class Pagos extends CI_Controller
         switch($this->session->userdata('id_rol')){
           case '31':
               $this->load->view('template/header');
-              $this->load->view("ventas/revision_INTMEXremanente");
+              $this->load->view("pagos/revision_remanente_intmex_view");
           break;
           default:
             $this->load->view('template/header');

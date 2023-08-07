@@ -1343,7 +1343,7 @@
         return $this->db->query("SELECT us.id_lider as id_subdirector, 
 		(CASE 
         WHEN us.id_lider = 7092 THEN 3 
-        WHEN us.id_lider IN (9471, 681, 609, 690) THEN 607 
+        WHEN us.id_lider IN (9471, 681, 609, 690, 2411) THEN 607 
 		WHEN us.id_lider = 692 THEN u0.id_lider
         WHEN us.id_lider = 703 THEN 4
         WHEN us.id_lider = 7886 THEN 5

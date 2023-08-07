@@ -982,7 +982,7 @@
             resear_formulario();
 
             $.ajax({
-                url: url + "Comisiones/cargaxml",
+                url: url + "Comisiones/cargaxml2",
                 data: data,
                 cache: false,
                 contentType: false,

@@ -52,14 +52,14 @@
                             <h4 class="modal-title  center-align" ><b>Llenado de Plan</b></h4>
                     </div>
                     <div class="modal-body">
-                        <label class="lbl-gray">Atención:</label>
+                        <label class="lbl-gray">Nota:</label>
                         
-                        <span class="lbl-gray">La siguiente accion llenará los planes de venta de los lotes que cumplan con las condiciones. considere que esta acción solo se podra realizar cada 4 horas.</span>
+                        <span class="lbl-gray">La siguiente acción asignara el plan de venta a los lotes que cumplan con las condiciones correspondientes, si no se asigna favor de revisar otros datos como la sede o los usuarios que tiene asignados la venta. Esta acción solo se podra realizar cada 4 horas.</span>
                
                     </div>
                     <div class="modal-footer">
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-gral-data llenadoPlan" id="llenadoPlan" name="llenadoPlan" >Llenado de plan</button>
+                        <button type="button" class="btn btn-gral-data llenadoPlan" id="llenadoPlan" name="llenadoPlan" >Aceptar</button>
                         <div class="spiner-loader hide" id="spiner-loader">
                             <div class="backgroundLS">
                                 <div class="contentLS">
