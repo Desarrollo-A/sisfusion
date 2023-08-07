@@ -189,4 +189,12 @@ class General_model extends CI_Model
         } else
             return false;
     }
+    function permisosMenu($val){
+        if($val == 1){
+            $this->session->set_flashdata('error_usuario', '<div id="ele" class="col-md-11" role="alert"><center><b>¡NO TIENES ACCESO AL PANEL SOLICITADO!</b><br><span style="font-size:12px;">Verificar los datos o ponerse en contacto con un administrador.</span></center></div>');
+            redirect(base_url() .$this->session->userdata('controlador'),'location');
+        }else{
+            $this->session->set_flashdata('error_usuario', '');
+        }
+    }
 }

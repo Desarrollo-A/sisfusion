@@ -1,3 +1,5 @@
+
+
 <div class="sidebar" data-active-color="blue" data-background-color="white" data-image="<?=base_url()?>/dist/img/sidebar-1.jpg">
 	<div class="logo"> 
 		<a href="<?=base_url()?>#" class="simple-text">
@@ -71,7 +73,7 @@
                                                         {		//href="<?= base_url().$hijos->pagina?>"
                                             ?>
                                                             <li class="<?php if ($url == base_url().$hijos->pagina) {echo 'active';} ?>">
-                                                                <a href="#" onclick="validarMenu('<?=$hijos->pagina?>')"><?=$hijos->nombre?></a>
+                                                                <a href="<?= base_url().$hijos->pagina?>"><?=$hijos->nombre?></a>
                                                             </li>
                                             <?php
                                                         }
@@ -98,7 +100,7 @@
                                                     if($hijos->orden >= $datos->orden && $hijos->orden <= $datos->orden +1)	{		
                                             ?>
                                                         <li class="<?php if ($url == base_url().$hijos->pagina) {echo 'active';} ?>">
-                                                            <a href="<?= base_url().$hijos->pagina?>  "><?=$hijos->nombre?></a>
+                                                            <a href="<?= base_url().$hijos->pagina?>"><?=$hijos->nombre?></a>
                                                         </li>
                                             <?php
                                                     }
@@ -124,7 +126,7 @@
                                                         if($hijos->orden >= $datos->orden && $hijos->orden <= $datos->orden +1)	{		
                                                 ?>
                                                             <li class="<?php if ($url == base_url().$hijos->pagina) {echo 'active';} ?>">
-                                                                <a href="<?= base_url().$hijos->pagina?>  "><?=$hijos->nombre?></a>
+                                                                <a href="<?= base_url().$hijos->pagina?>"><?=$hijos->nombre?></a>
                                                             </li>
                                                 <?php
                                                         }
@@ -257,6 +259,8 @@
 			</div>
 		</div>
     </nav>
+
+
 <script>
     function AddTicket(){
         $.post("<?=base_url()?>index.php/Api/ServicePostTicket", function (data) {
@@ -267,21 +271,86 @@
     var general_base_url_sidebar = "<?=base_url()?>";
     //console.log(general_base_url_sidebar)
 
-    function validarMenu(pagina){
-            $.post(general_base_url_sidebar+'Postventa/validarMenu', {ruta:urls }, function (data) {
-                console.log(data);
+  /*  function validarMenu(pagina){
+        let formData = new FormData();
+        formData.append('ruta',urls);
+        formData.append('origen',1);
+
+        $.ajax({
+            url: general_base_url_sidebar+'Postventa/validarMenu',
+            data: formData,
+            method: 'POST',
+            contentType: false,
+            cache: false,
+            processData:false,
+            success: function(data) {
                 if(data == 0){
+                    alerts.showNotification("top", "right", "NO SE TIENEN PERMISOS PARA LA VISTA SOLICITDA", "warning");
                     window.location.replace(general_base_url_sidebar);
                 }else{
                     let nuevaRuta = general_base_url_sidebar + pagina;
                     window.location.replace(nuevaRuta);
                 }
-            }, 'json');
-    }
-    let urls = "<?=$_SERVER["REQUEST_URI"]?>";
+            },
+            error: function(){
+
+            },
+            async: false
+        });
+
+    }*/
+   /* window.addEventListener('beforeunload', (event) => {
+  event.returnValue = 'ccaca?';
+});
+    window.onbeforeunload =  function ()  { 
+        return "caca?";
+ 
+}  */
+   /* let urls = "<?=$_SERVER["REQUEST_URI"]?>";
     let urlActual = "<?=$_SESSION['rutaActual']?>";
     console.log(urls);
     console.log(urlActual);
+    window.onload = function(){
+    let formData = new FormData();
+        formData.append('ruta',urls);
+        formData.append('origen',1);
+
+        $.ajax({
+            url: general_base_url_sidebar+'Postventa/validarMenu',
+            data: formData,
+            method: 'POST',
+            contentType: false,
+            cache: false,
+            processData:false,
+            success: function(data) {
+                if(data == 0){
+                    alerts.showNotification("top", "right", "NO SE TIENEN PERMISOS PARA LA VISTA SOLICITDA", "warning");
+                    window.location.replace(general_base_url_sidebar);
+                }else{
+                    let nuevaRuta = general_base_url_sidebar + pagina;
+                    //window.location.replace(nuevaRuta);
+                }
+            },
+            error: function(){
+
+            },
+            async: false
+        });
+    }*/
+    /*window.reload = function(){
+        $("#spiner-loader").removeClass("hide");
+        $.post(general_base_url_sidebar+'Postventa/validarMenu', {ruta:urls,origen:2 }, function (data) {
+            console.log(data);
+                if(data == 0){
+                    //alert(1)
+                    alerts.showNotification("top", "right", "NO SE TIENEN PERMISOS PARA LA VISTA SOLICITDA", "warning");
+                    window.location.replace(general_base_url_sidebar);
+                }else{
+                    let nuevaRuta = general_base_url_sidebar + urls.split(urlActual)[1];
+                }
+                $("#spiner-loader").addClass("hide");
+    }, 'json');*/
+    
     /*window.onload = function(){
         let urls = "<?=$_SERVER["REQUEST_URI"]?>";
         let urlActual = "<?=$_SESSION['rutaActual']?>";
@@ -298,4 +367,6 @@
             }
     }, 'json');
     }*/
+
+
 </script>

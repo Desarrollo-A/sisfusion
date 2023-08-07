@@ -1671,6 +1671,15 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
   }
 }
 
+#boxHome #ele {
+  animation: 3s fadeIn2;
+  -webkit-animation: 3s fadeIn2;
+  position: absolute;
+  animation-fill-mode: forwards;
+  visibility: hidden;
+  background-color: beige;
+}
+
 @keyframes fadeIn {
   0% {
     opacity: 0;
@@ -1696,5 +1705,14 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
 @media (max-width: 991px) {
   .navbar-header .navbar-toggle {
     color: #ffffff;
+  }
+}
+
+@keyframes fadeIn2 {
+  1% {
+    visibility: visible;
+  }
+  100% {
+    visibility: hidden;
   }
 }

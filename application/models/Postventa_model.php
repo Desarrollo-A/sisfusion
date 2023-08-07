@@ -67,8 +67,6 @@ class Postventa_model extends CI_Model
 		JOIN motivos_rechazo mr ON mr.id_motivo=he.descripcion AND he.tipo_movimiento = 1
         WHERE se.id_solicitud = $id_solicitud  AND he.numero_estatus NOT IN(28,31))
 		ORDER BY he.fecha_creacion  DESC");
-
-
     }
 
     function getEmpRef($idLote){

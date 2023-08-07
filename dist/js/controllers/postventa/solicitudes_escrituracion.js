@@ -80,7 +80,7 @@ sp = {
 sp2 = {
   initFormExtendedDatetimepickers: function () {
     $(".datepicker2").datetimepicker({
-      format: "DD/MM/YYYY",
+      format: "DD/MM/YYYY LT",
       icons: {
         time: "fa fa-clock-o",
         date: "fa fa-calendar",
@@ -704,7 +704,10 @@ $(document).on("click", ".comentariosModel", function (e) {
       $.each(data, function (i, v) {
         let fecha_creacion = moment(v.fecha_creacion.split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss')
         $("#comments-list-asimilados").append(
-          `<div class="col-lg-12" style="padding-left:40px;"><li><a style="color:${v.color};">${v.nombre}</a>&nbsp;<a style="color:${v.color}" class="float-right"><b>${fecha_creacion}</b></a><p>${v.descripcion}</p></li></div>`
+          `<div class="col-lg-12" style="padding-left:40px;">
+              <li>
+                <a style="color:${v.color};">${v.nombre}</a>&nbsp;<a style="color:${v.color}" class="float-right"><b>${fecha_creacion}</b></a><p>${v.descripcion}</p></li>
+          </div>`
         );
       });
     } else {
