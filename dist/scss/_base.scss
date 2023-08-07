@@ -212,6 +212,7 @@ $vividOrange        : #F57F17;
 $darkPink           : #880E4F;
 $melon              : #CD6155;
 $pink               : #cd5587;
+$orange             : #DF7314;
 /* END vrbls coloress */
 
 /* size devices */
@@ -439,7 +440,7 @@ $tv                 : "(min-width: 1280px)";
 .datepicker:disabled {
     opacity: 0.6;
     cursor: not-allowed;
-  }
+}
 .btn-green{
     color: $green;
     border: none;
@@ -623,6 +624,11 @@ $tv                 : "(min-width: 1280px)";
     border: none;
     background-color: #92929218;
 }
+.lbl-goldMaderas{
+    color: $goldMaderas;
+    border:none;
+    background-color: #96843D18;
+}
 .lbl-gral{
     border-radius: 25px;
     padding: 7px 10px;
@@ -635,7 +641,7 @@ $tv                 : "(min-width: 1280px)";
 .lbl-grayDark{
     color: $grayDark;
     border: none;
-    background-color: #28374718;
+    background-color: #191B1C18;
 }
 .lbl-green{
     color: $green;
@@ -656,6 +662,11 @@ $tv                 : "(min-width: 1280px)";
     color: $orangeYellow;
     border: none;
     background-color: #B9770E18;
+}
+.lbl-orange{
+    color:$orange;
+    border:none;
+    background-color: #DF731418;
 }
 .lbl-pink{
     color: $pink;
@@ -701,19 +712,19 @@ $tv                 : "(min-width: 1280px)";
 .lbl-lightBlue{
     color:#1B4F72;
     border:none;
-    background:#1B4F7218;
+    background-color:#1B4F7218;
 }
 
 .lbl-peach{
     color:#78281F;
     border: none;
-    background:#78281F18;
+    background-color:#78281F18;
 }
 
 .lbl-purple{
     color:#512E5F;
     border: none;
-    background:#512E5F18;
+    background-color:#512E5F18;
 }
 
 .lbl-aqua{
@@ -773,6 +784,9 @@ $tv                 : "(min-width: 1280px)";
         width: 77%;
         background-color: transparent;
         border: none;
+        &::placeholder{
+            color: red !important;
+        }
     }
 }
 

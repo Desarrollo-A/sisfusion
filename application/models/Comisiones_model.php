@@ -632,64 +632,48 @@ function getDatosHistorialPagoRP($id_usuario){
 
  
     function getDatosCobranzaRanking($a,$b){ 
-
-        
-
         $cadena = '';
-                if($a == 0){
-        $cadena = '';
+        if($a == 0){
+            $cadena = '';
         }else{
             $cadena = "AND MONTH(cl.fechaApartado)=".$a;
         }
 
-
-           if( $this->session->userdata('id_usuario') == 2042 ){
+        if( $this->session->userdata('id_usuario') == 2042 ){
         $filtro = " AND (ase.id_sede like '%2%' OR ase.id_sede like '%3%'OR ase.id_sede like '%4%'OR ase.id_sede like '%6%') ";
-      }
-      else{
-         $filtro = "  AND (ase.id_sede like '%1%' OR ase.id_sede like '%5%') ";
-      }
+        }
+        else{
+            $filtro = "  AND (ase.id_sede like '%1%' OR ase.id_sede like '%5%') ";
+        }
 
-           
-                
-           $this->db->query("SET LANGUAGE Español;");
+        $this->db->query("SET LANGUAGE Español;");
             $query = $this->db->query("SELECT cmktd.idc_mktd,l.idLote, res.nombreResidencial, con.nombre AS condominio, l.nombreLote, l.totalNeto2, cl.fechaApartado, convert(nvarchar, cl.fechaApartado, 6) mes, CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) AS cliente, se.nombre as plaza, CONCAT(ase.nombre,' ',ase.apellido_paterno,' ',ase.apellido_materno) AS asesor, CONCAT(ger.nombre,' ',ger.apellido_paterno,' ',ger.apellido_materno) AS gerente, stl.nombre as estatus,
-                CASE WHEN pro.otro_lugar = '0' THEN 'Sin especificar' WHEN pro.otro_lugar IS NULL THEN 'Sin especificar' ELSE pro.otro_lugar END as evidencia, cl.status, cl.id_cliente,l.idStatusContratacion,l.idLote,rm.precio, sd1.nombre as sd1,sd2.nombre as sd2, com.comision_total, pci2.abono_pagado, cmktd.idc_mktd, pc.bandera, pci3.abono_dispersado, convert(nvarchar, pc.fecha_modificacion, 6) date_final
-                FROM lotes l
-                INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1 AND lugar_prospeccion = 6
-                INNER JOIN condominios con ON con.idCondominio = l.idCondominio
-                INNER JOIN residenciales res ON res.idResidencial = con.idResidencial
-                INNER JOIN statuslote stl ON stl.idStatusLote = l.idStatusLote
-                INNER JOIN usuarios ase ON ase.id_usuario = cl.id_asesor
-                INNER JOIN sedes se ON se.id_sede = ase.id_sede $cadena
-                LEFT JOIN comisiones com ON com.id_lote = l.idLote AND com.estatus = 1 AND rol_generado = 38
-                LEFT JOIN pago_comision pc ON pc.id_lote = l.idLote
-                
-                LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision FROM pago_comision_ind WHERE (estatus in (11,3) OR descuento_aplicado = 1) GROUP BY id_comision) pci2 ON com.id_comision = pci2.id_comision
-                LEFT JOIN (SELECT SUM(abono_neodata) abono_dispersado, id_comision FROM pago_comision_ind GROUP BY id_comision) pci3 ON com.id_comision = pci3.id_comision
-
-                LEFT JOIN usuarios ger ON ger.id_usuario = cl.id_gerente
-                LEFT JOIN prospectos pro ON pro.id_prospecto = cl.id_prospecto
-                LEFT JOIN reportes_marketing rm on rm.id_lote=l.idLote
-                LEFT join compartidas_mktd cmktd on l.idLote=cmktd.id_lote
-                LEFT join sedes sd1 on sd1.id_sede=cmktd.sede1
-                LEFT join sedes sd2 on sd2.id_sede=cmktd.sede2
-                WHERE l.status = 1  AND year(cl.fechaApartado) = $b $filtro GROUP BY cmktd.idc_mktd,l.idLote, res.nombreResidencial, con.nombre , l.nombreLote, l.totalNeto2, cl.fechaApartado,
-                cl.fechaApartado, cl.nombre, cl.apellido_paterno, cl.apellido_materno , se.nombre , ase.nombre, ase.apellido_paterno,
-                ase.apellido_materno , ger.nombre, ger.apellido_paterno, ger.apellido_materno , stl.nombre ,
-                 pro.otro_lugar , cl.status, cl.id_cliente,l.idStatusContratacion,l.idLote,rm.precio, sd1.nombre ,sd2.nombre  , com.comision_total, 
-                 pci2.abono_pagado, cmktd.idc_mktd, pc.bandera, pci3.abono_dispersado, pc.fecha_modificacion");
-
+            CASE WHEN pro.otro_lugar = '0' THEN 'Sin especificar' WHEN pro.otro_lugar IS NULL THEN 'Sin especificar' ELSE pro.otro_lugar END as evidencia, cl.status, cl.id_cliente,l.idStatusContratacion,l.idLote,rm.precio, sd1.nombre as sede1,sd2.nombre as sede1, com.comision_total, pci2.abono_pagado, cmktd.idc_mktd, pc.bandera, pci3.abono_dispersado, convert(nvarchar, pc.fecha_modificacion, 6) date_final
+            FROM lotes l
+            INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1 AND lugar_prospeccion = 6
+            INNER JOIN condominios con ON con.idCondominio = l.idCondominio
+            INNER JOIN residenciales res ON res.idResidencial = con.idResidencial
+            INNER JOIN statuslote stl ON stl.idStatusLote = l.idStatusLote
+            INNER JOIN usuarios ase ON ase.id_usuario = cl.id_asesor
+            INNER JOIN sedes se ON se.id_sede = ase.id_sede $cadena
+            LEFT JOIN comisiones com ON com.id_lote = l.idLote AND com.estatus = 1 AND rol_generado = 38
+            LEFT JOIN pago_comision pc ON pc.id_lote = l.idLote
+            LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision FROM pago_comision_ind WHERE (estatus in (11,3) OR descuento_aplicado = 1) GROUP BY id_comision) pci2 ON com.id_comision = pci2.id_comision
+            LEFT JOIN (SELECT SUM(abono_neodata) abono_dispersado, id_comision FROM pago_comision_ind GROUP BY id_comision) pci3 ON com.id_comision = pci3.id_comision
+            LEFT JOIN usuarios ger ON ger.id_usuario = cl.id_gerente
+            LEFT JOIN prospectos pro ON pro.id_prospecto = cl.id_prospecto
+            LEFT JOIN reportes_marketing rm on rm.id_lote=l.idLote
+            LEFT join compartidas_mktd cmktd on l.idLote=cmktd.id_lote
+            LEFT join sedes sd1 on sd1.id_sede=cmktd.sede1
+            LEFT join sedes sd2 on sd2.id_sede=cmktd.sede2
+            WHERE l.status = 1  AND year(cl.fechaApartado) = $b $filtro GROUP BY cmktd.idc_mktd,l.idLote, res.nombreResidencial, con.nombre , l.nombreLote, l.totalNeto2, cl.fechaApartado,
+            cl.fechaApartado, cl.nombre, cl.apellido_paterno, cl.apellido_materno , se.nombre , ase.nombre, ase.apellido_paterno,
+            ase.apellido_materno , ger.nombre, ger.apellido_paterno, ger.apellido_materno , stl.nombre ,
+            pro.otro_lugar , cl.status, cl.id_cliente,l.idStatusContratacion,l.idLote,rm.precio, sd1.nombre ,sd2.nombre  , com.comision_total, 
+            pci2.abono_pagado, cmktd.idc_mktd, pc.bandera, pci3.abono_dispersado, pc.fecha_modificacion");
             return $query->result();
-                
-               
-            }
-        
 
-
-
-
-   
+    }
     
     function getDatosCobranzaReporte($a,$b){ 
 

@@ -293,7 +293,7 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
                     if (d.estatus == 1) { // IS ACTIVE
                         var actions = '';
                         var group_buttons = '';
-                        group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto +'" style="margin-right: 3px" data-toggle="tooltip"  data-placement="top" title="IINGRESA UN COMENTARIO"><i class="fas fa-comment-alt"></i></button>' +
+                        group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto +'" style="margin-right: 3px" data-toggle="tooltip"  data-placement="top" title="INGRESA UN COMENTARIO"><i class="fas fa-comment-alt"></i></button>' +
                                     '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto +'" style="margin-right: 3px;" data-toggle="tooltip"  data-placement="top" title="EDITAR LA INFORMACIÓN"><i class="fas fa-pencil-alt"></i></button>' +
                                     '<button class=" btn-data btn-details-grey see-information" data-id-prospecto="' + d.id_prospecto +'" style="margin-right: 3px;" data-toggle="tooltip"  data-placement="top" title="VER INFORMACIÓN"><i class="fas fa-eye"></i></button>' +
                                     '<button class="btn-data btn-details-violet re-asign" data-id-prospecto="' + d.id_prospecto +'" data-toggle="tooltip"  data-placement="top" title="RE-ASIGNAR"><i class="fas fa-retweet"></i></button>';

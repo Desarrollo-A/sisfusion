@@ -4064,6 +4064,11 @@ class Asesor extends CI_Controller
         $fileName = $_FILES['docArchivo1']['name'];
         $fileSize = $_FILES['docArchivo1']['size'];
         $fileType = $_FILES['docArchivo1']['type'];
+        // echo( $fileTmpPath);
+        echo( $fileName);
+        // echo( $fileSize);
+        // echo( $fileType);
+
         $fileNameCmps = explode(".", $fileName);
         $fileExtension = strtolower(end($fileNameCmps));
         $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
@@ -4197,7 +4202,7 @@ class Asesor extends CI_Controller
         if ($data != null) {
             $data2 = $this->Asesor_model->verificarControversia($idLote);
             if ($data2 == null) {
-                $data_insert = array('id_lote' => $idLote, 'tipo' => $this->input->post("controversy_type"), 'creado_por' => $this->session->userdata('id_usuario'), 'id_cliente' => $idCliente);
+                $data_insert = array('id_lote' => $idLote, 'tipo' => $this->input->post("controversy_type"), 'creado_por' => $this->session->userdata('id_usuario'), 'comentario' => $this->input->post("controversy_comment"), 'id_cliente' => $idCliente);
                 $this->Asesor_model->insertControversia($data_insert);
                 $json['resultado'] = TRUE;
             } else

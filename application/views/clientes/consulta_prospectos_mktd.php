@@ -22,14 +22,14 @@
                                         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <div class="form-group label-floating select-is-empty">
                                                 <label class="control-label">Subdirector</label>
-                                                <select name="subDir" id="subDir" class="selectpicker select-gral m-0" data-show-subtext="true" data-live-search="true" data-style="btn" title="Selecciona subdirector" data-size="7" required></select>
+                                                <select name="subDir" id="subDir" class="selectpicker select-gral m-0" data-show-subtext="true" data-live-search="true" data-style="btn" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                             </div>
                                         </div>
                                     <?php } ?>
                                     <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                         <div class="form-group label-floating select-is-empty">
                                             <label class="control-label">Gerente</label>
-                                            <select name="gerente" id="gerente" class="selectpicker select-gral m-0" data-show-subtext="true" data-live-search="true" data-style="btn" title="Selecciona gerente" data-size="7" required></select>
+                                            <select name="gerente" id="gerente" class="selectpicker select-gral m-0" data-show-subtext="true" data-live-search="true" data-style="btn" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4" id="filter_date">
@@ -73,8 +73,6 @@
             </div>
         </div>
     </div>
-
-	
 	<?php $this->load->view('template/footer_legend');?>
 </div>
 </body>
