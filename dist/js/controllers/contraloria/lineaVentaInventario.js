@@ -643,9 +643,12 @@ $(document).on("submit", "#formLineaVentas", function (e) {
         contentType: false, 
         success: function(data){
             $('#spiner-loader').addClass('hide');
-            if(data==true){
+            if(data == 1){
                 alerts.showNotification("top", "right", "Los datos se actualizaron correctamente.", "success");
                 tabla_inventario.ajax.reload(null,false);    
+            }else if(data == 2){
+                alerts.showNotification("top", "right", "No se pudo realizar el cambio, el lote fue dispersado recientemente.", "warning");
+                tabla_inventario.ajax.reload(null,false);  
             }else{
                 alerts.showNotification("top", "right", "Ha ocurrido un error intentalo nuevamente.", "danger");
             }

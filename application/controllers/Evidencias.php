@@ -11,7 +11,6 @@ class Evidencias extends CI_Controller
         $this->load->library(array('session', 'form_validation', 'get_menu', 'jwt_actions'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
-
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
     }
@@ -176,7 +175,7 @@ class Evidencias extends CI_Controller
             if ($type == 1) // MJ: EVIDENCIA BBVA
                 $response = $this->General_model->updateRecord('tokens',  array ("estatus" => $action), 'id_token', $this->input->post("id"));
             else if ($type == 2) // MJ: EVIDENCIA VIDEO
-                $response = $this->General_model->updateRecord('video_evidencia',  array ("estatus_validacion" => $action), 'id_video', $this->input->post("id"));
+                $response = $this->General_model->updateRecord('video_evidencia',  $action == 2 ? array ("estatus" => 0, "estatus_validacion" => $action) : array ("estatus_validacion" => $action), 'id_video', $this->input->post("id"));
             echo json_encode($response);
         }
     }

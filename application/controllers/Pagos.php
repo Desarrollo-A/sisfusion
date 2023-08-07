@@ -777,6 +777,7 @@ class Pagos extends CI_Controller
 
     public function revision_mktd()
     {
+      print_r($this->session->userdata('id_rol'));
       switch($this->session->userdata('id_rol')){
         case '31':
             $this->load->view('template/header');

@@ -28,23 +28,22 @@ $('#all_users_datatable').DataTable({
     dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
     width: "100%",
     scrollX: true,
-    buttons: [
-        {
-            extend: 'excelHtml5',
-            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-            className: 'btn buttons-excel',
-            titleAttr: 'Lista de usuarios',
-            title:'Lista de usuarios',
-            exportOptions: {
-                columns: id_rol_general == 49 ? [0, 1, 2, 3, 4, 5, 6, 7, 8,10,11,] : [0, 1, 2, 3, 4, 5, 6, 7 ,8 ,9 ,10 ,11,] ,
-                format: {
-                    header: function (d, columnIdx) {
-                        return ' ' + titulos[columnIdx] + ' ';
-                    }
+    bAutoWidth: true,
+    buttons: [{
+        extend: 'excelHtml5',
+        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+        className: 'btn buttons-excel',
+        titleAttr: 'Lista de usuarios',
+        title:'Lista de usuarios',
+        exportOptions: {
+            columns: id_rol_general == 49 ? [0, 1, 2, 3, 4, 5, 6, 7, 8,10,11,] : [0, 1, 2, 3, 4, 5, 6, 7 ,8 ,9 ,10 ,11,] ,
+            format: {
+                header: function (d, columnIdx) {
+                    return ' ' + titulos[columnIdx] + ' ';
                 }
             }
         }
-    ],
+    }],
     ordering: false,
     paging: true,
     pagingType: "full_numbers",
@@ -70,39 +69,39 @@ $('#all_users_datatable').DataTable({
                         return '<center><span class="label lbl-green">Activo</span><center>';
                     } else if (d.estatus == 3) {
                         boton = '<center><span class="label lbl-warning">Baja </span><center>';
-                                    if(id_rol_general == 49){
-                                var fecha_baja = '<center>FECHA DE BAJA <b>'+d.fecha_baja+'</b><br><center>';
-                                    }else{
-                                var fecha_baja = '';
-                                    }
-                                return boton + fecha_baja;
+                        if(id_rol_general == 49){
+                            var fecha_baja = '<center>FECHA DE BAJA <b>'+d.fecha_baja+'</b><br><center>';
+                        }else{
+                            var fecha_baja = '';
+                        }
+                        return boton + fecha_baja;
                     } else {
                         if (d.abono_pendiente !== undefined) {
                             if (parseFloat(d.abono_pendiente) > 0) {
                                 boton = '<center><p class="mt-1"><span class="label lbl-warning">Baja </span></p><center>';
-                                    if(id_rol_general == 49){
-                                var fecha_baja = '<center>FECHA DE BAJA <b>'+d.fecha_baja+'</b><br><center>';
-                                    }else{
-                                var fecha_baja = '';
-                                    }
+                                if(id_rol_general == 49){
+                                    var fecha_baja = '<center>FECHA DE BAJA <b>'+d.fecha_baja+'</b><br><center>';
+                                }else{
+                                    var fecha_baja = '';
+                                }
                                 return boton + fecha_baja;
                             } else {
                                 var boton = '<center><span class="label lbl-warning">Baja </span></center>';
-                                    if(id_rol_general == 49){
-                                var fecha_baja = '<center>FECHA DE BAJA <b>'+d.fecha_baja+'</b><br><center>';
-                                    }else{
-                                var fecha_baja = '';
-                                    }
+                                if(id_rol_general == 49){
+                                    var fecha_baja = '<center>FECHA DE BAJA <b>'+d.fecha_baja+'</b><br><center>';
+                                }else{
+                                    var fecha_baja = '';
+                                }
                                 return boton + fecha_baja;
                             }
                         } else {
-                                var boton = '<center><span class="label lbl-warning">Baja </span></center>';
-                                    if(id_rol_general == 49){
+                            var boton = '<center><span class="label lbl-warning">Baja </span></center>';
+                            if(id_rol_general == 49){
                                 var fecha_baja = '<center>FECHA DE BAJA <b>'+d.fecha_baja+'</b><br><center>';
-                                    }else{
+                            }else{
                                 var fecha_baja = '';
-                                    }
-                                return boton + fecha_baja;
+                            }
+                            return boton + fecha_baja;
                         }
                     }
                 }
@@ -132,8 +131,18 @@ $('#all_users_datatable').DataTable({
                 return d.sede;
             }
         },
-        { data: function (d) {
-            return d.forma_pago;
+        { 
+            data: function (d) {
+                if (id_rol_general == 49) {
+                    if(d.usuariouniv==1){
+                        return '<center><span class="label label-info">DESCUENTO UNIVERSIDAD</span><center>';
+                    }else{
+                        return '<center><span class="label label-info" style="background:gray">SIN DESCUENTO</span><center>';
+                    }
+                }
+                else{
+                    return d.forma_pago;
+                }
             }
         },
         { data: function (d) {
@@ -154,24 +163,29 @@ $('#all_users_datatable').DataTable({
             }
         },
         { data: function (d) {
-            return d.fecha_alta; 
+            return d.fecha_creacion;
             }
         },
-        { data: function (d) {
+        { 
+            data: function (d) {
                 if (id_usuario_general == 2767 || id_usuario_general == 5957 || id_usuario_general == 4878) {
-                    return '<button class="btn btn-blueMaderas btn-round btn-fab btn-fab-mini edit-user-information" data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip" data-placement="top" title="CAMBIAR FORMA DE PAGO"><i class="fas fa-pencil-alt"></i></button>'+
-                    '<button class="btn btn-green btn-round btn-fab btn-fab-mini see-user-information" data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip" data-placement="top" title="VER HISTORIAL DE CAMBIOS"><i class="far fa-eye"></i></button>';
+                    return '<div class="d-flex"><button class="btn btn-blueMaderas btn-round btn-fab btn-fab-mini edit-user-information" data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip" data-placement="top" title="CAMBIAR FORMA DE PAGO"><i class="fas fa-pencil-alt"></i></button>'+
+                    '<button class="btn btn-green btn-round btn-fab btn-fab-mini see-user-information" data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip" data-placement="top" title="VER HISTORIAL DE CAMBIOS"><i class="far fa-eye"></i></button></div>';
                 } else {
-                    return '<center><button class="btn-data btn-green see-user-information" data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip" data-placement="top" title="VER HISTORIAL DE CAMBIOS"><i class="far fa-eye"></i></button></center>';
+                    if(id_usuario_general == 2896){
+                        return '';
+                    }else{
+                        return '<div class="d-flex justify-center"><button class="btn-data btn-green see-user-information" data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip" data-placement="top" title="VER HISTORIAL DE CAMBIOS"><i class="far fa-eye"></i></button>';
+                    }
                 }
             }
         }
     ],
     ajax: {
-        url: general_base_url + "/usuarios/getUsersList",
-        type: "POST",
+        "url": "getUsersList",
+        "type": "POST",
         cache: false,
-        data: function( d ){
+        "data": function( d ){
         }
     },
     columnDefs:[{
@@ -201,11 +215,9 @@ $(document).on('click', '.edit-user-information', function(e){
 });
 
 $(document).on('click', '.see-user-information', function(e){
-    // $('#spiner-loader').removeClass('hide');
     id_usuario = $(this).attr("data-id-usuario");
     $.getJSON("getChangelog/"+id_usuario).done( function( data ){
         $("#seeInformationModal").modal();
-        // $('#spiner-loader').addClass('hide');
         $.each( data, function(i, v){
             fillChangelog(v);
         });
@@ -214,14 +226,14 @@ $(document).on('click', '.see-user-information', function(e){
 
 function fillChangelog (v) {
     $("#changelog").append('<li>\n' +
-        '            <a>Campo: <b>'+v.parametro_modificado.toUpperCase()+'</b></a>\n' +
-        '            <a style="float: right">'+v.fecha_creacion+'</a><br>\n' +
-        '            <a>Valor anterior:</a> <b> '+v.anterior.toUpperCase()+' </b>\n' +
-        '            <br>\n' +
-        '            <a>Valor nuevo:</a> <b> '+v.nuevo.toUpperCase()+' </b>\n' +
-        '            <br>\n' +
-        '            <a>Usuario:<b> '+v.creador.toUpperCase()+' </b></a>\n' +
-        '</li>');
+'            <a>Campo: <b>'+v.parametro_modificado.toUpperCase()+'</b></a>\n' +
+'            <a style="float: right">'+v.fecha_creacion+'</a><br>\n' +
+'            <a>Valor anterior:</a> <b> '+v.anterior.toUpperCase()+' </b>\n' +
+'            <br>\n' +
+'            <a>Valor nuevo:</a> <b> '+v.nuevo.toUpperCase()+' </b>\n' +
+'            <br>\n' +
+'            <a>Usuario:<b> '+v.creador.toUpperCase()+' </b></a>\n' +
+    '</li>');
 }
 
 function cleanComments() {
@@ -233,7 +245,7 @@ $("#editUserForm").on('submit', function(e){
     e.preventDefault();
     $.ajax({
         type: 'POST',
-        url: general_base_url + '/usuarios/updateUser',
+        url: 'updateUser',
         data: new FormData(this),
         contentType: false,
         cache: false,
@@ -241,6 +253,7 @@ $("#editUserForm").on('submit', function(e){
         beforeSend: function(){
         },
         success: function(data) {
+            console.log(data);
             if (data == 1) {
                 $('#editUserModal').modal("hide");
                 alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
@@ -258,7 +271,6 @@ $("#editUserForm").on('submit', function(e){
 $(document).on('click', '.see-changes-log', function(){
     id_usuario = $(this).attr("data-id-usuario");
     $.post("getChangeLogUsers/"+id_usuario).done( function( data ){
-        console.log("aqui es: " + data);
         $("#changesRegsUsers").modal();
         $.each( JSON.parse(data), function(i, v){
             fillChangelogUsers(v);

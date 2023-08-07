@@ -310,3 +310,7 @@ function buildTableDetail(data) {
     });
     return solicitudes += '</table>';
 }
+
+$(window).resize(function(){
+        reportsTable.columns.adjust();
+    });

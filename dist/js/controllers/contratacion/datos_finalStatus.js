@@ -13,6 +13,7 @@ $(document).ready(function() {
         $("#residenciales").selectpicker('refresh');
     }, 'json');
 });
+
 let titulos_intxt = [];
 $('#Jtabla thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
@@ -25,6 +26,7 @@ $('#Jtabla thead tr:eq(0) th').each(function (i) {
     });
     $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
 });
+
 $(document).on('change', "#sedes", function () {
     if($(this).val() != "2") {
         fillTable($(this).val(), 0);
@@ -41,9 +43,11 @@ $(document).on('change', "#sedes", function () {
     else                                            
         alerts.showNotification("top", "right", "SELECCIONA UNA OPCIÓN PARA CONTINUAR CON LA BÚSQUEDA.", "warning");
 });
+
 $(document).on('change', "#residenciales", function () {
     fillTable($("#sedes").val(), $(this).val());
 });
+
 function getFinalDate() {
     var today = new Date();
     var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
@@ -51,12 +55,14 @@ function getFinalDate() {
     var dateTime = date + ' ' + time;
     return [dateTime];
 }
+
 function fillTable(sede, residencial) {
     const [dateTime] = getFinalDate();
     $('#Jtabla').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
+        bAutoWidth: true,
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',

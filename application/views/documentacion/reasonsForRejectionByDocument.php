@@ -96,7 +96,7 @@
     </div>
     <?php $this->load->view('template/footer_legend'); ?>
 </div>
-</div><!--main-panel close-->
+</div>
 <?php $this->load->view('template/footer'); ?>
 <script src="<?= base_url() ?>dist/js/controllers/documentacion/reasonForRejectionDocument.js"></script>
 </body>

@@ -15,12 +15,12 @@ $(document).ready(function() {
         });
     
 
-    //Eliminamos la ultima columna "ACCIONES" donde se encuentra un elemento de tipo boton (para omitir en excel o pdf).
     num_colum_encabezado.pop();
     $usersTable = $('#clients-datatable').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
+        bAutoWidth: true,
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
@@ -109,12 +109,8 @@ $(document).ready(function() {
                 data: function(d) {
                     if (id_usuario_general != d.id_asesor && d.lugar_prospeccion == 6 && id_rol_general != 19 && id_rol_general != 20) { // NO ES ASESORY EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
                         return '';
-                    } else { // ES EL ASESOR DEL EXPEDIENTE O ES UN GERENTE O SUBIDIRECTOR DE MKTD QUIEN CONSULTA
-                        return `<center>
-                                    <button class="btn-data btn-blueMaderas see-information" data-id-prospecto="${d.id_prospecto}" style="margin-right: 3px;" data-toggle="tooltip" data-placement="top" title="VER INFORMACIÓN">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                </center>`;
+                    } else {
+                        return `<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas see-information" data-id-prospecto="${d.id_prospecto}" style="margin-right: 3px;" data-toggle="tooltip" data-placement="top" title="VER INFORMACIÓN"><i class="fas fa-eye"></i></button></div>`;
                     }
                 }
             }
@@ -127,7 +123,7 @@ $(document).ready(function() {
         },
         initComplete: function () {
             $('[data-toggle="tooltip"]').tooltip({ 
-                trigger: "hover"
+                trigger: "hover",
         });
                 
         }
@@ -146,11 +142,6 @@ function printProspectInfoMktd() {
 }
 
 function fillFields(v, type) {
-    /*
-     * 0 update prospect
-     * 1 see information modal
-     * 2 update reference
-     */
     if (type == 0) {
         $("#nationality").val(v.nacionalidad);
         $("#legal_personality").val(v.personalidad_juridica);
@@ -189,7 +180,6 @@ function fillFields(v, type) {
         } else {
             document.getElementById('other').setAttribute("checked", "true");
         }
-
         pp = v.lugar_prospeccion;
         if (pp == 3 || pp == 7 || pp == 9 || pp == 10) { // SPECIFY OPTION
             $("#specify").val(v.otro_lugar);
@@ -200,7 +190,6 @@ function fillFields(v, type) {
         } else { // WITHOUT SPECIFICATION
             $("#specify").val("");
         }
-
     } else if (type == 1) {
         $("#nationality-lbl").val(v.nacionalidad);
         $("#legal-personality-lbl").val(v.personalidad_juridica);
@@ -222,7 +211,6 @@ function fillFields(v, type) {
         $("#phone-asesor-lbl").val(v.tel_asesor);
         $("#phone-coordinador-lbl").val(v.tel_coordinador);
         $("#phone-gerente-lbl").val(v.tel_gerente);
-
     } else if (type == 2) {
         $("#prospecto_ed").val(v.id_prospecto).trigger('change');
         $("#prospecto_ed").selectpicker('refresh');
@@ -244,9 +232,9 @@ function fillChangelog(v) {
         '               <a>' + v.fecha_creacion + '</a>\n' +
         '           </div>\n' +
         '           <div class="col-md-12">\n' +
-    '                <p class="m-0"><small>Usuario: </small><b> ' + v.creador.toUpperCase() + '</b></p>\n'+
-    '                <p class="m-0"><small>Valor anterior: </small><b> ' + v.anterior.toUpperCase() + '</b></p>\n' +
-    '                <p class="m-0"><small>Valor Nuevo: </small><b> ' + v.nuevo.toUpperCase() + '</b></p>\n' +
+        '               <p class="m-0"><small>Usuario: </small><b> ' + v.creador.toUpperCase() + '</b></p>\n'+
+        '               <p class="m-0"><small>Valor anterior: </small><b> ' + v.anterior.toUpperCase() + '</b></p>\n' +
+        '               <p class="m-0"><small>Valor Nuevo: </small><b> ' + v.nuevo.toUpperCase() + '</b></p>\n' +
         '           </div>\n' +
         '        <h6>\n' +
         '        </h6>\n' +
@@ -258,7 +246,6 @@ function fillChangelog(v) {
 function cleanComments() {
     var myCommentsList = document.getElementById('comments-list');
     myCommentsList.innerHTML = '';
-
     var myChangelog = document.getElementById('changelog');
     myChangelog.innerHTML = '';
 }
@@ -284,7 +271,6 @@ $(document).on('click', '.see-information', function(e) {
     id_prospecto = $(this).attr("data-id-prospecto");
     $("#seeInformationModal").modal();
     $("#prospecto_lbl").val(id_prospecto);
-
     $.getJSON("getInformationToPrint/" + id_prospecto).done(function(data) {
         $.each(data, function(i, v) {
             fillFields(v, 1);

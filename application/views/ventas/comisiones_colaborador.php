@@ -18,7 +18,6 @@
         $usuarioid =  $this->session->userdata('id_usuario');
         $query = $this->db->query("SELECT forma_pago FROM usuarios WHERE id_usuario=".$usuarioid."");
         $cadena ='';
-
         foreach ($query->result() as $row){
             $forma_pago = $row->forma_pago;
             if( $forma_pago  == 2 ||  $forma_pago == '2'){
@@ -31,7 +30,6 @@
                     }
                     else if($opn_cumplimiento[0]['estatus'] == 0){
                         $cadena ='<a href="https://maderascrm.gphsis.com/index.php/Usuarios/configureProfile"> <span class="label label-danger" style="background:orange;">  SIN OPINIÓN DE CUMPLIMIENTO, CLIC AQUI PARA SUBIRLA</span> </a>';
-
                     }
                     else if($opn_cumplimiento[0]['estatus'] == 2){
                         $cadena = '<button type="button" class="btn btn-info subir_factura_multiple" >SUBIR FACTURAS</button>';
@@ -44,12 +42,7 @@
                     $cadena = '<button type="button" class="btn btn-info subir-archivo">SUBIR DOCUMENTO FISCAL</button>';
                 } else if ($opn_cumplimiento[0]['estatus'] == 1) {
                     $cadena = '<p><b>Documento fiscal cargado con éxito</b>
-                                <a href="#" class="verPDFExtranjero" 
-                                    title="Documento fiscal"
-                                    data-usuario="'.$opn_cumplimiento[0]["archivo_name"].'" 
-                                    style="cursor: pointer;">
-                                    <u>Ver documento</u>
-                                </a>
+                                <a href="#" class="verPDFExtranjero" title="Documento fiscal" data-usuario="'.$opn_cumplimiento[0]["archivo_name"].'" style="cursor: pointer;"><u>Ver documento</u></a>
                             </p>';
                 } else if($opn_cumplimiento[0]['estatus'] == 2) {
                     $cadena = '<p style="color: #02B50C;">Documento fiscal bloqueado, hay comisiones asociadas.</p>';
@@ -58,8 +51,6 @@
         }
         ?>
 
-
-        <!-- Modals -->
         <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -73,7 +64,6 @@
                 </div>
             </div>
         </div>
-
         <div class="modal fade modal-alertas" data-backdrop="static" id="cpModal" role="dialog">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -84,8 +74,7 @@
                     </div>
                     <form id="cpForm">
                         <div class="modal-body pt-0">
-                            <input type="number" id="cp" name="cp" class="form-control input-gral m-0"
-                            placeholder="Captura tu código postal" required value=''>
+                            <input type="number" id="cp" name="cp" class="form-control input-gral m-0" placeholder="Captura tu código postal" required value=''>
                             <input type="text" id="nuevoCp" name="nuevoCp" hidden>
                         </div>
                         <div class="modal-footer">
@@ -95,7 +84,6 @@
                 </div>
             </div>
         </div>
-
         <div class="modal fade modal-alertas" id="modalQuitarFactura" role="dialog">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -108,9 +96,8 @@
                 </div>
             </div>
         </div>
-
         <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
@@ -127,8 +114,8 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="card card-plain">
-                                                <div class="card-content">
-                                                    <ul class="timeline timeline-simple" id="comments-list-asimilados"></ul>
+                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                                    <ul class="timeline-3" id="comments-list-asimilados"></ul>
                                                 </div>
                                             </div>
                                         </div>
@@ -143,7 +130,6 @@
                 </div>
             </div>
         </div>
-
         <div class="modal fade bd-example-modal-sm" id="ModalEnviar" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -152,7 +138,6 @@
                 </div>
             </div>
         </div>
-
         <div class="modal fade modal-alertas" id="modal_multiples" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -165,7 +150,6 @@
                 </div>
             </div>
         </div>
-
         <div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
             <div class="modal-dialog" style="width:800px; margin-top:20px">
                 <div class="modal-content">
@@ -175,7 +159,6 @@
                 </div>
             </div>
         </div>
-
         <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -183,8 +166,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- inicia modal subir factura -->
         <div id="modal_formulario_solicitud_multiple" class="modal" style="position:fixed; top:0; left:0; margin-bottom: 1%; margin-top: -5%;">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
@@ -270,13 +251,11 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
         <div class="modal fade modal-alertas" id="addFileExtranjero" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -319,7 +298,6 @@
                 </div>
             </div>
         </div>
-
         <div class="modal fade" id="info-modal" tabindex="-1" aria-labelledby="Información" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -327,38 +305,14 @@
                         <h5 class="modal-title" id="Información">Información</h5>
                     </div>
                     <div class="modal-body">
-                        <p>
-                            Para deducir los comprobantes emitidos por residentes en el extranjero sin establecimiento permanente en México, es necesario que contengan los siguientes requisitos:
-                        </p>
-                        <p>
-                            <b>I.</b> Nombre, denominación o razón social; domicilio.
-                        </p>
-                        <p>
-                            <b>II.</b> Número de identificación fiscal, o su equivalente, de quien lo expide.
-                        </p>
-                        <p>
-                            USA se llama Tax Id o ITIN (Taxpayer Identification Number).
-                            <br>
-                            Canadá: Tax Id o Business Number.
-                            <br>
-                            Ecuador: RUC (Registro Único de Contribuyentes).
-                            <br>
-                            Colombia: RUT (Registro Único Tributario).
-                            <br>
-                            Otros países: el número de registro que se utiliza en su país para el pago de impuesto.
-                        </p>
-                        <p>
-                            <b>III.</b> Lugar y fecha de expedición.
-                        </p>
-                        <p>
-                            <b>IV.</b> Clave de RFC de la persona a favor de quien se expida o, en su defecto, nombre, denominación o razón social de dicha persona.
-                        </p>
-                        <p>
-                            <b>V.</b>   Servicio y descripción del mismo. (cantidad en caso de aplicar).
-                        </p>
-                        <p>
-                            <b>VI.</b>  Valor unitario consignado en número e importe total consignado en número o letra.
-                        </p>
+                        <p>Para deducir los comprobantes emitidos por residentes en el extranjero sin establecimiento permanente en México, es necesario que contengan los siguientes requisitos:</p>
+                        <p><b>I.</b> Nombre, denominación o razón social; domicilio.</p>
+                        <p><b>II.</b> Número de identificación fiscal, o su equivalente, de quien lo expide.</p>
+                        <p>USA se llama Tax Id o ITIN (Taxpayer Identification Number).<br>Canadá: Tax Id o Business Number.<br>Ecuador: RUC (Registro Único de Contribuyentes).<br>Colombia: RUT (Registro Único Tributario).<br>Otros países: el número de registro que se utiliza en su país para el pago de impuesto.</p>
+                        <p><b>III.</b> Lugar y fecha de expedición.</p>
+                        <p><b>IV.</b> Clave de RFC de la persona a favor de quien se expida o, en su defecto, nombre, denominación o razón social de dicha persona.</p>
+                        <p><b>V.</b>   Servicio y descripción del mismo. (cantidad en caso de aplicar).</p>
+                        <p><b>VI.</b>  Valor unitario consignado en número e importe total consignado en número o letra.</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -366,8 +320,6 @@
                 </div>
             </div>
         </div>
-        <!-- END Modals -->
-
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -395,19 +347,11 @@
                                     <div class="tab-content p-2">
                                         <div class="tab-pane active" id="nuevas-1">
                                             <div class="encabezadoBox">
-                                                <p class="card-title pl-2">
-                                                    Comisiones nuevas disponibles para solicitar tu pago, para ver más detalles podrás consultarlo en el historial
-                                                    <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador">
-                                                        <b>Da clic aquí para ir al historial</b>
-                                                    </a>
-                                                </p>
+                                                <p class="card-title pl-2">Comisiones nuevas disponibles para solicitar tu pago, para ver más detalles podrás consultarlo en el historial<a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>Da clic aquí para ir al historial</b></a></p>
                                                 <?php
                                                     if($this->session->userdata('forma_pago') == 3){
                                                 ?>
-                                                <p style="color:#0a548b; margin-left: 1rem">
-                                                    <i class="fa fa-info-circle" aria-hidden="true"></i>
-                                                    Al monto mostrado habrá que descontar el
-                                                    <b>impuesto estatal</b> del
+                                                <p style="color:#0a548b; margin-left: 1rem"><i class="fa fa-info-circle" aria-hidden="true"></i>Al monto mostrado habrá que descontar el <b>impuesto estatal</b> del
                                                 <?php
                                                 $sede = $this->session->userdata('id_sede');
                                                 $query = $this->db->query("SELECT * FROM sedes WHERE estatus in (1) AND id_sede = ".$sede."");
@@ -423,8 +367,7 @@
                                                 <p style="color:#0a548b;"><i class="fa fa-info-circle" aria-hidden="true"></i> La cantidad mostrada es menos las deducciones aplicables para el régimen de <b>Remanente Distribuible.</b>
                                                 <?php }?>
                                                 <?php if ($this->session->userdata('forma_pago') == 5) { ?>
-                                                    <p class="card-title pl-2">Comprobantes fiscales emitidos por residentes en el <b>extranjero</b>
-                                                        sin establecimiento permanente en México.
+                                                    <p class="card-title pl-2">Comprobantes fiscales emitidos por residentes en el <b>extranjero</b> sin establecimiento permanente en México.
                                                         <a data-toggle="modal" data-target="#info-modal" style="cursor: pointer;">
                                                             <u>Clic aquí para más información</u>
                                                         </a>
@@ -471,7 +414,7 @@
                                                                 <th>% COMISIÓN</th>
                                                                 <th>DETALLE</th>
                                                                 <th>ESTATUS</th>
-                                                                <th>MÁS</th>
+                                                                <th>ACCIONES</th>
                                                             </tr>
                                                         </thead>
                                                     </table>
@@ -480,18 +423,11 @@
                                         </div>
                                         <div class="tab-pane" id="proceso-1">
                                             <div class="encabezadoBox">
-                                                <p class="card-title pl-1">
-                                                    Comisiones enviadas a contraloría para su revisión antes de aplicar tu pago, 
-                                                    si requieres ver más detalles como lo pagado y lo pendiente podrás consultarlo en el historial
-                                                    <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador">
-                                                        <b>Da clic aquí para ir al historial</b>
-                                                    </a>
-                                                </p>
+                                                <p class="card-title pl-1">Comisiones enviadas a contraloría para su revisión antes de aplicar tu pago, si requieres ver más detalles como lo pagado y lo pendiente podrás consultarlo en el historial <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>Da clic aquí para ir al historial</b></a></p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
                                                     <div class="row">
-                                                        
                                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                             <div class="form-group d-flex justify-center align-center">
                                                                 <h4 class="title-tot center-align m-0">Solicitado sin impuestos:</h4>
@@ -515,21 +451,14 @@
                                                         <th>% COMISIÓN</th>
                                                         <th>DETALLE</th>
                                                         <th>ESTATUS</th>
-                                                        <th>MÁS</th>
+                                                        <th>ACCIONES</th>
                                                     </tr>
                                                 </thead>
                                             </table>
                                         </div>
                                         <div class="tab-pane" id="proceso-2">
                                             <div class="encabezadoBox">
-                                                <p class="card-title pl-1">
-                                                    Comisiones en proceso de pago por parte de INTERNOMEX. 
-                                                    Si requieres ver más detalles como lo pagado y lo pendiente, 
-                                                    podrás consultarlo en el historial 
-                                                    <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador">
-                                                        <b>Da clic aquí para ir al historial</b>
-                                                    </a>
-                                                </p>
+                                                <p class="card-title pl-1">Comisiones en proceso de pago por parte de INTERNOMEX. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el historial <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>Da clic aquí para ir al historial</b></a></p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
@@ -557,21 +486,14 @@
                                                         <th>% COMISIÓN</th>
                                                         <th>DETALLE</th>
                                                         <th>ESTATUS</th>
-                                                        <th>MÁS</th>
+                                                        <th>ACCIONES</th>
                                                     </tr>
                                                 </thead>
                                             </table>
                                         </div>
                                         <div class="tab-pane" id="otras-1">
                                             <div class="encabezadoBox">
-                                                <p class="card-title pl-1">
-                                                    Comisiones pausadas, para ver el motivo da clic el botón de información. 
-                                                    Si requieres ver más detalles como lo pagado y lo pendiente, 
-                                                    podrás consultarlo en el historial 
-                                                    <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador">
-                                                        <b>Da clic aquí para ir al historial</b>
-                                                    </a>
-                                                </p>
+                                                <p class="card-title pl-1">Comisiones pausadas, para ver el motivo da clic el botón de información. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el historial <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>Da clic aquí para ir al historial</b></a></p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
@@ -599,7 +521,7 @@
                                                         <th>% COMISIÓN</th>
                                                         <th>DETALLE</th>
                                                         <th>ESTATUS</th>
-                                                        <th>MÁS</th>
+                                                        <th>ACCCIONES</th>
                                                     </tr>
                                                 </thead>
                                             </table>
@@ -614,16 +536,13 @@
                                                         <div class="col-6 col-sm-6 col-md-6 col-lg-6">
                                                             <div class="form-group">
                                                                 <label class="m-0" for="proyecto">Proyecto</label>
-                                                                <select name="proyecto_wp" id="proyecto_wp" class="selectpicker select-gral" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required>
-                                                                </select>
+                                                                <select name="proyecto_wp" id="proyecto_wp" class="selectpicker select-gral" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
                                                             </div>
                                                         </div>
                                                         <div class="col-6 col-sm-6 col-md-6 col-lg-6">
                                                             <div class="form-group">
                                                                 <label class="m-0" for="proyecto">Condominio</label>
-                                                                <select name="condominio_wp" id="condominio_wp" class="selectpicker select-gral" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required>
-                                                                    <option disabled selected>Selecciona una opción</option>
-                                                                </select>
+                                                                <select name="condominio_wp" id="condominio_wp" class="selectpicker select-gral" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required><option disabled selected>Selecciona una opción</option></select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -657,16 +576,8 @@
         </div>
         <?php $this->load->view('template/footer_legend'); ?>
     </div>
-    </div><!--main-panel close-->
+    </div>
     <?php $this->load->view('template/footer'); ?>
-    <!--DATATABLE BUTTONS DATA EXPORT-->
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <script src="<?= base_url()?>dist/js/funciones-generales.js"></script>
     <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
     <script>

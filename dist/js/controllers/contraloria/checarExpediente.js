@@ -74,7 +74,8 @@ function llenarClientes(idLote){
                     data = JSON.parse(data);
                     datosTable = data;
                     let datosSelect = data.data;
-                    let len = datosSelect.length;
+                   // let len = datosSelect.length;
+                    console.log(datosSelect)
 
                     $('#spiner-loader').addClass('hide');  
         },
@@ -238,7 +239,8 @@ function construirTableClient(idCliente = '',idLote = '',datos = ''){
             {
                 "width": "10%",
                 "data": function( d ){
-                    return '<p style="font-size: .8em">'+d.fechaApartado+'</p>';
+                    let fechaApartado = moment(d.fechaApartado.split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss')
+                    return '<p style="font-size: .8em">'+fechaApartado+'</p>';
                 }
             },
             {
@@ -275,14 +277,15 @@ function construirTableClient(idCliente = '',idLote = '',datos = ''){
                     let button_action='';
                     if(data.estatus_cliente==0){
                         
-                        button_action = data.hlidStatus < 5 ? `<center><a class="backButton btn-data btn-warning" data-accion="3" title= "Regresar expediente" style="cursor:pointer;" data-idLote="${data.idLote}" data-nomLote="${data.nombreLote}" data-nombreCliente="${data.nomCliente}" data-idCliente="${data.id_cliente}"><i class="fas fa-history"></i></a></center>` : 
-                        `<center><button class="editButton btn-data btn-warning" title= "Regresar expediente" data-tipoVenta="${tipoVenta}" data-ubicacion="${ubicacion}" data-accion="1" style="cursor:pointer;" data-idStatusConstruccion="${data.hlidStatus}" data-idLote="${data.idLote}" data-nomLote="${data.nombreLote}" data-nombreCliente="${data.nomCliente}" data-idCliente="${data.id_cliente}"><i class="fas fa-history"></i></button></center>`;
+                        button_action = data.hlidStatus < 5 ? `<center><a class="backButton btn-data btn-warning" data-accion="3" data-toggle="tooltip" data-placement="top" title= "Regresar expediente" style="cursor:pointer;" data-tipoVenta="${tipoVenta}" data-idLote="${data.idLote}" data-nomLote="${data.nombreLote}" data-nombreCliente="${data.nomCliente}" data-idCliente="${data.id_cliente}"><i class="fas fa-history"></i></a></center>` : 
+                        `<center><button class="editButton btn-data btn-warning" data-toggle="tooltip" data-placement="top" title= "Regresar expediente" data-tipoVenta="${tipoVenta}" data-ubicacion="${ubicacion}" data-accion="1" style="cursor:pointer;" data-idStatusConstruccion="${data.hlidStatus}" data-idLote="${data.idLote}" data-nomLote="${data.nombreLote}" data-nombreCliente="${data.nomCliente}" data-idCliente="${data.id_cliente}"><i class="fas fa-history"></i></button></center>`;
                     }else{
 
                         if(data.hlidStatus >= 5){
-                            button_action = `<center><button class="editButton btn-data btn-sky" data-tipoVenta="${tipoVenta}" data-ubicacion="${ubicacion}" data-accion="2" title= "Regresar expediente" style="cursor:pointer;" data-idStatusConstruccion="${data.hlidStatus}" data-idLote="${data.idLote}" data-nomLote="${data.nombreLote}" data-nombreCliente="${data.nomCliente}" data-idCliente="${data.id_cliente}"><i class="fas fa-edit"></i></button></center>`;
+                            button_action = `<center><button class="editButton btn-data btn-sky" data-tipoVenta="${tipoVenta}" data-ubicacion="${ubicacion}" data-accion="2" data-toggle="tooltip" data-placement="top" title= "Regresar expediente" style="cursor:pointer;" data-idStatusConstruccion="${data.hlidStatus}" data-idLote="${data.idLote}" data-nomLote="${data.nombreLote}" data-nombreCliente="${data.nomCliente}" data-idCliente="${data.id_cliente}"><i class="fas fa-edit"></i></button></center>`;
                         }
                     }
+                    $('[data-toggle="tooltip"]').tooltip();
                     return button_action;
                 }
             }
@@ -390,7 +393,6 @@ $(document).on('click', '.editButton', function(){
 
 
 function RegresarExpo(datos){
-
     let idLote = $('#lotes').val();
     let accion = $('#accion').val();
     datos.append("idLote",idLote);
@@ -403,10 +405,10 @@ function RegresarExpo(datos){
         contentType: false, 
         success: function(data){
             data = JSON.parse(data);
-            $('#spiner-loader').addClass('hide');
             $('#tempIDC').val(0);
             $('#idLote').val(0);
             $('#accion').val(0);
+            $('#tipoV').val(0);
             if(data.data==true){
                 llenarClientes(idLote);
                 accion == 1 || accion == 2  ? $('#modalEditExp').modal('hide')  : $('#modalConfirmRegExp').modal('hide');
@@ -415,6 +417,7 @@ function RegresarExpo(datos){
                 alerts.showNotification("top", "right", "Ha ocurrido un error intentalo nuevamente.", "danger");
             }
             $('#modalConfirmRegExp').modal('hide');
+            $('#spiner-loader').addClass('hide');
         },
         async:   false,
         error: function() {
@@ -428,6 +431,7 @@ function RegresarExpo(datos){
 
 $(document).on("submit", "#formEdit", function (e) {
     e.preventDefault();
+    $('#spiner-loader').removeClass('hide');
     let datos = new FormData($(this)[0]);
     RegresarExpo(datos);
 
@@ -440,17 +444,22 @@ let cliente = $itself.attr('data-nombreCliente');
 let idCliente = $itself.attr('data-idCliente');
 let idLote = $itself.attr('data-idLote');
 let accion = $itself.attr('data-accion');
+let tipoV = $itself.attr('data-tipoVenta');
 $('#accion').val(accion);
 $('#tempIDC').val(idCliente);
 $('#loteName').text(nombreLote);
 $('#idLote').text(idLote);
+$('#tipoV').val(tipoV);
 $('#modalConfirmRegExp').modal();
 });
 
 $(document).on('click', '.acepta_regreso', function(e){
+    $('#spiner-loader').removeClass('hide');
         let idCliente = $('#tempIDC').val();
+        let tipoV = $('#tipoV').val();
         datos = new FormData();
         datos.append("idCliente", idCliente);
+        datos.append("tipo_venta", tipoV);
     RegresarExpo(datos);
 });
 

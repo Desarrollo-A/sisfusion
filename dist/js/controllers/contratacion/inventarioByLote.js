@@ -81,7 +81,6 @@ $(".find_doc").click( function() {
                         var stella;
                         var aura;
                         var terreno;
-
                         if (d.nombreLote == 'CCMP-LAMAY-011' || d.nombreLote == 'CCMP-LAMAY-021' || d.nombreLote == 'CCMP-LAMAY-030' ||
                         d.nombreLote == 'CCMP-LAMAY-031' || d.nombreLote == 'CCMP-LAMAY-032' || d.nombreLote == 'CCMP-LAMAY-045' ||
                         d.nombreLote == 'CCMP-LAMAY-046' || d.nombreLote == 'CCMP-LAMAY-047' || d.nombreLote == 'CCMP-LAMAY-054' || 
@@ -115,13 +114,11 @@ $(".find_doc").click( function() {
             }
         },
         {
-
             "data": function(d){
                 return '<p class="m-0"> '+formatMoney(d.totalNeto2)+'</p>';
             }
         },
         {
-
             "data": function(d){
                 var preciom2;					
                 if(d.nombreResidencial == 'CCMP'){
@@ -195,7 +192,6 @@ $(".find_doc").click( function() {
                 {
                     coordinador = myFunctions.validateEmptyField(d.coordinador);
                 }
-
                 coordinador = coordinador = '' ? 'Sin registro' : coordinador;
                 return coordinador;
             }
@@ -226,7 +222,6 @@ $(".find_doc").click( function() {
             }
         },
         {
-
             "data": function(d){
                 if(d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10){
                     if(d.fecha_modst == null || d.fecha_modst == 'null') {
@@ -290,13 +285,11 @@ $(document).on("click", ".ver_historial", function(){
         element.classList.add("hide");
         $('#clauses_content').html('');
     }
-
     $("#seeInformationModal").on("hidden.bs.modal", function(){
         $("#changeproces").html("");
         $("#changelog").html("");
         $('#nomLoteHistorial').html("");
     });
-
     $("#seeInformationModal").modal();
     var urlTableFred = '';
     $.getJSON(general_base_url+"Contratacion/obtener_liberacion/"+idLote).done( function( data ){
@@ -464,7 +457,6 @@ function fillFreedom(urlTableFred){
             { "data": "modificado" },
             { "data" : "observacionLiberacion"},
             { "data": "userLiberacion" }
-
         ],
         ajax:
             {
@@ -555,11 +547,9 @@ $(document).on('click', '#save_asignacion', function(e) {
     data_asignacion.append("idLote", idLote);
     data_asignacion.append("id_desarrollo", id_desarrollo);
     data_asignacion.append("id_estado", id_estado);
-
     if (id_desarrollo == null) {
         alerts.showNotification("top", "right", "Debes seleccionar un desarrollo.", "danger");
     } 
-
     if (id_desarrollo != null) {
         $('#save_asignacion').prop('disabled', true);
             $.ajax({
