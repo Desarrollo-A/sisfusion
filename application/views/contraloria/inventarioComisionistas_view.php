@@ -12,7 +12,7 @@
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon fa-2x" data-background-color="goldMaderas">
                                 <i class="fas fa-box"></i>
@@ -22,9 +22,9 @@
                                 <div class="toolbar">
                                     <div class="container"> 
                                         <div class="row">
-                                            <div class="col-md-4 form-group pl-0 overflow-hidden">
-                                                <div class="form-group">
-                                                    <label class="m-0" for="residenciales">Proyecto</label>
+                                            <div class="col-md-4 form-group pl-0 ">
+                                                <div class="form-group overflow-hidden">
+                                                    <label class="m-0 control-label" for="residenciales">Proyecto</label>
                                                     <select id="residenciales" name="residenciales"
                                                         class="selectpicker select-gral" data-style="btn"
                                                         data-show-subtext="true" data-live-search="true"
@@ -32,10 +32,9 @@
                                                     </select>
                                                 </div>
                                             </div>
-
-                                            <div class="col-md-4 form-group overflow-hidden ">
-                                                <div class="form-group">
-                                                    <label class="m-0" for="idCondominioInventario">Condominio</label>
+                                            <div class="col-md-4 form-group ">
+                                                <div class="form-group overflow-hidden ">
+                                                    <label class="m-0 control-label" for="idCondominioInventario">Condominio</label>
                                                     <select name="condominios" id="condominios"
                                                         class="selectpicker select-gral" data-style="btn"
                                                         data-show-subtext="true" data-live-search="true"
@@ -43,10 +42,9 @@
                                                     </select>
                                                 </div>
                                             </div>
-
-                                            <div class="col-md-4 form-group pr-0 overflow-hidden">
-                                                <div class="form-group">
-                                                    <label class="m-0" for="idEstatus">Estatus</label>
+                                            <div class="col-md-4 form-group pr-0">
+                                                <div class="form-group  overflow-hidden">
+                                                    <label class="m-0 control-label" for="idEstatus">Estatus</label>
                                                     <select name="idEstatus" id="idEstatus" class="selectpicker select-gral"
                                                         data-style="btn"  data-show-subtext="true" data-live-search="true"
                                                         title="Selecciona una opción" data-size="7" data-container="body" required>
@@ -58,8 +56,7 @@
                                 </div>
                                 <div class="material-datatables hide" id="TableHide">
                                     <div class="container">
-                                        <table class="table-striped table-hover" id="tablaInventarioComisionistas"
-                                            name="tablaInventarioComisionistas">
+                                        <table class="table-striped table-hover" id="tablaInventarioComisionistas"name="tablaInventarioComisionistas">
                                             <thead>
                                                 <tr>
                                                     <th>PROYECTO</th>
@@ -90,17 +87,6 @@
         </div>
         <?php $this->load->view('template/footer_legend');?>
     </div>
-    </div>
-    <!--main-panel close-->
     <?php $this->load->view('template/footer');?>
-    <!--DATATABLE BUTTONS DATA EXPORT-->
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-    <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/contraloria/inventarioComisionistas.js"></script>
 </body>

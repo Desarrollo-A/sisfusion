@@ -62,7 +62,7 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
                 format: 
                 {
                     header:  function (d, columnIdx) {
-                        return ' ' + titulos_intxt[columnIdx]  + ' ';
+                        return ' ' + titulos_intxt[columnIdx] + ' ';
                     }
                 }
             }

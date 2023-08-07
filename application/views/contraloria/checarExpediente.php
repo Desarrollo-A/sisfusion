@@ -17,7 +17,7 @@
             display: block;
             color: red;
         }
- </style>
+</style> 
     <!-- Modals -->
     <div class="modal fade " id="modalConfirmRegExp" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-md">
@@ -26,8 +26,9 @@
                     <div class="modal-body text-center">
                         <h3>¿Estás seguro que desea regresar el expediente <b id="loteName"></b> ?</h3>
                         <p><small>El cambio no podrá ser revertido.</small></p>
-                        <input type="hidden" value="" id="tempIDC">
-                        <input type="hidden" value="" id="idLote">
+                        <input type="hidden" value="" id="tempIDC" name="tempIDC">
+                        <input type="hidden" value="" id="idLote" name="idLote">
+                        <input type="hidden" value="" id="tipoV" name="tipoV">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -49,7 +50,6 @@
                         </div>
                         <input type="hidden" name="idCliente" id="idCliente">
                         <div id="camposEditar">
-
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -179,13 +179,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-<link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
-<script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
 <script type="text/javascript" src="<?=base_url()?>dist/js/funciones-generales.js"></script>
 <script type="text/javascript" src="<?=base_url()?>dist/js/controllers/contraloria/checarExpediente.js"></script>
-
-<script type="text/javascript">
-    Shadowbox.init();
-</script>
 
 

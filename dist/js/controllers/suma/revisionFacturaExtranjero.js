@@ -16,7 +16,7 @@ $('#tabla_factura thead tr:eq(0) th').each( function (i) {
                 $.each(data, function(i, v) {
                     total += parseFloat(v.impuesto);
                 });
-                document.getElementById("totpagarfactura").textContent = '$' + formatMoney(total);
+                document.getElementById("totpagarfactura").textContent = formatMoney(total);
             }
         });
     } 
@@ -27,7 +27,7 @@ $('#tabla_factura thead tr:eq(0) th').each( function (i) {
         trigger: "hover"
     });
 });
-// Selección de CheckBox
+
 $(document).on("click", ".individualCheck", function() {
     var totaPen = 0;
     tabla_factura.$('input[type="checkbox"]').each(function () {
@@ -38,15 +38,14 @@ $(document).on("click", ".individualCheck", function() {
             row = tabla_factura.row(tr).data();
             totaPen += parseFloat(row.impuesto); 
         }
-        // Al marcar todos los CheckBox Marca CB total
         if( totalChecados.length == totalCheckbox.length )
             $("#all").prop("checked", true);
         else 
-            $("#all").prop("checked", false); // si se desmarca un CB se desmarca CB total
+            $("#all").prop("checked", false);
     });
-    $("#totpagarPen").html('$ ' + formatMoney(totaPen));
+    $("#totpagarPen").html(formatMoney(totaPen));
 });
-// Función de selección total
+
 function selectAll(e) {
     tota2 = 0;
     if(e.checked == true){
@@ -58,7 +57,7 @@ function selectAll(e) {
                 $(v).prop("checked", true);
             }
         }); 
-        $("#totpagarPen").html('$ ' + formatMoney(tota2));
+        $("#totpagarPen").html(formatMoney(tota2));
     }
     if(e.checked == false){
         $(tabla_factura.$('input[type="checkbox"]')).each(function (i, v) {
@@ -66,7 +65,7 @@ function selectAll(e) {
                 $(v).prop("checked", false);
             }
         }); 
-        $("#totpagarPen").html('$ ' + formatMoney(0));
+        $("#totpagarPen").html(formatMoney(0));
     }
 }
 $('#tabla_factura').on('xhr.dt', function(e, settings, json, xhr) {
@@ -75,11 +74,12 @@ $('#tabla_factura').on('xhr.dt', function(e, settings, json, xhr) {
         total += parseFloat(v.impuesto);
     });
     var to = formatMoney(total);
-    document.getElementById("totpagarfactura").textContent = '$' + to;
+    document.getElementById("totpagarfactura").textContent = to;
 });
 tabla_factura = $("#tabla_factura").DataTable({
     dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
     width: '100%',
+    bAutoWidth: true,
     buttons: [{
         text: '<i class="fa fa-check"></i> ENVIAR A INTERNOMEX',
         action: function() {
@@ -188,12 +188,12 @@ tabla_factura = $("#tabla_factura").DataTable({
     },
     {
         "data": function(d) {
-            return '<p class="m-0">$' + formatMoney(d.total_comision) + '</p>';
+            return '<p class="m-0">' + formatMoney(d.total_comision) + '</p>';
         }
     },
     {
         "data": function(d) {
-            return '<p class="m-0">$' + formatMoney(d.impuesto) + '</p>';
+            return '<p class="m-0">' + formatMoney(d.impuesto) + '</p>';
         }
     },
     {
@@ -265,7 +265,7 @@ $("#tabla_factura tbody").on("click", ".consultar_logs", function(e){
     $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DE LA REFERENCIA <b style="color:#39A1C0; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">'+referencia+'</b></h5></p>');
     $.getJSON("getHistorial/"+id_pago).done( function( data ){
         $.each( data, function(i, v){
-            $("#comments-list-factura").append('<div class="col-lg-12"><p><i style="color:39A1C0;">'+v.comentario+'</i><br><b style="color:#39A1C0">'+v.fecha_movimiento+'</b><b style="color:gray;"> - '+v.modificado_por+'</b></p></div>');
+            $("#comments-list-factura").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><b>' + v.comentario + '</b></a><br></div><div class="float-end text-right"><a>'+v.fecha_movimiento+'</a></div><div class="col-md-12"><p class="m-0"><small>MODIFICADO POR: </small><b> ' +v.modificado_por+ '</b></p></div><h6></h6></div></div></li>');
         });
     });
 });
@@ -280,7 +280,7 @@ $("#tabla_factura tbody").on("click", ".cambiar_estatus", function(){
     $("#modal_nuevas .modal-body").append('<div class="row mt-3"><div class="col-md-6"></div><div class="col-md-3"><button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CANCELAR</button></div><div class="col-md-3"><input type="submit" class="btn btn-primary"></div></div>');
     $("#modal_nuevas").modal();
 });
- //Función para pausar la solicitud
+
 $("#form_interes").submit( function(e) {
     e.preventDefault();
 }).validate({
@@ -295,7 +295,7 @@ $("#form_interes").submit( function(e) {
             processData: false,
             dataType: 'json',
             method: 'POST',
-            type: 'POST', // For jQuery < 1.9
+            type: 'POST',
             success: function(data){
                 if(data){
                     $("#modal_nuevas").modal('toggle' );

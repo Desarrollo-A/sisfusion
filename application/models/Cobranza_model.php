@@ -97,7 +97,7 @@ class Cobranza_model extends CI_Model {
 
         /*********************/
     function getClientsByAsesor($asesor){
-        return $this->db->query("SELECT c.id_cliente, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, c.telefono1, c.correo, l.nombreLote, c.fechaApartado, 
+        return $this->db->query("SELECT c.id_cliente, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, c.telefono1, c.correo, l.nombreLote, CONVERT(VARCHAR,c.fechaApartado,20) AS fechaApartado, 
         c.idLote, CONCAT(u.nombre,  ' ', u.apellido_paterno, ' ', u.apellido_materno) gerente, c.lugar_prospeccion, 
         ISNULL (oxc.nombre, 'Sin especificar') nombre_lp, oxc2.id_opcion tipo_controversia
         FROM clientes c
@@ -110,13 +110,14 @@ class Cobranza_model extends CI_Model {
                 WHERE c.id_asesor = $asesor AND ec.id_evidencia IS NULL AND c.status = 1");
     }
     function getDetails($id, $checks, $beginDate, $endDate, $sede){
+        ini_set('max_execution_time', 900);
+        set_time_limit(900);
+        ini_set('memory_limit','8192M');
         $query["data"] = $this->db->query("SELECT * FROM clientes WHERE id_cliente = $id")->row();
-
         $name = str_replace(array(' ', '.'),'',$query["data"]->nombre);
         $correo = $query["data"]->correo;
         $telefono = $query["data"]->telefono1;
         $string = "";
-
         foreach($checks as $check){
             if( $check["value"] == "on" && $check["key"] == 'nombre'){
                 $string .= " AND REPLACE(REPLACE(p.nombre, ' ', ''),'.', '') LIKE '%$name%'";
@@ -130,16 +131,13 @@ class Cobranza_model extends CI_Model {
                 $string .= " AND p.fecha_creacion BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
             }
         }
-
         $WHERE = substr($string, 4);
-
-        $query2["data"] = $this->db->query("SELECT CONCAT(p.nombre, ' ', p.apellido_paterno, ' ', p.apellido_materno) nombre, oxc.nombre namePros, p.correo, p.telefono, p.fecha_creacion, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreAsesor, 
+        $query2["data"] = $this->db->query("SELECT CONCAT(p.nombre, ' ', p.apellido_paterno, ' ', p.apellido_materno) nombre, UPPER(oxc.nombre) AS namePros, UPPER(p.correo) AS correo, p.telefono, p.fecha_creacion, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreAsesor, 
         CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombreGerente
         FROM prospectos p 
         INNER JOIN usuarios u ON u.id_usuario = p.id_asesor
         INNER JOIN usuarios us ON us.id_usuario = p.id_gerente
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = p.lugar_prospeccion WHERE $WHERE AND oxc.id_catalogo = 9");
-
         return $query2["data"];
     }
 
@@ -149,7 +147,7 @@ class Cobranza_model extends CI_Model {
     }
 
     function getSedes(){
-        return $this->db->query("SELECT * FROM sedes WHERE estatus != 0");
+        return $this->db->query("SELECT * FROM sedes WHERE estatus != 0 ORDER BY nombre ");
     }
     //Se verifica si el lote ya tiene una controversia
     public function verificarControversia($idLote){

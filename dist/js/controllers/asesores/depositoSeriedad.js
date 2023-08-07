@@ -35,14 +35,6 @@ const ESTATUS_AUTORIZACION = Object.freeze({
 });
 const STATUS_CONTRATACION = 1;
 
-$('body').tooltip({
-    selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
-    trigger: 'hover',
-    container: 'body'
-}).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
-    $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
-});
-
 $('#tabla_deposito_seriedad thead tr:eq(0) th').each(function (i) {
     const title = $(this).text();
     titulos_intxt.push(title);
@@ -57,14 +49,13 @@ $('#tabla_deposito_seriedad thead tr:eq(0) th').each(function (i) {
 
 $(document).ready(function() {
     if (id_usuario_general == 9651) { // MJ: ERNESTO DEL PINO SILVA
+        $('#tabla_deposito_seriedad').addClass('hide');
         $.post(`${general_base_url}Contratacion/lista_proyecto`, function(data) {
             for(let i = 0; i < data.length; i++){
                 const id = data[i]['idResidencial'];
                 const name = data[i]['descripcion'];
-
                 $('#proyecto').append($('<option>').val(id).text(name.toUpperCase()));
             }
-
             $('#proyecto').selectpicker('refresh');
         }, 'json');
     } else { // MJ: PARA LOS DEMÁS SÍ CARGA EN EL READY
@@ -74,11 +65,9 @@ $(document).ready(function() {
     $('#subdirector').empty().selectpicker('refresh');
     $.get(`${general_base_url}Asesor/getSubdirectores`, function (data) {
         const subdirectores = JSON.parse(data);
-
         subdirectores.forEach(subdirector => {
             $('#subdirector').append($('<option>').val(subdirector.id_subdir).text(subdirector.nombre_subdir));
         });
-
         $('#subdirector').selectpicker('refresh');
     });
 });
@@ -86,28 +75,23 @@ $(document).ready(function() {
 $('#proyecto').change( function(){
     const proyecto = $(this).val();
     $("#condominio").html("");
-
     $(document).ready(function(){
         $.post(`${general_base_url}Contratacion/lista_condominio/`+proyecto, function(data) {
             $('#condominio').append($('<option disabled selected>Selecciona un codominio</option>'));
-
             for(let i = 0; i < data.length; i++) {
                 const id = data[i]['idCondominio'];
                 const name = data[i]['nombre'];
-
                 $('#condominio').append($('<option>').val(id).text(name.toUpperCase()));
             }
-
             $("#condominio").selectpicker('refresh');
         }, 'json');
     });
 });
 
 $('#condominio').change( function(){
+    $('#tabla_deposito_seriedad').removeClass('hide');
     fillDataTable($(this).val());
 });
-
-
 
 $("#tabla_deposito_seriedad").ready( function(){
     $(document).on('click', '.abrir_prospectos', function () {
@@ -118,9 +102,9 @@ $("#tabla_deposito_seriedad").ready( function(){
         const nombre_cliente = $itself.attr('data-nomCliente');
         $('#nom_cliente').append(nombre_cliente);
         $('#id_cliente_asignar').val(id_cliente);
-
         tabla_valores_ds = $("#table_prospectos").DataTable({
             width: '100%',
+            bAutoWidth: true,
             dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
             scrollX: true,
             buttons: [{
@@ -162,7 +146,6 @@ $("#tabla_deposito_seriedad").ready( function(){
                 orderable: false
             }],
             "pageLength": 10,
-            "bAutoWidth": false,
             "fixedColumns": true,
             "ordering": false,
             "destroy": true,
@@ -173,7 +156,6 @@ $("#tabla_deposito_seriedad").ready( function(){
             columns: [
                 {
                     "data": function(d){
-                        // return d.nombre + ' ' + d.apellido_paterno + ' ' + d.apellido_materno;
                         return `${d.nombre} ${d.apellido_paterno} ${d.apellido_materno}`;
                     }
                 },
@@ -217,7 +199,6 @@ $("#tabla_deposito_seriedad").ready( function(){
                     }
                 },
             ],
-
             "ajax": {
                 "url": general_base_url+"Asesor/get_info_prospectos/",
                 "dataSrc": "",
@@ -226,10 +207,7 @@ $("#tabla_deposito_seriedad").ready( function(){
                 "data": function( d ){
                 }
             }
-
-
         });
-
         $('#asignar_prospecto_a_cliente').modal();
     });
 
@@ -250,10 +228,7 @@ $("#tabla_deposito_seriedad").ready( function(){
         const id_cliente = $itself.attr('data-id_cliente');
         const id_prospecto = $itself.attr('data-id_prospecto');
         $('#modal_pregunta').modal();
-
         $(document).on('click', '#asignar_prospecto', function () {
-            //ajax con el post de update prospecto a cliente
-
             $.ajax({
                 type: 'POST',
                 url: general_base_url+'asesor/prospecto_a_cliente',
@@ -261,7 +236,6 @@ $("#tabla_deposito_seriedad").ready( function(){
                 dataType: 'json',
                 beforeSend: function(){
                     $('#modal_loader_assign').modal();
-
                 },
                 success: function(data) {
                     if (data.cliente_update == 'OK' && data.prospecto_update=='OK') {
@@ -291,7 +265,6 @@ $("#tabla_deposito_seriedad").ready( function(){
 
     $(document).on('click', '.pdfLink2', function () {
         const $itself = $(this);
-
         Shadowbox.open({
             content:    '<div><iframe style="overflow:hidden;width: 100%;height: -webkit-fill-available;" src="'+general_base_url+'asesor/deposito_seriedad/'+$itself.attr('data-idc')+'/0/"></iframe></div>',
             player:     "html",
@@ -303,7 +276,6 @@ $("#tabla_deposito_seriedad").ready( function(){
 
     $(document).on('click', '.pdfLink22', function () {
         const $itself = $(this);
-
         Shadowbox.open({
             content:    '<div><iframe style="overflow:hidden;width: 100%;height: -webkit-fill-available;" src="'+general_base_url+'asesor/deposito_seriedad_ds/'+$itself.attr('data-idc')+'/0/"></iframe></div>',
             player:     "html",
@@ -316,7 +288,6 @@ $("#tabla_deposito_seriedad").ready( function(){
 
 $(document).on("click", ".getInfo2", function (e) {
     e.preventDefault();
-
     getInfo2A[0] = $(this).attr("data-idCliente");
     getInfo2A[1] = $(this).attr("data-nombreResidencial");
     getInfo2A[2] = $(this).attr("data-nombreCondominio");
@@ -324,17 +295,14 @@ $(document).on("click", ".getInfo2", function (e) {
     getInfo2A[4] = $(this).attr("data-nombreLote");
     getInfo2A[5] = $(this).attr("data-idLote");
     getInfo2A[6] = $(this).attr("data-fechavenc");
-
     nombreLote = $(this).data("nomlote");
     tipo_comprobante = $(this).attr('data-ticomp');
-
     $(".lote").html(nombreLote);
     $('#modal1').modal('show');
 });
 
 $(document).on("click", ".getInfo2_2", function (e) {
     e.preventDefault();
-
     getInfo2_2A[0] = $(this).attr("data-idCliente");
     getInfo2_2A[1] = $(this).attr("data-nombreResidencial");
     getInfo2_2A[2] = $(this).attr("data-nombreCondominio");
@@ -342,17 +310,14 @@ $(document).on("click", ".getInfo2_2", function (e) {
     getInfo2_2A[4] = $(this).attr("data-nombreLote");
     getInfo2_2A[5] = $(this).attr("data-idLote");
     getInfo2_2A[6] = $(this).attr("data-fechavenc");
-
     nombreLote = $(this).data("nomlote");
     tipo_comprobante = $(this).attr('data-ticomp');
-
     $(".lote").html(nombreLote);
     $('#modal2').modal('show');
 });
 
 $(document).on("click", ".getInfo5", function (e) {
     e.preventDefault();
-
     getInfo5A[0] = $(this).attr("data-idCliente");
     getInfo5A[1] = $(this).attr("data-nombreResidencial");
     getInfo5A[2] = $(this).attr("data-nombreCondominio");
@@ -360,17 +325,14 @@ $(document).on("click", ".getInfo5", function (e) {
     getInfo5A[4] = $(this).attr("data-nombreLote");
     getInfo5A[5] = $(this).attr("data-idLote");
     getInfo5A[6] = $(this).attr("data-fechavenc");
-
     nombreLote = $(this).data("nomlote");
     tipo_comprobante = $(this).attr('data-ticomp');
-
     $(".lote").html(nombreLote);
     $('#modal3').modal('show');
 });
 
 $(document).on("click", ".getInfo6", function (e) {
     e.preventDefault();
-
     getInfo6A[0] = $(this).attr("data-idCliente");
     getInfo6A[1] = $(this).attr("data-nombreResidencial");
     getInfo6A[2] = $(this).attr("data-nombreCondominio");
@@ -378,17 +340,14 @@ $(document).on("click", ".getInfo6", function (e) {
     getInfo6A[4] = $(this).attr("data-nombreLote");
     getInfo6A[5] = $(this).attr("data-idLote");
     getInfo6A[6] = $(this).attr("data-fechavenc");
-
     nombreLote = $(this).data("nomlote");
     tipo_comprobante = $(this).attr('data-ticomp');
-
     $(".lote").html(nombreLote);
     $('#modal4').modal('show');
 });
 
 $(document).on("click", ".getInfo2_3", function (e) {
     e.preventDefault();
-
     getInfo2_3A[0] = $(this).attr("data-idCliente");
     getInfo2_3A[1] = $(this).attr("data-nombreResidencial");
     getInfo2_3A[2] = $(this).attr("data-nombreCondominio");
@@ -396,17 +355,14 @@ $(document).on("click", ".getInfo2_3", function (e) {
     getInfo2_3A[4] = $(this).attr("data-nombreLote");
     getInfo2_3A[5] = $(this).attr("data-idLote");
     getInfo2_3A[6] = $(this).attr("data-fechavenc");
-
     nombreLote = $(this).data("nomlote");
     tipo_comprobante = $(this).attr('data-ticomp');
-
     $(".lote").html(nombreLote);
     $('#modal5').modal('show');
 });
 
 $(document).on("click", ".getInfo2_7", function (e) {
     e.preventDefault();
-
     getInfo2_7A[0] = $(this).attr("data-idCliente");
     getInfo2_7A[1] = $(this).attr("data-nombreResidencial");
     getInfo2_7A[2] = $(this).attr("data-nombreCondominio");
@@ -414,17 +370,14 @@ $(document).on("click", ".getInfo2_7", function (e) {
     getInfo2_7A[4] = $(this).attr("data-nombreLote");
     getInfo2_7A[5] = $(this).attr("data-idLote");
     getInfo2_7A[6] = $(this).attr("data-fechavenc");
-
     nombreLote = $(this).data("nomlote");
     tipo_comprobante = $(this).attr('data-ticomp');
-
     $(".lote").html(nombreLote);
     $('#modal6').modal('show');
 });
 
 $(document).on("click", ".getInfo5_2", function (e) {
     e.preventDefault();
-
     getInfo5_2A[0] = $(this).attr("data-idCliente");
     getInfo5_2A[1] = $(this).attr("data-nombreResidencial");
     getInfo5_2A[2] = $(this).attr("data-nombreCondominio");
@@ -432,17 +385,14 @@ $(document).on("click", ".getInfo5_2", function (e) {
     getInfo5_2A[4] = $(this).attr("data-nombreLote");
     getInfo5_2A[5] = $(this).attr("data-idLote");
     getInfo5_2A[6] = $(this).attr("data-fechavenc");
-
     nombreLote = $(this).data("nomlote");
     tipo_comprobante = $(this).attr('data-ticomp');
-
     $(".lote").html(nombreLote);
     $('#modal7').modal('show');
 });
 
 $(document).on("click", ".return1", function (e) {
     e.preventDefault();
-
     return1a[0] = $(this).attr("data-idCliente");
     return1a[1] = $(this).attr("data-nombreResidencial");
     return1a[2] = $(this).attr("data-nombreCondominio");
@@ -450,7 +400,6 @@ $(document).on("click", ".return1", function (e) {
     return1a[4] = $(this).attr("data-nombreLote");
     return1a[5] = $(this).attr("data-idLote");
     return1a[6] = $(this).attr("data-fechavenc");
-
     nombreLote = $(this).data("nomlote");
     tipo_comprobante = $(this).attr('data-ticomp');
     $(".lote").html(nombreLote);
@@ -561,67 +510,51 @@ function fillDataTable(idCondominio) {
             {
                 "data": function( d ){
                     const idMovimiento = parseInt(d.idMovimiento);
-
                     if (idMovimiento === MOVIMIENTOS.NUEVO_APARTADO) {
                         return `${d.comentario}<br><span class='label lbl-sky'>Nuevo apartado</span>`;
                     }
-
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_2) {
                         return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloría estatus 2</span>`;
                     }
-
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_5) {
                         return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloría estatus 5</span>`;
                     }
-
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_6) {
                         return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloría estatus 6</span>`;
                     }
-
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_VENTAS_ESTATUS_8) {
                         return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Ventas estatus 8</span>`;
                     }
-
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_JURIDICO_ESTATUS_7) {
                         return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Jurídico estatus 7</span>`;
                     }
-
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_5_II) {
                         return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloría estatus 5</span>`;
                     }
-
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_JURIDICO_ESTATUS_7_II) {
                         return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Jurídico estatus 7</span>`;
                     }
-
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_POSTVENTA_ESTATUS_3) {
                         return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Postventa estatus 3</span>`;
                     }
-
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_2_II) {
                         return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloría estatus 2</span>`;
                     }
-
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_6_II) {
                         return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloría estatus 6</span>`;
                     }
-
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_POSTVENTA_ESTATUS_3_II) {
                         return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Postventa estatus 3</span>`;
                     }
-
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_JURIDICO_ESTATUS_7_III) {
                         return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Jurídico estatus 7</span>`;
                     }
-
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_POSTVENTA_3) {
                         return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Postventa 3</span>`;
                     }
-
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_6_III) {
                         return `${d.comentario}<br><span class='label lbl-warning'>Rechazo de Contraloría estatus 6</span>`;
                     }
-
                     return d.comentario;
                 }
             },
@@ -630,15 +563,12 @@ function fillDataTable(idCondominio) {
                     if (d.dsType != 1) {
                         return '';
                     }
-
                     if (parseInt(d.idMovimiento) !== MOVIMIENTOS.NUEVO_APARTADO && parseInt(d.idStatusContratacion) !== STATUS_CONTRATACION) {
                         return 'ASIGNADO CORRECTAMENTE';
                     }
-
-                    if (d.id_prospecto != 0) { // APARTADO DESDE LA PAGINA DE CIUDAD MADERAS
+                    if (d.id_prospecto != 0) {
                         return 'ASIGNADO CORRECTAMENTE';
                     }
-
                     if (d.id_coordinador == 10807 || d.id_coordinador == 10806 || d.id_gerente == 10807 || d.id_gerente == 10806) {
                         return 'ASIGNADO CORRECTAMENTE';
                     }
@@ -650,22 +580,18 @@ function fillDataTable(idCondominio) {
                     if (d.autorizacion_correo === null) {
                         return "<span class='label lbl-gray'>Sin envío de verificación</span>";
                     }
-
                     if (parseInt(d.total_sol_correo_pend) > 0) {
                         return "<span class='label lbl-azure'>Solicitud de autorización</span>";
                     }
-
                     if (parseInt(d.total_sol_correo_rech) > 0 && parseInt(d.total_sol_correo_aut) === 0 && parseInt(d.total_sol_correo_pend) === 0) {
                         return "<span class='label lbl-warning'>Solicitud rechazada</span>";
                     }
-
                     if (parseInt(d.autorizacion_correo) === 1) {
                         return `<span class='label lbl-yellow'>Verificación pendiente:</span></br>&nbsp;<span class='label lbl-yellow'>${d.correo}</span>`;
                     }
                     if (parseInt(d.autorizacion_correo) === 2) {
                         return `<span class='label lbl-green'>Verificado:</span></br>&nbsp;<span class='label lbl-green'>${d.correo}</span>`;
                     }
-
                     return '';
                 }
             },
@@ -674,23 +600,18 @@ function fillDataTable(idCondominio) {
                     if (d.autorizacion_sms === null) {
                         return "<span class='label lbl-gray'>Sin envío de verificación</span>";
                     }
-
                     if (parseInt(d.total_sol_sms_pend) > 0) {
                         return "<span class='label lbl-azure'>Solicitud de autorización</span>";
                     }
-
                     if (parseInt(d.total_sol_sms_rech) > 0 && parseInt(d.total_sol_sms_aut) === 0 && parseInt(d.total_sol_sms_pend) === 0) {
                         return "<span class='label lbl-warning'>Solicitud rechazada</span>";
                     }
-
                     if (parseInt(d.autorizacion_sms) === 1) {
                         return `<span class='label lbl-yellow'>Verificación pendiente:</span></br>&nbsp;<span class='label lbl-yellow'>${d.telefono}</span>`;
                     }
-
                     if (parseInt(d.autorizacion_sms) === 2) {
                         return `<span class='label lbl-green'>Verificado:</span></br>&nbsp;<span class='label lbl-green'>${d.telefono}</span>`;
                     }
-
                     return '';
                 }
             },
@@ -698,10 +619,8 @@ function fillDataTable(idCondominio) {
                 "data": function( d ){
                     let atributoButton = '';
                     let buttons = '';
-                    
                     const idMovimiento = parseInt(d.idMovimiento);
                     const idStatusContratacion = parseInt(d.idStatusContratacion);
-
                     if(d.vl == '1') {
                         buttons = 'En proceso de Liberación';
                     } else if (idMovimiento === MOVIMIENTOS.NUEVO_APARTADO && idStatusContratacion === STATUS_CONTRATACION) {
@@ -714,7 +633,6 @@ function fillDataTable(idCondominio) {
                         } else {
                             buttons = construirBotonEstatus(d, d.fechaVenc, 'getInfo2');
                         }
-
                         buttons += generarBotonesAutorizacion(d);
                     } else {
                         buttons = (idMovimiento === MOVIMIENTOS.NUEVO_APARTADO) ? construirBotonEstatus(d, d.fechaVenc, 'getInfo2')
@@ -734,9 +652,7 @@ function fillDataTable(idCondominio) {
                             : (idMovimiento === MOVIMIENTOS.RECHAZO_POSTVENTA_3) ? construirBotonEstatus(d, d.fechaVenc, 'getInfo2')
                             : d.comentario;
                     }
-
                     let urlToGo  = '';
-
                     if (d.idMovimiento == 31 && d.idStatusContratacion == STATUS_CONTRATACION) {
                         if (d.id_prospecto == 0) { // APARTADO DESDE LA PAGINA DE CIUDAD MADERAS
                             if (d.id_coordinador == 10807 || d.id_coordinador == 10806 || d.id_gerente == 10807 || d.id_gerente == 10806) {
@@ -754,7 +670,6 @@ function fillDataTable(idCondominio) {
                         atributoButton = '';
                         urlToGo  = general_base_url+'Asesor/deposito_seriedad/'+d.id_cliente+'/0';
                     }
-
                     if (d.dsType == 1){
                         buttons += '<a class="btn-data btn-blueMaderas btn_ds'+d.id_cliente+'" '+atributoButton+' id="btn_ds'+d.id_cliente+'" href="'+urlToGo+'" data-toggle="tooltip" data-placement="top" title="DEPÓSITO DE SERIEDAD" target=”_blank”><i class="fas fa-print"></i></a>';
                     } else if(d.dsType == 2) { // DATA FROM DEPOSITO_SERIEDAD_CONSULTA OLD VERSION
@@ -763,7 +678,6 @@ function fillDataTable(idCondominio) {
                     if(d.dsType == 2) { // DATA FROM DEPOSITO_SERIEDAD_CONSULTA OLD VERSION
                         buttons += '<a class="btn-data btn-blueMaderas" href="'+general_base_url+'Asesor/deposito_seriedad_ds/'+d.id_cliente+'/0" data-toggle="tooltip" data-placement="left" title="DEPÓSITO DE SERIEDAD" target=”_blank”><i class="fas fa-print"></i></a>';
                     }
-
                     if (
                         d.dsType == 1 &&
                         (parseInt(d.idMovimiento) === MOVIMIENTOS.NUEVO_APARTADO && parseInt(d.idStatusContratacion) === STATUS_CONTRATACION) &&
@@ -772,7 +686,6 @@ function fillDataTable(idCondominio) {
                     ) {
                         buttons += `<button class="btn-data btn-green abrir_prospectos btn-fab btn-fab-mini" data-toggle="tooltip" data-placement="left" title="ASIGNAR PROSPECTO" data-idCliente="${d.id_cliente}" data-nomCliente="${d.nombreCliente}"> <i class="fas fa-user-check"></i></button>`;
                     }
-
                     return '<div class="d-flex justify-center">'+buttons+'</div>';
                 }
             }
@@ -794,7 +707,6 @@ $(document).on('click', '#save1', function(e) {
     const comentario = $("#comentario").val();
     const validaComent = ($("#comentario").val().length == 0) ? 0 : 1;
     let dataExp1 = new FormData();
-
     dataExp1.append("idCliente", getInfo2A[0]);
     dataExp1.append("nombreResidencial", getInfo2A[1]);
     dataExp1.append("nombreCondominio", getInfo2A[2]);
@@ -804,12 +716,10 @@ $(document).on('click', '#save1', function(e) {
     dataExp1.append("comentario", comentario);
     dataExp1.append("fechaVenc", getInfo2A[6]);
     dataExp1.append('tipo_comprobante', tipo_comprobante);
-
     let comprobante_domicilio = (tipo_comprobante==1) ? '' : ', COMPROBANTE DE DOMICILIO';
     if (validaComent == 0) {
         alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
     }
-
     if (validaComent == 1) {
         $('#save1').prop('disabled', true);
         $.ajax({
@@ -873,7 +783,6 @@ $(document).on('click', '#guardar_re3pv', function(e) {
     const comentario = $("#comentarioST3PV2").val();
     const validaComent = ($("#comentarioST3PV2").val().length == 0) ? 0 : 1;
     let dataExp1 = new FormData();
-
     dataExp1.append("idCliente", getInfo2A[0]);
     dataExp1.append("nombreResidencial", getInfo2A[1]);
     dataExp1.append("nombreCondominio", getInfo2A[2]);
@@ -883,12 +792,10 @@ $(document).on('click', '#guardar_re3pv', function(e) {
     dataExp1.append("comentario", comentario);
     dataExp1.append("fechaVenc", getInfo2A[6]);
     dataExp1.append('tipo_comprobante', tipo_comprobante);
-
     let comprobante_domicilio = (tipo_comprobante==1) ? '' : ', COMPROBANTE DE DOMICILIO';
     if (validaComent == 0) {
         alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
     }
-
     if (validaComent == 1) {
         $('#guardar_re3pv').prop('disabled', true);
         $.ajax({
@@ -947,7 +854,6 @@ $(document).on('click', '#save2', function(e) {
     const comentario = $("#comentario2").val();
     const validaComent = ($("#comentario2").val().length == 0) ? 0 : 1;
     let dataExp2 = new FormData();
-
     dataExp2.append("idCliente", getInfo2_2A[0]);
     dataExp2.append("nombreResidencial", getInfo2_2A[1]);
     dataExp2.append("nombreCondominio", getInfo2_2A[2]);
@@ -957,12 +863,10 @@ $(document).on('click', '#save2', function(e) {
     dataExp2.append("comentario", comentario);
     dataExp2.append("fechaVenc", getInfo2_2A[6]);
     dataExp2.append('tipo_comprobante', tipo_comprobante);
-
     let comprobante_domicilio = (tipo_comprobante==1) ? '' : ', COMPROBANTE DE DOMICILIO';
     if (validaComent == 0) {
         alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
     }
-
     if (validaComent == 1) {
         $('#save2').prop('disabled', true);
         $.ajax({
@@ -1011,7 +915,6 @@ $(document).on('click', '#save3', function(e) {
     const comentario = $("#comentario3").val();
     const validaComent = ($("#comentario3").val().length == 0) ? 0 : 1;
     let dataExp3 = new FormData();
-
     dataExp3.append("idCliente", getInfo5A[0]);
     dataExp3.append("nombreResidencial", getInfo5A[1]);
     dataExp3.append("nombreCondominio", getInfo5A[2]);
@@ -1021,12 +924,10 @@ $(document).on('click', '#save3', function(e) {
     dataExp3.append("comentario", comentario);
     dataExp3.append("fechaVenc", getInfo5A[6]);
     dataExp3.append('tipo_comprobante', tipo_comprobante);
-
     let comprobante_domicilio = (tipo_comprobante==1) ? '' : ', COMPROBANTE DE DOMICILIO';
     if (validaComent == 0) {
         alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
     }
-
     if (validaComent == 1) {
         $('#save3').prop('disabled', true);
         $.ajax({
@@ -1075,7 +976,6 @@ $(document).on('click', '#save4', function(e) {
     const comentario = $("#comentario4").val();
     const validaComent = ($("#comentario4").val().length == 0) ? 0 : 1;
     let dataExp4 = new FormData();
-
     dataExp4.append("idCliente", getInfo6A[0]);
     dataExp4.append("nombreResidencial", getInfo6A[1]);
     dataExp4.append("nombreCondominio", getInfo6A[2]);
@@ -1087,7 +987,6 @@ $(document).on('click', '#save4', function(e) {
     if (validaComent == 0) {
         alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
     }
-
     if (validaComent == 1) {
         $('#save4').prop('disabled', true);
         $.ajax({
@@ -1131,7 +1030,6 @@ $(document).on('click', '#save5', function(e) {
     const comentario = $("#comentario5").val();
     const validaComent = ($("#comentario5").val().length == 0) ? 0 : 1;
     let dataExp5 = new FormData();
-
     dataExp5.append("idCliente", getInfo2_3A[0]);
     dataExp5.append("nombreResidencial", getInfo2_3A[1]);
     dataExp5.append("nombreCondominio", getInfo2_3A[2]);
@@ -1187,7 +1085,6 @@ $(document).on('click', '#save6', function(e) {
     const comentario = $("#comentario6").val();
     const validaComent = ($("#comentario6").val().length == 0) ? 0 : 1;
     let dataExp6 = new FormData();
-
     dataExp6.append("idCliente", getInfo2_7A[0]);
     dataExp6.append("nombreResidencial", getInfo2_7A[1]);
     dataExp6.append("nombreCondominio", getInfo2_7A[2]);
@@ -1199,7 +1096,6 @@ $(document).on('click', '#save6', function(e) {
     if (validaComent == 0) {
         alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
     }
-
     if (validaComent == 1) {
         $('#save6').prop('disabled', true);
         $.ajax({
@@ -1243,7 +1139,6 @@ $(document).on('click', '#save7', function(e) {
     const comentario = $("#comentario7").val();
     const validaComent = ($("#comentario7").val().length == 0) ? 0 : 1;
     let dataExp7 = new FormData();
-
     dataExp7.append("idCliente", getInfo5_2A[0]);
     dataExp7.append("nombreResidencial", getInfo5_2A[1]);
     dataExp7.append("nombreCondominio", getInfo5_2A[2]);
@@ -1255,7 +1150,6 @@ $(document).on('click', '#save7', function(e) {
     if (validaComent == 0) {
         alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
     }
-
     if (validaComent == 1) {
         $('#save7').prop('disabled', true);
         $.ajax({
@@ -1299,7 +1193,6 @@ $(document).on('click', '#b_return1', function(e) {
     const comentario = $("#comentario8").val();
     const validaComent = ($("#comentario8").val().length == 0) ? 0 : 1;
     let dataExp8 = new FormData();
-
     dataExp8.append("idCliente", return1a[0]);
     dataExp8.append("nombreResidencial", return1a[1]);
     dataExp8.append("nombreCondominio", return1a[2]);
@@ -1352,7 +1245,6 @@ $(document).on('click', '#b_return1', function(e) {
 
 $(document).on("click", ".enviar_nuevamente_estatus3", function (e) {
     e.preventDefault();
-
     getInfo2A[0] = $(this).attr("data-idCliente");
     getInfo2A[1] = $(this).attr("data-nombreResidencial");
     getInfo2A[2] = $(this).attr("data-nombreCondominio");
@@ -1360,10 +1252,8 @@ $(document).on("click", ".enviar_nuevamente_estatus3", function (e) {
     getInfo2A[4] = $(this).attr("data-nombreLote");
     getInfo2A[5] = $(this).attr("data-idLote");
     getInfo2A[6] = $(this).attr("data-fechavenc");
-
     nombreLote = $(this).data("nomlote");
     tipo_comprobante = $(this).attr('data-ticomp');
-
     $(".lote").html(nombreLote);
     $('#enviarNuevamenteEstatus3PV').modal('show');
 });
@@ -1371,10 +1261,8 @@ $(document).on("click", ".enviar_nuevamente_estatus3", function (e) {
 $(document).on('click', '.btn-autorizacion', function () {
     const $itself = $(this);
     const idCliente = $itself.attr('data-idCliente');
-
     $.get(`${general_base_url}Asesor/clienteAutorizacion/${idCliente}`, function (data) {
         cliente = JSON.parse(data);
-
         if (cliente.autorizacion_correo != null) {
             $('#chk-correo-aut-div').hide();
             $('#correo-aut-div').hide();
@@ -1385,7 +1273,6 @@ $(document).on('click', '.btn-autorizacion', function () {
             $('#correoAut').val(cliente.correo);
             $('#chkCorreoAut').prop('checked', true);
         }
-
         if (cliente.autorizacion_sms != null) {
             $('#chk-sms-aut-div').hide();
             $('#sms-aut-div').hide();
@@ -1401,12 +1288,10 @@ $(document).on('click', '.btn-autorizacion', function () {
                     ? parseInt(cliente.telefono1.substring(telLength - 10, telLength))
                     : parseInt(cliente.telefono1);
             }
-
             $('#smsAut').val(telefono);
             $('#ladaAut').val(cliente.lada_tel).trigger('change');
             $('#chkSmsAut').prop('checked', true);
         }
-
         $('#autorizaciones-modal').modal('toggle');
     });
 });
@@ -1414,24 +1299,20 @@ $(document).on('click', '.btn-autorizacion', function () {
 $(document).on('click', '.btn-reenvio', function () {
     const $itself = $(this);
     const idCliente = $itself.attr('data-idCliente');
-
     $.get(`${general_base_url}Asesor/clienteAutorizacion/${idCliente}`, function (data) {
         cliente = JSON.parse(data);
-
         if (parseInt(cliente.autorizacion_correo) !== ESTATUS_AUTORIZACION.ENVIADO) {
             $('#chk-correo-reenvio-div').hide();
             $('#chk-sms-reenvio-div').removeAttr('class');
             $('#chk-sms-reenvio-div').attr('class', 'col-12 col-sm-12 col-md-12 col-lg-12 p-0');
             $('#chkCorreoReenvio').prop('checked', false);
         }
-
         if (parseInt(cliente.autorizacion_sms) !== ESTATUS_AUTORIZACION.ENVIADO) {
             $('#chk-sms-reenvio-div').hide();
             $('#chk-correo-reenvio-div').removeAttr('class');
             $('#chk-correo-reenvio-div').attr('class', 'col-12 col-sm-12 col-md-12 col-lg-12 p-0');
             $('#chkSmsReenvio').prop('checked', false);
         }
-
         $('#reenvio-modal').modal('toggle');
     });
 });
@@ -1439,78 +1320,63 @@ $(document).on('click', '.btn-reenvio', function () {
 $(document).on('click', '.btn-solicitar', function () {
     const $itself = $(this);
     const idCliente = $itself.attr('data-idCliente');
-
     $.get(`${general_base_url}Asesor/clienteAutorizacion/${idCliente}`, function (data) {
         cliente = JSON.parse(data);
-
         if (parseInt(cliente.total_sol_correo_pend) > 0 || parseInt(cliente.total_sol_correo_aut) > 0 || cliente.autorizacion_correo === null || parseInt(cliente.autorizacion_correo) === ESTATUS_AUTORIZACION.AUTORIZADO) {
             $('#chk-correo-sol-div').hide();
             $('#chk-sms-sol-div').removeAttr('class');
             $('#chk-sms-sol-div').attr('class', 'col-12 col-sm-12 col-md-12 col-lg-12 p-0');
             $('#chkCorreoSol').prop('checked', false);
         }
-
         if (parseInt(cliente.total_sol_sms_pend) > 0 || parseInt(cliente.total_sol_sms_aut) > 0 || cliente.autorizacion_sms === null || parseInt(cliente.autorizacion_sms) === ESTATUS_AUTORIZACION.AUTORIZADO) {
             $('#chk-sms-sol-div').hide();
             $('#chk-correo-sol-div').removeAttr('class');
             $('#chk-correo-sol-div').attr('class', 'col-12 col-sm-12 col-md-12 col-lg-12 p-0');
             $('#chkSmsSol').prop('checked', false);
         }
-
         $('#solicitar-modal').modal('toggle');
     });
 });
 
 $(document).on('hidden.bs.modal', '#autorizaciones-modal', function () {
     cliente = null;
-
     $('#correoAut').val('');
     $('#smsAut').val('');
-
     $('#chk-correo-aut-div').show();
     $('#correo-aut-div').show();
     $('#chk-sms-aut-div').show();
     $('#sms-aut-div').show();
-
     $('#correoAut').attr('required');
     $('#ladaAut').attr('required');
     $('#smsAut').attr('required');
-
     $('#chk-sms-aut-div').removeAttr('class');
     $('#chk-sms-aut-div').attr('class', 'col-12 col-sm-12 col-md-6 col-lg-6 p-0');
     $('#chk-correo-aut-div').removeAttr('class');
     $('#chk-correo-aut-div').attr('class', 'col-12 col-sm-12 col-md-6 col-lg-6 p-0');
-
     $('#chkCorreoAut').prop('checked', true);
     $('#chkSmsAut').prop('checked', true);
 });
 
 $(document).on('hidden.bs.modal', '#reenvio-modal', function () {
     cliente = null;
-
     $('#chk-correo-reenvio-div').show();
     $('#chk-sms-reenvio-div').show();
-
     $('#chk-sms-reenvio-div').removeAttr('class');
     $('#chk-sms-reenvio-div').attr('class', 'col-12 col-sm-12 col-md-6 col-lg-6 p-0');
     $('#chk-correo-reenvio-div').removeAttr('class');
     $('#chk-correo-reenvio-div').attr('class', 'col-12 col-sm-12 col-md-6 col-lg-6 p-0');
-
     $('#chkCorreoReenvio').prop('checked', true);
     $('#chkSmsReenvio').prop('checked', true);
 });
 
 $(document).on('hidden.bs.modal', '#solicitar-modal', function () {
     cliente = null;
-
     $('#chk-correo-sol-div').show();
     $('#chk-sms-sol-div').show();
-
     $('#chk-sms-sol-div').removeAttr('class');
     $('#chk-sms-sol-div').attr('class', 'col-12 col-sm-12 col-md-6 col-lg-6 p-0');
     $('#chk-correo-sol-div').removeAttr('class');
     $('#chk-correo-sol-div').attr('class', 'col-12 col-sm-12 col-md-6 col-lg-6 p-0');
-
     $('#chkCorreoSol').prop('checked', true);
     $('#chkSmsSol').prop('checked', true);
     $('#comentarioSol').val('');
@@ -1519,45 +1385,37 @@ $(document).on('hidden.bs.modal', '#solicitar-modal', function () {
 
 $(document).on('submit', '#autorizacion-form', function (e) {
     e.preventDefault();
-
     let formValues = {};
     $.each($('#autorizacion-form').serializeArray(), function (i, campo) {
         formValues[campo.name] = campo.value;
     });
-
     if (!formValues.chkCorreoAut && !formValues.chkSmsAut) {
         alerts.showNotification('top', 'right', 'Debe seleccionar un método de envío.', 'danger');
         return;
     }
-
     if (cliente.autorizacion_correo !== null && !formValues.chkSmsAut) {
         alerts.showNotification('top', 'right', 'Debe seleccionar un método de envío.', 'danger');
         return;
     }
-
     if (cliente.autorizacion_sms !== null && !formValues.chkCorreoAut) {
         alerts.showNotification('top', 'right', 'Debe seleccionar un método de envío.', 'danger');
         return;
     }
-
     if (formValues.chkCorreoAut && cliente.autorizacion_correo === null) {
         if (formValues.correoAut.length === 0) {
             alerts.showNotification('top', 'right', 'El campo correo electrónico es obligatorio.', 'danger');
             return;
         }
     }
-
     if (formValues.chkSmsAut && cliente.autorizacion_sms === null) {
         if (formValues.ladaAut.length === 0) {
             alerts.showNotification('top', 'right', 'El campo lada es obligatorio.', 'danger');
             return;
         }
-
         if (formValues.smsAut.length === 0) {
             alerts.showNotification('top', 'right', 'El campo teléfono es obligatorio.', 'danger');
             return;
         }
-
         if (formValues.smsAut.length !== 10) {
             alerts.showNotification('top', 'right', 'El campo teléfono debe tener una longitud de 10 caracteres.', 'danger');
             return;
@@ -1566,7 +1424,6 @@ $(document).on('submit', '#autorizacion-form', function (e) {
 
     let data = new FormData();
     data.append('idCliente', cliente.id_cliente);
-
     if (formValues.chkCorreoAut && cliente.autorizacion_correo === null) {
         data.append('correo', formValues.correoAut);
     }
@@ -1574,9 +1431,7 @@ $(document).on('submit', '#autorizacion-form', function (e) {
         data.append('telefono', formValues.smsAut);
         data.append('lada', formValues.ladaAut);
     }
-
     $('#spiner-loader').removeClass('hide');
-
     $.ajax({
         url: `${general_base_url}Asesor/enviarAutorizaciones`,
         data: data,
@@ -1586,26 +1441,21 @@ $(document).on('submit', '#autorizacion-form', function (e) {
         type: 'POST',
         success: function (data) {
             const response = JSON.parse(data);
-
             if (response.code === 200) {
                 alerts.showNotification("top", "right", 'Verificación enviada con éxito', "success");
                 $('#tabla_deposito_seriedad').DataTable().ajax.reload();
                 $('#autorizaciones-modal').modal('hide');
             }
-
             if (response.code === 400) {
                 alerts.showNotification("top", "right", response.message, "warning");
             }
-
             if (response.code === 500) {
                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
             }
-
             $('#spiner-loader').addClass('hide');
         },
         error: function () {
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-
             $('#spiner-loader').addClass('hide');
         }
     });
@@ -1613,42 +1463,33 @@ $(document).on('submit', '#autorizacion-form', function (e) {
 
 $(document).on('submit', '#reenvio-form', function (e) {
     e.preventDefault();
-
     let formValues = {};
     $.each($('#reenvio-form').serializeArray(), function (i, campo) {
         formValues[campo.name] = campo.value;
     });
-
     if (!formValues.chkCorreoReenvio && !formValues.chkSmsReenvio) {
         alerts.showNotification('top', 'right', 'Debe seleccionar un método de envío.', 'danger');
         return;
     }
-
     if (parseInt(cliente.autorizacion_sms) !== ESTATUS_AUTORIZACION.ENVIADO &&
         parseInt(cliente.autorizacion_correo) === ESTATUS_AUTORIZACION.ENVIADO && !formValues.chkCorreoReenvio) {
         alerts.showNotification('top', 'right', 'Debe seleccionar un método de envío.', 'danger');
         return;
     }
-
     if (parseInt(cliente.autorizacion_correo) !== ESTATUS_AUTORIZACION.ENVIADO &&
         (parseInt(cliente.autorizacion_sms) === ESTATUS_AUTORIZACION.ENVIADO && !formValues.chkSmsReenvio)) {
         alerts.showNotification('top', 'right', 'Debe seleccionar un método de envío.', 'danger');
         return;
     }
-
     let data = new FormData();
     data.append('idCliente', cliente.id_cliente);
-
     if (parseInt(cliente.autorizacion_correo) === ESTATUS_AUTORIZACION.ENVIADO && formValues.chkCorreoReenvio) {
         data.append('correo', true);
     }
-
     if (parseInt(cliente.autorizacion_sms) === ESTATUS_AUTORIZACION.ENVIADO && formValues.chkSmsReenvio) {
         data.append('sms', true);
     }
-
     $('#spiner-loader').removeClass('hide');
-
     $.ajax({
         url: `${general_base_url}Asesor/reenvioAutorizacion`,
         data: data,
@@ -1658,26 +1499,21 @@ $(document).on('submit', '#reenvio-form', function (e) {
         type: 'POST',
         success: function (data) {
             const response = JSON.parse(data);
-
             if (response.code === 200) {
                 alerts.showNotification("top", "right", 'Autorización reenviada con éxito', "success");
                 $('#tabla_deposito_seriedad').DataTable().ajax.reload();
                 $('#reenvio-modal').modal('hide');
             }
-
             if (response.code === 400) {
                 alerts.showNotification("top", "right", response.message, "warning");
             }
-
             if (response.code === 500) {
                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
             }
-
             $('#spiner-loader').addClass('hide');
         },
         error: function () {
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-
             $('#spiner-loader').addClass('hide');
         }
     });
@@ -1685,42 +1521,33 @@ $(document).on('submit', '#reenvio-form', function (e) {
 
 $(document).on('submit', '#solicitar-form', function (e) {
     e.preventDefault();
-
     let formValues = {};
     $.each($('#solicitar-form').serializeArray(), function (i, campo) {
         formValues[campo.name] = campo.value;
     });
-
     if (!formValues.chkCorreoSol && !formValues.chkSmsSol) {
         alerts.showNotification('top', 'right', 'Debe seleccionar un método de envío.', 'danger');
         return;
     }
-
     if (formValues.comentario.length === 0) {
         alerts.showNotification('top', 'right', 'El comentario es requerido.', 'danger');
         return;
     }
-
     if (formValues.subdirector === null || formValues.subdirector === '') {
         alerts.showNotification('top', 'right', 'El subdirector es requerido.', 'danger');
         return;
     }
-
     let data = new FormData();
     data.append('idCliente', cliente.id_cliente);
     data.append('idSubdirector', formValues.subdirector);
     data.append('comentario', formValues.comentario);
-
     if ((parseInt(cliente.total_sol_correo_pend) === 0 || cliente.autorizacion_correo !== null) && formValues.chkCorreoSol) {
         data.append('correo', true);
     }
-
     if ((parseInt(cliente.total_sol_sms_pend) === 0 || cliente.autorizacion_sms !== null) && formValues.chkSmsSol) {
         data.append('sms', true);
     }
-
     $('#spiner-loader').removeClass('hide');
-
     $.ajax({
         url: `${general_base_url}Asesor/solicitarAclaracion`,
         data: data,
@@ -1730,26 +1557,21 @@ $(document).on('submit', '#solicitar-form', function (e) {
         type: 'POST',
         success: function (data) {
             const response = JSON.parse(data);
-
             if (response.code === 200) {
                 alerts.showNotification("top", "right", 'Solicitud enviada con éxito', "success");
                 $('#tabla_deposito_seriedad').DataTable().ajax.reload();
                 $('#solicitar-modal').modal('hide');
             }
-
             if (response.code === 400) {
                 alerts.showNotification("top", "right", response.message, "warning");
             }
-
             if (response.code === 500) {
                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
             }
-
             $('#spiner-loader').addClass('hide');
         },
         error: function () {
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-
             $('#spiner-loader').addClass('hide');
         }
     });
@@ -1784,37 +1606,30 @@ jQuery(document).ready(function(){
         jQuery(this).removeData('bs.modal');
         jQuery(this).find('#comentario').val('');
     })
-
     jQuery('#modal2').on('hidden.bs.modal', function (e) {
         jQuery(this).removeData('bs.modal');
         jQuery(this).find('#comentario2').val('');
     })
-
     jQuery('#modal3').on('hidden.bs.modal', function (e) {
         jQuery(this).removeData('bs.modal');
         jQuery(this).find('#comentario3').val('');
     })
-
     jQuery('#modal4').on('hidden.bs.modal', function (e) {
         jQuery(this).removeData('bs.modal');
         jQuery(this).find('#comentario4').val('');
     })
-
     jQuery('#modal5').on('hidden.bs.modal', function (e) {
         jQuery(this).removeData('bs.modal');
         jQuery(this).find('#comentario5').val('');
     })
-
     jQuery('#modal6').on('hidden.bs.modal', function (e) {
         jQuery(this).removeData('bs.modal');
         jQuery(this).find('#comentario6').val('');
     })
-
     jQuery('#modal7').on('hidden.bs.modal', function (e) {
         jQuery(this).removeData('bs.modal');
         jQuery(this).find('#comentario7').val('');
     })
-
     jQuery('#modal_return1').on('hidden.bs.modal', function (e) {
         jQuery(this).removeData('bs.modal');
         jQuery(this).find('#comentario8').val('');
@@ -1847,7 +1662,6 @@ function construirBotonEstatus(data, fechaVenc, classButton, atributoButton = ''
 
 function generarBotonesAutorizacion(clienteData) {
     let botones = '';
-
     if (clienteData.autorizacion_correo === null || clienteData.autorizacion_sms === null) {
         botones += `
             <button class="btn-data btn-violetDeep btn-rounded btn-autorizacion"
@@ -1859,7 +1673,6 @@ function generarBotonesAutorizacion(clienteData) {
             </button>
         `;
     }
-
     if (parseInt(clienteData.autorizacion_correo) === ESTATUS_AUTORIZACION.ENVIADO || parseInt(clienteData.autorizacion_sms) === ESTATUS_AUTORIZACION.ENVIADO) {
         botones += `
             <button class="btn-data btn-azure btn-rounded btn-reenvio"

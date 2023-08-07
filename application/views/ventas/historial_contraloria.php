@@ -124,8 +124,8 @@
                                             </div>
                                             <div class="toolbar">
                                                 <div class="row">
-                                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0 overflow-hidden">
-                                                        <div class="form-group select-is-empty">
+                                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0">
+                                                        <div class="form-group select-is-empty overflow-hidden">
                                                             <label class="control-label">AÑO</label>
                                                             <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-container="body" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
                                                                 <?php
@@ -188,8 +188,8 @@
                                             </div>
                                             <div class="toolbar">
                                                 <div class="row">
-                                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0 overflow-hidden">
-                                                        <div class="form-group">
+                                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0">
+                                                        <div class="form-group overflow-hidden">
                                                             <label for="proyecto">Año</label>
                                                             <select name="filtro35" id="filtro35" class="selectpicker select-gral" data-container="body" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
                                                                 <?php

@@ -58,7 +58,7 @@ $('#tabla_factura thead tr:eq(0) th').each( function (i) {
             $.each(data, function(i, v) {
                 total += parseFloat(v.total);
             });
-            document.getElementById("totpagarfactura").textContent ='$'+formatMoney(total);
+            document.getElementById("totpagarfactura").textContent = formatMoney(total);
         }
     });
     $('[data-toggle="tooltip"]').tooltip({
@@ -72,11 +72,8 @@ $('#tabla_factura').on('xhr.dt', function(e, settings, json, xhr) {
         total += parseFloat(v.total);
     });
     var to = formatMoney(total);
-    document.getElementById("totpagarfactura").textContent = '$' + to;
+    document.getElementById("totpagarfactura").textContent = to;
 });
-
-
-
 
 tabla_factura = $("#tabla_factura").DataTable({
     dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -157,7 +154,7 @@ tabla_factura = $("#tabla_factura").DataTable({
     },
     {
         "data": function( d ){
-            return '<p class="m-0"><b> $'+formatMoney(d.total)+'</b></p>';
+            return '<p class="m-0"><b>'+formatMoney(d.total)+'</b></p>';
         }
     },
     {
@@ -235,7 +232,7 @@ function construir_subtablas( data ){
         solicitudes += '<td><b>'+(i+1)+'</b></td>';
         solicitudes += '<td>'+'<b>'+'ID PAGO: '+'</b> '+v.id_pago_suma+'</td>';
         solicitudes += '<td>'+'<b>'+'REFERENCIA: '+'</b> '+v.referencia+'</td>';
-        solicitudes += '<td>'+'<b>'+'MONTO: '+'</b> $'+formatMoney(v.total_comision)+'</td>';
+        solicitudes += '<td>'+'<b>'+'MONTO: '+'</b>'+formatMoney(v.total_comision)+'</td>';
         solicitudes += '</tr>';
     });
     return solicitudes += '</table>';

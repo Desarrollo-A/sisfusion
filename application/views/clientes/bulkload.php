@@ -1,12 +1,26 @@
 <link href="<?=base_url()?>dist/js/controllers/files/css/fileinput.css" media="all" rel="stylesheet" type="text/css"/>
 <link href="<?=base_url()?>dist/js/controllers/files/themes/explorer-fas/theme.css" media="all" rel="stylesheet" type="text/css"/>
+<style type="text/css">
+    .progress .progress-bar, .progress .progress-bar.progress-bar-default {
+        background-color: #0073c8;
+    }
+    .progress-bar.indeterminate {
+        position: relative;
+        animation: progress-indeterminate 1.2s linear infinite;
+    }
+    @keyframes progress-indeterminate {
+        from { left: -25%; width: 25%; }
+        to { left: 100%; width: 25%;}
+    }
+</style>
+
 <div>
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
         <div class="content" id="bulkload_div">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="block full">
                             <div class="row">
                                 <div class="col-md-12">
@@ -17,91 +31,38 @@
                                         <div class="card-content">
                                             <div class="row">
                                                 <h4 class="card-title">Carga masiva de prospectos</h4>
-
                                                 <form method="post" enctype="multipart/form-data" name="my_bulkload_form" id="my_bulkload_form  ">
-
-<div class="">
-                                                                <label for="customFile" style="color: #106BA0;font-size: 20px;">Subir archivo CSV</label>
-                                                                <input id="customFile" style="width: 100%;" name="customFile" class="form-control-file" type="file" accept=".csv" >
-                                                            </div>
-
+                                                <div class="">
+                                                    <label for="customFile" style="color: #106BA0;font-size: 20px;">Subir archivo CSV</label>
+                                                    <input id="customFile" style="width: 100%;" name="customFile" class="form-control-file" type="file" accept=".csv" >
+                                                </div>
                                                 <div class="table-responsive">
                                                     <div class="material-datatables">
-                                                        
-
-                                                           
-                                                            <br>
-                                                            <style type="text/css">
-/*input[type='file']#customFile {
- width: 0.1px;
- height: 0.1px;
- opacity: 0;
- overflow: hidden;
- position: absolute;
- z-index: -1;
- }
- label[for='customFile'] {
- font-size: 14px;
- font-weight: 600;
- color: #fff;
- background-color: #106BA0;
- display: inline-block;
- transition: all .5s;
- cursor: pointer;
- padding: 15px 40px !important;
- text-transform: uppercase;
- width: fit-content;
- text-align: center;
- }*/
-
-
-                                                .progress .progress-bar, .progress .progress-bar.progress-bar-default {
-                                                    background-color: #0073c8;
-                                                }
-                                                .progress-bar.indeterminate {
-                                                  position: relative;
-                                                  animation: progress-indeterminate 1.2s linear infinite;
-                                                }
-
-                                                @keyframes progress-indeterminate {
-                                                   from { left: -25%; width: 25%; }
-                                                   to { left: 100%; width: 25%;}
-                                                }
-                                            </style>
-
-                                                            
-                                             <div class="table-responsive">
-                                                    <table id="table_datos2" class="table table-striped table-no-bordered table-hover" style="text-align:center;"><!--table table-bordered table-hover -->
-                                                        <thead>
-                                                        <tr>
-                                                           
-                                                            <th class="disabled-sorting text-right"><center>Sede</center></th>
-                                                            <th class="disabled-sorting text-right"><center>Asesor</center></th>
-                                                            <th class="disabled-sorting text-right"><center>Nombre</center></th>
-                                                            <th class="disabled-sorting text-right"><center>Apellido p.</center></th>
-                                                            <th class="disabled-sorting text-right"><center>Apellido m.</center></th>
-                                                            <th class="disabled-sorting text-right"><center>Personalidad</center></th>
-                                                            <th class="disabled-sorting text-right"><center>Correo</center></th>
-                                                            <th class="disabled-sorting text-right"><center>Teléfono</center></th>
-                                                            <th class="disabled-sorting text-right"><center>Teléfono 2</center></th>
-                                                            <th class="disabled-sorting text-right"><center>Observaciones</center></th>
-                                                              <th class="disabled-sorting text-right"><center>Lugar prospección</center></th>
-                                                                <th class="disabled-sorting text-right"><center>Otro lugar</center></th>
-                                                                  <th class="disabled-sorting text-right"><center>Plaza de venta</center></th>
-                                                               <!-- <th class="disabled-sorting text-right"><center>Medio publicitario</center></th>-->
-                                                                <th class="disabled-sorting text-right"><center>Nacionalidad</center></th>
-                                                        </tr>
-                                                        </thead>
-                                                    </table>
-                                                </div>
-                                <div class="col-md-12" id="savingProspect">
-                                                            <button type="reset" onclick="limpiar();" class="btn">Limpiar</button>
-<!--                                                            <button type="submit" class="btn" style="background-color: #4caf50;">Insertar</button>-->
-                                                            <button type="button" name='finish' id="finish" class="btn" style="background-color: #4caf50;" onclick="sendCsvFile()" disabled="disabled">Insertar</button>
-
-                                                        </form>
-
-                                                       
+                                                        <table id="table_datos2" class="table table-striped table-no-bordered table-hover" style="text-align:center;"><!--table table-bordered table-hover -->
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>SEDE</th>
+                                                                    <th>ASESOR</th>
+                                                                    <th>NOMBRE</th>
+                                                                    <th>APELLIDO PATERNO</th>
+                                                                    <th>APELLIDO MATERNO</th>
+                                                                    <th>PERSONALIDAD</th>
+                                                                    <th>CORREO</th>
+                                                                    <th>TELÉFONO</th>
+                                                                    <th>TELÉFONO 2</th>
+                                                                    <th>OBSERVACIONES</th>
+                                                                    <th>LUGAR DE PROSPECCIÓN</th>
+                                                                    <th>OTRO LUGAR</th>
+                                                                    <th>PLAZA DE VENTA</th>
+                                                                    <th>NACIONALIDAD</th>
+                                                                </tr>
+                                                            </thead>
+                                                        </table>
+                                                        <div class="col-md-12" id="savingProspect">
+                                                                <button type="reset" onclick="limpiar();" class="btn">Limpiar</button>
+                                                                <button type="button" name='finish' id="finish" class="btn" style="background-color: #4caf50;" onclick="sendCsvFile()">Insertar</button>
+                                                            </form>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -113,484 +74,18 @@
                     </div>
                 </div>
             </div>
-        </div>
-
         <?php $this->load->view('template/footer_legend');?>
-
+        </div>
     </div>
 </div>
 </body>
 
 <?php $this->load->view('template/footer');?>
-
 <script src="<?=base_url()?>dist/js/controllers/general-1.1.0.js"></script>
-
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-
 <script src="<?=base_url()?>dist/js/controllers/files/plugins/piexif.js" type="text/javascript"></script>
 <script src="<?=base_url()?>dist/js/controllers/files/plugins/sortable.js" type="text/javascript"></script>
-<!--<script src="<?=base_url()?>dist/js/controllers/files/fileinput.js" type="text/javascript"></script>-->
-
-<!--        <script src="--><?//=base_url()?><!--dist/js/controllers/files/locales/fr.js" type="text/javascript"></script>-->
 <script src="<?=base_url()?>dist/js/controllers/files/locales/es.js" type="text/javascript"></script>
 <script src="<?=base_url()?>dist/js/controllers/files/themes/fas/theme.js" type="text/javascript"></script>
 <script src="<?=base_url()?>dist/js/controllers/files/themes/explorer-fas/theme.js" type="text/javascript"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-<script>
-    $('#file-es').fileinput({
-        theme: 'fas',
-        language: 'es',
-        uploadUrl: '#',
-        allowedFileExtensions: ['csv']
-    });
-function limpiar()
-{
-    //$('#table_datos2').DataTable().ajax.reload();
-    var table = $('#table_datos2').DataTable();
-table
-    .clear()
-    .draw();
-    location.reload();
-}
+<script src="<?= base_url() ?>dist/js/controllers/clientes/bulkload.js"></script>
 
-
-
-
-
-
-let personalidadV=0;
-let contador = 0;
-function parseCSV(text) {
-  // Obtenemos las lineas del texto
-  let lines = text.replace(/\r/g, '').split('\n');
-  return lines.map(line => {
-    // Por cada linea obtenemos los valores
-    let values = line.split(',');
-    return values;
-  });
-}
-function reverseMatrix(matrix){
-  let output = [];
-  // Por cada fila
-  matrix.forEach((values, row) => {
-    // Vemos los valores y su posicion
-    values.forEach((value, col) => {
-      // Si la posición aún no fue creada
-      if (output[col] === undefined) output[col] = [];
-      output[col][row] = value;
-    });
-  });
-  return output;
-}
-let c=0;
-function readFile(evt) {
-    var fileName = this.files[0].name;
-    var ext = fileName.split('.').pop();
-    //alert(ext);
-
-if(ext !== "csv"){
-alerts.showNotification("top", "right", "El formato permitido solo es .csv", "danger");
-}else{
-     let file = evt.target.files[0];
-
-  let reader = new FileReader();
-  reader.onload = (e) => {
-    // Cuando el archivo se terminó de cargar
-    let lines = parseCSV(e.target.result);
-    let output = reverseMatrix(lines);
-
-//Se mandan los dotos a la funcion que pinta la datatable   
-//alert(lines.length);      
-llenar(lines.splice(1,lines.length));
-  };
-  // Leemos el contenido del archivo seleccionado
-  reader.readAsBinaryString(file); 
-
-}
-
- 
-}
-
-    document.getElementById('customFile').addEventListener('change', readFile, false);
-
-
-
-
-let contadorSede = 0;
-let contadorSede2 =0;
-let ContadorErr= 0;
-
-let ContadorFila=2;
-
-function llenar(lines) {
-    
-$(document).ready(function() {
-    $('#table_datos2').DataTable( {
-        ordering: false,
-        paging: true,
-        pagingType: "full_numbers",
-        lengthMenu: [
-            [10, 25, 50, -1],
-            [10, 25, 50, "Todos"]
-        ],
-        language: {
-            "url": "../../static/spanishLoader.json"
-        },
-        destroy: true,
-        data: lines.splice(0,lines.length -1),
-         initComplete:
-          function(settings, json) {
-            errores();
-  },
-        columns: [
-            { data: lines.id_sede, render: function(data)
-                { //alert(data);
-               // let v;
-               let variable = new String(data);
-let numero = parseFloat(data);
-                if (data == "id_sede" || data == undefined ) {
-                    return '<p></p>';
-                }else if(variable == ""){
-                    ContadorErr++;
- return '<b style="color:red;">REQUERIDO</b>';
-                    }else if( data !== "id_sede" && data !== "" && data != undefined)
-                    {
-
-                            if (data >= 1 && data <=7  && Number.isInteger(numero) == true) {
-                               return '<p>'+data+'</p>'; 
-                           }else{
-                            ContadorErr++;
-                             return '<b style="color:red;">'+data+'</b>';
-                           }
-                    }
-                 }
-  },        
-            { data: lines.id_asesor,render: function (data) {
-                let numero = parseFloat(data);
-                if (data == "id_asesor" || data == undefined) {
-                    return '<p></p>';
-                }
-                else if(data == "" && data != undefined){
-                    ContadorErr++;
-                     return '<b style="color:red;">REQUERIDO</b>';
-                }else if(data !== "id_asesor" && data !== "" && data != undefined){
-                    if (Number.isInteger(numero) == true) {
-                         return '<p >'+data+'</p>';
-                     }else{
-                        ContadorErr++;
-                           return '<b style="color:red;">'+data+'<b>';
-                     }
-                }
-            }
-             },
-            { data: lines.nombre,render:function(data) {
-                if (data == "nombre" || data == undefined) {
-                    return '<p></p>';
-                }
-                else if(data == ""){
-                     ContadorErr++;
-                     return '<b style="color:red;">REQUERIDO</b>';   
-                }else if(data !== "" && data !== "nombre"){
-                             return '<p>'+data+'</p>';
-                }
-            }
-            },
-            { data: lines.apellido_paterno,render:function(data) {
-                if (data == "apellido_paterno" || data == undefined) {
-                    return '<p></p>';
-                }
-                else{
-                    return '<p>'+data+'</p>';
-                }
-            }
-             },
-            { data: lines.apellido_materno,render:function(data) {
-                if (data == "apellido_materno" || data == undefined) {
-                    return '<p></p>';
-                }
-                else{
-                    return '<p>'+data+'</p>';
-                }
-            }
-             },
-            { data: lines.personalidad_juridica, render: function(data) {
-                if (data == "") {
-                    ContadorErr++;
- return '<b style="color:red;">REQUERIDO</b>';
-                }else{
-                    if (personalidad(data) == 1) 
-                {
-                    return '<p>'+data+'</p>'; 
-                }else if(personalidad(data) == 1)
-                {
-                   
-                    return '<p ">'+data+'</p>'; 
-                }else if(personalidad(data) == 2)
-                {
-                 
-                    return '<p ">'+data+'</p>'; 
-                }
-                else if(personalidad(data) == 3)
-                {
-                    ContadorErr++;
-                    return '<b style="color:red;">'+data+'</b>'; 
-                }
-                else if(personalidad(data) == 4)
-                {
-                    return '<p></p>';
-                }
-                }
-
-            } 
-             },
-            { data: lines.correo, render: function(data)
-                {   
-                        if (data == "") {
-                            //ContadorErr++;
- return '<b ></b>';
-                        }else{
-                            if (validar_email2(data) == 2) {
-                            return '<p>'+data+'</p>';
-                            }else if(validar_email2(data) == 1){
-                                ContadorErr++;
-                                 return '<b style="color:red;">'+data+'</b>';
-                                
-                            }else if(validar_email2(data) == 3)
-                            {    
-                               return '<b style="color:red;"></b>'; 
-                            } 
-                        }       
-                }
-            },
-            { data: lines.telefono, render: function(data)
-                { if (data == "") {
-                    ContadorErr++;
-                    return '<b style="color:red;">REQUERIDO</b>';
-                 }else{
-                         if (telefonoF(data) == 3) {
-                return '<b style="color:red;"></b>';
-                }else if(telefonoF(data) == 2){
-                    ContadorErr++;
-                     return '<b style="color:red;">'+data+'</b>';
-                    contador +=1;
-                }else if(telefonoF(data) == 1){
-                     return '<p>'+data+'</p>';   
-                }
-                 } 
-                }
-            },
-            { data: lines.telefono_2, render: function(data)
-                {
-                 if (data == undefined || data == "") {
-                    return '<p></p>';
-                 }else{
-                                 if (telefonoF(data) == 3) {
-                                    
-                        return '<b style="color:red;"></b>';
-                        }else if(telefonoF(data) == 2){
-                            
-                             return '<b style="color:red;">'+data+'</b>';
-                            contador +=1;
-                        }else if(telefonoF(data) == 1){
-                             return '<p>'+data+'</p>';
-                            
-                        }else if(telefonoF(data) == 4)
-                        {
-                            //ContadorErr++;
-                            return '<b style="color:red;">'+data+'</b>';
-                        }
-
-                 }   
-
-                }
-
-             },
-            { data: lines.observaciones,render:function(data) {
-                if (data == "observaciones" || data == undefined) {
-                    return '<p></p>';
-                }else{
-                    return '<p>'+data+'<p>';
-                }
-            }
-
-             },
-            { data: lines.lugar_prospeccion,render:function (data) {
-                if (data == "lugar_prospeccion" || data == undefined) {
-                    return '<p></p>';
-                }else if(data == ""){
- ContadorErr++;
-                    return '<b style="color:red;">REQUERIDO</b>';
-                   
-                }else{
-
-                    if (data == 6) {
-                        return '<p>'+data+'</p>';
-                    }else{
-                        ContadorErr++;
-                        return '<b style="color:red;">'+data+'</b>';
-                    }
-                }
-            }
-
-             },
-            { data: lines.otro_lugar,render: function(data) {
-                if (data == "") {
-  ContadorErr++;
-                    return '<b style="color:red;">REQUERIDO</b>';
-                }else{
-                        if (otro_lugar(data) == 1) {
-                        return '<p>'+data+'</p>';
-                    }else if (otro_lugar(data) == 2) {
-                        ContadorErr++;
-                        return '<b style="color:red;">'+data+'</b>';
-                    }else if (otro_lugar(data) == 3) {
-                        return '<p></p>';
-                    }
-                }
-            }
-             },
-            { data: lines.plaza_venta,render: function (data) {
-                let numero = parseFloat(data);
-                //console.log(parseFloat(data));
-                if (data == "plaza_venta" || data == undefined) {
-                    return '<p></p>';
-                }else if(data == ""){
-                 ContadorErr++;
-                    return '<b style="color:red;">REQUERIDO</b>';   
-                }else if(data !== "plaza_venta" && data !== ""){
-                    if (numero >= 1 && numero <= 5 && Number.isInteger(numero) == true)  {
-                        return '<p>'+data+'</p>';
-                    }else{
-                        ContadorErr++;
-                      return '<b style="color:red;">'+data+'</b>';  
-                    }
-                }
-            }
-             },
-           /* { data: lines.medio_publicitario,render:function (data) {
-                let numero = parseFloat(data);
-                if (data == "medio_publicitario" || data == undefined) {
-                    return '<p></p>';
-                }else if(data == ""){
-                   ContadorErr++;
-                    return '<b style="color:red;">REQUERIDO</b>'; 
-                }else if(data !== "medio_publicitario" && data !== ""){
-                     if (numero >= 1 && numero <= 10 && Number.isInteger(numero) == true) {
-                    return '<p>'+data+'</p>';
-                    }else{
-                        ContadorErr++;
-                       return '<b style="color:red;">'+data+'</b>';   
-                    }
-                }
-            }
-            },*/
-            { data: lines.nacionalidad,render: function (data) {
-                let numero = parseFloat(data);
-                if (data == "nacionalidad" || data == undefined) {
-                    return '<p></p>';
-                }else if(data == ""){
-                    ContadorErr++;
-                    return '<b style="color:red;">REQUERIDO</b>'; 
-                    
-                }else if(data !== "" && data !== "nacionalidad"){
-                    if (numero >= 0 && numero <= 70 && Number.isInteger(numero) == true) {
-                        return '<p>'+data+'</p>';
-                    }else{
-                        ContadorErr++;
-                       return '<b style="color:red;">'+data+'</b>';   
-                    }
-                }
-            }
-
-            }
-        ],
-
-    } );
-} );
-}
-function otro_lugar(dato) 
-{
-            let variable = new String(dato);
-            if (variable == "otro_lugar" || variable == "undefined" || variable == "") {
-                return 3;
-            }else 
-            {
-                   const opciones = ['01 800','Chat','Contacto web','Facebook','WhatsApp','Recomendado','Instagram'];
-                  let resultado = opciones.includes(''+variable+'');
-                 let result = opciones.indexOf(variable);
-                // console.log(resultado);
-                if (resultado == true) {
-                    return 1;
-                }else
-                {
-                    return 2;
-                }
-            }
-}
-function personalidad(dato) 
-{
-    const variable = new String(dato);
-                if (isNaN(variable) == false && variable !== "personalidad_juridica") {
-                            if (variable == 1 ) {
-                                   personalidadV=1;
-                                return 1;
-                            }else if(variable == 2){
-                                   personalidadV=2;
-                                return 2;
-                            }
-                            else if(variable != 1 || variable != 2){ 
-                                personalidadV = 3;
-                                return 3; }
-
-                }else{
-                    return 4;
-                } 
-}
-function validar_email2(d) 
-{
-        let variable = new String(d);
-        if (variable == "correo" || variable == "undefined") {
-            return 3;
-        }else 
-        {
-            if ( validar_email(variable) == false) {
-                return 1;
-            }
-            else if( validar_email(variable) == true){
-                return 2;
-            }
-        }
-    }
-function validar_email( email ) 
-{
-    var regex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-    return regex.test(email) ? true : false;
-}
-function telefonoF(d) 
-{
-    const variable = new String(d);
-    if (variable.length >= 10 && variable.length <= 15 && variable.includes('e') == false) {
-       return 1;     
-    }else if(variable.length < 10 || variable.length > 15 && variable.includes('e') == false)
-    {
-        return 2;
-    }
-    else if(variable.length < 10 || variable.length > 15 && variable.includes('e') == true )
-    {
-        return 3;
-    }else if(variable.length < 10 || variable.length > 15 && variable.includes('e') == false && variable !== ""){
-return 4;
-    }
-}
-function errores() 
-{
-    var btn = document.getElementById('finish');
-        if (ContadorErr == 0) {
-            btn.disabled = false;
-        }else{
-            btn.disabled = true;
-        }  
-}
-</script>

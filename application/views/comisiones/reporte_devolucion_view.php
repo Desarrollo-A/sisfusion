@@ -19,7 +19,7 @@
                         </div>
                         <div class="card-content">
                             <div class="encabezadoBox">
-                                <h3 class="card-title">Reporte devoluciones</h3>
+                                <h3 class="card-title">Reporte de devoluciones</h3>
                             </div>
                             <div class="toolbar">
                                 <div class="row">

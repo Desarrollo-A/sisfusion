@@ -626,7 +626,7 @@ function getStatusMktdPreventa(){
                                         CONCAT(uuu.nombre, ' ', uuu.apellido_paterno, ' ', uuu.apellido_materno) gerente,
                                         'Sin especificar' recomendado_por,
                                         'Sin especificar' lugar_prospeccion, 'Sin especificar' option_selected, 'Sin especificar' especificacion,
-                                        p.fecha_creacion, p.fecha_vencimiento, p.fecha_modificacion, p.tipo_recomendado
+                                        CONVERT(VARCHAR,p.fecha_creacion,20) AS fecha_creacion, CONVERT(VARCHAR,p.fecha_vencimiento,20) AS fecha_vencimiento, CONVERT(VARCHAR,p.fecha_modificacion,20) AS fecha_modificacion, p.tipo_recomendado
                                         FROM prospectos p
                                         INNER JOIN usuarios u ON u.id_usuario = p.id_asesor
                                         INNER JOIN usuarios uu ON uu.id_usuario = p.id_coordinador
@@ -639,7 +639,7 @@ function getStatusMktdPreventa(){
                                         CONCAT(uuu.nombre, ' ', uuu.apellido_paterno, ' ', uuu.apellido_materno) gerente,
                                         CONCAT(pp.nombre, ' ', pp.apellido_paterno, ' ', pp.apellido_materno) recomendado_por,
                                         pp.lugar_prospeccion, oxc.nombre option_selected, (CASE WHEN pp.lugar_prospeccion IN (3, 6, 7, 9, 10, 21) THEN pp.otro_lugar ELSE '' END) especificacion,
-                                        p.fecha_creacion, p.fecha_vencimiento, p.fecha_modificacion, p.tipo_recomendado
+                                        CONVERT(VARCHAR,p.fecha_creacion,20) AS fecha_creacion, CONVERT(VARCHAR,p.fecha_vencimiento,20) AS fecha_vencimiento, CONVERT(VARCHAR,p.fecha_modificacion,20) AS fecha_modificacion, p.tipo_recomendado
                                         FROM prospectos p
                                         INNER JOIN usuarios u ON u.id_usuario = p.id_asesor
                                         INNER JOIN usuarios uu ON uu.id_usuario = p.id_coordinador
@@ -657,7 +657,7 @@ function getStatusMktdPreventa(){
                                         CONCAT(uuu.nombre, ' ', uuu.apellido_paterno, ' ', uuu.apellido_materno) gerente,
                                         'Sin especificar' recomendado_por,
                                         'Sin especificar' lugar_prospeccion, 'Sin especificar' option_selected, 'Sin especificar' especificacion,
-                                        p.fecha_creacion, p.fecha_vencimiento, p.fecha_modificacion, p.tipo_recomendado
+                                        CONVERT(VARCHAR,p.fecha_creacion,20) AS fecha_creacion,CONVERT(VARCHAR,p.fecha_vencimiento,20) AS fecha_vencimiento, CONVERT(VARCHAR,p.fecha_modificacion,20) AS fecha_modificacion, p.tipo_recomendado
                                         FROM prospectos p
                                         INNER JOIN usuarios u ON u.id_usuario = p.id_asesor
                                         LEFT JOIN usuarios uu ON uu.id_usuario = p.id_coordinador
@@ -670,7 +670,7 @@ function getStatusMktdPreventa(){
                                         CONCAT(uuu.nombre, ' ', uuu.apellido_paterno, ' ', uuu.apellido_materno) gerente,
                                         CONCAT(pp.nombre, ' ', pp.apellido_paterno, ' ', pp.apellido_materno) recomendado_por,
                                         pp.lugar_prospeccion, oxc.nombre option_selected, (CASE WHEN pp.lugar_prospeccion IN (3, 6, 7, 9, 10, 21) THEN pp.otro_lugar ELSE '' END) especificacion,
-                                        p.fecha_creacion, p.fecha_vencimiento, p.fecha_modificacion, p.tipo_recomendado
+                                        CONVERT(VARCHAR,p.fecha_creacion,20) AS fecha_creacion, CONVERT(VARCHAR,p.fecha_vencimiento,20) AS fecha_vencimiento, CONVERT(VARCHAR,p.fecha_modificacion,20) AS fecha_modificacion, p.tipo_recomendado
                                         FROM prospectos p
                                         INNER JOIN usuarios u ON u.id_usuario = p.id_asesor
                                         LEFT JOIN usuarios uu ON uu.id_usuario = p.id_coordinador
@@ -1404,13 +1404,13 @@ function getStatusMktdPreventa(){
             case '19': // SUBDIRECTOR MKTD
                 $query = $this->db->query(
                     "SELECT c.id_prospecto, c.vigencia, c.tipo, c.telefono, c.telefono_2,
-                            CONVERT(VARCHAR, c.fecha_vencimiento, 20) AS fecha_vencimiento,
-                            CONVERT(VARCHAR, c.fecha_creacion, 20) AS fecha_creacion,
-                            UPPER(CONCAT (c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno)) nombre,
-                            CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor,
-                            CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador,
-                            CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente,
-                            c.estatus, c.estatus_particular, c.lugar_prospeccion, UPPER(oxc.nombre) AS nombre_lp,
+                    CONVERT(VARCHAR, c.fecha_vencimiento, 20) AS fecha_vencimiento,
+                    CONVERT(VARCHAR, c.fecha_creacion, 20) AS fecha_creacion,
+                    UPPER(CONCAT (c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno)) nombre,
+                    CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor,
+                    CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador,
+                    CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente,
+                    c.estatus, c.estatus_particular, c.lugar_prospeccion, UPPER(oxc.nombre) AS nombre_lp
                     FROM prospectos c
                     LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                     LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -1427,13 +1427,13 @@ function getStatusMktdPreventa(){
             default:
                 $query = $this->db->query(
                     "SELECT c.id_prospecto, c.vigencia, c.estatus, c.estatus_particular,
-                            c.lugar_prospeccion, UPPER(oxc.nombre) AS nombre_lp, c.tipo, c.telefono, c.telefono_2,
-                            CONVERT(VARCHAR, c.fecha_creacion, 20) AS fecha_creacion,
-                            CONVERT(VARCHAR, c.fecha_vencimiento, 20) AS fecha_vencimiento,
-                            UPPER(CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno)) nombre,
-                            CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor,
-                            CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador,
-                            CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente
+                    c.lugar_prospeccion, UPPER(oxc.nombre) AS nombre_lp, c.tipo, c.telefono, c.telefono_2,
+                    CONVERT(VARCHAR, c.fecha_creacion, 20) AS fecha_creacion,
+                    CONVERT(VARCHAR, c.fecha_vencimiento, 20) AS fecha_vencimiento,
+                    UPPER(CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno)) nombre,
+                    CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor,
+                    CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador,
+                    CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente
                     FROM prospectos c
                     LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                     LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -1459,19 +1459,19 @@ function getStatusMktdPreventa(){
             case '19': // SUBDIRECTOR MKTD
                 $query = $this->db->query(
                     "SELECT c.id_prospecto, c.vigencia, c.tipo, c.telefono, c.telefono_2,
-                            UPPER(CONCAT (c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno)) AS nombre,
-                            CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                            CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                            CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                            CONVERT(VARCHAR, c.fecha_creacion, 20) AS fecha_creacion, 
-                            CONVERT(VARCHAR, c.fecha_vencimiento, 20) AS fecha_creacion,
-                            c.estatus,c.estatus_particular, c.lugar_prospeccion, UPPER(oxc.nombre) AS nombre_lp
+                    UPPER(CONCAT (c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno)) AS nombre,
+                    CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
+                    CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
+                    CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
+                    CONVERT(VARCHAR, c.fecha_creacion, 20) AS fecha_creacion, 
+                    CONVERT(VARCHAR, c.fecha_vencimiento, 20) AS fecha_creacion,
+                    c.estatus,c.estatus_particular, c.lugar_prospeccion, UPPER(oxc.nombre) AS nombre_lp
                     FROM prospectos c 
                     LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                     LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
                     LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
                     LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion AND oxc.id_catalogo = 9
-                    WHERE   c.estatus_vigencia = 1 AND
+                    WHERE c.estatus_vigencia = 1 AND
                             c.id_sede IN($id_coord) AND
                             c.lugar_prospeccion = 6 AND
                             c.tipo = 0 OR
@@ -1505,6 +1505,7 @@ function getStatusMktdPreventa(){
 
     public function getProspectsListByAsesor($id_asesor, $typeTransaction, $beginDate, $endDate, $where)
     {
+        $filter = "";
         if ($typeTransaction == 1 || $typeTransaction == 3) {  // FIRST LOAD || SEARCH BY DATE RANGE
             $filter = " AND c.fecha_creacion BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
             //$this->db->where("c.fecha_creacion BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'");
@@ -1532,27 +1533,6 @@ function getStatusMktdPreventa(){
                 WHERE (c.id_asesor = $id_asesor) $filter 
                 ORDER BY c.fecha_creacion DESC");
             break;
-            case '28': // SUBDIRECTOR
-                $query = $this->db->query(
-                    "SELECT c.id_prospecto, c.vigencia, c.otro_lugar, c.tipo, c.telefono, c.telefono_2,
-                        CONCAT (c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre,
-                        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                        CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                        CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                        CONVERT(VARCHAR, c.fecha_creacion, 20) AS fecha_creacion,
-                        CONVERT(VARCHAR, c.fecha_vencimiento, 20) AS fecha_vencimiento, 
-                        c.estatus, c.lugar_prospeccion, UPPER(oxc.nombre) nombre_lp, c.estatus_particular
-                    FROM prospectos c 
-                    LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
-                    LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
-                    LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
-                    LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion AND oxc.id_catalogo = 9
-                    WHERE   c.lugar_prospeccion = 6 AND 
-                            c.estatus_vigencia = 1 AND
-                            (c.id_asesor = ".$id_asesor.")
-                            AND c.tipo IN(0,1) ".$filter." 
-                    ORDER BY c.fecha_creacion DESC");
-            break;
         }
         return $query->result();
     }
@@ -1567,30 +1547,30 @@ function getStatusMktdPreventa(){
                 case '28': // COBRANZA
                 case '13': // CONTRALORÍA
                 case '32': // CONTRALORÍA CORPORATIVA
-                $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                                    CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                                    CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                                    CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                                    c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
-                                    FROM prospectos c 
-                                    LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
-                                    LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
-                                    LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
-                                    INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion AND oxc.id_catalogo = 9
-                                    WHERE c.nombre LIKE '%".$name_prospect."%' AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
+                $query = $this->db->query("SELECT c.id_prospecto, UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) AS asesor, 
+                UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS coordinador, 
+                UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno)) AS gerente, 
+                CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion, CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                FROM prospectos c 
+                LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
+                LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
+                LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
+                INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion AND oxc.id_catalogo = 9
+                WHERE c.nombre LIKE '%".$name_prospect."%' AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
                 break;
             default:
-                $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                                    CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                                    CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                                    CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                                    c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
-                                    FROM prospectos c 
-                                    LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
-                                    LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
-                                    LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
-                                    INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion AND oxc.id_catalogo = 9 AND c.lugar_prospeccion != 6
-                                    WHERE c.nombre LIKE '%".$name_prospect."%' AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
+                $query = $this->db->query("SELECT c.id_prospecto,UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) AS asesor, 
+                UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS coordinador, 
+                UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno)) AS gerente, 
+                CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion, CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                FROM prospectos c 
+                LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
+                LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
+                LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
+                INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion AND oxc.id_catalogo = 9 AND c.lugar_prospeccion != 6
+                WHERE c.nombre LIKE '%".$name_prospect."%' AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
                 break;
         }
         return $query->result();
@@ -1605,24 +1585,24 @@ function getStatusMktdPreventa(){
                 case '28': // COBRANZA
                 case '13': // CONTRALORÍA
                 case '32': // CONTRALORÍA CORPORATIVA
-            $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-							    CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-							    CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-							    CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-							    c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
-							    FROM prospectos c 
-							    LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
-							    LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
-							    LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
-                                INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion AND oxc.id_catalogo = 9
-							    WHERE c.correo='".$correo_prospect."' OR c.correo LIKE '%".$correo_prospect."%' AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
+                    $query = $this->db->query("SELECT c.id_prospecto,  UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                    UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) AS asesor, 
+                    UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS coordinador, 
+                    UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno)) AS gerente,
+                    CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion, CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                    FROM prospectos c 
+                    LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
+                    LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
+                    LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
+                    INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion AND oxc.id_catalogo = 9
+                    WHERE c.correo='".$correo_prospect."' OR c.correo LIKE '%".$correo_prospect."%' AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
             break;
             default:
-            $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
+            $query = $this->db->query("SELECT c.id_prospecto,  UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
 							    CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
 							    CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
 							    CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-							    c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                                CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion, CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
 							    FROM prospectos c 
 							    LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
 							    LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -1643,11 +1623,11 @@ function getStatusMktdPreventa(){
             case '28': // COBRANZA
             case '13': // CONTRALORÍA
             case '32': // CONTRALORÍA CORPORATIVA
-            $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
+            $query = $this->db->query("SELECT c.id_prospecto,  UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
 							    CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
 							    CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
 							    CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-							    c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                                CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion, CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento,c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
 							    FROM prospectos c 
 							    LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
 							    LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -1656,11 +1636,11 @@ function getStatusMktdPreventa(){
 							    WHERE c.telefono='".$telefono_prospect."' OR c.telefono_2='".$telefono_prospect."'  AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
             break;
             default:
-            $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
+            $query = $this->db->query("SELECT c.id_prospecto, UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
 							    CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
 							    CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
 							    CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-							    c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                                CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion, CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
 							    FROM prospectos c 
 							    LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
 							    LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -1681,11 +1661,11 @@ function getStatusMktdPreventa(){
             case '28': // COBRANZA
             case '13': // CONTRALORÍA
             case '32': // CONTRALORÍA CORPORATIVA
-            $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-						        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-						        CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-						        CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-						        c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+            $query = $this->db->query("SELECT c.id_prospecto, UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+            UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+            UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+            UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+            CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
 						        FROM prospectos c 
 						        LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
 						        LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -1694,11 +1674,11 @@ function getStatusMktdPreventa(){
 						        WHERE c.nombre LIKE '%".$name_prospect."%' OR c.correo LIKE '%".$correo_prospect."%'  AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
             break;
             default:
-            $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-						        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-						        CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-						        CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-						        c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+            $query = $this->db->query("SELECT c.id_prospecto, UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+            UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+            UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+            UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+            CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
 						        FROM prospectos c 
 						        LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
 						        LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -1719,11 +1699,11 @@ function getStatusMktdPreventa(){
             case '28': // COBRANZA
             case '13': // CONTRALORÍA
             case '32': // CONTRALORÍA CORPORATIVA
-                    $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-						        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-						        CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-						        CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-						        c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                    $query = $this->db->query("SELECT c.id_prospecto, UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                    UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                    UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                    UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                    CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
 						        FROM prospectos c 
 						        LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
 						        LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -1734,19 +1714,19 @@ function getStatusMktdPreventa(){
 						        AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
             break;
             default:
-                    $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-						        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-						        CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-						        CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-						        c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
-						        FROM prospectos c 
-						        LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
-						        LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
-						        LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
-                                INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion AND oxc.id_catalogo = 9 AND c.lugar_prospeccion != 6
-						        WHERE c.nombre LIKE '%".$name_prospect."%' OR c.telefono LIKE '%".$telefono_prospect."%'  
-						        OR c.telefono_2 LIKE '%".$telefono_prospect."%' 
-						        AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
+                $query = $this->db->query("SELECT c.id_prospecto, UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                FROM prospectos c 
+                LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
+                LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
+                LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
+                INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion AND oxc.id_catalogo = 9 AND c.lugar_prospeccion != 6
+                WHERE c.nombre LIKE '%".$name_prospect."%' OR c.telefono LIKE '%".$telefono_prospect."%'  
+                OR c.telefono_2 LIKE '%".$telefono_prospect."%' 
+                AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
             break;
         }
 
@@ -1762,11 +1742,11 @@ function getStatusMktdPreventa(){
             case '28': // COBRANZA
             case '13': // CONTRALORÍA
             case '32': // CONTRALORÍA CORPORATIVA
-                    $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-						        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-						        CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-						        CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-						        c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                    $query = $this->db->query("SELECT c.id_prospecto, UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                    UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                    UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                    UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                    CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
 						        FROM prospectos c 
 						        LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
 						        LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -1777,11 +1757,11 @@ function getStatusMktdPreventa(){
 						        AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
             break;
             default:
-                    $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-						        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-						        CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-						        CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-						        c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                    $query = $this->db->query("SELECT c.id_prospecto, UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                    UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                    UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                    UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                    CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
 						        FROM prospectos c 
 						        LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
 						        LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -1805,11 +1785,11 @@ function getStatusMktdPreventa(){
             case '28': // COBRANZA
             case '13': // CONTRALORÍA
             case '32': // CONTRALORÍA CORPORATIVA
-                    $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-						        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-						        CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-						        CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-						        c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                    $query = $this->db->query("SELECT c.id_prospecto, UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+						        UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) AS asesor, 
+						        UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS coordinador, 
+						        UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno)) AS gerente, 
+						        CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion, CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento,  c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
 						        FROM prospectos c 
 						        LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
 						        LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -1821,20 +1801,20 @@ function getStatusMktdPreventa(){
 						        AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
             break;
             default:
-                    $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-						        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-						        CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-						        CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-						        c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
-						        FROM prospectos c 
-						        LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
-						        LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
-						        LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
-                                INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion AND oxc.id_catalogo = 9 AND c.lugar_prospeccion != 6
-						        WHERE c.nombre LIKE '%".$name_prospect."%' OR
-						        c.correo LIKE '%".$correo_prospect."%' OR c.telefono LIKE '%".$telefono_prospect."%'  
-						        OR c.telefono_2 LIKE '%".$telefono_prospect."%' 
-						        AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
+                    $query = $this->db->query("SELECT c.id_prospecto, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                    UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) AS asesor, 
+                    UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS coordinador, 
+                    UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno)) AS gerente, 
+                    CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion, CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                    FROM prospectos c 
+                    LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
+                    LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
+                    LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
+                    INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion AND oxc.id_catalogo = 9 AND c.lugar_prospeccion != 6
+                    WHERE c.nombre LIKE '%".$name_prospect."%' OR
+                    c.correo LIKE '%".$correo_prospect."%' OR c.telefono LIKE '%".$telefono_prospect."%'  
+                    OR c.telefono_2 LIKE '%".$telefono_prospect."%' 
+                    AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
             break;
         }
         return $query->result();
@@ -1851,11 +1831,11 @@ function getStatusMktdPreventa(){
             case '28': // COBRANZA
             case '13': // CONTRALORÍA
             case '32': // CONTRALORÍA CORPORATIVA
-                $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                    CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                    CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                    CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                    c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                $query = $this->db->query("SELECT c.id_prospecto, UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                    UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                    UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                    UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                    CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                     FROM prospectos c 
                     LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                     LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -1864,11 +1844,11 @@ function getStatusMktdPreventa(){
                     WHERE c.apellido_paterno LIKE '%".$apPaterno_prospect."%' AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
                 break;
             default:
-                $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                    CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                    CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                    CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                    c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                $query = $this->db->query("SELECT c.id_prospecto, UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                    UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                    UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                    UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                    CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                     FROM prospectos c 
                     LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                     LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -1888,11 +1868,11 @@ function getStatusMktdPreventa(){
             case '28': // COBRANZA
             case '13': // CONTRALORÍA
             case '32': // CONTRALORÍA CORPORATIVA
-                $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                $query = $this->db->query("SELECT c.id_prospecto,UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                 FROM prospectos c 
                 LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                 LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -1901,11 +1881,11 @@ function getStatusMktdPreventa(){
                 WHERE c.apellido_materno LIKE '%".$apMaterno_prospect."%' AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
                 break;
             default:
-                $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                $query = $this->db->query("SELECT c.id_prospecto, UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                 FROM prospectos c 
                 LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                 LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -1926,11 +1906,11 @@ function getStatusMktdPreventa(){
             case '28': // COBRANZA
             case '13': // CONTRALORÍA
             case '32': // CONTRALORÍA CORPORATIVA
-                $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                $query = $this->db->query("SELECT c.id_prospecto, UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                 FROM prospectos c 
                 LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                 LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -1940,11 +1920,11 @@ function getStatusMktdPreventa(){
                 AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
                 break;
             default:
-                $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                $query = $this->db->query("SELECT c.id_prospecto, UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                 FROM prospectos c 
                 LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                 LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -1965,11 +1945,11 @@ function getStatusMktdPreventa(){
             case '28': // COBRANZA
             case '13': // CONTRALORÍA
             case '32': // CONTRALORÍA CORPORATIVA
-                $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                $query = $this->db->query("SELECT c.id_prospecto, UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                 FROM prospectos c 
                 LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                 LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -1979,11 +1959,11 @@ function getStatusMktdPreventa(){
                 AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
                 break;
             default:
-                $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                $query = $this->db->query("SELECT c.id_prospecto, UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                 FROM prospectos c 
                 LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                 LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -2004,11 +1984,11 @@ function getStatusMktdPreventa(){
             case '28': // COBRANZA
             case '13': // CONTRALORÍA
             case '32': // CONTRALORÍA CORPORATIVA
-                $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                $query = $this->db->query("SELECT c.id_prospecto, UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                 FROM prospectos c 
                 LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                 LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -2018,11 +1998,11 @@ function getStatusMktdPreventa(){
                 c.apellido_materno LIKE '%".$ap_materno_prospect."%' AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
                 break;
             default:
-                $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                $query = $this->db->query("SELECT c.id_prospecto, UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                 FROM prospectos c 
                 LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                 LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -2043,11 +2023,11 @@ function getStatusMktdPreventa(){
             case '28': // COBRANZA
             case '13': // CONTRALORÍA
             case '32': // CONTRALORÍA CORPORATIVA
-                    $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                    CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                    CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                    CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                    c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                    $query = $this->db->query("SELECT c.id_prospecto, UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                    UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                    UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                    UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                    CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                     FROM prospectos c 
                     LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                     LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -2057,11 +2037,11 @@ function getStatusMktdPreventa(){
                     c.correo LIKE '%".$correo_prospect."%' AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
                 break;
             default:
-                $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                    CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                    CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                    CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                    c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                $query = $this->db->query("SELECT c.id_prospecto,UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                    UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                    UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                    UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                    CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento,c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                     FROM prospectos c 
                     LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                     LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -2083,11 +2063,11 @@ function getStatusMktdPreventa(){
             case '28': // COBRANZA
             case '13': // CONTRALORÍA
             case '32': // CONTRALORÍA CORPORATIVA
-                $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                        CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                        CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                $query = $this->db->query("SELECT c.id_prospecto,  UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                        UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                        UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                        UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno)) as gerente, 
+                        CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                         FROM prospectos c 
                         LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                         LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -2098,11 +2078,11 @@ function getStatusMktdPreventa(){
                         OR c.telefono_2 LIKE '%".$telefono_prospect."%' AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
                 break;
             default:
-                $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                        CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                        CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                $query = $this->db->query("SELECT c.id_prospecto,  UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                        UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                        UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                        UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno)) as gerente, 
+                        CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                         FROM prospectos c 
                         LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                         LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -2125,32 +2105,32 @@ function getStatusMktdPreventa(){
             case '28': // COBRANZA
             case '13': // CONTRALORÍA
             case '32': // CONTRALORÍA CORPORATIVA
-                $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                        CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                        CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
-                        FROM prospectos c 
-                        LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
-                        LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
-                        LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
-                        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion AND oxc.id_catalogo = 9
-                        WHERE c. apellido_materno LIKE '%".$ap_materno_prospect."%' 
-                        OR c.correo LIKE '%".$correo_prospect."%' AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
+                $query = $this->db->query("SELECT c.id_prospecto,  UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno)) as gerente, 
+                CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                FROM prospectos c 
+                LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
+                LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
+                LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
+                INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion AND oxc.id_catalogo = 9
+                WHERE c. apellido_materno LIKE '%".$ap_materno_prospect."%' 
+                OR c.correo LIKE '%".$correo_prospect."%' AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
                 break;
             default:
-                $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                        CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                        CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
-                        FROM prospectos c 
-                        LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
-                        LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
-                        LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
-                        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion AND oxc.id_catalogo = 9 AND c.lugar_prospeccion != 6
-                        WHERE c. apellido_materno LIKE '%".$ap_materno_prospect."%' 
-                        OR c.correo LIKE '%".$correo_prospect."%' AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
+                $query = $this->db->query("SELECT c.id_prospecto,  UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno)) as gerente, 
+                CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                FROM prospectos c 
+                LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
+                LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
+                LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
+                INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion AND oxc.id_catalogo = 9 AND c.lugar_prospeccion != 6
+                WHERE c. apellido_materno LIKE '%".$ap_materno_prospect."%' 
+                OR c.correo LIKE '%".$correo_prospect."%' AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
 
                 break;
         }
@@ -2165,11 +2145,11 @@ function getStatusMktdPreventa(){
             case '28': // COBRANZA
             case '13': // CONTRALORÍA
             case '32': // CONTRALORÍA CORPORATIVA
-                $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                        CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                        CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                $query = $this->db->query("SELECT c.id_prospecto,  UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                        UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                        UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                        UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno)) as gerente, 
+                        CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                         FROM prospectos c 
                         LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                         LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -2180,11 +2160,11 @@ function getStatusMktdPreventa(){
                         AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
                 break;
             default:
-                $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                        CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                        CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                $query = $this->db->query("SELECT c.id_prospecto,  UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                        UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                        UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                        UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno)) as gerente, 
+                        CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                         FROM prospectos c 
                         LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                         LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -2208,32 +2188,32 @@ function getStatusMktdPreventa(){
             case '28': // COBRANZA
             case '13': // CONTRALORÍA
             case '32': // CONTRALORÍA CORPORATIVA
-                $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                    CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                    CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                    CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                    c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
-                    FROM prospectos c 
-                    LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
-                    LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
-                    LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
-                    INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion AND oxc.id_catalogo = 9
-                    WHERE c.nombre LIKE '".$name_prospect."' OR c.apellido_paterno LIKE '%".$ap_paterno_prospect."%' OR
-                    c.apellido_materno LIKE '%".$ap_materno_prospect."%' AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
+                $query = $this->db->query("SELECT c.id_prospecto,UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento,c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                FROM prospectos c 
+                LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
+                LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
+                LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
+                INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion AND oxc.id_catalogo = 9
+                WHERE c.nombre LIKE '".$name_prospect."' OR c.apellido_paterno LIKE '%".$ap_paterno_prospect."%' OR
+                c.apellido_materno LIKE '%".$ap_materno_prospect."%' AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
                 break;
             default:
-                $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                    CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                    CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                    CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                    c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
-                    FROM prospectos c 
-                    LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
-                    LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
-                    LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
-                    INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion AND oxc.id_catalogo = 9 AND c.lugar_prospeccion != 6
-                    WHERE c.nombre LIKE '".$name_prospect."' OR c.apellido_paterno LIKE '%".$ap_paterno_prospect."%' OR
-                    c.apellido_materno LIKE '%".$ap_materno_prospect."%' AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
+                $query = $this->db->query("SELECT c.id_prospecto,UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento,c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                FROM prospectos c 
+                LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
+                LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
+                LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
+                INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion AND oxc.id_catalogo = 9 AND c.lugar_prospeccion != 6
+                WHERE c.nombre LIKE '".$name_prospect."' OR c.apellido_paterno LIKE '%".$ap_paterno_prospect."%' OR
+                c.apellido_materno LIKE '%".$ap_materno_prospect."%' AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
                 break;
         }
         return $query->result();
@@ -2247,36 +2227,36 @@ function getStatusMktdPreventa(){
             case '28': // COBRANZA
             case '13': // CONTRALORÍA
             case '32': // CONTRALORÍA CORPORATIVA
-                $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                    CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                    CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                    CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                    c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
-                    FROM prospectos c 
-                    LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
-                    LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
-                    LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
-                    INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion AND oxc.id_catalogo = 9
-                    WHERE c.nombre LIKE '%".$name_prospect."%' OR
-                    c.correo LIKE '%".$correo_prospect."%' OR c.apellido_paterno LIKE '%".$ap_paterno_prospect."%'
-                    OR c.apellido_materno LIKE '%".$ap_materno_prospect."%'
-                    AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
+                $query = $this->db->query("SELECT c.id_prospecto,UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento,c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                FROM prospectos c 
+                LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
+                LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
+                LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
+                INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion AND oxc.id_catalogo = 9
+                WHERE c.nombre LIKE '%".$name_prospect."%' OR
+                c.correo LIKE '%".$correo_prospect."%' OR c.apellido_paterno LIKE '%".$ap_paterno_prospect."%'
+                OR c.apellido_materno LIKE '%".$ap_materno_prospect."%'
+                AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
                 break;
             default:
-                $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                    CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                    CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                    CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                    c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
-                    FROM prospectos c 
-                    LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
-                    LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
-                    LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
-                    INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion AND oxc.id_catalogo = 9 AND c.lugar_prospeccion != 6
-                    WHERE c.nombre LIKE '%".$name_prospect."%' OR
-                    c.correo LIKE '%".$correo_prospect."%' OR c.apellido_paterno LIKE '%".$ap_paterno_prospect."%'
-                    OR c.apellido_materno LIKE '%".$ap_materno_prospect."%'
-                    AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
+                $query = $this->db->query("SELECT c.id_prospecto,UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento,c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                FROM prospectos c 
+                LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
+                LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
+                LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
+                INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion AND oxc.id_catalogo = 9 AND c.lugar_prospeccion != 6
+                WHERE c.nombre LIKE '%".$name_prospect."%' OR
+                c.correo LIKE '%".$correo_prospect."%' OR c.apellido_paterno LIKE '%".$ap_paterno_prospect."%'
+                OR c.apellido_materno LIKE '%".$ap_materno_prospect."%'
+                AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
                 break;
         }
         return $query->result();
@@ -2290,11 +2270,11 @@ function getStatusMktdPreventa(){
             case '28': // COBRANZA
             case '13': // CONTRALORÍA
             case '32': // CONTRALORÍA CORPORATIVA
-                $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                    CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                    CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                    CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                    c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                $query = $this->db->query("SELECT c.id_prospecto,UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                    UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                    UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                    UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                    CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento,c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                     FROM prospectos c 
                     LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                     LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -2305,11 +2285,11 @@ function getStatusMktdPreventa(){
                     AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
                 break;
             default:
-                $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                    CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                    CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                    CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                    c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                $query = $this->db->query("SELECT c.id_prospecto,UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                    UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                    UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                    UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                    CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento,c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                     FROM prospectos c 
                     LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                     LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -2333,11 +2313,11 @@ function getStatusMktdPreventa(){
             case '28': // COBRANZA
             case '13': // CONTRALORÍA
             case '32': // CONTRALORÍA CORPORATIVA
-                $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                    CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                    CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                    CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                    c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                $query = $this->db->query("SELECT c.id_prospecto,UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                    UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                    UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                    UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                    CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento,c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                     FROM prospectos c 
                     LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                     LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -2349,11 +2329,11 @@ function getStatusMktdPreventa(){
                     AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
                  break;
              default:
-                 $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                    CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                    CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                    CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                    c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                 $query = $this->db->query("SELECT c.id_prospecto,UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                    UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                    UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                    UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                    CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento,c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                     FROM prospectos c 
                     LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                     LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -2376,11 +2356,11 @@ function getStatusMktdPreventa(){
             case '28': // COBRANZA
             case '13': // CONTRALORÍA
             case '32': // CONTRALORÍA CORPORATIVA
-                $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                    CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                    CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                    CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                    c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                $query = $this->db->query("SELECT c.id_prospecto,UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                    UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                    UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                    UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                    CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento,c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                     FROM prospectos c 
                     LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                     LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -2392,11 +2372,11 @@ function getStatusMktdPreventa(){
                     AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
                  break;
              default:
-                 $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                    CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                    CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                    CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                    c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                 $query = $this->db->query("SELECT c.id_prospecto,UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                    UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                    UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                    UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                    CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento,c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                     FROM prospectos c 
                     LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                     LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -2419,11 +2399,11 @@ function getStatusMktdPreventa(){
             case '28': // COBRANZA
             case '13': // CONTRALORÍA
             case '32': // CONTRALORÍA CORPORATIVA
-                $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                    CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                    CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                    CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                    c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                $query = $this->db->query("SELECT c.id_prospecto,UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                    UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                    UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                    UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                    CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento,c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                     FROM prospectos c 
                     LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                     LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -2435,11 +2415,11 @@ function getStatusMktdPreventa(){
                     AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
                  break;
              default:
-                 $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                    CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                    CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                    CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                    c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                 $query = $this->db->query("SELECT c.id_prospecto,UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                    UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                    UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                    UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                    CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento,c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                     FROM prospectos c 
                     LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                     LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -2463,11 +2443,11 @@ function getStatusMktdPreventa(){
             case '28': // COBRANZA
             case '13': // CONTRALORÍA
             case '32': // CONTRALORÍA CORPORATIVA
-                    $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                        CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                        CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                    $query = $this->db->query("SELECT c.id_prospecto,  UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                        UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                        UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                        UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno)) as gerente, 
+                        CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                         FROM prospectos c 
                         LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                         LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -2478,11 +2458,11 @@ function getStatusMktdPreventa(){
                         AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
                  break;
              default:
-                 $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                        CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                        CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                 $query = $this->db->query("SELECT c.id_prospecto,  UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                        UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                        UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                        UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno)) as gerente, 
+                        CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                         FROM prospectos c 
                         LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                         LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -2504,11 +2484,11 @@ function getStatusMktdPreventa(){
             case '28': // COBRANZA
             case '13': // CONTRALORÍA
             case '32': // CONTRALORÍA CORPORATIVA
-                $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                    CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                    CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                    CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                    c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                $query = $this->db->query("SELECT c.id_prospecto,UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                    UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                    UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                    UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                    CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento,c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                     FROM prospectos c 
                     LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                     LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -2519,11 +2499,11 @@ function getStatusMktdPreventa(){
                     AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
                  break;
              default:
-                 $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                    CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                    CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                    CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                    c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                 $query = $this->db->query("SELECT c.id_prospecto,UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                    UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                    UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                    UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                    CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento,c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                     FROM prospectos c 
                     LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                     LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -2545,11 +2525,11 @@ function getStatusMktdPreventa(){
             case '28': // COBRANZA
             case '13': // CONTRALORÍA
             case '32': // CONTRALORÍA CORPORATIVA
-                    $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                        CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                        CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                    $query = $this->db->query("SELECT c.id_prospecto,  UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                        UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                        UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                        UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno)) as gerente, 
+                        CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                         FROM prospectos c 
                         LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                         LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -2561,11 +2541,11 @@ function getStatusMktdPreventa(){
                         AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
                  break;
              default:
-                 $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                        CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                        CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                 $query = $this->db->query("SELECT c.id_prospecto,  UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                        UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                        UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                        UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno)) as gerente, 
+                        CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                         FROM prospectos c 
                         LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                         LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -2588,11 +2568,11 @@ function getStatusMktdPreventa(){
             case '28': // COBRANZA
             case '13': // CONTRALORÍA
             case '32': // CONTRALORÍA CORPORATIVA
-                    $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                        CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                        CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                    $query = $this->db->query("SELECT c.id_prospecto,  UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                        UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                        UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                        UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno)) as gerente, 
+                        CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                         FROM prospectos c 
                         LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                         LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -2604,11 +2584,11 @@ function getStatusMktdPreventa(){
                         AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
                  break;
              default:
-                 $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                        CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                        CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                 $query = $this->db->query("SELECT c.id_prospecto,  UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                        UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                        UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                        UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno)) as gerente, 
+                        CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                         FROM prospectos c 
                         LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                         LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -2634,11 +2614,11 @@ function getStatusMktdPreventa(){
             case '28': // COBRANZA
             case '13': // CONTRALORÍA
             case '32': // CONTRALORÍA CORPORATIVA
-                    $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                        CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                        CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                    $query = $this->db->query("SELECT c.id_prospecto,  UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                        UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                        UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                        UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno)) as gerente, 
+                        CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                         FROM prospectos c 
                         LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                         LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -2650,11 +2630,11 @@ function getStatusMktdPreventa(){
                         AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
                  break;
              default:
-                 $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                        CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                        CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                 $query = $this->db->query("SELECT c.id_prospecto,  UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                        UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                        UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                        UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno)) as gerente, 
+                        CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                         FROM prospectos c 
                         LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                         LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -2677,11 +2657,11 @@ function getStatusMktdPreventa(){
             case '28': // COBRANZA
             case '13': // CONTRALORÍA
             case '32': // CONTRALORÍA CORPORATIVA
-                $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                    CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                    CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                    CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                    c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                $query = $this->db->query("SELECT c.id_prospecto,UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                    UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                    UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                    UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                    CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento,c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                     FROM prospectos c 
                     LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                     LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -2693,11 +2673,11 @@ function getStatusMktdPreventa(){
                     AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
                  break;
              default:
-                 $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                    CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                    CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                    CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                    c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                 $query = $this->db->query("SELECT c.id_prospecto,UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                    UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                    UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                    UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                    CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento,c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                     FROM prospectos c 
                     LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                     LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -2720,11 +2700,11 @@ function getStatusMktdPreventa(){
             case '28': // COBRANZA
             case '13': // CONTRALORÍA
             case '32': // CONTRALORÍA CORPORATIVA
-                $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                    CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                    CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                    CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                    c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                $query = $this->db->query("SELECT c.id_prospecto,UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                    UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                    UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                    UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                    CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento,c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                     FROM prospectos c 
                     LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                     LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -2736,11 +2716,11 @@ function getStatusMktdPreventa(){
                     AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
                  break;
              default:
-                 $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                    CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                    CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                    CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                    c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                 $query = $this->db->query("SELECT c.id_prospecto,UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                    UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                    UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                    UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                    CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento,c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                     FROM prospectos c 
                     LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                     LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -2763,11 +2743,11 @@ function getStatusMktdPreventa(){
             case '28': // COBRANZA
             case '13': // CONTRALORÍA
             case '32': // CONTRALORÍA CORPORATIVA
-                $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                    CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                    CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                    CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                    c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                $query = $this->db->query("SELECT c.id_prospecto,UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                    UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                    UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                    UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                    CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento,c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                     FROM prospectos c 
                     LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                     LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -2779,11 +2759,11 @@ function getStatusMktdPreventa(){
                     AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
                  break;
              default:
-                 $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno,  c.apellido_materno,
-                    CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-                    CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-                    CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                    c.fecha_creacion, c.fecha_vencimiento, c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
+                 $query = $this->db->query("SELECT c.id_prospecto,UPPER(c.nombre) AS nombre, UPPER(c.apellido_paterno) AS apellido_paterno,  UPPER(c.apellido_materno) AS apellido_materno,
+                    UPPER(CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)) as asesor, 
+                    UPPER(CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) as coordinador, 
+                    UPPER(CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno))as gerente, 
+                    CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_creacion,  CONVERT(VARCHAR,c.fecha_vencimiento,20) AS fecha_vencimiento,c.estatus, oxc.nombre lugar_prospeccion, c.otro_lugar
                     FROM prospectos c 
                     LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                     LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -3032,7 +3012,7 @@ function getStatusMktdPreventa(){
                                         CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
                                         CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
                                         CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, c.estatus_particular
+                                        CONVERT(VARCHAR, c.fecha_creacion, 120) AS fecha_creacion, CONVERT(VARCHAR,c.fecha_vencimiento,120) AS fecha_vencimiento, c.estatus, c.estatus_particular
                                         FROM prospectos c 
                                         INNER JOIN usuarios u ON u.id_usuario = c.id_asesor
                                         INNER JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -3044,7 +3024,7 @@ function getStatusMktdPreventa(){
                                         CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
                                         CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
                                         CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, c.estatus_particular
+                                        CONVERT(VARCHAR, c.fecha_creacion, 120) AS fecha_creacion, CONVERT(VARCHAR,c.fecha_vencimiento,120) AS fecha_vencimiento, c.estatus, c.estatus_particular
                                         FROM prospectos c 
                                         INNER JOIN usuarios u ON u.id_usuario = c.id_asesor
                                         INNER JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -3056,7 +3036,7 @@ function getStatusMktdPreventa(){
                                         CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
                                         CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
                                         CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, c.estatus_particular
+                                        CONVERT(VARCHAR, c.fecha_creacion, 120) AS fecha_creacion, CONVERT(VARCHAR,c.fecha_vencimiento,120) AS fecha_vencimiento, c.estatus, c.estatus_particular
                                         FROM prospectos c 
                                         INNER JOIN usuarios u ON u.id_usuario = c.id_asesor
                                         INNER JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -3069,7 +3049,7 @@ function getStatusMktdPreventa(){
                                         CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
                                         CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
                                         CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, c.estatus_particular
+                                        CONVERT(VARCHAR, c.fecha_creacion, 120) AS fecha_creacion, CONVERT(VARCHAR,c.fecha_vencimiento,120) AS fecha_vencimiento, c.estatus, c.estatus_particular
                                         FROM prospectos c
                                         LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                                         LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -3081,7 +3061,7 @@ function getStatusMktdPreventa(){
                                         CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
                                         CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
                                         CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, c.estatus_particular
+                                        CONVERT(VARCHAR, c.fecha_creacion, 120) AS fecha_creacion, CONVERT(VARCHAR,c.fecha_vencimiento,120) AS fecha_vencimiento, c.estatus, c.estatus_particular
                                         FROM prospectos c 
                                         LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                                         LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -3093,7 +3073,7 @@ function getStatusMktdPreventa(){
                                         CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
                                         CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
                                         CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente,  
-                                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, c.estatus_particular
+                                        CONVERT(VARCHAR, c.fecha_creacion, 120) AS fecha_creacion, CONVERT(VARCHAR,c.fecha_vencimiento,120) AS fecha_vencimiento, c.estatus, c.estatus_particular
                                         FROM prospectos c 
                                         LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                                         LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -3105,7 +3085,7 @@ function getStatusMktdPreventa(){
                                         CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
                                         CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
                                         CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, c.estatus_particular
+                                        CONVERT(VARCHAR, c.fecha_creacion, 120) AS fecha_creacion, CONVERT(VARCHAR,c.fecha_vencimiento,120) AS fecha_vencimiento, c.estatus, c.estatus_particular
                                         FROM prospectos c 
                                         LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                                         LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -3117,7 +3097,7 @@ function getStatusMktdPreventa(){
                                         CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
                                         CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
                                         CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, c.estatus_particular
+                                        CONVERT(VARCHAR, c.fecha_creacion, 120) AS fecha_creacion, CONVERT(VARCHAR,c.fecha_vencimiento,120) AS fecha_vencimiento, c.estatus, c.estatus_particular
                                         FROM prospectos c 
                                         LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                                         LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -3156,7 +3136,7 @@ function getStatusMktdPreventa(){
                                         CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
                                         CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
                                         CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-                                        c.fecha_creacion, c.fecha_vencimiento, c.estatus, c.estatus_particular
+                                        CONVERT(VARCHAR, c.fecha_creacion, 120) AS fecha_creacion, CONVERT(VARCHAR,c.fecha_vencimiento,120) AS fecha_vencimiento, c.estatus, c.estatus_particular
                                         FROM prospectos c 
                                         LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                                         LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -3249,7 +3229,7 @@ function getStatusMktdPreventa(){
                 CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador,
                 CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente,
                 CONCAT (sub.nombre, ' ', sub.apellido_paterno, ' ', sub.apellido_materno) sub,
-                c.fecha_creacion, c.fecha_vencimiento, c.estatus, c.estatus_particular, c.lugar_prospeccion
+                CONVERT(VARCHAR, c.fecha_creacion, 120) AS fecha_creacion, CONVERT(VARCHAR,c.fecha_vencimiento,120) AS fecha_vencimiento, c.estatus, c.estatus_particular, c.lugar_prospeccion
                 ,c.correo,c.telefono, oxc.nombre as lp
                 FROM prospectos c
                 LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
@@ -3265,7 +3245,7 @@ function getStatusMktdPreventa(){
                 CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador,
                 CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente,
                 CONCAT (sub.nombre, ' ', sub.apellido_paterno, ' ', sub.apellido_materno) sub,
-                c.fecha_creacion, c.fecha_vencimiento, c.estatus, c.estatus_particular, c.lugar_prospeccion
+                CONVERT(VARCHAR, c.fecha_creacion, 120) AS fecha_creacion, CONVERT(VARCHAR,c.fecha_vencimiento,120) AS fecha_vencimiento, c.estatus, c.estatus_particular, c.lugar_prospeccion
                 ,c.correo,c.telefono, oxc.nombre as lp
                 FROM prospectos c
                 LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
@@ -3286,7 +3266,7 @@ function getStatusMktdPreventa(){
         CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
         CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
         CONCAT (sub.nombre, ' ', sub.apellido_paterno, ' ', sub.apellido_materno) sub,
-        c.fecha_creacion, c.fecha_vencimiento, c.estatus
+        CONVERT(VARCHAR, c.fecha_creacion, 120) AS fecha_creacion, CONVERT(VARCHAR,c.fecha_vencimiento,120) AS fecha_vencimiento, c.estatus
         ,c.correo,c.telefono, oxc.nombre as lp
         FROM prospectos c
         LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
@@ -3300,49 +3280,6 @@ function getStatusMktdPreventa(){
         return $query->result();
     }
 
-
-
-    /*function getProspectsListByGte($lugar,$id_gte){   
-    if ($lugar == 0) { // TODOS
-        $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno, c.apellido_materno,
-        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-        CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-        CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-        CONCAT (sub.nombre, ' ', sub.apellido_paterno, ' ', sub.apellido_materno) sub,
-        c.fecha_creacion, c.fecha_vencimiento, c.estatus
-        ,c.correo,c.telefono, oxc.nombre as lp
-        FROM prospectos c
-        LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
-        LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
-        LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
-
-        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion and oxc.id_catalogo = 9
-        LEFT JOIN usuarios sub ON uss.id_lider = sub.id_usuario and sub.id_rol = 2
-        WHERE c.estatus_vigencia = 1 AND uss.id_usuario = $id_gte and c.tipo = 0 
-        ORDER BY c.fecha_creacion DESC;");
-
-    } else {
-        $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno, c.apellido_materno,
-        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-        CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-        CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-        CONCAT (sub.nombre, ' ', sub.apellido_paterno, ' ', sub.apellido_materno) sub,
-        c.fecha_creacion, c.fecha_vencimiento, c.estatus
-        ,c.correo,c.telefono, oxc.nombre as lp
-        FROM prospectos c
-        LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
-        LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
-        LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
-
-        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion and oxc.id_catalogo = 9
-        LEFT JOIN usuarios sub ON uss.id_lider = sub.id_usuario and sub.id_rol = 2
-        WHERE c.lugar_prospeccion = $lugar and uss.id_usuario = $id_gte and c.tipo = 0 
-        ORDER BY c.fecha_creacion DESC;");
-
-    }
-                
-        return $query->result();
-    }*/
     function getProspectsListByGte($lugar, $id_gte, $typeTransaction, $beginDate, $endDate, $where)
     {
         if ($typeTransaction == 1 || $typeTransaction == 3) {  // FIRST LOAD || SEARCH BY DATE RANGE
@@ -3383,61 +3320,15 @@ function getStatusMktdPreventa(){
         LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
         LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
         LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
-
         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion and oxc.id_catalogo = 9
         LEFT JOIN usuarios sub ON uss.id_lider = sub.id_usuario and sub.id_rol = 2
         WHERE c.lugar_prospeccion = $lugar and uss.id_usuario = $id_gte and c.tipo = 0 
         ".$filter."
         ORDER BY c.fecha_creacion DESC;");
-
         }
-
         return $query->result();
     }
 
-
-    /*function getProspectsListByCoord_v2($lugar,$id_sub,$id_gte,$id_coord){       
-    if ($lugar == 0) { // TODOS
-        $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno, c.apellido_materno,
-        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-        CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-        CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-        CONCAT (sub.nombre, ' ', sub.apellido_paterno, ' ', sub.apellido_materno) sub,
-        c.fecha_creacion, c.fecha_vencimiento, c.estatus
-        ,c.correo,c.telefono, oxc.nombre as lp
-        FROM prospectos c
-        LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
-        LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
-        LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
-
-        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion and oxc.id_catalogo = 9
-        LEFT JOIN usuarios sub ON uss.id_lider = sub.id_usuario and sub.id_rol = 2
-        WHERE sub.id_usuario = $id_sub and uss.id_usuario = $id_gte and us.id_usuario = $id_coord
-        and c.estatus_vigencia = 1 AND c.tipo = 0 ORDER BY c.fecha_creacion DESC;");
-
-    } else {
-        $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno, c.apellido_materno,
-        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-        CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-        CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-        CONCAT (sub.nombre, ' ', sub.apellido_paterno, ' ', sub.apellido_materno) sub,
-        c.fecha_creacion, c.fecha_vencimiento, c.estatus
-        ,c.correo,c.telefono, oxc.nombre as lp
-        FROM prospectos c
-        LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
-        LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
-        LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
-
-        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion and oxc.id_catalogo = 9
-        LEFT JOIN usuarios sub ON uss.id_lider = sub.id_usuario and sub.id_rol = 2
-        WHERE c.lugar_prospeccion = $lugar and sub.id_usuario = $id_sub and uss.id_usuario = $id_gte and us.id_usuario = $id_coord
-        and c.estatus_vigencia = 1 AND c.tipo = 0 ORDER BY c.fecha_creacion DESC;");
-
-    } 
-        
-                
-        return $query->result();
-    }*/
     function getProspectsListByCoord_v2($lugar, $id_sub, $id_gte, $id_coord, $typeTransaction, $beginDate, $endDate, $where){
         if ($typeTransaction == 1 || $typeTransaction == 3) {  // FIRST LOAD || SEARCH BY DATE RANGE
             $filter = " AND c.fecha_creacion BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
@@ -3493,49 +3384,6 @@ function getStatusMktdPreventa(){
         return $query->result();
     }
 
-
-    /*function getProspectsListByAs($lugar,$id_sub,$id_gte,$id_coord,$id_as){        
-    if ($lugar == 0) { // TODOS
-        $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno, c.apellido_materno,
-        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-        CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-        CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-        CONCAT (sub.nombre, ' ', sub.apellido_paterno, ' ', sub.apellido_materno) sub,
-        c.fecha_creacion, c.fecha_vencimiento, c.estatus
-        ,c.correo,c.telefono, oxc.nombre as lp
-        FROM prospectos c
-        LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
-        LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
-        LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
-
-        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion and oxc.id_catalogo = 9
-        LEFT JOIN usuarios sub ON uss.id_lider = sub.id_usuario and sub.id_rol = 2
-        WHERE sub.id_usuario = $id_sub and uss.id_usuario = $id_gte and us.id_usuario = $id_coord
-        and u.id_usuario = $id_as
-        and c.estatus_vigencia = 1 AND c.tipo = 0 ORDER BY c.fecha_creacion DESC;");
-    } else {
-        $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno, c.apellido_materno,
-        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-        CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-        CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-        CONCAT (sub.nombre, ' ', sub.apellido_paterno, ' ', sub.apellido_materno) sub,
-        c.fecha_creacion, c.fecha_vencimiento, c.estatus
-        ,c.correo,c.telefono, oxc.nombre as lp
-        FROM prospectos c
-        LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
-        LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
-        LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
-
-        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion and oxc.id_catalogo = 9
-        LEFT JOIN usuarios sub ON uss.id_lider = sub.id_usuario and sub.id_rol = 2
-        WHERE c.lugar_prospeccion = $lugar and sub.id_usuario = $id_sub and uss.id_usuario = $id_gte and us.id_usuario = $id_coord
-        and u.id_usuario = $id_as
-        and c.estatus_vigencia = 1 AND c.tipo = 0 ORDER BY c.fecha_creacion DESC;");
-
-    }
-                
-        return $query->result();
-    }*/
     function getProspectsListByAs($lugar,$id_sub,$id_gte,$id_coord,$id_as,$typeTransaction, $beginDate, $endDate, $where){
         if ($typeTransaction == 1 || $typeTransaction == 3) {  // FIRST LOAD || SEARCH BY DATE RANGE
             $filter = " AND c.fecha_creacion BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
@@ -3598,26 +3446,6 @@ function getStatusMktdPreventa(){
         return $query;
     }
 
-
-    /*function getProspectsListByGteAll($id_gte){         
-        $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno, c.apellido_materno,
-        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-        CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-        CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-        CONCAT (sub.nombre, ' ', sub.apellido_paterno, ' ', sub.apellido_materno) sub,
-        c.fecha_creacion, c.fecha_vencimiento, c.estatus
-        ,c.correo,c.telefono, oxc.nombre as lp
-        FROM prospectos c
-        LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
-        LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
-        LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
-
-        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion and oxc.id_catalogo = 9
-        LEFT JOIN usuarios sub ON uss.id_lider = sub.id_usuario and sub.id_rol = 2
-        WHERE c.estatus_vigencia = 1 AND uss.id_usuario = $id_gte and c.tipo = 0 ORDER BY c.fecha_creacion DESC;");
-                
-        return $query->result();
-    }*/
     function getProspectsListByGteAll($id_gte, $typeTransaction, $beginDate, $endDate, $where){
         if ($typeTransaction == 1 || $typeTransaction == 3) {  // FIRST LOAD || SEARCH BY DATE RANGE
             $filter = " AND c.fecha_creacion BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
@@ -3647,27 +3475,6 @@ function getStatusMktdPreventa(){
         return $query->result();
     }
 
-
-    /*function getProspectsListByCoordByGte($id_gte,$id_coord){         
-        $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno, c.apellido_materno,
-        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-        CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-        CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-        CONCAT (sub.nombre, ' ', sub.apellido_paterno, ' ', sub.apellido_materno) sub,
-        c.fecha_creacion, c.fecha_vencimiento, c.estatus
-        ,c.correo,c.telefono, oxc.nombre as lp
-        FROM prospectos c
-        LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
-        LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
-        LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
-
-        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion and oxc.id_catalogo = 9
-        LEFT JOIN usuarios sub ON uss.id_lider = sub.id_usuario and sub.id_rol = 2
-        WHERE uss.id_usuario = $id_gte and us.id_usuario = $id_coord
-        and c.estatus_vigencia = 1 AND c.tipo = 0 ORDER BY c.fecha_creacion DESC;");
-                
-        return $query->result();
-    }*/
     function getProspectsListByCoordByGte($id_gte, $id_coord, $typeTransaction, $beginDate, $endDate, $where){
         if ($typeTransaction == 1 || $typeTransaction == 3) {  // FIRST LOAD || SEARCH BY DATE RANGE
             $filter = " AND c.fecha_creacion BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
@@ -3699,28 +3506,6 @@ function getStatusMktdPreventa(){
         return $query->result();
     }
 
-
-    /*function getProspectsListByAsByCoord($id_gte,$id_coord,$id_as){         
-        $query = $this->db->query("SELECT c.id_prospecto, c.nombre, c.apellido_paterno, c.apellido_materno,
-        CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, 
-        CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) coordinador, 
-        CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) gerente, 
-        CONCAT (sub.nombre, ' ', sub.apellido_paterno, ' ', sub.apellido_materno) sub,
-        c.fecha_creacion, c.fecha_vencimiento, c.estatus
-        ,c.correo,c.telefono, oxc.nombre as lp
-        FROM prospectos c
-        LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
-        LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
-        LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
-
-        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion and oxc.id_catalogo = 9
-        LEFT JOIN usuarios sub ON uss.id_lider = sub.id_usuario and sub.id_rol = 2
-        WHERE uss.id_usuario = $id_gte and us.id_usuario = $id_coord
-        and u.id_usuario = $id_as
-        and c.estatus_vigencia = 1 AND c.tipo = 0 ORDER BY c.fecha_creacion DESC;");
-                
-        return $query->result();
-    }*/
     function getProspectsListByAsByCoord($id_gte,$id_coord,$id_as, $typeTransaction, $beginDate, $endDate, $where){
         if ($typeTransaction == 1 || $typeTransaction == 3) {  // FIRST LOAD || SEARCH BY DATE RANGE
             $filter = " AND c.fecha_creacion BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
@@ -3782,6 +3567,7 @@ function getStatusMktdPreventa(){
     }
 
     function getClientsReportMktd($typeTransaction, $beginDate, $endDate, $where){
+        
         if ($typeTransaction == 1 || $typeTransaction == 3) {  // FIRST LOAD || SEARCH BY DATE RANGE
             $filter = " AND c.fechaApartado BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
             $filterTwo = "";
@@ -3801,10 +3587,10 @@ function getStatusMktdPreventa(){
             case '19': // SUBDIRECTOR MKTD
             case '20': // GERENTE MKTD
             case '28': // GERENTE MKTD
-                $query = $this->db->query("SELECT r.descripcion nombreResidencial, cn.nombre nombreCondominio, l.nombreLote, l.idLote,
+                $query = $this->db->query("SELECT r.descripcion AS nombreResidencial, UPPER(cn.nombre) AS nombreCondominio, UPPER(l.nombreLote) AS nombreLote, l.idLote,
                 CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombreCliente,
                 ISNULL(c.telefono1, '') telefono, ISNULL(c.otro_lugar, '') medioProspeccion, l.totalNeto2,
-                s.nombre plaza, CONVERT(VARCHAR(10), c.fechaApartado, 111) fechaApartado, 
+                UPPER(s.nombre) AS plaza, CONVERT(VARCHAR(10), c.fechaApartado, 111) fechaApartado, 
                 CONVERT(VARCHAR(10), hl.modificado, 111) fechaEstatusQuince, l.enganche, ISNULL(oxc.nombre, 'SIN ESPECIFICAR') planEnganche,
                 CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreAsesor,
                 CONCAT(uu.nombre, ' ', uu.apellido_paterno, ' ', uu.apellido_materno) nombreGerente, l.idStatusLote
@@ -3815,11 +3601,9 @@ function getStatusMktdPreventa(){
                 INNER JOIN usuarios u ON u.id_usuario = c.id_asesor AND u.id_sede IN ($result)
                 INNER JOIN usuarios uu ON uu.id_usuario = c.id_gerente
                 INNER JOIN sedes s ON s.id_sede = u.id_sede
-                
                 LEFT JOIN (SELECT MAX(modificado) modificado, idStatusContratacion, idMovimiento, idLote, status, idCliente FROM historial_lotes 
                 GROUP BY idStatusContratacion, idMovimiento, idLote, status, idCliente) hl ON hl.idLote = l.idLote AND hl.idStatusContratacion = 15 
                 AND hl.idMovimiento = 45 AND hl.status = 1 AND hl.idCliente = c.id_cliente
-                
                 LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = l.plan_enganche AND oxc.id_catalogo = 39
                 WHERE l.status = 1 AND l.idStatusLote IN (2, 3) $filter ORDER BY r.nombreResidencial, cn.nombre, l.nombreLote");
             break;
@@ -3845,11 +3629,9 @@ function getStatusMktdPreventa(){
                 INNER JOIN usuarios uu ON uu.id_usuario = c.id_gerente
                 LEFT JOIN usuarios uuu ON uuu.id_usuario = c.id_coordinador
                 INNER JOIN sedes s ON CONVERT(VARCHAR(12), s.id_sede) = CONVERT(VARCHAR(12), u.id_sede)
-                
                 INNER JOIN (SELECT MAX(modificado) modificado, idStatusContratacion, idMovimiento, idLote, status, idCliente FROM historial_lotes 
                 GROUP BY idStatusContratacion, idMovimiento, idLote, status, idCliente) hl ON hl.idLote = l.idLote AND hl.idStatusContratacion = 9 
                 AND hl.idMovimiento = 39 AND hl.status = 1 AND hl.idCliente = c.id_cliente
-
                 LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = l.plan_enganche AND oxc.id_catalogo = 39
                 LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = c.lugar_prospeccion AND oxc2.id_catalogo = 9
                 WHERE l.status = 1 AND l.idStatusLote = 2 $filter ORDER BY r.nombreResidencial, cn.nombre, l.nombreLote");
@@ -3868,16 +3650,13 @@ function getStatusMktdPreventa(){
             $filter = "";
             $filterTwo = " AND l.idLote = $where";
         }
-
-
-        
         $rol = explode(", ", $this->session->userdata('id_sede'));
         $result = "'" . implode ( "', '", $rol ) . "'";
-        $query = $this->db->query("SELECT p.id_prospecto, CONCAT(p.nombre, ' ', p.apellido_paterno, ' ', p.apellido_materno) nombreProspecto, s.nombre sede,
-        CONCAT(uu.nombre, ' ', uu.apellido_paterno, ' ', uu.apellido_materno) nombreUsuarioModifica,
+        $query = $this->db->query("SELECT p.id_prospecto, UPPER(CONCAT(p.nombre, ' ', p.apellido_paterno, ' ', p.apellido_materno)) AS nombreProspecto, UPPER(s.nombre) AS sede,
+        UPPER(CONCAT(uu.nombre, ' ', uu.apellido_paterno, ' ', uu.apellido_materno)) AS nombreUsuarioModifica,
         CONCAT(old.nombre, ' ', old.apellido_paterno, ' ', old.apellido_materno) valorAnterior, 
         CONCAT(new.nombre, ' ', new.apellido_paterno, ' ', new.apellido_materno) valorNuevo,
-        p.fecha_creacion, oxc.nombre lugar_prospeccion, p.otro_lugar, c.fecha_creacion fecha_asignacion
+        CONVERT(VARCHAR,p.fecha_creacion,20) AS fecha_creacion, oxc.nombre lugar_prospeccion, p.otro_lugar, CONVERT(VARCHAR,c.fecha_creacion,20) AS fecha_asignacion
         FROM prospectos p
         INNER JOIN usuarios u ON u.id_usuario = p.id_asesor AND u.id_sede IN ($result)
         INNER JOIN cambios c ON c.id_prospecto = p.id_prospecto AND c.parametro_modificado = 'Asesor' 
@@ -3905,11 +3684,6 @@ function getStatusMktdPreventa(){
         WHERE $filter");
 
         return $query;
-
-        /*return $this->db->query("SELECT p.id_prospecto, p.nombre, p.apellido_paterno, p.apellido_materno, p.telefono, p.correo, 
-        s.nombre plaza, CONVERT(VARCHAR(10), p.fecha_creacion, 111) fecha_creacion FROM prospectos p 
-        INNER JOIN sedes s ON s.id_sede = p.id_sede
-        WHERE $filter");*/
     }
 
     function getSimilarName($key){
@@ -3951,7 +3725,7 @@ function getStatusMktdPreventa(){
 
     function getCoincidencias($where, $where2)
     {
-        $query = $this->db->query("SELECT cl.id_cliente, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombre, cl.telefono1, cl.correo, cl.idLote, cl.fechaApartado, 
+        $query = $this->db->query("SELECT cl.id_cliente, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombre, cl.telefono1, cl.correo, cl.idLote, CONVERT(VARCHAR,cl.fechaApartado,20) AS fechaApartado, 
         REPLACE(ISNULL (oxc.nombre, 'Sin especificar'), ' (especificar)', '') nombre_lp, lo.nombreLote, CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno)
         nombreAsesor, CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno) nombreGerente,
         ISNULL (se.nombre, 'Sin especificar') sede, st.nombre nombreEstatus, cl.descuento_mdb
@@ -3962,7 +3736,7 @@ function getStatusMktdPreventa(){
         INNER JOIN usuarios ae ON ae.id_usuario = cl.id_asesor
         INNER JOIN usuarios ge ON ge.id_usuario = cl.id_gerente
         INNER JOIN sedes se ON CAST(se.id_sede AS VARCHAR(10)) = ae.id_sede
-        WHERE cl.status = 1 $where2 AND $where");
+        WHERE cl.status = 1 $where2 $where");
 
         return $query;
     }
@@ -3980,7 +3754,6 @@ function getStatusMktdPreventa(){
     {
       if ($typeTransaction == 1 || $typeTransaction == 3) {  // FIRST LOAD || SEARCH BY DATE RANGE
             $filter = " AND p.fecha_creacion BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
-            //$this->db->where("p.fecha_creacion BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'");
         }
         /**/
         switch ($this->session->userdata('id_rol')) {

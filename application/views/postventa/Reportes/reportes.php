@@ -38,26 +38,11 @@
                                 </div>
                                 <div class="material-datatables">
                                     <div class="form-group">
-                                            <table class="table-striped table-hover" id="reports-datatable"
+                                            <div class="table-responsive">
+                                                <table class="table-striped table-hover" id="reports-datatable"
                                                 name="reports-datatable">
-                                                <!--<thead>
-                                                    <tr>
-                                                        <th>Id solicitud</th>
-                                                        <th>Referencia</th>
-                                                        <th>Lote</th>
-                                                        <th>Condominio</th>
-                                                        <th>Residencial</th>
-                                                        <th>Cliente</th>
-                                                        <th>Nombre a escriturar</th>
-                                                        <th>Estatus</th>
-                                                        <th>Área</th>
-                                                        <th>Vigencia</th>
-                                                        <th>Días de atraso</th>
-                                                        <th>Fecha del estatus</th>
-                                                        <th>Ultimo comentario</th>
-                                                    </tr>
-                                                </thead>-->
-                                            </table>
+                                                </table>
+                                            </div>
                                     </div>
                                 </div>
                             </div>

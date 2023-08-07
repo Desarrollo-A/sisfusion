@@ -22,6 +22,7 @@ function fillTable(transaction, beginDate, endDate, where) {
     prospectsTable = $('#prospects-datatable').DataTable({
         dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
+        bAutoWidth: true,
         columns: [
         {
             data: function(d) {
@@ -108,15 +109,15 @@ function fillTable(transaction, beginDate, endDate, where) {
                             return '<center>'+actions+'</center>';
                         }
                     }
-                } else if (typeTransaction == 1) { // Ventas
-                    if (id_rol_general != "19") { // Subdirecctor MKTD puede ver listado todos los prospectos pero no tiene ninguna acción sobre ellos
-                        if (id_rol_general == "3" || id_rol_general == "6") { // Array de roles permitidos para reasignar
+                } else if (typeTransaction == 1) {
+                    if (id_rol_general != "19") {
+                        if (id_rol_general == "3" || id_rol_general == "6") {
                             if (d.estatus == 1) {
                                 var actions = '';
                                 var group_buttons = '';
-                                if (id_usuario_general != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
+                                if (id_usuario_general != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) {
                                     actions = '';
-                                } else { // ES ASESOR Y EL REGISTRO ES DE MKTD - DEJO EL BOTÓN DE VER
+                                } else {
                                     group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + '" data-toggle="tooltip" data-placement="top" title="INGRESAR COMENTARIO"><i class="far fa-comments"></i></button>' +
                                         '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto + '" data-owner="' + d.id_asesor + '" data-source="' + d.source + '" data-editProspecto="' + d.editProspecto + '" data-toggle="tooltip" data-placement="top" title="EDITAR INFORMACIÓN"><i class="fas fa-pencil-alt"></i></button>' +
                                         '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '" data-toggle="tooltip" data-placement="top" title="VER INFORMACIÓN"><i class="far fa-eye"></i></button>' +
@@ -124,21 +125,19 @@ function fillTable(transaction, beginDate, endDate, where) {
                                     
                                     actions += `<button class="desplegable btn-data btn-blueMaderas" id="btn_${d.id_prospecto}" data-toggle="tooltip" data-placement="top" title="DESPLEGAR OPCIONES" onclick="javascript: $(this).addClass('hide');$('#cnt_${d.id_prospecto}').removeClass('hide');"> <i class="fas fa-chevron-up"></i> </button>`;
                                     actions += `<div class= "hide boxSBtns" id="cnt_${d.id_prospecto}"> ${group_buttons} <br> <button onclick="javascript: $('#btn_${d.id_prospecto}').removeClass('hide'); $('#cnt_${d.id_prospecto}').addClass('hide');" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="CERRAR OPCIONES"> <i class="fas fa-chevron-down"></i> </button> </div>`;
-
                                     actions += '<button class="btn-data btn-acidGreen update-status" '+'data-id-prospecto="' + d.id_prospecto + '" '+'data-telefono="'+d.telefono+'" '+'data-telefono2="'+d.telefono2+'" '+'data-toggle="tooltip"'+'data-placement="top" '+'title="ACTUALIZAR ESTATUS">'+'<i class="fas fa-redo"></i>';
                                 }
                                 return '<center>'+actions+'</center>';
                             } else {
                                 var actions = '';
                                 var group_buttons = '';
-                                if (id_usuario_general != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
+                                if (id_usuario_general != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) {
                                     actions = '';
-                                } else { // ES ASESOR Y EL REGISTRO ES DE MKTD - DEJO EL BOTÓN DE VER
+                                } else {
                                     group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + '" data-toggle="tooltip" data-placement="top" title="INGRESAR COMENTARIO"><i class="far fa-comments"></i></button>' +
                                         '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto + '" data-owner="' + d.id_asesor + '" data-source="' + d.source + '" data-editProspecto="' + d.editProspecto + '" data-toggle="tooltip" data-placement="top" title="EDITAR INFORMACIÓN"><i class="fas fa-pencil-alt"></i></button>' +
                                         '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '" data-toggle="tooltip" data-placement="top" title="VER INFORMACIÓN"><i class="far fa-eye"></i></button>' +
                                         '<button class="btn-data btn-details-grey re-asign" data-id-prospecto="' + d.id_prospecto + '" data-toggle="tooltip" data-placement="top" title="RE - ASIGNAR"><i class="fab fa-rev"></i></button>';
-
                                     actions += `<button class="desplegable btn-data btn-blueMaderas" id="btn_${d.id_prospecto}" data-toggle="tooltip" data-placement="top" title="Desplegar opciones" onclick="javascript: $(this).addClass('hide');$('#cnt_${d.id_prospecto}').removeClass('hide');"> <i class="fas fa-chevron-up"></i> </button>`;
                                     actions += `<div class= "hide boxSBtns" id="cnt_${d.id_prospecto}"> ${group_buttons} <br> <button onclick="javascript: $('#btn_${d.id_prospecto}').removeClass('hide'); $('#cnt_${d.id_prospecto}').addClass('hide');" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="CERRAR OPCIONES"> <i class="fas fa-chevron-down"></i> </button> </div>`;
                                 }
@@ -148,7 +147,7 @@ function fillTable(transaction, beginDate, endDate, where) {
                             if (d.estatus == 1) {
                                 var actions = '';
                                 var group_buttons = '';
-                                if (id_usuario_general != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITÓ EL BOTÓN DE VER
+                                if (id_usuario_general != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) {
                                     actions = '';
                                 } else { // ES ASESOR Y EL REGISTRO ES DE MKTD - DEJO EL BOTÓN DE VER
                                     group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + '" data-toggle="tooltip" data-placement="top" title="INGRESAR COMENTARIO"><i class="far fa-comments"></i></button>' +
@@ -156,16 +155,15 @@ function fillTable(transaction, beginDate, endDate, where) {
                                         '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '" data-toggle="tooltip" data-placement="top" title="VER INFORMACIÓN"><i class="far fa-eye"></i></button>';
                                     actions += `<button class="desplegable btn-data btn-blueMaderas" id="btn_${d.id_prospecto}" data-toggle="tooltip" data-placement="top" title="DESPLEGAR OPCIONES" onclick="javascript: $(this).addClass('hide');$('#cnt_${d.id_prospecto}').removeClass('hide');"> <i class="fas fa-chevron-up"></i> </button>`;
                                     actions += `<div class= "hide boxSBtns" id="cnt_${d.id_prospecto}"> ${group_buttons} <br> <button onclick="javascript: $('#btn_${d.id_prospecto}').removeClass('hide'); $('#cnt_${d.id_prospecto}').addClass('hide');" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="CERRAR OPCIONES"> <i class="fas fa-chevron-down"></i> </button> </div>`;
-
                                     actions += '<button class="btn-data btn-acidGreen update-status"'+'data-id-prospecto="' + d.id_prospecto + '" '+'data-telefono="'+d.telefono+'" '+'data-telefono2="'+d.telefono2+'" '+'data-toggle="tooltip"'+'data-placement="top" '+'title="ACTUALIZAR ESTATUS">'+'<i class="fas fa-redo"></i>';
                                 }
                                 return '<center>'+actions+'</center>';
                             } else {
                                 var actions = '';
                                 var group_buttons = '';
-                                if (id_usuario_general != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
+                                if (id_usuario_general != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) {
                                     actions = '';
-                                } else { // ES ASESOR Y EL REGISTRO ES DE MKTD - DEJO EL BOTÓN DE VER
+                                } else {
                                     group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + '" data-toggle="tooltip" data-placement="top" title="INGRESAR COMENTARIO"><i class="far fa-comments"></i></button>' +
                                         '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto + '" data-owner="' + d.id_asesor + '" data-source="' + d.source + '" data-editProspecto="' + d.editProspecto + '" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-pencil-alt"></i></button>' +
                                         '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '"><i class="material-icons" data-toggle="tooltip" data-placement="top" title="VER INFORMACIÓN">remove_red_eye</i></button>';
@@ -207,7 +205,6 @@ function fillTable(transaction, beginDate, endDate, where) {
                 "orderable": false,
                 "targets": 0
             },
-
         ],
         ajax: {
             "url": "getProspectsList/" + typeTransaction,
@@ -265,13 +262,9 @@ $(document).on("click", "#searchByDateRange", function () {
 });
 
 function setInitialValues() {
-    // BEGIN DATE
     const fechaInicio = new Date();
-    // Iniciar en este año, este mes, en el día 1
     const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
-    // END DATE
     const fechaFin = new Date();
-    // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
     const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
     $("#beginDate").val(convertDate(beginDate));
     $("#endDate").val(convertDate(endDate));
@@ -319,9 +312,6 @@ $("#my-edit-form").on('submit', function(e) {
         cache: false,
         processData: false,
         beforeSend: function() {
-            // Actions before send post
-            //validateEmptySelects(2);
-            //enableSelects(2);
         },
         success: function(data) {
             if (data == 1) {
@@ -338,8 +328,6 @@ $("#my-edit-form").on('submit', function(e) {
     });
 });
 
-
-
 $('#finish').on('click', function() {
     validateFile();
 });
@@ -354,7 +342,6 @@ $("#my-comment-form").on('submit', function(e) {
         cache: false,
         processData: false,
         beforeSend: function() {
-            // Actions before send post
         },
         success: function(data) {
             if (data == 1) {
@@ -371,7 +358,6 @@ $("#my-comment-form").on('submit', function(e) {
     });
 });
 
-
 $("#my_reasign_form_sm").on('submit', function(e) {
     e.preventDefault();
     $.ajax({
@@ -382,7 +368,6 @@ $("#my_reasign_form_sm").on('submit', function(e) {
         cache: false,
         processData: false,
         beforeSend: function() {
-            // Actions before send post
         },
         success: function(data) {
             if (data == 1) {
@@ -409,7 +394,6 @@ $("#my_reasign_form_gm").on('submit', function(e) {
         cache: false,
         processData: false,
         beforeSend: function() {
-            // Actions before send post
         },
         success: function(data) {
             if (data == 1) {
@@ -436,7 +420,6 @@ $("#my_reasign_form_ve").on('submit', function(e) {
         cache: false,
         processData: false,
         beforeSend: function() {
-            // Actions before send post
         },
         success: function(data) {
             if (data == 1) {
@@ -464,12 +447,7 @@ function validateFile() {
 }
 
 function validateEmptySelects(type) {
-    /*
-     * 1 insert prospect
-     * 2 update prospect
-     * 3 insert co-owner
-     */
-    if (type == 1 || type == 2) { // validate fields before insert/update a prospect
+    if (type == 1 || type == 2) {
         if ($("#civil_status").val() == null || $("#civil_status").val() == '') {
             $("#civil_status").val(7);
         }
@@ -479,7 +457,7 @@ function validateEmptySelects(type) {
         if ($("#state").val() == null || $("#state").val() == '') {
             $("#state").val(33);
         }
-    } else if (type == 3) { // validate fields before insert a co-owner
+    } else if (type == 3) {
         if ($("#civil_status_co").val() == null || $("#civil_status_co").val() == '') {
             $("#civil_status_co").val(7);
         }
@@ -496,12 +474,6 @@ function validateEmptySelects(type) {
 }
 
 function cleanFields(type) {
-    /*
-     * 1 insert prospect
-     * 2 update prospect
-     * 3 insert co-owner
-     * 4 insert references
-     */
     if (type == 1 || type == 2) {
         $("#nationality").val("");
         $("#nationality").selectpicker('refresh');
@@ -564,17 +536,12 @@ function cleanFields(type) {
 }
 
 function validateCivilStatus(type) {
-    /*
-     * 1 insert prospect
-     * 2 update prospect
-     * 3 insert co-owner
-     */
     if (type == 1 || type == 2) {
         cs = document.getElementById('civil_status');
         cs = cs.value;
-        if (cs == 4) { // IS MARRIED
+        if (cs == 4) {
             document.getElementById('matrimonial_regime').removeAttribute("disabled");
-        } else { // IT'S NOT MARRIED
+        } else {
             $("#matrimonial_regime").val("5");
             $("#spouce").val("");
             document.getElementById('matrimonial_regime').setAttribute("disabled", "true");
@@ -583,9 +550,9 @@ function validateCivilStatus(type) {
     } else if (type == 3) {
         cs = document.getElementById('civil_status_co');
         cs = cs.value;
-        if (cs == 4) { // IS MARRIED
+        if (cs == 4) {
             document.getElementById('matrimonial_regime_co').removeAttribute("disabled");
-        } else { // IT'S NOT MARRIED
+        } else {
             $("#matrimonial_regime_co").val("5");
             $("#spouce_co").val("");
             document.getElementById('matrimonial_regime_co').setAttribute("disabled", "true");
@@ -595,26 +562,21 @@ function validateCivilStatus(type) {
 }
 
 function validateMatrimonialRegime(type) {
-    /*
-     * 1 insert prospect
-     * 2 update prospect
-     * 3 insert co-owner
-     */
     if (type == 1 || type == 2) {
         mr = document.getElementById('matrimonial_regime');
         mr = mr.value;
-        if (mr == 1) { // IS A CONJUGAL SOCIETY
+        if (mr == 1) {
             document.getElementById('spouce').removeAttribute("readonly");
-        } else { // IT'S NOT A CONJUGAL SOCIETY
+        } else { 
             $("#spouce").val("");
             document.getElementById('spouce').setAttribute("readonly", "true");
         }
     } else if (type == 3) {
         mr = document.getElementById('matrimonial_regime_co');
         mr = mr.value;
-        if (mr == 1) { // IS A CONJUGAL SOCIETY
+        if (mr == 1) { 
             document.getElementById('spouce_co').removeAttribute("readonly");
-        } else { // IT'S NOT A CONJUGAL SOCIETY
+        } else {
             $("#spouce").val("");
             document.getElementById('spouce_co').setAttribute("readonly", "true");
         }
@@ -704,9 +666,6 @@ function getAdvisersByCoordinator(element) {
 }
 
 function getAge(type) {
-    // 1 insert
-    // 2 update
-    // 3 co-owner
     if (type == 1 || type == 2) {
         dateString = $("#date_birth").val();
     } else if (type == 3) {
@@ -737,16 +696,9 @@ function printProspectInfoMktd() {
 }
 
 function fillFields(v, type) {
-    /*
-     * 0 update prospect
-     * 1 see information modal
-     * 2 update reference
-     */
-    // Limpiar readonly de editar prospectos
     $("#name").val(v.nombre).attr('readonly',false);
     $("#last_name").val(v.apellido_paterno).attr('readonly',false);
     $("#mothers_last_name").val(v.apellido_materno).attr('readonly',false);
-    
     if (type == 0) {
         $("#nationality").val(v.nacionalidad);
         $("#legal_personality").val(v.personalidad_juridica);
@@ -773,7 +725,6 @@ function fillFields(v, type) {
         $("#prospecting_place").val(v.lugar_prospeccion);
         $("#advertising").val(v.medio_publicitario);
         $("#sales_plaza").val(v.plaza_venta);
-        //document.getElementById("observations").innerHTML = v.observaciones;
         $("#observation").val(v.observaciones);
         if (v.tipo_vivienda == 1) {
             document.getElementById('own').setAttribute("checked", "true");
@@ -786,18 +737,16 @@ function fillFields(v, type) {
         } else {
             document.getElementById('other').setAttribute("checked", "true");
         }
-
         pp = v.lugar_prospeccion;
-        if (pp == 3 || pp == 7 || pp == 9 || pp == 10) { // SPECIFY OPTION
+        if (pp == 3 || pp == 7 || pp == 9 || pp == 10) {
             $("#specify").val(v.otro_lugar);
-        } else if (pp == 6) { // SPECIFY MKTD OPTION
+        } else if (pp == 6) { 
             document.getElementById('specify_mkt').value = v.otro_lugar;
-        } else if (pp == 21) { // RECOMMENDED SPECIFICATION
+        } else if (pp == 21) {
             document.getElementById('specify_recommends').value = v.otro_lugar;
-        } else { // WITHOUT SPECIFICATION
+        } else {
             $("#specify").val("");
         }
-
     } else if (type == 1) {
         $("#nationality-lbl").val(v.nacionalidad);
         $("#legal-personality-lbl").val(v.personalidad_juridica);
@@ -819,7 +768,6 @@ function fillFields(v, type) {
         $("#phone-asesor-lbl").val(v.tel_asesor);
         $("#phone-coordinador-lbl").val(v.tel_coordinador);
         $("#phone-gerente-lbl").val(v.tel_gerente);
-
     } else if (type == 2) {
         $("#prospecto_ed").val(v.id_prospecto).trigger('change');
         $("#prospecto_ed").selectpicker('refresh');
@@ -831,10 +779,6 @@ function fillFields(v, type) {
 }
 
 function validateEmptyFields(v, type) {
-    /*
-     * 1 edit prospect
-     * 2 edit reference
-     */
     if (type === 1) {
         $(".select-is-empty").removeClass("is-empty");
         if (v.nombre != '') {
@@ -947,9 +891,9 @@ function fillChangelog(v) {
     '               <a>' + v.fecha_creacion + '</a>\n' +
     '           </div>\n' +
     '           <div class="col-md-12">\n' +
-'                <p class="m-0"><small>Usuario: </small><b> ' + v.creador.toUpperCase() + '</b></p>\n'+
-'                <p class="m-0"><small>Valor anterior: </small><b> ' + v.anterior.toUpperCase() + '</b></p>\n' +
-'                <p class="m-0"><small>Valor Nuevo: </small><b> ' + v.nuevo.toUpperCase() + '</b></p>\n' +
+    '             <p class="m-0"><small>Usuario: </small><b> ' + v.creador.toUpperCase() + '</b></p>\n'+
+    '             <p class="m-0"><small>Valor anterior: </small><b> ' + v.anterior.toUpperCase() + '</b></p>\n' +
+    '             <p class="m-0"><small>Valor Nuevo: </small><b> ' + v.nuevo.toUpperCase() + '</b></p>\n' +
     '           </div>\n' +
     '        <h6>\n' +
     '        </h6>\n' +
@@ -1009,26 +953,18 @@ $(document).on('click', '.edit-information', function(e) {
     owner = $(this).attr("data-owner");
     $.getJSON("getProspectInformation/" + id_prospecto).done(function(data) {
         $.each(data, function(i, v) {
-            /*Llenado de campos en automatico */
-                //Nacionalidad
                 $("#nationality option[value="+v.nacionalidad+"]").attr("selected", true);
                 $("#nationality").selectpicker("refresh");
-                //Personalidad Juridica
                 $("#legal_personality option[value="+v.personalidad_juridica+"]").attr("selected", true);
                 $("#legal_personality").selectpicker("refresh");
-                //Estado civil
                 $("#civil_status option[value="+v.estado_civil+"]").attr("selected", true);
                 $("#civil_status").selectpicker("refresh");
-                //Regimen Matrimonial
                 $("#matrimonial_regime option[value="+v.regimen_matrimonial+"]").attr("selected", true);
                 $("#matrimonial_regime").selectpicker("refresh");
-                //Lugar de Prospeccion
                 $("#prospecting_place option[value="+v.lugar_prospeccion+"]").attr("selected", true);
                 $("#prospecting_place").selectpicker("refresh");
-                //Plaza de venta
                 $("#sales_plaza option[value="+v.plaza_venta+"]").attr("selected", true);
                 $("#sales_plaza").selectpicker("refresh");
-                
                 $("#myEditModal").modal();
                 fillFields(v, 0);
                 validateEmptyFields(v, 1);
@@ -1050,7 +986,6 @@ $(document).on('click', '.update-validity', function() {
         success: function(data) {
             if (data == 1) {
                 alerts.showNotification("top", "right", "La vigencia de tu prospecto se ha renovado exitosamente.", "success");
-                //$prospectsTable.ajax.reload();
                 $('#prospects-datatable').DataTable().ajax.reload(null, false);
             } else {
                 alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
@@ -1104,7 +1039,6 @@ $(document).on('click', '.see-information', function(e) {
             fillFields(v, 1);
         });
     });
-
     $.getJSON("getComments/" + id_prospecto).done(function(data) {
         if (data.length == 0) {
             $("#comments-list").append('SIN DATOS POR MOSTRAR');
@@ -1116,7 +1050,6 @@ $(document).on('click', '.see-information', function(e) {
             });
         }
     });
-
     $.getJSON("getChangelog/" + id_prospecto).done(function(data) {
         if (data.length == 0) {
             $("#changelog").append('SIN DATOS POR MOSTRAR');
@@ -1130,14 +1063,14 @@ $(document).on('click', '.see-information', function(e) {
 
 $(document).on('click', '.re-asign', function(e) {
     id_prospecto = $(this).attr("data-id-prospecto");
-    if (id_rol_general == 3 || id_rol_general == 6) { // Gerente & asistente de ventas
+    if (id_rol_general == 3 || id_rol_general == 6) {
         $("#myReAsignModalVentas").modal();
         getManagers();
         $("#id_prospecto_re_asign_ve").val(id_prospecto);
-    } else if (id_rol_general == 19) { // Subdirector MKTD
+    } else if (id_rol_general == 19) {
         $("#myReAsignModalSubMktd").modal();
         $("#id_prospecto_re_asign_sm").val(id_prospecto);
-    } else if (id_rol_general == 20) { // Gerente MKTD
+    } else if (id_rol_general == 20) {
         $("#myReAsignModalGerMktd").modal();
         $("#id_prospecto_re_asign_gm").val(id_prospecto);
     }
@@ -1168,15 +1101,15 @@ $("#my_update_status_form").on('submit', function(e) {
         beforeSend: function() {
         },
         success: function(data) {
-            if (data == 1) { // SUCCESS RESPONSE
+            if (data == 1) { 
                 $('#myUpdateStatusModal').modal("hide");
                 $('#estatus_particular').val("0");
                 $("#estatus_particular").selectpicker("refresh");
                 $('#prospects-datatable').DataTable().ajax.reload(null, false);
                 alerts.showNotification("top", "right", "La actualización se ha llevado a cabo correctamente.", "success");
-            } else if (data == 2) { // LOTE APARTADO
+            } else if (data == 2) {
                 alerts.showNotification("top", "right", "La asignación no se ha podido llevar a cabo debido a que el lote seleccionado ya se encuentra apartado.", "warning");
-            } else { // ALGO LE FALTÓ
+            } else {
                 alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
             }
         },
@@ -1193,10 +1126,8 @@ function cleanSelects() {
 
 $("#my_update_status_form_preventa").on('submit', function(e) {
     e.preventDefault();
-
     let val = $('#estatus_particular2').val();
     let id = $("#id_prospecto_estatus_particular2").val();
-    //si la opcion seleccionada es 6 
     if (val == 7) {
         $("#id_prospecto_estatus_particular3").val(id);
         $("#myUpdateStatusPreve").modal();
@@ -1213,7 +1144,6 @@ $("#my_update_status_prevee").on('submit', function(e) {
         cache: false,
         processData: false,
         beforeSend: function() {
-            // Actions before send post
         },
         success: function(data) {
             if (data == 1) {
@@ -1250,21 +1180,20 @@ function getPersonsWhoRecommends() {
 function showSpecificationObject() {
     pp = document.getElementById('prospecting_place');
     pp = pp.value;
-    if (pp == 3 || pp == 7 || pp == 9 || pp == 10) { // SPECIFY OPTION
+    if (pp == 3 || pp == 7 || pp == 9 || pp == 10) { 
         $("#specify").removeAttr("style");
         $("#specify_mkt_div").css({ "display": "none" });
-    } else if (pp == 6) { // SPECIFY MKTD OPTION
+    } else if (pp == 6) {
         $("#specify_mkt").removeAttr("style");
         $("#specify_mkt_div").removeAttr("style");
-    } else if (pp == 21) { // RECOMMENDED SPECIFICATION
+    } else if (pp == 21) {
         $("#specify_recommends").removeAttr("style");
         $("#specify_mkt_div").css({ "display": "none" });
-    } else { // WITHOUT SPECIFICATION
+    } else {
         $("#specify").removeAttr("style");
         $("#specify_mkt_div").css({ "display": "none" });
     }
 }
-
 
 function cleanCombos() {
     $("#specify").val("0");
@@ -1277,9 +1206,9 @@ function cleanCombos() {
 
 function validateParticularStatus(element) {
     estatus = $('option:selected', element).val();
-    if (estatus == 6) { // IT'S PRESALE
+    if (estatus == 6) {
         document.getElementById("datatoassign").style.display = "block";
-    } else { // IT'S NOT PRESALE
+    } else {
         document.getElementById("datatoassign").style.display = "none";
         $("#condominio").empty().selectpicker('refresh');
         $("#lote").empty().selectpicker('refresh');
@@ -1317,10 +1246,6 @@ function compareDates(fecha_creacion){
 document.querySelector('#estatus_recordatorio_form').addEventListener('submit',async e =>  {
     e.preventDefault();
     const data = Object.fromEntries(new FormData(e.target));
-    // if(gapi.auth2.getAuthInstance().isSignedIn.get()){
-    //     let inserted = await insertEventGoogle(data);
-    //     data['idGoogle'] = inserted;
-    // }
     data['estatus_particular'] = $('#estatus_particular').val();
     data['id_prospecto_estatus_particular'] = $("#id_prospecto_estatus_particular").val();
     $.ajax({
