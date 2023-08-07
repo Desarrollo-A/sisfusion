@@ -5680,14 +5680,6 @@ for ($d=0; $d <count($dos) ; $d++) {
          echo json_encode($response);
     }
 
-    public function InsertPena($lote_1)
-    {
-      $response =$this->Comisiones_model->InsertPenalizacionComision($lote_1);
-      if ($response) {
-      return $this->Comisiones_model->InsertPenalizacionHistorial($lote_1);
-      }
-    }
-
       public function insertCertificacion(){
       $id_descuento       = $this->input->post('id_descuento');
       $monto              = $this->input->post('monto');
