@@ -268,7 +268,7 @@ $(document).ready(function () {
             tipo_venta = $(this).attr("data-tipov");
             bandera_penalizacion = $(this).attr("data-banderaPenalizacion");
 
-            if(parseFloat(totalNeto2) > 0 && registro_comision == 0){
+            if(parseFloat(totalNeto2) > 0){
                 
                 $("#modal_NEODATA .modal-body").html("");
                 $("#modal_NEODATA .modal-footer").html("");
@@ -429,7 +429,7 @@ $(document).ready(function () {
                                             // $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-12 text-center"><h3>Lote: <b>${row.data().nombreLote}${labelPenalizacion}</b></h3><l style='color:gray;'>Plan de venta: <b>${descripcion_plan}</b></l></div></div><div class="row"><div class="col-md-3 p-0"><h5>Precio lote: <b>$${formatMoney(totalNeto2)}</b></h5></div><div class="col-md-3 p-0"><h5>$ Neodata: <b style="color:${data[0].Aplicado <= 0 ? 'black' : 'blue'};">$${formatMoney(data[0].Aplicado)}</b></h5></div><div class="col-md-3 p-0"><h5>Disponible: <b style="color:green;">$${formatMoney(total0)}</b></h5></div><div class="col-md-3 p-0">${cadena}</div></div><br>`);
 
     
-                                            $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-12"><h3><i class="fa fa-info-circle" style="color:gray;"></i> Saldo diponible para <i>${row.data().nombreLote}</i>: <b>$${formatMoney(total0-(data1[0].abonado))}'</b><br>${labelPenalizacion}</h3></div></div><br>`);
+                                            $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-12"><h3><i class="fa fa-info-circle" style="color:gray;"></i> Saldo diponible para <i>${row.data().nombreLote}</i>: <b>$${formatMoney(total0-(data1[0].abonado))}</b><br>${labelPenalizacion}</h3></div></div><br>`);
     
                                             $("#modal_NEODATA .modal-body").append('<div class="row">'+
                                             '<div class="col-md-4">Total pago: <b style="color:blue">'+formatMoney(data1[0].total_comision)+'</b></div>'+
@@ -1002,6 +1002,13 @@ $('#planes').change(function () {
    
 
 });
+ function llenado (){
+  
+     $("#llenadoPlan").modal();
+     $('#tiempoRestante').removeClass('hide');
+    // $("#tiempoRestante").html("111");
+
+ }
 $(document).on("click",".llenadoPlan", function (e){
     $('#spiner-loader').removeClass('hide');
     document.getElementById('llenadoPlan').disabled = true;
