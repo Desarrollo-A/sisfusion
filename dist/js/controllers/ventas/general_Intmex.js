@@ -5,15 +5,16 @@ function cleanCommentsAsimilados() {
     myCommentsLote.innerHTML = '';
 }
 
-var totalLeon = 0;
-var totalQro = 0;
-var totalSlp = 0;
-var totalMerida = 0;
-var totalCdmx = 0;
-var totalCancun = 0;
+$('body').tooltip({
+    selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
+    trigger: 'hover',
+    container: 'body'
+}).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
+    $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
+});
+
 var tr;
 var tabla_asimilados2 ;
-var totaPen = 0;
 let titulos = [];
 
 $('#tabla_asimilados thead tr:eq(0) th').each( function (i) {
@@ -32,8 +33,7 @@ $('#tabla_asimilados thead tr:eq(0) th').each( function (i) {
             $.each(data, function(i, v) {
                 total += parseFloat(v.impuesto);
             });
-            var to1 = formatMoney(total);
-            document.getElementById("totpagarAsimilados").textContent = formatMoney(total);
+            document.getElementById("totpagarAsimilados").textContent = formatMoney(numberTwoDecimal(total));
         }
     });
 });
@@ -44,7 +44,7 @@ $("#tabla_plaza_1").ready( function(){
         $.each(json.data, function(i, v) {
             total += parseFloat(v.impuesto);
         });
-        var to = formatMoney(total);
+        var to = formatMoney(numberTwoDecimal(total));
         document.getElementById("totpagarAsimilados").textContent = to;
     });
 
@@ -112,7 +112,7 @@ $("#tabla_plaza_1").ready( function(){
         },
         {
             "data": function( d ){
-                return '<p class="m-0">'+formatMoney(d.precio_lote)+'</p>';
+                return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.precio_lote))+'</p>';
             }
         },
         {
@@ -122,7 +122,7 @@ $("#tabla_plaza_1").ready( function(){
         },
         {
             "data": function( d ){
-                return '<p class="m-0"><b>'+formatMoney(d.valimpuesto)+'%</b></p>';
+                return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.valimpuesto))+'%</b></p>';
             }
         },
         {
@@ -212,16 +212,34 @@ $("#tabla_plaza_1").ready( function(){
     });
     
     $("#tabla_asimilados tbody").on("click", ".consultar_logs_asimilados", function(e){
+        $('#spiner-loader').removeClass('hide');
         e.preventDefault();
         e.stopImmediatePropagation();
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
         $("#seeInformationModalAsimilados").modal();
-        $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
+        $("#nameLote").append('<p><h5">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $.getJSON("getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
-                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>Campo: </small><b>' + v.comentario + '</b></a><br></div><div class="float-end text-right"><a>' + v.fecha_movimiento + '</a></div><div class="col-md-12"><p class="m-0"><small>USUARIO: </small><b> ' + v.nombre_usuario + '</b></p></div><h6></h6></div></div></li>');
+                $("#comments-list-asimilados").append('<li>\n' +
+                '  <div class="container-fluid">\n' +
+                '    <div class="row">\n' +
+                '      <div class="col-md-6">\n' +
+                '        <a><b> ' +v.comentario.toUpperCase()+ '</b></a><br>\n' +
+                '      </div>\n' +
+                '      <div class="float-end text-right">\n' +
+                '        <a>' + v.fecha_movimiento.split(".")[0] + '</a>\n' +
+                '      </div>\n' +
+                '      <div class="col-md-12">\n' +
+                '        <p class="m-0"><small>Usuario: </small><b> ' + v.nombre_usuario + '</b></p>\n'+
+                '      </div>\n' +
+                '    <h6>\n' +
+                '    </h6>\n' +
+                '    </div>\n' +
+                '  </div>\n' +
+                '</li>');
             });
+            $('#spiner-loader').addClass('hide');
         });
     });
 });

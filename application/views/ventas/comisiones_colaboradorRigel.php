@@ -1,7 +1,18 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <link href="<?=base_url()?>dist/js/controllers/files/css/fileinput.css" media="all" rel="stylesheet" type="text/css"/>
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Last-Modified" content="0">
+<meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
+<meta http-equiv="Pragma" content="no-cache">
+
 <body>
+    <style>
+		.bs-searchbox .form-group{
+			padding-bottom: 0!important;
+    		margin: 0!important;
+		}
+	</style>
     <div class="wrapper">
         <?php
         if (in_array($this->session->userdata('id_rol'), array(1,2))){
@@ -10,6 +21,12 @@
         else{
             echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
         }
+
+        header("Expires: Tue, 03 Jul 2001 06:00:00 GMT");
+        header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+        header("Cache-Control: no-store, no-cache, must-revalidate");
+        header("Cache-Control: post-check=0, pre-check=0", false);
+        header("Pragma: no-cache");
         ?>
 
         <style>
@@ -20,7 +37,7 @@
 
         <!-- Modals --> 
         <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+            <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header"></div>
                     <div class="modal-body">
@@ -245,11 +262,10 @@
                                                                 <p class="input-tot pl-1">
                                                                     <?php
                                                                         $query = $this->db->query("SELECT Coalesce(SUM (abono_neodata),0) nuevo_general FROM pago_comision_ind WHERE estatus in (1) AND id_comision IN (select id_comision from comisiones) AND id_usuario = ".$this->session->userdata('id_usuario')."");
-
                                                                         foreach ($query->result() as $row)
                                                                         {
                                                                             $number = $row->nuevo_general;
-                                                                            echo '$'. number_format($number, 3).'';
+                                                                            echo '$'. number_format($number, 2).'';
                                                                         }
                                                                     ?>
                                                                 </p>
@@ -271,13 +287,13 @@
                                                     <div class="row">
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
                                                             <div class="form-group">
-                                                                <label  class="m-0" for="proyecto1">Proyecto</label>
+                                                                <label  class="control-label" for="proyecto1">Proyecto</label>
                                                                 <select name="proyecto1" id="proyecto1" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                                             <div class="form-group">
-                                                                <label for="condominio1">Condominio</label>
+                                                                <label class="control-label" for="condominio1">Condominio</label>
                                                                 <select name="condominio1" id="condominio1" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
                                                             </div>
                                                         </div>
@@ -352,11 +368,10 @@
                                                                 <p class="input-tot pl-1">
                                                             <?php
                                                             $query = $this->db->query("SELECT Coalesce(SUM (abono_neodata),0) nuevo_general FROM pago_comision_ind WHERE estatus in (4) AND id_comision IN (select id_comision from comisiones) AND id_usuario = ".$this->session->userdata('id_usuario')."");
-
                                                             foreach ($query->result() as $row)
                                                             {
                                                                 $number = $row->nuevo_general;
-                                                                echo '$' . number_format($number, 3).'';
+                                                                echo '$' . number_format($number, 2).'';
                                                             }
                                                             ?>
                                                             </p>
@@ -371,11 +386,11 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
-                                                            <label class="m-0" for="proyecto2">Proyecto</label>
+                                                            <label class="control-label" for="proyecto2">Proyecto</label>
                                                             <select name="proyecto2" id="proyecto2" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
                                                         </div>
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                                            <label class="m-0" for="condominio2">Condominio</label>
+                                                            <label class="control-label" for="condominio2">Condominio</label>
                                                             <select name="condominio2" id="condominio2" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
                                                         </div>
                                                     </div>
@@ -419,7 +434,7 @@
                                                                     foreach ($query->result() as $row)
                                                                     {
                                                                         $number = $row->nuevo_general;
-                                                                        echo '$' . number_format($number, 3).'';
+                                                                        echo '$' . number_format($number, 2).'';
                                                                     }
                                                                     ?>
                                                                 </p>
@@ -435,13 +450,13 @@
                                                     <div class="row">
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
                                                             <div class="form-group">
-                                                                <label class="m-0" for="proyecto28">Proyecto</label>
+                                                                <label class="control-label" for="proyecto28">Proyecto</label>
                                                                 <select name="proyecto28" id="proyecto28" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                                             <div class="form-group">
-                                                                <label class="m-0" for="condominio28">Condominio</label>
+                                                                <label class="control-label" for="condominio28">Condominio</label>
                                                                 <select name="condominio28" id="condominio28" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
                                                             </div>
                                                         </div>
@@ -484,7 +499,7 @@
                                                                     foreach ($query->result() as $row)
                                                                     {
                                                                         $number = $row->nuevo_general;
-                                                                        echo '$' . number_format($number, 3).'';
+                                                                        echo '$' . number_format($number, 2).'';
                                                                     }
                                                                     ?>
                                                                 </p>
@@ -499,11 +514,11 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">                      
-                                                            <label class="m-0" for="proyecto3">Proyecto</label>
+                                                            <label class="control-label" for="proyecto3">Proyecto</label>
                                                             <select name="proyecto3" id="proyecto3" class="selectpicker select-gral" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
                                                         </div>
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                                            <label class="m-0" for="condominio3">Condominio</label>
+                                                            <label class="control-label" for="condominio3">Condominio</label>
                                                             <select name="condominio3" id="condominio3" class="selectpicker select-gral" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
                                                         </div>
                                                     </div>
@@ -542,11 +557,10 @@
                                                                 <p class="input-tot pl-1">
                                                                 <?php
                                                                     $query = $this->db->query("SELECT SUM (abono_neodata) nuevo_general FROM pago_comision_ind WHERE estatus in (6) AND id_comision IN (select id_comision from comisiones) AND id_usuario = ".$this->session->userdata('id_usuario')."");
-
                                                                     foreach ($query->result() as $row)
                                                                     {
                                                                         $number = $row->nuevo_general;
-                                                                        echo '$' . number_format($number, 3).'';
+                                                                        echo '$' . number_format($number, 2).'';
                                                                     }
                                                                     ?>
                                                                 </p>
@@ -561,11 +575,11 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
-                                                            <label class="m-0" for="proyecto4">Proyecto</label>
+                                                            <label class="control-label" for="proyecto4">Proyecto</label>
                                                             <select name="proyecto4" id="proyecto4" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
                                                         </div>
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                                            <label class="m-0" for="condominio4">Condominio</label>
+                                                            <label class="control-label" for="condominio4">Condominio</label>
                                                             <select name="condominio4" id="condominio4" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
                                                         </div>
                                                     </div>
@@ -600,13 +614,13 @@
                                                         <div class="row">
                                                             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
                                                                 <div class="form-group">
-                                                                    <label class="m-0" for="proyecto">Proyecto</label>
+                                                                    <label class="control-label" for="proyecto">Proyecto</label>
                                                                     <select name="proyecto" id="proyecto" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
                                                                 </div>
                                                             </div>
                                                             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                                                 <div class="form-group">
-                                                                    <label class="m-0" for="condominio">Condominio</label>
+                                                                    <label class="control-label" for="condominio">Condominio</label>
                                                                     <select name="condominio" id="condominio" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
                                                                 </div>
                                                             </div>
@@ -643,14 +657,6 @@
     </div>
     <!--main-panel close-->
     <?php $this->load->view('template/footer'); ?>
-    <!--DATATABLE BUTTONS DATA EXPORT-->
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <script>
             var formaPago = "<?= $this->session->userdata('forma_pago')?>";
     </script>                                                        

@@ -3,7 +3,6 @@
 <body>
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
-
         <div class="modal fade" id="verDetalles" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -81,7 +80,7 @@
                                                         </div>
                                                         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                                             <div class="form-group">
-                                                                <select class="selectpicker select-gral m-0" id="sede" name="sede[]" data-style="btn btn-primary "data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7"required="" multiple="" tabindex="-98" onchange="changeSede()">
+                                                                <select class="selectpicker select-gral m-0" id="sede" name="sede[]" data-container="body" data-style="btn btn-primary "data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7"required="" multiple="" tabindex="-98" onchange="changeSede()">
                                                                 </select>
                                                             </div>
                                                         </div>

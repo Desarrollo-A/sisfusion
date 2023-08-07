@@ -73,6 +73,5 @@
     </div><!--main-panel close-->
 </body>
 <?php $this->load->view('template/footer');?>
-<!--DATATABLE BUTTONS DATA EXPORT-->
 <script src="<?=base_url()?>dist/js/controllers/inventario/inventario.js"></script>
 

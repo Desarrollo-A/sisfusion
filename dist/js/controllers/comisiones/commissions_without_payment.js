@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    $.post(url + "Contratacion/lista_proyecto", function (data) {
+    $.post(general_base_url + "Contratacion/lista_proyecto", function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
@@ -15,10 +15,8 @@ $('#proyecto').change( function(){
     index_condominio = 0
     $("#condominio").html("");
     $(document).ready(function(){
-        $.post(url + "Contratacion/lista_condominio/"+index_proyecto, function(data) {
+        $.post(general_base_url + "Contratacion/lista_condominio/"+index_proyecto, function(data) {
             var len = data.length;
-            $("#condominio").append($('<option disabled selected>Selecciona una opción</option>'));
-
             for( var i = 0; i<len; i++)
             {
                 var id = data[i]['idCondominio'];
@@ -42,30 +40,32 @@ $('#condominio').change( function(){
 var totaPen = 0;
 var tr;
 
-$('#tabla_comisiones_sin_pago thead tr:eq(0) th').each(function (i) {
+let titulos = [];
+$('#tabla_comisiones_sin_pago thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
-    $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
-    $('input', this).on('keyup change', function () {
-        if ($('#tabla_comisiones_sin_pago').DataTable().column(i).search() !== this.value) {
-            $('#tabla_comisiones_sin_pago').DataTable()
-                .column(i)
-                .search(this.value)
-                .draw();
+    titulos.push(title);
+    $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
+    $( 'input', this ).on('keyup change', function () {
+        if ($('#tabla_comisiones_sin_pago').DataTable().column(i).search() !== this.value ) {
+            $('#tabla_comisiones_sin_pago').DataTable().column(i).search(this.value).draw();
         }
     });
-});
+    $('[data-toggle="tooltip"]').tooltip();
+    })
+
 
 function fillCommissionTableWithoutPayment (proyecto, condominio) {
     tabla_comisiones_sin_pago = $("#tabla_comisiones_sin_pago").DataTable({
-        dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
-        width: 'auto',
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: "100%",
+        scrollX: true,
         language: {
             url: "../static/spanishLoader.json"
         },
         pagingType: "full_numbers",
         fixedHeader: true,
         language: {
-            url: url+"/static/spanishLoader_v2.json",
+            url: general_base_url+"/static/spanishLoader_v2.json",
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -78,6 +78,15 @@ function fillCommissionTableWithoutPayment (proyecto, condominio) {
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
+                title:'Estatus comisiones',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7],
+                    format: {
+                        header: function (d, columnIdx) {
+                            return ' ' + titulos[columnIdx] + ' ';
+                        }
+                    }
+                }
         }],
         columns: [{
             data: function(d) {
@@ -104,7 +113,6 @@ function fillCommissionTableWithoutPayment (proyecto, condominio) {
                 return '<p class="m-0">' + d.nombreCliente + ' </p>';
             }
         },
-
         {
             data: function(d) {
                 return '<p class="m-0">' + d.nombreAsesor + '</p>';
@@ -132,7 +140,7 @@ function fillCommissionTableWithoutPayment (proyecto, condominio) {
             orderable: false
         }],
         ajax: {
-            url: url2 + "ComisionesNeo/getGeneralStatusFromNeodata/" + proyecto + "/" + condominio,
+            url: general_base_url + "ComisionesNeo/getGeneralStatusFromNeodata/" + proyecto + "/" + condominio,
             type: "POST",
             cache: false,
             data: function(d) {}

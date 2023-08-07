@@ -41,6 +41,7 @@ $("#tabla_ingresar_6").ready(function () {
     tabla_6 = $("#tabla_ingresar_6").DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
+        bAutoWidth: true,
         buttons: [
             {
                 extend: 'excelHtml5',
@@ -83,7 +84,6 @@ $("#tabla_ingresar_6").ready(function () {
             }
         },
         pageLength: 10,
-        bAutoWidth: false,
         fixedColumns: true,
         ordering: false,
         scrollX: true,
