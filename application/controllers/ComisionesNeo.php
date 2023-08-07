@@ -23,7 +23,7 @@ class ComisionesNeo extends CI_Controller
     redirect(base_url());
   }
 
-  public function getStatusNeodata($lote, $parametro)
+  public function getStatusNeodata($lote)
   {
     echo json_encode($this->ComisionesNeo_model->getStatusNeodata($lote)->result_array(),JSON_NUMERIC_CHECK);
   }

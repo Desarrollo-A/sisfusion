@@ -236,7 +236,7 @@ function getDatosComisionesHistorialRigel($proyecto,$condominio){
                     INNER JOIN opcs_x_cats oxcC ON pci1.estatus = oxcC.id_opcion and oxcC.id_catalogo = 23
                     LEFT JOIN sedes sed ON sed.id_sede in ($sede) and sed.estatus = 1
                     LEFT JOIN opcs_x_cats rol ON rol.id_opcion = com.rol_generado and rol.id_catalogo = 1
-                    WHERE pci1.estatus IN ($estado) AND ( (lo.idStatusContratacion < 9 AND com.estatus IN (1,8)) OR (lo.idStatusContratacion > 8 AND com.estatus IN (8))) $add_fil
+                    WHERE pci1.estatus IN ($estado) AND ((lo.idStatusContratacion < 9 AND com.estatus IN (1,8)) OR (lo.idStatusContratacion > 8 AND com.estatus IN (8))) $add_fil
                     GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, 
                     com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata,
                     pci1.estatus, pci1.fecha_abono, pci1.id_usuario, oxcpj.nombre, 
