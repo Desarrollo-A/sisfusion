@@ -18,6 +18,7 @@ $('#comisiones-detenidas-table').ready(function () {
     let comisionesDetenidasTabla = $('#comisiones-detenidas-table').DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
+        bAutoWidth:true,
         buttons: [{
             extend: 'excelHtml5',
             text: "<i class='fa fa-file-excel-o' aria-hidden='true'></i>",
@@ -51,7 +52,6 @@ $('#comisiones-detenidas-table').ready(function () {
         ordering: false,
         columns: [
             {
-
                 'className': 'details-control',
                 'orderable': false,
                 'data': null,
@@ -142,7 +142,6 @@ $('#comisiones-detenidas-table').ready(function () {
                 let motivo;
                 let color;
                 if (d.motivo == 4 || d.motivo == 5 || d.motivo == 3 || d.motivo == 6 || d.motivo == 8) {
-           
                     motivo = d.motivoOpc;
                 } else {
                     color = 'lbl-azure';
@@ -165,13 +164,12 @@ $('#comisiones-detenidas-table').ready(function () {
                             </button>
                         </div>`;
                         }else{
-                            botton = ``;
+                            botton = `NO APLICA`;
                         }
                         return botton;
                     } else {
                         return 'NA';
                     }
-
                 }
             }
         ],

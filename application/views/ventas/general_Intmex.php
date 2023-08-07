@@ -4,7 +4,6 @@
     <div class="wrapper">
         <?php
         if($this->session->userdata('id_rol')=="31"){
-            /*-------------------------------------------------------*/
             $this->load->view('template/sidebar');
         }
         else{
@@ -22,7 +21,7 @@
                     </div>
                     <div class="modal-body">
                         <div role="tabpanel">
-                            <ul class="nav nav-tabs" role="tablist" style="background: #949494;">
+                            <ul>
                                 <div id="nameLote"></div>
                             </ul>
                             <div class="tab-content">
@@ -122,7 +121,7 @@
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
                                 <i class="fas fa-wallet fa-2x"></i>
@@ -153,18 +152,18 @@
                                                     <th>ID PAGO</th>
                                                     <th>PROYECTO</th>
                                                     <th>CONDOMINIO</th>
-                                                    <th>NOMBRE LOTE </th>
+                                                    <th>NOMBRE DEL LOTE </th>
                                                     <th>REFERENCIA</th>
-                                                    <th>PRECIO LOTE</th>
+                                                    <th>PRECIO DEL LOTE</th>
                                                     <th>EMPRESA</th>
                                                     <th>IMPUESTO</th>
                                                     <th>DESCUENTO</th>
                                                     <th>TOTAL A PAGAR</th>
                                                     <th>COMISIONISTA</th>
-                                                    <th>RFC</th>
                                                     <th>PUESTO</th>
                                                     <th>SEDE</th>
-                                                    <th>FORMA PAGO</th>
+                                                    <th>RFC</th>
+                                                    <th>FORMA DE PAGO</th>
                                                     <th>FECHA DE ENVÍO</th>
                                                     <th>ESTATUS</th> 
                                                     <th>ACCIONES</th>
@@ -180,7 +179,6 @@
             </div>
         </div>
         <?php $this->load->view('template/footer_legend');?>
-    </div>
     </div>
     <?php $this->load->view('template/footer');?>
     <script src="<?= base_url() ?>dist/js/controllers/ventas/general_Intmex.js"></script>

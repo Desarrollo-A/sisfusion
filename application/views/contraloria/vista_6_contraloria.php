@@ -4,6 +4,14 @@
 <body class="">
 	<div class="wrapper ">
 		<?php $this->load->view('template/sidebar'); ?>
+
+		<style>
+		.form-group{
+			padding-bottom: 0!important;
+    		margin: 0!important;
+		}
+	</style>
+
 	<!-- MODALS-->
 		<!-- modal para registrar corrida elaborada-->
 		<div class="modal fade " id="regCorrElab" data-backdrop="static" data-keyboard="false">
@@ -15,13 +23,13 @@
 					<div class="modal-body">
 						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-								<label>Comentario</label>
+								<label class="control-label">Comentario</label>
 								<textarea class="text-modal" name="comentario" id="comentarioregCor" rows="3"></textarea>
 								<br>
 							</div>
 							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-								<label id="tvLbl">Enganche</label>
-								<input class="form-control input-gral" name="totalNeto" id="totalNeto" oncopy="return false" onpaste="return false" type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" autocomplete="off">
+								<label  class="control-label" id="tvLbl">Enganche</label>
+								<input class="form-control input-gral m-0" name="totalNeto" id="totalNeto" oncopy="return false" onpaste="return false" type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" autocomplete="off">
 							</div>
 							<input type="hidden" name="idLote" id="idLoteregCor" >
 							<input type="hidden" name="idCliente" id="idClienteregCor" >
@@ -30,7 +38,6 @@
 							<input type="hidden" name="nombreLote" id="nombreLoteregCor"  >
 						</div>
 					</div>
-
 					<div class="modal-footer"></div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-danger btn-simple" onClick="closeWindow()" data-dismiss="modal">Cancelar</button>
@@ -49,7 +56,7 @@
 					<div class="modal-body">
 						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-								<label>Comentario</label>
+								<label class="control-label">Comentario</label>
 								<textarea class="text-modal" name="motivoRechazo" id="motivoRechazo" rows="3"></textarea>
 								<br>
 							</div>
@@ -92,12 +99,12 @@
 					<div class="modal-body">
 						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-								<label>Comentario</label>
+								<label class="control-label">Comentario</label>
 								<textarea class="text-modal" name="comentario1" id="comentario1" rows="3"></textarea>
 								<br>
 							</div>
 							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-								<label id="tvLbl">Enganche</label>
+								<label class="control-label" id="tvLbl">Enganche</label>
 								<input class="form-control input-gral" name="totalNeto" id="totalNetoR" oncopy="return false" onpaste="return false" type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" autocomplete="off">
 							</div>
 						</div>
@@ -120,12 +127,12 @@
 					<div class="modal-body">
 						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-								<label>Comentario</label>
+								<label class="control-label">Comentario</label>
 								<textarea class="text-modal" name="comentario2" id="comentario2" rows="3"></textarea>
 								<br>
 							</div>
 							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-								<label id="tvLbl">Enganche</label>
+								<label class="control-label" id="tvLbl">Enganche</label>
 								<input class="form-control input-gral" name="totalNeto" id="totalNetoRevA7" oncopy="return false" onpaste="return false" type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" autocomplete="off">
 							</div>
 						</div>
@@ -149,16 +156,16 @@
 					<div class="modal-body">
 						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-								<label>Lote:</label>
+								<label class="control-label">Lote:</label>
 								<input type="text" class="form-control" id="nomLoteFakeenvARevCE" disabled>
 								<br><br>
-								<label>Status Contratación</label>
+								<label class="control-label">Status Contratación</label>
 								<select required="required" name="idStatusContratacion" id="idStatusContratacionenvARevCE" class="selectpicker" data-style="btn" title="SELECCIONA UNA OPCIÓN" data-size="7">
 									<option value="6">  6. Corrida elaborada (Contraloría) </option>
 								</select>
 							</div>
 							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-								<label>Comentario</label>
+								<label class="control-label">Comentario</label>
 								<input type="text" class="text-modal" name="comentario" id="comentarioenvARevCE">
 								<br><br>
 							</div>
@@ -188,12 +195,12 @@
 					<div class="modal-body">
 						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-								<label>Comentario</label>
+								<label class="control-label">Comentario</label>
 								<textarea class="text-modal" name="comentario3" id="comentario3" rows="3"></textarea>
 								<br>
 							</div>
 							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-								<label id="tvLbl">Enganche</label>
+								<label class="control-label" id="tvLbl">Enganche</label>
 								<input class="form-control input-gral" name="totalNeto" id="totalReturn1" oncopy="return false" onpaste="return false" type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" autocomplete="off">
 							</div>
 						</div>
@@ -217,7 +224,7 @@
 					<div class="modal-body">
 						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 overflow-hidden">
-								<label id="tvLbl">Sede</label>
+								<label class="control-label" id="tvLbl">Sede</label>
 								<select required="required" name="ubicacion" id="ubicacion" class="selectpicker select-gral" data-live-search="true" data-container="body" data-style="btn" title="SELECCIONA UNA OPCIÓN" data-size="7">
 								</select>
 							</div>
@@ -276,12 +283,4 @@
 	</div><!--main-panel close-->
 </body>
 <?php $this->load->view('template/footer');?>
-<!--DATATABLE BUTTONS DATA EXPORT-->
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/contraloria/vista_6_contraloria.js"></script>

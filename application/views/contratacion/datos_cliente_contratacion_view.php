@@ -3,31 +3,12 @@
 <body class="">
     <div class="wrapper ">
         <?php
-            switch ($this->session->userdata('id_rol')) {
-                case '2':
-                case '13':
-                case '33':
-                case '17':
-                case '6':
-                case '5':
-                case '3':
-                case '4':
-                case '9':
-                case '11':
-                case '34':
-                case '15':
-                case '13':
-                case '32':
-                case '12':
-                case '40': // COBRANZA
-                case '53': // COBRANZA
-                case '70': // COBRANZA
-                    $this->load->view('template/sidebar');
-                    break;
-                default:
-                    echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-                break;
-            }
+        if (in_array($this->session->userdata('id_rol'), array(2,13,33,17,6,5,3,4,9,11,34,15,13,32,12,40,53,70))){
+            $this->load->view('template/sidebar');
+        }
+        else{
+            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
+        }
         ?>
         <div class="modal fade" id="modal_cancelar_11" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg" role="document">

@@ -141,12 +141,7 @@ maderascrm.gphsis.com
             redirect(base_url());
         }
         switch ($this->session->userdata('id_rol')){
-            case '11': //ADMON
-            case '17': //CONTRALORIA
-            case '55': //POSTVENTA
-            case '56': //COMITE TECNICO
             case '57': //TITULACION
-            case '62': //Proyectos
             $this->load->view('template/header');
             $this->load->view("postventa/notaria");
             break;
@@ -1743,7 +1738,6 @@ maderascrm.gphsis.com
                 $this->load->view('template/header');
                 $this->load->view("postventa/Reportes/reportes");
                 break;
-
             default:
                 echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
                 break;
@@ -2327,120 +2321,8 @@ function saveNotaria(){
         $endDate = $this->input->post("endDate");
         $data = $this->Postventa_model->getData_contraloria($beginDate, $endDate)->result();
         switch ($this->session->userdata('id_rol')){
-            case '17': //CONTRALORIA 
-                $columns = array(
-                    [
-                        "title" => 'Id solicitud',
-                        "data" => 'id_solicitud'
-                    ],
-                    [
-                        "title" => 'Referencia',
-                        "data" => 'referencia'
-                    ],
-                    [
-                        "title" => 'Lote',
-                        "data" => 'nombreLote'
-                    ],
-                    [
-                        "title" => 'Condominio',
-                        "data" => 'nombreCondominio'
-                    ],
-                    [
-                        "title" => 'Residencial',
-                        "data" => 'nombreResidencial'
-                    ],
-                    [
-                        "title" => 'Cliente',
-                        "data" => 'cliente'
-                    ],
-                    [
-                        "title" => 'Nombre a escriturar',
-                        "data" => 'nombre_a_escriturar'
-                    ],
-                    [
-                        "title" => 'Estatus',
-                        "data" => 'estatus'
-                    ],
-                    [
-                        "title" => 'Área',
-                        "data" => 'area'
-                    ],
-                    [
-                        "title" => 'Vigencia',
-                        "data" => 'atrasado'
-                    ],
-                    [
-                        "title" => 'Días de atraso',
-                        "data" => 'diferencia'
-                    ],
-                    [
-                        "title" => 'Fecha del estatus',
-                        "data" => 'fecha_ultima'
-                    ],
-                    [
-                        "title" => 'Ultimo comentario',
-                        "data" => 'descripcion'
-                    ],
-                );
-            break;
-
+            case 17: //CONTRALORIA 
             case 55: //POSTVENTA
-                $columns = array(
-                    [
-                        "title" => 'Id solicitud',
-                        "data" => 'id_solicitud'
-                    ],
-                    [
-                        "title" => 'Referencia',
-                        "data" => 'referencia' 
-                    ],
-                    [
-                        "title" => 'Lote',
-                        "data" => 'nombreLote'
-                    ],
-                    [
-                        "title" => 'Condominio',
-                        "data" => 'nombreCondominio' 
-                    ],
-                    [
-                        "title" => 'Residencial',
-                        "data" => 'nombreResidencial'
-                    ],
-                    [
-                        "title" => 'Cliente',
-                        "data" => 'cliente'
-                    ],
-                    [
-                        "title" => 'Nombre a escriturar',
-                        "data" => 'nombre_a_escriturar'
-                    ],
-                    [
-                        "title" => 'Estatus',
-                        "data" => 'estatus'
-                    ],
-                    [
-                        "title" => 'Área',
-                        "data" => 'area'
-                    ],
-                    [
-                        "title" => 'Vigencia',
-                        "data" => 'atrasado'
-                    ],
-                    [
-                        "title" => 'Días de atraso',
-                        "data" => 'diferencia'
-                    ],
-                    [
-                        "title" => 'Fecha del estatus',
-                        "data" => 'fecha_ultima'
-                    ],
-                    [
-                        "title" => 'Ultimo comentario',
-                        "data" => 'descripcion'
-                    ],
-                );
-            break;
-
             case 57: //TITULACION
                 $columns = array(
                     [
@@ -2464,7 +2346,7 @@ function saveNotaria(){
                         "data" => 'nombreResidencial'
                     ],
                     [
-                        "title" => 'Nombre Cliente',
+                        "title" => 'Cliente',
                         "data" => 'cliente'
                     ],
                     [
@@ -2492,7 +2374,7 @@ function saveNotaria(){
                         "data" => 'fecha_ultima'
                     ],
                     [
-                        "title" => 'Ultimo comentario',
+                        "title" => 'Último comentario',
                         "data" => 'descripcion'
                     ],
                 );

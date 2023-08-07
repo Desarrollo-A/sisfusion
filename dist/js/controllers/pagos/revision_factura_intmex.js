@@ -1,14 +1,13 @@
-var url = "<?=base_url()?>";
-var url2 = "<?=base_url()?>index.php/";
-var totalLeon = 0;
-var totalQro = 0;
-var totalSlp = 0;
-var totalMerida = 0;
-var totalCdmx = 0;
-var totalCancun = 0;
 var tr;
 var tabla_remanente2 ;
-var totaPen = 0;
+
+$('body').tooltip({
+    selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
+    trigger: 'hover',
+    container: 'body'
+}).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
+    $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
+});
 
 function cleanCommentsremanente() {
     var myCommentsList = document.getElementById('comments-list-remanente');
@@ -60,6 +59,9 @@ $('#filtro33').change(function(ruta){
                 var name = response[i]['nombre'];
                 $("#filtro44").append($('<option>').val(id).text(name));
             }
+            if(len<=0){
+            $("#filtro44").append('<option selected="selected" disabled>NO HAY OPCIONES</option>');
+            }
             $("#filtro44").selectpicker('refresh');
         }
     });
@@ -96,7 +98,6 @@ $(document).on("click", ".Pagar", function() {
     </div>`);
 
     $.post(general_base_url+'Pagos/getDesarrolloSelectINTMEX/',{desarrollo:2}, function(data) {
-        $("#desarrolloSelect").append($('<option disabled>').val("default").text("Seleccione una opción"))
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_usuario'];
@@ -153,32 +154,25 @@ $(document).on("click", ".Pagar", function() {
 
 //INICIO TABLA QUERETARO***************************************
 let titulos = [];
-
 $('#tabla_remanente thead tr:eq(0) th').each( function (i) {
     if(i != 0){
         var title = $(this).text();
         titulos.push(title);
-        $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>');
+        $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
         $('input', this).on('keyup change', function() {
             if (tabla_remanente2.column(i).search() !== this.value) {
-                tabla_remanente2
-                .column(i)
-                .search(this.value)
-                .draw();
-
+                tabla_remanente2.column(i).search(this.value).draw();
                 var total = 0;
                 var index = tabla_remanente2.rows({
                 selected: true,
                 search: 'applied'
             }).indexes();
-
                 var data = tabla_remanente2.rows(index).data();
                 $.each(data, function(i, v) {
                     total += parseFloat(v.impuesto);
                 });
-
                 var to1 = formatMoney(total);
-                document.getElementById("totpagarremanente").textContent = formatMoney(total);
+                document.getElementById("totpagarremanente").textContent = formatMoney(numberTwoDecimal(total));
             }
         });
     }
@@ -193,14 +187,16 @@ function getAssimilatedCommissions(proyecto, condominio){
         $.each(json.data, function(i, v) {
             total += parseFloat(v.impuesto);
         });
-        var to = formatMoney(total);
-        document.getElementById("totpagarremanente").textContent = '$' + to;
+        var to = formatMoney(numberTwoDecimal(total));
+        document.getElementById("totpagarremanente").textContent = to;
     });
 
     $("#tabla_remanente").prop("hidden", false);
     tabla_remanente2 = $("#tabla_remanente").DataTable({
-        dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
-        width: 'auto',
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: "100%",
+        scrollX: true,
+        bAutoWidth:true,
         buttons: [{
             text: '<div class="d-flex"><i class="fa fa-check "></i><p class="m-0 pl-1">Marcar como pagado</p></div>',
             action: function() {
@@ -209,7 +205,6 @@ function getAssimilatedCommissions(proyecto, condominio){
                     var idcomision = $(tabla_remanente2.$('input[name="idTQ[]"]:checked')).map(function() {
                         return this.value;
                     }).get();
-                    
                     var com2 = new FormData();
                     com2.append("idcomision", idcomision); 
                     $.ajax({
@@ -230,7 +225,11 @@ function getAssimilatedCommissions(proyecto, condominio){
                                 tabla_remanente2.ajax.reload();
                                 $("#myModalEnviadas .modal-body").html("");
                                 $("#myModalEnviadas").modal();
-                                $("#myModalEnviadas .modal-body").append("<center><img style='width: 75%; height: 75%;' src='<?= base_url('dist/img/send_intmex.gif')?>'><p style='color:#676767;'>Comisiones de esquema <b>asimilados</b>, fueron marcadas como <b>PAGADAS</b> correctamente.</p></center>");
+                                $("#myModalEnviadas .modal-body").append(`
+                                <center>
+                                    <img style='width: 75%; height: 75%;' src="${general_base_url}dist/img/send_intmex.gif">
+                                    <p style='color:#676767;'>Comisiones de esquema <b>asimilados</b>, fueron marcadas como <b>PAGADAS</b> correctamente.</p>
+                                </center>`);
                             }
                             else {
                                 $('#spiner-loader').addClass('hide');
@@ -254,7 +253,7 @@ function getAssimilatedCommissions(proyecto, condominio){
             },
             attr: {
                 class: 'btn btn-azure',
-                style: 'position: relative; float: right;',
+                style: 'position: relative;',
             }
         },
         {
@@ -266,42 +265,8 @@ function getAssimilatedCommissions(proyecto, condominio){
             exportOptions: {
                 columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
                 format: {
-                    header:  function (d, columnIdx) {
-                        if(columnIdx == 0){
-                            return ' '+d +' ';
-                        }else if(columnIdx == 1){
-                            return 'ID PAGO';
-                        }else if(columnIdx == 2){
-                            return 'PROYECTO';
-                        }else if(columnIdx == 3){
-                            return 'CONDOMINIO';
-                        }else if(columnIdx == 4){
-                            return 'NOMBRE LOTE ';
-                        }else if(columnIdx == 5){
-                            return 'REFERENCIA';
-                        }else if(columnIdx == 6){
-                            return 'PRECIO LOTE';
-                        }else if(columnIdx == 7){
-                            return 'EMPRESA';
-                        }else if(columnIdx == 8){
-                            return 'TOT. COMISIÓN';
-                        }else if(columnIdx == 9){
-                            return 'P. CLIENTE';
-                        }else if(columnIdx == 10){
-                            return 'TOT. PAGAR';
-                        }else if(columnIdx == 11){
-                            return 'TIPO VENTA';
-                        }else if(columnIdx == 12){
-                            return 'COMISIONISTA';
-                        }else if(columnIdx == 13){
-                            return 'RFC';
-                        }else if(columnIdx == 14){
-                            return 'PUESTO';
-                        }else if(columnIdx == 15){
-                            return 'FECH. ENVÍO';
-                        }else if(columnIdx != 16 && columnIdx !=0){
-                            return ' '+titulos[columnIdx-1] +' ';
-                        }
+                    header: function (d, columnIdx) {
+                        return ' ' + titulos[columnIdx-1] + ' ';
                     }
                 }
             },
@@ -317,73 +282,61 @@ function getAssimilatedCommissions(proyecto, condominio){
         },
         destroy: true,
         ordering: false,
+        orderable: false,
         columns: [{
-            "width": "3%"
         },
         {
-            "width": "5%",
-            "data": function( d ){
+            data: function( d ){
                 return '<p class="m-0">'+d.id_pago_i+'</p>';
             }
         },
         {
-            "width": "5%",
-            "data": function( d ){
+            data: function( d ){
                 return '<p class="m-0">'+d.proyecto+'</p>';
             }
         },
         {
-            "width": "7%",
-            "data": function( d ){
+            data: function( d ){
                 return '<p class="m-0">'+d.condominio+'</p>';
             }
         },
         {
-            "width": "7%",
-            "data": function( d ){
+            data: function( d ){
                 return '<p class="m-0"><b>'+d.lote+'</b></p>';
             }
         },
         {
-            "width": "7%",
-            "data": function( d ){
+            data: function( d ){
                 return '<p class="m-0">'+d.referencia+'</p>';
             }
         },
         {
-            "width": "7%",
-            "data": function( d ){
-                return '<p class="m-0">$'+formatMoney(d.precio_lote)+'</p>';
+            data: function( d ){
+                return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.precio_lote))+'</p>';
             }
         },
         {
-            "width": "5%",
-            "data": function( d ){
+            data: function( d ){
                 return '<p class="m-0"><b>'+d.empresa+'</p>';
             }
         },
         {
-            "width": "6%",
-            "data": function( d ){
-                return '<p class="m-0">$'+formatMoney(d.comision_total)+'</p>';
+            data: function( d ){
+                return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.comision_total))+'</p>';
             }
         },
         {
-            "width": "5%",
-            "data": function( d ){
-                return '<p class="m-0">$'+formatMoney(d.pago_neodata)+'</p>';
-            }
-        },
-
-        {
-            "width": "6%",
-            "data": function( d ){
-                return '<p class="m-0"><b>$'+formatMoney(d.impuesto)+'</b></p>';
+            data: function( d ){
+                return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.pago_neodata))+'</p>';
             }
         },
         {
-            "width": "6%",
-            "data": function( d ){
+            data: function( d ){
+                return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.impuesto))+'</b></p>';
+            }
+        },
+        {
+            data: function( d ){
                 if(d.lugar_prospeccion == 6){
                     return '<p class="m-0">COMISIÓN + MKTD <br><b> ('+d.porcentaje_decimal+'% de '+d.porcentaje_abono+'%)</b></p>';
                 }
@@ -393,47 +346,32 @@ function getAssimilatedCommissions(proyecto, condominio){
             }
         },
         {
-            "width": "7%",
-            "data": function( d ){
+            data: function( d ){
                 return '<p class="m-0"><b>'+d.usuario+'</b></i></p>';
             }
         },
         {
-            "width": "6%",
-            "data": function( d ){
+            data: function( d ){
                 return '<p class="m-0"><b>'+d.rfc+'</b></i></p>';
             }
         },
         {
-            "width": "7%",
-            "data": function( d ){
+            data: function( d ){
                 return '<p class="m-0"><i> '+d.puesto+'</i></p>';
             }
         },
-
-
         {
-            "width": "7%",
-            "data": function( d ){
+            data: function( d ){
                 var BtnStats1;
                 BtnStats1 =  '<p class="m-0">'+d.fecha_creacion+'</p>';
                 return BtnStats1;
-
             }
         },
         {
-            "width": "7%",
-            "orderable": false,
-            "data": function( data ){
+            data: function( data ){
                 var BtnStats;
-                
                 BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_remanente" title="Detalles">' +'<i class="fas fa-info"></i></button>';
                 return '<div class="d-flex">'+ BtnStats +'</div>';
-                /*
-                +
-
-                '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.id_pago_i+'" data-code="'+data.cbbtton+'" ' + 'class="btn-data btn-orangeYellow cambiar_estatus" title="Pausar solicitud">' + '<span class="material-icons">block</span></button>'
-                */ 
             }
         }],
         columnDefs: [{
@@ -445,7 +383,7 @@ function getAssimilatedCommissions(proyecto, condominio){
             render: function (d, type, full, meta){
                 if(full.estatus == 8){
                     if(full.id_comision){
-                        return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
+                        return '<input type="checkbox" name="idTQ[]" class="individualCheck" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
                     }else{
                         return '';
                     }
@@ -472,22 +410,36 @@ function getAssimilatedCommissions(proyecto, condominio){
 
 
     $("#tabla_remanente tbody").on("click", ".consultar_logs_remanente", function(e){
-
+        $('#spiner-loader').removeClass('hide');
         e.preventDefault();
         e.stopImmediatePropagation();
-
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
-
         $("#seeInformationModalremanente").modal();
-        $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
+        $("#nameLote").append('<p><h5">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $.getJSON(general_base_url+"Pagos/getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
-                $("#comments-list-remanente").append('<div class="col-lg-12"><p><i style="color:gray;">'+v.comentario+'</i><br><b style="color:#3982C0">'+v.fecha_movimiento+'</b><b style="color:gray;"> - '+v.nombre_usuario+'</b></p></div>');
+                $("#comments-list-remanente").append('<li>\n' +
+                '  <div class="container-fluid">\n' +
+                '    <div class="row">\n' +
+                '      <div class="col-md-6">\n' +
+                '        <a><b> ' +v.comentario.toUpperCase()+ '</b></a><br>\n' +
+                '      </div>\n' +
+                '      <div class="float-end text-right">\n' +
+                '        <a>' + v.fecha_movimiento.split(".")[0] + '</a>\n' +
+                '      </div>\n' +
+                '      <div class="col-md-12">\n' +
+                '        <p class="m-0"><small>Usuario: </small><b> ' + v.nombre_usuario + '</b></p>\n'+
+                '      </div>\n' +
+                '    <h6>\n' +
+                '    </h6>\n' +
+                '    </div>\n' +
+                '  </div>\n' +
+                '</li>');         
             });
+        $('#spiner-loader').addClass('hide');
         });
     });
-
 
     $('#tabla_remanente').on('click', 'input', function() {
         tr = $(this).closest('tr');
@@ -501,16 +453,13 @@ function getAssimilatedCommissions(proyecto, condominio){
             totaPen -= parseFloat(row.pa);
             row.pa = 0;
         }
-
-        $("#totpagarPen").html(formatMoney(totaPen));
+        $("#totpagarPen").html(formatMoney(numberTwoDecimal(totaPen)));
     });
 
     $("#tabla_remanente tbody").on("click", ".cambiar_estatus", function(){
         var tr = $(this).closest('tr');
         var row = tabla_remanente2.row( tr );
-
         id_pago_i = $(this).val();
-
         $("#modal_nuevas .modal-body").html("");
         $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><p>¿Está seguro de pausar la comisión de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b> <i>'+row.data().usuario+'</i>?</p></div></div>');
         $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><input type="text" class="form-control observaciones" name="observaciones" required placeholder="Describe mótivo por el cual se pauso la solicitud"></input></div></div>');
@@ -533,15 +482,11 @@ function getAssimilatedCommissions(proyecto, condominio){
     $("#tabla_remanente tbody").on("click", ".consultar_documentos", function(){
         id_com = $(this).val();
         id_pj = $(this).attr("data-personalidad");
-
         $("#seeInformationModal").modal();
-
         $.getJSON( general_base_url + "Pagos/getDatosDocumentos/"+id_com+"/"+id_pj).done( function( data ){
             $.each( data, function( i, v){
-
                 $("#seeInformationModal .documents").append('<div class="row">');
                 if (v.estado == "NO EXISTE"){
-
                     $("#seeInformationModal .documents").append('<div class="col-md-7"><label style="font-size:10px; margin:0; color:gray;">'+(v.nombre).substr(0, 52)+'</label></div><div class="col-md-5"><label style="font-size:10px; margin:0; color:gray;">(No existente)</label></div>');
                 }
                 else{
@@ -552,38 +497,22 @@ function getAssimilatedCommissions(proyecto, condominio){
         });
 
         $.getJSON( general_base_url + "Pagos/getDatosFactura/"+id_com).done( function( data ){
-
             $("#seeInformationModal .facturaInfo").append('<div class="row">');
             if (!data.datos_solicitud['id_factura'] == '' && !data.datos_solicitud['id_factura'] == '0'){
-
                 $("#seeInformationModal .facturaInfo").append('<BR><div class="col-md-12"><label style="font-size:14px; margin:0; color:gray;"><b>NOMBRE EMISOR</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['nombre']+' '+data.datos_solicitud['apellido_paterno']+' '+data.datos_solicitud['apellido_materno']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
                 $("#seeInformationModal .facturaInfo").append('<div class="col-md-4"><label style="font-size:14px; margin:0; color:gray;"><b> LOTE</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['nombreLote']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
                 $("#seeInformationModal .facturaInfo").append('<div class="col-md-4"><label style="font-size:14px; margin:0; color:gray;"><b>TOTAL FACT.</b></label><br><label style="font-size:12px; margin:0; color:gray;">$ '+data.datos_solicitud['total']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
                 $("#seeInformationModal .facturaInfo").append('<div class="col-md-4"><label style="font-size:14px; margin:0; color:gray;"><b>MONTO COMSN.</b></label><br><label style="font-size:12px; margin:0; color:gray;">$ '+data.datos_solicitud['porcentaje_dinero']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
                 $("#seeInformationModal .facturaInfo").append('<div class="col-md-4"><label style="font-size:14px; margin:0; color:gray;"><b>FOLIO</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['folio_factura']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
                 $("#seeInformationModal .facturaInfo").append('<div class="col-md-4"><label style="font-size:14px; margin:0; color:gray;"><b>FECHA FACTURA</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['fecha_factura']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
                 $("#seeInformationModal .facturaInfo").append('<div class="col-md-4"><label style="font-size:14px; margin:0; color:gray;"><b>FECHA CAPTURA</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['fecha_ingreso']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
                 $("#seeInformationModal .facturaInfo").append('<div class="col-md-3"><label style="font-size:14px; margin:0; color:gray;"><b>MÉTODO</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['metodo_pago']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
                 $("#seeInformationModal .facturaInfo").append('<div class="col-md-3"><label style="font-size:14px; margin:0; color:gray;"><b>RÉGIMEN F.</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['regimen']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
                 $("#seeInformationModal .facturaInfo").append('<div class="col-md-3"><label style="font-size:14px; margin:0; color:gray;"><b>FORMA P.</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['forma_pago']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
                 $("#seeInformationModal .facturaInfo").append('<div class="col-md-3"><label style="font-size:14px; margin:0; color:gray;"><b>CFDI</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['cfdi']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
                 $("#seeInformationModal .facturaInfo").append('<div class="col-md-3"><label style="font-size:14px; margin:0; color:gray;"><b>UNIDAD</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['unidad']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
                 $("#seeInformationModal .facturaInfo").append('<div class="col-md-3"><label style="font-size:14px; margin:0; color:gray;"><b>CLAVE PROD.</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['claveProd']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
                 $("#seeInformationModal .facturaInfo").append('<div class="col-md-6"><label style="font-size:14px; margin:0; color:gray;"><b>UUID</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['uuid']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-
                 $("#seeInformationModal .facturaInfo").append('<div class="col-md-12"><label style="font-size:14px; margin:0; color:gray;"><b>DESCRIPCIÓN</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['descripcion']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
             }
             else {
@@ -603,16 +532,6 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 $(window).resize(function(){
     tabla_remanente2.columns.adjust();
 });
-
-function formatMoney( n ) {
-    var c = isNaN(c = Math.abs(c)) ? 2 : c,
-    d = d == undefined ? "." : d,
-    t = t == undefined ? "," : t,
-    s = n < 0 ? "-" : "",
-    i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
-    j = (j = i.length) > 3 ? j % 3 : 0;
-    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
-};
 
 function cancela(){
     $("#modal_nuevas").modal('toggle');
@@ -644,7 +563,6 @@ $("#form_interes").submit( function(e) {
                     }, 3000);
                 }else{
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
-
                 }
             },error: function( ){
                 alert("ERROR EN EL SISTEMA");
@@ -658,7 +576,6 @@ $("#form_refresh").submit( function(e) {
     e.preventDefault();
 }).validate({
     submitHandler: function( form ) {
-
         var data = new FormData( $(form)[0] );
         console.log(data);
         data.append("id_pago_i", id_pago_i);
@@ -680,7 +597,6 @@ $("#form_refresh").submit( function(e) {
                     }, 3000);
                 }else{
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
-
                 }
             },error: function( ){
                 alert("ERROR EN EL SISTEMA");
@@ -693,7 +609,6 @@ $("#form_despausar").submit( function(e) {
     e.preventDefault();
 }).validate({
     submitHandler: function( form ) {
-
         var data = new FormData( $(form)[0] );
         console.log(data);
         data.append("id_pago_i", id_pago_i);
@@ -716,7 +631,6 @@ $("#form_despausar").submit( function(e) {
                     }, 3000);
                 }else{
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
-
                 }
             },error: function( ){
                 alert("ERROR EN EL SISTEMA");
@@ -724,7 +638,6 @@ $("#form_despausar").submit( function(e) {
         });
     }
 });
-
 
 function preview_info(archivo){
     $("#documento_preview .modal-dialog").html("");
@@ -753,24 +666,52 @@ function preview_info(archivo){
         $("#documento_preview .modal-dialog").append(elemento);
     }
 }
-
+// Selección de CheckBox
+$(document).on("click", ".individualCheck", function() {
+    totaPen = 0;
+    tabla_remanente2.$('input[type="checkbox"]').each(function () {
+        let totalChecados = tabla_remanente2.$('input[type="checkbox"]:checked') ;
+        let totalCheckbox = tabla_remanente2.$('input[type="checkbox"]');
+        if(this.checked){
+            tr = this.closest('tr');
+            row = tabla_remanente2.row(tr).data();
+            totaPen += parseFloat(row.impuesto); 
+        }
+        // Al marcar todos los CheckBox Marca CB total
+        if( totalChecados.length == totalCheckbox.length )
+            $("#all").prop("checked", true);
+        else 
+            $("#all").prop("checked", false); // si se desmarca un CB se desmarca CB total
+    });
+    $("#totpagarPen").html(formatMoney(numberTwoDecimal(totaPen)));
+});
+    // Función de selección total
 function selectAll(e) {
     tota2 = 0;
-    $(tabla_remanente2.$('input[type="checkbox"]')).each(function (i, v) {
-        if (!$(this).prop("checked")) {
-            $(this).prop("checked", true);
-            tota2 += parseFloat(tabla_remanente2.row($(this).closest('tr')).data().impuesto);
-        } else {
-            $(this).prop("checked", false);
-        }
-        $("#totpagarPen").html(formatMoney(tota2));
-    });
+    if(e.checked == true){
+        $(tabla_remanente2.$('input[type="checkbox"]')).each(function (i, v) {
+            tr = this.closest('tr');
+            row = tabla_remanente2.row(tr).data();
+            tota2 += parseFloat(row.impuesto);
+            if(v.checked == false){
+                $(v).prop("checked", true);
+            }
+        }); 
+        $("#totpagarPen").html(formatMoney(numberTwoDecimal(tota2)));
+    }
+    if(e.checked == false){
+        $(tabla_remanente2.$('input[type="checkbox"]')).each(function (i, v) {
+            if(v.checked == true){
+                $(v).prop("checked", false);
+            }
+        }); 
+        $("#totpagarPen").html(formatMoney(0));
+    }
 }
 
 function cleanComments(){
     var myCommentsList = document.getElementById('documents');
     myCommentsList.innerHTML = '';
-
     var myFactura = document.getElementById('facturaInfo');
     myFactura.innerHTML = '';
 }
@@ -800,12 +741,10 @@ $("#form_multiples").submit( function(e) {
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
                 }
                 $('#loader').addClass('hidden');
-
             },error: function( ){
                 CloseModalDelete2();
                 alert("ERROR EN EL SISTEMA");
                 $('#loader').addClass('hidden');
-
             }
         });
     }
@@ -816,7 +755,6 @@ $(document).ready( function(){
         $(".report_empresa").html();
         $.each( data, function( i, v){
             $(".report_empresa").append('<div class="col xol-xs-3 col-sm-3 col-md-3 col-lg-3"><label style="color: #00B397;">&nbsp;'+v.empresa+': $<input style="border-bottom: none; border-top: none; border-right: none;  border-left: none; background: white; color: #00B397; font-weight: bold;" value="'+formatMoney(v.porc_empresa)+'" disabled="disabled" readonly="readonly" type="text"  name="myText_FRO" id="myText_FRO"></label></div>');
-
         });
     });
 });
