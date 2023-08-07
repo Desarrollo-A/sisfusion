@@ -1718,7 +1718,7 @@ class Asesor extends CI_Controller
                 ) {
                     $tipoViviendaCopArray[$i] = 5;
                 } else {
-                    $tipoViviendaCopArray[$i] = $this->input->post("tipo_vivienda_cop" . $i . "[]");
+                    $tipoViviendaCopArray[$i] = $this->input->post("tipo_vivienda_cop" . $i . "[]")[0];
                 }
             }
         }
@@ -2843,6 +2843,7 @@ class Asesor extends CI_Controller
 
                         if ($updCoprop) {
                             echo json_encode(['code' => 200]);
+                            return;
                         }
                     }
 
