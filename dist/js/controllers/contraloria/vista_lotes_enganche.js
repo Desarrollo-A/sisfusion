@@ -31,19 +31,19 @@ function llenarSelectPrincipal(){
         break;
         case 2754: //Gabriela Hernández Tovar vista_lotes_enganche_sede
             subtitulo = "En esta vista podrás hacer la actualización del enganche y ubicación de un lote apartado.";
-            $('#modificacion').append('<option value="Ubicacion">Ubicacion</option>');
+            $('#modificacion').append('<option value="Ubicacion">Ubicación</option>');
             $('#modificacion').append('<option value="Enganche">Enganche</option>');
             document.getElementById('selects').innerHTML = ubicacion + enganche;
         break;
         case 2749: //Ariadna Martínez vista_lotes_sede
             subtitulo = "En esta vista podrás hacer la actualización de la ubicación de un lote apartado.";
-            $('#modificacion').append('<option value="Ubicacion">Ubicacion</option>');  
+            $('#modificacion').append('<option value="Ubicacion">Ubicación</option>');  
             document.getElementById('selects').innerHTML = ubicacion;      
         break;
         case 1297: //María de Jesús
         case 826: //Victor Hugo vista_lotes_apartados
         subtitulo = "En esta vista podrás hacer la actualización del precio total con descuentos, enganche y ubicación de un lote apartado.";
-        $('#modificacion').append('<option label="dsfsdf" value="Ubicacion">Ubicacion</option>');
+        $('#modificacion').append('<option label="dsfsdf" value="Ubicacion">Ubicación</option>');
         $('#modificacion').append('<option value="Precio">Precio total con descuento</option>');
         $('#modificacion').append('<option value="Enganche">Enganche</option>');
         document.getElementById('selects').innerHTML = ubicacion + enganche + precio;
@@ -51,10 +51,11 @@ function llenarSelectPrincipal(){
     }
 }
 
-
+let titulos = [];
 $('#tabla_historial thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
-    $(this).html('<input type="text" style="width:100%; background:#003D82; color:white; border: 0; font-weight: 500;" class="textoshead" data-toggle="tooltip" data-placement="top"  placeholder="'+title+'"/>' );
+    titulos.push(title);
+    $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
     $( 'input', this ).on('keyup change', function () {
         if ($('#tabla_historial').DataTable().column(i).search() !== this.value ) {
             $('#tabla_historial').DataTable().column(i).search(this.value).draw();
@@ -65,7 +66,7 @@ $('#tabla_historial thead tr:eq(0) th').each( function (i) {
 
 $(document).ready(function(){
     llenarSelectPrincipal();
-    $.post(url + "Contraloria/lista_proyecto", function(data) {
+    $.post(general_base_url + "Contraloria/lista_proyecto", function(data) {
         var len = data.length;
         for( var i = 0; i<len; i++)
         {
@@ -75,18 +76,15 @@ $(document).ready(function(){
         }
         $("#proyecto").selectpicker('refresh');
     }, 'json'); 
-
 document.getElementById('subtitulo').innerHTML = subtitulo;
-
 });
 
 $('#proyecto').change( function() {
     index_proyecto = $(this).val();
     $("#condominio").html("");
     $(document).ready(function(){
-        $.post(url + "Contraloria/lista_condominio/"+index_proyecto, function(data) {
+        $.post(general_base_url + "Contraloria/lista_condominio/"+index_proyecto, function(data) {
             var len = data.length;
-            $("#condominio").append($('<option disabled selected>SELECCIONA UN CONDOMINIO</option>'));
             for( var i = 0; i<len; i++)
             {
                 var id = data[i]['idCondominio'];
@@ -103,9 +101,8 @@ $('#condominio').change( function() {
     index_condominio = $(this).val();
     $("#lote").html("");
     $(document).ready(function(){
-        $.post(url + "Contraloria/lista_lote_apartado/"+index_condominio, function(data) {
+        $.post(general_base_url + "Contraloria/lista_lote_apartado/"+index_condominio, function(data) {
             var len = data.length;
-            $("#lote").append($('<option disabled selected>SELECCIONA UN LOTE</option>'));
             for( var i = 0; i<len; i++)
             {
                 var id = data[i]['idLote'];
@@ -118,19 +115,22 @@ $('#condominio').change( function() {
 });
 
 $('#lote').change( function() {
-    
+    $('#tabla_historial').removeClass('hide');
     llenarSelectPrincipal();    
     index_lote = $(this).val();
     tabla_expediente = $("#tabla_historial").DataTable({
-        dom: 'Brt'+ "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: "100%",
+        scrollX: true,
+        bAutoWidth:true,
         destroy: true,
-        "buttons": [
+        buttons: [
             
         ],
-        "ajax":
+        ajax:
             {
-                "url": url2+'Contraloria/get_lote_historial/'+index_lote,
-                "dataSrc": ""
+                url: general_base_url+'Contraloria/get_lote_historial/'+index_lote,
+                dataSrc: ""
             },
         language: {
             url: general_base_url+"static/spanishLoader_v2.json",
@@ -139,23 +139,19 @@ $('#lote').change( function() {
                 next: "<i class='fa fa-angle-right'>"
             }
         },
-        "ordering": false,
-        "searching": true,
-        "paging": true,
-
-        "bAutoWidth": false,
-        "bLengthChange": false,
-        "scrollX": true,
-        "bInfo": true,
-        "fixedColumns": true,
-
-        "columns":
+        ordering: false,
+        searching: true,
+        paging: true,
+        bLengthChange: false,
+        bInfo: true,
+        fixedColumns: true,
+        columns:
             [
-                {data: 'nombreLote'},
-                {'data': function (d) {
+                {data: function (d) {
                         return d.idLote
                     } 
                 },
+                {data: 'nombreLote'},
                 {data: 'cliente'},
                 {data: 'fechaApartado'},
                 {data: 'asesor'},
@@ -168,17 +164,15 @@ $('#lote').change( function() {
                 {data: 'lote'},
                 {data: 'contratacion'},
                 {
-                    "data": function(d){
+                    data: function(d){
                         $('[data-toggle="tooltip"]').tooltip();
                         opciones = `<center><button id="modificar" data-toggle="tooltip" data-placement="top" data-bandera9=${d.validacion_estatus_9} data-registroComision=${d.registro_comision} data-idLote=${d.idLote} class="btn-data btn-orangeYellow" data-toggle="tooltip" data-placement="top" title="Modificar"><i class="far fa-edit"></i></button></center>`;
                         return opciones;
-
                     }
                 }
             ]
     });
     $('[data-toggle="tooltip"]').tooltip();
-
 });
 
 $(document).on('click', '#modificar', function () {
@@ -186,8 +180,6 @@ $(document).on('click', '#modificar', function () {
     let bandera9 = $(this).attr("data-bandera9");
     let banderaComision = $(this).attr("data-registroComision");
     selectobject=document.getElementById("modificacion").getElementsByTagName("option");
-   //console.log( selectobject.findIndex((element) => element.innerHTML == 'Precio'))
-    //selectobject[3].disabled=true;
     let engancheContra = data.engancheContra;
     let ubicacionContra = data.ubicacion;
     getLoteApartado(data.idLote);
@@ -198,21 +190,19 @@ $(document).on('click', '#modificar', function () {
     ubicacionContra == null || ubicacionContra == 0 ? $("#modificacion option[value='Ubicacion']").prop("disabled",true) : '';
     if(bandera9 == 1 && (banderaComision  == 8 || banderaComision == 0)){
         //TIENE ESTATUS 9 REGISTRADO Y RECESIÓN O NUEVA COMISIÓN => SI SE PUEDE ACTUALIZAR PRECIO
-                 $("#modificacion option[value='Precio']").prop("disabled",false);
-                 $('#modificacion').selectpicker('refresh');
+        $("#modificacion option[value='Precio']").prop("disabled",false);
+        $('#modificacion').selectpicker('refresh');
     }else if(bandera9 == 1 && (banderaComision  != 8 && banderaComision != 0)){
         //TIENE ESTATUS 9 REGISTRADO Y COMISIÓN ACTIVA => NO SE PUEDE MODIFICAR PRECIO LOTE
-            $("#modificacion option[value='Precio']").prop("disabled",true);
-            $('#modificacion').selectpicker('refresh');
-            $('#preciodesc').prop("disabled",true);
-
+        $("#modificacion option[value='Precio']").prop("disabled",true);
+        $('#modificacion').selectpicker('refresh');
+        $('#preciodesc').prop("disabled",true);
     }else if(bandera9 != 1 && (banderaComision  == 8 || banderaComision == 0 )){
         //NO SE TIENE ESTATUS 9 REGISTRADO Y LA COMISIÓN ES NUEVA O TIENE UNA RECESIÓN => NO SE PUEDE MODIFICAR EL PRECIO DEL LOTE 
         $("#modificacion option[value='Precio']").prop("disabled",true);
-            $('#modificacion').selectpicker('refresh');
-            $('#preciodesc').prop("disabled",true);
+        $('#modificacion').selectpicker('refresh');
+        $('#preciodesc').prop("disabled",true);
     }else{
-
     }
     $("#modal_aprobar").modal();
 });
@@ -266,7 +256,6 @@ $(document).on("submit", "#form_modificacion", function (e) {
     data.append('saldo', $('#preciodesc').val() == '' || document.getElementById('preciodesc') == null ? null : $('#preciodesc').val());
     data.append('enganche', $('#enganches').val() == '' || document.getElementById('enganches') == null ? null : $('#enganches').val());
     data.append('ubicacion', $('#ubicacion_sede').val() == '' || document.getElementById('ubicacion_sede') == null ? null : $('#ubicacion_sede').val());
-    
     $.ajax({
         url: "updateLotePrecioEnganche",
         data: data,
@@ -282,10 +271,11 @@ $(document).on("submit", "#form_modificacion", function (e) {
         }
     });
 });
+
 var sedes = [];
 $(document).ready(function(){
     $("#ubicacion_sede").empty().selectpicker('refresh');
-    $.post(url + "Contraloria/lista_sedes", function(data) {
+    $.post(general_base_url + "Contraloria/lista_sedes", function(data) {
         var len = data.length;
         $("#ubicacion_sede").append($('<option disabled selected>').val("").text("Seleccione una opción"));
         for( var i = 0; i<len; i++)
@@ -300,7 +290,6 @@ $(document).ready(function(){
         }
         $("#ubicacion_sede").selectpicker('refresh');
     }, 'json');
-
 });
 
 function llenarSelectUbicacion() {
