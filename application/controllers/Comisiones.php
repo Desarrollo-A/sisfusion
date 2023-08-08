@@ -4764,20 +4764,14 @@ public function getDatosHistorialPagoEstatus($proyecto, $condominio, $usuario) {
                     
                     $comision_total[$i] = $totalNeto2 * (($porcentaje[$i] + $PorcentajeAsumar) / 100 );  
                     $porcentaje[$i] = $porcentaje[$i] + $PorcentajeAsumar;
-                   
                   }
 
                   if($id_rol[$i] == 1){
                     $pivote=str_replace($replace,"",$comision_total[$i]);
                   }
-                  // echo "Entra rol"+$id_rol[$i];
-
                   if($penalizacion == 1 && ($id_rol[$i] == 3 || $id_rol[$i] == 7 || $id_rol[$i] == 9)){
-
-                    // echo "Entra a penalizacion";
                     $respuesta =  $this->Comisiones_model->InsertNeoPenalizacion($lote_1,$id_usuario[$i],str_replace($replace,"",$comision_total[$i]),$this->session->userdata('id_usuario'),$porcentaje[$i],str_replace($replace,"",$comision_dar[$i]),str_replace($replace,"",$pago_neo),$id_rol[$i],$idCliente,$tipo_venta_insert,$nombreLote);
                   }else{
-                    // echo "Normal";
                     $respuesta =  $this->Comisiones_model->InsertNeo($lote_1,$id_usuario[$i],str_replace($replace,"",$comision_total[$i]),$this->session->userdata('id_usuario'),$porcentaje[$i],str_replace($replace,"",$comision_dar[$i]),str_replace($replace,"",$pago_neo),$id_rol[$i],$idCliente,$tipo_venta_insert);
                   }
                 
