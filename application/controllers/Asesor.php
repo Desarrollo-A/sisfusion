@@ -2854,6 +2854,14 @@ class Asesor extends CI_Controller
                     echo json_encode(['code' => 200]);
                 }
             } else {
+                if (count($idCopArray) > 0) {
+                    for ($i = 0; $i < sizeof($idCopArray); $i++) {
+                        $this->db->query("UPDATE copropietarios SET correo = '" . $emailCopArray[$i] . "', telefono = '" . $telefono1CopArray[$i] . "', telefono_2 = '" . $telefono2CopArray[$i] . "', fecha_nacimiento = '" . $fNacimientoCopArray[$i] . "', nacionalidad = '" . $nacionalidadCopArray[$i] . "', originario_de = '" . $originarioCopArray[$i] . "', domicilio_particular = '" . $idParticularCopArray[$i] . "', estado_civil = '" . $eCivilCopArray[$i] . "', conyuge = '" . $conyugeCopArray[$i] . "', regimen_matrimonial = '" . $rMatrimonialCopArray[$i] . "', ocupacion = '" . $ocupacionCopArray[$i] . "', posicion = '" . $puestoCopArray[$i] . "', empresa = '" . $empresaCopArray[$i] . "', antiguedad = '" . $antiguedadCopArray[$i] . "', edadFirma = '" . $edadFirmaCopArray[$i] . "', direccion = '" . $domEmpCopArray[$i] . "',
+                                rfc='" . $rfcCopArray[$i] . "',  tipo_vivienda=" . $tipoViviendaCopArray[$i] . "
+                            WHERE id_copropietario = " . $idCopArray[$i]);
+                    }
+                }
+
                 if ($this->Asesor_model->editaRegistroClienteDS_2($id_cliente, $arreglo_cliente, $arreglo_ds)) {
                     if (count($checkIfRefExist) <= 0) {
                         $arreglo_referencia2["id_cliente"] = $id_cliente;
