@@ -3473,7 +3473,7 @@ function getDatosNuevasmkContraloria(){
                 $filtro = "WHERE pci1.estatus IN (8) ";
             }
             else{
-                $filtro = "WHERE pci1.estatus IN (13,8) ";
+                $filtro = "WHERE pci1.estatus IN (13) ";
             }
 
 
