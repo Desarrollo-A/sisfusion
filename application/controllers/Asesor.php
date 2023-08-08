@@ -4925,5 +4925,19 @@ class Asesor extends CI_Controller
         $caracteres_permitidos = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         return substr(str_shuffle($caracteres_permitidos), 0, $longitud);
     }
+
+    function diccionarioResidenciales() {
+        $this->load->view('template/header');
+        $this->load->view('asesor/diccionarioResidenciales_view');
+    }
+
+    function getResidenciales()
+    {
+        $data = $this->General_model->getResidenciales();
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
 }
 ?>
