@@ -277,7 +277,6 @@ $(document).ready(function(){
     $("#ubicacion_sede").empty().selectpicker('refresh');
     $.post(general_base_url + "Contraloria/lista_sedes", function(data) {
         var len = data.length;
-        $("#ubicacion_sede").append($('<option disabled selected>').val("").text("Seleccione una opción"));
         for( var i = 0; i<len; i++)
         {
             var id = data[i]['id_sede'];
@@ -296,7 +295,6 @@ function llenarSelectUbicacion() {
     console.log(sedes)
     $("#ubicacion_sede").empty().selectpicker('refresh');
     var len = sedes.length;
-    $("#ubicacion_sede").append($('<option disabled selected>').val("").text("Seleccione una opción"));
     for( var i = 0; i<len; i++)
     {
         var id = sedes[i].id;
