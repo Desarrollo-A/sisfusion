@@ -49,6 +49,36 @@ class ServicesCRM extends CI_Controller
        echo base64_encode(json_encode($data));
     }
 
+    function codificarTest(){
+        $miJson = array(
+            "rfc"=>"CACE950817RRf",
+            "id_rol"=> 3,
+            "id_lider"=>1695,
+            "id_gerente" => 456,
+            "id_subdirector" => 789,
+            "id_regional" => 321,
+            "nombre" => "María de Jesús",
+            "apellido_paterno" => "Garduño",
+            "apellido_materno" => "Martinez",
+            "forma_pago" => 2,
+            "correo" => "garmar@gmail.com",
+            "telefono" => 442210616,
+            "id_sede" => 3,
+            "usuario" => "mgarmar" ,
+            "contrasena" => "123456",
+            "creado_por" => 5,
+            "sedech" => 1,
+            "sucursalch" => 1,
+            "status_contratacion" => 1,
+            "nacionalidad" => "MEX"
+
+        ) ;
+        $ok1 = json_encode($miJson);
+        $ok2 = utf8_decode($ok1);
+        print_r(base64_encode($ok2));
+
+
+    }
     public function saveUserCH()
     {
             $objDatos = json_decode(utf8_encode(base64_decode(file_get_contents("php://input"))), true);
@@ -67,12 +97,17 @@ class ServicesCRM extends CI_Controller
                 $id_subdirector=0;
                 $id_regional=0;
                 $id_lider=0;
+                $mensajeLeyenda = '';
                 if($objDatos['id_rol'] == 7){
                     //Asesor
                     $id_lider  = $objDatos['id_lider'];
                     $id_gerente=$getLider[0]['id_gerente'];
                     $id_subdirector=$getLider[0]['id_subdirector'];
                     $id_regional=$getLider[0]['id_regional'];
+                    $mensajeLeyenda = 'No se pueden añadir más asesores';
+//                    echo 'validación de rol 7<br><br>';
+//                    print_r($getLider);
+//                    exit;
                 }
                 else if($objDatos['id_rol'] == 9){
                     //Coordinador
@@ -80,6 +115,9 @@ class ServicesCRM extends CI_Controller
                     $id_gerente=$objDatos['id_lider'];
                     $id_subdirector=$getLider[0]['id_subdirector'];
                     $id_regional=$getLider[0]['id_regional'];
+                    $mensajeLeyenda = 'No se pueden añadir más coordinadores';
+//                    echo 'validación de rol 9';
+//                    exit;
                 }
                 else if($objDatos['id_rol'] == 3){
                     //Gerente
@@ -87,7 +125,39 @@ class ServicesCRM extends CI_Controller
                     $id_gerente=0;
                     $id_subdirector=0;//$getLider[0]['id_subdirector'];
                     $id_regional=0;//$getLider[0]['id_regional'];
+                    $mensajeLeyenda = 'No se pueden añadir más gerentes';
+//                    echo 'validación de rol 3';
+//                    exit;
                 }
+
+//                print_r($id_lider);
+//                echo '<br><br>';
+//                print_r($id_gerente);
+//                echo '<br><br>';
+//                print_r($id_subdirector);
+//                echo '<br><br>';
+//                print_r($id_regional);
+//                echo '<br><br>';
+                $dataValidar = array(
+                    "id_sede" => $objDatos['id_sede'],
+                    "id_rol" => $objDatos['id_rol'],
+                    "id_lider" => $id_lider,
+                    "gerente_id" => $id_gerente,
+                    "subdirector_id" => $id_subdirector,
+                    "regional_id" => $id_regional,
+                );
+//                $validacion = $this->validateUserVts($dataValidar);
+                $validacion = validateUserVts($dataValidar);
+                if($validacion==1){
+                    //continuar con la lógica
+                }else{
+                    echo base64_encode(json_encode(array("result" => false,
+                        "code" => 0,
+                        "message" => $mensajeLeyenda)));
+                    exit;
+                }
+
+
                 $data = array(
                     "nombre" => $this->formatter->eliminar_tildes(strtoupper(trim($objDatos['nombre']))),
                     "apellido_paterno" => $this->formatter->eliminar_tildes(strtoupper(trim($objDatos['apellido_paterno']))),
@@ -129,7 +199,7 @@ class ServicesCRM extends CI_Controller
                         echo base64_encode(json_encode(array("result" => $response,
                         "message" => "Ok")));
                         }else{
-                        echo base64_encode(json_encode($response));      
+                        echo base64_encode(json_encode($response));
                         }    
                 }
             }

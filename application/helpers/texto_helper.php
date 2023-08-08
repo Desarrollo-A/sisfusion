@@ -98,4 +98,52 @@ use PHPMailer\PHPMailer\PHPMailer;
 	    }
 	    return $resp;
 	}
+
+    function validateUserVts($dataValidate){
+    $id_sede = $dataValidate["id_sede"];
+    $id_rol = $dataValidate["id_rol"];
+    $id_lider = $dataValidate["id_lider"];
+    $maxAsesores=0;
+    $maxCoordinador=10;
+    $maxGerente=10;
+    $respuesta = 0;
+
+
+    $CI =& get_instance();
+    $CI->load->model('Services_model');
+
+    $colabsData = $CI->Services_model->countColabsByRol($id_rol, $id_sede, $id_lider);
+    switch ($id_rol){
+        case 7:
+            if($id_sede == 4){
+                //si es CDMX debe dejar 40 asesores
+                $maxAsesores = 40;
+            }else{
+                $maxAsesores = 20;
+            }
+            if(count($colabsData) < $maxAsesores){
+                //si puede ingresar más asesores
+                $respuesta = 1;
+            }else{
+                //no puede ingresar más asesores
+                $respuesta = 0;
+            }
+            break;
+        case 3:
+        case 9:
+            if(count($colabsData) < (($id_rol==9) ? $maxCoordinador : $maxGerente)){
+                //si puede ingresar Coordinadores o gerente
+                $respuesta = 1;
+            }else{
+                //no puede ingresar más Coordinadores o gerente
+                $respuesta = 0;
+            }
+            break;
+        default:
+            break;
+    }
+
+    return $respuesta;
+}
+
 ?>
