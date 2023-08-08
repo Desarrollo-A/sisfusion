@@ -72,12 +72,21 @@
 	$(document).ready(function() {
 		demo.initDashboardPageCharts();
 		demo.initVectorMap();
+        <?php
+        //comentar este fragmento de codigo para NO mostrar el mensaje de aviso
+        if(in_array($this->session->userdata('id_rol'), array(17, 70, 7, 9, 3, 6, 2, 5, 4, 8))){
+            if ($this->session->userdata('no_show_modal_info')==0) {
+                echo '$("#avisoNovedades").modal("toggle");';
+            }
+        }
+        ?>
 	});
 
     function validaCheckSession(){
         if($('#no_mostrar_session:checkbox:checked').length > 0)
         {
             $.post('<?=base_url()?>index.php/Login/noShowModalSession',  function(data) {
+
             });
             <?php echo "console.log(".$this->session->userdata('no_show_modal_info').");";?>
         }
