@@ -4066,11 +4066,6 @@ class Asesor extends CI_Controller
         $fileName = $_FILES['docArchivo1']['name'];
         $fileSize = $_FILES['docArchivo1']['size'];
         $fileType = $_FILES['docArchivo1']['type'];
-        // echo( $fileTmpPath);
-        echo( $fileName);
-        // echo( $fileSize);
-        // echo( $fileType);
-
         $fileNameCmps = explode(".", $fileName);
         $fileExtension = strtolower(end($fileNameCmps));
         $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
