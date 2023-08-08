@@ -41,7 +41,7 @@ $("#tabla_bono_revision").ready(function() {
             action: function(){
                 if ($('input[name="idTQ[]"]:checked').length > 0 ) {
                     var idbono = $(tabla_nuevas.$('input[name="idTQ[]"]:checked')).map(function () { return this.value; }).get();
-                    $.get(general_base_url+"Comisiones/enviarBonosMex/"+idbono).done(function () {
+                    $.get(general_base_url+"Pagos/enviarBonosMex/"+idbono).done(function () {
                         $("#myModalEnviadas").modal('toggle');
                         tabla_nuevas.ajax.reload();
                         $("#myModalEnviadas .modal-body").html("");
@@ -52,13 +52,13 @@ $("#tabla_bono_revision").ready(function() {
                                 <b><P style='color:#BCBCBC;'>BONOS MARCADOS COMO PAGADOS.</P></b>
                             </center>"`);
                     });
-                  }else{
+                }else{
                     alerts.showNotification("top", "right", "Favor de seleccionar un bono activo .", "warning");
                 }
             },
             attr: {
                 class: 'btn btn-azure',
-                style: 'position: relative; float: right;',
+                style: 'position: relative;',
             }
         },
         {
@@ -223,11 +223,11 @@ $("#tabla_bono_revision").ready(function() {
                 color='065D7F';
             }    
             
-            let f = data[0].fecha_abono.split('.');
-            $("#modal_bonos .modal-body").append(`<div class="row"><div class="col-md-3"><h6>PARA: <b>${nombre}</b></h6></div>
-            <div class="col-md-3"><h6>Abono: <b style="color:green;">${formatMoney(data[0].impuesto1)}</b></h6></div>
-            <div class="col-md-3"><h6>Fecha: <b>${f[0]}</b></h6></div>
-            <div class="col-md-3"><center><span class="label label-danger" style="background:#${color}">${estatus}</span><center></h6></div>
+            let f = data[0].fecha_movimiento.split('.')[0];
+            console.log(data[0]);
+            $("#modal_bonos .modal-body").append(`<div class="row"><div class="col-md-4"><h6>PARA: <b>${nombre}</b></h6></div>
+            <div class="col-md-4"><h6>Abono: <b style="color:green;">${formatMoney(data[0].abono)}</b></h6></div>
+            <div class="col-md-4"><h6>Fecha: <b>${data[0].date_final}</b></h6></div>
             </div>`);
 
             $("#modal_bonos .modal-body").append(`<br>
@@ -240,18 +240,39 @@ $("#tabla_bono_revision").ready(function() {
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="card card-plain">
-                                    <div class="card-content">
-                                        <ul class="timeline timeline-simple" id="comments-list-asimilados"></ul>
+                                    <div class="card-content scroll-styles p-0" style="height: 350px; overflow: auto">
+                                        <ul class="timeline-3" id="comments-list-asimilados"></ul>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="d-flex justify-end">
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CERRAR</button>
+                </div>
             </div>`);
             for (let index = 0; index < data.length; index++) {
-                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><b style="color:#896597">'+data[index].fecha+'</b><b style="color:gray;"> - '+data[index].nombreAu+'</b><br><i style="color:gray;">'+data[index].comentario+'</i></p><br></div>');
-            }
+                $.each( data, function(i, v){
+                    $("#comments-list-asimilados").append('<li>\n' +
+                    '  <div class="container-fluid">\n' +
+                    '    <div class="row">\n' +
+                    '      <div class="col-md-6">\n' +
+                    '        <a><b>Usuario: ' + v.nombre_usuario + '</b></a><br>\n' +
+                    '      </div>\n' +
+                    '      <div class="float-end text-right">\n' +
+                    '        <a>' + v.fecha_movimiento.split(".")[0] + '</a>\n' +
+                    '      </div>\n' +
+                    '      <div class="col-md-12">\n' +
+                    '        <p class="m-0"><small>Comentario: </small><b> ' + v.comentario + '</b></p>\n'+
+                    '      </div>\n' +
+                    '    <h6>\n' +
+                    '    </h6>\n' +
+                    '    </div>\n' +
+                    '  </div>\n' +
+                    '</li>');
+                }); 
+                }
             $("#modal_bonos").modal();
         });
     });
@@ -308,15 +329,6 @@ $("#form_abono").on('submit', function(e){
         }
     });
 });
-
-function mandar_espera(idLote, nombre) {
-    idLoteespera = idLote;
-    link_espera1 = "Comisiones/generar comisiones/";
-    $("#myModalEspera .modal-footer").html("");
-    $("#myModalEspera .modal-body").html("");
-    $("#myModalEspera ").modal();
-    $("#myModalEspera .modal-footer").append("<div class='btn-group'><button type='submit' class='btn btn-success'>GENERAR COMISIÓN</button></div>");
-}
 
 $(window).resize(function(){
     tabla_nuevas.columns.adjust();

@@ -2536,6 +2536,9 @@ public function LiquidarLote(){
     }
 
     public function getCommissionsToValidate(){
+      ini_set('max_execution_time', 900);
+      set_time_limit(900);
+      ini_set('memory_limit','8192M');
         $id_usuario = $this->session->userdata('id_usuario');
         $data['data'] = $this->Comisiones_model->getCommissionsToValidate($id_usuario)->result_array();
         echo json_encode($data);
@@ -5550,14 +5553,6 @@ for ($d=0; $d <count($dos) ; $d++) {
         }
 
          echo json_encode($response);
-    }
-
-    public function InsertPena($lote_1)
-    {
-      $response =$this->Comisiones_model->InsertPenalizacionComision($lote_1);
-      if ($response) {
-      return $this->Comisiones_model->InsertPenalizacionHistorial($lote_1);
-      }
     }
 
       public function insertCertificacion(){

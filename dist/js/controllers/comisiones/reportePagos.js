@@ -290,18 +290,38 @@ function getAssimilatedCommissions(id_usuario){
     });
 
     $("#tabla_historialGral tbody").on("click", ".consultar_logs_asimilados", function(e){
+        $('#spiner-loader').removeClass('hide');
         e.preventDefault();
         e.stopImmediatePropagation();
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
         $("#seeInformationModalAsimilados").modal();
-        $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
+        $("#nameLote").append('<p><h5>HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $.getJSON("getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
-                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:gray;">'+v.comentario+'</i><br><b style="color:#3982C0">'+v.fecha_movimiento+'</b><b style="color:gray;"> - '+v.nombre_usuario+'</b></p></div>');
+                $("#comments-list-asimilados").append(
+                '<li>\n' +
+                    '  <div class="container-fluid">\n' +
+                        '    <div class="row">\n' +
+                        '      <div class="col-md-6">\n' +
+                                '        <a><b> ' +v.comentario.toUpperCase()+ '</b></a><br>\n' +
+                            '      </div>\n' +
+                        '      <div class="float-end text-right">\n' +
+                        '        <a>' + v.fecha_movimiento + '</a>\n' +
+                        '      </div>\n' +
+                        '      <div class="col-md-12">\n' +
+                        '        <p class="m-0"><small>Usuario: </small><b> ' + v.nombre_usuario + '</b></p>\n'+
+                        '      </div>\n' +
+                        '    <h6>\n' +
+                        '    </h6>\n' +
+                    '    </div>\n' +
+                    '  </div>\n' +
+                '</li>');
             });
+            $('#spiner-loader').addClass('hide');
         });
     });
+
 }
 
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {

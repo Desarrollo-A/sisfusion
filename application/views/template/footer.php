@@ -74,11 +74,6 @@
 		demo.initVectorMap();
 	});
 
-    function llamar(){
-        alert();
-        alerts.showNotification("top", "right", "Debe seleccionar una notaría", "warning");
-    }
-
     function validaCheckSession(){
         if($('#no_mostrar_session:checkbox:checked').length > 0)
         {

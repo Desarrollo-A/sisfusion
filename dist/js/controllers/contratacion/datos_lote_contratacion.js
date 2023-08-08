@@ -378,6 +378,17 @@ function consultarHistoriaContratacion(idLote) {
     });
 }
 
+$('#tablaHistoriaLiberacion').on('draw.dt', function() {
+    $('[data-toggle="tooltip"]').tooltip({ trigger: "manual" });
+});
+
+// Volver a aplicar tooltips en elementos filtrados
+$('#tablaHistoriaLiberacion').on('search.dt', function() {
+    $('[data-toggle="tooltip"]').tooltip('dispose'); // Elimina los tooltips actuales
+    $('[data-toggle="tooltip"]').tooltip({ trigger: "manual" }); // Vuelve a inicializar los tooltips en todos los elementos
+    $('[data-toggle="tooltip"]').tooltip('show'); // Muestra los tooltips en todos los elementos
+});
+
 let titulosTablaHistoriaLiberacion = [];
 $('#tablaHistoriaLiberacion thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();

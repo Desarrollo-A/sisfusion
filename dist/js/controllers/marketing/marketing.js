@@ -485,16 +485,21 @@ $(document).on('click', '.cop', function (e) {
 	$('#verDetalles').modal('show');
 });
 
-var titulos_encabezado_detalle = [];
-var num_colum_encabezado_detalle = [];
-$("#verDet").ready(function () {
-	$('#verDet thead tr:eq(0) th').each(function (i) {
-		var title = $(this).text();
-		titulos_encabezado_detalle.push(title);
-		num_colum_encabezado_detalle.push(i);
-		$(this).html(`<input type="text"class="textoshead"data-toggle="tooltip_details" data-placement="top"title="${title}"placeholder="${title}"readOnly/>`);
-	});
-});
+let titulos_encabezado_detalle = [];
+let num_colum_encabezado_detalle = [];
+$('#verDet thead tr:eq(0) th').each( function (i) {
+    var title = $(this).text();
+    titulos_encabezado_detalle.push(title);
+	num_colum_encabezado_detalle.push(i);
+    $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
+    $( 'input', this ).on('keyup change', function () {
+        if ($('#verDet').DataTable().column(i).search() !== this.value ) {
+            $('#verDet').DataTable().column(i).search(this.value).draw();
+        }
+    });
+    $('[data-toggle="tooltip"]').tooltip();
+    })
+
 
 $(document).ready(function () {
 	tableHistorial = $('#verDet').DataTable({
