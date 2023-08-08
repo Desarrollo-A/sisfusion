@@ -761,6 +761,7 @@ class Asesor extends CI_Controller
         $id_cliente = $this->input->post('id_cliente');
         $data_prospecto = $this->Asesor_model->getProspectInfoById($id_prospecto);
         $data_update_client = array(
+            'id_sede' => $this->session->userdata('id_sede'),
             'rfc' => $data_prospecto[0]->rfc,
             'curp' => $data_prospecto[0]->curp,
             'correo' => $data_prospecto[0]->correo,
@@ -783,7 +784,8 @@ class Asesor extends CI_Controller
             'antiguedad' => $data_prospecto[0]->antiguedad,
             'edadFirma' => $data_prospecto[0]->edadFirma,
             'puesto' => $data_prospecto[0]->posicion,
-            'id_prospecto' => $id_prospecto
+            'id_prospecto' => $id_prospecto,
+            'modificado_por' => $this->session->userdata('id_usuario')
         );
         $update_cliente = $this->Asesor_model->update_client_from_prospect($id_cliente, $data_update_client);
         if ($update_cliente > 0) {
