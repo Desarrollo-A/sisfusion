@@ -12,6 +12,7 @@
         }
         ?>
 
+        <!-- Modals -->
         <div class="modal fade modal-alertas" id="modal_users" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -32,7 +33,6 @@
                 </div>
             </div>
         </div>
-        
         <div class="modal fade modal-alertas" id="modal_mktd" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -231,7 +231,7 @@
         </div>
         <?php $this->load->view('template/footer_legend');?>
     </div>
-    </div>
+    </div><!--main-panel close-->
     <?php $this->load->view('template/footer');?>
     <!--DATATABLE BUTTONS DATA EXPORT-->
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>

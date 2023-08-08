@@ -50,7 +50,6 @@
         </div>
         <?php $this->load->view('template/footer_legend');?>
     </div>
-    <!--main-panel close-->
 </body>
 <?php $this->load->view('template/footer');?>
 <script src="<?=base_url()?>dist/js/controllers/contratacion/datos_lotesContratados.js"></script>

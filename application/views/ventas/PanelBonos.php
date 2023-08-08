@@ -3,7 +3,6 @@
 <body>
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
-
         <div class="modal fade modal-alertas" id="modal_bonos" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -17,7 +16,6 @@
                 </div>
             </div>
         </div>
-
         <div class="modal fade modal-alertas " id="modal_abono" data-backdrop="static" data-keyboard="false" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -30,8 +28,6 @@
                 </div>
             </div>
         </div>
-        <!-- END Modals -->
-
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -246,8 +242,7 @@
         </div>
         <?php $this->load->view('template/footer_legend'); ?>
     </div>
-    </div><!--main-panel close-->
+    </div>
     <?php $this->load->view('template/footer'); ?>
-    <!--DATATABLE BUTTONS DATA EXPORT-->
     <script src="<?= base_url() ?>dist/js/controllers/ventas/panelBonos.js"></script>
 </body>

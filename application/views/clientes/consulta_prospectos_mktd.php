@@ -39,9 +39,7 @@
                                                     <div class="form-group d-flex">
                                                         <input type="text" class="form-control datepicker" id="beginDate" value="01/01/2021" />
                                                         <input type="text" class="form-control datepicker" id="endDate" value="01/01/2021" />
-                                                        <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
-                                                            <span class="material-icons update-dataTable">search</span>
-                                                        </button>
+                                                        <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange"><span class="material-icons update-dataTable">search</span></button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -77,7 +75,6 @@
 </div>
 </body>
 <?php $this->load->view('template/footer');?>
-
 <script src="<?= base_url() ?>dist/js/es.js"></script>
 <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
 <script src="<?= base_url() ?>dist/js/fullcalendar.min.js"></script>

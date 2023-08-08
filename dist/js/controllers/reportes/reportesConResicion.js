@@ -1,9 +1,11 @@
+let titulos_intxt = [];
+
 $(document).ready(function () {
 	sp.initFormExtendedDatetimepickers();
 	$('.datepicker').datetimepicker({locale: 'es'});
-	setInitialValues();
+	setIniDatesXMonth("#beginDate", "#endDate");
+    fillVentas(finalBeginDate, finalEndDate);
 });
-
 
 sp = { // MJ: SELECT PICKER
     initFormExtendedDatetimepickers: function () {
@@ -25,37 +27,17 @@ sp = { // MJ: SELECT PICKER
     }
 }
 
-function setInitialValues(){
-	// BEGIN DATE
-	const fechaInicio = new Date();
-	// Iniciar en este año, este mes, en el día 1
-	const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
-	// END DATE
-	const fechaFin = new Date();
-	// Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
-	const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
-	finalBeginDate = [('0' + beginDate.getDate()).slice(-2), ('0' + (beginDate.getMonth() + 1)).slice(-2), beginDate.getFullYear()].join('/');
-	finalEndDate = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
-	
-	$("#beginDate").val(finalBeginDate);
-	$("#endDate").val(finalEndDate);
-	fillVentas(finalBeginDate, finalEndDate);
-}
-
 function fillVentas(beginDate, endDate) {
-    var beginDate = moment(beginDate, 'DD/MM/YYYY').format('YYYY-MM-DD');
-    var endDate = moment(endDate, 'DD/MM/YYYY').format('YYYY-MM-DD');
-
     $('#ventasRecision thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
-        $(this).html('<input class="textoshead"  placeholder="'+title+'"/>' );
+        titulos_intxt.push(title);
+        $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
         $( 'input', this ).on('keyup change', function () {
             if ($('#ventasRecision').DataTable().column(i).search() !== this.value ) {
                 $('#ventasRecision').DataTable().column(i).search(this.value).draw();
             }
         });
     });
-
     $('#ventasRecision').DataTable({
         destroy: true,
         ajax:
@@ -69,8 +51,9 @@ function fillVentas(beginDate, endDate) {
                     "endDate": endDate
                 }
             },
-        dom: 'Brt'+ "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
-        width: "auto",
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: "100%",
+        bAutoWidth: true,
         ordering: false,
         pagingType: "full_numbers",
         scrollX: true,
@@ -83,69 +66,13 @@ function fillVentas(beginDate, endDate) {
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
+            title: 'REPORTE DE VENTAS',
             exportOptions: {
                 columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
-                format: {
-                    header: function (d, columnIdx) {
-                        switch (columnIdx) {
-                            case 0:
-                                return 'ID LOTE';
-                                break;
-                            case 1:
-                                return 'RESIDENCIAL'
-                                break;
-                            case 2:
-                                return 'CONDOMINIO';
-                                break;
-                            case 3:
-                                return 'LOTE';
-                                break;
-                            case 4:
-                                return 'CLIENTE';
-                                break;
-                            case 5:
-                                return 'FECHA APARTADO';
-                                break;
-                            case 6:
-                                return 'ASESOR';
-                                break;
-                            case 7:
-                                return 'COORDINADOR';
-                                break;
-                            case 8:
-                                return 'GERENTE';
-                                break;
-                            case 9:
-                                return 'TIPO LOTE';
-                                break;
-                            case 10:
-                                return 'CASA';
-                                break;
-                            case 11:
-                                return 'ESTATUS ACTUAL';
-                                break;
-                            case 12:
-                                return 'PLAZA VENTA';
-                                break;
-                            case 13:
-                                return 'TIPO VENTA';
-                                break;
-                            case 14:
-                                return 'REFERENCIA';
-                                break;
-                            case 15:
-                                return 'COMPARTIDA';
-                                break;
-                            case 16:
-                                return 'PRECIO FINAL';
-                                break;
-                            case 17:
-                                return 'ESTATUS 9';
-                                break;
-                            case 18:
-                                return 'ESTATUS 11';
-                                break;
-                        }
+                format:     
+                {
+                    header:  function (d, columnIdx) {
+                        return ' ' + titulos_intxt[columnIdx] + ' ';
                     }
                 }
             }
@@ -188,10 +115,17 @@ function fillVentas(beginDate, endDate) {
                 },
             ]
     });
+    $('#ventasRecision').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
+    });
 }
 
 $(document).on("click", "#searchByDateRange", function () {
 	let finalBeginDate = $("#beginDate").val();
 	let finalEndDate = $("#endDate").val();
-	fillVentas(finalBeginDate, finalEndDate);
+    var beginDate = moment(finalBeginDate, 'DD/MM/YYYY').format('YYYY-MM-DD');
+    var endDate = moment(finalEndDate, 'DD/MM/YYYY').format('YYYY-MM-DD');
+	fillVentas(beginDate, endDate);
 });

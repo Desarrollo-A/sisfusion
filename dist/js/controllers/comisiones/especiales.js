@@ -112,15 +112,6 @@ $(document).ready(function () {
                 return labelEstatus;
             }},
             { data: function (d) {
-                var fechaSistema;
-                if(d.fecha_sistema == null ) {
-                    fechaSistema ='<span class="label" style="color:#626567;background:#E5E7E9;">Sin Definir</span>';
-                }else {
-                    fechaSistema = '<br><span class="label" style="color:#1B4F72;background:#AED6F1;">'+d.fecha_sistema+'</span>';
-                }
-                return fechaSistema;
-            }},
-            { data: function (d) {
                 var fechaNeodata;
                 var rescisionLote;
                 fechaNeodata = '<br><span class="label" style="color:#1B4F72;background:#AED6F1;">'+d.fecha_neodata+'</span>';

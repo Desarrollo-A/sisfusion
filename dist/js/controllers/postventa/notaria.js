@@ -26,6 +26,7 @@ prospectsTable = $('#notaria-datatable').DataTable({
     scrollX: true,
     pagingType: "full_numbers",
     pageLength: 12,
+    bAutoWidth:true,
     language: {
       url: "../static/spanishLoader_v2.json",
       paginate: {
@@ -40,13 +41,11 @@ prospectsTable = $('#notaria-datatable').DataTable({
             data: function (d) {
                 return d.idNotaria
             }
-
         },
         {
             data: function (d) {
                 return d.nombre_notaria
             }
-
         },
         {
             data: function (d) {
@@ -150,7 +149,6 @@ $(document).on('submit','#form-delete', function(e){
   });
 });
 
-//   Funciones para crear un nuevo notario
 $("#form_notario").on('submit', function(e){
   e.preventDefault();
   var formData = new FormData(document.getElementById("form_notario"));

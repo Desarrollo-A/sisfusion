@@ -2428,11 +2428,13 @@ function getDatosRevisionFactura($proyecto,$condominio){
 
 
         if( $QUERY_VOBO->num_rows() > 0 ){
-            $respuesta =  $this->db->query("UPDATE pago_comision SET total_comision = ".$sumaComi.", abonado = ".$sumaDispo.", porcentaje_abono = ".$porcentaje.", pendiente = ".$resta.", creado_por = ".$id_user.", fecha_modificacion = GETDATE(), ultimo_pago = ".$pagado.", bonificacion = ".$bonificacion." WHERE id_lote = ".$lote."");
+            
+            $respuesta =  $this->db->query("UPDATE pago_comision SET total_comision = ".$sumaComi.", abonado = ".$sumaDispo.", porcentaje_abono = ".$porcentaje.", pendiente = ".$resta.", creado_por = ".$id_user.", fecha_modificacion = GETDATE(), ultimo_pago = ".$pagado.", bonificacion = ".$bonificacion." ultima_dispersion = GETDATE() ,numero_dispersion = (numero_dispersion +1) WHERE id_lote = ".$lote."");
         }
         else{
+
             // $respuesta =  $this->db->query("INSERT INTO pago_comision ([id_lote], [total_comision], [abonado], [porcentaje_abono], [pendiente], [creado_por], [fecha_modificacion], [fecha_abono],[bandera],[ultimo_pago],[bonificacion]) VALUES (".$lote.", ".$sumaComi.", ".$sumaDispo.",".$porcentaje.",".$resta.",".$id_user.", GETDATE(), GETDATE(),1,".$pagado.",".$bonificacion.")");
-            $respuesta =  $this->db->query("INSERT INTO pago_comision ([id_lote], [total_comision], [abonado], [porcentaje_abono], [pendiente], [creado_por], [fecha_modificacion], [fecha_abono],[bandera],[ultimo_pago],[bonificacion],[fecha_neodata],[modificado_por]) VALUES (".$lote.", ".$sumaComi.", ".$sumaDispo.",".$porcentaje.",".$resta.",".$id_user.", GETDATE(), GETDATE(),1,".$pagado.",".$bonificacion.", null, null)");
+            $respuesta =  $this->db->query("INSERT INTO pago_comision ([id_lote], [total_comision], [abonado], [porcentaje_abono], [pendiente], [creado_por], [fecha_modificacion], [fecha_abono],[bandera],[ultimo_pago],[bonificacion],[fecha_neodata],[modificado_por],[new_neo],[ultima_dispersion], [numero_dispersion]) VALUES (".$lote.", ".$sumaComi.", ".$sumaDispo.",".$porcentaje.",".$resta.",".$id_user.", GETDATE(), GETDATE(),1,".$pagado.",".$bonificacion.", null, null, null, GETDATE() , 1)");
 
         }
     if (! $respuesta ) {
@@ -2561,7 +2563,7 @@ function insert_penalizacion_individual($id_comision, $id_usuario, $rol, $abono_
 }
 
 function update_pago_dispersion($suma, $ideLote, $pago){
-    $respuesta = $this->db->query("UPDATE pago_comision SET abonado = (abonado + ".$suma."), pendiente = (total_comision-abonado-".$suma."), bandera = 1, ultimo_pago = ".$pago." WHERE id_lote = ".$ideLote."");
+    $respuesta = $this->db->query("UPDATE pago_comision SET abonado = (abonado + ".$suma."), pendiente = (total_comision-abonado-".$suma."), bandera = 1, ultimo_pago = ".$pago." , ultima_dispersion = GETDATE() WHERE id_lote = ".$ideLote."");
     if (! $respuesta ) {
         return 0;
         } else {
@@ -5996,20 +5998,25 @@ function obtenerIDMK($id){
                     }
                 }
 
-            $evaluarPorcentajes =  $this->db->query("SELECT pe.id_penalizacion, pe.dias_atraso, (pp.asesor*lo.totalNeto2*0.01) asesor, (pp.coordinador*lo.totalNeto2*0.01) coordinador, (pp.gerente*lo.totalNeto2*0.01) gerente FROM penalizaciones pe
+            $evaluarPorcentajes =  $this->db->query("SELECT pe.id_penalizacion, pe.dias_atraso, (pp.asesor*lo.totalNeto2*0.01) asesor, (pp.coordinador*lo.totalNeto2*0.01) coordinador, (pp.gerente*lo.totalNeto2*0.01) gerente, pp.asesor as pAse, pp.coordinador as pCoo, pp.gerente as pGer FROM penalizaciones pe
             $stringInner
             INNER JOIN lotes lo ON lo.idLote = pe.id_lote AND lo.idCliente = pe.id_cliente
             WHERE pe.id_lote = $idLote and pe.id_cliente = $idCliente");
 
             if($rol == 3){
                 $montoPenalizar = ($evaluarPorcentajes->row()->gerente); 
-                $descuento90dias = ($montoPenalizar/(1/$porcentaje));      
+                $descuento90dias = ($montoPenalizar/(1/$porcentaje));
+                $porcentajeTomado = $evaluarPorcentajes->row()->pGer;
+
             }else if($rol == 7){
                 $montoPenalizar = ($evaluarPorcentajes->row()->asesor);
                 $descuento90dias = ($montoPenalizar/(3/$porcentaje)); 
+                $porcentajeTomado = $evaluarPorcentajes->row()->pAse;
+
             }else if($rol == 9){
                 $montoPenalizar = ($evaluarPorcentajes->row()->coordinador);
                 $descuento90dias = ($montoPenalizar/(1/$porcentaje));
+                $porcentajeTomado = $evaluarPorcentajes->row()->pCoo;
             }
             if($descuento90dias > 0 && $descuento90dias <= $abono){//ABONO es mayor a la PENALIZACION
                 $abonoNormal = $abono - $descuento90dias;
@@ -6039,7 +6046,7 @@ function obtenerIDMK($id){
                 $this->db->query("INSERT INTO prestamos_aut
                 (id_usuario, monto, num_pagos, pago_individual, comentario, estatus, pendiente, creado_por, fecha_creacion, modificado_por, 
                 fecha_modificacion, n_p, tipo, id_cliente)
-                VALUES ($id_usuario, $descuento90dias, 1, $abonoPenalizacion, 'PENALIZACIÓN ".$nombreLote." +90 DÍAS', $estatusPrestamo, 0, $user, GETDATE(), $user, GETDATE(), 1, 28, $idCliente)");
+                VALUES ($id_usuario, $descuento90dias, 1, $abonoPenalizacion, 'PENALIZACIÓN ".$nombreLote." +90 DÍAS (-".$porcentajeTomado."%)', $estatusPrestamo, 0, $user, GETDATE(), $user, GETDATE(), 1, 28, $idCliente)");
                 $insert_id_4 = $this->db->insert_id();
 
                 $this->db->query("INSERT INTO relacion_pagos_prestamo (id_prestamo, id_pago_i, estatus, creado_por, fecha_creacion, modificado_por, fecha_modificacion, np)
@@ -7574,87 +7581,6 @@ public function getDataDispersionPagoEspecial($val = '') {
     {   
         return (bool)($this->db->query("INSERT INTO historial_log (identificador, id_usuario, fecha_movimiento, estatus, comentario, tabla, motivo) values ($idLote, $idCliente, getdate(), 1, '".$comentario."', 'penalizaciones', '0')"));
     }
-    
-    public function InsertPenalizacionComision($lote){
-   
-        $valInner =  $this->db->query("SELECT COALESCE(pe.id_porcentaje_penalizacion,0) val FROM penalizaciones pe
-        INNER JOIN lotes l ON l.idLote = pe.id_lote
-        INNER JOIN clientes c ON c.id_cliente = l.idCliente
-        INNER JOIN porcentajes_penalizaciones pp ON pp.id_porcentaje_penalizacion = pe.id_porcentaje_penalizacion
-        WHERE bandera = 1 AND l.idLote = ".$lote."");
-        
-        if(!empty($valInner->row()->val)){
-            $stringInner  = '';
-            if(empty($valInner->row()->val) || $valInner->row()->val != '4' || $valInner->row()->val != 4){
-                $stringInner  = ' INNER JOIN porcentajes_penalizaciones pp ON pp.id_porcentaje_penalizacion = pe.id_porcentaje_penalizacion ';
-            }else{
-                $stringInner  = ' INNER JOIN distribucion_penalizaciones pp ON pp.id_penalizacion = pe.id_penalizacion ';
-            }
-        }
-    
-        $ConsultAsesor = $this->db->query("SELECT COUNT(*) val FROM comisiones where id_lote in (".$lote.") AND rol_generado = 7");
-        $ConsultCoordinador = $this->db->query("SELECT COUNT(*) val FROM comisiones where id_lote in (".$lote.") AND rol_generado = 9");
-        $ConsultGerente = $this->db->query("SELECT COUNT(*) val FROM comisiones where id_lote in (".$lote.") AND rol_generado = 3");  
-       
-        $Consult = $this->db->query("SELECT pe.id_penalizacion, com.rol_generado, CONCAT('(', com.id_comision,',', com.id_usuario,',', (((CASE WHEN com.rol_generado = 3 THEN pp.gerente/".$ConsultGerente->row()->val." WHEN com.rol_generado = 7 THEN pp.asesor/".$ConsultAsesor->row()->val." WHEN com.rol_generado = 9 THEN pp.coordinador/".$ConsultCoordinador->row()->val." END))*(l.totalNeto2/100)),', GETDATE(), GETDATE(), 1, 28,1 ,','''NUEVO DESCUENTO +90 DÍAS''', ', 1, NULL, NULL, 1)') AS comisionista, CONCAT(' abono_neodata - ', (((CASE WHEN com.rol_generado = 3 THEN pp.gerente/1 WHEN com.rol_generado = 7 THEN pp.asesor/1 WHEN com.rol_generado = 9 THEN pp.coordinador/1 END))*(l.totalNeto2/100)), ' WHERE id_comision = ',com.id_comision, ' AND estatus = 1 ' ) AS update_consult
-        FROM penalizaciones pe
-        INNER JOIN lotes l ON l.idLote = pe.id_lote AND l.idCliente = pe.id_cliente AND pe.estatus = 1
-        INNER JOIN clientes c ON c.id_cliente = l.idCliente
-        $stringInner 
-        LEFT JOIN comisiones com ON com.id_lote = l.idLote AND com.rol_generado in (3,7,9)
-        WHERE bandera = 1 AND l.idLote = ".$lote."")->result_array();
-
-        for($a = 0; $a < sizeof($Consult) ; $a++){
-           $this->db->query("INSERT INTO pago_comision_ind VALUES ".$Consult[$a]['comisionista']." ");
-           $this->db->query("UPDATE pago_comision_ind SET abono_neodata = ".$Consult[$a]['update_consult']." ");
-        }
- 
-        return true;
-  
-      }
-
-    //   public function InsertPenalizacionHistorial($lote){
-   
-    //     $valInner =  $this->db->query("SELECT COALESCE(pe.id_porcentaje_penalizacion,0) val FROM penalizaciones pe
-    //     INNER JOIN lotes l ON l.idLote = pe.id_lote
-    //     INNER JOIN clientes c ON c.id_cliente = l.idCliente
-    //     INNER JOIN porcentajes_penalizaciones pp ON pp.id_porcentaje_penalizacion = pe.id_porcentaje_penalizacion
-    //     WHERE bandera = 1 AND l.idLote = ".$lote."");
-        
-    //     if(!empty($valInner->row()->val)){
-    //         $stringInner  = '';
-    //         if(empty($valInner->row()->val) || $valInner->row()->val != '4' || $valInner->row()->val != 4){
-    //             $stringInner  = ' INNER JOIN porcentajes_penalizaciones pp ON pp.id_porcentaje_penalizacion = pe.id_porcentaje_penalizacion ';
-    //         }else{
-    //             $stringInner  = ' INNER JOIN distribucion_penalizaciones pp ON pp.id_penalizacion = pe.id_penalizacion ';
-    //         }
-    //     }
-    
-    //     $ConsultAsesor = $this->db->query("SELECT COUNT(*) val FROM comisiones where id_lote in (".$lote.") AND rol_generado = 7");
-    //     $ConsultCoordinador = $this->db->query("SELECT COUNT(*) val FROM comisiones where id_lote in (".$lote.") AND rol_generado = 9");
-    //     $ConsultGerente = $this->db->query("SELECT COUNT(*) val FROM comisiones where id_lote in (".$lote.") AND rol_generado = 3");  
-       
-    //     $ConsultHistorial = $this->db->query("SELECT pci.id_pago_i, CONCAT('(',pci.id_pago_i, ', 1, GETDATE(), 1, ', '''DESCUENTO POR PENALIZACIÓN DE ', pe.dias_atraso,' DÍAS DE ATRASO POR UN MONTO DE ', FORMAT(pci.abono_neodata, 'C'), ' CON UN PORCENTAJE DE ', (CASE WHEN com.rol_generado = 3 THEN pp.gerente/".$ConsultGerente->row()->val." WHEN com.rol_generado = 7 THEN pp.asesor/".$ConsultAsesor->row()->val." WHEN com.rol_generado = 9 THEN pp.coordinador/".$ConsultCoordinador->row()->val." END), '%''', ')') comentario
-    //     FROM pago_comision_ind pci 
-    //     INNER JOIN comisiones com ON com.id_comision = pci.id_comision AND com.rol_generado in (3,7,9)
-    //     INNER JOIN penalizaciones pe ON com.id_lote = pe.id_lote AND pe.estatus = 1
-    //     $stringInner 
-    //     WHERE pci.estatus = 28 AND com.id_lote = ".$lote."")->result_array();
-
-    //     for($b = 0; $b < sizeof($ConsultHistorial) ; $b++){
-    //         $this->db->query("INSERT INTO historial_comisiones VALUES ".$ConsultHistorial[$b]['comentario']." ");
-    //     }
-
-    //     $this->db->query("DELETE FROM pago_comision_ind WHERE abono_neodata < 1 AND estatus IN (1,0)");
-
-    //     return true;
-  
-    //   }
-
-      public function validatePenalization($idlote){
-        return $this->db->query("SELECT id_lote FROM penalizaciones WHERE estatus = 1 AND bandera = 1 AND id_lote = $idlote");
-    }
-
 
     public function getCertificaciones()
     {
@@ -7748,7 +7674,7 @@ public function getDataDispersionPagoEspecial($val = '') {
             $this->db->where('id_lote', $id_lote);
             $this->db->update('pago_comision', $data);
             $afftectedRows = $this->db->affected_rows();
-            var_dump($afftectedRows);
+       
             return $afftectedRows > 0 ? TRUE : FALSE ;
         }
         catch(Exception $e) {

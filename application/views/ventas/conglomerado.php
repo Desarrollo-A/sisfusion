@@ -183,6 +183,7 @@
                                                 <option value="8">8</option>
                                                 <option value="9">9</option>
                                                 <option value="10">10</option>
+                                                <option value="11">11</option>
                                             </select>
                                         </div>
                                     </div>
@@ -255,8 +256,8 @@
                                 <div role="tabpanel" class="tab-pane active" id="changelogTab">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <div class="card card-plain m-0">
-                                                <div class="card-content">
+                                            <div class="card card-plain">
+                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
                                                     <ul class="timeline-3" id="comments-list-asimilados"></ul>
                                                 </div>
                                             </div>
@@ -448,6 +449,7 @@
                                             <option value="8">8</option>
                                             <option value="9">9</option>
                                             <option value="10">10</option>
+                                            <option value="11">11</option>
                                         </select>
                                     </div>
                                 </div>
@@ -511,6 +513,7 @@
                                             <option value="8">8</option>
                                             <option value="9">9</option>
                                             <option value="10">10</option>
+                                            <option value="11">11</option>
                                         </select>
                                     </div>
 

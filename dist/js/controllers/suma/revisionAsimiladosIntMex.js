@@ -92,7 +92,6 @@ function getAssimilatedCommissions(idRol, idUsuario){
         var to = formatMoney(total);
         document.getElementById("totpagarAsimilados").textContent = to;
     });
-
     $("#tabla_asimilados").prop("hidden", false);
     tabla_asimilados = $("#tabla_asimilados").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -354,7 +353,8 @@ $(document).on("click", ".Pagar", function() {
     $("#modal_multiples .modal-header").html("");
     $("#modal_multiples .modal-header").append('<h4 class="card-title"><b>Marcar pagadas</b></h4>');
     $("#modal_multiples .modal-footer").append(`<div class="row" id="borrarProyect"><center><input type="submit" disabled id="btn-aceptar" class="btn btn-primary" value="ACEPTAR"><button type="button" class="btn btn-danger" data-dismiss="modal" onclick="CloseModalDelete2()">CANCELAR</button></center></div>`);
-    $("#modal_multiples .modal-header").append(`<div class="row"><div class="col-md-12"><select id="desarrolloSelect" name="desarrolloSelect" class="selectpicker select-gral m-0" required data-live-search="true"></select></div></div>`);
+    $("#modal_multiples .modal-header").append(`<div class="row">
+    <div class="col-md-12"><select id="desarrolloSelect" name="desarrolloSelect" class="form-control desarrolloSelect ng-invalid ng-invalid-required" required data-live-search="true"></select></div></div>`);
     $.post('getDesarrolloSelectINTMEX/'+3, function(data) {
         $("#desarrolloSelect").append($('<option disabled>').val("default").text("Seleccione una opción"))
         var len = data.length;

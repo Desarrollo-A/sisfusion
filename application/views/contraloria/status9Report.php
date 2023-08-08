@@ -84,9 +84,7 @@
         <?php $this->load->view('template/footer_legend'); ?>
     </div>
     </div>
-
     </div>
-    <!--main-panel close-->
 </body>
 <?php $this->load->view('template/footer');?>
 <script src="<?=base_url()?>dist/js/controllers/contraloria/status9Report.js"></script>

@@ -8,20 +8,16 @@
             <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            <i class="material-icons" onclick="cleanComments()">clear</i>
-                        </button>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons" onclick="cleanComments()">clear</i></button>
                         <h4 class="modal-title">Consulta información</h4>
                     </div>
                     <div class="modal-body">
                         <div role="tabpanel">
-                            <!-- Nav tabs -->
                             <ul class="nav nav-tabs" role="tablist" style="background: #003d82;">
                                 <li role="presentation" class="active"><a href="#generalTab" aria-controls="generalTab" role="tab" data-toggle="tab">General</a></li>
                                 <li role="presentation"><a href="#commentsTab" aria-controls="commentsTab" role="tab" data-toggle="tab">Comentarios</a></li>
                                 <li role="presentation"><a href="#changelogTab" aria-controls="changelogTab" role="tab" data-toggle="tab">Bitácora de cambios</a></li>
                             </ul>
-                            <!-- Tab panes -->
                             <div class="tab-content">
                                 <div role="tabpanel" class="tab-pane active" id="generalTab">
                                     <div class="row">

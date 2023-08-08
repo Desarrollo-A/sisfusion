@@ -5,8 +5,6 @@
 <body>
     <div class="wrapper">
         <?php  $this->load->view('template/sidebar'); ?>
-        
-        <!-- Modelo para eliminar -->
         <div class="modal fade modal-alertas" id="modal-delete" role="dialog">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content" >
@@ -15,7 +13,6 @@
                 </div>
             </div>
         </div>
-
         <div class="modal fade modal-alertas" id="modal-usuario" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -57,7 +54,6 @@
                 </div>
             </div>
         </div>
-
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -94,7 +90,7 @@
                                         </table>
                                     </div>
                                 </div>
-                              <?php include 'common_modals.php' ?>
+                            <?php include 'common_modals.php' ?>
                             </div>
                         </div>
                     </div>

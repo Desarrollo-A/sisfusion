@@ -109,7 +109,6 @@ function getAssimilatedCommissions(proyecto, condominio){
         var to = formatMoney(numberTwoDecimal((total)));
         document.getElementById("totpagarAsimilados").textContent = to;
     });
-
     $("#tabla_asimilados").prop("hidden", false);
     tabla_asimilados2 = $("#tabla_asimilados").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",

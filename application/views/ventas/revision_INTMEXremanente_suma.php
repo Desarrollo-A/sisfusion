@@ -22,7 +22,7 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="card card-plain">
-                                                <div class="card-content">
+                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
                                                     <ul class="timeline-3" id="comments-list-remanentes"></ul>
                                                 </div>
                                             </div>
@@ -107,7 +107,7 @@
                                             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                                 <div class="form-group">
                                                     <label class="m-0" for="filtro33">Puesto</label>
-                                                    <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona un puesto" data-size="7" required> 
+                                                    <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" required> 
                                                         <option value="0">Seleccione todo</option>
                                                     </select>
                                                 </div>
@@ -115,7 +115,7 @@
                                             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                                 <div class="form-group">
                                                     <label class="m-0" for="filtro44">Usuario</label>
-                                                    <select class="selectpicker select-gral" id="filtro44" name="filtro44[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona un usuario" data-size="7" required/></select>
+                                                    <select class="selectpicker select-gral" id="filtro44" name="filtro44[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required/></select>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 d-flex align-end">

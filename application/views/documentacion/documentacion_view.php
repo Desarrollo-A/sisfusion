@@ -5,17 +5,11 @@
 <body class="">
     <div class="wrapper">
         <?php
-		    //se debe validar que tipo de perfil esta sesionado para poder asignarle el tipo de sidebar
-		    if(
-                    in_array($this->session->userdata('id_rol'), array(2, 3, 4, 5, 6, 7, 9, 11, 12, 13, 15, 16, 17, 19, 28, 32, 33, 34, 39, 40, 47, 50, 53, 54, 55, 58, 65, 70, 71, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83)) ||
-                    ($this->session->userdata('id_rol') == 11 && $this->session->userdata('id_usuario') == 2755) ||
-                    $this->session->userdata('id_usuario') == 2748
-            )
+		    if(in_array($this->session->userdata('id_rol'), array(2, 3, 4, 5, 6, 7, 9, 11, 12, 13, 15, 16, 17, 19, 28, 32, 33, 34, 39, 40, 47, 50, 53, 54, 55, 58, 65, 70, 71, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83)) || ($this->session->userdata('id_rol') == 11 && $this->session->userdata('id_usuario') == 2755) || $this->session->userdata('id_usuario') == 2748)
                 $this->load->view('template/sidebar');
             else
                 echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
 		?>
-        <!-- Modals -->
         <div class="modal fade" id="addDeleteFileModal" data-keyboard="false" data-backdrop="static">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -28,10 +22,7 @@
                                 <div class="file-gph">
                                     <input class="d-none" type="file" id="fileElm">
                                     <input class="file-name" id="file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
-                                    <label class="upload-btn m-0" for="fileElm">
-                                        <span>Seleccionar</span>
-                                        <i class="fas fa-folder-open"></i>
-                                    </label>
+                                    <label class="upload-btn m-0" for="fileElm"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>
                                 </div>
                             </div>
                         </div>
@@ -49,8 +40,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- autorizaciones-->
         <div class="modal fade" id="verAutorizacionesAsesor">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -65,7 +54,6 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -74,8 +62,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Modals -->
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -97,7 +83,6 @@
                                 ?>
                             </div>
                             <div class="card-content">
-                                <!-- FILTROS POR DEFAULT (Proyecto, Condominio y Lote) -->
                                 <?php if (!isset($tipoFiltro)) { ?>
                                     <div class="toolbar">
                                         <h3 class="card-title center-align">Documentación por lote</h3>
@@ -117,30 +102,21 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                                <div class="form-group select-is-empty overflow-hidden">
-                                                    <label class="control-label">Condominio</label>
-                                                    <select id="idCondominio" name="idCondominio" class="selectpicker select-gral m-0"
-                                                            data-style="btn" data-show-subtext="true" data-live-search="true"
-                                                            title="SELECCIONA UNA OPCIÓN" data-size="7" data-container='body' required>
-                                                    </select>
-                                                </div>
+                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                            <div class="form-group select-is-empty overflow-hidden">
+                                                <label class="control-label">Condominio</label>
+                                                <select id="idCondominio" name="idCondominio" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container='body' required></select>
                                             </div>
-                                            <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                                <div class="form-group select-is-empty overflow-hidden">
-                                                    <label class="control-label">Lote</label>
-                                                    <select id="idLote" name="idLote" class="selectpicker select-gral m-0"
-                                                            data-style="btn" data-show-subtext="true" data-live-search="true"
-                                                            title="SELECCIONA UNA OPCIÓN" data-size="7" data-container='body' required>
-                                                    </select>
-                                                </div>
+                                        </div>
+                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                            <div class="form-group select-is-empty overflow-hidden">
+                                                <label class="control-label">Lote</label>
+                                                <select id="idLote" name="idLote" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container='body' required></select>
                                             </div>
                                         </div>
                                     </div>
+                                    </div>
                                 <?php } ?>
-                                <!-- FIN FILTRO POR DEFECTO -->
-
-                                <!-- FILTROS 1 (Proyecto, Condominio, Lote y Cliente) -->
                                 <?php if ($tipoFiltro == 1) { ?>
                                     <div class="toolbar">
                                         <h3 class="card-title center-align">Documentación por lote</h3>
@@ -148,9 +124,7 @@
                                             <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                                 <div class="form-group select-is-empty">
                                                     <label class="control-label">Proyecto</label>
-                                                    <select name="idResidencial" id="idResidencial" class="selectpicker select-gral m-0"
-                                                            data-style="btn" data-show-subtext="true" data-live-search="true"
-                                                            title="Selecciona un proyecto" data-size="7" required>
+                                                    <select name="idResidencial" id="idResidencial" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un proyecto" data-size="7" required>
                                                         <?php
                                                         if ($residencial != NULL) :
                                                             foreach ($residencial as $fila) : ?>
@@ -165,36 +139,24 @@
                                             <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                                 <div class="form-group select-is-empty">
                                                     <label class="control-label">Condominio</label>
-                                                    <select id="idCondominio" name="idCondominio" class="selectpicker select-gral m-0"
-                                                            data-style="btn" data-show-subtext="true" data-live-search="true"
-                                                            title="Selecciona un condominio" data-size="7" required>
-                                                    </select>
+                                                    <select id="idCondominio" name="idCondominio" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un condominio" data-size="7" required></select>
                                                 </div>
                                             </div>
                                             <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                                 <div class="form-group select-is-empty">
                                                     <label class="control-label">Lote</label>
-                                                    <select id="idLote" name="idLote" class="selectpicker select-gral m-0"
-                                                            data-style="btn" data-show-subtext="true" data-live-search="true"
-                                                            title="Selecciona un lote" data-size="7" required>
-                                                    </select>
+                                                    <select id="idLote" name="idLote" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un lote" data-size="7" required></select>
                                                 </div>
                                             </div>
                                             <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                                 <div class="form-group select-is-empty">
                                                     <label class="control-label">Cliente</label>
-                                                    <select id="idCliente" name="idCliente" class="selectpicker select-gral m-0"
-                                                            data-style="btn" data-show-subtext="true" data-live-search="true"
-                                                            title="Selecciona un cliente" data-size="7" required>
-                                                    </select>
+                                                    <select id="idCliente" name="idCliente" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un cliente" data-size="7" required></select>
                                                 </div>
                                             </div>
                                         </div>
-                                        <!--        Here you can write extra buttons/accions for the toolbar              -->
                                     </div>
                                 <?php } ?>
-                                <!-- FIN FILTRO 1 -->
-
                                 <?php if ($tipoFiltro == 2) { ?>
                                     <div class="toolbar">
                                         <h3 class="card-title center-align">Documentación por lote</h3>
@@ -213,7 +175,6 @@
                                         </div>
                                     </div>
                                 <?php } ?>
-
                                 <table id="tableDoct" class="table-striped table-hover hide">
                                     <thead>
                                         <tr>
