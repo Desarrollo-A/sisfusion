@@ -1,23 +1,24 @@
 let subtitulo = ''; 
 let option = '';
-let ubicacion =`<div class="col-12 col-sm-4 col-md-4 col-lg-12">
+let ubicacion =`<div class="col-12 col-sm-12 col-md-4 col-lg-12">
 <div id="ubicacion" style="display:none">
     <label class="control-label label-gral">Ubicación</label>
     <select id="ubicacion_sede" name="ubicacion_sede" class="selectpicker select-gral m-0" data-style="btn btn-round" style="text-align:center"></select>
 </div>
 </div>`;
-let precio = `<div class="col-12 col-sm-4 col-md-4 col-lg-12">
+let precio = `<div class="col-12 col-sm-12 col-md-4 col-lg-12">
 <div id="precio" style="display:none">
     <label class="control-label label-gral">Precio total con descuento</label>
     <input type="text" id="preciodesc" name="preciodesc" class="form-control input-gral" style="text-align:center" value="">
 </div>
 </div>`;
-let enganche = `<div class="col-12 col-sm-4 col-md-4 col-lg-12">
+let enganche = `<div class="col-12 col-sm-12 col-md-4 col-lg-12">
 <div id="enganche" style="display:none">
     <label class="control-label label-gral">Enganche</label>
     <input type="text" id="enganches" name="enganches" class="form-control input-gral" style="text-align:center" value="">
 </div>
 </div>`;
+
 function llenarSelectPrincipal(){
     $("#modificacion").empty().selectpicker('refresh');
     switch(id_usuario_general) {
@@ -26,7 +27,7 @@ function llenarSelectPrincipal(){
         case 2767: //Irene Vallejo vista_lotes_precio_enganche
             subtitulo = "En esta vista podrás hacer la actualización del precio total con descuentos y enganche de un lote apartado.";
             $('#modificacion').append('<option value="Precio">Precio total con descuento</option>');
-            $('#modificacion').append('<option value="Enganche">Enganche</option>');
+            $('#modificacion').append('<option id="pruebaEnganche" value="Enganche">Enganche</option>');
             document.getElementById('selects').innerHTML = precio + enganche;
         break;
         case 2754: //Gabriela Hernández Tovar vista_lotes_enganche_sede
@@ -43,7 +44,7 @@ function llenarSelectPrincipal(){
         case 1297: //María de Jesús
         case 826: //Victor Hugo vista_lotes_apartados
         subtitulo = "En esta vista podrás hacer la actualización del precio total con descuentos, enganche y ubicación de un lote apartado.";
-        $('#modificacion').append('<option label="dsfsdf" value="Ubicacion">Ubicación</option>');
+        $('#modificacion').append('<option value="Ubicacion">Ubicación</option>');
         $('#modificacion').append('<option value="Precio">Precio total con descuento</option>');
         $('#modificacion').append('<option value="Enganche">Enganche</option>');
         document.getElementById('selects').innerHTML = ubicacion + enganche + precio;
@@ -95,7 +96,6 @@ $('#proyecto').change( function() {
         }, 'json');
     });
 });
-
 
 $('#condominio').change( function() {
     index_condominio = $(this).val();
@@ -250,27 +250,76 @@ function limpiarCampos(){
 }
 
 $(document).on("submit", "#form_modificacion", function (e) {
+    console.log( $('#ubicacion_sede').val());
     e.preventDefault();
+    e.stopImmediatePropagation();
     let idLote = $("#idLote").val();
     let data = new FormData($(this)[0]);
-    data.append('saldo', $('#preciodesc').val() == '' || document.getElementById('preciodesc') == null ? null : $('#preciodesc').val());
-    data.append('enganche', $('#enganches').val() == '' || document.getElementById('enganches') == null ? null : $('#enganches').val());
-    data.append('ubicacion', $('#ubicacion_sede').val() == '' || document.getElementById('ubicacion_sede') == null ? null : $('#ubicacion_sede').val());
-    $.ajax({
-        url: "updateLotePrecioEnganche",
-        data: data,
-        cache: false,
-        contentType: false,
-        processData: false,
-        type: 'POST',
-        success: function (response) {
-            alerts.showNotification("top", "right", "El registro se ha actualizado con éxito.", "success");
-            $("#modal_aprobar").modal("hide");
-            limpiarCampos();
-            $('#tabla_historial').DataTable().ajax.reload();
-        }
-    });
+    let precioVacio = $('#modificacion').val().includes('Precio');
+    let engancheVacio = $('#modificacion').val().includes('Enganche');
+    data.append('ubicacion', $('#ubicacion_sede').val());
+    let validar = validateData(engancheVacio,precioVacio);
+
+    if(validar == true){
+    $('#spiner-loader').removeClass('hide');
+        $.ajax({
+            url: "updateLotePrecioEnganche",
+            data: data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function (response) {
+                alerts.showNotification("top", "right", "El registro se ha actualizado con éxito.", "success");
+                $("#modal_aprobar").modal("hide");
+                limpiarCampos();
+                $('#spiner-loader').addClass('hide');
+                $('#tabla_historial').DataTable().ajax.reload();
+            }
+        });
+    }    
+
 });
+
+function validateData(engancheVacio, precioVacio){
+    validate = false;
+    if(engancheVacio && precioVacio){
+        if( $('#enganches').val() == '' && $('#preciodesc').val() == '' ){
+            alerts.showNotification("top", "right", "Faltan datos", "warning");
+        }
+        else if( $('#enganches').val() == '' ){
+            alerts.showNotification("top", "right", "Falta enganche", "warning");
+        }
+        else if( $('#preciodesc').val() == '' ){
+            alerts.showNotification("top", "right", "Falta precio desc", "warning");
+        }
+        else{
+            validate = true;
+        }
+        return validate;
+        
+    }
+    else if(engancheVacio){
+        if( $('#enganches').val() == '' ){
+            alerts.showNotification("top", "right", "El campo Enganche no puede estar vacio", "warning");
+        }
+        else{
+            validate = true;
+        }
+        
+        return validate;
+    }
+    else if(precioVacio){
+        if( $('#preciodesc').val() == '' ){
+            alerts.showNotification("top", "right", "El campo Precio desc no puede estar vacio", "warning");
+        }
+        else{
+            validate = true;
+        }
+        return validate;
+    }
+
+}
 
 var sedes = [];
 $(document).ready(function(){
@@ -292,7 +341,6 @@ $(document).ready(function(){
 });
 
 function llenarSelectUbicacion() {
-    console.log(sedes)
     $("#ubicacion_sede").empty().selectpicker('refresh');
     var len = sedes.length;
     for( var i = 0; i<len; i++)

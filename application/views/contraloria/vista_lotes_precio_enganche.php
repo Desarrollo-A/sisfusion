@@ -57,21 +57,21 @@
                                             <div class="col-md-4 form-group">
                                                 <div class="form-group select-is-empty">
                                                     <label class="control-label">Proyecto</label>
-                                                    <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" required>
+                                                    <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-container="body"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" required>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="col-md-4 form-group">
                                                 <div class="form-group select-is-empty">
                                                     <label class="control-label">Condominio</label>
-                                                    <select name="condominio" id="condominio"  class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" required>
+                                                    <select name="condominio" id="condominio"  class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-container="body"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" required>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="col-md-4 form-group">
                                                 <div class="form-group select-is-empty">
                                                     <label class="control-label">Lote</label>
-                                                    <select name="lote" id="lote" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" required>
+                                                    <select name="lote" id="lote" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-container="body"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" required>
                                                     </select>
                                                 </div>
                                             </div>
@@ -112,10 +112,4 @@
 <?php $this->load->view('template/footer');?>
 
 <!-- MODAL WIZARD -->
-<script src="<?= base_url() ?>dist/js/modal-steps.min.js"></script>
-<script src="<?= base_url() ?>dist/js/moment.min.js"></script>
-<script src="<?= base_url() ?>dist/js/es.js"></script>
-<script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
-<script src="<?= base_url() ?>static/yadcf/jquery.dataTables.yadcf.js"></script>
-<script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/contraloria/vista_lotes_enganche.js"></script>
