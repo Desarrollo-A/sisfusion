@@ -198,7 +198,6 @@ $("#form_aplicar").submit( function(e) {
     }).validate({
         submitHandler: function( form ) {
             var data = new FormData( $(form)[0] );
-            console.log(data);
             $.ajax({
                 // url: url + "Comisiones/pausar_solicitud/",
                 url: general_base_url+'Comisiones/agregar_comentarios',

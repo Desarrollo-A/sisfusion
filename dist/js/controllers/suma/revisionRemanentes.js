@@ -151,7 +151,6 @@ tabla_remanente = $("#tabla_remanente").DataTable({
             columns: [1,2,3,4,5,6,7,8],
             format: {
                 header:  function (d, columnIdx) {
-                    console.log(d);
                     if(columnIdx == 0){
                         return ' '+d +' ';
                     }else if(columnIdx == 1){

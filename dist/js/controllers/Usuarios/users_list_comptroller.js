@@ -253,7 +253,6 @@ $("#editUserForm").on('submit', function(e){
         beforeSend: function(){
         },
         success: function(data) {
-            console.log(data);
             if (data == 1) {
                 $('#editUserModal').modal("hide");
                 alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");

@@ -478,7 +478,6 @@ function getAssimilatedCommissions(mes, anio) {
     });
 
     $("#form_mktd").submit( function(e) {
-        console.log('click de formulario');
         e.preventDefault();
         e.stopImmediatePropagation();
         var plaza1 = $('#plaza1').val();
@@ -516,7 +515,6 @@ function getAssimilatedCommissions(mes, anio) {
     }).validate({
         submitHandler: function(form) {
             var data = new FormData($(form)[0]);
-            console.log(data);
             $.ajax({
                 url: general_base_url + 'Comisiones/agregar_comentarios',
                 data: data,
