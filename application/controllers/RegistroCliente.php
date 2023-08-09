@@ -1928,24 +1928,22 @@ class RegistroCliente extends CI_Controller {
         }
 
     }
-    public function replaceDocumentView()
-    {
-      $this->validateSession();
-      $datos=array();
-      $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
-      $this->load->view('template/header');
-      $this->load->view("juridico/vista_documentacion_juridico",$datos);
+    public function replaceDocumentView(){
+        $this->validateSession();
+        $datos=array();
+        $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
+        $this->load->view('template/header');
+        $this->load->view("juridico/vista_documentacion_juridico",$datos);
     }
 
 
- 	public function expedientesWS_DS($lotes) {
+    public function expedientesWS_DS($lotes) {
         $data = array_merge($this->registrolote_modelo->getdp_DS($lotes));
         if($data != null) {
             echo json_encode($data);
         } else {
             echo json_encode(array());
-        }
-       
+        }       
     }
 
     public function query_ds(){
