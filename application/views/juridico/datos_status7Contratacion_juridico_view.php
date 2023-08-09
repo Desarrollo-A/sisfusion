@@ -16,8 +16,7 @@
                 </div>
                 <div class="modal-body">
                     <label>Comentario:</label>
-                    <textarea class="form-control" id="comentario" rows="3"></textarea>
-                    <br>              
+                    <textarea class="form-control input-gral" id="comentario" rows="3"></textarea><br>              
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
@@ -26,6 +25,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="editLoteRev" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content" >
@@ -34,8 +34,7 @@
                 </div>
                 <div class="modal-body">
                     <label>Comentario:</label>
-                    <textarea class="form-control" id="comentario2" rows="3"></textarea>
-                    <br>              
+                    <textarea class="form-control input-gral" id="comentario2" rows="3"></textarea><br>              
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
@@ -44,6 +43,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="rechReg" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content" >
@@ -52,7 +52,7 @@
                 </div>
                 <div class="modal-body">
                     <label>Comentario:</label>
-                    <textarea class="form-control" id="comentario3" rows="3"></textarea>
+                    <textarea class="form-control input-gral" id="comentario3" rows="3"></textarea>
                     <br>              
                 </div>
                 <div class="modal-footer">
@@ -62,6 +62,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="rechazoAs" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content" >
@@ -70,8 +71,7 @@
                 </div>
                 <div class="modal-body">
                     <label>Comentario:</label>
-                    <textarea class="form-control" id="comentario4" rows="3"></textarea>
-                    <br>              
+                    <textarea class="form-control input-gral" id="comentario4" rows="3"></textarea><br>              
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
@@ -80,6 +80,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="rev8" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content" >
@@ -88,7 +89,7 @@
                 </div>
                 <div class="modal-body">
                     <label>Comentario:</label>
-                    <textarea class="form-control" id="comentario5" rows="3"></textarea>
+                    <textarea class="form-control input-gral" id="comentario5" rows="3"></textarea>
                     <br>              
                 </div>
                 <div class="modal-footer">
@@ -98,6 +99,7 @@
             </div>
         </div>
     </div>
+
     <div class="barc modal fade" id="codeB" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content" style="padding: 40px;background-color: rgba(255,255,255,1);color:  #FFF;">
@@ -105,12 +107,12 @@
                     <img id="imgBar" class="img-responsive">
                 </div>
                 <div class="modal-footer" style="text-align: center">
-                    <br>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">cerrar</button>
+                    <br><button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">cerrar</button>
                 </div>
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="change_s" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content" >
@@ -119,9 +121,9 @@
                 </div>
                 <div class="modal-body">
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 overflow-hidden">
                             <label id="tvLbl">Sede</label>
-                            <select required="required" name="ubicacion" id="ubicacion" class="selectpicker" data-style="btn" title="SELECCIONA UBICACIÓN" data-size="7"></select>
+                            <select name="ubicacion" id="ubicacion" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required></select>
                         </div>
                     </div>
                 </div>
@@ -133,6 +135,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="change_u" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content" >
@@ -141,9 +144,9 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 overflow-hidden">
                             <label id="tvLbl">Nuevo usuario:</label>
-                            <select required="required" name="user_re" id="user_re" class="selectpicker select-gral m-0" data-style="btn" data-live-search="true" title="Selecciona un usuario" data-size="7"></select>
+                            <select name="user_re" id="user_re" class="selectpicker select-gral m-0" data-style="btn" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7"  data-container="body" required></select>
                         </div>
                     </div>
                 </div>
@@ -154,6 +157,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="return1" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content" >
@@ -162,8 +166,7 @@
                 </div>
                 <div class="modal-body">
                     <label>Comentario:</label>
-                    <textarea class="form-control" id="comentario6" rows="3"></textarea>
-                    <br>              
+                    <textarea class="form-control input-gral" id="comentario6" rows="3"></textarea><br>              
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
@@ -172,6 +175,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="return2" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content" >
@@ -180,7 +184,7 @@
                 </div>
                 <div class="modal-body">
                     <label>Comentario:</label>
-                    <textarea class="form-control" id="comentario7" rows="3"></textarea>
+                    <textarea class="form-control input-gral" id="comentario7" rows="3"></textarea>
                     <br>              
                 </div>
                 <div class="modal-footer">
@@ -190,6 +194,7 @@
             </div>
         </div>
     </div>
+
     <div class="content boxContent">
         <div class="container-fluid">
             <div class="row">
@@ -210,20 +215,20 @@
                                 <div class="form-group">
                                     <table class="table-striped table-hover" id="Jtabla" name="Jtabla">
                                         <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th>TIPO DE VENTA</th>
-                                            <th>PROYECTO</th>
-                                            <th>CONDOMINIO</th>
-                                            <th>LOTE</th>
-                                            <th>GERENTE</th>
-                                            <th>CLIENTE</th>
-                                            <th>FECHA DE MODIFICADO</th>
-                                            <th>FECHA DE VENCIMIENTO</th>
-                                            <th>ASIGANADO A</th>
-                                            <th>UBICACIÓN</th>
-                                            <th></th>
-                                        </tr>
+                                            <tr>
+                                                <th></th>
+                                                <th>TIPO DE VENTA</th>
+                                                <th>PROYECTO</th>
+                                                <th>CONDOMINIO</th>
+                                                <th>LOTE</th>
+                                                <th>GERENTE</th>
+                                                <th>CLIENTE</th>
+                                                <th>FECHA DE MODIFICADO</th>
+                                                <th>FECHA DE VENCIMIENTO</th>
+                                                <th>ASIGANADO A</th>
+                                                <th>UBICACIÓN</th>
+                                                <th></th>
+                                            </tr>
                                         </thead>
                                     </table>
                                 </div>
