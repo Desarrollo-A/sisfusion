@@ -2,9 +2,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <body class="">
 <div class="wrapper ">
-<?php $this->load->view('template/sidebar'); ?>
-
-
+    <?php $this->load->view('template/sidebar'); ?>
     <style type="text/css">
         .textoshead::placeholder {
             color: white;
@@ -328,9 +326,11 @@
     </div>
     <!-- modal -->
 
+
     <?php $this->load->view('template/footer_legend'); ?>
 </div>
 </div>
+
 </div><!--main-panel close-->
 </body>
 <?php $this->load->view('template/footer'); ?>
@@ -343,20 +343,6 @@
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script>
-
-    $(document).ready(()=>{
-        $('#editReg').modal();
-        $('#editLoteRev').modal();
-        $('#rechReg').modal();
-        $('#rechazoAs').modal();
-        $('#rev8').modal();
-        $('#codeB').modal();
-        $('#change_s').modal();
-        $('#change_u').modal();
-        $('#return1').modal();
-        $('#return2').modal();
-    });
-
     var idlote_global = 0;
 
 
@@ -406,7 +392,7 @@
             var len = data.length;
             for (var i = 0; i < len; i++) {
                 var id = data[i]['id_usuario'];
-                var name = data[i]['nombre'];
+                var name = data[i]['nombreUsuario'];
                 $("#user_re").append($('<option>').val(id).text(name.toUpperCase()));
             }
             $("#user_re").selectpicker('refresh');
@@ -689,12 +675,10 @@ if(idResidencial == 27 ){
                                 cntActions = 'N/A';
                             }
 
-                            if (Array(2762, 6096, 6864, 10937, 10938, 12136, 12173, 13015).includes(user) ){
+                            if (Array(2762, 6096, 6864, 10937, 10938, 12136, 12173, 13015, 2747).includes(user) ){
                                 cntActions += '<li><button href="#" title= "Cambio de sede" data-nomLote="' + data.nombreLote + '" data-lote="' + data.idLote + '" class="btn btn-secondary btn-round btn-fab btn-fab-mini change_sede"><span class="material-icons">pin_drop</span></button></li><br>';
-
                             }
-
-                            if (Array(1, 2, 4, 5, 3, 12, 15).includes(parseInt(data.ubicacion)) && Array(2762, 2845, 2747, 6096, 6864, 10937, 10938, 12136, 12173, 13015).includes(user)) {
+                            if ((Array("2762", "2845", "2747").includes(data.user) || Array(6096, 6864, 10937, 10938, 12136, 12173, 13015).includes(user))) {
                                 cntActions += '<li><button href="#" title= "Reasignacion" data-nomLote="' + data.nombreLote + '" data-usuario="' + data.juridico + '" data-lote="' + data.idLote + '" class="btn btn-warning btn-round btn-fab btn-fab-mini change_user"><span class="material-icons">find_replace</span></button></li><br>';
                             }
                             var color = (data.idMovimiento == 36) ? '#58D68D' :
@@ -822,7 +806,7 @@ if(idResidencial == 27 ){
                 informacion_adicional += '         <label><b>COMENTARIO: </b></label> ' + row.data().comentario;
                 informacion_adicional += '     </div>';
                 informacion_adicional += '     <div class="col-12 col-sm-12 col-md-12 col-lg-12">';
-                informacion_adicional += '         <label><b>FECHA APARATO: </b></label> ' + row.data().fechaApartado;
+                informacion_adicional += '         <label><b>FECHA APARTADO: </b></label> ' + row.data().fechaApartado;
                 informacion_adicional += '     </div>';
                 informacion_adicional += '     <div class="col-12 col-sm-12 col-md-12 col-lg-12">';
                 informacion_adicional += '         <label><b>COORDINADOR: </b></label> ' + row.data().coordinador;
@@ -1605,3 +1589,4 @@ if(idResidencial == 27 ){
 
 
 </script>
+

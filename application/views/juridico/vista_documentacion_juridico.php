@@ -4,7 +4,7 @@
 	<div class="wrapper ">
 		<?php
 		if($this->session->userdata('id_usuario')=="2762" || $this->session->userdata('id_usuario')=="1" || $this->session->userdata('id_usuario')=="1297"){
-			 $this->load->view('template/sidebar');
+			$this->load->view('template/sidebar');
 		}
 		
 		?>
@@ -21,10 +21,10 @@
 								<div class="toolbar">
 									<div class="container-fluid p-0">
 										<div class="row">
-											<div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
+											<div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4 overflow-hidden">
 												<div class="form-group">
 													<label class="m-0" for="filtro3">Proyecto</label>
-													<select name="filtro3" id="filtro3" class="selectpicker select-gral" data-show-subtext="true" data-live-search="true"  data-style="btn" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
+													<select name="filtro3" id="filtro3" class="selectpicker select-gral" data-show-subtext="true" data-live-search="true"  data-style="btn" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required>
 														<?php
 														if($residencial != NULL) :
 															foreach($residencial as $fila) : ?>
@@ -35,16 +35,16 @@
 													</select>
 												</div>
 											</div>
-											<div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
+											<div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4 overflow-hidden ">
 												<div class="form-group">
 													<label class="m-0" for="filtro4">Condominio</label>
-													<select id="filtro4" name="filtro4" class="selectpicker select-gral" data-show-subtext="true" data-live-search="true"  data-style="btn" title="SELECCIONA UNA OPCIÓN" data-size="7"></select>
+													<select id="filtro4" name="filtro4" class="selectpicker select-gral" data-show-subtext="true" data-live-search="true"  data-style="btn" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body"></select>
 												</div>
 											</div>
-											<div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
+											<div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4 overflow-hidden ">
 												<div class="form-group">
 													<label class="m-0" for="filtro5">Lote</label>
-													<select id="filtro5" name="filtro5" class="selectpicker select-gral" data-show-subtext="true" data-live-search="true"  data-style="btn" title="SELECCIONA UNA OPCIÓN" data-size="7"></select>
+													<select id="filtro5" name="filtro5" class="selectpicker select-gral" data-show-subtext="true" data-live-search="true"  data-style="btn" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body"></select>
 												</div>
 											</div>
 										</div>
@@ -52,23 +52,21 @@
 								</div>
 								<div class="material-datatables">
 									<div class="form-group">
-										<div class="table-responsive">
-											<table id="tableDoct" class="table-striped table-hover">
-												<thead>
-													<tr>
-														<th>PROYECTO</th>
-														<th>CONDOMINIO</th>
-														<th>LOTE</th>
-														<th>CLIENTE</th>
-														<th>NOMBRE DE DOCUMENTO</th>
-														<th>HORA/FECHA</th>
-														<th>DOCUMENTO</th>
-														<th>RESPONSABLE</th>
-														<th>UBICACIÓN</th>
-													</tr>
-												</thead>
-											</table>
-										</div>
+										<table id="tableDoct" class="table-striped table-hover hide">
+											<thead>
+												<tr>
+													<th>PROYECTO</th>
+													<th>CONDOMINIO</th>
+													<th>LOTE</th>
+													<th>CLIENTE</th>
+													<th>NOMBRE DE DOCUMENTO</th>
+													<th>HORA/FECHA</th>
+													<th>DOCUMENTO</th>
+													<th>RESPONSABLE</th>
+													<th>UBICACIÓN</th>
+												</tr>
+											</thead>
+										</table>
 									</div>
 								</div>
 							</div>
@@ -84,6 +82,6 @@
 	<?php $this->load->view('template/footer');?>
 	<link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
 	<script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
-	<script>var base_url = '<?php echo base_url() ?>';</script>
-	<script type="text/javascript" src="<?=base_url()?>dist/js/addRemove.js"></script>
 	<script src="<?= base_url() ?>dist/js/controllers/juridico/vista_documentacion_juridico.js"></script>
+
+
