@@ -4,10 +4,6 @@
 <div class="wrapper ">
 <?php $this->load->view('template/sidebar'); ?>
 
-    <style type="text/css">
-        .textoshead::placeholder { color: white; }
-    </style>
-
     <div class="modal fade" id="editReg" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content" >
@@ -15,8 +11,8 @@
                     <h4 class="modal-title text-center"><label>Registro estatus 7 (Ventas)- <b><span class="lote"></span></b></label></h4>
                 </div>
                 <div class="modal-body">
-                    <label>Comentario:</label>
-                    <textarea class="form-control input-gral" id="comentario" rows="3"></textarea><br>              
+                    <label>Comentario</label>
+                    <textarea class="text-modal" id="comentario" rows="3"></textarea><br>              
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
@@ -33,8 +29,8 @@
                     <h4 class="modal-title text-center"><label>Registro estatus 7 (Ventas)- <b><span class="lote"></span></b></label></h4>
                 </div>
                 <div class="modal-body">
-                    <label>Comentario:</label>
-                    <textarea class="form-control input-gral" id="comentario2" rows="3"></textarea><br>              
+                    <label>Comentario</label>
+                    <textarea class="text-modal" id="comentario2" rows="3"></textarea><br>              
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
@@ -51,8 +47,8 @@
                     <h4 class="modal-title text-center"><label>Rechazo estatus 7 (Contraloría)- <b><span class="lote"></span></b></label></h4>
                 </div>
                 <div class="modal-body">
-                    <label>Comentario:</label>
-                    <textarea class="form-control input-gral" id="comentario3" rows="3"></textarea>
+                    <label>Comentario</label>
+                    <textarea class="text-modal" id="comentario3" rows="3"></textarea>
                     <br>              
                 </div>
                 <div class="modal-footer">
@@ -70,8 +66,8 @@
                         <h4 class="modal-title text-center"><label>Rechazo estatus 7 (Asesor)- <b><span class="lote"></span></b></label></h4>
                 </div>
                 <div class="modal-body">
-                    <label>Comentario:</label>
-                    <textarea class="form-control input-gral" id="comentario4" rows="3"></textarea><br>              
+                    <label>Comentario</label>
+                    <textarea class="text-modal" id="comentario4" rows="3"></textarea><br>              
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
@@ -88,8 +84,8 @@
                     <h4 class="modal-title text-center"><label>Registro estatus 7 (Ventas) - <b><span class="lote"></span></b></label></h4>
                 </div>
                 <div class="modal-body">
-                    <label>Comentario:</label>
-                    <textarea class="form-control input-gral" id="comentario5" rows="3"></textarea>
+                    <label>Comentario</label>
+                    <textarea class="text-modal" id="comentario5" rows="3"></textarea>
                     <br>              
                 </div>
                 <div class="modal-footer">
@@ -106,7 +102,7 @@
                 <div class="modal-body d-flex justify-center">
                     <img id="imgBar" class="img-responsive">
                 </div>
-                <div class="modal-footer" style="text-align: center">
+                <div class="modal-footer d-flex justify-center">
                     <br><button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">cerrar</button>
                 </div>
             </div>
@@ -165,8 +161,8 @@
                     <h4 class="modal-title"><label>Rechazo estatus 7 (Contraloría)- <b><span class="lote"></span></b></label></h4>
                 </div>
                 <div class="modal-body">
-                    <label>Comentario:</label>
-                    <textarea class="form-control input-gral" id="comentario6" rows="3"></textarea><br>              
+                    <label>Comentario</label>
+                    <textarea class="text-modal" id="comentario6" rows="3"></textarea><br>              
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
@@ -183,8 +179,8 @@
                     <h4 class="modal-title text-center"><label>Rechazo estatus 7 (Asesor)- <b><span class="lote"></span></b></label></h4>
                 </div>
                 <div class="modal-body">
-                    <label>Comentario:</label>
-                    <textarea class="form-control input-gral" id="comentario7" rows="3"></textarea>
+                    <label>Comentario</label>
+                    <textarea class="text-modal" id="comentario7" rows="3"></textarea>
                     <br>              
                 </div>
                 <div class="modal-footer">
@@ -225,9 +221,9 @@
                                                 <th>CLIENTE</th>
                                                 <th>FECHA DE MODIFICADO</th>
                                                 <th>FECHA DE VENCIMIENTO</th>
-                                                <th>ASIGANADO A</th>
+                                                <th>ASIGNADO A</th>
                                                 <th>UBICACIÓN</th>
-                                                <th></th>
+                                                <th>ACCIONES</th>
                                             </tr>
                                         </thead>
                                     </table>

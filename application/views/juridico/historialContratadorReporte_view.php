@@ -34,23 +34,21 @@
                             </div>
                             <div class="material-datatables">
                                 <div class="form-group">
-                                    <div class="table-responsive">
-                                        <table id="Jtabla" class="table-striped table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>LOTE</th>
-                                                    <th>GERENTE(S)</th>
-                                                    <th>ASESOR(ES)</th>
-                                                    <th>ESTATUS</th>
-                                                    <th>DETALLES</th>
-                                                    <th>COMENTARIO</th>
-                                                    <th>FECHA</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                    <table id="Jtabla" class="table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>LOTE</th>
+                                                <th>GERENTE(S)</th>
+                                                <th>ASESOR(ES)</th>
+                                                <th>ESTATUS</th>
+                                                <th>DETALLES</th>
+                                                <th>COMENTARIO</th>
+                                                <th>FECHA</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
