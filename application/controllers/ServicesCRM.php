@@ -51,26 +51,26 @@ class ServicesCRM extends CI_Controller
 
     function codificarTest(){
         $miJson = array(
-            "rfc"=>"CACE950817RRf",
-            "id_rol"=> 3,
-            "id_lider"=>1695,
+            "rfc"=>"HGDE350247FF5",
+            "id_rol"=> 9,
+            "id_lider"=>692,
             "id_gerente" => 456,
             "id_subdirector" => 789,
             "id_regional" => 321,
-            "nombre" => "María de Jesús",
-            "apellido_paterno" => "Garduño",
-            "apellido_materno" => "Martinez",
+            "nombre" => "Nombre Fulanito",
+            "apellido_paterno" => "Gómez",
+            "apellido_materno" => "Perez",
             "forma_pago" => 2,
             "correo" => "garmar@gmail.com",
             "telefono" => 442210616,
-            "id_sede" => 3,
-            "usuario" => "mgarmar" ,
+            "id_sede" => 4,
+            "usuario" => "tedigo" ,
             "contrasena" => "123456",
             "creado_por" => 5,
             "sedech" => 1,
             "sucursalch" => 1,
             "status_contratacion" => 1,
-            "nacionalidad" => "MEX"
+            "nacionalidad" => 0
 
         ) ;
         $ok1 = json_encode($miJson);
@@ -97,27 +97,19 @@ class ServicesCRM extends CI_Controller
                 $id_subdirector=0;
                 $id_regional=0;
                 $id_lider=0;
-                $mensajeLeyenda = '';
                 if($objDatos['id_rol'] == 7){
                     //Asesor
                     $id_lider  = $objDatos['id_lider'];
                     $id_gerente=$getLider[0]['id_gerente'];
                     $id_subdirector=$getLider[0]['id_subdirector'];
                     $id_regional=$getLider[0]['id_regional'];
-                    $mensajeLeyenda = 'No se pueden añadir más asesores';
-//                    echo 'validación de rol 7<br><br>';
-//                    print_r($getLider);
-//                    exit;
                 }
                 else if($objDatos['id_rol'] == 9){
                     //Coordinador
-                    $id_lider  = 0;
+                    $id_lider  = $objDatos['id_lider'];
                     $id_gerente=$objDatos['id_lider'];
                     $id_subdirector=$getLider[0]['id_subdirector'];
                     $id_regional=$getLider[0]['id_regional'];
-                    $mensajeLeyenda = 'No se pueden añadir más coordinadores';
-//                    echo 'validación de rol 9';
-//                    exit;
                 }
                 else if($objDatos['id_rol'] == 3){
                     //Gerente
@@ -125,19 +117,8 @@ class ServicesCRM extends CI_Controller
                     $id_gerente=0;
                     $id_subdirector=0;//$getLider[0]['id_subdirector'];
                     $id_regional=0;//$getLider[0]['id_regional'];
-                    $mensajeLeyenda = 'No se pueden añadir más gerentes';
-//                    echo 'validación de rol 3';
-//                    exit;
                 }
 
-//                print_r($id_lider);
-//                echo '<br><br>';
-//                print_r($id_gerente);
-//                echo '<br><br>';
-//                print_r($id_subdirector);
-//                echo '<br><br>';
-//                print_r($id_regional);
-//                echo '<br><br>';
                 $dataValidar = array(
                     "id_sede" => $objDatos['id_sede'],
                     "id_rol" => $objDatos['id_rol'],
@@ -146,14 +127,13 @@ class ServicesCRM extends CI_Controller
                     "subdirector_id" => $id_subdirector,
                     "regional_id" => $id_regional,
                 );
-//                $validacion = $this->validateUserVts($dataValidar);
                 $validacion = validateUserVts($dataValidar);
-                if($validacion==1){
+                if($validacion['respuesta']==1){
                     //continuar con la lógica
                 }else{
                     echo base64_encode(json_encode(array("result" => false,
                         "code" => 0,
-                        "message" => $mensajeLeyenda)));
+                        "message" => $validacion['mensaje'])));
                     exit;
                 }
 

@@ -235,36 +235,18 @@ class Usuarios extends CI_Controller
             $resultadoCH = $res->resultado;
         }
         else {
-            //TEST
             $arrayChecar = array (
                 'id_rol' => $_POST['member_type'],
                 'id_sede' => $_POST['headquarter'],
                 'id_lider' => $_POST['leader']
             );
             $validacion = validateUserVts($arrayChecar);
-
-//            echo 'OK RESPUESTA:'.$validacion;
-            switch ($_POST['member_type']){
-                case 7:
-                    $mensajeLeyenda = 'No se pueden añadir más asesores';
-                    break;
-                case 3:
-                    $mensajeLeyenda = 'No se pueden añadir más gerentes';
-                    break;
-                case 9:
-                    $mensajeLeyenda = 'No se pueden añadir más coordinadores';
-                    break;
-                default:
-                    break;
-            }
-
-
-            if($validacion==1){
+            if($validacion['respuesta']==1){
                 //continuar con la lógica
             }else{
                 echo json_encode(array("result" => false,
                     "respuesta" => 0,
-                    "message" => $mensajeLeyenda));
+                    "message" => $validacion['mensaje']));
                 exit;
             }
             $sedeCH = 0;

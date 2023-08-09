@@ -42,14 +42,14 @@ class Services_model extends CI_Model
             $this->db->db_debug = false;
             $response = $this->db->insert("usuarios", $data);
             $id = $this->db->insert_id();
+
             if (!$response) {  
             $error = $this->db->error();
             $datos = explode('.',$error['message']);
             if($error['code'] == "23000/2627"){
                 $message = "El nombre de usuario ya se encuentra registrado";
             }else{
-                echo $error;
-
+                $message = "Error desconocido";
             }
             return $finalAnswer = array("result" => false,
                                         "code" => $error['code'],
@@ -103,4 +103,8 @@ class Services_model extends CI_Model
         return $query->result_array();
     }
 
+    function getSedeById($id_sede){
+        $query = $this->db->query("SELECT * FROM sedes wHERE id_sede=".$id_sede);
+        return $query->row();
+    }
 }
