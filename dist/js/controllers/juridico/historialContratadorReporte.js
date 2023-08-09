@@ -115,56 +115,55 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
         }],
         destroy: true,
         ordering: false,
-        "columns":
-        [{
+        "columns":[{
             data: 'nombreLote'},
+        {
+            data: function (data)
             {
-                data: function (data)
-                {
-                    var ge1, ge2, ge3, ge4, ge5;
-                    if(data.gerente == undefined){ge1="";}else{ge1=data.gerente;};
-                    if(data.gerente2 == undefined){ge2="";}else{ge2=data.gerente2;};
-                    if(data.gerente3 == undefined){ge3="";}else{ge3=data.gerente3;};
-                    if(data.gerente4 == undefined){ge4="";}else{ge4=data.gerente4;};
-                    if(data.gerente5 == undefined){ ge5=""; }else{ge5=data.gerente5;};
-                    return ge1 ;
-                }
-            },
+                var ge1, ge2, ge3, ge4, ge5;
+                if(data.gerente == undefined){ge1="";}else{ge1=data.gerente;};
+                if(data.gerente2 == undefined){ge2="";}else{ge2=data.gerente2;};
+                if(data.gerente3 == undefined){ge3="";}else{ge3=data.gerente3;};
+                if(data.gerente4 == undefined){ge4="";}else{ge4=data.gerente4;};
+                if(data.gerente5 == undefined){ ge5=""; }else{ge5=data.gerente5;};
+                return ge1 ;
+            }
+        },
+        {
+            data: function (data)
             {
-                data: function (data)
-                {
-                    var as1, as2, as3, as4, as5;
-                    if(data.asesor == undefined){as1="";}else{as1=data.asesor};
-                    if(data.asesor2 == undefined){as2="";}else{as2=data.asesor2;};
-                    if(data.asesor3 == undefined){as3="";}else{as3=data.asesor3};
-                    if(data.asesor4 == undefined){as4="";}else{ as4=data.asesor4;};
-                    if(data.asesor5 == undefined){as5="";}else{ as5=data.asesor5;};
-                    return as1 ;
-                }
-            },
+                var as1, as2, as3, as4, as5;
+                if(data.asesor == undefined){as1="";}else{as1=data.asesor};
+                if(data.asesor2 == undefined){as2="";}else{as2=data.asesor2;};
+                if(data.asesor3 == undefined){as3="";}else{as3=data.asesor3};
+                if(data.asesor4 == undefined){as4="";}else{ as4=data.asesor4;};
+                if(data.asesor5 == undefined){as5="";}else{ as5=data.asesor5;};
+                return as1 ;
+            }
+        },
+        {
+            data: function (data)
             {
-                data: function (data)
-                {
-                    var status;
-                    if(data.idStatusContratacion==15){status="Lote Contratado"}else{status="Status no definido [303]"}
-                    return status;
-                }
-            },
+                var status;
+                if(data.idStatusContratacion==15){status="Lote Contratado"}else{status="Status no definido [303]"}
+                return status;
+            }
+        },
+        {
+            data: function (data)
             {
-                data: function (data)
-                {
-                    var details;
-                    if(data.idStatusContratacion==15 && data.idMovimiento==45){details="15. Acuse entregado (Contraloría)"}
-                    return details;
-                }
-            },
-            {data: 'comentario'},
+                var details;
+                if(data.idStatusContratacion==15 && data.idMovimiento==45){details="15. Acuse entregado (Contraloría)"}
+                return details;
+            }
+        },
+        {data: 'comentario'},
+        {
+            data: function (data) 
             {
-                data: function (data) 
-                {
-                    return '<p class="m-0">' + data.fechaVenc.split('.')[0] + '</p>';
-                }
-            }]
+                return '<p class="m-0">' + data.fechaVenc.split('.')[0] + '</p>';
+            }
+        }]
     });
 
     $('#Jtabla').on('draw.dt', function() {
