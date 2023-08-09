@@ -24,6 +24,8 @@ $(document).ready(function()
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
     setIniDatesXMonth('#beginDate','#endDate');
+    let finalBeginDate = $("#beginDate").val();
+    let finalEndDate = $("#endDate").val();
     fillTable(1, finalBeginDate, finalEndDate, 0);
 });
 
@@ -73,6 +75,9 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
                 }
             },
         dom: 'Brt'+ "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        width: '100%',
+        scrollX: true,
+        bAutoWidth: true,
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
