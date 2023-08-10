@@ -188,6 +188,10 @@
   padding-bottom: 30px;
 }
 
+.pb-0 {
+  padding-bottom: 0px;
+}
+
 /* END Margin and padding generales */
 /* Utilities */
 .min-w100 {
@@ -1114,6 +1118,12 @@
   color: #54d2d2;
   border: none;
   background: #11DFC618;
+}
+
+.lbl-olivo {
+  color: #86895D;
+  border: none;
+  background-color: #86895D18;
 }
 
 /* END Etiquetas */
