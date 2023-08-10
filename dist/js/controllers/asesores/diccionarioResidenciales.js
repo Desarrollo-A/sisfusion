@@ -26,28 +26,26 @@ $('#tablaResidenciales').DataTable({
     },
     destroy: true,
     ordering: false,
-    columns: [
-        { 
-            data: function (d) {
-                return d.idResidencial;
-            }
-        },
-        { 
-            data: function (d) {
-                return d.nombreResidencial;
-            }
-        },
-        { 
-            data: function (d) {
-                return d.descripcion;
-            }
-        },
-        { 
-            data: function (d) {
-                return d.empresa;
-            }
-        },
-    ],
+    columns: [{ 
+        data: function (d) {
+            return d.idResidencial;
+        }
+    },
+    { 
+        data: function (d) {
+            return d.nombreResidencial;
+        }
+    },
+    { 
+        data: function (d) {
+            return d.descripcion;
+        }
+    },
+    { 
+        data: function (d) {
+            return d.empresa;
+        }
+    }],
     columnDefs: [{
         "searchable": true,
         "orderable": false,
