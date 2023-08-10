@@ -93,4 +93,14 @@ class General extends CI_Controller
         else
             echo json_encode(array());
     }
+
+    public function getOfficeAddresses(){
+        $data = $this->General_model->getOfficeAddresses()->result_array();
+
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
 }

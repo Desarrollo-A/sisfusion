@@ -16,7 +16,7 @@
 
 <ul>
     <li>
-        Haga clic en el siguiente <a href='<?=$url?>' target='_blank'>enlace.</a><br>
+        Haga clic en el siguiente <a href='<?=$url?>' target='_blank'><b>enlace.</b></a><br>
     </li>
     <li>
         Será redirigido una página de verificación en nuestro sitio web.<br><br>

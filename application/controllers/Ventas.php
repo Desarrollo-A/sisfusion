@@ -74,4 +74,8 @@ class Ventas extends CI_Controller {
         }
     }
 
+    public function gestorOficinas(){
+        $this->load->view('template/header');
+        $this->load->view("ventasAsistentes/gestorOficinas_view");
+    }
 }
