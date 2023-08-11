@@ -1,4 +1,3 @@
-
 $('#mes').change(function() {
     anio = $('#anio').val();
     mes = $('#mes').val();
@@ -287,7 +286,7 @@ $('#anio').change(function () {
     datos = datos + `<option value="${meses[index]['id']}">${meses[index]['mes']}</option>`;
     $('#mes').html(datos);
     $('#mes').selectpicker('refresh');
-}
+    }
 });
 
 

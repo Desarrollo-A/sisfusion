@@ -2978,11 +2978,14 @@ class Asesor extends CI_Controller
         $tipo_comprobante = $this->input->post('tipo_comprobante');
 
         $cliente = $this->Clientes_model->clienteAutorizacion($id_cliente);
-        if (intval($cliente->autorizacion_correo) !== AutorizacionClienteOpcs::VALIDADO || intval($cliente->autorizacion_sms) !== AutorizacionClienteOpcs::VALIDADO) {
-            $data['message'] = 'VERIFICACION CORREO/SMS';
-            echo json_encode($data);
-            return;
+        if($this->session->userdata('id_rol') != 17){
+            if (intval($cliente->autorizacion_correo) !== AutorizacionClienteOpcs::VALIDADO || intval($cliente->autorizacion_sms) !== AutorizacionClienteOpcs::VALIDADO) {
+                $data['message'] = 'VERIFICACION CORREO/SMS';
+                echo json_encode($data);
+                return;
+            }
         }
+        
 
         $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
         if($valida_tventa[0]['tipo_venta'] == 1 ){
@@ -4064,11 +4067,6 @@ class Asesor extends CI_Controller
         $fileName = $_FILES['docArchivo1']['name'];
         $fileSize = $_FILES['docArchivo1']['size'];
         $fileType = $_FILES['docArchivo1']['type'];
-        // echo( $fileTmpPath);
-        echo( $fileName);
-        // echo( $fileSize);
-        // echo( $fileType);
-
         $fileNameCmps = explode(".", $fileName);
         $fileExtension = strtolower(end($fileNameCmps));
         $newFileName = md5(time() . $fileName) . '.' . $fileExtension;

@@ -1802,8 +1802,6 @@ $("#updateDescuentoCertificado").submit(function (e) {
     fechaComparar = (year + '-' + month + '-' + day);
     var f1 = new Date(year,month, day);
     var f2 = new Date(fechaSeleccionada);
-    console.log(f1,'f1');
-    console.log(f2,'f2');
     MesSelecionado = parseInt(FechaEnArreglo[1]);
     DiaSeleccionado = parseInt(FechaEnArreglo[2]);
     MesSistemas = parseInt(month+1);
@@ -1874,9 +1872,6 @@ function setInitialValues() {
     const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
     FechaIncial = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
     finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
-    // console.log('Fecha inicio: ', finalBeginDate);
-    // console.log('Fecha final: ', finalEndDate);
-    // $("#beginDate").val(finalBeginDate);
     $("#fechaIncial").val(FechaIncial);
 }
 

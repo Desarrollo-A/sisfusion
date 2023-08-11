@@ -2608,37 +2608,57 @@ class Contraloria extends CI_Controller {
         echo json_encode($response);
     }
 
+    public function setData()
+    {
 
-    public function setData() {
-        $json = json_decode($this->input->post("jsonInfo"));
-        $insertArrayData = array();
-        $updateArrayData = array();
-        $updateArrayData = array();
+			$json = json_decode($this->input->post("jsonInfo"));
+            // print_r($json[0]);
+            
 
-        for ($i = 0; $i < count($json); $i++) { // MJ: SE ARMAN ARRAYS PARA INSERTAR | ACTUALIZAR SEGÚN SEA EL CASO
-            $commonData = array();
-            $commonData2 = array();
+            foreach( $json as $obj ){
+                print_r($obj->referencia );
+                // foreach ( $obj as $elem ) {
+                //     print_r($elem);
+                // }
+            }
+			//print_r($json);
+			//echo "---------";
+			//print_r($json[1]->ID_LOTE);
 
-            $commonData +=  array("idLote" => $json[$i]->ID_LOTE);
-            $commonData +=  array("observacionContratoUrgente" => 1);
-            $commonData +=  array("usuario" => $this->session->userdata('id_usuario'));
+			// $insertArrayData = array();
+			// $updateArrayData = array();
+            //     $updateArrayData = array();
+            //     for ($i = 0; $i < count($json); $i++) { // MJ: SE ARMAN ARRAYS PARA INSERTAR | ACTUALIZAR SEGÚN SEA EL CASO
+			// 		$commonData = array();
+			// 		$commonData2 = array();
+
+            //             $commonData +=  array("idLote" => $json[$i]->ID_LOTE);
+            //             $commonData +=  array("observacionContratoUrgente" => 1);
+            //             $commonData +=  array("usuario" => $this->session->userdata('id_usuario'));
+
+						
+            //             $commonData2 +=  array("id_parametro" => $json[$i]->ID_LOTE);
+            //             $commonData2 +=  array("tipo" => 'update');
+            //             $commonData2 +=  array("anterior" => '');
+            //             $commonData2 +=  array("nuevo" => 1);
+            //             $commonData2 +=  array("col_afect" => 'observacionContratoUrgente');
+			// 			$commonData2 +=  array("tabla" => 'lotes');
+			// 			$commonData2 +=  array("creado_por" => $this->session->userdata('id_usuario'));
+						
+            //             array_push($insertArrayData, $commonData2);
+			// 			array_push($updateArrayData, $commonData); 
+            //     }
+              
+
+			// 	//print_r($insertArrayData);
+
+			// 	$response = $this->db->update_batch('lotes', $updateArrayData, 'idLote');
+       		// 	 $this->db->insert_batch('auditoria',$insertArrayData);
+
+			// 		echo json_encode($response);
 
 
-            $commonData2 +=  array("id_parametro" => $json[$i]->ID_LOTE);
-            $commonData2 +=  array("tipo" => 'update');
-            $commonData2 +=  array("anterior" => '');
-            $commonData2 +=  array("nuevo" => 1);
-            $commonData2 +=  array("col_afect" => 'observacionContratoUrgente');
-            $commonData2 +=  array("tabla" => 'lotes');
-            $commonData2 +=  array("creado_por" => $this->session->userdata('id_usuario'));
 
-            array_push($insertArrayData, $commonData2);
-            array_push($updateArrayData, $commonData);
-        }
-        $response = $this->db->update_batch('lotes', $updateArrayData, 'idLote');
-        $this->db->insert_batch('auditoria',$insertArrayData);
-
-        echo json_encode($response);
     }
 
     public function lotes_apartados() {
