@@ -234,6 +234,7 @@ class Usuarios extends CI_Controller
                 'id_lider' => $_POST['leader']
             );
             $validacion = validateUserVts($arrayChecar);
+
             if($validacion['respuesta']==1){
                 //continuar con la lógica
             }else{
@@ -247,7 +248,7 @@ class Usuarios extends CI_Controller
             if ($_POST['member_type'] == 3 || $_POST['member_type'] == 7 || $_POST['member_type'] == 9) {
                 $usersCH = 1;
                 #actualizar los registros en caso de que haya modificado de lider o tipo de miembro
-                /* 
+                /*
                 SEDES CAPITAL HUMANO
                 9 -- cancun
                 4 ---cdmx
