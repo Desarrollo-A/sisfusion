@@ -86,7 +86,7 @@ function getLotes(idCondominio) {
     $('#spiner-loader').removeClass('hide');
     $("#lotes").empty().selectpicker('refresh');
     $.ajax({
-        url: url + 'General/getLotesList',
+        url: general_base_url + 'General/getLotesList',
         type: 'post',
         dataType: 'json',
         data: {

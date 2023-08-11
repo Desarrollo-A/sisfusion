@@ -1,14 +1,11 @@
 $('#table-user thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
-    if (i !== 10) {
-        $(this).html('<input class="textoshead"  placeholder="'+title+'"/>' );
-        $( 'input', this ).on('keyup change', function () {
-            if ($('#table-user').DataTable().column(i).search() !== this.value ) {
-                $('#table-user').DataTable().column(i).search(this.value).draw();
-            }
-        });
-    }
-   
+    $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
+    $( 'input', this ).on('keyup change', function () {
+        if ($('#table-user').DataTable().column(i).search() !== this.value ) {
+            $('#table-user').DataTable().column(i).search(this.value).draw();
+        }
+    });
 });
 
 sp = { // MJ: SELECT PICKER
@@ -51,7 +48,7 @@ sp2 = { // CHRIS: SELECT PICKER
         });
     }
 }
- 
+
 $(document).ready(function () {
     sp.initFormExtendedDatetimepickers();
     sp2.initFormExtendedDatetimepickers();
@@ -59,33 +56,6 @@ $(document).ready(function () {
     getEstatusEscrituracion();
     setInitialValues();
     fillTable();
-
-    // $('#table-user thead tr:eq(0) th').each(function (i) {
-    //     if (i !== 10) {
-    //         const title = $(this).text();
-    //         titulosTablaGeneral.push(title);
- 
-    //         $(this).html(`<input type="text" class="textoshead" placeholder="${title}"/>`);
-    //         $('input', this).on('keyup change', function () {
-    //             if (tablaGeneral.column(i).search() !== this.value) {
-    //                 tablaGeneral.column(i).search(this.value).draw();
-
-    //                 let totalDescuento = 0;
-    //                 const index = tablaGeneral.rows({selected: true, search: 'applied'}).indexes();
-    //                 const data = tablaGeneral.rows(index).data();
-
-                
-
-                
-    //             }
-    //         });
-    //     }
-    // })
-
-
-
-
-
     $(document).on('fileselect', '.btn-file :file', function (event, numFiles, label) {
         var input = $(this).closest('.input-group').find(':text'),
             log = numFiles > 1 ? numFiles + ' files selected' : label;
@@ -95,28 +65,23 @@ $(document).ready(function () {
             if (log) alert(log);
         }
     });
-
     $(document).on('change', '.btn-file :file', function () {
         var input = $(this),
             numFiles = input.get(0).files ? input.get(0).files.length : 1,
             label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-        input.trigger('fileselect', [numFiles, label]);
+            input.trigger('fileselect', [numFiles, label]);
     });
-
     getRejectionReasons(2); // MJ: SE MANDAN TRAER LOS MOTIVOS DE RECHAZO PARA EL ÁRBOL DE DOCUMENTOS DE ESCRUTURACIÓN
-
 }); 
- 
 
-//funciones
 function fillTable(id) {
-    console.log(id);
     if(id == ''){
         id = ''
     }
     prospectsTable = $('#table-user').DataTable({
-        dom: 'rt' + "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
-        width: "auto",
+        dom: 'rt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: "100%",
+        scrollX: true,
         pagingType: "full_numbers",
         language: {
             url: "../static/spanishLoader_v2.json",
@@ -183,20 +148,7 @@ function fillTable(id) {
             },
             {
                 data: function (d) {
-                    return `<center> <button value="${d.id_solicitud}" 
-                                            data-code="${d.id_solicitud}" 
-                                            data-nombre=" ${d.cliente}"
-                                            data-nombreTitu="${d.nombre}"
-                                            data-idTitu="${d.id_titulacion}"
-                                            data-lote="${d.nombreLote}"
-                                             name="repartir" 
-                                            id="repartir" data-type="5"
-                                             class="btn-data btn-green" 
-                                             data-toggle="tooltip" 
-                                             data-placement="top" 
-                                             title="Reasignar">
-                                             <i class="fas fa-user-friends"></i></button>
-                                              <center>`;
+                    return `<center> <button value="${d.id_solicitud}" data-code="${d.id_solicitud}" data-nombre=" ${d.cliente}" data-nombreTitu="${d.nombre}" data-idTitu="${d.id_titulacion}" data-lote="${d.nombreLote}" name="repartir"  id="repartir" data-type="5" class="btn-data btn-green"  data-toggle="tooltip"  data-placement="top" title="REASIGNAR"><i class="fas fa-user-friends"></i></button><center>`;
                 }
             }
             
@@ -206,10 +158,6 @@ function fillTable(id) {
             "orderable": false,
             "targets": 0
         },
-        // {
-        //     "targets": [ 10 ],
-        //     "visible": false
-        // }
         ],
         ajax: {
             url: 'SolicitudesEscrituracion',
@@ -217,13 +165,17 @@ function fillTable(id) {
             cache: false,
             data: {
                 "id_usuario": id,
-            
             }
         }
-
     });
 };
- 
+
+$('#table-user').on('draw.dt', function() {
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
+    });
+});
+
 function setInitialValues() {
     // BEGIN DATE
     const fechaInicio = new Date();
@@ -237,11 +189,8 @@ function setInitialValues() {
     finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
     finalBeginDate2 = [('0' + beginDate.getDate()).slice(-2), ('0' + (beginDate.getMonth() + 1)).slice(-2), beginDate.getFullYear()].join('/');
     finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
-    
     $('#beginDate').val(finalBeginDate2);
     $('#endDate').val(finalEndDate2);
-
-   
 }
 
 function getEstatusEscrituracion(){
@@ -251,100 +200,73 @@ function getEstatusEscrituracion(){
     $("#estatusE").append($('<option>').val("1").text("Todos"));
     $("#estatusE").selectpicker('refresh');
     $('#spiner-loader').addClass('hide');
- 
 }
 
-
 $(document).on('click', '#repartir', function () {
-
     $('#modal_nuevas').modal('show');
     solicitud = $(this).attr("data-code");
     nombreTitular = $(this).attr("data-nombreTitu");
     idTitular = $(this).attr("data-idTitu");
-
     document.getElementById("id_actual").value =  idTitular;
     document.getElementById("solicitud").value =  solicitud;
-
-    console.log(solicitud);
     var Descripcion = document.getElementById('textDescripcion');
     Descripcion.innerHTML = '';
     var titulo  = '';
     titulo += ` <h4 class="modal-title card-title" id="tituloModalUni" name="tituloModalUni">Reasignación de la solicitud :  ${solicitud}  </h4>`;
     var anterior = document.getElementById('anteriorTitu');
     anterior.innerHTML = ''  ;
-    anterior.innerHTML =   nombreTitular  ;
-
+    anterior.innerHTML =   '<b>'+nombreTitular+'<b>'  ;
     var Descripcion = document.getElementById('textDescripcion');
     var comentarioDescrip = document.getElementById('textDescripcion');
-    comentarioDescrip.innerHTML = 'ID USUARIO :'+idTitular +' <br>NOMBRE USUARIO: '+ nombreTitular   ;
-
+    comentarioDescrip.innerHTML = 'ID USUARIO :<b>'+idTitular +'</b><br><br>NOMBRE USUARIO: <b>'+ nombreTitular +'</b>';
     var myCommentsLote = document.getElementById('tituloModal');
     myCommentsLote.innerHTML = '';
     myCommentsLote.innerHTML = titulo;
-
-
 });
 
-    $(document).on("click", ".updateTitu", function () {
-        titulares  = document.getElementById("titulares").value;
-        if(titulares != ''){
-            idTitular  =   document.getElementById("id_actual").value ;
-            solicitud  = document.getElementById("solicitud").value ;
-            var validacion = false;
-            if(titulares == idTitular){
-                validacion = false;
-                console.log('son iguales');
-            }else{
-                validacion = true;
-                console.log('son diferentes');
-            }
-            if(validacion){
-                $.ajax({
-                    url : 'reasignacionSolicitudEsc',
-                    type : 'POST',
-                    dataType: "json",
-                    data: {
-                    // "pagos_activos"     : pagos_activos,
-                    "id_solicitud" : solicitud,
-                    "titulares" : titulares, //nuevo 
-                    "idTitular": idTitular,         //viejo  
-                      }, 
-                      success: function(data) {
-               
-                        alerts.showNotification("top", "right", ""+data.message+"", ""+data.response_type+"");
-                       
-                        $('#table-user').DataTable().ajax.reload(null, false );
-                        
-                        // toastr[response.response_type](response.message);
-                        $('#modal_nuevas').modal('toggle');
-                    },              
-                    error : (a, b, c) => {
-                        alerts.showNotification("top", "right", "Error al actualizar No actualizado .", "error");
-                    }
-                    });
-            }else{
-                alerts.showNotification("top", "right", "No puedes asignar a la misma persona la actividad .", "error");
-            }
+$(document).on("click", ".updateTitu", function () {
+    titulares  = document.getElementById("titulares").value;
+    if(titulares != ''){
+        idTitular  =   document.getElementById("id_actual").value ;
+        solicitud  = document.getElementById("solicitud").value ;
+        var validacion = false;
+        if(titulares == idTitular){
+            validacion = false;
         }else{
-            alerts.showNotification("top", "right", "Debe seleccionar un usuario .", "warning");
+            validacion = true;
         }
-
-    });
-
-    $(document).on("click", ".aportaciones", function () {
-
-        claveusu  = document.getElementById("claveusu").value;
-        
-        if(claveusu == '' ){
-            alerts.showNotification("top", "right", "Por favor escribe la clave del usuario.", "error");
-        }else {
-            fillTable(claveusu);
+        if(validacion){
+            $.ajax({
+                url : 'reasignacionSolicitudEsc',
+                type : 'POST',
+                dataType: "json",
+                data: {
+                    "id_solicitud" : solicitud,
+                    "titulares" : titulares, 
+                    "idTitular": idTitular,
+                }, 
+                success: function(data) {
+                    alerts.showNotification("top", "right", "Actualizado con exito", ""+data.response_type+"");
+                    $('#table-user').DataTable().ajax.reload(null, false );
+                    $('#modal_nuevas').modal('toggle');
+                },              
+                error : (a, b, c) => {
+                    alerts.showNotification("top", "right", "Error al actualizar No actualizado .", "error");
+                }
+                });
+        }else{
+            alerts.showNotification("top", "right", "No puedes asignar a la misma persona la actividad .", "error");
         }
+    }else{
+        alerts.showNotification("top", "right", "Debe seleccionar un usuario .", "warning");
+    }
+});
 
-
-
-    });
-
-
-
- 
+$(document).on("click", ".aportaciones", function () {
+    claveusu  = document.getElementById("claveusu").value;
+    if(claveusu == '' ){
+        alerts.showNotification("top", "right", "Por favor escribe la clave del usuario.", "error");
+    }else {
+        fillTable(claveusu);
+    }
+}); 

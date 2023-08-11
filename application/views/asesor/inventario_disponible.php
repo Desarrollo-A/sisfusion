@@ -3,10 +3,7 @@
 <body>
 	<div class="wrapper">
 		<?php $this->load->view('template/sidebar');?>
-
-		<!-- Modals -->
-		<div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-		aria-hidden="true" data-backdrop="static" data-keyboard="false">
+		<div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -21,8 +18,6 @@
 				</div>
 			</div>
 		</div>
-		<!-- END Modals -->
-
 		<div class="content boxContent">
 			<div class="container-fluid">
 				<div class="row">
@@ -54,16 +49,13 @@
 											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 overflow-hidden">
 												<div class="form-group">
 													<label class="control-label">Proyecto</label>
-													<select name="filtro3" id="filtro3" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required>
-														<option value="0"> SELECCIONA TODO</option>
-													</select>
+													<select name="filtro3" id="filtro3" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required><option value="0"> SELECCIONA TODO</option></select>
 												</div>
 											</div>
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 overflow-hidden">
 												<div class="form-group  ">
 													<label class="control-label">Condominio</label>
-													<select id="filtro4" name="filtro4[]" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" multiple title="Selecciona una opción" data-size="7" data-container="body" required>
-													</select>
+													<select id="filtro4" name="filtro4[]" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" multiple title="Selecciona una opción" data-size="7" data-container="body" required></select>
 												</div>
 											</div>
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 overflow-hidden">
@@ -86,22 +78,19 @@
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 overflow-hidden">
 												<div class="form-group ">
 													<label class="control-label">Precio por m<sup>2</sup></label>
-													<select	class="selectpicker select-gral m-0"  id="filtro7" name="filtro7[]" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required multiple>
-													</select>
+													<select	class="selectpicker select-gral m-0"  id="filtro7" name="filtro7[]" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required multiple></select>
 												</div>
 											</div>
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 overflow-hidden">
 												<div class="form-group ">
 													<label class="control-label">Precio total</label>
-													<select	class="selectpicker select-gral m-0"  id="filtro8" name="filtro8[]" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required multiple>
-													</select>
+													<select	class="selectpicker select-gral m-0"  id="filtro8" name="filtro8[]" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required multiple></select>
 												</div>
 											</div>
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 overflow-hidden">
 												<div class="form-group ">
 													<label class="control-label">Meses S/N</label>
-													<select	class="selectpicker select-gral m-0" id="filtro9" name="filtro9[]" data-style="btn btn-primary " data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required multiple>
-													</select>
+													<select	class="selectpicker select-gral m-0" id="filtro9" name="filtro9[]" data-style="btn btn-primary " data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required multiple></select>
 												</div>
 											</div>
 										</form>
@@ -130,8 +119,7 @@
 		</div>
 		<?php $this->load->view('template/footer_legend');?>
 	</div>
-	</div><!--main-panel close-->
+	</div>
 	<?php $this->load->view('template/footer');?>
-	<!--DATATABLE BUTTONS DATA EXPORT-->
 	<script src="<?=base_url()?>dist/js/controllers/asesores/inventario_disponible.js"></script>
 </body>

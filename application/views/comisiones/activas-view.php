@@ -10,19 +10,15 @@
             echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
         }
         ?>
-
         <style type="text/css">        
             #modal_nuevas{
                 z-index: 1041!important;
             }
-
             #modal_vc{
                 z-index: 1041!important;
             }
         </style>
-
         <!-- Modals -->
-
         <div class="modal fade modal-alertas" id="detenciones-modal" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -36,32 +32,26 @@
                             <input type="hidden"  id="idLote" name="idLote"></input>
                             <div class="col-lg-12" >
                                 <div class="form-group">
-                                <label for="motivo" class="control-label label-gral">Motivo</label>
-                                    <select class="selectpicker select-gral"
-                                            id="motivo"
-                                            name="motivo"
-                                            data-style="btn"
-                                            required>
-                                            <option disabled default >SELECCIONA UNA OPCIÓN</option>
+                                <label for="motivo" class="control-label">Motivo</label>
+                                    <select class="selectpicker select-gral" id="motivo" name="motivo" data-style="btn" title="SELECCIONA UNA OPCIÓN" required>
                                             <?php foreach($controversias as $controversia){ ?>
-
                                                 <option value="<?= $controversia['id_opcion']; ?>"><?= $controversia['nombre'] ?> </option>
                                             <?php } ?>
                                     </select>
                                 </div>
                             </div> 
                             <div class="col-lg-12">
-                                <div class="form-group label-floating">
-                                    <textarea class="form-control input-gral" id="descripcion" name="descripcion" rows="3" placeholder="Escriba detalles de la controversia." required></textarea>
+                                <div class="form-group">
+                                    <label for="motivo" class="control-label">Detalles de la controversia</label>
+                                    <textarea class="text-modal" id="descripcion" name="descripcion" rows="3" placeholder="Escriba detalles de la controversia." required></textarea>
                                 </div>
                             </div>
                         </div>
-
                         <div class="modal-footer">
-                        <div class="col-lg-12">
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                            <button type="submit" id="detenerLote" class="btn btn-primary">Registrar</button>
-                        </div>
+                            <div class="col-lg-12">
+                                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" id="detenerLote" class="btn btn-primary">Registrar</button>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -73,13 +63,15 @@
                 <div class="modal-content">
                     <form id="my_updatebandera_form" name="my_updatebandera_form" method="post">
                     <div class="modal-header bg-red">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> <i class="material-icons">clear</i></button>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> 
+                            <i class="material-icons">clear</i></button>
                     </div>
-                        <div class="modal-body" style="text-align: center;"></div>
+                        <div class="modal-body" style="text-align: center;">
+                        </div>
                         <div class="modal-footer">
                         <div class="col-lg-12">
                             <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                            <button type="submit" id="updateBandera" class="btn btn-primary">Registrar</button>
+                            <button type="submit" id="updateBandera" class="btn btn-primary">ENVIAR</button>
                         </div>
                         </div>
                     </form>
@@ -154,15 +146,6 @@
     </div>
     </div><!--main-panel close-->
     <?php $this->load->view('template/footer');?>
-    <!--DATATABLE BUTTONS DATA EXPORT-->
-    
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/activas.js"></script>
 
 </body>

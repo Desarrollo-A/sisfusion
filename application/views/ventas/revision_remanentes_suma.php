@@ -7,7 +7,7 @@
 
         <!-- Modals -->
         <div class="modal fade" id="seeInformationModalremanente" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
@@ -24,8 +24,8 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="card card-plain">
-                                                <div class="card-content">
-                                                    <ul class="timeline timeline-simple" id="comments-list-remanente"></ul>
+                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                                    <ul class="timeline-3" id="comments-list-remanente"></ul>
                                                 </div>
                                             </div>
                                         </div>

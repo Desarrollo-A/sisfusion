@@ -376,7 +376,7 @@
 	}
 // filtro de condominios por residencial PARA SUR Y SAN LUIS
 	public function getResidencialQro() {
-		$query = $this->db-> query("SELECT CONCAT(nombreResidencial, ' - ', UPPER(CONVERT(VARCHAR, descripcion))) nombreResidencial, idResidencial, descripcion, 
+		$query = $this->db-> query("SELECT CONCAT(nombreResidencial, ' - ', UPPER(CONVERT(VARCHAR(50), descripcion))) nombreResidencial, idResidencial, descripcion, 
 		ciudad, empresa, clave_residencial, abreviatura, active_comission, sede_residencial, sede FROM residenciales WHERE status = 1");
 		return $query->result_array();
 	}
@@ -811,6 +811,7 @@
 		cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '')");
 		return $query->result();
 	}
+	
 	public function getInventario($condominio,$residencial)
 	{
 		$this->db->select('lotes.idLote, nombreLote, sup, precio, total, porcentaje, enganche, saldo, modalidad_1, modalidad_2, referencia, statuslote.nombre, comentarioLiberacion, fechaLiberacion, condominio.nombre as nombreCondominio, residencial.nombreResidencial,
@@ -841,6 +842,7 @@
 			return $query;
 		}
 	}
+
 ///	fin filtro de lotes por condominios y residencial	(PARA EL INVENTARIO)
 // filtro de lotes por condominios y residencial (PARA EL INVENTARIO LIBERACIONES)
 	public function getInventarioLiberacion($condominio,$residencial)
@@ -855,6 +857,7 @@
 			return $query;
 		}
 	}
+
 	///	fin filtro de lotes por condominios y residencial	(PARA EL INVENTARIO LIBERACIONES)
 	public function clienteDocumentosElite(){
 		$query = $this->db-> query('SELECT idCliente, primerNombre, segundoNombre, apellidoPaterno, apellidoMaterno, corrida, expediente, nombreLote, rfc, razonSocial, condominio.nombre AS nombreCondominio, residencial.nombreResidencial, lotes.idStatusContratacion, lotes.idMovimiento
@@ -866,6 +869,7 @@
 		or lotes.idStatusContratacion = "1" and lotes.idMovimiento  = "20" ');
 		return $query->result();
 	}
+
 	public function getLotesAll(){
 		$this->db->select('idLote, nombreLote');
 		$this->db->from('lotes');
@@ -873,6 +877,7 @@
 		$query = $this->db->get();
 		return ($query->num_rows >0) ? $query->result_array(): NULL;
 	}
+
 // filtro de lote por condominios y residencial DOCUMENTACION ELITE INICIO
 	public function getLotesElite($condominio,$residencial)
 	{
@@ -886,7 +891,6 @@
 			return $query;
 		}
 	}
-///	fin filtro de lote por condominios y residencial DOCUMENTACION ELITE FIN
 
 	public function getDocumentosElite($lotes)
 	{
@@ -904,6 +908,7 @@
 	cliente.status = 1 and cliente.idLote = ".$lotes." ");
 	return $query->result_array();
 	}
+
 // filtro de lote por condominios y residencial DOCUMENTACION ELITE INICIO
 	public function getExpedienteCliente($lotes)
 	{
@@ -922,6 +927,7 @@
 	$query = $this->db->get('historial_documento hd');
 	return $query->result();
 	}
+
 ///	fin filtro de lote por condominios y residencial DOCUMENTACION ELITE FIN
 // filtro de lote por condominios y residencial DOCUMENTACION CONTRALORIA INICIO
 	public function getLotesDocContraloria($condominio,$residencial) {
@@ -935,11 +941,13 @@
 			return $query;
 		}
 	}
+
 ///	fin filtro de lote por condominios y residencial DOCUMENTACION CONTRALORIA FIN
 	public function insert_historial_documento($dato){
 		$this->db->insert('historial_documento',$dato);
 		return true;
 	}
+
 	public function deletePago($id, $dato) {
 		$dato = array(
 			'status' => '0'
@@ -948,6 +956,7 @@
 		$this->db->update('historial_enganche', $dato);
 		return true;
 	}
+
 	public function getLotesPagos($condominio,$residencial)
 	{
 		$this->db->select('idLote,nombreLote, idStatusLote');
@@ -960,9 +969,9 @@
 			return $query;
 		}
 	}
+
 	public function getPagosCliente($lotes) {
-		$query = $this->db-> query('SELECT idEnganche, historial_enganche.noRecibo, historial_enganche.engancheCliente,historial_enganche.fechaEnganche, lotes.nombreLote, historial_enganche.user,
-	 	tipopago.tipo, cliente.primerNombre, cliente.segundoNombre, cliente.apellidoPaterno, cliente.apellidoMaterno, cliente.razonSocial, historial_enganche.concepto 
+		$query = $this->db-> query('SELECT idEnganche, historial_enganche.noRecibo, historial_enganche.engancheCliente,historial_enganche.fechaEnganche, lotes.nombreLote, historial_enganche.user, tipopago.tipo, cliente.primerNombre, cliente.segundoNombre, cliente.apellidoPaterno, cliente.apellidoMaterno, cliente.razonSocial, historial_enganche.concepto 
 	 	from historial_enganche 
 	 	inner join lotes on historial_enganche.idLote = lotes.idLote 
 	 	inner join tipopago on historial_enganche.idTipoPago = tipopago.idTipoPago 
@@ -970,16 +979,19 @@
 	 	where historial_enganche.status = 1 and cliente.status = 1 and historial_enganche.idLote = "'.$lotes.'" ');
 		return $query->result_array();
 	}
+
 	public function cancelaPago($id,$dato){
 		$this->db->where("idEnganche",$id);
 		$this->db->update('historial_enganche',$dato);
 		return true;
 	}
+
 	public function selectPago($id){
 		$this->db->where("idEnganche",$id);
 		$query= $this->db->get("historial_enganche");
 		return $query->row();
 	}
+
 	public function getPagosCanceladosCliente($lotes) {
 		$query = $this->db-> query('SELECT idEnganche, historial_enganche.noRecibo, historial_enganche.engancheCliente, historial_enganche.fechaCancelacion, lotes.nombreLote, historial_enganche.user,
                                     tipopago.tipo, cliente.primerNombre, cliente.segundoNombre, cliente.apellidoPaterno, cliente.apellidoMaterno, historial_enganche.comentarioCancelacion, historial_enganche.concepto, cliente.razonSocial 
@@ -988,6 +1000,7 @@
                                     inner join cliente on historial_enganche.idCliente = cliente.idCliente where historial_enganche.status = 0 AND cliente.status = 1 and historial_enganche.idLote = "'.$lotes.'" ');
 		return $query->result_array();
 	}
+
 // filtro de lote por condominios y residencial DOCUMENTACION ELITE INICIO
 	public function getLotesGral($condominio,$residencial)
 	{
@@ -1003,16 +1016,19 @@
 			return $query;
 		}
 	}
+
 //	fin filtro de lote por condominios y residencial DOCUMENTACION ELITE FIN
 	public function insertHistorialLotes($dato){
 		$this->db->insert('historial_lotes',$dato);
 		return true;
 	}
+
 	public function registroStatus10($b,$dato2){
 		$this->db->where("numContrato",$b);
 		$this->db->update('lotes',$dato2);
 		return true;
 	}
+
 	public function insertControlContrato($dato3){
 		$this->db->insert('controlcontrato',$dato3);
 		return true;
@@ -1026,11 +1042,13 @@
 			WHERE cl.status=1 AND cc.status=1;');
 		return $query->result();
 	}
+
 	public function updateContratosFirmados($b,$dato3){
 		$this->db->where("numContrato",$b);
 		$this->db->update('controlcontrato',$dato3);
 		return true;
 	}
+
 	public function selectRegistroPorContrato($numContrato){
 		$this->db->select("cl.id_cliente, l.nombreLote, l.idLote, l.usuario, l.perfil, l.fechaVenc, l.idCondominio,
 		l.modificado, l.fechaSolicitudValidacion, cl.nombre, cl.apellido_paterno, cl.apellido_materno, 
@@ -1046,6 +1064,7 @@
 		$query = $this->db->get('lotes l');
 		return $query->row();
 	}
+
 	public function editaLoteStatus12PorNumContrato($b,$arreglo){
 		$this->db->select('cliente.idCliente, cliente.status, lotes.nombreLote, lotes.idLote, lotes.idStatusContratacion, lotes.idMovimiento, lotes.numContrato');
 		$this->db->join('cliente', 'cliente.idLote = lotes.idLote');
@@ -1053,17 +1072,20 @@
 		$this->db->update('lotes',$arreglo);
 		return true;
 	}
+
 	public function insertHistorialLotesContraloria($dato){
 		$this->db->insert('historial_lotes',$dato);
 		return true;
 	}
+
 	public function lots () {
 		$query = $this->db-> query('SELECT lotes.idLote, lotes.nombreLote, condominio.nombre, residencial.nombreResidencial  FROM lotes 
-                                    inner join cliente on cliente.idLote = lotes.idLote 
-                                    inner join condominio on condominio.idCondominio = lotes.idCondominio 
-                                    inner join residencial on condominio.idResidencial = residencial.idResidencial');
+		inner join cliente on cliente.idLote = lotes.idLote 
+		inner join condominio on condominio.idCondominio = lotes.idCondominio 
+		inner join residencial on condominio.idResidencial = residencial.idResidencial');
 		return $query->result();
 	}
+
 	public function contratin($id){
 		$this->db->select('cliente.idCliente, cliente.primerNombre, cliente.segundoNombre,
 			cliente.apellidoPaterno, cliente.apellidoMaterno, cliente.correo, lotes.nombreLote, lotes.idLote, lotes.idCondominio, condominio.nombre, lotes.sup, cliente.calle, cliente.numero, cliente.colonia, cliente.estado, cliente.municipio, lotes.precio, lotes.total, residencial.nombreResidencial');
@@ -1075,6 +1097,7 @@
 		$query = $this->db->get('lotes');
 		return $query->row();
 	}
+
 	public function corridaContraloria(){
 		$query = $this->db-> query("SELECT cliente.id_cliente, cliente.nombre, condominio.idCondominio, lotes.idLote,
         apellido_paterno, apellido_materno, expediente, nombreLote, rfc, condominio.nombre as nombreCondominio, residencial.nombreResidencial
@@ -1088,6 +1111,7 @@
             or lotes.idStatusContratacion = '5' and lotes.idMovimiento  = '75' AND cliente.status = 1");
 		return $query->result();
 	}
+
 // filtro de lote por condominios y residencial CONTRATO VENTAS INICIO
 	public function getContratoCliente($lotes)
 	{
@@ -1102,6 +1126,7 @@
 		$query= $this->db->get("lotes l");
 		return $query->result();
 	}
+
 ///	fin filtro de lote por condominios y residencial CONTRATO VENTAS FIN
 	public function selectdocs($id){
 		$this->db->join('lotes', 'cliente.idLote = lotes.idLote');
@@ -1111,6 +1136,7 @@
 		$query= $this->db->get("cliente");
 		return $query->row();
 	}
+
 	public function report($typeTransaction, $beginDate, $endDate, $where){
 		if ($typeTransaction == 1 || $typeTransaction == 3)
             $filter = " AND hd.modificado BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
@@ -1137,10 +1163,11 @@
 		INNER JOIN condominios cond ON cond.idCondominio = lotes.idCondominio 
 		INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial 
 		INNER JOIN usuarios us ON cl.id_asesor = us.id_usuario 
-		LEFT JOIN usuarios ge ON ge.id_usuario = cl.id_gerente
+		INNER JOIN usuarios ge ON ge.id_usuario = cl.id_gerente
 		WHERE hd.idStatusContratacion = 9 AND hd.idMovimiento = 39 AND hd.status = 1 $lider ".$filter);
 		return $query;
 	}
+
 	public function registroClienteDS(){
 		$this->db->select('cliente.idCliente, primerNombre, segundoNombre, apellidoPaterno, apellidoMaterno, nombreLote, fechaApartado, fechaVencimiento, cliente.rfc, razonSocial, 
 			noRecibo, noAcuse, nombreResidencial, condominio.nombre as nombreCondominio, cliente.status, cliente.idAsesor, condominio.idCondominio, lotes.idLote, cliente.autorizacion, cliente.fechaApartado');
@@ -1177,8 +1204,8 @@
 		INNER JOIN deposito_seriedad ds ON cl.id_cliente = ds.id_cliente
 		WHERE cl.id_cliente =".$id);
 		return $query->row();
-
 	}
+
 	public function selectLoteCorrida($id){
 		$this->db->select('lotes.idLote, lotes.id_descuento, lotes.nombreLote, lotes.sup, lotes.precio, lotes.total, lotes.porcentaje, lotes.enganche, lotes.descSup1, lotes.descSup2, condominio.msni');
 		$this->db->join('condominio', 'lotes.idCondominio = condominio.idCondominio');
@@ -1188,6 +1215,7 @@
 		$query = $this->db->get('lotes');
 		return $query->row();
 	}
+	
 	public function getDesc(){
 		$this->db->select('id_descuento, motivo, porcentaje, status');
 		$this->db->from('descuentos');
@@ -1195,6 +1223,7 @@
 		$query = $this->db->get();
 		return $query->result_array();
 	}
+
 	public function registroDesc($idLote){
 		$query = $this->db-> query('SELECT GROUP_CONCAT(id_descuento) as descArray FROM lotes where idlote = "'.$idLote.'" ');
 		foreach ($query->result_array() as $row)
@@ -1227,6 +1256,7 @@
 		AND descuentosfin.status = 1');
 		return $query2->result();
 	}
+
 	public function arrayDescad(){
 		$this->db->select('idDescuentoAd, motivo, porcentaje');
 		$this->db->from('descuentosadicionales');
@@ -1234,6 +1264,7 @@
 		$query = $this->db->get();
 		return $query->result_array();
 	}
+
 	public function arrayDescpp(){
 		$this->db->select('idDescuentopp, motivo, descuento');
 		$this->db->from('descuentospp');
@@ -1241,6 +1272,7 @@
 		$query = $this->db->get();
 		return $query->result_array();
 	}
+
 	public function arrayPackDesc(){
 	    $this->db->select('id_descuento, descuentosadicionales.motivo as mAdicional, descuentospp.motivo as mProntop, descuentosadicionales.porcentaje as descad, descuentospp.descuento as descpp, descuentosfin.nombreDescuento, descAd2.motivo as mAdicional2, descAd2.porcentaje as descad2');
 		$this->db->from('descuentosfin');
@@ -1251,6 +1283,7 @@
 		$query = $this->db->get();
 		return $query->result();
 	}
+	
 	public function tblDescpp(){
 	    $this->db->select('idDescuentopp, motivo, descuento');
 		$this->db->from('descuentospp');
@@ -1258,6 +1291,7 @@
 		$query = $this->db->get();
 		return $query->result();
 	}
+
 	public function tblDescps(){
 		$this->db->select('idDescuentoSup, motivo, desc1_1, desc1_2, desc2_1, desc2_2, supIni, supFin, bonoOpcion1, bonoOpcion2, bonoOpcion3, preciomc, options');
 		$this->db->from('descuentosup');
@@ -1265,6 +1299,7 @@
 		$query = $this->db->get();
 		return $query->result();
 	}
+
 	public function arrayDesc(){
 		$this->db->select('id_descuento, residencial, cluster, motivo, motivo_otro, porcentaje, sup1, sup2, fecha_inicio, fecha_fin, residencial');
 		$this->db->from('descuentosmensuales');
@@ -1272,11 +1307,13 @@
 		$query = $this->db->get();
 		return $query->result_array();
 	}
+
 	public function editaDesc($id,$dato){
 		$this->db->where("id_descuento",$id);
 		$this->db->update('descuentosmensuales',$dato);
 		return true;
 	}
+
 	public function tblDescAd(){
 		$this->db->select('idDescuentoAd, motivo, porcentaje');
 		$this->db->from('descuentosadicionales');
@@ -1284,6 +1321,7 @@
 		$query = $this->db->get();
 		return $query->result();
 	}
+
 	public function getCondominioDesc($residencial){
 		$this->db->select('idCondominio, nombre, residencial.nombreResidencial');
 		$this->db->from('condominio');
@@ -1294,11 +1332,13 @@
 		$query = $this->db->get();
 		return $query->result_array();
 	}
+
 	public function selectDesc($id){
 		$this->db->where("id_descuento",$id);
 		$query = $this->db->get('descuentosmensuales');
 		return $query->row();
 	}
+
 	public function eliminaDesc($id_descuento){
 		$dato = array(
 			'status' => '0'
@@ -1307,6 +1347,7 @@
 		$this->db->update('descuentosmensuales', $dato);
 		return true;
 	}
+
 	public function getLotesVentasAut($condominio,$residencial)
 	{
 		$this->db->select('idLote,nombreLote, idStatusLote');
@@ -1319,6 +1360,7 @@
 			return $query;
 		}
 	}
+
 	public function reportContratados($typeTransaction, $beginDate, $endDate, $where){
         if ($typeTransaction == 1 || $typeTransaction == 3) {  // FIRST LOAD || SEARCH BY DATE RANGE
             $filter = " AND hl.fechaVenc BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
@@ -1339,6 +1381,7 @@
         JOIN usuarios gerente ON gerente.id_usuario=asesor.id_lider
         WHERE hl.idStatusContratacion=15 AND hl.idMovimiento=45 AND hl.status=1 ".$filter);
 	}
+
 // filtro de lote por condominios y residencial DOCUMENTACION ELITE INICIO
 	public function getExp($lotes)
 	{
@@ -1358,6 +1401,7 @@
 		where historial_documento.status = 1 and historial_documento.idLote = '".$lotes."'");
 		return $query->result();
 	}
+
 ///	fin filtro de lote por condominios y residencial DOCUMENTACION ELITE FIN
 	public function sendMailApartadosOld15(){
 		$this->db->join('lotes', 'cliente.idLote = lotes.idLote');
@@ -1369,6 +1413,7 @@
 		$query = $this->db->get('cliente');
 		return $query->result();
 	}
+
 	public function sendMailApartadosOld7(){
 		$this->db->join('lotes', 'cliente.idLote = lotes.idLote');
 		$this->db->join('condominio', 'lotes.idCondominio = condominio.idCondominio');
@@ -1379,6 +1424,7 @@
 		$query = $this->db->get('cliente');
 		return $query->result();
 	}
+
 	public function queryLotes(){
 		$this->db->select('idLote, nombreLote, sup, precio, total, porcentaje, enganche, saldo, modalidad_1, modalidad_2, referencia, lotes.status, statuslote.nombre, condominio.nombre as nombreCondominio, residencial.nombreResidencial');
 		$this->db->join('statuslote', 'lotes.idStatusLote = statuslote.idStatusLote');
@@ -1391,6 +1437,7 @@
 			return $query;
 		}
 	}
+
 	public function getDescuentosAdicionales($idDescuentoAd){
 		$this->db->select('idDescuentoAd, motivo, porcentaje, aplica');
 		$this->db->from('descuentosadicionales');
@@ -1398,6 +1445,7 @@
 		$query = $this->db->get();
 		return $query->row();
 	}
+
 	public function getDescuentosPP($idDescuentopp){
 		$this->db->select('idDescuentopp, motivo, descuento, aplica');
 		$this->db->from('descuentospp');
@@ -1405,6 +1453,7 @@
 		$query = $this->db->get();
 		return $query->row();
 	}
+
 	public function sendMailVentasRetrasos(){
 		$this->db->select('residencial.nombreResidencial, condominio.nombre as nombreCondominio, lotes.nombreLote, cliente.fechaApartado, cliente.primerNombre, cliente.segundoNombre, cliente.apellidoPaterno, cliente.apellidoMaterno, cliente.razonSocial, gerente.nombreGerente, asesor.nombreAsesor');
 		$this->db->join('lotes', 'cliente.idLote = lotes.idLote');
@@ -1419,6 +1468,7 @@
 		$query = $this->db->get('cliente');
 		return $query->result();
 	}
+
     public function lotesContratados() {
         $query = $this->db->query("SELECT lotes.idLote, ISNULL(UPPER(s.nombre), 'SIN ESPECIFICAR') AS nombreSede, 
 		CONCAT(cl.nombre,' ', cl.apellido_paterno,' ',cl.apellido_materno) AS nombreCliente,
@@ -1451,14 +1501,15 @@
         cl.id_gerente, cl.id_coordinador, concat(us.nombre,' ', us.apellido_paterno, ' ', us.apellido_materno),
         concat(ge.nombre,' ', ge.apellido_paterno,' ', ge.apellido_materno), idAsesor, lotes.fechaSolicitudValidacion, lotes.firmaRL,
         lotes.validacionEnganche, fechaApartado, lotes.totalNeto2, lotes.referencia, CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno), hd.usuario,
-		cl.id_cliente_reubicacion, cl.fechaAlta");
+		cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '')");
         return $query->result();
     }
+
 	public function reportLotesPost45(){
-		return $this->db->query("SELECT lotes.idLote, s.nombre AS nombreSede, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, lotes.nombreLote, 
-		lotes.idStatusContratacion, lotes.idMovimiento, lotes.modificado, CAST(lotes.comentario AS varchar(MAX)) as comentario, 
-		fechaVenc, lotes.perfil, residencial.nombreResidencial, cond.nombre as nombreCondominio, lotes.ubicacion, lotes.tipo_venta,
-		lotes.fechaSolicitudValidacion, lotes.firmaRL, lotes.validacionEnganche, cl.fechaApartado,
+		return $this->db->query("SELECT lotes.idLote, UPPER(s.nombre) AS nombreSede, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, lotes.nombreLote, 
+		lotes.idStatusContratacion, lotes.idMovimiento, lotes.modificado, UPPER(CAST(lotes.comentario AS varchar(MAX))) as comentario, 
+		convert(varchar,fechaVenc,120) AS fechaVenc, lotes.perfil, residencial.nombreResidencial, cond.nombre as nombreCondominio, lotes.ubicacion, lotes.tipo_venta,
+		lotes.fechaSolicitudValidacion, lotes.firmaRL, lotes.validacionEnganche, convert(varchar,cl.fechaApartado,120) as fechaApartado,
 		concat(us.nombre,' ', us.apellido_paterno, ' ', us.apellido_materno) as asesor, idAsesor,
 		concat(ge.nombre,' ', ge.apellido_paterno, ' ', ge.apellido_materno) as gerente, lotes.referencia,
 		lotes.validacionEnganche, lotes.status8Flag, cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta
@@ -1478,8 +1529,10 @@
 		residencial.nombreResidencial, cond.nombre, lotes.ubicacion, lotes.tipo_venta,
 		cl.id_gerente, cl.id_coordinador, concat(us.nombre,' ', us.apellido_paterno, ' ', us.apellido_materno),
 		concat(ge.nombre,' ', ge.apellido_paterno,' ', ge.apellido_materno), idAsesor, lotes.fechaSolicitudValidacion, lotes.firmaRL,
-		lotes.validacionEnganche, cl.fechaApartado, lotes.referencia, lotes.validacionEnganche, lotes. status8Flag")->result();
+		lotes.validacionEnganche, cl.fechaApartado, lotes.referencia, lotes.validacionEnganche, lotes. status8Flag,
+		cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '')")->result();
 	}
+
 	public function getInventarioAllAd()
 	{
 		$this->db->select('idLote,nombreLote, condominios.msni, sup, precio, total, porcentaje, enganche, saldo, modalidad_1, modalidad_2, referencia, statuslote.nombre, comentarioLiberacion, fechaLiberacion, condominios.nombre as nombreCondominio, residenciales.nombreResidencial');
@@ -1494,6 +1547,7 @@
 			return $query;
 		}
 	}
+
 	public function getInventarioAd($condominio,$residencial)
 	{
 		$this->db->select('idLote,nombreLote, c.msni, sup, precio, total, porcentaje, enganche, saldo, modalidad_1,
@@ -1511,6 +1565,7 @@
 			return $query;
 		}
 	}
+
 	public function descSup($dato){
 		$this->db->trans_begin();
 		$this->db->insert('descuentosup',$dato);
@@ -1522,6 +1577,7 @@
 		}
 		return true;
 	}
+
 	public function getInventarioDis($condominio,$residencial)
 	{
 		$this->db->select('idLote,nombreLote, sup, precio, total, porcentaje, enganche, saldo, modalidad_1, modalidad_2, referencia, statuslote.nombre, comentarioLiberacion, fechaLiberacion, condominio.nombre as nombreCondominio, residencial.nombreResidencial');
@@ -1537,10 +1593,12 @@
 			return $query;
 		}
 	}
+
 	public function getStatusLotecaja() {
 		$query = $this->db-> query('SELECT idStatusLote,nombre FROM statuslote  WHERE idStatusLote IN (9, 8, 7, 3, 10) ');
 		return $query->result();
 	}
+
 	public function table_condominio(){
 		$this->db->select('condominio.idCondominio, residencial.nombreResidencial, condominio.nombre as nombreCluster, etapa.descripcion, datosbancarios.empresa, tipo_lote');
 		$this->db->join('residencial', 'condominio.idResidencial = residencial.idResidencial');
@@ -1550,6 +1608,7 @@
 		$query= $this->db->get("condominio");
 		return $query->result();
 	}
+
 	public function uploadData($idCondominio)
 	{
 		$count=0;
@@ -1629,40 +1688,46 @@
 		</script>
 		<?php
 	}
+
 	public function table_asesor(){
-		return $this->db->query("SELECT u.estatus, u.id_sede, u.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, u.correo, u.rfc, u.telefono, u.usuario,
-								CONCAT(uu.nombre, ' ', uu.apellido_paterno, ' ', uu.apellido_materno) lider FROM usuarios u INNER JOIN usuarios uu ON uu.id_usuario = u.id_lider WHERE u.id_rol IN (7, 9)");
+		return $this->db->query("SELECT u.estatus, u.id_sede, u.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor, u.correo, u.rfc, u.telefono, u.usuario, CONCAT(uu.nombre, ' ', uu.apellido_paterno, ' ', uu.apellido_materno) lider FROM usuarios u INNER JOIN usuarios uu ON uu.id_usuario = u.id_lider WHERE u.id_rol IN (7, 9)");
 
 	}
+
 	public function insert_asesor($dato){
 		$this->db->insert('usuarios',$dato);
 		return true;
 	}
+
 	public function changeStatusUser($id, $data) {
 		$this->db->where('id_usuario', $id);
 		return $this->db->update('usuarios', $data);
 	}
+	
 	public function changeStatusUserAsesor($id, $data) {
 		$this->db->where('id_usuario', $id);
 		return $this->db->update('usuarios', $data);
 	}
+
 	public function corridaContraloria2(){
 	$query = $this->db-> query('SELECT cliente.idCliente, primerNombre, segundoNombre,
-	apellidoPaterno, apellidoMaterno, razonSocial, expediente, nombreLote, rfc, condominio.nombre, residencial.nombreResidencial
-	FROM cliente INNER JOIN lotes ON cliente.idLote = lotes.idLote 
-	inner join condominio on condominio.idCondominio = lotes.idCondominio inner join residencial on condominio.idResidencial = residencial.idResidencial
-	where cliente.status = 1
-     ');
+		apellidoPaterno, apellidoMaterno, razonSocial, expediente, nombreLote, rfc, condominio.nombre, residencial.nombreResidencial
+		FROM cliente INNER JOIN lotes ON cliente.idLote = lotes.idLote 
+		inner join condominio on condominio.idCondominio = lotes.idCondominio inner join residencial on condominio.idResidencial = residencial.idResidencial
+		where cliente.status = 1');
 		return $query->result();
 	}
+
 	public function getStatusLoteDis() {
 		$query = $this->db-> query('SELECT idStatusLote,nombre FROM statuslote  WHERE idStatusLote IN (1, 9, 8, 7, 3, 10) ');
 		return $query->result();
 	}
+
 	public function getStatusLoteDisEditaLote() {
 		$query = $this->db-> query('SELECT idStatusLote,nombre FROM statuslote  WHERE idStatusLote IN (1, 9, 8, 7, 10) ');
 		return $query->result();
 	}
+
 	public function getDataAsesor($idAsesor) {
 		$this->db->select('us.id_usuario, us.nombre, us.apellido_paterno, 
 		us.apellido_materno, us.contrasena, us.estatus, us.correo, us.telefono, us.rfc, us.tiene_hijos');
@@ -1670,16 +1735,19 @@
 		$query= $this->db->get("usuarios us");
 		return $query->row();
 	}
+
 	public function updateAsesor($idAsesor, $data){
 		$this->db->where("id_usuario",$idAsesor);
 		$this->db->update('usuarios', $data);
 		return true;
 	}
+
 	public function updateAsesorUser($idAsesor, $arregloUser){
 		$this->db->where("id_usuario",$idAsesor);
 		$this->db->update('usuarios', $arregloUser);
 		return true;
 	}
+
 	public function getDescSup($lote) {
 		$query2 = $this->db-> query('SELECT descSup1 FROM lotes where idlote = "'.$lote.'" ');
 		foreach ($query2->result_array() as $row)
@@ -1695,6 +1763,7 @@
 			return $query;
 		}
 	}
+
 	public function updateDescPackSup($cluster, $pack){
 		$queryLotes = $this->db->query('SELECT idLote, sup, descSup1, idCondominio FROM lotes where idCondominio IN ('.$cluster.') ');
 		foreach ($queryLotes->result_array() as $lote)
@@ -1707,14 +1776,17 @@
 		}
 		return true;
 	}
+
 	public function insertProntoPago($dato){
 		$this->db->insert('descuentospp',$dato);
 		return true;
 	}
+
 	public function insertDescFin($dato){
 		$this->db->insert('descuentosfin',$dato);
 		return true;
 	}
+
 	public function descuentosActuales($cluster){
 		$queryLotes = $this->db->query('SELECT idLote, idCondominio, id_descuento FROM lotes where idCondominio IN ('.$cluster.') ');
 		foreach ($queryLotes->result_array() as $lote)
@@ -1726,6 +1798,7 @@
 			return $query;
 		}
 	}
+
 	public function updateDescPack($cluster, $res){
 		$this->db->where_in("idCondominio", $cluster, FALSE);
 		$this->db->update('lotes', array( "id_descuento" => $res));
@@ -3190,7 +3263,7 @@
 				$where_sede = '';
 				if ($id_usuario == 30) // MJ: VALERIA PALACIOS VERÁ LO DE SLP + TIJUANA
 					$where = "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('$id_sede', '8'))";
-				else if (in_array($id_usuario, array(7096, 7097, 10924, 7324, 5620))) { // MJ: EDGAR, GRISELL Y DALIA VERÁN LO DE CDMX, SMA, EDOMEXO Y EDOMEXP
+				else if (in_array($id_usuario, array(7096, 7097, 10924, 7324, 5620, 13094))) { // MJ: EDGAR, GRISELL Y DALIA VERÁN LO DE CDMX, SMA, EDOMEXO Y EDOMEXP
 					$where_sede = 'AND clientes.id_sede IN(4, 9, 13, 14)';
 					$where = "(SELECT id_usuario FROM usuarios WHERE (id_rol = 3 AND id_sede IN ('$id_sede', '9', '13', '14')) OR id_usuario IN (7092, 690))";
 				}
@@ -3219,15 +3292,24 @@
 				$sede = "";
 				if ($this->session->userdata('id_usuario') == 11656) // Dulce María Facundo Torres VERÁ USUARIOS DE LA GERENCIA ACTUAL (7886 JESSIKA GUADALUPE NEAVES FLORES) Y LO DE SU ANTERIOR GERENCIA (106 ANA KARINA ARTEAGA LARA)
                         $id_lider = $this->session->userdata('id_lider') . ', 106';
-				else if ($this->session->userdata('id_usuario') == 10795) { // ALMA GALICIA ACEVEDO QUEZADA
+				else if ($this->session->userdata('id_usuario') == 10795) { // ALMA GALICIA ACEVEDO QUEZADA 
 					$id_lider = $id_lider . ', 671';
 					$sede = "AND clientes.id_sede = 12";
-				} else if ($this->session->userdata('id_usuario') == 12449) { // MARCELA CUELLAR MORON
+				}	
+				else if ($this->session->userdata('id_usuario') == 12449) { // MARCELA CUELLAR MORON
 					$id_lider = $id_lider . ', 654';
 					$sede = "AND clientes.id_sede = 12";
-				} else if ($this->session->userdata('id_usuario') == 10270) { // ANDRES BARRERA VENEGAS
+				}
+				else if ($this->session->userdata('id_usuario') == 10270) { // ANDRES BARRERA VENEGAS
 					$id_lider = $id_lider . ', 113';
 					$sede = "AND clientes.id_sede IN (4, 13)";
+				}else if ($this->session->userdata('id_usuario') == 479) { // MARBELLA DEL SOCORRO DZUL CALÁN
+					$id_lider = $id_lider . ', 4223';
+					$sede = "";
+				}
+				else if ($this->session->userdata('id_usuario') == 12318) { // EMMA CECILIA MALDONADO RAMÍREZ
+					$id_lider = $id_lider . ', 11196, 5637';
+					$sede = "";
 				}
                 $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor, '1' venta_compartida  FROM lotes
                 INNER JOIN clientes ON clientes.idLote = lotes.idLote $sede

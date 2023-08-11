@@ -61,7 +61,7 @@ $("#tabla_ingresar_9").ready(function () {
             [10, 25, 50, -1],
             [10, 25, 50, "Todos"]
         ],
-        bAutoWidth: false,
+        bAutoWidth: true,
         fixedColumns: true,
         ordering: false,
         scrollX: true,

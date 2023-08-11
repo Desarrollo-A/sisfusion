@@ -22,49 +22,7 @@ class Calendar extends CI_Controller {
     }
 
     public function calendar(){
-        $client = new Google_Client();
-        $client ->setAccessType("offline");
-        $client->setIncludeGrantedScopes(true); 
-        // Enter your Client ID
-        $client->setAuthConfig('./client_secret.json');
-        // Enter the Redirect URL
-        $client ->setRedirectUri('http://localhost/sisfusion/Dashboard/dashboard');
-        // Adding those scopes which we want to get ( calendar Information)
-        $client ->addScope("https://www.googleapis.com/auth/calendar");
-
-        $datos['googleEvents'] = '';
-        if($_POST['googleCode'] != ''){
-            $res = $client->isAccessTokenExpired();
-            $token = $client->fetchAccessTokenWithAuthCode($_POST['googleCode']);
-            if(!isset($token["error"])){
-                $client->setAccessToken($token['access_token']);
-                $this->session->set_userdata('access_token', $token['access_token']);
-                $this->session->set_userdata('refresh_token', $token['refresh_token']);
-
-                 // Print the next 10 events on the user's calendar.
-                $calendarId = 'primary';
-                $optParams = array(
-                    'maxResults' => 2500,
-                    'orderBy' => 'startTime',
-                    'singleEvents' => TRUE,
-                    'timeMin' => '1090-12-11T23:59:59.000Z',
-                    'showDeleted' => FALSE,
-                );
-
-                $service = new Google_Service_Calendar($client);
-                $results = $service->events->listEvents($calendarId, $optParams);
-                $datos['googleEvents'] = $results->items;
-            }
-        }
-        $login_button = '';
-        
-        if(!$this->session->userdata('access_token')){
-            $login_button = '<a href="'.$client->createAuthUrl().'"><i class="fab fa-google"></i></a>';
-        }
-        $datos['login_button'] =  $login_button;
-        $datos['googleCode'] = $_POST['googleCode'];
-
-        $this->load->view("dashboard/agenda/calendar", $datos);
+        $this->load->view("dashboard/agenda/calendar");
     }
 
     public function Events(){
@@ -88,17 +46,18 @@ class Calendar extends CI_Controller {
 
     public function updateAppointmentData(){
         $objDatos = json_decode(file_get_contents("php://input"));
+
         $data = array(
             "medio" => $objDatos->estatus_recordatorio2,
             "fecha_cita" => str_replace("T", " ", $objDatos->dateStart),
             "titulo" => $objDatos->evtTitle,
             "fecha_final" => str_replace("T", " ", $objDatos->dateEnd),
-            "id_direccion" => isset($objDatos->id_direccion) ? $objDatos->id_direccion :null,
-            "direccion" => isset($objDatos->direccion) ? $objDatos->direccion :null,
+            "id_direccion" => $objDatos->id_direccion ?? null,
+            "direccion" => $objDatos->direccion ?? null,
             "descripcion" => $objDatos->description == '' ? null:$objDatos->description,
-            "idGoogle" => isset($objDatos->inserted) ? $objDatos->inserted:null
-
+            "idGoogle" => $objDatos->idGoogle ?? null
         );
+
         $response = $this->General_model->updateRecord('agenda', $data, 'id_cita',  $objDatos->idAgenda);
 
         if($response){

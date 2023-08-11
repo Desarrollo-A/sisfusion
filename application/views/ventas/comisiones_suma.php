@@ -491,5 +491,9 @@
     <?php $this->load->view('template/footer'); ?>
     <!--DATATABLE BUTTONS DATA EXPORT-->
     <script type="text/javascript" src="<?= base_url() ?>dist/js/shadowbox.js"></script>
+    <script>
+        forma_pago = <?= $this->session->userdata('forma_pago') ?>;
+        Shadowbox.init();
+    </script>
     <script src="<?= base_url() ?>dist/js/controllers/suma/comisionesSuma.js"></script>
 </body>

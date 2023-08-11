@@ -33,7 +33,6 @@
                 </div>
             </div>
         </div>
-
         <div class="modal fade modal-alertas" id="modal_mktd" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -73,7 +72,7 @@
                     </div>
                     <div class="modal-body">
                         <div role="tabpanel">
-                            <ul class="nav nav-tabs" role="tablist" style="background: #949494;">
+                            <ul>
                                 <div id="nameLote"></div>
                             </ul>
                             <div class="tab-content">
@@ -81,8 +80,8 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="card card-plain">
-                                                <div class="card-content">
-                                                    <ul class="timeline timeline-simple" id="comments-list-asimilados"></ul>
+                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                                    <ul class="timeline-3" id="comments-list-asimilados"></ul>
                                                 </div>
                                             </div>
                                         </div>
@@ -119,8 +118,7 @@
         <div class="modal fade modal-alertas" id="documento_preview" role="dialog">
             <div class="modal-dialog" style= "margin-top:20px;"></div>
         </div>
-        <!-- END Modals -->
-
+        
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -160,24 +158,22 @@
                                             </div>
                                             <div class="material-datatables">
                                                 <div class="form-group">
-                                                    <div class="table-responsive">
-                                                        <table class="table-striped table-hover" id="tabla_plaza_1" name="tabla_plaza_1">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>ID USUARIO</th>
-                                                                    <th>USUARIO</th>
-                                                                    <th>RFC</th>
-                                                                    <th>SEDE USUARIO</th>
-                                                                    <th>EMPRESA</th>
-                                                                    <th>IMPUESTO %</th>
-                                                                    <th>ABONO DISPERSADO</th>
-                                                                    <th>DESCUENTO</th>
-                                                                    <th>A PAGAR</th>
-                                                                    <th>FORMA PAGO</th>
-                                                                </tr>
-                                                            </thead>
-                                                        </table>
-                                                    </div>
+                                                    <table class="table-striped table-hover" id="tabla_plaza_1" name="tabla_plaza_1">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>ID USUARIO</th>
+                                                                <th>USUARIO</th>
+                                                                <th>RFC</th>
+                                                                <th>SEDE DEL USUARIO</th>
+                                                                <th>EMPRESA</th>
+                                                                <th>IMPUESTO %</th>
+                                                                <th>ABONO DISPERSADO</th>
+                                                                <th>DESCUENTO</th>
+                                                                <th>A PAGAR</th>
+                                                                <th>FORMA DE PAGO</th>
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
                                                 </div>
                                             </div>
                                         </div>
@@ -200,31 +196,28 @@
                                             </div>
                                             <div class="material-datatables">
                                                 <div class="form-group">
-                                                    <div class="table-responsive">
-                                                        <table class="table-striped table-hover" id="tabla_plaza_2" name="tabla_plaza_2">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>ID</th>
-                                                                    <th>PROY.</th>
-                                                                    <th>CONDOMINIO</th>
-                                                                    <th>LOTE</th>
-                                                                    <th>REFERENCIA</th>
-                                                                    <th>PRECIO LOTE</th>
-                                                                    <th>EMP.</th>
-                                                                    <th>TOT. COM.</th>
-                                                                    <th>P. CLIENTE</th>
-                                                                    <th>SOLICITADO</th>
-                                                                    <th>TIPO VENTA</th>
-                                                                    <th>USUARIO</th>
-                                                                    <th>RFC</th>
-                                                                    <th>PUESTO</th>
-                                                                    <th>FEC. ENVÍO</th>
-                                                                    <th>MÁS</th>
-
-                                                                </tr>
-                                                            </thead>
-                                                        </table>
-                                                    </div>
+                                                    <table class="table-striped table-hover" id="tabla_plaza_2" name="tabla_plaza_2">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>ID</th>
+                                                                <th>PROYECTO</th>
+                                                                <th>CONDOMINIO</th>
+                                                                <th>LOTE</th>
+                                                                <th>REFERENCIA</th>
+                                                                <th>PRECIO DE LOTE</th>
+                                                                <th>EMPRESA</th>
+                                                                <th>TOTAL DE LA COMISION</th>
+                                                                <th>PAGADO DEL CLIENTE</th>
+                                                                <th>SOLICITADO</th>
+                                                                <th>TIPO DE VENTA</th>
+                                                                <th>USUARIO</th>
+                                                                <th>RFC</th>
+                                                                <th>PUESTO</th>
+                                                                <th>FECHA DE ENVÍO</th>
+                                                                <th>ACCIONES</th>
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
                                                 </div>
                                             </div>
                                         </div>
@@ -982,7 +975,7 @@
             resear_formulario();
 
             $.ajax({
-                url: url + "Comisiones/cargaxml",
+                url: url + "Comisiones/cargaxml2",
                 data: data,
                 cache: false,
                 contentType: false,

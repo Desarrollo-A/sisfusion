@@ -2,7 +2,7 @@ let titulos = [];
 $('#Jtabla thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
     titulos.push(title);
-    $(this).html(`<input type="text" class="textoshead" placeholder="${title}"/>`);
+    $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
     $('input', this).on('keyup change', function () {
         if ($('#Jtabla').DataTable().column(i).search() !== this.value)
             $('#Jtabla').DataTable().column(i).search(this.value).draw();
@@ -29,6 +29,7 @@ $(document).ready(function () {
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
+        bAutoWidth: true,
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
@@ -134,5 +135,10 @@ $(document).ready(function () {
             }
         ]
     });
+});
 
+$('#Jtabla').on('draw.dt', function() {
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
+    });
 });

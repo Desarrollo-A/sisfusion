@@ -1,6 +1,8 @@
+let titulos = [];
 $('#tabla_remanente thead tr:eq(0) th').each( function (i) {
     if(i != 0){
         var title = $(this).text();
+        titulos.push(title);
         $(this).html(`<input type="text" class="textoshead w-100" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
         $('input', this).on('keyup change', function() {
             if (tabla_remanente.column(i).search() !== this.value) {
@@ -15,7 +17,7 @@ $('#tabla_remanente thead tr:eq(0) th').each( function (i) {
                     total += parseFloat(v.impuesto);
                 });
                 
-                document.getElementById("totpagarAsimilados").textContent = '$' + formatMoney(total);
+                document.getElementById("totpagarAsimilados").textContent = formatMoney(total);
             }
         });
     } 
@@ -32,10 +34,9 @@ $('#tabla_remanente').on('xhr.dt', function(e, settings, json, xhr) {
         total += parseFloat(v.impuesto);
     });
     var to = formatMoney(total);
-    document.getElementById("totpagarremanente").textContent = '$' + to;
+    document.getElementById("totpagarremanente").textContent = to;
 });
 
-// Selección de CheckBox
 $(document).on("click", ".individualCheck", function() {
     var totaPen = 0;
     tabla_remanente.$('input[type="checkbox"]').each(function () {
@@ -46,17 +47,14 @@ $(document).on("click", ".individualCheck", function() {
             row = tabla_remanente.row(tr).data();
             totaPen += parseFloat(row.impuesto); 
         }
-        // Al marcar todos los CheckBox Marca CB total
         if( totalChecados.length == totalCheckbox.length )
             $("#all").prop("checked", true);
         else 
-            $("#all").prop("checked", false); // si se desmarca un CB se desmarca CB total
-
+            $("#all").prop("checked", false);
     });
-    $("#totpagarPen").html('$ ' + formatMoney(totaPen));
+    $("#totpagarPen").html(formatMoney(totaPen));
 });
 
-// Función de selección total
 function selectAll(e) {
     tota2 = 0;
     if(e.checked == true){
@@ -64,12 +62,11 @@ function selectAll(e) {
             tr = this.closest('tr');
             row = tabla_remanente.row(tr).data();
             tota2 += parseFloat(row.impuesto);
-
             if(v.checked == false){
                 $(v).prop("checked", true);
             }
         }); 
-        $("#totpagarPen").html('$ ' + formatMoney(tota2));
+        $("#totpagarPen").html(formatMoney(tota2));
     }
 
     if(e.checked == false){
@@ -78,7 +75,7 @@ function selectAll(e) {
                 $(v).prop("checked", false);
             }
         }); 
-        $("#totpagarPen").html('$ ' + formatMoney(0));
+        $("#totpagarPen").html(formatMoney(0));
     }
 }
 
@@ -150,27 +147,8 @@ tabla_remanente = $("#tabla_remanente").DataTable({
         exportOptions: {
             columns: [1,2,3,4,5,6,7,8],
             format: {
-                header:  function (d, columnIdx) {
-                    console.log(d);
-                    if(columnIdx == 0){
-                        return ' '+d +' ';
-                    }else if(columnIdx == 1){
-                        return 'ID PAGO';
-                    }else if(columnIdx == 2){
-                        return 'REFERENCIA';
-                    }else if(columnIdx == 3){
-                        return 'NOMBRE COMISIONISTA';
-                    }else if(columnIdx == 4){
-                        return 'SEDE';
-                    }else if(columnIdx == 5){
-                        return 'TOTAL COMISIÓN';
-                    }else if(columnIdx == 6){
-                        return 'IMPUESTO';
-                    }else if(columnIdx == 7){
-                        return '% COMISIÓN';
-                    }else if(columnIdx == 8){
-                        return 'ESTATUS';
-                    }
+                header: function (d, columnIndex) {
+                    return ' '+titulos[columnIndex-1] +' ';
                 }
             }
         },
@@ -210,12 +188,12 @@ tabla_remanente = $("#tabla_remanente").DataTable({
     },
     {
         "data": function(d) {
-            return '<p class="m-0">$' + formatMoney(d.total_comision) + '</p>';
+            return '<p class="m-0">' + formatMoney(d.total_comision) + '</p>';
         }
     },
     {
         "data": function(d) {
-            return '<p class="m-0">$' + formatMoney(d.impuesto) + '</p>';
+            return '<p class="m-0">' + formatMoney(d.impuesto) + '</p>';
         }
     },
     {
@@ -280,14 +258,13 @@ $("#tabla_remanente tbody").on("click", ".consultar_logs", function(e){
     e.stopImmediatePropagation();
     id_pago = $(this).val();
     referencia = $(this).attr("data-referencia");
-
     $("#seeInformationModalremanente").modal();
     $("#nameLote").html("");
     $("#comments-list-remanente").html("");
     $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DE LA REFERENCIA <b style="color:#39A1C0; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">'+referencia+'</b></h5></p>');
     $.getJSON("getHistorial/"+id_pago).done( function( data ){
         $.each( data, function(i, v){
-            $("#comments-list-remanente").append('<div class="col-lg-12"><p><i style="color:39A1C0;">'+v.comentario+'</i><br><b style="color:#39A1C0">'+v.fecha_movimiento+'</b><b style="color:gray;"> - '+v.modificado_por+'</b></p></div>');
+            $("#comments-list-remanente").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><b>' + v.comentario + '</b></a><br></div><div class="float-end text-right"><a>'+v.fecha_movimiento+'</a></div><div class="col-md-12"><p class="m-0"><small>MODIFICADO POR: </small><b> ' +v.modificado_por+ '</b></p></div><h6></h6></div></div></li>');
         });
     });
 });
@@ -296,7 +273,6 @@ $("#tabla_remanente tbody").on("click", ".cambiar_estatus", function(){
     var tr = $(this).closest('tr');
     var row = tabla_remanente.row( tr );
     id_pago_i = $(this).val();
-
     $("#modal_nuevas .modal-body").html("");
     $("#modal_nuevas .modal-body").append(`<div class="row"><div class="col-lg-12"><p class="text-center">¿Estás seguro de ${(row.data().estatus == 4 || row.data().estatus == 5) ? 'activar' : 'pausar'} la comisión con referencia <b>${row.data().referencia}</b> para <b>${(row.data().nombreComisionista).toUpperCase()}</b>?</p></div></div>`);
     $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><input type="hidden" name="estatus" value="'+row.data().estatus+'"><input type="text" class="form-control input-gral observaciones" name="observaciones" required placeholder="Describe motivo para el cambio de estatus de esta solicitud"></input></div></div>');
@@ -305,8 +281,7 @@ $("#tabla_remanente tbody").on("click", ".cambiar_estatus", function(){
     $("#modal_nuevas").modal();
 });
 
- //Función para pausar la solicitud
- $("#form_interes").submit( function(e) {
+$("#form_interes").submit( function(e) {
     e.preventDefault();
 }).validate({
     submitHandler: function( form ) {

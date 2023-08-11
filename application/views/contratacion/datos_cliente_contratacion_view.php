@@ -3,34 +3,13 @@
 <body class="">
     <div class="wrapper ">
         <?php
-            switch ($this->session->userdata('id_rol')) {
-                case '2':
-                case '13':
-                case '33':
-                case '17':
-                case '6':
-                case '5':
-                case '3':
-                case '4':
-                case '9':
-                case '11':
-                case '34':
-                case '15':
-                case '13':
-                case '32':
-                case '12':
-                case '40': // COBRANZA
-                case '53': // COBRANZA
-                case '70': // COBRANZA
-                    $this->load->view('template/sidebar');
-                    break;
-                default:
-                    echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-                break;
-            }
+        if (in_array($this->session->userdata('id_rol'), array(2,13,33,17,6,5,3,4,9,11,34,15,13,32,12,40,53,70))){
+            $this->load->view('template/sidebar');
+        }
+        else{
+            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
+        }
         ?>
-        <!--Contenido de la página-->
-
         <div class="modal fade" id="modal_cancelar_11" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
@@ -46,7 +25,6 @@
                 </div>
             </div>
         </div>
-
         <div class="modal fade" id="verDetalles" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -81,7 +59,6 @@
                 </div>
             </div>
         </div>
-
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -96,13 +73,13 @@
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 overflow-hidden">
                                             <div class="form-group">
-                                                <label class="m-0" for="proyecto">Proyecto</label>
+                                                <label class="control-label" for="proyecto">Proyecto</label>
                                                 <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                             <div class="form-group">
-                                                <label class="m-0" for="proyecto">Condominio</label>
+                                                <label class="control-label" for="proyecto">Condominio</label>
                                                 <select name="condominio" id="condominio" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
                                             </div>
                                         </div>
@@ -114,7 +91,7 @@
                                             <thead>
                                                 <tr>
                                                     <th>MÁS</th>
-                                                    <th>ID LOTE</th>
+                                                    <th>ID CLIENTE</th>
                                                     <th>PROYECTO</th>
                                                     <th>CONDOMINIO</th>
                                                     <th>LOTE</th>
@@ -139,14 +116,6 @@
         </div>
         <?php $this->load->view('template/footer_legend'); ?>
     </div>
-    
     <?php $this->load->view('template/footer'); ?>
-    <!--DATATABLE BUTTONS DATA EXPORT-->
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <script src="<?=base_url()?>dist/js/controllers/contratacion/datos_cliente_contratacion.js"></script>
 </body>

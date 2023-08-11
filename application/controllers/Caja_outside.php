@@ -488,7 +488,7 @@ class Caja_outside extends CI_Controller {
 
         if ($datosView->id_coordinador == $datosView->id_asesor && $datosView->id_asesor != 7092 && $datosView->id_asesor != 6626) {
             $voBoCoord = 0;
-        } else if ($datosView->id_coordinador == $datosView->id_gerente && $datosView->id_asesor != 7092 && $datosView->id_asesor != 6626 && $datosView->id_gerente != 832) {
+        } else if ($datosView->id_coordinador == $datosView->id_gerente && $datosView->id_asesor != 7092 && $datosView->id_asesor != 6626) {
             $voBoCoord = 0;
         } else {
             $voBoCoord = $datosView->id_coordinador;
@@ -1743,7 +1743,7 @@ class Caja_outside extends CI_Controller {
         $query_superdicie = $getCurrentLoteStatus->sup < 200 ?  "AND sup < 200" : "AND sup >= 200";
         $desarrollos = $getCurrentLoteStatus->idResidencial;
         $getPaquetesDescuentos = $this->PaquetesCorrida_model->getPaquetes($query_tipo_lote,$query_superdicie,$desarrollos, $inicio, $fin);
-        if(count($getPaquetesDescuentos) == 0){
+        if(count($getPaquetesDescuentos) == 0 || $getPaquetesDescuentos[0]['id_paquete'] == NULL){
             $descuentos = NULL;
         }else{
             $descuentos = $getPaquetesDescuentos[0]['id_paquete'];
@@ -1893,7 +1893,7 @@ class Caja_outside extends CI_Controller {
 
                     if ($data->asesores[0]->idCoordinador == $data->asesores[0]->idAsesor && $data->asesores[0]->idAsesor != 7092 && $data->asesores[0]->idAsesor != 6626) {
                         $voBoCoord = 0;
-                    } else if ($data->asesores[0]->idCoordinador == $data->asesores[0]->idGerente && $data->asesores[0]->idAsesor != 7092 && $data->asesores[0]->idAsesor != 6626 && $data->asesores[0]->idGerente != 832) {
+                    } else if ($data->asesores[0]->idCoordinador == $data->asesores[0]->idGerente && $data->asesores[0]->idAsesor != 7092 && $data->asesores[0]->idAsesor != 6626) {
                         $voBoCoord = 0;
                     } else {
                         $voBoCoord = $data->asesores[0]->idCoordinador;
@@ -2354,9 +2354,15 @@ class Caja_outside extends CI_Controller {
         $id_cliente = $dataJson->id_cliente;
         if ($dataJson->id_gerente != null) {
             //$data['lider'] = $this->caja_model_outside->getLider($dataJson->id_gerente);
+            if ($dataJson->id_asesor == $dataJson->id_coordinador)
+                $id_coordinador = 0;
+            else if($dataJson->id_coordinador == $dataJson->id_gerente &&)
+                $id_coordinador = 0;
+            else
+                $id_coordinador = $dataJson->id_coordinador;
             $data = array(
                 "id_asesor" => $dataJson->id_asesor,
-                "id_coordinador" => $dataJson->id_coordinador == $dataJson->id_asesor ? 0 : $dataJson->id_coordinador,
+                "id_coordinador" => $id_coordinador,
                 "id_gerente" => $dataJson->id_gerente,
                 "id_subdirector" => $dataJson->id_subdirector,
                 "id_regional" => $dataJson->id_regional,

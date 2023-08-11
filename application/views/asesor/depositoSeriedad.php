@@ -3,17 +3,16 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <body>
 <div class="wrapper">
-    <?php  $this->load->view('template/sidebar');   ?>
+    <?php  $this->load->view('template/sidebar'); ?>
     
     <div class="modal fade" id="modal_pregunta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"data-backdrop="static" data-keyboard="false" style="z-index: 1600;" >
         <div class="modal-dialog">
             <div class="modal-content" >
                 <div class="modal-header">
-                    <h4 class="modal-title">¿Realmente desea asignar este prospecto al cliente?</h4>
+                <h4 class="modal-title">¿Realmente desea asignar este prospecto al cliente?</h4>
                     <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-simple" id="cancelar" data-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary" id="asignar_prospecto" data-dismiss="modal">ASIGNAR
-                            <div class="ripple-container"></div></button>
+                        <button type="button" class="btn btn-danger btn-simple" id="cancelar" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="asignar_prospecto" data-dismiss="modal">ASIGNAR<div class="ripple-container"></div></button>
                     </div>
                 </div>
             </div>
@@ -35,8 +34,8 @@
         </div>
     </div>
 
-    <div class="modal fade overflow-hiden " id="asignar_prospecto_a_cliente" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
-        data-backdrop="static" data-keyboard="false" >
+    <div class="modal fade" id="asignar_prospecto_a_cliente" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+        data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -84,7 +83,6 @@
         </div>
     </div>
 
-    <!-- modal  ENVIA A CONTRALORIA 2-->
     <div class="modal fade" id="modal1" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -102,9 +100,7 @@
             </div>
         </div>
     </div>
-    <!-- modal -->
 
-    <!-- modal  ENVIA A postventa 3 despúes de un rechazo-->
     <div class="modal fade" id="enviarNuevamenteEstatus3PV" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content" >
@@ -123,10 +119,8 @@
             </div>
         </div>
     </div>
-    <!-- modal -->
 
-    <!-- modal ENVÍO DE VERIFICACIONES -->
-    <div class="modal fade" id="autorizaciones-modal" data-backdrop="static" data-keyboard="false" >
+    <div class="modal fade" id="autorizaciones-modal" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content" >
                 <div class="modal-header">
@@ -134,7 +128,6 @@
                 </div>
                 <form id="autorizacion-form">
                     <div class="modal-body">
-                        <!-- CHECKBOX CORREO / SMS -->
                         <div class="row pt-1 pb-1 checkAut">
                             <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                                 <h4 class="label-on-left m-0">MÉTODOS DE ENVÍO (<small style="color: red;">*</small>)</h4>
@@ -197,7 +190,6 @@
             </div>
         </div>
     </div>
-    <!-- modal -->
 
     <div class="modal fade" id="reenvio-modal" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
@@ -209,7 +201,6 @@
                 </div>
                 <form id="reenvio-form">
                     <div class="modal-body">
-                        <!-- CHECKBOX CORREO / SMS -->
                         <div class="row pt-1 pb-1 checkAut">
                             <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                                 <h4 class="label-on-left m-0">MÉTODOS DE ENVÍO (<small style="color: red;">*</small>)</h4>
@@ -253,7 +244,6 @@
                 </div>
                 <form id="solicitar-form">
                     <div class="modal-body">
-                        <!-- CHECKBOX CORREO / SMS -->
                         <div class="row pt-1 pb-1 checkAut">
                             <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                                 <h4 class="label-on-left m-0">MÉTODOS DE ENVÍO (<small style="color: red;">*</small>)</h4>
@@ -264,7 +254,6 @@
                                             <span>CORREO ELECTRÓNICO</span>
                                         </label>
                                     </div>
-
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 p-0" id="chk-sms-sol-div">
                                         <label class="m-0 checkstyleAut">
                                             <input type="checkbox" name="chkSmsSol" id="chkSmsSol" checked>
@@ -273,14 +262,12 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mt-3">
                                 <div class="form-group label-floating select-is-empty overflow-hidden">
                                     <label class="control-label">Subdirector (<small style="color: red;">*</small>)</label>
                                     <select id="subdirector" name="subdirector" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un subdirector" data-size="7" data-container="body" required></select>
                                 </div>
                             </div>
-
                             <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mt-2">
                                 <label>Comentario adicional (<small style="color: red;">*</small>)</label>
                                 <textarea class="text-modal scroll-styles" name="comentario" id="comentarioSol" rows="3" placeholder="Comentario" required></textarea>
@@ -298,7 +285,7 @@
 
     <div class="content hide">
         <!-- modal  ENVIA A CONTRALORIA 5 por rechazo 1-->
-        <div class="modal fade in" id="modal2" data-backdrop="static" data-keyboard="false">
+        <div class="modal fade" id="modal2" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
                 <div class="modal-content" >
                     <div class="modal-header">
@@ -327,7 +314,7 @@
                     </div>
                     <div class="modal-body">
                         <label>Comentario:</label>
-                            <textarea class="text-modal scroll-styles" name="comentario3" id="comentario3" rows="3" placeholder="Comentario" required></textarea>
+                        <textarea class="text-modal scroll-styles" name="comentario3" id="comentario3" rows="3" placeholder="Comentario" required></textarea>
                         <br>
                     </div>
                     <div class="modal-footer">
@@ -442,7 +429,6 @@
                 </div>
             </div>
         </div>
-        <!-- modal -->
     </div>
 
     <div class="content boxContent">
@@ -467,18 +453,15 @@
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                             <div class="col-md-4 form-group">
-                                                <div class="form-group label-floating select-is-empty">
+                                                <div class="form-group select-is-empty">
                                                     <label class="control-label">Proyecto</label>
-                                                    <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="Selecciona un proyecto" data-size="7" data-live-search="true" required>
-                                                    </select>
+                                                    <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" required></select>
                                                 </div>
                                             </div>
                                             <div class="col-md-4 form-group">
-                                                <div class="form-group label-floating select-is-empty">
+                                                <div class="form-group select-is-empty">
                                                     <label class="control-label">Condominio</label>
-                                                    <select name="condominio" id="condominio" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="Selecciona condominio" data-size="7" data-live-search="true" required>
-                                                        <option disabled selected>Selecciona un condominio</option>
-                                                    </select>
+                                                    <select name="condominio" id="condominio" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" required></select>
                                                 </div>
                                             </div>
                                         </div>
@@ -523,7 +506,6 @@
 </div>
 </body>
 <?php $this->load->view('template/footer');?>
-<!--DATATABLE BUTTONS DATA EXPORT-->
 <link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
 <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/asesores/depositoSeriedad.js"></script>

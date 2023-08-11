@@ -4,6 +4,12 @@
 <div class="wrapper ">
     <?php $this->load->view('template/sidebar'); ?>
 
+	<style>
+		.bs-searchbox .form-group{
+			padding-bottom: 0!important;
+    		margin: 0!important;
+		}
+	</style>
 	<!-- modal para revision status 5 100% -->
 	<div class="modal fade " id="envARevCE" data-backdrop="static" data-keyboard="false">
 		<div class="modal-dialog">
@@ -12,31 +18,25 @@
 					<h4 class="modal-title text-center"><label>Registro estatus 5 - <b><span class="lote"></span></b></label></h4>
 				</div>
 				<div class="modal-body">
-					<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-						<div class="col col-xs-12 col-sm-12 col-md-6 col-lg-12">
-							<label>Comentario</label>
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+							<label class="control-label">Comentario</label>
 							<input class="text-modal mb-1" name="comentario" id="comentarioenvARevCE" autocomplete="off">
-                             <br>
+							<br>
 						</div>
-
-						<div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6 overflow-hidden"
-                             id="tipo-venta-options-div" hidden>
-							<label id="tvLbl">Tipo de venta</label>
-							<select required="required" name="tipo_venta" id="tipo_ventaenvARevCE" class="selectpicker select-gral" data-style="btn" data-live-search="true" title="SELECCIONA TIPO VENTA" data-container="body" data-size="7">
+						<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 overflow-hidden" id="tipo-venta-options-div" hidden>
+							<label class="control-label" id="tvLbl">Tipo de venta</label>
+							<select required="required" name="tipo_venta" id="tipo_ventaenvARevCE" class="selectpicker select-gral" data-style="btn" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-container="body" data-size="4">
 							</select>			
 						</div>
-
-                        <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6"
-                             id="tipo-venta-particular-div" hidden>
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6"id="tipo-venta-particular-div" hidden>
                             <h6><b>Tipo de venta particular</b></h6>
                         </div>
-
-						<div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6 overflow-hidden">
-							<label id="tvLbl">Ubicación</label>
-							<select required="required" name="ubicacion" id="ubicacion" class="selectpicker select-gral" data-style="btn" data-live-search="true" title="SELECCIONA UBICACIÓN" data-container="body" data-size="7">
+						<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 overflow-hidden">
+							<label class="control-label" id="tvLbl">Ubicación</label>
+							<select required="required" name="ubicacion" id="ubicacion" class="selectpicker select-gral" data-style="btn" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-container="body" data-size="7">
 							</select>
 						</div>
-
 						<input type="hidden" name="idLote" id="idLoteenvARevCE" >
 						<input type="hidden" name="idCliente" id="idClienteenvARevCE" >
 						<input type="hidden" name="idCondominio" id="idCondominioenvARevCE" >
@@ -44,7 +44,6 @@
 						<input type="hidden" name="nombreLote" id="nombreLoteenvARevCE"  >
 					</div>
 				</div>
-
 				<div class="modal-footer"></div>
 				<div class="modal-footer">
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
@@ -63,8 +62,8 @@
 					<h4 class="modal-title text-center"><label>Rechazo estatus 5 - <b><span class="lote"></span></b></label></h4>	
 				</div>
 				<div class="modal-body">
-					<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-						<label>Comentario</label>
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+						<label class="control-label">Comentario</label>
 						<textarea class="text-modal" id="motivoRechazo" rows="3"></textarea>
 						<input type="hidden" name="idCliente" id="idClienterechCor" >
 						<input type="hidden" name="idCondominio" id="idCondominiorechCor" >
@@ -79,8 +78,8 @@
 		</div>
 	</div>
 
-  	<!-- modal  ENVIA A ASESOR por rechazo 2-->
-  	<div class="modal fade" id="rechazarStatus_2" data-backdrop="static" data-keyboard="false">
+	<!-- modal  ENVIA A ASESOR por rechazo 2-->
+	<div class="modal fade" id="rechazarStatus_2" data-backdrop="static" data-keyboard="false">
 		<div class="modal-dialog">
 			<div class="modal-content" > 
 				<div class="modal-header">
@@ -98,10 +97,10 @@
 			</div>
 		</div>
 	</div>
-  <!-- modal -->
+	<!-- modal -->
 
-  <!-- modal  ENVIA A JURIDICO por rechazo 1-->
-  	<div class="modal fade" id="envARev2" data-backdrop="static" data-keyboard="false">
+	<!-- modal  ENVIA A JURIDICO por rechazo 1-->
+	<div class="modal fade" id="envARev2" data-backdrop="static" data-keyboard="false">
 		<div class="modal-dialog">
 			<div class="modal-content" > 
 				<div class="modal-header">
@@ -119,12 +118,12 @@
 			</div>
 		</div>
 	</div>
-  <!-- modal -->
+	<!-- modal -->
 
     <div class="content boxContent">
         <div class="container-fluid">
             <div class="row">
-                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="card">
                         <div class="card-header card-header-icon" data-background-color="goldMaderas">
                             <i class="fas fa-expand fa-2x"></i>
@@ -168,17 +167,7 @@
     </div>
     <?php $this->load->view('template/footer_legend');?> 
 </div>
-</div>
-
-</div><!--main-panel close-->
 </body>
 <?php $this->load->view('template/footer');?>
-<!--DATATABLE BUTTONS DATA EXPORT-->
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
+
 <script src="<?= base_url() ?>dist/js/controllers/contraloria/vista_5_contraloria.js"></script>

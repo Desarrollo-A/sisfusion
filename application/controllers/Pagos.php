@@ -268,9 +268,10 @@ class Pagos extends CI_Controller
 
   public function pago_internomex(){
     $id_pago_is = $this->input->post('idcomision');  
+
     $consulta_comisiones = $this->Pagos_model->consultaComisiones($id_pago_is);
 
-      if( $consulta_comisiones =! FALSE ){
+      if( $consulta_comisiones != 0 ){
 
         $id_user_Vl = $this->session->userdata('id_usuario');
         
@@ -280,6 +281,7 @@ class Pagos extends CI_Controller
           $data=array();
 
           foreach ($consulta_comisiones as $row) {
+   
             $id_pago_i .= implode($sep, $row);
             $id_pago_i .= $sep;
 
@@ -293,7 +295,7 @@ class Pagos extends CI_Controller
              array_push($data,$row_arr);
           }
           $id_pago_i = rtrim($id_pago_i, $sep);
-      
+            
             $up_b = $this->Pagos_model->update_acepta_INTMEX($id_pago_i);
             $ins_b = $this->Pagos_model->insert_phc($data);
       
@@ -328,16 +330,12 @@ class Pagos extends CI_Controller
   public function acepto_internomex_remanente(){
     $sol=$this->input->post('idcomision');  
     $consulta_comisiones = $this->db->query("SELECT id_pago_i FROM pago_comision_ind where id_pago_i IN (".$sol.")");
-   
       if( $consulta_comisiones->num_rows() > 0 ){
         $consulta_comisiones = $consulta_comisiones->result_array();
         $id_user_Vl = $this->session->userdata('id_usuario');
-        
           $sep = ',';
           $id_pago_i = '';
-
           $data=array();
-
           foreach ($consulta_comisiones as $row) {
             $id_pago_i .= implode($sep, $row);
             $id_pago_i .= $sep;
@@ -350,19 +348,15 @@ class Pagos extends CI_Controller
               'comentario' =>  'CONTRALORÍA ENVÍO PAGO A    ' 
             );
              array_push($data,$row_arr);
-
-
           }
+          // var_dump($id_pago_i );
           $id_pago_i = rtrim($id_pago_i, $sep);
-            
             $arrayUpdateControlaria = array(
               'estatus' => 8,
               'modificado_por' => $id_user_Vl
             );
-
             $up_b = $this->Pagos_model->update_acepta_contraloria($arrayUpdateControlaria , $id_pago_i);
             $ins_b = $this->Pagos_model->insert_phc($data);
-      
       if($up_b == true && $ins_b == true){
         $data_response = 1;
         echo json_encode($data_response);
@@ -370,7 +364,6 @@ class Pagos extends CI_Controller
         $data_response = 0;
         echo json_encode($data_response);
       }
-            
       }
       else{
         $data_response = 0;
@@ -603,9 +596,7 @@ class Pagos extends CI_Controller
     
     public function GetDescripcionXML($xml){
       error_reporting(0);
-  
       $xml=simplexml_load_file("".base_url()."UPLOADS/XMLS/".$xml."") or die("Error: Cannot create object");
-  
       $cuantos = count($xml-> xpath('//cfdi:Concepto'));
       $UUID = $xml->xpath('//@UUID')[0];
       $fecha = $xml -> xpath('//cfdi:Comprobante')[0]['Fecha'];
@@ -786,6 +777,7 @@ class Pagos extends CI_Controller
 
     public function revision_mktd()
     {
+      print_r($this->session->userdata('id_rol'));
       switch($this->session->userdata('id_rol')){
         case '31':
             $this->load->view('template/header');
@@ -849,6 +841,11 @@ class Pagos extends CI_Controller
     echo json_encode( $respuesta );
       }
 
+      public function getFormasPago()
+      {
+          $data = $this->Pagos_model->getFormasPago();
+          echo json_encode($data);
+      }
 
       public function enviadas_internomex()
       {
@@ -873,7 +870,7 @@ class Pagos extends CI_Controller
         switch($this->session->userdata('id_rol')){
           case '31':
               $this->load->view('template/header');
-              $this->load->view("ventas/revision_INTMEXremanente");
+              $this->load->view("pagos/revision_remanente_intmex_view");
           break;
           default:
             $this->load->view('template/header');

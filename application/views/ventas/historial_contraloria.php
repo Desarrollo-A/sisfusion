@@ -3,7 +3,6 @@
 <meta http-equiv='cache-control' content='no-cache'>
 <meta http-equiv='expires' content='0'>
 <meta http-equiv='pragma' content='no-cache'>
-
 <body>
     <div class="wrapper">
         <?php
@@ -15,7 +14,7 @@
         ?>
         <!-- MODALS -->
         <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+            <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header"></div>
                     <div class="modal-body">
@@ -116,7 +115,7 @@
                                                 <div class="row">
                                                     <h3 class="card-title center-align">Historial activos</h3>
                                                     <p class="card-title pl-1">(Listado de todos los pagos aplicados, en proceso de lotes contratados y activos)
-                                                        <a href="https://youtu.be/6W5B97MTOCghttps://youtu.be/6W5B97MTOCg" style="color:red" target="_blank">
+                                                        <a href="https://youtu.be/S7HO2QTLaL0" style="color:red" target="_blank">
                                                             <i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
                                                         </a>
                                                     </p>
@@ -124,9 +123,9 @@
                                             </div>
                                             <div class="toolbar">
                                                 <div class="row">
-                                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0 overflow-hidden">
-                                                        <div class="form-group select-is-empty">
-                                                            <label class="control-label">AÑO</label>
+                                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0">
+                                                        <div class="form-group select-is-empty overflow-hidden">
+                                                            <label class="control-label">Año</label>
                                                             <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-container="body" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
                                                                 <?php
                                                                 setlocale(LC_ALL, 'es_ES');
@@ -140,7 +139,7 @@
                                                     </div>
                                                     <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0 overflow-hidden">
                                                         <div class="form-group select-is-empty">
-                                                            <label for="proyecto" class="control-label">PROYECTO</label>
+                                                            <label for="proyecto" class="control-label">Proyecto</label>
                                                             <select name="filtro44" id="filtro44" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                                         </div>
                                                     </div>
@@ -180,7 +179,7 @@
                                                 <div class="row">
                                                     <h3 class="card-title center-align">Historial canceladas</h3>
                                                     <p class="card-title pl-1">(Listado de todos los pagos aplicados, en proceso de lotes cancelados con recisión)
-                                                        <a href="https://youtu.be/6W5B97MTOCghttps://youtu.be/6W5B97MTOCg" style="color:red" target="_blank">
+                                                        <a href="https://youtu.be/S7HO2QTLaL0" style="color:red" target="_blank">
                                                             <i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
                                                         </a>
                                                     </p>
@@ -188,9 +187,9 @@
                                             </div>
                                             <div class="toolbar">
                                                 <div class="row">
-                                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0 overflow-hidden">
-                                                        <div class="form-group">
-                                                            <label for="proyecto">Año</label>
+                                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0">
+                                                        <div class="form-group overflow-hidden">
+                                                            <label class="control-label" for="proyecto">Año</label>
                                                             <select name="filtro35" id="filtro35" class="selectpicker select-gral" data-container="body" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
                                                                 <?php
                                                                 setlocale(LC_ALL, 'es_ES');
@@ -204,7 +203,7 @@
                                                     </div>
                                                     <div class="col-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
                                                         <div class="form-group">
-                                                            <label for="proyecto">Proyecto</label>
+                                                            <label class="control-label" for="proyecto">Proyecto</label>
                                                             <select name="filtro45" id="filtro45" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-container="body" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
                                                                 <option value="0">Seleccione todo</option>
                                                             </select>
@@ -244,7 +243,7 @@
                                         <div class="tab-pane <?php if($this->session->userdata('id_rol') == 66){ ?> active <?php } ?>" id="solicitudesSUMA">
                                                 <div class="encabezadoBox">
                                                     <h3 class="card-title center-align">Historial general SUMA
-                                                        <a href="https://youtu.be/6W5B97MTOCghttps://youtu.be/6W5B97MTOCg" style="color:red" target="_blank">
+                                                        <a href="https://youtu.be/S7HO2QTLaL0" style="color:red" target="_blank">
                                                             <i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
                                                         </a>
                                                     </h3>

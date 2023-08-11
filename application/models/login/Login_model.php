@@ -14,7 +14,7 @@ class login_model extends CI_Model {
 		CASE WHEN us.id_rol = 3 THEN u.id_lider ELSE ge.id_usuario END id_lider_3, 
 		CASE WHEN us.id_rol = 3 THEN  us.id_lider ELSE sb.id_usuario END id_lider_4, 
 		(CASE  WHEN sb.id_usuario = 7092 THEN 3 
-		WHEN sb.id_usuario IN (9471,681,609,690) THEN 607 
+		WHEN sb.id_usuario IN (9471, 681, 609, 690, 2411) THEN 607 
 		WHEN sb.id_usuario = 692 THEN sb.id_lider
 		WHEN sb.id_usuario = 703 THEN 4
 		WHEN sb.id_usuario =  7886 THEN 5

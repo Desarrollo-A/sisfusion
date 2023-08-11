@@ -58,16 +58,20 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="<?= base_url() ?>dist/js/moment.min.js"></script>
 
+<script src="<?= base_url() ?>dist/js/es.js"></script>
+<script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
+<script src="<?= base_url() ?>dist/js/fullcalendar.min.js"></script>
 
 <!-- <script async defer src="https://apis.google.com/js/api.js" onload="this.onload=function(){};handleClientLoad()" onreadystatechange="if (this.readyState === 'complete') this.onload()"></script> -->
 <!-- <script src="<?=base_url()?>dist/js/controllers/dashboard/agenda/side_calendar.js"></script> -->
 <!-- <script src="<?=base_url()?>dist/js/controllers/dashboard/agenda/googleCalendarConnection.js"></script> -->
-
 <script type="text/javascript">
     var url2 = "<?=base_url()?>index.php/";
     var general_base_url = "<?=base_url()?>";
     let id_rol_general = <?= (empty($this->session->userdata('id_rol')) ? 0 : $this->session->userdata('id_rol')) ?>;
     let id_usuario_general =  <?= (empty($this->session->userdata('id_usuario')) ? 0 : $this->session->userdata('id_usuario')) ?>;
+
+
 	$(document).ready(function() {
 		demo.initDashboardPageCharts();
 		demo.initVectorMap();
@@ -119,7 +123,6 @@ if($this->session->userdata('id_rol') == 7 && $this->session->userdata('asesor_g
         async: false
     })
     var mySound = new Audio('../static/tono-mensaje.mp3');
-   
     let im = '<?=base_url()?>static/images/perfil/'+perfil[0].id_usuario+'/'+perfil[0].foto;
     if ($(window).width() < 996){
         console.log("chico");
@@ -311,6 +314,15 @@ if($this->session->userdata('id_rol') == 7 && $this->session->userdata('asesor_g
 
     $(document).on('click', '.session_close_btn_clean', function(){
         localStorage.clear();
+    });
+
+
+    $('body').tooltip({
+        selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
+        trigger: 'hover',
+        container: 'body'
+    }).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
+        $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
     });
 
 </script>

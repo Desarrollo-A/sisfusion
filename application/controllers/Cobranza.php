@@ -77,8 +77,10 @@ class Cobranza extends CI_Controller
     public function getDetails(){
         $id = $_POST['id'];
         $checks = $_POST['checks'];
-        $beginDate = $_POST['beginDate'];
-        $endDate = $_POST['endDate'];
+        $fechaInicio = explode('/', $this->input->post("beginDate"));
+        $fechaFin = explode('/', $this->input->post("endDate"));
+        $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+        $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
         $sede = $_POST['sede'];
         $data =$this->Cobranza_model->getDetails($id, $checks, $beginDate, $endDate, $sede)->result_array();
         echo json_encode($data);

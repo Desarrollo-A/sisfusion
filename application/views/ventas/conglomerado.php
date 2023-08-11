@@ -16,7 +16,7 @@
                 echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
             }
         ?>
-            <!--MODALS-->
+            <!--MODALS si se usa-->
         <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -28,7 +28,7 @@
             </div>
         </div>  
 
-        <!--Modal para add costo universidad -->
+        <!--Modal para add costo universidad si se usa -->
         <div class="modal fade" id="modalUni" nombre="modalUni" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
                 <div class="modal-content">
@@ -38,14 +38,14 @@
                     <form method="post" id="updateDescuentoCertificado" name='updateDescuentoCertificado'>
                         <div class="modal-body" >
                             <div class="col-4 col-sm-4 col-md-4 col-lg-4">
-                                        <div class="form-group">
-                                            <label class="control-label">Certificaciones (<span class="isRequired">*</span>)</label>       
-                                            <select class="selectpicker select-gral select2 certificaciones" name="certificaciones" id="certificaciones">
-                                                <?php if(isset($certificaciones)){ foreach($certificaciones as $certificacion){ ?>
-                                                    <option value="<?= $certificacion->id_opcion ?>"><?= $certificacion->nombre ?> </option>
-                                                <?php } } ?>
-                                            </select>
-                                        </div>      
+                                <div class="form-group">
+                                    <label class="control-label">Certificaciones (<span class="isRequired">*</span>)</label>       
+                                    <select class="selectpicker select-gral select2 certificaciones" name="certificaciones" id="certificaciones">
+                                        <?php if(isset($certificaciones)){ foreach($certificaciones as $certificacion){ ?>
+                                            <option value="<?= $certificacion->id_opcion ?>"><?= $certificacion->nombre ?> </option>
+                                        <?php } } ?>
+                                    </select>
+                                </div>      
                             </div>
                             <div class="col-md-4" style="display:none;">
                                 <div class="form-group">
@@ -112,7 +112,6 @@
             </div>
         </div>
         <!-- Fin modal add costo Universidad -->
-
         <div class="modal fade" id="editDescuento" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
@@ -184,6 +183,7 @@
                                                 <option value="8">8</option>
                                                 <option value="9">9</option>
                                                 <option value="10">10</option>
+                                                <option value="11">11</option>
                                             </select>
                                         </div>
                                     </div>
@@ -241,7 +241,7 @@
         </div>
         <!-- END ACTIVAR PAGO--> 
         
-        <!-- INFORMACIÓN DU-->
+        <!-- INFORMACIÓN DU si se usa-->
         <div class="modal fade" id="seeInformationModalDU" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
@@ -249,7 +249,7 @@
                     </div>
                     <div class="modal-body">
                         <div role="tabpanel">
-                            <ul class="nav nav-tabs" role="tablist" style="background: #3982C0;">
+                            <ul>
                                 <div id="nameLote"></div>
                             </ul>
                             <div class="tab-content">
@@ -257,7 +257,7 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="card card-plain">
-                                                <div class="card-content">
+                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
                                                     <ul class="timeline-3" id="comments-list-asimilados"></ul>
                                                 </div>
                                             </div>
@@ -276,7 +276,7 @@
         </div>
         <!-- END INFORMACIÓN DU-->
 
-        <!-- INFORMACIÓN P-->
+        <!-- INFORMACIÓN P si se usa-->
         <div class="modal fade" id="seeInformationModalP" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content boxContent">
@@ -284,30 +284,35 @@
                     </div>
                     <div class="modal-body">
                         <div role="tabpanel">
-                            <ul class="nav nav-tabs" role="tablist" style="background: #3982C0;">
+                            <ul>
                                 <div id="nameUser"></div>
                             </ul>
                             <div class="tab-content">
                                 <div role="tabpanel" class="tab-pane active" id="changelogTabP">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <div class="card card-plain m-0">
+                                            <div class="card card-plain m-0 p-0">
                                                 <div class="card-content">
-                                                    <ul id="comments-list-asimiladosP">
+                                                    <ul class="p-0"id="comments-list-asimiladosP">
                                                         <div class="row toolbar">
                                                             <input id="userid" name="userid" value="0" type="hidden">
-                                                            <div class="form-group text-center" ><h4>MONTO:</h4><p class="category input-tot pl-1" ><B id="montito">$0</B></p></div>
+                                                            <div class="form-group">
+                                                                <h4 class=" text-center">MONTO:</h4>
+                                                                <p class=" text-center category input-tot p-0" >
+                                                                    <B id="montito">$0</B>
+                                                                </p>
+                                                            </div>
                                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                                 <div class="form-group">
-                                                                    <label class="m-0" for="mes">Año</label>
-                                                                    <select name="anio" id="anio" class="selectpicker select-gral m-0 "  data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona año" data-size="7" required>
+                                                                    <label class="control-label m-1" for="mes">Año</label>
+                                                                    <select name="anio" id="anio" class="selectpicker select-gral m-0 "  data-container="body"  data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="4" required>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                                 <div class="form-group">
-                                                                    <label class="m-0" for="mes">Mes</label>
-                                                                    <select name="mes" id="mes" class="selectpicker select-gral m-0 " data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona un mes" data-size="7" required>
+                                                                    <label class="control-label m-1" for="mes">Mes</label>
+                                                                    <select name="mes" id="mes" class="selectpicker select-gral m-0 " data-container="body" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -444,6 +449,7 @@
                                             <option value="8">8</option>
                                             <option value="9">9</option>
                                             <option value="10">10</option>
+                                            <option value="11">11</option>
                                         </select>
                                     </div>
                                 </div>
@@ -466,7 +472,7 @@
         </div>
         <!-- END MODAL ACTUALIZAR DESCUENTO-->
 
-        <!-- MODAL BONOS-->
+        <!-- MODAL BONOS si se usa-->
         <div class="modal fade modal-alertas" id="ModalBonos" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -507,6 +513,7 @@
                                             <option value="8">8</option>
                                             <option value="9">9</option>
                                             <option value="10">10</option>
+                                            <option value="11">11</option>
                                         </select>
                                     </div>
 
@@ -549,7 +556,8 @@
             </div>
         </div>
         <!-- END MODAL BONOS-->
-
+        
+        <!--TABLA-->
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -560,7 +568,7 @@
                             </div>
                             <div class="card-content">
                                 <div class="toolbar">
-                                    <div class="container-fluid">
+                                    <div class="container-fluid p-0">
                                         <!-- USUARIOS ACTIVOS-->
                                         <div id="title-activo">
                                             <div class="col-lg-12 text-center mt-1 p-0">
@@ -568,49 +576,50 @@
                                                 <p class="card-title pl-1">(Descuentos activos, una vez liquidados podrás consultarlos en el Historial de descuentos)</p><br>
                                             </div>
                                             <div class="row">
-                                                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                                    <h5 class="card-title center-align">
-                                                        Total
-                                                        <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="total-activo">
+                                                <div class="text-center col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                    <h5>
+                                                        Total<br>
+                                                        <input class="text-center" style="border-bottom: none; border-top: none; border-right: none; border-left: none; color: #0a548b; font-weight: bold;" disabled="disabled" id="total-activo">
                                                     </h5>
                                                 </div>
-                                                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                                    <h5 class="card-title center-align">
-                                                    Total recaudado
-                                                        <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="total-abonado">
+                                                <div class="text-center col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                    <h5>
+                                                        Total recaudado<br>
+                                                        <input class="text-center" style="border-bottom: none; border-top: none; border-right: none; border-left: none; color: #0a548b; font-weight: bold;" disabled="disabled" id="total-abonado">
                                                     </h5>
                                                 </div>
-                                                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                                    <h5 class="card-title center-align">
-                                                        Pendiente
-                                                        <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="total-pendiente">
+                                                <div class="text-center col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                    <h5 >
+                                                        Pendiente<br>
+                                                        <input class="text-center" style="border-bottom: none; border-top: none; border-right: none; border-left: none; color: #0a548b; font-weight: bold;" disabled="disabled" id="total-pendiente">
                                                     </h5>
                                                 </div>
                                             </div>
                                         </div>
                                         <!-- END USUARIOS ACTIVOS-->
+
                                         <!-- USUARIOS INACTIVOS-->
                                         <div id="title-baja" hidden>
                                             <div class="col-lg-12 text-center mt-1 p-0">
                                                 <h3 class="card-title center-align">Descuentos Universidad</h3>
                                                 <p class="card-title pl-1">(Listado de descuentos de usuarios inactivos)</p><br>
                                             </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                                <h5 class="card-title center-align">
-                                                    Total
-                                                    <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="total-baja">
+                                            <div class="text-center col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                <h5>
+                                                    Total<br>
+                                                    <input class="text-center" style="border-bottom: none; border-top: none; border-right: none; border-left: none; color: #0a548b;  font-weight: bold;" disabled="disabled" id="total-baja">
                                                 </h5>
                                             </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                                <h5 class="card-title center-align">
-                                                Total recaudado
-                                                    <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="abonado-baja">
+                                            <div class="text-center col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                <h5>
+                                                    Total recaudado<br>
+                                                    <input class="text-center" style="border-bottom: none; border-top: none; border-right: none; border-left: none; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="abonado-baja">
                                                 </h5>
                                             </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                                <h5 class="card-title center-align">
-                                                    Pendiente
-                                                    <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="pendiente-baja">
+                                            <div class="text-center col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                <h5>
+                                                    Pendiente<br>
+                                                    <input class="text-center" style="border-bottom: none; border-top: none; border-right: none; border-left: none;  color: #0a548b;  font-weight: bold;" disabled="disabled" id="pendiente-baja">
                                                 </h5>
                                             </div>
                                         </div>
@@ -620,22 +629,22 @@
                                                 <h3 class="card-title center-align">Descuentos Universidad - <b>Liquidados</b></h3>
                                                 <p class="card-title pl-1">(Listado de descuentos completos o liquidados en caja)</p><br>
                                             </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                                <h5 class="card-title center-align">
-                                                    Total
-                                                    <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="total-liquidado">
+                                            <div class="text-center col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                <h5>
+                                                    Total<br>
+                                                    <input class="text-center" style="border-bottom: none; border-top: none; border-right: none; border-left: none; color: #0a548b;  font-weight: bold;" disabled="disabled" id="total-liquidado">
                                                 </h5>
                                             </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                                <h5 class="card-title center-align">
-                                                Total recaudado
-                                                    <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="abonado-liquidado">
+                                            <div class="text-center col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                <h5>
+                                                    Total recaudado<br>
+                                                    <input class="text-center" style="border-bottom: none; border-top: none; border-right: none; border-left: none; color: #0a548b;  font-weight: bold;" disabled="disabled" id="abonado-liquidado">
                                                 </h5>
                                             </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                                <h5 class="card-title center-align">
-                                                    Pendiente
-                                                    <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="pendiente-liquidado">
+                                            <div class="text-center col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                <h5>
+                                                    Pendiente<br>
+                                                <input class="text-center" style="border-bottom: none; border-top: none; border-right: none; border-left: none; color: #0a548b;  font-weight: bold;" disabled="disabled" id="pendiente-liquidado">
                                                 </h5>
                                             </div>
                                         </div>
@@ -645,33 +654,32 @@
                                             <div class="col-lg-12 text-center mt-1 p-0">
                                                 <h3 class="card-title center-align">Descuentos Universidad y Liquidados</h3>
                                             </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                                <h5 class="card-title">
-                                                    Total
-                                                    <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="total-conglomerado">
+                                            <div class="text-center col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                <h5>
+                                                    Total<br>
+                                                    <input class="text-center" style="border-bottom: none; border-top: none; border-right: none; border-left: none; color: #0a548b;  font-weight: bold;" disabled="disabled" id="total-conglomerado">
                                                 </h5>
                                             </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                                <h5 class="card-title">
-                                                Total recaudado
-                                                    <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="abonado-conglomerado">
+                                            <div class="text-center col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                <h5>
+                                                    Total recaudado<br>
+                                                    <input class="text-center" style="border-bottom: none; border-top: none; border-right: none; border-left: none; color: #0a548b;  font-weight: bold;" disabled="disabled" id="abonado-conglomerado">
                                                 </h5>
                                             </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                                <h5 class="card-title">
-                                                    Pendiente
-                                                    <input style="border-bottom: none; border-top: none; border-right: none; border-left: none; background: white; color: #0a548b; font-weight: bold;" disabled="disabled" readonly="readonly" type="text" id="pendiente-conglomerado">
+                                            <div class="text-center col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                <h5>
+                                                    Pendiente<br>
+                                                    <input class="text-center" style="border-bottom: none; border-top: none; border-right: none; border-left: none; color: #0a548b; font-weight: bold;" disabled="disabled" id="pendiente-conglomerado">
                                                 </h5>
                                             </div>
                                         </div>
                                         
                                         <!-- BUSCADOR/SELECT -->
-                                        <div class="col-lg-12">
+                                        <div class="col-lg-12 p-0">
                                             <div class="form-group is-empty">
                                                 <label class="control-label"for="proyecto">Tipo de descuento:</label>
                                                 <select name="tipo_descuento" id="tipo_descuento" class="selectpicker select-gral" data-style="btn " data-show-subtext="true"
-                                                        data-live-search="true"  title="Selecciona el tipo de descuento" data-size="7" required onChange="checkTypeOfDesc()">
-                                                    <!--<option value="0">Seleccione all</option>-->
+                                                        data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" required onChange="checkTypeOfDesc()">
                                                     <option value="1" selected>ACTIVO</option>
                                                     <option value="2">BAJA</option>
                                                     <option value="3">LIQUIDADO</option>
@@ -684,7 +692,7 @@
 
                                 <!-- TABLA-->
                                 <div class="material-datatables">
-                                    <table id="tabla-general" class="table-striped table-hover" style="text-align: center;">
+                                    <table id="tabla-general" class="table-striped table-hover">
                                         <thead>
                                             <tr>
                                                 <th>ID</th>
@@ -694,12 +702,12 @@
                                                 <th>SALDO DE COMISIONES</th>
                                                 <th>DESCUENTO</th>
                                                 <th>APLICADO</th>
-                                                <th>PENDIENTE GENERAL.</th>
+                                                <th>PENDIENTE GENERAL</th>
                                                 <th>PAGO MENSUAL</th>
                                                 <th>ESTATUS</th>
                                                 <th>PENDIENTE DEL MES</th>
                                                 <th>DESCUENTO DISPONIBLE</th>
-                                                <th>FECCH DE DESCUENTO 1</th>
+                                                <th>FECHA DE DESCUENTO 1</th>
                                                 <th>FECHA DE CREACIÓN</th>
                                                 <th>ESTATUS DE LAS CERTIFICACIONES</th>
                                                 <th>ACCIONES</th>
@@ -722,8 +730,8 @@
 <script src="<?= base_url() ?>dist/js/controllers/ventas/conglomerado.js"></script>
 <script src="<?= base_url() ?>dist/js/jwt/hmac-sha256.js"></script>
 <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
-    <script src="<?= base_url() ?>dist/js/jwt/enc-base64-min.js"></script>
-    <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
+<script src="<?= base_url() ?>dist/js/jwt/enc-base64-min.js"></script>
+<script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 </body>

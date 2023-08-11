@@ -52,6 +52,7 @@ $(document).on("click", "#searchByDateRange", function () {
             dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
             width: '100%',
             scrollX: true,
+            bAutoWidth: true,
             buttons: [{
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
@@ -92,7 +93,6 @@ $(document).on("click", "#searchByDateRange", function () {
                     var ge1;
                     if(d.gerente == undefined){ge1="";}else{ge1=d.gerente;};
                     return ge1;
-
                 }
             },
             {

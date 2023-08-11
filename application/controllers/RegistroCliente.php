@@ -1928,24 +1928,22 @@ class RegistroCliente extends CI_Controller {
         }
 
     }
-    public function replaceDocumentView()
-    {
-      $this->validateSession();
-      $datos=array();
-      $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
-      $this->load->view('template/header');
-      $this->load->view("juridico/vista_documentacion_juridico",$datos);
+    public function replaceDocumentView(){
+        $this->validateSession();
+        $datos=array();
+        $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
+        $this->load->view('template/header');
+        $this->load->view("juridico/vista_documentacion_juridico",$datos);
     }
 
 
- 	public function expedientesWS_DS($lotes) {
+    public function expedientesWS_DS($lotes) {
         $data = array_merge($this->registrolote_modelo->getdp_DS($lotes));
         if($data != null) {
             echo json_encode($data);
         } else {
             echo json_encode(array());
-        }
-       
+        }       
     }
 
     public function query_ds(){
@@ -4595,7 +4593,7 @@ class RegistroCliente extends CI_Controller {
 					initComplete: function () {
 						this.api().columns().every( function () {
 							var column = this;
-							var select = $('<select><option value=""></option></select>')
+							var select = $('><option value=""></option></select>')
 								.appendTo( $(column.footer()).empty() )
 								.on( 'change', function () {
 									var val = $.fn.dataTable.util.escapeRegex(
@@ -6260,6 +6258,9 @@ class RegistroCliente extends CI_Controller {
 	
     function getResultsClientsSerch()
     {
+    ini_set('max_execution_time', 900);
+    set_time_limit(900);
+    ini_set('memory_limit','2048M');
       $info_client = [];
       $this->input->post('nombre') !== ''
       ? $info_client["cl.nombre"] = $this->input->post('nombre')

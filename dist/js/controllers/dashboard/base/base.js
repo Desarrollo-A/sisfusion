@@ -21,16 +21,7 @@ sp = { // MJ: SELECT PICKER
 };
 
 $(document).ready(function(){
-    if(googleCode != ''){
-        changePill('agendaOption');
-        $("#inicio").removeClass("active");
-        $("#agenda").addClass("active");
-        $("#inicioOption").removeClass("active");
-        $("#agendaOption").addClass("active");
-    }
-    else{
-        changePill('inicioOption')
-    }
+    changePill('inicioOption');
 });
 
 $(document).on('click', '.menuTab', function(e){
@@ -61,16 +52,17 @@ function changePill(element){
                 });  
             else readyReport();
         });
-    }
-    else if(element == 'agendaOption'){
+    } else if (element == 'agendaOption') {
         contAgenda++;
         $('#agenda').html("");
-        $('#agenda').load(`${base_url}Calendar/calendar`, {'googleCode' : googleCode}, function(){
-            if(contAgenda <= 1 )
+        $('#agenda').load(`${base_url}Calendar/calendar`, function(){
+            if(contAgenda <= 1 ) {
                 $.getScript(base_url+"dist/js/controllers/dashboard/agenda/dashboarCalendar.js", function(){
                     readyAgenda();
-                }); 
-            else readyAgenda();
+                });
+            } else {
+                readyAgenda();
+            }
         });
     }
     else if(element == 'rankingOption'){

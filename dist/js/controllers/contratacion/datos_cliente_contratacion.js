@@ -82,7 +82,6 @@ function fillTable(index_proyecto, index_condominio) {
                     }
                 }
             },
-
         }],
         pagingType: "full_numbers",
         language: {
@@ -94,7 +93,7 @@ function fillTable(index_proyecto, index_condominio) {
         },
         processing: true,
         pageLength: 10,
-        bAutoWidth: false,
+        bAutoWidth: true,
         bLengthChange: false,
         scrollX: true,
         bInfo: true,
@@ -105,7 +104,6 @@ function fillTable(index_proyecto, index_condominio) {
         columns: [
             {
                 "className": 'details-control',
-                "width": "3%",
                 "orderable": false,
                 "data": null,
                 "defaultContent": `<div class="toggle-subTable">
@@ -127,49 +125,41 @@ function fillTable(index_proyecto, index_condominio) {
                     return '<p class="m-0">' + d.nombreCondominio + '</p>';
                 }
             },
-
             {
                 data: function (d) {
                     return '<p class="m-0">' + d.nombreLote + '</p>';
                 }
             },
-
             {
                 data: function (d) {
                     return '<p class="m-0">' + d.nombreCompleto + '</p>';
                 }
             },
-
             {
                 data: function (d) {
                     return '<p class="m-0">' + (d.noRecibo == null || d.noRecibo == '' ? 'SIN ESPECIFICAR' : d.noRecibo) + '</p>';
                 }
             },
-
             {
                 data: function (d) {
                     return '<p class="m-0">' + d.referencia + '</p>';
                 }
             },
-
             {
                 data: function (d) {
                     return '<p class="m-0">' + myFunctions.validateEmptyField(d.tipo) + '</p>';
                 }
             },
-
             {
                 data: function (d) {
                     return '<p class="m-0">' + (d.fechaApartado == null || d.fechaApartado == '' ? 'SIN ESPECIFICAR' : d.fechaApartado) + '</p>';
                 }
             },
-
             {
                 data: function (d) {
                     return '<p class="m-0">$ ' + myFunctions.number_format(d.engancheCliente, 2, '.', ',') + '</p>';
                 }
             },
-
             {
                 data: function (d) {
                     return '<p class="m-0">' + (d.fechaEnganche == null || d.fechaEnganche == '' ? 'SIN ESPECIFICAR' : d.fechaEnganche) + '</p>';
@@ -213,11 +203,14 @@ function fillTable(index_proyecto, index_condominio) {
     $('#tabla_clientes tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
         var row = tabla_valores_cliente.row(tr);
+        console.log(row.child.isShown());
         if (row.child.isShown() ) {
+        console.log('Hola');
             row.child.hide();
             tr.removeClass('shown');
             $(this).parent().find('.animacion').removeClass("fas fa-chevron-up").addClass("fas fa-chevron-down");
         } else {
+        console.log('Hola2');
             var informacion_adicional = 
                 `<div class="container subBoxDetail">
                     <div class="row">
@@ -305,6 +298,7 @@ function fillTable(index_proyecto, index_condominio) {
             row.child(informacion_adicional).show();
             tr.addClass('shown');
             $(this).parent().find('.animacion').removeClass("fa-caret-right").addClass("fa-caret-down");
+            console.log('cambio');
         }
     });
 }

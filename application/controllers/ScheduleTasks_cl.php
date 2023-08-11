@@ -1165,7 +1165,7 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
         $contenido[] = [
             'usuario'      =>  'ASESOR COMODÍN',
             'contraseña'   =>  $key,
-            'diasVencer'   =>  '15',
+            'diasVencer'   =>  '1 mes',
             'fechaAccion'  =>  date('Y-m-d H:i:s')
         ];
 

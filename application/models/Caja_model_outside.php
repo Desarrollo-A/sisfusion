@@ -282,19 +282,19 @@
 		(CASE u1.id_rol WHEN 3 THEN u1.id_lider ELSE u3.id_usuario END) id_subdirector, 
 		(CASE u1.id_rol WHEN 3 THEN CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) ELSE CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) END) subdirector,
 		(CASE u1.id_rol WHEN 3 THEN (CASE WHEN u2.id_lider = 2 THEN 0 ELSE u2.id_lider END) ELSE CASE 
-		WHEN u3.id_usuario = 7092 THEN 3 
+		WHEN u2.id_usuario = 7092 THEN 3 
 		WHEN u2.id_usuario IN (9471,681,609,690) THEN 607 
 		WHEN u2.id_lider = 692 THEN u0.id_lider
         WHEN u2.id_lider = 703 THEN 4
         WHEN u2.id_lider = 7886 THEN 5
 		ELSE 0 END END) id_regional,
 			(CASE u1.id_rol WHEN 3 THEN (CASE WHEN u2.id_lider = 2 THEN 'NO APLICA' ELSE CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) END) ELSE CASE 
-		WHEN u3.id_usuario = 7092 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
-		WHEN u3.id_usuario = 9471 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
-		WHEN u3.id_usuario = 681 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
-		WHEN u3.id_usuario = 609 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
-		WHEN u3.id_usuario = 690 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
-		WHEN (u3.id_usuario = 5 AND u0.id_sede = '11') THEN 'NO APLICA' ELSE 'NO APLICA' END END) regional,
+		WHEN u2.id_usuario = 7092 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
+		WHEN u2.id_usuario = 9471 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
+		WHEN u2.id_usuario = 681 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
+		WHEN u2.id_usuario = 609 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
+		WHEN u2.id_usuario = 690 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
+		WHEN (u2.id_usuario = 5 AND u0.id_sede = '11') THEN 'NO APLICA' ELSE 'NO APLICA' END END) regional,
 				CASE 
 		WHEN (u0.id_sede = '13' AND u2.id_lider = 7092) THEN 3
 		WHEN (u0.id_sede = '13' AND u2.id_lider = 3) THEN 7092
@@ -317,11 +317,16 @@
 
 
     public function prospectoXAsesor($idAsesor) {
+        if($idAsesor == 12874) {
+            $where = " p.id_asesor=p.id_coordinador ";
+        }else{
+            $where = " p.id_asesor = $idAsesor ";
+        }
         $query = $this->db->query("SELECT p.id_prospecto, CONCAT(UPPER(p.nombre), ' ', UPPER(p.apellido_paterno), ' ', UPPER(p.apellido_materno), ' (', REPLACE(oxc.nombre, ' (especificar)', ''), ')') nombre,
         UPPER(p.nombre) nombre_cliente, UPPER(p.apellido_paterno) apellido_paterno, UPPER(p.apellido_materno) apellido_materno, p.source
         FROM prospectos p 
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = p.lugar_prospeccion AND oxc.id_catalogo = 9
-		WHERE p.id_asesor = $idAsesor AND p.estatus = 1 AND p.lugar_prospeccion != 6
+		WHERE $where AND p.estatus = 1 AND p.lugar_prospeccion != 6
 		ORDER BY nombre, apellido_paterno, apellido_materno");
         return $query->result();
     }
@@ -1343,7 +1348,7 @@
         return $this->db->query("SELECT us.id_lider as id_subdirector, 
 		(CASE 
         WHEN us.id_lider = 7092 THEN 3 
-        WHEN us.id_lider IN (9471, 681, 609, 690) THEN 607 
+        WHEN us.id_lider IN (9471, 681, 609, 690, 2411) THEN 607 
 		WHEN us.id_lider = 692 THEN u0.id_lider
         WHEN us.id_lider = 703 THEN 4
         WHEN us.id_lider = 7886 THEN 5

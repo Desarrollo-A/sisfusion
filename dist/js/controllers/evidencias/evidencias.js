@@ -2,7 +2,7 @@ $(document).ready(function(){
     getResidenciales();
     $('.iconCopy').tooltip({
         trigger: 'manual'
-     });
+    });
 })
 
 $(document).on('change', "#residenciales", function () {
@@ -39,7 +39,6 @@ $(document).on('click', "#generate", function () {
     console.log('obj', obj);
     if(obj.idCliente==''){
         alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-
     }else{
         generateToken(obj);
     }
@@ -74,7 +73,6 @@ function getClient(idLote){
         type: 'POST',
         dataType: 'json',
         success: function (response) {
-            console.log(response);
             $('.nombreCl').text(response.nombre);
             $('.nombreAs').text(response.nombreAsesor);
             $('.fechaApartado').text(response.fechaApartado);
@@ -126,15 +124,11 @@ function generateToken(obj){
         success: function (response) {
             console.log(response);
             let url = buildURL(response);
-            // $("#url_second").text(url);
             $("#url").val(url);
             $('#copy_button').removeClass('hide');
             $('#copy_button').show();
             $('.iconCopy').tooltip('show');
             setTimeout(function(){ $('.iconCopy').tooltip('hide'); }, 3000);
-
-            // $("#url").text(url);
-            // $('#urlModal').modal();
             $('#spiner-loader').addClass('hide');
         }, error: function () {
             $("#sendRequestButton").prop("disabled", false);
@@ -145,22 +139,15 @@ function generateToken(obj){
 }
 
 function buildURL(token){
-    let url = `${base_url}Evidencias/evidenciaUser/?jwt=${token}`;
+    let url = `${general_base_url}Evidencias/evidenciaUser/?jwt=${token}`;
     return url;
 }
 
 function copyToClipboard() {
-    /* Get the text field */
     var copyText = document.getElementById("url");
-  
-    /* Select the text field */
     copyText.select();
     copyText.setSelectionRange(0, 99999); /* For mobile devices */
-  
-     /* Copy the text inside the text field */
     navigator.clipboard.writeText(copyText.value);
-  
-    /* Alert the copied text */
     alerts.showNotification("top", "right", "La URL ha sido copiada a su portapapeles.", "success");
 }
 
@@ -179,7 +166,6 @@ function verEvidencia(){
             source.setAttribute('src', url);
             source.setAttribute('type', 'video/mp4');
             video.appendChild(source);
-           
             $("#nombre_lote").text( $('#nombreLote').val());
             $('#videoPreview').modal();
             $('#spiner-loader').addClass('hide');
