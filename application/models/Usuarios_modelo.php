@@ -1030,4 +1030,37 @@ class Usuarios_modelo extends CI_Model
         WHERE u.id_usuario = $id_usuario ");
         return $query;
     }
+
+    function obtenerLideresPorIdUsuario($idUsuario, $idLiderNuevo, $idSedeNueva, $idRolNuevo)
+    {
+        $idCoordinador = ($idRolNuevo == 7) ? $idLiderNuevo : 'u0.id_lider';
+        $idGerente = ($idRolNuevo == 9) ? $idLiderNuevo : 'u1.id_lider';
+        $idSubdirector = ($idRolNuevo == 3) ? $idLiderNuevo : 'u2.id_lider';
+        $idRegional = ($idRolNuevo == 2 ) ? $idLiderNuevo : 'u3.id_lider';
+
+        $query = $this->db->query("SELECT u0.id_usuario as id_asesor, 
+                $idLiderNuevo as id_coordinador,
+                (CASE u1.id_rol WHEN 3 THEN u1.id_usuario ELSE u2.id_usuario END) id_gerente,
+                (CASE u1.id_rol WHEN 3 THEN u1.id_lider ELSE u3.id_usuario END) id_subdirector,
+                (CASE u1.id_rol WHEN 3 THEN (CASE WHEN u2.id_lider = 2 THEN 0 ELSE u2.id_lider END) ELSE CASE 
+                WHEN u3.id_usuario = 7092 THEN 3 
+                WHEN u3.id_usuario IN (9471, 681, 609, 690) THEN 607 
+                WHEN u3.id_usuario = 692 THEN u3.id_lider
+                WHEN u3.id_usuario = 703 THEN 4
+                WHEN u3.id_usuario = 7886 THEN 5
+                ELSE 0 END END) id_regional,
+                CASE 
+                WHEN (($idSedeNueva = '13' AND u3.id_lider = 7092) OR ($idSedeNueva = '13' AND u2.id_lider = 7092)) THEN 3
+	            WHEN (($idSedeNueva = '13' AND u3.id_lider = 3) OR ($idSedeNueva = '13' AND u2.id_lider = 3)) THEN 7092
+                ELSE 0 END id_regional_2
+            FROM usuarios u0 -- asesor
+            LEFT JOIN usuarios u1 ON u1.id_usuario = $idCoordinador -- coordinador 
+            LEFT JOIN usuarios u2 ON u2.id_usuario = $idGerente -- gerencia
+            LEFT JOIN usuarios u3 ON u3.id_usuario = $idSubdirector -- subdirector
+            LEFT JOIN usuarios u4 ON u4.id_usuario = $idRegional -- id_regional
+            LEFT JOIN usuarios u5 ON u5.id_usuario = u4.id_lider -- id_regional_2
+            WHERE u0.id_usuario = $idUsuario");
+
+        return $query->row();
+    }
 }
