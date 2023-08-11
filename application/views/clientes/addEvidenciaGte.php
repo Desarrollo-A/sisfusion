@@ -903,6 +903,7 @@
 
     $("#subir_evidencia_form").on('submit', function (e) {
         e.preventDefault();
+        console.log(this);
         $.ajax({
             type: 'POST',
             url: '<?=base_url()?>index.php/Asesor/addEvidenceToCobranza',

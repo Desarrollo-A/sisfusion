@@ -58,6 +58,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="<?= base_url() ?>dist/js/moment.min.js"></script>
 
+<script src="<?= base_url() ?>dist/js/es.js"></script>
+<script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
+<script src="<?= base_url() ?>dist/js/fullcalendar.min.js"></script>
 
 <!-- <script async defer src="https://apis.google.com/js/api.js" onload="this.onload=function(){};handleClientLoad()" onreadystatechange="if (this.readyState === 'complete') this.onload()"></script> -->
 <!-- <script src="<?=base_url()?>dist/js/controllers/dashboard/agenda/side_calendar.js"></script> -->
