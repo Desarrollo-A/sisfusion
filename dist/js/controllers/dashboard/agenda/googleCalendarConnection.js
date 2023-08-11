@@ -13,21 +13,6 @@ const SCOPES = "https://www.googleapis.com/auth/calendar";
 
 let tokenClient;
 
-function gapiLoaded() {
-  gapi.load('client', initGapiLoaded);
-}
-
-function initGapiLoaded() {
-  gapi.client.init({
-    'apiKey': API_KEY,
-    'discoveryDocs': DISCOVERY_DOC,
-    'clientId': CLIENT_ID,
-    'scope': 'profile'
-  }).then(function (response) {
-    console.log(response);
-  });
-}
-
 /**
  * Callback after Google Identity Services are loaded.
  */
@@ -38,7 +23,7 @@ function gisLoaded() {
       scope: SCOPES,
       callback: tokenCallback,
     });
-    tokenClient.requestAccessToken();
+    tokenClient.requestAccessToken({prompt: ''});
   }
 }
 
