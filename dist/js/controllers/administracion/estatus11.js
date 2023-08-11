@@ -137,7 +137,6 @@ $("#tabla_ingresar_11").ready(function () {
 						else
 							cntActions = 'N/A';
 					}
-
 					return `<div class="d-flex justify-center">${cntActions}</div>`;
 				}
 			}],
@@ -328,9 +327,7 @@ $(document).on('click', '#save3', function (e) {
 				alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
 			}
 		});
-
 	}
-
 });
 
 

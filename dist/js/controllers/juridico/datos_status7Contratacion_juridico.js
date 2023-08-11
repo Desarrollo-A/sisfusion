@@ -45,10 +45,13 @@ $(document).ready(function () {
 
 $("#proyecto").on('change', function (e) {
     e.preventDefault();
+    $("#Cproyecto").removeClass('col-xs-12 col-sm-12 col-md-6 col-lg-6');
+    $("#Ccondominio").addClass('hide');
     let idResidencial = $("#proyecto").val();
     console.log(idResidencial);
     if(idResidencial == 27){
-        $("#condominio").prop('disabled', false);
+        $("#Cproyecto").addClass('col-xs-12 col-sm-12 col-md-6 col-lg-6');
+        $("#Ccondominio").removeClass('hide');
         $.post(general_base_url + "Contratacion/lista_condominio/"+idResidencial, function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
@@ -63,7 +66,6 @@ $("#proyecto").on('change', function (e) {
         fillTable(1, 0, 0, idResidencial,0);
         $("#condominio").empty();
         $("#condominio").selectpicker('refresh');
-        $("#condominio").prop('disabled', true);
     }
 });
 
@@ -76,7 +78,6 @@ $("#condominio").on('change', function (e) {
     }else{
         $("#condominio").empty();
         $("#condominio").selectpicker('refresh');
-        $("#condominio").prop('disabled', true);
     }
 });
 

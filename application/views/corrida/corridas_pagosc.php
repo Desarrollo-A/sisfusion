@@ -99,7 +99,7 @@
                                 </div>
                             </div>
                             <div class="container-fluid">
-                                <table id="tableDoct" class="table-striped table-hover">
+                                <table id="tableDoct" class="table-striped table-hover hide">
                                     <thead>
                                         <tr>
                                             <th>ID CORRIDA</th>
@@ -107,7 +107,7 @@
                                             <th>CONDOMINIO</th>
                                             <th>ID POR LOTE</th>
                                             <th>LOTE</th>
-                                            <th>HORA/FECHA CREACIÓN</th>
+                                            <th>HORA/FECHA DE CREACIÓN</th>
                                             <th>RESPONSABLE</th>
                                             <th>ÚLTIMA MODIFICACIÓN POR</th>
                                             <th>ACCIÓN</th>

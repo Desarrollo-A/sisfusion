@@ -20,6 +20,7 @@ $(document).ready (function() {
     $('#filtro3').change(function(){
         var valorSeleccionado = $(this).val();
         $("#filtro4").empty().selectpicker('refresh');
+        $("#spiner-loader").removeClass('hide');
         $.ajax({
             url: general_base_url + 'registroCliente/getCondominios/'+valorSeleccionado,
             type: 'post',
@@ -33,6 +34,7 @@ $(document).ready (function() {
                     $("#filtro4").append($('<option>').val(id).text(name));
                 }
                 $("#filtro4").selectpicker('refresh');
+                $("#spiner-loader").addClass('hide');
             }
         });
     });
@@ -40,6 +42,7 @@ $(document).ready (function() {
     $('#filtro4').change(function(){
         var residencial = $('#filtro3').val();
         var valorSeleccionado = $(this).val();
+        $("#spiner-loader").removeClass('hide');
         $("#filtro5").empty().selectpicker('refresh');
         $.ajax({
             url: general_base_url + 'Corrida/getLotesPC/'+valorSeleccionado+'/'+residencial,/*getCorridasPCByLote*/
@@ -55,6 +58,7 @@ $(document).ready (function() {
                     $("#filtro5").append($('<option>').val(datos).text(name));
                 }
                 $("#filtro5").selectpicker('refresh');
+                $("#spiner-loader").addClass('hide');
             },
         });
     });
@@ -64,7 +68,7 @@ $(document).ready (function() {
         $(this).css('text-align', 'center');
         var title = $(this).text();
         titulos_intxt.push(title);
-        $(this).html('<input type="text" class="textoshead"  placeholder="'+title+'"/>' );
+        $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
         $( 'input', this ).on('keyup change', function () {
             if ($('#tableDoct').DataTable().column(i).search() !== this.value ) {
                 $('#tableDoct').DataTable().column(i).search(this.value).draw();
@@ -77,38 +81,38 @@ $(document).ready (function() {
         let datos = seleccion.split(',');
         let valorSeleccionado=datos[0];
         let ventaC = datos[1];
-
+        $("#spiner-loader").removeClass('hide');
+        $("#tableDoct").removeClass('hide');
         $('#tableDoct').DataTable({
             destroy: true,
             lengthMenu: [[15, 25, 50, -1], [10, 25, 50, "All"]],
-            "ajax":
-                {
-                    "url": general_base_url + 'Corrida/getCorridasPCByLote/'+valorSeleccionado,
-                    "dataSrc": ""
-                },
+            "ajax":{
+                "url": general_base_url + 'Corrida/getCorridasPCByLote/'+valorSeleccionado,
+                "dataSrc": ""
+            },
+            initComplete: function(){
+                $("#spiner-loader").addClass('hide');
+            },
             dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
             width: "100%",
             scrollX: true,
             bAutoWidth: true,
             "ordering": false,
-            "buttons": [
-                {
-                    extend: 'excelHtml5',
-                    text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                    className: 'btn buttons-excel',
-                    titleAttr: 'Descargar archivo de Excel',
-                    title: 'CORRIDAS FINANCIERAS',
-                    exportOptions: {
-                        columns: [ 0, 1, 2, 3,4,5, 7],
-                        format: 
-                        {
-                            header:  function (d, columnIdx) {
-                                return ' ' + titulos_intxt[columnIdx] + ' ';
-                            }
+            "buttons": [{
+                extend: 'excelHtml5',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                className: 'btn buttons-excel',
+                titleAttr: 'Descargar archivo de Excel',
+                title: 'CORRIDAS FINANCIERAS',
+                exportOptions: {
+                    columns: [ 0, 1, 2, 3, 4, 5, 6, 7],
+                    format:{
+                        header:  function (d, columnIdx) {
+                            return ' ' + titulos_intxt[columnIdx] + ' ';
                         }
-                    },
-                }
-            ],
+                    }
+                },
+            }],
             pagingType: "full_numbers",
             language: {
                 url: general_base_url + "static/spanishLoader_v2.json",
@@ -121,25 +125,47 @@ $(document).ready (function() {
                 visible: false,
                 searchable: false
             }],
-            "columns":[
-                {data: 'id_pc'},
-                {data: 'nombreResidencial'},
-                {data: 'nombreCondominio'},
-                {data: 'idLote'},
-                {data: 'nombreLote'},
-                {data: 'fecha_creacionpc'},
-                {data: 'nombre_creador'},
-                {data: 'modificado_nombre'},
+            "columns":[{
+                data: 'id_pc'
+            },
+            {
+                data: 'nombreResidencial'
+            },
+            {
+                data: 'nombreCondominio'
+            },
+            {
+                data: 'idLote'
+            },
+            {
+                data: 'nombreLote'
+            },
+            {
+                data : function (d) {
+                    return '<p class="m-0">'+d.fecha_creacionpc.split('.')[0]+'</p>';
+                }
+            },
+            {
+                data: 'nombre_creador'
+            },
+            {
+                data: 'modificado_nombre'
+            },
+            {
+                data: null,
+                render: function ( data, type, row )
                 {
-                    data: null,
-                    render: function ( data, type, row )
-                    {
-                        let button_action;
-                            button_action = '<a href="'+general_base_url+'Corrida/editapc/'+data.id_pc+'" target="_blank"><button class="btn-data btn-green" data-idCorrida="'+data.id_pc+'" data-idLote="'+data.idLote+'"><i class="fa fa-eye"></i></button></a>';
-                        return '<center>' + button_action + '</center>';
-                    }
-                },
-            ]
+                    let button_action;
+                    button_action = '<a href="'+general_base_url+'Corrida/editapc/'+data.id_pc+'" target="_blank"><button class="btn-data btn-green" data-idCorrida="'+data.id_pc+'" data-idLote="'+data.idLote+'"><i class="fa fa-eye"></i></button></a>';
+                    return '<center>' + button_action + '</center>';
+                }
+            }],
+        });
+    });
+
+    $('#tableDoct').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
         });
     });
 
@@ -225,7 +251,7 @@ $(document).ready (function() {
     $('.btn-documentosGenerales').on('click', function () {
         $('#modalFiles').modal('show');
     });
-});/*document Ready*/
+});
 
 $(document).on('click', '.pdfLink', function () {
     var $itself = $(this);
@@ -285,7 +311,6 @@ $(document).on('click', '.verProspectos', function () {
         title:      "Visualizando Prospecto: " + $itself.attr('data-nombreProspecto'),
         width:      985,
         height:     660
-
     });
 });
 
@@ -352,69 +377,110 @@ $(document).on('click', '.seeAuts', function (e) {
 });
 
 if(id_rol_general == 7 || id_rol_general == 9 || id_rol_general == 3){
-/*más querys alv*/
-var miArrayAddFile = new Array(8);
-var miArrayDeleteFile = new Array(1);
+    /*más querys alv*/
+    var miArrayAddFile = new Array(8);
+    var miArrayDeleteFile = new Array(1);
 
-$(document).ready (function() {
-    $(document).on("click", ".update", function(e){
-        e.preventDefault();
-        $('#txtexp').val('');
-        var descdoc= $(this).data("descdoc");
-        var idCliente = $(this).attr("data-idCliente");
-        var nombreResidencial = $(this).attr("data-nombreResidencial");
-        var nombreCondominio = $(this).attr("data-nombreCondominio");
-        var idCondominio = $(this).attr("data-idCondominio");
-        var nombreLote = $(this).attr("data-nombreLote");
-        var idLote = $(this).attr("data-idLote");
-        var tipodoc = $(this).attr("data-tipodoc");
-        var iddoc = $(this).attr("data-iddoc");
-        miArrayAddFile[0] = idCliente;
-        miArrayAddFile[1] = nombreResidencial;
-        miArrayAddFile[2] = nombreCondominio;
-        miArrayAddFile[3] = idCondominio;
-        miArrayAddFile[4] = nombreLote;
-        miArrayAddFile[5] = idLote;
-        miArrayAddFile[6] = tipodoc;
-        miArrayAddFile[7] = iddoc;
-        $(".lote").html(descdoc);
-        $('#addFile').modal('show');
+    $(document).ready (function() {
+        $(document).on("click", ".update", function(e){
+            e.preventDefault();
+            $('#txtexp').val('');
+            var descdoc= $(this).data("descdoc");
+            var idCliente = $(this).attr("data-idCliente");
+            var nombreResidencial = $(this).attr("data-nombreResidencial");
+            var nombreCondominio = $(this).attr("data-nombreCondominio");
+            var idCondominio = $(this).attr("data-idCondominio");
+            var nombreLote = $(this).attr("data-nombreLote");
+            var idLote = $(this).attr("data-idLote");
+            var tipodoc = $(this).attr("data-tipodoc");
+            var iddoc = $(this).attr("data-iddoc");
+            miArrayAddFile[0] = idCliente;
+            miArrayAddFile[1] = nombreResidencial;
+            miArrayAddFile[2] = nombreCondominio;
+            miArrayAddFile[3] = idCondominio;
+            miArrayAddFile[4] = nombreLote;
+            miArrayAddFile[5] = idLote;
+            miArrayAddFile[6] = tipodoc;
+            miArrayAddFile[7] = iddoc;
+            $(".lote").html(descdoc);
+            $('#addFile').modal('show');
+        });
     });
-});
 
-$(document).on('click', '#sendFile', function(e) {
-    e.preventDefault();
-    var idCliente = miArrayAddFile[0];
-    var nombreResidencial = miArrayAddFile[1];
-    var nombreCondominio = miArrayAddFile[2];
-    var idCondominio = miArrayAddFile[3];
-    var nombreLote = miArrayAddFile[4];
-    var idLote = miArrayAddFile[5];
-    var tipodoc = miArrayAddFile[6];
-    var iddoc = miArrayAddFile[7];
-    var expediente = $("#expediente")[0].files[0];
-    var validaFile = (expediente == undefined) ? 0 : 1;
-    tipodoc = (tipodoc == 'null') ? 0 : tipodoc;
-    var dataFile = new FormData();
-    dataFile.append("idCliente", idCliente);
-    dataFile.append("nombreResidencial", nombreResidencial);
-    dataFile.append("nombreCondominio", nombreCondominio);
-    dataFile.append("idCondominio", idCondominio);
-    dataFile.append("nombreLote", nombreLote);
-    dataFile.append("idLote", idLote);
-    dataFile.append("expediente", expediente);
-    dataFile.append("tipodoc", tipodoc);
-    dataFile.append("idDocumento", iddoc);
+    $(document).on('click', '#sendFile', function(e) {
+        e.preventDefault();
+        var idCliente = miArrayAddFile[0];
+        var nombreResidencial = miArrayAddFile[1];
+        var nombreCondominio = miArrayAddFile[2];
+        var idCondominio = miArrayAddFile[3];
+        var nombreLote = miArrayAddFile[4];
+        var idLote = miArrayAddFile[5];
+        var tipodoc = miArrayAddFile[6];
+        var iddoc = miArrayAddFile[7];
+        var expediente = $("#expediente")[0].files[0];
+        var validaFile = (expediente == undefined) ? 0 : 1;
+        tipodoc = (tipodoc == 'null') ? 0 : tipodoc;
+        var dataFile = new FormData();
+        dataFile.append("idCliente", idCliente);
+        dataFile.append("nombreResidencial", nombreResidencial);
+        dataFile.append("nombreCondominio", nombreCondominio);
+        dataFile.append("idCondominio", idCondominio);
+        dataFile.append("nombreLote", nombreLote);
+        dataFile.append("idLote", idLote);
+        dataFile.append("expediente", expediente);
+        dataFile.append("tipodoc", tipodoc);
+        dataFile.append("idDocumento", iddoc);
 
-    if (validaFile == 0) {
-        alerts.showNotification('top', 'right', 'Debes seleccionar un archivoo', 'danger');
-    }
+        if (validaFile == 0) {
+            alerts.showNotification('top', 'right', 'Debes seleccionar un archivoo', 'danger');
+        }
 
-    if (validaFile == 1) {
-        $('#sendFile').prop('disabled', true);
+        if (validaFile == 1) {
+            $('#sendFile').prop('disabled', true);
+            $.ajax({
+                url: general_base_url + "registroCliente/addFileAsesor",
+                data: dataFile,
+                cache: false,
+                contentType: false,
+                processData: false,
+                type: 'POST',
+                success : function (response) {
+                    response = JSON.parse(response);
+                    if(response.message == 'OK') {
+                        alerts.showNotification('top', 'right', 'Expediente enviado', 'success');
+                        $('#sendFile').prop('disabled', false);
+                        $('#addFile').modal('hide');
+                        $('#tableDoct').DataTable().ajax.reload();
+                    } else if(response.message == 'ERROR'){
+                        alerts.showNotification('top', 'right', 'Error al enviar expediente y/o formato no válido', 'danger');
+                        $('#sendFile').prop('disabled', false);
+                    }
+                }
+            });
+        }
+    });
+
+    $(document).ready (function() {
+        $(document).on("click", ".delete", function(e){
+            e.preventDefault();
+            var iddoc= $(this).data("iddoc");
+            var tipodoc= $(this).data("tipodoc");
+            miArrayDeleteFile[0] = iddoc;
+            $(".tipoA").html(tipodoc);
+            $('#cuestionDelete').modal('show');
+        });
+    });
+
+    $(document).on('click', '#aceptoDelete', function(e) {
+        e.preventDefault();
+        var id = miArrayDeleteFile[0];
+        var dataDelete = new FormData();
+        dataDelete.append("idDocumento", id);
+
+        $('#aceptoDelete').prop('disabled', true);
         $.ajax({
-            url: general_base_url + "registroCliente/addFileAsesor",
-            data: dataFile,
+            url: general_base_url + "registroCliente/deleteFile",
+            data: dataDelete,
             cache: false,
             contentType: false,
             processData: false,
@@ -422,56 +488,15 @@ $(document).on('click', '#sendFile', function(e) {
             success : function (response) {
                 response = JSON.parse(response);
                 if(response.message == 'OK') {
-                    alerts.showNotification('top', 'right', 'Expediente enviado', 'success');
-                    $('#sendFile').prop('disabled', false);
-                    $('#addFile').modal('hide');
+                    alerts.showNotification('top', 'right', 'Archivo eliminado', 'danger');
+                    $('#aceptoDelete').prop('disabled', false);
+                    $('#cuestionDelete').modal('hide');
                     $('#tableDoct').DataTable().ajax.reload();
                 } else if(response.message == 'ERROR'){
-                    alerts.showNotification('top', 'right', 'Error al enviar expediente y/o formato no válido', 'danger');
-                    $('#sendFile').prop('disabled', false);
+                    alerts.showNotification('top', 'right', 'Error al eliminar el archivo', 'danger');
+                    $('#tableDoct').DataTable().ajax.reload();
                 }
             }
         });
-    }
-});
-
-$(document).ready (function() {
-    $(document).on("click", ".delete", function(e){
-        e.preventDefault();
-        var iddoc= $(this).data("iddoc");
-        var tipodoc= $(this).data("tipodoc");
-        miArrayDeleteFile[0] = iddoc;
-        $(".tipoA").html(tipodoc);
-        $('#cuestionDelete').modal('show');
     });
-});
-
-$(document).on('click', '#aceptoDelete', function(e) {
-    e.preventDefault();
-    var id = miArrayDeleteFile[0];
-    var dataDelete = new FormData();
-    dataDelete.append("idDocumento", id);
-
-    $('#aceptoDelete').prop('disabled', true);
-    $.ajax({
-        url: general_base_url + "registroCliente/deleteFile",
-        data: dataDelete,
-        cache: false,
-        contentType: false,
-        processData: false,
-        type: 'POST',
-        success : function (response) {
-            response = JSON.parse(response);
-            if(response.message == 'OK') {
-                alerts.showNotification('top', 'right', 'Archivo eliminado', 'danger');
-                $('#aceptoDelete').prop('disabled', false);
-                $('#cuestionDelete').modal('hide');
-                $('#tableDoct').DataTable().ajax.reload();
-            } else if(response.message == 'ERROR'){
-                alerts.showNotification('top', 'right', 'Error al eliminar el archivo', 'danger');
-                $('#tableDoct').DataTable().ajax.reload();
-            }
-        }
-    });
-});
 } 

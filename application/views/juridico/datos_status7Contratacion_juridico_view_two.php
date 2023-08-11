@@ -210,7 +210,7 @@
                             </div>
                             <div class="toolbar">
                                 <div class="row">
-                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="Cproyecto" class="Cproyecto">
                                         <div class="pl-0">
                                             <div class="form-group select-is-empty overflow-hidden">
                                                 <label class="control-label">Desarrollo</label>
@@ -218,11 +218,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 hide" id="Ccondominio" class="Ccondominio">
                                         <div class="pl-0">
                                             <div class="form-group select-is-empty overflow-hidden">
                                                 <label class="control-label">Condominio</label>
-                                                <select id="condominio" name="condominio" class="selectpicker select-gral m-0 disabled" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required disabled></select>
+                                                <select id="condominio" name="condominio" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required></select>
                                             </div>
                                         </div>
                                     </div>
@@ -232,20 +232,20 @@
                                 <div class="form-group">
                                     <table class="table-striped table-hover" id="Jtabla" name="Jtabla">
                                         <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th>TIPO DE VENTA</th>
-                                            <th>PROYECTO</th>
-                                            <th>CONDOMINIO</th>
-                                            <th>LOTE</th>
-                                            <th>GERENTE</th>
-                                            <th>CLIENTE</th>
-                                            <th>FECHA DE MODIFICADO</th>
-                                            <th>FECHA DE VENCIMIENTO</th>
-                                            <th>ASIGNADO A</th>
-                                            <th>UBICACIÓN</th>
-                                            <th>ACCIONES</th>
-                                        </tr>
+                                            <tr>
+                                                <th></th>
+                                                <th>TIPO DE VENTA</th>
+                                                <th>PROYECTO</th>
+                                                <th>CONDOMINIO</th>
+                                                <th>LOTE</th>
+                                                <th>GERENTE</th>
+                                                <th>CLIENTE</th>
+                                                <th>FECHA DE MODIFICADO</th>
+                                                <th>FECHA DE VENCIMIENTO</th>
+                                                <th>ASIGNADO A</th>
+                                                <th>UBICACIÓN</th>
+                                                <th>ACCIONES</th>
+                                            </tr>
                                         </thead>
                                     </table>
                                 </div>
