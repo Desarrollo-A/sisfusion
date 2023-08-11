@@ -216,7 +216,7 @@ function fillTable(idCondominio) {
             },
             {
                 data: function (d) {
-                    return d.fechaApartado;
+                    return d.fechaApartado.split('.')[0];
                 }
             },
             {
