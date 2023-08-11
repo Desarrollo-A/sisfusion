@@ -233,8 +233,22 @@ class Usuarios extends CI_Controller
             $resultadoCH  =  $this->Usuarios_modelo->ServicePostCH($ruta, $dataCH);
             $res = json_decode($resultadoCH);
             $resultadoCH = $res->resultado;
-        } else {
-
+        }
+        else {
+            $arrayChecar = array (
+                'id_rol' => $_POST['member_type'],
+                'id_sede' => $_POST['headquarter'],
+                'id_lider' => $_POST['leader']
+            );
+            $validacion = validateUserVts($arrayChecar);
+            if($validacion['respuesta']==1){
+                //continuar con la lógica
+            }else{
+                echo json_encode(array("result" => false,
+                    "respuesta" => 0,
+                    "message" => $validacion['mensaje']));
+                exit;
+            }
             $sedeCH = 0;
             $sucursal = 0;
             if ($_POST['member_type'] == 3 || $_POST['member_type'] == 7 || $_POST['member_type'] == 9 || $_POST['member_type'] == 2) {
@@ -304,12 +318,32 @@ class Usuarios extends CI_Controller
             // $result = json_decode(1);
             if ($result == 1) {
                 $response = $this->Usuarios_modelo->updateUser($data, $this->input->post("id_usuario"));
+                $mensajeLeyenda = 'Usuario Actualizado correctamente';
             } else {
                 $response = 0;
+                $mensajeLeyenda = 'No se pudo actualizar el usuario';
             }
         }
 
-        echo json_encode($response);
+        $props = $this->Usuarios_modelo->DatosProsp($this->input->post("id_usuario"))->row();
+        if ($props) {
+
+            $arrProp = array(
+                "id_coordinador" => $props->id_coordinador,
+                "id_gerente" => $props->id_gerente,
+                "id_subdirector" => $props->id_subdirector,
+                "id_regional" => $props->id_regional,
+                "id_sede" => $sedeCH,
+                "fecha_modificacion" => date("Y-m-d H:i:s"),
+                "modificado_por" => $this->session->userdata('id_usuario')
+            );
+            $this->db->update('prospectos', $arrProp, "$tipo =". $this->input->post("id_usuario") ." AND tipo = 0");
+        }
+        $respuestaView = array(
+            'respuesta' => $response,
+            'mensaje' =>$mensajeLeyenda
+        );
+        echo json_encode($respuestaView);
     }
 
     public function getUserInformation($id_usuario){
