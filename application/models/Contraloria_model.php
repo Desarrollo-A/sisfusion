@@ -769,18 +769,17 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		AND lo.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96)");
         return $query->result_array();
     }
-
-    public function getLiberacionesInformation($idCondominio) {
+    public function getLiberacionesInformationProyecto($idCondominio) {
         return $this->db->query("SELECT l.idLote, UPPER(l.nombreLote) nombreLote, l.referencia, 
         UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
-        cl.fechaApartado, sl.nombre estatusContratacion, sl.color colorEstatusContratacion,
+        CONVERT(VARCHAR,cl.fechaApartado,20) fechaApartado, sl.nombre estatusContratacion, sl.color colorEstatusContratacion,
         (CASE l.observacionContratoUrgente WHEN '1' THEN 'En proceso de liberación' ELSE 'Sin definir estatus' END) estatusLiberacion,
         (CASE l.observacionContratoUrgente WHEN '1' THEN '28B463' ELSE '566573' END) colorEstatusLiberacion
         FROM lotes l
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1
         INNER JOIN statuslote sl ON sl.idStatusLote = l.idStatusLote
 		INNER JOIN condominios con ON con.idCondominio=l.idCondominio
-        WHERE l.status = 1 AND con.idResidencial = $idCondominio
+        WHERE l.status = 1 AND l.idCondominio = $idCondominio
         UNION ALL
         SELECT l.idLote, UPPER(l.nombreLote) nombreLote, l.referencia, 
         'N/A' nombreCliente,
@@ -790,7 +789,30 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         FROM lotes l
         INNER JOIN statuslote sl ON sl.idStatusLote = l.idStatusLote
 		INNER JOIN condominios con ON con.idCondominio=l.idCondominio
-		WHERE l.status = 1 AND (l.idCliente IS NULL OR l.idCliente = 0) AND con.idResidencial = $idCondominio ORDER BY l.idLote");
+		WHERE l.status = 1 AND (l.idCliente IS NULL OR l.idCliente = 0) AND l.idCondominio = $idCondominio ORDER BY l.idLote");
+    }
+
+    public function getLiberacionesInformation($idCondominio) {
+        return $this->db->query("SELECT l.idLote, UPPER(l.nombreLote) nombreLote, l.referencia, 
+        UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
+        CONVERT(VARCHAR,cl.fechaApartado,20) fechaApartado, sl.nombre estatusContratacion, sl.color colorEstatusContratacion,
+        (CASE l.observacionContratoUrgente WHEN '1' THEN 'En proceso de liberación' ELSE 'Sin definir estatus' END) estatusLiberacion,
+        (CASE l.observacionContratoUrgente WHEN '1' THEN '28B463' ELSE '566573' END) colorEstatusLiberacion
+        FROM lotes l
+        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1
+        INNER JOIN statuslote sl ON sl.idStatusLote = l.idStatusLote
+		INNER JOIN condominios con ON con.idCondominio=l.idCondominio
+        WHERE l.status = 1 AND l.idCondominio = $idCondominio 
+        UNION ALL
+        SELECT l.idLote, UPPER(l.nombreLote) nombreLote, l.referencia, 
+        'N/A' nombreCliente,
+        '1900-01-01 00:00:00.000' fechaApartado, sl.nombre estatusContratacion, sl.color colorEstatusContratacion,
+        (CASE l.observacionContratoUrgente WHEN '1' THEN 'En proceso de liberación' ELSE 'Sin definir estatus' END) estatusLiberacion,
+        (CASE l.observacionContratoUrgente WHEN '1' THEN '28B463' ELSE '566573' END) colorEstatusLiberacion
+        FROM lotes l
+        INNER JOIN statuslote sl ON sl.idStatusLote = l.idStatusLote
+		INNER JOIN condominios con ON con.idCondominio=l.idCondominio
+		WHERE l.status = 1 AND (l.idCliente IS NULL OR l.idCliente = 0) AND l.idCondominio = $idCondominio ORDER BY l.idLote");
     }
 
     public function getInformation($beginDate, $endDate) {

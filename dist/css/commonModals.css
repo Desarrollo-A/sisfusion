@@ -189,7 +189,7 @@
 }
 
 .pb-0 {
-  padding-bottom: 0px;
+  padding-bottom: 0px !important;
 }
 
 /* END Margin and padding generales */
