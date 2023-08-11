@@ -189,4 +189,31 @@ class General_model extends CI_Model
         } else
             return false;
     }
+
+    public function getResidenciales()
+    {
+        return $this->db->query("SELECT idResidencial, nombreResidencial, CAST(descripcion AS VARCHAR(75)) descripcion, empresa FROM residenciales WHERE status = 1 ORDER BY nombreResidencial ASC")->result_array();
+    }
+
+    public function getOfficeAddressesAll(){
+        $response = $this->db->query("SELECT di.id_direccion, se.nombre sede, di.nombre, di.tipo_oficina, di.hora_inicio, di.hora_fin, di.estatus
+        FROM direcciones di
+        INNER JOIN sedes se on se.id_sede = di.id_sede
+        WHERE di.tipo_oficina = 1 ORDER BY se.nombre");
+
+        return $response;
+    }
+
+    public function getActiveOfficeAddresses(){
+        $response = $this->db->query("SELECT di.id_direccion, se.nombre sede, di.nombre, di.tipo_oficina, di.hora_inicio, di.hora_fin, di.estatus
+        FROM direcciones di
+        INNER JOIN sedes se on se.id_sede = di.id_sede
+        WHERE di.estatus = 1 AND di.tipo_oficina = 1 ORDER BY se.nombre");
+
+        return $response;
+    }
+
+    function listSedes(){
+        return $this->db->query("SELECT * FROM sedes WHERE estatus = 1");
+    }
 }
