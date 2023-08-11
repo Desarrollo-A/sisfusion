@@ -116,8 +116,8 @@
                     <h4 class="modal-title"><label>Modificación de sede - <b><span class="lote"></span></b></label></h4>
                 </div>
                 <div class="modal-body">
-                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 overflow-hidden">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 overflow-hidden">
                             <label id="tvLbl">Sede</label>
                             <select name="ubicacion" id="ubicacion" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required></select>
                         </div>
@@ -140,7 +140,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 overflow-hidden">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 overflow-hidden">
                             <label id="tvLbl">Nuevo usuario:</label>
                             <select name="user_re" id="user_re" class="selectpicker select-gral m-0" data-style="btn" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7"  data-container="body" required></select>
                         </div>

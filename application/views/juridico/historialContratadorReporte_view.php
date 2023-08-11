@@ -63,8 +63,4 @@
 </div>
 </body>
 <?php $this->load->view('template/footer');?>
-<script src="<?= base_url() ?>dist/js/es.js"></script>
-<script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
-<script src="<?= base_url() ?>dist/js/fullcalendar.min.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/juridico/historialContratadorReporte.js"></script>
-<script src="<?= base_url() ?>static/yadcf/jquery.dataTables.yadcf.js"></script>
