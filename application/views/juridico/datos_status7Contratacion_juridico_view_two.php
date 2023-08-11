@@ -118,15 +118,13 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header text-center">
-                    <h4 class="modal-title"><label>Modificación de sede - <b><spanclass="lote"></span></b></label></h4>
+                    <h4 class="modal-title"><label>Modificación de sede - <b><span class="lote"></span></b></label></h4>
                 </div>
                 <div class="modal-body">
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 overflow-hidden">
                             <label id="tvLbl">Sede</label>
                             <select name="ubicacion" id="ubicacion" class="selectpicker select-gral m-0" data-style="btn" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body"></select>
                         </div>
-                    </div>
                 </div>
                 <div class="modal-footer"></div>
                 <div class="modal-footer">
@@ -212,7 +210,7 @@
                             </div>
                             <div class="toolbar">
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                         <div class="pl-0">
                                             <div class="form-group select-is-empty overflow-hidden">
                                                 <label class="control-label">Desarrollo</label>
@@ -220,7 +218,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                         <div class="pl-0">
                                             <div class="form-group select-is-empty overflow-hidden">
                                                 <label class="control-label">Condominio</label>
