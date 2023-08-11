@@ -709,10 +709,9 @@ $("#editUserForm").on('submit', function(e){
                 $allUsersTable.ajax.reload();
                 $('#editUserModal').modal("hide");
                 alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
-            }if (data.respuesta == 0) {
+            } else if (data.respuesta == 0) {
                 alerts.showNotification("top", "right", data.message, "warning");
-            }
-            else {
+            } else {
                 alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
             }
         },
