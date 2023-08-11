@@ -313,6 +313,7 @@ class Usuarios extends CI_Controller
 
         if ($usersCH == 0) {
             $response = $this->Usuarios_modelo->updateUser($data, $this->input->post("id_usuario"));
+            $mensajeLeyenda = ($response == 1) ? 'Usuario Actualizado correctamente' : 'No se pudo actualizar el usuario';
         } else {
             $result = json_decode($resultadoCH);
             // $result = json_decode(1);
@@ -327,7 +328,7 @@ class Usuarios extends CI_Controller
 
         $respuestaView = array(
             'respuesta' => $response,
-            'mensaje' =>$mensajeLeyenda
+            'message' => $mensajeLeyenda
         );
         echo json_encode($respuestaView);
     }
