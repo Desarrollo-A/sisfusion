@@ -325,20 +325,6 @@ class Usuarios extends CI_Controller
             }
         }
 
-        $props = $this->Usuarios_modelo->DatosProsp($this->input->post("id_usuario"))->row();
-        if ($props) {
-
-            $arrProp = array(
-                "id_coordinador" => $props->id_coordinador,
-                "id_gerente" => $props->id_gerente,
-                "id_subdirector" => $props->id_subdirector,
-                "id_regional" => $props->id_regional,
-                "id_sede" => $sedeCH,
-                "fecha_modificacion" => date("Y-m-d H:i:s"),
-                "modificado_por" => $this->session->userdata('id_usuario')
-            );
-            $this->db->update('prospectos', $arrProp, "$tipo =". $this->input->post("id_usuario") ." AND tipo = 0");
-        }
         $respuestaView = array(
             'respuesta' => $response,
             'mensaje' =>$mensajeLeyenda
@@ -540,7 +526,7 @@ class Usuarios extends CI_Controller
         $datosCH['dcontrato']['idcoordinador'] = $coordAndGerente->id_coordinador;
         $datosCH['dcontrato']['idgerente'] = $coordAndGerente->id_gerente;
 
-        /*$resultado = $this->Usuarios_modelo->ServicePostCH($url, $datosCH);
+        $resultado = $this->Usuarios_modelo->ServicePostCH($url, $datosCH);
         $r = json_decode($resultado);
         if (isset($r->resultado)) {
             if ($r->resultado == 1) {
@@ -550,9 +536,9 @@ class Usuarios extends CI_Controller
             }
         } else {
             return json_decode(0);
-        }*/
+        }
 
-        return json_decode(1);
+        // return json_decode(1);
     }
 
     private function actualizarProspectoPorRol($idOwner, $rolNuevo, $rolActual, $idLiderNuevo, $sede): object
