@@ -14,7 +14,6 @@ $(document).ready (function() {
             numFiles = input.get(0).files ? input.get(0).files.length : 1,
             label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
         input.trigger('fileselect', [numFiles, label]);
-        console.log('triggered');
     });
 
     $('#filtro3').change(function(){
@@ -49,7 +48,6 @@ $(document).ready (function() {
             type: 'post',
             dataType: 'json',
             success:function(response){
-                console.log("back: ", response);
                 var len = response.length;
                 for( var i = 0; i<len; i++)
                 {
@@ -174,7 +172,6 @@ $(document).ready (function() {
         let id_corrida = $itself.attr('data-idCorrida');
         let id_lote = $itself.attr('data-idLote');
         let disabled = 0;
-        console.log("Desactivar corrida: ", id_corrida);
         var formData = new FormData();
         formData.append("idLote", id_lote);
         
@@ -188,7 +185,6 @@ $(document).ready (function() {
             beforeSend: function(){},
             success : function (response) {
                 response = JSON.parse(response);
-                console.log(response);
                 if(response.message == 'OK') {
                     alerts.showNotification('top', 'right', 'Corrida financiera deshabilitada', 'success');
                     $('#tableDoct').DataTable().ajax.reload();
@@ -206,7 +202,6 @@ $(document).ready (function() {
         let enabled = 1;
         $('#spiner-loader').removeClass('hide');
         $.post(general_base_url + "Corrida/checCFActived/"+id_lote, function(data) {
-            console.log(data.message);
             if(data.message >= 1){
                 $('#avisoModal').modal();
                 $('#spiner-loader').addClass('hide');
@@ -221,12 +216,10 @@ $(document).ready (function() {
                     processData: false,
                     type: 'POST',
                     beforeSend: function(){
-                        console.log('enviando...');
                         $('#spiner-loader').removeClass('hide');
                     },
                     success : function (response) {
                         response = JSON.parse(response);
-                        console.log(response);
                         if(response.message == 'OK') {
                             alerts.showNotification('top', 'right', 'Corrida financiera habilitada', 'success');
                             $('#tableDoct').DataTable().ajax.reload();
@@ -242,7 +235,6 @@ $(document).ready (function() {
 
     $(document).on('click', '.editarpc', function(){
         var $itself = $(this);
-        console.log('elementos:', $itself);
         let id_corrida = $itself.attr('data-idcorrida');
         let id_lote = $itself.attr('data-idlote');
         window.location.href= general_base_url + "Corrida/editapc/"+id_corrida;
@@ -377,7 +369,6 @@ $(document).on('click', '.seeAuts', function (e) {
 });
 
 if(id_rol_general == 7 || id_rol_general == 9 || id_rol_general == 3){
-    /*más querys alv*/
     var miArrayAddFile = new Array(8);
     var miArrayDeleteFile = new Array(1);
 

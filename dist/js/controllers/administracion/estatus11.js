@@ -359,8 +359,6 @@ function SoloNumeros(evt) {
 	}
 }
 
-
-// Jquery Dependency
 $("input[data-type='currency']").on({
 	keyup: function () {
 		formatCurrency($(this));

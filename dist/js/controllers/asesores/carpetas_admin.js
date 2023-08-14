@@ -135,7 +135,11 @@ $(document).ready(function () {
             },
             { 
                 data: function (d) {
-                    return d.fecha_modificacion;
+                    if(d.fecha_modificacion == "1900-01-01 00:00:00"){
+                        return '<p>SIN MODIFICACIÓN</p>'
+                    }else{
+                        return d.fecha_modificacion;
+                    }
                 }
             },
             { 

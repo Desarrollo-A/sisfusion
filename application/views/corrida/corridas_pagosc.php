@@ -1,25 +1,8 @@
-
-<!--<link href="--><?//= base_url() ?><!--dist/assets/css/datatableNFilters.css" rel="stylesheet"/>-->
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <link href="<?=base_url()?>dist/js/controllers/files/css/fileinput.css" media="all" rel="stylesheet" type="text/css"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <body class="">
-<style>
-    .active-pill{
-        padding: 3px 20px;
-        color: white;
-        background-color: #34c759;
-        border-radius: 12px;
-        font-size: 0.8em;
-    }
-    .inactive-pill{
-        padding: 3px 20px;
-        color: white;
-        background-color: #ff3b30;
-        border-radius: 12px;
-        font-size: 0.8em;
-    }
-</style>
+
 <div class="wrapper ">
     <?php
     if (in_array($this->session->userdata('id_rol'), array(2,3,4,5,6,7,9,11,12,13,15,16,28,32,33,34,39,50,40,53))){
@@ -77,7 +60,7 @@
                                                 <?php
                                                 if ($residencial != NULL) :
                                                     foreach ($residencial as $fila) : ?>
-                                                        <option value=<?= $fila['idResidencial'] ?>> <?= $fila['descripcion'] ?> </option>
+                                                        <option value=<?= $fila['idResidencial'] ?>> <?= $fila['nombreResidencial'] ?> </option>
                                                     <?php endforeach;
                                                 endif;
                                                 ?>
