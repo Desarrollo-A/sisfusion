@@ -64,7 +64,7 @@ function fillTable(typeTransaction, beginDate, endDate) {
             {
                 text: "<i class='fas fa-sync' aria-hidden='true'></i>",
                 titleAttr: 'CARGAR VISTA INICIAL',
-                className: 'btn btn-success buttons-excel reset-initial-values',
+                className: 'btn btn-azure buttons-azure reset-initial-values',
             }
         ],
         pagingType: "full_numbers",
@@ -136,16 +136,12 @@ $(document).on("click", "#searchByDateRange", function () {
 });
 
 $(document).on("click", ".reset-initial-values", function () {
-    setInitialValues();
-    const fechaInicio = new Date();
-    const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
-    const fechaFin = new Date();
-    const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
-    $(".idLote").val('');
-    $(".textoshead").val('');
-    $("#beginDate").val(convertDate(beginDate));
-    $("#endDate").val(convertDate(endDate));
-    fillTable(1, finalBeginDate, finalEndDate);
+    sp.initFormExtendedDatetimepickers();
+    $('.datepicker').datetimepicker({ locale: 'es' });
+    setIniDatesXMonth("#beginDate", "#endDate");
+    let finalBeginDate = $("#beginDate").val();
+    let finalEndDate = $("#endDate").val();
+    fillTable(1, finalBeginDate, finalEndDate, 0);
 });
 
 $('body').tooltip({

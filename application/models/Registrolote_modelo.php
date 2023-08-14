@@ -3108,9 +3108,11 @@
 		AND hd.status = 1 ".$filter." ORDER BY hd.modificado asc");
         return $query->result();
 	}
-    function getRevision7() {
-        $query = $this->db->query("SELECT idHistorialLote, hd.nombreLote, hd.idStatusContratacion, hd.idMovimiento, hd.modificado, 
-		hd.fechaVenc, lotes.idLote, cl.fechaApartado, cond.nombre as nombreCondominio,
+    function getRevision7($beginDate, $endDate) {
+		$filter = " AND cl.fechaApartado BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
+
+        $query = $this->db->query("SELECT idHistorialLote, hd.nombreLote, hd.idStatusContratacion, hd.idMovimiento, CONVERT(VARCHAR,hd.modificado,20) AS modificado, 
+		CONVERT(VARCHAR,hd.fechaVenc,20) AS fechaVenc, lotes.idLote, CONVERT(VARCHAR,cl.fechaApartado,20) AS fechaApartado, cond.nombre as nombreCondominio,
 		lotes.comentario, res.nombreResidencial, s.nombre as nombreSede,
 		hd.status, hd.comentario,
 		CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
@@ -3130,7 +3132,7 @@
 		LEFT JOIN usuarios u ON CAST(u.id_usuario AS VARCHAR(45)) = (SELECT TOP 1 usuario FROM historial_lotes WHERE idLote = lotes.idLote AND status = 1 AND idStatusContratacion = 6 ORDER BY modificado DESC)
 		WHERE (hd.idStatusContratacion =5 and hd.idMovimiento=22 and cl.status = 1
 		or hd.idStatusContratacion = 3 and hd.idMovimiento = 82 and cl.status = 1)
-		AND hd.status = 1 ORDER BY hd.modificado ASC");
+		AND hd.status = 1 ".$filter." ORDER BY hd.modificado asc");
         return $query->result();
     }
 	function getDirectores(){
