@@ -5,7 +5,7 @@
 	<div class="wrapper">
 
 		<?php
-		if ($this->session->userdata('id_rol') == "7" || $this->session->userdata('id_rol') == "9"){
+		if ($this->session->userdata('id_rol') == "7" || $this->session->userdata('id_rol') == "9" || $this->session->userdata('id_rol') == "3"){
 			$this->load->view('template/sidebar');
 		}
 		else {

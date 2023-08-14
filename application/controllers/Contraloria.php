@@ -2610,17 +2610,28 @@ class Contraloria extends CI_Controller {
 
     public function setData()
     {
-
+        print_r($this->input->post("jsonInfo"));
+        exit;
 			$json = json_decode($this->input->post("jsonInfo"));
-            // print_r($json[0]);
-            
 
-            foreach( $json as $obj ){
-                print_r($obj->referencia );
-                // foreach ( $obj as $elem ) {
-                //     print_r($elem);
-                // }
-            }
+                for ($i = 0; $i < count($json); $i++) { // MJ: SE ARMAN ARRAYS PARA INSERTAR | ACTUALIZAR SEGÚN SEA EL CASO
+                    print_r($json[$i]->REFERENCIA);
+                    echo '<br><br>';
+                }
+
+            exit;
+			// $json = $this->input->post("jsonInfo");
+
+            // print_r(json_decode($this->input->post("jsonInfo")));
+            // exit;
+
+            // foreach( $json as $index => $element ){
+                // print_r($element );
+                // echo '<br><br>';
+            //     foreach ( $obj as $elem ) {
+            //         print_r($elem);
+            //     }
+            // }
 			//print_r($json);
 			//echo "---------";
 			//print_r($json[1]->ID_LOTE);

@@ -20,7 +20,7 @@
                             <div class="card-content" >
                                 <h3 class="card-title center-align">Inventario lotes y comisionistas</h3>
                                 <div class="toolbar">
-                                    <div class="container"> 
+                                    <div class="container-fluid"> 
                                         <div class="row">
                                             <div class="col-md-4 form-group pl-0 ">
                                                 <div class="form-group overflow-hidden">
@@ -55,7 +55,7 @@
                                     </div>
                                 </div>
                                 <div class="material-datatables hide" id="TableHide">
-                                    <div class="container">
+                                    <div class="container-fluid">
                                         <table class="table-striped table-hover" id="tablaInventarioComisionistas"name="tablaInventarioComisionistas">
                                             <thead>
                                                 <tr>

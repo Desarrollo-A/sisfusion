@@ -234,7 +234,6 @@ class Usuarios extends CI_Controller
             $res = json_decode($resultadoCH);
             $resultadoCH = $res->resultado;
         } else {
-
             $sedeCH = 0;
             $sucursal = 0;
             if ($_POST['member_type'] == 3 || $_POST['member_type'] == 7 || $_POST['member_type'] == 9 || $_POST['member_type'] == 2) {
@@ -301,14 +300,12 @@ class Usuarios extends CI_Controller
             $response = $this->Usuarios_modelo->updateUser($data, $this->input->post("id_usuario"));
         } else {
             $result = json_decode($resultadoCH);
-            // $result = json_decode(1);
             if ($result == 1) {
                 $response = $this->Usuarios_modelo->updateUser($data, $this->input->post("id_usuario"));
             } else {
                 $response = 0;
             }
         }
-
         echo json_encode($response);
     }
 
@@ -321,7 +318,6 @@ class Usuarios extends CI_Controller
     public function validateSession()
     {
         if ($this->session->userdata('id_usuario') == "" || $this->session->userdata('id_rol') == "") {
-            //echo "<script>console.log('No hay sesión iniciada');</script>";
             redirect(base_url() . "index.php/login");
         }
     }
@@ -431,8 +427,6 @@ class Usuarios extends CI_Controller
     /**---------------------------------------- */
     public function getChangeLogUsers($id_usuario)
     {
-        /*print_r($id_usuario);
-        exit;*/
         $data = $this->Usuarios_modelo->getChangeLogUsers($id_usuario);
         echo json_encode($data);
     }
