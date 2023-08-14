@@ -14,7 +14,6 @@ $(document).ready (function() {
             numFiles = input.get(0).files ? input.get(0).files.length : 1,
             label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
         input.trigger('fileselect', [numFiles, label]);
-        console.log('triggered');
     });
 
     $('#filtro3').change(function(){
@@ -45,7 +44,7 @@ $(document).ready (function() {
         $("#spiner-loader").removeClass('hide');
         $("#filtro5").empty().selectpicker('refresh');
         $.ajax({
-            url: general_base_url + 'Corrida/getLotesPC/'+valorSeleccionado+'/'+residencial,/*getCorridasPCByLote*/
+            url: general_base_url + 'Corrida/getLotesPC/'+valorSeleccionado+'/'+residencial,
             type: 'post',
             dataType: 'json',
             success:function(response){
@@ -377,7 +376,6 @@ $(document).on('click', '.seeAuts', function (e) {
 });
 
 if(id_rol_general == 7 || id_rol_general == 9 || id_rol_general == 3){
-    /*más querys alv*/
     var miArrayAddFile = new Array(8);
     var miArrayDeleteFile = new Array(1);
 
