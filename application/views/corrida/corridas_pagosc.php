@@ -48,11 +48,11 @@
                             <div class="card-header card-header-icon" data-background-color="gray" style=" background: linear-gradient(45deg, #AEA16E, #96843D);">
                                 <i class="material-icons">reorder</i>
                             </div>
-                            <div class="card-content" style="padding: 50px 20px;">
+                            <div class="card-content">
                                 <h4 class="card-title"></h4>
                                 <div class="toolbar">
                                     <h3 class="card-title center-align">Corridas financieras con pago a capital</h3>
-                                    <div class="container-fluid" style="padding: 20px 0px;">
+                                    <div class="container-fluid">
                                         <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <div class="form-group overflow-hidden">
                                                 <label class="control-label">Proyecto</label>
