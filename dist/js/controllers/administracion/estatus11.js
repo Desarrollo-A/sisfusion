@@ -58,7 +58,7 @@ $("#tabla_ingresar_11").ready(function () {
 			},
 			{
 				data: function (d) {
-					return `<span class="label" style="background: #A3E4D7; color: #0E6251">${d.tipo_venta}</span>`;
+					return `<span class="label lbl-green">${d.tipo_venta}</span>`;
 				}
 			},
 			{ data: 'nombreResidencial' },
@@ -115,7 +115,7 @@ $("#tabla_ingresar_11").ready(function () {
 			{ data: 'descripcion' },
 			{
 				data: function (d) {
-					return `<span class="label" style="background: #A9CCE3; color: #154360">${d.nombreSede}</span>`;
+					return `<span class="label lbl-azure">${d.nombreSede}</span>`;
 				}
 			},
 			{

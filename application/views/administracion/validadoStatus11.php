@@ -20,13 +20,13 @@
                                 <div class="form-group">
                                     <table class="table-striped table-hover" id="tabla_ingresar_11" name="tabla_ingresar_11">
                                         <thead>
-                                        <tr>
-                                            <th>PROYECTO</th>
-                                            <th>CONDOMINIO</th>
-                                            <th>LOTE</th>
-                                            <th>CLIENTE</th>
-                                            <th>FECHA ESTATUS 11</th>
-                                        </tr>
+                                            <tr>
+                                                <th>PROYECTO</th>
+                                                <th>CONDOMINIO</th>
+                                                <th>LOTE</th>
+                                                <th>CLIENTE</th>
+                                                <th>FECHA ESTATUS 11</th>
+                                            </tr>
                                         </thead>
                                     </table>
                                 </div>
@@ -40,7 +40,6 @@
     <?php $this->load->view('template/footer_legend');?>
 </div>
 </div>
-
 <?php $this->load->view('template/footer');?>
 <script src="<?= base_url() ?>dist/js/controllers/administracion/validadoStatus11.js"></script>
 </body>

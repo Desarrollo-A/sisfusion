@@ -22,8 +22,8 @@
                                 <p class="center-align">Por medio de este panel podrás visualizar y descargar un reporte de lotes, los cuales tienen como característica haber pasado por el estatus 11 y que posteriormente fueron liberados.</p>
                                 <div  class="toolbar">
                                     <div class="row">
-                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 overflow-hidden">
-                                                <div class="form-group ">
+                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                <div class="form-group overflow-hidden">
                                                     <label class="control-label">PROYECTO</label>
                                                     <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true"  data-container="body" required></select>
                                                 </div>

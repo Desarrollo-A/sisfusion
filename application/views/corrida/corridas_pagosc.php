@@ -71,7 +71,7 @@
                                 <h3 class="card-title center-align">Corridas financieras con pago a capital</h3>
                                 <div class="container-fluid" style="padding: 20px 0px;">
                                     <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4 overflow-hidden">
-                                        <div class="form-group label-floating select-is-empty">
+                                        <div class="form-group">
                                             <label class="control-label">Proyecto</label>
                                             <select name="filtro3" id="filtro3" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required>
                                                 <?php
@@ -85,13 +85,13 @@
                                         </div>
                                     </div>
                                     <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4 overflow-hidden">
-                                        <div class="form-group label-floating">
+                                        <div class="form-group">
                                             <label class="control-label">Condominio</label>
                                             <select id="filtro4" name="filtro4" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                         </div>
                                     </div>
                                     <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4 overflow-hidden">
-                                        <div class="form-group label-floating ">
+                                        <div class="form-group">
                                             <label class="control-label">Lote</label>
                                             <select id="filtro5" name="filtro5" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                         </div>

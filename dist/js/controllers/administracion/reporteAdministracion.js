@@ -1,5 +1,4 @@
 $(document).ready(function () {
-
     $.post(general_base_url + "Contratacion/lista_proyecto", function(data) {
         var len = data.length;
         for(var i = 0; i<len; i++){
@@ -62,15 +61,15 @@ function repAdmon(idResidencial) {
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
-        exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
-            format: 
-            {
-                header:  function (d, columnIdx) {
-                    return ' ' + titulos_intxt[columnIdx] + ' ';
+            exportOptions: {
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                format: 
+                {
+                    header:  function (d, columnIdx) {
+                        return ' ' + titulos_intxt[columnIdx] + ' ';
+                    }
                 }
             }
-        }
         }],
         language: {
             url: `${general_base_url}static/spanishLoader_v2.json`,
@@ -111,7 +110,7 @@ function repAdmon(idResidencial) {
             data: 'idStatusContratacion'
         }]
     });
-    
+
     $('#repAdministracion').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
