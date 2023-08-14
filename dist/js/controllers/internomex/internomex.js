@@ -14,7 +14,6 @@ $(document).ready(function () {
     $('.datepicker').datetimepicker({locale: 'es'});
 });
 
-
 sp = { // MJ: SELECT PICKER
     initFormExtendedDatetimepickers: function () {
         $('.datepicker').datetimepicker({
@@ -92,7 +91,7 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
                 className: `btn btn-dt-youtube buttons-youtube`,
                 titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Consulta pago final podrás visualizarlo en el siguiente tutorial',
                 action: function (e, dt, button, config) {
-                    window.open('https://youtu.be/6W5B97MTOCghttps://youtu.be/6W5B97MTOCg', '_blank');
+                    window.open('https://youtu.be/S7HO2QTLaL0', '_blank');
                 }
             }
         ],

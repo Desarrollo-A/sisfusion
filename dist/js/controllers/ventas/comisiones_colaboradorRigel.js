@@ -43,7 +43,7 @@ $('#proyecto').change( function(){
             $("#condominio").selectpicker('refresh');
         }, 'json');
     });
-    if (userType != 2 && userType != 3 && userType != 13 && userType != 32 && userType != 17) { // SÓLO MANDA LA PETICIÓN SINO ES SUBDIRECTOR O GERENTE
+    if (id_usuario_general != 2 && id_usuario_general != 3 && id_usuario_general != 13 && id_usuario_general != 32 && id_usuario_general != 17) { // SÓLO MANDA LA PETICIÓN SINO ES SUBDIRECTOR O GERENTE
         fillCommissionTableWithoutPayment(index_proyecto, index_condominio);
     }
 });
@@ -593,7 +593,7 @@ function fillCommissionTableNUEVAS(proyecto,condominio){
         $("#totpagarPen").html(formatMoney(totaPen));
     });
 
-    $("#tabla_nuevas_comisiones tbody").on("click", ".consultar_logs_nuevas", function(){
+    $(document).off("click", ".consultar_logs_nuevas").on("click", ".consultar_logs_nuevas", function () {
         id_pago = $(this).val();
         user = $(this).attr("data-usuario");
         $('#spiner-loader').removeClass('hide');
@@ -1362,7 +1362,7 @@ function fillCommissionTableOTRAS(proyecto,condominio){
 //INICIO SIN PAGO EN NEODATA
 $('#tabla_comisiones_sin_pago thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
-    $(this).html('<input type="text" class="textoshead" placeholder="' + title + '"/>');
+    $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
     $('input', this).on('keyup change', function () {
         if ($('#tabla_comisiones_sin_pago').DataTable().column(i).search() !== this.value) {
             $('#tabla_comisiones_sin_pago').DataTable().column(i).search(this.value).draw();
@@ -1372,9 +1372,9 @@ $('#tabla_comisiones_sin_pago thead tr:eq(0) th').each(function (i) {
 
 function fillCommissionTableWithoutPayment (proyecto, condominio) {
     tabla_comisiones_sin_pago = $("#tabla_comisiones_sin_pago").DataTable({
-        dom: "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'><'col-xs-12 col-sm-12 col-md-6 col-lg-6 d-flex justify-end p-0'l>rt><'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
-        width: '100%',
-        scrollX:    true,
+        dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: "100%",
+        scrollX: true,
         pagingType: "full_numbers",
         fixedHeader: true,
         language: {
@@ -1411,7 +1411,6 @@ function fillCommissionTableWithoutPayment (proyecto, condominio) {
                 return '<p class="m-0">' + d.nombreCliente + ' </p>';
             }
         },
-
         {
             data: function(d) {
                 return '<p class="m-0">' + d.nombreAsesor + '</p>';
@@ -1466,6 +1465,9 @@ function fillCommissionTableWithoutPayment (proyecto, condominio) {
             cache: false,
             data: function(d) {}
         },
+        initComplete: function() {
+            $('[data-toggle="tooltip"]').tooltip();
+        }
     });
 };
 

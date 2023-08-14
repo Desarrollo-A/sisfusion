@@ -9,8 +9,6 @@
 			else
 				echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
 		?>
-
-        <!-- Modals -->
         <div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
             aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg">
@@ -123,12 +121,10 @@
                 </div>
             </div>
         </div>
-        <!-- END Modals -->
-
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon fa-2x" data-background-color="goldMaderas">
                                 <?php

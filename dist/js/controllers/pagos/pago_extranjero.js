@@ -13,6 +13,39 @@ $(document).ready(function() {
 
 
 });
+$("#form_interes").submit( function(e) {
+    e.preventDefault();
+}).validate({
+    submitHandler: function( form ) {
+        var data = new FormData( $(form)[0] );
+        console.log(data);
+        data.append("id_pago_i", id_pago_i);
+        $.ajax({
+            url: general_base_url + "Pagos/despausar_solicitud/",
+            data: data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            method: 'POST',
+            type: 'POST', // For jQuery < 1.9
+            success: function(data){
+                if( data[0] ){
+                    $("#modal_nuevas").modal('toggle' );
+                    alerts.showNotification("top", "right", "Se ha pausado la comisión exitosamente", "success");
+                    setTimeout(function() {
+                        tabla_extranjero2.ajax.reload();
+                    }, 3000);
+                }
+                else{
+                    alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
+                }
+            },error: function( ){
+                alert("ERROR EN EL SISTEMA");
+            }
+        });
+    }
+});
 
 $('#filtro33').change(function(ruta){
     residencial = $('#filtro33').val();
@@ -376,6 +409,7 @@ function getAssimilatedCommissions(proyecto, condominio){
     });
 
     $("#tabla_extranjero tbody").on("click", ".consultar_logs_extranjero", function(e){
+        
         e.preventDefault();
         e.stopImmediatePropagation();
 

@@ -56,7 +56,7 @@
                                     </div>
                                 </div>
                                 <div class="material-datatables">
-                                    <table id="estatusNueveTable" name="estatusNueveTable" class="table-striped table-hover hide">
+                                    <table id="estatusNueveTable" name="estatusNueveTable" class="table-striped table-hover">
                                         <thead>
                                             <tr>
                                                 <th>PROYECTO</th>
@@ -66,11 +66,11 @@
                                                 <th>GERENTE</th>
                                                 <th>ENGANCHE</th>
                                                 <th>TOTAL</th>
-                                                <th>FECHA ESTATUS 9</th>
+                                                <th>FECHA DE ESTATUS 9</th>
                                                 <th>USUARIO</th>
                                                 <th>FECHA APARTADO</th>
                                                 <th>REUBICACIÓN</th>
-                                                <th>FECHA REUBICACIÓN</th>
+                                                <th>FECHA DE REUBICACIÓN</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -84,16 +84,10 @@
         <?php $this->load->view('template/footer_legend'); ?>
     </div>
     </div>
-
     </div>
-    <!--main-panel close-->
 </body>
 <?php $this->load->view('template/footer');?>
 <script src="<?=base_url()?>dist/js/controllers/contraloria/status9Report.js"></script>
-<script src="<?= base_url() ?>dist/js/dataTables.select.js"></script>
-<script src="<?= base_url() ?>dist/js/dataTables.select.min.js"></script>
-<script src="<?= base_url() ?>dist/js/moment.min.js"></script>
 <script src="<?= base_url() ?>dist/js/es.js"></script>
 <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
-<script src="<?= base_url() ?>dist/js/nouislider.min.js"></script>
 <script src="<?= base_url() ?>dist/js/fullcalendar.min.js"></script>

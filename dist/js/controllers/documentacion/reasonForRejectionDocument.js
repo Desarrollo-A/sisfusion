@@ -34,6 +34,8 @@ function fillTable(id_documento) {
     generalDataTable = $('#reasonsForRejectionTable').dataTable({
         dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
+        bAutoWidth: true,
+        scrollX: true,
         pagingType: "full_numbers",
         fixedHeader: true,
         language: {
@@ -177,3 +179,11 @@ function updateStatus(action, id_motivo) {
         }
     });
 }
+
+$('body').tooltip({
+    selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
+    trigger: 'hover',
+    container: 'body'
+}).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
+    $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
+});

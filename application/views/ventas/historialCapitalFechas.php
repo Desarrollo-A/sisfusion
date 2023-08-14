@@ -3,7 +3,7 @@
 <body>
     <div class="wrapper">
         <?php
-        if ($this->session->userdata('id_rol') == "49" || $this->session->userdata('id_rol') == "13" || $this->session->userdata('id_rol') == "17" ){
+        if ($this->session->userdata('id_rol') == "49" || $this->session->userdata('id_rol') == "63" || $this->session->userdata('id_rol') == "17" ){
             $this->load->view('template/sidebar');
         }
         else {

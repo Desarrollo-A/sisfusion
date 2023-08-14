@@ -29,6 +29,7 @@
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                             <h4 class="modal-title  center-align" ><b>Reporte dispersión</b></h4>
                             <div class="row">
+
                                     <div class="col-md-6">
                                         <input type="text" name="fecha1" id="fecha1" class="form-control datepicker">
                                     </div>
@@ -51,15 +52,14 @@
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                             <h4 class="modal-title  center-align" ><b>Llenado de Plan</b></h4>
                     </div>
-                    <div class="modal-body">
-                        <label class="lbl-gray">Atención:</label>
-                        
-                        <span class="lbl-gray">La siguiente accion llenará los planes de venta de los lotes que cumplan con las condiciones. considere que esta acción solo se podra realizar cada 4 horas.</span>
-               
+                    <div class="modal-body center-align">
+                        <label class="">Nota:</label>
+                        <label class="">La siguiente acción asignara el plan de venta a los lotes que cumplan con las condiciones correspondientes, si no se asigna favor de revisar otros datos como la sede o los usuarios que tiene asignados la venta. Esta acción solo se podra realizar cada 4 horas.</span>
+                        <label  id='tiempoRestante' name='tiempoRestante' class=" tiempoRestante hide">:</label>
                     </div>
                     <div class="modal-footer">
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-gral-data llenadoPlan" id="llenadoPlan" name="llenadoPlan" >Llenado de plan</button>
+                        <button type="button" class="btn btn-gral-data llenadoPlan" id="llenadoPlan" name="llenadoPlan" >Aceptar</button>
                         <div class="spiner-loader hide" id="spiner-loader">
                             <div class="backgroundLS">
                                 <div class="contentLS">
@@ -336,8 +336,8 @@
                                             <br>
                                             <br><br>
                                             <div class="col-xs-4 col-sm-3 col-md-4 col-lg-4 d-flex align-end text-center">
-                                                    <a data-target="#llenadoPlan" data-toggle="modal" class="btn-gral-data" id="MainNavHelp" 
-                                                    href="#llenadoPlan" style="color:white"> Llenado de plan</a>
+                                                    <a  type="sum" data-toggle="modal" class="btn-gral-data" id="planllenado" 
+                                                     style="color:white" onclick="llenado()"> Llenado de plan</a>
                                             </div>
                                             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 d-flex align-end text-center">
                                                 <a data-target="#myModal" data-toggle="modal" class="btn-gral-data" id="MainNavHelp" 

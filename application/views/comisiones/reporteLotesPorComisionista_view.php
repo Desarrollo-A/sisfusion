@@ -119,7 +119,7 @@
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                <a href="https://youtu.be/6W5B97MTOCghttps://youtu.be/6W5B97MTOCg" class="align-center justify-center u2be" target="_blank">
+                                <a href="https://youtu.be/S7HO2QTLaL0" class="align-center justify-center u2be" target="_blank">
                                     <i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
                                 </a>
                             </div>

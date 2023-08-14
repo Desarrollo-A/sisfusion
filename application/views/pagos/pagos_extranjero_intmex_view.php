@@ -5,16 +5,24 @@
     <div class="wrapper">
         <?php
             if($this->session->userdata('id_rol')=="31"){
-                 $this->load->view('template/sidebar'); 
-
+                $this->load->view('template/sidebar'); 
             }
             else
             {
                 echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
             }
         ?>
-    
         <!-- Modals -->
+
+        <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post" id="form_interes">
+                        <div class="modal-body"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
         <div class="modal fade modal-alertas" id="modal_colaboradores" role="dialog">
             <div class="modal-dialog modal-md">
@@ -44,7 +52,7 @@
             </div>
         </div>
 
-        <div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal fade" id="seeInformationModalExtranjero" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -54,7 +62,7 @@
                     </div>
                     <div class="modal-body">
                         <div role="tabpanel">
-                            <ul class="nav nav-tabs" role="tablist" style="background: #949494;">
+                            <ul>
                                 <div id="nameLote"></div>
                             </ul>
                             <div class="tab-content">
@@ -62,8 +70,8 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="card card-plain">
-                                                <div class="card-content">
-                                                    <ul class="timeline timeline-simple" id="comments-list-asimilados"></ul>
+                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                                    <ul class="timeline-3" id="comments-list-extranjeros"></ul>
                                                 </div>
                                             </div>
                                         </div>
@@ -78,90 +86,85 @@
                 </div>
             </div>
         </div>
-
         <!-- END Modals -->
 
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">        
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">        
                         <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
                             <li class="active"><a href="#nuevas-1" role="tab" data-toggle="tab">Pagos Solicitados</a></li>
                             <li><a href="#proceso-1" role="tab" data-toggle="tab">Invoice</a></li>
                         </ul>
-                        
                         <div class="card no-shadow m-0 border-conntent__tabs">
                             <div class="card-content p-0">
                                 <div class="nav-tabs-custom">
                                     <div class="tab-content p-2">
                                         <div class="tab-pane active" id="nuevas-1">
-                                        <div class="card-content">
-                                    <div class="encabezadoBox">
-                                        <h3 class="card-title center-align" >Comisiones nuevas <b>Factura Extranjero</b></h3>
-                                        <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de Factura Extranjero)</p>
-                                    </div>
-                                    <div class="toolbar">
-                                        <div class="row">
-                                            <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-                                                <div class="form-group d-flex justify-center align-center">
-                                                    <h4 class="title-tot center-align m-0">Disponible:</h4>
-                                                    <p class="input-tot pl-1" name="totpagarextranjero" id="totpagarextranjero">$0.00</p>
+                                            <div class="card-content">
+                                                <div class="encabezadoBox">
+                                                    <h3 class="card-title center-align" >Comisiones nuevas <b>Factura Extranjero</b></h3>
+                                                    <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de Factura Extranjero)</p>
+                                                </div>
+                                                <div class="toolbar">
+                                                    <div class="row">
+                                                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                                                            <div class="form-group d-flex justify-center align-center">
+                                                                <h4 class="title-tot center-align m-0">Disponible:</h4>
+                                                                <p class="input-tot pl-1" name="totpagarextranjero" id="totpagarextranjero">$0.00</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                                                            <div class="form-group d-flex justify-center align-center">
+                                                                <h4 class="title-tot center-align m-0 hide">Autorizar:</h4>
+                                                                <p class="input-tot pl-1 hide" name="totpagarPen" id="totpagarPen">$0.00</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">          
+                                                            <div class="form-group">
+                                                                <label class="control-label" for="filtro33">Proyecto</label>
+                                                                <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-container="body" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" required>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">          
+                                                            <div class="form-group">
+                                                                <label class="control-label" for="filtro44">Condominio</label>
+                                                                <select class="selectpicker select-gral" id="filtro44" name="filtro44[]" data-style="btn " data-show-subtext="true" data-container="body" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required/></select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="material-datatables">
+                                                    <div class="form-group">
+                                                        <table class="table-striped table-hover" id="tabla_extranjero" name="tabla_extranjero">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th></th>
+                                                                    <th>ID</th>
+                                                                    <th>PROYECTO</th>
+                                                                    <th>CONDOMINIO</th>
+                                                                    <th>LOTE</th>
+                                                                    <th>REFERENCIA</th>
+                                                                    <th>PRECIO DE LOTE</th>
+                                                                    <th>EMPRESA</th>
+                                                                    <th>TOTAL DE LA COMPRA</th>
+                                                                    <th>PAGO DEL CLIENTE</th>
+                                                                    <th>A PAGAR</th>
+                                                                    <th>TIPO DE VENTA</th>
+                                                                    <th>USUARIO</th>
+                                                                    <th>RFC</th>
+                                                                    <th>PUESTO</th>
+                                                                    <th>FECHA DE ENVÍO</th>
+                                                                    <th>MÁS</th>
+                                                                </tr>
+                                                            </thead>
+                                                        </table>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-                                                <div class="form-group d-flex justify-center align-center">
-                                                    <h4 class="title-tot center-align m-0">Autorizar:</h4>
-                                                    <p class="input-tot pl-1" name="totpagarPen" id="totpagarPen">$0.00</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">          
-                                                <div class="form-group">
-                                                    <label class="m-0" for="filtro33">Proyecto</label>
-                                                    <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona un proyecto" data-size="7" required>
-                                                        <option value="0">Seleccione todo</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">          
-                                                <div class="form-group">
-                                                    <label class="m-0" for="filtro44">Condominio</label>
-                                                    <select class="selectpicker select-gral" id="filtro44" name="filtro44[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona un condominio" data-size="7" required/></select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="material-datatables">
-                                        <div class="form-group">
-                                            <div class="table-responsive">
-                                                <table class="table-striped table-hover" id="tabla_extranjero" name="tabla_extranjero">
-                                                    <thead>
-                                                        <tr>
-                                                            <th></th>
-                                                            <th>ID</th>
-                                                            <th>PROY.</th>
-                                                            <th>CONDOMINIO</th>
-                                                            <th>LOTE</th>
-                                                            <th>REFERENCIA</th>
-                                                            <th>PRECIO LOTE</th>
-                                                            <th>EMP.</th>
-                                                            <th>TOT. COM.</th>
-                                                            <th>P. CLIENTE</th>
-                                                            <th>A PAGAR</th>
-                                                            <th>TIPO VENTA</th>
-                                                            <th>USUARIO</th>
-                                                            <th>RFC</th>
-                                                            <th>PUESTO</th>
-                                                            <th>FEC. ENVÍO</th>
-                                                            <th>MÁS</th>
-                                                        </tr>
-                                                    </thead>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                                         </div>
                                         <div class="tab-pane" id="proceso-1">
                                             <div class="text-center">
@@ -179,46 +182,34 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="table-responsive">
                                                 <table class="table-striped table-hover" id="tabla_factura" name="tabla_factura">
-                                                <thead>
-                                                    <tr>
-                                                        <th>ID</th>
-                                                        <th>USUARIO</th>
-                                                        <th>RFC</th>
-                                                        <th>TOTAL</th>
-                                                        <th>FORMA DE PAGO</th>
-                                                        <th>NACIONALIDAD</th>
-                                                        <th>ESTATUS</th>
-                                                        <th>MÁS</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
-                                                </div>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>ID</th>
+                                                            <th>USUARIO</th>
+                                                            <th>RFC</th>
+                                                            <th>TOTAL</th>
+                                                            <th>FORMA DE PAGO</th>
+                                                            <th>NACIONALIDAD</th>
+                                                            <th>ESTATUS</th>
+                                                            <th>MÁS</th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
     <?php $this->load->view('template/footer_legend');?>
     </div>
-    </div><!--main-panel close-->
     <?php $this->load->view('template/footer');?>
-    <!--DATATABLE BUTTONS DATA EXPORT-->
     <script src="<?= base_url() ?>dist/js/controllers/pagos/pago_extranjero_intmex.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
     <script>
         Shadowbox.init();

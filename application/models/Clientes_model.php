@@ -461,6 +461,8 @@ function getStatusMktdPreventa(){
                 $where = "pr.id_gerente IN ($id_lider, 654) AND pr.id_sede = 12";
             else if ($id_usuario == 10270) // ANDRES BARRERA VENEGAS
                 $where = "pr.id_gerente IN ($id_lider, 113) AND pr.id_sede IN (4, 13)";
+            else if ($id_usuario == 12318) // EMMA CECILIA MALDONADO RAMÍREZ
+                $where = "pr.id_gerente IN ($id_lider, 11196, 5637) AND pr.id_sede IN (8, 10)";
             else
                 $where = "pr.id_gerente = $id_lider";
         }
@@ -1059,7 +1061,8 @@ function getStatusMktdPreventa(){
                     us3.telefono tel_gerente,
                     CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) AS asesor, 
                     CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) AS coordinador,
-                    CONCAT(us3.nombre, ' ', us3.apellido_paterno, ' ', us3.apellido_materno) AS gerente
+                    CONCAT(us3.nombre, ' ', us3.apellido_paterno, ' ', us3.apellido_materno) AS gerente,
+                    p.observaciones
             FROM prospectos p 
             LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = p.personalidad_juridica AND oxc.id_catalogo = 10
             LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = p.lugar_prospeccion AND oxc2.id_catalogo = 9
@@ -1132,41 +1135,41 @@ function getStatusMktdPreventa(){
     function getChangelog($prospecto){
         return $this->db->query("SELECT CONVERT(VARCHAR,fecha_creacion,20) AS fecha_creacion, isNULL(creador, cambios.creado_por) creador, UPPER(parametro_modificado) AS parametro_modificado,UPPER((
             CASE 
-                WHEN parametro_modificado = 'Nacionalidad' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 11)
-                WHEN parametro_modificado = 'Personalidad jurídica' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 10)
-                WHEN parametro_modificado = 'Asesor' THEN (SELECT CONCAT( apellido_paterno,' ',apellido_materno,' ',nombre) as nombre FROM usuarios WHERE id_usuario = nuevo)
-                WHEN parametro_modificado = 'Sede' THEN (SELECT nombre FROM sedes WHERE id_sede = nuevo)
-                WHEN parametro_modificado = 'Coordinador' THEN (SELECT CONCAT( apellido_paterno,' ',apellido_materno,' ',nombre) as nombre FROM usuarios WHERE id_usuario = nuevo)
-                WHEN parametro_modificado = 'Gerente' THEN (SELECT CONCAT( apellido_paterno,' ',apellido_materno,' ',nombre) as nombre FROM usuarios WHERE id_usuario = nuevo)
-                WHEN parametro_modificado = 'Tipo' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 8)
-                WHEN parametro_modificado = 'Lugar de prospección' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 9)
-                WHEN parametro_modificado = 'Plaza de venta' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 5)
-                WHEN parametro_modificado = 'Zona de venta' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 6)
-                WHEN parametro_modificado = 'Método de prospección' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 7)
-                WHEN parametro_modificado = 'Estado civil' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 18)
-                WHEN parametro_modificado = 'Régimen Matrimonial' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 19)
-                WHEN parametro_modificado = 'Tpo vivienda' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 20)
-                WHEN parametro_modificado = 'Estatus vigencia' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 3)
-                WHEN parametro_modificado = 'Estatus prospecto' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 38)
+                WHEN parametro_modificado = 'NACIONALIDAD' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 11)
+                WHEN parametro_modificado = 'PERSONALIDAD JURÍDICA' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 10)
+                WHEN parametro_modificado = 'ASESOR' THEN (SELECT CONCAT( apellido_paterno,' ',apellido_materno,' ',nombre) as nombre FROM usuarios WHERE id_usuario = nuevo)
+                WHEN parametro_modificado = 'SEDE' THEN (SELECT nombre FROM sedes WHERE id_sede = nuevo)
+                WHEN parametro_modificado = 'COORDINADOR' THEN (SELECT CONCAT( apellido_paterno,' ',apellido_materno,' ',nombre) as nombre FROM usuarios WHERE id_usuario = nuevo)
+                WHEN parametro_modificado = 'GERENTE' THEN (SELECT CONCAT( apellido_paterno,' ',apellido_materno,' ',nombre) as nombre FROM usuarios WHERE id_usuario = nuevo)
+                WHEN parametro_modificado = 'TIPO' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 8)
+                WHEN parametro_modificado = 'LUGAR DE PROSPECCIÓN' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 9)
+                WHEN parametro_modificado = 'PLAZA DE VENTA' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 5)
+                WHEN parametro_modificado = 'ZONA DE VENTA' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 6)
+                WHEN parametro_modificado = 'MÉTODO DE PROSPECCIÓN' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 7)
+                WHEN parametro_modificado = 'ESTADO CIVIL' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 18)
+                WHEN parametro_modificado = 'RÉGIMEN MATRIMONIAL' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 19)
+                WHEN parametro_modificado = 'TIPO VIVIENDA' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 20)
+                WHEN parametro_modificado = 'ESTATUS VIGENCIA' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 3)
+                WHEN parametro_modificado = 'ESTATUS PROSPECTO' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 38)
                 ELSE nuevo  
             END)) AS nuevo,UPPER((
             CASE 
-                WHEN parametro_modificado = 'Nacionalidad' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 11)
-                WHEN parametro_modificado = 'Personalidad jurídica' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 10)
-                WHEN parametro_modificado = 'Asesor' THEN (SELECT CONCAT( apellido_paterno,' ',apellido_materno,' ',nombre) as nombre FROM usuarios WHERE id_usuario = anterior)
-                WHEN parametro_modificado = 'Sede' THEN (SELECT nombre FROM sedes WHERE id_sede = anterior)
-                WHEN parametro_modificado = 'Coordinador' THEN (SELECT CONCAT( apellido_paterno,' ',apellido_materno,' ',nombre) as nombre FROM usuarios WHERE id_usuario = anterior)
-                WHEN parametro_modificado = 'Gerente' THEN (SELECT CONCAT( apellido_paterno,' ',apellido_materno,' ',nombre) as nombre FROM usuarios WHERE id_usuario = anterior)
-                WHEN parametro_modificado = 'Tipo' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 8)
-                WHEN parametro_modificado = 'Lugar de prospección' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 9)
-                WHEN parametro_modificado = 'Plaza de venta' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 5)
-                WHEN parametro_modificado = 'Zona de venta' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 6)
-                WHEN parametro_modificado = 'Método de prospección' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 7)
-                WHEN parametro_modificado = 'Estado civil' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 18)
-                WHEN parametro_modificado = 'Régimen matrimonial' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 19)
-                WHEN parametro_modificado = 'Tpo vivienda' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 20)
-                WHEN parametro_modificado = 'Estatus vigencia' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 3)
-                WHEN parametro_modificado = 'Estatus prospecto' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 38)
+                WHEN parametro_modificado = 'NACIONALIDAD' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 11)
+                WHEN parametro_modificado = 'PERSONALIDAD JURÍDICA' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 10)
+                WHEN parametro_modificado = 'ASESOR' THEN (SELECT CONCAT( apellido_paterno,' ',apellido_materno,' ',nombre) as nombre FROM usuarios WHERE id_usuario = anterior)
+                WHEN parametro_modificado = 'SEDE' THEN (SELECT nombre FROM sedes WHERE id_sede = anterior)
+                WHEN parametro_modificado = 'COORDINADOR' THEN (SELECT CONCAT( apellido_paterno,' ',apellido_materno,' ',nombre) as nombre FROM usuarios WHERE id_usuario = anterior)
+                WHEN parametro_modificado = 'GERENTE' THEN (SELECT CONCAT( apellido_paterno,' ',apellido_materno,' ',nombre) as nombre FROM usuarios WHERE id_usuario = anterior)
+                WHEN parametro_modificado = 'TIPO' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 8)
+                WHEN parametro_modificado = 'LUGAR DE PROSPECCIÓN' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 9)
+                WHEN parametro_modificado = 'PLAZA DE VENTA' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 5)
+                WHEN parametro_modificado = 'ZONA DE VENTA' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 6)
+                WHEN parametro_modificado = 'MÉTODO DE PROSPECCIÓN' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 7)
+                WHEN parametro_modificado = 'ESTADO CIVIL' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 18)
+                WHEN parametro_modificado = 'RÉGIMEN MATRIMONIAL' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 19)
+                WHEN parametro_modificado = 'TIPO VIVIENDA' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 20)
+                WHEN parametro_modificado = 'ESTATUS VIGENCIA' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 3)
+                WHEN parametro_modificado = 'ESTATUS PROSPECTO' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 38)
                 ELSE anterior  
             END)) AS anterior
             FROM cambios
@@ -3318,15 +3321,12 @@ function getStatusMktdPreventa(){
         LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
         LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
         LEFT JOIN usuarios uss ON uss.id_usuario = c.id_gerente
-
         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion and oxc.id_catalogo = 9
         LEFT JOIN usuarios sub ON uss.id_lider = sub.id_usuario and sub.id_rol = 2
         WHERE c.lugar_prospeccion = $lugar and uss.id_usuario = $id_gte and c.tipo = 0 
         ".$filter."
         ORDER BY c.fecha_creacion DESC;");
-
         }
-
         return $query->result();
     }
 
@@ -3756,10 +3756,9 @@ function getStatusMktdPreventa(){
       if ($typeTransaction == 1 || $typeTransaction == 3) {  // FIRST LOAD || SEARCH BY DATE RANGE
             $filter = " AND p.fecha_creacion BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
         }
-        /**/
         switch ($this->session->userdata('id_rol')) {
             case '19': // SUBDIRECTOR MKTD
-                 $query = $this->db->query(
+                $query = $this->db->query(
                     "SELECT p.id_prospecto, p.vigencia,
                             p.estatus, p.estatus_particular, p.lugar_prospeccion, UPPER(oxp.nombre) nombre_lp,
                             CONVERT(VARCHAR, p.fecha_vencimiento, 20) AS fecha_vencimiento,
@@ -3780,7 +3779,7 @@ function getStatusMktdPreventa(){
             break;
 
             default:
-                 $query = $this->db->query(
+                $query = $this->db->query(
                     "SELECT p.id_prospecto, UPPER(p.nombre) AS nombre, p.apellido_paterno, p.apellido_materno, p.vigencia, 
                             p.estatus, p.estatus_particular,
                             p.lugar_prospeccion, UPPER(oxc.nombre) AS nombre_lp , p.id_sede,
@@ -3788,11 +3787,13 @@ function getStatusMktdPreventa(){
                             CONVERT(VARCHAR, p.fecha_vencimiento, 20) AS fecha_vencimiento,
                             CONCAT (u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) AS asesor, 
                             CONCAT (us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) AS coordinador, 
-                            CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) AS gerente
+                            CONCAT (uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno) AS gerente,
+                            CONCAT (usu.nombre, ' ', usu.apellido_paterno, ' ', usu.apellido_materno) subdirector
                     FROM prospectos p
                     LEFT JOIN usuarios u ON u.id_usuario = p.id_asesor 
                     LEFT JOIN usuarios us ON us.id_usuario = p.id_coordinador 
                     LEFT JOIN usuarios uss ON uss.id_usuario = p.id_gerente 
+                    LEFT JOIN usuarios usu ON usu.id_usuario = p.id_subdirector
                     LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = p.lugar_prospeccion AND oxc.id_catalogo = 9
                     WHERE p.estatus_vigencia = 1 AND p.id_sede IN (SELECT idSede FROM roles_x_usuario WHERE idUsuario = $idSubdir AND idRol = 2) AND p.tipo = 0 $filter 
                     ORDER BY p.fecha_creacion DESC");
@@ -4187,10 +4188,10 @@ function getStatusMktdPreventa(){
         return $query->row();
     }
 
-    public function getCancelacionesProceso($idUsuario, $idRol, $fechaInicio, $fechaFin) {
-        $condicion = ($idRol == 6)
-            ? "AND cl.id_gerente = $idUsuario"
-            : 'AND cl.cancelacion_proceso = 1';
+    public function getCancelacionesProceso($idLider, $idRol, $fechaInicio, $fechaFin) {
+        if ($this->session->userdata('id_usuario') == 10795) // ALMA GARCIA ACEVEDO QUEZADA
+            $idLider = $idLider . ", 671";
+        $condicion = ($idRol == 6) ? "AND cl.id_gerente IN ($idLider)" : "AND cl.cancelacion_proceso = 1";
 
         $query = $this->db->query("SELECT lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, 
         CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, co.nombre AS nombreCondominio, re.nombreResidencial,
@@ -4213,7 +4214,6 @@ function getStatusMktdPreventa(){
         LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
         INNER JOIN opcs_x_cats cp ON cp.id_opcion = cl.cancelacion_proceso AND cp.id_catalogo = 94
         WHERE lo.idStatusLote IN (2, 3) $condicion");
-
         return $query->result_array();
     }
 
@@ -4263,6 +4263,8 @@ function getStatusMktdPreventa(){
 
             $set .= ", $key = $data[$key]";
         }
+
+        $set .= ', fecha_modificacion = GETDATE()';
 
         $this->db->query("UPDATE prospectos SET $set WHERE id_asesor = $idOwner AND becameClient IS NULL");
     }

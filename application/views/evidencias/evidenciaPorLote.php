@@ -23,38 +23,22 @@
 									<div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
 										<div class="form-group label-floating select-is-empty">
 											<label class="control-label">Proyectos</label>
-											<select name="residenciales" id="residenciales"
-												class="selectpicker select-gral m-0"
-												data-style="btn" data-show-subtext="true"
-												data-live-search="true"
-												title="Selecciona un proyecto" data-size="7" required>
-											</select>
+											<select name="residenciales" id="residenciales" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
 										</div>
 									</div>
 								    <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
 									    <div class="form-group label-floating select-is-empty">
 											<label class="control-label">Condominios</label>
-											<select id="condominios" name="condominios"
-												class="selectpicker select-gral m-0"
-												data-style="btn" data-show-subtext="true"
-												data-live-search="true"
-												title="Selecciona un condominio" data-size="7" required>
-											</select>
+											<select id="condominios" name="condominios" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
 										</div>
 									</div>
 									<div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
 										<div class="form-group label-floating select-is-empty">
 											<label class="control-label">Lotes</label>
-										    <select id="lotes" name="lotes"
-												class="selectpicker select-gral m-0"
-												data-style="btn" data-show-subtext="true"
-												data-live-search="true"
-												title="Selecciona un lote" data-size="7" required>
-											</select>
+										    <select id="lotes" name="lotes" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
 										</div>
 									</div>
 								</div>
-
                                 <div id="basic_info" class="row hide">
                                     <div class="col-12 col-sm-12 col-md-4 col-lg-4">
                                         <div class="card miniCard">
@@ -70,7 +54,6 @@
                                                             <button><i class="fas fa-link"></i>&nbsp;Generar URL</button>
                                                         </div>
                                                         <div class="col-12 col-sm-12 col-md-10 col-lg-10">
-                                                            <!-- <p id="url_second"></p> -->
                                                             <input id="url" type="text" disabled></input>
                                                         </div>
                                                         <div id="copy_button" class="col-12 col-sm-12 col-md-2 col-lg-2 p-0 hide">
@@ -94,9 +77,6 @@
                                                     <p class="titleMini m-0">Fecha apartado</p>
                                                     <p class="fechaApartado data"></p>
                                                 </div>
-                                                <!-- <div class="boxIcon">
-                                                    <img src="../dist/img/verify.png" alt="Icono verificación" class="">
-                                                </div> -->
                                             </div>
                                         </div>
                                     </div>
@@ -151,25 +131,12 @@
 </div>
 </div>
 <?php include 'common_modals.php' ?>
-
 <?php $this->load->view('template/footer'); ?>
-<!--DATATABLE BUTTONS DATA EXPORT-->
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script type="text/javascript" src="//unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
 
 <script>
-    let url = "<?=base_url()?>";
-    let base_url = "<?=base_url()?>";
     let typeTransaction = 0; // MJ: SELECTS MULTIPLES
 </script>
-
 <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
-<!-- <script src="<?= base_url() ?>dist/js/controllers/general/main_services_dr.js"></script> -->
 <script src="<?= base_url() ?>dist/js/controllers/evidencias/evidencias.js"></script>
 </body>

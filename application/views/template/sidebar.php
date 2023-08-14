@@ -70,10 +70,10 @@
                                             <?php
                                                 foreach ($datos3 as $hijos) {
                                                     if($hijos->orden >= $datos->orden && $hijos->orden <= $datos->orden +1)	
-                                                        {		//href="<?= base_url().$hijos->pagina?>"
+                                                        {		
                                             ?>
                                                             <li class="<?php if ($url == base_url().$hijos->pagina) {echo 'active';} ?>">
-                                                                <a href="<?= base_url().$hijos->pagina?>"><?=$hijos->nombre?></a>
+                                                                <a href="<?= base_url().$hijos->pagina?>  "><?=$hijos->nombre?></a>
                                                             </li>
                                             <?php
                                                         }

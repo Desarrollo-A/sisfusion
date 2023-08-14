@@ -59,7 +59,7 @@ $("#tabla_ingresar_9").ready(function () {
             defaultContent: "",
             targets: "_all",
             searchable: true,
-            orderable: false,
+            orderable: false
         }],
         destroy: true,
         ordering: false,
@@ -166,15 +166,10 @@ $("#tabla_ingresar_9").ready(function () {
             $(this).parent().find('.animacion').removeClass("fas fa-chevron-up").addClass("fas fa-chevron-down");
         } else {
             $.post( general_base_url + "Comisiones/comisionistasPorLote/"+idLote ,function( d ){
-                
-                
                 row.child(buildDatatable(d)).show();
-                // tr.addClass('shown');
-                // $(this).parent().find('.animacion').removeClass("fas fa-chevron-down").addClass("fas fa-chevron-up");
             });
         }
     });
-
 
     function buildDatatable(jsonComisionistas){
         let informacion_adicional ;
@@ -183,13 +178,16 @@ $("#tabla_ingresar_9").ready(function () {
         informacion_adicional += '      <div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px">';
         informacion_adicional += '          <label><b>Información adicional</b></label>';
         informacion_adicional += '      </div>';
+        informacion_adicional += '<div class="col-sm-12 col-md-4 col-lg-4"><b>Porcentaje a comisionar </b></div>  '+
+                                '<div class="col-sm-12 col-md-4 col-lg-4"><b>Fecha de pago</b></div>  '+
+                                '<div class="col-sm-12 col-md-4 col-lg-4"><b>Nombre </b></div>  ';
 
         objComisionistas = JSON.parse( jsonComisionistas );
         objComisionistas.forEach( comisionista => {
             informacion_adicional += '<div class="col-sm-4 col-md-12 col-lg-12">'+
-                                        '<div class="col-sm-12 col-md-4 col-lg-4">Porcentaje a comisionar: <b>'+ comisionista.porcentaje_decimal+'% </b></div>  '+
-                                        '<div class="col-sm-12 col-md-4 col-lg-4">Fecha de pago: <b>' + comisionista.fechaCreacion + '</b></div>   '+
-                                        '<div class="col-sm-12 col-md-4 col-lg-4">Nombre: <b>' + comisionista.nombre + '</b></div>'+
+                                        '<div class="col-sm-12 col-md-4 col-lg-4">'+ comisionista.porcentaje_decimal+'% </div>  '+
+                                        '<div class="col-sm-12 col-md-4 col-lg-4">' + comisionista.fechaCreacion + '</div>   '+
+                                        '<div class="col-sm-12 col-md-4 col-lg-4">' + comisionista.nombre + '</div>'+
                                         '</div>';
         });
             informacion_adicional += '  </div>';

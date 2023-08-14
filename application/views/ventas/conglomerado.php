@@ -183,6 +183,7 @@
                                                 <option value="8">8</option>
                                                 <option value="9">9</option>
                                                 <option value="10">10</option>
+                                                <option value="11">11</option>
                                             </select>
                                         </div>
                                     </div>
@@ -248,7 +249,7 @@
                     </div>
                     <div class="modal-body">
                         <div role="tabpanel">
-                            <ul class="nav nav-tabs" role="tablist" style="background: #3982C0;">
+                            <ul>
                                 <div id="nameLote"></div>
                             </ul>
                             <div class="tab-content">
@@ -256,7 +257,7 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="card card-plain">
-                                                <div class="card-content">
+                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
                                                     <ul class="timeline-3" id="comments-list-asimilados"></ul>
                                                 </div>
                                             </div>
@@ -283,7 +284,7 @@
                     </div>
                     <div class="modal-body">
                         <div role="tabpanel">
-                            <ul class="nav nav-tabs" role="tablist" style="background: #3982C0;">
+                            <ul>
                                 <div id="nameUser"></div>
                             </ul>
                             <div class="tab-content">
@@ -448,6 +449,7 @@
                                             <option value="8">8</option>
                                             <option value="9">9</option>
                                             <option value="10">10</option>
+                                            <option value="11">11</option>
                                         </select>
                                     </div>
                                 </div>
@@ -511,6 +513,7 @@
                                             <option value="8">8</option>
                                             <option value="9">9</option>
                                             <option value="10">10</option>
+                                            <option value="11">11</option>
                                         </select>
                                     </div>
 
@@ -704,7 +707,7 @@
                                                 <th>ESTATUS</th>
                                                 <th>PENDIENTE DEL MES</th>
                                                 <th>DESCUENTO DISPONIBLE</th>
-                                                <th>FECCH DE DESCUENTO 1</th>
+                                                <th>FECHA DE DESCUENTO 1</th>
                                                 <th>FECHA DE CREACIÓN</th>
                                                 <th>ESTATUS DE LAS CERTIFICACIONES</th>
                                                 <th>ACCIONES</th>
@@ -727,8 +730,8 @@
 <script src="<?= base_url() ?>dist/js/controllers/ventas/conglomerado.js"></script>
 <script src="<?= base_url() ?>dist/js/jwt/hmac-sha256.js"></script>
 <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
-    <script src="<?= base_url() ?>dist/js/jwt/enc-base64-min.js"></script>
-    <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
+<script src="<?= base_url() ?>dist/js/jwt/enc-base64-min.js"></script>
+<script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 </body>

@@ -58,11 +58,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="<?= base_url() ?>dist/js/moment.min.js"></script>
 
+<script src="<?= base_url() ?>dist/js/es.js"></script>
+<script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
+<script src="<?= base_url() ?>dist/js/fullcalendar.min.js"></script>
 
 <!-- <script async defer src="https://apis.google.com/js/api.js" onload="this.onload=function(){};handleClientLoad()" onreadystatechange="if (this.readyState === 'complete') this.onload()"></script> -->
 <!-- <script src="<?=base_url()?>dist/js/controllers/dashboard/agenda/side_calendar.js"></script> -->
 <!-- <script src="<?=base_url()?>dist/js/controllers/dashboard/agenda/googleCalendarConnection.js"></script> -->
-
 <script type="text/javascript">
     var url2 = "<?=base_url()?>index.php/";
     var general_base_url = "<?=base_url()?>";
@@ -73,12 +75,21 @@
 	$(document).ready(function() {
 		demo.initDashboardPageCharts();
 		demo.initVectorMap();
+        <?php
+        //comentar este fragmento de codigo para NO mostrar el mensaje de aviso
+        if(in_array($this->session->userdata('id_rol'), array(17, 70, 7, 9, 3, 6, 2, 5, 4, 8))){
+            if ($this->session->userdata('no_show_modal_info')==0) {
+                echo '$("#avisoNovedades").modal("toggle");';
+            }
+        }
+        ?>
 	});
 
     function validaCheckSession(){
         if($('#no_mostrar_session:checkbox:checked').length > 0)
         {
             $.post('<?=base_url()?>index.php/Login/noShowModalSession',  function(data) {
+
             });
             <?php echo "console.log(".$this->session->userdata('no_show_modal_info').");";?>
         }
@@ -114,7 +125,6 @@ if($this->session->userdata('id_rol') == 7 && $this->session->userdata('asesor_g
     var mySound = new Audio('../static/tono-mensaje.mp3');
     let im = '<?=base_url()?>static/images/perfil/'+perfil[0].id_usuario+'/'+perfil[0].foto;
     if ($(window).width() < 996){
-        console.log("chico");
     }
     else {
         var socket = io('https://chatcomercial.gphsis.com/', {query:{
