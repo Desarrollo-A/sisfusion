@@ -245,10 +245,25 @@ class Usuarios extends CI_Controller
             if($validacion['respuesta']==1){
                 //continuar con la lógica
             }else{
-                echo json_encode(array("result" => false,
-                    "respuesta" => 0,
-                    "message" => $validacion['mensaje']));
-                exit;
+                switch ($this->session->userdata('id_rol')){
+                    case 4:
+                    case 5:
+                    case 6:
+                        $usr = $this->Usuarios_modelo->getUserInformation($_POST['id_usuario']);
+                        $usr = $usr[0];
+                        $rolActual = $usr['id_rol'];
+                        $sedeActual = $usr['id_sede'];
+                        $liderActual = $usr['id_lider'];
+                    if($_POST['member_type'] != $rolActual AND $_POST['headquarter'] != $sedeActual AND $_POST['leader'] != $liderActual){
+                            echo json_encode(array("result" => false,
+                                "respuesta" => 0,
+                                "message" => $validacion['mensaje']));
+                            exit;
+                        }
+
+                        break;
+                }
+
             }
             $sedeCH = 0;
             $sucursal = 0;
