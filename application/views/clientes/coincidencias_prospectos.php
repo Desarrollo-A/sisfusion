@@ -13,7 +13,7 @@
                         <p class="p-0 text-center">No ha seleccionado al menos un filtro o cargado un documento</p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CERRAR</button>
                     </div>
                 </div>
             </div>
@@ -25,7 +25,7 @@
                     <form id="formCoincidencias" name="formCoincidencias">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <center><h3 class="modal-title" id="myModalLabel">Cargar prospectos</h3></center>
+                            <h3 class="modal-title" id="myModalLabel">Cargar prospectos</h3>
                         </div>
                         <div class="modal-body">
                             <h5>Selección de archivo a cargar</h5>
@@ -88,7 +88,7 @@
 		<div class="content boxContent">
 			<div class="container-fluid">
 				<div class="row">
-					<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 						<div class="card">
 							<div class="card-header card-header-icon" data-background-color="goldMaderas">
                                 <i class="fas fa-user-friends fa-2x"></i>
@@ -134,25 +134,26 @@
                                                 </div>
                                             </div>
 											<div class="row">
-                                                <div class="col-sm-12 col-md-2 col-lg-2">
-                                                        <select class="selectpicker select-gral m-0" title="Selecciona una opción" required id="anio"> 
-                                                            <option value="0" selected disabled>Selecciona una opción</option>
-                                                            <option value="2020">2020</option>
-                                                            <option value="2021">2021</option>
-                                                            <option value="2022">2022</option>
-                                                        </select>
+                                                <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
+                                                    <label class="control-label m-0">AÑO (<span class="isRequired">*</span>)</label>
+                                                    <select class="selectpicker select-gral m-0" title="SELECCIONA UNA OPCIÓN" id="anio" required> 
+                                                        <option value="2020">2020</option>
+                                                        <option value="2021">2021</option>
+                                                        <option value="2022">2022</option>
+                                                        <option value="2023">2023</option>
+                                                    </select>
                                                 </div>
-                                                <div class="col-md-6 mb-2">
+                                                <div class="col-sm-12 col-md-6 col-lg-6 p-2">
                                                     <div class="file-gph">
                                                         <input class="d-none" type="file" id="fileElm">
-                                                        <input class="file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
+                                                        <input class="file-name" type="text" placeholder="NO HAS SELECCIONADO NINGÚN ARCHIVO" readonly="">
                                                         <label class="upload-btn m-0" for="fileElm">
                                                             <span>Seleccionar</span>
                                                             <i class="fas fa-folder-open"></i>
                                                         </label>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-4 mb-2">
+                                                <div class="col-col-sm-12 col-md-2 col-lg-2 mb-2">
                                                     <div class="">
                                                         <button class="btn-data-gral btn-s-blue" id="cargaCoincidencias" data-toggle="modal">Cargar</button>
                                                     </div>
@@ -163,25 +164,23 @@
 								</div>
 								<div class="material-datatables">
 									<div class="form-group">
-										<div class="table-responsive">
-                                            <table id="prospectscon_datatable" class="table-striped table-hover">
-                                                <thead>
-                                                    <tr>
-                                                        <th>ID LOTE</th>
-                                                        <th>LOTE</th>
-                                                        <th>CLIENTE</th>
-                                                        <th>TELÉFONO</th>
-                                                        <th>CORREO</th>
-                                                        <th>FECHA APARTADO</th>
-                                                        <th>LUGAR PROSPECCIÓN</th>
-                                                        <th>ASESOR</th>
-                                                        <th>GERENTE</th>
-                                                        <th>SEDE</th>
-                                                        <th>ESTATUS</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
-										</div>
+                                        <table id="prospectscon_datatable" class="table-striped table-hover hide">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID LOTE</th>
+                                                    <th>LOTE</th>
+                                                    <th>CLIENTE</th>
+                                                    <th>TELÉFONO</th>
+                                                    <th>CORREO</th>
+                                                    <th>FECHA DE APARTADO</th>
+                                                    <th>LUGAR DE PROSPECCIÓN</th>
+                                                    <th>ASESOR</th>
+                                                    <th>GERENTE</th>
+                                                    <th>SEDE</th>
+                                                    <th>ESTATUS</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
 									</div>
 								</div>
 							</div>
@@ -192,185 +191,7 @@
 		</div>
 		<?php $this->load->view('template/footer_legend');?>
 	</div>
-	</div><!--main-panel close-->
     <?php $this->load->view('template/footer');?>
-    <!--DATATABLE BUTTONS DATA EXPORT-->
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/clientes/xlsx.core.min.js"></script>
-
-
-    <script>
-        $(document).ready(function () {
-            $("input:file").on("change", function () {
-                var target = $(this);
-                var relatedTarget = target.siblings(".file-name");
-                var fileName = target[0].files[0].name;
-                relatedTarget.val(fileName);
-            });
-        });
-
-        async function processFile(selectedFile) {
-            try {
-                let arrayBuffer = await readFileAsync(selectedFile);
-                return arrayBuffer;
-            } catch (err) {
-                console.log(err);
-            }
-        }
-
-        function readFileAsync(selectedFile) {
-            return new Promise((resolve, reject) => {
-                let fileReader = new FileReader();
-                fileReader.onload = function (event) {
-                    var data = event.target.result;
-                    var workbook = XLSX.read(data, {
-                        type: "binary"
-                    });
-
-                    workbook.SheetNames.forEach(sheet => {
-                        rowObject = JSON.stringify(XLSX.utils.sheet_to_json(workbook.Sheets[sheet], { header: 0, defval: '', blankrows: true }));
-                        // jsonProspectos = JSON.stringify(rowObject, null);
-                    });
-                    resolve(rowObject);
-                };
-                fileReader.onerror = reject;
-                fileReader.readAsArrayBuffer(selectedFile);
-            })
-        }
-
-		$(document).on('click', '#cargaCoincidencias', function (){
-            checked = $("input[type=checkbox]:checked").length;
-            fileElm = document.getElementById("fileElm");
-            if ( checked > 0 &&  fileElm.value != ''){
-                processFile(fileElm.files[0]).then(jsonProspectos => {
-                    var checks = [];
-                    $('input[name^="checks"]:checked').each(function() {
-                        checks.push($(this).val());
-                    });
-                    // MJ: SE AGREGÓ EL AÑO AL ARRAY DE CHECKS
-                    checks.push("anio");
-                    updateTable(checks, jsonProspectos, $("#anio").val());
-                });
-            }
-            else{
-			    $('#notificacion').modal('show');
-            }
-        });
-
-        $('#prospectscon_datatable thead tr:eq(0) th').each( function (i) {
-            var title = $(this).text();
-            $(this).html('<input type="text" class="textoshead"  placeholder="'+title+'"/>' );
-            $( 'input', this ).on('keyup change', function () {
-                if ($('#prospectscon_datatable').DataTable().column(i).search() !== this.value ) {
-                    $('#prospectscon_datatable').DataTable().column(i).search(this.value).draw();
-                }
-            });
-        });
-
-        function updateTable(checks, jsonProspectos, anio){
-            prospectsTable = $('#prospectscon_datatable').DataTable({
-                dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
-                width: "auto",
-                buttons: [
-                    {
-                        extend: 'excelHtml5',
-                        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                        className: 'btn buttons-excel',
-                        titleAttr: 'Descargar archivo de Excel',
-                    }
-                ],
-                pagingType: "full_numbers",
-                language: {
-                    url: "<?=base_url()?>/static/spanishLoader_v2.json",
-                    paginate: {
-                        previous: "<i class='fa fa-angle-left'>",
-                        next: "<i class='fa fa-angle-right'>"
-                    }
-                },
-                destroy: true,
-                ordering: false,
-                columnDefs: [{
-                    defaultContent: "",
-                    targets: "_all",
-                    searchable: true,
-                    orderable: false
-                }],
-                columns: [{
-                    data: function (d) {
-                        return d.idLote;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.nombreLote;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.nombre;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.telefono1;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.correo;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.fechaApartado;
-                    }
-                },
-                {
-                    data: function (d) {
-                        if(d.descuento_mdb == 1)
-                            return d.nombre_lp + ' MDB';
-                        else
-                            return d.nombre_lp
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.nombreAsesor;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.nombreGerente;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.sede;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.nombreEstatus;
-                    }
-                }],
-                ajax: {
-                    url: 'filterProspectos',
-                    type: "POST",
-                    cache: false,
-                    data : {
-                        "checks": checks,
-                        "anio": anio,
-                        "jsonProspectos": jsonProspectos
-                    }
-                }
-            });
-        }
-
-    </script>
+    <script src="<?=base_url()?>dist/js/controllers/clientes/coincidenciasProspectos.js"></script>
 </body>

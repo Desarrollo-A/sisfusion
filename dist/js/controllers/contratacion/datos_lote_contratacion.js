@@ -1,11 +1,16 @@
 $(document).ready(function () {
-    $('#spiner-loader').removeClass('hide');
     $.post(`${general_base_url}Contratacion/lista_proyecto`, function (data) {
         for (var i = 0; i < data.length; i++) {
-            $("#idResidencial").append($('<option>').val(data[i]['idResidencial']).text(data[i]['descripcion'].toUpperCase()));
+            $("#idResidencial").append($('<option>').val(data[i]['idResidencial']).text(data[i]['descripcion']));
         }
         $("#idResidencial").selectpicker('refresh');
-        $('#spiner-loader').addClass('hide');
+    }, 'json');
+
+    $.post(`${general_base_url}Contratacion/lista_estatus`, function (data) {
+        for (var i = 0; i < data.length; i++) {
+            $("#idEstatus").append($('<option>').val(data[i]['idStatusLote']).text(data[i]['nombre']));
+        }
+        $("#idEstatus").selectpicker('refresh');
     }, 'json');
 });
 
@@ -22,32 +27,7 @@ $('#idResidencial').change(function () {
             $("#idCondominioInventario").selectpicker('refresh');
             $('#spiner-loader').addClass('hide');
         }, 'json');
-        tablaInventario(index_idResidencial,0,0);
     });    
-});
-
-$('#idCondominioInventario').change(function (){
-    $('#spiner-loader').removeClass('hide');
-    index_CondominioInventario = $(this).val();
-    $(document).ready(function () {
-    $.post(`${general_base_url}Contratacion/lista_estatus/${index_CondominioInventario}`, function (data) {
-        for (var i = 0; i < data.length; i++) {
-            $("#idEstatus").append($('<option>').val(data[i]['idStatusLote']).text(data[i]['nombre']));
-        }
-        $("#idEstatus").selectpicker('refresh');
-        $('#spiner-loader').addClass('hide');
-    }, 'json');
-    tablaInventario(index_idResidencial,index_CondominioInventario,0);
-    });
-});
-
-$('#idEstatus').change(function (){
-    $('#spiner-loader').removeClass('hide');
-    index_idEstatus = $(this).val();
-    $(document).ready(function () {
-    tablaInventario(index_idResidencial,index_CondominioInventario,index_idEstatus);
-    $('#spiner-loader').addClass('hide');
-    });
 });
 
 let titulosInventario = [];
@@ -57,16 +37,20 @@ $('#tablaInventario thead tr:eq(0) th').each(function (i) {
     $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
     $('input', this).on('keyup change', function () {
         if ($('#tablaInventario').DataTable().column(i).search() !== this.value) {
-            $('#tablaInventario').DataTable().column(i).search(this.value).draw();
+            $('#tablaInventario').DataTable().column(i).search(this.value).draw(); 
         }
     });
 });
 
-function tablaInventario(ix_idResidencial = 0,ix_idCondominio = 0,ix_idEstatus = 0){
+$(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', function () {
+    ix_idResidencial = ($("#idResidencial").val().length <= 0) ? 0 : $("#idResidencial").val();
+    ix_idCondominio = $("#idCondominioInventario").val() == '' ? 0 : $("#idCondominioInventario").val();
+    ix_idEstatus = $("#idEstatus").val() == '' ? 0 : $("#idEstatus").val();
     tabla_inventario = $("#tablaInventario").DataTable({
         dom: "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'B><'col-12 col-sm-12 col-md-6 col-lg-6 p-0'f>rt>"+"<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
+        bAutoWidth: true,
         destroy: true,
         searching: true,
         ajax: {
@@ -306,13 +290,10 @@ function tablaInventario(ix_idResidencial = 0,ix_idCondominio = 0,ix_idEstatus =
                 return `<center><button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-tipo-venta="${d.tipo_venta}" data-toggle="tooltip" data-placement="left" title="VER MÁS INFORMACIÓN"><i class="fas fa-history"></i></button></center>`;
             }
         }],
+        initComplete: function() {
+            $('[data-toggle="tooltip"]').tooltip();
+        }
     });  
-}
-
-$('#tablaInventario').on('draw.dt', function() {
-    $('[data-toggle="tooltip"]').tooltip({
-        trigger: "hover"
-    });
 });
 
 $(document).on("click", ".ver_historial", function () {
@@ -328,9 +309,7 @@ $(document).on("click", ".ver_historial", function () {
         element.classList.add("hide");
         $('#clauses_content').html('');
     }
-
     $("#seeInformationModal").modal();
-
     // LLENA LA TABLA CON EL HISTORIAL DEL PROCESO DE CONTRATACIÓN DEL LOTE X
     consultarHistoriaContratacion(idLote);
     // LLENA LA TABLA CON EL HISTORIAL DE LIBERACIÓN DEL LOTE X
@@ -396,11 +375,19 @@ function consultarHistoriaContratacion(idLote) {
             url: `${general_base_url}Contratacion/historialProcesoLoteOp/${idLote}`,
             dataSrc: ""
         },
-        initComplete: function() {
-            $('[data-toggle="tooltip"]').tooltip();
-        }
     });
 }
+
+$('#tablaHistoriaLiberacion').on('draw.dt', function() {
+    $('[data-toggle="tooltip"]').tooltip({ trigger: "manual" });
+});
+
+// Volver a aplicar tooltips en elementos filtrados
+$('#tablaHistoriaLiberacion').on('search.dt', function() {
+    $('[data-toggle="tooltip"]').tooltip('dispose'); // Elimina los tooltips actuales
+    $('[data-toggle="tooltip"]').tooltip({ trigger: "manual" }); // Vuelve a inicializar los tooltips en todos los elementos
+    $('[data-toggle="tooltip"]').tooltip('show'); // Muestra los tooltips en todos los elementos
+});
 
 let titulosTablaHistoriaLiberacion = [];
 $('#tablaHistoriaLiberacion thead tr:eq(0) th').each(function (i) {

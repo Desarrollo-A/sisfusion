@@ -2,10 +2,8 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
     <div class="wrapper">
-    <?php $this->load->view('template/sidebar'); ?>
+        <?php $this->load->view('template/sidebar'); ?>
 
-
-        <!-- Modals -->
         <div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -26,7 +24,7 @@
         </div>
         
         <div class="modal fade modal-alertas" id="modal_bonos" role="dialog">
-            <div class="modal-dialog modal-lg">
+            <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -42,8 +40,8 @@
         <div class="modal fade modal-alertas" id="modal_abono" data-backdrop="static" data-keyboard="false" role="dialog">
             <div class="modal-dialog ">
                 <div class="modal-content">
-                    <div class="modal-header bg-red">
-                        <center><img src="<?=base_url()?>static/images/warning.png" width="300" height="300"></center>
+                    <div class="modal-header bg-red d-flex justify-center">
+                        <img src="<?=base_url()?>static/images/warning.png" width="300" height="300">
                     </div>
                     <form method="post" id="form_abono">
                         <div class="modal-body"></div>
@@ -52,12 +50,11 @@
                 </div>
             </div>
         </div>
-        <!-- END Modals-->
 
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
                                 <i class="fas fa-gift fa-2x"></i>
@@ -78,25 +75,23 @@
                                 </div>
                                 <div class="material-datatables">
                                     <div class="form-group">
-                                        <div class="table-responsive">
-                                            <table class="table-striped table-hover" id="tabla_bono_revision" name="tabla_bono_revision">
-                                                <thead>
-                                                    <tr>
-                                                        <th></th>
-                                                        <th>ID</th>
-                                                        <th>USUARIO</th>
-                                                        <th>RFC</th>
-                                                        <th>PUESTO</th>
-                                                        <th>PAGO</th>
-                                                        <th>IMPUESTO</th>
-                                                        <th>TOTAL A PAGAR</th>
-                                                        <th>ESTATUS</th>
-                                                        <th>COMENTARIO</th>
-                                                        <th>OPCIONES</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
-                                        </div>
+                                        <table class="table-striped table-hover" id="tabla_bono_revision" name="tabla_bono_revision">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>ID</th>
+                                                    <th>USUARIO</th>
+                                                    <th>RFC</th>
+                                                    <th>PUESTO</th>
+                                                    <th>PAGO</th>
+                                                    <th>IMPUESTO</th>
+                                                    <th>TOTAL A PAGAR</th>
+                                                    <th>ESTATUS</th>
+                                                    <th>COMENTARIO</th>
+                                                    <th>OPCIONES</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -107,16 +102,6 @@
         </div>
         <?php $this->load->view('template/footer_legend');?>
     </div>
-    </div><!--main-panel close-->
     <?php $this->load->view('template/footer');?>
-    <!--DATATABLE BUTTONS DATA EXPORT-->
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/bonos_intmex.js"></script>
-
 </bdoy>

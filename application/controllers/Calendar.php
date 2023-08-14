@@ -46,17 +46,18 @@ class Calendar extends CI_Controller {
 
     public function updateAppointmentData(){
         $objDatos = json_decode(file_get_contents("php://input"));
+
         $data = array(
             "medio" => $objDatos->estatus_recordatorio2,
             "fecha_cita" => str_replace("T", " ", $objDatos->dateStart),
             "titulo" => $objDatos->evtTitle,
             "fecha_final" => str_replace("T", " ", $objDatos->dateEnd),
-            "id_direccion" => isset($objDatos->id_direccion) ? $objDatos->id_direccion :null,
-            "direccion" => isset($objDatos->direccion) ? $objDatos->direccion :null,
+            "id_direccion" => $objDatos->id_direccion ?? null,
+            "direccion" => $objDatos->direccion ?? null,
             "descripcion" => $objDatos->description == '' ? null:$objDatos->description,
-            "idGoogle" => isset($objDatos->inserted) ? $objDatos->inserted:null
-
+            "idGoogle" => $objDatos->idGoogle ?? null
         );
+
         $response = $this->General_model->updateRecord('agenda', $data, 'id_cita',  $objDatos->idAgenda);
 
         if($response){

@@ -5,14 +5,13 @@ class Usuarios extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(array('Usuarios_modelo', 'Services_model'));
+        $this->load->model(array('Usuarios_modelo'));
         $this->load->model('asesor/Asesor_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
         $this->load->model('Clientes_model');
-        $this->load->model('General_model');
         //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
-        $this->load->library(array('session', 'form_validation', 'get_menu'));
-        $this->load->library(array('session', 'form_validation', 'formatter'));
-        $this->load->helper(array('url', 'form'));
+        $this->load->library(array('session','form_validation', 'get_menu'));
+        $this->load->library(array('session','form_validation','formatter'));
+        $this->load->helper(array('url','form'));
         $this->load->database('default');
         $this->validateSession();
 
@@ -117,8 +116,20 @@ class Usuarios extends CI_Controller
         echo json_encode($data);
     }
 
-    public function getPaymentMethod()
+    public function usersAsesor()
     {
+        $this->load->view('template/header');
+        $this->load->view("asesor/viewUser");
+    }
+
+    public function getUsersListAsesor()
+    {
+        $data['data'] = $this->Usuarios_modelo->getUserPassword()->result_array();
+        $data['data'][0]['contrasena'] = desencriptar($data['data'][0]['contrasena']);
+        echo json_encode($data);
+    }
+
+    public function getPaymentMethod(){
         echo json_encode($this->Usuarios_modelo->getPaymentMethod()->result_array());
     }
 
@@ -203,11 +214,8 @@ class Usuarios extends CI_Controller
 
     public function updateUser()
     {
-        //RUTA DE PRUEBAS
         $usersCH = 0;
         $ruta = "https://prueba.gphsis.com/RHCV/index.php/WS/movimiento_interno_asesor_v2";
-        //RUTA DE PRODUCCIÓN
-        //$ruta="https://rh.gphsis.com/index.php/WS/movimiento_interno_asesor";
         if ($this->session->userdata('id_rol') == 32 || $this->session->userdata('id_rol') == 17 || $this->session->userdata('id_rol') == 13) {
             $data = array(
                 "forma_pago" => $_POST['payment_method'],
@@ -225,8 +233,22 @@ class Usuarios extends CI_Controller
             $resultadoCH  =  $this->Usuarios_modelo->ServicePostCH($ruta, $dataCH);
             $res = json_decode($resultadoCH);
             $resultadoCH = $res->resultado;
-        } else {
-
+        }
+        else {
+            $arrayChecar = array (
+                'id_rol' => $_POST['member_type'],
+                'id_sede' => $_POST['headquarter'],
+                'id_lider' => $_POST['leader']
+            );
+            $validacion = validateUserVts($arrayChecar);
+            if($validacion['respuesta']==1){
+                //continuar con la lógica
+            }else{
+                echo json_encode(array("result" => false,
+                    "respuesta" => 0,
+                    "message" => $validacion['mensaje']));
+                exit;
+            }
             $sedeCH = 0;
             $sucursal = 0;
             if ($_POST['member_type'] == 3 || $_POST['member_type'] == 7 || $_POST['member_type'] == 9 || $_POST['member_type'] == 2) {
@@ -262,7 +284,6 @@ class Usuarios extends CI_Controller
                 $resultadoCH = $this->actualizarProspecto($this->input->post("id_usuario"), $_POST['leader'], $_POST['member_type'], $_POST['rol_actual'], $_POST['headquarter'], $sucursal, $datosCH);
             }
             $nueva_estructura = (isset($_POST['nueva_estructura'])) ? $_POST['nueva_estructura'] : 0;
-
             if(isset($_POST["simbolicoType"])){
                 $simbolicoPropiedad = $_POST["simbolicoType"];
             }else{
@@ -297,16 +318,21 @@ class Usuarios extends CI_Controller
             // $result = json_decode(1);
             if ($result == 1) {
                 $response = $this->Usuarios_modelo->updateUser($data, $this->input->post("id_usuario"));
+                $mensajeLeyenda = 'Usuario Actualizado correctamente';
             } else {
                 $response = 0;
+                $mensajeLeyenda = 'No se pudo actualizar el usuario';
             }
         }
 
-        echo json_encode($response);
+        $respuestaView = array(
+            'respuesta' => $response,
+            'mensaje' =>$mensajeLeyenda
+        );
+        echo json_encode($respuestaView);
     }
 
-    public function getUserInformation($id_usuario)
-    {
+    public function getUserInformation($id_usuario){
         $data = $this->Usuarios_modelo->getUserInformation($id_usuario);
         $data[0]['contrasena'] = desencriptar($data[0]['contrasena']);
         echo json_encode($data);
@@ -475,19 +501,6 @@ class Usuarios extends CI_Controller
         echo json_encode($data);
     }
 
-    public function usersAsesor()
-    {
-        $this->load->view('template/header');
-        $this->load->view("asesor/viewUser");
-    }
-
-    public function getUsersListAsesor()
-    {
-        $data['data'] = $this->Usuarios_modelo->getUserPassword()->result_array();
-        $data['data'][0]['contrasena'] = desencriptar($data['data'][0]['contrasena']);
-        echo json_encode($data);
-    }
-
     public function deleteDocumentoExtranjero()
     {
         $a = 0;
@@ -513,7 +526,7 @@ class Usuarios extends CI_Controller
         $datosCH['dcontrato']['idcoordinador'] = $coordAndGerente->id_coordinador;
         $datosCH['dcontrato']['idgerente'] = $coordAndGerente->id_gerente;
 
-        /*$resultado = $this->Usuarios_modelo->ServicePostCH($url, $datosCH);
+        $resultado = $this->Usuarios_modelo->ServicePostCH($url, $datosCH);
         $r = json_decode($resultado);
         if (isset($r->resultado)) {
             if ($r->resultado == 1) {
@@ -523,9 +536,9 @@ class Usuarios extends CI_Controller
             }
         } else {
             return json_decode(0);
-        }*/
+        }
 
-        return json_decode(1);
+        // return json_decode(1);
     }
 
     private function actualizarProspectoPorRol($idOwner, $rolNuevo, $rolActual, $idLiderNuevo, $sede): object

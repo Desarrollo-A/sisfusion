@@ -1320,6 +1320,7 @@ function fillTableReport(dataObject) {
                     text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
+                    title:'Desglose de lotes',
                     exportOptions: {
                         columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,20],
                         format: {
@@ -1555,16 +1556,12 @@ function fillTableReport(dataObject) {
         });
     } else{
 
-        $('#lotesInformationTableCancelados thead tr:eq(0) th').each(function (i) {
-            const title = $(this).text();
-            $(this).html('<input type="text" class="textoshead" placeholder="' + title + '" data-toggle="tooltip" data-placement="top" title="' + title + '"/>');
-
-            $('input', this).on('keyup change', function () {
-                if(i != 0){
-                    if ($("#lotesInformationTableCancelados").DataTable().column(i).search() !== this.value) {
-                        $("#lotesInformationTableCancelados").DataTable().column(i)
-                            .search(this.value).draw();
-                    }
+        $('#lotesInformationTableCancelados thead tr:eq(0) th').each( function (i) {
+            var title = $(this).text();
+            $(this).html(`<input   data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
+            $( 'input', this ).on('keyup change', function () {
+                if ($('#lotesInformationTableCancelados').DataTable().column(i).search() !== this.value ) {
+                    $('#lotesInformationTableCancelados').DataTable().column(i).search(this.value).draw();
                 }
             });
             $('[data-toggle="tooltip"]').tooltip();
@@ -1579,6 +1576,7 @@ function fillTableReport(dataObject) {
                     text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
+                    title:'Desglose de lotes cancelados',
                     exportOptions: {
                         columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
                         format: {

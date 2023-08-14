@@ -51,13 +51,32 @@
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
                         <img src="<?=base_url()?>static/images/bell-cdm.gif" style="width: 10%"><br>
                     </div>
-                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0 50px">
+                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0 50px; ">
                         <h4><b>Aviso</b></h4>
                         <p>
-                        Estimado colaborador el día de hoy, 14 de junio, estaremos aplicando una mejora en nuestro sistema. Esta actualización tiene como objetivo optimizar el rendimiento y la eficiencia de algunas operaciones.
-<br>
-Será necesario realizar una breve interrupción del servicio. Dicha interrupción está programada para comenzar a las <b>8:00 p.m.</b> y se espera que tenga una duración de aproximadamente una hora.<br><br> Durante este período, será posible que se vean intermitencias en el sistema, agradeceremos tu apoyo y comprensión en el transcurso de la implementación. 
+                            Cambio de fecha en el corte de comisiones
+
                         </p>
+                        <p style="text-align: justify">
+                            <br>
+                            Estimado comisionista. Esperamos que este mensaje le
+                            encuentre bien. Queremos informarle sobre una actualización importante
+                            relacionada con el corte de comisiones. Por razones estratégicas se decidió
+                            realizar un cambio en la fecha del corte de comisiones. Por esta ocasión, el
+                            corte de comisiones se llevará a cabo el día miércoles 9 y jueves 10 (hasta dos
+                            de la tarde) del presente mes.
+                            <br><br>
+                            Queremos asegurarnos de que esté completamente informado
+                            sobre esta modificación para evitar cualquier confusión o malentendido. Si
+                            tiene alguna pregunta o inquietud con respecto a este cambio, no dude en
+                            ponerse en contacto con su supervisor directo. Estamos aquí para brindarle toda
+                            la información y el apoyo que necesite durante esta transición.
+                            <br><br>
+                            Agradecemos su comprensión y colaboración ante este cambio,
+                            y confiamos en que, juntos, continuaremos fortaleciendo el éxito de nuestra
+                            empresa.</p>
+
+                        <p style="font-size: small">Recuerda actualizar cache con el comando <b>CTRL + SHIFT + R</b></p>
                         <div class="d-flex justify-center align-center mt-1">
                             <input type="checkbox" name="no_mostrar_session" id="no_mostrar_session" style="margin: -1px 0 0;line-height: normal;">
                             <label for="no_mostrar_session" style="color: #5a5a5a;font-size: 1.2rem " class="m-0"><b>No volver a mostrar aviso durante la sesión</b></label>

@@ -16,7 +16,7 @@ $('#tabla_factura thead tr:eq(0) th').each( function (i) {
                 $.each(data, function(i, v) {
                     total += parseFloat(v.impuesto);
                 });
-                document.getElementById("totpagarfactura").textContent = '$' + formatMoney(total);
+                document.getElementById("totpagarfactura").textContent = formatMoney(total);
             }
         });
     } 
@@ -34,7 +34,7 @@ $('#tabla_factura').on('xhr.dt', function(e, settings, json, xhr) {
         total += parseFloat(v.impuesto);
     });
     var to = formatMoney(total);
-    document.getElementById("totpagarfactura").textContent = '$' + to;
+    document.getElementById("totpagarfactura").textContent = to;
 });
 
 
@@ -49,15 +49,14 @@ $(document).on("click", ".individualCheck", function() {
             row = tabla_factura.row(tr).data();
             totaPen += row.impuesto; 
         }
-        // Al marcar todos los CheckBox Marca CB total
         if( totalChecados.length == totalCheckbox.length )
             $("#all").prop("checked", true);
         else 
-            $("#all").prop("checked", false); // si se desmarca un CB se desmarca CB total
+            $("#all").prop("checked", false); 
     });
-    $("#totpagarPen").html('$ ' + formatMoney(totaPen));
+    $("#totpagarPen").html(formatMoney(totaPen));
 });
-// Función de selección total
+
 function selectAll(e) {
     tota2 = 0;
     if(e.checked == true){
@@ -69,7 +68,7 @@ function selectAll(e) {
                 $(v).prop("checked", true);
             }
         }); 
-        $("#totpagarPen").html('$ ' + formatMoney(tota2));
+        $("#totpagarPen").html(formatMoney(tota2));
     }
     if(e.checked == false){
         $(tabla_factura.$('input[type="checkbox"]')).each(function (i, v) {
@@ -77,7 +76,7 @@ function selectAll(e) {
                 $(v).prop("checked", false);
             }
         }); 
-        $("#totpagarPen").html('$ ' + formatMoney(0));
+        $("#totpagarPen").html(formatMoney(0));
     }
 }
 tabla_factura = $("#tabla_factura").DataTable({
@@ -93,10 +92,8 @@ tabla_factura = $("#tabla_factura").DataTable({
                 var idcomision = $(tabla_factura.$('input[name="idTQ[]"]:checked')).map(function() {
                     return this.value;
                 }).get();
-                
                 var com2 = new FormData();
                 com2.append("idcomision", idcomision); 
-                
                 $.ajax({
                     url : general_base_url + 'Suma/aceptoInternomexAsimilados/',
                     data: com2,
@@ -189,12 +186,12 @@ tabla_factura = $("#tabla_factura").DataTable({
     },
     {
         "data": function(d) {
-            return '<p class="m-0">$' + formatMoney(d.total_comision) + '</p>';
+            return '<p class="m-0">' + formatMoney(d.total_comision) + '</p>';
         }
     },
     {
         "data": function(d) {
-            return '<p class="m-0">$' + formatMoney(d.impuesto) + '</p>';
+            return '<p class="m-0">' + formatMoney(d.impuesto) + '</p>';
         }
     },
     {
@@ -264,7 +261,7 @@ $("#tabla_factura tbody").on("click", ".consultar_logs", function(e){
     $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DE LA REFERENCIA <b style="color:#39A1C0; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">'+referencia+'</b></h5></p>');
     $.getJSON("getHistorial/"+id_pago).done( function( data ){
         $.each( data, function(i, v){
-            $("#comments-list-factura").append('<div class="col-lg-12"><p><i style="color:39A1C0;">'+v.comentario+'</i><br><b style="color:#39A1C0">'+v.fecha_movimiento+'</b><b style="color:gray;"> - '+v.modificado_por+'</b></p></div>');
+            $("#comments-list-factura").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small></small><b>' + v.comentario + '</b></a><br></div><div class="float-end text-right"><a>'+v.fecha_movimiento+'</a></div><div class="col-md-12"><p class="m-0"><small>MODIFICADO POR: </small><b> ' +v.modificado_por+ '</b></p></div><h6></h6></div></div></li>');
         });
     });
 });

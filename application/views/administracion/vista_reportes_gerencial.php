@@ -172,7 +172,7 @@
 				{
 					"width": "6%",
 					"data": function( d ){
-					    return '<p class="m-0">'+d.estatusContratacion+'</p>';
+						return '<p class="m-0">'+d.estatusContratacion+'</p>';
 					}
 				}, 
 				{ 

@@ -595,6 +595,7 @@
   background-color: #f4433618 !important;
   border-radius: 27px;
   margin: 0;
+  color: #f44336 !important;
 }
 
 .color-letter {
@@ -606,6 +607,7 @@
 }
 
 .buttons-pdf:hover {
+  color: #ffffff !important;
   background-color: #f44336 !important;
 }
 
@@ -985,6 +987,12 @@
   background-color: #92929218;
 }
 
+.lbl-goldMaderas {
+  color: #96843D;
+  border: none;
+  background-color: #96843D18;
+}
+
 .lbl-gral {
   border-radius: 25px;
   padding: 7px 10px;
@@ -999,7 +1007,7 @@
 .lbl-grayDark {
   color: #191B1C;
   border: none;
-  background-color: #28374718;
+  background-color: #191B1C18;
 }
 
 .lbl-green {
@@ -1024,6 +1032,12 @@
   color: #B9770E;
   border: none;
   background-color: #B9770E18;
+}
+
+.lbl-orange {
+  color: #DF7314;
+  border: none;
+  background-color: #DF731418;
 }
 
 .lbl-pink {
@@ -1077,25 +1091,25 @@
 .lbl-lightBlue {
   color: #1B4F72;
   border: none;
-  background: #AED6F1;
+  background-color: #1B4F7218;
 }
 
 .lbl-peach {
   color: #78281F;
   border: none;
-  background: #F5B7B1;
+  background-color: #78281F18;
 }
 
 .lbl-purple {
   color: #512E5F;
   border: none;
-  background: #D7BDE2;
+  background-color: #512E5F18;
 }
 
 .lbl-aqua {
-  color: #ffffff;
+  color: #54d2d2;
   border: none;
-  background: #11DFC6;
+  background: #11DFC618;
 }
 
 /* END Etiquetas */
@@ -1126,8 +1140,9 @@
 .file-gph {
   background-color: #eaeaea;
   border-radius: 30px;
-  padding: 7px 3px 7px 15px;
+  padding: 7px 7px 7px 15px;
   display: flex;
+  align-items: center;
 }
 
 .file-gph .upload-btn {
@@ -1155,6 +1170,10 @@
   width: 77%;
   background-color: transparent;
   border: none;
+}
+
+.file-gph .file-name::placeholder {
+  color: red !important;
 }
 
 .file-gph input[type="file"] {
@@ -1334,6 +1353,7 @@
   color: #ffffff;
   background-color: #333333;
   width: fit-content;
+  text-transform: uppercase !important;
 }
 
 .tooltip.top .tooltip-arrow {
@@ -1852,6 +1872,7 @@ table {
   text-align: center;
   width: 100% !important;
   font-size: 13px;
+  text-transform: uppercase;
 }
 
 table tbody > tr.selected, table tbody > tr > .selected {
@@ -1869,7 +1890,7 @@ table tr.selected td.select-checkbox:after, table tr.selected th.select-checkbox
 }
 
 table thead tr {
-  background-color: #143860 !important;
+  background-color: #143860;
 }
 
 table thead tr th {
@@ -1884,7 +1905,7 @@ table thead tr th input {
   text-align: center;
   font-weight: 300;
   font-size: 10px !important;
-  background-color: #143860 !important;
+  background-color: #143860;
   text-transform: uppercase;
 }
 
@@ -1947,10 +1968,6 @@ table .boxSBtns {
   border-radius: 30px;
   padding: 10px;
   width: fit-content;
-}
-
-.dataTables_scroll .dataTables_scrollHeadInner {
-  width: 100% !important;
 }
 
 .dataTables_scroll .container-fluid {

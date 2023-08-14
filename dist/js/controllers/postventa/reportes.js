@@ -5,7 +5,6 @@ sp = {
         var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
         var time = today.getHours() + ":" + today.getMinutes();
         var dateTime = date + ' ' + time;
-
         $('.datepicker').datetimepicker({
             format: 'DD/MM/YYYY',
             icons: {
@@ -101,7 +100,6 @@ function formatDate(date) {
         month = '0' + month;
     if (day.length < 2)
         day = '0' + day;
-
     return [year, month, day].join('-');
 }
 
@@ -118,7 +116,6 @@ function setInitialValues() {
     finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
     finalBeginDate2 = [('0' + beginDate.getDate()).slice(-2), ('0' + (beginDate.getMonth() + 1)).slice(-2), beginDate.getFullYear()].join('/');
     finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
-
     $('#beginDate').val(finalBeginDate2);
     $('#endDate').val(finalEndDate2);
     /*cuando se carga por primera vez, se mandan los valores en cero, para no filtar por mes*/
@@ -171,6 +168,7 @@ function buildTable(columns, data) {
         text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
         className: 'btn buttons-excel',
         titleAttr: 'Descargar archivo de Excel',
+        title:'Reporte de solicitudes escrituración',
         exportOptions: {
             columns: [0,1,2,3,4,5,6,7,8,9,10,11,12],
             format: {
@@ -200,13 +198,11 @@ function buildTable(columns, data) {
                     }else if(columnIdx == 11){
                         return 'FECHA ULTIMO ESTATUS';
                     }else if(columnIdx ==12){
-                        return 'ULTIMO COMENTARIO';
+                        return 'ÚLTIMO COMENTARIO';
                     }
-
                 }
             }
         },
-
         }],
         language: {
             url: "../static/spanishLoader.json",
@@ -227,7 +223,7 @@ function buildTable(columns, data) {
         {
             targets: 0,
             render: function (data, type, full, meta) {
-                return `<div><button id="details" class="btn-unstyled details w-50" data-toggle="tooltip" data-placement="top" title="Desglose detallado"><i class="fas fa-caret-right"></i></button><a class="w-50">${data}</a></div>`;
+                return `<div><button id="details" class="btn-unstyled details w-50" data-toggle="tooltip" data-placement="top" title="DESGLOSE DETALLADO"><i class="fas fa-caret-right"></i></button><a class="w-50">${data}</a></div>`;
             }
         },
         {
@@ -257,10 +253,7 @@ function buildTable(columns, data) {
     });
 }
 
-
-
 function createDocRow(row, tr, thisVar) {
-    
     if (row.child.isShown()) {
         row.child.hide();
         tr.removeClass('shown');
@@ -281,7 +274,6 @@ function createDocRow(row, tr, thisVar) {
 }
 
 function buildTableDetail(data) {
-    
     var solicitudes = '<table class="table subBoxDetail">';
     solicitudes += '<tr style="border-bottom: 1px solid #fff; color: #4b4b4b;">';
     solicitudes += '<td>' + '<b>' + '# ' + '</b></td>';
@@ -291,7 +283,6 @@ function buildTableDetail(data) {
     solicitudes += '<td>' + '<b>' + 'ACTIVIDAD' + '</b></td>';
     solicitudes += '<td>' + '<b>' + 'COMENTARIO' + '</b></td>';
     solicitudes += '<td>' + '<b>' + 'FECHA DEL ESTATUS' + '</b></td>';
-    //solicitudes += '<td>' + '<b>' + 'FECHA FINAL DEL ESTATUS' + '</b></td>';
     solicitudes += '<td>' + '<b>' + 'VIGENCIA ' + '</b></td>';
     solicitudes += '<td>' + '<b>' + 'DÍAS TRANSCURRIDOS ' + '</b></td>';
     solicitudes += '</tr>';
@@ -304,9 +295,12 @@ function buildTableDetail(data) {
         solicitudes += '<td> ' + v.nombre + ' </td>';
         solicitudes += '<td> ' + (v.comentarios == null ? v.descripcion : v.comentarios) + ' </td>';
         solicitudes += '<td> ' + moment(v.fechados.split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss') + ' </td>';
-        //solicitudes += '<td> ' + moment(v.fecha_creacion.split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss') + ' </td>';
         solicitudes += '<td> ' + v.atrasado + '</td>';
         solicitudes += '<td> ' + v.diferencia + '</td>';
     });
     return solicitudes += '</table>';
 }
+
+$(window).resize(function(){
+    reportsTable.columns.adjust();
+});

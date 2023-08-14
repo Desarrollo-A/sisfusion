@@ -74,4 +74,56 @@ class Ventas extends CI_Controller {
         }
     }
 
+    public function gestorOficinas(){
+        $this->load->view('template/header');
+        $this->load->view("ventasAsistentes/gestorOficinas_view");
+    }
+
+    public function editDireccionOficce(){
+        if (isset($_POST) && !empty($_POST)) {
+            $idDireccion = $this->input->post("idDireccion");
+            $direccionOffice = $this->input->post("direccionOffice");
+
+            $data = $this->Ventas_modelo->editDireccionOficce($idDireccion, $direccionOffice);
+            if($data == true)
+                echo json_encode(1);
+            else
+                echo json_encode(0);
+        }else{
+            echo json_encode(array());
+        }
+    }
+
+    public function addDireccionOficce(){
+        if (isset($_POST) && !empty($_POST)) {
+            $direccion = $this->input->post("newOffice");
+            $idSede = $this->input->post("idSede");
+            $inicio = (int)$this->input->post("inicio");
+            $fin = (int)$this->input->post("fin");
+            $data = $this->Ventas_modelo->addDireccionOficce($direccion, $idSede, $inicio, $fin);
+            
+            if($data == true)
+                echo json_encode(1);
+            else
+                echo json_encode(0);
+        }else{
+            echo json_encode(array());
+        }
+    }
+
+    public function statusOffice(){
+        $a = 0;
+        if (isset($_POST) && !empty($_POST)) {
+            $direccion = $this->input->post("idDireccionS");
+            $status = $this->input->post("status");
+            $data = $this->Ventas_modelo->statusOffice($direccion, $status);
+            
+            if($data == true)
+                echo json_encode(1);
+            else
+                echo json_encode(0);
+        }else{
+            echo json_encode(array());
+        }
+    }
 }

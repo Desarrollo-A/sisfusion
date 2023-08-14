@@ -1,6 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
 class Postventa extends CI_Controller
 {
 
@@ -14,9 +15,44 @@ class Postventa extends CI_Controller
         date_default_timezone_set('America/Mexico_City');
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+    /*echo $_SERVER['HTTP_ACCEPT'];
+        echo "<br>";
+        echo $_SERVER['AUTH_TYPE'];
+        echo "<br>";
+        echo $_SERVER['PATH_INFO'];*/
+      /*  if($_SERVER['HTTP_ACCEPT']){
+            echo "Entra aqui";
+            $_SESSION['rutaActual'];
+            $menuGral = $this->session->userdata('datos');
+            $ruta = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
+            $ruta[1];
+    
+            $existe = 0;
+            foreach ($menuGral['datos2'] as $key => $objeto) {
+                    if($objeto->pagina == $ruta[1]){
+                        $existe = 1;
+                    }    
+            }
+            if($existe == 0 && $this->session->userdata('controlador') != $ruta[1] ){
+                echo "entra";
+                //echo '<script> llamar(); </script>';
+                redirect(base_url() .$this->session->userdata('controlador'),'location');
+            }
+        }*/
 
-        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+
+        //PRUEBAS
+/*   prueba.gphsis.com
+/sisfusion/Ventas
+
+LOCAL
+localhost
+/sisfusion/Postventa/solicitudes_escrituracion
+PRODUCCION
+maderascrm.gphsis.com
+/Chat/Chat
+
+*/
     }
 
     public function index()
@@ -34,6 +70,25 @@ class Postventa extends CI_Controller
         if ($this->session->userdata('id_usuario') == "" || $this->session->userdata('id_rol') == "") {
             redirect(base_url() . "index.php/login");
         }
+    }
+    public function validarMenu(){
+            $rutaAc = $this->input->post('ruta');
+            // echo $_SESSION['rutaActual'];
+            // echo "<br>";
+            // $menuGral = $this->session->userdata('datos');
+            // $ruta = explode($_SESSION['rutaActual'], $rutaAc);
+            // echo  $ruta[1];
+            $existe = 0;
+            foreach ($menuGral['datos2'] as $key => $objeto) {
+                    if($objeto->pagina == $rutaAc){
+                        $existe = 1;
+                    }    
+            }
+            if($existe == 0 && $this->session->userdata('controlador') != $ruta[1] ){
+                echo json_encode(0);
+            }else{
+                echo json_encode(3);
+            }
     }
 
     
@@ -86,12 +141,7 @@ class Postventa extends CI_Controller
             redirect(base_url());
         }
         switch ($this->session->userdata('id_rol')){
-            case '11': //ADMON
-            case '17': //CONTRALORIA
-            case '55': //POSTVENTA
-            case '56': //COMITE TECNICO
             case '57': //TITULACION
-            case '62': //Proyectos
             $this->load->view('template/header');
             $this->load->view("postventa/notaria");
             break;
@@ -1400,6 +1450,10 @@ class Postventa extends CI_Controller
                                                     ' . ($data->cliente_anterior == 1 ? 'Si':'NO') . '
                                                 </td>
                                             <td style="font-size: 1em;">
+                                                <b>Valor de operación de contrato:</b><br>
+                                                ' .$data->valor_contrato. '
+                                            </td>
+                                             <td style="font-size: 1em;">
                                                 <b>Valor a escriturar:</b><br>
                                                 ' .$data->valor_escriturar. '
                                             </td>
@@ -1684,7 +1738,6 @@ class Postventa extends CI_Controller
                 $this->load->view('template/header');
                 $this->load->view("postventa/Reportes/reportes");
                 break;
-
             default:
                 echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
                 break;
@@ -1708,9 +1761,9 @@ class Postventa extends CI_Controller
             $a = 0;
             $dias = $data[$i]['dias_vencimiento'];
             $fechados = explode(" ",$data[$i]['fechados']);
-            $data[$i]['fecha_creacion'] = date("Y-m-d",strtotime($fechados[0]."+ ".$dias." days")) . " ".$fechados[1]; ; 
+            $data[$i]['fecha_creacion'] = date("Y-m-d",strtotime($fechados[0]."+ ".$dias." days")) . " ".$fechados[1];  
             
-            if ( $data[$i]['tiempo'] != 0 && $data[$i]['tiempo'] != null){
+            if ($data[$i]['tiempo'] != 0 && $data[$i]['tiempo'] != null){
                 $startDate = $data[$i]['fecha_creacion'];
                 $endDate = ( $i+1 < count($data) ) ? $data[$i+1]['fecha_creacion'] : date('Y-m-d h:i:s');
 
@@ -2045,7 +2098,7 @@ function saveNotaria(){
     } 
     public function SolicitudesEscrituracion()
     {
-        $id_usuario       = $this->input->post('id_usuario');
+        $id_usuario = $this->input->post('id_usuario');
         $data['data'] =  $this->Postventa_model->SolicitudesEscrituracion($id_usuario);
       
         echo json_encode($data);
@@ -2268,120 +2321,8 @@ function saveNotaria(){
         $endDate = $this->input->post("endDate");
         $data = $this->Postventa_model->getData_contraloria($beginDate, $endDate)->result();
         switch ($this->session->userdata('id_rol')){
-            case '17': //CONTRALORIA 
-                $columns = array(
-                    [
-                        "title" => 'Id solicitud',
-                        "data" => 'id_solicitud'
-                    ],
-                    [
-                        "title" => 'Referencia',
-                        "data" => 'referencia'
-                    ],
-                    [
-                        "title" => 'Lote',
-                        "data" => 'nombreLote'
-                    ],
-                    [
-                        "title" => 'Condominio',
-                        "data" => 'nombreCondominio'
-                    ],
-                    [
-                        "title" => 'Residencial',
-                        "data" => 'nombreResidencial'
-                    ],
-                    [
-                        "title" => 'Cliente',
-                        "data" => 'cliente'
-                    ],
-                    [
-                        "title" => 'Nombre a escriturar',
-                        "data" => 'nombre_a_escriturar'
-                    ],
-                    [
-                        "title" => 'Estatus',
-                        "data" => 'estatus'
-                    ],
-                    [
-                        "title" => 'Área',
-                        "data" => 'area'
-                    ],
-                    [
-                        "title" => 'Vigencia',
-                        "data" => 'atrasado'
-                    ],
-                    [
-                        "title" => 'Días de atraso',
-                        "data" => 'diferencia'
-                    ],
-                    [
-                        "title" => 'Fecha del estatus',
-                        "data" => 'fecha_ultima'
-                    ],
-                    [
-                        "title" => 'Ultimo comentario',
-                        "data" => 'descripcion'
-                    ],
-                );
-            break;
-
+            case 17: //CONTRALORIA 
             case 55: //POSTVENTA
-                $columns = array(
-                    [
-                        "title" => 'Id solicitud',
-                        "data" => 'id_solicitud'
-                    ],
-                    [
-                        "title" => 'Referencia',
-                        "data" => 'referencia'
-                    ],
-                    [
-                        "title" => 'Lote',
-                        "data" => 'nombreLote'
-                    ],
-                    [
-                        "title" => 'Condominio',
-                        "data" => 'nombreCondominio' 
-                    ],
-                    [
-                        "title" => 'Residencial',
-                        "data" => 'nombreResidencial'
-                    ],
-                    [
-                        "title" => 'Cliente',
-                        "data" => 'cliente'
-                    ],
-                    [
-                        "title" => 'Nombre a escriturar',
-                        "data" => 'nombre_a_escriturar'
-                    ],
-                    [
-                        "title" => 'Estatus',
-                        "data" => 'estatus'
-                    ],
-                    [
-                        "title" => 'Área',
-                        "data" => 'area'
-                    ],
-                    [
-                        "title" => 'Vigencia',
-                        "data" => 'atrasado'
-                    ],
-                    [
-                        "title" => 'Días de atraso',
-                        "data" => 'diferencia'
-                    ],
-                    [
-                        "title" => 'Fecha del estatus',
-                        "data" => 'fecha_ultima'
-                    ],
-                    [
-                        "title" => 'Ultimo comentario',
-                        "data" => 'descripcion'
-                    ],
-                );
-            break;
-
             case 57: //TITULACION
                 $columns = array(
                     [
@@ -2405,7 +2346,7 @@ function saveNotaria(){
                         "data" => 'nombreResidencial'
                     ],
                     [
-                        "title" => 'Nombre Cliente',
+                        "title" => 'Cliente',
                         "data" => 'cliente'
                     ],
                     [
@@ -2433,7 +2374,7 @@ function saveNotaria(){
                         "data" => 'fecha_ultima'
                     ],
                     [
-                        "title" => 'Ultimo comentario',
+                        "title" => 'Último comentario',
                         "data" => 'descripcion'
                     ],
                 );
@@ -2460,6 +2401,18 @@ function saveNotaria(){
                 $data[$i]['atrasado'] = "EN TIEMPO";
                 $data[$i]['diferencia'] = 0;
             }
+
+            if($data[$i]['nombreLote'] == null){
+                $data[$i]['nombre_a_escriturar'] = 'SOLICITUD ELIMINADA';
+                $data[$i]['nombreLote'] =  'SOLICITUD ELIMINADA';
+                $data[$i]['nombreCondominio'] =  'SOLICITUD ELIMINADA';
+                $data[$i]['nombreResidencial'] =  'SOLICITUD ELIMINADA';
+                $data[$i]['nombre'] =  'SOLICITUD ELIMINADA';
+                $data[$i]['estatus'] =  'SOLICITUD ELIMINADA';
+                $data[$i]['area'] =  'SOLICITUD ELIMINADA';
+                $data[$i]['dias_vencimiento'] =  0;
+            }
+            
         }
 
         $array = [

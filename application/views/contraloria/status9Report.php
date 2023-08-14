@@ -56,7 +56,7 @@
                                     </div>
                                 </div>
                                 <div class="material-datatables">
-                                    <table id="estatusNueveTable" name="estatusNueveTable" class="table-striped table-hover hide">
+                                    <table id="estatusNueveTable" name="estatusNueveTable" class="table-striped table-hover">
                                         <thead>
                                             <tr>
                                                 <th>PROYECTO</th>
@@ -66,11 +66,11 @@
                                                 <th>GERENTE</th>
                                                 <th>ENGANCHE</th>
                                                 <th>TOTAL</th>
-                                                <th>FECHA ESTATUS 9</th>
+                                                <th>FECHA DE ESTATUS 9</th>
                                                 <th>USUARIO</th>
                                                 <th>FECHA APARTADO</th>
                                                 <th>REUBICACIÓN</th>
-                                                <th>FECHA REUBICACIÓN</th>
+                                                <th>FECHA DE REUBICACIÓN</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -84,29 +84,10 @@
         <?php $this->load->view('template/footer_legend'); ?>
     </div>
     </div>
-
     </div>
-    <!--main-panel close-->
 </body>
 <?php $this->load->view('template/footer');?>
-
-<!--DATATABLE BUTTONS DATA EXPORT-->
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/contraloria/status9Report.js"></script>
-<script src="<?= base_url() ?>dist/js/dataTables.select.js"></script>
-<script src="<?= base_url() ?>dist/js/dataTables.select.min.js"></script>
-<!--  Plugin for Date Time Picker and Full Calendar Plugin-->
-<script src="<?= base_url() ?>dist/js/moment.min.js"></script>
 <script src="<?= base_url() ?>dist/js/es.js"></script>
-<!-- DateTimePicker Plugin -->
 <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
-<!-- Sliders Plugin -->
-<script src="<?= base_url() ?>dist/js/nouislider.min.js"></script>
-<!--  Full Calendar Plugin    -->
 <script src="<?= base_url() ?>dist/js/fullcalendar.min.js"></script>

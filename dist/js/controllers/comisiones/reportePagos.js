@@ -34,25 +34,22 @@ function cleanCommentsAsimilados() {
     myCommentsLote.innerHTML = '';
 }
 
+let titulos = [];
 $('#tabla_historialGral thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
-    if(i != 15){
-        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
-        $( 'input', this ).on('keyup change', function () {
-            if ($('#tabla_historialGral').DataTable().column(i).search() !== this.value ) {
-                $('#tabla_historialGral').DataTable().column(i).search(this.value).draw();
-            }
-        });
-    }
+    titulos.push(title);
+    $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
+    $( 'input', this ).on('keyup change', function () {
+        if ($('#tabla_historialGral').DataTable().column(i).search() !== this.value ) {
+            $('#tabla_historialGral').DataTable().column(i).search(this.value).draw();
+        }
+    });
 });
 
 var tr;
 var tabla_historialGral2 ;
 
-//INICIO TABLA QUERETARO
-
 function getAssimilatedCommissions(id_usuario){
-    let titulos = [];
     $("#tabla_historialGral").prop("hidden", false);
     tabla_historialGral2 = $("#tabla_historialGral").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -84,7 +81,8 @@ function getAssimilatedCommissions(id_usuario){
         },
         destroy: true,
         ordering: false,
-        columns: [{
+        columns: [
+            {
             data: function( d ){
                 var lblStats;
                 lblStats ='<p class="m-0"><b>'+d.id_pago_i+'</b></p>';
@@ -264,7 +262,7 @@ function getAssimilatedCommissions(id_usuario){
                 }
             },
             {
-                "orderable": false,
+                orderable: false,
                 data: function( data ){
                     var BtnStats;
                     BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.nombreLote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_asimilados"  data-toggle="tooltip"  data-placement="top" title="DETALLES">' +'<i class="fas fa-info"></i></button>';
@@ -292,30 +290,47 @@ function getAssimilatedCommissions(id_usuario){
     });
 
     $("#tabla_historialGral tbody").on("click", ".consultar_logs_asimilados", function(e){
+        $('#spiner-loader').removeClass('hide');
         e.preventDefault();
         e.stopImmediatePropagation();
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
         $("#seeInformationModalAsimilados").modal();
-        $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
+        $("#nameLote").append('<p><h5>HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $.getJSON("getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
-                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:gray;">'+v.comentario+'</i><br><b style="color:#3982C0">'+v.fecha_movimiento+'</b><b style="color:gray;"> - '+v.nombre_usuario+'</b></p></div>');
+                $("#comments-list-asimilados").append(
+                '<li>\n' +
+                    '  <div class="container-fluid">\n' +
+                        '    <div class="row">\n' +
+                        '      <div class="col-md-6">\n' +
+                                '        <a><b> ' +v.comentario.toUpperCase()+ '</b></a><br>\n' +
+                            '      </div>\n' +
+                        '      <div class="float-end text-right">\n' +
+                        '        <a>' + v.fecha_movimiento + '</a>\n' +
+                        '      </div>\n' +
+                        '      <div class="col-md-12">\n' +
+                        '        <p class="m-0"><small>Usuario: </small><b> ' + v.nombre_usuario + '</b></p>\n'+
+                        '      </div>\n' +
+                        '    <h6>\n' +
+                        '    </h6>\n' +
+                    '    </div>\n' +
+                    '  </div>\n' +
+                '</li>');
             });
-            
+            $('#spiner-loader').addClass('hide');
         });
     });
+
 }
 
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
 });
 
-
 function cleanComments(){
     var myCommentsList = document.getElementById('documents');
     myCommentsList.innerHTML = '';
-
     var myFactura = document.getElementById('facturaInfo');
     myFactura.innerHTML = '';
 }

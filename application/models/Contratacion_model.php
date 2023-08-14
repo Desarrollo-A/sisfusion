@@ -7,7 +7,19 @@ class Contratacion_model extends CI_Model {
     }
 
    function get_proyecto_lista() {
-      return $this->db->query("SELECT idResidencial, UPPER(CONCAT(nombreResidencial, ' - '  ,descripcion)) descripcion, ciudad, status, empresa, clave_residencial, abreviatura, active_comission, sede_residencial, sede FROM [residenciales] WHERE status = 1");
+      return $this->db->query("SELECT 
+      idResidencial, 
+      UPPER(CONCAT(nombreResidencial, ' - '  ,descripcion)) descripcion, 
+      ciudad, 
+      status, 
+      empresa, 
+      clave_residencial, 
+      abreviatura, 
+      active_comission, 
+      sede_residencial, 
+      sede FROM residenciales
+      WHERE status = 1
+      ");
    }
    
    function get_condominio_lista($proyecto) {
@@ -47,18 +59,6 @@ class Contratacion_model extends CI_Model {
       
       return $lpReturn;
    }
-      function get_datos_historial($lote){
-        /* return $this->db->query("SELECT nombreLote, idLiberacion, observacionLiberacion, modificado, usuarios.nombre, usuarios.apellido_paterno, usuarios.apellido_materno 
-                                FROM historial_liberacion INNER JOIN statuslote ON statuslote.idStatusLote = historial_liberacion.status 
-                                LEFT JOIN usuarios ON usuarios.usuario = historial_liberacion.userLiberacion WHERE idLote = ".$lote." ORDER BY modificado");*/
-         return $this->db->query("SELECT nombreLote, idLiberacion, UPPER(observacionLiberacion) AS observacionLiberacion, precio, fechaLiberacion
-                modificado, usuarios.nombre, status, idLote, UPPER(userLiberacion) AS userLiberacion,
-                usuarios.apellido_paterno, usuarios.apellido_materno , comentarioLiberacion
-                                FROM historial_liberacion 
-                                INNER JOIN statuslote ON statuslote.idStatusLote = historial_liberacion.status 
-                                LEFT JOIN usuarios ON usuarios.usuario = historial_liberacion.userLiberacion 
-                                WHERE idLote = ".$lote." ORDER BY modificado");                       
-     }
 
    function getInventarioData($estatus, $condominio, $proyecto) {
       $prospectingPlaceDetail = $this->getProspectingPlaceDetail();
@@ -92,7 +92,7 @@ class Contratacion_model extends CI_Model {
       lot.fecha_creacion, lot.totalValidado as cantidad_enganche, ISNULL(CONVERT(varchar, fechaSolicitudValidacion, 20), '') as fecha_validacion,
       lot.idStatusContratacion, ISNULL(co.nombreCopropietario, 'SIN ESPECIFICAR') nombreCopropietario,
       sl.background_sl, ISNULL(cl.tipo_casa, 0) tipo_casa, ISNULL(oxc2.nombre, 'SIN ESPECIFICAR') nombre_tipo_casa, lot.casa,
-      sed.nombre as ubicacion, ISNULL(ca.comAdmon, 'SIN ESPECIFICAR') comentario_administracion, ISNULL(sc.nombreStatus, 'SIN ESPECIFICAR') statusContratacion
+      sed.nombre as ubicacion, ISNULL(ca.comAdmon, 'SIN ESPECIFICAR') comentario_administracion, ISNULL(vc.total, 0) venta_compartida, ISNULL(sc.nombreStatus, 'SIN ESPECIFICAR') statusContratacion
       FROM lotes lot
       INNER JOIN condominios con ON con.idCondominio = lot.idCondominio $filtroCondominio
       INNER JOIN residenciales res ON res.idResidencial = con.idResidencial $filtroProyecto
@@ -117,10 +117,21 @@ class Contratacion_model extends CI_Model {
       LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = cl.tipo_casa AND oxc2.id_catalogo = 35
       LEFT JOIN sedes sed ON sed.id_sede = lot.ubicacion
       LEFT JOIN comentarios_administracion ca ON ca.nombreLote = lot.nombreLote
+      LEFT JOIN (SELECT id_cliente, COUNT(*) total FROM ventas_compartidas WHERE estatus = 1 GROUP BY id_cliente) vc ON vc.id_cliente = cl.id_cliente
       LEFT JOIN statuscontratacion sc ON sc.idStatusContratacion = lot.idStatusContratacion
       WHERE lot.status = 1 $filtroEstatus
       ORDER BY lot.nombreLote");
       return $query->result_array();
+   }
+
+   function get_datos_historial($lote){
+       return $this->db->query("SELECT nombreLote, idLiberacion, UPPER(observacionLiberacion) AS observacionLiberacion, precio, fechaLiberacion
+              modificado, usuarios.nombre, status, idLote, UPPER(userLiberacion) AS userLiberacion,
+              usuarios.apellido_paterno, usuarios.apellido_materno , comentarioLiberacion
+                              FROM historial_liberacion 
+                              INNER JOIN statuslote ON statuslote.idStatusLote = historial_liberacion.status 
+                              LEFT JOIN usuarios ON usuarios.usuario = historial_liberacion.userLiberacion 
+                              WHERE idLote = ".$lote." ORDER BY modificado");                       
    }
 
      function get_datos_proceso($lote){
@@ -170,45 +181,14 @@ class Contratacion_model extends CI_Model {
    }
 
    function getCoSallingAdvisers($id_cliente) {
-      return $this->db-> query(
-         "SELECT  id_cliente, 
-                  CONVERT(varchar, vc.fecha_creacion, 20) AS fecha_creacion,
-                  CASE 
-                     WHEN u0.id_usuario IS NULL THEN 
-                        'SIN ESPECIFICAR'
-                     ELSE 
-                        UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno))
-                  END AS asesor,
-                  CASE
-                     WHEN u1.id_usuario IS NULL THEN
-                        'SIN ESPECIFICAR'
-                     ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno))
-                  END AS coordinador,
-                  CASE 
-                     WHEN u2.id_usuario IS NULL THEN
-                        'SIN ESPECIFICAR'
-                     ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno))
-                  END AS gerente,
-                  CASE
-                     WHEN u3.id_usuario IS NULL THEN
-                        'SIN ESPECIFICAR'
-                     ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno))
-                  END AS subdirector,
-                  CASE
-                     WHEN u4.id_usuario IS NULL THEN
-                        'SIN ESPECIFICAR'
-                     ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno))
-                  END AS regional,
-                  CASE
-                     WHEN u5.id_usuario IS NULL THEN
-                        'SIN ESPECIFICAR'
-                     ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno))
-                  END AS regional2,
-                  CASE vc.creado_por
-                     WHEN '1297' THEN 
-                        'ADMINISTRADOR INTERNO SISTEMAS'
-                     ELSE vc.creado_por
-                  END AS creado_por 
+      return $this->db-> query("SELECT id_cliente,
+      CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END asesor,
+      CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END coordinador,
+      CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END gerente,
+      CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END subdirector,
+      CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END regional,
+      CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END regional2,
+      CONVERT(varchar, vc.fecha_creacion, 20) fecha_creacion, (CASE vc.creado_por WHEN '1297' THEN 'Control interno' ELSE vc.creado_por END) creado_por 
          FROM ventas_compartidas vc 
          LEFT JOIN usuarios u0 ON u0.id_usuario = vc.id_asesor
          LEFT JOIN usuarios u1 ON u1.id_usuario = vc.id_coordinador
@@ -216,8 +196,7 @@ class Contratacion_model extends CI_Model {
          LEFT JOIN usuarios u3 ON u3.id_usuario = vc.id_subdirector
          LEFT JOIN usuarios u4 ON u4.id_usuario = vc.id_regional
          LEFT JOIN usuarios u5 ON u5.id_usuario = vc.id_regional_2
-         WHERE vc.estatus IN (1, 2) AND vc.id_cliente = $id_cliente 
-         ORDER BY vc.id_cliente")->result_array();
+         WHERE vc.estatus IN (1, 2) AND vc.id_cliente = $id_cliente ORDER BY vc.id_cliente")->result_array();
    }
 
     function getClauses($lote){

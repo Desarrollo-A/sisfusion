@@ -28,26 +28,29 @@ sp = { // MJ: SELECT PICKER
 }
 
 let titulos = [];
-$('#estatusNueveTable thead tr:eq(0) th').each(function (i) {
+$('#estatusNueveTable thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
     titulos.push(title);
-    $(this).html(`<input type="text" class="textoshead" placeholder="${title}"/>`);
-    $('input', this).on('keyup change', function () {
-        if ($('#estatusNueveTable').DataTable().column(i).search() !== this.value)
+    $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
+    $( 'input', this ).on('keyup change', function () {
+        if ($('#estatusNueveTable').DataTable().column(i).search() !== this.value ) {
             $('#estatusNueveTable').DataTable().column(i).search(this.value).draw();
+        }
     });
-});
+    $('[data-toggle="tooltip"]').tooltip();
+})
 
 function fillTable(typeTransaction, beginDate, endDate) {
     generalDataTable = $('#estatusNueveTable').dataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
+        bAutoWidth:true,
         buttons: [
             {
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn btn-success buttons-excel',
-                titleAttr: 'Reporte estatus 9',
+                titleAttr: 'REPORTE ESTATUS 9',
                 title: 'Reporte estatus 9',
                 exportOptions: {
                     columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
@@ -60,7 +63,7 @@ function fillTable(typeTransaction, beginDate, endDate) {
             },
             {
                 text: "<i class='fas fa-sync' aria-hidden='true'></i>",
-                titleAttr: 'Cargar vista inicial',
+                titleAttr: 'CARGAR VISTA INICIAL',
                 className: 'btn btn-success buttons-excel reset-initial-values',
             }
         ],
@@ -93,9 +96,9 @@ function fillTable(typeTransaction, beginDate, endDate) {
             {
                 data: function (d) {
                     if (d.id_cliente_reubicacion != 0 && d.id_cliente_reubicacion != null)
-                        return `<span class="label" style="background: #A3E4D7; color: #0E6251">REUBICADO</span>`;
+                        return `<span class="label lbl-green">REUBICADO</span>`;
                     else
-                        return `<span class="label" style="background: #ABB2B9; color: #17202A">NO APLICA</span>`;
+                        return `<span class="label lbl-gray">NO APLICA</span>`;
                 }
             },
             {
@@ -135,15 +138,20 @@ $(document).on("click", "#searchByDateRange", function () {
 $(document).on("click", ".reset-initial-values", function () {
     setInitialValues();
     const fechaInicio = new Date();
-    // Iniciar en este año, este mes, en el día 1
     const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
-    // END DATE
     const fechaFin = new Date();
-    // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
     const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
     $(".idLote").val('');
     $(".textoshead").val('');
     $("#beginDate").val(convertDate(beginDate));
     $("#endDate").val(convertDate(endDate));
     fillTable(1, finalBeginDate, finalEndDate);
+});
+
+$('body').tooltip({
+    selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
+    trigger: 'hover',
+    container: 'body'
+}).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
+    $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
 });

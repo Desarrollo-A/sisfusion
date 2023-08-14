@@ -211,9 +211,7 @@ function fillUsersTable() {
 }
 
 $('#all_users_datatable').on('draw.dt', function() {
-    $('[data-toggle="tooltip"]').tooltip({
-        trigger: "hover"
-    });
+    $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
 });
 
 function showPassword() {
@@ -706,10 +704,13 @@ $("#editUserForm").on('submit', function(e){
         beforeSend: function(){
         },
         success: function(data) {
-            if (data == 1) {
+            data = JSON.parse(data);
+            if (data.respuesta == 1) {
                 $allUsersTable.ajax.reload();
                 $('#editUserModal').modal("hide");
                 alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
+            } else if (data.respuesta == 0) {
+                alerts.showNotification("top", "right", data.message, "warning");
             } else {
                 alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
             }

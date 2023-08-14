@@ -3,9 +3,7 @@
 
 <body class="">
     <div class="wrapper">
-
     <?php $this->load->view('template/sidebar'); ?>
-
         <!-- BEGUIN Modals -->
         <div class="modal" tabindex="-1" role="dialog" id="uploadModal">
             <div class="modal-dialog" role="document">
@@ -64,7 +62,6 @@
             </div>
         </div>
         <!-- FIN Modal editar monto internomex -->
-
 
         <!-- INICIO Modal para bitácora -->
         <div class="modal fade" id="changesBitacora" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
@@ -136,11 +133,11 @@
                                     <?php if($this->session->userdata('id_rol') == 31){?>
                                         <div class="row aligned-row pb-3" id="tipo_pago_selector">
                                             <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                                <label>Tipo de pago*</label>
-                                                <select class="selectpicker select-gral m-0" title="Seleccione una opción"
+                                                <label class="control-label">Tipo de pago (<span class="isRequired">*</span>)</label>
+                                                <select class="selectpicker select-gral m-0" title="SELECCIONA UNA OPCIÓN"
                                                         id="tipo_accion" onchange="validaTipoPago(this.value)">
-                                                    <option value="1">Pago lotes</option>
-                                                    <option value="2">Pago suma</option>
+                                                    <option value="1">PAGO DE LOTES</option>
+                                                    <option value="2">PAGO SUMA</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -219,10 +216,8 @@
     </div>
 
     <?php $this->load->view('template/footer'); ?>
-    <!--DATATABLE BUTTONS DATA EXPORT-->
     <script type="text/javascript" src="<?= base_url() ?>dist/js/xlsx/xlsx.full.min.js"></script>
     <script src="<?= base_url() ?>dist/js/es.js"></script>
-    <!-- DateTimePicker Plugin -->
     <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
     <script src="<?= base_url() ?>dist/js/jwt/hmac-sha256.js"></script>
     <script src="<?= base_url() ?>dist/js/jwt/enc-base64-min.js"></script>
