@@ -45,10 +45,13 @@ $(document).ready(function () {
 
 $("#proyecto").on('change', function (e) {
     e.preventDefault();
+    $("#Cproyecto").removeClass('col-xs-12 col-sm-12 col-md-6 col-lg-6');
+    $("#Ccondominio").addClass('hide');
     let idResidencial = $("#proyecto").val();
     console.log(idResidencial);
     if(idResidencial == 27){
-        $("#condominio").prop('disabled', false);
+        $("#Cproyecto").addClass('col-xs-12 col-sm-12 col-md-6 col-lg-6');
+        $("#Ccondominio").removeClass('hide');
         $.post(general_base_url + "Contratacion/lista_condominio/"+idResidencial, function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
@@ -63,7 +66,6 @@ $("#proyecto").on('change', function (e) {
         fillTable(1, 0, 0, idResidencial,0);
         $("#condominio").empty();
         $("#condominio").selectpicker('refresh');
-        $("#condominio").prop('disabled', true);
     }
 });
 
@@ -76,7 +78,6 @@ $("#condominio").on('change', function (e) {
     }else{
         $("#condominio").empty();
         $("#condominio").selectpicker('refresh');
-        $("#condominio").prop('disabled', true);
     }
 });
 
@@ -216,7 +217,7 @@ function fillTable(typeTransaction, beginDate, endDate, idResidencial,condominio
                         data.idStatusContratacion == 7 && data.idMovimiento == 83) {
                         cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                             'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' +
-                            'class="btn-data btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS (VENTAS)">' +
+                            'class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS (VENTAS)">' +
                             '<i class="fas fa-thumbs-up"></i></button>';
                         cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                             'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' +
@@ -233,26 +234,26 @@ function fillTable(typeTransaction, beginDate, endDate, idResidencial,condominio
                         data.idStatusContratacion == 6 && data.idMovimiento == 97) {
                         cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                             'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc2 + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' +
-                            'class="btn btn-warning btn-round btn-fab btn-fab-mini editLoteTo8" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS (VENTAS)">' +
+                            'class="btn-data btn-green editLoteTo8" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS (VENTAS)">' +
                             '<span class="material-icons">thumb_up</span></button>';
                         cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                             'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc2 + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' +
-                            'class="btn btn-secondary btn-round btn-fab btn-fab-mini return1" data-toggle="tooltip" data-placement="top" title="RECHAZAR ESTATUS (CONTRALORÍA)">' +
+                            'class="btn-data btn-warning btn-secondar return1" data-toggle="tooltip" data-placement="top" title="RECHAZAR ESTATUS (CONTRALORÍA)">' +
                             '<span class="material-icons">thumb_down</span></button>';
                         cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                             'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc2 + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' +
-                            'class="btn btn-info btn-round btn-fab btn-fab-mini return2" data-toggle="tooltip" data-placement="top" title="RECHAZAR ESTATUS (ASESOR)">' +
+                            'class="btn-data btn-orangeYellow btn-inf return2" data-toggle="tooltip" data-placement="top" title="RECHAZAR ESTATUS (ASESOR)">' +
                             '<span class="material-icons">thumb_down</span></button>';
-                        cntActions += '<button href="#" data-toggle="tooltip" data-placement="top" title="CÓDIGO DE BARRAS" data-lote="' + data.cbbtton + '" class="btn btn-primary btn-round btn-fab btn-fab-mini barcode" title="Ver código">' +
+                        cntActions += '<button href="#" data-toggle="tooltip" data-placement="top" title="CÓDIGO DE BARRAS" data-lote="' + data.cbbtton + '" class="btn-data btn-blueMaderas barcode" title="Ver código">' +
                             '<span class="material-icons">select_all</span></button>';
                     } else {
                         cntActions = '';
                     }
                     if (Array(2762, 6096, 6864, 10937, 10938, 12136, 12173, 13015, 2747).includes(user) ){
-                        cntActions += '<button href="#" data-toggle="tooltip" data-placement="top" title= "CAMBIO DE SEDE" data-nomLote="' + data.nombreLote + '" data-lote="' + data.idLote + '" class="btn btn-secondary btn-round btn-fab btn-fab-mini change_sede"><span class="material-icons">pin_drop</span></button><br>';
+                        cntActions += '<button href="#" data-toggle="tooltip" data-placement="top" title= "CAMBIO DE SEDE" data-nomLote="' + data.nombreLote + '" data-lote="' + data.idLote + '" class="btn-data btn-gray change_sede"><span class="material-icons">pin_drop</span></button><br>';
                     }
                     if ((Array("2762", "2845", "2747").includes(data.user) || Array(6096, 6864, 10937, 10938, 12136, 12173, 13015).includes(user))) {
-                        cntActions += '<button href="#" title= "Reasignacion" data-nomLote="' + data.nombreLote + '" data-usuario="' + data.juridico + '" data-lote="' + data.idLote + '" class="btn btn-warning btn-round btn-fab btn-fab-mini change_user"><span class="material-icons">find_replace</span></button><br>';
+                        cntActions += '<button href="#" title= "REASIGNACIÓN" data-nomLote="' + data.nombreLote + '" data-usuario="' + data.juridico + '" data-lote="' + data.idLote + '" class="btn-data btn-warning change_user"><span class="material-icons">find_replace</span></button><br>';
                     }
                     var color = (data.idMovimiento == 36) ? '#58D68D' :
                         (data.idMovimiento == 23) ? '#F39C12' : '#85929E';

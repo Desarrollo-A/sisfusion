@@ -58,7 +58,7 @@ $("#tabla_ingresar_11").ready(function () {
 			},
 			{
 				data: function (d) {
-					return `<span class="label" style="background: #A3E4D7; color: #0E6251">${d.tipo_venta}</span>`;
+					return `<span class="label lbl-green">${d.tipo_venta}</span>`;
 				}
 			},
 			{ data: 'nombreResidencial' },
@@ -115,7 +115,7 @@ $("#tabla_ingresar_11").ready(function () {
 			{ data: 'descripcion' },
 			{
 				data: function (d) {
-					return `<span class="label" style="background: #A9CCE3; color: #154360">${d.nombreSede}</span>`;
+					return `<span class="label lbl-azure">${d.nombreSede}</span>`;
 				}
 			},
 			{
@@ -137,7 +137,6 @@ $("#tabla_ingresar_11").ready(function () {
 						else
 							cntActions = 'N/A';
 					}
-
 					return `<div class="d-flex justify-center">${cntActions}</div>`;
 				}
 			}],
@@ -328,9 +327,7 @@ $(document).on('click', '#save3', function (e) {
 				alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
 			}
 		});
-
 	}
-
 });
 
 

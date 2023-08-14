@@ -19,7 +19,7 @@ $(document).ready(function(){
     fillTable(1, finalBeginDate, finalEndDate, 0);
 });
 
-sp = { //  SELECT PICKER
+sp = {
     initFormExtendedDatetimepickers: function () {
         $('.datepicker').datetimepicker({
             format: 'DD/MM/YYYY',
