@@ -17,7 +17,7 @@ class Comisiones extends CI_Controller
     $this->load->model('Usuarios_modelo');
     $this->load->model('PagoInvoice_model');
     $this->load->model('General_model');
-    $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions'));
+    $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions','permisos_sidebar'));
     $this->load->helper(array('url', 'form'));
     $this->load->database('default');
     $this->jwt_actions->authorize('7396', $_SERVER['HTTP_HOST']);

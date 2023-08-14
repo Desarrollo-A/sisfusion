@@ -7,7 +7,7 @@ class Cobranza extends CI_Controller
     {
         parent::__construct();
         $this->load->model(array('Cobranza_model','Contraloria_model'));
-        $this->load->library(array('session', 'form_validation', 'get_menu'));
+        $this->load->library(array('session', 'form_validation', 'get_menu','permisos_sidebar'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
         date_default_timezone_set('America/Mexico_City');

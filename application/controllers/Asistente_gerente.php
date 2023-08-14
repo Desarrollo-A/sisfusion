@@ -9,7 +9,7 @@ class Asistente_gerente extends CI_Controller {
 				$this->load->model('asesor/Asesor_model');
  		$this->load->library(array('session','form_validation'));
        //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
-    $this->load->library(array('session','form_validation', 'get_menu'));
+    $this->load->library(array('session','form_validation', 'get_menu','permisos_sidebar'));
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
 		$this->load->library('email');
