@@ -93,4 +93,8 @@ class General extends CI_Controller
         else
             echo json_encode(array());
     }
+    public function borrarFlashdata()
+    {
+        $this->session->set_flashdata('error_usuario', '');
+    }
 }

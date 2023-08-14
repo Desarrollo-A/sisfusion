@@ -48,7 +48,7 @@
                         {                    
             ?>
                             <li class="nav-item hidden-xs  <?php if ($url == $url2 && $datos->nombre == "Inicio" ) { echo 'active'; }elseif($url == base_url().$datos->pagina  && $datos->nombre == "Asesores / Coordinadores"){echo 'active';}elseif($url == base_url().$datos->pagina && ($datos->nombre == "Revisión evidencia" || $datos->nombre == "Evidencias clientes" || $datos->nombre == "Eliminados de la lista")){echo 'active';}elseif($url == base_url().$datos->pagina  && $datos->nombre == "Dashboard"){echo 'active';}?>">
-                                <a class="nav-link" href="<?php if($datos->nombre == "Aparta en línea"){ echo $datos->pagina; } elseif($datos->nombre == "Asesores / Coordinadores"){echo base_url().$datos->pagina;}else {echo base_url().$datos->pagina;}?>" <?php if($datos->nombre == "Aparta en línea"){ echo ' target="_blank"';   } ?>>
+                                <a class="nav-link" <?php if ($url == $url2 && $datos->nombre == "Inicio" ) { ?> onclick="borrarFlashdata();" <?php } ?> href="<?php if($datos->nombre == "Aparta en línea"){ echo $datos->pagina; } elseif($datos->nombre == "Asesores / Coordinadores"){echo base_url().$datos->pagina;}else {echo base_url().$datos->pagina;}?>" <?php if($datos->nombre == "Aparta en línea"){ echo ' target="_blank"';   } ?>>
                                     <i class="material-icons"><?=$datos->icono?></i>
                                     <p><?=$datos->nombre?></p>
                                 </a>
@@ -269,104 +269,11 @@
         }, 'json');
     }
     var general_base_url_sidebar = "<?=base_url()?>";
-    //console.log(general_base_url_sidebar)
 
-  /*  function validarMenu(pagina){
-        let formData = new FormData();
-        formData.append('ruta',urls);
-        formData.append('origen',1);
-
-        $.ajax({
-            url: general_base_url_sidebar+'Postventa/validarMenu',
-            data: formData,
-            method: 'POST',
-            contentType: false,
-            cache: false,
-            processData:false,
-            success: function(data) {
-                if(data == 0){
-                    alerts.showNotification("top", "right", "NO SE TIENEN PERMISOS PARA LA VISTA SOLICITDA", "warning");
-                    window.location.replace(general_base_url_sidebar);
-                }else{
-                    let nuevaRuta = general_base_url_sidebar + pagina;
-                    window.location.replace(nuevaRuta);
-                }
-            },
-            error: function(){
-
-            },
-            async: false
-        });
-
-    }*/
-   /* window.addEventListener('beforeunload', (event) => {
-  event.returnValue = 'ccaca?';
-});
-    window.onbeforeunload =  function ()  { 
-        return "caca?";
- 
-}  */
-   /* let urls = "<?=$_SERVER["REQUEST_URI"]?>";
-    let urlActual = "<?=$_SESSION['rutaActual']?>";
-    console.log(urls);
-    console.log(urlActual);
-    window.onload = function(){
-    let formData = new FormData();
-        formData.append('ruta',urls);
-        formData.append('origen',1);
-
-        $.ajax({
-            url: general_base_url_sidebar+'Postventa/validarMenu',
-            data: formData,
-            method: 'POST',
-            contentType: false,
-            cache: false,
-            processData:false,
-            success: function(data) {
-                if(data == 0){
-                    alerts.showNotification("top", "right", "NO SE TIENEN PERMISOS PARA LA VISTA SOLICITDA", "warning");
-                    window.location.replace(general_base_url_sidebar);
-                }else{
-                    let nuevaRuta = general_base_url_sidebar + pagina;
-                    //window.location.replace(nuevaRuta);
-                }
-            },
-            error: function(){
-
-            },
-            async: false
-        });
-    }*/
-    /*window.reload = function(){
-        $("#spiner-loader").removeClass("hide");
-        $.post(general_base_url_sidebar+'Postventa/validarMenu', {ruta:urls,origen:2 }, function (data) {
-            console.log(data);
-                if(data == 0){
-                    //alert(1)
-                    alerts.showNotification("top", "right", "NO SE TIENEN PERMISOS PARA LA VISTA SOLICITDA", "warning");
-                    window.location.replace(general_base_url_sidebar);
-                }else{
-                    let nuevaRuta = general_base_url_sidebar + urls.split(urlActual)[1];
-                }
-                $("#spiner-loader").addClass("hide");
-    }, 'json');*/
-    
-    /*window.onload = function(){
-        let urls = "<?=$_SERVER["REQUEST_URI"]?>";
-        let urlActual = "<?=$_SESSION['rutaActual']?>";
-        let controlador = "<?=$this->session->userdata('controlador')?>";
-        console.log(urls);
-        console.log(urlActual);
-        console.log(controlador);
-        var URLactual = jQuery(location).attr('href');
-        //window.location.replace(<?=base_url()?>);
-        $.post(general_base_url_sidebar+'Postventa/validarMenu', {ruta:urls }, function (data) {
-            console.log(data);
-            if(data == 4){
-                window.location.replace(general_base_url_sidebar);
-            }
-    }, 'json');
-    }*/
+    function borrarFlashdata(){
+        $.post(general_base_url_sidebar+'General/borrarFlashdata', function (data) {
+        }, 'json');
+    }
 
 
 </script>

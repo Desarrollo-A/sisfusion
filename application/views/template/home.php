@@ -9,7 +9,7 @@
 
 
 		<div class="content" id="boxHome">
-		<?= $this->session->flashdata('error_usuario') ?>
+		<?=$this->session->flashdata('error_usuario')?>
 			<div class="container-fluid h-100">				
 				<div class="row h-100" style="" id="banner">
 					<div id="clock">
