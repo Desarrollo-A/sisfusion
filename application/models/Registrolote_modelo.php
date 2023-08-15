@@ -3275,6 +3275,8 @@
 				} 
 				else if ($id_usuario == 6831) // MJ: YARETZI MARICRUZ ROSALES HERNANDEZ VE ITZEL ALVAREZ MATA
 					$where = "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('$id_sede') OR id_usuario = 690)";
+				else if ($id_usuario == 12962) // MJ: DULCE MARIA FACUNDO TORRES TAMBIÉN LO DE LA SUBDIRECCIÓN DE ADRI MAÑAS EN MTY
+					$where = "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('$id_sede') OR (id_usuario = 7886 AND id_sede IN ('$id_sede')))";
 				else
 					$where = "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('$id_sede'))";
                 $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor, '1' venta_compartida  FROM lotes

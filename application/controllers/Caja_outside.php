@@ -1738,8 +1738,8 @@ class Caja_outside extends CI_Controller {
         $inicio = date("Y-m-01");
         $fin = date("Y-m-t");
         $getCurrentLoteStatus = $this->caja_model_outside->validateCurrentLoteStatus($idLote)->row();
-        $descuentos = NULL;
-        $query_tipo_lote = "AND c.tipo_lote =".$getCurrentLoteStatus->tipo_lote;
+        $descuentos = 0;
+        /*$query_tipo_lote = "AND c.tipo_lote =".$getCurrentLoteStatus->tipo_lote;
         $query_superdicie = $getCurrentLoteStatus->sup < 200 ?  "AND sup < 200" : "AND sup >= 200";
         $desarrollos = $getCurrentLoteStatus->idResidencial;
         $getPaquetesDescuentos = $this->PaquetesCorrida_model->getPaquetes($query_tipo_lote,$query_superdicie,$desarrollos, $inicio, $fin);
@@ -1747,7 +1747,7 @@ class Caja_outside extends CI_Controller {
             $descuentos = NULL;
         }else{
             $descuentos = $getPaquetesDescuentos[0]['id_paquete'];
-        }
+        }*/
         /*
         1.- consultar lotes < 200
         2.- consultar lotes >= 200
