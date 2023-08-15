@@ -2988,11 +2988,13 @@ class Asesor extends CI_Controller
         $id_cliente = $this->input->post('idCliente');
         $tipo_comprobante = $this->input->post('tipo_comprobante');
 
-        $cliente = $this->Clientes_model->clienteAutorizacion($id_cliente);
-        if (intval($cliente->autorizacion_correo) !== AutorizacionClienteOpcs::VALIDADO || intval($cliente->autorizacion_sms) !== AutorizacionClienteOpcs::VALIDADO) {
-            $data['message'] = 'VERIFICACION CORREO/SMS';
-            echo json_encode($data);
-            return;
+        if ($this->session->userdata('id_rol') != 17) {
+            $cliente = $this->Clientes_model->clienteAutorizacion($id_cliente);
+            if (intval($cliente->autorizacion_correo) !== AutorizacionClienteOpcs::VALIDADO || intval($cliente->autorizacion_sms) !== AutorizacionClienteOpcs::VALIDADO) {
+                $data['message'] = 'VERIFICACION CORREO/SMS';
+                echo json_encode($data);
+                return;
+            }
         }
 
         $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
