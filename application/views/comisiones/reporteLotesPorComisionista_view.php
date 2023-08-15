@@ -89,12 +89,7 @@
     </style>
 
     <div class="wrapper ">
-        <?php
-            if (in_array($this->session->userdata('id_rol'), array(18, 63, 8, 7, 9, 3, 2, 1, 4)))
-                $this->load->view('template/sidebar');
-            else
-                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-        ?>
+        <?php $this->load->view('template/sidebar'); ?>
 
         <div class="modal fade" id="detailComisionistaModal" tabindex="-1" role="dialog" aria-labelledby="detailComisionistaLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm" role="document">

@@ -2,16 +2,7 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body class="">
   <div class="wrapper ">
-    <?php
-    //se debe validar que tipo de perfil esta sesionado para poder asignarle el tipo de sidebar
-    if($this->session->userdata('id_rol')=="6")//contratacion
-    {
-      $this->load->view('template/sidebar');
-    }
-    else{
-      echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
-    }
-    ?>
+    <?php $this->load->view('template/sidebar'); ?>
 
     <!-- Modals -->
 

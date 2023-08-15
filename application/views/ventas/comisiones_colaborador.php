@@ -3,18 +3,7 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
     <div class="wrapper">
-        <?php
-        switch ($this->session->userdata('id_rol')) {
-            case '3': // GERENTE
-            case '7': // ASESOR
-            case '9': // COORDINADORmultiple
-                $this->load->view('template/sidebar');
-            break;
-            default: // NO ACCESS
-                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-            break;
-        }
-
+        <?php $this->load->view('template/sidebar'); 
         $usuarioid =  $this->session->userdata('id_usuario');
         $query = $this->db->query("SELECT forma_pago FROM usuarios WHERE id_usuario=".$usuarioid."");
         $cadena ='';

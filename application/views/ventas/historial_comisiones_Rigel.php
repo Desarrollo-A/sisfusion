@@ -1,14 +1,6 @@
 <body class="">
 <div class="wrapper ">
-    <?php
-
-    if
-    ($this->session->userdata('id_rol') == "1" || $this->session->userdata('id_rol') == "2" || $this->session->userdata('id_rol') == "3" || $this->session->userdata('id_rol') == "7" || $this->session->userdata('id_rol') == "9" || $this->session->userdata('id_rol') == "23" || $this->session->userdata('id_rol') == "22" || $this->session->userdata('id_rol') == "25" || $this->session->userdata('id_rol') == "27" || $this->session->userdata('id_rol') == "30" || $this->session->userdata('id_rol') == "36" || $this->session->userdata('id_rol') == "28" || $this->session->userdata('id_rol') == "19" || $this->session->userdata('id_rol') == "20" || $this->session->userdata('id_rol') == "18") {
-        $this->load->view('template/sidebar');
-    } else {
-        echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-    }
-    ?>
+    <?php $this->load->view('template/sidebar'); ?>
     <!--Contenido de la página-->
 
     <style type="text/css">

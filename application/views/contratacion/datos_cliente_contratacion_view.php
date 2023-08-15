@@ -2,14 +2,7 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet" />
 <body class="">
     <div class="wrapper ">
-        <?php
-        if (in_array($this->session->userdata('id_rol'), array(2,13,33,17,6,5,3,4,9,11,34,15,13,32,12,40,53,70))){
-            $this->load->view('template/sidebar');
-        }
-        else{
-            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-        }
-        ?>
+        <?php $this->load->view('template/sidebar'); ?>
         <div class="modal fade" id="modal_cancelar_11" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">

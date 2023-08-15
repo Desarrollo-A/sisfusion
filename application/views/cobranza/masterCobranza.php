@@ -2,20 +2,7 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
     <div class="wrapper ">
-        <?php
-        switch ($this->session->userdata('id_rol')) {
-            case '19': // SUBDIRECTOR MKTD
-            case '28': // EJECUTIVO ADMINISTRATIVO MKTD
-            case '50': // GENERALISTA MKTD
-            case '63': // CONTROL INTERNO AUDITORIA 
-                $this->load->view('template/sidebar');
-            break;
-
-            default:
-                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-            break;
-        }
-        ?>
+        <?php $this->load->view('template/sidebar'); ?>
 
         <div class="modal fade modal-alertas" id="modal_NEODATA" role="dialog">
             <div class="modal-dialog modal-lg">
