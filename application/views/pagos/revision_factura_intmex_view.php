@@ -5,7 +5,6 @@
 
         <?php
         if($this->session->userdata('id_rol')=="31"){
-            /*---------------------------- Contraloria---------------------------*/
             $this->load->view('template/sidebar');
         }
         else{
