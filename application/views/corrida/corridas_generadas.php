@@ -21,16 +21,7 @@
     }
 </style>
 <div class="wrapper ">
-    <?php
-    //se debe validar que tipo de perfil esta sesionado para poder asignarle el tipo de sidebar
-    if(
-        in_array($this->session->userdata('id_rol'), array(2, 3, 4, 5, 6, 7, 9, 11, 12, 13, 15, 16, 17, 19, 28, 32, 33, 34, 39, 40, 47, 50, 53, 54, 55, 58, 65, 70, 71, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83)) ||
-        ($this->session->userdata('id_rol') == 11 && $this->session->userdata('id_usuario') == 2755) || $this->session->userdata('id_usuario') == 2748
-    )
-        $this->load->view('template/sidebar');
-    else
-        echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
-    ?>
+    <?php $this->load->view('template/sidebar'); ?>
 
 
 

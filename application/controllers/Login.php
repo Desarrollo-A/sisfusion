@@ -218,8 +218,10 @@ class Login extends CI_Controller
 						$_SESSION['datos4'] = [];
 						$data['certificado'] = $_SERVER["HTTP_HOST"] == 'localhost' ? 'http://' : 'https://';
 						$datos = $this->get_menu->get_menu_data($check_user[0]->id_rol,$check_user[0]->id_usuario,$check_user[0]->estatus);
+						$opcionesMenu = $this->get_menu->get_menu_opciones();
 						$_SESSION['rutaActual'] = $_SERVER["HTTP_HOST"] == 'prueba.gphsis.com' || $_SERVER["HTTP_HOST"] == 'localhost' ? '/sisfusion/' : '/';
 						$data['datos'] = $datos;
+						$data['opcionesMenu'] = array_column($opcionesMenu, 'pagina');
 						$this->session->set_userdata($data);
 						$this->index();
 						

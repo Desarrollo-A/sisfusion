@@ -1,58 +1,20 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
 class Postventa extends CI_Controller
 {
-
+public $controller = 'Postventa';
     public function __construct()
     {
         parent::__construct();
         $this->load->model(array('Postventa_model', 'General_model', 'Contraloria_model', 'asesor/Asesor_model'));
-        $this->load->library(array('session', 'form_validation', 'Jwt_actions','formatter', 'email'));
+        $this->load->library(array('session', 'form_validation', 'Jwt_actions','formatter', 'email','permisos_sidebar'));
         $this->jwt_actions->authorize('2278',$_SERVER['HTTP_HOST']);
         $this->validateSession();
         date_default_timezone_set('America/Mexico_City');
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
-    /*echo $_SERVER['HTTP_ACCEPT'];
-        echo "<br>";
-        echo $_SERVER['AUTH_TYPE'];
-        echo "<br>";
-        echo $_SERVER['PATH_INFO'];*/
-      /*  if($_SERVER['HTTP_ACCEPT']){
-            echo "Entra aqui";
-            $_SESSION['rutaActual'];
-            $menuGral = $this->session->userdata('datos');
-            $ruta = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
-            $ruta[1];
-    
-            $existe = 0;
-            foreach ($menuGral['datos2'] as $key => $objeto) {
-                    if($objeto->pagina == $ruta[1]){
-                        $existe = 1;
-                    }    
-            }
-            if($existe == 0 && $this->session->userdata('controlador') != $ruta[1] ){
-                echo "entra";
-                //echo '<script> llamar(); </script>';
-                redirect(base_url() .$this->session->userdata('controlador'),'location');
-            }
-        }*/
-
-
-        //PRUEBAS
-/*   prueba.gphsis.com
-/sisfusion/Ventas
-
-LOCAL
-localhost
-/sisfusion/Postventa/solicitudes_escrituracion
-PRODUCCION
-maderascrm.gphsis.com
-/Chat/Chat
-
-*/
+        $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
+        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
     }
 
     public function index()
@@ -73,43 +35,34 @@ maderascrm.gphsis.com
     }
     public function validarMenu(){
             $rutaAc = $this->input->post('ruta');
+            $origen = $this->input->post('origen');
+     //   echo    $rutaAc = $rutaAc == 1 ? $rutaAc : $_SESSION['rutaActual'].$rutaAc ;
             // echo $_SESSION['rutaActual'];
-            // echo "<br>";
-            // $menuGral = $this->session->userdata('datos');
-            // $ruta = explode($_SESSION['rutaActual'], $rutaAc);
-            // echo  $ruta[1];
+             //echo "<br>";
+            $menuGral = $this->session->userdata('datos');
+            $ruta = explode($_SESSION['rutaActual'], $rutaAc);
+           //  echo  $ruta[1];
             $existe = 0;
             foreach ($menuGral['datos2'] as $key => $objeto) {
-                    if($objeto->pagina == $rutaAc){
+                    if($objeto->pagina == $ruta[1]){
                         $existe = 1;
                     }    
             }
             if($existe == 0 && $this->session->userdata('controlador') != $ruta[1] ){
                 echo json_encode(0);
             }else{
-                echo json_encode(3);
+                echo json_encode(1);
             }
     }
 
-    
 
     public function escrituracion()
     {
         if ($this->session->userdata('id_rol') == FALSE) {
             redirect(base_url());
-        }
-        switch ($this->session->userdata('id_rol')) {
-            case '55': // POSTVENTA
-            case '56': // COMITÉ TÉCNICO
-            case '57': // TITULACIÓN
-                $this->load->view('template/header');
-                $this->load->view("postventa/escrituracion");
-                break;
-
-            default:
-                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-                break;
-        }
+        }     
+        $this->load->view('template/header');
+        $this->load->view("postventa/escrituracion"); 
     }
 
     public function solicitudes_escrituracion()
@@ -117,22 +70,8 @@ maderascrm.gphsis.com
         if ($this->session->userdata('id_rol') == FALSE) {
             redirect(base_url());
         }
- 
-        switch ($this->session->userdata('id_rol')) {
-            case '11': // ADMON
-            case '17': // CONTRALORÍA corporativa
-            case '55': // POSTVENTA
-            case '56': // COMITÉ TÉCNICO
-            case '57': // TITULACIÓN
-            case '62': // PROYECTOS
-                $this->load->view('template/header');
-                $this->load->view("postventa/solicitudes_escrituracion");
-                break;
-            
-            default:
-                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-                break;
-        }
+        $this->load->view('template/header');
+        $this->load->view("postventa/solicitudes_escrituracion");
     }
 
 
@@ -140,17 +79,8 @@ maderascrm.gphsis.com
         if($this->session->userdata('id_rol') == FALSE){
             redirect(base_url());
         }
-        switch ($this->session->userdata('id_rol')){
-            case '57': //TITULACION
             $this->load->view('template/header');
             $this->load->view("postventa/notaria");
-            break;
-
-            default:
-                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'"</script>';
-                break;
-        }
-
     }
 
     public function getProyectos()
@@ -1731,17 +1661,8 @@ maderascrm.gphsis.com
         if ($this->session->userdata('id_rol') == FALSE) {
             redirect(base_url());
         }
-        switch ($this->session->userdata('id_rol')) {
-            case '17': // CONTRALORIA
-            case '55': // POSTVENTA
-            case '57': // TITULACIÓN
                 $this->load->view('template/header');
                 $this->load->view("postventa/Reportes/reportes");
-                break;
-            default:
-                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-                break;
-        }
     }
 
     public function getEstatusEscrituracion()
@@ -2083,18 +2004,8 @@ function saveNotaria(){
             redirect(base_url());
         }
         $datos['titulaciones'] = $this->Postventa_model->GetTitulaciones();
-        switch ($this->session->userdata('id_rol')) {
-            case '55': // POSTVENTA
-            case '56': // COMITÉ TÉCNICO
-            case '57': // TITULACIÓN
                 $this->load->view('template/header');
                 $this->load->view("postventa/solicitudes_usuario_view", $datos);
-                break;
-
-            default:
-                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-                break;
-        }
     } 
     public function SolicitudesEscrituracion()
     {
