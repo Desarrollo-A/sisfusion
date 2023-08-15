@@ -1329,7 +1329,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         FROM usuarios 
         WHERE id_usuario in(6482, 5, 7092) AND estatus = 1   AND ISNULL(correo, '') NOT LIKE '%SINCO%' AND ISNULL(correo, '') NOT LIKE '%test_%')")->result();
      }
-     public function EditarInventario($datos){
+    public function EditarInventario($datos){
         $this->db->trans_begin();
         $id_cliente = $datos['id_cliente'];
         $id_asesor = $datos['id_asesor'];
@@ -1341,7 +1341,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         $modificado_por = $this->session->userdata('id_usuario');
         $this->db->query("UPDATE clientes SET id_asesor=$id_asesor,id_coordinador=$id_coordinador,id_gerente=$id_gerente,id_subdirector=$id_subdirector,id_regional=$id_regional,id_regional_2=$id_regional_2,modificado_por='$modificado_por'  WHERE id_cliente=$id_cliente;");
 
-        for($m=0; $m < $datos['indexVC'] ; $m++) { 
+        for($m=0; $m < $datos['indexVC'] ; $m++) {
             $id_vcompartida = $datos['id_vcompartida_'.$m];
             $id_asesor = $datos['id_asesor_'.$m];
             $id_coordinador = $datos['id_coordinador_'.$m];
@@ -1359,49 +1359,5 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
             $this->db->trans_commit();
             return true;
         }
-     }
-
-    public function getAllDsByLider($idLider)
-    {
-        $query = $this->db->query("
-            SELECT cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.nombre, cl.apellido_paterno,
-                cl.apellido_materno, cl.status, cl.idLote, fechaApartado, fechaVencimiento, cl.usuario, cond.idCondominio, cl.fecha_creacion,
-                cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre AS nombreCondominio, residencial.nombreResidencial AS nombreResidencial,
-                cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado
-            FROM deposito_seriedad AS ds
-            INNER JOIN clientes AS cl ON ds.id_cliente = cl.id_cliente
-            INNER JOIN lotes AS lotes ON lotes.idLote=cl.idLote AND lotes.idCliente = cl.id_cliente AND cl.status = 1
-            LEFT JOIN condominios AS cond ON lotes.idCondominio=cond.idCondominio
-            LEFT JOIN residenciales AS residencial ON cond.idResidencial=residencial.idResidencial
-            WHERE idStatusContratacion IN (1, 2, 3) AND 
-                idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND 
-                cl.status = 1 AND
-                lotes.idLote IN (
-                    SELECT l.idLote
-                    FROM lotes l 
-                    INNER JOIN clientes c ON c.id_cliente = l.idCliente
-                    INNER JOIN usuarios u ON u.id_usuario = c.id_asesor AND u.estatus != 1
-                    WHERE l.status = 1 AND 
-                        l.idStatusContratacion IN (1, 2, 3) AND 
-                        l.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND 
-                        c.status = 1 AND 
-                        c.id_gerente = $idLider
-            
-                    UNION ALL
-            
-                    SELECT l.idLote
-                    FROM lotes l 
-                    INNER JOIN clientes c ON c.id_cliente = l.idCliente AND c.id_coordinador IN (2562, 2541) AND c.id_asesor != 1908
-                    INNER JOIN usuarios u ON u.id_usuario = c.id_asesor
-                    INNER JOIN usuarios uu ON uu.id_usuario = u.id_lider AND 
-                        (uu.id_lider = $idLider OR u.id_lider = $idLider)
-                    WHERE l.status = 1 AND 
-                        l.idStatusContratacion IN (1, 2, 3) AND 
-                        l.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND 
-                        c.status = 1
-                )
-            ORDER BY cl.id_Cliente ASC
-        ");
-        return $query->result_array();
     }
 }
