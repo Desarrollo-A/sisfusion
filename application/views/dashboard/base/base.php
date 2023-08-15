@@ -87,6 +87,7 @@
 <script src="<?=base_url()?>dist/js/controllers/dashboard/agenda/general_calendar.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/dashboard/base/base.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/dashboard/agenda/googleCalendarConnection.js"></script>
+
 <script>
     userType = <?= $this->session->userdata('id_rol') ?> ;
     idUser = <?= $this->session->userdata('id_usuario') ?>;
