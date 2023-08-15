@@ -51,9 +51,9 @@ class ServicesCRM extends CI_Controller
 
     function codificarTest(){
         $miJson = array(
-            "rfc"=>"HGDE350247FF5",
-            "id_rol"=> 9,
-            "id_lider"=>692,
+            "rfc"=>"HGDE350247FF8",
+            "id_rol"=> 7,
+            "id_lider"=>655,
             "id_gerente" => 456,
             "id_subdirector" => 789,
             "id_regional" => 321,
@@ -63,8 +63,8 @@ class ServicesCRM extends CI_Controller
             "forma_pago" => 2,
             "correo" => "garmar@gmail.com",
             "telefono" => 442210616,
-            "id_sede" => 4,
-            "usuario" => "tedigo" ,
+            "id_sede" => 1,
+            "usuario" => "otroususario3" ,
             "contrasena" => "123456",
             "creado_por" => 5,
             "sedech" => 1,
@@ -76,9 +76,8 @@ class ServicesCRM extends CI_Controller
         $ok1 = json_encode($miJson);
         $ok2 = utf8_decode($ok1);
         print_r(base64_encode($ok2));
-
-
     }
+
     public function saveUserCH()
     {
             $objDatos = json_decode(utf8_encode(base64_decode(file_get_contents("php://input"))), true);
