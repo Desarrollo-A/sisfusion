@@ -63,4 +63,10 @@ $(document).ready( function() {
             }
         }
     });
+
+    $('#all_password_datatable').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
+    });
 });

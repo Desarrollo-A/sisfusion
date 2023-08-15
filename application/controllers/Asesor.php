@@ -3897,9 +3897,8 @@ class Asesor extends CI_Controller
             'descripcion' => $this->input->post("desc"),
             'archivo' => $newFileName,
             'estatus' => 1,
-            'usuario' => 666,
+            'usuario' => $this->session->userdata('id_usuario'),
             'fecha_creacion' => date("Y-m-d H:i:s"),
-            'fecha_modificacion' => date("Y-m-d H:i:s")
         ];
         $uploadFileDir = './static/documentos/carpetas/';
         $dest_path = $uploadFileDir . $newFileName;
@@ -3927,7 +3926,8 @@ class Asesor extends CI_Controller
                 'nombre' => $this->input->post("nombreE"),
                 'descripcion' => $this->input->post("descripcionE"),
                 'archivo' => $newFileName,
-                'estatus' => $this->input->post("estatus")
+                'estatus' => $this->input->post("estatus"),
+                'fecha_modificacion' => date("Y-m-d H:i:s")
             ];
             $response = $this->Asesor_model->updateCarpeta($data, $this->input->post("idCarpeta"));
             echo json_encode($response);
@@ -3935,7 +3935,8 @@ class Asesor extends CI_Controller
             $data = [
                 'nombre' => $this->input->post("nombreE"),
                 'descripcion' => $this->input->post("descripcionE"),
-                'estatus' => $this->input->post("estatus")
+                'estatus' => $this->input->post("estatus"),
+                'fecha_modificacion' => date("Y-m-d H:i:s")
             ];
             $response = $this->Asesor_model->updateCarpeta($data, $this->input->post("idCarpeta"));
             echo json_encode($response);

@@ -92,15 +92,15 @@
                             <div class="file-gph">
                                 <input class="d-none" type="hidden" id="filename" name="filename">
                                 <input class="file-name" id="file-upload" name="file-upload" accept=".pdf" type="file"/>
-                                <p id="archivoE" class="m-0 w-80 overflow-text"></p>
+                                <p id="archivo" class="m-0 w-80 overflow-text"></p>
                                 <label for="file-upload" class="upload-btn m-0"><i class="fas fa-folder-open"></i> Subir archivo</label>
                             </div>
                         </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" id="btnsave1" class="btn btn-primary">Guardar</button>
+                        </div>
                     </form>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" id="btnsave" class="btn btn-primary">Guardar</button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -120,7 +120,7 @@
                                 ?>
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-4 com-md-4 col-lg-4">
-                                        <button class="btn-data-gral btn-success mb-3" data-toggle="modal" data-target="#carpetas">Agregar carpeta</button>
+                                        <button class="btn-data-gral btn-s-blue mb-3" data-toggle="modal" data-target="#carpetas">Agregar carpeta</button>
                                     </div>
                                 </div>
                                 <?php } ?>
@@ -134,8 +134,8 @@
                                                 <th>ARCHIVO</th>
                                                 <th>ESTATUS</th>
                                                 <th>USUARIO</th>
-                                                <th>FECHA CREACIÓN</th>
-                                                <th>FECHA MODIFICACIÓN</th>
+                                                <th>FECHA DE CREACIÓN</th>
+                                                <th>FECHA DE MODIFICACIÓN</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>
