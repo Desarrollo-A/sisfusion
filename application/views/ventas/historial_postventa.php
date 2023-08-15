@@ -3,12 +3,7 @@
 
 <body class="">
 <div class="wrapper ">
-    <?php
-    if (in_array($this->session->userdata('id_rol'), array('33', '17', '74', '75', '76', '77', '78', '79', '80', '81', '82', '83', '55')))
-        $this->load->view('template/sidebar');
-    else
-        echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-    ?>
+    <?php $this->load->view('template/sidebar'); ?>
 
     <div class="content boxContent">
         <div class="container-fluid">

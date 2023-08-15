@@ -60,20 +60,9 @@ public $controller = 'Postventa';
     {
         if ($this->session->userdata('id_rol') == FALSE) {
             redirect(base_url());
-        }
-        
-        switch ($this->session->userdata('id_rol')) {
-            case '55': // POSTVENTA
-            case '56': // COMITÉ TÉCNICO
-            case '57': // TITULACIÓN
-                $this->load->view('template/header');
-                $this->load->view("postventa/escrituracion");
-                break;
-
-            default:
-                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-                break;
-        }
+        }     
+        $this->load->view('template/header');
+        $this->load->view("postventa/escrituracion"); 
     }
 
     public function solicitudes_escrituracion()
@@ -81,23 +70,8 @@ public $controller = 'Postventa';
         if ($this->session->userdata('id_rol') == FALSE) {
             redirect(base_url());
         }
-        $this->datosSidebar['request_uri'] = $_SERVER['REQUEST_URI'];
-        //echo $_SERVER['request_uri'];
-        switch ($this->session->userdata('id_rol')) {
-            case '11': // ADMON
-            case '17': // CONTRALORÍA corporativa
-            case '55': // POSTVENTA
-            case '56': // COMITÉ TÉCNICO
-            case '57': // TITULACIÓN
-            case '62': // PROYECTOS
-                $this->load->view('template/header');
-                $this->load->view("postventa/solicitudes_escrituracion",[],FALSE,$this->datosSidebar);
-                break;
-            
-            default:
-                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-                break;
-        }
+        $this->load->view('template/header');
+        $this->load->view("postventa/solicitudes_escrituracion");
     }
 
 
@@ -105,17 +79,8 @@ public $controller = 'Postventa';
         if($this->session->userdata('id_rol') == FALSE){
             redirect(base_url());
         }
-        switch ($this->session->userdata('id_rol')){
-            case '57': //TITULACION
             $this->load->view('template/header');
             $this->load->view("postventa/notaria");
-            break;
-
-            default:
-                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'"</script>';
-                break;
-        }
-
     }
 
     public function getProyectos()
@@ -1696,17 +1661,8 @@ public $controller = 'Postventa';
         if ($this->session->userdata('id_rol') == FALSE) {
             redirect(base_url());
         }
-        switch ($this->session->userdata('id_rol')) {
-            case '17': // CONTRALORIA
-            case '55': // POSTVENTA
-            case '57': // TITULACIÓN
                 $this->load->view('template/header');
                 $this->load->view("postventa/Reportes/reportes");
-                break;
-            default:
-                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-                break;
-        }
     }
 
     public function getEstatusEscrituracion()
@@ -2048,18 +2004,8 @@ function saveNotaria(){
             redirect(base_url());
         }
         $datos['titulaciones'] = $this->Postventa_model->GetTitulaciones();
-        switch ($this->session->userdata('id_rol')) {
-            case '55': // POSTVENTA
-            case '56': // COMITÉ TÉCNICO
-            case '57': // TITULACIÓN
                 $this->load->view('template/header');
                 $this->load->view("postventa/solicitudes_usuario_view", $datos);
-                break;
-
-            default:
-                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-                break;
-        }
     } 
     public function SolicitudesEscrituracion()
     {

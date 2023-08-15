@@ -3,12 +3,7 @@
 
 <body>
     <div class="wrapper">
-        <?php
-			if (in_array($this->session->userdata('id_rol'), array(16, 6, 5, 13, 17, 32, 2, 3, 4, 9, 7, 33, 23, 35, 2, 11, 12, 15, 28, 19, 20, 50, 40, 53, 55, 47, 58, 61, 54, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 55, 63, 70, 71, 73, 18)))
-            	$this->load->view('template/sidebar');
-			else
-				echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-		?>
+        <?php $this->load->view('template/sidebar'); ?>
         <div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
             aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg">

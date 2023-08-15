@@ -2,18 +2,7 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
     <div class="wrapper">
-        <?php
-        switch ($this->session->userdata('id_rol')) {
-            case '13': // CONTRALORÍA
-            case '19': // SUBDIRECTOR CONTRALORÍA
-            case '32': // CONTRALORÍA CORPORATIVA
-                $this->load->view('template/sidebar');
-                break;
-            default: // NO ACCESS
-                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-                break;
-        }
-        ?>
+        <?php $this->load->view('template/sidebar'); ?>
 
         <div class="content boxContent">
             <div class="container-fluid">
