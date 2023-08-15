@@ -2527,10 +2527,8 @@ class Contraloria extends CI_Controller {
     }
 
     public function depositoSeriedadAssistant() {
-        $this->validateSession();
-        $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
         $this->load->view('template/header');
-        $this->load->view("contraloria/ds_assistant",$datos);
+        $this->load->view("asesor/depositoSeriedad");
     }
 
     public function expedienteAssistant(){
