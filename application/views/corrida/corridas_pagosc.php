@@ -1,4 +1,3 @@
-
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <link href="<?=base_url()?>dist/js/controllers/files/css/fileinput.css" media="all" rel="stylesheet" type="text/css"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
@@ -60,7 +59,7 @@
                                                     <?php
                                                     if ($residencial != NULL) :
                                                         foreach ($residencial as $fila) : ?>
-                                                            <option value=<?= $fila['idResidencial'] ?>> <?= $fila['descripcion'] ?> </option>
+                                                            <option value=<?= $fila['idResidencial'] ?>> <?= $fila['nombreResidencial'] ?> </option>
                                                         <?php endforeach;
                                                     endif;
                                                     ?>
