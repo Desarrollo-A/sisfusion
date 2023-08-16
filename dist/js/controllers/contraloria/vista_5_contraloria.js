@@ -83,7 +83,6 @@ $("#tabla_ingresar_5").ready(function () {
             }
         },
         pageLength: 11,
-        bAutoWidth: true,
         fixedColumns: true,
         ordering: false,
         scrollX: true,

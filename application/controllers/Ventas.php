@@ -114,7 +114,6 @@ class Ventas extends CI_Controller {
     }
 
     public function statusOffice(){
-        $a = 0;
         if (isset($_POST) && !empty($_POST)) {
             $direccion = $this->input->post("idDireccionS");
             $status = $this->input->post("status");

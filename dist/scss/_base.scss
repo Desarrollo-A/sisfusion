@@ -16,6 +16,7 @@
 .mt-4 { margin-top: 40px; }
 .mr-1{ margin-right: 10px; }
 .mr-2{ margin-right: 20px!important; }
+.ml-0{ margin-left: 0px!important; }
 .ml-1{ margin-left: 10px!important; }
 .ml-2{ margin-left: 20px!important; }
 .ml-3{ margin-left: 30px!important; }
@@ -46,6 +47,7 @@
 .pb-1 { padding-bottom:10px; }
 .pb-2 { padding-bottom:20px; }
 .pb-3 { padding-bottom:30px; }
+.pb-0 { padding-bottom: 0px !important; }
 /* END Margin and padding generales */
 
 /* Utilities */
@@ -144,6 +146,7 @@
 /* Text */
 
 /* Vrbls colores */
+$olivo              :#86895D;
 $white              : #ffffff;
 $cultured           : #f8f8f8;
 $platinumLight      : #eeeeee;
@@ -732,6 +735,12 @@ $tv                 : "(min-width: 1280px)";
     border: none;
     background:#11DFC618;
 }
+.lbl-olivo{
+    color:  $olivo;
+    border: none;
+    background-color: #86895D18;
+
+}
 /* END Etiquetas */
 
 /* Estilo del scroll en DIVS */
@@ -753,6 +762,7 @@ $tv                 : "(min-width: 1280px)";
 /* Color del HOVER de barra de desplazamiento */
 .scroll-styles::-webkit-scrollbar-thumb:hover{
     background-color: $deepGray;
+    height: 10px!important;
 }
 /* END de estilos del scroll en DIVS */
 
@@ -778,6 +788,9 @@ $tv                 : "(min-width: 1280px)";
         }
         span{
             margin: 5px;
+        }
+        @media #{$smartphone}{
+            width: 100%;
         }
     }
     .file-name{

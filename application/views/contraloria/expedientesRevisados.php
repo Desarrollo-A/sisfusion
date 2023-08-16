@@ -2,12 +2,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <body class="">
     <div class="wrapper ">
-        <?php
-        //se debe validar que tipo de perfil esta sesionado para poder asignarle el tipo de sidebar
-        /*-------------------------------------------------------*/
-        $datos = array();
-        $this->load->view('template/sidebar');
-        ?>
+        <?php $this->load->view('template/sidebar'); ?>
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -66,7 +61,7 @@
             </div>
         </div>
     <?php $this->load->view('template/footer_legend'); ?>
-    </div><!--main-panel close-->
+    </div>
 </body>
 <?php $this->load->view('template/footer'); ?>
 <script src="<?= base_url() ?>dist/js/es.js"></script>
