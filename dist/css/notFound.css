@@ -1181,6 +1181,12 @@
   margin: 5px;
 }
 
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  .file-gph .upload-btn {
+    width: 100%;
+  }
+}
+
 .file-gph .file-name {
   width: 77%;
   background-color: transparent;

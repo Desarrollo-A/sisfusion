@@ -16,9 +16,8 @@
 
         <div class="modal fade" id="carpetasE" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content" >
+                <div class="modal-content p-1" >
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h5 >Agregar nueva carpeta</h5>
                     </div>
                     <form  enctype="multipart/form-data" id="formAdminE">
@@ -64,7 +63,7 @@
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     </div>                                            
                     <div class="modal-footer"><br><br>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
             </div>
@@ -72,9 +71,8 @@
 
         <div class="modal fade" id="carpetas" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content" >
+                <div class="modal-content p-1" >
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h5 >Agregar nueva carpeta</h5>
                     </div>
                     <form  enctype="multipart/form-data" id="formAdmin">
@@ -128,7 +126,7 @@
                                     <table id="tableCarpetas" class="table-striped table-hover">
                                         <thead>
                                             <tr>
-                                                <th>#</th>
+                                                <th>ID</th>
                                                 <th>CARPETA</th>
                                                 <th>DESCRIPCIÓN</th>
                                                 <th>ARCHIVO</th>
