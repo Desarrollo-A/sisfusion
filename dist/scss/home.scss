@@ -84,6 +84,7 @@
             }
         }
     }
+
 }
 .footer{
     margin-top: -110px;
@@ -105,7 +106,15 @@
         }
     }
 }
-
+#boxHome #ele{ 
+    animation: 3s fadeIn2;
+    -webkit-animation: 3s fadeIn2;
+    position: absolute;
+    animation-fill-mode: forwards;
+    visibility: hidden;
+    background-color: beige;
+    
+}
 @keyframes fadeIn {
     0% {
         opacity: 0;
@@ -131,3 +140,14 @@
         color: $white;
     }
 }
+
+
+ 
+@keyframes fadeIn2 {
+    1% {
+      visibility: visible;
+    }
+    100% {
+      visibility:hidden;
+    }
+  }

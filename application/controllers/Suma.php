@@ -5,13 +5,15 @@ class Suma extends CI_Controller
     {
         parent::__construct();
         $this->load->model(array('Suma_model', 'General_model', 'Comisiones_model', 'PagoInvoice_model', 'Usuarios_modelo'));
-        $this->load->library(array('session', 'form_validation', 'Jwt_actions', 'get_menu'));
+        $this->load->library(array('session', 'form_validation', 'Jwt_actions', 'get_menu','permisos_sidebar'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
         // $this->jwt_actions->authorize_externals('3450', apache_request_headers()["Authorization"]);
 
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+        $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
+        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
     }
     public function index() {}
     public function validateUserAccess() {

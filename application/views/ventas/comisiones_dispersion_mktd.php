@@ -9,14 +9,7 @@
         }
     </style>
     <div class="wrapper">
-        <?php
-        if (in_array($this->session->userdata('id_rol'), array(18,19,20,21))){
-            $this->load->view('template/sidebar');
-        }
-        else{
-            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
-        }
-        ?>
+        <?php $this->load->view('template/sidebar'); ?>
         <div class="modal fade modal-alertas" id="modal_users" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">

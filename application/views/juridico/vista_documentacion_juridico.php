@@ -2,12 +2,7 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body class="">
 	<div class="wrapper ">
-		<?php
-		if($this->session->userdata('id_usuario')=="2762" || $this->session->userdata('id_usuario')=="1" || $this->session->userdata('id_usuario')=="1297"){
-			$this->load->view('template/sidebar');
-		}
-		
-		?>
+		<?php $this->load->view('template/sidebar'); ?>
 		<div class="content boxContent">
 			<div class="container-fluid">
 				<div class="row">

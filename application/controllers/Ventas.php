@@ -5,7 +5,7 @@ class Ventas extends CI_Controller {
         
 		parent::__construct();
         $this->load->model(array('Ventas_modelo', 'Statistics_model', 'asesor/Asesor_model'));
-        $this->load->library(array('get_menu', 'Jwt_actions'));
+        $this->load->library(array('get_menu', 'Jwt_actions','permisos_sidebar'));
 		$this->load->helper(array('url','form'));
         $this->jwt_actions->authorize('3515', $_SERVER['HTTP_HOST']);
 		$this->load->database('default');
@@ -13,6 +13,8 @@ class Ventas extends CI_Controller {
 
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+        $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
+        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
     }
 
     public function validateSession() {

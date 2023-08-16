@@ -2,12 +2,7 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
     <div class="wrapper ">
-        <?php
-            if (in_array($this->session->userdata('id_rol'), array(17,5)))
-                $this->load->view('template/sidebar');
-            else
-                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-        ?>
+        <?php $this->load->view('template/sidebar'); ?>
         
         <div class="modal fade" id="detailComisionistaModal" tabindex="-1" role="dialog" aria-labelledby="detailComisionistaLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm" role="document">
