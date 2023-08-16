@@ -1,14 +1,7 @@
 
 <body class="">
 <div class="wrapper ">
-<?php
-if (in_array($this->session->userdata('id_rol'), array(13,17,32))){
-    $this->load->view('template/sidebar');
-}
-else{
-    echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-}
-?>
+<?php $this->load->view('template/sidebar'); ?>
     <!--Contenido de la página-->
 
     <style type="text/css">

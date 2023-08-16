@@ -197,10 +197,8 @@ tabla_factura = $("#tabla_factura").DataTable({
     },
 });
 $('#tabla_factura tbody').on('click', 'td.details-control', function () {
-    console.log("entra");
     var tr = $(this).closest('tr');
     var row = tabla_factura.row(tr);
-    console.log(row.child.isShown());
     if ( row.child.isShown() ) {
         row.child.hide();
         tr.removeClass('shown');

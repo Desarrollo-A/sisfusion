@@ -1,5 +1,3 @@
-
-var totaPen = 0;
 var tr;
 
 $(document).ready(function(){
@@ -87,34 +85,34 @@ function fillTable(typeTransaction, beginDate, endDate, where, estatus){
             ordering: false,
             columns: [{
                 "data": function( d ){
-                        return '<p class="m-0"><br>'+d.id_usuario+'</p>';
-                    }
-                },
-                {
-                    "data": function( d ){
-                        return '<p class="m-0"><br>'+d.rol+'</p>';
-                    }
-                },
-                {
-                    "data": function( d ){
-                        return '<p class="m-0"><b>'+d.nombre_comisionista+'</p>';
-                    }
-                },
-                {
-                    "data": function( d ){
-                        return '<p class="m-0">'+formatMoney(d.total_dispersado)+'</p>';
-                    }
-                },
-                {
-                    "data": function( d ){
-                        return '<p class="m-0">'+d.fecha+'<b></b></p>';
-                    }
-                },
-                {
-                    "data": function( d ){
-                        return '<p class="m-0">'+d.nombre+'<b></b></p>';
-                    }
-                }],
+                    return '<p class="m-0"><br>'+d.id_usuario+'</p>';
+                }
+            },
+            {
+                "data": function( d ){
+                    return '<p class="m-0"><br>'+d.rol+'</p>';
+                }
+            },
+            {
+                "data": function( d ){
+                    return '<p class="m-0"><b>'+d.nombre_comisionista+'</p>';
+                }
+            },
+            {
+                "data": function( d ){
+                    return '<p class="m-0">'+formatMoney(d.total_dispersado)+'</p>';
+                }
+            },
+            {
+                "data": function( d ){
+                    return '<p class="m-0">'+d.fecha+'<b></b></p>';
+                }
+            },
+            {
+                "data": function( d ){
+                    return '<p class="m-0">'+d.nombre+'<b></b></p>';
+                }
+            }],
             ajax: {
                 url: general_base_url + "Comisiones/getCommissionsByMktdUser/",
                 type: "POST",
@@ -161,7 +159,7 @@ $.post(general_base_url + "Comisiones/getEstatusPagosMktd", function (data) {
     $("#selectEstatusR").selectpicker('refresh');
 }, 'json');
 
-$('#mes').change(function(ruta) {
+$('#mes').change(function() {
     anio = $('#anio').val();
     mes = $('#mes').val();
     mes = $('#mes').val();
@@ -172,7 +170,7 @@ $('#mes').change(function(ruta) {
     }
 });
 
-$('#anio').change(function(ruta) {
+$('#anio').change(function() {
     anio = $('#anio').val();
     mes = $('#mes').val();
     Estatus = $('#selectEstatusN').val();
@@ -180,14 +178,13 @@ $('#anio').change(function(ruta) {
     }else{
         RevisionMKTD(mes,anio,Estatus);
     }
-    
 });
 
 $('#selectEstatusN').change( function(){
     mes = $('#mes').val();
     anio = $('#anio').val();
     Estatus = $('#selectEstatusN').val();
-    if(mes == '' || anio == '' ){
+    if(mes != '' || anio != '' ){
     //     alerts.showNotification("top", "right", "Debe seleccionar las dos fechas y el estatus", "warning");
     }else{
         RevisionMKTD(mes,anio,Estatus);
@@ -229,61 +226,63 @@ let titulos3 = [];
     });
 
 RevisionMKTD(0,0,0);
+
 function RevisionMKTD(mes,anio,Estatus){
-$("#tabla_plaza_12").ready( function(){
-    let c=0;
-    $('#tabla_plaza_12').on('xhr.dt', function ( e, settings, json, xhr ) {
-        var total = 0;
-        var totalNus=0;
-        var totalMktd=0;
-        var totalTo=0;
-        $.each(json.data, function(i, v){
-            total += parseFloat(v.impuesto);
-            totalNus += parseFloat(v.nus);
+    $("#tabla_plaza_12").ready( function(){
+        let c=0;
+        $('#tabla_plaza_12').on('xhr.dt', function ( e, settings, json, xhr ) {
+            var total = 0;
+            var totalNus=0;
+            var totalMktd=0;
+            var totalTo=0;
+            $.each(json.data, function(i, v){
+                total += parseFloat(v.impuesto);
+                totalNus += parseFloat(v.nus);
                 totalMktd += parseFloat(v.mktd);
                 totalTo += parseFloat(v.impuesto)+ parseFloat(v.nus) + parseFloat(v.mktd);
+            });
+
+            var to = formatMoney(total);
+            document.getElementById("myText_nuevasCo").textContent = formatMoney(total);
+            var to2 = formatMoney(totalNus);
+            document.getElementById("myText_nuevasNus").textContent = formatMoney(totalNus);
+            var to3 = formatMoney(totalMktd);
+            document.getElementById("myText_nuevasMktd").textContent = formatMoney(totalMktd);
+            document.getElementById("myText_nuevasTo").textContent = formatMoney(totalTo);
         });
-        var to = formatMoney(total);
-        document.getElementById("myText_nuevasCo").textContent = formatMoney(total);
-        var to2 = formatMoney(totalNus);
-                document.getElementById("myText_nuevasNus").textContent = formatMoney(totalNus);
-                var to3 = formatMoney(totalMktd);
-                document.getElementById("myText_nuevasMktd").textContent = formatMoney(totalMktd);
-                document.getElementById("myText_nuevasTo").textContent = formatMoney(totalTo);
-    });
-    plaza_12 = $("#tabla_plaza_12").DataTable({
-        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        width: "100%",
-        scrollX: true,
-        bAutoWidth: true,
-        buttons: [{
-            extend: 'excelHtml5',
-            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-            className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
-            title: 'MKTD_CONCENTRADO_PAGO_COMISIONES',
-            exportOptions: {
-                columns: [0,1,2,3,4,5,6,7,8,9,10],
-                format: 
-                {
-                    header:  function (d, columnIdx) {
-                        return ' ' + titulos3[columnIdx] + ' ';
+        plaza_12 = $("#tabla_plaza_12").DataTable({
+            dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+            width: "100%",
+            scrollX: true,
+            bAutoWidth: true,
+            buttons: [{
+                extend: 'excelHtml5',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                className: 'btn buttons-excel',
+                titleAttr: 'Descargar archivo de Excel',
+                title: 'MKTD_CONCENTRADO_PAGO_COMISIONES',
+                exportOptions: {
+                    columns: [0,1,2,3,4,5,6,7,8,9,10],
+                    format: 
+                    {
+                        header:  function (d, columnIdx) {
+                            return ' ' + titulos3[columnIdx] + ' ';
+                        }
                     }
+                },
+            }],
+            pagingType: "full_numbers",
+            language: {
+                url: general_base_url + "static/spanishLoader_v2.json",
+                paginate: {
+                    previous: "<i class='fa fa-angle-left'>",
+                    next: "<i class='fa fa-angle-right'>"
                 }
             },
-        }],
-        pagingType: "full_numbers",
-        language: {
-            url: general_base_url + "static/spanishLoader_v2.json",
-            paginate: {
-                previous: "<i class='fa fa-angle-left'>",
-                next: "<i class='fa fa-angle-right'>"
-            }
-        },
-        destroy: true,
-        ordering: false,
-        columns: [{
-            "data": function( d ){
+            destroy: true,
+            ordering: false,
+            columns: [{
+                "data": function( d ){
                     return '<p class="m-0"><b>'+d.id_usuario+'</b></p>';
                 }
             },
@@ -338,68 +337,69 @@ $("#tabla_plaza_12").ready( function(){
                 "data": function( d ){
                     return '<p class="m-0">'+d.forma_pago+'</p>';
                 }
-            },],
-        columnDefs: [{
-            orderable: false,
-            className: 'select-checkbox',
-            targets:   0,
-            searchable:false,
-            className: 'dt-body-center'
-        }],
-        ajax: {
-            url: general_base_url + "Comisiones/getDatosRevisionMktd2/"+mes+"/"+anio+"/"+Estatus,
-            type: "POST",
-            cache: false,
-            data: function( d ){}
-        },
-    });
-    $("#tabla_plaza_12 tbody").on("click", ".dispersar_colaboradores", function(){
-        var tr = $(this).closest('tr');
-        var row = plaza_1.row( tr );
-        let c=0;
-        let ubication = $(this).attr("data-value");
-        let plen = $(this).val();
-        $.getJSON( general_base_url + "Comisiones/getDatosSumaMktd/"+ubication+"/"+plen).done( function( data01 ){
-            let suma_01 = parseFloat(data01[0].suma_f01);
-            $("#modal_colaboradores .modal-body").html("");
-            $("#modal_colaboradores .modal-footer").html("");
-            $("#modal_colaboradores .modal-body").append('<div class="row"><div class="col-lg-12"><p>Comisión total:&nbsp;&nbsp;<b>'+formatMoney(suma_01)+'</b></p> </div></div>');
-            $("#modal_colaboradores .modal-body").append('<input type="hidden" name="total_comi" value="'+data01[0].suma_f01+'">');
-            $("#modal_colaboradores .modal-body").append('<input type="hidden" name="num_plan" value="'+plen+'">');
-            $("#modal_colaboradores .modal-body").append('<input type="hidden" name="valores_pago_i" value="'+data01[0].valor_obtenido+'">');
-            $("#modal_colaboradores .modal-body").append('<input type="hidden" name="pago_mktd" id="pago_mktd" value="'+parseFloat(suma_01)+'">');
-            $.getJSON( general_base_url + "Comisiones/getDatosColabMktd/"+ubication+"/"+plen).done( function( data1 ){
-                var_sum = 0;
-                let fech = data1[0].fecha_plan;
-                let fecha = fech.substr(0, 10);
-                let nuevaFecha = fecha.split('-');
-                let fechaCompleta = nuevaFecha[2]+'-'+nuevaFecha[1]+'-'+nuevaFecha[0];
-                let fech2 = data1[0].fin_plan;
-                let fecha2 = fech2.substr(0, 10);
-                let nuevaFecha2 = fecha2.split('-');
-                let fechaCompleta2 = nuevaFecha2[2]+'-'+nuevaFecha2[1]+'-'+nuevaFecha2[0];
-                $("#modal_colaboradores .modal-body").append('<div class="row"><div class="col-lg-4"><p style="color:blue;">Número plan:&nbsp;&nbsp;<b>'+data1[0].id_plan+'</b></p> </div>  <div class="col-lg-4"><p style="color:green;">Inicio:&nbsp;&nbsp;<b>'+fechaCompleta+'</b></p> </div>  <div class="col-lg-4"><p style="color:green;">Fin:&nbsp;&nbsp;<b>'+fechaCompleta2+'</b></p> </div> </div>');
-                $.each( data1, function( i, v){
-                    valor_money = ((v.porcentaje/100)*suma_01)
-                    $("#modal_colaboradores .modal-body").append('<div class="row"><input type="hidden" name="user_mktd[]" value="'+v.id_usuario+'"><div class="col-md-5"><b><p>'+v.colaborador+'</p></b><p>'+v.rol+'</p><br></div>'
-                        +'<div class="col-md-2"><input type="text" name="porcentaje_mktd[]" readonly class="form-control ng-pristine ng-invalid ng-invalid-required ng-touched" value="'+v.porcentaje+'%'+'"></div>'+'<div class="col-md-5"><input type="text" readonly name="abono_marketing[]" id="abono_marketing_'+i+'"  class="form-control ng-pristine ng-invalid ng-invalid-required ng-touched" value="'+parseFloat(valor_money.toFixed(3))+'"></div>'
-                        +'</div>');
-                    var_sum +=  parseFloat(v.porcentaje);
-                    c++;
+            }],
+            columnDefs: [{
+                orderable: false,
+                className: 'select-checkbox',
+                targets:   0,
+                searchable:false,
+                className: 'dt-body-center'
+            }],
+            ajax: {
+                url: general_base_url + "Comisiones/getDatosRevisionMktd2/"+mes+"/"+anio+"/"+Estatus,
+                type: "POST",
+                cache: false,
+                data: function( d ){}
+            },
+        });
+
+        $("#tabla_plaza_12 tbody").on("click", ".dispersar_colaboradores", function(){
+            var tr = $(this).closest('tr');
+            var row = plaza_1.row( tr );
+            let c=0;
+            let ubication = $(this).attr("data-value");
+            let plen = $(this).val();
+            $.getJSON( general_base_url + "Comisiones/getDatosSumaMktd/"+ubication+"/"+plen).done( function( data01 ){
+                let suma_01 = parseFloat(data01[0].suma_f01);
+                $("#modal_colaboradores .modal-body").html("");
+                $("#modal_colaboradores .modal-footer").html("");
+                $("#modal_colaboradores .modal-body").append('<div class="row"><div class="col-lg-12"><p>Comisión total:&nbsp;&nbsp;<b>'+formatMoney(suma_01)+'</b></p> </div></div>');
+                $("#modal_colaboradores .modal-body").append('<input type="hidden" name="total_comi" value="'+data01[0].suma_f01+'">');
+                $("#modal_colaboradores .modal-body").append('<input type="hidden" name="num_plan" value="'+plen+'">');
+                $("#modal_colaboradores .modal-body").append('<input type="hidden" name="valores_pago_i" value="'+data01[0].valor_obtenido+'">');
+                $("#modal_colaboradores .modal-body").append('<input type="hidden" name="pago_mktd" id="pago_mktd" value="'+parseFloat(suma_01)+'">');
+                $.getJSON( general_base_url + "Comisiones/getDatosColabMktd/"+ubication+"/"+plen).done( function( data1 ){
+                    var_sum = 0;
+                    let fech = data1[0].fecha_plan;
+                    let fecha = fech.substr(0, 10);
+                    let nuevaFecha = fecha.split('-');
+                    let fechaCompleta = nuevaFecha[2]+'-'+nuevaFecha[1]+'-'+nuevaFecha[0];
+                    let fech2 = data1[0].fin_plan;
+                    let fecha2 = fech2.substr(0, 10);
+                    let nuevaFecha2 = fecha2.split('-');
+                    let fechaCompleta2 = nuevaFecha2[2]+'-'+nuevaFecha2[1]+'-'+nuevaFecha2[0];
+                    $("#modal_colaboradores .modal-body").append('<div class="row"><div class="col-lg-4"><p style="color:blue;">Número plan:&nbsp;&nbsp;<b>'+data1[0].id_plan+'</b></p> </div>  <div class="col-lg-4"><p style="color:green;">Inicio:&nbsp;&nbsp;<b>'+fechaCompleta+'</b></p> </div>  <div class="col-lg-4"><p style="color:green;">Fin:&nbsp;&nbsp;<b>'+fechaCompleta2+'</b></p> </div> </div>');
+                    $.each( data1, function( i, v){
+                        valor_money = ((v.porcentaje/100)*suma_01)
+                        $("#modal_colaboradores .modal-body").append('<div class="row"><input type="hidden" name="user_mktd[]" value="'+v.id_usuario+'"><div class="col-md-5"><b><p>'+v.colaborador+'</p></b><p>'+v.rol+'</p><br></div>'
+                            +'<div class="col-md-2"><input type="text" name="porcentaje_mktd[]" readonly class="form-control ng-pristine ng-invalid ng-invalid-required ng-touched" value="'+v.porcentaje+'%'+'"></div>'+'<div class="col-md-5"><input type="text" readonly name="abono_marketing[]" id="abono_marketing_'+i+'"  class="form-control ng-pristine ng-invalid ng-invalid-required ng-touched" value="'+parseFloat(valor_money.toFixed(3))+'"></div>'
+                            +'</div>');
+                        var_sum +=  parseFloat(v.porcentaje);
+                        c++;
+                    });
+                    var_sum2 = parseFloat(var_sum);
+                    new_valll = parseFloat((suma_01)-((suma_01/100)*var_sum2));
+                    new_valll2 = parseFloat((suma_01/100)*var_sum2);
+                    $("#modal_colaboradores .modal-body").append('<div class="row"><div class="col-lg-12"><p>Comisión distribuida:&nbsp;&nbsp;<b>'+new_valll2.toFixed(3)+'</b></p> </div></div>');
+                    $("#modal_colaboradores .modal-body").append('<div class="row"><div class="col-lg-12"><p>Comisión restante:&nbsp;&nbsp;<b style="color:red;">'+new_valll.toFixed(3)+'</b></p> </div></div>');
+                    $("#modal_colaboradores .modal-body").append('<div class="row"><div class="col-lg-12"><p>Suma: <b id="Sumto" style="color:red;"></b></p> </div></div>');
+                    $("#modal_colaboradores .modal-body").append('<input type="hidden" name="cuantos" id="cuantos" value="'+c+'">');
                 });
-                var_sum2 = parseFloat(var_sum);
-                new_valll = parseFloat((suma_01)-((suma_01/100)*var_sum2));
-                new_valll2 = parseFloat((suma_01/100)*var_sum2);
-                $("#modal_colaboradores .modal-body").append('<div class="row"><div class="col-lg-12"><p>Comisión distribuida:&nbsp;&nbsp;<b>'+new_valll2.toFixed(3)+'</b></p> </div></div>');
-                $("#modal_colaboradores .modal-body").append('<div class="row"><div class="col-lg-12"><p>Comisión restante:&nbsp;&nbsp;<b style="color:red;">'+new_valll.toFixed(3)+'</b></p> </div></div>');
-                $("#modal_colaboradores .modal-body").append('<div class="row"><div class="col-lg-12"><p>Suma: <b id="Sumto" style="color:red;"></b></p> </div></div>');
-                $("#modal_colaboradores .modal-body").append('<input type="hidden" name="cuantos" id="cuantos" value="'+c+'">');
+                $("#modal_colaboradores .modal-footer").append('<br><div class="row"><div class="col-md-6"><center><input type="submit" class="btn btn-success" value="DISPERSAR"></center></div><div class="col-md-6"><center><input type="button" class="btn btn-danger"  data-dismiss="modal" value="CANCELAR"></center></div></div>');
+                $("#modal_colaboradores").modal();
             });
-            $("#modal_colaboradores .modal-footer").append('<br><div class="row"><div class="col-md-6"><center><input type="submit" class="btn btn-success" value="DISPERSAR"></center></div><div class="col-md-6"><center><input type="button" class="btn btn-danger"  data-dismiss="modal" value="CANCELAR"></center></div></div>');
-            $("#modal_colaboradores").modal();
         });
     });
-});
 }
 
 $("#tabla_plaza_1").ready( function(){
@@ -425,6 +425,7 @@ $("#tabla_plaza_1").ready( function(){
             trigger: "hover"
         });
     });
+
     let c=0;
     $('#tabla_plaza_1').on('xhr.dt', function ( e, settings, json, xhr ) {
         var total = 0;
@@ -434,6 +435,7 @@ $("#tabla_plaza_1").ready( function(){
         var to = formatMoney(total);
         document.getElementById("myText_nuevas").textContent = to;
     });
+
     plaza_1 = $("#tabla_plaza_1").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
@@ -467,49 +469,49 @@ $("#tabla_plaza_1").ready( function(){
         ordering: false,
         columns: [{
             "data": function( d ){
-                    return '<p class="m-0"><b>'+d.id_usuario+'</b></p>';
-                }
-            },
-            {
-                "data": function( d ){
-                    return '<p class="m-0">'+d.colaborador+'</p>';
-                }
-            },
-            {
-                "data": function( d ){
-                    return '<p class="m-0">'+d.sede+'</p>';
-                }
-            },
-            {
-                "data": function( d ){
-                    return '<p class="m-0">'+d.empresa+'</p>';
-                }
-            },
-            {
-                "data": function( d ){
-                    return '<p class="m-0"><b>'+d.valimpuesto+'%</b></p>';
-                }
-            },
-            {
-                "data": function( d ){
-                    return '<p class="m-0">'+formatMoney(d.sum_abono_marketing)+'</p>';
-                }
-            },
-            {
-                "data": function( d ){
-                    return '<p class="m-0">'+formatMoney(d.dcto)+'</p>';
-                }
-            },
-            {
-                "data": function( d ){
-                    return '<p class="m-0"><b>'+formatMoney(d.impuesto)+'</b></p>';
-                }
-            },
-            {
-                "data": function( d ){
-                    return '<p class="m-0">'+d.forma_pago+'</p>';
-                }
-            },],
+                return '<p class="m-0"><b>'+d.id_usuario+'</b></p>';
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0">'+d.colaborador+'</p>';
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0">'+d.sede+'</p>';
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0">'+d.empresa+'</p>';
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0"><b>'+d.valimpuesto+'%</b></p>';
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0">'+formatMoney(d.sum_abono_marketing)+'</p>';
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0">'+formatMoney(d.dcto)+'</p>';
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0"><b>'+formatMoney(d.impuesto)+'</b></p>';
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0">'+d.forma_pago+'</p>';
+            }
+        }],
         columnDefs: [{
             orderable: false,
             className: 'select-checkbox',
@@ -524,6 +526,7 @@ $("#tabla_plaza_1").ready( function(){
             data: function( d ){}
         },
     });
+
     $("#tabla_plaza_1 tbody").on("click", ".dispersar_colaboradores", function(){
         var tr = $(this).closest('tr');
         var row = plaza_1.row( tr );
@@ -660,85 +663,85 @@ $("#tabla_plaza_2").ready( function(){
                 return '<p>'+d.id_pago_i+'</p>';
             }
         },
-            {
-                "data": function( d ){
-                    return '<p>'+d.proyecto+'</p>';
+        {
+            "data": function( d ){
+                return '<p>'+d.proyecto+'</p>';
+            }
+        },{
+            "data": function( d ){
+                return '<p>'+d.condominio+'</p>';
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p><b>'+d.lote+'</b></p>';
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p>'+d.referencia+'</p>';
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p>'+formatMoney(d.precio_lote)+'</p>';
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p><b>'+d.empresa+'</p>';
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p>'+formatMoney(d.comision_total)+'</p>';
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p>'+formatMoney(d.pago_neodata)+'</p>';
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p>'+formatMoney(d.pago_cliente)+'</p>';
+            }
+        },
+        {
+            "data": function( d ){
+                if(d.lugar_prospeccion == 6){
+                    return '<p>COMISIÓN + MKTD <br><b> ('+d.porcentaje_decimal+'% de '+d.porcentaje_abono+'%)</b></p>';
                 }
-            },{
-                "data": function( d ){
-                    return '<p>'+d.condominio+'</p>';
+                else{
+                    return '<p>COMISIÓN <br><b> ('+d.porcentaje_decimal+'% de '+d.porcentaje_abono+'%)</b></p>';
                 }
-            },
-            {
-                "data": function( d ){
-                    return '<p><b>'+d.lote+'</b></p>';
-                }
-            },
-            {
-                "data": function( d ){
-                    return '<p>'+d.referencia+'</p>';
-                }
-            },
-            {
-                "data": function( d ){
-                    return '<p>'+formatMoney(d.precio_lote)+'</p>';
-                }
-            },
-            {
-                "data": function( d ){
-                    return '<p><b>'+d.empresa+'</p>';
-                }
-            },
-            {
-                "data": function( d ){
-                    return '<p>'+formatMoney(d.comision_total)+'</p>';
-                }
-            },
-            {
-                "data": function( d ){
-                    return '<p>'+formatMoney(d.pago_neodata)+'</p>';
-                }
-            },
-            {
-                "data": function( d ){
-                    return '<p>'+formatMoney(d.pago_cliente)+'</p>';
-                }
-            },
-            {
-                "data": function( d ){
-                    if(d.lugar_prospeccion == 6){
-                        return '<p>COMISIÓN + MKTD <br><b> ('+d.porcentaje_decimal+'% de '+d.porcentaje_abono+'%)</b></p>';
-                    }
-                    else{
-                        return '<p>COMISIÓN <br><b> ('+d.porcentaje_decimal+'% de '+d.porcentaje_abono+'%)</b></p>';
-                    }
-                }
-            },
-            {
-                "data": function( d ){
-                    return '<p><b>'+d.usuario+'</b></i></p>';
-                }
-            },
-            {
-                "data": function( d ){
-                    return '<p><i> '+d.puesto+'</i></p>';
-                }
-            },
-            {
-                "data": function( d ){
-                    var BtnStats1;
-                    BtnStats1 =  '<p>'+d.fecha_creacion.split('.')[0]+'</p>';
-                    return BtnStats1;
-                }
-            },
-            {
-                "orderable": false,
-                "data": function( data ){
-                    var BtnStats;
-                    BtnStats = '<div class="d-flex justify-center"><button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-sky consultar_logs_asimilados" data-toggle="tooltip" data-placement="top" title="DETALLE">' +'<span class="material-icons">info</span></button></div>&nbsp;';
-                    return BtnStats;
-                }
-            }],
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p><b>'+d.usuario+'</b></i></p>';
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p><i> '+d.puesto+'</i></p>';
+            }
+        },
+        {
+            "data": function( d ){
+                var BtnStats1;
+                BtnStats1 =  '<p>'+d.fecha_creacion.split('.')[0]+'</p>';
+                return BtnStats1;
+            }
+        },
+        {
+            "orderable": false,
+            "data": function( data ){
+                var BtnStats;
+                BtnStats = '<div class="d-flex justify-center"><button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-sky consultar_logs_asimilados" data-toggle="tooltip" data-placement="top" title="DETALLE">' +'<span class="material-icons">info</span></button></div>&nbsp;';
+                return BtnStats;
+            }
+        }],
         columnDefs: [{
             orderable: false,
             className: 'select-checkbox',
@@ -757,6 +760,7 @@ $("#tabla_plaza_2").ready( function(){
             data: function( d ){}
         },
     });
+
     $("#tabla_plaza_2 tbody").on("click", ".consultar_logs_asimilados", function(e){
         e.preventDefault();
         e.stopImmediatePropagation();
@@ -815,7 +819,6 @@ $('#tabla_total_comisionistas thead tr:eq(0) th').each( function (i) {
             $.each(data, function(i, v){
                 total += parseFloat(v.total_dispersado);
             });
-            var to1 = formatMoney(total);
             document.getElementById("myText_nuevas_tc").textContent = formatMoney(total);
         }
     });
@@ -823,12 +826,12 @@ $('#tabla_total_comisionistas thead tr:eq(0) th').each( function (i) {
 
 $('#fechaR1').change( function(){
     fecha1 = $(this).val();
-    let fecha2 = $('#fechaR2').val();
+    $('#fechaR2').val();
 });
 
 $('#fechaR2').change( function(){
     fecha2 = $(this).val();
-    let fecha1 = $('#fechaR1').val();
+    $('#fechaR1').val();
 });
 
 $('#selectEstatusR').change( function(){
@@ -852,7 +855,7 @@ $('#tabla_total_comisionistas2 thead tr:eq(0) th').each( function (i) {
             $.each(data, function(i, v){
                 total += parseFloat(v.total);
             });
-            var to1 = formatMoney(total);
+
             document.getElementById("myText_nuevas_tc2").textContent = formatMoney(total);
         }
     });
@@ -902,29 +905,29 @@ function fillTableR(typeTransaction, beginDate, endDate, where, estatus){
             ordering: false,
             columns: [{
                 "data": function( d ){
-                        return '<p class="m-0"><center>MKTD COMISIONES</center></p>';
-                    }
-                },
-                {
-                    "data": function( d ){
-                        return '<p class="m-0"><center>'+d.id_plan+'</p>';
-                    }
-                },
-                {
-                    "data": function( d ){
-                        return '<p class="m-0"><center><b>'+d.sede+'</b></center></p>';
-                    }
-                },
-                {
-                    "data": function( d ){
-                        return '<p class="m-0"><center>'+formatMoney(d.total)+'</center></p>';
-                    }
-                },
-                {
-                    "data": function( d ){
-                        return '<p style="font-size: .8em"><center>'+d.nombre+'</center></p>';
-                    }
-                }],
+                    return '<p class="m-0"><center>MKTD COMISIONES</center></p>';
+                }
+            },
+            {
+                "data": function( d ){
+                    return '<p class="m-0"><center>'+d.id_plan+'</p>';
+                }
+            },
+            {
+                "data": function( d ){
+                    return '<p class="m-0"><center><b>'+d.sede+'</b></center></p>';
+                }
+            },
+            {
+                "data": function( d ){
+                    return '<p class="m-0"><center>'+formatMoney(d.total)+'</center></p>';
+                }
+            },
+            {
+                "data": function( d ){
+                    return '<p style="font-size: .8em"><center>'+d.nombre+'</center></p>';
+                }
+            }],
             ajax: {
                 url: general_base_url + "Comisiones/getCommissionsByMktdUserReport/",
                 type: "POST",
@@ -948,141 +951,7 @@ $(document).on("click", "#searchByDateRangeR", function () {
     fillTableR(3, finalBeginDate, finalEndDate, 0, estatus);
 });
 
-$(document).on( "click", ".nuevo_plan", function(){
-    $("#modal_mktd .modal-body").html("");
-    $("#modal_mktd .modal-footer").html("");
-    $.getJSON( general_base_url + "Comisiones/getDatosNuevo/").done( function( data1 ){
-        $("#modal_mktd .modal-body").append('<div class="row"><div class="col-md-6"><label>Fecha inicio: </label><input type="date" class="form-control ng-pristine ng-invalid ng-invalid-required ng-touched" name="fecha_inicio" id="fecha_inicio" required=""></div></div>');
-        $.each( data1, function( i, v){
-            $("#modal_mktd .modal-body").append('<div class="row">'
-                +'<div class="col-md-3"><br><input class="form-contol ng-invalid ng-invalid-required" style="border: 1px solid white; outline: none;" value="'+v.puesto+'"  readonly><input id="puesto" name="puesto[]" value="'+v.id_rol+'" type="hidden"></div>'
-                +'<div class="col-md-3"><select id="userMKTDSelect'+i+'" name="userMKTDSelect[]" class="form-control userMKTDSelect ng-invalid ng-invalid-required" required data-live-search="true"></select></div>'
-                +'<div class="col-md-2"><input id="porcentajeUserMk'+i+'" name="porcentajeUserMk[]" class="form-control porcentajeUserMk ng-invalid ng-invalid-required" required placeholder="%" value="0"></div>'
-                +'<div class="col-md-2"><select id="plazaMKTDSelect'+i+'" name="plazaMKTDSelect[]" class="form-control plazaMKTDSelect ng-invalid ng-invalid-required"   data-live-search="true"></select></div>'
-                +'<div class="col-md-2"><select id="sedeMKTDSelect'+i+'" name="sedeMKTDSelect[]" class="form-control sedeMKTDSelect ng-invalid ng-invalid-required"   data-live-search="true"></select></div></div>');
-            $.post('getUserMk', function(data) {
-                $("#userMKTDSelect"+i+"").append($('<option disabled>').val("default").text("Seleccione una opción"))
-                var len = data.length;
-                for( var j = 0; j<len; j++){
-                    var id = data[j]['id_usuario'];
-                    var name = data[j]['name_user'];
-                    $("#userMKTDSelect"+i+"").append($('<option>').val(id).attr('data-value', id).text(name));
-                }
-                if(len<=0){
-                    $("#userMKTDSelect"+i+"").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
-                }
-                $("#userMKTDSelect"+i+"").val(data1[i].id_usuario);
-                $("#userMKTDSelect"+i+"").selectpicker('refresh');
-            }, 'json');
-            $.post('getPlazasMk', function(data) {
-                $("#plazaMKTDSelect"+i+"").append($('<option disabled>').val("default").text("Seleccione una opción"))
-                var len = data.length;
-                for( var j = 0; j<len; j++){
-                    var id = data[j]['id_opcion'];
-                    var name = data[j]['nombre'];
-                    $("#plazaMKTDSelect"+i+"").append($('<option>').val(id).attr('data-value', id).text(name));
-                }
-                if(len<=0){
-                    $("#plazaMKTDSelect"+i+"").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
-                }
-                $("#plazaMKTDSelect"+i+"").val(1);
-                $("#plazaMKTDSelect"+i+"").selectpicker('refresh');
-            }, 'json');
-            $.post('getSedeMk', function(data) {
-                $("#sedeMKTDSelect"+i+"").append($('<option disabled>').val("default").text("Seleccione una opción"))
-                var len = data.length;
-                for( var j = 0; j<len; j++){
-                    var id = data[j]['id_sede'];
-                    var name = data[j]['nombre'];
-                    $("#sedeMKTDSelect"+i+"").append($('<option>').val(id).attr('data-value', id).text(name));
-                }
-                if(len<=0){
-                    $("#sedeMKTDSelect"+i+"").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
-                }
-                if(data1[i].id_rol=='20'){
-                    $("#sedeMKTDSelect"+i+"").val(data1[i].id_sede);
-                }
-                else{
-                    $("#sedeMKTDSelect"+i+"").val(2);
-                }
-                $("#sedeMKTDSelect"+i+"").selectpicker('refresh');
-            }, 'json');
-        });
-    });
-    $("#modal_mktd .modal-footer").append('<br><div class="row"><div class="col-md-12"><center><input type="submit" id="btnsubmit" class="btn btn-success" value="GUARDAR"></center></div></div>');
-    $("#modal_mktd").modal();
-});
-
-$(document).on( "click", ".subir_factura", function(){
-    resear_formulario();
-    id_comision = $(this).val();
-    link_post = "Comisiones/guardar_solicitud/"+id_comision;
-    $("#modal_formulario_solicitud").modal( {backdrop: 'static', keyboard: false} );
-});
-
-function resear_formulario(){
-    $("#modal_formulario_solicitud input.form-control").prop("readonly", false).val("");
-    $("#modal_formulario_solicitud textarea").html('');
-    $("#modal_formulario_solicitud #obse").val('');
-    var validator = $( "#frmnewsol" ).validate();
-    validator.resetForm();
-    $( "#frmnewsol div" ).removeClass("has-error");
-}
-
-$("#cargar_xml").click( function(){
-    subir_xml( $("#xmlfile") );
-});
-
 var justificacion_globla = "";
-
-function subir_xml( input ){
-    var data = new FormData();
-    documento_xml = input[0].files[0];
-    var xml = documento_xml;
-    data.append("xmlfile", documento_xml);
-    resear_formulario();
-    $.ajax({
-        url: general_base_url + "Comisiones/cargaxml",
-        data: data,
-        cache: false,
-        contentType: false,
-        processData: false,
-        dataType: 'json',
-        method: 'POST',
-        type: 'POST', // For jQuery < 1.9
-        success: function(data){
-            if( data.respuesta[0] ){
-                documento_xml = xml;
-                var informacion_factura = data.datos_xml;
-                cargar_info_xml( informacion_factura );
-                $("#solobs").val( justificacion_globla );
-            }
-            else{
-                input.val('');
-                alert( data.respuesta[1] );
-            }
-        },
-        error: function( data ){
-            input.val('');
-            alert("ERROR INTENTE COMUNICARSE CON EL PROVEEDOR");
-        }
-    });
-}
-
-function cargar_info_xml( informacion_factura ){
-    $("#emisor").val( ( informacion_factura.nameEmisor ? informacion_factura.nameEmisor[0] : '') ).attr('readonly',true);
-    $("#rfcemisor").val( ( informacion_factura.rfcemisor ? informacion_factura.rfcemisor[0] : '') ).attr('readonly',true);
-    $("#receptor").val( ( informacion_factura.namereceptor ? informacion_factura.namereceptor[0] : '') ).attr('readonly',true);
-    $("#rfcreceptor").val( ( informacion_factura.rfcreceptor ? informacion_factura.rfcreceptor[0] : '') ).attr('readonly',true);
-    $("#regimenFiscal").val( ( informacion_factura.regimenFiscal ? informacion_factura.regimenFiscal[0] : '') ).attr('readonly',true);
-    $("#formaPago").val( ( informacion_factura.formaPago ? informacion_factura.formaPago[0] : '') ).attr('readonly',true);
-    $("#total").val( ('$ '+informacion_factura.total ? '$ '+informacion_factura.total[0] : '') ).attr('readonly',true);
-    $("#cfdi").val( ( informacion_factura.usocfdi ? informacion_factura.usocfdi[0] : '') ).attr('readonly',true);
-    $("#metodopago").val( ( informacion_factura.metodoPago ? informacion_factura.metodoPago[0] : '') ).attr('readonly',true);
-    $("#unidad").val( ( informacion_factura.claveUnidad ? informacion_factura.claveUnidad[0] : '') ).attr('readonly',true);
-    $("#clave").val( ( informacion_factura.claveProdServ ? informacion_factura.claveProdServ[0] : '') ).attr('readonly',true);
-    $("#obse").val( ( informacion_factura.descripcion ? informacion_factura.descripcion[0] : '') ).attr('readonly',true);
-}
 
 $("#form_colaboradores").submit( function(e) {
     e.preventDefault();
@@ -1131,36 +1000,6 @@ $("#form_colaboradores").submit( function(e) {
         else if(parseFloat(sumat2.toFixed(3)) > valor1 && parseFloat(sumat2.toFixed(3)) > valor2 ){
             alerts.showNotification("top", "right", "Cantidad excedida", "danger");
         }
-    }
-});
-
-$("#frmnewsol").submit( function(e) {
-    e.preventDefault();
-}).validate({
-    submitHandler: function( form ) {
-        var data = new FormData( $(form)[0] );
-        data.append("xmlfile", documento_xml);
-        $.ajax({
-            url: general_base_url + link_post,
-            data: data,
-            cache: false,
-            contentType: false,
-            processData: false,
-            dataType: 'json',
-            method: 'POST',
-            type: 'POST', // For jQuery < 1.9
-            success: function(data){
-                if( data.resultado ){
-                    alert("LA FACTURA SE SUBIO CORRECTAMENTE");
-                    $("#modal_formulario_solicitud").modal( 'toggle' );
-                    tabla_nuevas.ajax.reload();
-                }else{
-                    alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
-                }
-            },error: function(){
-                alert("ERROR EN EL SISTEMA");
-            }
-        });
     }
 });
 

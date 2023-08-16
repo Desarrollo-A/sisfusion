@@ -2,15 +2,7 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
     <div class="wrapper">
-        <?php
-        if($this->session->userdata('id_rol')=="31"){
-            /*---------------------------contraloria----------------------------*/
-            $this->load->view('template/sidebar');
-        }
-        else{
-            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
-        }
-        ?>
+        <?php $this->load->view('template/sidebar'); ?>
 
         <!-- Modals -->
         <div class="modal fade" id="seeInformationModalremanente" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
@@ -128,7 +120,7 @@
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
                                 <i class="fas fa-wallet fa-2x"></i>
@@ -141,7 +133,7 @@
                                 <div class="toolbar">
                                     <div class="container-fluid p-0">
                                         <div class="row">
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                 <div class="form-group d-flex justify-center align-center">
                                                     <h4 class="title-tot center-align m-0">Disponible:</h4>
                                                     <p class="input-tot pl-1" name="totpagarremanente" id="totpagarremanente">$0.00</p>
@@ -182,7 +174,7 @@
                                             <thead>
                                                 <tr>
                                                     <th></th>
-                                                    <th>ID</th>
+                                                    <th>ID PAGO</th>
                                                     <th>PROYECTO</th>
                                                     <th>CONDOMINIO</th>
                                                     <th>LOTE</th>
@@ -191,13 +183,13 @@
                                                     <th>EMPRESA</th>
                                                     <th>TOTAL DE LA COMPRA</th>
                                                     <th>PAGO DEL CLIENTE</th>
-                                                    <th>A PAGAR</th>
+                                                    <th>TOTAL A PAGAR</th>
                                                     <th>TIPO DE VENTA</th>
                                                     <th>USUARIO</th>
                                                     <th>RFC</th>
                                                     <th>PUESTO</th>
                                                     <th>FECHA DE ENVÍO</th>
-                                                    <th>MÁS</th>
+                                                    <th>ACCIONES</th>
                                                 </tr>
                                             </thead>
                                         </table>
@@ -211,7 +203,6 @@
         </div>
         <?php $this->load->view('template/footer_legend');?>
     </div>
-    </div><!--main-panel close-->
     <?php $this->load->view('template/footer');?>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_remanente_intmex.js"></script>
 </body>

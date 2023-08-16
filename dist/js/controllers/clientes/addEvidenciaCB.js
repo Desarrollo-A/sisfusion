@@ -868,7 +868,6 @@ $("#subir_evidencia_form").on('submit', function (e) {
             $("#btnSubmit").attr("onclick", "").unbind("click");
         },
         success: function (data) {
-            console.log(data);
             if (data == 1) {
                 $('#btnSubmit').removeAttr("disabled");
                 $('#btnSubmit').css("opacity", "1");
@@ -879,7 +878,6 @@ $("#subir_evidencia_form").on('submit', function (e) {
                 $('#sol_aut').DataTable().ajax.reload();
                 alerts.showNotification('top', 'right', 'Se enviaron las autorizaciones correctamente', 'success');
             } else {
-            console.log('else');
                 $('#btnSubmit').removeAttr("disabled");
                 $('#btnSubmit').css("opacity", "1");
                 //toastr.error("Asegúrate de haber llenado todos los campos mínimos requeridos");

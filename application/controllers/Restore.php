@@ -24,6 +24,7 @@ class Restore extends CI_Controller {
             echo json_encode(array());
         }
     }
+    
     public function return_status_uno()
     {
         $datos = $_POST;// $this->input->post('idCliente');

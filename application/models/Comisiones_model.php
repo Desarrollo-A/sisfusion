@@ -638,7 +638,7 @@ function getDatosHistorialPagoRP($id_usuario){
 
         $this->db->query("SET LANGUAGE Español;");
             $query = $this->db->query("SELECT cmktd.idc_mktd,l.idLote, res.nombreResidencial, con.nombre AS condominio, l.nombreLote, l.totalNeto2, cl.fechaApartado, convert(nvarchar, cl.fechaApartado, 6) mes, CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) AS cliente, se.nombre as plaza, CONCAT(ase.nombre,' ',ase.apellido_paterno,' ',ase.apellido_materno) AS asesor, CONCAT(ger.nombre,' ',ger.apellido_paterno,' ',ger.apellido_materno) AS gerente, stl.nombre as estatus,
-            CASE WHEN pro.otro_lugar = '0' THEN 'Sin especificar' WHEN pro.otro_lugar IS NULL THEN 'Sin especificar' ELSE pro.otro_lugar END as evidencia, cl.status, cl.id_cliente,l.idStatusContratacion,l.idLote,rm.precio, sd1.nombre as sede1,sd2.nombre as sede1, com.comision_total, pci2.abono_pagado, cmktd.idc_mktd, pc.bandera, pci3.abono_dispersado, convert(nvarchar, pc.fecha_modificacion, 6) date_final
+            CASE WHEN pro.otro_lugar = '0' THEN 'Sin especificar' WHEN pro.otro_lugar IS NULL THEN 'Sin especificar' ELSE pro.otro_lugar END as evidencia, cl.status, cl.id_cliente,l.idStatusContratacion,l.idLote,rm.precio, sd1.nombre as sd1,sd2.nombre as sd2, com.comision_total, pci2.abono_pagado, cmktd.idc_mktd, pc.bandera, pci3.abono_dispersado, convert(nvarchar, pc.fecha_modificacion, 6) date_final
             FROM lotes l
             INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1 AND lugar_prospeccion = 6
             INNER JOIN condominios con ON con.idCondominio = l.idCondominio
@@ -2101,10 +2101,11 @@ ORDER BY pci.fecha_abono DESC");
 
 
  function getDataMarketing($a, $b){
-    return $this->db->query("SELECT ck.comentario, ck.fecha_creacion, ck.enganche, ck.fecha_prospecion_mktd, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) as nombre
+    return $this->db->query("SELECT ck.comentario, ck.fecha_creacion, ck.enganche, convert(varchar, fecha_prospecion_mktd, 103) AS prospeccion, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) as nombre
         FROM cobranza_mktd ck
         INNER JOIN usuarios u ON u.id_usuario = ck.creado_por
-        WHERE ck.id_lote = $a AND ck.id_cliente = $b");
+        WHERE ck.id_lote = $a AND ck.id_cliente = $b
+        ");
 }
 
 
@@ -2427,14 +2428,10 @@ function getDatosRevisionFactura($proyecto,$condominio){
 
 
         if( $QUERY_VOBO->num_rows() > 0 ){
-            
-            $respuesta =  $this->db->query("UPDATE pago_comision SET total_comision = ".$sumaComi.", abonado = ".$sumaDispo.", porcentaje_abono = ".$porcentaje.", pendiente = ".$resta.", creado_por = ".$id_user.", fecha_modificacion = GETDATE(), ultimo_pago = ".$pagado.", bonificacion = ".$bonificacion." ultima_dispersion = GETDATE() ,numero_dispersion = (numero_dispersion +1) WHERE id_lote = ".$lote."");
+            $respuesta =  $this->db->query("UPDATE pago_comision SET total_comision = ".$sumaComi.", abonado = ".$sumaDispo.", porcentaje_abono = ".$porcentaje.", pendiente = ".$resta.", creado_por = ".$id_user.", fecha_modificacion = GETDATE(), ultimo_pago = ".$pagado.", bonificacion = ".$bonificacion.", ultima_dispersion = GETDATE(), numero_dispersion = (numero_dispersion +1) WHERE id_lote = ".$lote."");
         }
         else{
-
-            // $respuesta =  $this->db->query("INSERT INTO pago_comision ([id_lote], [total_comision], [abonado], [porcentaje_abono], [pendiente], [creado_por], [fecha_modificacion], [fecha_abono],[bandera],[ultimo_pago],[bonificacion]) VALUES (".$lote.", ".$sumaComi.", ".$sumaDispo.",".$porcentaje.",".$resta.",".$id_user.", GETDATE(), GETDATE(),1,".$pagado.",".$bonificacion.")");
-            $respuesta =  $this->db->query("INSERT INTO pago_comision ([id_lote], [total_comision], [abonado], [porcentaje_abono], [pendiente], [creado_por], [fecha_modificacion], [fecha_abono],[bandera],[ultimo_pago],[bonificacion],[fecha_neodata],[modificado_por],[new_neo],[ultima_dispersion], [numero_dispersion]) VALUES (".$lote.", ".$sumaComi.", ".$sumaDispo.",".$porcentaje.",".$resta.",".$id_user.", GETDATE(), GETDATE(),1,".$pagado.",".$bonificacion.", null, null, null, GETDATE() , 1)");
-
+            $respuesta =  $this->db->query("INSERT INTO pago_comision ([id_lote], [total_comision], [abonado], [porcentaje_abono], [pendiente], [creado_por], [fecha_modificacion], [fecha_abono],[bandera],[ultimo_pago],[bonificacion],[fecha_neodata],[modificado_por],[new_neo],[ultima_dispersion], [numero_dispersion]) VALUES (".$lote.", ".$sumaComi.", ".$sumaDispo.",".$porcentaje.",".$resta.",".$id_user.", GETDATE(), GETDATE(),1,".$pagado.",".$bonificacion.", null, null, null, GETDATE(), 1)");
         }
     if (! $respuesta ) {
     return 0;
@@ -4961,7 +4958,6 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
 
     public function Update_MKTD_precioL($lote,$precio,$user){
         $respuesta = $this->db->query("UPDATE reportes_marketing SET precio=".$precio.",creado_por=$user,fecha_creacion=GETDATE() WHERE id_lote=".$lote."");
-
         if ($respuesta ) {
             return 1;
         } else {

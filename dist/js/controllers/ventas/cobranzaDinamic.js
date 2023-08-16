@@ -1,4 +1,57 @@
+let datos = '';
+let meses = [
+    {
+        id: '01',
+        mes:'ENERO'
+    },
+    {
+        id:'02',
+        mes:'FEBRERO'
+    },
+    {
+        id:'03',
+        mes:'MARZO'
+    },
+    {
+        id:'04',
+        mes:'ABRIL'
+    },
+    {
+        id:'05',
+        mes:'MAYO'
+    },
+    {
+        id:'06',
+        mes:'JUNIO'
+    },
+    {
+        id:'07',
+        mes:'JULIO'
+    },
+    {
+        id:'08',
+        mes:'AGOSTO'
+    },
+    {
+        id:'09',
+        mes:'SEPTIEMBRE'
+    },
+    {
+        id:'10',
+        mes:'OCTUBRE'
+    },
+    {
+        id:'11',
+        mes:'NOVIEMBRE'
+    },
+    {
+        id:'12',
+        mes:'DICIEMBRE'
+    }
+];
+
 $('#mes').change( function(){
+    $('#tableDinamicMKTD').removeClass('hide');
     mes = $('#mes').val();
     anio = $('#anio').val();
     if(anio == ''){
@@ -6,25 +59,14 @@ $('#mes').change( function(){
         getAssimilatedCommissions(mes, anio, 0, 0);
     }
 });
-$(document).ready(function(){
-    $('#anio').html("");
-    $('#plaza').html("");
-    $('#gerente').html("");
-    var d = new Date();
-    var n = d.getFullYear();
-    for (var i = n; i >= 2020; i--){
-        var id = i;
-        $("#anio").append($('<option>').val(id).text(id));
-    }
-    $("#anio").selectpicker('refresh');
-    $("#plaza").selectpicker('refresh');
-    $("#gerente").selectpicker('refresh');
-});
-
 $('#anio').change( function(){
+    for (let index = 0; index < meses.length; index++) {
+        datos = datos + `<option value="${meses[index]['id']}">${meses[index]['mes']}</option>`;
+        $('#mes').html(datos);
+        $('#mes').selectpicker('refresh');
+        }
     $("#plaza").html("");
     $("#gerente").html("");
-    $('#tableDinamicMKTD').removeClass('hide');
     mes = $('#mes').val();
     if(mes == '')
     {
@@ -43,8 +85,23 @@ $('#anio').change( function(){
             $("#gerente").selectpicker('refresh');
         }, 'json');
     });
-    getAssimilatedCommissions(mes, anio, 0, 0);
 });
+$(document).ready(function(){
+    $('#anio').html("");
+    $('#plaza').html("");
+    $('#gerente').html("");
+    var d = new Date();
+    var n = d.getFullYear();
+    for (var i = n; i >= 2020; i--){
+        var id = i;
+        $("#anio").append($('<option>').val(id).text(id));
+    }
+    $("#anio").selectpicker('refresh');
+    $("#plaza").selectpicker('refresh');
+    $("#gerente").selectpicker('refresh');
+});
+
+
 
 $('#plaza').change( function(){
     $("#gerente").html("");
@@ -80,12 +137,7 @@ $('#gerente').change( function(){
     }
     getAssimilatedCommissions(mes, anio, plaza, gerente);
 });
-var totalLeon = 0;
-var totalQro = 0;
-var totalSlp = 0;
-var totalMerida = 0;
-var totalCdmx = 0;
-var totalCancun = 0;
+
 var tr;
 var tableDinamicMKTD2 ;
 var totaPen = 0;
@@ -112,7 +164,7 @@ function getAssimilatedCommissions(mes, anio, plaza, gerente){
             total += parseFloat(v.monto_vendido);
         });
         var to = formatMoney(total);
-        document.getElementById("myText_vendido").textContent = '$'+to;
+        document.getElementById("myText_vendido").textContent =to;
     });
 
 $("#tableDinamicMKTD").prop("hidden", false);
@@ -148,7 +200,7 @@ $("#tableDinamicMKTD").prop("hidden", false);
         ordering: false,
         columns: [
         {
-            "data": function( d ){
+            data: function( d ){
                 if(d.status == 0)
                     return '<p class="m-0"      >'+d.lotes_vendidos+'</p>';
                 else
@@ -156,15 +208,15 @@ $("#tableDinamicMKTD").prop("hidden", false);
             }
         },
         {
-            "data": function( d ){
+            data: function( d ){
                 if(d.status == 0)
-                    return '<p class="m-0" style="color:crimson;">$'+formatMoney(d.monto_vendido)+'</p>';
+                    return '<p class="m-0" style="color:crimson;">'+formatMoney(d.monto_vendido)+'</p>';
                 else
-                    return '<p class="m-0">$'+formatMoney(d.monto_vendido)+'</p>';
+                    return '<p class="m-0">'+formatMoney(d.monto_vendido)+'</p>';
             }
         },
         {
-            "data": function( d ){
+            data: function( d ){
                 if(d.status == 0)
                     return '<p class="m-0" style="color:crimson;">'+d.asesor+'</p>';
                 else
@@ -172,7 +224,7 @@ $("#tableDinamicMKTD").prop("hidden", false);
             }
         },
         {
-            "data": function( d ){
+            data: function( d ){
                 if(d.status == 0)
                     return '<p class="m-0" style="color:crimson;">'+d.gerente+'</p>';
                 else
@@ -180,7 +232,7 @@ $("#tableDinamicMKTD").prop("hidden", false);
             }
         },
         {
-            "data": function( d ){
+            data: function( d ){
                 if(d.status == 0)
                     return '<p class="m-0" style="color:crimson;">'+($('select[name="mes"] option:selected').text()).toUpperCase()+'</p>';
                 else
@@ -188,7 +240,7 @@ $("#tableDinamicMKTD").prop("hidden", false);
             }
         },
         {
-            "data": function( d ){
+            data: function( d ){
                 if(d.status == 0)
                     return '<p class="m-0" style="color:crimson;">'+(d.nombre).toUpperCase()+' </p>';
                 else 
@@ -196,7 +248,7 @@ $("#tableDinamicMKTD").prop("hidden", false);
             }
         },
         {
-            "data": function( d ){
+            data: function( d ){
                 if(d.status == 0)
                     return '<p class="m-0"><span class="label lbl-warning">CANCELADO</span></p>';
                 else
@@ -214,7 +266,7 @@ $("#tableDinamicMKTD").prop("hidden", false);
             "url": url2 + "Comisiones/getDatosCobranzaDimamic/" + mes + "/" + anio+ "/" + plaza+ "/" + gerente,
             "type": "POST",
             cache: false,
-            "data": function( d ){}
+            data: function( d ){}
         },
         order: [[ 1, 'asc' ]]
     });
@@ -233,14 +285,3 @@ $("#tableDinamicMKTD").prop("hidden", false);
         $("#totpagarPen").html(formatMoney(totaPen));
     });
 }
-//FIN TABLA  
-
-$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-    $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
-});
-
-$(window).resize(function(){
-    tableDinamicMKTD2.columns.adjust();
-});
-
-

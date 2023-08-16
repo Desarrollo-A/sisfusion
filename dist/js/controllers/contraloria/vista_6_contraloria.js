@@ -41,7 +41,6 @@ $("#tabla_ingresar_6").ready(function () {
     tabla_6 = $("#tabla_ingresar_6").DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
-        bAutoWidth: true,
         buttons: [
             {
                 extend: 'excelHtml5',
@@ -134,7 +133,7 @@ $("#tabla_ingresar_6").ready(function () {
                     var fechaVenc;
                     if (d.idStatusContratacion == 5 && d.idMovimiento == 22 || d.idStatusContratacion == 5 && d.idMovimiento == 75 ||
                         d.idStatusContratacion == 5 && d.idMovimiento == 94)
-                        fechaVenc = 'Vencido';
+                        fechaVenc = 'VENCIDO';
                     else if (d.idStatusContratacion == 5 && d.idMovimiento == 35 || d.idStatusContratacion == 2 && d.idMovimiento == 62 || d.idStatusContratacion == 5 && d.idMovimiento == 106)
                         fechaVenc = d.fechaVenc;
 

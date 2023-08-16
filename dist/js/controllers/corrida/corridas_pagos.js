@@ -44,7 +44,7 @@ $(document).ready (function() {
         $("#spiner-loader").removeClass('hide');
         $("#filtro5").empty().selectpicker('refresh');
         $.ajax({
-            url: general_base_url + 'Corrida/getLotesPC/'+valorSeleccionado+'/'+residencial,/*getCorridasPCByLote*/
+            url: general_base_url + 'Corrida/getLotesPC/'+valorSeleccionado+'/'+residencial,
             type: 'post',
             dataType: 'json',
             success:function(response){

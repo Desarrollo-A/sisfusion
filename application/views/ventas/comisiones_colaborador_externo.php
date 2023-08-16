@@ -3,14 +3,7 @@
 <body>
     <div class="wrapper">
 
-        <?php
-        if (in_array($this->session->userdata('id_rol'), array(1,2,3,7,9,13,18,19,20,22,23,25,26,27,28,30,32,36))){
-            $this->load->view('template/sidebar');
-        }
-        else{
-            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-        }
-        ?>
+        <?php $this->load->view('template/sidebar'); ?>
         
         <style>
             .abc {

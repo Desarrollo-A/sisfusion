@@ -2,16 +2,7 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
     <div class="wrapper">
-        <?php
-        if($this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="17" || $this->session->userdata('id_usuario')=="2767"
-            || $this->session->userdata('id_rol')=="70"){
-            /*-----------------------contraloria--------------------------------*/
-            $this->load->view('template/sidebar');
-        }
-        else{
-            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
-        }
-        ?>
+        <?php $this->load->view('template/sidebar'); ?>
 
         <!-- Modals -->
         <div class="modal fade" id="seeInformationModalremanente" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
@@ -24,16 +15,14 @@
                     </div>
                     <div class="modal-body">
                         <div role="tabpanel">
-                            <ul class="nav nav-tabs" role="tablist" style="background: #949494;">
-                                <div id="nameLote"></div>
-                            </ul>
+                            <div id="nameLote"></div>
                             <div class="tab-content">
                                 <div role="tabpanel" class="tab-pane active" id="changelogTab">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="card card-plain">
-                                                <div class="card-content">
-                                                    <ul class="timeline timeline-simple" id="comments-list-remanente"></ul>
+                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                                    <ul class="timeline-3" id="comments-list-remanente"></ul>
                                                 </div>
                                             </div>
                                         </div>
@@ -52,49 +41,12 @@
         <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
-
                     <form method="post" id="form_interes">
                         <div class="modal-body"></div>
                     </form>
                 </div>
             </div>
         </div>
-
-        <!--<div class="modal fade modal-alertas" id="modal_despausar" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-
-                    <form method="post" id="form_despausar">
-                        <div class="modal-body"></div>
-                    </form>
-                </div>
-            </div>
-        </div>-->
-
-        <!--<div class="modal fade modal-alertas" id="modal_refresh" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form method="post" id="form_refresh">
-                        <div class="modal-body"></div>
-                    </form>
-                </div>
-            </div>
-        </div>-->
-
-        <!--<div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
-            <div class="modal-dialog" style="width:800px; margin-top:20px">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div class="row"></div>
-                    </div>
-                </div>
-            </div>
-        </div>-->
-
-        <!--<div class="modal fade modal-alertas" id="documento_preview" role="dialog">
-            <div class="modal-dialog" style= "margin-top:20px;"></div>
-        </div>-->
-
 
         <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm">
@@ -103,20 +55,12 @@
                 </div>
             </div>
         </div>
-
-        <!--<div class="modal fade bd-example-modal-sm" id="myModalTQro" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-body"></div>
-                </div>
-            </div>
-        </div>-->
         <!-- END Modals -->
 
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
                                 <i class="fas fa-dollar-sign fa-2x"></i>
@@ -145,16 +89,14 @@
                                         <div class="row">
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">          
                                                 <div class="form-group">
-                                                    <label class="m-0" for="filtro33">Proyecto</label>
-                                                    <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona un proyecto" data-size="7" required>
-                                                        <option value="0">Seleccione todo</option>
-                                                    </select>
+                                                    <label class="control-label" for="filtro33">Proyecto</label>
+                                                    <select name="filtro33" id="filtro33" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true" data-container="body" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6"> 
                                                 <div class="form-group">
-                                                    <label class="m-0" for="filtro44">Condominio</label>
-                                                    <select class="selectpicker select-gral" id="filtro44" name="filtro44[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona un condominio" data-size="7" required/></select>
+                                                    <label class="control-label" for="filtro44">Condominio</label>
+                                                    <select class="selectpicker select-gral m-0" id="filtro44" name="filtro44[]" data-style="btn " data-show-subtext="true" data-live-search="true" data-container="body" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                                 </div>
                                             </div>
                                         </div>
@@ -162,30 +104,28 @@
                                 </div>
                                 <div class="material-datatables">
                                     <div class="form-group">
-                                        <div class="table-responsive">
-                                            <table class="table-striped table-hover" id="tabla_remanente" name="tabla_remanente">
-                                                <thead>
-                                                    <tr>
-                                                        <th></th>
-                                                        <th>ID</th>
-                                                        <th>PROY.</th>
-                                                        <th>CONDOMINIO</th>
-                                                        <th>LOTE</th>
-                                                        <th>REFERENCIA</th>
-                                                        <th>PRECIO LOTE</th>
-                                                        <th>EMP.</th>
-                                                        <th>TOT. COM.</th>
-                                                        <th>P. CLIENTE</th>
-                                                        <th>A PAGAR</th>
-                                                        <th>TIPO VENTA</th>
-                                                        <th>USUARIO</th>
-                                                        <th>PUESTO</th>
-                                                        <th>FEC. ENVÍO</th>
-                                                        <th>MÁS</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
-                                        </div>
+                                        <table class="table-striped table-hover" id="tabla_remanente" name="tabla_remanente">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>ID PAGO</th>
+                                                    <th>PROYECTO</th>
+                                                    <th>CONDOMINIO</th>
+                                                    <th>LOTE</th>
+                                                    <th>REFERENCIA</th>
+                                                    <th>PRECIO DEL LOTE</th>
+                                                    <th>EMPRESA</th>
+                                                    <th>TOTAL DE LA COMISIÓN</th>
+                                                    <th>PAGADO POR EL CLIENTE</th>
+                                                    <th>TOTAL A PAGAR</th>
+                                                    <th>TIPO DE VENTA</th>
+                                                    <th>USUARIO</th>
+                                                    <th>PUESTO</th>
+                                                    <th>FECHA DE ENVÍO</th>
+                                                    <th>ACCIONES</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -196,15 +136,6 @@
         </div>
         <?php $this->load->view('template/footer_legend');?>
     </div>
-    </div><!--main-panel close-->
     <?php $this->load->view('template/footer');?>
-    <!--DATATABLE BUTTONS DATA EXPORT-->
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_factura.js"></script>
 </body>

@@ -2,14 +2,8 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet" />
 <body class="">
     <div class="wrapper ">
-        <?php
-        if (in_array($this->session->userdata('id_rol'), array(2,13,33,17,6,5,3,4,9,11,34,15,13,32,12,40,53,70))){
-            $this->load->view('template/sidebar');
-        }
-        else{
-            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-        }
-        ?>
+        <?php $this->load->view('template/sidebar'); ?>
+        
         <div class="modal fade" id="modal_cancelar_11" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
@@ -25,6 +19,7 @@
                 </div>
             </div>
         </div>
+
         <div class="modal fade" id="verDetalles" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -34,7 +29,7 @@
                         </b>
                         <div class="material-datatables">
                             <div class="form-group">
-                                <table id="tabla_clientes_detalles" name="tabla_clientes_detalles" class="table-striped table-hover" >
+                                <table id="tabla_clientes_detalles" name="tabla_clientes_detalles" class="table-striped table-hover">
                                     <thead>
                                         <tr>
                                             <th>ASESOR</th>
@@ -59,6 +54,7 @@
                 </div>
             </div>
         </div>
+        
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -71,14 +67,14 @@
                                 <h3 class="card-title center-align">Registro de clientes</h3>
                                 <div class="toolbar">
                                     <div class="row">
-                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 overflow-hidden">
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                             <div class="form-group">
-                                                <label class="control-label" for="proyecto">Proyecto</label>
+                                                <label class="control-label overflow-hidden" for="proyecto">Proyecto</label>
                                                 <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                            <div class="form-group">
+                                            <div class="form-group overflow-hidden">
                                                 <label class="control-label" for="proyecto">Condominio</label>
                                                 <select name="condominio" id="condominio" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
                                             </div>

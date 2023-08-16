@@ -192,7 +192,7 @@ function getAssimilatedCommissions(proyecto, condominio){
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
-        bAutoWidth: true,
+        bAutoWidth:true,
         buttons: [{
             text: '<div class="d-flex"><i class="fa fa-check "></i><p class="m-0 pl-1">Marcar como pagado</p></div>',
             action: function() {
@@ -592,7 +592,7 @@ function getAssimilatedCommissions(proyecto, condominio){
         });
     });
 }
-//FIN TABLA  ****************************************************************************************
+//FIN TABLA  
 
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     $($.fn.dataTable.tables(true)).DataTable()
@@ -637,6 +637,7 @@ $("#form_interes").submit( function(e) {
                 alert("ERROR EN EL SISTEMA");
             }
         });
+        $("#totpagarPen").html(formatMoney(0));
     }
 });
 

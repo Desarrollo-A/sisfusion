@@ -16,7 +16,7 @@ $(document).ready( function() {
         width: '100%',
         scrollX: true,
         bAutoWidth: true,
-        "buttons": [{
+        buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
