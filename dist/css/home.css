@@ -1148,6 +1148,7 @@
 /* Color del HOVER de barra de desplazamiento */
 .scroll-styles::-webkit-scrollbar-thumb:hover {
   background-color: #929292;
+  height: 10px !important;
 }
 
 /* END de estilos del scroll en DIVS */
@@ -1178,6 +1179,12 @@
 
 .file-gph .upload-btn span {
   margin: 5px;
+}
+
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  .file-gph .upload-btn {
+    width: 100%;
+  }
 }
 
 .file-gph .file-name {
@@ -1701,6 +1708,15 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
   }
 }
 
+#boxHome #ele {
+  animation: 3s fadeIn2;
+  -webkit-animation: 3s fadeIn2;
+  position: absolute;
+  animation-fill-mode: forwards;
+  visibility: hidden;
+  background-color: beige;
+}
+
 @keyframes fadeIn {
   0% {
     opacity: 0;
@@ -1726,5 +1742,14 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
 @media (max-width: 991px) {
   .navbar-header .navbar-toggle {
     color: #ffffff;
+  }
+}
+
+@keyframes fadeIn2 {
+  1% {
+    visibility: visible;
+  }
+  100% {
+    visibility: hidden;
   }
 }

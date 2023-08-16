@@ -31,7 +31,7 @@ $(document).on('change', '#residenciales, #condominios, #idEstatus', function ()
     ix_idCondominio = $("#condominios").val() == '' ? 0 : $("#condominios").val();
     ix_idEstatus = $("#idEstatus").val() == '' ? 0 : $("#idEstatus").val();
     tabla_inventario = $("#tablaInventarioComisionistas").DataTable({
-        dom: "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'B><'col-12 col-sm-12 col-md-6 col-lg-6 p-0'f>rt>" + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        dom: "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6 p-0'B><'col-12 col-sm-12 col-md-6 col-lg-6 p-0'f>rt>" + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
         destroy: true,
@@ -40,22 +40,21 @@ $(document).on('change', '#residenciales, #condominios, #idEstatus', function ()
             url: `${general_base_url}Contraloria/getInvientarioComisionista/${ix_idEstatus}/${ix_idCondominio}/${ix_idResidencial}`,
             dataSrc: ""
         },
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                className: 'btn buttons-excel',
-                titleAttr: 'Descargar archivo de Excel',
-                title: 'MADERAS_CRM_INVENTARIO',
-                exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
-                    format: {
-                        header: function (d, columnIdx) {
-                            return ' ' + titulosInventario[columnIdx] + ' ';
-                        }
+        buttons: [{
+            extend: 'excelHtml5',
+            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+            className: 'btn buttons-excel',
+            titleAttr: 'Descargar archivo de Excel',
+            title: 'MADERAS_CRM_INVENTARIO',
+            exportOptions: {
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+                format: {
+                    header: function (d, columnIdx) {
+                        return ' ' + titulosInventario[columnIdx] + ' ';
                     }
                 }
-            }],
+            }
+        }],
         pagingType: "full_numbers",
         language: {
             url: `${general_base_url}static/spanishLoader_v2.json`,
@@ -78,43 +77,45 @@ $(document).on('change', '#residenciales, #condominios, #idEstatus', function ()
         paging: true,
         ordering: true,
         fixedColumns: true,
-        columns: [
-            { data: 'nombreResidencial' },
-            { data: 'nombreCondominio' },
-            {
-                data: function (d) {
-                    if (d.casa == 1)
-                        return `${d.nombreLote} <br><span class="label lbl-violetDeep">${d.nombre_tipo_casa}</span>`
-                    else
-                       return d.nombreLote;
-                }
-            },
-            { data: 'referencia' },
-            { data: 'nombreAsesor1' },
-            { data: 'nombreCoordinador1' },
-            { data: 'nombreGerente1' },
-            { data: 'nombreAsesor2' },
-            { data: 'nombreCoordinador2' },
-            { data: 'nombreGerente2' },
-            { data: 'nombreAsesor3' },
-            { data: 'nombreCoordinador3' },
-            { data: 'nombreGerente3' },
-            {
-                data: function (d) {
-                    return d.tipo_venta == null ?
-                        `<center><span class="label lbl-yellow">${d.descripcion_estatus}</span> <center>` :
-                        `<center><span class="label label lbl-yellow">${d.descripcion_estatus}</span> <p><p> <span class="label lbl-green">${d.tipo_venta}</span> <center>`;
-                }
-            },
-            {
-                data: function (d) {
-                    if (d.fechaApartado == '' || d.fechaApartado == null || d.fechaApartado == 'null')
-                        return 'SIN ESPECIFICAR';
-                    else
-                        return d.fechaApartado;
-                }
+        columns: [{ 
+            data: 'nombreResidencial' 
+        },
+        { 
+            data: 'nombreCondominio' 
+        },
+        {
+            data: function (d) {
+                if (d.casa == 1)
+                    return `${d.nombreLote} <br><span class="label lbl-violetDeep">${d.nombre_tipo_casa}</span>`
+                else
+                    return d.nombreLote;
             }
-        ],
+        },
+        { data: 'referencia' },
+        { data: 'nombreAsesor1' },
+        { data: 'nombreCoordinador1' },
+        { data: 'nombreGerente1' },
+        { data: 'nombreAsesor2' },
+        { data: 'nombreCoordinador2' },
+        { data: 'nombreGerente2' },
+        { data: 'nombreAsesor3' },
+        { data: 'nombreCoordinador3' },
+        { data: 'nombreGerente3' },
+        {
+            data: function (d) {
+                return d.tipo_venta == null ?
+                    `<center><span class="label lbl-yellow">${d.descripcion_estatus}</span> <center>` :
+                    `<center><span class="label label lbl-yellow">${d.descripcion_estatus}</span> <p><p> <span class="label lbl-green">${d.tipo_venta}</span> <center>`;
+            }
+        },
+        {
+            data: function (d) {
+                if (d.fechaApartado == '' || d.fechaApartado == null || d.fechaApartado == 'null')
+                    return 'SIN ESPECIFICAR';
+                else
+                    return d.fechaApartado;
+            }
+        }],
         initComplete: function () {
             $('[data-toggle="tooltip"]').tooltip();
         }

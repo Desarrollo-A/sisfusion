@@ -1,12 +1,6 @@
 <body>
 <div class="wrapper">
-<?php
-switch ($this->session->userdata('id_rol')) {
-    case "21": // CLIENTE
-        $this->load->view('template/sidebar');
-        break;
-}
-?>
+<?php $this->load->view('template/sidebar'); ?>
     <div class="content">
         <div class="container-fluid">
 

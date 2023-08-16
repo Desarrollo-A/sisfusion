@@ -60,7 +60,6 @@ $("#tabla_envio_RL").ready(function () {
             [10, 25, 50, -1],
             [10, 25, 50, "Todos"]
         ],
-        bAutoWidth: true,
         fixedColumns: true,
         ordering: false,
         scrollX: true,

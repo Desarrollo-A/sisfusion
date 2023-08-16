@@ -1,12 +1,6 @@
 <body>
 <div class="wrapper">
-	<?php
-		if($this->session->userdata('id_rol') == 22 && $this->session->userdata('id_usuario') == 4853){
-			$this->load->view('template/sidebar');
-		} else {
-			echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-		}
-	?>
+	<?php $this->load->view('template/sidebar'); ?>
     <style>
         .textoshead::placeholder { color: white; }
         th { background: #003D82; }

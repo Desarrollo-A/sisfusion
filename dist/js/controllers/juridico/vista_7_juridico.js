@@ -134,7 +134,7 @@ $("#Jtabla").ready(function () {
                     d.idStatusContratacion == 7 && d.idMovimiento == 83) {
                     fechaVenc = d.fechaVenc.split('.')[0];
                 } else if (d.idStatusContratacion == 6 && d.idMovimiento == 76) {
-                    fechaVenc = 'Vencido';
+                    fechaVenc = 'VENCIDO';
                 }
                 return '<p class="m-0">' + fechaVenc + '</p>';
             }
@@ -223,7 +223,7 @@ $("#Jtabla").ready(function () {
                         cntActions += '<button href="#" title= "Código de barras" data-lote="' + data.cbbtton + '" class="btn btn-primary btn-round btn-fab btn-fab-mini barcode" data-toggle="tooltip" data-placement="top" title="VER CÓDIGO">' +
                             '<span class="material-icons">select_all</span></button>';
                     } else {
-                        cntActions = 'N/A';
+                        cntActions = ' ';
                     }
 
                     if (Array(2762, 6096, 6864, 10937, 10938, 12136, 12173, 13015).includes(user) ){

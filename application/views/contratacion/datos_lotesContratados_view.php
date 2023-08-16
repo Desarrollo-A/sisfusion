@@ -6,7 +6,7 @@
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
                                 <i class="fas fa-bookmark fa-2x"></i>
@@ -14,7 +14,8 @@
                             <div class="card-content">
                                 <h3 class="card-title center-align " id="showDate"> </h3>
                                 <div class="toolbar">
-                                    <div class="row"></div>
+                                    <div class="row">
+                                    </div>
                                 </div>
                                 <div class="material-datatables">
                                     <div class="form-group">

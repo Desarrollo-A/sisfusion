@@ -11,17 +11,12 @@ $('#Jtabla thead tr:eq(0) th').each(function (i) {
 });
 
 $(document).ready(function(){
-    $.ajax(
-        {
-            post: "POST",
-            url: general_base_url + "registroLote/getDateToday/"
-        }).done(function(data)
-            {
-                $('#showDate').text('Lotes contratados al: '+data);
-            }).fail(function()
-            {
-                // $('#showDate').append('<center><h3>Lotes contratados al: '+new Date().getDay()+new Date().getMonth()+new Date().getFullYear()'</h3></center>');
-            });
+    $.ajax({
+        post: "POST",
+        url: general_base_url + "registroLote/getDateToday/"
+    }).done(function(data){
+        $('#showDate').text('Lotes contratados al: '+data);
+    }).fail(function(){});
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
     setIniDatesXMonth('#beginDate','#endDate');
@@ -116,7 +111,8 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
         destroy: true,
         ordering: false,
         "columns":[{
-            data: 'nombreLote'},
+            data: 'nombreLote'
+        },
         {
             data: function (data)
             {

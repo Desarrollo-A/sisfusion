@@ -3,9 +3,8 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
     <div class="wrapper">
-        <?php
-            $this->load->view('template/sidebar');
-        ?>
+        <?php $this->load->view('template/sidebar'); ?>
+    
         <!-- Modals -->
         <div class="modal fade modal-alertas" id="modal_colaboradores" role="dialog">
             <div class="modal-dialog modal-md">

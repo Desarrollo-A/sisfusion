@@ -1,157 +1,143 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <body class="">
-    <div class="wrapper ">
-        <?php
-        //se debe validar que tipo de perfil esta sesionado para poder asignarle el tipo de sidebar
-        
-        if( $this->session->userdata('id_rol')=="17" ) //contraloria
-        {
-            $this->load->view('template/sidebar');
-        }
-        else
-        {
-            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
-        }
-        ?>
+<div class="wrapper ">
+    <?php $this->load->view('template/sidebar'); ?>
 
-        <!--Contenido de la página-->
-        <!---   MODALS  --->
-            <!-- modal  ENVIA A CONTRALORIA 2-->
-            <div class="modal fade" id="modal1" data-backdrop="static" data-keyboard="false">
-                <div class="modal-dialog modal-sm">
-                    <div class="modal-content" >
-                        <div class="modal-header">
-                            <h4 class="modal-title"><label>Integración de Expediente - <b><span class="lote"></span></b></label></h4>
-                        </div>
-                        <div class="modal-body pt-0">
-                            <div class="row">
-                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                    <label class="control-label">Comentario:</label>
-                                </div>
-                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                    <textarea class="text-modal" id="comentario" rows="3"></textarea>
-                                </div>
+        <div class="modal fade" id="modal1" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        <h4 class="modal-title"><label>Integración de Expediente - <b><span class="lote"></span></b></label></h4>
+                    </div>
+                    <div class="modal-body pt-0">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <label class="control-label">Comentario:</label>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <textarea class="text-modal" id="comentario" rows="3"></textarea>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                            <button type="button" id="save1" class="btn btn-primary">Registrar</button>
-                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="save1" class="btn btn-primary">Registrar</button>
                     </div>
                 </div>
             </div>
-            <!-- modal  ENVIA A CONTRALORIA 5 por rechazo 1-->
-            <div class="modal fade" id="modal2" data-backdrop="static" data-keyboard="false">
-                <div class="modal-dialog modal-sm">
-                    <div class="modal-content" >
-                        <div class="modal-header">
-                            <h4 class="modal-title"><label>Integración de Expediente (Rechazo estatus 5 Contraloría) - <b><span class="lote"></span></b></label></h4>
-                        </div>
-                        <div class="modal-body pt-0">
-                            <label class="control-label">Comentario:</label>
-                            <textarea class="text-modal" id="comentario2" rows="3"></textarea>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> Cancelar</button>
-                            <button type="button" id="save2" class="btn btn-primary"> Registrar</button>
-                        </div>
+        </div>
+        <!-- modal  ENVIA A CONTRALORIA 5 por rechazo 1-->
+        <div class="modal fade" id="modal2" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        <h4 class="modal-title"><label>Integración de Expediente (Rechazo estatus 5 Contraloría) - <b><span class="lote"></span></b></label></h4>
+                    </div>
+                    <div class="modal-body pt-0">
+                        <label class="control-label">Comentario:</label>
+                        <textarea class="text-modal" id="comentario2" rows="3"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> Cancelar</button>
+                        <button type="button" id="save2" class="btn btn-primary"> Registrar</button>
                     </div>
                 </div>
             </div>
-            <!-- modal  ENVIA A CONTRALORIA 5 por rechazo 1-->
-            <div class="modal fade" id="modal3" data-backdrop="static" data-keyboard="false">
-                <div class="modal-dialog modal-sm">
-                    <div class="modal-content" >
-                        <div class="modal-header">
-                            <h4 class="modal-title"><label>Integración de Expediente (Rechazo estatus 5 Contraloría) - <b><span class="lote"></span></b></label></h4>
-                        </div>
-                        <div class="modal-body pt-0">
-                            <label class="control-label">Comentario:</label>
-                            <textarea class="text-modal" id="comentario3" rows="3"></textarea>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> Cancelar</button>
-                            <button type="button" id="save3" class="btn btn-primary"> Registrar</button>
-                        </div>
+        </div>
+        <!-- modal  ENVIA A CONTRALORIA 5 por rechazo 1-->
+        <div class="modal fade" id="modal3" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        <h4 class="modal-title"><label>Integración de Expediente (Rechazo estatus 5 Contraloría) - <b><span class="lote"></span></b></label></h4>
+                    </div>
+                    <div class="modal-body pt-0">
+                        <label class="control-label">Comentario:</label>
+                        <textarea class="text-modal" id="comentario3" rows="3"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> Cancelar</button>
+                        <button type="button" id="save3" class="btn btn-primary"> Registrar</button>
                     </div>
                 </div>
             </div>
-            <!-- modal  ENVIA A CONTRALORIA 6 por rechazo 1-->
-            <div class="modal fade" id="modal4" data-backdrop="static" data-keyboard="false">
-                <div class="modal-dialog modal-sm">
-                    <div class="modal-content" >
-                        <div class="modal-header">
-                            <h4 class="modal-title"><label>Integración de Expediente (Rechazo estatus 6 Contraloría) - <b><span class="lote"></span></b></label></h4>
-                        </div>
-                        <div class="modal-body pt-0">
-                            <label class="control-label">Comentario:</label>
-                            <textarea class="text-modal" id="comentario4" rows="3"></textarea>
-                            
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> Cancelar</button>
-                            <button type="button" id="save4" class="btn btn-primary"> Registrar</button>
-                        </div>
+        </div>
+        <!-- modal  ENVIA A CONTRALORIA 6 por rechazo 1-->
+        <div class="modal fade" id="modal4" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        <h4 class="modal-title"><label>Integración de Expediente (Rechazo estatus 6 Contraloría) - <b><span class="lote"></span></b></label></h4>
+                    </div>
+                    <div class="modal-body pt-0">
+                        <label class="control-label">Comentario:</label>
+                        <textarea class="text-modal" id="comentario4" rows="3"></textarea>
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> Cancelar</button>
+                        <button type="button" id="save4" class="btn btn-primary"> Registrar</button>
                     </div>
                 </div>
             </div>
-            <!-- modal  ENVIA A VENTAS 8 por rechazo 1-->
-            <div class="modal fade" id="modal5" data-backdrop="static" data-keyboard="false">
-                <div class="modal-dialog modal-sm">
-                    <div class="modal-content" >
-                        <div class="modal-header">
-                            <h4 class="modal-title"><label>Integración de Expediente (Rechazo estatus 8 Ventas) - <b><span class="lote"></span></b></label></h4>
-                        </div>
-                        <div class="modal-body pt-0">
-                            <label class="control-label">Comentario:</label>
-                            <textarea class="text-modal" id="comentario5" rows="3"></textarea>
-                            
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                            <button type="button" id="save5" class="btn btn-primary">Registrar</button>
-                        </div>
+        </div>
+        <!-- modal  ENVIA A VENTAS 8 por rechazo 1-->
+        <div class="modal fade" id="modal5" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        <h4 class="modal-title"><label>Integración de Expediente (Rechazo estatus 8 Ventas) - <b><span class="lote"></span></b></label></h4>
+                    </div>
+                    <div class="modal-body pt-0">
+                        <label class="control-label">Comentario:</label>
+                        <textarea class="text-modal" id="comentario5" rows="3"></textarea>
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="save5" class="btn btn-primary">Registrar</button>
                     </div>
                 </div>
             </div>
-            <!-- modal  ENVIA A JURIDICO por rechazo 1-->
-            <div class="modal fade" id="modal6" data-backdrop="static" data-keyboard="false">
-                <div class="modal-dialog modal-sm">
-                    <div class="modal-content" >
-                        <div class="modal-header">
-                            <h4 class="modal-title"><label>Integración de Expediente (Rechazo estatus 7 Jurídico) - <b><span class="lote"></span></b></label></h4>
-                        </div>
-                        <div class="modal-body pt-0">
-                            <label class="control-label">Comentario:</label>
-                            <textarea class="text-modal" id="comentario6" rows="3"></textarea>
-                            
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                            <button type="button" id="save6" class="btn btn-primary"> Registrar</button>
-                        </div>
+        </div>
+        <!-- modal  ENVIA A JURIDICO por rechazo 1-->
+        <div class="modal fade" id="modal6" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        <h4 class="modal-title"><label>Integración de Expediente (Rechazo estatus 7 Jurídico) - <b><span class="lote"></span></b></label></h4>
+                    </div>
+                    <div class="modal-body pt-0">
+                        <label class="control-label">Comentario:</label>
+                        <textarea class="text-modal" id="comentario6" rows="3"></textarea>
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="save6" class="btn btn-primary"> Registrar</button>
                     </div>
                 </div>
             </div>
-            <!-- modal  ENVIA A JURIDICO por rechazo 1-->
-            <div class="modal fade" id="modal7" data-backdrop="static" data-keyboard="false">
-                <div class="modal-dialog modal-sm">
-                    <div class="modal-content" >
-                        <div class="modal-header">
-                            <h4 class="modal-title"><label>Integración de Expediente (Rechazo estatus 5 Contraloría) - <b><span class="lote"></span></b></label></h4>
-                        </div>
-                        <div class="modal-body pt-0">
-                            <label class="control-label">Comentario:</label>
-                            <textarea class="text-modal" id="comentario7" rows="3"></textarea>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                            <button type="button" id="save7" class="btn btn-primary">Registrar</button>
-                        </div>
+        </div>
+        <!-- modal  ENVIA A JURIDICO por rechazo 1-->
+        <div class="modal fade" id="modal7" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        <h4 class="modal-title"><label>Integración de Expediente (Rechazo estatus 5 Contraloría) - <b><span class="lote"></span></b></label></h4>
+                    </div>
+                    <div class="modal-body pt-0">
+                        <label class="control-label">Comentario:</label>
+                        <textarea class="text-modal" id="comentario7" rows="3"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="save7" class="btn btn-primary">Registrar</button>
                     </div>
                 </div>
             </div>
+        </div>
         <!--- END MODALS --->
 
         <div class="content boxContent">

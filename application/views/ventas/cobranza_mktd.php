@@ -1,13 +1,6 @@
 <body>
 <div class="wrapper">
-<?php
-    if($this->session->userdata('id_rol')=="28" ||$this->session->userdata('id_rol')=="18"||$this->session->userdata('id_rol')=="19"){ 
-    $this->load->view('template/sidebar');
-    }
-    else{
-        echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
-    }
-?>
+<?php $this->load->view('template/sidebar'); ?>
 
 <style type="text/css">
     ::-webkit-input-placeholder { /* Chrome/Opera/Safari */

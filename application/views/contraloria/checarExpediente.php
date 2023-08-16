@@ -1,23 +1,16 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body class="">
-    <div class="wrapper ">
-        <?php
-        if($this->session->userdata('id_rol')=="17")//contraloría
-        {
-            $this->load->view('template/sidebar');
-        }
-        else
-        {
-            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
-        }
-        ?>
+<div class="wrapper ">
+    <?php $this->load->view('template/sidebar'); ?>
+        
         <style>
         .col-lg-6 select:required + label {
-                display: block;
-                color: red;
-            }
+            display: block;
+            color: red;
+        }
         </style> 
+        
         <!-- Modals -->
         <div class="modal fade " id="modalConfirmRegExp" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md">

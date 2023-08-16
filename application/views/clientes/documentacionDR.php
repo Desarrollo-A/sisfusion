@@ -2,38 +2,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <body class="">
 <div class="wrapper ">
-    <?php
-    //se debe validar que tipo de perfil esta sesionado para poder asignarle el tipo de sidebar
-    switch ($this->session->userdata('id_rol')) {
-        case '2': // SUB VENTAS
-        case '3': // GERENTE VENTAS
-        case '4': // ASISTENTE DIRECCIÓN COMERCIAL
-        case '5': // ASISTENTE SUBDIRECCIÓN COMERCIAL
-        case '6': // ASISTENTE GERENCIA COMERCIAL
-        case '7': // ASESOR
-        case '9': // COORDINADOR
-        case '11': // ADMINISTRACIÓN
-        case '12': // CAJA
-        case '13': // CONTRALORÍA
-        case '15': // JURÍDICO
-        case '16': // CONTRATACIÓN
-        case '28': // EJECUTIVO ADMINISTRATIVO MKTD
-        case '32': // CONTRALORÍA CORPORATIVA
-        case '33': // CONSULTA
-        case '34': // FACTURACIÓN
-        case '39': // CONTABILIDAD
-        case '50': // GENERALISTA MKTD
-        case '40': // COBRANZA
-        case '53': // analista comisisones
-        case '58': // ANALISTA DE DATOS
-            $this->load->view('template/sidebar');
-            break;
-
-        default:
-            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
-            break;
-    }
-    ?>
+    <?php $this->load->view('template/sidebar'); ?>
     <!-- Modals -->
     <!-- modal  INSERT FILE-->
     <div class="modal fade" id="addFile" >

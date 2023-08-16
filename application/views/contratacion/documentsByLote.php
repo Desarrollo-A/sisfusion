@@ -3,14 +3,7 @@
 
 <body class="">
 	<div class="wrapper ">
-		<?php
-		if (in_array($this->session->userdata('id_rol'), array(19,28,50,58,54))){
-			$this->load->view('template/sidebar');
-		}
-		else{
-			echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
-		}
-		?>
+		<?php $this->load->view('template/sidebar'); ?>
 
 		<div class="modal fade" id="verAutorizacionesAsesor" >
 			<div class="modal-dialog">

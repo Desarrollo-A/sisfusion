@@ -3,7 +3,11 @@
 <body>
     <div class="wrapper">
         <?php
-            $this->load->view('template/sidebar');
+            if(in_array($this->session->userdata('id_rol'), array(3,7,9)) && $this->session->userdata('forma_pago')!=2){
+                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
+            }else{
+                $this->load->view('template/sidebar');
+            }
         ?>
 
         <div class="modal fade" id="seeInformationModalfactura" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
