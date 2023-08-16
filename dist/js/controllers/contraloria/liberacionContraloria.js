@@ -28,7 +28,6 @@ function readFileAsync(selectedFile) {
             //workbook.deleteData(wb, sheet = 1, cols = LETTERS, rows = 18, gridExpand = TRUE)
             workbook.SheetNames.forEach(sheet => {
                 rowObject = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheet], {defval: ''});
-                console.log(rowObject);
                 jsonProspectos = JSON.stringify(rowObject, null);
             });
             resolve(jsonProspectos);
@@ -41,10 +40,8 @@ function readFileAsync(selectedFile) {
 async function processFile(selectedFile) {
     try {
         let arrayBuffer = await readFileAsync(selectedFile);
-        console.log(arrayBuffer);
         return arrayBuffer;
     } catch (err) {
-        console.log(err);
     }
 }
 
@@ -57,16 +54,13 @@ $(document).on('click', '#cargaCoincidencias', function () {
         let extension = file.substring(file.lastIndexOf("."));
         let statusValidateExtension = validateExtension(extension, ".xlsx");
          if (statusValidateExtension == true) { // MJ: ARCHIVO VÁLIDO PARA CARGAR
-             //let lotes = $("#lotes").val();
             processFile(fileElm.files[0]).then(jsonInfo => {
-                console.log(processFile(fileElm.files[0]));
                 $.ajax({
                     url: 'setData',
                     type: 'post',
                     dataType: 'json',
                     data: {
                         "jsonInfo": jsonInfo
-                         //"lotes": lotes
                     },
                     success: function (response) {
                         if (response == 0) {
@@ -158,9 +152,6 @@ function fillTable(idCondominio) {
         width: "100%",
         scrollX: true,
         bAutoWidth:true,
-        // select: {
-        //     // style: 'single'
-        // },
         buttons: [
             {
                 extend: 'excelHtml5',
@@ -216,7 +207,7 @@ function fillTable(idCondominio) {
             },
             {
                 data: function (d) {
-                    return d.fechaApartado;
+                    return d.fechaApartado.split('.')[0];
                 }
             },
             {
@@ -229,7 +220,7 @@ function fillTable(idCondominio) {
                     btns = '';
                     btns += '<span class="label" style="color:#'+d.colorEstatusLiberacion +'; background:#' + d.colorEstatusLiberacion + '18;">' + d.estatusLiberacion + '</span>';
                     if(d.estatusLiberacion == "En proceso de liberación")
-                        btns += '<br><button class="btn btn-success btn-round btn-fab btn-fab-mini m-1 remove-mark" data-toggle="tooltip"  data-placement="top" title="Remover marca" style="margin: 0;" data-idLote="'+d.idLote+'"><span class="material-icons" data-type="1">clear</span></button>';
+                        btns += '<br><div class="d-flex align-center justify-center"><button class="btn-data btn-warning  remove-mark" data-toggle="tooltip"  data-placement="top" title="Remover marca" style="margin: 0;" data-idLote="'+d.idLote+'"><span class="material-icons" data-type="1">clear</span></button></div>';
                     return btns;
                 }
             }

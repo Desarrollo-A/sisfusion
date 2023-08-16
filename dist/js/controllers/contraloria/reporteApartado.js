@@ -1,9 +1,11 @@
 $(document).ready(function () {
 	sp.initFormExtendedDatetimepickers();
-	$('.datepicker').datetimepicker({locale: 'es'});
-	setInitialValues();
+    $('.datepicker').datetimepicker({locale: 'es'});
+    setIniDatesXMonth("#beginDate", "#endDate");
+    let finalBeginDate = $("#beginDate").val();
+    let finalEndDate = $("#endDate").val();
+    fillTable(finalBeginDate, finalEndDate);
 });
-
 
 sp = { // MJ: SELECT PICKER
     initFormExtendedDatetimepickers: function () {
@@ -25,37 +27,21 @@ sp = { // MJ: SELECT PICKER
     }
 }
 
-function setInitialValues(){
-	// BEGIN DATE
-	const fechaInicio = new Date();
-	// Iniciar en este año, este mes, en el día 1
-	const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
-	// END DATE
-	const fechaFin = new Date();
-	// Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
-	const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
-	finalBeginDate = [('0' + beginDate.getDate()).slice(-2), ('0' + (beginDate.getMonth() + 1)).slice(-2), beginDate.getFullYear()].join('/');
-	finalEndDate = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
-	
-	$("#beginDate").val(finalBeginDate);
-	$("#endDate").val(finalEndDate);
-	fillTable(finalBeginDate, finalEndDate);
-}
+let titulos = [];
+$('#lotesApartados thead tr:eq(0) th').each( function (i) {
+    var title = $(this).text();
+    titulos.push(title);
+    $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
+    $( 'input', this ).on('keyup change', function () {
+        if ($('#lotesApartados').DataTable().column(i).search() !== this.value ) {
+            $('#lotesApartados').DataTable().column(i).search(this.value).draw();
+        }
+    });
+});
 
 function fillTable(beginDate, endDate) {
     var beginDate = moment(beginDate, 'DD/MM/YYYY').format('YYYY-MM-DD');
     var endDate = moment(endDate, 'DD/MM/YYYY').format('YYYY-MM-DD');
-
-    $('#lotesApartados thead tr:eq(0) th').each( function (i) {
-        var title = $(this).text();
-        $(this).html('<input class="textoshead"  placeholder="'+title+'"/>' );
-        $( 'input', this ).on('keyup change', function () {
-            if ($('#lotesApartados').DataTable().column(i).search() !== this.value ) {
-                $('#lotesApartados').DataTable().column(i).search(this.value).draw();
-            }
-        });
-    });
-
     $('#lotesApartados').DataTable({
         destroy: true,
         ajax:
@@ -69,11 +55,12 @@ function fillTable(beginDate, endDate) {
                     "endDate": endDate
                 }
             },
-        dom: 'Brt'+ "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
-        width: "auto",
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: "100%",
+        scrollX: true,
+        bAutoWidth:true,
         ordering: false,
         pagingType: "full_numbers",
-        scrollX: true,
         columnDefs: [{
             visible: false,
             searchable: false
@@ -83,45 +70,12 @@ function fillTable(beginDate, endDate) {
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
+            title:'Reporte de lotes con ingreso de contrato',
             exportOptions: {
                 columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                 format: {
                     header: function (d, columnIdx) {
-                        switch (columnIdx) {
-                            case 0:
-                                return 'RESIDENCIAL'
-                                break;
-                            case 1:
-                                return 'CONDOMINIO';
-                                break;
-                            case 2:
-                                return 'LOTE';
-                                break;
-                            case 3:
-                                return 'PRECIO FINAL';
-                                break;
-                            case 4:
-                                return 'REFERENCIA';
-                                break;
-                            case 5:
-                                return 'ASESOR';
-                                break;
-                            case 6:
-                                return 'FECHA APORTADO';
-                                break;
-                            case 7:
-                                return 'SEDE';
-                                break;
-                            case 8:
-                                return 'TIPO VENTA';
-                                break;
-                            case 9:
-                                return 'FECHA CONTRATACIÓN';
-                                break;
-                            case 10:
-                                return 'ESTATUS VENTA';
-                                break;
-                        }
+                        return ' ' + titulos[columnIdx] + ' ';
                     }
                 }
             }
@@ -154,4 +108,12 @@ $(document).on("click", "#searchByDateRange", function () {
 	let finalBeginDate = $("#beginDate").val();
 	let finalEndDate = $("#endDate").val();
 	fillTable(finalBeginDate, finalEndDate);
+});
+
+$('body').tooltip({
+    selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
+    trigger: 'hover',
+    container: 'body'
+}).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
+    $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
 });

@@ -1,7 +1,12 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="<?= base_url() ?>dist/css/liberaciones-styles.css" rel="stylesheet"/>
-
+<style>
+    .bs-searchbox .form-group{
+        padding-bottom: 0!important;
+        margin: 0!important;
+    }
+</style>
 <body class="">
     <div class="wrapper ">
         <?php $this->load->view('template/sidebar'); ?>
@@ -37,7 +42,7 @@
                             <div class="card-content">
                                 <h3 class="card-title text-center">Liberaciones</h3>
                                 <div class="toolbar">
-                                    <div class="row d-flex align-end">
+                                    <div class="row align-end">
                                         <div class="col-12 col-sm-12 col-md-5 col-lg-5 pr-0 ">
                                             <label class="control-label">Proyecto (<span class="isRequired">*</span>)</label>
                                             <select class="selectpicker select-gral m-0"  title="SELECCIONA UNA OPCIÓN" data-size="7" id="selectResidenciales" data-live-search="true"></select>
@@ -46,7 +51,7 @@
                                             <label class="control-label">Condominio(<span class="isRequired">*</span>)</label>
                                             <select class="selectpicker select-gral m-0" title="SELECCIONA UNA OPCIÓN" data-size="7" id="selectCondominios" data-live-search="true"></select>
                                         </div>
-                                        <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 d-flex align-center justify-evenly">
+                                        <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 pt-3">
                                             <button class="btn-rounded btn-s-blueLight" name="uploadFile" id="uploadFile" title="Subir plantilla" data-toggle="modal" data-target="#uploadModal">
                                                 <i class="fas fa-upload"></i>
                                             </button> 

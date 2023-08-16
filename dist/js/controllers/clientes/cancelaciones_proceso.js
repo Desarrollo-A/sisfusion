@@ -25,27 +25,21 @@ const sp = {
         });
     }
 }
-
 $(document).ready(function () {
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({ locale: 'es' });
-
     setIniDatesXYear('#beginDate', '#endDate');
-
     fillTable(convertDateDDMMYYYYToYYYYMMDD($('#beginDate').val()), convertDateDDMMYYYYToYYYYMMDD($('#endDate').val()));
 });
-
 $('#cancelacionesTabla thead tr:eq(0) th').each(function (i) {
     const title = $(this).text();
     titulosTabla.push(title);
-
     $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
     $('input', this).on('keyup change', function () {
         if ($('#cancelacionesTabla').DataTable().column(i).search() !== this.value) {
             $('#cancelacionesTabla').DataTable().column(i).search(this.value).draw();
         }
     });
-
     $('[data-toggle="tooltip"]').tooltip();
 });
 
@@ -125,11 +119,9 @@ function fillTable(fechaInicio, fechaFin) {
                     if (id_rol_general == 17) {
                         return `<span class='label' style='background: ${d.color}18; color: ${d.color}'>${d.nombreCancelacion}</span>`;
                     }
-
                     if (parseInt(d.cancelacion_proceso) === ESTATUS_CANCELACIONES.CANCELACION) {
                         return `<span class='label' style='background: ${d.color}18; color: ${d.color}'>${d.nombreCancelacion}</span>`;
                     }
-
                     return `<div class="d-flex justify-center">
                         <button class="btn-data btn-warning btn-cancelar"
                                 data-toggle="tooltip" 
@@ -159,17 +151,14 @@ function fillTable(fechaInicio, fechaFin) {
         },
     });
 }
-
 $(document).on('click', '#filtrarPorFecha', function () {
     const fechaInicio = convertDateDDMMYYYYToYYYYMMDD($('#beginDate').val());
     const fechaFin = convertDateDDMMYYYYToYYYYMMDD($('#endDate').val());
     fillTable(fechaInicio, fechaFin);
 });
-
 $(document).on('click', '.btn-cancelar', function () {
     const $itself = $(this);
     const idCliente = $itself.attr('data-idCliente');
-
     changeSizeModal('modal-sm');
     appendBodyModal(`
         <div class="row">
@@ -181,21 +170,17 @@ $(document).on('click', '.btn-cancelar', function () {
             </div>
         </div>
     `);
-
     appendFooterModal(`
         <button type="button" class="btn btn-simple btn-danger" onclick="hideModal()">Cancelar</button>
         <button type="button" class="btn btn-primary" onclick="guardarCancelacion(${idCliente})">Aceptar</button>
     `);
-
     showModal();
 });
 
 function guardarCancelacion(idCliente) {
     let data = new FormData();
     data.append('idCliente', idCliente);
-
     $('#spiner-loader').removeClass('hide');
-
     $.ajax({
         url: `${general_base_url}Clientes/updateCancelacionProceso`,
         data: data,
@@ -205,19 +190,15 @@ function guardarCancelacion(idCliente) {
         type: 'POST',
         success: function (response) {
             const res = JSON.parse(response);
-
             hideModal();
             $('#spiner-loader').addClass('hide');
-
             if (res.code === 200) {
                 alerts.showNotification("top", "right", `El registro se ha actualizado con éxito.`, "success");
                 tablaCancelaciones.ajax.reload();
             }
-
             if (res.code === 400) {
                 alerts.showNotification("top", "right", res.message, "warning");
             }
-
             if (res.code === 500) {
                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
             }
