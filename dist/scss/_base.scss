@@ -762,6 +762,7 @@ $tv                 : "(min-width: 1280px)";
 /* Color del HOVER de barra de desplazamiento */
 .scroll-styles::-webkit-scrollbar-thumb:hover{
     background-color: $deepGray;
+    height: 10px!important;
 }
 /* END de estilos del scroll en DIVS */
 

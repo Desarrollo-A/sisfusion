@@ -3,7 +3,7 @@
 
 <div>
     <div class="wrapper">
-        <?php $this->load->view('template/sidebar', "");  ?>
+        <?php $this->load->view('template/sidebar');  ?>
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -37,4 +37,3 @@
 <?php $this->load->view('template/footer'); ?>
 <script src="<?=base_url()?>dist/js/controllers/asesores/viewUser.js"></script>
 </html>
-

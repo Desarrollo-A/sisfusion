@@ -1148,6 +1148,7 @@
 /* Color del HOVER de barra de desplazamiento */
 .scroll-styles::-webkit-scrollbar-thumb:hover {
   background-color: #929292;
+  height: 10px !important;
 }
 
 /* END de estilos del scroll en DIVS */
@@ -2010,6 +2011,7 @@ table .boxSBtns {
 /* Color del HOVER de barra de desplazamiento */
 .dataTables_scrollBody::-webkit-scrollbar-thumb:hover {
   background-color: #929292;
+  height: 12px;
 }
 
 .dataTables_wrapper .container-fluid .row .dataTables_info {

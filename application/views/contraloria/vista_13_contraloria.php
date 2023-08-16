@@ -84,7 +84,7 @@
             </div>
         </div>
         <?php $this->load->view('template/footer_legend'); ?>
-    </div><!--main-panel close-->
+    </div>
 </body>
 <?php $this->load->view('template/footer'); ?>
 <script src="<?= base_url() ?>dist/js/controllers/contraloria/vista_13_contraloria.js"></script>

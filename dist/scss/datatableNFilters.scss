@@ -380,6 +380,8 @@ table{
 /* Color del HOVER de barra de desplazamiento */
 .dataTables_scrollBody::-webkit-scrollbar-thumb:hover{
     background-color: $deepGray;
+    height: 12px;
+
 }
 .dataTables_wrapper{
     .container-fluid .row{

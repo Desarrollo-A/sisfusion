@@ -1148,6 +1148,7 @@
 /* Color del HOVER de barra de desplazamiento */
 .scroll-styles::-webkit-scrollbar-thumb:hover {
   background-color: #929292;
+  height: 10px !important;
 }
 
 /* END de estilos del scroll en DIVS */

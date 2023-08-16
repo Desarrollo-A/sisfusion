@@ -2608,8 +2608,7 @@ class Contraloria extends CI_Controller {
         echo json_encode($response);
     }
 
-    public function setData()
-    {
+    public function setData() {
         print_r($this->input->post("jsonInfo"));
         exit;
 			$json = json_decode($this->input->post("jsonInfo"));
@@ -2696,13 +2695,11 @@ class Contraloria extends CI_Controller {
         } 
     }
 
-    /**al día de hoy**/ 
     public function backExp() {
         $this->load->view('template/header');
         $this->load->view("contraloria/checarExpediente");
     }
-
-
+    
     public function get_lote_historial($lote) {
         echo json_encode($this->Contraloria_model->get_datos_lotes($lote)->result_array(),JSON_NUMERIC_CHECK);
     }
@@ -3120,6 +3117,7 @@ class Contraloria extends CI_Controller {
         $this->load->view('template/header');
         $this->load->view("contraloria/lineaVentaInventario");
     }
+
     public function get_inventario() {
 		$this->validateSession();
         $fechaInicio = $this->input->post("fechaInicio");
@@ -3131,10 +3129,12 @@ class Contraloria extends CI_Controller {
 		    print_r(json_encode(array("data" => [])));
 		exit;
     }
+
     public function getLineaVenta(){
         $idCliente = $this->input->post("idCliente");
         $banderaVC = $this->input->post("vanderaVC");
         $data = $this->Contraloria_model->getLineaVenta($idCliente,$banderaVC);
+       
         echo json_encode($data,JSON_NUMERIC_CHECK);
     }
     public function allUserVentas()
@@ -3142,6 +3142,7 @@ class Contraloria extends CI_Controller {
         $datos = $this->Contraloria_model->allUserVentas();
         echo json_encode($datos,JSON_NUMERIC_CHECK);
     }
+
     public function EditarInventario(){
         $datos = $_POST;
         $result = $this->Contraloria_model->EditarInventario($datos);
