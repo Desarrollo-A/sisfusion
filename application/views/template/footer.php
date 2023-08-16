@@ -2,6 +2,8 @@
 <script src="<?=base_url()?>dist/js/jquery-3.1.1.min.js" type="text/javascript"></script>
 <script src="<?=base_url()?>dist/js/jquery-ui.min.js" type="text/javascript"></script>
 <script src="<?=base_url()?>dist/js/popper.min.js" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+
 <script src="<?=base_url()?>dist/js/bootstrap.min.js" type="text/javascript"></script>
 <script src="<?=base_url()?>dist/js/material.min.js" type="text/javascript"></script>
 <script src="<?=base_url()?>dist/js/perfect-scrollbar.jquery.min.js" type="text/javascript"></script>

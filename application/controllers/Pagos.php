@@ -469,126 +469,109 @@ class Pagos extends CI_Controller
     }
 
 
-    public function SubirPDF(){
-      if($this->input->post('opc') == 3){
-       $idpago = $this->input->post('id2');
-     
-     
-      }elseif( $this->input->post('opc') == 2 ){
-        //ya no aplica
-       $uuid = $this->input->post('uuid2');
-       $motivo = $this->input->post('motivo');
-       $datos = $this->Pagos_model->RegresarFactura($uuid,$motivo);
-     
-     
-     
-       //echo $this->input->post('uuid2');
-     if($datos == true){
-       echo json_encode(1);
-     }else{
-       echo json_encode(0);
-     }
-     
-     }else if($this->input->post('opc') == 1){
-         $uploadFileDir = './UPLOADS/PDF/';
-             date_default_timezone_set('America/Mexico_City');
-             $datos = explode(".",$this->input->post('xmlfile'));
-             $uuid = $this->input->post('uuid');
-             $nombrefile = $datos[0];
-             //$hoy = date("Y-m-d");
-        
-       $datos = $this->Pagos_model->BanderaPDF($uuid);
-     
-     
-             $fileTmpPath = $_FILES['file-uploadE']['tmp_name'];
-                 $fileName = $_FILES['file-uploadE']['name'];
-                 $fileSize = $_FILES['file-uploadE']['size'];
-                 $fileType = $_FILES['file-uploadE']['type'];
-                 $fileNameCmps = explode(".", $fileName);
-                 $fileExtension = strtolower(end($fileNameCmps));
-                 $newFileName = $nombrefile . '.' . $fileExtension;
-                 $uploadFileDir = './UPLOADS/PDF/';
-                 $dest_path = $uploadFileDir . $newFileName;
-                 
-                 
-                 $dest_path = $uploadFileDir . $newFileName;
-                 move_uploaded_file($fileTmpPath, $dest_path);
-                 echo json_encode(1);
-                             
-       }elseif($this->input->post('opc') == 4){
-     
-         $id_user = $this->input->post('id_user');
-         $motivo = $this->input->post('motivo');
-       $uuid =$this->input->post('uuid2');
-       $datos = $this->Pagos_model->GetPagosFacturas($uuid)->result_array();
-        $resultado = array("resultado" => TRUE);
-        if( (isset($_POST) && !empty($_POST)) || ( isset( $_FILES ) && !empty($_FILES) ) ){
-          $this->db->trans_begin();
-          $responsable = $id_user;
-          $resultado = TRUE;
-          if( isset( $_FILES ) && !empty($_FILES) ){
-            $config['upload_path'] = './UPLOADS/XMLS/';
-            $config['allowed_types'] = 'xml';
-            $this->load->library('upload', $config);
-            $resultado = $this->upload->do_upload("xmlfile2");
-            if( $resultado ){
-              $xml_subido = $this->upload->data();
-              $datos_xml = $this->Pagos_model->leerxml( $xml_subido['full_path'], TRUE );
-              
-              $nuevo_nombre = date("my")."_";
-              $nuevo_nombre .= str_replace( array(",", ".", '"'), "", str_replace( array(" ", "/"), "_", limpiar_dato($datos_xml["nameEmisor"]) ))."_";
-              $nuevo_nombre .= date("Hms")."_";
-              $nuevo_nombre .= rand(4, 100)."_";
-              $nuevo_nombre .= substr($datos_xml["uuidV"], -5)."_REFACTURA".".xml";
-              rename( $xml_subido['full_path'], "./UPLOADS/XMLS/".$nuevo_nombre );
-              $datos_xml['nombre_xml'] = $nuevo_nombre;
-        
-              for ($i=0; $i <count($datos) ; $i++) { 
-                if(!empty($datos[$i]['id_comision'])){
-                  $id_com =  $datos[$i]['id_comision'];
-                  $this->Pagos_model->update_refactura($id_com, $datos_xml,$id_user,$datos[$i]['id_factura']);
-                  //$this->Comisiones_model->update_acepta_solicitante($id_com);
-                $this->db->query("INSERT INTO historial_comisiones VALUES (".$id_com.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'CONTRALORÍA REFACTURÓ, MOTIVO: ".$motivo." ')");
-     
-                }
+  public function SubirPDF(){
+    if($this->input->post('opc') == 3){
+      $idpago = $this->input->post('id2');
+    }
+    elseif( $this->input->post('opc') == 2 ){
+      //ya no aplica
+      $uuid = $this->input->post('uuid2');
+      $motivo = $this->input->post('motivo');
+      $datos = $this->Pagos_model->RegresarFactura($uuid,$motivo);
+      //echo $this->input->post('uuid2');
+      if($datos == true){
+        echo json_encode(1);
+      }
+      else{
+        echo json_encode(0);
+      }
+    }
+    else if($this->input->post('opc') == 1){
+      $uploadFileDir = './UPLOADS/PDF/';
+      date_default_timezone_set('America/Mexico_City');
+      $datos = explode(".",$this->input->post('xmlfile'));
+      $uuid = $this->input->post('uuid');
+      $nombrefile = $datos[0];
+      //$hoy = date("Y-m-d");
+      $datos = $this->Pagos_model->BanderaPDF($uuid);
+      $fileTmpPath = $_FILES['file-uploadE']['tmp_name'];
+      $fileName = $_FILES['file-uploadE']['name'];
+      $fileSize = $_FILES['file-uploadE']['size'];
+      $fileType = $_FILES['file-uploadE']['type'];
+      $fileNameCmps = explode(".", $fileName);
+      $fileExtension = strtolower(end($fileNameCmps));
+      $newFileName = $nombrefile . '.' . $fileExtension;
+      $uploadFileDir = './UPLOADS/PDF/';
+      $dest_path = $uploadFileDir . $newFileName;
+      $dest_path = $uploadFileDir . $newFileName;
+      move_uploaded_file($fileTmpPath, $dest_path);
+      echo json_encode(1);
+    }
+    elseif($this->input->post('opc') == 4){
+      $id_user = $this->input->post('id_user');
+      $motivo = $this->input->post('motivo');
+      $uuid =$this->input->post('uuid2');
+      $datos = $this->Pagos_model->GetPagosFacturas($uuid)->result_array();
+      $resultado = array("resultado" => TRUE);
+      if( (isset($_POST) && !empty($_POST)) || ( isset( $_FILES ) && !empty($_FILES) ) ){
+        $this->db->trans_begin();
+        $responsable = $id_user;
+        $resultado = TRUE;
+        if( isset( $_FILES ) && !empty($_FILES) ){
+          $config['upload_path'] = './UPLOADS/XMLS/';
+          $config['allowed_types'] = 'xml';
+          $this->load->library('upload', $config);
+          $resultado = $this->upload->do_upload("xmlfile2");
+          if( $resultado ){
+            $xml_subido = $this->upload->data();
+            $datos_xml = $this->Pagos_model->leerxml( $xml_subido['full_path'], TRUE );
+            $nuevo_nombre = date("my")."_";
+            $nuevo_nombre .= str_replace( array(",", ".", '"'), "", str_replace( array(" ", "/"), "_", limpiar_dato($datos_xml["nameEmisor"]) ))."_";
+            $nuevo_nombre .= date("Hms")."_";
+            $nuevo_nombre .= rand(4, 100)."_";
+            $nuevo_nombre .= substr($datos_xml["uuidV"], -5)."_REFACTURA".".xml";
+            rename( $xml_subido['full_path'], "./UPLOADS/XMLS/".$nuevo_nombre );
+            $datos_xml['nombre_xml'] = $nuevo_nombre;
+            for ($i=0; $i <count($datos) ; $i++) { 
+              if(!empty($datos[$i]['id_comision'])){
+                $id_com =  $datos[$i]['id_comision'];
+                $this->Pagos_model->update_refactura($id_com, $datos_xml,$id_user,$datos[$i]['id_factura']);
+                //$this->Comisiones_model->update_acepta_solicitante($id_com);
+              $this->db->query("INSERT INTO historial_comisiones VALUES (".$id_com.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'CONTRALORÍA REFACTURÓ, MOTIVO: ".$motivo." ')");
               }
-            }else{
-              $resultado["mensaje"] = $this->upload->display_errors();
             }
           }
-          if ( $resultado === FALSE || $this->db->trans_status() === FALSE){
-                    $this->db->trans_rollback();
-                    $resultado = array("resultado" => FALSE);
-                }else{
-                    $this->db->trans_commit();
-                    $resultado = array("resultado" => TRUE);
-                }
-            }
-     
-            //$this->Usuarios_modelo->Update_OPN($this->session->userdata('id_usuario'));
-            if($resultado){
-             echo json_encode( 1 );
-     
-            }else{
-             echo json_encode(0);
-     
-            }
-       }
-                             //$response = $this->Usuarios_modelo->SaveCumplimiento($this->session->userdata('id_usuario'),$newFileName);
-                             
-     
-     }
+          else{
+            $resultado["mensaje"] = $this->upload->display_errors();
+          }
+        }
+        if ( $resultado === FALSE || $this->db->trans_status() === FALSE){
+            $this->db->trans_rollback();
+            $resultado = array("resultado" => FALSE);
+        }
+        else{
+            $this->db->trans_commit();
+            $resultado = array("resultado" => TRUE);
+        }
+      }
+          //$this->Usuarios_modelo->Update_OPN($this->session->userdata('id_usuario'));
+      if($resultado){
+        echo json_encode( 1 );
+      }else{
+        echo json_encode(0);
+      }
+    }
+    //$response = $this->Usuarios_modelo->SaveCumplimiento($this->session->userdata('id_usuario'),$newFileName);
+  }
 
-     
-     public function getDatosNuevasXContraloria(){
+    public function getDatosNuevasXContraloria(){
       $proyecto = $this->input->post('proyecto');
       $condominio = $this->input->post('condominio');
-
       $dat =  $this->Pagos_model->getDatosNuevasXContraloria($proyecto,$condominio)->result_array();
-     for( $i = 0; $i < count($dat); $i++ ){
-         $dat[$i]['pa'] = 0;
-     }
-     echo json_encode( array( "data" => $dat));
+      for( $i = 0; $i < count($dat); $i++ ){
+          $dat[$i]['pa'] = 0;
+      }
+      echo json_encode( array( "data" => $dat));
     }
     
     public function GetDescripcionXML($xml){

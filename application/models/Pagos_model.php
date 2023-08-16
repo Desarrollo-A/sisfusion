@@ -614,9 +614,6 @@ function update_estatus_pausaM($id_pago_i, $obs) {
         return $this->db->query("INSERT INTO xmldatos VALUES (".$id_factura.", '".$VALOR_TEXT."', GETDATE())");
     }
 
-
-    
-       
     function getDatosNuevasXContraloria($proyecto,$condominio){
 
         if( $this->session->userdata('id_rol') == 31 ){
@@ -626,60 +623,56 @@ function update_estatus_pausaM($id_pago_i, $obs) {
             $filtro = "WHERE pci1.estatus IN (4) ";
         }
 
-
-
         $user_data = $this->session->userdata('id_usuario');
-          switch($this->session->userdata('id_rol')){
-              case 2:
-              case 3:
-              case 7:
-              case 9:
-                  $filtro02 = $filtro.' AND   fa.id_usuario = '.$user_data .' ';
-                  break;
+            switch($this->session->userdata('id_rol')){
+                case 2:
+                case 3:
+                case 7:
+                case 9:
+                    $filtro02 = $filtro.' AND   fa.id_usuario = '.$user_data .' ';
+                    break;
+                default:
+                    $filtro02 = $filtro.' ';
+                    break;
+                }  
 
-             default:
-                  $filtro02 = $filtro.' ';
-                  break;
-              }
-  
-  
-           if($condominio == 0){
+        if($condominio == 0){
             return $this->db->query("SELECT SUM(pci1.abono_neodata) total, re.idResidencial, re.nombreResidencial as proyecto, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario, pci1.id_usuario, u.forma_pago, 0 as factura, oxcest.id_opcion id_estatus_actual, re.empresa, opn.estatus estatus_opinion, opn.archivo_name, fa.uuid,fa.nombre_archivo as xmla,fa.bandera, u.rfc
             FROM pago_comision_ind pci1 
-                   INNER JOIN comisiones com ON pci1.id_comision = com.id_comision AND com.estatus in (1,8)
-                   INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
-                   INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
-                   INNER JOIN residenciales re ON re.idResidencial = co.idResidencial AND re.idResidencial = $proyecto
-                   INNER JOIN usuarios u ON u.id_usuario = com.id_usuario AND u.forma_pago in (2)
-                   INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
-                   INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23 
-                   INNER JOIN opinion_cumplimiento opn ON opn.id_usuario = u.id_usuario and opn.estatus IN (2) 
-                   INNER JOIN facturas fa ON fa.id_comision = pci1.id_pago_i
-                   $filtro02 
-                   GROUP BY re.idResidencial, re.nombreResidencial, u.nombre, u.apellido_paterno, u.apellido_materno, pci1.id_usuario, u.forma_pago, oxcest.id_opcion, re.empresa, re.idResidencial, opn.estatus, opn.archivo_name, fa.uuid, fa.nombre_archivo, fa.bandera, u.rfc
-                   ORDER BY u.nombre");
-      
-              }else{
-  
-                return $this->db->query("SELECT SUM(pci1.abono_neodata) total, re.idResidencial, re.nombreResidencial as proyecto, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario, pci1.id_usuario, u.forma_pago, 0 as factura, oxcest.id_opcion id_estatus_actual, re.empresa, opn.estatus estatus_opinion, opn.archivo_name, fa.uuid,fa.nombre_archivo as xmla,fa.bandera , u.rfc
-                   FROM pago_comision_ind pci1 
-                   INNER JOIN comisiones com ON pci1.id_comision = com.id_comision AND com.estatus in (1,8)
-                   INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
-                   INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
-                   INNER JOIN residenciales re ON re.idResidencial = co.idResidencial  
-                   INNER JOIN usuarios u ON u.id_usuario = com.id_usuario AND u.forma_pago in (2)
-                   INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
-                   INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23 
-                   INNER JOIN opinion_cumplimiento opn ON opn.id_usuario = u.id_usuario  and opn.estatus IN (2) 
-                   INNER JOIN facturas fa ON fa.id_comision = pci1.id_pago_i
-                --    $filtro02
-                   GROUP BY re.idResidencial, re.nombreResidencial, u.nombre, u.apellido_paterno, u.apellido_materno, pci1.id_usuario, u.forma_pago, oxcest.id_opcion, re.empresa, re.idResidencial, opn.estatus, opn.archivo_name, fa.uuid,fa.nombre_archivo,fa.bandera, u.rfc
-  ORDER BY u.nombre");
-  
-             
-              }
-          }
-          function verificar_uuid( $uuid ){
+            INNER JOIN comisiones com ON pci1.id_comision = com.id_comision AND com.estatus in (1,8)
+            INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial AND re.idResidencial = $proyecto
+            INNER JOIN usuarios u ON u.id_usuario = com.id_usuario AND u.forma_pago in (2)
+            INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
+            INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23 
+            INNER JOIN opinion_cumplimiento opn ON opn.id_usuario = u.id_usuario and opn.estatus IN (2) 
+            INNER JOIN facturas fa ON fa.id_comision = pci1.id_pago_i
+            -- $filtro02 
+            where re.idResidencial = $proyecto
+            GROUP BY re.idResidencial, re.nombreResidencial, u.nombre, u.apellido_paterno, u.apellido_materno, pci1.id_usuario, u.forma_pago, oxcest.id_opcion, re.empresa, re.idResidencial, opn.estatus, opn.archivo_name, fa.uuid, fa.nombre_archivo, fa.bandera, u.rfc
+            ORDER BY u.nombre");
+        }
+        else{
+            return $this->db->query("SELECT SUM(pci1.abono_neodata) total, re.idResidencial, re.nombreResidencial as proyecto, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario, pci1.id_usuario, u.forma_pago, 0 as factura, oxcest.id_opcion id_estatus_actual, re.empresa, opn.estatus estatus_opinion, opn.archivo_name, fa.uuid,fa.nombre_archivo as xmla,fa.bandera , u.rfc
+            FROM pago_comision_ind pci1 
+            INNER JOIN comisiones com ON pci1.id_comision = com.id_comision AND com.estatus in (1,8)
+            INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial  
+            INNER JOIN usuarios u ON u.id_usuario = com.id_usuario AND u.forma_pago in (2)
+            INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
+            INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23 
+            INNER JOIN opinion_cumplimiento opn ON opn.id_usuario = u.id_usuario  and opn.estatus IN (2) 
+            INNER JOIN facturas fa ON fa.id_comision = pci1.id_pago_i
+            where lo.idCondominio = $condominio
+            --    $filtro02
+            GROUP BY re.idResidencial, re.nombreResidencial, u.nombre, u.apellido_paterno, u.apellido_materno, pci1.id_usuario, u.forma_pago, oxcest.id_opcion, re.empresa, re.idResidencial, opn.estatus, opn.archivo_name, fa.uuid,fa.nombre_archivo,fa.bandera, u.rfc
+            ORDER BY u.nombre");
+        }
+    }
+
+        function verificar_uuid( $uuid ){
             return $this->db->query("SELECT * FROM facturas WHERE uuid = '".$uuid."'");
         }
 
