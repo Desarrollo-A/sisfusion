@@ -190,13 +190,12 @@ function fillUsersTable() {
                     }
                 }
             }
-        }],
+        ],
         ajax: {
             url: "getUsersList",
             type: "POST",
             cache: false,
-            data: function (d) {
-            }
+            data: function (d) {}
         }
     });
     if(id_rol_general == 54){
