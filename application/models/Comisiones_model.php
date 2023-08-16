@@ -2112,7 +2112,7 @@ ORDER BY pci.fecha_abono DESC");
 
 
 function update_acepta_contraloria($idsol) {
-    return $this->db->query("UPDATE pago_comision_ind SET estatus = 8,modificado_por='".$this->session->userdata('id_usuario')."' WHERE estatus = 4 AND id_pago_i IN (".$idsol.")");
+    return $this->db->query("UPDATE pago_comision_ind SET estatus = 8,modificado_por='".$this->session->userdata('id_usuario')."' WHERE estatus IN (4,13) AND id_pago_i IN (".$idsol.")");
 }
 
 function update_contraloria_especial($idsol) {
@@ -2508,10 +2508,14 @@ function update_pago_general($suma, $ideLote){
 
 
 function insert_dispersion_individual($id_comision, $id_usuario, $abono_nuevo, $pago){
+
+    if($id_usuario == 2){
+        return false;
+    }else{
     $respuesta = $this->db->query("INSERT INTO pago_comision_ind (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, estatus, pago_neodata, creado_por, comentario,modificado_por) VALUES (".$id_comision.", ".$id_usuario.", ".$abono_nuevo.", GETDATE(), GETDATE(), 1, ".$pago.", ".$this->session->userdata('id_usuario').", 'NUEVO PAGO','".$this->session->userdata('id_usuario')."')");
     $insert_id_2 = $this->db->insert_id();
     $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($insert_id_2, ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'DISPERSÓ PAGO DE COMISIÓN')");
-
+}
     if (! $respuesta ) {
         return 0;
         } else {
@@ -2615,13 +2619,10 @@ public function getDataLiquidadasPago($val = '') {
 public function validateSettledCommissions($idlote){
     return $this->db->query("SELECT * FROM comisiones WHERE id_lote = $idlote");
 }
-public function validateDispersionCommissions($lote_1){
-    return $this->db->query("SELECT id_lote FROM pago_comision 
-    WHERE id_lote = $lote_1 
-    AND bandera = 0
-    AND YEAR(GETDATE()) != YEAR(ultima_dispersion)
-    AND MONTH(GETDATE()) != MONTH(ultima_dispersion)
-    AND DAY(GETDATE()) != DAY(ultima_dispersion)");
+public function validateDispersionCommissions($lote){
+    return $this->db->query("SELECT count(*) dispersion, pc.bandera FROM comisiones com
+    LEFT JOIN pago_comision pc ON pc.id_lote = com.id_lote and pc.bandera = 1
+    WHERE com.id_lote = $lote AND com.id_usuario = 2 AND com.estatus = 1 AND com.fecha_creacion <= GETDATE() GROUP BY pc.bandera");
 }
 
  
