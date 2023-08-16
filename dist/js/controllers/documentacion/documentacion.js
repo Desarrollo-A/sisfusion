@@ -1,7 +1,9 @@
 $('[data-toggle="tooltip"]').tooltip();
 
 const movimientosPermitidosContrato = [36, 6, 23, 76, 83, 95, 97, 112];
+const rolesPermitidosContratoEspecial = [8];
 const rolesPermitidosContrato = [15];
+const usuariosPermitidosContratoEspecial = [2762, 2747];
 const movimientosPermitidosContratoFirmado = [45];
 const movimientosPermitidosCorrida = [35, 22, 62, 75, 94, 106];
 const rolesPermitidosContraloria = [17, 70];
@@ -165,10 +167,15 @@ function cargarTabla(idLote, idCliente = '') {
             }
         });
     });
+
+    const url = ((id_rol_general == 8 || includesArray(usuariosPermitidosContratoEspecial, id_usuario_general)) && funcionVista == 'replaceDocumentView') 
+    ? `${general_base_url}registroCliente/expedientesReplace/${idLote}`
+    : `${general_base_url}registroCliente/expedientesWS/${idLote}/${idCliente}`;
+
     documentacionLoteTabla = $('#tableDoct').DataTable({
         destroy: true,
         ajax: {
-            url: `${general_base_url}registroCliente/expedientesWS/${idLote}/${idCliente}`,
+            url: url,
             dataSrc: ""
         },
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -235,6 +242,21 @@ function cargarTabla(idLote, idCliente = '') {
                             : crearBotonAccion(AccionDoc.DOC_CARGADO, data);
                         return `<div class="d-flex justify-center">${buttonMain}</div>`;
                     }
+
+                    if (data.tipo_doc == TipoDoc.CONTRATO && (includesArray(rolesPermitidosContratoEspecial, id_rol_general) || includesArray(usuariosPermitidosContratoEspecial, id_usuario_general))) {
+                        if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
+                            buttonMain = crearBotonAccion(AccionDoc.SUBIR_DOC, data)
+
+                            return `<div class="d-flex justify-center">${buttonMain}</div>`;
+                        }
+
+                        // LA RAMA TIENE UN DOCUMENTO CARGADO
+                        buttonMain = crearBotonAccion(AccionDoc.DOC_CARGADO, data); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
+                        buttonDelete = crearBotonAccion(AccionDoc.ELIMINAR_DOC, data);
+
+                        return `<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`;
+                    }
+
                     if (data.tipo_doc == TipoDoc.CONTRATO) { // CONTRATO
                         if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
                             buttonMain = (includesArray(movimientosPermitidosContrato, data.idMovimiento) && includesArray(rolesPermitidosContrato, id_rol_general))
@@ -472,7 +494,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
         data.append("accion", accion);
         data.append('tituloDocumento', $('#tituloDocumento').val());
         $.ajax({
-            url: "subirArchivo",
+            url: `${general_base_url}Documentacion/subirArchivo`,
             data: data,
             cache: false,
             contentType: false,
@@ -505,7 +527,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
         data.append("idDocumento", $("#idDocumento").val());
         data.append("tipoDocumento", parseInt($("#tipoDocumento").val()));
         $.ajax({
-            url: "eliminarArchivo",
+            url: `${general_base_url}Documentacion/eliminarArchivo`,
             data: data,
             cache: false,
             contentType: false,

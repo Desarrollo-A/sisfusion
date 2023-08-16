@@ -62,16 +62,10 @@ $('#filtro44').change(function(ruta){
     getAssimilatedCommissions(proyecto, condominio);
 });
 
-var totalLeon = 0;
-var totalQro = 0;
-var totalSlp = 0;
-var totalMerida = 0;
-var totalCdmx = 0;
-var totalCancun = 0;
 var tr;
 var tabla_asimilados2 ;
 var totaPen = 0;
-//INICIO TABLA QUERETARO*********************
+//INICIO TABLA QUERETARO
 let titulos = [];
 
 $('#tabla_asimilados thead tr:eq(0) th').each( function (i) {
@@ -114,7 +108,7 @@ function getAssimilatedCommissions(proyecto, condominio){
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
-        bAutoWidth: true,
+        bAutoWidth:true,
         buttons: [{
             text: '<div class="d-flex"><i class="fa fa-check "></i><p class="m-0 pl-1">Marcar como pagado</p></div>',
             action: function() {

@@ -333,7 +333,6 @@ class Usuarios extends CI_Controller
             $mensajeLeyenda = ($response == 1) ? 'Usuario Actualizado correctamente' : 'No se pudo actualizar el usuario';
         } else {
             $result = json_decode($resultadoCH);
-            // $result = json_decode(1);
             if ($result == 1) {
                 $response = $this->Usuarios_modelo->updateUser($data, $this->input->post("id_usuario"));
                 $mensajeLeyenda = 'Usuario Actualizado correctamente';
@@ -359,7 +358,6 @@ class Usuarios extends CI_Controller
     public function validateSession()
     {
         if ($this->session->userdata('id_usuario') == "" || $this->session->userdata('id_rol') == "") {
-            //echo "<script>console.log('No hay sesión iniciada');</script>";
             redirect(base_url() . "index.php/login");
         }
     }
@@ -469,8 +467,6 @@ class Usuarios extends CI_Controller
     /**---------------------------------------- */
     public function getChangeLogUsers($id_usuario)
     {
-        /*print_r($id_usuario);
-        exit;*/
         $data = $this->Usuarios_modelo->getChangeLogUsers($id_usuario);
         echo json_encode($data);
     }
@@ -544,19 +540,19 @@ class Usuarios extends CI_Controller
         $datosCH['dcontrato']['idcoordinador'] = $coordAndGerente->id_coordinador;
         $datosCH['dcontrato']['idgerente'] = $coordAndGerente->id_gerente;
 
-        $resultado = $this->Usuarios_modelo->ServicePostCH($url, $datosCH);
-        $r = json_decode($resultado);
-        if (isset($r->resultado)) {
-            if ($r->resultado == 1) {
-                return json_decode($r->resultado);
-            } else {
-                return json_decode(0);
-            }
-        } else {
-            return json_decode(0);
-        }
+//        $resultado = $this->Usuarios_modelo->ServicePostCH($url, $datosCH);
+//        $r = json_decode($resultado);
+//        if (isset($r->resultado)) {
+//            if ($r->resultado == 1) {
+//                return json_decode($r->resultado);
+//            } else {
+//                return json_decode(0);
+//            }
+//        } else {
+//            return json_decode(0);
+//        }
 
-        // return json_decode(1);
+        return json_decode(1);
     }
 
     private function actualizarProspectoPorRol($idOwner, $rolNuevo, $rolActual, $idLiderNuevo, $sede): object

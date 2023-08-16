@@ -110,7 +110,6 @@ function fillDataTable(typeTransaction, beginDate, endDate, where)
                 title: "Estatus 5. Revisión 100%",
                 orientation: 'landscape',
                 pageSize: 'LEGAL',
-                bAutoWidth: true,
                 exportOptions: {
                     columns: [0,1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                     format: {

@@ -98,4 +98,13 @@ class Api_model extends CI_Model
         return $query;
     }
 
+    public function getAsesoresList($fecha) {
+        $validacionFecha = $fecha != '' ? "AND u0.fecha_creacion >= '$fecha 00:00:00.000'" : "";
+        return $this->db->query("SELECT u0.id_usuario, u0.usuario, u0.fecha_creacion, oxc0.nombre estatusAsesor,
+        UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) nombreAsesor
+        FROM usuarios u0
+        INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = u0.estatus AND oxc0.id_catalogo = 3
+        WHERE u0.id_rol = 7 $validacionFecha")->result_array(); 
+    }
+
 }

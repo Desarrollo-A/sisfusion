@@ -608,7 +608,6 @@ $("#my_updatebandera_form").on('submit', function(e){
     var formulario =  new FormData(this)
 
     e.preventDefault();
-    console.log(this);
     $.ajax({
         type: 'POST',
         url: 'updateBandera',
@@ -629,7 +628,6 @@ $("#my_updatebandera_form").on('submit', function(e){
             }
         },
         error: function(){
-            console.log(formulario);
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });

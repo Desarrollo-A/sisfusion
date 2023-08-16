@@ -374,16 +374,13 @@ class Pagos extends CI_Controller
   }
  
   public function getDatosNuevasRContraloria(){
-
     $proyecto = $this->input->post('proyecto');  
     $condominio =   $this->input->post('condominio');  
-    // var_dump($proyecto);
-    // var_dump($condominio);
     $dat =  $this->Pagos_model->getDatosNuevasRContraloria($proyecto,$condominio);
-   for( $i = 0; $i < count($dat); $i++ ){
-       $dat[$i]['pa'] = 0;
-   }
-   echo json_encode( array( "data" => $dat));
+    for( $i = 0; $i < count($dat); $i++ ){
+      $dat[$i]['pa'] = 0;
+    }
+    echo json_encode( array( "data" => $dat));
   }
 
   

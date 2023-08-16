@@ -21,7 +21,6 @@ class General_model extends CI_Model
                         return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $id_rol . " AND estatus = 1 ORDER BY orden ASC");   
         }
     }
-
     
     public function get_children_menu($id_rol,$id_usuario,$estatus)
     {

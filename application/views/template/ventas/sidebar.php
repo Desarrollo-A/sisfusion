@@ -40,7 +40,7 @@
 		<ul class="nav">
 
 
-			<li class="nav-item hidden-xs  <?php if ($home == 1) {
+			<li class="nav-item <?php if ($home == 1) {
 				echo 'active';
 			} ?>">
 				<a class="nav-link" href="<?= base_url() ?>">
