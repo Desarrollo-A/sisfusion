@@ -1,5 +1,3 @@
-var miArray = new Array(6);
-var miArrayAddFile = new Array(6);
 var getInfo2A = new Array(7);
 var getInfo2_2A = new Array(7);
 var getInfo5A = new Array(7);
@@ -8,7 +6,6 @@ var getInfo2_3A = new Array(7);
 var getInfo2_7A = new Array(7);
 var getInfo5_2A = new Array(7);
 var return1a = new Array(7);
-var aut;
 
 $(document).ready (function() {
     $(document).on('fileselect', '.btn-file :file', function(event, numFiles, label) {
@@ -67,6 +64,7 @@ $(document).ready (function() {
         ordering: false,
         width: '100%',
         scrollX: true,
+        bAutoWidth: true,
         columns: [{
             "data": "nombreResidencial"
         },
@@ -93,14 +91,14 @@ $(document).ready (function() {
         },
         {
             "data": function( d ){
-                comentario = d.idMovimiento == 31 ? d.comentario + "<br> <span class='label label-success'>Nuevo apartado</span>":
-                d.idMovimiento == 85 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Contraloria estatus 2</span>":
-                d.idMovimiento == 20 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Contraloria estatus 5</span>":
-                d.idMovimiento == 63 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Contraloria estatus 6</span>":
-                d.idMovimiento == 73 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Ventas estatus 8</span>":
-                d.idMovimiento == 82 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Jurídico estatus 7</span>":
-                d.idMovimiento == 92 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Contraloria estatus 5</span>":
-                d.idMovimiento == 96 ?  d.comentario + "<br> <span class='label label-danger'>Rechazo Jurídico estatus 7</span>":
+                comentario = d.idMovimiento == 31 ? d.comentario + "<br> <span class='label lbl-green'>Nuevo apartado</span>":
+                d.idMovimiento == 85 ?  d.comentario + "<br> <span class='label lbl-warning'>Rechazo Contraloria estatus 2</span>":
+                d.idMovimiento == 20 ?  d.comentario + "<br> <span class='label lbl-warning'>Rechazo Contraloria estatus 5</span>":
+                d.idMovimiento == 63 ?  d.comentario + "<br> <span class='label lbl-warning'>Rechazo Contraloria estatus 6</span>":
+                d.idMovimiento == 73 ?  d.comentario + "<br> <span class='label lbl-warning'>Rechazo Ventas estatus 8</span>":
+                d.idMovimiento == 82 ?  d.comentario + "<br> <span class='label lbl-warning'>Rechazo Jurídico estatus 7</span>":
+                d.idMovimiento == 92 ?  d.comentario + "<br> <span class='label lbl-warning'>Rechazo Contraloria estatus 5</span>":
+                d.idMovimiento == 96 ?  d.comentario + "<br> <span class='label lbl-warning'>Rechazo Jurídico estatus 7</span>":
                 d.comentario;
                 return comentario;
             }
@@ -373,6 +371,7 @@ $(document).on('click', '#save3', function(e) {
     dataExp3.append("idLote", getInfo5A[5]);
     dataExp3.append("comentario", comentario);
     dataExp3.append("fechaVenc", getInfo5A[6]);
+    
     if (validaComent == 0) {
         alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
     }
