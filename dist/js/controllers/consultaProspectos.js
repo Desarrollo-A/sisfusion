@@ -22,7 +22,7 @@ function fillTable(transaction, beginDate, endDate, where) {
     prospectsTable = $('#prospects-datatable').DataTable({
         dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
-        bAutoWidth: true,
+        bAutoWidth: true,
         columns: [
         {
             data: function(d) {
@@ -624,7 +624,6 @@ function getManagers(){
     }, 'json');
 }
 
-// SELECT coordinador
 function getCoordinatorsByManager(element) {
     gerente = $('option:selected', element).val();
     $("#myselectcoordinador").find("option").remove();
@@ -645,7 +644,6 @@ function getCoordinatorsByManager(element) {
     }, 'json');
 }
 
-// SELECT ASESOR 
 function getAdvisersByCoordinator(element) {
     coordinador = $('option:selected', element).val();
     $("#myselectasesor3").find("option").remove();
@@ -725,7 +723,7 @@ function fillFields(v, type) {
         $("#prospecting_place").val(v.lugar_prospeccion);
         $("#advertising").val(v.medio_publicitario);
         $("#sales_plaza").val(v.plaza_venta);
-        $("#observation").val(v.observaciones);
+        $("#comentario").val(v.observaciones);
         if (v.tipo_vivienda == 1) {
             document.getElementById('own').setAttribute("checked", "true");
         } else if (v.tipo_vivienda == 2) {
@@ -768,6 +766,7 @@ function fillFields(v, type) {
         $("#phone-asesor-lbl").val(v.tel_asesor);
         $("#phone-coordinador-lbl").val(v.tel_coordinador);
         $("#phone-gerente-lbl").val(v.tel_gerente);
+        $("#comentario").val(v.observaciones);
     } else if (type == 2) {
         $("#prospecto_ed").val(v.id_prospecto).trigger('change');
         $("#prospecto_ed").selectpicker('refresh');

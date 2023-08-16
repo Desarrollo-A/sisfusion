@@ -9,14 +9,15 @@ class Usuarios extends CI_Controller
         $this->load->model('asesor/Asesor_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
         $this->load->model('Clientes_model');
         //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
-        $this->load->library(array('session','form_validation', 'get_menu'));
-        $this->load->library(array('session','form_validation','formatter'));
-        $this->load->helper(array('url','form'));
+        $this->load->library(array('session', 'form_validation', 'get_menu', 'formatter','permisos_sidebar'));
+        $this->load->helper(array('url', 'form'));
         $this->load->database('default');
         $this->validateSession();
 
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+        $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
+        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
     }
 
     public function index()
@@ -233,14 +234,44 @@ class Usuarios extends CI_Controller
             $resultadoCH  =  $this->Usuarios_modelo->ServicePostCH($ruta, $dataCH);
             $res = json_decode($resultadoCH);
             $resultadoCH = $res->resultado;
-        } else {
+        }
+        else {
+            $arrayChecar = array (
+                'id_rol' => $_POST['member_type'],
+                'id_sede' => $_POST['headquarter'],
+                'id_lider' => $_POST['leader']
+            );
+            $validacion = validateUserVts($arrayChecar);
 
+            if($validacion['respuesta']==1){
+                //continuar con la lógica
+            }else{
+                switch ($this->session->userdata('id_rol')){
+                    case 4:
+                    case 5:
+                    case 6:
+                        $usr = $this->Usuarios_modelo->getUserInformation($_POST['id_usuario']);
+                        $usr = $usr[0];
+                        $rolActual = $usr['id_rol'];
+                        $sedeActual = $usr['id_sede'];
+                        $liderActual = $usr['id_lider'];
+                    if($_POST['member_type'] != $rolActual AND $_POST['headquarter'] != $sedeActual AND $_POST['leader'] != $liderActual){
+                            echo json_encode(array("result" => false,
+                                "respuesta" => 0,
+                                "message" => $validacion['mensaje']));
+                            exit;
+                        }
+
+                        break;
+                }
+
+            }
             $sedeCH = 0;
             $sucursal = 0;
             if ($_POST['member_type'] == 3 || $_POST['member_type'] == 7 || $_POST['member_type'] == 9 || $_POST['member_type'] == 2) {
                 $usersCH = 1;
                 #actualizar los registros en caso de que haya modificado de lider o tipo de miembro
-                /* 
+                /*
                 SEDES CAPITAL HUMANO
                 9 -- cancun
                 4 ---cdmx
@@ -299,17 +330,24 @@ class Usuarios extends CI_Controller
 
         if ($usersCH == 0) {
             $response = $this->Usuarios_modelo->updateUser($data, $this->input->post("id_usuario"));
+            $mensajeLeyenda = ($response == 1) ? 'Usuario Actualizado correctamente' : 'No se pudo actualizar el usuario';
         } else {
             $result = json_decode($resultadoCH);
             // $result = json_decode(1);
             if ($result == 1) {
                 $response = $this->Usuarios_modelo->updateUser($data, $this->input->post("id_usuario"));
+                $mensajeLeyenda = 'Usuario Actualizado correctamente';
             } else {
                 $response = 0;
+                $mensajeLeyenda = 'No se pudo actualizar el usuario';
             }
         }
 
-        echo json_encode($response);
+        $respuestaView = array(
+            'respuesta' => $response,
+            'message' => $mensajeLeyenda
+        );
+        echo json_encode($respuestaView);
     }
 
     public function getUserInformation($id_usuario){
@@ -506,7 +544,7 @@ class Usuarios extends CI_Controller
         $datosCH['dcontrato']['idcoordinador'] = $coordAndGerente->id_coordinador;
         $datosCH['dcontrato']['idgerente'] = $coordAndGerente->id_gerente;
 
-        /*$resultado = $this->Usuarios_modelo->ServicePostCH($url, $datosCH);
+        $resultado = $this->Usuarios_modelo->ServicePostCH($url, $datosCH);
         $r = json_decode($resultado);
         if (isset($r->resultado)) {
             if ($r->resultado == 1) {
@@ -516,9 +554,9 @@ class Usuarios extends CI_Controller
             }
         } else {
             return json_decode(0);
-        }*/
+        }
 
-        return json_decode(1);
+        // return json_decode(1);
     }
 
     private function actualizarProspectoPorRol($idOwner, $rolNuevo, $rolActual, $idLiderNuevo, $sede): object

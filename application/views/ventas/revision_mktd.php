@@ -3,14 +3,8 @@
 <body>
 <div class="wrapper">
 
-    <?php
-    if($this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="17" || $this->session->userdata('id_rol')=="18" || $this->session->userdata('id_usuario')=="2767" || $this->session->userdata('id_rol')=="70"){
-        $this->load->view('template/sidebar');
-    }
-    else{
-        echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
-    }
-    ?>
+    <?php $this->load->view('template/sidebar'); ?>
+
     <div class="modal fade modal-alertas" id="miModal" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -20,37 +14,37 @@
                 </div>
                 <form method="post" id="form_descuentos">
                     <div class="modal-body">
-                        <div class="form-group" id="users">
-                            <label class="label">Usuario</label>
-                            <select id="usuarioid" name="usuarioid" class="form-control directorSelect ng-invalid ng-invalid-required" required data-live-search="true"></select>
+                        <div class="form-group overflow-hidden" id="users">
+                            <label class="control-label">Usuario</label>
+                            <select id="usuarioid" name="usuarioid" class="selectpicker select-gral m-0 directorSelect" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7"  data-live-search="true" data-container="body" required></select>
                         </div>
                         <div class="form-group" id="loteorigen">
-                            <label class="label">Lote origen</label>
+                            <label class="control-label">Lote origen</label>
                             <select id="idloteorigen"  name="idloteorigen[]" multiple="multiple" class="form-control directorSelect2 js-example-theme-multiple" style="width: 100%;height:200px !important;"  required data-live-search="true"></select>
                         </div>
                         <b id="msj2" style="color: red;"></b>
                         <div class="form-group row">
                             <div class="col-md-6">
                                 <div class="form-group" >
-                                    <label class="label">Monto disponible</label>
-                                    <input class="form-control" type="text" id="idmontodisponible" readonly name="idmontodisponible" value="">
+                                    <label class="control-label">Monto disponible</label>
+                                    <input class="form-control input-gral" type="text" id="idmontodisponible" readonly name="idmontodisponible" value="">
                                 </div>
                                 <div id="montodisponible"></div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="label">Monto a descontar</label>
-                                    <input class="form-control" type="text" id="monto" onblur="verificar();" name="monto" value="">
+                                    <label class="control-label">Monto a descontar</label>
+                                    <input class="form-control input-gral" type="text" id="monto" onblur="verificar();" name="monto" value="">
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="label">Mótivo de descuento</label>
-                            <textarea id="comentario" name="comentario" class="form-control" rows="3" required></textarea>
+                            <label class="control-label">Mótivo de descuento</label>
+                            <textarea id="comentario" name="comentario" class="form-control input-gral" rows="3" required></textarea>
                         </div>
-                        <div class="form-group d-flex justify-center">
-                            <button type="submit" id="btn_abonar" class="btn btn-success">GUARDAR</button>
-                            <button class="btn btn-danger" type="button" data-dismiss="modal" >CANCELAR</button>
+                        <div class="form-group d-flex justify-end">
+                            <button class="btn btn-danger btn-simple" type="button" data-dismiss="modal" >CANCELAR</button>
+                            <button type="submit" id="btn_abonar" class="btn btn-primary">GUARDAR</button>
                         </div>
                     </div>
                 </form>
@@ -58,65 +52,15 @@
         </div>
     </div>
 
-    <!--<div class="modal fade modal-alertas" id="modal_users" role="dialog">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <form method="post" id="form_interes">
-                    <div class="modal-body"></div>
-                </form>
-            </div>
-        </div>
-    </div>-->
-
-    <!--<div class="modal fade modal-alertas" id="modal_colaboradores" role="dialog">
-        <div class="modal-dialog modal-md">
-            <div class="modal-content">
-                <form method="post" id="form_colaboradores">
-                    <div class="modal-body"></div>
-                    <div class="modal-footer"></div>
-                </form>
-            </div>
-        </div>
-    </div>-->
-
-    <!--<div class="modal fade modal-alertas" id="modal_mktd" role="dialog">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header bg-red">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">EDITAR INFORMACIÓN</h4>
-                </div>
-                <form method="post" id="form_MKTD">
-                    <div class="modal-body"></div>
-                    <div class="modal-footer"></div>
-                </form>
-            </div>
-        </div>
-    </div>-->
-
-    <!--<div class="modal fade modal-alertas" id="modalParcialidad" role="dialog">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header bg-red">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">SOLICITAR PARCIALIDAD DE PAGO</h4>
-                </div>
-                <form method="post" id="form_parcialidad">
-                    <div class="modal-body"></div>
-                </form>
-            </div>
-        </div>
-    </div>-->
-
     <div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons" onclick="cleanComments()">clear</i></button>
                 </div>
                 <div class="modal-body">
                     <div role="tabpanel">
-                        <ul class="nav nav-tabs" role="tablist" style="background: #949494;">
+                        <ul class="nav" role="tablist">
                             <div id="nameLote"></div>
                         </ul>
                         <div class="tab-content">
@@ -125,7 +69,7 @@
                                     <div class="col-md-12">
                                         <div class="card card-plain">
                                             <div class="card-content">
-                                                <ul class="timeline timeline-simple" id="comments-list-asimilados"></ul>
+                                                <ul class="timeline-3" id="comments-list-asimilados"></ul>
                                             </div>
                                         </div>
                                     </div>
@@ -141,17 +85,6 @@
         </div>
     </div>
 
-    <!--<div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
-        <div class="modal-dialog" style="width:800px; margin-top:20px">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="row">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>-->
-
     <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
@@ -159,11 +92,6 @@
             </div>
         </div>
     </div>
-
-    <!--<div class="modal fade modal-alertas" id="documento_preview" role="dialog">
-        <div class="modal-dialog" style= "margin-top:20px;"></div>
-    </div>-->
-    <!-- END Modals -->
 
     <div class="content boxContent">
         <div class="container-fluid">
@@ -241,23 +169,21 @@
                                             </div>
                                             <div class="material-datatables">
                                                 <div class="form-group">
-                                                    <div class="table-responsive">
-                                                        <table class="table-striped table-hover" id="tabla_plaza_1" name="tabla_plaza_1">
-                                                            <thead>
+                                                    <table class="table-striped table-hover" id="tabla_plaza_1" name="tabla_plaza_1">
+                                                        <thead>
                                                             <tr>
                                                                 <th>ID USUARIO</th>
                                                                 <th>USUARIO</th>
-                                                                <th>SEDE USUARIO</th>
+                                                                <th>SEDE DEL USUARIO</th>
                                                                 <th>IMPUESTO %</th>
                                                                 <th>ABONO DISPERSADO</th>
                                                                 <th>DESCUENTO</th>
                                                                 <th>A PAGAR</th>
                                                                 <th>TOTAL</th>
-                                                                <th>FORMA PAGO</th>
+                                                                <th>FORMA DE PAGO</th>
                                                             </tr>
-                                                            </thead>
-                                                        </table>
-                                                    </div>
+                                                        </thead>
+                                                    </table>
                                                 </div>
                                             </div>
                                         </div> 
@@ -305,14 +231,14 @@
                                                 </div>
                                             </div>
                                             <div class="toolbar">
-                                            <div class="row">
-                                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                                            <div class="container-fluid p-0">
-                                                                <div class="row">
-                                                                <div class="col-4 col-sm-4 col-md-4 col-lg-4">
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                        <div class="container-fluid p-0">
+                                                            <div class="row">
+                                                                <div class="col-4 col-sm-4 col-md-4 col-lg-4 overflow-hidden">
                                                                     <div class="form-group">
-                                                                        <label for="proyecto">Mes</label>
-                                                                        <select name="mes" id="mes" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
+                                                                        <label  for="proyecto">Mes</label>
+                                                                        <select name="mes" id="mes" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required>
                                                                             <?php
                                                                                 setlocale(LC_ALL, 'es_ES');
                                                                                 for ($i = 1; $i <= 12; $i++) {
@@ -325,10 +251,10 @@
                                                                         </select>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-4 col-sm-4 col-md-4 col-lg-4">
+                                                                <div class="col-4 col-sm-4 col-md-4 col-lg-4 overflow-hidden">
                                                                     <div class="form-group">
                                                                         <label>Año</label>
-                                                                        <select name="anio" id="anio" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
+                                                                        <select name="anio" id="anio" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required>
                                                                             <?php
                                                                                 setlocale(LC_ALL, 'es_ES');
                                                                                 for ($i = 2019; $i <= 2023; $i++) {
@@ -339,34 +265,34 @@
                                                                         </select>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                                                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 overflow-hidden">
                                                                     <div class="form-group label-floating select-is-empty">
                                                                         <label for="proyecto">Estatus:</label>
-                                                                        <select name="selectEstatusN" id="selectEstatusN" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                                                        <select name="selectEstatusN" id="selectEstatusN" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                                                     </div>
                                                                 </div>
                                                                 </div>
                                                             </div>
-                                                        </div>                                                                                                          
+                                                        </div>
                                                     </div>
                                                 </div>                                       
                                             <div class="material-datatables">
                                                 <div class="form-group">
                                                     <table class="table-striped table-hover" id="tabla_plaza_12" name="tabla_plaza_12">
                                                         <thead>
-                                                        <tr>
-                                                            <th>ID USUARIO</th>
-                                                            <th>USUARIO</th>
-                                                            <th>SEDE USUARIO</th>
-                                                            <th>IMPUESTO %</th>
-                                                            <th>ABONO DISPERSADO</th>
-                                                            <th>DESCUENTO</th>
-                                                            <th>A PAGAR</th>
-                                                            <th>NUSKAH</th>
-                                                            <th>MKTD 2020</th>
-                                                            <th>TOTAL</th>
-                                                            <th>FORMA PAGO</th>
-                                                        </tr>
+                                                            <tr>
+                                                                <th>ID USUARIO</th>
+                                                                <th>USUARIO</th>
+                                                                <th>SEDE DEL USUARIO</th>
+                                                                <th>IMPUESTO %</th>
+                                                                <th>ABONO DISPERSADO</th>
+                                                                <th>DESCUENTO</th>
+                                                                <th>A PAGAR</th>
+                                                                <th>NUSKAH</th>
+                                                                <th>MKTD 2020</th>
+                                                                <th>TOTAL</th>
+                                                                <th>FORMA DE PAGO</th>
+                                                            </tr>
                                                         </thead>
                                                     </table>
                                                 </div>
@@ -392,33 +318,30 @@
                                             </div>
                                             <div class="material-datatables">
                                                 <div class="form-group">
-                                                    <div class="table-responsive">
-                                                        <table class="table-striped table-hover" id="tabla_plaza_2" name="tabla_plaza_2">
-                                                            <thead>
-                                                            <tr>
-                                                                <th>ID</th>
-                                                                <th>PROY.</th>
-                                                                <th>CONDOMINIO</th>
-                                                                <th>LOTE</th>
-                                                                <th>REFERENCIA</th>
-                                                                <th>PRECIO LOTE</th>
-                                                                <th>EMP.</th>
-                                                                <th>TOT. COM.</th>
-                                                                <th>P. CLIENTE</th>
-                                                                <th>SOLICITADO</th>
-                                                                <th>TIPO VENTA</th>
-                                                                <th>USUARIO</th>
-                                                                <th>PUESTO</th>
-                                                                <th>FEC. ENVÍO</th>
-                                                                <th>MÁS</th>
-                                                            </tr>
-                                                            </thead>
-                                                        </table>
-                                                    </div>
+                                                    <table class="table-striped table-hover" id="tabla_plaza_2" name="tabla_plaza_2">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>ID</th>
+                                                            <th>PROYECTO</th>
+                                                            <th>CONDOMINIO</th>
+                                                            <th>LOTE</th>
+                                                            <th>REFERENCIA</th>
+                                                            <th>PRECIO DEL LOTE</th>
+                                                            <th>EMPRESA</th>
+                                                            <th>TOTAL COMISION</th>
+                                                            <th>PAGADO CLIENTE</th>
+                                                            <th>SOLICITADO</th>
+                                                            <th>TIPO DE VENTA</th>
+                                                            <th>USUARIO</th>
+                                                            <th>PUESTO</th>
+                                                            <th>FECHA DE ENVÍO</th>
+                                                            <th>ACCIONES</th>
+                                                        </tr>
+                                                        </thead>
+                                                    </table>
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- ///////////////// -->
                                         <div class="tab-pane" id="total_comisionistas">
                                             <h3 class="card-title center-align">Total comisionista</b></h3>
                                             <div class="toolbar">
@@ -432,17 +355,14 @@
                                                         </div>
                                                     </div>
                                                     <div class="row">
-
                                                         <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
                                                             <div class="container-fluid p-0">
                                                                 <div class="row">
                                                                     <div class="col-md-12 p-r">
                                                                         <div class="form-group d-flex">
-                                                                            <input type="text" class="form-control datepicker" id="beginDate" value="01/01/2021" />
-                                                                            <input type="text" class="form-control datepicker" id="endDate" value="01/01/2021" />
-                                                                            <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
-                                                                                <span class="material-icons update-dataTable">search</span>
-                                                                            </button>
+                                                                            <input type="text" class="form-control datepicker" id="beginDate"/>
+                                                                            <input type="text" class="form-control datepicker" id="endDate"/>
+                                                                            <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange"><span class="material-icons update-dataTable">search</span></button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -450,25 +370,9 @@
                                                         </div>
                                                         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                                             <div class="form-group label-floating select-is-empty">
-                                                                <!--<label for="proyecto">Lugar prospección:</label>-->
-                                                                <select name="selectEstatus" id="selectEstatus" class="selectpicker select-gral m-0"
-                                                                        data-style="btn" data-show-subtext="true" data-live-search="true"
-                                                                        title="Selecciona opción" data-size="7" required>
-                                                                </select>
+                                                                <select name="selectEstatus" id="selectEstatus" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona opción" data-size="7" required></select>
                                                             </div>
                                                         </div>
-
-                                                        <!--<div class="col-md-2">
-                                                            <input type="date" name="fecha1" id="fecha1" class="form-control">
-                                                        </div>
-                                                        <div class="col-md-2" id="f2">
-                                                            <input type="date" name="fecha2" id="fecha2" class="form-control">
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            <select class="form-control" id="selectEstatus" name="selectEstatus" require>
-                                                                <option value="" default>---Seleccionar---</option>
-                                                            </select>
-                                                        </div>-->
                                                     </div>
                                                 </div>
                                             </div>
@@ -483,7 +387,7 @@
                                                                 <th>NOMBRE</th>
                                                                 <th>TOTAL</th>
                                                                 <th>FECHA</th>
-                                                                <th>ESTUTUS</th>
+                                                                <th>ESTATUS</th>
                                                             </tr>
                                                             </thead>
                                                         </table>
@@ -491,7 +395,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- ///////////////// -->
                                         <div class="tab-pane" id="total_comisionistas2">
                                             <div class="encabezadoBox">
                                                 <h3 class="card-title center-align" >Comisiones nuevas <b>mktd</b></h3>
@@ -508,27 +411,14 @@
                                                         </div>
                                                     </div>
                                                     <div class="row">
-                                                        <!--<div class="col-md-2">
-                                                            <input type="date" name="fechaR1" id="fechaR1" class="form-control">
-                                                        </div>
-                                                        <div class="col-md-2" id="f2">
-                                                            <input type="date" name="fechaR2" id="fechaR2" class="form-control">
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            <select class="form-control" id="selectEstatusR" name="selectEstatusR" require>
-                                                                <option value="" default>---Seleccionar---</option>
-                                                            </select>
-                                                        </div>-->
                                                         <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
                                                             <div class="container-fluid p-0">
                                                                 <div class="row">
                                                                     <div class="col-md-12 p-r">
                                                                         <div class="form-group d-flex">
-                                                                            <input type="text" class="form-control datepicker" id="beginDateR" value="01/01/2021" />
-                                                                            <input type="text" class="form-control datepicker" id="endDateR" value="01/01/2021" />
-                                                                            <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRangeR">
-                                                                                <span class="material-icons update-dataTable">search</span>
-                                                                            </button>
+                                                                            <input type="text" class="form-control datepicker beginDateR" id="beginDate" name="beginDateR"/>
+                                                                            <input type="text" class="form-control datepicker endDateR" id="endDate" name="endDateR"/>
+                                                                            <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRangeR"><span class="material-icons update-dataTable">search</span></button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -536,11 +426,7 @@
                                                         </div>
                                                         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                                             <div class="form-group label-floating select-is-empty">
-                                                                <!--<label for="proyecto">Lugar prospección:</label>-->
-                                                                <select name="selectEstatusR" id="selectEstatusR" class="selectpicker select-gral m-0"
-                                                                        data-style="btn" data-show-subtext="true" data-live-search="true"
-                                                                        title="Selecciona opción" data-size="7" required>
-                                                                </select>
+                                                                <select name="selectEstatusR" id="selectEstatusR" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona opción" data-size="7" required></select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -548,9 +434,8 @@
                                             </div>
                                             <div class="material-datatables">
                                                 <div class="form-group">
-                                                    <div class="table-responsive">
-                                                        <table class="table-striped table-hover" id="tabla_total_comisionistas2" name="tabla_total_comisionistas2">
-                                                            <thead>
+                                                    <table class="table-striped table-hover" id="tabla_total_comisionistas2" name="tabla_total_comisionistas2">
+                                                        <thead>
                                                             <tr>
                                                                 <th>COMISIONISTA</th>
                                                                 <th>PLAN</th>
@@ -558,9 +443,8 @@
                                                                 <th>TOTAL</th>
                                                                 <th>ESTUTUS</th>
                                                             </tr>
-                                                            </thead>
-                                                        </table>
-                                                    </div>
+                                                        </thead>
+                                                    </table>
                                                 </div>
                                             </div>
                                         </div>

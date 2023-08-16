@@ -1,3 +1,5 @@
+
+
 <div class="sidebar" data-active-color="blue" data-background-color="white" data-image="<?=base_url()?>/dist/img/sidebar-1.jpg">
 	<div class="logo"> 
 		<a href="<?=base_url()?>#" class="simple-text">
@@ -46,7 +48,7 @@
                         {                    
             ?>
                             <li class="nav-item hidden-xs  <?php if ($url == $url2 && $datos->nombre == "Inicio" ) { echo 'active'; }elseif($url == base_url().$datos->pagina  && $datos->nombre == "Asesores / Coordinadores"){echo 'active';}elseif($url == base_url().$datos->pagina && ($datos->nombre == "Revisión evidencia" || $datos->nombre == "Evidencias clientes" || $datos->nombre == "Eliminados de la lista")){echo 'active';}elseif($url == base_url().$datos->pagina  && $datos->nombre == "Dashboard"){echo 'active';}?>">
-                                <a class="nav-link" href="<?php if($datos->nombre == "Aparta en línea"){ echo $datos->pagina; } elseif($datos->nombre == "Asesores / Coordinadores"){echo base_url().$datos->pagina;}else {echo base_url().$datos->pagina;}?>" <?php if($datos->nombre == "Aparta en línea"){ echo ' target="_blank"';   } ?>>
+                                <a class="nav-link" <?php if ($url == $url2 && $datos->nombre == "Inicio" ) { ?> onclick="borrarFlashdata();" <?php } ?> href="<?php if($datos->nombre == "Aparta en línea"){ echo $datos->pagina; } elseif($datos->nombre == "Asesores / Coordinadores"){echo base_url().$datos->pagina;}else {echo base_url().$datos->pagina;}?>" <?php if($datos->nombre == "Aparta en línea"){ echo ' target="_blank"';   } ?>>
                                     <i class="material-icons"><?=$datos->icono?></i>
                                     <p><?=$datos->nombre?></p>
                                 </a>
@@ -68,10 +70,10 @@
                                             <?php
                                                 foreach ($datos3 as $hijos) {
                                                     if($hijos->orden >= $datos->orden && $hijos->orden <= $datos->orden +1)	
-                                                        {		//href="<?= base_url().$hijos->pagina?>"
+                                                        {		
                                             ?>
                                                             <li class="<?php if ($url == base_url().$hijos->pagina) {echo 'active';} ?>">
-                                                                <a href="#" onclick="validarMenu('<?=$hijos->pagina?>')"><?=$hijos->nombre?></a>
+                                                                <a href="<?= base_url().$hijos->pagina?>  "><?=$hijos->nombre?></a>
                                                             </li>
                                             <?php
                                                         }
@@ -98,7 +100,7 @@
                                                     if($hijos->orden >= $datos->orden && $hijos->orden <= $datos->orden +1)	{		
                                             ?>
                                                         <li class="<?php if ($url == base_url().$hijos->pagina) {echo 'active';} ?>">
-                                                            <a href="<?= base_url().$hijos->pagina?>  "><?=$hijos->nombre?></a>
+                                                            <a href="<?= base_url().$hijos->pagina?>"><?=$hijos->nombre?></a>
                                                         </li>
                                             <?php
                                                     }
@@ -124,7 +126,7 @@
                                                         if($hijos->orden >= $datos->orden && $hijos->orden <= $datos->orden +1)	{		
                                                 ?>
                                                             <li class="<?php if ($url == base_url().$hijos->pagina) {echo 'active';} ?>">
-                                                                <a href="<?= base_url().$hijos->pagina?>  "><?=$hijos->nombre?></a>
+                                                                <a href="<?= base_url().$hijos->pagina?>"><?=$hijos->nombre?></a>
                                                             </li>
                                                 <?php
                                                         }
@@ -257,6 +259,8 @@
 			</div>
 		</div>
     </nav>
+
+
 <script>
     function AddTicket(){
         $.post("<?=base_url()?>index.php/Api/ServicePostTicket", function (data) {
@@ -265,37 +269,11 @@
         }, 'json');
     }
     var general_base_url_sidebar = "<?=base_url()?>";
-    //console.log(general_base_url_sidebar)
 
-    function validarMenu(pagina){
-            $.post(general_base_url_sidebar+'Postventa/validarMenu', {ruta:urls }, function (data) {
-                console.log(data);
-                if(data == 0){
-                    window.location.replace(general_base_url_sidebar);
-                }else{
-                    let nuevaRuta = general_base_url_sidebar + pagina;
-                    window.location.replace(nuevaRuta);
-                }
-            }, 'json');
+    function borrarFlashdata(){
+        $.post(general_base_url_sidebar+'General/borrarFlashdata', function (data) {
+        }, 'json');
     }
-    let urls = "<?=$_SERVER["REQUEST_URI"]?>";
-    let urlActual = "<?=$_SESSION['rutaActual']?>";
-    console.log(urls);
-    console.log(urlActual);
-    /*window.onload = function(){
-        let urls = "<?=$_SERVER["REQUEST_URI"]?>";
-        let urlActual = "<?=$_SESSION['rutaActual']?>";
-        let controlador = "<?=$this->session->userdata('controlador')?>";
-        console.log(urls);
-        console.log(urlActual);
-        console.log(controlador);
-        var URLactual = jQuery(location).attr('href');
-        //window.location.replace(<?=base_url()?>);
-        $.post(general_base_url_sidebar+'Postventa/validarMenu', {ruta:urls }, function (data) {
-            console.log(data);
-            if(data == 4){
-                window.location.replace(general_base_url_sidebar);
-            }
-    }, 'json');
-    }*/
+
+
 </script>

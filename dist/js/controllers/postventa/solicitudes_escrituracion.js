@@ -74,7 +74,7 @@ sp = {
 sp2 = {
   initFormExtendedDatetimepickers: function () {
     $(".datepicker2").datetimepicker({
-      format: "DD/MM/YYYY",
+      format: "DD/MM/YYYY LT",
       icons: {
         time: "fa fa-clock-o",
         date: "fa fa-calendar",
@@ -683,7 +683,10 @@ $(document).on("click", ".comentariosModel", function (e) {
       $.each(data, function (i, v) {
         let fecha_creacion = moment(v.fecha_creacion.split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss')
         $("#comments-list-asimilados").append(
-          `<div class="col-lg-12" style="padding-left:40px;"><li><a style="color:${v.color};">${v.nombre}</a>&nbsp;<a style="color:${v.color}" class="float-right"><b>${fecha_creacion}</b></a><p>${v.descripcion}</p></li></div>`
+          `<div class="col-lg-12" style="padding-left:40px;">
+              <li>
+                <a style="color:${v.color};">${v.nombre}</a>&nbsp;<a style="color:${v.color}" class="float-right"><b>${fecha_creacion}</b></a><p>${v.descripcion}</p></li>
+          </div>`
         );
       });
     } else {
@@ -1336,7 +1339,7 @@ function crearTablas(datosTablas,numTabla = ''){
                             case 9:
                             case 11:
                             case 36:
-                                if ((d.creado_por == idUser || idUser == 12071 || idUser == 12066)) { 
+                                if ((d.creado_por == idUser)) { 
                                     bandera_request = (d.nombre_a_escriturar != 0 && d.nombre_a_escriturar != null) ? 1 : 0;
                                     group_buttons += `<button id="presupuesto" data-area-actual="${userType}" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Información"><i class="fas fa-info"></i></button>`;// `<button id="presupuesto" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="left" title="Presupuesto"><i class="fas fa-coins"></i></button>`; 
                                     bandera_reject = 1;                           
@@ -1393,7 +1396,7 @@ function crearTablas(datosTablas,numTabla = ''){
                             case 24:
                                     // if ((d.creado_por == idUser || idUser == 12071 || idUser == 12066)) { 
                                         //ESTATUS 19 Y 22 SE VALIDA QUE LOS DOCUMENTOS OBLIGATORIOS ESTEN CARGADOS Y UN PRESUPUESTO ESTE VALIDADO SOLO SI SE TRABAJARA CON UNA NOTARIA INTERNA
-                                        if (d.creado_por == idUser || idUser == 12071 || idUser == 12066){
+                                        if (idUser == 12071 || idUser == 12066){
                                           group_buttons += `<button id="trees${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
                                         } else if (d.creado_por == idUser){
                                         group_buttons += `<button id="trees${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;

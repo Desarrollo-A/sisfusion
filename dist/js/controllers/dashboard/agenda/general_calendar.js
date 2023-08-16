@@ -1,5 +1,9 @@
 //jquery
   $(document).on('change','#gerente', function(){
+    removeCRMEvents();
+
+    $("#labelAses").show();
+
     let id = $("#gerente").val();
     getCoordinators(id);
     $("#coordinador").empty().selectpicker('refresh');
@@ -7,6 +11,8 @@
 
   $(document).on('change', '#coordinador', function(e){
     const idCoordinador = $("#coordinador").val();
+    $("#labelAses").show();
+
     getAsesores(idCoordinador, true).then( () => {
       getEventos(idCoordinador).then( response => {
         setSourceEventCRM(response);
@@ -56,17 +62,25 @@
         $('#spiner-loader').removeClass('hide');
       },
       success: function(data) {
-        $("#labelAses").show();
         $('#spiner-loader').addClass('hide');
-        if(firstLoad){
+
+        let ids = '';
+
+        if(firstLoad) {
           const len = data.length;
           for (let i = 0; i < len; i++) {
             const id = data[i]['id_usuario'];
             const nombre = data[i]['nombre'];
+
             $("#asesor").append($('<option>').val(id).text(nombre));
+
+            ids += (i+1 === len) ? data[i]['id_usuario'] : `${data[i]['id_usuario']},`;
           }
+
           if (len <= 0) {
             $("#asesor").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+          } else {
+            $("#asesor").append($('<option>').val(ids).text('SELECCIONAR TODOS'));
           }
   
           $("#asesor").selectpicker('refresh');
@@ -131,8 +145,7 @@
       }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
     } else if(userType == 9){ /* Coordinador */
         getAsesores(idUser, firstLoad).then( response => {
-        const arrayId = idUser;
-        getEventos(arrayId).then( response => {
+        getEventos(idUser).then( response => {
           setSourceEventCRM(response);
         }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
       }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });

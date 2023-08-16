@@ -309,7 +309,7 @@
 		LEFT JOIN usuarios u3 ON u3.id_usuario = u2.id_lider -- SUBDIRECTOR
 		LEFT JOIN usuarios u4 ON u4.id_usuario = u3.id_lider -- REGIONAL
         WHERE u0.id_rol = 7 AND u0.estatus = 1 AND ISNULL(u0.correo, '') NOT LIKE '%SINCO%' AND ISNULL(u0.correo, '') NOT LIKE '%test_%'
-		AND u0.id_usuario NOT IN (4415,11160,11161,11179,11750,12187,11332,2595,10828,9942,10549,12874)
+		AND u0.id_usuario NOT IN (4415, 11160, 11161, 11179, 11750, 12187, 11332, 2595, 10828, 9942, 10549, 12874, 13151)
 		UNION ALL
 		(SELECT id_usuario as id_asesor,0 id_sede,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as asesor,0 id_coordinador ,'NO APLICA' coordinador, 0 id_gerente, 'NO APLICA' gerente,
 		0 id_subdirector, 'NO APLICA' subdirector,0 id_regional, 'NO APLICA' regional, 0 id_regional_2, 'NO APLICA' regional_2 FROM usuarios WHERE id_usuario = 12874)")->result();
@@ -1453,7 +1453,7 @@
 		LEFT JOIN usuarios u3 ON u3.id_usuario = u2.id_lider -- SUBDIRECTOR
 		LEFT JOIN usuarios u4 ON u4.id_usuario = u3.id_lider -- REGIONAL
         WHERE u0.id_rol = 7 AND u0.estatus = 1 AND ISNULL(u0.correo, '') NOT LIKE '%SINCO%' AND ISNULL(u0.correo, '') NOT LIKE '%test_%'
-		AND u0.id_usuario NOT IN (4415,11160,11161,11179,11750,12187,11332,2595,10828,9942,10549,12874)
+		AND u0.id_usuario NOT IN (4415, 11160, 11161, 11179, 11750, 12187, 11332, 2595, 10828, 9942, 10549, 12874, 13151)
 		UNION ALL
 		(SELECT id_usuario as id_asesor,0 id_sede,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as asesor,0 id_coordinador ,'NO APLICA' coordinador, 0 id_gerente, 'NO APLICA' gerente,
 		0 id_subdirector, 'NO APLICA' subdirector,0 id_regional, 'NO APLICA' regional, 0 id_regional_2, 'NO APLICA' regional_2 FROM usuarios WHERE id_usuario = 12874)")->result();

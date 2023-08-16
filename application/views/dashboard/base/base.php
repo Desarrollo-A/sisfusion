@@ -83,11 +83,11 @@
 <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
-<script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
 <script async defer src="https://accounts.google.com/gsi/client"></script>
 <script src="<?=base_url()?>dist/js/controllers/dashboard/agenda/general_calendar.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/dashboard/base/base.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/dashboard/agenda/googleCalendarConnection.js"></script>
+
 <script>
     userType = <?= $this->session->userdata('id_rol') ?> ;
     idUser = <?= $this->session->userdata('id_usuario') ?>;

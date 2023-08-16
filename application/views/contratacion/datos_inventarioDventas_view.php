@@ -2,14 +2,7 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body class="">
 <div class="wrapper ">
-    <?php
-        if($this->session->userdata('id_rol') == "16" || $this->session->userdata('id_rol') == "6" || $this->session->userdata('id_rol') == "5" || $this->session->userdata('id_rol') == "3" || $this->session->userdata('id_rol') == "4" || $this->session->userdata('id_rol') == "9" || $this->session->userdata('id_rol') == "53"){
-            $this->load->view('template/sidebar');
-        }
-        else {
-            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
-        }
-    ?>
+    <?php $this->load->view('template/sidebar'); ?>
 
     <!--Contenido de la página-->
     <div class="content boxContent">

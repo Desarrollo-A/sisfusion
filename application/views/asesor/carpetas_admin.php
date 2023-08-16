@@ -6,14 +6,7 @@
 <body>
     <div class="wrapper">
 
-        <?php
-        if ($this->session->userdata('id_rol') == "4" || $this->session->userdata('id_rol') == "53") //contratacion
-        {
-        $this->load->view('template/sidebar');
-        } else {
-            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-        }
-        ?>
+        <?php $this->load->view('template/sidebar'); ?>
 
         <div class="modal fade" id="carpetasE" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">

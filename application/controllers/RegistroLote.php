@@ -10,7 +10,7 @@ class RegistroLote extends CI_Controller
 		$this->load->model('model_queryinventario');
 		$this->load->library(array('session', 'form_validation'));
 		//LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
-		$this->load->library(array('session', 'form_validation', 'get_menu'));
+		$this->load->library(array('session', 'form_validation', 'get_menu','permisos_sidebar'));
 		$this->load->helper(array('url', 'form'));
 		$this->load->database('default');
 		$this->validateSession();
@@ -18,6 +18,8 @@ class RegistroLote extends CI_Controller
 
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+		$rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
+        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
     }
 	function getClusterGrupo($residencial, $condominio, $grupo)
 	{
@@ -7028,12 +7030,14 @@ class RegistroLote extends CI_Controller
 		$this->load->view('template/header');
 		$this->load->view('juridico/historialContratadorReporte_view');
 	}
-	public function getReportData()
-	{
+	public function getReportData(){
+
 		if (isset($_POST) && !empty($_POST)) {
 			$typeTransaction = $this->input->post("typeTransaction");
-			$beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-			$endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+			$fechaInicio = explode('/', $this->input->post("beginDate"));
+            $fechaFin = explode('/', $this->input->post("endDate"));
+            $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+            $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
 			$where = $this->input->post("where");
 			$data['data'] = $this->registrolote_modelo->reportContratados($typeTransaction, $beginDate, $endDate, $where)->result_array();
 			echo json_encode($data);

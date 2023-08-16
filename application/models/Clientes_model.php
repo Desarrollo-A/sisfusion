@@ -476,6 +476,8 @@ function getStatusMktdPreventa(){
                 $where = "pr.lugar_prospeccion IN (33)";
             else if ($id_usuario == 11750) // MJ: FLACO CON SUERTE
                 $where = "pr.lugar_prospeccion IN (43)";
+            else if ($id_usuario == 13151) // MJ: LOS BEZARES
+                $where = "pr.lugar_prospeccion IN (48)";
             else
                 $where = "pr.id_asesor = $id_usuario";
         }
@@ -515,7 +517,11 @@ function getStatusMktdPreventa(){
             if ($id_usuario == 6578) // MJ: COREANO VLOGS
                 $where = "pr.lugar_prospeccion IN (26)";
             else if ($id_usuario == 9942) // MJ: BADABUN
-            $where = "pr.lugar_prospeccion IN (33)";
+                $where = "pr.lugar_prospeccion IN (33)";
+            else if ($id_usuario == 11750) // MJ: FLACO CON SUERTE
+                $where = "pr.lugar_prospeccion IN (43)";
+            else if ($id_usuario == 13151) // MJ: LOS BEZARES
+                $where = "pr.lugar_prospeccion IN (48)";
             else
                 $where = "pr.id_asesor = $id_usuario";
         }
@@ -1061,7 +1067,8 @@ function getStatusMktdPreventa(){
                     us3.telefono tel_gerente,
                     CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) AS asesor, 
                     CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) AS coordinador,
-                    CONCAT(us3.nombre, ' ', us3.apellido_paterno, ' ', us3.apellido_materno) AS gerente
+                    CONCAT(us3.nombre, ' ', us3.apellido_paterno, ' ', us3.apellido_materno) AS gerente,
+                    p.observaciones
             FROM prospectos p 
             LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = p.personalidad_juridica AND oxc.id_catalogo = 10
             LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = p.lugar_prospeccion AND oxc2.id_catalogo = 9
@@ -1515,8 +1522,6 @@ function getStatusMktdPreventa(){
             case '18': // SUBDIRECTOR
             case '19': // SUBDIRECTOR
             case '20': // SUBDIRECTOR
-            case '2': // SUBDIRECTOR
-            case '59': // SUBDIRECTOR
             default:
                 $query = $this->db->query(
                     "SELECT c.id_prospecto, c.vigencia, c.tipo, c.telefono, c.telefono_2,

@@ -13,7 +13,7 @@ class RegistroCliente extends CI_Controller {
         ]);
 		$this->load->library(array('session','form_validation'));
         //LIBRERIA PARA LLAMAR OBTENER LrAS CONSULTAS DE LAS  DEL MENÚ
-        $this->load->library(array('session','form_validation', 'get_menu'));
+        $this->load->library(array('session','form_validation', 'get_menu','permisos_sidebar'));
 		$this->load->library('Pdf');
 		$this->load->library('email');
 		$this->load->helper(array('url','form'));
@@ -23,6 +23,8 @@ class RegistroCliente extends CI_Controller {
 
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+        $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
+        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
     }
 	// EN ESTA PARTE SE REALIZA EL REGISTRO DE CLIENTES TODOS LOS CLIENTES EXCEPTO DE SAN LUIS Y DE CIUDAD MADERAS SUR
 	public function index (){
@@ -1928,24 +1930,22 @@ class RegistroCliente extends CI_Controller {
         }
 
     }
-    public function replaceDocumentView()
-    {
-      $this->validateSession();
-      $datos=array();
-      $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
-      $this->load->view('template/header');
-      $this->load->view("juridico/vista_documentacion_juridico",$datos);
+    public function replaceDocumentView(){
+        $this->validateSession();
+        $datos=array();
+        $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
+        $this->load->view('template/header');
+        $this->load->view("juridico/vista_documentacion_juridico",$datos);
     }
 
 
- 	public function expedientesWS_DS($lotes) {
+    public function expedientesWS_DS($lotes) {
         $data = array_merge($this->registrolote_modelo->getdp_DS($lotes));
         if($data != null) {
             echo json_encode($data);
         } else {
             echo json_encode(array());
-        }
-       
+        }       
     }
 
     public function query_ds(){
