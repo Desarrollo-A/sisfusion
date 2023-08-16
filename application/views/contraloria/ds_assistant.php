@@ -277,5 +277,5 @@
   <script type="text/javascript">
     Shadowbox.init();
   </script>
-  <script></script>
+  <script src="<?=base_url()?>dist/js/controllers/contraloria/ds_assistant.js"></script>
 </body>

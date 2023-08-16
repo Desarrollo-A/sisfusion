@@ -1397,8 +1397,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
                     WHERE l.status = 1 AND 
                         l.idStatusContratacion IN (1, 2, 3) AND 
                         l.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND 
-                        c.status = 1 AND 
-                        c.id_gerente = $idLider
+                        c.status = 1 
             
                     UNION ALL
             
