@@ -543,19 +543,19 @@ class Usuarios extends CI_Controller
         $datosCH['dcontrato']['idcoordinador'] = $coordAndGerente->id_coordinador;
         $datosCH['dcontrato']['idgerente'] = $coordAndGerente->id_gerente;
 
-        $resultado = $this->Usuarios_modelo->ServicePostCH($url, $datosCH);
-        $r = json_decode($resultado);
-        if (isset($r->resultado)) {
-            if ($r->resultado == 1) {
-                return json_decode($r->resultado);
-            } else {
-                return json_decode(0);
-            }
-        } else {
-            return json_decode(0);
-        }
+//        $resultado = $this->Usuarios_modelo->ServicePostCH($url, $datosCH);
+//        $r = json_decode($resultado);
+//        if (isset($r->resultado)) {
+//            if ($r->resultado == 1) {
+//                return json_decode($r->resultado);
+//            } else {
+//                return json_decode(0);
+//            }
+//        } else {
+//            return json_decode(0);
+//        }
 
-        // return json_decode(1);
+        return json_decode(1);
     }
 
     private function actualizarProspectoPorRol($idOwner, $rolNuevo, $rolActual, $idLiderNuevo, $sede): object

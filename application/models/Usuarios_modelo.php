@@ -442,9 +442,9 @@ class Usuarios_modelo extends CI_Model
     {
         $response = $this->db->update("usuarios", $data, "id_usuario = $id_usuario");
         if (!$response) {
-            return $finalAnswer = 0;
+            return 0;
         } else {
-            return $finalAnswer = 1;
+            return 1;
         }
     }
 
