@@ -1,6 +1,12 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet" />
 
+<style>
+    .form-group {
+        margin: 0;
+    }
+</style>
+
 <body class="">
     <div class="wrapper ">
         <?php $this->load->view('template/sidebar'); ?>
@@ -39,23 +45,21 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header text-center">
-                            <h4 class="modal-title"><label>Registro estatus 11 - <b><span class="lote"></span></b></label></h4>
+                        <h4 class="modal-title"><label>Registro estatus 11 - <b><span class="lote"></span></b></label></h4>
                     </div>
                     <div class="modal-body">
-                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-12">
-                                <label>Comentario</label>
-                                <textarea class="text-modal" id="comentario" rows="3"></textarea>
-                                <br>
-                            </div>
-                            <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6 mt-1">
-                                <label id="tvLbl">Total a validar</label>
-                                <input class="form-control input-gral" name="totalNeto" id="totalNeto" oncopy="return false" onpaste="return false" readonly type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency">
-                            </div>
-                            <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6 mt-1">
-                                <label id="tvLbl">Total validado</label>
-                                <input type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" class="form-control input-gral m-0" name="totalValidado" id="totalValidado" oncopy="return false" onpaste="return false" onkeypress="return SoloNumeros(event)">
-                            </div>
+                        <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-12">
+                            <label>Comentario</label>
+                            <textarea class="text-modal" id="comentario" rows="3"></textarea>
+                            <br>
+                        </div>
+                        <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6 mt-1">
+                            <label id="tvLbl">Total a validar</label>
+                            <input class="form-control input-gral" name="totalNeto" id="totalNeto" oncopy="return false" onpaste="return false" readonly type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency">
+                        </div>
+                        <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6 mt-1">
+                            <label id="tvLbl">Total validado</label>
+                            <input type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" class="form-control input-gral" name="totalValidado" id="totalValidado" oncopy="return false" onpaste="return false" onkeypress="return SoloNumeros(event)">
                         </div>
                     </div>
                     <div class="modal-footer"></div>
