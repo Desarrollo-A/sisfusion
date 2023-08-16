@@ -476,6 +476,8 @@ function getStatusMktdPreventa(){
                 $where = "pr.lugar_prospeccion IN (33)";
             else if ($id_usuario == 11750) // MJ: FLACO CON SUERTE
                 $where = "pr.lugar_prospeccion IN (43)";
+            else if ($id_usuario == 13151) // MJ: LOS BEZARES
+                $where = "pr.lugar_prospeccion IN (48)";
             else
                 $where = "pr.id_asesor = $id_usuario";
         }
@@ -515,7 +517,11 @@ function getStatusMktdPreventa(){
             if ($id_usuario == 6578) // MJ: COREANO VLOGS
                 $where = "pr.lugar_prospeccion IN (26)";
             else if ($id_usuario == 9942) // MJ: BADABUN
-            $where = "pr.lugar_prospeccion IN (33)";
+                $where = "pr.lugar_prospeccion IN (33)";
+            else if ($id_usuario == 11750) // MJ: FLACO CON SUERTE
+                $where = "pr.lugar_prospeccion IN (43)";
+            else if ($id_usuario == 13151) // MJ: LOS BEZARES
+                $where = "pr.lugar_prospeccion IN (48)";
             else
                 $where = "pr.id_asesor = $id_usuario";
         }

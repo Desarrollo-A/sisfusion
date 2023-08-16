@@ -2,15 +2,41 @@
 <link href="<?=base_url()?>dist/js/controllers/files/css/fileinput.css" media="all" rel="stylesheet" type="text/css"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <body class="">
-    <div class="wrapper ">
-        <?php
-        if (in_array($this->session->userdata('id_rol'), array(2,3,4,5,6,7,9,11,12,13,15,16,28,32,33,34,39,50,40,53))){
-            $this->load->view('template/sidebar');
-        }
-        else{
-            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-        }
-        ?>
+<style>
+    .active-pill{
+        padding: 3px 20px;
+        color: white;
+        background-color: #34c759;
+        border-radius: 12px;
+        font-size: 0.8em;
+    }
+    .inactive-pill{
+        padding: 3px 20px;
+        color: white;
+        background-color: #ff3b30;
+        border-radius: 12px;
+        font-size: 0.8em;
+    }
+</style>
+<div class="wrapper ">
+    <?php $this->load->view('template/sidebar'); ?>
+    <!--Contenido de la página-->
+
+    <div class="modal fade" id="avisoModal" >
+        <div class="modal-dialog">
+            <div class="modal-content" >
+                <div class="modal-header">
+                    <center><h3 class="modal-title">¡Ya existe una corrida financiera activa!</h3></center>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid pdt-50">
+                        <div class="row centered center-align">
+                            <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                                <h1 class="modal-title"> <i class="fa fa-exclamation-triangle fa-1x" aria-hidden="true"></i></h1><br><br>
+                            </div>
+                            <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-10">
+                                <h3 class="modal-title" style="font-size: 2em">Actualmente ya hay una corrida financiera para este lote</h3>
+                                <h5 style="font-size: 1.5rem"><i> Puedes deshabilitar la corrida financiera actual, para habilitar la corrida financiera deseada</i></h5>
 
         <div class="modal fade" id="avisoModal" >
             <div class="modal-dialog">

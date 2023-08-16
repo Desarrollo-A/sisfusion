@@ -2,17 +2,7 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body class="">
 <div class="wrapper ">
-    <?php
-    switch ($this->session->userdata('id_rol')) {
-        case '54': // POPEA
-            $this->load->view('template/sidebar');
-            break;
-        default:
-            // code...
-            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-            break;
-    }
-    ?>
+    <?php $this->load->view('template/sidebar'); ?>
     <!--Contenido de la página-->
 
     <div class="modal fade" id="modal_cancelar_11" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"

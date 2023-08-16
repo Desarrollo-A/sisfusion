@@ -71,13 +71,14 @@
 
 	$(document).ready(function() {
 		demo.initDashboardPageCharts();
-		demo.initVectorMap();
+
 	});
 
     function validaCheckSession(){
         if($('#no_mostrar_session:checkbox:checked').length > 0)
         {
             $.post('<?=base_url()?>index.php/Login/noShowModalSession',  function(data) {
+
             });
             <?php echo "console.log(".$this->session->userdata('no_show_modal_info').");";?>
         }
@@ -109,7 +110,6 @@
     var mySound = new Audio('../static/tono-mensaje.mp3');
     let im = '<?=base_url()?>static/images/perfil/'+perfil[0].id_usuario+'/'+perfil[0].foto;
     if ($(window).width() < 996){
-        console.log("chico");
     }
     else {
         var socket = io('https://chatcomercial.gphsis.com/', {query:{
@@ -220,7 +220,6 @@
         });
 
     }
-
 
 
 
