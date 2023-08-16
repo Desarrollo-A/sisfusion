@@ -3771,9 +3771,16 @@
 			}
 			$query = $this->db-> query("SELECT 
 			hd.expediente, hd.idDocumento, hd.modificado, hd.status, hd.idCliente, hd.idLote, lotes.nombreLote, 
-			cl.nombre as nomCliente, cl.apellido_paterno, cl.apellido_materno, cl.rfc, cond.nombre, res.nombreResidencial, 
+			UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, 
+			cl.rfc, cond.nombre, res.nombreResidencial, 
 			u.nombre as primerNom, u.apellido_paterno as apellidoPa, u.apellido_materno as apellidoMa, sedes.abreviacion as ubic, 
-			hd.movimiento, hd.movimiento, cond.idCondominio, hd.tipo_doc, lotes.idMovimiento, cl.id_asesor
+			hd.movimiento, hd.movimiento, cond.idCondominio, hd.tipo_doc, lotes.idMovimiento, cl.id_asesor,
+			CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
+			CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
+			CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
+			CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
+			CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
+			CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2
 			FROM historial_documento hd
 			INNER JOIN lotes ON lotes.idLote = hd.idLote
 			INNER JOIN clientes cl ON  hd.idCliente = cl.id_cliente
@@ -3781,6 +3788,12 @@
 			INNER JOIN residenciales res ON res.idResidencial = cond.idResidencial
 			LEFT JOIN usuarios u ON hd.idUser = u.id_usuario
 			LEFT JOIN sedes ON lotes.ubicacion = sedes.id_sede
+			LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+			LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+			LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+			LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
+			LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
+			LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
 			WHERE hd.status = 1 and hd.idLote = $lotes AND hd.tipo_doc=8");
 			return $query->result_array();
 		}

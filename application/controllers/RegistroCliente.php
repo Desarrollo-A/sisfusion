@@ -1931,11 +1931,15 @@ class RegistroCliente extends CI_Controller {
 
     }
     public function replaceDocumentView(){
-        $this->validateSession();
-        $datos=array();
-        $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
+        $datos = [
+            'residencial' => $this->registrolote_modelo->getResidencialQro(),
+            'tieneAcciones' => 1,
+            'tipoFiltro' => null,
+            'funcionVista' => 'replaceDocumentView'
+        ];
+        
         $this->load->view('template/header');
-        $this->load->view("juridico/vista_documentacion_juridico",$datos);
+        $this->load->view("documentacion/documentacion_view", $datos);
     }
 
 
@@ -4608,7 +4612,7 @@ class RegistroCliente extends CI_Controller {
 							column.data().unique().sort().each( function ( d, j ) {
 								select.append( '<option value="'+d+'">'+d+'</option>' )
 							} );
-						} );
+						});
 					},
 					"scrollX": true,
 					"pageLength": 10,

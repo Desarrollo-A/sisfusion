@@ -19,7 +19,7 @@ $("#nombre").keypress(function(){
     document.getElementById("nom").innerHTML ='';
 });
 
-$("#btnsave").on('click', function(e){ 
+$("#btnsave1").on('click', function(e){
     if ($('#nombre').val().length == 0 && v == "" || v == undefined) {
         document.getElementById("nom").innerHTML ='Requerido';
         document.getElementById("archivo").innerHTML ='Requerido';	  
@@ -66,7 +66,7 @@ typeTransaction = 1;
 $(document).ready(function () {
     $('#tableCarpetas thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
-        $(this).html('<input type="text" class="textoshead"  placeholder="'+title+'"/>' );
+        $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
         $( 'input', this ).on('keyup change', function () {
             if ($('#tableCarpetas').DataTable().column(i).search() !== this.value ) {
                 $('#tableCarpetas').DataTable().column(i).search(this.value).draw();
@@ -93,57 +93,60 @@ $(document).ready(function () {
         },
         destroy: true,
         ordering: false,
-        columns: [
-            { 
-                data: function (d) {
-                    return d.id_archivo;
-                }
-            },
-            { 
-                data: function (d) {
-                    return d.nombre;
-                }
-            },
-            { 
-                data: function (d) {
-                    return d.descripcion;
-                }
-            },
-            { 
-                data: function (d) {
-                    return d.archivo;
-                }
-            },
-            { 
-                data: function (d) {
-                    if (d.estatus == 1) {
-                        return '<center><span class="label lbl-green">Activo</span><center>';
-                    } else {
-                        return '<center><span class="label lbl-warning">Inactivo</span><center>';
-                    }
-                }
-            },
-            { 
-                data: function (d) {
-                    return d.usuario;
-                }
-            },
-            { 
-                data: function (d) {
-                    return d.fecha_creacion;
-                }
-            },
-            { 
-                data: function (d) {
-                    return d.fecha_modificacion;
-                }
-            },
-            { 
-                data: function (d) {
-                    return id_rol_general == 53 ? "N/A" : '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas editarCarpeta" data-id-carpeta="' + d.id_archivo +'"><i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-deepGray preview" data-id-carpeta="' + d.id_archivo +'"><i class="far fa-eye"></i></button></div>';
+        columns: [{ 
+            data: function (d) {
+                return d.id_archivo;
+            }
+        },
+        { 
+            data: function (d) {
+                return d.nombre;
+            }
+        },
+        { 
+            data: function (d) {
+                return d.descripcion;
+            }
+        },
+        { 
+            data: function (d) {
+                return d.archivo;
+            }
+        },
+        { 
+            data: function (d) {
+                if (d.estatus == 1) {
+                    return '<center><span class="label lbl-green">Activo</span><center>';
+                } else {
+                    return '<center><span class="label lbl-warning">Inactivo</span><center>';
                 }
             }
-        ],
+        },
+        { 
+            data: function (d) {
+                return d.usuario;
+            }
+        },
+        { 
+            data: function (d) {
+                return d.fecha_creacion;
+            }
+        },
+        { 
+            data: function (d) {
+                console.log(d.fecha_modificacion);
+                if(d.fecha_modificacion == "1900-01-01 00:00:00" || d.fecha_modificacion == null){
+                    return '<p>SIN MODIFICACIÓN</p>'
+                }else{
+                    return d.fecha_modificacion;
+                }
+            }
+        },
+        { 
+            data: function (d) {
+                return id_rol_general == 53 ? "N/A" : '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas editarCarpeta" data-toggle="tooltip" data-placement="top" title="MODIFICAR" data-id-carpeta="' + d.id_archivo +'"><i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-deepGray preview" data-toggle="tooltip" data-placement="top" title="VER DOCUMENTO" data-id-carpeta="' + d.id_archivo +'"><i class="far fa-eye"></i></button></div>';
+            }
+        }],
         columnDefs: [{
             "searchable": true,
             "orderable": false,
@@ -156,6 +159,12 @@ $(document).ready(function () {
             "data": function( d ){
             }
         },
+    });
+
+    $('#tableCarpetas').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
     });
 
     $(document).on('click', '.editarCarpeta', function(e){
@@ -205,6 +214,7 @@ function update() {
     }
 
     var formData = new FormData(document.getElementById("formAdminE"));
+    console.log(val);
     formData.append("dato", "valor");
     $.ajax({
         type: 'POST',

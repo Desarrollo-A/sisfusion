@@ -779,6 +779,9 @@ $tv                 : "(min-width: 1280px)";
         span{
             margin: 5px;
         }
+        @media #{$smartphone}{
+            width: 100%;
+        }
     }
     .file-name{
         width: 77%;
