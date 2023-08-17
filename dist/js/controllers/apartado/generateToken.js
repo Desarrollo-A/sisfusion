@@ -12,10 +12,10 @@ $(document).ready(function () {
     $('[data-toggle="tooltip"]').tooltip();
 });
 
-let titulosEvidence = [];
+let titulos = [];
 $('#evidenceTable thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
-    titulosEvidence.push(title);
+    titulos.push(title);
     $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
     $( 'input', this ).on('keyup change', function () {
         if ($('#evidenceTable').DataTable().column(i).search() !== this.value ) {
@@ -23,7 +23,7 @@ $('#evidenceTable thead tr:eq(0) th').each( function (i) {
         }
     });
     $('[data-toggle="tooltip"]').tooltip();
-    })
+})
 
 function fillevidenceTable() {
     evidenceTable = $("#evidenceTable").dataTable({
@@ -41,7 +41,7 @@ function fillevidenceTable() {
                 columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
                 format: {
                     header: function (d, columnIdx) {
-                        return ' ' + titulosEvidence[columnIdx] + ' ';
+                        return ' ' + titulos[columnIdx] + ' ';
                     }
                 }
             }

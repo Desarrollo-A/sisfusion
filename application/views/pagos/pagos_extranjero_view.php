@@ -27,7 +27,8 @@
             </div>
         </div>
         
-        <div class="modal fade modal-alertas" id="modal_mktd" role="dialog">
+        <!-- VERIFICAR SI SE USA -->
+        <!-- <div class="modal fade modal-alertas" id="modal_mktd" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
@@ -40,7 +41,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <div class="modal fade" id="seeInformationModalExtranjero" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
@@ -52,16 +53,18 @@
                     </div>
                     <div class="modal-body">
                         <div role="tabpanel">
-                            <ul class="nav nav-tabs" role="tablist" style="background: #949494;">
                                 <div id="nameLote"></div>
+                                <div id="nameLote"></div>
+                            </ul>
+                            <div id="nameLote"></div>
                             </ul>
                             <div class="tab-content">
                                 <div role="tabpanel" class="tab-pane active" id="changelogTab">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="card card-plain">
-                                                <div class="card-content">
-                                                    <ul class="timeline timeline-simple" id="comments-list-extranjero"></ul>
+                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                                    <ul class="timeline-3" id="comments-list-extranjero"></ul>
                                                 </div>
                                             </div>
                                         </div>
