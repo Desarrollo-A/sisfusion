@@ -282,7 +282,7 @@ function getAssimilatedCommissions(proyecto, condominio, formaPago) {
             },
         }],
         ajax: {
-            url: `${general_base_url}Comisiones/getDatosEnviadasInternomex/${proyecto}/${condominio}/${formaPago}`,
+            url: `${general_base_url}Pagos/getDatosEnviadasInternomex/${proyecto}/${condominio}/${formaPago}`,
             type: "POST",
             cache: false,
             data: function( d ){}
