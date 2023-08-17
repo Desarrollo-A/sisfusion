@@ -24,7 +24,7 @@ class Api extends CI_Controller
     function getToken()
     {
         $data = json_decode(file_get_contents("php://input"));
-        if (!isset($data->id))// contraseña antes de ser encriptada: I2503^831NQqHWxr, usuario : ojqd58DY3@
+        if (!isset($data->id))
             echo json_encode(array("status" => -1, "message" => "Algún parámetro no viene informado."), JSON_UNESCAPED_UNICODE);
         else {
             if ($data->id == "")
