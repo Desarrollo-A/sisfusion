@@ -4122,7 +4122,7 @@ return 1;
         FROM historial_bonos hc 
         INNER JOIN pagos_bonos_ind pci ON pci.id_pago_bono = hc.id_pago_b
         INNER JOIN usuarios u ON u.id_usuario = hc.id_usuario 
-        WHERE hc.id_pago_b = 3
+        WHERE hc.id_pago_b = $pago
         ORDER BY hc.fecha_creacion DESC");
         }
 

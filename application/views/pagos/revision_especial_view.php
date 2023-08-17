@@ -65,7 +65,7 @@
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <div class="card">
                                 <div class="card-header card-header-icon" data-background-color="goldMaderas">
                                     <i class="fas fa-dollar-sign fa-2x"></i>
@@ -77,13 +77,13 @@
                                     </div>
                                     <div class="toolbar">
                                         <div class="row">
-                                            <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                                                 <div class="form-group d-flex justify-center align-center">
                                                     <h4 class="title-tot center-align m-0">Disponible:</h4>
                                                     <p class="input-tot pl-1" name="totpagarremanente" id="totpagarremanente">$0.00</p>
                                                 </div>
                                             </div>
-                                            <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                                                 <div class="form-group d-flex justify-center align-center">
                                                     <h4 class="title-tot center-align m-0">Autorizar:</h4>
                                                     <p class="input-tot pl-1" name="totpagarPen" id="totpagarPen">$0.00</p>
