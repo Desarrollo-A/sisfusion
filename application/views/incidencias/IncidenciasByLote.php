@@ -439,7 +439,7 @@ hr {
                                 title="Selecciona un usuario" data-size="7" required>
                                 </select>
                             </div>
-                            <div id="info" ></div>
+                            <div id="info"></div>
                             <div class="form-group" id="users"></div>
                             <div class="form-group">
                                 <label class="control-label">Puesto del usuario a ceder la comisiones</label>
@@ -615,16 +615,19 @@ hr {
             </div>
         </div>
 
+
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                <i class="fas fa-wallet fa-2x"></i>
+                                <i class="fas fa-chart-pie fa-2x"></i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Panel de incidencias</h3>
+                                <div class="encabezadoBox">
+                                    <h3 class="card-title center-align" >Panel de incidencias</h3>
+                                </div>
                                 <div class="toolbar">
                                     <div class="container-fluid">
                                         <div class="row">
@@ -647,7 +650,7 @@ hr {
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                                 <div class="form-group">
-                                                    <button type="button" class="btn-gral-data find_doc">Buscar <i class="fas fa-search pl-1"></i></button>
+                                                    <button type="button" class="btn-gral-data buscarLote">Buscar <i class="fas fa-search pl-1"></i></button>
                                                 </div>
                                             </div>
                                         </div>
@@ -656,10 +659,10 @@ hr {
                                 <div class="material-datatables">
                                     <div class="form-group">
                                         <div class="table-responsive">
-                                            <table class="table-striped table-hover" id="tabla_inventario_contraloria" name="tabla_inventario_contraloria">
+                                            <table class="table-striped table-hover" id="tabla_incidencias_contraloria" name="tabla_incidencias_contraloria">
                                                 <thead>
-                                                    <tr>   
-                                                        <th>PROYECTO</th>
+                                                    <tr>
+                                                    <th>PROYECTO</th>
                                                         <th>CONDOMINIO</th>
                                                         <th>LOTE</th>
                                                         <th>ID LOTE</th>
@@ -667,27 +670,25 @@ hr {
                                                         <th>TIPO VENTA</th>
                                                         <th>MODALIDAD</th>
                                                         <th>CONTRATACIÓN</th>
-                                                        
                                                         <th>PLAN VENTA</th>
                                                         <th>FEC. SISTEMA</th> 
                                                         <th>FEC. NEODATA</th>
-
-                                                        <th>ENT. VENTA</th>
                                                         <th>ESTATUS COM.</th>
-                                                        <th>MÁS</th>
+                                                        <th>ACCIONES</th>
                                                     </tr>
                                                 </thead>
                                             </table>
                                         </div>
                                     </div>
                                 </div>
-							</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <?php $this->load->view('template/footer_legend');?>
+ 
+    <?php $this->load->view('template/footer_legend');?>
     </div>
     </div>
     </div><!--main-panel close-->
