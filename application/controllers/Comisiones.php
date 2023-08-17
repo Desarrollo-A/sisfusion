@@ -29,6 +29,7 @@ class Comisiones extends CI_Controller
   public function index(){
     redirect(base_url());
   }
+  
 
   public function validateSession() {
     if ($this->session->userdata('id_usuario') == "" || $this->session->userdata('id_rol') == "")
@@ -5386,4 +5387,21 @@ public function descuentosCapitalHumano(){
   
      echo  json_encode( $respuesta);
     }
+
+
+    public function enviarBonosMex($idbono){
+      $estatus=6;
+      if($this->session->userdata('id_rol') == 31){
+       $estatus=3;
+     }else if($this->session->userdata('id_rol') == 18){
+       $estatus=2;
+     }
+     $ids = explode(',',$idbono);
+     for ($i=0; $i <count($ids) ; $i++) { 
+   
+      $result = $this->Pagos_model->UpdateINMEX($ids[$i],$estatus);
+     }
+     echo json_encode($result);
+     }
+
 }
