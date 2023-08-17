@@ -93,30 +93,28 @@
                                     </div>
                                     <div class="material-datatables">
                                         <div class="form-group">
-                                            <div class="table-responsive">
-                                                <table class="table-striped table-hover" id="tabla_especial" name="tabla_especial">
-                                                    <thead>
-                                                        <tr>
-                                                            <th></th>
-                                                            <th>ID</th>
-                                                            <th>PROY.</th>
-                                                            <th>CONDOMINIO</th>
-                                                            <th>LOTE</th>
-                                                            <th>REFERENCIA</th>
-                                                            <th>PRECIO LOTE</th>
-                                                            <th>EMP.</th>
-                                                            <th>TOT. COM.</th>
-                                                            <th>P. CLIENTE</th>
-                                                            <th>A PAGAR</th>
-                                                            <th>TIPO VENTA</th>
-                                                            <th>USUARIO</th>
-                                                            <th>PUESTO</th>
-                                                            <th>FEC. ENVÍO</th>
-                                                            <th>MÁS</th>
-                                                        </tr>
-                                                    </thead>
-                                                </table>
-                                            </div>
+                                            <table class="table-striped table-hover" id="tabla_especial" name="tabla_especial">
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th>ID</th>
+                                                        <th>PROY.</th>
+                                                        <th>CONDOMINIO</th>
+                                                        <th>LOTE</th>
+                                                        <th>REFERENCIA</th>
+                                                        <th>PRECIO LOTE</th>
+                                                        <th>EMP.</th>
+                                                        <th>TOT. COM.</th>
+                                                        <th>P. CLIENTE</th>
+                                                        <th>A PAGAR</th>
+                                                        <th>TIPO VENTA</th>
+                                                        <th>USUARIO</th>
+                                                        <th>PUESTO</th>
+                                                        <th>FEC. ENVÍO</th>
+                                                        <th>MÁS</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
@@ -129,16 +127,6 @@
         <?php $this->load->view('template/footer_legend');?>
     </div>
     </div><!--main-panel close-->
-    
-
     <?php $this->load->view('template/footer');?>
-    <!--DATATABLE BUTTONS DATA EXPORT-->
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_especial.js"></script>
 </body>
