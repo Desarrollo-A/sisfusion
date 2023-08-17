@@ -27,7 +27,7 @@ class Pagos extends CI_Controller
       $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
       $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
       $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
-      // $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
+       $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
   }
 
    public function validateSession() {
@@ -117,21 +117,7 @@ class Pagos extends CI_Controller
         $this->load->view("pagos/bonos_historial_view");
     }
 
-    public function enviarBonosMex($idbono){
-      $estatus=6;
-      if($this->session->userdata('id_rol') == 31){
-       $estatus=3;
-     }else if($this->session->userdata('id_rol') == 18){
-       $estatus=2;
-     }
-     $ids = explode(',',$idbono);
-     for ($i=0; $i <count($ids) ; $i++) { 
-   
-      $result = $this->Pagos_model->UpdateINMEX($ids[$i],$estatus);
-     }
-     echo json_encode($result);
-     }
-
+    
 
      public function getDatosNuevasAContraloria(){
 
