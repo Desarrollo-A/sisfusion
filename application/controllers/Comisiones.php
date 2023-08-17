@@ -29,6 +29,7 @@ class Comisiones extends CI_Controller
   public function index(){
     redirect(base_url());
   }
+  
 
   public function validateSession() {
     if ($this->session->userdata('id_usuario') == "" || $this->session->userdata('id_rol') == "")
@@ -289,11 +290,7 @@ class Comisiones extends CI_Controller
      echo json_encode( array( "data" => $dat));
     }
   
-    public function enviadas_internomex()
-    {
-      $this->load->view('template/header');
-      $this->load->view("ventas/enviadas_internomex");
-    }
+
 
 
         public function enviadas_cobranza()
@@ -301,18 +298,7 @@ class Comisiones extends CI_Controller
       $this->load->view('template/header');
       $this->load->view("ventas/enviadas_cobranza");
     }
- 
 
-    
-    
-    public function getDatosEnviadasInternomex($proyecto, $condominio, $formaPago){
-      $dat =  $this->Comisiones_model->getDatosEnviadasInternomex($proyecto, $condominio, $formaPago)->result_array();
-      for( $i = 0; $i < count($dat); $i++ ){
-        $dat[$i]['pa'] = 0;
-      }
-      echo json_encode( array( "data" => $dat));
-    }
-    
     
     // ------------------------------------------------------****************----------------------------------------
   
@@ -384,102 +370,7 @@ class Comisiones extends CI_Controller
       }
   }
  
-  public function acepto_contraloria_MKTD(){
-    $this->load->model("Comisiones_model");
-    $sol=$this->input->post('idcomision');  
-    $consulta_comisiones = $this->db->query("SELECT id_pago_i FROM pago_comision_ind where estatus = 13");
-   
-      if( $consulta_comisiones->num_rows() > 0 ){
-        $consulta_comisiones = $consulta_comisiones->result_array();
-        $id_user_Vl = $this->session->userdata('id_usuario');
-        
-          $sep = ',';
-          $id_pago_i = '';
 
-          $data=array();
-
-          foreach ($consulta_comisiones as $row) {
-            $id_pago_i .= implode($sep, $row);
-            $id_pago_i .= $sep;
-
-            $row_arr=array(
-              'id_pago_i' => $row['id_pago_i'],
-              'id_usuario' =>  $id_user_Vl,
-              'fecha_movimiento' => date('Y-m-d H:i:s'),
-              'estatus' => 1,
-              'comentario' =>  'CONTRALORÍA ENVÍO PAGO A INTERNOMEX' 
-            );
-             array_push($data,$row_arr);
-          }
-          $id_pago_i = rtrim($id_pago_i, $sep);
-      
-            $up_b = $this->Comisiones_model->update_acepta_contraloria($id_pago_i);
-            $up_c = $this->Comisiones_model->update_mktd_contraloria($id_pago_i);
-            $ins_b = $this->Comisiones_model->insert_phc($data);
-      
-      if($up_b == true && $up_c == true && $ins_b == true){
-        $data_response = 1;
-        echo json_encode($data_response);
-      } else {
-        $data_response = 0;
-        echo json_encode($data_response);
-      }
-            
-      }
-      else{
-        $data_response = 0;
-      echo json_encode($data_response);
-      }
-  }
-
-
-  public function pago_internomex_MKTD(){
-    $this->load->model("Comisiones_model");
-    $sol=$this->input->post('idcomision');  
-    $consulta_comisiones = $this->db->query("SELECT id_pago_i FROM pago_comision_ind where estatus = 8 AND id_usuario = 4394");
-   
-      if( $consulta_comisiones->num_rows() > 0 ){
-        $consulta_comisiones = $consulta_comisiones->result_array();
-        $id_user_Vl = $this->session->userdata('id_usuario');
-        
-          $sep = ',';
-          $id_pago_i = '';
-
-          $data=array();
-
-          foreach ($consulta_comisiones as $row) {
-            $id_pago_i .= implode($sep, $row);
-            $id_pago_i .= $sep;
-
-            $row_arr=array(
-              'id_pago_i' => $row['id_pago_i'],
-              'id_usuario' =>  $id_user_Vl,
-              'fecha_movimiento' => date('Y-m-d H:i:s'),
-              'estatus' => 1,
-              'comentario' =>  'INTERNOMEX APLICO PAGO' 
-            );
-             array_push($data,$row_arr);
-          }
-          $id_pago_i = rtrim($id_pago_i, $sep);
-      
-            $up_b = $this->Comisiones_model->update_acepta_INTMEX($id_pago_i);
-            $up_b = $this->Comisiones_model->update_mktd_INTMEX($id_pago_i);
-            $ins_b = $this->Comisiones_model->insert_phc($data);
-      
-      if($up_b == true && $ins_b == true){
-        $data_response = 1;
-        echo json_encode($data_response);
-      } else {
-        $data_response = 0;
-        echo json_encode($data_response);
-      }
-            
-      }
-      else{
-        $data_response = 0;
-      echo json_encode($data_response);
-      }
-  }
 
 function enviar_solicitud(){
   $respuesta = array( FALSE );
@@ -2641,40 +2532,6 @@ public function LiquidarLote(){
       echo json_encode($respuesta);
     }
 
-    public function revision_mktd()
-    {
-      switch($this->session->userdata('id_rol')){
-        case '31':
-        $this->load->view('template/header');
-        $this->load->view("ventas/revision_INTMEXmktd");
-        break;
-
-        default:
-        $this->load->view('template/header');
-        $this->load->view("ventas/revision_mktd");
-        break;
-      }
-
-    }
- 
-    public function getDatosRevisionMktd(){
-      $dat =  $this->Comisiones_model->getDatosRevisionMktd()->result_array();
-     for( $i = 0; $i < count($dat); $i++ ){
-         $dat[$i]['pa'] = 0;
-     }
-     echo json_encode( array( "data" => $dat));
-    }
-
-
-    public function getDatosNuevasmkContraloria(){
-      $dat =  $this->Comisiones_model->getDatosNuevasmkContraloria()->result_array();
-     for( $i = 0; $i < count($dat); $i++ ){
-         $dat[$i]['pa'] = 0;
-     }
-     echo json_encode( array( "data" => $dat));
-    }
-
-
     
     public function getDatosEnviadasmkContraloria(){
       $dat =  $this->Comisiones_model->getDatosEnviadasmkContraloria()->result_array();
@@ -2697,23 +2554,6 @@ public function LiquidarLote(){
      echo json_encode( array( "data" => $dat));
     }
     
- 
- 
-    public function revision_especial()
-    {
-      switch($this->session->userdata('id_rol')){
-        case '31':
-        $this->load->view('template/header');
-        $this->load->view("ventas/revision_INTMEXremanente");
-        break;
-
-        default:
-        $this->load->view('template/header');
-        $this->load->view("ventas/revision_especial");
-        break;
-      }
-
-    }
  
     public function getDatosNuevasRContraloria($proyecto,$condominio){
       $dat =  $this->Comisiones_model->getDatosNuevasRContraloria($proyecto,$condominio)->result_array();
@@ -3429,49 +3269,6 @@ echo json_encode($respuesta);
     $this->load->view("ventas/historial_postventa");
   }
 
-  public function getCommissionsByMktdUserReport(){
-      if (isset($_POST) && !empty($_POST)) {
-          $typeTransaction = $this->input->post("typeTransaction");
-          $fechaInicio = explode('/', $this->input->post("beginDate"));
-          $fechaFin = explode('/', $this->input->post("endDate"));
-          $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
-          $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
-          $where = $this->input->post("where");
-          $estatus = $this->input->post("estatus");
-          $data['data'] = $this->Comisiones_model->getCommissionsByMktdUserReport($estatus,$typeTransaction, $beginDate, $endDate, $where)->result_array();
-          echo json_encode($data);
-      } else {
-          json_encode(array());
-      }
-
-
-    /*$data =  $this->Comisiones_model->getCommissionsByMktdUserReport($fecha1,$fecha2,$estatus)->result_array();
-    echo json_encode( array( "data" => $data));*/
-  }
-  public function getCommissionsByMktdUser(){
-      if (isset($_POST) && !empty($_POST)) {
-          $typeTransaction = $this->input->post("typeTransaction");
-          $fechaInicio = explode('/', $this->input->post("beginDate"));
-          $fechaFin = explode('/', $this->input->post("endDate"));
-          $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
-          $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
-          $where = $this->input->post("where");
-          $estatus = $this->input->post("estatus");
-          $data['data'] = $this->Comisiones_model->getCommissionsByMktdUser($estatus,$typeTransaction, $beginDate, $endDate, $where)->result_array();
-          echo json_encode($data);
-      } else {
-          json_encode(array());
-      }
-
-    /*$data =  $this->Comisiones_model->getCommissionsByMktdUser($fecha1,$fecha2,$estatus)->result_array();
-    echo json_encode( array( "data" => $data));*/
-  }
-  // public function getCommissionsByMktdUser(){
-  //   $data =  $this->Comisiones_model->getCommissionsByMktdUser()->result_array();
-  //   echo json_encode( array( "data" => $data));
-  // }
-
-
   /**REPORTE JOSH */
   public function reportPz()
   {
@@ -3493,15 +3290,7 @@ echo json_encode($respuesta);
   }
   /**-------------- */
 
-  public function getEstatusPagosMktd()
-  {
-    $datos = $this->Comisiones_model->getEstatusPagosMktd();
-    if ($datos != null) {
-      echo json_encode($datos);
-    } else {
-      echo json_encode(array());
-    }
-  }
+
 
 
     public function cobranza_reporte()
@@ -4461,106 +4250,6 @@ public function getDatosHistorialPagoEstatus($proyecto, $condominio, $usuario) {
     $this->load->view('template/header');
     $this->load->view("ventas/historial_estatus");
   }
-
-
-
-  public function getMktdRol(){
-  echo json_encode($this->Comisiones_model->getMktdRol()->result_array());
-}
-
-
-  public function getLotesOrigenmk($user)
-  {
-    echo json_encode($this->Comisiones_model->getLotesOrigenmk($user)->result_array());
-  }
-
-
-
-  public function getInformacionDataMK($lote)
-  {
-    echo json_encode($this->Comisiones_model->getInformacionDataMK($lote)->result_array());
-  }
-
-
-
-
-  public function saveDescuentoMK($valor)
-  {
-
- 
-  $datos =  $this->input->post("idloteorigen[]");
-  $descuento = $this->input->post("monto");
-  $usuario = $this->input->post("usuarioid");
-  $comentario = $this->input->post("comentario");
-  $pagos_aplica = 0;
-  
-
-    $cuantos = count($datos);
- 
-    if($cuantos > 1){
-     // echo var_dump( $datos);
-
-      $sumaMontos = 0;
-      for($i=0; $i <$cuantos ; $i++) { 
-        
-        if($i == $cuantos-1){
-
-          $formatear = explode(",",$datos[$i]);
-          $id = $formatear[0]; 
-          $monto = $formatear[1];
-          $pago_neodata = $formatear[2];
-
-         $montoAinsertar = $descuento - $sumaMontos;
-         $Restante = $monto - $montoAinsertar;
-
- 
-
-         $comision = $this->Comisiones_model->obtenerIDMK($id)->result_array();
- 
-          $dat =  $this->Comisiones_model->update_descuentoMK($id,$montoAinsertar,$comentario, $this->session->userdata('id_usuario'),$valor,$usuario,$pagos_aplica);
-          $dat =  $this->Comisiones_model->insertar_descuentoMK($usuario,$Restante,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata,$valor, $comision[0]['id_list'],$comision[0]['empresa']);
-         
-        }else{
-
-          $formatear = explode(",",$datos[$i]);
-           $id=$formatear[0];
-          $monto = $formatear[1]; 
- 
-         $dat = $this->Comisiones_model->update_descuentoMK($id,0,$comentario, $this->session->userdata('id_usuario'),$valor,$usuario, $pagos_aplica);
-         $sumaMontos = $sumaMontos + $monto;
-        }
-
-  
-      }
- 
-
-    }else{
-
-      // echo "entra a else 2";
-         $formatear = explode(",",$datos[0]);
-         $id = $formatear[0];
-         $monto = $formatear[1];
-         $pago_neodata = $formatear[2];
-         $montoAinsertar = $monto - $descuento;
-         $Restante = $monto - $montoAinsertar;
-
-         $comision = $this->Comisiones_model->obtenerIDMK($id)->result_array();
-         // $dat =  $this->Comisiones_model->update_descuentoMK($id,$descuento);
-
-         // echo 'formatear: '.$formatear ;
-         // echo 'monto: '.$monto ;
-         // echo 'montoAinsertar: '.$montoAinsertar ;
-         // echo 'Restante: '.$Restante ;
-          
-          $dat =  $this->Comisiones_model->update_descuentoMK($id,$descuento,$comentario, $this->session->userdata('id_usuario'),$valor,$usuario,0);
-          $dat =  $this->Comisiones_model->insertar_descuentoMK($usuario,$montoAinsertar,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata,$valor, $comision[0]['id_list'],$comision[0]['empresa']);
- 
-
-    }
-    echo json_encode($dat);
-    
-    
-    }
  
  
 
@@ -4680,7 +4369,7 @@ public function getDatosHistorialPagoEstatus($proyecto, $condominio, $usuario) {
         $respuesta[0] = 2;
       } else{
         $respuesta[0] = 3;
-      }
+      } 
     echo json_encode( $respuesta );
     }
 
@@ -4965,68 +4654,6 @@ for ($d=0; $d <count($dos) ; $d++) {
      "sumaBono2" => $sumaTotalBono2,
      "sumaTotalComision" => $sumaTotalComision ));
   }
-
-  
-
-
-
-  
-  public function getDatosRevisionMktd2($mes=0,$anio=0,$estatus=0){
-
-
-
-    if($mes == 0 ){
-      $dat =  $this->Comisiones_model->getDatosRevisionMktd2()->result_array();
-    }else{
-
-      if($mes < 10){
-        $mes = '0'.$mes;
-      }
-
-      $dat =  $this->Comisiones_model->getDatosRevisionMktd2($mes,$anio,$estatus)->result_array();
-    }
-
-    //print_r($dat);
-
-
-   for( $i = 0; $i < count($dat); $i++ ){
-    $comentario='BONO NUSKAH - MKTD 5 MENSUALIDADES';
-    $comentario2='BONO MARKETING - COMISIONES SIN EVIDENCIA DISPERSADO A 12 MESES ENTRE TODOS LOS INVOLUCRADOS';
-
-    if($mes == 0 && $anio == 0 && $estatus == 0){
-      $BonoPagado2 = $this->Comisiones_model->getBonoXUser2($dat[$i]['id_usuario'],$comentario)->result_array();
-      $BonoPagado3 = $this->Comisiones_model->getBonoXUser2($dat[$i]['id_usuario'],$comentario2)->result_array();
-
-    }else{
-      
-      $BonoPagado2 = $this->Comisiones_model->getBonoXUser2($dat[$i]['id_usuario'],$comentario,$mes,$anio,$estatus)->result_array();
-      $BonoPagado3 = $this->Comisiones_model->getBonoXUser2($dat[$i]['id_usuario'],$comentario2,$mes,$anio,$estatus)->result_array();
-
-    }
-   if(count($BonoPagado2) == 0){
-    $dat[$i]['nus'] = 0;
-
-   }else{
-    $dat[$i]['nus'] = $BonoPagado2[0]['impuesto1'];
-
-   }
-
-
-
-
-    if(count($BonoPagado3) == 0){
-      $dat[$i]['mktd'] = 0;
-  
-     }else{
-      $dat[$i]['mktd'] = $BonoPagado3[0]['impuesto1'];
-  
-     }
-    //$dat[$i]['mktd'] = $BonoPagado3[0]['impuesto1'];
-       $dat[$i]['pa'] = 0;
-   }
-   echo json_encode( array( "data" => $dat));
-  }
-   
 
   public function getPagosByUser($user,$mes,$anio){
     $dat =  $this->Comisiones_model->getPagosByUser($user,$mes,$anio)->result_array();
@@ -5384,23 +5011,6 @@ for ($d=0; $d <count($dos) ; $d++) {
         $idUsuario = $this->session->userdata('id_usuario');
         $data = $this->Comisiones_model->getTotalComisionAsesor($idUsuario);
         echo json_encode($data);
-    }
-
-    public function pagosExtranjero()
-    {
-      switch($this->session->userdata('id_rol')){
-
-        case '31':
-        $this->load->view('template/header');
-        $this->load->view("ventas/vista_extranjero_internomex");
-        break;
-
-        default:
-        $this->load->view('template/header');
-        $this->load->view("ventas/vista_extranjero_contraloria");
-        break;
-      }
-
     }
 
     public function getComprobantesExtranjero()
@@ -5777,4 +5387,21 @@ public function descuentosCapitalHumano(){
   
      echo  json_encode( $respuesta);
     }
+
+
+    public function enviarBonosMex($idbono){
+      $estatus=6;
+      if($this->session->userdata('id_rol') == 31){
+       $estatus=3;
+     }else if($this->session->userdata('id_rol') == 18){
+       $estatus=2;
+     }
+     $ids = explode(',',$idbono);
+     for ($i=0; $i <count($ids) ; $i++) { 
+   
+      $result = $this->Pagos_model->UpdateINMEX($ids[$i],$estatus);
+     }
+     echo json_encode($result);
+     }
+
 }

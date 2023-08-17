@@ -175,7 +175,7 @@ function fillTable(typeTransaction, beginDate, endDate, where, estatus){
                 }
             }],
             ajax: {
-                url: general_base_url + "Comisiones/getCommissionsByMktdUser/",
+                url: general_base_url + "Pagos/getCommissionsByMktdUser/",
                 type: "POST",
                 cache: false,
                 data: {
@@ -190,7 +190,7 @@ function fillTable(typeTransaction, beginDate, endDate, where, estatus){
     });
 }
 
-$.post(general_base_url + "Comisiones/getEstatusPagosMktd", function (data) {
+$.post(general_base_url + "Pagos/getEstatusPagosMktd", function (data) {
     var len = data.length;
     for (var i = 0; i < len; i++) {
         var id = data[i]['id_opcion'];
@@ -200,7 +200,7 @@ $.post(general_base_url + "Comisiones/getEstatusPagosMktd", function (data) {
     $("#selectEstatus").selectpicker('refresh');
 }, 'json');
 
-$.post(general_base_url + "Comisiones/getEstatusPagosMktd", function (data) {
+$.post(general_base_url + "Pagos/getEstatusPagosMktd", function (data) {
     var len = data.length;
     for (var i = 0; i < len; i++) {
         var id = data[i]['id_opcion'];
@@ -210,7 +210,7 @@ $.post(general_base_url + "Comisiones/getEstatusPagosMktd", function (data) {
     $("#selectEstatusN").selectpicker('refresh');
 }, 'json');
 
-$.post(general_base_url + "Comisiones/getEstatusPagosMktd", function (data) {
+$.post(general_base_url + "Pagos/getEstatusPagosMktd", function (data) {
     var len = data.length;
     for (var i = 0; i < len; i++) {
         var id = data[i]['id_opcion'];
@@ -404,7 +404,7 @@ function RevisionMKTD(mes,anio,Estatus){
                 className: 'dt-body-center'
             }],
             ajax: {
-                url: general_base_url + "Comisiones/getDatosRevisionMktd2/"+mes+"/"+anio+"/"+Estatus,
+                url: general_base_url + "Pagos/getDatosRevisionMktd2/"+mes+"/"+anio+"/"+Estatus,
                 type: "POST",
                 cache: false,
                 data: function( d ){}
@@ -417,7 +417,7 @@ function RevisionMKTD(mes,anio,Estatus){
             let c=0;
             let ubication = $(this).attr("data-value");
             let plen = $(this).val();
-            $.getJSON( general_base_url + "Comisiones/getDatosSumaMktd/"+ubication+"/"+plen).done( function( data01 ){
+            $.getJSON( general_base_url + "Pagos/getDatosSumaMktd/"+ubication+"/"+plen).done( function( data01 ){
                 let suma_01 = parseFloat(data01[0].suma_f01);
                 $("#modal_colaboradores .modal-body").html("");
                 $("#modal_colaboradores .modal-footer").html("");
@@ -426,7 +426,7 @@ function RevisionMKTD(mes,anio,Estatus){
                 $("#modal_colaboradores .modal-body").append('<input type="hidden" name="num_plan" value="'+plen+'">');
                 $("#modal_colaboradores .modal-body").append('<input type="hidden" name="valores_pago_i" value="'+data01[0].valor_obtenido+'">');
                 $("#modal_colaboradores .modal-body").append('<input type="hidden" name="pago_mktd" id="pago_mktd" value="'+parseFloat(suma_01)+'">');
-                $.getJSON( general_base_url + "Comisiones/getDatosColabMktd/"+ubication+"/"+plen).done( function( data1 ){
+                $.getJSON( general_base_url + "Pagos/getDatosColabMktd/"+ubication+"/"+plen).done( function( data1 ){
                     var_sum = 0;
                     let fech = data1[0].fecha_plan;
                     let fecha = fech.substr(0, 10);
@@ -581,7 +581,7 @@ $("#tabla_plaza_1").ready( function(){
             className: 'dt-body-center'
         }],
         ajax: {
-            url: general_base_url + "Comisiones/getDatosRevisionMktd",
+            url: general_base_url + "Pagos/getDatosRevisionMktd",
             type: "POST",
             cache: false,
             data: function( d ){}
@@ -594,7 +594,7 @@ $("#tabla_plaza_1").ready( function(){
         let c=0;
         let ubication = $(this).attr("data-value");
         let plen = $(this).val();
-        $.getJSON( general_base_url + "Comisiones/getDatosSumaMktd/"+ubication+"/"+plen).done( function( data01 ){
+        $.getJSON( general_base_url + "Pagos/getDatosSumaMktd/"+ubication+"/"+plen).done( function( data01 ){
             let suma_01 = parseFloat(data01[0].suma_f01);
             $("#modal_colaboradores .modal-body").html("");
             $("#modal_colaboradores .modal-footer").html("");
@@ -603,7 +603,7 @@ $("#tabla_plaza_1").ready( function(){
             $("#modal_colaboradores .modal-body").append('<input type="hidden" name="num_plan" value="'+plen+'">');
             $("#modal_colaboradores .modal-body").append('<input type="hidden" name="valores_pago_i" value="'+data01[0].valor_obtenido+'">');
             $("#modal_colaboradores .modal-body").append('<input type="hidden" name="pago_mktd" id="pago_mktd" value="'+parseFloat(suma_01)+'">');
-            $.getJSON( general_base_url + "Comisiones/getDatosColabMktd/"+ubication+"/"+plen).done( function( data1 ){
+            $.getJSON( general_base_url + "Pagos/getDatosColabMktd/"+ubication+"/"+plen).done( function( data1 ){
                 var_sum = 0;
                 let fech = data1[0].fecha_plan;
                 let fecha = fech.substr(0, 10);
@@ -687,7 +687,7 @@ $("#tabla_plaza_2").ready( function(){
         enviar.push({
             text: '<i class="fa fa-check"></i> ENVIAR A INTERNOMEX',
             action: function(){
-                $.get(general_base_url + "Comisiones/acepto_contraloria_MKTD/").done(function () {
+                $.get(general_base_url + "Pagos/acepto_contraloria_MKTD/").done(function () {
                     $("#myModalEnviadas").modal('toggle');
                     plaza_2.ajax.reload();
                     plaza_1.ajax.reload();
@@ -818,7 +818,7 @@ $("#tabla_plaza_2").ready( function(){
             },
         }],
         ajax: {
-            url: general_base_url + "Comisiones/getDatosNuevasmkContraloria",
+            url: general_base_url + "Pagos/getDatosNuevasmkContraloria",
             type: "POST",
             cache: false,
             data: function( d ){}
@@ -995,7 +995,7 @@ function fillTableR(typeTransaction, beginDate, endDate, where, estatus){
                 }
             }],
             ajax: {
-                url: general_base_url + "Comisiones/getCommissionsByMktdUserReport/",
+                url: general_base_url + "Pagos/getCommissionsByMktdUserReport/",
                 type: "POST",
                 cache: false,
                 data: {
@@ -1039,7 +1039,7 @@ $("#form_colaboradores").submit( function(e) {
         }
         else if(parseFloat(sumat2.toFixed(3)) >= valor1 && parseFloat(sumat2.toFixed(3)) <= valor2 ){
             $.ajax({
-                url: general_base_url + "Comisiones/nueva_mktd_comision",
+                url: general_base_url + "Pagos/nueva_mktd_comision",
                 data: data,
                 cache: false,
                 contentType: false,
@@ -1085,7 +1085,7 @@ $("#form_MKTD").submit( function(e) {
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
         $.ajax({
-            url: general_base_url + "Comisiones/save_new_mktd",
+            url: general_base_url + "Pagos/save_new_mktd",
             data: data,
             cache: false,
             contentType: false,
@@ -1230,7 +1230,7 @@ $(document).ready( function(){
 $("#idloteorigen").select2({dropdownParent:$('#miModal')});
 
 $(document).ready(function () {
-    $.post(general_base_url + "Comisiones/getMktdRol", function (data) {
+    $.post(general_base_url + "Pagos/getMktdRol", function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_usuario'];
@@ -1246,7 +1246,7 @@ $("#usuarioid").change(function() {
     document.getElementById('idmontodisponible').value = '';
     var user = $(this).val();
     $('#idloteorigen option').remove();
-    $.post('../Comisiones/getLotesOrigenmk/'+user, function(data) {
+    $.post(general_base_url + "Pagos/getLotesOrigenmk/"+user, function(data) {
         $("#idloteorigen").append($('<option disabled>').val("default").text("Seleccione una opción"));
         var len = data.length;
         for( var i = 0; i<len; i++)
@@ -1275,7 +1275,7 @@ $("#idloteorigen").change(function() {
             let id = datos[0];
             let monto = datos[1];
             document.getElementById('monto').value = '';
-            $.post('getInformacionDataMK/'+id, function(data) {
+            $.post(general_base_url + "Pagos/getInformacionDataMK/"+id, function(data) {
                 var disponible = (data[0]['comision_total']-data[0]['abono_pagado']);
                 var idecomision = data[0]['id_pago_i'];
                 suma = suma + disponible;
@@ -1297,7 +1297,7 @@ $("#idloteorigen").change(function() {
         let id = datos[0];
         let monto = datos[1];
         document.getElementById('monto').value = '';
-        $.post('getInformacionDataMK/'+id, function(data) {
+        $.post(general_base_url + "Pagos/getInformacionDataMK/"+id, function(data) {
             var disponible = (data[0]['comision_total']-data[0]['abono_pagado']);
             var idecomision = data[0]['id_pago_i'];
             document.getElementById('montodisponible').innerHTML = '';
@@ -1358,7 +1358,7 @@ $("#form_descuentos").on('submit', function(e){
     let formData = new FormData(document.getElementById("form_descuentos"));
     formData.append("dato", "valor");
     $.ajax({
-        url: 'saveDescuentomk/'+1,
+        url: general_base_url + "Pagos/saveDescuentomk/"+1,
         data: formData,
         method: 'POST',
         contentType: false,

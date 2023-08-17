@@ -443,5 +443,5 @@
 <script src="<?= base_url() ?>dist/js/es.js"></script>
 <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
 <script src="<?= base_url() ?>dist/js/fullcalendar.min.js"></script>
-<script src="<?= base_url() ?>dist/js/controllers/ventas/revision_mktd.js"></script>
+<script src="<?= base_url() ?>dist/js/controllers/pagos/revision_mktd.js"></script>
 </body>
