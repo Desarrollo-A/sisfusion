@@ -718,7 +718,7 @@ $("#form_NEODATA").submit( function(e) {
                     })
                 } else if (data == 2) {
                     $('#spiner-loader').addClass('hidden');
-                    alerts.showNotification("top", "right", "Ya se dispersó por otra persona o es una recisión", "warning");
+                    alerts.showNotification("top", "right", "Ya se dispersó por otro usuario", "warning");
                     $('#tabla_dispersar_comisiones').DataTable().ajax.reload();
                     $("#modal_NEODATA").modal( 'hide' );
                     $('#dispersar').prop('disabled', false);

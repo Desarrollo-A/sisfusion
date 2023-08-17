@@ -363,11 +363,7 @@ $("#roles3").change(function() {
                 }
             }
         });
-        // console.log(res['readyState']);
-        // console.log(res.responseJSON);
-        // console.log(res['responseJSON']);
-
-  
+ 
     }
 
     document.getElementById('UserSelect').innerHTML = '<em>Usuario a cambiar: <b>'+nameUser+'</b></em>';
@@ -569,14 +565,7 @@ function replaceAll(text, busca, reemplaza) {
         text = text.toString().replace(busca, reemplaza);
     return text;
 }
-
-// function Confirmacion(i){
-//     $('#modal_avisos .modal-body').html(''); 
-//     $('#modal_avisos .modal-body').append(`<h5>¿Seguro que desea topar esta comisión?</h5>
-//     <br><div class="row"><div class="col-md-12"><center><input type="button" onclick="ToparComision(${i})" id="btn-save" class="btn btn-success" value="GUARDAR"><input type="button" class="btn btn-danger"  data-dismiss="modal" value="CANCELAR"></center></div></div>`);
-//     $('#modal_avisos').modal('show');
-// }
-
+ 
 function Regresar(i,por,colab,puesto,precioLote){
     $('#modal_avisos .modal-body').html('');
     $('#modal_avisos .modal-footer').html('');
@@ -685,14 +674,14 @@ function saveTipo(id){
                     $('#modal_pagadas .modal-body').html('');
                 
                     $("#modal_pagadas").modal('toggle');
-                    $('#tabla_inventario_contraloria').DataTable().ajax.reload();
+                    $('#tabla_incidencias_contraloria').DataTable().ajax.reload();
                     $('#spiner-loader').addClass('hidden');
                     alerts.showNotification("top", "right", "Tipo de venta actualizado", "success");
                 }
                 else{
                     $('#modal_pagadas .modal-body').html('');
                     $("#modal_pagadas").modal('toggle');
-                    $('#tabla_inventario_contraloria').DataTable().ajax.reload();
+                    $('#tabla_incidencias_contraloria').DataTable().ajax.reload();
                     $('#spiner-loader').addClass('hidden');
                     alerts.showNotification("top", "right", "Algo salio mal", "danger");
                 }
@@ -876,34 +865,52 @@ function onKeyUp(event) {
     var keycode = event.keyCode;
         
     if(keycode == '13'){ 
-        $('.find_doc').click();
+        $('.buscarLote').click();
     }
 }
  
-$(".find_doc").click( function() {
+$(".buscarLote").click( function() {
     var idLote = $('#inp_lote').val();
    if(idLote != '' ){
-    tabla_inventario = $("#tabla_inventario_contraloria").DataTable({
-        dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        width: 'auto',
-        buttons: [],
+    tabla_inventario = $("#tabla_incidencias_contraloria").DataTable({
+ 
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',
+        scrollX: true,
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                className: 'btn buttons-excel',
+                titleAttr: 'Descargar archivo de Excel',
+                title: 'Reporte Incidencia por lote',
+                exportOptions: {
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                    format: {
+                        header:  function (d, columnIdx) {
+                            return ' ' + titulos_intxt[columnIdx] + ' ';
+                            }
+                        }
+                }
+            }
+        ],
         ajax:{
-            "url": general_base_url+'Incidencias/getInCommissions/'+idLote,
-            "dataSrc": ""
-        },
+                "url": general_base_url+'Incidencias/getInCommissions/'+idLote,
+                "dataSrc": ""
+            },
         pagingType: "full_numbers",
         fixedHeader: true,
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, "Todos"]
+        ],
         language: {
-            url: general_base_url+"/static/spanishLoader_v2.json",
+            url: `${general_base_url}static/spanishLoader_v2.json`,
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
             }
         },
-        lengthMenu: [
-            [10, 25, 50, -1],
-            [10, 25, 50, "Todos"]
-        ],
         scrollX: true,
         destroy: true,
         ordering: false,
@@ -913,61 +920,59 @@ $(".find_doc").click( function() {
         {data: 'nombreLote'},
         {data: 'idLote'}, 
         {data: 'nombre_cliente'}, 
-        {data: function( d ){
-                var lblType;
-                if(d.tipo_venta==1) {
-                    lblType ='<p class="label label-danger" style="color:#78281F;background:#F5B7B1;">Venta Particular</p>';
-                }
-                else if(d.tipo_venta==2) {
-                    lblType ='<p class="label label-success" style="color:#186A3B;background:#ABEBC6;">Venta normal</p>';
-                }
-                else{
-                    lblType ='<p class="label label-warning">SIN TIPO Venta</p>';
-                }
-                return lblType;
+        { data: function (d) {
+            var labelTipoVenta;
+            if(d.tipo_venta == 1) {
+                labelTipoVenta ='<span class="label lbl-orageYellow" >Particular</span>';
+            }else if(d.tipo_venta == 2) {
+                labelTipoVenta ='<span class="label lbl-green" >Normal</span>';
+            }else if(d.tipo_venta == 7) {
+                labelTipoVenta ='<span class="label lbl-violetDeep" >Especial</span>';
+            }else{
+                labelTipoVenta ='<span class="label lbl-gray" >Sin Definir</span>';
             }
-        }, 
-        {data: function( d ){
-                var lblStats;
-                if(d.compartida==null) {
-                    lblStats ='<p class="label" style="color:#7D6608;background:#F9E79F;" >Individual</p>';
-                }else {
-                    lblStats ='<p class="label label-warning" style="color:#7E5109;background:#FAD7A0;">Compartida</p>';
-                }
-                return lblStats;
+            return labelTipoVenta;
+        }},  
+        { data: function (d) {
+            var labelCompartida;
+            if(d.compartida == null) {
+                labelCompartida ='<span class="label lbl-yellow" >Individual</span>';
+            } else{
+                labelCompartida ='<span class="label lbl-orangeYellow">Compartida</span>';
             }
-        },
-        {data: function( d ){
-                var lblStats;
-                if(d.idStatusContratacion==15){
-                    lblStats ='<span class="label label-success" style="color:#512E5F;background:#D7BDE2;" >Contratado</span>';
-                }
-                else {
-                    lblStats ='<p><b>'+d.idStatusContratacion+'</b></p>';  
-                }
-                return lblStats;
+            return labelCompartida;
+        }}, 
+        { data: function (d) {
+            var labelStatus;
+            if(d.idStatusContratacion == 15) {
+                labelStatus ='<span class="label lbl-violetDeep">Contratado</span>';
+            }else {
+                labelStatus ='<span class="label lbl-gray"><b>'+d.idStatusContratacion+'</b></span>';
             }
-        },
-        // 
+            return labelStatus;
+        }},
         { data: function (d) {
             var labelEstatus;
             if(d.totalNeto2 == null) {
                 labelEstatus ='<p class="m-0"><b>Sin Precio Lote</b></p>';
             }else if(d.registro_comision == 2){
-                labelEstatus ='<span class="label" style="background:#11DFC6;">SOLICITADO MKT</span>'+' '+d.plan_descripcion;
+                labelEstatus ='<span class="label lbl-sky">SOLICITADO MKT</span>'+' '+d.plan_descripcion;
             }else {
                 labelEstatus =`<span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span>`;
             }
             return labelEstatus;
-        }},{ data: function (d) {
-            var fechaSistema;
-            if(d.fecha_sistema <= '01 OCT 20' || d.fecha_sistema == null ) {
-                fechaSistema ='<span class="label" style="color:#626567;background:#E5E7E9;">Sin Definir</span>';
-            }else {
-                fechaSistema = '<br><span class="label" style="color:#1B4F72;background:#AED6F1;">'+d.fecha_sistema+'</span>';
-            }
-            return fechaSistema;
         }},
+        
+        { data: function (d) {
+            var ultima_dispersion;
+            if( d.ultima_dispersion == null ) {
+                ultima_dispersion ='<span class="label lbl-deepGray">Sin Definir</span>';
+            }else {
+                ultima_dispersion = '<br><span class="label lbl-lightBlue">'+d.ultima_dispersion+'</span>';
+            }
+            return ultima_dispersion;
+        }} ,
+
         { data: function (d) {
             var fechaNeodata;
             var rescisionLote;
@@ -981,64 +986,35 @@ $(".find_doc").click( function() {
             }
             return fechaNeodata+rescisionLote;
         }},
-        // 
-        {
-            "width": "8%",
-            "data": function( d ){
-                var lblStats;
-                if(d.totalNeto2==null) {
-                        lblStats ='<span class="label label-danger">Sin precio lote</span>';
-                }
-                else {
-                    switch(d.lugar_prospeccion){
-                        case '6':
-                            lblStats ='<label class="label " style="color:#E5E7E9;background:#B4A269;">MARKETING DIGÍTAL</span>';
-                        break;
-                        case '12':
-                            lblStats ='<label class="label " style="background:#00548C;">CLUB MADERAS</span>';
-                        break;
-                        case '25':
-                            lblStats ='<label class="label " style="background:#0860BA;">IGNACIO GREENHAM</span>';
-                        break;
-                        case '26':
-                            lblStats ='<label class="label " style="background:#0860BA;">COREANO VLOGS</span>';
-                        break;
-                        default:
-                            lblStats ='';
-                        break;
-                    }
-                }
-
-                return lblStats;
-            }
-        },
         {
             "width": "8%",
             "data": function( d ){
                 var lblStats = '';
                 switch(d.registro_comision){
-                    case '7':
-                        lblStats ='<span class="label lbl-warning" style="background:red;" >LIQUIDADA</span>';
+                    case 7:
+                        lblStats ='<span class="label lbl-warning">LIQUIDADA</span>';
                     break;
                     
-                    case '1':
-                        lblStats ='<span class="label lbl-sky" style="background:blue;">COMISIÓN ACTIVA</span>';
+                    case 1:
+                        lblStats ='<span class="label lbl-sky">COMISIÓN ACTIVA</span>';
                     break;
-                    case '8':
-                        lblStats ='<span class="label lbl-blueMaderas" style="color:#0860BA;">NUEVA, rescisión</span>';
+                    case 8:
+                        lblStats ='<span class="label lbl-blueMaderas">NUEVA, rescisión</span>';
                     break;
 
-                    case '0':
-                        lblStats ='<span class="label lbl-blueMaderas" style="color:#0860BA;">NUEVA, sin dispersar</span>';
+                    case 0:
+                        lblStats ='<span class="label lbl-blueMaderas">NUEVA, sin dispersar</span>';
                     break;
 
                     default:
-                        lblStats ='';
+                        lblStats ='-';
                     break;
                 }
                 return lblStats;      
             }
         },
+        
+ 
         { 
             "width": "20%",
             "orderable": false,
@@ -1055,10 +1031,7 @@ $(".find_doc").click( function() {
                     if(data.registro_comision == 0 || data.registro_comision == 8) {
                         BtnStats += '<button class="btn-data btn-sky cambiar_precio" title="Cambiar precio" value="' + data.idLote +'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-pencil-alt"></i></button>';
                         if(data.tipo_venta == 'null' || data.tipo_venta == 0 || data.tipo_venta == null){
-                            BtnStats += '<button href="#" value="'+data.idLote+'" data-nombre="'+data.nombreLote+'" data-tipo="'+data.tipo+'" data-tipo="I" class="btn-data btn-orangeYellow tipo_venta" title="Cambiar tipo de venta"><i class="fas fa-map-marker-alt"></i></button>';
-                        }         
-                        if(data.registro_comision == 0){
-                            BtnStats += '<button href="#" value="'+data.idLote+'" data-idLote="'+data.idLote+'"  data-cliente="'+data.id_cliente+'" data-sedesName="'+data.nombre+'"  data-sedes="'+data.id_sede+'" data-nombre="'+data.nombreLote+'" data-tipo="'+data.tipo+'" data-tipo="1" class="btn-data btn-violetDeep cambioSede"  title="Cambio de sede"> <i class="fas fa-map-signs"></i> </button> '
+                            BtnStats += '<button href="#" value="'+data.idLote+'" data-nombre="'+data.nombreLote+'" data-tipo="'+data.tipo+'" data-tipo="I" class="btn-data btn-orangeYellow tipo_venta" title="Cambiar tipo de venta"><i class="fas fa-map-marker-alt"></i></button><button href="#" value="'+data.idLote+'" data-idLote="'+data.idLote+'"  data-cliente="'+data.id_cliente+'" data-sedesName="'+data.nombre+'"  data-sedes="'+data.id_sede+'" data-nombre="'+data.nombreLote+'" data-tipo="'+data.tipo+'" data-tipo="1" class="btn-data btn-violetDeep cambioSede"  title="Cambio de sede"> <i class="fas fa-map-signs"></i> </button> '
 
                         }     
                     }
@@ -1082,12 +1055,13 @@ $(".find_doc").click( function() {
                 }
                 return '<div class="d-flex justify-center">'+BtnStats+'</div>';
             }
-        }]
+        }
+    ]
     });
    }
   
 
-    $("#tabla_inventario_contraloria tbody").on("click", ".cambiar_precio", function(){
+    $("#tabla_incidencias_contraloria tbody").on("click", ".cambiar_precio", function(){
         var tr = $(this).closest('tr');
         var row = tabla_inventario.row( tr );
         idLote = $(this).val();
@@ -1114,7 +1088,7 @@ $(".find_doc").click( function() {
         $("#modal_pagadas").modal();
     });
     
-    $("#tabla_inventario_contraloria tbody").on("click", ".tipo_venta", function(){
+    $("#tabla_incidencias_contraloria tbody").on("click", ".tipo_venta", function(){
         var tr = $(this).closest('tr');
         var row = tabla_inventario.row( tr );
         idLote = $(this).val();
@@ -1151,7 +1125,7 @@ $(".find_doc").click( function() {
     });
 
     /**-------------------INVENTARIO------------------------------- */
-    $("#tabla_inventario_contraloria tbody").on("click", ".inventario", function(e){
+    $("#tabla_incidencias_contraloria tbody").on("click", ".inventario", function(e){
         e.preventDefault();
         e.stopImmediatePropagation();
  
@@ -1173,64 +1147,15 @@ $(".find_doc").click( function() {
             $("#modal_inventario").modal();
         }
         else{ 
-            // $("#modal_avisitos .modal-body").html('');
-            // $('#modal_avisitos .modal-footer').html('');
-            // $('#modal_avisitos .modal-footer').html('');
-          
+
             document.getElementById("lotes1").value = (idLote);
-
             document.getElementById("clientes2").value = (id_cliente);
-
-            // <div class="row" >
-            // <div class="form-group">
-            // <div class="col-md-3">
-            // </div> 
-            
-            // <div class="col-md-5 form-group" style="text-align: center;">
-            // <label class="control-label" style="text-align: center;" >Seleccione una opción</label>
-            // <select class="selectpicker select-gral m-0"
-            // data-style="btn"
-            // data-show-subtext="true"
-            // data-live-search="true"
-            // style="text-align: center;" name="opcion" 
-            // onchange="selectOpcion(${id_cliente},${idLote})" id="opcion" >
-            
-            // <option  default >SELECCIONA UNA OPCIÓN</option>
-            // <option value="1">Cliente</option>
-            // <option value="2">Venta compartida</option>
-            // </select>
-    
-            // </div> 
-            // </div> 
-            // </div> 
-            // <hr>` );
+ 
             $("#modal_avisitos").modal();
         }                      
     }); 
-
-
-/**--------------------------AGREGAR EMPRESA---------------------------- */
-// $("#tabla_inventario_contraloria tbody").on("click", ".addEmpresa", function(e){
-//         e.preventDefault();
-//         e.stopImmediatePropagation();
-
-//         var tr = $(this).closest('tr');
-//         var row = tabla_inventario.row( tr );
-//         idLote = $(this).val();
-
-//         $('#idLoteE').val(idLote);
-//         id_cliente = $(this).attr("data-cliente");
-//         precioAnt = $(this).attr("data-precioAnt");
-//         $('#idClienteE').val(id_cliente);
-//         $('#PrecioLoteE').val(precioAnt);
-
-//         $("#addEmpresa").modal();
-                   
-//     }); 
-    /**--------------------------------------------------------------------- */
-
-
-    $("#tabla_inventario_contraloria tbody").on("click", ".verify_neodata", function(e){
+ 
+    $("#tabla_incidencias_contraloria tbody").on("click", ".verify_neodata", function(e){
         e.preventDefault();
         e.stopImmediatePropagation();
         var tr = $(this).closest('tr');
@@ -1590,7 +1515,7 @@ $("#my_updatebandera_form").on('submit', function(e){
                 $('#myUpdateBanderaModal').modal("hide");
                 $("#id_pagoc").val("");
                 alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
-                $('#tabla_inventario_contraloria').DataTable().ajax.reload();
+                $('#tabla_incidencias_contraloria').DataTable().ajax.reload();
             } else {
                 alerts.showNotification("top", "right", "Oops, algo salió mal. Error al intentar actualizar.", "warning");
             }
@@ -1619,7 +1544,7 @@ $("#form_pagadas").submit(function(e) {;
             success: function(data) {
                 if (data == 1) {
                     $("#modal_pagadas").modal('toggle');
-                    $('#tabla_inventario_contraloria').DataTable().ajax.reload();
+                    $('#tabla_incidencias_contraloria').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "Precio Actualizado", "success");
                 }else if(data == 2){
                     $("#modal_pagadas").modal('toggle');
@@ -2119,7 +2044,7 @@ $("#form_ceder").on('submit', function(e){
             console.log(data);
             if (data == 1) {
                  $("#asesorold").selectpicker('refresh');
-                // $('#tabla_inventario_contraloria').DataTable().ajax.reload(null, false);
+                // $('#tabla_incidencias_contraloria').DataTable().ajax.reload(null, false);
 
                  $("#asesorold").val('');
                  $("#asesorold").selectpicker("refresh");
@@ -2164,7 +2089,7 @@ $("#form_inventario").on('submit', function(e){
         processData:false,
         success: function(data) {
             if (data == 1) {
-                $('#tabla_inventario_contraloria').DataTable().ajax.reload();
+                $('#tabla_incidencias_contraloria').DataTable().ajax.reload();
 
                 $('#form_inventario')[0].reset();
                 $("#roles3").val('');
@@ -2210,7 +2135,7 @@ $("#form_vc").on('submit', function(e){
         processData:false,
         success: function(data) {
             if (data == 1) {
-                $('#tabla_inventario_contraloria').DataTable().ajax.reload();
+                $('#tabla_incidencias_contraloria').DataTable().ajax.reload();
 
                 $('#form_vc')[0].reset();
                 $("#rolesvc").val('');
@@ -2257,7 +2182,7 @@ if( $('#usuarioid6').val() != 0 && $('#usuarioid7').val() != 0 && $('#usuarioid8
             console.log(data);
             if (data == 1) {
                 $('#form_vcNew')[0].reset();
-                $('#tabla_inventario_contraloria').DataTable().ajax.reload();
+                $('#tabla_incidencias_contraloria').DataTable().ajax.reload();
 
                 $('#usuarioid5').val('default');
                 $("#usuarioid5").selectpicker("refresh");
@@ -2303,7 +2228,7 @@ if( $('#usuarioid6').val() != 0 && $('#usuarioid7').val() != 0 && $('#usuarioid8
         $("#tituloLote").html('')
         $("#sedeOld").html('')
 
-        $('#tabla_inventario_contraloria').DataTable().ajax.reload();
+        $('#tabla_incidencias_contraloria').DataTable().ajax.reload();
         nombreLote  = $(this).attr("data-nombre");
         nombreSede  = $(this).attr("data-sedesName");
         idSedes     = $(this).attr("data-sedes");
@@ -2348,7 +2273,7 @@ if( $('#usuarioid6').val() != 0 && $('#usuarioid7').val() != 0 && $('#usuarioid8
                     $("#tituloLote").html('')
                     $("#sedeOld").html('')
                     $('#modal_sedes').modal('hide');
-                    $('#tabla_inventario_contraloria').DataTable().ajax.reload();
+                    $('#tabla_incidencias_contraloria').DataTable().ajax.reload();
 
                 },
                 error: function() {
