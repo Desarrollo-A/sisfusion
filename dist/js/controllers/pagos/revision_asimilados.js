@@ -122,15 +122,12 @@ function getAssimilatedCommissions(proyecto, condominio){
             text: '<i class="fa fa-check"></i> ENVIAR A INTERNOMEX',
             action: function() {
                 if ($('input[name="idTQ[]"]:checked').length > 0) {
-                    
                     $('#spiner-loader').removeClass('hide');
                     var idcomision = $(tabla_asimilados2.$('input[name="idTQ[]"]:checked')).map(function() {
                         return this.value;
                     }).get();
-                    
                     var com2 = new FormData();
                     com2.append("idcomision", idcomision); 
-                    
                     $.ajax({
                         url : general_base_url + 'Pagos/acepto_internomex_asimilados/',
                         data: com2,
@@ -299,7 +296,6 @@ function getAssimilatedCommissions(proyecto, condominio){
                 else{
                     return '<p class="m-0">COMISIÓN <br><b> ('+d.porcentaje_decimal+'% de '+d.porcentaje_abono+'%)</b></p>';
                 }
-            
             }
         },
         {
@@ -340,17 +336,17 @@ function getAssimilatedCommissions(proyecto, condominio){
             searchable:false,
             className: 'dt-body-center',
             render: function (d, type, full, meta){
-                // if(full.estatus == 4){
-                //     if(full.id_comision){
+                if(full.estatus == 4){
+                    if(full.id_comision){
                         return '<input type="checkbox" name="idTQ[]" class="individualCheck" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
-                //     }
-                //     else{
-                //         return '';
-                //     }
-                // }
-                // else{
-                //     return '';
-                // }
+                    }
+                    else{
+                        return '';
+                    }
+                }
+                else{
+                    return '';
+                }
             },
             select: {
                 style:    'os',

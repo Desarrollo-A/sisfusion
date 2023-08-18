@@ -204,11 +204,13 @@ $(document).ready(function getAssimilatedCommissions(){
         },
         {
             data: function( d ){
+                let porcentajeDecimal = numberTwoDecimal(d.porcentaje_decimal);
+                let porcentajeAbono = numberTwoDecimal(d.porcentaje_abono); 
                 if(d.lugar_prospeccion == 6){
-                    return '<p class="m-0">COMISIÓN + MKTD <br><b> ('+d.porcentaje_decimal+'% de '+d.porcentaje_abono+'%)</b></p>';
+                    return '<p class="m-0">COMISIÓN + MKTD <br><b> ('+porcentajeDecimal+'% de '+porcentajeAbono+'%)</b></p>';
                 }
                 else{
-                    return '<p class="m-0">COMISIÓN <br><b> ('+d.porcentaje_decimal+'% de '+d.porcentaje_abono+'%)</b></p>';
+                    return '<p class="m-0">COMISIÓN <br><b> ('+porcentajeDecimal+'% de '+porcentajeAbono+'%)</b></p>';
                 }
             
             }

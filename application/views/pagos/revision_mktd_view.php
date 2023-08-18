@@ -19,7 +19,7 @@
                             <select id="usuarioid" name="usuarioid" class="selectpicker select-gral m-0 directorSelect" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7"  data-live-search="true" data-container="body" required></select>
                         </div>
                         <div class="form-group mt-0" id="loteorigen">
-                            <label class="control-label">Lote origen</label>
+                            <label class="control-label">Lote origen (<span class="isRequired">*</span>)</label>
                             <select id="idloteorigen"  name="idloteorigen[]" multiple="multiple" class="form-control directorSelect2 js-example-theme-multiple" style="width: 100%;height:200px !important;"  required data-live-search="true"></select>
                         </div>
                         <b id="msj2" style="color: red;"></b>
@@ -39,7 +39,7 @@
                             </div>
                         </div>
                         <div class="form-group mt-0">
-                            <label class="control-label">Mótivo de descuento</label>
+                            <label class="control-label">Mótivo de descuento (<span class="isRequired">*</span>)</label>
                             <textarea id="comentario" name="comentario" class="text-modal" rows="3" required></textarea>
                         </div>
                         <div class="form-group d-flex justify-end">
@@ -136,7 +136,7 @@
                         <div class="card-content p-0">
                             <div class="nav-tabs-custom">
                                 <div class="tab-content p-2">
-                                <?php if($this->session->userdata('id_rol') != "18") { ?>
+                                    <?php if($this->session->userdata('id_rol') != "18") { ?>
                                     <div class="tab-pane active" id="nuevas-1">
                                         <div class="encabezadoBox">
                                             <h3 class="card-title center-align" >Comisiones nuevas <b>mktd</b></h3>
@@ -196,9 +196,10 @@
                                             <div class="container-fluid p-0">
                                                 <div class="row">
                                                     <?php
-                                                    if($this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="17"){?>  <!-- Regresar a 17 -->
+                                                    if($this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="17"){?>  
                                                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                                        <?php } else { ?>
+                                                        <?php
+                                                    } else { ?>
                                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                             <?php } ?>
                                                             <div class="form-group col-md-6 m-0">

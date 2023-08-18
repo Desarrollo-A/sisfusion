@@ -296,18 +296,24 @@ function getFacturaCommissions(proyecto, condominio){
         else {
             if( row.data().solicitudes == null || row.data().solicitudes == "null" ){
                 $.post( general_base_url + "Pagos/carga_listado_factura" , { "idResidencial" : row.data().idResidencial, "id_usuario" : row.data().id_usuario } ).done( function( data ){
-                    row.data().solicitudes = JSON.parse( data );
-                    tabla_factura2.row( tr ).data( row.data() );
-                    row = tabla_factura2.row( tr );
-                    row.child( construir_subtablas( row.data().solicitudes ) ).show();
-                    tr.addClass('shown');
-                    $(this).parent().find('.animacion').removeClass("fa-caret-right").addClass("fa-caret-down");
+                    data = JSON.parse( data );
+                    if(data.length == 0){
+                        alerts.showNotification("top", "right", "No hay datos que mostrar", "warning");
+                    }
+                    else{
+                        row.data().solicitudes = data;
+                        tabla_factura2.row( tr ).data( row.data() );
+                        row = tabla_factura2.row( tr );
+                        row.child( construir_subtablas( row.data().solicitudes ) ).show();
+                        tr.addClass('shown');
+                        $(this).parent().find('.animacion').removeClass("fa-caret-right").addClass("fa-caret-down");
+                    }
                 });
             }
             else{
-                row.child( construir_subtablas( row.data().solicitudes ) ).show();
                 tr.addClass('shown');
                 $(this).parent().find('.animacion').removeClass("fa-caret-right").addClass("fa-caret-down");
+                row.child.hide()
             }
         }
     });
