@@ -101,11 +101,6 @@ class Contraloria extends CI_Controller {
         $this->load->view("contraloria/vista_envio_RL_contraloria");
     }
 
-    public function envio_RL_contraloria_2() {
-		$this->load->view('template/header');
-	 	$this->load->view("contraloria/vista_envio_RL_contraloria_2");
-	}
-
     public function estatus_12_contraloria() {
         $this->load->view('template/header');
         $this->load->view("contraloria/vista_12_contraloria");
