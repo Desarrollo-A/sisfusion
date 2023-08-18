@@ -15,18 +15,12 @@
                     </div>
                     <div class="modal-body">
                         <div role="tabpanel">
-                            <ul class="nav nav-tabs" role="tablist" style="background: #949494;">
-                                <div id="nameLote"></div>
-                            </ul>
-                            <div class="tab-content">
-                                <div role="tabpanel" class="tab-pane active" id="changelogTab">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="card card-plain">
-                                                <div class="card-content">
-                                                    <ul class="timeline timeline-simple" id="comments-list-remanente"></ul>
-                                                </div>
-                                            </div>
+                            <div id="nameLote"></div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card card-plain">
+                                        <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                            <ul class="timeline-3" id="comments-list-remanente"></ul>
                                         </div>
                                     </div>
                                 </div>
@@ -70,7 +64,7 @@
                                 <div class="card-header card-header-icon" data-background-color="goldMaderas">
                                     <i class="fas fa-dollar-sign fa-2x"></i>
                                 </div>
-                                 <div class="card-content">
+                                <div class="card-content">
                                     <div class="encabezadoBox">
                                         <h3 class="card-title center-align" >Comisiones <b>Especiales</b></h3>
                                         <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de remanente distribuible)</p>
@@ -98,20 +92,20 @@
                                                     <tr>
                                                         <th></th>
                                                         <th>ID</th>
-                                                        <th>PROY.</th>
+                                                        <th>PROYECTO</th>
                                                         <th>CONDOMINIO</th>
                                                         <th>LOTE</th>
                                                         <th>REFERENCIA</th>
-                                                        <th>PRECIO LOTE</th>
-                                                        <th>EMP.</th>
-                                                        <th>TOT. COM.</th>
-                                                        <th>P. CLIENTE</th>
-                                                        <th>A PAGAR</th>
-                                                        <th>TIPO VENTA</th>
+                                                        <th>PRECIO DEL LOTE</th>
+                                                        <th>EMPRESA</th>
+                                                        <th>TOTAL DE LA COMISIÓN</th>
+                                                        <th>PAGO DEL CLIENTE</th>
+                                                        <th>TOTAL A PAGAR</th>
+                                                        <th>TIPO DE VENTA</th>
                                                         <th>USUARIO</th>
                                                         <th>PUESTO</th>
-                                                        <th>FEC. ENVÍO</th>
-                                                        <th>MÁS</th>
+                                                        <th>FECHA DE ENVÍO</th>
+                                                        <th>ACCIONES</th>
                                                     </tr>
                                                 </thead>
                                             </table>

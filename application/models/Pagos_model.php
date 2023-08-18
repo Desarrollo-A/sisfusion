@@ -1285,9 +1285,8 @@ function insertar_descuentoMK($usuarioid,$monto,$ide_comision,$comentario,$usuar
 
     function getDatosEnviadasInternomex($proyecto, $condominio, $formaPago) {
         $formaPagoWhereClause = '';
-        if ($formaPago !== '0')
+        if ($formaPago != '0')
             $formaPagoWhereClause = "AND oxcfp.id_opcion = $formaPago";
-    
         if($condominio == 0) {
             $whereProyecto = "AND re.idResidencial = $proyecto";
             $whereCondominio = "";
