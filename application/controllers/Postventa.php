@@ -2296,10 +2296,6 @@ function saveNotaria(){
         for ($i = 0; $i < count($data); $i++) {
             $a = 0;
             if ( $data[$i]['tiempo'] != 0 && $data[$i]['tiempo'] != null){
-              //  $startDate = $data[$i]['fecha_creacion'];
-               // $endDate = ( $i+1 < count($data) ) ? $data[$i+1]['fecha_creacion'] : date('Y-m-d h:i:s');
-
-                //$result = $this->getWorkingDays($startDate, $endDate, $data[$i]['tiempo']);
                 if($data[$i]['dias_vencimiento'] >= $data[$i]['dias']){
                     $data[$i]['atrasado'] = "EN TIEMPO";
                     $data[$i]['diferencia'] = $data[$i]['tiempo'];
