@@ -1388,31 +1388,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
             LEFT JOIN residenciales AS residencial ON cond.idResidencial=residencial.idResidencial
             WHERE idStatusContratacion IN (1, 2, 3) AND 
                 idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND 
-                cl.status = 1 AND
-                lotes.idLote IN (
-                    SELECT l.idLote
-                    FROM lotes l 
-                    INNER JOIN clientes c ON c.id_cliente = l.idCliente
-                    INNER JOIN usuarios u ON u.id_usuario = c.id_asesor AND u.estatus != 1
-                    WHERE l.status = 1 AND 
-                        l.idStatusContratacion IN (1, 2, 3) AND 
-                        l.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND 
-                        c.status = 1 AND 
-                        c.id_gerente = $idLider
-            
-                    UNION ALL
-            
-                    SELECT l.idLote
-                    FROM lotes l 
-                    INNER JOIN clientes c ON c.id_cliente = l.idCliente AND c.id_coordinador IN (2562, 2541) AND c.id_asesor != 1908
-                    INNER JOIN usuarios u ON u.id_usuario = c.id_asesor
-                    INNER JOIN usuarios uu ON uu.id_usuario = u.id_lider AND 
-                        (uu.id_lider = $idLider OR u.id_lider = $idLider)
-                    WHERE l.status = 1 AND 
-                        l.idStatusContratacion IN (1, 2, 3) AND 
-                        l.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND 
-                        c.status = 1
-                )
+                cl.status = 1 
             ORDER BY cl.id_Cliente ASC
         ");
         return $query->result_array();
