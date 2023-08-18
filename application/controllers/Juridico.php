@@ -12,7 +12,7 @@ class Juridico extends CI_Controller
 		$this->load->model('Contraloria_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
 		$this->load->library(array('session','form_validation'));
 		 //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
-		$this->load->library(array('session','form_validation', 'get_menu'));
+		$this->load->library(array('session','form_validation', 'get_menu','permisos_sidebar'));
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
 		$this->load->library('email');
@@ -22,6 +22,8 @@ class Juridico extends CI_Controller
 
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+		$rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
+        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
     }
 
 	public function index()

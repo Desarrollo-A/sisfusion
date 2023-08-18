@@ -5,7 +5,7 @@ class Clientes extends CI_Controller {
         $this->load->model(array('Clientes_model', 'Statistics_model', 'asesor/Asesor_model', 'Caja_model_outside',
             'General_model'));
         $this->load->library(array('session','form_validation'));
-        $this->load->library(array('session','form_validation', 'get_menu'));
+        $this->load->library(array('session','form_validation', 'get_menu','permisos_sidebar'));
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
         date_default_timezone_set('America/Mexico_City');
@@ -13,6 +13,8 @@ class Clientes extends CI_Controller {
 
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+        $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
+        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
     }
 
 	public function index()
@@ -1502,131 +1504,127 @@ public function getStatusMktdPreventa(){
             </style>
         </head>
         <body>
-              <section class="content">
-                    <div class="row">
-                        <div class="col-xs-10 col-md-offset-1">
+            <section class="content">
+                <div class="row">
+                    <div class="col-xs-10 col-md-offset-1">
                         <div class="box">
                             <div class="box-body">
-                                  <table width="100%" style="height: 100px; border: 1px solid #ddd;" width="690">
+                                <table width="100%" style="height: 100px; border: 1px solid #ddd;" width="690">
                                     <tr>
                                         <td colspan="2" align="left"><img src="https://www.ciudadmaderas.com/assets/img/logo.png" style=" max-width: 70%; height: auto;"></td>
-                                        <td colspan="2" align="right"><b style="font-size: 2em; "> Información<BR></b><small style="font-size: 2em; color: #777;"> Prospecto</small> 
-                                        </td>
+                                        <td colspan="2" align="right"><b style="font-size: 2em; "> Información<BR></b><small style="font-size: 2em; color: #777;"> Prospecto</small></td>
                                     </tr>
                                 </table>
-                                
                                 <br><br>
-                                  <table width="100%" style="padding:10px 0px; text-align: center;height: 45px; border: 1px solid #ddd;" width="690">
+                                <table width="100%" style="padding:10px 0px; text-align: center;height: 45px; border: 1px solid #ddd;" width="690">
                                     <tr>
-                                        <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Datos generales</b>
-                                        </td>
+                                        <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Datos generales</b></td>
                                     </tr>
                                 </table>							
                                 <br>                       
-                                    <div class="row">                
-                                  <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-align: center;" width="690">
+                                <div class="row">                
+                                    <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-align: center;" width="690">
                                         <tr>
                                             <td style="font-size: 1em;">
-                                             <b>Nombre:</b><br>
-                                             '.$informacion->cliente.'
+                                                <b>Nombre:</b><br>
+                                                '.$informacion->cliente.'
                                             </td>
                                             <td style="font-size: 1em;">
-                                            <b>CURP:</b><br>
-                                            '.$informacion->curp.'
+                                                <b>CURP:</b><br>
+                                                '.$informacion->curp.'
                                             </td>
                                             <td style="font-size: 1em;">
-                                            <b>RFC:</b><br>
-                                            '.$informacion->rfc.'
+                                                <b>RFC:</b><br>
+                                                '.$informacion->rfc.'
                                             </td>
                                         </tr>                                        
                                         <tr>
                                             <td style="font-size: 1em;">
-                                             <b>Correo electrónico:</b><br>
-                                             '.$informacion->correo.'
+                                                <b>Correo electrónico:</b><br>
+                                                '.$informacion->correo.'
                                             </td>
                                             <td style="font-size: 1em;">
-                                            <b>Teléfono:</b><br>
-                                            '.$informacion->telefono.'
+                                                <b>Teléfono:</b><br>
+                                                '.$informacion->telefono.'
                                             </td>
                                             <td style="font-size: 1em;">
-                                            <b>Teléfono 2 (opcional):</b><br>
-                                            '.$informacion->telefono_2.'
+                                                <b>Teléfono 2 (opcional):</b><br>
+                                                '.$informacion->telefono_2.'
                                             </td>
                                         </tr>
                                         <tr>
                                             <td style="font-size: 1em;">
-                                             <b>Personalidad jurídica:</b><br>
-                                             '.$informacion->personalidad.'
+                                                <b>Personalidad jurídica:</b><br>
+                                                '.$informacion->personalidad.'
                                             </td>
                                             <td style="font-size: 1em;">
-                                            <b>Nacionalidad:</b><br>
-                                            '.$informacion->nacionalidad.'
+                                                <b>Nacionalidad:</b><br>
+                                                '.$informacion->nacionalidad.'
                                             </td>
                                         </tr>
                                     </table>
                                     <br>
                                     <br>
                                     <br>                       
-                                  <table width="100%" style="text-align: center;padding:10px;height: 45px; border-top: 1px solid #ddd;border-left: 1px solid #ddd;border-right: 1px solid #ddd;" width="690">
-                                    <tr>
-                                        <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Datos de prospección</b>
-                                        </td>
-                                    </tr>
-                                </table>							
-                                <br><br>                                  
-                                <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-align: center;" width="690">
-                                <tr>
-                                    <td style="font-size: 1em;">
-                                     <b>Asesor:</b><br>
-                                     '.$informacion->asesor.'
-                                    </td>
-                                    <td style="font-size: 1em;">
-                                    <b>Coordinador:</b><br>
-                                    '.$informacion->coordinador.'
-                                    </td> 
-                                    <td style="font-size: 1em;">
-                                    <b>Gerente:</b><br>
-                                    '.$informacion->gerente.'
-                                    </td>
-                                </tr>
-                                <tr>
-                                <td style="font-size: 1em;">
-                                 <b>Teléfono asesor:</b><br>
-                                 '.$informacion->telefono_asesor.'
-                                </td>
-                                <td style="font-size: 1em;">
-                                <b>Teléfono coordinador:</b><br>
-                                '.$informacion->telefono_coordinador.'
-                                </td> 
-                                <td style="font-size: 1em;">
-                                <b>Teléfono gerente:</b><br>
-                                '.$informacion->telefono_gerente.'
-                                </td>
-                            </tr>
-                            </table>
-                            <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-align: center;" width="690">
-                            <tr>
-                                <td style="font-size: 1em;">
-                                 <b>Medio de contacto:</b><br>
-                                 '.$informacion->lugar.'<br>
-                                 '.$informacion_lugar->especificar.'
-                                </td>
-                                <td style="font-size: 1em;">
-                                <b>Plaza de venta:</b><br>
-                                '.$informacion->plaza.'
-                                </td>
-                                <td style="font-size: 1em;">
-                                <b>Creado por:</b><br>
-                                '.$informacion->creacion.'
-                                </td>
-                            </tr>
-                        </table>
-                            <br>
-                            <br>
-                            <br>
-                                  <body>
-            </html>
-                                  ';
+                                    <table width="100%" style="text-align: center;padding:10px;height: 45px; border-top: 1px solid #ddd;border-left: 1px solid #ddd;border-right: 1px solid #ddd;" width="690">
+                                        <tr>
+                                            <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Datos de prospección</b>
+                                            </td>
+                                        </tr>
+                                    </table>							
+                                    <br><br>                                  
+                                    <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-align: center;" width="690">
+                                        <tr>
+                                            <td style="font-size: 1em;">
+                                                <b>Asesor:</b><br>
+                                                '.$informacion->asesor.'
+                                            </td>
+                                            <td style="font-size: 1em;">
+                                                <b>Coordinador:</b><br>
+                                                '.$informacion->coordinador.'
+                                            </td> 
+                                            <td style="font-size: 1em;">
+                                                <b>Gerente:</b><br>
+                                                '.$informacion->gerente.'
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-size: 1em;">
+                                                <b>Teléfono asesor:</b><br>
+                                                '.$informacion->telefono_asesor.'
+                                            </td>
+                                                <td style="font-size: 1em;">
+                                                <b>Teléfono coordinador:</b><br>
+                                            '.$informacion->telefono_coordinador.'
+                                            </td> 
+                                                <td style="font-size: 1em;">
+                                                <b>Teléfono gerente:</b><br>
+                                            '.$informacion->telefono_gerente.'
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-align: center;" width="690">
+                                        <tr>
+                                            <td style="font-size: 1em;">
+                                                <b>Medio de contacto:</b><br>
+                                                '.$informacion->lugar.'<br>
+                                                '.$informacion_lugar->especificar.'
+                                            </td>
+                                            <td style="font-size: 1em;">
+                                                <b>Plaza de venta:</b><br>
+                                                '.$informacion->plaza.'
+                                            </td>
+                                            <td style="font-size: 1em;">
+                                                <b>Creado por:</b><br>
+                                                '.$informacion->creacion.'
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <br>
+                                    <br>
+                                    <br>
+            <body>
+            </html>';
 
             $pdf->writeHTMLCell(0, 0, $x = '', $y = '10', $html, $border = 0, $ln = 1, $fill = 0, $reseth = true, $align = '', $autopadding = true);ob_end_clean();
             $pdf->Output(utf8_decode("Informacion_".$informacion->cliente.".pdf"), 'I');

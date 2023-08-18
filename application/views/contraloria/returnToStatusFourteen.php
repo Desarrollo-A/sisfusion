@@ -2,15 +2,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <body class="">
 <div class="wrapper ">
-    <?php
-    //se debe validar que tipo de perfil esta sesionado para poder asignarle el tipo de sidebar
-    if ($this->session->userdata('id_rol') == "17")//contratacion
-    {
-        $this->load->view('template/sidebar');
-    } else {
-        echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-    }
-    ?>
+    <?php $this->load->view('template/sidebar'); ?>
 
 
     <div class="content boxContent">

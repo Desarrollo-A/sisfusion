@@ -67,6 +67,7 @@ $(document).on('click', '.verPDFExtranjero', function () {
     });
 });
 
+// Apartado para la validación del codigo postal       
 function requestCodigoPostal(){
     $.ajax({
         url: general_base_url + 'Comisiones/consulta_codigo_postal',
@@ -93,6 +94,7 @@ function requestCodigoPostal(){
 }
 
 $(document).on("submit", "#cpForm", function (e) {
+    $('#spiner-loader').removeClass('hide');
     e.preventDefault();
     let cp = $('#cp').val();
     if (cp == '') {
@@ -116,9 +118,11 @@ $(document).on("submit", "#cpForm", function (e) {
         processData: false,
         type: 'POST',
         success: function (response) {
+            $('#spiner-loader').addClass('hide');
             alerts.showNotification("top", "right", "Se capturó tu código postal: " + cp + "", "success");
             $("#cpModal").modal("hide");
         }, error: function () {
+            $('#spiner-loader').addClass('hide');
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
@@ -146,7 +150,7 @@ $(document).ready(function () {
     ((mes == 5 && dia == 8) || (mes == 5 && dia == 9 && hora <= 13)) ||
     ((mes == 6 && dia == 12) || (mes == 6 && dia == 13 && hora <= 13)) ||
     ((mes == 7 && dia == 10) || (mes == 7 && dia == 11 && hora <= fin )) ||
-    ((mes == 8 && dia == 09) || (mes == 8 && dia == 10 && hora <= fin)) ||
+    ((mes == 8 && dia == 9) || (mes == 8 && dia == 10 && hora <= fin)) ||
     ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= fin)) ||
     ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= fin)) ||
     ((mes == 11 && dia == 13) || (mes == 11 && dia == 14 && hora <= fin)) ||
@@ -172,7 +176,8 @@ $('#proyecto_wp').change(function () {
             $("#condominio_wp").selectpicker('refresh');
         }, 'json');
     });
-    if (id_rol_general != 2 && id_rol_general != 3 && id_rol_general != 13 && id_rol_general != 32 && id_rol_general != 17) {
+    // SE MANDA LLAMAR FUNCTION QUE LLENA LA DATA TABLE DE COMISINONES SIN PAGO EN NEODATA
+    if (id_rol_general != 2 && id_rol_general != 3 && id_rol_general != 13 && id_rol_general != 32 && id_rol_general != 17) { // SÓLO MANDA LA PETICIÓN SINO ES SUBDIRECTOR O GERENTE
         fillCommissionTableWithoutPayment(index_proyecto, index_condominio);
     }
 });
@@ -180,6 +185,7 @@ $('#proyecto_wp').change(function () {
 $('#condominio_wp').change(function () {
     index_proyecto = $('#proyecto_wp').val();
     index_condominio = $(this).val();
+// SE MANDA LLAMAR FUNCTION QUE LLENA LA DATA TABLE DE COMISINONES SIN PAGO EN NEODATA
     fillCommissionTableWithoutPayment(index_proyecto, index_condominio);
 });
 
@@ -198,7 +204,10 @@ $("#tabla_nuevas_comisiones").ready(function () {
                 if (tabla_nuevas.column(i).search() !== this.value) {
                     tabla_nuevas.column(i).search(this.value).draw();
                     var total = 0;
-                    var index = tabla_nuevas.rows({selected: true, search: 'applied'}).indexes();
+                    var index = tabla_nuevas.rows({
+                        selected: true,
+                        search: 'applied'
+                    }).indexes();
                     var data = tabla_nuevas.rows(index).data();
                     $.each(data, function (i, v) {
                         total += parseFloat(v.pago_cliente);
@@ -219,9 +228,6 @@ $("#tabla_nuevas_comisiones").ready(function () {
         document.getElementById("myText_nuevas").textContent = '$' + to;
     });
     let boton_sol_pago = (forma_pago != 2) ? '' : 'hidden';
-    /*let boton_youtube = ([2, 3, 4, 5].includes(forma_pago) && [3, 7, 9].includes(id_rol_general))
-        ? ''
-        : 'hidden';*/
     tabla_nuevas = $("#tabla_nuevas_comisiones").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
@@ -260,7 +266,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     ((mes == 5 && dia == 8) || (mes == 5 && dia == 9 && hora <= 13)) ||
                     ((mes == 6 && dia == 12) || (mes == 6 && dia == 13 && hora <= 13)) ||
                     ((mes == 7 && dia == 10) || (mes == 7 && dia == 11 && hora <= fin)) ||
-                    ((mes == 8 && dia == 09) || (mes == 8 && dia == 10 && hora <= fin)) ||
+                    ((mes == 8 && dia == 9) || (mes == 8 && dia == 10 && hora <= fin)) ||
                     ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= fin)) ||
                     ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= fin)) ||
                     ((mes == 11 && dia == 13) || (mes == 11 && dia == 14 && hora <= fin)) ||
@@ -414,20 +420,20 @@ $("#tabla_nuevas_comisiones").ready(function () {
         {
             "data": function (d) {
                 switch (d.forma_pago) {
-                    case '1': 
-                    case 1: 
+                    case '1': //SIN DEFINIR
+                    case 1: //SIN DEFINIr
                         return `<p class="mb-1"><span class="label lbl-dark-blue">SIN DEFINIR FORMA DE PAGO</span></p>
                                 <p><span class="label lbl-green">REVISAR CON RH</span></p>`.split("\n").join("").split("  ").join("");
-                    case '2':
-                    case 2:
+                    case '2': //FACTURA
+                    case 2: //FACTURA
                         return `<p class="mb-1"><span class="label lbl-dark-blue">FACTURA</span></p>
                                 <p style="font-size: .5em"><span class="label lbl-green">SUBIR XML</span></p>`.split("\n").join("").split("  ").join("");
-                    case '3':
-                    case 3:
+                    case '3': //ASIMILADOS
+                    case 3: //ASIMILADOS
                         return `<p class="mb-1"><span class="label lbl-dark-blue" >ASIMILADOS</span></p>
                                 <p style="font-size: .5em"><span class="label lbl-green">LISTA PARA APROBAR</span></p>`.split("\n").join("").split("  ").join("");
-                    case '4':
-                    case 4:
+                    case '4': //RD
+                    case 4: //RD
                         return `<p class="mb-1"><span class="label lbl-dark-blue">REMANENTE DIST.</span></p>
                                 <p style="font-size: .5em"><span class="label lbl-green">LISTA PARA APROBAR</span><</p>`.split("\n").join("").split("  ").join("");
                     case '5':

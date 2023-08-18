@@ -191,7 +191,7 @@ class Reporte_model extends CI_Model {
                 else // SE CONSULTA DESDE LA TABLA PAPÁ
                     $filtro .= " AND (cl.id_asesor = $id_usuario OR cl.id_coordinador = $id_usuario)";
             }
-            else{
+            else {
                 if ($typeTransaction == null) // SE CONSULTA DESDE EL ROWDETAIL O LA MODAL QUE SE TRAE EL DETALLE DE LOS LOTES
                     if ($leadersList[4] == 0) // NO TIENE REGIONAL NI SUBDIRECTOR
                         $filtro .= " AND cl.id_asesor = $leadersList[0] AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2]";
@@ -200,12 +200,12 @@ class Reporte_model extends CI_Model {
                 else { // SE CONSULTA DESDE LA TABLA PAPÁ
                     if ($leadersList[4] == 0) { // NO TIENE REGIONAL 
                         if ($leadersList[3] == 0) // NO TIENE SUBDIRECTPR
-                            $filtro .= " AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = 0 AND cl.id_regional = 0";
+                            $filtro .= " AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2]";
                         else if ($leadersList[3] != 0) // SÍ TIENE SUBDIRECTPR
-                            $filtro .= " AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = 0";
+                            $filtro .= " AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3]";
                     }
                     else // ESTE SÍ TIENE SUBDIRECTOR
-                        $filtro .= " AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3]";
+                        $filtro .= " AND cl.id_coordinador = $leadersList[1] AND cl.id_gerente = $leadersList[2] AND cl.id_subdirector = $leadersList[3] AND cl.id_regional = $leadersList[4]";
                 }
             }
             $comodin = "id_asesor";
@@ -883,8 +883,9 @@ class Reporte_model extends CI_Model {
     }
     
     public function getReporteTrimestral($beginDate, $endDate){
+        
         $query=$this->db->query("SELECT t.nombreResidencial as nombreResidencial, t.nombreCondominio as nombreCondominio, t.nombreLote as nombreLote, t.precioFinal as precioFinal, t.referencia as referencia,
-        t.nombreAsesor as nombreAsesor, t.fechaApartado as fechaApartado, t.nombreSede as nombreSede, t.tipo_venta as tipo_venta, t.fechaEstatus9 as fechaEstatus9
+        t.nombreAsesor as nombreAsesor, CONVERT(VARCHAR,t.fechaApartado,20) AS fechaApartado, t.nombreSede as nombreSede, t.tipo_venta as tipo_venta, CONVERT(VARCHAR,t.fechaEstatus9,20) AS fechaEstatus9
         FROM (
             SELECT re.descripcion nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote,
             lo.idLote, FORMAT(lo.totalNeto2, 'C') precioFinal, lo.referencia, 
@@ -1019,7 +1020,7 @@ class Reporte_model extends CI_Model {
         FROM lotes lo
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio AND co.status = 1
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial AND re.status = 1
-        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote  AND cl.status = 1 AND YEAR(cl.fechaApartado) = 2022
+        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote  AND cl.status = 1 
         INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE status = 1 GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
         INNER JOIN historial_lotes hl2 ON hl2.idLote = lo.idLote AND hl2.idCliente = cl.id_cliente AND hl2.modificado = hl.modificado AND hl2.status = 1
         INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = hl2.idStatusContratacion
@@ -1037,7 +1038,7 @@ class Reporte_model extends CI_Model {
         FROM lotes lo
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio AND co.status = 1
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial AND re.status = 1
-        INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 0 AND YEAR(cl.fechaApartado) = 2022 AND isNULL(cl.noRecibo, '') != 'CANCELADO'
+        INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 0 AND isNULL(cl.noRecibo, '') != 'CANCELADO'
         INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE status = 0 GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
         INNER JOIN historial_lotes hl2 ON hl2.idLote = lo.idLote AND hl2.idCliente = cl.id_cliente AND hl2.modificado = hl.modificado AND hl2.status = 0
         INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = hl2.idStatusContratacion

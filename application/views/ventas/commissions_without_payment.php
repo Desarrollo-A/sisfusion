@@ -2,14 +2,7 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
     <div class="wrapper">
-        <?php
-            if (in_array($this->session->userdata('id_rol'), array(13,17,32,11,70))){
-                $this->load->view('template/sidebar');
-            }
-            else{
-                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-            }
-        ?>
+        <?php $this->load->view('template/sidebar'); ?>
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -27,16 +20,16 @@
                                     <div class="container-fluid p-0">
                                         <div class="row">
                                             <div class="col-12 col-sm-6 col-md-6 col-lg-6">
-                                                <div class="form-group">
+                                                <div class="form-group overflow-hidden">
                                                     <label class="control-label" for="proyecto">Proyecto</label>
-                                                    <select name="proyecto" id="proyecto" class="selectpicker select-gral" data-style="btn btn-second"data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required>
+                                                    <select name="proyecto" id="proyecto" class="selectpicker select-gral" data-style="btn btn-second"data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-6 col-md-6 col-lg-6">
-                                                <div class="form-group">
+                                                <div class="form-group overflow-hidden">
                                                     <label class="control-label" for="condominio">Condominio</label>
-                                                    <select name="condominio" id="condominio" class="selectpicker select-gral" data-style="btn btn-second"data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required>
+                                                    <select name="condominio" id="condominio" class="selectpicker select-gral" data-style="btn btn-second"data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" data-container="body" required>
                                                     </select>
                                                 </div>
                                             </div>

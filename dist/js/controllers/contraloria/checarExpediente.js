@@ -1,4 +1,3 @@
-
 var sedes,tipos_venta;
 $(document).ready(function(){ /**FUNCIÓN PARA LLENAR EL SELECT DE PROYECTOS(RESIDENCIALES)*/
     $.post(`${general_base_url}General/getResidencialesList`, function (data) {        
@@ -14,14 +13,12 @@ $(document).ready(function(){ /**FUNCIÓN PARA LLENAR EL SELECT DE PROYECTOS(RES
         $("#residencial").selectpicker('refresh');
         $('#spiner-loader').addClass('hide');
     }, 'json'); 
-
             $.post("get_tventa", function (data) {
                 tipos_venta = data;
             }, 'json');
             $.post("get_sede", function (data) {
                 sedes = data;
             }, 'json');
-
 });
 
 $('#residencial').change(function(){
@@ -45,7 +42,6 @@ $('#residencial').change(function(){
 $('#condominio').change(function(){
     var condominio = $(this).val();
     $("#lotes").empty().selectpicker('refresh');
-   // $("#lotes").selectpicker('refresh');
     $.post(`${general_base_url}General/getLotesList`,{idCondominio:condominio,typeTransaction:0}, function (data) {  
             data = JSON.parse(data);
             let len = data.length;
@@ -74,20 +70,17 @@ function llenarClientes(idLote){
                     data = JSON.parse(data);
                     datosTable = data;
                     let datosSelect = data.data;
-                   // let len = datosSelect.length;
-                    console.log(datosSelect)
-
                     $('#spiner-loader').addClass('hide');  
         },
         async:   false
-   }); 
+    }); 
     construirTableClient('','',datosTable);
 }
+
 $('#lotes').change(function(){
     var lote = $(this).val();
     llenarClientes(lote);
 });
-
 
 let titulos = [];
 $('#tableClient thead tr:eq(0) th').each(function (i) {
@@ -104,6 +97,7 @@ $('#tableClient thead tr:eq(0) th').each(function (i) {
         });
     $('[data-toggle="tooltip"]').tooltip();
 });
+
 function construirTableClient(idCliente = '',idLote = '',datos = ''){
     let opcionConsulta = 'getClientsByLote'
     tableClient = $("#tableClient").DataTable({
@@ -118,7 +112,7 @@ function construirTableClient(idCliente = '',idLote = '',datos = ''){
             titleAttr: 'Descargar archivo de Excel',
             title: 'AUTORIZACIONES PLANES DE VENTAS',
             exportOptions: {
-                columns: [0,1,2,3,4,5,7,8,9,10,11,12,13,14,15,16,17,18,19],
+                columns: [0,1,2,3,4,5,7,8,9,10,11,12,13,14,15,16,17,18,19], //Falta el 6
                 format: {
                     header:  function (d, columnIdx) {
                         return titulos[columnIdx];
@@ -140,111 +134,92 @@ function construirTableClient(idCliente = '',idLote = '',datos = ''){
         ordering: false,
         columns: [
             {
-                "width": "8%",
                 "data": function( d ){
                     return '<p style="font-size: .8em">'+d.nombreResidencial+'</p>';
                 }
             },
-
             {
-                "width": "8%",
                 "data": function( d ){
                     return '<p style="font-size: .8em">'+d.nombreCondominio+'</p>';
                 }
             },
             {
-                "width": "12%",
                 "data": function( d ){
                     return '<p style="font-size: .8em">'+d.idLote+'</p>';
                 }
             },
             {
-                "width": "10%",
                 "data": function( d ){
                     return '<p style="font-size: .8em">'+d.nombreLote+'</p>';
                 }
             },
             {
-                "width": "10%",
                 "data": function( d ){
                     return '<p style="font-size: .8em">'+d.nombreStatus+'</p>';
                 } 
             },
             {
-                "width": "10%",
                 "data": function( d ){
                     return '<p style="font-size: .8em">$'+formatMoney(d.totalNeto)+'</p>';
                 } 
             },
             {
-                "width": "10%",
                 "data": function( d ){
                     return '<p style="font-size: .8em">$'+formatMoney(d.totalNeto2)+'</p>';
                 } 
             },
             {
-                "width": "10%",
                 "data": function( d ){
                     return '<p style="font-size: .8em">$'+formatMoney(d.totalValidado)+'</p>';
                 } 
             },
             {
-                "width": "10%",
                 "data": function( d ){
                     return '<p style="font-size: .8em">'+d.bandera8+'</p>';
                 } 
             },
             {
-                "width": "10%",
                 "data": function( d ){
                     return '<p style="font-size: .8em">'+d.validacionEng+'</p>';
                 } 
             },
             {
-                "width": "10%",
                 "data": function( d ){
                     return '<p style="font-size: .8em">'+d.tventa+'</p>';
                 }
             },
             {
-                "width": "10%",
                 "data": function( d ){
                     return '<p style="font-size: .8em">'+d.registroComision+'</p>';
                 }
             },
             {
-                "width": "10%",
                 "data": function( d ){
                     return '<p style="font-size: .8em">'+d.gerente+'</p>';
                 }
             },
             {
-                "width": "10%",
                 "data": function( d ){
                     return '<p style="font-size: .8em">'+d.coordinador+'</p>';
                 }
             },
             {
-                "width": "10%",
                 "data": function( d ){
                     return '<p style="font-size: .8em">'+d.asesor+'</p>';
                 }
             },
             {
-                "width": "10%",
                 "data": function( d ){
                     return '<p style="font-size: .8em">'+d.nomCliente+'</p>';
                 }
             },
             {
-                "width": "10%",
                 "data": function( d ){
                     let fechaApartado = moment(d.fechaApartado.split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss')
                     return '<p style="font-size: .8em">'+fechaApartado+'</p>';
                 }
             },
             {
-                "width": "10%",
                 "data": function( d ){
                     let lblStatus='';
                     if(d.estatus_cliente == 1){
@@ -256,31 +231,26 @@ function construirTableClient(idCliente = '',idLote = '',datos = ''){
                 }
             },
             {
-                "width": "10%",
                 "data": function( d ){
                     return '<span class="label lbl-blueMaderas">'+d.estatus_lote+'</span>';
                 }
             },
             {
-                "width": "10%",
                 "data": function( d ){
                     return '<p style="font-size: .8em">'+d.lp+'</p>';
                 }
             },
             {
-                "width": "10%",
                 data: null,
-                render: function ( data, type, row )
+                render: function ( data )
                 {
                     let tipoVenta = data.tipo_ventaId == 0 || data.tipo_ventaId == null ? 0 : data.tipo_ventaId;
                     let ubicacion = data.ubicacion == 0 || data.ubicacion == null ? 0 : data.ubicacion;
                     let button_action='';
                     if(data.estatus_cliente==0){
-                        
                         button_action = data.hlidStatus < 5 ? `<center><a class="backButton btn-data btn-warning" data-accion="3" data-toggle="tooltip" data-placement="top" title= "Regresar expediente" style="cursor:pointer;" data-tipoVenta="${tipoVenta}" data-idLote="${data.idLote}" data-nomLote="${data.nombreLote}" data-nombreCliente="${data.nomCliente}" data-idCliente="${data.id_cliente}"><i class="fas fa-history"></i></a></center>` : 
                         `<center><button class="editButton btn-data btn-warning" data-toggle="tooltip" data-placement="top" title= "Regresar expediente" data-tipoVenta="${tipoVenta}" data-ubicacion="${ubicacion}" data-accion="1" style="cursor:pointer;" data-idStatusConstruccion="${data.hlidStatus}" data-idLote="${data.idLote}" data-nomLote="${data.nombreLote}" data-nombreCliente="${data.nomCliente}" data-idCliente="${data.id_cliente}"><i class="fas fa-history"></i></button></center>`;
                     }else{
-
                         if(data.hlidStatus >= 5){
                             button_action = `<center><button class="editButton btn-data btn-sky" data-tipoVenta="${tipoVenta}" data-ubicacion="${ubicacion}" data-accion="2" data-toggle="tooltip" data-placement="top" title= "Regresar expediente" style="cursor:pointer;" data-idStatusConstruccion="${data.hlidStatus}" data-idLote="${data.idLote}" data-nomLote="${data.nombreLote}" data-nombreCliente="${data.nomCliente}" data-idCliente="${data.id_cliente}"><i class="fas fa-edit"></i></button></center>`;
                         }
@@ -295,9 +265,7 @@ function construirTableClient(idCliente = '',idLote = '',datos = ''){
             [1, 'asc']
         ]
     });
-
 }
-
 
 const permisosEstatus = [
     {
@@ -309,13 +277,11 @@ const permisosEstatus = [
         idStatusContratacion : [8,11],
         campos: ['totalValidado','totalNeto','totalNeto2','comentario','ubicacion','tipo_venta'],
         title: ['Total validado (Enganche Administración)','Total Neto (Enganche contraloría)','Precio final con descuento','Comentario','Ubicación' ,'Tipo venta']
-
     },
     {
         idStatusContratacion : [9,10,12,13,14,15], // idStatusContratacion >= 11
         campos:  ['totalValidado','totalNeto','totalNeto2','comentario','ubicacion','tipo_venta'],          
         title: ['Total validado (Enganche Administración)','Total Neto (Enganche contraloría)','Precio final con descuento','Comentario','Ubicación' ,'Tipo venta']
-
     },
 ];
 
@@ -326,7 +292,6 @@ $(document).on('click', '.editButton', function(){
     let accion = $itself.attr('data-accion');
     let tipoVenta = $itself.attr('data-tipoVenta');
     let ubicacion = $itself.attr('data-ubicacion');
-    
     $('#idCliente').val(datosPorTr.id_cliente);
     $('#accion').val(accion);
     let idStatusConstrataccion = $itself.attr('data-idStatusConstruccion');
@@ -340,24 +305,26 @@ $(document).on('click', '.editButton', function(){
             if(permisos[0].campos[m] == 'comentario'){
                 $('#camposEditar').append(`
                     <div class="form-group m-0">
-                        <label>${permisos[0].title[m]}</label>
+                        <label class="control-label">${permisos[0].title[m]}</label>
                             <textarea class="text-modal" rows="1" required name="${permisos[0].campos[m]}" id="${permisos[0].campos[m]}"></textarea>
                     </div>`);
-            }else if(permisos[0].campos[m] == 'ubicacion' || permisos[0].campos[m] == 'tipo_venta'){
+            }
+            else if(permisos[0].campos[m] == 'ubicacion' || permisos[0].campos[m] == 'tipo_venta'){
                 $('#camposEditar').append(`
                     <div class="col-lg-12">
                     <div class="form-group m-0 overflow-hidden">
-                    <label>${permisos[0].title[m]}</label>
+                    <label class="control-label">${permisos[0].title[m]}</label>
                     <select class="selectpicker select-gral" data-container="body" tabindex="-1" required="required" title="SELECCIONA UNA OPCIÓN" name="${permisos[0].campos[m]}" id="${permisos[0].campos[m]}">
                     </select>
                 </div>
                     </div>    
                 `);
-            }else{
-               let columna = permisos[0].campos[m] == 'totalNeto' ? datosPorTr.totalNeto :(permisos[0].campos[m] == 'totalNeto2' ? datosPorTr.totalNeto2 : datosPorTr.totalValidado) ;
+            }
+            else{
+                let columna = permisos[0].campos[m] == 'totalNeto' ? datosPorTr.totalNeto :(permisos[0].campos[m] == 'totalNeto2' ? datosPorTr.totalNeto2 : datosPorTr.totalValidado) ;
                 $('#camposEditar').append(`
                     <div class="form-group m-0">
-                        <label>${permisos[0].title[m]}</label>
+                        <label class="control-label">${permisos[0].title[m]}</label>
                         <input class="form-control input-gral" type="text" required value="$${formatMoney(columna)}" name="${permisos[0].campos[m]}" id="${permisos[0].campos[m]}">
                     </div>`);
             }                        
@@ -422,7 +389,6 @@ function RegresarExpo(datos){
         async:   false,
         error: function() {
             $('#modalConfirmRegExp').modal('hide');
-    
             $('#spiner-loader').addClass('hide');
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }

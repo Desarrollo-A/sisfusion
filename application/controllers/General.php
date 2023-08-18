@@ -93,7 +93,10 @@ class General extends CI_Controller
         else
             echo json_encode(array());
     }
-
+    public function borrarFlashdata()
+    {
+        $this->session->set_flashdata('error_usuario', '');
+    }
     public function getOfficeAddressesAll(){
         $data = $this->General_model->getOfficeAddressesAll()->result_array();
 

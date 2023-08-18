@@ -2,15 +2,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <body>
     <div class="wrapper">
-        <?php
-        if($this->session->userdata('id_rol')=="31"){
-            //sistemas 
-            $this->load->view('template/sidebar');
-        }
-        else{
-            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
-        }
-        ?>
+        <?php $this->load->view('template/sidebar'); ?>
 
         <!-- Modals -->
         <div class="modal fade modal-alertas" id="modal_users" role="dialog">

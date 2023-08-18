@@ -19,7 +19,6 @@ $("#form_bonos").on('submit', function(e) {
         cache: false,
         processData: false,
         success: function(data) {
-            console.log(data);
             if (data == 1) {
                 $('#miModal').modal('hide');
                 alerts.showNotification("top", "right", "Abono registrado con exito.", "success");
@@ -1052,18 +1051,14 @@ $("#form_abono").on('submit', function(e) {
         processData: false,
         contentType: false,
         success: function(data) {
-            console.log(data);
             if (data == 1) {
                 $('#tabla_nuevos').DataTable().ajax.reload(null, false);
                 $('#tabla_bono_revision').DataTable().ajax.reload(null, false);
-                
                 tabla_nuevas.ajax.reload();
                 tabla_nuevas2.ajax.reload();
                 closeModalEng();
-
                 alerts.showNotification("top", "right", "Abono autorizado con éxito.", "success");                    
                 document.getElementById("form_abono").reset();
-
             } else if (data == 2) {
                 $('#tabla_nuevos').DataTable().ajax.reload(null, false);
                 $('#tabla_bono_revision').DataTable().ajax.reload(null, false);
