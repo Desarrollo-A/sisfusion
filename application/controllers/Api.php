@@ -416,9 +416,9 @@ class Api extends CI_Controller
                     }
                     if(!empty($checkSingup) && json_decode($checkSingup)->status == 200) {
                         $year = date('Y');
-                        $month = date('n') - 1;
+                        $month = date('n');
                         $year = $month == 1 ? $year -1 : $year;
-                        $dbTransaction = $this->Internomex_model->getInformacionContratos($rows_number, $year, $month);
+                        $dbTransaction = $this->Internomex_model->getInformacionContratos($rows_number, $year, $month - 1);
                         $data2 = array();
                         for ($i = 0; $i < COUNT($dbTransaction); $i++) {
                             $data2[$i]['cliente']['tipo_persona'] = $dbTransaction[$i]['tipo_persona'];
