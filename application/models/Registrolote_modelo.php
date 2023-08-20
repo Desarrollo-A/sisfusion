@@ -1154,11 +1154,18 @@
 			$lider = "AND ge.id_usuario = $id_usuario";
 		else if ($id_rol == 6) // ASISTENTE DE GERENTE
 			$lider = "AND ge.id_usuario = $id_lider";
-		else if($id_rol == 2 || $id_rol == 53) // DIRECCIÓN REGIONAL || SUDDIRECCIÓN
-			$lider = "AND cl.id_subdirector = $id_usuario";
-		else if($id_rol == 5) // ASISTENTES DIRECCIÓN REGIONAL || ASISTENTES DE SUBDIRECCIÓN
-			$lider = "AND cl.id_subdirector = $id_lider";
-		
+		else if(in_array($id_rol, array(2, 53))) { // DIRECCIÓN REGIONAL || SUDDIRECCIÓN
+			if(in_array($id_usuario, array(3))) // JESÚS TORRE
+				$lider = "AND (cl.id_subdirector = $id_usuario OR cl.id_regional = $id_usuario OR cl.id_regional_2 = $id_usuario)";
+			else
+				$lider = "AND cl.id_subdirector = $id_usuario";
+		}
+		else if($id_rol == 5) { // ASISTENTES DIRECCIÓN REGIONAL || ASISTENTES DE SUBDIRECCIÓN
+			if(in_array($id_usuario, array(28))) // ADRIANA RODRIGUEZ
+				$lider = "AND (cl.id_subdirector = $id_lider OR cl.id_regional = $id_lider OR cl.id_regional_2 = $id_lider)";
+			else
+				$lider = "AND cl.id_subdirector = $id_lider";
+		}
 		$query = $this->db->query("SELECT idHistorialLote, hd.nombreLote, hd.idStatusContratacion, hd.idMovimiento, CONVERT(VARCHAR,hd.modificado,120) AS modificado, hd.fechaVenc, lotes.idLote, 
 		CAST(lotes.comentario AS varchar(MAX)) as comentario, hd.status, lotes.totalNeto, totalValidado, lotes.totalNeto2, 
 		concat(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_paterno) as asesor, concat(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_paterno) as gerente 
@@ -3238,21 +3245,26 @@
 	// filtro de lote por condominios y residencial DOCUMENTACION ASESOR INICIO
     public function getLotesAsesor($condominio,$residencial){
         $where_sede='';
+		$id_usuario = $this->session->userdata('id_usuario');
         switch ($this->session->userdata('id_rol')) {
 			case '2':
 				$sede =  $this->session->userdata('id_sede');
+				if ($id_usuario == 3) // MJ: JESUS TORRE VERÁ LO DE QUERÉTARO, CDMX, EDOMEXO, EDOMEXP Y PUEBLA
+					$where = "id_rol = 3 AND id_sede IN ('2', '4', '13', '14', '15')";
+				else
+					$where = "id_rol = 3 AND id_sede IN ($sede) and id_lider = $id_usuario";
                 $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor, '1' venta_compartida  FROM lotes
-                INNER JOIN clientes ON clientes.idLote = lotes.idLote WHERE clientes.id_gerente IN (SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN (".$sede.") and id_lider = ".$this->session->userdata('id_usuario').") 
+                INNER JOIN clientes ON clientes.idLote = lotes.idLote WHERE clientes.id_gerente IN (SELECT id_usuario FROM usuarios WHERE $where) 
                 AND lotes.status = 1 AND clientes.status = 1 AND lotes.idCondominio = $condominio
                 UNION ALL
                 SELECT lotes.idLote, nombreLote, idStatusLote, vc.id_asesor, '2' venta_compartida FROM lotes
                 INNER JOIN clientes ON clientes.idLote = lotes.idLote 
                 INNER JOIN ventas_compartidas vc ON vc.id_cliente = clientes.id_cliente
-                WHERE vc.id_gerente IN (SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN (".$sede.") and id_lider = ".$this->session->userdata('id_usuario').")  AND vc.estatus = 1 AND 
-                clientes.status = 1 AND lotes.status = 1 AND lotes.idCondominio = $condominio 
+                WHERE vc.id_gerente IN (SELECT id_usuario FROM usuarios WHERE $where)  AND vc.estatus = 1 AND 
+                clientes.status = 1 AND lotes.status = 1 AND lotes.idCondominio = $condominio
 				UNION ALL
 				SELECT lotes.idLote, nombreLote, idStatusLote, cl.id_asesor, '1' venta_compartida FROM lotes
-				INNER JOIN clientes cl ON cl.idLote = lotes.idLote AND cl.id_asesor = ".$this->session->userdata('id_usuario')." AND cl.id_coordinador IN (10806, 10807) AND cl.id_gerente IN (10806, 10807) AND cl.status = 1
+				INNER JOIN clientes cl ON cl.idLote = lotes.idLote AND cl.id_asesor = $id_usuario AND cl.id_coordinador IN (10806, 10807) AND cl.id_gerente IN (10806, 10807) AND cl.status = 1
 				WHERE lotes.status = 1 AND lotes.idCondominio = $condominio
 				ORDER BY lotes.idLote");
 				break;
@@ -3288,6 +3300,10 @@
 				else if (in_array($id_usuario, array(7096, 7097, 10924, 7324, 5620, 13094))) { // MJ: EDGAR, GRISELL Y DALIA VERÁN LO DE CDMX, SMA, EDOMEXO Y EDOMEXP
 					$where_sede = 'AND clientes.id_sede IN(4, 9, 13, 14)';
 					$where = "(SELECT id_usuario FROM usuarios WHERE (id_rol = 3 AND id_sede IN ('$id_sede', '9', '13', '14')) OR id_usuario IN (7092, 690))";
+				}
+				else if (in_array($id_usuario, array(28))) { // MJ: ADRINA RODRIGUEZ VERÁN LO DE CDMX, SMA, EDOMEXO Y EDOMEXP
+					$where_sede = 'AND clientes.id_sede IN (2, 4, 13, 14, 15)';
+					$where = "(SELECT id_usuario FROM usuarios WHERE (id_rol = 3 AND id_sede IN ('$id_sede', '4', '13', '14', '15')))";
 				}
 				else if ($id_usuario == 29 || $id_usuario == 7934) // MJ: FERNANDA MONJARAZ VE CINTHYA TANDAZO
 					$where = "(SELECT id_usuario FROM usuarios WHERE (id_rol = 3 AND id_sede IN ('$id_sede', '12')) OR id_usuario = 666)";
