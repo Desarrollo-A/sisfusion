@@ -1410,7 +1410,7 @@ function getStatusMktdPreventa(){
         switch ($this->session->userdata('id_rol')) {
             case '19': // SUBDIRECTOR MKTD
                 $query = $this->db->query(
-                    "SELECT c.id_prospecto, c.vigencia, c.tipo, c.telefono, c.telefono_2,
+                    "SELECT c.id_prospecto, c.vigencia, c.tipo, c.telefono, c.telefono_2, 
                     CONVERT(VARCHAR, c.fecha_vencimiento, 20) AS fecha_vencimiento,
                     CONVERT(VARCHAR, c.fecha_creacion, 20) AS fecha_creacion,
                     UPPER(CONCAT (c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno)) nombre,

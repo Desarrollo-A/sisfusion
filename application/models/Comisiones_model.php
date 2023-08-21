@@ -2368,26 +2368,21 @@ function getDatosRevisionFactura($proyecto,$condominio){
         return $this->db->query("UPDATE pago_comision_ind SET estatus = 4,modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$idcom.")");
     } 
 
-     public function InsertPagoComision($lote,$sumaComi,$sumaDispo,$porcentaje,$resta,$id_user,$pagado,$bonificacion){
+    public function InsertPagoComision($lote,$sumaComi,$sumaDispo,$porcentaje,$resta,$id_user,$pagado,$bonificacion){
 
         $QUERY_VOBO =  $this->db->query("SELECT id_pagoc FROM pago_comision WHERE id_lote = ".$lote."");
 
-
-        if( $QUERY_VOBO->num_rows() > 0 ){
-            $respuesta =  $this->db->query("UPDATE pago_comision SET total_comision = ".$sumaComi.", abonado = ".$sumaDispo.", porcentaje_abono = ".$porcentaje.", pendiente = ".$resta.", creado_por = ".$id_user.", fecha_modificacion = GETDATE(), ultimo_pago = ".$pagado.", bonificacion = ".$bonificacion.", ultima_dispersion = GETDATE(), numero_dispersion = (numero_dispersion +1) WHERE id_lote = ".$lote."");
+        if($QUERY_VOBO->num_rows() > 0){
+            $respuesta =  $this->db->query("UPDATE pago_comision SET total_comision = $sumaComi, abonado = $sumaDispo, porcentaje_abono = $porcentaje, pendiente = $resta, creado_por = $id_user, fecha_modificacion = GETDATE(), ultimo_pago = $pagado, bonificacion = $bonificacion, ultima_dispersion = GETDATE(), numero_dispersion = (numero_dispersion+1) WHERE id_lote = $lote");
+        } else{
+            $respuesta =  $this->db->query("INSERT INTO pago_comision ([id_lote],[total_comision],[abonado],[porcentaje_abono],[pendiente],[creado_por],[fecha_modificacion],[fecha_abono],[bandera],[ultimo_pago],[bonificacion],[fecha_neodata],[modificado_por],[new_neo],[ultima_dispersion],[numero_dispersion],[monto_anticipo]) VALUES ($lote,$sumaComi,$sumaDispo,$porcentaje,$resta,$id_user,GETDATE(),GETDATE(),1,$pagado,$bonificacion,null,null,null,GETDATE(),1,$sumaDispo)");
         }
-        else{        
-            $respuesta =  $this->db->query("INSERT INTO pago_comision ([id_lote], [total_comision], [abonado], [porcentaje_abono], [pendiente], [creado_por], [fecha_modificacion], [fecha_abono],[bandera],[ultimo_pago],[bonificacion],[fecha_neodata],[modificado_por],[new_neo],[ultima_dispersion], [numero_dispersion]) VALUES (".$lote.", ".$sumaComi.", ".$sumaDispo.",".$porcentaje.",".$resta.",".$id_user.", GETDATE(), GETDATE(),1,".$pagado.",".$bonificacion.", null, null, null, GETDATE() , 1)");
 
+        if (! $respuesta ) {
+        return 0;
+        } else {
+        return 1;
         }
-    if (! $respuesta ) {
-    return 0;
-    } else {
-    return 1;
-    }
-
-
-
 }
 
 public function UpdateLoteLiquidar($lote){
@@ -2554,7 +2549,7 @@ public function getDataLiquidadasPago($val = '') {
     LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision
     LEFT JOIN sedes se ON se.id_sede = cl.id_sede 
     WHERE l.idStatusContratacion BETWEEN 11 AND 15 AND cl.status = 1 AND l.status = 1
-    AND l.registro_comision in (7) AND tipo_venta IS NOT NULL AND tipo_venta IN (1,2,7)
+    AND l.registro_comision in (7) AND tipo_venta IS NOT NULL AND tipo_venta IN (7)
     ORDER BY l.idLote");
         return $query ;
     }
@@ -3993,7 +3988,7 @@ return 1;
         FROM historial_bonos hc 
         INNER JOIN pagos_bonos_ind pci ON pci.id_pago_bono = hc.id_pago_b
         INNER JOIN usuarios u ON u.id_usuario = hc.id_usuario 
-        WHERE hc.id_pago_b = 3
+        WHERE hc.id_pago_b = $pago
         ORDER BY hc.fecha_creacion DESC");
         }
 
@@ -5663,16 +5658,20 @@ SELECT 7 AS idEstatus, 'PAGADAS' as nombre ");
     public function InsertNeo($idLote, $id_usuario, $TotComision,$user, $porcentaje,$abono,$pago,$rol,$idCliente,$tipo_venta){
     
     if($porcentaje != 0 && $porcentaje != ''){
-        $this->db->query("INSERT INTO comisiones ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [evidencia], [factura], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado],[idCliente],[modificado_por]) VALUES (".$idLote.", ".$id_usuario.", ".$TotComision.", 1, 'NUEVA DISPERSIÓN - $tipo_venta ', NULL, NULL, ".$user.", GETDATE(), ".$porcentaje.", GETDATE(), ".$rol.",".$idCliente.",'".$this->session->userdata('id_usuario')."')");
+        $respuesta =  $this->db->query("INSERT INTO comisiones ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [evidencia], [factura], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado],[idCliente],[modificado_por]) VALUES (".$idLote.", ".$id_usuario.", ".$TotComision.", 1, 'NUEVA DISPERSIÓN - $tipo_venta ', NULL, NULL, ".$user.", GETDATE(), ".$porcentaje.", GETDATE(), ".$rol.",".$idCliente.",'".$this->session->userdata('id_usuario')."')");
         $insert_id = $this->db->insert_id();
 
-
-        
-        $this->db->query("INSERT INTO pago_comision_ind (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, estatus, pago_neodata, creado_por, comentario, modificado_por) VALUES (".$insert_id.", ".$id_usuario.", ".$abono.", GETDATE(), GETDATE(), 1 , ".$pago.",'$user', 'PAGO 1 - NEDOATA', '$user')");
+        $respuesta = $this->db->query("INSERT INTO pago_comision_ind (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, estatus, pago_neodata, creado_por, comentario, modificado_por) VALUES (".$insert_id.", ".$id_usuario.", ".$abono.", GETDATE(), GETDATE(), 1 , ".$pago.",'$user', 'PAGO 1 - NEDOATA', '$user')");
         
         $insert_id_2 = $this->db->insert_id();
-        $this->db->query("INSERT INTO  historial_comisiones VALUES ($insert_id_2, ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'DISPERSÓ PAGO DE COMISIÓN')");
+        $respuesta = $this->db->query("INSERT INTO  historial_comisiones VALUES ($insert_id_2, ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'DISPERSÓ PAGO DE COMISIÓN')");
             }
+
+            if (! $respuesta ) {
+                return 0;
+                } else {
+                return 1;
+                }
         }
 
         public function InsertNeoPenalizacion($idLote, $id_usuario, $TotComision,$user,$porcentaje,$abono,$pago,$rol,$idCliente,$tipo_venta, $nombreLote){
@@ -5691,10 +5690,7 @@ SELECT 7 AS idEstatus, 'PAGADAS' as nombre ");
                     }
                 }
 
-            $evaluarPorcentajes =  $this->db->query("SELECT pe.id_penalizacion, pe.dias_atraso, (pp.asesor*lo.totalNeto2*0.01) asesor, (pp.coordinador*lo.totalNeto2*0.01) coordinador, (pp.gerente*lo.totalNeto2*0.01) gerente, pp.asesor as pAse, pp.coordinador as pCoo, pp.gerente as pGer FROM penalizaciones pe
-            $stringInner
-            INNER JOIN lotes lo ON lo.idLote = pe.id_lote AND lo.idCliente = pe.id_cliente
-            WHERE pe.id_lote = $idLote and pe.id_cliente = $idCliente");
+            $evaluarPorcentajes =  $this->db->query("SELECT pe.id_penalizacion, pe.dias_atraso, (pp.asesor*lo.totalNeto2*0.01) asesor, (pp.coordinador*lo.totalNeto2*0.01) coordinador, (pp.gerente*lo.totalNeto2*0.01) gerente, pp.asesor as pAse, pp.coordinador as pCoo, pp.gerente as pGer FROM penalizaciones pe $stringInner INNER JOIN lotes lo ON lo.idLote = pe.id_lote AND lo.idCliente = pe.id_cliente WHERE pe.id_lote = $idLote and pe.id_cliente = $idCliente");
 
             if($rol == 3){
                 $montoPenalizar = ($evaluarPorcentajes->row()->gerente); 
@@ -5720,33 +5716,33 @@ SELECT 7 AS idEstatus, 'PAGADAS' as nombre ");
                 $abonoNormal = 0;
                 $abonoPenalizacion = $abono;
                 $estatusPrestamo = 1;
-
             }
 
-                $this->db->query("INSERT INTO comisiones ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [evidencia], [factura], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado],[idCliente],[modificado_por]) VALUES (".$idLote.", ".$id_usuario.", ".$TotComision.", 1, 'NUEVA DISPERSIÓN - $tipo_venta ', NULL, NULL, ".$user.", GETDATE(), ".$porcentaje.", GETDATE(), ".$rol.",".$idCliente.",'".$this->session->userdata('id_usuario')."')");
-                $insert_id = $this->db->insert_id();
+            $respuesta = $this->db->query("INSERT INTO comisiones ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [evidencia], [factura], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado],[idCliente],[modificado_por]) VALUES (".$idLote.", ".$id_usuario.", ".$TotComision.", 1, 'NUEVA DISPERSIÓN - $tipo_venta ', NULL, NULL, ".$user.", GETDATE(), ".$porcentaje.", GETDATE(), ".$rol.",".$idCliente.",'".$this->session->userdata('id_usuario')."')");
+            $insert_id = $this->db->insert_id();
                 
-                $this->db->query("INSERT INTO pago_comision_ind (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, estatus, pago_neodata, creado_por, comentario, modificado_por, descuento_aplicado ) VALUES (".$insert_id.", ".$id_usuario.", ".$abonoNormal.", GETDATE(), GETDATE(), 1 , ".$pago.",'$user', 'PAGO 1 - NEDOATA', '$user',0) ");
+            $respuesta = $this->db->query("INSERT INTO pago_comision_ind (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, estatus, pago_neodata, creado_por, comentario, modificado_por, descuento_aplicado ) VALUES (".$insert_id.", ".$id_usuario.", ".$abonoNormal.", GETDATE(), GETDATE(), 1 , ".$pago.",'$user', 'PAGO 1 - NEDOATA', '$user',0) ");
                 
-                $insert_id_2 = $this->db->insert_id();
-                $this->db->query("INSERT INTO  historial_comisiones VALUES ($insert_id_2, ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'DISPERSÓ PAGO DE COMISIÓN CON PENALIZACIÓN')");
+            $insert_id_2 = $this->db->insert_id();
+            $respuesta = $this->db->query("INSERT INTO  historial_comisiones VALUES ($insert_id_2, ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'DISPERSÓ PAGO DE COMISIÓN CON PENALIZACIÓN')");
 
-                $this->db->query("INSERT INTO pago_comision_ind (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, estatus, pago_neodata, creado_por, comentario, modificado_por, descuento_aplicado ) VALUES (".$insert_id.", ".$id_usuario.", ".$abonoPenalizacion.", GETDATE(), GETDATE(), 28 , ".$pago.",'$user', 'PAGO 1 - NEDOATA', '$user', 1)");
+            $respuesta = $this->db->query("INSERT INTO pago_comision_ind (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, estatus, pago_neodata, creado_por, comentario, modificado_por, descuento_aplicado ) VALUES (".$insert_id.", ".$id_usuario.", ".$abonoPenalizacion.", GETDATE(), GETDATE(), 28 , ".$pago.",'$user', 'PAGO 1 - NEDOATA', '$user', 1)");
 
-                $insert_id_3 = $this->db->insert_id();
-                $this->db->query("INSERT INTO  historial_comisiones VALUES ($insert_id_3, ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'DESCUENTO ".$nombreLote."PENALIZACIÓN +90 DÍAS')");
+            $insert_id_3 = $this->db->insert_id();
+            $respuesta = $this->db->query("INSERT INTO  historial_comisiones VALUES ($insert_id_3, ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'DESCUENTO ".$nombreLote."PENALIZACIÓN +90 DÍAS')");
 
-                $this->db->query("INSERT INTO prestamos_aut
-                (id_usuario, monto, num_pagos, pago_individual, comentario, estatus, pendiente, creado_por, fecha_creacion, modificado_por, 
-                fecha_modificacion, n_p, tipo, id_cliente)
-                VALUES ($id_usuario, $descuento90dias, 1, $abonoPenalizacion, 'PENALIZACIÓN ".$nombreLote." +90 DÍAS (-".$porcentajeTomado."%)', $estatusPrestamo, 0, $user, GETDATE(), $user, GETDATE(), 1, 28, $idCliente)");
-                $insert_id_4 = $this->db->insert_id();
+            $respuesta = $this->db->query("INSERT INTO prestamos_aut (id_usuario, monto, num_pagos, pago_individual, comentario, estatus, pendiente, creado_por, fecha_creacion, modificado_por, fecha_modificacion, n_p, tipo, id_cliente) VALUES ($id_usuario, $descuento90dias, 1, $abonoPenalizacion, 'PENALIZACIÓN ".$nombreLote." +90 DÍAS (-".$porcentajeTomado."%)', $estatusPrestamo, 0, $user, GETDATE(), $user, GETDATE(), 1, 28, $idCliente)");
+            $insert_id_4 = $this->db->insert_id();
 
-                $this->db->query("INSERT INTO relacion_pagos_prestamo (id_prestamo, id_pago_i, estatus, creado_por, fecha_creacion, modificado_por, fecha_modificacion, np)
-                VALUES($insert_id_4, $insert_id_3, 1, $user, GETDATE(), $user, GETDATE(), 1)");
-
-                    }
+            $respuesta = $this->db->query("INSERT INTO relacion_pagos_prestamo (id_prestamo, id_pago_i, estatus, creado_por, fecha_creacion, modificado_por, fecha_modificacion, np) VALUES($insert_id_4, $insert_id_3, 1, $user, GETDATE(), $user, GETDATE(), 1)");
+        }
+            
+            if (! $respuesta ) {
+                return 0;
+                } else {
+                return 1;
                 }
+            }
         
   
  
@@ -6146,23 +6142,13 @@ return $query->result();
 
 
 public function getDataDispersionPagoEspecial($val = '') {
-     $filtro = '';
-     if(empty($val)){
-        $filtro = 'AND l.registro_comision in (1) AND pc.bandera in (0)';
-     }else{
-        $filtro = 'AND l.registro_comision in (1,7)';
-     }
-
-        $this->db->query("SET LANGUAGE Español;");
-
+    
+    $this->db->query("SET LANGUAGE Español;");
 
     $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre as nombreCondominio, l.nombreLote,  
-            CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombreCliente, l.tipo_venta, 
-            vc.id_cliente AS compartida, l.idStatusContratacion, l.totalNeto2, pc.fecha_modificacion, 
-            convert(nvarchar, pc.fecha_modificacion, 6) fecha_sistema, 
-            convert(nvarchar, pc.fecha_neodata, 6) fecha_neodata, 
-            convert(nvarchar, cl.fechaApartado, 6) fechaApartado, se.nombre as sede,
-            l.registro_comision, l.referencia, cl.id_cliente,            
+            CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombreCliente, l.tipo_venta, vc.id_cliente AS compartida, l.idStatusContratacion, l.totalNeto2, pc.fecha_modificacion, 
+            convert(nvarchar, pc.fecha_modificacion, 6) fecha_sistema, convert(nvarchar, pc.fecha_neodata, 6) fecha_neodata, 
+            convert(nvarchar, cl.fechaApartado, 6) fechaApartado, se.nombre as sede, l.registro_comision, l.referencia, cl.id_cliente,       
             CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) as asesor,
             CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_materno) as coordinador,
             CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno) as gerente,
@@ -6176,7 +6162,7 @@ public function getDataDispersionPagoEspecial($val = '') {
             INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
             INNER JOIN usuarios ae ON ae.id_usuario = cl.id_asesor
             LEFT JOIN pago_comision pc ON pc.id_lote = l.idLote
-                        LEFT JOIN (SELECT id_cliente FROM ventas_compartidas WHERE estatus = 1) AS vc ON vc.id_cliente = cl.id_cliente
+            LEFT JOIN (SELECT id_cliente FROM ventas_compartidas WHERE estatus = 1) AS vc ON vc.id_cliente = cl.id_cliente
             LEFT JOIN usuarios co ON co.id_usuario = cl.id_coordinador
             LEFT JOIN usuarios ge ON ge.id_usuario = cl.id_gerente
             LEFT JOIN usuarios su ON su.id_usuario = cl.id_subdirector
@@ -6185,15 +6171,12 @@ public function getDataDispersionPagoEspecial($val = '') {
             LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision
             LEFT JOIN sedes se ON se.id_sede = cl.id_sede 
             LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado, idStatusContratacion, idMovimiento FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39 
-                GROUP BY idLote, idCliente, idStatusContratacion, idMovimiento) hl 
-            ON hl.idLote = l.idLote AND hl.idCliente = l.idCliente
+            GROUP BY idLote, idCliente, idStatusContratacion, idMovimiento) hl ON hl.idLote = l.idLote AND hl.idCliente = l.idCliente
             WHERE ((hl.idStatusContratacion = 9 AND hl.idMovimiento = 39) OR l.idLote IN (7167, 7168, 10304, 15178, 17231, 18338, 18549, 23730, 27250)) AND l.idStatusContratacion >= 9
             AND cl.status = 1 AND l.status = 1
-            AND l.registro_comision in (1) AND pc.bandera in (0) AND tipo_venta IS NOT NULL AND tipo_venta IN (7)
-
+            AND l.registro_comision in (1) AND pc.bandera in (0) AND l.tipo_venta IS NOT NULL AND (tipo_venta IN (7) OR cl.plan_comision = 98)
             ORDER BY l.idLote");
-                        
-
+            
             return $query;
 }
 
@@ -6651,10 +6634,10 @@ public function getDataDispersionPagoEspecial($val = '') {
         return $query->result_array();
     }
 
-    function updateBandera($id_pagoc, $param) {
-        $response = $this->db->query("UPDATE pago_comision SET bandera = ".$param." WHERE id_lote IN (".$id_pagoc.")");
+    function updateBandera($identificador, $param) {
+        $response = $this->db->query("UPDATE pago_comision SET bandera = ".$param." WHERE id_lote IN (".$identificador.")");
         if($param == 55){
-            $response = $this->db->query("UPDATE lotes SET registro_comision = 1 WHERE idLote IN (".$id_pagoc.")");
+            $response = $this->db->query("UPDATE lotes SET registro_comision = 1 WHERE idLote IN (".$identificador.")");
         }
         if (! $response ) {
             return $finalAnswer = 0;

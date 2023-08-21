@@ -18,12 +18,12 @@
                             <label class="control-label">Usuario</label>
                             <select id="usuarioid" name="usuarioid" class="selectpicker select-gral m-0 directorSelect" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7"  data-live-search="true" data-container="body" required></select>
                         </div>
-                        <div class="form-group" id="loteorigen">
-                            <label class="control-label">Lote origen</label>
+                        <div class="form-group mt-0" id="loteorigen">
+                            <label class="control-label">Lote origen (<span class="isRequired">*</span>)</label>
                             <select id="idloteorigen"  name="idloteorigen[]" multiple="multiple" class="form-control directorSelect2 js-example-theme-multiple" style="width: 100%;height:200px !important;"  required data-live-search="true"></select>
                         </div>
                         <b id="msj2" style="color: red;"></b>
-                        <div class="form-group row">
+                        <div class="form-group row mt-0">
                             <div class="col-md-6">
                                 <div class="form-group" >
                                     <label class="control-label">Monto disponible</label>
@@ -38,9 +38,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="control-label">Mótivo de descuento</label>
-                            <textarea id="comentario" name="comentario" class="form-control input-gral" rows="3" required></textarea>
+                        <div class="form-group mt-0">
+                            <label class="control-label">Mótivo de descuento (<span class="isRequired">*</span>)</label>
+                            <textarea id="comentario" name="comentario" class="text-modal" rows="3" required></textarea>
                         </div>
                         <div class="form-group d-flex justify-end">
                             <button class="btn btn-danger btn-simple" type="button" data-dismiss="modal" >CANCELAR</button>
@@ -53,22 +53,20 @@
     </div>
 
     <div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+        <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons" onclick="cleanComments()">clear</i></button>
                 </div>
                 <div class="modal-body">
                     <div role="tabpanel">
-                        <ul class="nav" role="tablist">
-                            <div id="nameLote"></div>
-                        </ul>
+                        <div id="nameLote" class="text-center"></div>
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane active" id="changelogTab">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="card card-plain">
-                                            <div class="card-content">
+                                            <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
                                                 <ul class="timeline-3" id="comments-list-asimilados"></ul>
                                             </div>
                                         </div>
@@ -138,7 +136,7 @@
                         <div class="card-content p-0">
                             <div class="nav-tabs-custom">
                                 <div class="tab-content p-2">
-                                <?php if($this->session->userdata('id_rol') != "18") { ?>
+                                    <?php if($this->session->userdata('id_rol') != "18") { ?>
                                     <div class="tab-pane active" id="nuevas-1">
                                         <div class="encabezadoBox">
                                             <h3 class="card-title center-align" >Comisiones nuevas <b>mktd</b></h3>
@@ -175,11 +173,11 @@
                                                                 <th>ID USUARIO</th>
                                                                 <th>USUARIO</th>
                                                                 <th>SEDE DEL USUARIO</th>
+                                                                <th>EMPRESA</th>
                                                                 <th>IMPUESTO %</th>
                                                                 <th>ABONO DISPERSADO</th>
                                                                 <th>DESCUENTO</th>
                                                                 <th>A PAGAR</th>
-                                                                <th>TOTAL</th>
                                                                 <th>FORMA DE PAGO</th>
                                                             </tr>
                                                         </thead>
@@ -188,7 +186,7 @@
                                             </div>
                                         </div> 
                                         <?php } ?>
-                                        <?php if($this->session->userdata('id_rol') == "18") { ?>
+                                        <?php if($this->session->userdata('id_rol') == "18") { ?>  <!-- Regresar a 18 -->
                                         <div class="tab-pane active" id="nuevas-12">
                                         <div class="encabezadoBox">
                                             <h3 class="card-title center-align" >Comisiones nuevas <b>mktd</b></h3>
@@ -198,9 +196,10 @@
                                             <div class="container-fluid p-0">
                                                 <div class="row">
                                                     <?php
-                                                    if($this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="17"){?>
+                                                    if($this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="17"){?>  
                                                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                                        <?php } else { ?>
+                                                        <?php
+                                                    } else { ?>
                                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                             <?php } ?>
                                                             <div class="form-group col-md-6 m-0">
@@ -237,37 +236,19 @@
                                                             <div class="row">
                                                                 <div class="col-4 col-sm-4 col-md-4 col-lg-4 overflow-hidden">
                                                                     <div class="form-group">
-                                                                        <label  for="proyecto">Mes</label>
-                                                                        <select name="mes" id="mes" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required>
-                                                                            <?php
-                                                                                setlocale(LC_ALL, 'es_ES');
-                                                                                for ($i = 1; $i <= 12; $i++) {
-                                                                                    $monthNum  = $i;
-                                                                                    $dateObj   = DateTime::createFromFormat('!m', $monthNum);
-                                                                                    $monthName = strftime('%B', $dateObj->getTimestamp());
-                                                                                    echo '<option value="' . $i . '">' . $monthName . '</option>';
-                                                                                }
-                                                                            ?>
-                                                                        </select>
+                                                                        <label class="control-label">Año (<span class="isRequired">*</span>)</label>
+                                                                        <select name="anio" id="anio" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-4 col-sm-4 col-md-4 col-lg-4 overflow-hidden">
                                                                     <div class="form-group">
-                                                                        <label>Año</label>
-                                                                        <select name="anio" id="anio" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required>
-                                                                            <?php
-                                                                                setlocale(LC_ALL, 'es_ES');
-                                                                                for ($i = 2019; $i <= 2023; $i++) {
-                                                                                    $yearName  = $i;
-                                                                                    echo '<option value="' . $i . '">' . $yearName . '</option>';
-                                                                                }
-                                                                            ?>
-                                                                        </select>
+                                                                        <label class="control-label" for="proyecto">Mes (<span class="isRequired">*</span>)</label>
+                                                                        <select name="mes" id="mes" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="5" data-container="body" required></select>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 overflow-hidden">
-                                                                    <div class="form-group label-floating select-is-empty">
-                                                                        <label for="proyecto">Estatus:</label>
+                                                                    <div class="form-group select-is-empty">
+                                                                        <label class="control-label" for="proyecto">Estatus (<span class="isRequired">*</span>)</label>
                                                                         <select name="selectEstatusN" id="selectEstatusN" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                                                     </div>
                                                                 </div>
@@ -328,8 +309,8 @@
                                                             <th>REFERENCIA</th>
                                                             <th>PRECIO DEL LOTE</th>
                                                             <th>EMPRESA</th>
-                                                            <th>TOTAL COMISION</th>
-                                                            <th>PAGADO CLIENTE</th>
+                                                            <th>TOTAL DE LA COMISIÓN</th>
+                                                            <th>PAGADO POR EL CLIENTE</th>
                                                             <th>SOLICITADO</th>
                                                             <th>TIPO DE VENTA</th>
                                                             <th>USUARIO</th>
@@ -369,7 +350,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                                            <div class="form-group label-floating select-is-empty">
+                                                            <div class="form-group  select-is-empty">
                                                                 <select name="selectEstatus" id="selectEstatus" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona opción" data-size="7" required></select>
                                                             </div>
                                                         </div>
@@ -425,7 +406,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                                            <div class="form-group label-floating select-is-empty">
+                                                            <div class="form-group  select-is-empty">
                                                                 <select name="selectEstatusR" id="selectEstatusR" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona opción" data-size="7" required></select>
                                                             </div>
                                                         </div>
