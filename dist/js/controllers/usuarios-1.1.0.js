@@ -281,15 +281,12 @@ function getLeadersList(){
     $("#leader").find("option").remove();
     $.post('getLeadersList/'+headquarter+'/'+type, function(data) {
         var len = data.length;
-        for( var i = 0; i<len; i++)
-        {
+        for( var i = 0; i<len; i++){
             var id = data[i]['id_usuario'];
             var name = data[i]['nombre'];
-            var sede = data[i]['id_sede'];
             $("#leader").append($('<option>').val(id).text(name));
         }
-        if(len<=0)
-        {
+        if(len<=0){
             $("#leader").append('<option selected="selected" value="0">NA</option>');
         }
         $('#leader').selectpicker('refresh');
@@ -300,11 +297,9 @@ function getLeadersListForEdit(headquarter, type, leader){
     $("#leader").find("option").remove();
     $.post('getLeadersList/'+headquarter+'/'+type, function(data) {
         var len = data.length;
-        for( var i = 0; i<len; i++)
-        {
+        for( var i = 0; i<len; i++){
             var id = data[i]['id_usuario'];
             var name = data[i]['nombre'];
-            var sede = data[i]['id_sede'];
             if(id == leader){
                 $("#leader").append($('<option selected>').val(id).text(name));
                 $("#lastLI").val(id);

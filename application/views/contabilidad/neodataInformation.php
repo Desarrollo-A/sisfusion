@@ -18,7 +18,7 @@
         text-align: center;
     }
 </style>
-<body class="">
+<body>
 <div class="wrapper">
 
     <?php $this->load->view('template/sidebar'); ?>
@@ -126,10 +126,8 @@
     <?php $this->load->view('template/footer_legend'); ?>
 </div>
 </div>
-
 <?php $this->load->view('template/footer'); ?>
 <script type="text/javascript" src="//unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
-<script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
-<script src="<?= base_url() ?>dist/js/funciones-generales.js"></script>
+<script src="<?= base_url()?>dist/js/funciones-generales.js"></script>
 <script type="text/javascript" src="<?= base_url() ?>dist/js/controllers/contabilidad/neodataInformation.js"></script>
 </body>

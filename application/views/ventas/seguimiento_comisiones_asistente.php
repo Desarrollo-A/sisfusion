@@ -5,11 +5,8 @@
 <?php $this->load->view('template/sidebar'); ?>
 
     <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons" onclick="cleanCommentsAsimilados()">clear</i></button>
-                </div>
+        <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
+            <div class="modal-content"> 
                 <div class="modal-body">
                     <div role="tabpanel">
                         <ul class="nav" role="tablist">
@@ -19,7 +16,7 @@
                             <div role="tabpanel" class="tab-pane active" id="changelogTab">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div class="card card-plain">
+                                        <div class="card card-plain m-0">
                                             <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
                                                 <ul class="timeline-3" id="comments-list-asimilados"></ul>
                                             </div>
@@ -92,9 +89,9 @@
                                             <th>CONDOMINIO</th>
                                             <th>LOTE</th>
                                             <th>REFERENCIA</th>
-                                            <th>PRECIO LOTE</th>
-                                            <th>TOTAL COMISION</th>
-                                            <th>PAGO CLIENTE</th>
+                                            <th>PRECIO DEL LOTE</th>
+                                            <th>TOTAL DE COMISIÓN</th>
+                                            <th>PAGO DEL CLIENTE</th>
                                             <th>DISPERSADO</th>
                                             <th>PAGADO</th>
                                             <th>PENDIENTE</th>

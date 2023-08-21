@@ -2640,12 +2640,11 @@ class Contraloria extends CI_Controller {
 
     public function lotes_apartados() {
         $this->validateSession();
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
         if ($this->session->userdata('id_usuario') == FALSE) {
             redirect(base_url());
         }
-                $this->load->view('template/header');
-                $this->load->view("contraloria/vista_lotes_precio_enganche");
+            $this->load->view('template/header');
+            $this->load->view("contraloria/vista_lotes_precio_enganche");
     }
 
     public function backExp() {

@@ -187,6 +187,7 @@ function fillTableLotificacion(lotes) {
 }
 
 $(document).on('click', '.find-results', function () {
+    $(".closeTable").removeClass("hide");
     result = validateEmpty();
     if (result) {
         $(".row-load").addClass("hide");
@@ -198,10 +199,11 @@ $(document).on('click', '.find-results', function () {
 });
 
 $(document).on('click', '.generate', function () {
+    $(".closeTable").addClass("hide");
     result = validateEmpty();
+    
     if (result) {
         $(".row-load").removeClass("hide");
-        $(".tableLotificacion").addClass("hide");
     } else {
         $('#notificacion').modal('show');
     }
@@ -214,7 +216,7 @@ $(document).on('change', ".select-gral", function () {
 function validateEmpty() {
     if ($("#residenciales").val() == '' || $("#condominios").val().length == 0 || $("#lotes").val().length == 0) {
         $(".row-load").addClass("hide");
-        $("#tableLotificacion").addClass("hide");
+        $(".tableLotificacion").addClass("hide");
         $("#columns").selectpicker('refresh');
         $(".generate").prop('checked', false);
         $(".find-results").prop('checked', false);
