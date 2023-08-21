@@ -1045,14 +1045,11 @@ class Usuarios_modelo extends CI_Model
         $query = $this->db->query("SELECT u0.id_usuario as id_asesor, 
                 $idLiderNuevo as id_coordinador,
                 (CASE u1.id_rol WHEN 3 THEN u1.id_usuario ELSE u2.id_usuario END) id_gerente,
-                (CASE u1.id_rol WHEN 3 THEN u1.id_lider ELSE u3.id_usuario END) id_subdirector,
-                (CASE u1.id_rol WHEN 3 THEN (CASE WHEN u2.id_lider = 2 THEN 0 ELSE u2.id_lider END) ELSE CASE 
-                WHEN u3.id_usuario = 7092 THEN 3 
-                WHEN u3.id_usuario IN (9471, 681, 609, 690) THEN 607 
-                WHEN u3.id_usuario = 692 THEN u3.id_lider
-                WHEN u3.id_usuario = 703 THEN 4
-                WHEN u3.id_usuario = 7886 THEN 5
-                ELSE 0 END END) id_regional,
+                (CASE WHEN u1.id_rol = 3 THEN u1.id_lider WHEN u3.id_usuario IS NOT NULL THEN u3.id_usuario ELSE 0 END) id_subdirector,
+                (CASE WHEN u3.id_usuario = 7092 THEN 3 WHEN u3.id_usuario IN (9471, 681, 609, 690) THEN 607
+                    WHEN u3.id_usuario = 692 THEN u3.id_lider WHEN u3.id_usuario = 703 THEN 4 WHEN u3.id_usuario = 7886
+                        THEN 5 WHEN u1.id_rol = 3 THEN (CASE WHEN (u2.id_lider = 2 OR u3.id_lider = 2) THEN 0 ELSE u2.id_lider END)
+					ELSE 0 END) id_regional,
                 CASE 
                 WHEN (($idSedeNueva = '13' AND u3.id_lider = 7092) OR ($idSedeNueva = '13' AND u2.id_lider = 7092)) THEN 3
 	            WHEN (($idSedeNueva = '13' AND u3.id_lider = 3) OR ($idSedeNueva = '13' AND u2.id_lider = 3)) THEN 7092
