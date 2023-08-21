@@ -14,7 +14,7 @@ $('#tabla_ingresar_12 thead tr:eq(0) th').each( function (i) {
     tabla_12 = $("#tabla_ingresar_12").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         scrollX: true,
-        bAutoWidth: true,
+        bAutoWidth:true,
         buttons: [
             {
                 extend: 'excelHtml5',

@@ -18,6 +18,7 @@
                 </div>
             </div>
         </div>
+        
         <div class="modal fade " id="modalConfirmRequest" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content"> 
@@ -35,6 +36,7 @@
                 </div>
             </div>
         </div>
+
         <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
                 <div class="modal-content">
@@ -42,9 +44,7 @@
                     </div>
                     <div class="modal-body">
                         <div role="tabpanel">
-                            <ul class="nav nav-tabs" role="tablist" style="background: #949494;">
-                                <div id="nameLote"></div>
-                            </ul>
+                            <div id="nameLote"></div>                            
                             <div class="tab-content">
                                 <div role="tabpanel" class="tab-pane active" id="changelogTab">
                                     <div class="row">
@@ -66,6 +66,7 @@
                 </div>
             </div>
         </div>
+
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">

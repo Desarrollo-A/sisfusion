@@ -3528,19 +3528,6 @@ echo json_encode($respuesta);
     }
   }
 
-
-
-
-   // public function getDatosCobranzaReporte($a,$b){
-   //    $dat =  $this->Comisiones_model->getDatosCobranzaReporte($a,$b)->result_array();
-   //   for( $i = 0; $i < count($dat); $i++ ){
-   //       $dat[$i]['pa'] = 0;
-   //   }
-   //   echo json_encode( array( "data" => $dat));
-   //  }
-    
-
-
    public function getDatosCobranzaReporte($a,$b)
   {
     $datos = array();

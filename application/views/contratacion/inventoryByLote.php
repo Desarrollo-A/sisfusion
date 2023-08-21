@@ -41,8 +41,6 @@
 																<th>USUARIO</th>
 															</tr>
 														</thead>
-														<tbody>
-														</tbody>
 													</table>
 												</div>
 											</div>
@@ -64,8 +62,6 @@
 																<th>USUARIO</th>
 															</tr>
 														</thead>
-														<tbody>
-														</tbody>
 													</table>
 												</div>
 											</div>
@@ -87,8 +83,6 @@
 																<th>USUARIO</th>
 															</tr>
 														</thead>
-														<tbody>
-														</tbody>
 													</table>
 												</div>
 											</div>
@@ -139,6 +133,7 @@
 				</div>
 			</div>
 		</div>
+
 		<div class="content boxContent">
 			<div class="container-fluid">
 				<div class="row">
@@ -184,7 +179,7 @@
 													<th>APARTADO</th>
 													<th>COMENTARIO</th>
 													<th>LUGAR DE PROSPECCIÓN</th>
-													<th></th>
+													<th>ACCIONES</th>
 												</tr>
 											</thead>
 										</table>
