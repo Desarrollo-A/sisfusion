@@ -726,22 +726,22 @@ function getDatosHistorialPagoRP($id_usuario){
    
 
         function getDatosCobranzaDimamic($a,$b,$c,$d){ 
-        if($a != 0 && $b != 0 && $c == 0 && $d == 0){
-            $filtro = " AND MONTH(cl.fechaApartado) = $a AND year(cl.fechaApartado) = $b ";
-        }else if($a != 0 && $b != 0 && $c != 0 && $d == 0){
-            $filtro = " AND MONTH(cl.fechaApartado) = $a AND year(cl.fechaApartado) = $b AND ase.id_sede like '%".$c."'";
-        }else if($a != 0 && $b != 0 && $c != 0 && $d != 0){
-            $filtro = " AND MONTH(cl.fechaApartado) = $a AND year(cl.fechaApartado) = $b AND ase.id_sede like '%".$c."' AND cl.id_gerente = $d ";
-        }else {
-            $filtro = " ";
-        }
+            if($a != 0 && $b != 0 && $c == 0 && $d == 0){
+                $filtro = " AND MONTH(cl.fechaApartado) = $a AND year(cl.fechaApartado) = $b ";
+            }else if($a != 0 && $b != 0 && $c != 0 && $d == 0){
+                $filtro = " AND MONTH(cl.fechaApartado) = $a AND year(cl.fechaApartado) = $b AND ase.id_sede like '%".$c."'";
+            }else if($a != 0 && $b != 0 && $c != 0 && $d != 0){
+                $filtro = " AND MONTH(cl.fechaApartado) = $a AND year(cl.fechaApartado) = $b AND ase.id_sede like '%".$c."' AND cl.id_gerente = $d ";
+            }else {
+                $filtro = " ";
+            }
 
             return $this->db->query("(SELECT COUNT(l.idLote) lotes_vendidos, CASE WHEN SUM(l.totalNeto2) = '0' THEN 0 WHEN SUM(l.totalNeto2) IS NULL THEN 0 ELSE  SUM(l.totalNeto2) END as monto_vendido, ase.id_usuario, cl.status,
-                CONCAT(ase.nombre,' ',ase.apellido_paterno,' ',ase.apellido_materno) as asesor,
-                CONCAT(ger.nombre,' ',ger.apellido_paterno,' ',ger.apellido_materno) as gerente,se.nombre,
-                CONCAT(coor.nombre,' ',coor.apellido_paterno,' ',coor.apellido_materno) as coordinador,
-                CONCAT(sd.nombre,' ',sd.apellido_paterno,' ',sd.apellido_materno) as subdirector,
-                CONCAT(dir.nombre,' ',dir.apellido_paterno,' ',dir.apellido_materno) as director
+                CASE WHEN ase.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE  CONCAT(ase.nombre,' ',ase.apellido_paterno,' ',ase.apellido_materno) END asesor,
+                CASE WHEN ger.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE  CONCAT(ger.nombre,' ',ger.apellido_paterno,' ',ger.apellido_materno) END gerente,se.nombre,
+                CASE WHEN coor.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE  CONCAT(coor.nombre,' ',coor.apellido_paterno,' ',coor.apellido_materno) END coordinador,
+                CASE WHEN sd.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE  CONCAT(sd.nombre,' ',sd.apellido_paterno,' ',sd.apellido_materno) END subdirector,
+                CASE WHEN dir.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(dir.nombre,' ',dir.apellido_paterno,' ',dir.apellido_materno) END director
                 FROM lotes l
                 INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1 AND lugar_prospeccion = 6
                 INNER JOIN condominios con ON con.idCondominio = l.idCondominio
@@ -766,11 +766,11 @@ function getDatosHistorialPagoRP($id_usuario){
 
                 (SELECT COUNT(l.idLote) lotes_vendidos, CASE WHEN SUM(l.totalNeto2) = '0' THEN 0 WHEN SUM(l.totalNeto2) IS NULL THEN 
                 0 ELSE  SUM(l.totalNeto2) END as monto_vendido, ase.id_usuario, cl.status,
-                CONCAT(ase.nombre,' ',ase.apellido_paterno,' ',ase.apellido_materno) as asesor,
-                CONCAT(ger.nombre,' ',ger.apellido_paterno,' ',ger.apellido_materno) as gerente,se.nombre,
-				CONCAT(coor.nombre,' ',coor.apellido_paterno,' ',coor.apellido_materno) as coordinador,
-				CONCAT(sd.nombre,' ',sd.apellido_paterno,' ',sd.apellido_materno) as subdirector,
-				CONCAT(dir.nombre,' ',dir.apellido_paterno,' ',dir.apellido_materno) as director
+                CASE WHEN ase.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE  CONCAT(ase.nombre,' ',ase.apellido_paterno,' ',ase.apellido_materno) END asesor,
+                CASE WHEN ger.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE  CONCAT(ger.nombre,' ',ger.apellido_paterno,' ',ger.apellido_materno) END gerente,se.nombre,
+				CASE WHEN coor.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE  CONCAT(coor.nombre,' ',coor.apellido_paterno,' ',coor.apellido_materno) END coordinador,
+				CASE WHEN sd.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE  CONCAT(sd.nombre,' ',sd.apellido_paterno,' ',sd.apellido_materno) END subdirector,
+				CASE WHEN dir.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(dir.nombre,' ',dir.apellido_paterno,' ',dir.apellido_materno) END director
                 FROM lotes l
                 INNER JOIN clientes cl ON cl.idLote = l.idLote AND cl.status = 0 AND lugar_prospeccion = 6
                 INNER JOIN condominios con ON con.idCondominio = l.idCondominio
@@ -790,7 +790,7 @@ function getDatosHistorialPagoRP($id_usuario){
 				sd.nombre,sd.apellido_paterno,sd.apellido_materno,
 				dir.nombre,dir.apellido_paterno,dir.apellido_materno
                 HAVING COUNT(l.idLote) > 0)");
-         }
+        }
 
 
 
