@@ -104,7 +104,7 @@ use PHPMailer\PHPMailer\PHPMailer;
     $id_rol = $dataValidate["id_rol"];
     $id_lider = $dataValidate["id_lider"];
     $maxAsesores=0;
-    $maxCoordinador=10;//original: 10
+    $maxCoordinador=5;//original: 10
     $maxGerente=3; //original: 10
     $respuesta = 0;
     $mensaje = '';
@@ -122,7 +122,7 @@ use PHPMailer\PHPMailer\PHPMailer;
                 //si es CDMX debe dejar 40 asesores
                 $maxAsesores = 12;//original: 40
             }else{
-                $maxAsesores = 10;//original: 20
+                $maxAsesores = 5;//original: 20
             }
             if(count($colabsData) < $maxAsesores){
                 //si puede ingresar más asesores
