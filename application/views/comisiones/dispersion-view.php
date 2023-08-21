@@ -47,8 +47,8 @@
                     </div>
                     <div class="modal-body center-align">
                         <label class="">Nota:</label>
-                        <label class="">La siguiente acción asignara el plan de venta a los lotes que cumplan con las condiciones correspondientes, si no se asigna favor de revisar otros datos como la sede o los usuarios que tiene asignados la venta. Esta acción solo se podra realizar cada 4 horas.</span>
-                        <label  id='tiempoRestante' name='tiempoRestante' class=" tiempoRestante hide">:</label>
+                        <label class="">La siguiente acción asignará el plan de venta a los lotes que cumplan con las condiciones correspondientes, si no se asigna favor de revisar otros datos como la sede o los usuarios que tiene asignados la venta. Esta acción solo se podrá realizar cada 4 horas.</span>
+                        <!-- <label  id='tiempoRestante' name='tiempoRestante' class=" tiempoRestante hide">:</label> -->
                     </div>
                     <div class="modal-footer">
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
