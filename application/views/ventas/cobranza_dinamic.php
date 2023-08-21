@@ -7,7 +7,7 @@
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
                                 <i class="fas fa-chart-bar fa-2x"></i>
@@ -22,7 +22,7 @@
                                 <div class="toolbar">
                                     <div class="container-fluid p-0">
                                         <div class="row">
-                                            <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                 <div class="form-group d-flex justify-center align-center">
                                                     <h4 class="title-tot center-align m-0">Total vendido:</h4>
                                                     <p class="input-tot pl-1" id="myText_vendido">$0.00</p>
@@ -45,14 +45,14 @@
                                             <div class="col-12 col-sm-6 col-md-6 col-lg-3 overflow-hidden">
                                                 <div class="form-group">
                                                     <label class="control-label">Plaza</label>
-                                                    <select name="plaza" id="plaza" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required> 
+                                                    <select name="plaza" id="plaza" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required> 
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-12 col-sm-6 col-md-6 col-lg-3 overflow-hidden">
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 overflow-hidden">
                                                 <div class="form-group">
                                                     <label class="control-label">Gerente</label>
-                                                    <select name="gerente" id="gerente" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required> 
+                                                    <select name="gerente" id="gerente" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required> 
                                                     </select>
                                                 </div>
                                             </div>
@@ -67,7 +67,10 @@
                                                     <th>LOTES VENDIDOS</th>
                                                     <th>MONTO VENDIDO</th>
                                                     <th>ASESOR</th>
+                                                    <th>COORDINADOR</th>
                                                     <th>GERENTE</th>
+                                                    <th>SUBDIRECTOR</th>
+                                                    <th>DIRECTOR REGIONAL</th>
                                                     <th>MES DE APARTADO</th>
                                                     <th>PLAZA</th>
                                                     <th>ESTATUS</th>

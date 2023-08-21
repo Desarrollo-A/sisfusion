@@ -17,28 +17,28 @@
                                 <p class="card-title pl-1"></p>
                             </div>
                             <div class="toolbar">
-                                <div class="row">
+                                <div class="row aligned-row">
                                     <?php if($this->session->userdata('id_rol') != 19){?>
                                         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                            <div class="form-group label-floating select-is-empty">
+                                            <div class="form-group  select-is-empty">
                                                 <label class="control-label">Subdirector</label>
                                                 <select name="subDir" id="subDir" class="selectpicker select-gral m-0" data-show-subtext="true" data-live-search="true" data-style="btn" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                             </div>
                                         </div>
                                     <?php } ?>
                                     <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                        <div class="form-group label-floating select-is-empty">
+                                        <div class="form-group select-is-empty">
                                             <label class="control-label">Gerente</label>
                                             <select name="gerente" id="gerente" class="selectpicker select-gral m-0" data-show-subtext="true" data-live-search="true" data-style="btn" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                         </div>
                                     </div>
-                                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4" id="filter_date">
+                                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 d-flex align-end" id="filter_date">
                                         <div class="container-fluid p-0">
                                             <div class="row">
                                                 <div class="col-md-12 p-r">
                                                     <div class="form-group d-flex">
-                                                        <input type="text" class="form-control datepicker" id="beginDate" value="01/01/2021" />
-                                                        <input type="text" class="form-control datepicker" id="endDate" value="01/01/2021" />
+                                                        <input type="text" class="form-control datepicker" id="beginDate" />
+                                                        <input type="text" class="form-control datepicker" id="endDate" />
                                                         <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange"><span class="material-icons update-dataTable">search</span></button>
                                                     </div>
                                                 </div>
@@ -79,6 +79,6 @@
 <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
 <script src="<?= base_url() ?>dist/js/fullcalendar.min.js"></script>
 <script src="<?=base_url()?>dist/js/modal-steps.min.js"></script>
-<script src="<?=base_url()?>dist/js/controllers/general-1.1.0.js"></script>
+<!-- <script src="<?=base_url()?>dist/js/controllers/general-1.1.0.js"></script> -->
 <script src="<?=base_url()?>dist/js/controllers/clientes/consultaProspectosMKTD.js"></script>
 </html>
