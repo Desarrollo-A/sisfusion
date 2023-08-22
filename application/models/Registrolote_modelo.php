@@ -3336,7 +3336,7 @@
 					$id_lider = $id_lider . ', 671';
 					$sede = "AND clientes.id_sede = 12";
 				}	
-				else if ($this->session->userdata('id_usuario') == 12449) { // MARCELA CUELLAR MORON
+				else if ($this->session->userdata('id_usuario') == 12855) { // ARIADNA ZORAIDA ALDANA ZAPATA
 					$id_lider = $id_lider . ', 654';
 					$sede = "AND clientes.id_sede = 12";
 				}
