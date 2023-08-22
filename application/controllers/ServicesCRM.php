@@ -41,10 +41,10 @@ class ServicesCRM extends CI_Controller {
 
     function codificarTest() {
         $miJson = array(
-            "id_usuario" => 7809,
-            "id_lider" => 745,
+            "id_usuario" => 13066,
+            "id_lider" => 6942,
             "estatus" => 1,
-            "id_rol" => 7,
+            "id_rol" => 9,
             "modificado_por" => 1,
             "id_sede" => 1/*,
             "rfc" => "HGDE350247FF8",
