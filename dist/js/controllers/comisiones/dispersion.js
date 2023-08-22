@@ -207,6 +207,7 @@ $(document).ready(function () {
 
     $("#tabla_dispersar_comisiones tbody").on('click', '.btn-detener', function () {
             $("#motivo").val("");
+            $("#motivo").selectpicker('refresh');
             $("#descripcion").val("");
             const idLote = $(this).val();
             const nombreLote = $(this).attr("data-value");
@@ -563,6 +564,7 @@ $(document).ready(function () {
 });
 
 $('#detenidos-form').on('submit', function (e) {
+    document.getElementById('detenerLote').disabled = true;
     e.preventDefault();
     $.ajax({
         type: 'POST',
@@ -575,6 +577,7 @@ $('#detenidos-form').on('submit', function (e) {
             if (data) {
                 $('#detenciones-modal').modal("hide");
                 $("#id-lote-detenido").val("");
+                document.getElementById('detenerLote').disabled = false;
                 alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
                 $('#tabla_dispersar_comisiones').DataTable().ajax.reload();
             } else {
@@ -903,6 +906,7 @@ $(document).on('click', '.update_bandera', function(e){
 
 $("#tabla_dispersar_comisiones tbody").on('click', '.btn-detener', function () {
     $("#motivo").val("");
+    $("#motivo").selectpicker('refresh');
     $("#descripcion").val("");
     const idLote = $(this).val();
     const nombreLote = $(this).attr("data-value");
@@ -997,10 +1001,21 @@ $('#planes').change(function () {
 
 });
  function llenado (){
-  
-     $("#llenadoPlan").modal();
-     $('#tiempoRestante').removeClass('hide');
-    // $("#tiempoRestante").html("111");
+    $.ajax({
+        type: 'POST',
+        url: 'ultimoLlenado',
+        contentType: false,
+        cache: false,
+        dataType:'json',
+        success: function (data) {
+            console.log('data');
+            $("#llenadoPlan").modal();
+            console.log(data);
+            $('#tiempoRestante').removeClass('hide');
+           $("#tiempoRestante").html("ultima ejecución : "+data.date[0].fecha_mostrar);
+        }
+    })
+
 
  }
 $(document).on("click",".llenadoPlan", function (e){
