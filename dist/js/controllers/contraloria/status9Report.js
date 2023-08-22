@@ -44,12 +44,11 @@ function fillTable(typeTransaction, beginDate, endDate) {
     generalDataTable = $('#estatusNueveTable').dataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
-        bAutoWidth:true,
         buttons: [
             {
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                className: 'btn btn-success buttons-excel',
+                className: 'btn buttons-excel',
                 titleAttr: 'REPORTE ESTATUS 9',
                 title: 'Reporte estatus 9',
                 exportOptions: {
@@ -60,11 +59,6 @@ function fillTable(typeTransaction, beginDate, endDate) {
                         }
                     }
                 }
-            },
-            {
-                text: "<i class='fas fa-sync' aria-hidden='true'></i>",
-                titleAttr: 'CARGAR VISTA INICIAL',
-                className: 'btn btn-success buttons-excel reset-initial-values',
             }
         ],
         pagingType: "full_numbers",
@@ -133,25 +127,4 @@ $(document).on("click", "#searchByDateRange", function () {
     let finalEndDate = $("#endDate").val();
     fillTable(2, finalBeginDate, finalEndDate);
     $('#estatusNueveTable').removeClass('hide');
-});
-
-$(document).on("click", ".reset-initial-values", function () {
-    setInitialValues();
-    const fechaInicio = new Date();
-    const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
-    const fechaFin = new Date();
-    const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
-    $(".idLote").val('');
-    $(".textoshead").val('');
-    $("#beginDate").val(convertDate(beginDate));
-    $("#endDate").val(convertDate(endDate));
-    fillTable(1, finalBeginDate, finalEndDate);
-});
-
-$('body').tooltip({
-    selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
-    trigger: 'hover',
-    container: 'body'
-}).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
-    $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
 });

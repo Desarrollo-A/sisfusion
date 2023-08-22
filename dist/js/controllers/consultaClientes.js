@@ -124,8 +124,7 @@ $(document).ready(function() {
         initComplete: function () {
             $('[data-toggle="tooltip"]').tooltip({ 
                 trigger: "hover",
-        });
-                
+        });        
         }
     });
 

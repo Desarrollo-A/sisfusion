@@ -203,14 +203,12 @@ function fillTable(index_proyecto, index_condominio) {
     $('#tabla_clientes tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
         var row = tabla_valores_cliente.row(tr);
-        console.log(row.child.isShown());
+
         if (row.child.isShown() ) {
-        console.log('Hola');
             row.child.hide();
             tr.removeClass('shown');
             $(this).parent().find('.animacion').removeClass("fas fa-chevron-up").addClass("fas fa-chevron-down");
         } else {
-        console.log('Hola2');
             var informacion_adicional = 
                 `<div class="container subBoxDetail">
                     <div class="row">
@@ -298,7 +296,6 @@ function fillTable(index_proyecto, index_condominio) {
             row.child(informacion_adicional).show();
             tr.addClass('shown');
             $(this).parent().find('.animacion').removeClass("fa-caret-right").addClass("fa-caret-down");
-            console.log('cambio');
         }
     });
 }

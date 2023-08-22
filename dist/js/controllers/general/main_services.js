@@ -22,7 +22,7 @@ $(document).on("click", "#residenciales", function (e) { // MJ: SE OBTIENE EL CH
     let idResidencial = $(this).val();
     $("#condominios").empty().selectpicker('refresh');
     $.ajax({
-        url: url + 'General/getCondominiosList',
+        url: general_base_url + 'General/getCondominiosList',
         type: 'post',
         dataType: 'json',
         data: {
@@ -65,7 +65,7 @@ $(document).on("click", "#condominios", function (e) { // MJ: SE OBTIENE EL CHAN
     let idCondominio = $(this).val();
     $("#lotes").empty().selectpicker('refresh');
     $.ajax({
-        url: url + 'General/getLotesList',
+        url: general_base_url + 'General/getLotesList',
         type: 'post',
         dataType: 'json',
         data: {

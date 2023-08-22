@@ -4,7 +4,6 @@
 <div class="wrapper ">
     <?php $this->load->view('template/sidebar'); ?>
     <!--MODALS-->
-    <!-- modal  ENVIA A CONTRALORIA 7-->
     <div class="modal fade" id="editReg" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content" >
@@ -25,15 +24,15 @@
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <div class="form-group m-0">
+                            <div class="form-group m-0 overflow-hidden">
                                 <label class="control-label " for="proyecto">Representante legal</label>
-                                <select name="rl" id="rl"  class="selectpicker select-gral m-0 rl" data-default-value="opciones" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                <select name="rl" id="rl"  class="selectpicker select-gral m-0 rl" data-default-value="opciones" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <div class="form-group m-0">
+                            <div class="form-group m-0 overflow-hidden">
                                 <label class="control-label" for="proyecto">Residencia cliente</label>
-                                <select name="residencia" id="residencia"  class="selectpicker select-gral m-0 rl" data-default-value="opciones" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                <select name="residencia" id="residencia"  class="selectpicker select-gral m-0 rl" data-default-value="opciones" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                             </div>
                         </div>
                     </div>
@@ -45,9 +44,7 @@
             </div>
         </div>
     </div>
-    <!-- modal -->
 
-    <!-- modal  rechazar A CONTRALORIA 7-->
     <div class="modal fade" id="rechReg" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content" >
@@ -66,7 +63,6 @@
             </div>
         </div>
     </div>
-    <!-- modal -->
     <!--END MODALS-->
 
     <!--Contenido de la página-->

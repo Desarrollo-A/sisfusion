@@ -443,7 +443,12 @@
                         </div>
                         <div class="card-content">
                             <div class="encabezadoBox">
-                                <h3 class="card-title center-align">Tus ventas</h3>
+                                <?php if ($this->session->userdata('id_rol') != 6) { ?>
+                                    <h3 class="card-title center-align">Tus ventas</h3>
+                                <?php } else { ?>
+                                    <h3 class="card-title center-align">Ventas</h3>
+                                <?php } ?>
+
                                 <p class="card-title pl-1"></p>
                             </div>
                             <?php

@@ -2,31 +2,32 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <body>
     <div class="wrapper">
-        <?php
-        if($this->session->userdata('id_rol')=="28" ||$this->session->userdata('id_rol')=="18"||$this->session->userdata('id_rol')=="19"){
-            $this->load->view('template/sidebar');
-        } else {
-            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-        }
-        ?>
+        <?php $this->load->view('template/sidebar'); ?>
+
+    <style>
+		.bs-searchbox .form-group{
+			padding-bottom: 0!important;
+    		margin: 0!important;
+		}
+	</style>
 
         <!-- Modals -->
-        <div class="modal fade modal-alertas" id="modal_mktd" role="dialog">
+        <div class="modal fade" id="modal_mktd" data-keyboard="false" data-backdrop="static">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <form method="post" id="form_mktd">
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label>Plaza 1</label>
-                                    <select name="plaza1" id="plaza1" class="selectpicker" data-style="btn btn-second"data-show-subtext="true" data-live-search="true" title="Selecciona una opción"  required>
-                                        <option value="0">Selecciona una opción</option>
+                                    <label class="control-label">Plaza 1</label>
+                                    <select name="plaza1" id="plaza1" class="selectpicker select-gral" data-style="btn btn-second"
+                                    data-show-subtext="true" data-live-search="true" title="Selecciona una opción"  required>
                                     </select>
                                 </div>
                                 <div class="col-md-6">
-                                    <label>Plaza 2</label>
-                                    <select name="plaza2" id="plaza2" class="selectpicker" data-style="btn btn-second"data-show-subtext="true" data-live-search="true" title="Selecciona una opción"  required>
-                                        <option value="0">Selecciona una opción</option>
+                                <label class="control-label">Plaza 2</label>
+                                    <select name="plaza2" id="plaza2" class="selectpicker select-gral" data-style="btn btn-second"
+                                    data-show-subtext="true" data-live-search="true" title="Selecciona una opción"  required>
                                     </select>
                                 </div>
                             </div>
@@ -40,8 +41,8 @@
         <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header bg-red">
-                        <center><img src="<?= base_url() ?>static/images/cob_mktd.gif" width="150" height="150"></center>
+                    <div class="modal-header d-flex justify-center">
+                        <img src="<?= base_url() ?>static/images/cob_mktd.gif" width="150" height="150">
                     </div>
                     <form method="post" id="form_aplicar">
                         <div class="modal-body"></div>
@@ -52,12 +53,12 @@
         </div>
 
         <div class="modal fade modal-alertas" id="modal_precio" role="dialog">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
                     </div>
                     <form method="post" id="form_precio">
-                        <div class="modal-body"></div>
+                        <div class="modal-body pt-0"></div>
                         <div class="modal-footer"></div>
                     </form>
                 </div>
@@ -74,17 +75,14 @@
                     </div>
                     <div class="modal-body">
                         <div role="tabpanel">
-                            <ul class="nav nav-tabs" role="tablist" style="background: orange;">
-                                <h5 style="color: white;"><b>BITÁCORA DE CAMBIOS</b></h5>
-                            </ul>
-
+                                <h5 class="mb-0 text-center"><b>BITÁCORA DE CAMBIOS</b></h5>
                             <div class="tab-content">
                                 <div role="tabpanel" class="tab-pane active" id="changelogTab">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <div class="card card-plain">
-                                                <div class="card-content">
-                                                    <ul class="timeline timeline-simple" id="comments-list-asimilados"></ul>
+                                            <div class="card card-plain mt-0">
+                                                <div class="card-content scroll-styles pl-0 pt-0" style="height: 350px; overflow: auto">
+                                                    <ul class="timeline-3" id="comments-list-asimilados"></ul>
                                                 </div>
                                             </div>
                                         </div>
@@ -117,33 +115,15 @@
                                 <div class="toolbar">
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                            <div class="form-group select-is-empty">
-                                                <label class="control-label">Mes</label>
-                                                <select name="mes" id="mes"class="selectpicker select-gral m-0"data-style="btn" data-show-subtext="true"data-live-search="true"title="SELECCIONA UNA OPCIÓN" data-size="7" required>
-                                                    <?php
-                                                    setlocale(LC_ALL, 'es_ES');
-                                                    for ($i = 1; $i <= 12; $i++) {
-                                                        $monthNum  = $i;
-                                                        $dateObj   = DateTime::createFromFormat('!m', $monthNum);
-                                                        $monthName = strftime('%B', $dateObj->getTimestamp());
-                                                        echo '<option value="' . $i . '">' . $monthName . '</option>';
-                                                    }
-                                                    ?>
-                                                </select>
+                                            <div class="form-group">
+                                                <label class="control-label" for="mes">Año (<span class="isRequired">*</span>)</label>
+                                                <select name="anio" id="anio" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                            <div class="form-group select-is-empty">
-                                                <label class="control-label">Año</label>
-                                                <select name="anio" id="anio"class="selectpicker select-gral m-0"data-style="btn" data-show-subtext="true"data-live-search="true"title="SELECCIONA UNA OPCIÓN" data-size="7" required>
-                                                    <?php
-                                                    setlocale(LC_ALL, 'es_ES');
-                                                    for ($i = 2019; $i <= 2023; $i++) {
-                                                        $yearName  = $i;
-                                                        echo '<option value="' . $i . '">' . $yearName . '</option>';
-                                                    }
-                                                    ?>
-                                                </select>
+                                            <div class="form-group">
+                                                <label class="control-label" for="mes">Mes</label>
+                                                <select name="mes" id="mes" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body"  required></select>
                                             </div>
                                         </div>
                                     </div>
@@ -153,7 +133,6 @@
                                         <table class="table-striped table-hover hide" id="tabla_historialGral" name="tabla_historialGral">
                                             <thead>
                                                 <tr>
-                                                    <th></th>
                                                     <th>ID</th>
                                                     <th>PROYECTO</th>
                                                     <th>CONDOMINIO</th>

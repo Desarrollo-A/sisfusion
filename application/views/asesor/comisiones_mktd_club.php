@@ -1,15 +1,7 @@
 <body>
 <div class="wrapper">
  
-    <?php
- if($this->session->userdata('id_rol')=="18" || $this->session->userdata('id_rol')=="1" ||  $this->session->userdata('id_rol')=="3" ||$this->session->userdata('id_rol')=="9" || $this->session->userdata('id_rol')=="2" || $this->session->userdata('id_rol')=="13" || $this->session->userdata('id_rol')=="22" || $this->session->userdata('id_rol')=="23")//contraloria
-     {        
-        $this->load->view('template/sidebar');
-     }else
-        {
-            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
-        }
-    ?>
+    <?php $this->load->view('template/sidebar'); ?>
 
 
 

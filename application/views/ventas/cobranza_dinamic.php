@@ -2,13 +2,7 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
     <div class="wrapper">
-        <?php
-            if($this->session->userdata('id_rol')=="28" ||$this->session->userdata('id_rol')=="18"||$this->session->userdata('id_rol')=="19"||$this->session->userdata('id_rol')=="63"){
-                $this->load->view('template/sidebar');
-            }else{
-                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
-            }
-        ?>
+        <?php $this->load->view('template/sidebar'); ?>
 
         <div class="content boxContent">
             <div class="container-fluid">
@@ -36,40 +30,28 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-12 col-sm-6 col-md-6 col-lg-3 overflow-hidden">
-                                                <div class="form-group">
-                                                    <label class="m-0" for="proyecto">Mes</label>
-                                                    <select name="mes" id="mes" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required>
-                                                        <?php
-                                                        setlocale(LC_ALL, 'es_ES');
-                                                        for ($i=1; $i<=12; $i++) {
-                                                            $monthNum  = $i;
-                                                            $dateObj   = DateTime::createFromFormat('!m', $monthNum);
-                                                            $monthName = strftime('%B', $dateObj->getTimestamp());
-                                                            echo '<option value="'.$i.'">'.$monthName.'</option>';
-                                                        }
-                                                        ?>
-                                                    </select>
-                                                </div>
+                                        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                                            <div class="form-group">
+                                                <label class="control-label" for="mes">Año (<span class="isRequired">*</span>)</label>
+                                                <select name="anio" id="anio" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                             </div>
-                                            <div class="col-12 col-sm-6 col-md-6 col-lg-3 overflow-hidden">
-                                                <div class="form-group">
-                                                    <label class="m-0">Año</label>
-                                                    <select name="anio" id="anio" class="selectpicker select-gral" data-style="btn btn-second"data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required>
-                                                        <option disabled selected>Selecciona una opción</option>
-                                                    </select>
-                                                </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                                            <div class="form-group">
+                                                <label class="control-label" for="mes">Mes(<span class="isRequired">*</span>)</label>
+                                                <select name="mes" id="mes" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body"  required></select>
                                             </div>
+                                        </div>
                                             <div class="col-12 col-sm-6 col-md-6 col-lg-3 overflow-hidden">
                                                 <div class="form-group">
-                                                    <label class="m-0">Plaza</label>
+                                                    <label class="control-label">Plaza</label>
                                                     <select name="plaza" id="plaza" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required> 
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-6 col-md-6 col-lg-3 overflow-hidden">
                                                 <div class="form-group">
-                                                    <label class="m-0">Gerente</label>
+                                                    <label class="control-label">Gerente</label>
                                                     <select name="gerente" id="gerente" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required> 
                                                     </select>
                                                 </div>
@@ -86,7 +68,7 @@
                                                     <th>MONTO VENDIDO</th>
                                                     <th>ASESOR</th>
                                                     <th>GERENTE</th>
-                                                    <th>FECHA DE APARTADO</th>
+                                                    <th>MES DE APARTADO</th>
                                                     <th>PLAZA</th>
                                                     <th>ESTATUS</th>
                                                 </tr>
@@ -100,16 +82,7 @@
             </div>
         </div>
         <?php $this->load->view('template/footer_legend');?>
-    </div><!--main-panel close-->
-
+    </div>
     <?php $this->load->view('template/footer');?>
-    <!--DATATABLE BUTTONS DATA EXPORT-->
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/ventas/cobranzaDinamic.js"></script>
 </body>

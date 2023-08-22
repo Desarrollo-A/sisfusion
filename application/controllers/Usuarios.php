@@ -9,14 +9,15 @@ class Usuarios extends CI_Controller
         $this->load->model('asesor/Asesor_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
         $this->load->model('Clientes_model');
         //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
-        $this->load->library(array('session','form_validation', 'get_menu'));
-        $this->load->library(array('session','form_validation','formatter'));
-        $this->load->helper(array('url','form'));
+        $this->load->library(array('session', 'form_validation', 'get_menu', 'formatter','permisos_sidebar'));
+        $this->load->helper(array('url', 'form'));
         $this->load->database('default');
         $this->validateSession();
 
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+        $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
+        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
     }
 
     public function index()
@@ -352,7 +353,6 @@ class Usuarios extends CI_Controller
             $mensajeLeyenda = ($response == 1) ? 'Usuario Actualizado correctamente' : 'No se pudo actualizar el usuario';
         } else {
             $result = json_decode($resultadoCH);
-            // $result = json_decode(1);
             if ($result == 1) {
                 $response = $this->Usuarios_modelo->updateUser($data, $this->input->post("id_usuario"));
                 $mensajeLeyenda = 'Usuario Actualizado correctamente';
@@ -378,7 +378,6 @@ class Usuarios extends CI_Controller
     public function validateSession()
     {
         if ($this->session->userdata('id_usuario') == "" || $this->session->userdata('id_rol') == "") {
-            //echo "<script>console.log('No hay sesión iniciada');</script>";
             redirect(base_url() . "index.php/login");
         }
     }
@@ -488,8 +487,6 @@ class Usuarios extends CI_Controller
     /**---------------------------------------- */
     public function getChangeLogUsers($id_usuario)
     {
-        /*print_r($id_usuario);
-        exit;*/
         $data = $this->Usuarios_modelo->getChangeLogUsers($id_usuario);
         echo json_encode($data);
     }
@@ -563,19 +560,19 @@ class Usuarios extends CI_Controller
         $datosCH['dcontrato']['idcoordinador'] = $coordAndGerente->id_coordinador;
         $datosCH['dcontrato']['idgerente'] = $coordAndGerente->id_gerente;
 
-        $resultado = $this->Usuarios_modelo->ServicePostCH($url, $datosCH);
-        $r = json_decode($resultado);
-        if (isset($r->resultado)) {
-            if ($r->resultado == 1) {
-                return json_decode($r->resultado);
-            } else {
-                return json_decode(0);
-            }
-        } else {
-            return json_decode(0);
-        }
+//        $resultado = $this->Usuarios_modelo->ServicePostCH($url, $datosCH);
+//        $r = json_decode($resultado);
+//        if (isset($r->resultado)) {
+//            if ($r->resultado == 1) {
+//                return json_decode($r->resultado);
+//            } else {
+//                return json_decode(0);
+//            }
+//        } else {
+//            return json_decode(0);
+//        }
 
-        // return json_decode(1);
+        return json_decode(1);
     }
 
     private function actualizarProspectoPorRol($idOwner, $rolNuevo, $rolActual, $idLiderNuevo, $sede): object

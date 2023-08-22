@@ -1,5 +1,7 @@
 $(document).ready(function() {
+    $('#spiner-loader').removeClass('hide');
     $.post(general_base_url + "Contratacion/lista_proyecto", function (data) {
+        $('#spiner-loader').addClass('hide');
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
@@ -11,11 +13,13 @@ $(document).ready(function() {
 });
 
 $('#proyecto').change( function(){
+    $('#spiner-loader').removeClass('hide');
     index_proyecto = $(this).val();
     index_condominio = 0
     $("#condominio").html("");
     $(document).ready(function(){
         $.post(general_base_url + "Contratacion/lista_condominio/"+index_proyecto, function(data) {
+            $('#spiner-loader').addClass('hide');
             var len = data.length;
             for( var i = 0; i<len; i++)
             {

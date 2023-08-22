@@ -21,7 +21,6 @@ class General_model extends CI_Model
                         return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $id_rol . " AND estatus = 1 ORDER BY orden ASC");   
         }
     }
-
     
     public function get_children_menu($id_rol,$id_usuario,$estatus)
     {
@@ -48,7 +47,7 @@ class General_model extends CI_Model
     {
         return $this->db->query("SELECT * FROM Menu2 WHERE idmenu IN 
             (SELECT value FROM menu_usuario CROSS APPLY STRING_SPLIT(menu, ',') 
-                    WHERE id_usuario = $idUsuario AND es_padre = 0) AND estatus=1 ORDER BY orden");
+                    WHERE id_usuario = $idUsuario AND es_padre = 0) AND estatus IN(1,3) ORDER BY orden");
     }
 
     public function getResidencialesList()
@@ -124,20 +123,31 @@ class General_model extends CI_Model
         return $this->db->query("SELECT * FROM roles_x_usuario WHERE idUsuario = $usuario");
     }
 
-    public function getUsersByLeader($rol, $secondRol){
+    public function getUsersByLeader($rol, $secondRol) {
         $idrol = $this->session->userdata('id_rol');
+        $extraSelect = "";
         if($idrol == 5)
             $idUsuario = $this->session->userdata('id_lider');
         else
             $idUsuario = $this->session->userdata('id_usuario');
 
-        return $this->db->query("(SELECT DISTINCT(u.id_usuario),u.* FROM roles_x_usuario rxu
+
+        if (in_array($this->session->userdata('id_usuario'), array(3, 28)))
+            $extraSelect = "UNION 
+            SELECT DISTINCT(u.id_usuario), u.* FROM roles_x_usuario rxu
+            INNER JOIN usuarios u  ON u.id_usuario = rxu.idUsuario  
+            WHERE rxu.idUsuario = 692";
+        
+        return $this->db->query("SELECT DISTINCT(u.id_usuario),u.* FROM roles_x_usuario rxu
         INNER JOIN usuarios u  ON u.id_lider = rxu.idUsuario  
-        WHERE rxu.idRol = $rol AND rxu.idUsuario =  $idUsuario AND u.id_rol =$secondRol)
-        UNION (SELECT DISTINCT(u.id_usuario), u.* FROM roles_x_usuario rxu
+        WHERE rxu.idRol = $rol AND rxu.idUsuario =  $idUsuario AND u.id_rol = $secondRol
+        UNION 
+        SELECT DISTINCT(u.id_usuario), u.* FROM roles_x_usuario rxu
         INNER JOIN usuarios u  ON u.id_usuario = rxu.idUsuario  
-        WHERE rxu.idRol = $rol AND rxu.idUsuario =  $idUsuario AND u.id_rol =$secondRol)");
+        WHERE rxu.idRol = $rol AND rxu.idUsuario =  $idUsuario AND u.id_rol = $secondRol
+        $extraSelect");
     }
+    
     function getCatalogOptions($id_catalogo)
     {
         return $this->db->query("SELECT id_opcion, id_catalogo, nombre FROM opcs_x_cats WHERE id_catalogo = $id_catalogo AND estatus = 1");
@@ -189,7 +199,15 @@ class General_model extends CI_Model
         } else
             return false;
     }
-
+    function permisosMenu($val){
+        if($val == 1){
+            $this->session->set_flashdata('error_usuario', '<div id="ele" class="col-md-11" role="alert"><center><b>¡NO TIENES ACCESO AL PANEL SOLICITADO!</b><br><span style="font-size:12px;">Verificar los datos o ponerse en contacto con un administrador.</span></center></div>');
+            redirect(base_url() .$this->session->userdata('controlador'),'location');
+        }
+    }
+    public function get_menu_opciones(){
+        return $this->db->query("SELECT LOWER(pagina) pagina FROM Menu2 WHERE pagina != '' AND estatus=1 AND nombre !='Aparta en línea' AND rol in(SELECT id_opcion FROM opcs_x_cats where id_catalogo=1 and estatus=1) GROUP BY pagina");
+    }
     public function getResidenciales()
     {
         return $this->db->query("SELECT idResidencial, nombreResidencial, CAST(descripcion AS VARCHAR(75)) descripcion, empresa FROM residenciales WHERE status = 1 ORDER BY nombreResidencial ASC")->result_array();
