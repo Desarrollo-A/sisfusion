@@ -631,18 +631,6 @@ function editGoogleEvent(evento, data){
   });
 }
 
-function removeCRMEvents(){
-  const srcEventos = calendar.getEventSources();
-  srcEventos.forEach(event => {
-      if(
-          event['internalEventSource']['extendedProps'].hasOwnProperty('title') &&
-          event['internalEventSource']['extendedProps']['title'] == "sourceCRM"
-      ) {
-        event.remove();
-      }
-  });
-}
-
 function setSourceEventCRM(events){
   calendar.addEventSource({
     title: 'sourceCRM',

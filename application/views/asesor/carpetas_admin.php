@@ -76,7 +76,7 @@
                             <p id="nom" style="color: red;"></p>
                         </div>
                         <div class="form-group col-lg-12 m-0">
-                            <label for="descripción">Descripción</label>                            
+                            <label for="descripción">Descripción</label>
                             <textarea class="text-modal" rows="2" name="desc" id="desc" required></textarea>
                             <p id="des" style="color: red;"></p>
                         </div>
