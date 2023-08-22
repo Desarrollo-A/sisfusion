@@ -71,10 +71,10 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h4 class="modal-title  center-align" ><b>Llenado de Plan</b></h4>
                     </div>
-                    <div class="modal-body center-align">
+                    <div class="modal-body ">
                         <label class="">Nota:</label>
-                        <label class="">La siguiente acción asignara el plan de venta a los lotes que cumplan con las condiciones correspondientes, si no se asigna favor de revisar otros datos como la sede o los usuarios que tiene asignados la venta. Esta acción solo se podra realizar cada 4 horas.</span>
-                        <label  id='tiempoRestante' name='tiempoRestante' class=" tiempoRestante hide">:</label>
+                        <label class="">La siguiente acción asignará el plan de venta a los lotes que cumplan con las condiciones correspondientes, si no se asigna favor de revisar otros datos como la sede o los usuarios que tiene asignados la venta. Esta acción solo se podrá realizar cada 4 horas.</span>
+                         <label  id='tiempoRestante' name='tiempoRestante' class=" tiempoRestante hide">:</label> 
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
@@ -129,12 +129,14 @@
                             <input type="hidden" name="id_pagoc" id="id-lote-detenido">
                             <input type="hidden" name="statusLote" id="statusLote">
                             <div class="col-lg-12" >
-                                <div class="form-group m-0">
-                                    <label for="motivo" class="control-label mt-0">Motivo (<span class="isRequired">*</span>)</label>
-                                    <select class="selectpicker select-gral m-0" id="motivo" name="motivo" data-style="btn" required title="SELECCIONA UNA OPCIÓN">
-                                        <?php foreach($controversias as $controversia){ ?>
-                                            <option value="<?= $controversia['id_opcion']; ?>"><?= $controversia['nombre'] ?> </option>
-                                        <?php } ?>
+                                <div class="form-group">
+                                <label for="motivo" class="control-label mt-0">Motivo (<span class="isRequired">*</span>)</label>
+                                    <select class="selectpicker select-gral" id="motivo" name="motivo" data-style="btn" required title="SELECCIONA UNA OPCIÓN">
+                                            <?php foreach($controversias as $controversia){ ?>
+                                                <?php if($controversia['id_opcion'] != 8 ){  ?>
+                                                <option value="<?= $controversia['id_opcion']; ?>"><?= $controversia['nombre'] ?> </option>
+                                            
+                                            <?php }} ?>
                                     </select>
                                 </div>
                             </div>

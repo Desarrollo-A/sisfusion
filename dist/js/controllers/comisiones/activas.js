@@ -196,6 +196,7 @@ $(document).ready(function () {
 
     $("#tabla_comisiones_activas tbody").on('click', '.btn-detener', function () {
             $("#motivo").val("");
+            $("#motivo").selectpicker('refresh');
             $("#descripcion").val("");
             const idLote = $(this).val();
             const nombreLote = $(this).attr("data-value");
@@ -389,6 +390,7 @@ $(document).ready(function () {
 });
 
 $('#detenidos-form').on('submit', function (e) {
+    document.getElementById('detenerLote').disabled = true;
     e.preventDefault();
     $.ajax({
         type: 'POST',
@@ -403,6 +405,7 @@ $('#detenidos-form').on('submit', function (e) {
                 $("#id-lote-detenido").val("");
                 alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
                 $('#tabla_comisiones_activas').DataTable().ajax.reload();
+                document.getElementById('detenerLote').disabled = false;
             } else {
                 alerts.showNotification("top", "right", "Ocurrió un problema, vuelva a intentarlo más tarde.", "warning");
             }
@@ -616,6 +619,7 @@ $(document).on('click', '.update_bandera', function(e){
 
 $("#tabla_comisiones_activas tbody").on('click', '.btn-detener', function () {
     $("#motivo").val("");
+    $("#motivo").selectpicker('refresh');
     $("#descripcion").val("");
     const idLote = $(this).val();
     const nombreLote = $(this).attr("data-value");
