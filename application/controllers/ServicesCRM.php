@@ -51,20 +51,20 @@ class ServicesCRM extends CI_Controller
 
     function codificarTest(){
         $miJson = array(
-            "rfc"=>"HGDE350247FF8",
-            "id_rol"=> 7,
-            "id_lider"=>655,
+            "rfc"=>"HGDE350247F13",
+            "id_rol"=> 3,
+            "id_lider"=>19,
             "id_gerente" => 456,
             "id_subdirector" => 789,
             "id_regional" => 321,
-            "nombre" => "Nombre Fulanito",
+            "nombre" => "Nombre Fulanitodods",
             "apellido_paterno" => "Gómez",
             "apellido_materno" => "Perez",
             "forma_pago" => 2,
             "correo" => "garmar@gmail.com",
             "telefono" => 442210616,
             "id_sede" => 1,
-            "usuario" => "otroususario3" ,
+            "usuario" => "otroususario6" ,
             "contrasena" => "123456",
             "creado_por" => 5,
             "sedech" => 1,
@@ -131,7 +131,7 @@ class ServicesCRM extends CI_Controller
                     //continuar con la lógica
                 }else{
                     echo base64_encode(json_encode(array("result" => false,
-                        "code" => 0,
+                        "code" => $validacion['respuesta'],
                         "message" => $validacion['mensaje'])));
                     exit;
                 }
