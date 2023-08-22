@@ -3812,13 +3812,17 @@ public function getLotesDispersado(){
 }
 
 
-public function getMontoDispersadoDates($fecha1, $fecha2){
+public function getMontoDispersadoDates(){
+  $fechaInicio = explode('/', $this->input->post("fecha1"));
+  $fechaFin = explode('/', $this->input->post("fecha2"));
+  $fecha1 = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+  $fecha2 = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
 
-   $datos["datos_monto"] = $this->Comisiones_model->getMontoDispersadoDates($fecha1, $fecha2)->result_array();
-   $datos["datos_pagos"] = $this->Comisiones_model->getPagosDispersadoDates($fecha1, $fecha2)->result_array();
-   $datos["datos_lotes"] = $this->Comisiones_model->getLotesDispersadoDates($fecha1, $fecha2)->result_array();
+  $datos["datos_monto"] = $this->Comisiones_model->getMontoDispersadoDates($fecha1, $fecha2)->result_array();
+  $datos["datos_pagos"] = $this->Comisiones_model->getPagosDispersadoDates($fecha1, $fecha2)->result_array();
+  $datos["datos_lotes"] = $this->Comisiones_model->getLotesDispersadoDates($fecha1, $fecha2)->result_array();
 
-   echo json_encode($datos);
+  echo json_encode($datos);
 
 }
 
