@@ -43,6 +43,7 @@ class ServicesCRM extends CI_Controller {
         $miJson = array(
             /*"id_usuario" => 5425,
             "estatus" => 1,
+            "id_rol" => 7,
             "modificado_por" => 1*/
             "rfc" => "HGDE350247FF8",
             "id_rol" => 7,
