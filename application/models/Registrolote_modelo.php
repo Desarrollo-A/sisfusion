@@ -3350,6 +3350,9 @@
 				else if ($this->session->userdata('id_usuario') == 12318) { // EMMA CECILIA MALDONADO RAMÍREZ
 					$id_lider = $id_lider . ', 11196, 5637';
 					$sede = "";
+				} else if ($this->session->userdata('id_usuario') == 11607) { // JOSE ENRIQUE HINOJOSA GUERRERO
+					$id_lider = $id_lider . ', 2411'; // VE LO DE SU GERENTE ACTUAL + LOS REGISTROS DE MAGDALENA ESPARZA HERNANDEZ CUANDO ERA GERENTE
+					$sede = "";
 				}
                 $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor, '1' venta_compartida  FROM lotes
                 INNER JOIN clientes ON clientes.idLote = lotes.idLote $sede
