@@ -41,9 +41,30 @@ class ServicesCRM extends CI_Controller {
 
     function codificarTest() {
         $miJson = array(
-            "id_usuario" => 5425,
+            /*"id_usuario" => 5425,
             "estatus" => 1,
-            "modificado_por" => 1
+            "id_rol" => 7,
+            "modificado_por" => 1*/
+            "rfc" => "HGDE350247FF8",
+            "id_rol" => 7,
+            "id_lider" => 655,
+            "id_gerente" => 456,
+            "id_subdirector" => 789,
+            "id_regional" => 321,
+            "nombre" => "Nombre Fulanito",
+            "apellido_paterno" => "Gómez",
+            "apellido_materno" => "Perez",
+            "forma_pago" => 2,
+            "correo" => "garmar@gmail.com",
+            "telefono" => 442210616,
+            "id_sede" => 1,
+            "usuario" => "otroususario3" ,
+            "contrasena" => "123456",
+            "creado_por" => 5,
+            "sedech" => 1,
+            "sucursalch" => 1,
+            "status_contratacion" => 1,
+            "nacionalidad" => 0
         ) ;
         $ok1 = json_encode($miJson);
         $ok2 = utf8_decode($ok1);
