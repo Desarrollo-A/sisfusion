@@ -4758,10 +4758,10 @@ for ($d=0; $d <count($dos) ; $d++) {
       echo json_encode(array('data' => $data));
     }
 
-      public function getStoppedCommissions()
+      public function getDataDetenidas()
     {
       $datos = array();
-      $datos = $this->Comisiones_model->getStoppedCommissions();
+      $datos = $this->Comisiones_model->getDataDetenidas();
       if ($datos != null) {
         echo json_encode($datos);
       } else {

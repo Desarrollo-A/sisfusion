@@ -6261,13 +6261,12 @@ public function getDataDispersionPagoEspecial($val = '') {
     }
 
 
-    public function getStoppedCommissions()
+    public function getDataDetenidas()
     {
         $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre as nombreCondominio,
         l.nombreLote, l.tipo_venta, vc.id_cliente AS compartida, l.idStatusContratacion,
         hl.motivo, hl.comentario,l.totalNeto2, l.registro_comision, 
-        convert(nvarchar, pc.fecha_modificacion, 6)  fecha_sistema,
-        convert(nvarchar, pc.fecha_neodata, 6) fecha_neodata,
+        convert(nvarchar,  hl.fecha_movimiento , 6) fecha_movimiento,
         (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion
         ,oxc.nombre as motivoOpc
         FROM lotes l 
