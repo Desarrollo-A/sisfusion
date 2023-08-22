@@ -113,12 +113,6 @@ $('#comisiones-detenidas-table').ready(function () {
             },
             {
                 data: function (d) {
-                    // var fechaMovimiento;
-                    // if (d.fecha_movimiento <= '01 OCT 20' || d.fecha_movimiento == null) {
-                    //     fechaMovimiento = '<span class="label lbl-deepGray">Sin Definir</span>';
-                    // } else {
-                    //     fechaMovimiento = '<br><span class="label lbl-blueMaderas">' + d.fecha_movimiento + '</span>';
-                    // }
                     return d.fecha_movimiento;
                 }
             },
