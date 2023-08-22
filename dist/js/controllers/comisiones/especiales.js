@@ -191,6 +191,7 @@ $(document).ready(function () {
     });
     $("#tabla_dispersar_especiales tbody").on('click', '.btn-detener', function () {
             $("#motivo").val("");
+            $("#motivo").selectpicker('refresh');
             $("#descripcion").val("");
             const idLote = $(this).val();
             const nombreLote = $(this).attr("data-value");
@@ -529,6 +530,7 @@ $(document).ready(function () {
 });
 
 $('#detenidos-form').on('submit', function (e) {
+    document.getElementById('detenerLote').disabled = true;
     e.preventDefault();
     $.ajax({
         type: 'POST',
@@ -541,6 +543,7 @@ $('#detenidos-form').on('submit', function (e) {
             if (data) {
                 $('#detenciones-modal').modal("hide");
                 $("#id-lote-detenido").val("");
+                document.getElementById('detenerLote').disabled = false;
                 alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
                 $('#tabla_dispersar_especiales').DataTable().ajax.reload();
             } else {
@@ -975,6 +978,7 @@ $(document).on('click', '.update_bandera', function(e){
 
 $("#tabla_dispersar_especiales tbody").on('click', '.btn-detener', function () {
     $("#motivo").val("");
+    $("#motivo").selectpicker('refresh');
     $("#descripcion").val("");
     const idLote = $(this).val();
     const nombreLote = $(this).attr("data-value");

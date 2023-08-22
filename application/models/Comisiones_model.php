@@ -7241,7 +7241,7 @@ public function getDataDispersionPagoEspecial($val = '') {
 
 
     public function ultimoLlenado(){
-        $cmd = "SELECT  TOP 1 * FROM historial_llenado_plan  ORDER BY  id_hlp  DESC";
+        $cmd = "	SELECT  TOP 1   CONVERT(VARCHAR(10), fecha_ejecucion, 103) + ' '  + convert(VARCHAR(8), fecha_ejecucion, 14) fecha_mostrar, * FROM historial_llenado_plan  ORDER BY  id_hlp  DESC";
         $query = $this->db->query($cmd);
        
         return  $query->num_rows() == 0 ?   FALSE  : $query->result_array()  ; 
