@@ -41,12 +41,13 @@ class ServicesCRM extends CI_Controller {
 
     function codificarTest() {
         $miJson = array(
-            /*"id_usuario" => 5425,
+            "id_usuario" => 7809,
+            "id_lider" => 745,
             "estatus" => 1,
             "id_rol" => 7,
-            "modificado_por" => 1*/
+            "modificado_por" => 1,
+            "id_sede" => 1/*,
             "rfc" => "HGDE350247FF8",
-            "id_rol" => 7,
             "id_lider" => 655,
             "id_gerente" => 456,
             "id_subdirector" => 789,
@@ -64,7 +65,7 @@ class ServicesCRM extends CI_Controller {
             "sedech" => 1,
             "sucursalch" => 1,
             "status_contratacion" => 1,
-            "nacionalidad" => 0
+            "nacionalidad" => 0*/
         ) ;
         $ok1 = json_encode($miJson);
         $ok2 = utf8_decode($ok1);
@@ -163,6 +164,17 @@ class ServicesCRM extends CI_Controller {
     public function activarUsuarioCh() {
         $objDatos = json_decode(utf8_encode(base64_decode(file_get_contents("php://input"))), true);
         if (isset($objDatos) && !empty($objDatos)) {
+
+            $dataChecar = array(
+                'id_rol' => $objDatos['id_rol'],
+                'id_sede' => $objDatos['id_sede'],
+                'id_lider' => $objDatos['id_lider']);
+            $validacion = validateUserVts($dataChecar);
+            if($validacion['respuesta'] == 0){
+                echo base64_encode(json_encode(array("status" => -1, "message" => $validacion['mensaje'])));
+                exit;
+            }
+
             $dataToUpdate = array(
                 'estatus'=> $objDatos['estatus'], 
                 "fecha_modificacion" => date("Y-m-d H:i:s"), 
