@@ -110,23 +110,23 @@ class VentasAsistentes_model extends CI_Model {
                 $filtroUsuarioBR = ' AND l.tipo_venta IN (4, 6)';
             $where = "l.idStatusContratacion IN (7, 11) AND l.idMovimiento IN (37, 7, 64, 66, 77, 41) AND l.status8Flag = 0 AND cl.status = 1 ".$filtroUsuarioBR;
         }
-        else if (in_array($id_rol, array(54, 63))) // MJ: MARKETING DIGITAL (POPEA) OR CONTROL INTERNO
+        else if (in_array($id_rol, array(54, 63, 4))) // MJ: MARKETING DIGITAL (POPEA) OR CONTROL INTERNO OR ASISTENTES DIRECCIÓN COMERCIAL
             $where = "l.idStatusContratacion IN (7, 11) AND l.idMovimiento IN (37, 7, 64, 66, 77, 41) AND l.status8Flag = 0 AND cl.status = 1";
-        else { // MJ: ES VENTAS
+        else { // MJ: ES COMERCIALIZACIÓN
             if ($id_sede == 9)
                 $filtroSede = "AND l.ubicacion IN ('4', '$id_sede')";
             else if ($id_sede == 10 && $id_usuario == 11422) // FRANCISCA JUDITH VE TEXAS, TIJUANA Y MTY
                 $filtroSede = "AND l.ubicacion IN ('8', '11', '$id_sede')";
-            else if ($id_sede == 10) 
+            else if ($id_sede == 10 && !in_array($id_rol, array(6, 5, 4))) 
                 $filtroSede = "AND l.ubicacion IN ('11', '$id_sede')";
             else
                 $filtroSede = "AND l.ubicacion IN ('$id_sede')";
 
+            if (in_array($id_usuario, array(28, 3)))
+                $filtroSede = "AND l.ubicacion IN ('2', '4', '13', '14', '15')";
+
             $filtroGerente = "";
-            if ($id_usuario == 6831) { // YARETZI MARICRUZ ROSALES HERNANDEZ
-                $filtroGerente = "AND cl.id_gerente = 690";
-                $filtroSede = "";
-            } else if ($id_usuario == 12318) { // EMMA CECILIA MALDONADO RAMÍREZ
+            if ($id_usuario == 12318) { // EMMA CECILIA MALDONADO RAMÍREZ
                 $id_lider = $this->session->userdata('id_lider');
                 $filtroGerente = "AND cl.id_gerente IN ($id_lider, 11196, 5637)";
                 $filtroSede = "";
@@ -270,23 +270,23 @@ class VentasAsistentes_model extends CI_Model {
                 $filtroUsuarioBR = ' AND l.tipo_venta IN (4, 6)';
             $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1".$filtroUsuarioBR;
         }
-        else if (in_array($id_rol, array(54, 63)))  // MJ: MARKETING DIGITAL (POPEA) OR CONTROL INTERNO
+        else if (in_array($id_rol, array(54, 63, 4)))  // MJ: MARKETING DIGITAL (POPEA) OR CONTROL INTERNO OR ASISTENTES DIRECCIÓN COMERCIAL
             $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1";
-        else { // MJ: ES VENTAS
+        else { // MJ: ES COMERCIALIZACIÓN
             if ($id_sede == 9)
                 $filtroSede = "AND l.ubicacion IN ('4', '$id_sede')";
             else if ($id_sede == 10 && $id_usuario == 11422) // FRANCISCA JUDITH VE TEXAS, TIJUANA Y MTY
                 $filtroSede = "AND l.ubicacion IN ('8', '11', '$id_sede')";
-            else if ($id_sede == 10) 
+            else if ($id_sede == 10 && !in_array($id_rol, array(6, 5, 4))) 
                 $filtroSede = "AND l.ubicacion IN ('11', '$id_sede')";
             else
                 $filtroSede = "AND l.ubicacion IN ('$id_sede')";
 
+            if (in_array($id_usuario, array(28, 3)))
+                $filtroSede = "AND l.ubicacion IN ('2', '4', '13', '14', '15')";
+
             $filtroGerente = "";
-            if ($id_usuario == 6831) { // YARETZI MARICRUZ ROSALES HERNANDEZ
-                $filtroGerente = "AND cl.id_gerente = 690";
-                $filtroSede = "";
-            } else if ($id_usuario == 12318) { // EMMA CECILIA MALDONADO RAMÍREZ
+            if ($id_usuario == 12318) { // EMMA CECILIA MALDONADO RAMÍREZ
                 $id_lider = $this->session->userdata('id_lider');
                 $filtroGerente = "AND cl.id_gerente IN ($id_lider, 11196, 5637)";
                 $filtroSede = "";

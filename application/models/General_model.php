@@ -123,20 +123,31 @@ class General_model extends CI_Model
         return $this->db->query("SELECT * FROM roles_x_usuario WHERE idUsuario = $usuario");
     }
 
-    public function getUsersByLeader($rol, $secondRol){
+    public function getUsersByLeader($rol, $secondRol) {
         $idrol = $this->session->userdata('id_rol');
+        $extraSelect = "";
         if($idrol == 5)
             $idUsuario = $this->session->userdata('id_lider');
         else
             $idUsuario = $this->session->userdata('id_usuario');
 
-        return $this->db->query("(SELECT DISTINCT(u.id_usuario),u.* FROM roles_x_usuario rxu
+
+        if (in_array($this->session->userdata('id_usuario'), array(3, 28)))
+            $extraSelect = "UNION 
+            SELECT DISTINCT(u.id_usuario), u.* FROM roles_x_usuario rxu
+            INNER JOIN usuarios u  ON u.id_usuario = rxu.idUsuario  
+            WHERE rxu.idUsuario = 692";
+        
+        return $this->db->query("SELECT DISTINCT(u.id_usuario),u.* FROM roles_x_usuario rxu
         INNER JOIN usuarios u  ON u.id_lider = rxu.idUsuario  
-        WHERE rxu.idRol = $rol AND rxu.idUsuario =  $idUsuario AND u.id_rol =$secondRol)
-        UNION (SELECT DISTINCT(u.id_usuario), u.* FROM roles_x_usuario rxu
+        WHERE rxu.idRol = $rol AND rxu.idUsuario =  $idUsuario AND u.id_rol = $secondRol
+        UNION 
+        SELECT DISTINCT(u.id_usuario), u.* FROM roles_x_usuario rxu
         INNER JOIN usuarios u  ON u.id_usuario = rxu.idUsuario  
-        WHERE rxu.idRol = $rol AND rxu.idUsuario =  $idUsuario AND u.id_rol =$secondRol)");
+        WHERE rxu.idRol = $rol AND rxu.idUsuario =  $idUsuario AND u.id_rol = $secondRol
+        $extraSelect");
     }
+    
     function getCatalogOptions($id_catalogo)
     {
         return $this->db->query("SELECT id_opcion, id_catalogo, nombre FROM opcs_x_cats WHERE id_catalogo = $id_catalogo AND estatus = 1");
