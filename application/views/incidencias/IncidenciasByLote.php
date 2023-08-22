@@ -553,18 +553,19 @@ hr {
                                 </div>
                                 <div class="toolbar">
                                     <div class="container-fluid">
-                                        <div class="row">
-                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                        <div class="row aligned-row">
+                                            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                                 <label class="control-label">Lote (<span class="isRequired">*</span>)</label>
                                                 <input id="inp_lote" onkeyup="onKeyUp(event)" name="inp_lote"  onkeydown="return event.keyCode !== 69" class="form-control input-gral" type="number" min="1"  maxlength="6">
                                             </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 mt-3">
-                                                <div class="form-group">
-                                                    <button type="button" class="btn-gral-data buscarLote">Buscar <i class="fas fa-search pl-1"></i></button>
+                                            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 d-flex align-end">
+                                                <div class="form-group w-100">
+                                                    <button type="button" class="btn-gral-data buscarLote ">Buscar <i class="fas fa-search pl-1"></i></button>
                                                 </div>
                                             </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 mt-3">
-                                                <div class="form-group">
+                                            <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2"></div>
+                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 d-flex align-end">
+                                                <div class="form-group w-100">
                                                     <button class="btn-gral-data" onclick="open_Modal();">Ceder comisiones</button>
                                                 </div>
                                             </div>

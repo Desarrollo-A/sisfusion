@@ -17,7 +17,7 @@ let titulos = [];
 
 $("#tabla_bono_revision").ready(function() {
     $('#tabla_bono_revision thead tr:eq(0) th').each( function (i) {
-        if(  i !=14 && i != 0){
+        if( i != 0){
             var title = $(this).text();
             titulos.push(title);
             $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
@@ -176,7 +176,7 @@ $("#tabla_bono_revision").ready(function() {
         {
             data: function(d) {
                 if(parseFloat(d.pago) == parseFloat(d.impuesto1)){
-                    return '<p class="m-0"><center><b>$' + formatMoney(d.pago) + '</b></center></p>';
+                    return '<p class="m-0"><center><b>' + formatMoney(d.pago) + '</b></center></p>';
                 }
                 else{
                     let iva = ((parseFloat(d.impuesto)/100)*d.pago);

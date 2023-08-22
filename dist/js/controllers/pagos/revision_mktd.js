@@ -1,5 +1,4 @@
 var tr;
-
 let meses = [
     {
         id: '01',
@@ -541,7 +540,7 @@ $("#tabla_plaza_1").ready( function(){
         },
         {
             "data": function( d ){
-                if(d.empresa == null)
+                if(d.empresa == null || d.empresa == "")
                     return '<p class="m-0">SIN ESPECIFICAR</p>';
                 else
                     return '<p class="m-0">'+d.empresa+'</p>';
@@ -698,7 +697,6 @@ $("#tabla_plaza_2").ready( function(){
             },
             attr: {
                 class: 'btn btn-azure',
-                style: 'position: relative; float: right;',
             }
         });
     }
@@ -1247,7 +1245,6 @@ $("#usuarioid").change(function() {
     var user = $(this).val();
     $('#idloteorigen option').remove();
     $.post(general_base_url + "Pagos/getLotesOrigenmk/"+user, function(data) {
-        $("#idloteorigen").append($('<option disabled>').val("default").text("Seleccione una opción"));
         var len = data.length;
         for( var i = 0; i<len; i++)
         {
