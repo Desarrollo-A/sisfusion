@@ -182,7 +182,7 @@ function cargarTabla(idLote, idCliente = '') {
         width: '100%',
         scrollX: true,
         ordering: false,
-        bAutoWidth: true,
+        bAutoWidth:true,
         pageLength: 20,
         buttons: [
             {
