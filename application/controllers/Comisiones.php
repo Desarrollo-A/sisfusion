@@ -4777,7 +4777,7 @@ for ($d=0; $d <count($dos) ; $d++) {
     
     public function detenidas() {
       $this->load->view('template/header');
-      $this->load->view('ventas/comisiones_detenidas');
+      $this->load->view('comisiones/detenidas-view');
     }
 
  
