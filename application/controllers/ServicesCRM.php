@@ -22,7 +22,7 @@ class ServicesCRM extends CI_Controller {
         if(in_array($origin,$urls) || strpos($origin,"192.168")) {
             $this->load->helper(array('form'));
             $this->load->library(array('jwt_key','formatter'));
-            $this->load->model(array('Services_model', 'General_model'));
+            $this->load->model(array('Services_model', 'General_model', 'Usuarios_modelo'));
         } else {
             die ("Access Denied");     
             exit;  
@@ -41,12 +41,11 @@ class ServicesCRM extends CI_Controller {
 
     function codificarTest() {
         $miJson = array(
-            "id_usuario" => 9312,
-            "id_lider" => 644,
+            "id_usuario" => 9643,
+            "id_lider" => 654,
             "estatus" => 1,
             "id_rol" => 7,
-            "modificado_por" => 1,
-            "id_sede" => 1
+            "modificado_por" => 1
             /*,
             "rfc" => "HGDE350247FF8",
             "id_lider" => 655,
