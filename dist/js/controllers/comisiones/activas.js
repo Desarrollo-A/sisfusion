@@ -576,12 +576,6 @@ function formatCurrency(input, blur) {
     input[0].setSelectionRange(caret_pos, caret_pos);
 }
 
-const formatMiles = (number) => {
-const exp = /(\d)(?=(\d{3})+(?!\d))/g;
-const rep = '$1,';
-return number.toString().replace(exp,rep);
-}
-
 function convertirPorcentajes(value) {
     const fixed = Number(value).toFixed(3);
     const partes = fixed.split(".");
