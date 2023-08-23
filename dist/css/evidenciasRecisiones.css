@@ -1205,7 +1205,7 @@
 }
 
 .file-gph .file-name::placeholder {
-  color: red !important;
+  color: #929292 !important;
 }
 
 .file-gph input[type="file"] {

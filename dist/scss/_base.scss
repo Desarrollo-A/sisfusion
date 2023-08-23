@@ -800,7 +800,7 @@ $tv                 : "(min-width: 1280px)";
         background-color: transparent;
         border: none;
         &::placeholder{
-            color: red !important;
+            color: $deepGray !important;
         }
     }
 }
