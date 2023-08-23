@@ -104,7 +104,9 @@ class Api_model extends CI_Model
         UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) nombreAsesor
         FROM usuarios u0
         INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = u0.estatus AND oxc0.id_catalogo = 3
-        WHERE u0.id_rol = 7 $validacionFecha")->result_array(); 
+        WHERE u0.id_rol = 7 AND rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%'
+        AND id_usuario NOT IN (821, 1366, 1923, 4340, 4062, 4064, 4065, 4067, 4068, 4069, 6578, 712 , 9942, 4415, 3, 607, 13151, 12845)
+        $validacionFecha")->result_array(); 
     }
 
 }

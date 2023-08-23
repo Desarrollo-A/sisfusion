@@ -116,11 +116,14 @@ class VentasAsistentes_model extends CI_Model {
                 $filtroSede = "AND l.ubicacion IN ('4', '$id_sede')";
             else if ($id_sede == 10 && $id_usuario == 11422) // FRANCISCA JUDITH VE TEXAS, TIJUANA Y MTY
                 $filtroSede = "AND l.ubicacion IN ('8', '11', '$id_sede')";
-                else if ($id_sede == 10 && !in_array($id_rol, array(6, 5, 4))) 
+            else if ($id_sede == 10 && !in_array($id_rol, array(6, 5, 4))) 
                 $filtroSede = "AND l.ubicacion IN ('11', '$id_sede')";
             else
                 $filtroSede = "AND l.ubicacion IN ('$id_sede')";
                 
+            if (in_array($id_usuario, array(28, 3)))
+                $filtroSede = "AND l.ubicacion IN ('2', '4', '13', '14', '15')";
+
             if (in_array($id_usuario, array(28, 3)))
                 $filtroSede = "AND l.ubicacion IN ('2', '4', '13', '14', '15')";
 
@@ -281,7 +284,7 @@ class VentasAsistentes_model extends CI_Model {
                 $filtroSede = "AND l.ubicacion IN ('4', '$id_sede')";
             else if ($id_sede == 10 && $id_usuario == 11422) // FRANCISCA JUDITH VE TEXAS, TIJUANA Y MTY
                 $filtroSede = "AND l.ubicacion IN ('8', '11', '$id_sede')";
-                else if ($id_sede == 10 && !in_array($id_rol, array(6, 5, 4))) 
+            else if ($id_sede == 10 && !in_array($id_rol, array(6, 5, 4))) 
                 $filtroSede = "AND l.ubicacion IN ('11', '$id_sede')";
             else
                 $filtroSede = "AND l.ubicacion IN ('$id_sede')";
