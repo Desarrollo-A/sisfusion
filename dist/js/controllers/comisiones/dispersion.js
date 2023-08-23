@@ -160,7 +160,7 @@ $(document).ready(function () {
                             varColor  = 'btn-green';
                         }
                         if(d.fecha_modificacion != null && d.registro_comision != 8 ) {
-                            RegresaActiva = '<button href="#" data-param="1" data-idpagoc="' + d.idLote + '" data-nombreLote="' + d.nombreLote + '"  ' +'class="btn-data btn-violetChin update_bandera" data-toggle="tooltip"  data-placement="top" title="Regresar a activas">' +'<i class="fas fa-undo-alt"></i></button>';
+                            RegresaActiva = '<button href="#" data-idpagoc="' + d.idLote + '" data-nombreLote="' + d.nombreLote + '"  ' +'class="btn-data btn-violetChin update_bandera" data-toggle="tooltip" data-placement="top" title="Enviar a activas">' +'<i class="fas fa-undo-alt"></i></button>';
                         }
                         BtnStats = '<button href="#" value="'+d.idLote+'" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'"  data-penalizacion="'+d.penalizacion+'"data-nombreLote="'+d.nombreLote+'" data-banderaPenalizacion="'+d.bandera_penalizacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata" data-toggle="tooltip"  data-placement="top" title="Verificar en NEODATA">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
                         BtnStats += `<button href="#" value="${d.idLote}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas btn-detener btn-warning" data-toggle="tooltip"  data-placement="top" title="Detener"> <i class="material-icons">block</i> </button>`;
@@ -810,13 +810,13 @@ $("#my_updatebandera_form").on('submit', function(e){
     });
 });
 
+
 $(document).on('click', '.update_bandera', function(e){
-        id_pagoc = $(this).attr("data-idpagoc");
+    id_pagoc = $(this).attr("data-idpagoc");
         nombreLote = $(this).attr("data-nombreLote");
-        param = $(this).attr("data-param");
         $("#myUpdateBanderaModal .modal-body").html('');
         $("#myUpdateBanderaModal .modal-header").html('');
-        $("#myUpdateBanderaModal .modal-header").append('<h3 class="modal-title">Aviso</b></h3><br><h4 class="modal-title">El lote <b>'+nombreLote+'</b> se enviará al panel de activas.</h4>');
+        $("#myUpdateBanderaModal .modal-header").append('<h4 class="modal-title">Enviar a activas: <b>'+nombreLote+'</b></h4>');
         $("#myUpdateBanderaModal .modal-body").append('<input type="hidden" name="id_pagoc" id="id_pagoc"><input type="hidden" name="param" id="param">');
         $("#myUpdateBanderaModal").modal();
     $("#id_pagoc").val(id_pagoc);
