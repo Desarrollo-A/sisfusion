@@ -5398,12 +5398,12 @@ public function descuentosCapitalHumano(){
 
     public function nuevoLlenadoPlan(){
       $fecha_reinicio = $this->input->post("fecha_reinicio");
-      $fecha_Sistema =  date('Y-m-d H:i:s');
-      if(strtotime($fecha_reinicio) <= strtotime($fecha_Sistema)){
-        $respuesta = $this->Comisiones_model->nuevoLlenadoPlan();
-      }else {
-        $respuesta = 300;
-      }
+        $fecha_Sistema =  date('Y-m-d H:i:s');
+      
+       $respuesta = $this->Comisiones_model->nuevoLlenadoPlan();
+     
+    
+      
   
      echo  json_encode( $respuesta);
     }
