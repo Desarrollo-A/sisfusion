@@ -181,9 +181,11 @@ class Contabilidad extends CI_Controller
         $idProyecto = $this->input->post("idProyecto");
         $idCliente = $this->input->post("idCliente");
         $dates = $this->input->post("dates");
-        $fechaIni = date("Y-m-d", strtotime($this->input->post("fechaIni")));
-        $fechaFin = date("Y-m-d", strtotime($this->input->post("fechaFin")));
-        $data['data'] = $this->Contabilidad_model->getInformationFromNeoData($this->input->post("empresa"), $idProyecto, $idCliente, $fechaIni, $fechaFin, $dates)->result_array();
+        $fechaInicio = explode('/', $this->input->post("fechaIni"));
+        $fechaFin = explode('/', $this->input->post("fechaFin"));
+        $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+        $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
+        $data['data'] = $this->Contabilidad_model->getInformationFromNeoData($this->input->post("empresa"), $idProyecto, $idCliente, $beginDate, $endDate, $dates)->result_array();
         echo json_encode($data);
     }
 

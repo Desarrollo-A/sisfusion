@@ -86,35 +86,37 @@
                                     </div>
                                 </div>
                             </div>
-                            <table id="tableLotificacion" name="tableLotificacion" class="table-striped table-hover hide">
-                                <thead>
-                                    <tr>
-                                        <th>CLIENTE</th>
-                                        <th>LOTE</th>
-                                        <th>SUPERFICIE</th>
-                                        <th>PRECIO POR M2</th>
-                                        <th>TOTAL</th>
-                                        <th>FECHA DE CONTRATO</th>
-                                        <th>FECHA DE FIRMA</th>
-                                        <th>ADENDUM</th>
-                                        <th>SUPERFICIE CONTRATO</th>
-                                        <th>COSTO POR M2</th>
-                                        <th>PARCELA</th>
-                                        <th>SUPERFICIE PROYECTOS</th>
-                                        <th>PRESUPUESTO DE OBRA</th>
-                                        <th>PRESUPUESTO A PLAZOS</th>
-                                        <th>$ M2 TERRENO</th>
-                                        <th>COSTO TERRENO</th>
-                                        <th>UNIDAD</th>
-                                        <th>CALLE EXACTA</th>
-                                        <th># EXTERIOR</th>
-                                        <th>CODIGO POSTAL</th>
-                                        <th>COLONIA</th>
-                                        <th>FOLIO REAL</th>
-                                        <th>OBSERVACIONES</th>
-                                    </tr>
-                                </thead>
-                            </table>
+                            <div class="form-group closeTable" id="closeTable" name="closeTable">
+                                <table id="tableLotificacion" name="tableLotificacion" class="table-striped table-hover hide">
+                                    <thead>
+                                        <tr>
+                                            <th>CLIENTE</th>
+                                            <th>LOTE</th>
+                                            <th>SUPERFICIE</th>
+                                            <th>PRECIO POR M2</th>
+                                            <th>TOTAL</th>
+                                            <th>FECHA DE CONTRATO</th>
+                                            <th>FECHA DE FIRMA</th>
+                                            <th>ADENDUM</th>
+                                            <th>SUPERFICIE CONTRATO</th>
+                                            <th>COSTO POR M2</th>
+                                            <th>PARCELA</th>
+                                            <th>SUPERFICIE PROYECTOS</th>
+                                            <th>PRESUPUESTO DE OBRA</th>
+                                            <th>PRESUPUESTO A PLAZOS</th>
+                                            <th>$ M2 TERRENO</th>
+                                            <th>COSTO TERRENO</th>
+                                            <th>UNIDAD</th>
+                                            <th>CALLE EXACTA</th>
+                                            <th># EXTERIOR</th>
+                                            <th>CODIGO POSTAL</th>
+                                            <th>COLONIA</th>
+                                            <th>FOLIO REAL</th>
+                                            <th>OBSERVACIONES</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
