@@ -924,7 +924,13 @@ function llenado (){
         success: function (data) {
             $("#llenadoPlan").modal();
             $('#tiempoRestante').removeClass('hide');
-            $("#tiempoRestante").html("ultima ejecución : "+data.date[0].fecha_mostrar);
+         
+            if(data.date ==  undefined || data.date == false){
+                $("#tiempoRestante").html("Disponible para ejecutar ");
+            }else{
+                $("#tiempoRestante").html("ultima ejecución : "+data.date[0].fecha_mostrar );
+            }
+           
         }
     })
 }
@@ -941,14 +947,25 @@ $(document).on("click",".llenadoPlan", function (e){
         dataType:'json',
         success: function (data) {
             let ban ;
-            fecha_reinicio =  new Date(data.date[0].fecha_reinicio)
-            fechaSitema =  new Date();
-            if (fechaSitema.getTime() >= fecha_reinicio.getTime())  {
-                bandera = 1;       
-            }else{
-                bandera = 0;
-                document.getElementById('llenadoPlan').disabled = false;
+            console.log(data); 
+            if(data.date ==  undefined || data.date == false){
+                bandera = 1;   
+                var milliseconds = new Date().getTime() + (1 * 60 * 60 * 4000);
+                fecha_reinicio = new Date(milliseconds);    
+             
+           }else{
+                fecha_reinicio =  new Date(data.date[0].fecha_reinicio)
+                fechaSitema =  new Date();
+                if (fechaSitema.getTime() >= fecha_reinicio.getTime())  {
+                    bandera = 1;       
+                }else{
+                    bandera = 0;
+                    document.getElementById('llenadoPlan').disabled = false;
+                }
             }
+
+   
+           
             if(bandera == 1 ){
                 $.ajax({
                     type: 'POST',
