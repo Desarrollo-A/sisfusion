@@ -2,20 +2,18 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <style>
 hr {
-  display: block;
-  height: 1px;
-  border: 0;
-  border-top: 1px solid #ccc;
-  margin: 1em 0;
-  padding: 0;
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0;
 }
 </style>
 <body>
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
-
-
-
+        <!--MODALS-->
         <div class="modal fade modal-alertas" id="modal_sedes" name="modal_sedes" role="dialog">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
@@ -24,15 +22,11 @@ hr {
                         <i class="material-icons">clear</i>
                     </button> 
                     <h4 class="card-title"><b>Cambio de sedes</b></h4>
-                   
                     </div>
                     <form method="post" id="form_sede">
-
                         <div class="modal-body">
-                            
                             <div class="tituloLote" id="tituloLote" ></div>
                             <div class="sedeOld" id="sedeOld" ></div>
-                            
                             <div class="form-group" >
                                 <label class="control-label">Selecciona una opción </label>
                                 <select id="sedesCambio" name="sedesCambio" 
@@ -46,20 +40,14 @@ hr {
                             </div>
                         </div>
                         <div class="modal-footer">  
-                            <button type="button" class="btn btn-danger btn-simple " data-dismiss="modal">
-                                CANCELAR
-                            </button>
-                            <button type="submit" class="btn btn-gral-data" value="ACEPTAR" style="margin: 15px;">
-                                ACEPTAR
-                            </button>
+                            <button type="button" class="btn btn-danger btn-simple " data-dismiss="modal">CANCELAR</button>
+                            <button type="submit" class="btn btn-gral-data" value="ACEPTAR" style="margin: 15px;">ACEPTAR</button>
             			</div>
-                    
                     </form>
-                
                 </div>
             </div>
         </div>
-       
+
         <div class="modal fade modal-alertas" id="modal_pagadas" role="dialog">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
@@ -70,10 +58,8 @@ hr {
                     </div>
                     <form method="post" id="form_pagadas">
                         <div class="modal-body"></div>
-                        <div class="modal-footer">  
-            				</div>
+                        <div class="modal-footer">  </div>
                     </form>
-                
                 </div>
             </div>
         </div>
@@ -327,43 +313,30 @@ hr {
             </div>
         </div>
 
-        <div class="modal fade" id="modal_avisitos" style="overflow-y: scroll;" 
-        style="overflow:auto !important;" role="dialog">
+        <div class="modal fade" id="modal_avisitos" style="overflow-y: scroll;" style="overflow:auto !important;" role="dialog">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-header">           
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                             <i class="material-icons">clear</i>
                         </button>      
-                     
                         <!-- <button type="button" style="font-size: 20px;top:20px;" class="close" data-dismiss="modal">  <i class="large material-icons">close</i></button> -->
                     </div>
                     <div class="modal-body"> 
-                    <h4 class="modal-title" >Cambiar usuario</h4>
+                        <h4 class="modal-title" >Cambiar usuario</h4>
                         <div class="form-group">        
                             <div class="col-md-12" >
-                            <label class="control-label"  >
-                                Seleccione una opción
-                            </label>
-                                <select class="selectpicker select-gral m-0"
-                                data-style="btn"
-                                data-cliente=""
-                                data-lote=""
-                                title="SELECCIONA UNA OPCIÓN" required data-live-search="true"
-                               name="opcion" 
-                                onchange="selectOpcion()" id="opcion" >
+                                <label class="control-label"  >Seleccione una opción</label>
+                                <select class="selectpicker select-gral m-0" data-style="btn" data-cliente="" data-lote="" title="SELECCIONA UNA OPCIÓN" required data-live-search="true"name="opcion" onchange="selectOpcion()" id="opcion" >
                                     <option value="1">Cliente</option>
                                     <option value="2">Venta compartida</option>
                                 </select>
-                            <input type="hidden" class="form-control"
-                            id="lotes1" name="lotes1">
-                            <input type="hidden" class="form-control"
-                            id="clientes2" name="clientes2">
-                            <!-- aqui mero vamos a poner los imputs  -->
-                            <!--  -->
+                                <input type="hidden" class="form-control"id="lotes1" name="lotes1">
+                                <input type="hidden" class="form-control"id="clientes2" name="clientes2">
+                                <!-- aqui mero vamos a poner los imputs  -->
+                                <!--  -->
                             </div> 
                         </div> 
-                  
                     </div>
                     <div class="modal-footer"></div>
                 </div>
@@ -422,13 +395,11 @@ hr {
                                 title="Selecciona un usuario" data-size="7" required>
                                 </select>
                             </div>
-                            <div id="info" ></div>
+                            <div id="info"></div>
                             <div class="form-group" id="users"></div>
                             <div class="form-group">
                                 <label class="control-label">Puesto del usuario a ceder la comisiones</label>
-                                <select class="selectpicker select-gral roles2" 
-                                    name="roles2" id="roles2" required
-                                 title="SELECCIONA UNA OPCIÓN" required data-live-search="true">
+                                <select class="selectpicker select-gral roles2"  name="roles2" id="roles2" required title="SELECCIONA UNA OPCIÓN" required data-live-search="true">
                                     <option value="7">Asesor</option>
                                     <option value="9">Coordinador</option>
                                     <option value="3">Gerente</option>
@@ -436,26 +407,19 @@ hr {
                             </div>
                             <div class="form-group" id="users">
                                 <label class="control-label">Usuario a ceder comisiones</label>
-                                <select id="usuarioid2" name="usuarioid2" class="selectpicker directorSelect select-gral"
-                                title="SELECCIONA UNA OPCIÓN" 
-                                 required data-live-search="true"></select>
+                                <select id="usuarioid2" name="usuarioid2" class="selectpicker directorSelect select-gral" title="SELECCIONA UNA OPCIÓN"  required data-live-search="true"></select>
                             </div>
                             <div class="form-group">
                                 <label class="control-label">Descripción</label>
-                                <textarea id="comentario" name="comentario" class="form-control input-gral" rows="3" 
-                                placeholder="Descripción" required="required"></textarea>
+                                <textarea id="comentario" name="comentario" class="form-control input-gral" rows="3" placeholder="Descripción" required="required"></textarea>
                             </div>
                             <div class="form-group">
-                             
                             </div>
                         </div>
-                        
                         <div class="modal-footer">     
-
-                                    <button class="btn btn-danger btn-simple" type="button" data-dismiss="modal" >CANCELAR</button>
-                                    <button type="submit" id="btn_ceder" class="btn btn-gral-data ">GUARDAR</button>
+                            <button class="btn btn-danger btn-simple" type="button" data-dismiss="modal" >CANCELAR</button>
+                            <button type="submit" id="btn_ceder" class="btn btn-gral-data ">GUARDAR</button>
                         </div>
-
                     </form>
                 </div>
             </div>
@@ -473,9 +437,7 @@ hr {
                             <div class="form-group" id="users"></div>
                             <div class="form-group">
                                 <label class="control-label">Puesto del usuario a modificar</label>
-                                <select class="selectpicker select-gral roles3"  name="roles3" 
-                                    id="roles3" required
-                                    title="SELECCIONA UNA OPCIÓN" required data-live-search="true">
+                                <select class="selectpicker select-gral roles3"  name="roles3"  id="roles3" required title="SELECCIONA UNA OPCIÓN" required data-live-search="true">
                                     <option value="7">Asesor</option>
                                     <option value="9">Coordinador</option>
                                     <option value="3">Gerente</option>
@@ -486,24 +448,17 @@ hr {
                             </div>
                             <div class="form-group" id="users">
                                 <label class="control-label">Seleccionar usuario</label>
-                                <select id="usuarioid3" name="usuarioid3" 
-                                class="selectpicker select-gral directorSelect " 
-                                title="SELECCIONA UNA OPCIÓN" 
-                                required data-live-search="true"></select>
+                                <select id="usuarioid3" name="usuarioid3"  class="selectpicker select-gral directorSelect "  title="SELECCIONA UNA OPCIÓN"  required data-live-search="true"></select>
                             </div>      
                             <p id="UserSelectDirec"></p>                
                             <div class="form-group">
                                 <label class="control-label">Descripción</label>
-                                <textarea id="comentario3" name="comentario3" 
-                                class="form-control input-gral" rows="3" placeholder="Descripción"
-                                 required></textarea>
+                                <textarea id="comentario3" name="comentario3" class="form-control input-gral" rows="3" placeholder="Descripción"required></textarea>
                             </div>
-                
                         </div>
                         <div class="modal-footer">    
-                                    
-                                    <button class="btn btn-danger btn-simple" type="button" data-dismiss="modal" >CANCELAR</button>
-                                    <button type="submit" id="btn_inv" class="btn btn-gral-data">GUARDAR</button>
+                            <button class="btn btn-danger btn-simple" type="button" data-dismiss="modal" >CANCELAR</button>
+                            <button type="submit" id="btn_inv" class="btn btn-gral-data">GUARDAR</button>
                         </div>
                     </form>
                 </div>
@@ -522,11 +477,7 @@ hr {
                             <div class="form-group" id="users"></div>
                             <div class="form-group">
                                 <label class="control-label">Puesto del usuario a modificar</label>
-
-                                    <select class="selectpicker select-gral rolesvc" 
-                                    name="rolesvc" id="rolesvc" required
-                                 title="SELECCIONA UNA OPCIÓN" required data-live-search="true">
-
+                                    <select class="selectpicker select-gral rolesvc"  name="rolesvc" id="rolesvc" required title="SELECCIONA UNA OPCIÓN" required data-live-search="true">
                                     <option value="7">Asesor</option>
                                     <option value="9">Coordinador</option>
                                     <option value="3">Gerente</option>
@@ -535,23 +486,17 @@ hr {
                             </div>
                             <div class="form-group" id="users">
                                 <label class="control-label">Seleccionar usuario</label>
-                                <select id="usuarioid4" name="usuarioid4" 
-                                class="selectpicker select-gral directorSelect" 
-                                title="SELECCIONA UNA OPCIÓN"
-                                required data-live-search="true"></select>
+                                <select id="usuarioid4" name="usuarioid4"  class="selectpicker select-gral directorSelect"  title="SELECCIONA UNA OPCIÓN" required data-live-search="true"></select>
                             </div>
                             <div class="form-group">
                                 <label class="control-label">Descripción</label>
-                                <textarea id="comentario4" name="comentario4" class="form-control input-gral"
-                                 rows="3" placeholder="Descripción" required="required"></textarea>
+                                <textarea id="comentario4" name="comentario4" class="form-control input-gral" rows="3" placeholder="Descripción" required="required"></textarea>
                             </div>
-                            <div class="form-group">
-                              
-                            </div>
+                            <div class="form-group"></div>
                         </div>
                         <div class="modal-footer">     
-                                <button class="btn btn-danger btn-simple " type="button" data-dismiss="modal" >CANCELAR</button>
-                                <button type="submit" id="btn_vc" class="btn btn-gral-data" >GUARDAR</button>
+                            <button class="btn btn-danger btn-simple " type="button" data-dismiss="modal" >CANCELAR</button>
+                            <button type="submit" id="btn_vc" class="btn btn-gral-data" >GUARDAR</button>
                         </div>
                     </form>
                 </div>
@@ -569,68 +514,59 @@ hr {
                             <div class="vcnew"></div>
                             <div class="form-group" id="users5">
                                 <label class="control-label">Asesor</label>
-                                <select id="usuarioid5" name="usuarioid5" class="selectpicker select-gral  asesor " 
-                                required data-live-search="true"    title="SELECCIONA UNA OPCIÓN" ></select>
+                                <select id="usuarioid5" name="usuarioid5" class="selectpicker select-gral  asesor " required data-live-search="true"    title="SELECCIONA UNA OPCIÓN" ></select>
                             </div>
                             <div class="form-group" id="users6">
                                 <label class="control-label">Coordinador</label>
-                                <select id="usuarioid6" name="usuarioid6" class="selectpicker select-gral  coor "
-                                data-live-search="true" required    title="SELECCIONA UNA OPCIÓN"></select>
+                                <select id="usuarioid6" name="usuarioid6" class="selectpicker select-gral  coor "data-live-search="true" required    title="SELECCIONA UNA OPCIÓN"></select>
                             </div>
                             <div class="form-group" id="users7">
                                 <label class="control-label">Gerente</label>
-                                <select id="usuarioid7" name="usuarioid7" class="selectpicker select-gral  ger " 
-                                required data-live-search="true"    title="SELECCIONA UNA OPCIÓN" ></select>
+                                <select id="usuarioid7" name="usuarioid7" class="selectpicker select-gral  ger " required data-live-search="true"    title="SELECCIONA UNA OPCIÓN" ></select>
                             </div>
                             <div class="form-group" id="users7">
                                 <label class="control-label">Subdirector</label>
-                                <select id="usuarioid8" name="usuarioid8" class="selectpicker select-gral ger " 
-                                required data-live-search="true"    title="SELECCIONA UNA OPCIÓN"></select>
+                                <select id="usuarioid8" name="usuarioid8" class="selectpicker select-gral ger " required data-live-search="true"    title="SELECCIONA UNA OPCIÓN"></select>
                             </div>
                         </div>
                         <div class="modal-footer">     
-                               
-                                <button class="btn btn-danger btn-simple" type="button" data-dismiss="modal" >CANCELAR</button>
-                                <button type="submit" id="btn_vcnew" class="btn btn-gral-data">GUARDAR</button>
+                            <button class="btn btn-danger btn-simple" type="button" data-dismiss="modal" >CANCELAR</button>
+                            <button type="submit" id="btn_vcnew" class="btn btn-gral-data">GUARDAR</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
+        <!--END MODALS-->
 
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                <i class="fas fa-wallet fa-2x"></i>
+                                <i class="fas fa-chart-pie fa-2x"></i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Panel de incidencias</h3>
+                                <div class="encabezadoBox">
+                                    <h3 class="card-title center-align" >Panel de incidencias</h3>
+                                </div>
                                 <div class="toolbar">
                                     <div class="container-fluid">
-                                        <div class="row">
-                                            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                                        <div class="row aligned-row">
+                                            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                                <label class="control-label">Lote (<span class="isRequired">*</span>)</label>
+                                                <input id="inp_lote" onkeyup="onKeyUp(event)" name="inp_lote"  onkeydown="return event.keyCode !== 69" class="form-control input-gral" type="number" min="1"  maxlength="6">
                                             </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                                <div class="form-group">
+                                            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 d-flex align-end">
+                                                <div class="form-group w-100">
+                                                    <button type="button" class="btn-gral-data buscarLote ">Buscar <i class="fas fa-search pl-1"></i></button>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2"></div>
+                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 d-flex align-end">
+                                                <div class="form-group w-100">
                                                     <button class="btn-gral-data" onclick="open_Modal();">Ceder comisiones</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
-                                                <div class="form-group  label-floating is-empty">
-                                                    <label class="control-label label-gral">Lote</label>
-                                                    <input id="inp_lote" onkeyup="onKeyUp(event)" name="inp_lote" 
-                                                    onkeydown="return event.keyCode !== 69"
-                                                    class="form-control input-gral" type="number" min="1"  maxlength="6">
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                                <div class="form-group">
-                                                    <button type="button" class="btn-gral-data find_doc">Buscar <i class="fas fa-search pl-1"></i></button>
                                                 </div>
                                             </div>
                                         </div>
@@ -638,39 +574,35 @@ hr {
                                 </div>
                                 <div class="material-datatables">
                                     <div class="form-group">
-                                        <div class="table-responsive">
-                                            <table class="table-striped table-hover" id="tabla_inventario_contraloria" name="tabla_inventario_contraloria">
-                                                <thead>
-                                                    <tr>   
-                                                        <th>PROYECTO</th>
-                                                        <th>CONDOMINIO</th>
-                                                        <th>LOTE</th>
-                                                        <th>ID LOTE</th>
-                                                        <th>CLIENTE</th>
-                                                        <th>TIPO VENTA</th>
-                                                        <th>MODALIDAD</th>
-                                                        <th>CONTRATACIÓN</th>
-                                                        
-                                                        <th>PLAN VENTA</th>
-                                                        <th>FEC. SISTEMA</th> 
-                                                        <th>FEC. NEODATA</th>
-
-                                                        <th>ENT. VENTA</th>
-                                                        <th>ESTATUS COM.</th>
-                                                        <th>MÁS</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
-                                        </div>
+                                        <table class="table-striped table-hover hide" id="tabla_incidencias_contraloria" name="tabla_incidencias_contraloria">
+                                            <thead>
+                                                <tr>
+                                                    <th>PROYECTO</th>
+                                                    <th>CONDOMINIO</th>
+                                                    <th>LOTE</th>
+                                                    <th>ID LOTE</th>
+                                                    <th>CLIENTE</th>
+                                                    <th>TIPO DE VENTA</th>
+                                                    <th>MODALIDAD</th>
+                                                    <th>CONTRATACIÓN</th>
+                                                    <th>PLAN DE VENTA</th>
+                                                    <th>FECHA EN SISTEMA</th> 
+                                                    <th>FECHA DE NEODATA</th>
+                                                    <th>ESTATUS DE LA COMISIÓN</th>
+                                                    <th>ACCIONES</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
                                     </div>
                                 </div>
-							</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <?php $this->load->view('template/footer_legend');?>
+ 
+    <?php $this->load->view('template/footer_legend');?>
     </div>
     </div>
     </div><!--main-panel close-->

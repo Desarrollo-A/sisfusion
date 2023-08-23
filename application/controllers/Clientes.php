@@ -2628,16 +2628,16 @@ public function getStatusMktdPreventa(){
             $typeTransaction = $this->input->post("typeTransaction");
             $fechaInicio = explode('/', $this->input->post("beginDate"));
             $fechaFin = explode('/', $this->input->post("endDate"));
-            $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
-            $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
+            $beginDate = date("Y-m-d", strtotime("$fechaInicio[2]-$fechaInicio[1]-$fechaInicio[0]"));
+            $endDate = date("Y-m-d", strtotime("$fechaFin[2]-$fechaFin[1]-$fechaFin[0]"));
             $where = $this->input->post("where");
             $data = $this->Clientes_model->getProspectsListBySubdirector($dato[0]['id_sede'], $typeTransaction, $beginDate, $endDate, $where);
         } else {
             $typeTransaction = $this->input->post("typeTransaction");
             $fechaInicio = explode('/', $this->input->post("beginDate"));
             $fechaFin = explode('/', $this->input->post("endDate"));
-            $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
-            $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
+            $beginDate = date("Y-m-d", strtotime("$fechaInicio[2]-$fechaInicio[1]-$fechaInicio[0]"));
+            $endDate = date("Y-m-d", strtotime("$fechaFin[2]-$fechaFin[1]-$fechaFin[0]"));
             $where = $this->input->post("where");
             $data = $this->Clientes_model->getProspectsListBySubdirector($idSubdir, $typeTransaction, $beginDate, $endDate, $where);
         }
