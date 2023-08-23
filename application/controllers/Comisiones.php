@@ -72,10 +72,7 @@ class Comisiones extends CI_Controller
     }
     
     public function updateBandera(){
-      $identificador     = $this->input->post('id_pagoc');
-      $param   = $this->input->post('param');
-
-      $response = $this->Comisiones_model->updateBandera( $param, $identificador);
+      $response = $this->Comisiones_model->updateBandera( $_POST['id_pagoc'], $_POST['param']);
       echo json_encode($response);
     }
 
@@ -4777,7 +4774,7 @@ for ($d=0; $d <count($dos) ; $d++) {
     
     public function detenidas() {
       $this->load->view('template/header');
-      $this->load->view('ventas/comisiones_detenidas');
+      $this->load->view('comisiones/detenidas-view');
     }
 
  
@@ -5398,12 +5395,12 @@ public function descuentosCapitalHumano(){
 
     public function nuevoLlenadoPlan(){
       $fecha_reinicio = $this->input->post("fecha_reinicio");
-      $fecha_Sistema =  date('Y-m-d H:i:s');
-      if(strtotime($fecha_reinicio) <= strtotime($fecha_Sistema)){
-        $respuesta = $this->Comisiones_model->nuevoLlenadoPlan();
-      }else {
-        $respuesta = 300;
-      }
+        $fecha_Sistema =  date('Y-m-d H:i:s');
+      
+       $respuesta = $this->Comisiones_model->nuevoLlenadoPlan();
+     
+    
+      
   
      echo  json_encode( $respuesta);
     }

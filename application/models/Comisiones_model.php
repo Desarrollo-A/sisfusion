@@ -6291,7 +6291,8 @@ public function getDataDispersionPagoEspecial($val = '') {
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1 
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio 
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
-        INNER JOIN historial_log hl ON hl.identificador = l.idLote AND hl.tabla = 'pago_comision' AND hl.estatus = 1
+        NNER JOIN historial_log hl ON hl.identificador = l.idLote AND hl.tabla = 'pago_comision' AND hl.estatus = 1 
+		AND hl.fecha_movimiento = (select max(t2.fecha_movimiento) from historial_log t2 Where t2.identificador = hl.identificador)
         LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
         LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision
         LEFT JOIN pago_comision pc ON pc.id_lote = l.idLote AND pc.bandera in (0)
@@ -6651,11 +6652,13 @@ public function getDataDispersionPagoEspecial($val = '') {
         return $query->result_array();
     }
 
-    function updateBandera($identificador, $param) {
-        $response = $this->db->query("UPDATE pago_comision SET bandera = ".$param." WHERE id_lote IN (".$identificador.")");
+    function updateBandera($id_pagoc, $param) {
+         $response = $this->db->query("UPDATE pago_comision SET bandera = ".$param." WHERE id_lote IN (".$id_pagoc.")");
+
         if($param == 55){
-            $response = $this->db->query("UPDATE lotes SET registro_comision = 1 WHERE idLote IN (".$identificador.")");
+          $response = $this->db->query("UPDATE lotes SET registro_comision = 1 WHERE idLote IN (".$id_pagoc.")");
         }
+
         if (! $response ) {
             return $finalAnswer = 0;
         } else {
@@ -7259,7 +7262,9 @@ public function getDataDispersionPagoEspecial($val = '') {
 
 
     public function ultimoLlenado(){
-        $cmd = "	SELECT  TOP 1   CONVERT(VARCHAR(10), fecha_ejecucion, 103) + ' '  + convert(VARCHAR(8), fecha_ejecucion, 14) fecha_mostrar, * FROM historial_llenado_plan  ORDER BY  id_hlp  DESC";
+        $cmd = "SELECT  TOP 1   CONVERT(VARCHAR(10), fecha_ejecucion, 103) + ' '  + convert(VARCHAR(8), fecha_ejecucion, 14) fecha_mostrar, * FROM historial_llenado_plan 
+        where   fecha_reinicio >= GetDate() 
+        ORDER BY  id_hlp desc";
         $query = $this->db->query($cmd);
        
         return  $query->num_rows() == 0 ?   FALSE  : $query->result_array()  ; 
