@@ -31,7 +31,7 @@
                                 <option value="20">Marketing</option>      
                             </select>
                             </div>
-                            <div class="form-group m-0" id="users"></div>
+                            <div class="form-group m-0 overflow-hidden" id="users"></div>
                             <div class="form-group row m-0">
                             <div class="col-md-4">
                                 <label class="control-label">Monto bono</label>
