@@ -1231,6 +1231,7 @@
 			else
 				$lider = "AND cl.id_subdirector = $id_lider";
 		}
+		
 		$query = $this->db->query("SELECT idHistorialLote, hd.nombreLote, hd.idStatusContratacion, hd.idMovimiento, CONVERT(VARCHAR,hd.modificado,120) AS modificado, hd.fechaVenc, lotes.idLote, 
 		CAST(lotes.comentario AS varchar(MAX)) as comentario, hd.status, lotes.totalNeto, totalValidado, lotes.totalNeto2, 
 		concat(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_paterno) as asesor, concat(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_paterno) as gerente 

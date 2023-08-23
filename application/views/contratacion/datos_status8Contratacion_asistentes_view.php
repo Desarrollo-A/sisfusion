@@ -167,8 +167,7 @@
         </div>
         <?php $this->load->view('template/footer_legend');?>
     </div>
-    </div><!--main-panel close-->
+    </div>
     <?php $this->load->view('template/footer');?>
-    <!--DATATABLE BUTTONS DATA EXPORT-->
     <script src="<?= base_url() ?>dist/js/controllers/contratacion/vista_8_contratacion.js"></script>
 </body>
