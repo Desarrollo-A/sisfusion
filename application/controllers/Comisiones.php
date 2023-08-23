@@ -72,10 +72,7 @@ class Comisiones extends CI_Controller
     }
     
     public function updateBandera(){
-      $identificador     = $this->input->post('id_pagoc');
-      $param   = $this->input->post('param');
-
-      $response = $this->Comisiones_model->updateBandera( $param, $identificador);
+      $response = $this->Comisiones_model->updateBandera( $_POST['id_pagoc'], $_POST['param']);
       echo json_encode($response);
     }
 
