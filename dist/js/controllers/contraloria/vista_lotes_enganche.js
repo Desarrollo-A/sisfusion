@@ -214,12 +214,14 @@ function limpiarCampos(){
 $(document).on("submit", "#form_modificacion", function (e) {
     e.preventDefault();
     e.stopImmediatePropagation();
-    let idLote = $("#idLotes").val();
     let data = new FormData($(this)[0]);
     let precioVacio = $('#modificacion').val().includes('Precio');
     let engancheVacio = $('#modificacion').val().includes('Enganche');
+    let ubicacion = $('#modificacion').val().includes('Ubicacion');
+
     data.append('ubicacion', $('#ubicacion_sede').val());
-    let validar = validateData(engancheVacio,precioVacio);
+    debugger;
+    let validar = validateData(engancheVacio,precioVacio,ubicacion);
 
     if(validar == true){
     $('#spiner-loader').removeClass('hide');
@@ -241,9 +243,9 @@ $(document).on("submit", "#form_modificacion", function (e) {
     }    
 });
 
-function validateData(engancheVacio, precioVacio){
+function validateData(engancheVacio, precioVacio,ubicacionVacio){
     validate = false;
-    if(engancheVacio && precioVacio){
+    if( (engancheVacio && precioVacio) || (engancheVacio && ubicacionVacio) ){
         if( $('#enganches').val() == '' && $('#preciodesc').val() == '' ){
             alerts.showNotification("top", "right", "Faltan datos", "warning");
         }
@@ -257,21 +259,17 @@ function validateData(engancheVacio, precioVacio){
             validate = true;
         }
         return validate;
-        
     }
     else if(engancheVacio){
-        
         if( $('#enganches').val() == '' ){
             alerts.showNotification("top", "right", "El campo Enganche no puede estar vacio", "warning");
         }
         else{
             validate = true;
         }
-        
         return validate;
     }
     else if(precioVacio){
-        
         if( $('#preciodesc').val() == '' ){
             alerts.showNotification("top", "right", "El campo Precio desc no puede estar vacio", "warning");
         }
@@ -279,6 +277,10 @@ function validateData(engancheVacio, precioVacio){
             validate = true;
         }
         return validate;
+    }
+    else if( ubicacionVacio ){
+        console.log(ubicacionVacio);
+        return ubicacionVacio;
     }
 
 }
