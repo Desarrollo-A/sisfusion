@@ -33,8 +33,8 @@
                                                     <th>MODALIDAD</th>
                                                     <th>CONTRATACIÓN</th>
                                                     <th>PLAN DE VENTA</th>
-                                                    <th>FECHA DEL SISTEMA</th> 
-                                                    <th>FECHA DE NEODATA</th>
+                                                    <th>FECHA MOVIMIENTO</th> 
+                                                   
                                                     <th>MOTIVO</th>
                                                     <th>ACCIONES</th>
                                                 </tr>

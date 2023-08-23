@@ -363,6 +363,7 @@ function loadTable(idUsuario, idProyecto, idEstatus) {
     });
 
     $("#tabla-historial tbody").on("click", ".consultar_logs_asimilados", function(e){
+        $("#spiner-loader").removeClass('hide');
         e.preventDefault();
         e.stopImmediatePropagation();
         const id_pago = $(this).val();
@@ -374,6 +375,7 @@ function loadTable(idUsuario, idProyecto, idEstatus) {
             $.each( data, function(i, v){
                 $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-xs-12 col-sm-6 col-md-6 col-lg-6"><a><b>' + v.nombre_usuario + '</b></a><br></div> <div class="float-end text-right"><a>' + v.fecha_movimiento + '</a></div><div class="col-md-12"><p class="m-0"><b> ' + v.comentario + '</b></p></div></div></div></li>');
             });
+            $("#spiner-loader").addClass('hide');
         });
     });
 }

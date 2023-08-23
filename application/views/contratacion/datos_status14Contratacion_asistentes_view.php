@@ -4,7 +4,6 @@
     <div class="wrapper ">
         <?php $this->load->view('template/sidebar'); ?>
 
-        <!-- Modals -->
         <!-- modal  rechazar A CONTRALORIA 7-->
         <div class="modal fade" id="editReg" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
@@ -86,7 +85,7 @@
         </div>
         <?php $this->load->view('template/footer_legend');?>
     </div>
-    </div><!--main-panel close-->
+    </div>
     <?php $this->load->view('template/footer');?>
     <script src="<?= base_url() ?>dist/js/controllers/contratacion/vista_14_contratacion.js"></script>
 </body>

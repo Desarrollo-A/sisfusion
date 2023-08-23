@@ -72,10 +72,7 @@ class Comisiones extends CI_Controller
     }
     
     public function updateBandera(){
-      $identificador     = $this->input->post('id_pagoc');
-      $param   = $this->input->post('param');
-
-      $response = $this->Comisiones_model->updateBandera( $param, $identificador);
+      $response = $this->Comisiones_model->updateBandera( $_POST['id_pagoc'], $_POST['param']);
       echo json_encode($response);
     }
 
@@ -3799,13 +3796,17 @@ public function getLotesDispersado(){
 }
 
 
-public function getMontoDispersadoDates($fecha1, $fecha2){
+public function getMontoDispersadoDates(){
+  $fechaInicio = explode('/', $this->input->post("fecha1"));
+  $fechaFin = explode('/', $this->input->post("fecha2"));
+  $fecha1 = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+  $fecha2 = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
 
-   $datos["datos_monto"] = $this->Comisiones_model->getMontoDispersadoDates($fecha1, $fecha2)->result_array();
-   $datos["datos_pagos"] = $this->Comisiones_model->getPagosDispersadoDates($fecha1, $fecha2)->result_array();
-   $datos["datos_lotes"] = $this->Comisiones_model->getLotesDispersadoDates($fecha1, $fecha2)->result_array();
+  $datos["datos_monto"] = $this->Comisiones_model->getMontoDispersadoDates($fecha1, $fecha2)->result_array();
+  $datos["datos_pagos"] = $this->Comisiones_model->getPagosDispersadoDates($fecha1, $fecha2)->result_array();
+  $datos["datos_lotes"] = $this->Comisiones_model->getLotesDispersadoDates($fecha1, $fecha2)->result_array();
 
-   echo json_encode($datos);
+  echo json_encode($datos);
 
 }
 
@@ -4745,10 +4746,10 @@ for ($d=0; $d <count($dos) ; $d++) {
       echo json_encode(array('data' => $data));
     }
 
-      public function getStoppedCommissions()
+      public function getDataDetenidas()
     {
       $datos = array();
-      $datos = $this->Comisiones_model->getStoppedCommissions();
+      $datos = $this->Comisiones_model->getDataDetenidas();
       if ($datos != null) {
         echo json_encode($datos);
       } else {
@@ -4760,7 +4761,7 @@ for ($d=0; $d <count($dos) ; $d++) {
     
     public function detenidas() {
       $this->load->view('template/header');
-      $this->load->view('ventas/comisiones_detenidas');
+      $this->load->view('comisiones/detenidas-view');
     }
 
  
@@ -5381,12 +5382,12 @@ public function descuentosCapitalHumano(){
 
     public function nuevoLlenadoPlan(){
       $fecha_reinicio = $this->input->post("fecha_reinicio");
-      $fecha_Sistema =  date('Y-m-d H:i:s');
-      if(strtotime($fecha_reinicio) <= strtotime($fecha_Sistema)){
-        $respuesta = $this->Comisiones_model->nuevoLlenadoPlan();
-      }else {
-        $respuesta = 300;
-      }
+        $fecha_Sistema =  date('Y-m-d H:i:s');
+      
+       $respuesta = $this->Comisiones_model->nuevoLlenadoPlan();
+     
+    
+      
   
      echo  json_encode( $respuesta);
     }

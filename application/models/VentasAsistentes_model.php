@@ -54,8 +54,7 @@ class VentasAsistentes_model extends CI_Model {
         return $this->db->query("SELECT cli.id_cliente, cli.nombre, con.idCondominio,  cli.apellido_paterno, cli.apellido_materno, cli.idLote, lot.nombreLote, con.nombre as condominio, res.nombreResidencial 
                                 FROM clientes cli INNER JOIN [lotes] lot ON lot.idLote = cli.idLote 
                                     INNER JOIN [condominios] con ON con.idCondominio = lot.idCondominio 
-                                    INNER JOIN [residenciales] res ON res.idResidencial = con.idResidencial 
-                                WHERE cli.status = 1 AND cli.idLote = '".$lote."'");
+                                    INNER JOIN [residenciales] res ON res.idResidencial = con.idResidencial WHERE cli.status = 1 AND cli.idLote = '".$lote."'");
     }
     
     function get_datos_lote_cont($lote){
@@ -122,6 +121,9 @@ class VentasAsistentes_model extends CI_Model {
                 $filtroSede = "AND l.ubicacion IN ('11', '$id_sede')";
             else
                 $filtroSede = "AND l.ubicacion IN ('$id_sede')";
+                
+            if (in_array($id_usuario, array(28, 3)))
+                $filtroSede = "AND l.ubicacion IN ('2', '4', '13', '14', '15')";
 
             if (in_array($id_usuario, array(28, 3)))
                 $filtroSede = "AND l.ubicacion IN ('2', '4', '13', '14', '15')";
@@ -312,7 +314,7 @@ class VentasAsistentes_model extends CI_Model {
             } 
             $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1 $filtroSede $filtroGerente";
         }
-        $query = $this->db->query(" SELECT l.idLote, cl.id_cliente, 
+        $query = $this->db->query(" SELECT l.idLote, cl.id_cliente,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, CONVERT(VARCHAR,l.modificado,120) AS modificado, cl.rfc,
         CAST(l.comentario AS VARCHAR(MAX)) AS comentario, CONVERT(VARCHAR,l.fechaVenc,120) AS fechaVenc, l.perfil, cond.nombre AS nombreCondominio, res.nombreResidencial, l.ubicacion,
         ISNULL(tv.tipo_venta, 'Sin especificar') tipo_venta,
@@ -361,7 +363,7 @@ class VentasAsistentes_model extends CI_Model {
 	public function validaCartaCM($idCliente){
         $query = $this->db->query("SELECT hd.*, cl.personalidad_juridica, cl.tipo_comprobanteD FROM historial_documento  hd
         INNER JOIN clientes cl ON cl.id_cliente = hd.idCliente
-        WHERE idCliente=".$idCliente." AND hd.status=1 AND tipo_doc=29 AND movimiento='CARTA DOMICILIO CM';");
+        WHERE idCliente=".$idCliente." AND hd.status=1 AND (tipo_doc=29 OR tipo_doc=26) AND movimiento='CARTA DOMICILIO CM';");
         return $query->result_array();
     }
     public function check_carta($idCliente){

@@ -103,8 +103,4 @@
     </div>
     <?php $this->load->view('template/footer');?>
     <script src="<?=base_url()?>dist/js/controllers/usuarios-1.1.0.js"></script>
-    <script>
-        userId = <?= $this->session->userdata('id_usuario') ?>;
-        rolId = <?= $this->session->userdata('id_rol') ?>;
-    </script>
 </body>

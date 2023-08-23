@@ -18,7 +18,7 @@
         text-align: center;
     }
 </style>
-<body class="">
+<body>
 <div class="wrapper">
 
     <?php $this->load->view('template/sidebar'); ?>
@@ -51,19 +51,19 @@
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 overflow-hidden">
                                         <div class="form-group select-is-empty">
-                                            <label class="control-label">Empresa:</label>
+                                            <label class="control-label">Empresa</label>
                                             <select id="empresas" name="empresas" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 overflow-hidden">
                                         <div class="form-group select-is-empty">
-                                            <label class="control-label">Proyecto:</label>
+                                            <label class="control-label">Proyecto</label>
                                             <select id="proyectos" name="proyectos" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 overflow-hidden">
                                         <div class="form-group select-is-empty">
-                                            <label class="control-label">Cliente:</label>
+                                            <label class="control-label">Cliente</label>
                                             <select id="clientes" name="clientes" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
                                         </div>
                                     </div>
@@ -126,10 +126,8 @@
     <?php $this->load->view('template/footer_legend'); ?>
 </div>
 </div>
-
 <?php $this->load->view('template/footer'); ?>
+<script src="<?= base_url()?>dist/js/funciones-generales.js"></script>
 <script type="text/javascript" src="//unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
-<script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
-<script src="<?= base_url() ?>dist/js/funciones-generales.js"></script>
 <script type="text/javascript" src="<?= base_url() ?>dist/js/controllers/contabilidad/neodataInformation.js"></script>
 </body>
