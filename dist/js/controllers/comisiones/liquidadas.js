@@ -418,12 +418,7 @@ function formatCurrency(input, blur) {
     caret_pos = updated_len - original_len + caret_pos;
     input[0].setSelectionRange(caret_pos, caret_pos);
 }
-
-const formatMiles = (number) => {
-const exp = /(\d)(?=(\d{3})+(?!\d))/g;
-const rep = '$1,';
-return number.toString().replace(exp,rep);
-}
+ 
 
 function convertirPorcentajes(value) {
     const fixed = Number(value).toFixed(3);

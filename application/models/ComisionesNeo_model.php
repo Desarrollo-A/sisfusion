@@ -333,7 +333,7 @@ class ComisionesNeo_model extends CI_Model {
         INNER JOIN lotes l ON l.idLote = p.id_lote
         INNER JOIN condominios c ON c.idCondominio = l.idCondominio
         INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
-        WHERE p.bandera = 1 
+        WHERE p.bandera = 2
         AND l.registro_comision IN (1,5) 
         AND l.idStatusContratacion = 15 
         AND p.ultimo_pago > 0 
@@ -341,5 +341,6 @@ class ComisionesNeo_model extends CI_Model {
         $query =  $this->db->query($cmd);
         return $query->result_array();
     }
+    
 
 }

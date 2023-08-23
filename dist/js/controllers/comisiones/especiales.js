@@ -191,6 +191,7 @@ $(document).ready(function () {
     });
     $("#tabla_dispersar_especiales tbody").on('click', '.btn-detener', function () {
             $("#motivo").val("");
+            $("#motivo").selectpicker('refresh');
             $("#descripcion").val("");
             const idLote = $(this).val();
             const nombreLote = $(this).attr("data-value");
@@ -529,6 +530,7 @@ $(document).ready(function () {
 });
 
 $('#detenidos-form').on('submit', function (e) {
+    document.getElementById('detenerLote').disabled = true;
     e.preventDefault();
     $.ajax({
         type: 'POST',
@@ -541,6 +543,7 @@ $('#detenidos-form').on('submit', function (e) {
             if (data) {
                 $('#detenciones-modal').modal("hide");
                 $("#id-lote-detenido").val("");
+                document.getElementById('detenerLote').disabled = false;
                 alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
                 $('#tabla_dispersar_especiales').DataTable().ajax.reload();
             } else {
@@ -931,12 +934,6 @@ function formatCurrency(input, blur) {
     input[0].setSelectionRange(caret_pos, caret_pos);
 }
 
-const formatMiles = (number) => {
-const exp = /(\d)(?=(\d{3})+(?!\d))/g;
-const rep = '$1,';
-return number.toString().replace(exp,rep);
-}
-
 function convertirPorcentajes(value) {
     const fixed = Number(value).toFixed(3);
     const partes = fixed.split(".");
@@ -975,6 +972,7 @@ $(document).on('click', '.update_bandera', function(e){
 
 $("#tabla_dispersar_especiales tbody").on('click', '.btn-detener', function () {
     $("#motivo").val("");
+    $("#motivo").selectpicker('refresh');
     $("#descripcion").val("");
     const idLote = $(this).val();
     const nombreLote = $(this).attr("data-value");

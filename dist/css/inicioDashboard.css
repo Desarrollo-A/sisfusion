@@ -24,6 +24,10 @@
   margin-bottom: 0px !important;
 }
 
+.mb-a {
+  margin-bottom: auto !important;
+}
+
 .mb-1 {
   margin-bottom: 10px;
 }
@@ -386,6 +390,10 @@
 
 .d-block {
   display: block;
+}
+
+.d-wrap {
+  flex-wrap: wrap;
 }
 
 .d-flex {

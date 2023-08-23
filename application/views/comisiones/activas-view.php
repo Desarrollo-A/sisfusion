@@ -28,8 +28,10 @@
                                 <label for="motivo" class="control-label">Motivo</label>
                                     <select class="selectpicker select-gral" id="motivo" name="motivo" data-style="btn" title="SELECCIONA UNA OPCIÓN" required>
                                             <?php foreach($controversias as $controversia){ ?>
+                                                <?php if($controversia['id_opcion'] != 8 ){  ?>
+                                             
                                                 <option value="<?= $controversia['id_opcion']; ?>"><?= $controversia['nombre'] ?> </option>
-                                            <?php } ?>
+                                            <?php } }?>
                                     </select>
                                 </div>
                             </div> 

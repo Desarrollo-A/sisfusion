@@ -146,7 +146,7 @@ $(document).ready(function () {
                     } else{
                         varColor  = 'btn-deepGray';
                             if(d.fecha_modificacion != null ) {
-                                RegresaActiva = '<button href="#" data-param="1" data-idpagoc="' + d.idLote + '" data-nombreLote="' + d.nombreLote + '"  ' +'class="btn-data btn-violetChin update_bandera" title="REGRESAR A DISPERSIÓN">' +'<i class="fas fa-undo-alt"></i></button>';
+                                RegresaActiva = '<button href="#" data-idpagoc="' + d.idLote + '" data-nombreLote="' + d.nombreLote + '"  ' +'class="btn-data btn-violetChin update_bandera" data-toggle="tooltip" data-placement="top" title="Regresar a dispersión ">' +'<i class="fas fa-undo-alt"></i></button>';
                             }
                             BtnStats += `<button href="#" value="${d.idLote}" data-value="${d.nombreLote}" data-idLote="${d.idLote}" class="btn-data btn-blueMaderas btn-detener btn-warning" title="DETENER"><i class="material-icons">block</i></button>`;
                             BtnStats += '<button href="#" value="'+d.idLote+'" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata" title="VERIFICAR EN NEODATA">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
@@ -196,6 +196,7 @@ $(document).ready(function () {
 
     $("#tabla_comisiones_activas tbody").on('click', '.btn-detener', function () {
             $("#motivo").val("");
+            $("#motivo").selectpicker('refresh');
             $("#descripcion").val("");
             const idLote = $(this).val();
             const nombreLote = $(this).attr("data-value");
@@ -389,6 +390,7 @@ $(document).ready(function () {
 });
 
 $('#detenidos-form').on('submit', function (e) {
+    document.getElementById('detenerLote').disabled = true;
     e.preventDefault();
     $.ajax({
         type: 'POST',
@@ -403,6 +405,7 @@ $('#detenidos-form').on('submit', function (e) {
                 $("#id-lote-detenido").val("");
                 alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
                 $('#tabla_comisiones_activas').DataTable().ajax.reload();
+                document.getElementById('detenerLote').disabled = false;
             } else {
                 alerts.showNotification("top", "right", "Ocurrió un problema, vuelva a intentarlo más tarde.", "warning");
             }
@@ -516,8 +519,6 @@ $('#fecha2').change( function(){
 });
 
 $("#my_updatebandera_form").on('submit', function(e){
-    var formulario =  new FormData(this)
-
     e.preventDefault();
     $.ajax({
         type: 'POST',
@@ -543,6 +544,7 @@ $("#my_updatebandera_form").on('submit', function(e){
         }
     });
 });
+
 
 function formatCurrency(input, blur) {
     var input_val = input.val();
@@ -573,12 +575,6 @@ function formatCurrency(input, blur) {
     input[0].setSelectionRange(caret_pos, caret_pos);
 }
 
-const formatMiles = (number) => {
-const exp = /(\d)(?=(\d{3})+(?!\d))/g;
-const rep = '$1,';
-return number.toString().replace(exp,rep);
-}
-
 function convertirPorcentajes(value) {
     const fixed = Number(value).toFixed(3);
     const partes = fixed.split(".");
@@ -603,19 +599,19 @@ function checkDecimal(decimal) {
 $(document).on('click', '.update_bandera', function(e){
     id_pagoc = $(this).attr("data-idpagoc");
         nombreLote = $(this).attr("data-nombreLote");
-        param = $(this).attr("data-param");
         $("#myUpdateBanderaModal .modal-body").html('');
         $("#myUpdateBanderaModal .modal-header").html('');
-        $("#myUpdateBanderaModal .modal-header").append('<h3 class="modal-title">Aviso</b></h3><br><h4 class="modal-title">El lote <b>'+nombreLote+'</b> se enviará al panel de dispersión.</h4>');
+        $("#myUpdateBanderaModal .modal-header").append('<h4 class="modal-title">Enviar a dispersion de comisiones: <b>'+nombreLote+'</b></h4>');
         $("#myUpdateBanderaModal .modal-body").append('<input type="hidden" name="id_pagoc" id="id_pagoc"><input type="hidden" name="param" id="param">');
         $("#myUpdateBanderaModal").modal();
     $("#id_pagoc").val(id_pagoc);
-    $("#param").val(param);
+    $("#param").val(0);
 });
 
 
 $("#tabla_comisiones_activas tbody").on('click', '.btn-detener', function () {
     $("#motivo").val("");
+    $("#motivo").selectpicker('refresh');
     $("#descripcion").val("");
     const idLote = $(this).val();
     const nombreLote = $(this).attr("data-value");
