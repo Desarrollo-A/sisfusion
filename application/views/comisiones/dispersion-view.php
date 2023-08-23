@@ -68,7 +68,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header alcenter-align">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+         
                         <h4 class="modal-title  center-align" ><b>Llenado de Plan</b></h4>
                     </div>
                     <div class="modal-body ">
@@ -77,8 +77,8 @@
                          <label  id='tiempoRestante' name='tiempoRestante' class=" tiempoRestante hide"></label> 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-primary llenadoPlan" id="llenadoPlan" name="llenadoPlan" >Aceptar</button>
+                        <button type="button" class="btn btn-danger btn-simple cerradoPlan hide" id="cerradoPlan" name="cerradoPlan" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-primary llenadoPlanbtn hide" id="llenadoPlanbtn" name="llenadoPlanbtn" >Aceptar</button>
                         <div class="spiner-loader hide" id="spiner-loader">
                             <div class="backgroundLS">
                                 <div class="contentLS">
@@ -339,7 +339,7 @@
                                             <br>
                                             <br><br>
                                             <div class="col-xs-4 col-sm-3 col-md-4 col-lg-4 d-flex align-end text-center">
-                                                    <a  type="sum" data-toggle="modal" class="btn-gral-data" id="planllenado" style="color:white" onclick="llenado()"> Llenado de plan</a>
+                                                    <button type="sum" data-toggle="modal" class="btn-gral-data" id="planllenado" style="color:white" onclick="llenado()"> Llenado de plan</button>
                                             </div>
                                             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 d-flex align-end text-center">
                                                 <a data-target="#myModal" data-toggle="modal" class="btn-gral-data" id="MainNavHelp" 
