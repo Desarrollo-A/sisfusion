@@ -241,6 +241,7 @@ $(document).on('click', '#downloadFile', function () {
                 var len = response.length;
                 var createXLSLFormatObj = [];
                 var xlsHeader = ["id_lote", "nombre_lote", 'id_cliente', "nombre_cliente"];
+                console.log('id_cliente');
                 $('#columns').find("option:selected").each(function () {
                     xlsHeader.push($(this).data('name'));
                 });

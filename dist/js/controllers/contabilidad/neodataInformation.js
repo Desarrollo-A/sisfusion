@@ -155,7 +155,7 @@ function fillTableLotificacionNeoData(empresa, idProyecto, idCliente, fechaIni, 
         },
         {
             data: function (d) {
-                return formatMoney(d.precioventa);
+                return "$" + formatMoney(d.precioventa);
             }
         },
         {
@@ -180,12 +180,12 @@ function fillTableLotificacionNeoData(empresa, idProyecto, idCliente, fechaIni, 
         },
         {
             data: function (d) {
-                return formatMoney(d.monto2170);
+                return "$" + formatMoney(d.monto2170);
             }
         },
         {
             data: function (d) {
-                return formatMoney(d.monto1150);
+                return "$" + formatMoney(d.monto1150);
             }
         },
         {
@@ -205,32 +205,32 @@ function fillTableLotificacionNeoData(empresa, idProyecto, idCliente, fechaIni, 
         },
         {
             data: function (d) {
-                return formatMoney(d.totcontrato);
+                return "$" + formatMoney(d.totcontrato);
             }
         },
         {
             data: function (d) {
-                return formatMoney(d.totcontratoint);
+                return "$" + formatMoney(d.totcontratoint);
             }
         },
         {
             data: function (d) {
-                return formatMoney(d.pagado_cap)
+                return "$" + formatMoney(d.pagado_cap)
             }
         },
         {
             data: function (d) {
-                return formatMoney(d.pagado_mor)
+                return "$" + formatMoney(d.pagado_mor)
             }
         },
         {
             data: function (d) {
-                return formatMoney(d.pagado_int)
+                return "$" + formatMoney(d.pagado_int)
             }
         },
         {
             data: function (d) {
-                return formatMoney(d.totcontratoint)
+                return "$" + formatMoney(d.totcontratoint)
             }
         }],
         columnDefs: [{

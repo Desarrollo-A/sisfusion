@@ -1,3 +1,14 @@
+var totalLeon = 0;
+var totalQro = 0;
+var totalSlp = 0;
+var totalMerida = 0;
+var totalCdmx = 0;
+var totalCancun = 0;
+var tr;
+var tabla_asimilados2 ;
+var totaPen = 0;
+let titulos = [];
+
 function cleanCommentsAsimilados() {
     var myCommentsList = document.getElementById('comments-list-asimilados');
     var myCommentsLote = document.getElementById('nameLote');
@@ -7,6 +18,7 @@ function cleanCommentsAsimilados() {
 
 $(document).ready(function() {
     $("#tabla_asimilados").prop("hidden", true);
+    $("#spiner-loader").removeClass('hide');
     $.post(`${general_base_url}Comisiones/lista_roles`, function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
@@ -16,6 +28,7 @@ $(document).ready(function() {
             $("#id_rol_hn").append($('<option>').val(id).attr('data-catalogo', catalog).text(name.toUpperCase()));
         }
         $("#id_rol_hn").selectpicker('refresh');
+        $("#spiner-loader").addClass('hide');
     }, 'json');
 });
 
@@ -23,6 +36,7 @@ $('#id_rol_hn').change(function(ruta){
     id_rol = $('#id_rol_hn').val();
     id_catalogo = $('#id_rol_hn>option:selected').attr("data-catalogo");
     $("#id_usuario_hn").empty().selectpicker('refresh');
+    $("#spiner-loader").removeClass('hide');
     $.ajax({
         url: `${general_base_url}Comisiones/usuarios_nuevas`,
         type: 'post',
@@ -36,11 +50,13 @@ $('#id_rol_hn').change(function(ruta){
                 $("#id_usuario_hn").append($('<option>').val(id).text(name));
             }
             $("#id_usuario_hn").selectpicker('refresh');
+            $("#spiner-loader").addClass('hide');
         }
     });
 });
 
 $('#id_usuario_hn').change(function(ruta){
+    $("#spiner-loader").removeClass('hide');
     id_rol = $('#id_rol_hn').val();
     id_usuario = $('#id_usuario_hn').val();
     if(id_usuario == '' || id_usuario == null || id_usuario == undefined)
@@ -48,62 +64,41 @@ $('#id_usuario_hn').change(function(ruta){
     fillTable(id_rol, id_usuario);
 });
 
-var totalLeon = 0;
-var totalQro = 0;
-var totalSlp = 0;
-var totalMerida = 0;
-var totalCdmx = 0;
-var totalCancun = 0;
-var tr;
-var tabla_asimilados2 ;
-var totaPen = 0;
-//INICIO TABLA QUERETARO*********************
-let titulos = [];
-
-
 $('#tabla_asimilados thead tr:eq(0) th').each( function (i) {
-    if(i != 0){
-        var title = $(this).text();
-        titulos.push(title);
-        $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>');
-        $('input', this).on('keyup change', function() {
-            if (tabla_asimilados2.column(i).search() !== this.value) {
-                tabla_asimilados2
-                .column(i)
-                .search(this.value)
-                .draw();
-                var total = 0;
-                var index = tabla_asimilados2.rows({
-                selected: true,
-                search: 'applied'
-            }).indexes();
-                var data = tabla_asimilados2.rows(index).data();
-                $.each(data, function(i, v) {
-                    total += parseFloat(v.impuesto);
-                });
-                var to1 = formatMoney(total);
-                document.getElementById("totpagarAsimilados").textContent = formatMoney(total);
-            }
-        });
-    }
+    var title = $(this).text();
+    titulos.push(title);
+    $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
+    $('input', this).on('keyup change', function() {
+        if (tabla_asimilados2.column(i).search() !== this.value) {
+            tabla_asimilados2.column(i).search(this.value).draw();
+            var total = 0;
+            var index = tabla_asimilados2.rows({ selected: true, search: 'applied' }).indexes();
+            var data = tabla_asimilados2.rows(index).data();
+            $.each(data, function(i, v) {
+                total += parseFloat(v.impuesto);
+            });
+            document.getElementById("totpagarAsimilados").textContent = formatMoney(total);
+        }
+    });
 });
 
 function fillTable(id_rol, id_usuario){
+
     $('#tabla_asimilados').on('xhr.dt', function(e, settings, json, xhr) {
         var total = 0;
         $.each(json.data, function(i, v) {
             total += parseFloat(v.impuesto);
         });
         var to = formatMoney(total);
-        document.getElementById("totpagarAsimilados").textContent = '$' + to;
+        document.getElementById("totpagarAsimilados").textContent = to;
     });
 
     $("#tabla_asimilados").prop("hidden", false);
     tabla_asimilados2 = $("#tabla_asimilados").DataTable({
-        dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
-        width: 'auto',
-        buttons: [
-        {
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',
+        scrollX: true,
+        buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
@@ -114,38 +109,6 @@ function fillTable(id_rol, id_usuario){
                 format: {
                     header:  function (d, columnIdx) {
                         return ' ' + titulos[columnIdx] + ' ';
-                    }
-                },
-                format: {
-                    header:  function (d, columnIdx) {
-                        if(columnIdx == 0)
-                            return 'ID PAGO';
-                        else if(columnIdx == 1)
-                            return 'PROYECTO';
-                        else if(columnIdx == 2)
-                            return 'CONDOMINIO';
-                        else if(columnIdx == 3)
-                            return 'NOMBRE LOTE ';
-                        else if(columnIdx == 4)
-                            return 'REFERENCIA';
-                        else if(columnIdx == 5)
-                            return 'PRECIO LOTE';
-                        else if(columnIdx == 6)
-                            return 'TOTAL COMISIÓN';
-                        else if(columnIdx == 7)
-                            return 'IMPUESTO';                                    
-                        else if(columnIdx == 8)
-                            return 'DESCUENTO';
-                        else if(columnIdx == 9)
-                            return 'TOT. PAGAR';
-                        else if(columnIdx == 10)
-                            return 'COMISIONISTA';
-                        else if(columnIdx == 11)
-                            return 'PUESTO';
-                        else if(columnIdx == 12)
-                            return 'ESATUS';
-                        else if(columnIdx != 13 && columnIdx !=0)
-                            return ' '+titulos[columnIdx-1] +' ';
                     }
                 }
             }
@@ -161,45 +124,61 @@ function fillTable(id_rol, id_usuario){
             },
         destroy: true,
         ordering: false,
-        columns: [
-            { data: "id_pago_i" },
-            { data: "proyecto" },
-            { data: "condominio" },
-            { data: "lote" },
-            { data: "referencia" },
-            {
-                data: function( d ){
-                    return '$' + formatMoney(d.precio_lote);
-                }
-            },
-            {
-                data: function( d ){
-                    return '$' + formatMoney(d.comision_total);
-                }
-            },
-            { data: "valimpuesto" },
-            {
-                data: function( d ){
-                    return '$' + formatMoney(d.dcto);
-                }
-            },
-            {
-                data: function( d ){
-                    return '$' + formatMoney(d.impuesto);
-                }
-            },
-            { data: "usuario" },
-            { data: "puesto" },
-            { data: "estatus_actual" },
-            {
-                orderable: false,
-                data: function( data ){
-                    var BtnStats;
-                        BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_asimilados" title="Detalles">' +'<i class="fas fa-info"></i></button>';
-                    return '<div class="d-flex">'+ BtnStats +'</div>';
-                }
+        columns: [{ 
+            data: "id_pago_i" 
+        },
+        { 
+            data: "proyecto" 
+        },
+        { 
+            data: "condominio" 
+        },
+        { 
+            data: "lote" 
+        },
+        {
+            data: "referencia" 
+        },
+        {
+            data: function( d ){
+                return formatMoney(d.precio_lote);
             }
-        ],
+        },
+        {
+            data: function( d ){
+                return formatMoney(d.comision_total);
+            }
+        },
+        { 
+            data: "valimpuesto" 
+        },
+        {
+            data: function( d ){
+                return formatMoney(d.dcto);
+            }
+        },
+        {
+            data: function( d ){
+                return formatMoney(d.impuesto);
+            }
+        },
+        { 
+            data: "usuario" 
+        },
+        { 
+            data: "puesto" 
+        },
+        { 
+            data: "estatus_actual" 
+        },
+        {
+            orderable: false,
+            data: function( data ){
+                var BtnStats;
+                    BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_asimilados" data-toggle="tooltip" data-placement="top" title="HISTORIAL DEL PAGO">' +'<i class="fas fa-info"></i></button>';
+                return '<div class="d-flex justify-center">'+ BtnStats +'</div>';
+            }
+        }],
         columnDefs: [{
             orderable: false,
             className: 'select-checkbox',
@@ -218,6 +197,15 @@ function fillTable(id_rol, id_usuario){
             data: function( d ){
             }
         },
+        initComplete: function(){
+            $("#spiner-loader").addClass('hide');
+        }
+    });
+
+    $('#tabla_asimilados').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
     });
 
     $("#tabla_asimilados tbody").on("click", ".consultar_logs_asimilados", function(e){
@@ -226,30 +214,15 @@ function fillTable(id_rol, id_usuario){
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
         $("#seeInformationModalAsimilados").modal();
-        $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
+        $("#nameLote").append('<p><h5>HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $.getJSON("getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
-                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:gray;">'+v.comentario+'</i><br><b style="color:#3982C0">'+v.fecha_movimiento+'</b><b style="color:gray;"> - '+v.nombre_usuario+'</b></p></div>');
+                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-xs-12 col-sm-6 col-md-6 col-lg-6"><a><b>' + v.nombre_usuario + '</b></a><br></div> <div class="float-end text-right"><a>' + v.fecha_movimiento + '</a></div><div class="col-md-12"><p class="m-0"><b> ' + v.comentario + '</b></p></div></div></div></li>');
             });
         });
     });
 }
 
-$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-    $($.fn.dataTable.tables(true)).DataTable()
-    .columns.adjust();
-});
-
 $(window).resize(function(){
     tabla_asimilados2.columns.adjust();
 });
-
-function formatMoney( n ) {
-    var c = isNaN(c = Math.abs(c)) ? 2 : c,
-    d = d == undefined ? "." : d,
-    t = t == undefined ? "," : t,
-    s = n < 0 ? "-" : "",
-    i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
-    j = (j = i.length) > 3 ? j % 3 : 0;
-    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
-};

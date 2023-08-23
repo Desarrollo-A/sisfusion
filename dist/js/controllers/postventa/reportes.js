@@ -49,7 +49,7 @@ $(document).ready(function () {
     sp.initFormExtendedDatetimepickers();
     sp2.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({ locale: 'es' });
-    setInitialValues();
+    setIniDatesXMonth('#beginDate','#endDate');
 
     $(document).on('fileselect', '.btn-file :file', function (event, numFiles, label) {
         var input = $(this).closest('.input-group').find(':text'),
@@ -78,7 +78,6 @@ $(document).on('click', '.details', function (e) {
     var tr = $(this).closest('tr');
     var row = reportsTable.row(tr);
     createDocRow(row, tr, $(this));
-
 })
 
 $(document).on("click", "#searchByDateRange", function () {
