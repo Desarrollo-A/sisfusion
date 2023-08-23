@@ -84,7 +84,9 @@
                                             <th>ASESOR</th>
                                             <th>COORDINADOR</th>
                                             <th>GERENTE</th>
-                                            <th>SUBGERENTE</th>
+                                            <th>SUBDIRECTOR</th>
+                                            <th>DIRECTOR REGIONAL</th>
+                                            <th>DIRECTOR REGIONAL 2</th>
                                             <th>CREACIÓN</th>
                                         </tr>
                                     </thead>

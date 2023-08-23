@@ -202,8 +202,6 @@ $(document).on('change', '#subdirector',function () {
 
     /**/ //carga tabla
     var url =general_base_url + 'index.php/Clientes/getProspectsListBySubdirector/' + subdirector;
-    /*console.log("TypeTRans: " + typeTransaction);
-    updateTable(url, typeTransaction);*/
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
     updateTable(url, 1, finalBeginDate, finalEndDate, 0)
@@ -211,8 +209,8 @@ $(document).on('change', '#subdirector',function () {
 
 
 $(document).on('change','#gerente', function () {
-
-    /**/var gerente = $("#gerente").val();
+    $('#prospects-datatable_dir').removeClass('hide');
+    var gerente = $("#gerente").val();
 
     $("#coordinador").empty().selectpicker('refresh');
     $("#asesores").empty().selectpicker('refresh');
@@ -268,8 +266,7 @@ $(document).on('change', '#coordinador', function () {
     var url = general_base_url + 'index.php/Clientes/getProspectsListByCoord/'+coordinador;
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
-    updateTable(url, 1, finalBeginDate, finalEndDate, 0)
-    // updateTable(url, typeTransaction);
+    updateTable(url, 1, finalBeginDate, finalEndDate, 0);
 });
 
 //asesor
@@ -280,8 +277,7 @@ $(document).on('change', '#asesores',function () {
     var url = general_base_url + 'index.php/Clientes/getProspectsListByAsesor/' +asesor;
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
-    updateTable(url, 1, finalBeginDate, finalEndDate, 0)
-    // updateTable(url, typeTransaction);
+    updateTable(url, 1, finalBeginDate, finalEndDate, 0);
 });
 
 
@@ -395,6 +391,21 @@ function updateTable(url, typeTransaction, beginDate, endDate, where)
             },
             { data: function (d) {
                     return d.gerente;
+                }
+            },
+            {
+                data: function (d) {
+                    return (d.subdirector === '  ') ? 'SIN ESPECIFICAR' : d.subdirector;
+                }
+            },
+            {
+                data: function (d) {
+                    return (d.regional === '  ') ? 'SIN ESPECIFICAR' : d.regional;
+                }
+            },
+            {
+                data: function (d) {
+                    return (d.regional_2 === '  ') ? 'SIN ESPECIFICAR' : d.regional_2;
                 }
             },
             { data: function (d) {
