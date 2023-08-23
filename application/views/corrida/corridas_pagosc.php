@@ -22,22 +22,6 @@
     <?php $this->load->view('template/sidebar'); ?>
     <!--Contenido de la página-->
 
-    <div class="modal fade" id="avisoModal" >
-        <div class="modal-dialog">
-            <div class="modal-content" >
-                <div class="modal-header">
-                    <center><h3 class="modal-title">¡Ya existe una corrida financiera activa!</h3></center>
-                </div>
-                <div class="modal-body">
-                    <div class="container-fluid pdt-50">
-                        <div class="row centered center-align">
-                            <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-2">
-                                <h1 class="modal-title"> <i class="fa fa-exclamation-triangle fa-1x" aria-hidden="true"></i></h1><br><br>
-                            </div>
-                            <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-10">
-                                <h3 class="modal-title" style="font-size: 2em">Actualmente ya hay una corrida financiera para este lote</h3>
-                                <h5 style="font-size: 1.5rem"><i> Puedes deshabilitar la corrida financiera actual, para habilitar la corrida financiera deseada</i></h5>
-
         <div class="modal fade" id="avisoModal" >
             <div class="modal-dialog">
                 <div class="modal-content" >
