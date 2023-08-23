@@ -8,7 +8,7 @@ $(document).ready(function() {
 
 $('#prospects-datatable thead tr:eq(0) th').each(function (i) {
     const title = $(this).text();
-    if (i != 9){
+    if (i != 12){
         $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
         $('input', this).on('keyup change', function () {
             if ($("#prospects-datatable").DataTable().column(i).search() !== this.value) {
@@ -64,6 +64,21 @@ function fillTable(transaction, beginDate, endDate, where) {
         {
             data: function (d) {
                 return d.gerente == '  ' ? 'SIN ESPECIFICAR' : d.gerente;
+            }
+        },
+        {
+            data: function (d) {
+                return (d.subdirector === '  ') ? 'SIN ESPECIFICAR' : d.subdirector;
+            }
+        },
+        {
+            data: function (d) {
+                return (d.regional === '  ') ? 'SIN ESPECIFICAR' : d.regional;
+            }
+        },
+        {
+            data: function (d) {
+                return (d.regional_2 === '  ') ? 'SIN ESPECIFICAR' : d.regional_2;
             }
         },
         {

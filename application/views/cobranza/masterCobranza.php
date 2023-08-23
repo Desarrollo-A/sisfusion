@@ -125,14 +125,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-    <!--  Plugin for Date Time Picker and Full Calendar Plugin-->
     <script src="<?= base_url() ?>dist/js/moment.min.js"></script>
     <script src="<?= base_url() ?>dist/js/es.js"></script>
-    <!-- DateTimePicker Plugin -->
     <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
-    <!-- Sliders Plugin -->
     <script src="<?= base_url() ?>dist/js/nouislider.min.js"></script>
-    <!--  Full Calendar Plugin    -->
     <script src="<?= base_url() ?>dist/js/fullcalendar.min.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/cobranza/cobranzaMaster.js"></script>
 </body>

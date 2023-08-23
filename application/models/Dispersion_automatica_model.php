@@ -34,12 +34,34 @@ class Dispersion_automatica_model extends CI_Model {
     }
 
     public function porcentajeLotes ($idLote){
-        $cmd  = "SELECT l.idLote,cl.id_cliente, cl.plan_comision  
-         FROM lotes l, clientes cl WHERE l.idLote = cl.idLote and l.idLote = $idLote ";
+        $cmd  = "SELECT l.idLote,cl.id_cliente, cl.plan_comision ,
+		comi.id_pagoc , com.id_comision 
+		,com.id_usuario 
+		,com.idCliente
+         FROM  clientes cl 
+		 inner join lotes l on l.idLote = cl.idLote
+		 INNER JOIN pago_comision comi on comi.id_lote = l.idLote
+		 INNER JOIN comisiones com on com.id_lote = l.idLote  and com.estatus = 1 
+		 WHERE  l.idLote = $idLote ";
         $query = $this->db->query($cmd);
         return $query->result_array();
     }
 
+    function insert_dispersion_individual($id_comision, $id_usuario, $abono_nuevo, $pago){
 
+        if($id_usuario == 2){
+            return false;
+        }else{
+        $respuesta = $this->db->query("INSERT INTO pago_comision_ind (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, estatus, pago_neodata, creado_por, comentario,modificado_por) VALUES (".$id_comision.", ".$id_usuario.", ".$abono_nuevo.", GETDATE(), GETDATE(), 1, ".$pago.", ".$this->session->userdata('id_usuario').", 'NUEVO PAGO','".$this->session->userdata('id_usuario')."')");
+        $insert_id_2 = $this->db->insert_id();
+        $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($insert_id_2, ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'DISPERSÓ PAGO DE COMISIÓN')");
+    }
+        if (! $respuesta ) {
+            return 0;
+            } else {
+            return 1;
+            }
+    }
+    
 
 }

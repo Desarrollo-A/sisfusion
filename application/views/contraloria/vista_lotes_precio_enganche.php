@@ -21,8 +21,7 @@
                             <div class="container-fluid">
                                 <div class="row">
                                     <div class="col-sm-12 col-md-12 col-lg-12">
-                                        <select id="modificacion" class="selectpicker select-gral m-0" data-style="btn btn-round" title="SELECCIONA UNA OPCIÓN" 
-                                        data-size="7" data-live-search="true" multiple required></select>
+                                        <select id="modificacion" class="selectpicker select-gral m-0" data-style="btn btn-round" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" multiple required></select>
                                     </div>
                                     <div id="selects"></div>
                                 </div>

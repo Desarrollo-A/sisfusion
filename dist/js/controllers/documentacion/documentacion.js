@@ -356,8 +356,19 @@ function cargarTabla(idLote, idCliente = '') {
                     if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
                         buttonMain = (
                             includesArray(movimientosPermitidosEstatus2, parseInt(data.idMovimiento)) &&
-                            includesArray(rolesPermitidosEstatus2, parseInt(id_rol_general)) &&
-                            parseInt(data.id_asesor) === parseInt(id_usuario_general)
+                            (
+                                (
+                                    includesArray(rolesPermitidosEstatus2, parseInt(id_rol_general)) &&
+                                    parseInt(data.estatusAsesor) === 1
+                                ) ||
+                                (
+                                    parseInt(data.id_asesor) === parseInt(id_usuario_general) ||
+                                    (
+                                        includesArray(rolesPermitidosEstatus2AsesorInactivo, id_rol_general) &&
+                                        parseInt(data.estatusAsesor) !== 1
+                                    )
+                                )
+                            )
                         )
                             // ESTÁ EN ESTATUS 2 Y ES ASESOR, COORDINADOR, GERENTE O SUBDIRECTOR EL QUE CONSULTA, SE VEA A MONSTRAR ENABLED EL BOTÓN PARA CARGAR EL ARCHIVO
                             ? crearBotonAccion(AccionDoc.SUBIR_DOC, data)
@@ -369,9 +380,20 @@ function cargarTabla(idLote, idCliente = '') {
                     buttonMain = crearBotonAccion(AccionDoc.DOC_CARGADO, data); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
                     // ESTÁ EN ESTATUS 2 Y ES ASESOR, COORDINADOR, GERENTE O SUBDIRECTOR EL QUE CONSULTA, SE VEA A MONSTRAR EL BOTÓN PARA ELIMINAR EL ARCHIVO
                     if (
-                        movimientosPermitidosEstatus2.includes(parseInt(data.idMovimiento)) &&
-                        rolesPermitidosEstatus2.includes(parseInt(id_rol_general)) &&
-                        parseInt(data.id_asesor) === parseInt(id_usuario_general)
+                        includesArray(movimientosPermitidosEstatus2, parseInt(data.idMovimiento)) &&
+                        (
+                            (
+                                includesArray(rolesPermitidosEstatus2, parseInt(id_rol_general)) &&
+                                parseInt(data.estatusAsesor) === 1
+                            ) ||
+                            (
+                                parseInt(data.id_asesor) === parseInt(id_usuario_general) ||
+                                (
+                                    includesArray(rolesPermitidosEstatus2AsesorInactivo, id_rol_general) &&
+                                    parseInt(data.estatusAsesor) !== 1
+                                )
+                            )
+                        )
                     ) {
                         buttonDelete = crearBotonAccion(AccionDoc.ELIMINAR_DOC, data);
                     }
