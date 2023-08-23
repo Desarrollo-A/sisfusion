@@ -83,7 +83,7 @@
                                                     <th>LOTE</th>
                                                     <th>REFERENCIA</th>
                                                     <th>PRECIO LOTE</th>
-                                                    <th>TOTAL COMISION</th>
+                                                    <th>TOTAL COMISIÓN</th>
                                                     <th>IMPUESTO</th>
                                                     <th>DESCUENTO</th>
                                                     <th>A PAGAR</th>

@@ -841,6 +841,9 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 									CONCAT(asesor.nombre,' ',asesor.apellido_paterno,' ',asesor.apellido_materno) as asesor,
 									CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno,' ',coordinador.apellido_materno) as coordinador,
 									CONCAT(gerente.nombre,' ',gerente.apellido_paterno,' ',gerente.apellido_materno) as gerente,
+                                    CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END subdirector,
+                                    CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END regional,
+                                    CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END regional2,
 									FORMAT(ISNULL(lot.totalValidado, 0), 'C') as enganche,FORMAT(ISNULL(lot.totalNeto, 0), 'C') as engancheContra, lot.ubicacion, CONCAT('', FORMAT(lot.totalNeto2, 'C', 'en-US')) as saldo, s.id_sede, s.nombre as nombre_ubicacion,
 									sl.nombre as lote, sc.nombreStatus as contratacion,
 									(CASE WHEN hl.idLote IS NULL THEN 0 ELSE 1 END) validacion_estatus_9,lot.registro_comision
@@ -851,6 +854,9 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 									LEFT JOIN statuscontratacion sc ON sc.idStatusContratacion = lot.idStatusContratacion
 									INNER JOIN condominios con ON con.idCondominio = lot.idCondominio
 									INNER JOIN residenciales res ON res.idResidencial = con.idResidencial
+                                    LEFT JOIN usuarios u3 ON u3.id_usuario = cli.id_subdirector
+                                    LEFT JOIN usuarios u4 ON u4.id_usuario = cli.id_regional
+                                    LEFT JOIN usuarios u5 ON u5.id_usuario = cli.id_regional_2
 									LEFT JOIN usuarios asesor ON cli.id_asesor = asesor.id_usuario
 									LEFT JOIN usuarios coordinador ON cli.id_coordinador = coordinador.id_usuario
 									LEFT JOIN usuarios gerente ON cli.id_gerente = gerente.id_usuario

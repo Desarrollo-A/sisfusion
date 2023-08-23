@@ -17,7 +17,7 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="card card-plain">
-                                                <div class="card-content">
+                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
                                                     <ul class="timeline-3" id="comments-list-asimilados"></ul>
                                                 </div>
                                             </div>
@@ -38,15 +38,12 @@
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
-                        <h3 class="modal-title">Cambio de estatus</h3>
+                        <h3 class="modal-title">Cambio de estatus <small id="total-pagos"></small></h3>
                     </div>
                     <form method="post" class="row" id="estatus-form" autocomplete="off">
                         <div class="modal-body">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                <h5 id="total-pagos"></h5>
-                            </div>
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                <div id="div-options"></div>
+                                <div id="div-options" class="radio_container w-100"></div>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                 <div class="form-group is-empty">
@@ -135,7 +132,7 @@
                                                     <th>LOTE</th>
                                                     <th>REFERENCIA</th>
                                                     <th>PRECIO LOTE</th>
-                                                    <th>TOTAL COMISION</th>
+                                                    <th>TOTAL COMISIÓN</th>
                                                     <th>PAGO CLIENTE</th>
                                                     <th>DISPERSADO</th>
                                                     <th>PAGADO</th>

@@ -129,10 +129,6 @@
 
 <?php $this->load->view('template/footer'); ?>
 <script type="text/javascript" src="//unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
-<script>
-    let url = "<?=base_url()?>";
-    let typeTransaction = 1;
-</script>
 <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/general/main_services_dr.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/contabilidad/contabilidad.js"></script>

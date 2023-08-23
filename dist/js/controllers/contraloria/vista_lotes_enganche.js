@@ -4,7 +4,7 @@ let option = '';
 let ubicacion =`<div class="col-12 col-sm-12 col-md-4 col-lg-12">
 <div id="ubicacion" style="display:none">
     <label class="control-label label-gral">Ubicación</label>
-    <select id="ubicacion_sede" name="ubicacion_sede" class="selectpicker select-gral m-0" data-style="btn btn-round" style="text-align:center"></select>
+    <select id="ubicacion_sede" name="ubicacion_sede" class="selectpicker select-gral m-0" data-style="btn btn-round" overflow-hidden data-container="body" style="text-align:center"></select>
 </div>
 </div>`;
 let precio = `<div class="col-12 col-sm-12 col-md-4 col-lg-12">
@@ -118,10 +118,17 @@ $('#lotes').change( function() {
         },
         {data: 'nombreLote'},
         {data: 'cliente'},
-        {data: 'fechaApartado'},
+        {
+            data: function(d){
+                return d.fechaApartado.split('.')[0]
+            }
+        },
         {data: 'asesor'},
         {data: 'coordinador'},
         {data: 'gerente'},
+        {data: 'subdirector'},
+        {data: 'regional'},
+        {data: 'regional2'},
         {data: 'saldo'},
         {data: 'enganche'},
         {data: 'engancheContra'},

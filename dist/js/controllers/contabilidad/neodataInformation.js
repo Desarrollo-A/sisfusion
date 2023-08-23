@@ -47,6 +47,7 @@ $(document).ready(function () {
 });
 
 $(document).on('click', '#searchInfo', function () {
+    $("#spiner-loader").removeClass('hide');
     let empresa = $("#empresas").val();
     let idProyecto = $("#proyectos").val();
     let idCliente = $("#clientes").val();
@@ -251,6 +252,7 @@ function fillTableLotificacionNeoData(empresa, idProyecto, idCliente, fechaIni, 
             }
         },
         initComplete: function () {
+            $("#spiner-loader").addClass('hide');
             $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
         }
     });
