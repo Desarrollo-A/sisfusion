@@ -263,34 +263,34 @@ $("#tabla_bonos").ready( function(){
 
                 if(data[index].estado == 1){
                     estatus=data[index].est;
-                    color='29A2CC';
+                    colorCss='lbl-azure'
                 }
                 else if(data[index].estado == 2){
                     estatus=data[index].est;
-                    color='9129CC';
+                    colorCss='lbl-violetBoots';
                 }
                 else if(data[index].estado == 3){
                     estatus=data[index].est;
-                    color='05A134';
+                    colorCss='lbl-green';
                 }
                 else if(data[index].estado == 4){
                     estatus=data[index].est;
-                    color='9129CC';
+                    colorCss='lbl-violetBoots';
                 }
                 else if(data[index].estado == 5){
                     estatus=data[index].est;
-                    color='red';
+                    colorCss='lbl-warning';
                 }
                 else if(data[index].estado == 6){
                     estatus=data[index].est;
-                    color='4D7FA1';
+                    colorCss='lbl-azure';
                 } 
                 $("#modal_bonos .modal-body").append(`<div class="row">
                     <div class="col-md-1"><h7>${index +1}</h7></div>
                     <div class="col-md-2"><h7>${formatMoney(data[index].abono)}</h7></div>
                     <div class="col-md-2"><h7>${data[index].date_final}</h7></div>
                     <div class="col-md-4"><h7>${data[index].creado_por}</h7></div>
-                    <div class="col-md-3"><center><span class="label label-danger" style="background:#${color}">${estatus}</span><center></h7></div></div><br>`);
+                    <div class="col-md-3"><center><span class="label ${colorCss}">${estatus}</span><center></h7></div></div><br>`);
                 }
                 $("#modal_bonos").modal();
             }
@@ -323,7 +323,7 @@ $("#tabla_bonos").ready( function(){
             $("#modal-delete .modal-body").append(`<center><img style='width: 80%; height: 80%;' src='${general_base_url}dist/img/error.gif'><p style='color:#9D9D9D;'><b>No se puede eliminar este bono</b>, ya cuenta con saldo abonado.</p></center>`);
         }
         else{
-            $("#modal-delete .modal-body").append(`<div id="borrarBono"><form id="form-delete"><center><p style='color:#9D9D9D;'><b>¿Está seguro de eliminar este bono?</b><br>No tiene saldo abonado aún.</p></center><input type="hidden" id="id_bono" name="id_bono" value="${id}"><input type="submit"  class="btn btn-primary" style="margin: 15px;" value="Aceptar"><button class="btn btn-danger" onclick="CloseModalDelete2();">Cerrar</button></form></div>`);
+            $("#modal-delete .modal-body").append(`<div id="borrarBono"><form id="form-delete"><center><p style='color:#9D9D9D;'><b>¿Está seguro de eliminar este bono?</b><br>No tiene saldo abonado aún.</p></center><input type="hidden" id="id_bono" name="id_bono" value="${id}"><button class="btn btn-danger btn-simple" onclick="CloseModalDelete2();">Cerrar</button><input type="submit"  class="btn btn-primary" style="margin: 15px;" value="Aceptar"></form></div>`);
         }
         });
         $('#modal-delete').modal('show');
@@ -439,9 +439,8 @@ tabla_bonos1.columns.adjust();
 $("#roles").change(function() {
     var parent = $(this).val();
     document.getElementById("users").innerHTML ='';
-    $('#users').append(`<label class="label">Usuario</label><select id="usuarioid" name="usuarioid" class="form-control directorSelect ng-invalid ng-invalid-required" required data-live-search="true"></select>`);
+    $('#users').append(`<label class="control-label">Usuario</label><select id="usuarioid" name="usuarioid" class="selectpicker select-gral m-0 directorSelect" required data-live-search="true"></select>`);
     $.post('getUsuariosRolBonos/'+parent, function(data) {
-        $("#usuarioid").append($('<option disabled>').val("default").text("Seleccione una opción"))
         var len = data.length;
 
         for( var i = 0; i<len; i++){
