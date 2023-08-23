@@ -59,6 +59,7 @@ $('#mes').change( function(){
         getAssimilatedCommissions(mes, anio, 0, 0);
     }
 });
+
 $('#anio').change( function(){
     for (let index = 0; index < meses.length; index++) {
         datos = datos + `<option value="${meses[index]['id']}">${meses[index]['mes']}</option>`;
@@ -86,6 +87,7 @@ $('#anio').change( function(){
         }, 'json');
     });
 });
+
 $(document).ready(function(){
     $('#anio').html("");
     $('#plaza').html("");
@@ -100,8 +102,6 @@ $(document).ready(function(){
     $("#plaza").selectpicker('refresh');
     $("#gerente").selectpicker('refresh');
 });
-
-
 
 $('#plaza').change( function(){
     $("#gerente").html("");
@@ -149,8 +149,21 @@ $('#tableDinamicMKTD thead tr:eq(0) th').each( function (i) {
     $('input', this).on('keyup change', function () {
         if ($('#tableDinamicMKTD').DataTable().column(i).search() !== this.value) {
             $('#tableDinamicMKTD').DataTable().column(i).search(this.value).draw();
-        }
+
+            var total = 0;
+            var index = tableDinamicMKTD2.rows({
+                selected: true,
+                search: 'applied'
+            }).indexes();
+
+            var data = tableDinamicMKTD2.rows(index).data();
+            $.each(data, function(i, v) {
+                total += parseFloat(v.monto_vendido);
+            });
+            document.getElementById("myText_vendido").textContent = formatMoney(total);
+        }        
     });
+    
     titulos.push(title);    
     $('[data-toggle="tooltip"]').tooltip({
         trigger: "hover"
@@ -167,7 +180,7 @@ function getAssimilatedCommissions(mes, anio, plaza, gerente){
         document.getElementById("myText_vendido").textContent =to;
     });
 
-$("#tableDinamicMKTD").prop("hidden", false);
+    $("#tableDinamicMKTD").prop("hidden", false);
     tableDinamicMKTD2 = $("#tableDinamicMKTD").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
@@ -202,7 +215,7 @@ $("#tableDinamicMKTD").prop("hidden", false);
         {
             data: function( d ){
                 if(d.status == 0)
-                    return '<p class="m-0"      >'+d.lotes_vendidos+'</p>';
+                    return '<p class="m-0">'+d.lotes_vendidos+'</p>';
                 else
                     return '<p class="m-0">'+d.lotes_vendidos+'</p>';
             }
@@ -226,9 +239,34 @@ $("#tableDinamicMKTD").prop("hidden", false);
         {
             data: function( d ){
                 if(d.status == 0)
+                    return '<p class="m-0" style="color:crimson;">'+d.coordinador+'</p>';
+                else
+                    return '<p class="m-0">'+d.coordinador+'</p>';
+            }
+        },
+        {
+            data: function( d ){
+                if(d.status == 0)
                     return '<p class="m-0" style="color:crimson;">'+d.gerente+'</p>';
                 else
                     return '<p class="m-0">'+d.gerente+'</p>';
+            }
+        },
+        {
+            data: function( d ){
+                    if(d.status == 0){
+                        return '<p class="m-0" style="color:crimson;">'+d.subdirector+'</p>';
+                    }
+                    else
+                        return '<p class="m-0">'+d.subdirector+'</p>';
+            }
+        },
+        {
+            data: function( d ){
+                if(d.status == 0)
+                    return '<p class="m-0" style="color:crimson;">'+d.director+'</p>';
+                else
+                    return '<p class="m-0">'+d.director+'</p>';
             }
         },
         {
@@ -256,6 +294,7 @@ $("#tableDinamicMKTD").prop("hidden", false);
             }
         }],
         columnDefs: [{
+            defaultContent: 'Sin especificar',
             orderable: false,
             className: 'select-checkbox',
             targets:   0,

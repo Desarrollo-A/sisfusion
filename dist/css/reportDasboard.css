@@ -132,6 +132,10 @@
   padding-right: 30px;
 }
 
+.pr-4 {
+  padding-right: 40px;
+}
+
 .pl-0 {
   padding-left: 0 !important;
 }
@@ -564,7 +568,7 @@
 }
 
 .txt-sunny {
-  color: #F9F871 !important;
+  color: #a98800 !important;
 }
 
 .btn-a {
@@ -691,7 +695,6 @@
   padding: 10px 0;
   background-color: #103f75;
   color: #ffffff;
-  box-shadow: 0px 8px 15px RGB(0, 0, 0, 0.3);
 }
 
 .btn-gral-data:hover {

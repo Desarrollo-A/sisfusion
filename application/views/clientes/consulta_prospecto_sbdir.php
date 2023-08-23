@@ -46,12 +46,13 @@
                                                 <th>ASESOR</th>
                                                 <th>COORDINADOR</th>
                                                 <th>GERENTE</th>
+                                                <th>SUBDIRECTOR</th>
+                                                <th>DIRECTOR REGIONAL</th>
+                                                <th>DIRECTOR REGIONAL 2</th>
                                                 <th>LUGAR DE PROSPECCIÓN</th>
                                                 <th>CREACIÓN</th>
                                                 <th>VENCIMIENTO</th>
-                                                <?php if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 5){?>
                                                 <th>ACCIONES</th>
-                                                <?php } ?>
                                             </tr>
                                         </thead>
                                     </table>

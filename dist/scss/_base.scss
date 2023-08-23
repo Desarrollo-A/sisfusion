@@ -33,6 +33,7 @@
 .pr-1 { padding-right: 10px; }
 .pr-2 { padding-right: 20px; }
 .pr-3 { padding-right: 30px; }
+.pr-4 { padding-right: 40px;  }
 .pl-0 { padding-left: 0!important; }
 .pl-1 { padding-left: 10px; }
 .pl-2 { padding-left: 20px; }
@@ -205,7 +206,7 @@ $tiffanyBlue        : #00ACB8;
 $oceanGreen         : #4BBC8E;
 $caribbeanGreen     : #00CDA3;
 $lightGreen         : #92E784;
-$sunny              : #F9F871;
+$sunny              : #a98800;
 $darkCyan           : #008c76;
 $brightBlue         : #4a30dd;
 $verySoftBlue       : #AED6F1;
@@ -369,7 +370,6 @@ $tv                 : "(min-width: 1280px)";
     padding: 10px 0;
     background-color: $blueIndigo;
     color: $white;
-    box-shadow: 0px 8px 15px RGB(0, 0, 0, 0.3);
 }
 
 .btn-gral-data:hover{

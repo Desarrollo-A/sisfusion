@@ -5,12 +5,11 @@ class Contabilidad extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(array('Contabilidad_model', 'asesor/Asesor_model'));
+        $this->load->model(array('Contabilidad_model'));
         $this->load->library(array('session', 'form_validation', 'get_menu','permisos_sidebar'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
         $this->programacion = $this->load->database('programacion', TRUE);
-
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
         $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
