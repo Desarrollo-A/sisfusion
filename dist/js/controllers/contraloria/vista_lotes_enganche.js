@@ -220,7 +220,6 @@ $(document).on("submit", "#form_modificacion", function (e) {
     let ubicacion = $('#modificacion').val().includes('Ubicacion');
 
     data.append('ubicacion', $('#ubicacion_sede').val());
-    debugger;
     let validar = validateData(engancheVacio,precioVacio,ubicacion);
 
     if(validar == true){
@@ -279,7 +278,6 @@ function validateData(engancheVacio, precioVacio,ubicacionVacio){
         return validate;
     }
     else if( ubicacionVacio ){
-        console.log(ubicacionVacio);
         return ubicacionVacio;
     }
 

@@ -30,8 +30,8 @@
                                 <option value="2">Sub director</option> 
                                 <option value="20">Marketing</option>      
                             </select>
-                            </div>
-                            <div class="form-group m-0" id="users"></div>
+                        </div>
+                        <div class="form-group m-0" id="users"></div>
                             <div class="form-group row m-0">
                             <div class="col-md-4">
                                 <label class="control-label">Monto bono</label>
@@ -118,7 +118,6 @@
                             </div>
                             <div class="material-datatables">
                                 <div class="form-group">
-                                    <div class="table-responsive">
                                     <table class="table-striped table-hover" id="tabla_bonos" name="tabla_bonos">
                                         <thead>
                                             <tr>
@@ -137,7 +136,6 @@
                                             </tr>
                                         </thead>
                                     </table>
-                                    </div>
                                 </div>
                             </div>
                         </div>
