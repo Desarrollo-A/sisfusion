@@ -2234,7 +2234,13 @@
 	}
 //	fin filtro de status
 		public function historialProcesoFin($lotes){
-		$query = $this->db-> query("SELECT historial_lotes.nombreLote, CONVERT(VARCHAR,historial_lotes.modificado, 20) AS modificado, UPPER(CONVERT(VARCHAR,historial_lotes.comentario)) AS comentario, UPPER(movimientos.descripcion) AS descripcion, UPPER((CASE WHEN (CONCAT(usuarios.nombre, ' ', usuarios.apellido_paterno, ' ', usuarios.apellido_materno)) = '' THEN historial_lotes.usuario ELSE (CONCAT(usuarios.nombre, ' ', usuarios.apellido_paterno, ' ', usuarios.apellido_materno)) END)) usuario, UPPER((CASE WHEN historial_lotes.perfil = '11' THEN 'administracion' WHEN historial_lotes.perfil = '13' THEN 'contraloria' WHEN historial_lotes.perfil = '15' THEN 'juridico' WHEN historial_lotes.perfil = '32' THEN 'contraloriaCorporativa' WHEN historial_lotes.perfil = '6' THEN 'asistentesGerentes' WHEN historial_lotes.perfil = '7' THEN 'asesor' WHEN historial_lotes.perfil = '9' THEN 'coordinador' ELSE historial_lotes.perfil END)) perfil,
+		$query = $this->db-> query("SELECT historial_lotes.nombreLote, CONVERT(VARCHAR,historial_lotes.modificado, 20) AS modificado, historial_lotes.comentario AS comentario, UPPER(movimientos.descripcion) AS descripcion,
+		UPPER((CASE WHEN (CONCAT(usuarios.nombre, ' ', usuarios.apellido_paterno, ' ', usuarios.apellido_materno)) = '' THEN historial_lotes.usuario 
+		ELSE (CONCAT(usuarios.nombre, ' ', usuarios.apellido_paterno, ' ', usuarios.apellido_materno)) END)) usuario,
+		UPPER((CASE WHEN historial_lotes.perfil = '11' THEN 'administracion' WHEN historial_lotes.perfil = '13' THEN 'contraloria'
+		WHEN historial_lotes.perfil = '15' THEN 'juridico' WHEN historial_lotes.perfil = '32' THEN 'contraloriaCorporativa'
+		WHEN historial_lotes.perfil = '6' THEN 'asistentesGerentes' WHEN historial_lotes.perfil = '7' THEN 'asesor'
+		WHEN historial_lotes.perfil = '9' THEN 'coordinador' ELSE historial_lotes.perfil END)) perfil,
 		UPPER(CASE 
 		WHEN historial_lotes.idStatusContratacion = 2 AND historial_lotes.idMovimiento = 84 THEN '2.0 Integración de Expediente (Asesor)' 
 		ELSE
@@ -2931,7 +2937,7 @@
 		$query = $this->db-> query('SELECT *  FROM sedes WHERE id_sede='.$id_sede.' AND estatus=1');
 		return $query->result();
 	}
-	
+
 	public function table_datosBancarios(){
 		$this->db->select('idDBanco, empresa, banco, cuenta, clabe');
 		$query= $this->db->get("datosbancarios");
@@ -3117,7 +3123,7 @@
 		fclose($fp) or die("can't close file");
 		return true;
 	}
-	
+
 	function getRevision2($fechaInicio, $fechaFinal) {
 		$filter = " AND hd.modificado BETWEEN '$fechaInicio 00:00:00' AND '$fechaFinal 23:59:59'";
 

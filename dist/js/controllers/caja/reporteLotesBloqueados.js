@@ -24,7 +24,7 @@ $("#tablaLotesBloqueados").ready(function () {
                     columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                     format: {
                         header: function (d, columnIdx) {
-                            return ' ' + titulosLotesBloqueados[columnIdx -1] + ' ';
+                            return ' ' + titulosLotesBloqueados[columnIdx] + ' ';
                         }
                     }
                 }
@@ -53,13 +53,6 @@ $("#tablaLotesBloqueados").ready(function () {
             {data: 'motivo_change_status'},
             {data: 'fechaBloqueo'},
             {data: 'bloqueadoPara'}
-        ],
-        columnDefs: [
-            {
-                searchable: false,
-                orderable: false,
-                targets: 0
-            },
         ],
         ajax: {
             url: "getReporteLotesBloqueados",

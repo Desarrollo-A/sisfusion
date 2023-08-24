@@ -22,7 +22,7 @@ class ServicesCRM extends CI_Controller {
         if(in_array($origin,$urls) || strpos($origin,"192.168")) {
             $this->load->helper(array('form'));
             $this->load->library(array('jwt_key','formatter'));
-            $this->load->model(array('Services_model', 'General_model'));
+            $this->load->model(array('Services_model', 'General_model', 'Usuarios_modelo'));
         } else {
             die ("Access Denied");     
             exit;  
@@ -41,12 +41,12 @@ class ServicesCRM extends CI_Controller {
 
     function codificarTest() {
         $miJson = array(
-            "id_usuario" => 7809,
-            "id_lider" => 745,
+            "id_usuario" => 9643,
+            "id_lider" => 654,
             "estatus" => 1,
             "id_rol" => 7,
-            "modificado_por" => 1,
-            "id_sede" => 1/*,
+            "modificado_por" => 1
+            /*,
             "rfc" => "HGDE350247FF8",
             "id_lider" => 655,
             "id_gerente" => 456,
@@ -165,26 +165,34 @@ class ServicesCRM extends CI_Controller {
         $objDatos = json_decode(utf8_encode(base64_decode(file_get_contents("php://input"))), true);
         if (isset($objDatos) && !empty($objDatos)) {
 
-            $dataChecar = array(
-                'id_rol' => $objDatos['id_rol'],
-                'id_sede' => $objDatos['id_sede'],
-                'id_lider' => $objDatos['id_lider']);
-            $validacion = validateUserVts($dataChecar);
-            if($validacion['respuesta'] == 0){
-                echo base64_encode(json_encode(array("status" => -1, "message" => $validacion['mensaje'])));
-                exit;
-            }
+            if(empty($objDatos['id_usuario']) || empty($objDatos['id_lider']) || empty($objDatos['estatus']) || empty($objDatos['id_rol'])){
+                echo base64_encode(json_encode(array("status" => -1, "message" => "Verifica que envies los datos requeridos")));
+            }else{
+                $usr = $this->Usuarios_modelo->getUserInformation($objDatos['id_usuario']);
+                $usr = $usr[0];
+                $id_sede = $usr['id_sede'];
 
-            $dataToUpdate = array(
-                'estatus'=> $objDatos['estatus'], 
-                "fecha_modificacion" => date("Y-m-d H:i:s"), 
-                "modificado_por" => $objDatos['modificado_por']
-            );
-			$responseUpdate = $this->General_model->updateRecord("usuarios", $dataToUpdate, "id_usuario", $objDatos['id_usuario']); // MJ: LLEVA 4 PARÁMETROS $table, $data, $key, $value
-            if($responseUpdate == TRUE)
-                echo base64_encode(json_encode(array("status" => 1, "message" => "El registro se ha actualizado con éxito.")));
-            else
-                echo base64_encode(json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde.")));
+                $dataChecar = array(
+                    'id_rol' => $objDatos['id_rol'],
+                    'id_sede' => $id_sede,
+                    'id_lider' => $objDatos['id_lider']);
+                $validacion = validateUserVts($dataChecar);
+                if($validacion['respuesta'] == 0){
+                    echo base64_encode(json_encode(array("status" => -1, "message" => $validacion['mensaje'])));
+                    exit;
+                }
+
+                $dataToUpdate = array(
+                    'estatus'=> $objDatos['estatus'],
+                    "fecha_modificacion" => date("Y-m-d H:i:s"),
+                    "modificado_por" => $objDatos['modificado_por']
+                );
+                $responseUpdate = $this->General_model->updateRecord("usuarios", $dataToUpdate, "id_usuario", $objDatos['id_usuario']); // MJ: LLEVA 4 PARÁMETROS $table, $data, $key, $value
+                if($responseUpdate == TRUE)
+                    echo base64_encode(json_encode(array("status" => 1, "message" => "El registro se ha actualizado con éxito.")));
+                else
+                    echo base64_encode(json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde.")));
+            }
         }
         else
             echo base64_encode(json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud o la petición no se efectuó de manera correcta. Por favor, inténtelo de nuevo más tarde.")));

@@ -178,7 +178,7 @@ function updateTable(url, typeTransaction, beginDate, endDate, where)
                 titleAttr: 'Listado general de prospectos',
                 title:"Listado general de prospectos",
                 exportOptions: {
-                    columns: [0,1,2,3,4,5,6,7,8,9],
+                    columns: [0,1,2,3,4,5,6,7,8,9,10,11,12],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + titulos_intxt[columnIdx] + ' ';
@@ -248,6 +248,21 @@ function updateTable(url, typeTransaction, beginDate, endDate, where)
             },
             { data: function (d) {
                     return d.gerente;
+                }
+            },
+            {
+                data: function (d) {
+                    return (d.subdirector === '  ') ? 'SIN ESPECIFICAR' : d.subdirector;
+                }
+            },
+            {
+                data: function (d) {
+                    return (d.regional === '  ') ? 'SIN ESPECIFICAR' : d.regional;
+                }
+            },
+            {
+                data: function (d) {
+                    return (d.regional_2 === '  ') ? 'SIN ESPECIFICAR' : d.regional_2;
                 }
             },
             { data: function (d) {

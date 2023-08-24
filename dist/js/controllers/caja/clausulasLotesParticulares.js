@@ -24,7 +24,7 @@ $("#tablaClausulasLotesParticulares").ready(function () {
                     columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
                     format: {
                         header: function (d, columnIdx) {
-                            return ' ' + titulosClausulasLotesParticulares[columnIdx -1] + ' ';
+                            return ' ' + titulosClausulasLotesParticulares[columnIdx] + ' ';
                         }
                     }
                 }
@@ -65,13 +65,6 @@ $("#tablaClausulasLotesParticulares").ready(function () {
         initComplete: function() {
             $('[data-toggle="tooltip"]').tooltip();
         },
-        columnDefs: [
-            {
-                searchable: false,
-                orderable: false,
-                targets: 0
-            },
-        ],
         ajax: {
             url: "getLotesParticulares",
             dataSrc: "",
