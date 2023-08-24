@@ -4000,12 +4000,13 @@ return 1;
         function getHistorialAbono2($pago){
         $this->db->query("SET LANGUAGE Español;");
         return $this->db->query("SELECT DISTINCT(hc.comentario), hc.id_pago_b, hc.id_usuario, 
-        convert(nvarchar(20), hc.fecha_creacion, 113) date_final,
+        convert(nvarchar(20), hc.fecha_creacion, 113) date_final,pci.estado,
         hc.fecha_creacion as fecha_movimiento, pci.abono, CONVERT(VARCHAR,pci.fecha_abono,20) AS fecha_abono,
-        CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario
+        CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario, oxp.nombre
         FROM historial_bonos hc 
         INNER JOIN pagos_bonos_ind pci ON pci.id_pago_bono = hc.id_pago_b
         INNER JOIN usuarios u ON u.id_usuario = hc.id_usuario 
+        INNER JOIN opcs_x_cats oxp ON id_opcion = pci.estado and oxp.id_catalogo = 46
         WHERE hc.id_pago_b = $pago
         ORDER BY hc.fecha_creacion DESC");
         }
@@ -4903,7 +4904,7 @@ function getBonosPorUser($id,$estado){
     WHEN 9629 THEN 2
     ELSE u.id_sede END) and sed.estatus = 1
     INNER JOIN pagos_bonos_ind b on b.id_bono=p.id_bono
-    inner join opcs_x_cats opcs on opcs.id_opcion=u.id_rol WHERE $cadena b.estado=$estado and opcs.id_catalogo=1");
+    inner join opcs_x_cats opcs on opcs.id_opcion=u.id_rol WHERE b.estado=$estado and opcs.id_catalogo=1");
 }
 
 /*--------------planes-----------*/

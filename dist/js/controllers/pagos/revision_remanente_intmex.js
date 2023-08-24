@@ -70,28 +70,18 @@ $('#filtro44').change(function(ruta){
     getAssimilatedCommissions(proyecto, condominio);
 });
 
-var url = "<?=base_url()?>";
-var totalLeon = 0;
-var totalQro = 0;
-var totalSlp = 0;
-var totalMerida = 0;
-var totalCdmx = 0;
-var totalCancun = 0;
 var tr;
 var tabla_remanente2 ;
 var totaPen = 0;
 
-
-/**------------------------------------------------------------- */
 $(document).on("click", ".Pagar", function() {            
     $("#modal_multiples .modal-body").html("");
     $("#modal_multiples .modal-header").html("");
     $("#modal_multiples .modal-header").append('<h4 class="card-title"><b>Marcar pagadas</b></h4>');
-    $("#modal_multiples .modal-footer").append(`<div class="row" id="borrarProyect"><center><input type="submit" disabled id="btn-aceptar" class="btn btn-primary" value="ACEPTAR"><button type="button" class="btn btn-danger" data-dismiss="modal" onclick="CloseModalDelete2()">CANCELAR</button></center></div>`);
+    $("#modal_multiples .modal-footer").append(`<div class="row pr-2" id="borrarProyect"><button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="CloseModalDelete2()">CANCELAR</button><input type="submit" disabled id="btn-aceptar" class="btn btn-primary" value="ACEPTAR"></div>`);
     $("#modal_multiples .modal-header").append(`<div class="row">
     <div class="col-md-12"><select id="desarrolloSelect" name="desarrolloSelect" class="form-control desarrolloSelect ng-invalid ng-invalid-required" required data-live-search="true"></select></div></div>`);
     $.post(general_base_url+'pagos/getDesarrolloSelectINTMEX/',{desarrollo :4}, function(data) {
-        $("#desarrolloSelect").append($('<option disabled>').val("default").text("Seleccione una opción"))
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_usuario'];
@@ -144,7 +134,6 @@ $(document).on("click", ".Pagar", function() {
     });
 });
 
-//INICIO TABLA QUERETARO**********************************************
 let titulos = [];
 $('#tabla_remanente thead tr:eq(0) th').each( function (i) {
     if(i != 0){
@@ -172,10 +161,6 @@ $('#tabla_remanente thead tr:eq(0) th').each( function (i) {
         $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAll(this)"/>');
     }
 });
-
-
-
-
 
 function getAssimilatedCommissions(proyecto, condominio){
     $('#tabla_remanente').on('xhr.dt', function(e, settings, json, xhr) {
