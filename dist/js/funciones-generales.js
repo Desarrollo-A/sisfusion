@@ -332,3 +332,8 @@ const formatMiles = (number) => {
   const rep = '$1,';
   return number.toString().replace(exp,rep);
 }
+
+function cleanElement(e) { 
+  var myElement = document.getElementById(e);
+  myElement.innerHTML = '';
+}
