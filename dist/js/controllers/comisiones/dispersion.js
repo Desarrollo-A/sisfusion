@@ -922,7 +922,6 @@ $('#planes').change(function () {
                     }
                     else{
                         $('#plan-detalle-tabla tbody').append('No tiene un plan asignado');
-
                     }
                 });
                 $('#detalle-tabla-div').show();
