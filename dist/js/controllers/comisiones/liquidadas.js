@@ -367,7 +367,6 @@ $('.decimals').on('input', function () {
 
 function showDetailModal(idPlan) {
     cleanElement('detalle-tabla-div');
-    $('#planes-div').hide();
     $.ajax({
         url: `${general_base_url}Comisiones/getDetallePlanesComisiones/${idPlan}`,
         type: 'GET',
@@ -405,3 +404,6 @@ function showDetailModal(idPlan) {
         }        
     });
 }
+
+
+

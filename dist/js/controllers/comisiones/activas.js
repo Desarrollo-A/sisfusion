@@ -519,41 +519,43 @@ $("#tabla_comisiones_activas tbody").on('click', '.btn-detener', function () {
 
 function showDetailModal(idPlan) {
     cleanElement('detalle-tabla-div');
-    $('#planes-div').hide();
-    $.ajax({
-        url: `${general_base_url}Comisiones/getDetallePlanesComisiones/${idPlan}`,
-        type: 'GET',
-        dataType: 'json',
-        success: function (data) {
-            $('#plan-detalle-tabla-tbody').empty();
-            $('#title-plan').text(`Plan: ${data.descripcion}`);
-            $('#detalle-plan-modal').modal();
-            $('#detalle-tabla-div').hide();
-            const roles = data.comisiones;
-            $('#detalle-tabla-div').append(`
-            <div class="row subBoxDetail" id="modalInformation">
-                <div class=" col-sm-12 col-sm-12 col-lg-12 text-center" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>Nueva línea de ventas</b></label></div>
-                <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label><b>PUESTO</b></label></div>
-                <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label><b>% COMISIÓN</b></label></div>
-                <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label><b>% NEODATA</b></label></div> 
-                <div class="prueba"></div>
-            `)
-            roles.forEach(rol => {
-                if (rol.puesto !== null && (rol.com > 0 && rol.neo > 0)) {
-                    $('#detalle-tabla-div .prueba').append(`
-                    <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label>${(rol.puesto.split(' ')[0]).toUpperCase()}</label></div>
-                    <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label>${convertirPorcentajes(rol.com)} %</label></div>
-                    <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label>${convertirPorcentajes(rol.neo)} %</label></div>
-                    `);
-                }
-                
-            });
-            $('#detalle-tabla-div').append(`
-            </div>`)
-            $('#detalle-tabla-div').show();
-        },
-        error: function(){
-            alerts.showNotification("top", "right", "No hay datos por mostrar.", "danger");
-        }        
-    });
-}
+        $.ajax({
+            url: `${general_base_url}Comisiones/getDetallePlanesComisiones/${idPlan}`,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                $('#plan-detalle-tabla-tbody').empty();
+                $('#title-plan').text(`Plan: ${data.descripcion}`);
+                $('#detalle-plan-modal').modal();
+                $('#detalle-tabla-div').hide();
+                const roles = data.comisiones;
+                $('#detalle-tabla-div').append(`
+                <div class="row subBoxDetail" id="modalInformation">
+                    <div class=" col-sm-12 col-sm-12 col-lg-12 text-center" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>Nueva línea de ventas</b></label></div>
+                    <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label><b>PUESTO</b></label></div>
+                    <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label><b>% COMISIÓN</b></label></div>
+                    <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label><b>% NEODATA</b></label></div> 
+                    <div class="prueba"></div>
+                `)
+                roles.forEach(rol => {
+                    if (rol.puesto !== null && (rol.com > 0 && rol.neo > 0)) {
+                        $('#detalle-tabla-div .prueba').append(`
+                        <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label>${(rol.puesto.split(' ')[0]).toUpperCase()}</label></div>
+                        <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label>${convertirPorcentajes(rol.com)} %</label></div>
+                        <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label>${convertirPorcentajes(rol.neo)} %</label></div>
+                        `);
+                    }
+                    
+                });
+                $('#detalle-tabla-div').append(`
+                </div>`)
+                $('#detalle-tabla-div').show();
+            },
+            error: function(){
+                alerts.showNotification("top", "right", "No hay datos por mostrar.", "danger");
+            }        
+        });
+    }
+
+
+

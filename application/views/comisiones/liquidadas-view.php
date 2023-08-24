@@ -82,14 +82,7 @@
                 <div class="modal-content">
                     <div class="modal-body pb-0">
                         <div class="row">
-                            <div class="col-lg-12" id="planes-div">
-                                <div class="form-group">
-                                    <br>
-                                    <select class="selectpicker select-gral" id="planes" name="planes" title="SELECCIONA UNA OPCIÓN" required data-live-search="true" data-style="btn" required></select>
-                                </div>
-                            </div>
                             <div id="detalle-tabla-div"class="col-lg-12">
-                                
                             </div>
                         </div>
                     </div>
