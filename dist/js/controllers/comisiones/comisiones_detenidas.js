@@ -3,7 +3,7 @@ $('#comisiones-detenidas-table').ready(function () {
 
     let titulos = [];
     $('#comisiones-detenidas-table thead tr:eq(0) th').each(function (i) {
-        if (i !== 0 && i !== 13) {
+        if (i !== 0) {
             const title = $(this).text();
             titulos.push(title);
             $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
@@ -26,7 +26,7 @@ $('#comisiones-detenidas-table').ready(function () {
             titleAttr: 'Descargar archivo de Excel',
             title: 'REPORTE COMISIONES DETENIDAS',
             exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulos[columnIdx - 1] + ' ';
@@ -116,7 +116,7 @@ $('#comisiones-detenidas-table').ready(function () {
                     return d.fecha_movimiento;
                 }
             },
-            {   
+            {
             data: function (d) {
                 let motivo;
                 let color;
@@ -127,19 +127,19 @@ $('#comisiones-detenidas-table').ready(function () {
                     motivo = d.motivo;
                 }
                 return '<span class="label lbl-gray">' + motivo + '</span>';
-                    }        
+                    }
             },
             {
                 data: function (d) {
-                    //Checar boton
                     let botton = '';
                     if (id_rol_general != 63 && id_rol_general != 4) {
                         if(d.motivo == 5){
-                            botton = ` 
+                            botton = `
                         <div class="d-flex justify-center">
-                            <button value="${d.idLote}" data-value="${d.nombreLote}" 
-                                class="btn-data btn-blueMaderas btn-cambiar-estatus" 
-                                data-toggle="tooltip" data-placement="top">
+                            <button value="${d.idLote}" data-value="${d.nombreLote}"
+                                class="btn-data btn-blueMaderas btn-cambiar-estatus"
+                                data-toggle="tooltip" data-placement="top"
+                                title="REGRESAR A ACTIVAS">
                                 <i class="material-icons">undo</i>
                             </button>
                         </div>`;
@@ -175,14 +175,12 @@ $('#comisiones-detenidas-table').ready(function () {
     $('#comisiones-detenidas-table tbody').on('click', 'td.details-control', function () {
         const tr = $(this).closest('tr');
         const row = comisionesDetenidasTabla.row(tr);
-
         if (row.child.isShown()) {
             row.child.hide();
             tr.removeClass('shown');
             $(this).parent().find('.animacion').removeClass("fas fa-chevron-up").addClass("fas fa-chevron-down");
         } else {
             row.child(`
-            
                 <div class="container subBoxDetail">
                     <div class="row">
                         <div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px">
