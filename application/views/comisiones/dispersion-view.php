@@ -263,33 +263,22 @@
         <div class="modal fade" id="detalle-plan-modal" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> <i class="material-icons">clear</i></button>
-                    </div>
-                    <div class="modal-body pt-0">
+                    <div class="modal-header" id="mHeader"></div>
+                    <div class="modal-body pb-0 pt-0">
                         <div class="row">
                             <div class="col-lg-12" id="planes-div">
                                 <div class="form-group">
-                                    <br>
                                     <select class="selectpicker select-gral" id="planes" name="planes" title="SELECCIONA UNA OPCIÓN" required data-live-search="true" data-style="btn" required></select>
                                 </div>
                             </div>
                             <div id="detalle-tabla-div"class="col-lg-12">
-                                <table class="table table-bordered" id="plan-detalle-tabla">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col" style="color:white; text-align: center; ">PUESTO</th>
-                                            <th scope="col" style="color:white; text-align: center; ">% COMISIÓN</th>
-                                            <th scope="col" style="color:white; text-align: center; ">% NEODATA</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="plan-detalle-tabla-tbody">
-                                    </tbody>
-                                </table>
+                                
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
+                    </div>
                 </div>
             </div>
         </div>

@@ -367,6 +367,7 @@ $('.decimals').on('input', function () {
 
 function showDetailModal(idPlan) {
     cleanElement('detalle-tabla-div');
+    $('#spiner-loader').removeClass('hide');
     $.ajax({
         url: `${general_base_url}Comisiones/getDetallePlanesComisiones/${idPlan}`,
         type: 'GET',
@@ -379,7 +380,7 @@ function showDetailModal(idPlan) {
             const roles = data.comisiones;
             $('#detalle-tabla-div').append(`
             <div class="row subBoxDetail" id="modalInformation">
-                <div class=" col-sm-12 col-sm-12 col-lg-12 text-center" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>Nueva línea de ventas</b></label></div>
+                <div class=" col-sm-12 col-sm-12 col-lg-12 text-center" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>PLANES DE COMISIÓN</b></label></div>
                 <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label><b>PUESTO</b></label></div>
                 <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label><b>% COMISIÓN</b></label></div>
                 <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label><b>% NEODATA</b></label></div> 
@@ -398,9 +399,11 @@ function showDetailModal(idPlan) {
             $('#detalle-tabla-div').append(`
             </div>`)
             $('#detalle-tabla-div').show();
+            $('#spiner-loader').addClass('hide');
         },
         error: function(){
             alerts.showNotification("top", "right", "No hay datos por mostrar.", "warning");
+            $('#spiner-loader').addClass('hide');
         }        
     });
 }
