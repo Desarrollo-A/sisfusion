@@ -273,6 +273,13 @@ $tv                 : "(min-width: 1280px)";
     padding: 5px 6px !important;
 }
 
+.btn-dataTable{
+    font-size: 12px !important;
+    color: #333 !important; 
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 
+                0 1px 2px rgba(0,0,0,0.24);
+}
+
 /* END Estilos generales datatable */
 
 /* Btns fuera de datatable */
@@ -735,14 +742,14 @@ $tv                 : "(min-width: 1280px)";
 .lbl-aqua{
     color: $aqua;
     border: none;
-    background:#11DFC618;
+    background:#54d2d218;
 }
 .lbl-olivo{
     color:  $olivo;
     border: none;
     background-color: #86895D18;
-
 }
+
 /* END Etiquetas */
 
 /* Estilo del scroll en DIVS */
@@ -800,7 +807,7 @@ $tv                 : "(min-width: 1280px)";
         background-color: transparent;
         border: none;
         &::placeholder{
-            color: red !important;
+            color: $deepGray !important;
         }
     }
 }

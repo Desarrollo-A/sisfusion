@@ -4,7 +4,6 @@ $(document).ready(function () {
     setIniDatesXMonth("#beginDate", "#endDate");
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
-
     $('#tabla_dispersar_comisiones thead tr:eq(0) th').each(function (i) {
         $(this).css('text-align', 'center');
         var title = $(this).text();
@@ -111,7 +110,10 @@ $(document).ready(function () {
                     }else if(d.registro_comision == 2){
                         labelEstatus ='<span class="label lbl-cerulean">SOLICITADO MKT</span>'+' '+d.plan_descripcion;
                     }else {
-                        labelEstatus =`<span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span>`;
+                        if(d.plan_descripcion=="-")
+                            return '<p>SIN PLAN</p>'
+                        else
+                            labelEstatus =`<label class="label lbl-azure btn-dataTable" data-toggle="tooltip"  data-placement="top"  title="VER MÁS DETALLES"><b><span  onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span></label>`;
                     }
                 }
                 return labelEstatus;
@@ -837,10 +839,10 @@ $("#tabla_dispersar_comisiones tbody").on('click', '.btn-detener', function () {
     $("#detenciones-modal").modal();
 });
 
-var getInfo1 = new Array(6);
-var getInfo3 = new Array(6);
-
 function showDetailModal(idPlan) {
+    cleanElement('detalle-tabla-div');
+    cleanElement("mHeader");
+    $('#spiner-loader').removeClass('hide');
     $('#planes-div').hide();
     $.ajax({
         url: `${general_base_url}Comisiones/getDetallePlanesComisiones/${idPlan}`,
@@ -852,21 +854,38 @@ function showDetailModal(idPlan) {
             $('#detalle-plan-modal').modal();
             $('#detalle-tabla-div').hide();
             const roles = data.comisiones;
+            $('#detalle-tabla-div').append(`
+            <div class="row subBoxDetail" id="modalInformation">
+                <div class=" col-sm-12 col-sm-12 col-lg-12 text-center" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>PLANES DE COMISIÓN</b></label></div>
+                <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label><b>PUESTO</b></label></div>
+                <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label><b>% COMISIÓN</b></label></div>
+                <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label><b>% NEODATA</b></label></div> 
+                <div class="prueba"></div>
+            `)
             roles.forEach(rol => {
                 if (rol.puesto !== null && (rol.com > 0 && rol.neo > 0)) {
-                    $('#plan-detalle-tabla tbody').append('<tr>');
-                    $('#plan-detalle-tabla tbody').append(`<td><b>${(rol.puesto).toUpperCase()}</b></td>`);
-                    $('#plan-detalle-tabla tbody').append(`<td>${convertirPorcentajes(rol.com)} %</td>`);
-                    $('#plan-detalle-tabla tbody').append(`<td>${convertirPorcentajes(rol.neo)} %</td>`);
-                    $('#plan-detalle-tabla tbody').append('</tr>');
+                    $('#detalle-tabla-div .prueba').append(`
+                    <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label>${(rol.puesto.split(' ')[0]).toUpperCase()}</label></div>
+                    <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label>${convertirPorcentajes(rol.com)} %</label></div>
+                    <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label>${convertirPorcentajes(rol.neo)} %</label></div>
+                    `);
                 }
+                
             });
+            $('#detalle-tabla-div').append(`
+            </div>`)
             $('#detalle-tabla-div').show();
-        }
+            $('#spiner-loader').addClass('hide');
+        },
+        error: function(){
+            alerts.showNotification("top", "right", "No hay datos por mostrar.", "danger");
+            $('#spiner-loader').addClass('hide');
+        }        
     });
 }
 
 $('#btn-detalle-plan').on('click', function () {
+    cleanElement('mHeader');
     $('#planes-div').show();
     $('#planes').empty().selectpicker('refresh');
     $.ajax({
@@ -887,29 +906,46 @@ $('#btn-detalle-plan').on('click', function () {
     });
 });
 
+// Cambiar tabla
 $('#planes').change(function () {
+    cleanElement('detalle-tabla-div');
     const idPlan = $(this).val();
-    if (idPlan !== '0') {
+    if (idPlan !== '0' || idPlan !== NULL) {
         $.ajax({
             url: `${general_base_url}Comisiones/getDetallePlanesComisiones/${idPlan}`,
             type: 'GET',
             dataType: 'json',
             success: function (data) {
                 $('#plan-detalle-tabla-tbody').empty();
+                $('#title-plan').text(`Plan: ${data.descripcion}`);
+                $('#detalle-plan-modal').modal();
+                $('#detalle-tabla-div').hide();
                 const roles = data.comisiones;
+                $('#detalle-tabla-div').append(`
+                <div class="row subBoxDetail" id="modalInformation">
+                    <div class=" col-sm-12 col-sm-12 col-lg-12 text-center" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>PLANES DE COMISIÓN</b></label></div>
+                    <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label><b>PUESTO</b></label></div>
+                    <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label><b>% COMISIÓN</b></label></div>
+                    <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label><b>% NEODATA</b></label></div> 
+                    <div class="prueba"></div>
+                `)
                 roles.forEach(rol => {
                     if (rol.puesto !== null && (rol.com > 0 && rol.neo > 0)) {
-                        $('#plan-detalle-tabla tbody').append('<tr>');
-                        $('#plan-detalle-tabla tbody').append(`<td><b>${(rol.puesto).toUpperCase()}</b></td>`);
-                        $('#plan-detalle-tabla tbody').append(`<td>${convertirPorcentajes(rol.com)} %</td>`);
-                        $('#plan-detalle-tabla tbody').append(`<td>${convertirPorcentajes(rol.neo)} %</td>`);
-                        $('#plan-detalle-tabla tbody').append('</tr>');
+                        $('#detalle-tabla-div .prueba').append(`
+                        <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label>${(rol.puesto.split(' ')[0]).toUpperCase()}</label></div>
+                        <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label>${convertirPorcentajes(rol.com)} %</label></div>
+                        <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label>${convertirPorcentajes(rol.neo)} %</label></div>
+                        `);
                     }
+                    
                 });
+                $('#detalle-tabla-div').append(`
+                </div>`)
                 $('#detalle-tabla-div').show();
-            }
+            },
         });
     } else {
+        $('#plan-detalle-tabla tbody').append('No tiene un plan asignado');
         $('#detalle-tabla-div').hide();
     }
 });
@@ -922,10 +958,8 @@ function llenado (){
         cache: false,
         dataType:'json',
         success: function (data) {
-       
             $("#llenadoPlan").modal();
             $('#tiempoRestante').removeClass('hide');
-         
             if(data.date ==  undefined || data.date == false){
                 $("#tiempoRestante").html("Disponible para ejecutar ");
                 $('#cerradoPlan').removeClass('hide');
@@ -934,11 +968,8 @@ function llenado (){
             }else{
                 $('#llenadoPlanbtn').addClass('hide');
                 $('#cerradoPlan').addClass('hide');
-    
-                
                 $("#tiempoRestante").html("ultima ejecución : "+data.date[0].fecha_mostrar );
             }
-           
         }
     })
 }
@@ -955,13 +986,11 @@ $(document).on("click",".llenadoPlanbtn", function (e){
         dataType:'json',
         success: function (data) {
             let ban ;
-      
             if(data.date ==  undefined || data.date == false){
                 bandera = 1;   
                 var milliseconds = new Date().getTime() + (1 * 60 * 60 * 4000);
                 fecha_reinicio = new Date(milliseconds);    
-               
-           }else{
+            }else{
                 fecha_reinicio =  new Date(data.date[0].fecha_reinicio)
                 fechaSitema =  new Date();
                 if (fechaSitema.getTime() >= fecha_reinicio.getTime())  {
@@ -971,11 +1000,7 @@ $(document).on("click",".llenadoPlanbtn", function (e){
                     document.getElementById('llenadoPlanbtn').disabled = false;
                 }
             }
-
-   
-           
             if(bandera == 1 ){
-           
                 $.ajax({
                     type: 'POST',
                     url: 'nuevoLlenadoPlan',
