@@ -4,7 +4,6 @@ $(document).ready(function () {
     setIniDatesXMonth("#beginDate", "#endDate");
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
-
     $('#tabla_dispersar_comisiones thead tr:eq(0) th').each(function (i) {
         $(this).css('text-align', 'center');
         var title = $(this).text();
@@ -958,10 +957,8 @@ function llenado (){
         cache: false,
         dataType:'json',
         success: function (data) {
-       
             $("#llenadoPlan").modal();
             $('#tiempoRestante').removeClass('hide');
-         
             if(data.date ==  undefined || data.date == false){
                 $("#tiempoRestante").html("Disponible para ejecutar ");
                 $('#cerradoPlan').removeClass('hide');
@@ -970,11 +967,8 @@ function llenado (){
             }else{
                 $('#llenadoPlanbtn').addClass('hide');
                 $('#cerradoPlan').addClass('hide');
-    
-                
                 $("#tiempoRestante").html("ultima ejecución : "+data.date[0].fecha_mostrar );
             }
-           
         }
     })
 }
@@ -991,13 +985,11 @@ $(document).on("click",".llenadoPlanbtn", function (e){
         dataType:'json',
         success: function (data) {
             let ban ;
-      
             if(data.date ==  undefined || data.date == false){
                 bandera = 1;   
                 var milliseconds = new Date().getTime() + (1 * 60 * 60 * 4000);
                 fecha_reinicio = new Date(milliseconds);    
-               
-           }else{
+            }else{
                 fecha_reinicio =  new Date(data.date[0].fecha_reinicio)
                 fechaSitema =  new Date();
                 if (fechaSitema.getTime() >= fecha_reinicio.getTime())  {
@@ -1007,11 +999,7 @@ $(document).on("click",".llenadoPlanbtn", function (e){
                     document.getElementById('llenadoPlanbtn').disabled = false;
                 }
             }
-
-   
-           
             if(bandera == 1 ){
-           
                 $.ajax({
                     type: 'POST',
                     url: 'nuevoLlenadoPlan',
