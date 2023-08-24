@@ -113,7 +113,10 @@ $(document).ready(function () {
                 }else if(d.registro_comision == 2){
                     labelEstatus ='<span class="label lbl-sky">SOLICITADO MKT</span>'+' '+d.plan_descripcion;
                 }else {
-                    labelEstatus =`<span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span>`;
+                    if(d.plan_descripcion=="-")
+                        return '<p>SIN PLAN</p>'
+                    else
+                        labelEstatus =`<label class="label lbl-azure btn-dataTable" data-toggle="tooltip"  data-placement="top"  title="VER MÁS DETALLES"><b><span  onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span></label>`;
                 }
                 return labelEstatus;
             }},
@@ -209,10 +212,8 @@ $(document).ready(function () {
         });
 
     $("#tabla_comisiones_activas tbody").on("click", ".verify_neodata", async function(){ 
-        
         $("#modal_NEODATA .modal-header").html("");
         $("#modal_NEODATA .modal-body").html("");
-        $("#modal_NEODATA .modal-footer").html("");
         var tr = $(this).closest('tr');
         var row = $('#tabla_comisiones_activas').DataTable().row(tr);
         let cadena = '';
@@ -227,10 +228,8 @@ $(document).ready(function () {
         descripcion_plan = $(this).attr("data-descplan");
         tipo_venta = $(this).attr("data-tipov");
         bandera_penalizacion = $(this).attr("data-banderaPenalizacion");
-
         if(parseFloat(totalNeto2) > 0){
             $("#modal_NEODATA .modal-body").html("");
-            $("#modal_NEODATA .modal-footer").html("");
             $.getJSON( general_base_url + "ComisionesNeo/getStatusNeodata/"+idLote).done( function( data ){
                 if(data.length > 0){
                     switch (data[0].Marca) {
@@ -358,15 +357,15 @@ $(document).ready(function () {
                             $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>Aviso.</b></h4><br><h5>Sistema en mantenimiento.</h5></div> <div class="col-md-12 d-flex justify-center"><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></div> </div>');
                         break;
                         }
-                    }  
-                    else{
-                        //QUERY SIN RESULTADOS
-                        $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><b>No se encontró esta referencia en NEODATA de '+row.data().nombreLote+'.</b></h3><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12 d-flex justify-center"><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></div> </div>');
-                    }
-                }); //FIN getStatusNeodata
-                
-                $("#modal_NEODATA").modal();
-            }
+                }  
+                else{
+                    //QUERY SIN RESULTADOS
+                    $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><b>No se encontró esta referencia en NEODATA de '+row.data().nombreLote+'.</b></h3><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12 d-flex justify-center"><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></div> </div>');
+                }
+            }); //FIN getStatusNeodata
+            
+            $("#modal_NEODATA").modal();
+        }
     }); //FIN VERIFY_NEODATA
 });
 
@@ -494,12 +493,12 @@ $("#my_updatebandera_form").on('submit', function(e){
 
 $(document).on('click', '.update_bandera', function(e){
     id_pagoc = $(this).attr("data-idpagoc");
-        nombreLote = $(this).attr("data-nombreLote");
-        $("#myUpdateBanderaModal .modal-body").html('');
-        $("#myUpdateBanderaModal .modal-header").html('');
-        $("#myUpdateBanderaModal .modal-header").append('<h4 class="modal-title">Enviar a dispersion de comisiones: <b>'+nombreLote+'</b></h4>');
-        $("#myUpdateBanderaModal .modal-body").append('<input type="hidden" name="id_pagoc" id="id_pagoc"><input type="hidden" name="param" id="param">');
-        $("#myUpdateBanderaModal").modal();
+    nombreLote = $(this).attr("data-nombreLote");
+    $("#myUpdateBanderaModal .modal-body").html('');
+    $("#myUpdateBanderaModal .modal-header").html('');
+    $("#myUpdateBanderaModal .modal-header").append('<h4 class="modal-title">Enviar a dispersion de comisiones: <b>'+nombreLote+'</b></h4>');
+    $("#myUpdateBanderaModal .modal-body").append('<input type="hidden" name="id_pagoc" id="id_pagoc"><input type="hidden" name="param" id="param">');
+    $("#myUpdateBanderaModal").modal();
     $("#id_pagoc").val(id_pagoc);
     $("#param").val(0);
 });
@@ -518,10 +517,8 @@ $("#tabla_comisiones_activas tbody").on('click', '.btn-detener', function () {
     $("#detenciones-modal").modal();
 });
 
-var getInfo1 = new Array(6);
-var getInfo3 = new Array(6);
-
 function showDetailModal(idPlan) {
+    cleanElement('detalle-tabla-div');
     $('#planes-div').hide();
     $.ajax({
         url: `${general_base_url}Comisiones/getDetallePlanesComisiones/${idPlan}`,
@@ -533,16 +530,30 @@ function showDetailModal(idPlan) {
             $('#detalle-plan-modal').modal();
             $('#detalle-tabla-div').hide();
             const roles = data.comisiones;
+            $('#detalle-tabla-div').append(`
+            <div class="row subBoxDetail" id="modalInformation">
+                <div class=" col-sm-12 col-sm-12 col-lg-12 text-center" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>Nueva línea de ventas</b></label></div>
+                <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label><b>PUESTO</b></label></div>
+                <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label><b>% COMISIÓN</b></label></div>
+                <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label><b>% NEODATA</b></label></div> 
+                <div class="prueba"></div>
+            `)
             roles.forEach(rol => {
                 if (rol.puesto !== null && (rol.com > 0 && rol.neo > 0)) {
-                    $('#plan-detalle-tabla tbody').append('<tr>');
-                    $('#plan-detalle-tabla tbody').append(`<td><b>${(rol.puesto).toUpperCase()}</b></td>`);
-                    $('#plan-detalle-tabla tbody').append(`<td>${convertirPorcentajes(rol.com)} %</td>`);
-                    $('#plan-detalle-tabla tbody').append(`<td>${convertirPorcentajes(rol.neo)} %</td>`);
-                    $('#plan-detalle-tabla tbody').append('</tr>');
+                    $('#detalle-tabla-div .prueba').append(`
+                    <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label>${(rol.puesto.split(' ')[0]).toUpperCase()}</label></div>
+                    <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label>${convertirPorcentajes(rol.com)} %</label></div>
+                    <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label>${convertirPorcentajes(rol.neo)} %</label></div>
+                    `);
                 }
+                
             });
+            $('#detalle-tabla-div').append(`
+            </div>`)
             $('#detalle-tabla-div').show();
-        }
+        },
+        error: function(){
+            alerts.showNotification("top", "right", "No hay datos por mostrar.", "danger");
+        }        
     });
 }

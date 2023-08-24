@@ -78,7 +78,9 @@
                 <div class="modal-content">
                     <form method="post" id="form_NEODATA">
                         <div class="modal-body"></div>
-                        <div class="modal-footer"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -96,17 +98,7 @@
                                 </div>
                             </div>
                             <div id="detalle-tabla-div"class="col-lg-12">
-                                <table class="table table-bordered" id="plan-detalle-tabla">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col" style="color:white; text-align: center; ">PUESTO</th>
-                                            <th scope="col" style="color:white; text-align: center; ">% COMISIÓN</th>
-                                            <th scope="col" style="color:white; text-align: center; ">% NEODATA</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="plan-detalle-tabla-tbody">
-                                    </tbody>
-                                </table>
+                                
                             </div>
                         </div>
                     </div>
