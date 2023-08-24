@@ -6330,6 +6330,7 @@ public function getDataDispersionPagoEspecial($val = '') {
 
     public function getDataDetenidas()
     {
+        $this->db->query("SET LANGUAGE Español;");
         $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre as nombreCondominio,
         l.nombreLote, l.tipo_venta, vc.id_cliente AS compartida, l.idStatusContratacion,
         hl.motivo, hl.comentario,l.totalNeto2, l.registro_comision, 

@@ -99,7 +99,7 @@ $(document).ready(function () {
         },
         {
             data: function (d) {
-                return '$' + formatMoney(d.precio);
+                return formatMoney(d.precio);
             }
         },
         {
@@ -107,7 +107,7 @@ $(document).ready(function () {
                 if (d.totalNeto2 == 'null' || d.totalNeto2 == '' || d.totalNeto2 == '0.00' || d.totalNeto2 == null || d.totalNeto2 == '.00') {
                     return '$0.00';
                 } else {
-                    return '$' + formatMoney(d.totalNeto2);
+                    return formatMoney(d.totalNeto2);
                 }
             }
         },
@@ -130,7 +130,23 @@ $(document).ready(function () {
             data: function (d) {
                 return d.gerente;
             }
-        }],
+        },
+        {
+            data: function (d) {
+                return d.subdirector;
+            }
+        },
+        {
+            data: function (d) {
+                return d.dRegional;
+            }
+        },
+        {
+            data: function (d) {
+                return d.dRegional2;
+            }
+        }
+        ],
         ajax: {
             url: `${general_base_url}contraloria/getGeneralClientsReport`,
             type: "POST",
