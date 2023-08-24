@@ -48,7 +48,11 @@
 														<th>MEDIO</th>
 														<th>PLAZA</th>
 														<th>ASESOR</th>
+														<th>COORDINADOR</th>
 														<th>GERENTE</th>
+														<th>SUBDIRECTOR</th>
+														<th>DIRECTOR REGIONAL</th>
+														<th>DIRECTOR REGIONAL 2</th>
 														<th>TOTAL</th>
 														<th>ENGANCHE</th>
 														<th>PLAN DE ENGANCHE</th>

@@ -586,6 +586,12 @@
   padding: 5px 6px !important;
 }
 
+.btn-dataTable {
+  font-size: 12px !important;
+  color: #333 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
 /* END Estilos generales datatable */
 /* Btns fuera de datatable */
 .btn-azure {
@@ -1128,7 +1134,7 @@
 .lbl-aqua {
   color: #54d2d2;
   border: none;
-  background: #11DFC618;
+  background: #54d2d218;
 }
 
 .lbl-olivo {
@@ -1205,7 +1211,7 @@
 }
 
 .file-gph .file-name::placeholder {
-  color: red !important;
+  color: #929292 !important;
 }
 
 .file-gph input[type="file"] {
