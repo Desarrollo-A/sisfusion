@@ -42,9 +42,8 @@
             </div>
         </div>
         <?php $this->load->view('template/footer_legend'); ?>
-    </div><!--main-panel close-->
+    </div>
     <?php $this->load->view('template/footer'); ?>
-    <!--DATATABLE BUTTONS DATA EXPORT-->
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
@@ -55,10 +54,7 @@
     <script src="<?= base_url() ?>dist/js/controllers/mktd-1.1.0.js"></script>
     <script src="<?=base_url()?>dist/js/funciones-generales.js"></script>
     <script src="<?=base_url()?>dist/js/controllers/contraloria/generalClientsReport.js"></script>
-    <!--  Plugin for Date Time Picker and Full Calendar Plugin-->
     <script src="<?= base_url() ?>dist/js/moment.min.js"></script>
     <script src="<?= base_url() ?>dist/js/es.js"></script>
-    <!-- DateTimePicker Plugin -->
     <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
-
 </body>
