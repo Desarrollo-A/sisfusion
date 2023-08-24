@@ -439,7 +439,7 @@ tabla_bonos1.columns.adjust();
 $("#roles").change(function() {
     var parent = $(this).val();
     document.getElementById("users").innerHTML ='';
-    $('#users').append(`<label class="control-label">Usuario</label><select id="usuarioid" name="usuarioid" class="selectpicker select-gral m-0 directorSelect" required data-live-search="true"></select>`);
+    $('#users').append(`<label class="control-label">Usuario</label><select id="usuarioid" name="usuarioid" class="selectpicker select-gral m-0 directorSelect" title="SELECCIONA UNA OPCIÓN" data-container="body" required data-live-search="true"></select>`);
     $.post('getUsuariosRolBonos/'+parent, function(data) {
         var len = data.length;
 

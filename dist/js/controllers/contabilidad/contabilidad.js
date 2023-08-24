@@ -167,8 +167,10 @@ function fillTableLotificacion(lotes) {
             }
         }],
         columnDefs: [{
-            visible: false,
-            searchable: false
+            defaultContent: "Sin especificar",
+            targets: "_all",
+            searchable: true,
+            orderable: false
         }],
         ajax: {
             url: "getInformation",
