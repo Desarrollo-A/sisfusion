@@ -165,7 +165,7 @@ function fillTable(idLote, bandera, beginDate, endDate ) {
                         case 1:
                         case '1':
                         default:
-                            labelStatus = '<span class="label lbl-violetBoot">ACTIVA</span>';
+                            labelStatus = '<span class="label lbl-azure">ACTIVA</span>';
                             break;
                     }
                 }
@@ -283,7 +283,8 @@ function fillTable(idLote, bandera, beginDate, endDate ) {
         }
     });
     $('#cobranzaHistorial').removeClass('hide');
-    $(document).on("click", ".consultar_history", function(){
+
+    $("#cobranzaHistorial tbody").off('click', '.consultar_history').on('click', '.consultar_history', function () {
         var myCommentsList = document.getElementById('comments-list-asimilados');
         myCommentsList.innerHTML = '';
         var clearTitle = document.getElementById('nameLote');
@@ -293,10 +294,10 @@ function fillTable(idLote, bandera, beginDate, endDate ) {
         $("#seeInformationModalAsimilados").modal();
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
-        $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
+        $("#nameLote").append('<h5>HISTORIAL DEL PAGO DE <b>'+lote+'</b></h5>');
         $.getJSON("getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
-                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><b>' + v.comentario + '</b></a><br></div><div class="float-end text-right"><a>'+v.fecha_movimiento+'</a></div><div class="col-md-12"><p class="m-0"><small>MODIFICADO POR: </small><b> ' +v.nombre_usuario+ '</b></p></div><h6></h6></div></div></li>');
+                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><b>' + v.comentario + '</b></a><br></div><div class="float-end text-right"><a>'+v.fecha_movimiento.split('.')[0]+'</a></div><div class="col-md-12"><p class="m-0"><small>MODIFICADO POR: </small><b> ' +v.nombre_usuario+ '</b></p></div><h6></h6></div></div></li>');
             });
         });
     });
@@ -310,10 +311,11 @@ function fillTable(idLote, bandera, beginDate, endDate ) {
         $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $.getJSON("Comisiones/getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
-                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><b>' + v.comentario + '</b></a><br></div><div class="float-end text-right"><a>'+v.fecha_movimiento+'</a></div><div class="col-md-12"><p class="m-0"><small>MODIFICADO POR: </small><b> ' +v.nombre_usuario+ '</b></p></div><h6></h6></div></div></li>');
+                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><b>' + v.comentario + '</b></a><br></div><div class="float-end text-right"><a>'+v.fecha_movimiento.split('.')[0]+'</a></div><div class="col-md-12"><p class="m-0"><small>MODIFICADO POR: </small><b> ' +v.nombre_usuario+ '</b></p></div><h6></h6></div></div></li>');
             });
         });
     });
+    
     $("#cobranzaHistorial tbody").on("click", "#verifyNeodataStatus", function (e) {
         e.preventDefault();
         e.stopImmediatePropagation();
@@ -389,10 +391,10 @@ function fillTable(idLote, bandera, beginDate, endDate ) {
                 $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12" style="text-align: center;"><h3><b>No se encontró esta referencia en NEODATA de ' + row.data().nombreLote + '.</b></h3><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="' + general_base_url + 'static/images/robot.gif" width="320" height="300"></center></div> </div>');
             }
         });
-        console.log('entra 526');
         $("#modal_NEODATA").modal();
     });
 }
+
 $(document).on("click", "#searchByLote", function () {
     let idLote = $("#idLote").val();
     let finalBeginDate = $("#beginDate").val();
@@ -404,6 +406,7 @@ $(document).on("click", "#searchByLote", function () {
         fillTable(idLote,bandera, finalBeginDate, finalEndDate);
     }
 });
+
 $(document).on("click", "#searchByDateRange", function () {
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
@@ -413,13 +416,11 @@ $(document).on("click", "#searchByDateRange", function () {
     {
         alerts.showNotification("top", "right", "Oops, faltan valores para consultar.", "warning");
     }else{
-    
         fillTable(lote ,bandera, finalBeginDate, finalEndDate);
     }
 });
 
 $(document).on("click", ".reset-initial-values", function () {
-    // setIniDatesXMonth(inicioFecha, finFecha);
     $(".idLote").val('');
     $(".textoshead").val('');
     $("#beginDate").val('01/10/2022');
@@ -452,3 +453,10 @@ $(document).on('click', '#sendRequestCommissionPayment', function () {
         }
     });
 });
+
+function cleanCommentsAsimilados() {
+    var myCommentsList = document.getElementById('comments-list-asimilados');
+    var myCommentsLote = document.getElementById('nameLote');
+    myCommentsList.innerHTML = '';
+    myCommentsLote.innerHTML = '';
+}

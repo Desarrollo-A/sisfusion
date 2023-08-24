@@ -221,7 +221,7 @@ class Internomex_model extends CI_Model {
         ORDER BY au.fecha_creacion DESC");
     }
 
-    public function getInformacionContratos($rows_number) {
+    public function getInformacionContratos($rows_number, $year, $month) {
         ini_set('memory_limit', -1);
         $top_statement = $rows_number != '' ? "TOP $rows_number": "";
         return $this->db->query("SELECT $top_statement lo.idLote, op1.nombre tipo_persona, 
@@ -243,8 +243,9 @@ class Internomex_model extends CI_Model {
         LEFT JOIN corridas_financieras cf ON cf.id_lote = lo.idLote AND cf.id_cliente = cl.id_cliente AND cf.status = 1
 		LEFT JOIN comisiones cm ON cm.id_lote = lo.idLote AND cm.idCliente = cl.id_cliente
 		LEFT JOIN pago_comision pc ON pc.id_lote = cm.id_lote
-		INNER JOIN (SELECT * FROM pago_comision_ind WHERE estatus = 8) pci ON pci.id_comision = cm.id_comision
-		INNER JOIN historial_comisiones hc ON hc.id_pago_i = pci.id_pago_i AND hc.comentario IN ('CONTRALOÍA ENVIO A INTERNOMEX', 'CONTRALORIA ENVIO A INTERNOMEX', 'CONTRALORIA ENVÍO A INTERNOMEX', 'CONTRALORÍA ENVIO A INTERNOMEX', 'CONTRALORÍA ENVÍO A INTERNOMEX', 'CONTRALORÍA ENVÍO A INTERNOMEX ASIMILADO', 'CONTRALORÍA ENVÍO A INTERNOMEX FACTURA', 'CONTRALORÍA ENVÍO A INTERNOMEX REMANENTE', 'CONTRALORÍA ENVÍO PAGO A INTERNOMEX', 'Se envío a INTERNOMEX', 'SE ENVÍO PAGO A INTERNOMEX')
+		INNER JOIN (SELECT * FROM pago_comision_ind WHERE estatus = 11) pci ON pci.id_comision = cm.id_comision
+		INNER JOIN historial_comisiones hc ON hc.id_pago_i = pci.id_pago_i AND hc.comentario IN ('INTERNOMEX APLICO PAGO', 'INTERNOMEX APLICO EL PAGO','INTERNOMEX APLICÓ PAGO', 
+		'INTERNOMEX APLICÓ EL PAGO','INTERNOMEX APLICÓ EL PAGO POR SISTEMA','APLICÓ PAGO INTERNOMEX') AND YEAR(hc.fecha_movimiento) = $year AND MONTH(hc.fecha_movimiento) = $month
 		INNER JOIN opcs_x_cats op1 ON op1.id_opcion = cl.personalidad_juridica AND op1.id_catalogo = 10
         INNER JOIN opcs_x_cats op2 ON op2.id_opcion = cl.nacionalidad AND op2.id_catalogo = 11
 		LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39 AND status = 1 GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente 
@@ -271,7 +272,7 @@ class Internomex_model extends CI_Model {
         FORMAT(ISNULL(lo.totalNeto2, 0.00), 'C'), 
         ISNULL(cf.plan_corrida, 'SIN ESPECIFICAR'), FORMAT(ISNULL(lo.totalValidado, 0), 'C'), pc.total_comision,
         re.empresa, ISNULL(CONVERT(varchar, hl.modificado, 103), 'SIN ESPECIFICAR'), ISNULL(CONVERT(varchar, hl2.modificado, 103), 'SIN ESPECIFICAR'),
-		ISNULL(CONVERT(varchar, pc.ultima_dispersion, 103), 'SIN ESPECIFICAR'), oxc0.nombre, oxc1.nombre, oxc2.nombre, oxc3.nombre, oxc4.nombre, oxc5.nombre")->result_array(); 
+		oxc0.nombre, oxc1.nombre, oxc2.nombre, oxc3.nombre, oxc4.nombre, oxc5.nombre")->result_array(); 
     }
 
 }

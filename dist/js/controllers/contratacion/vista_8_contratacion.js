@@ -167,8 +167,7 @@ $(document).ready(function () {
                     return  `<span class="label lbl-warning">N/A</span>`;
                 }
             }
-        }
-        ],
+        }],
         columnDefs: [{
             searchable: false,
             orderable: false,
@@ -223,9 +222,12 @@ $(document).ready(function () {
                 status = "ESTATUS 11 VALIDACIÓN DE ENGANCHE (ADMINISTRACIÓN)";
             }
     
-            if(idStatusContratacion.includes(parseInt(row.data().idStatusContratacion)) && idMovimiento.includes(parseInt(row.data().idMovimiento)))
-                    fechaVenc = row.data().fechaVenc;
-             else if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 66) {
+            if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 37 ||
+                row.data().idStatusContratacion == 7 && row.data().idMovimiento == 7 ||
+                row.data().idStatusContratacion == 7 && row.data().idMovimiento == 64 ||
+                row.data().idStatusContratacion == 7 && row.data().idMovimiento == 77) {
+                fechaVenc = row.data().fechaVenc;
+            } else if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 66) {
                 fechaVenc = 'VENCIDO';
             }
 
@@ -561,7 +563,13 @@ $(document).on('click', '#save5', function (e) {
                     $('#rev8').modal('hide');
                     $('#Jtabla').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
-                } else if (response.message == 'ERROR') {
+                } else if(response.message == 'MISSING_CARTA_UPLOAD'){
+                    $('#save5').prop('disabled', false);
+                    $('#rev8').modal('hide');
+                    $('#Jtabla').DataTable().ajax.reload();
+                    alerts.showNotification("top", "right", "Primero debes subir la Carta de Domicilio CM antes de avanzar el expediente", "danger");
+                }
+                else if (response.message == 'ERROR') {
                     $('#save5').prop('disabled', false);
                     $('#rev8').modal('hide');
                     $('#Jtabla').DataTable().ajax.reload();

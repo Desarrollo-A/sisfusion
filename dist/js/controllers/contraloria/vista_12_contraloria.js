@@ -14,7 +14,8 @@ $('#tabla_ingresar_12 thead tr:eq(0) th').each( function (i) {
     tabla_12 = $("#tabla_ingresar_12").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         scrollX: true,
-        bAutoWidth: true,
+        bAutoWidth:true,
+        width: '100%',
         buttons: [
             {
                 extend: 'excelHtml5',
@@ -44,7 +45,6 @@ $('#tabla_ingresar_12 thead tr:eq(0) th').each( function (i) {
             targets: 0,
             searchable: false,
         }],
-        width: '100%',
         language: {
             url: general_base_url + "/static/spanishLoader_v2.json",
             paginate: {
@@ -52,7 +52,6 @@ $('#tabla_ingresar_12 thead tr:eq(0) th').each( function (i) {
                 next: "<i class='fa fa-angle-right'>"
             }
         },
-        "bAutoWidth": false,
         "fixedColumns": true,
         "ordering": false,
         "columns": [
@@ -263,7 +262,7 @@ $(document).ready(function(){
         text += "</ul>";
         $.ajax({
             data:  "datos=" + arrw,
-            url:   general_base_url + 'index.php/Contraloria/insertContratosFirmados/',
+            url:   general_base_url + 'Contraloria/insertContratosFirmados/',
             type:  'post',
             success: function(data){
             response = JSON.parse(data);
@@ -306,3 +305,9 @@ jQuery(document).ready(function(){
     jQuery(this).find('#contratos').val('');
     })
 })
+
+$('#tabla_ingresar_12').on('draw.dt', function() {
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
+    });
+});

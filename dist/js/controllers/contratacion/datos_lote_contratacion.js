@@ -367,7 +367,11 @@ function consultarHistoriaContratacion(idLote) {
             { data: "nombreLote" },
             { data: "nombreStatus" },
             { data: "descripcion" },
-            { data: "comentario" },
+            {
+                data: function (d) {
+                    return d.comentario.toUpperCase();
+                }
+            },
             { data: "modificado" },
             { data: "usuario" }
         ],

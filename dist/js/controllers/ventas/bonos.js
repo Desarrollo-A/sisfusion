@@ -409,7 +409,7 @@ $("#form_abono").on('submit', function(e){
             $('#tabla_bonos').DataTable().ajax.reload(null, false);
             closeModalEng();
             $('#modal_abono').modal('hide');
-            alerts.showNotification("top", "right", "Abono registrado con exito.", "success");
+            alerts.showNotification("top", "right", "Abono registrado con éxito.", "success");
             document.getElementById("form_abono").reset(); 
             }
             else if(data == 2) {
@@ -468,7 +468,7 @@ $("#numeroP").change(function(){
     let cantidad = parseFloat($('#numeroP').val());
     let resultado=0;
     if (isNaN(monto)) {
-        alerts.showNotification("top", "right", "Debe ingresar un monto valido.", "warning");
+        alerts.showNotification("top", "right", "Debe ingresar un monto válido.", "warning");
         $('#pago').val(resultado);
         document.getElementById('btn_abonar').disabled=true;
     }else{

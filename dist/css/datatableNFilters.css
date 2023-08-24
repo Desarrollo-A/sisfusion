@@ -24,6 +24,10 @@
   margin-bottom: 0px !important;
 }
 
+.mb-a {
+  margin-bottom: auto !important;
+}
+
 .mb-1 {
   margin-bottom: 10px;
 }
@@ -130,6 +134,10 @@
 
 .pr-3 {
   padding-right: 30px;
+}
+
+.pr-4 {
+  padding-right: 40px;
 }
 
 .pl-0 {
@@ -384,6 +392,10 @@
   display: block;
 }
 
+.d-wrap {
+  flex-wrap: wrap;
+}
+
 .d-flex {
   display: flex !important;
 }
@@ -564,7 +576,7 @@
 }
 
 .txt-sunny {
-  color: #F9F871 !important;
+  color: #a98800 !important;
 }
 
 .btn-a {
@@ -572,6 +584,12 @@
   height: 37px !important;
   width: 37px !important;
   padding: 5px 6px !important;
+}
+
+.btn-dataTable {
+  font-size: 12px !important;
+  color: #333 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 
 /* END Estilos generales datatable */
@@ -691,7 +709,6 @@
   padding: 10px 0;
   background-color: #103f75;
   color: #ffffff;
-  box-shadow: 0px 8px 15px RGB(0, 0, 0, 0.3);
 }
 
 .btn-gral-data:hover {
@@ -1117,7 +1134,7 @@
 .lbl-aqua {
   color: #54d2d2;
   border: none;
-  background: #11DFC618;
+  background: #54d2d218;
 }
 
 .lbl-olivo {
@@ -1194,7 +1211,7 @@
 }
 
 .file-gph .file-name::placeholder {
-  color: red !important;
+  color: #929292 !important;
 }
 
 .file-gph input[type="file"] {
@@ -1989,6 +2006,17 @@ table .boxSBtns {
   border-radius: 30px;
   padding: 10px;
   width: fit-content;
+}
+
+.subBoxDetail {
+  background-color: #eaeaea;
+  border-radius: 10px;
+  padding: 15px 0;
+}
+
+.subBoxDetail label {
+  color: #333333;
+  font-weight: 100;
 }
 
 .dataTables_scroll .container-fluid {

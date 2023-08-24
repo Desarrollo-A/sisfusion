@@ -49,29 +49,29 @@
                             <div class="toolbar">
                                 <div class="container-fluid p-0">
                                     <div class="row">
-                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 overflow-hidden">
-                                            <div class="form-group">
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
+                                            <div class="form-group overflow-hidden">
                                                 <label class="m-0" for="puestos">Puesto(<span class="text-danger">*</span>)</label>
                                                 <select class="selectpicker select-gral" name="puestos" id="puestos" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required></select>
                                             </div>
                                         </div>
 
-                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 overflow-hidden">
-                                            <div class="form-group">
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
+                                            <div class="form-group overflow-hidden">
                                                 <label class="m-0" for="usuarios">Usuarios(<span class="text-danger">*</span>)</label>
                                                 <select class="selectpicker select-gral" name="usuarios" id="usuarios" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required></select>
                                             </div>
                                         </div>
 
-                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 overflow-hidden">
-                                            <div class="form-group">
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
+                                            <div class="form-group overflow-hidden">
                                                 <label class="m-0" for="proyectos">Proyecto</label>
                                                 <select class="selectpicker select-gral" name="proyectos" id="proyectos" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body"></select>
                                             </div>
                                         </div>
 
-                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 overflow-hidden">
-                                            <div class="form-group">
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
+                                            <div class="form-group overflow-hidden">
                                                 <label class="m-0" for="estatus">Estatus</label>
                                                 <select class="selectpicker select-gral" name="estatus" id="estatus" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body"></select>
                                             </div>

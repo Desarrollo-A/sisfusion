@@ -5,6 +5,7 @@
 .m-3  { margin: 30px; }
 .m-4  { margin: 40px; }
 .mb-0 { margin-bottom: 0px!important; }
+.mb-a { margin-bottom: auto !important; }
 .mb-1 { margin-bottom: 10px; }
 .mb-2 { margin-bottom: 20px!important; }
 .mb-3 { margin-bottom: 30px; }
@@ -33,6 +34,7 @@
 .pr-1 { padding-right: 10px; }
 .pr-2 { padding-right: 20px; }
 .pr-3 { padding-right: 30px; }
+.pr-4 { padding-right: 40px;  }
 .pl-0 { padding-left: 0!important; }
 .pl-1 { padding-left: 10px; }
 .pl-2 { padding-left: 20px; }
@@ -105,6 +107,7 @@
 /* Flexbox */
 .d-none          { display: none!important; }
 .d-block         { display: block; }
+.d-wrap          {flex-wrap: wrap;}   
 .d-flex          { display: flex!important; }
 .align-start     { align-items: flex-start; }
 .align-end       { align-items: flex-end; }
@@ -205,7 +208,7 @@ $tiffanyBlue        : #00ACB8;
 $oceanGreen         : #4BBC8E;
 $caribbeanGreen     : #00CDA3;
 $lightGreen         : #92E784;
-$sunny              : #F9F871;
+$sunny              : #a98800;
 $darkCyan           : #008c76;
 $brightBlue         : #4a30dd;
 $verySoftBlue       : #AED6F1;
@@ -268,6 +271,13 @@ $tv                 : "(min-width: 1280px)";
     height: 37px !important;
     width: 37px !important;
     padding: 5px 6px !important;
+}
+
+.btn-dataTable{
+    font-size: 12px !important;
+    color: #333 !important; 
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 
+                0 1px 2px rgba(0,0,0,0.24);
 }
 
 /* END Estilos generales datatable */
@@ -369,7 +379,6 @@ $tv                 : "(min-width: 1280px)";
     padding: 10px 0;
     background-color: $blueIndigo;
     color: $white;
-    box-shadow: 0px 8px 15px RGB(0, 0, 0, 0.3);
 }
 
 .btn-gral-data:hover{
@@ -733,14 +742,14 @@ $tv                 : "(min-width: 1280px)";
 .lbl-aqua{
     color: $aqua;
     border: none;
-    background:#11DFC618;
+    background:#54d2d218;
 }
 .lbl-olivo{
     color:  $olivo;
     border: none;
     background-color: #86895D18;
-
 }
+
 /* END Etiquetas */
 
 /* Estilo del scroll en DIVS */
@@ -798,7 +807,7 @@ $tv                 : "(min-width: 1280px)";
         background-color: transparent;
         border: none;
         &::placeholder{
-            color: red !important;
+            color: $deepGray !important;
         }
     }
 }

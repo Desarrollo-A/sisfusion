@@ -118,7 +118,6 @@
                             </div>
                             <div class="material-datatables">
                                 <div class="form-group">
-                                    <div class="table-responsive">
                                     <table class="table-striped table-hover" id="tabla_bonos" name="tabla_bonos">
                                         <thead>
                                             <tr>
@@ -137,7 +136,6 @@
                                             </tr>
                                         </thead>
                                     </table>
-                                    </div>
                                 </div>
                             </div>
                         </div>

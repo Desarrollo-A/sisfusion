@@ -236,36 +236,56 @@ class Usuarios extends CI_Controller
             $resultadoCH = $res->resultado;
         }
         else {
-            $arrayChecar = array (
-                'id_rol' => $_POST['member_type'],
-                'id_sede' => $_POST['headquarter'],
-                'id_lider' => $_POST['leader']
-            );
-            $validacion = validateUserVts($arrayChecar);
 
-            if($validacion['respuesta']==1){
-                //continuar con la lógica
-            }else{
-                switch ($this->session->userdata('id_rol')){
-                    case 4:
-                    case 5:
-                    case 6:
-                        $usr = $this->Usuarios_modelo->getUserInformation($_POST['id_usuario']);
-                        $usr = $usr[0];
-                        $rolActual = $usr['id_rol'];
-                        $sedeActual = $usr['id_sede'];
-                        $liderActual = $usr['id_lider'];
-                    if($_POST['member_type'] != $rolActual AND $_POST['headquarter'] != $sedeActual AND $_POST['leader'] != $liderActual){
-                            echo json_encode(array("result" => false,
-                                "respuesta" => 0,
-                                "message" => $validacion['mensaje']));
-                            exit;
-                        }
+            if($this->session->userdata('id_rol') == 4 || $this->session->userdata('id_rol') == 5 || $this->session->userdata('id_rol') == 6){
+                $arrayChecar = array (
+                    'id_rol' => $_POST['member_type'],
+                    'id_sede' => $_POST['headquarter'],
+                    'id_lider' => $_POST['leader']
+                );
+                $validacion = validateUserVts($arrayChecar);
 
-                        break;
+
+                if($validacion['respuesta']==1){
+                    //continuar con la lógica
                 }
+                else{
+                    switch ($this->session->userdata('id_rol')){
+                        case 4:
+                        case 5:
+                        case 6:
+                            $usr = $this->Usuarios_modelo->getUserInformation($_POST['id_usuario']);
+                            $usr = $usr[0];
+                            $rolActual = $usr['id_rol'];
+                            $sedeActual = $usr['id_sede'];
+                            $liderActual = $usr['id_lider'];
+//                            print_r($_POST['member_type']);
+//                            echo '<br>'.$rolActual;
+//                            echo '<br><br>';
+//                            print_r($_POST['headquarter']);
+//                            echo '<br>'.$sedeActual;
+//                            echo '<br><br>';
+//                            print_r($_POST['leader']);
+//                            echo '<br>'.$liderActual;
+//                            echo '<br><br>';
+//                            exit;
+                            if($_POST['member_type'] != $rolActual || $_POST['headquarter'] != $sedeActual || $_POST['leader'] != $liderActual){
 
+                                echo json_encode(array("result" => false,
+                                    "respuesta" => $validacion['respuesta'],
+                                    "message" => $validacion['mensaje']));
+                                exit;
+                            }else{
+//                                print_r('sigue lógica normal');
+//                                exit;
+                            }
+
+                            break;
+                    }
+
+                }
             }
+
             $sedeCH = 0;
             $sucursal = 0;
             if ($_POST['member_type'] == 3 || $_POST['member_type'] == 7 || $_POST['member_type'] == 9 || $_POST['member_type'] == 2) {
