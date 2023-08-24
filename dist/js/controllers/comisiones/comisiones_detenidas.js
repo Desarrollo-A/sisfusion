@@ -106,7 +106,7 @@ $('#comisiones-detenidas-table').ready(function () {
                     } else if (d.registro_comision == 2) {
                         labelEstatus = '<span class="label lbl-aqua">SOLICITADO MKT</span>' + ' ' + d.plan_descripcion;
                     } else {
-                        labelEstatus = `<span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span>`;
+                        labelEstatus = `<span class="label lbl-azure">${d.plan_descripcion}</span>`;
                     }
                     return labelEstatus;
                 }
@@ -131,6 +131,7 @@ $('#comisiones-detenidas-table').ready(function () {
             },
             {
                 data: function (d) {
+                    //Checar boton
                     let botton = '';
                     if (id_rol_general != 63 && id_rol_general != 4) {
                         if(d.motivo == 5){
@@ -147,7 +148,7 @@ $('#comisiones-detenidas-table').ready(function () {
                         }
                         return botton;
                     } else {
-                        return 'NA';
+                        return 'NO APLICA';
                     }
                 }
             }
@@ -202,7 +203,6 @@ $('#comisiones-detenidas-table').ready(function () {
         const idLote = $(this).val();
         let data = new FormData();
         data.append('idLote', idLote);
-
         $.ajax({
             type: 'POST',
             url: 'updateBanderaDetenida',
