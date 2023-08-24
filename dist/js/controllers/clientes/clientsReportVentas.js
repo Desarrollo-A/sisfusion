@@ -61,7 +61,6 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
                         }
                     }
                 },
-
             }
         ],
         pagingType: "full_numbers",
@@ -120,11 +119,23 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
                 }
             },
             { data: function (d) {
-                    return '$'+ formatMoney(d.totalNeto2);
+                    return d.nombreSubdirector;
                 }
             },
             { data: function (d) {
-                    return '$'+formatMoney(d.enganche);
+                    return d.directorRegional;
+                }
+            },
+            { data: function (d) {
+                    return d.directorRegional2;
+                }
+            },
+            { data: function (d) {
+                    return formatMoney(d.totalNeto2);
+                }
+            },
+            { data: function (d) {
+                    return formatMoney(d.enganche);
                 }
             },
             { data: function (d) {
