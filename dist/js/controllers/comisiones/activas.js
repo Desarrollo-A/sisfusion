@@ -629,6 +629,9 @@ var getInfo3 = new Array(6);
 
 function showDetailModal(idPlan) {
     $('#planes-div').hide();
+    if(idPlan == 0 || idPlan == null){
+        alerts.showNotification("top", "right", "No cuenta con un plan asignado.", "warning");                      
+    }else{
     $.ajax({
         url: `${general_base_url}Comisiones/getDetallePlanesComisiones/${idPlan}`,
         type: 'GET',
@@ -651,6 +654,7 @@ function showDetailModal(idPlan) {
             $('#detalle-tabla-div').show();
         }
     });
+}
 }
 
 

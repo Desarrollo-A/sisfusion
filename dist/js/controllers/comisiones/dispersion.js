@@ -842,6 +842,9 @@ var getInfo3 = new Array(6);
 
 function showDetailModal(idPlan) {
     $('#planes-div').hide();
+    if(idPlan == 0 || idPlan == null){
+        alerts.showNotification("top", "right", "No cuenta con un plan asignado.", "warning");                      
+    }else{
     $.ajax({
         url: `${general_base_url}Comisiones/getDetallePlanesComisiones/${idPlan}`,
         type: 'GET',
@@ -864,6 +867,7 @@ function showDetailModal(idPlan) {
             $('#detalle-tabla-div').show();
         }
     });
+}
 }
 
 $('#btn-detalle-plan').on('click', function () {
@@ -889,7 +893,7 @@ $('#btn-detalle-plan').on('click', function () {
 
 $('#planes').change(function () {
     const idPlan = $(this).val();
-    if (idPlan !== '0') {
+    if (idPlan !== '0' || idPlan !== NULL) {
         $.ajax({
             url: `${general_base_url}Comisiones/getDetallePlanesComisiones/${idPlan}`,
             type: 'GET',
@@ -905,11 +909,16 @@ $('#planes').change(function () {
                         $('#plan-detalle-tabla tbody').append(`<td>${convertirPorcentajes(rol.neo)} %</td>`);
                         $('#plan-detalle-tabla tbody').append('</tr>');
                     }
+                    else{
+                        $('#plan-detalle-tabla tbody').append('No tiene un plan asignado');
+
+                    }
                 });
                 $('#detalle-tabla-div').show();
             }
         });
     } else {
+        $('#plan-detalle-tabla tbody').append('No tiene un plan asignado');
         $('#detalle-tabla-div').hide();
     }
 });
