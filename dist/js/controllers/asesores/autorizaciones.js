@@ -1,3 +1,5 @@
+const movimientosPermitidosAsesor = [31, 85, 20, 63, 73, 82, 92, 96, 99, 102, 104, 107, 108, 109, 111];
+
 function validateEmptyFields(){
     var miArray = [];
     for (i = 0; i < $("#tamanocer").val(); i++) {
@@ -305,7 +307,7 @@ $(document).ready (function() {
         },
         {
             "data": function( d ){
-                if((d.idStatusContratacion == 1 || d.idStatusContratacion == 2 || d.idStatusContratacion == 3) && (d.idMovimiento == 31 || d.idMovimiento == 85 || d.idMovimiento == 20 || d.idMovimiento == 63 || d.idMovimiento == 73 || d.idMovimiento == 82 || d.idMovimiento == 92 || d.idMovimiento == 96)){
+                if((d.idStatusContratacion == 1 || d.idStatusContratacion == 2 || d.idStatusContratacion == 3) && movimientosPermitidosAsesor.includes(parseInt(d.idMovimiento))){
                     aut =
                         `<a href="#" class="btn-data btn-blueMaderas addAutorizacionAsesor" data-idCliente="${d.id_cliente}" data-nombreResidencial="${d.nombreResidencial}" data-nombreCondominio="${d.nombreCondominio}" data-nombreLote="${d.nombreLote}" data-idCondominio="${d.idCondominio}" data-idLote="${d.idLote}" data-toggle="tooltip" data-placement="top" title="ACCIONES"><i class="fas fa-redo"></i></a>`;
                     return '<div class="d-flex justify-center">'+aut+'</div>';

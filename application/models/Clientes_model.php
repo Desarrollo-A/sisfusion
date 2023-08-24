@@ -3691,14 +3691,23 @@ function getStatusMktdPreventa(){
                 ISNULL(c.telefono1, '') telefono, ISNULL(c.otro_lugar, '') medioProspeccion, l.totalNeto2,
                 UPPER(s.nombre) AS plaza, CONVERT(VARCHAR(10), c.fechaApartado, 111) fechaApartado, 
                 CONVERT(VARCHAR(10), hl.modificado, 111) fechaEstatusQuince, l.enganche, ISNULL(oxc.nombre, 'SIN ESPECIFICAR') planEnganche,
-                CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreAsesor,
-                CONCAT(uu.nombre, ' ', uu.apellido_paterno, ' ', uu.apellido_materno) nombreGerente, l.idStatusLote
+                CASE WHEN u.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) END nombreAsesor,
+                CASE WHEN uu.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(uu.nombre, ' ', uu.apellido_paterno, ' ', uu.apellido_materno) END  coordinador,
+                CASE WHEN uuu.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(uuu.nombre, ' ', uuu.apellido_paterno, ' ', uuu.apellido_materno) END nombreGerente,
+                CASE WHEN sb.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(sb.nombre, ' ', sb.apellido_paterno, ' ', sb.apellido_materno)END nombreSubdirector,
+                CASE WHEN dr.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(dr.nombre, ' ', dr.apellido_paterno, ' ', dr.apellido_materno) END directorRegional,
+                CASE WHEN dr2.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(dr2.nombre, ' ', dr2.apellido_paterno, ' ', dr2.apellido_materno) END directorRegional2,
+                l.idStatusLote
                 FROM lotes l
                 INNER JOIN clientes c ON c.idLote = l.idLote AND c.lugar_prospeccion = 6 AND c.status = 1
                 INNER JOIN condominios cn ON cn.idCondominio = l.idCondominio
                 INNER JOIN residenciales r ON r.idResidencial  = cn.idResidencial
                 INNER JOIN usuarios u ON u.id_usuario = c.id_asesor AND u.id_sede IN ($result)
-                INNER JOIN usuarios uu ON uu.id_usuario = c.id_gerente
+                LEFT JOIN usuarios uu ON uu.id_usuario = c.id_coordinador
+                LEFT JOIN usuarios uuu ON uuu.id_usuario = c.id_gerente
+                LEFT JOIN usuarios sb ON sb.id_usuario = c.id_subdirector
+                LEFT JOIN usuarios dr ON dr.id_usuario = c.id_regional
+                LEFT JOIN usuarios dr2 ON dr2.id_usuario = c.id_regional_2
                 INNER JOIN sedes s ON s.id_sede = u.id_sede
                 LEFT JOIN (SELECT MAX(modificado) modificado, idStatusContratacion, idMovimiento, idLote, status, idCliente FROM historial_lotes 
                 GROUP BY idStatusContratacion, idMovimiento, idLote, status, idCliente) hl ON hl.idLote = l.idLote AND hl.idStatusContratacion = 15 
@@ -3717,9 +3726,12 @@ function getStatusMktdPreventa(){
                 ISNULL(c.telefono1, '') telefono, ISNULL(UPPER(c.otro_lugar), '') medioProspeccion, UPPER(oxc2.nombre) lp, l.totalNeto2,
                 UPPER(s.nombre) plaza, CONVERT(VARCHAR(10), c.fechaApartado, 111) fechaApartado, 
                 CONVERT(VARCHAR(10), hl.modificado, 111) fechaEstatusQuince, l.enganche, ISNULL(oxc.nombre, 'SIN ESPECIFICAR') planEnganche,
-                CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreAsesor,
-                CONCAT(uu.nombre, ' ', uu.apellido_paterno, ' ', uu.apellido_materno) nombreGerente,
-                CONCAT(uuu.nombre, ' ', uuu.apellido_paterno, ' ', uuu.apellido_materno) nombreCoordinador
+                CASE WHEN u.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE  CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) END nombreAsesor,
+                CASE WHEN uu.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(uu.nombre, ' ', uu.apellido_paterno, ' ', uu.apellido_materno)END nombreGerente,
+                CASE WHEN uuu.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(uuu.nombre, ' ', uuu.apellido_paterno, ' ', uuu.apellido_materno)END nombreCoordinador,
+                CASE WHEN sb.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(sb.nombre, ' ', sb.apellido_paterno, ' ', sb.apellido_materno)END nombreSubdirector,
+                CASE WHEN dr.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(dr.nombre, ' ', dr.apellido_paterno, ' ', dr.apellido_materno) END directorRegional,
+                CASE WHEN dr2.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(dr2.nombre, ' ', dr2.apellido_paterno, ' ', dr2.apellido_materno) END directorRegional2
                 FROM lotes l
                 INNER JOIN clientes c ON c.idLote = l.idLote AND c.status = 1
                 INNER JOIN condominios cn ON cn.idCondominio = l.idCondominio
@@ -3727,6 +3739,9 @@ function getStatusMktdPreventa(){
                 INNER JOIN usuarios u ON u.id_usuario = c.id_asesor
                 INNER JOIN usuarios uu ON uu.id_usuario = c.id_gerente
                 LEFT JOIN usuarios uuu ON uuu.id_usuario = c.id_coordinador
+                LEFT JOIN usuarios sb ON sb.id_usuario = c.id_subdirector
+                LEFT JOIN usuarios dr ON dr.id_usuario = c.id_regional
+                LEFT JOIN usuarios dr2 ON dr2.id_usuario = c.id_regional_2
                 INNER JOIN sedes s ON CONVERT(VARCHAR(12), s.id_sede) = CONVERT(VARCHAR(12), u.id_sede)
                 INNER JOIN (SELECT MAX(modificado) modificado, idStatusContratacion, idMovimiento, idLote, status, idCliente FROM historial_lotes 
                 GROUP BY idStatusContratacion, idMovimiento, idLote, status, idCliente) hl ON hl.idLote = l.idLote AND hl.idStatusContratacion = 9 

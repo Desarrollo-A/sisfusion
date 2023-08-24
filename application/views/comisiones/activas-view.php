@@ -91,7 +91,7 @@
                 <div class="modal-content">
                     <div class="modal-body pb-0">
                         <div class="row">
-                            <div id="detalle-tabla-div"class="col-lg-12">
+                            <div id="detalle-tabla-div"class="container-fluid">
                             </div>
                         </div>
                     </div>
