@@ -920,9 +920,6 @@ $('#planes').change(function () {
                         $('#plan-detalle-tabla tbody').append(`<td>${convertirPorcentajes(rol.neo)} %</td>`);
                         $('#plan-detalle-tabla tbody').append('</tr>');
                     }
-                    else{
-                        $('#plan-detalle-tabla tbody').append('No tiene un plan asignado');
-                    }
                 });
                 $('#detalle-tabla-div').show();
             }
