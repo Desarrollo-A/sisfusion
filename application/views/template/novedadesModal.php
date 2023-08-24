@@ -42,6 +42,7 @@
         vertical-align: middle;
     }
 </style>
+
 <div class="modal fade" id="avisoNovedades" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
      data-backdrop="static" >
     <div class="modal-dialog modal-lg"  id="body_modal">
@@ -54,29 +55,12 @@
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0 50px; ">
                         <h4><b>Aviso</b></h4>
                         <p>
-                            Cambio de fecha en el corte de comisiones
-
+                        Estimado colaborador el día de hoy 24 de Agosto, así como el día 26 de Agosto, estaremos aplicando una serie de mejoras en nuestro sistema. Estas actualizaciones tienen como objetivo optimizar el rendimiento, eficiencia y seguridad de algunas operaciones dentro de nuestro CRM.
+                        <br>
+                        <br>
+                        Será necesario realizar una breve interrupción del servicio. La actualización está programada para comenzar a las <b>7:00 p.m. el día 24</b> y por otro lado <b>8:00 a.m. el día 26</b> se espera que tenga una duración de aproximadamente dos o tres horas respectivamente.<br><br> Durante estos períodos, será posible que se vean intermitencias en el sistema, agradeceremos tu apoyo y comprensión en el transcurso de la implementación. 
                         </p>
-                        <p style="text-align: justify">
-                            <br>
-                            Estimado comisionista. Esperamos que este mensaje le
-                            encuentre bien. Queremos informarle sobre una actualización importante
-                            relacionada con el corte de comisiones. Por razones estratégicas se decidió
-                            realizar un cambio en la fecha del corte de comisiones. Por esta ocasión, el
-                            corte de comisiones se llevará a cabo el día miércoles 9 y jueves 10 (hasta dos
-                            de la tarde) del presente mes.
-                            <br><br>
-                            Queremos asegurarnos de que esté completamente informado
-                            sobre esta modificación para evitar cualquier confusión o malentendido. Si
-                            tiene alguna pregunta o inquietud con respecto a este cambio, no dude en
-                            ponerse en contacto con su supervisor directo. Estamos aquí para brindarle toda
-                            la información y el apoyo que necesite durante esta transición.
-                            <br><br>
-                            Agradecemos su comprensión y colaboración ante este cambio,
-                            y confiamos en que, juntos, continuaremos fortaleciendo el éxito de nuestra
-                            empresa.</p>
-
-                        <p style="font-size: small">Recuerda actualizar cache con el comando <b>CTRL + SHIFT + R</b></p>
+                        <p style="font-size: small">Recuerda actualizar caché con el comando <b>CTRL + SHIFT + R</b></p>
                         <div class="d-flex justify-center align-center mt-1">
                             <input type="checkbox" name="no_mostrar_session" id="no_mostrar_session" style="margin: -1px 0 0;line-height: normal;">
                             <label for="no_mostrar_session" style="color: #5a5a5a;font-size: 1.2rem " class="m-0"><b>No volver a mostrar aviso durante la sesión</b></label>

@@ -22,7 +22,6 @@
     <?php $this->load->view('template/sidebar'); ?>
     <!--Contenido de la página-->
 
-
         <div class="modal fade" id="avisoModal" >
             <div class="modal-dialog">
                 <div class="modal-content" >

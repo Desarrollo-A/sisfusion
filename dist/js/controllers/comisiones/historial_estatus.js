@@ -13,7 +13,6 @@ $(document).ready(function() {
 
     $.get(`${general_base_url}Comisiones/getPuestoByIdOpts`, function (data) {
         const puestos = JSON.parse(data);
-        $('#roles').append($('<option>').val('').text('SELECCIONA UNA OPCIÓN'));
         puestos.forEach(puesto => {
             const id = puesto.id_opcion;
             const name = puesto.nombre.toUpperCase();
@@ -137,24 +136,24 @@ var tabla_historialGral2 ;
 var totaPen = 0;
 
 const optNueva = `
-    <div class="form-check">
-        <input class="form-check-input" type="radio" name="estatus" id="estatus-nueva" value="1" required>
-        <label class="form-check-label" for="estatus-nueva">Nueva</label>
+    <div class="w-100">
+        <input class="d-none" type="radio" name="estatus" id="estatus-nueva" value="1" required>
+        <label class="w-100" for="estatus-nueva">Nueva</label>
     </div>`;
 const optRevision = `
-    <div class="form-check">
-        <input class="form-check-input" type="radio" name="estatus" id="estatus-revision" value="4" required>
-        <label class="form-check-label" for="estatus-revision"> Revisión contraloría</label>
+    <div class="w-100">
+        <input class="d-none" type="radio" name="estatus" id="estatus-revision" value="4" required>
+        <label class="w-100" for="estatus-revision"> Revisión contraloría</label>
     </div>`;
 const optPausado = `
-    <div class="form-check">
-        <input class="form-check-input" type="radio" name="estatus" id="estatus-pausado" value="6" required>
-        <label class="form-check-label" for="estatus-pausado"> Pausado</label>
+    <div class="w-100">
+        <input class="d-none" type="radio" name="estatus" id="estatus-pausado" value="6" required>
+        <label class="w-100" for="estatus-pausado"> Pausado</label>
     </div>`;
 const optPagado = `
-    <div class="form-check">
-        <input class="form-check-input" type="radio" name="estatus" id="estatus-pagado" value="11" required>
-        <label class="form-check-label" for="estatus-pagado"> Pagado</label>
+    <div class="w-100">
+        <input class="d-none" type="radio" name="estatus" id="estatus-pagado" value="11" required>
+        <label class="w-100" for="estatus-pagado"> Pagado</label>
     </div>`;
 
 let seleccionados = [];
@@ -184,8 +183,8 @@ function getAssimilatedCommissions(proyecto, condominio, usuario){
                         options = optPagado;
                     }
                     const titlePagos = (idComisiones.length > 1) ? `<b>${idComisiones.length}</b> pagos seleccionados` : `<b>${idComisiones.length}</b> pago seleccionado`;
-                    $('#total-pagos').html('').html(titlePagos);
-                    $('#div-options').html('').html('<label>Seleccione una opción:</label>'+options);
+                    $('#total-pagos').html('').html('('+titlePagos+')');
+                    $('#div-options').html('').html(options);
                     $('#movimiento-modal').modal();
                 }
             },
@@ -433,7 +432,9 @@ $('#estatus-form').on('submit', function (e) {
                     <div class="row">
                         <div class="col-lg-12 text-center">
                             <h3 style='color:#676767;'>Se cambiaron los estatus de los pagos seleccionados</h3>
-                            <img style='width: 200px; height: 200px;' src='${general_base_url}dist/img/check.gif'>
+                        </div>
+                        <div class="col-lg-12 text-right ">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
                         </div>
                     </div>
                 `);

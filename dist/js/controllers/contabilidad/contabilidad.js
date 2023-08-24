@@ -1,3 +1,4 @@
+let typeTransaction = 1;
 $(document).ready(function () {
     getColumns();
 });
@@ -77,7 +78,7 @@ function fillTableLotificacion(lotes) {
         },
         {
             data: function (d) {
-                return d.modificado;
+                return d.modificado.split('.')[0];
             }
         },
         {
@@ -166,8 +167,10 @@ function fillTableLotificacion(lotes) {
             }
         }],
         columnDefs: [{
-            visible: false,
-            searchable: false
+            defaultContent: "Sin especificar",
+            targets: "_all",
+            searchable: true,
+            orderable: false
         }],
         ajax: {
             url: "getInformation",
@@ -176,6 +179,9 @@ function fillTableLotificacion(lotes) {
             data: {
                 "lotes": lotes
             }
+        },
+        initComplete: function(){
+            $("#spiner-loader").addClass('hide');
         }
     });
 
@@ -187,7 +193,8 @@ function fillTableLotificacion(lotes) {
 }
 
 $(document).on('click', '.find-results', function () {
-    $(".closeTable").removeClass("hide");
+    $(".closeTable").removeClass('hide');
+    $("#spiner-loader").removeClass('hide');
     result = validateEmpty();
     if (result) {
         $(".row-load").addClass("hide");
@@ -241,7 +248,6 @@ $(document).on('click', '#downloadFile', function () {
                 var len = response.length;
                 var createXLSLFormatObj = [];
                 var xlsHeader = ["id_lote", "nombre_lote", 'id_cliente', "nombre_cliente"];
-                console.log('id_cliente');
                 $('#columns').find("option:selected").each(function () {
                     xlsHeader.push($(this).data('name'));
                 });
@@ -315,6 +321,7 @@ function readFileAsync(selectedFile) {
 $(document).on('click', '#cargaCoincidencias', function () {
     fileElm = document.getElementById("fileElm");
     file = fileElm.value;
+    $("#spiner-loader").removeClass('hide');
     if (file == '')
         alerts.showNotification("top", "right", "Asegúrate de seleccionar un archivo para llevar a cabo la carga de la información.", "warning");
     else {
@@ -332,6 +339,7 @@ $(document).on('click', '#cargaCoincidencias', function () {
                         "lotes": lotes
                     },
                     success: function (response) {
+                        $("#spiner-loader").addClass('hide');
                         alerts.showNotification("top", "right", response["message"], (response["status" == 503]) ? "danger" : (response["status" == 400]) ? "warning" : "success");
                         $('#uploadModal').modal('toggle');
                     },

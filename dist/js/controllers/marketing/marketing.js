@@ -592,10 +592,10 @@ function changeSedeC(){
 	let sedes = $('#sedeC').val();
 	if(sedes.length>0){
 		$('#fechasFiltroC').removeClass('hide');
-		$('#insideC').addClass('col-md-offset-8 col-lg-offset-8');
+		$('#insideC').addClass('col-md-offset-7 col-lg-offset-7');
 		}else{
 		$('#fechasFiltroC').addClass('hide');
-		$('#insideC').removeClass('col-md-offset-8 col-lg-offset-8');
+		$('#insideC').removeClass('col-md-offset-7 col-lg-offset-7');
 	}
 }
 
@@ -635,8 +635,8 @@ function cleanFiltersC(){
 		$('#fechasFiltroC').addClass('hide');
 		$('#beginDateC').val('');
 		$('#endDateC').val('');
-		$('#insideC').addClass('col-md-4 col-lg-4');
-		$('#insideC').removeClass('col-md-offset-8 col-lg-offset-8');
+		$('#insideC').addClass('col-md-5 col-lg-5');
+		$('#insideC').removeClass('col-md-offset-7 col-lg-offset-7');
 		tabla_valores_cliente.clear().draw();
 		tabla_valores_cliente.destroy();
 	}

@@ -83,6 +83,9 @@
                                                 <th>ASESOR</th>
                                                 <th>COORDINADOR</th>
                                                 <th>GERENTE</th>
+                                                <th>SUBDIRECTOR</th>
+                                                <th>DIRECTOR REGIONAL</th>
+                                                <th>DIRECTOR REGIONAL 2</th>
                                                 <th>TOTAL</th>
                                                 <th>ENGANCHE DE ADMINISTRACIÓN</th>
                                                 <th>ENGANCHE DE CONTRALORÍA</th>
