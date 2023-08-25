@@ -4904,7 +4904,10 @@ function getBonosPorUser($id,$estado){
     WHEN 9629 THEN 2
     ELSE u.id_sede END) and sed.estatus = 1
     INNER JOIN pagos_bonos_ind b on b.id_bono=p.id_bono
-    inner join opcs_x_cats opcs on opcs.id_opcion=u.id_rol WHERE b.estado=$estado and opcs.id_catalogo=1");
+    inner join opcs_x_cats opcs on opcs.id_opcion=u.id_rol
+    WHERE 
+    -- $cadena
+     b.estado=$estado and opcs.id_catalogo=1");
 }
 
 /*--------------planes-----------*/
