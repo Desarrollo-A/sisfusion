@@ -186,6 +186,9 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
                 beginDate: fechaInicio,
                 endDate: fechaFin
             }
+        },
+        initComplete: function(){
+            $("#spiner-loader").addClass('hide');
         }
     });
 }
@@ -266,6 +269,7 @@ $(document).on('click', '.searchByDateRange', function(){
 });
 
 $(document).on('click', '.find-results', function () {
+    $("#spiner-loader").removeClass('hide');
     $(".row-load").addClass("hide");
     $(".box-table").removeClass("hide");
     let fechaInicio = formatDate( $(".beginDate").val());

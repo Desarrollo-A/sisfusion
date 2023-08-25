@@ -2460,6 +2460,10 @@ class Contraloria extends CI_Controller {
     }
 
     public function getGeneralClientsReport(){
+        ini_set('max_execution_time', 900);
+        set_time_limit(900);
+        ini_set('memory_limit','2048M');
+        
         $data['data'] = $this->Contraloria_model->getGeneralClientsReport()->result_array();
         echo json_encode($data);
     }

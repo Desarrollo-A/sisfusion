@@ -3,12 +3,10 @@
 <body class="">
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
-
         <style type="text/css">        
             #modal_nuevas{
                 z-index: 1041!important;
             }
-
             #modal_vc{
                 z-index: 1041!important;
             }
@@ -50,9 +48,9 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form id="my_updatebandera_form" name="my_updatebandera_form" method="post">
-                    <div class="modal-header bg-red">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> <i class="material-icons">clear</i></button>
-                    </div>
+                        <div class="modal-header bg-red">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> <i class="material-icons">clear</i></button>
+                        </div>
                         <div class="modal-body" style="text-align: center;"></div>
                         <div class="modal-footer">
                             <div class="col-lg-12">
@@ -71,8 +69,26 @@
                 <div class="modal-content">
                     <form method="post" id="form_NEODATA">
                         <div class="modal-body"></div>
-                        <div class="modal-footer"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
+                        </div>
                     </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="detalle-plan-modal" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body pb-0">
+                        <div class="row">
+                            <div id="detalle-tabla-div"class="container-fluid">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" >Cerrar</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -129,12 +145,9 @@
                 </div>
             </div>
         </div>
-    <?php $this->load->view('template/footer_legend');?>
+        <?php $this->load->view('template/footer_legend');?>
     </div>
     <?php $this->load->view('template/footer');?>
-    <script > 
-    var url = "<?=base_url()?>";
-    var url2 = "<?=base_url()?>index.php/";
-    </script>
+    <script src="<?= base_url() ?>dist/js/funciones-generales.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/liquidadas.js"></script>
 </body>

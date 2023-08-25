@@ -210,7 +210,8 @@ $(document).on('change', '#subdirector',function () {
 
 $(document).on('change','#gerente', function () {
     $('#prospects-datatable_dir').removeClass('hide');
-    var gerente = $("#gerente").val();
+
+    /**/var gerente = $("#gerente").val();
 
     $("#coordinador").empty().selectpicker('refresh');
     $("#asesores").empty().selectpicker('refresh');
@@ -243,6 +244,7 @@ $(document).on('change','#gerente', function () {
 
 $(document).on('change', '#coordinador', function () {
     var coordinador = $("#coordinador").val();
+    $('#prospects-datatable_dir').removeClass('hide');
 
     //gerente
     $("#asesores").empty().selectpicker('refresh');
@@ -272,6 +274,7 @@ $(document).on('change', '#coordinador', function () {
 //asesor
 $(document).on('change', '#asesores',function () {
     var asesor = $("#asesores").val();
+    $('#prospects-datatable_dir').removeClass('hide');
 
     /**///carga tabla
     var url = general_base_url + 'index.php/Clientes/getProspectsListByAsesor/' +asesor;

@@ -120,7 +120,27 @@ function fillDataTable(typeTransaction, beginDate, endDate, where){
         },
         { 
             data: function (d) {
+                return d.coordinador;
+            }
+        },
+        { 
+            data: function (d) {
                 return d.nombreGerente;
+            }
+        },
+        { 
+            data: function (d) {
+                return d.nombreSubdirector;
+            }
+        },
+        { 
+            data: function (d) {
+                return d.directorRegional;
+            }
+        },
+        { 
+            data: function (d) {
+                return d.directorRegional2;
             }
         },
         { 

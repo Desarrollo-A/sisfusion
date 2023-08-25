@@ -26,7 +26,6 @@
                                                             <input type="text" data-toggle="tooltip" data-placement="top" title="Fecha fin" class="form-control datepicker" id="beginDate" value="" autocomplete='off' />
                                                             <input type="text" data-toggle="tooltip" data-placement="top" title="Fecha fin" class="form-control datepicker" id="endDate" value="" autocomplete='off' />
                                                             <button data-toggle="tooltip" data-placement="top" title="Buscar" class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange"><span class="material-icons update-dataTable">search</span></button>
-                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

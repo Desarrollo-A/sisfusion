@@ -47,6 +47,7 @@ $(document).ready(function () {
 });
 
 $(document).on('click', '#searchInfo', function () {
+    $("#spiner-loader").removeClass('hide');
     let empresa = $("#empresas").val();
     let idProyecto = $("#proyectos").val();
     let idCliente = $("#clientes").val();
@@ -56,11 +57,12 @@ $(document).on('click', '#searchInfo', function () {
     let fechaIni = $("#beginDate").val();
     let fechaFin = $("#endDate").val();
 
-    if (empresa == undefined || empresa == '')
+    if (empresa == undefined || empresa == ''){
         $('#notificacion').modal('show');
-    else
+    }else{
         $("#tableLotificacionNeodata").removeClass('hide');
         fillTableLotificacionNeoData(empresa, idProyecto, idCliente, fechaIni, fechaFin, dates);
+    }
 });
 
 const formatter = new Intl.NumberFormat('en-US', {
@@ -154,7 +156,7 @@ function fillTableLotificacionNeoData(empresa, idProyecto, idCliente, fechaIni, 
         },
         {
             data: function (d) {
-                return '$' + formatMoney(d.precioventa);
+                return "$" + formatMoney(d.precioventa);
             }
         },
         {
@@ -179,12 +181,12 @@ function fillTableLotificacionNeoData(empresa, idProyecto, idCliente, fechaIni, 
         },
         {
             data: function (d) {
-                return '$' + formatMoney(d.monto2170);
+                return "$" + formatMoney(d.monto2170);
             }
         },
         {
             data: function (d) {
-                return '$' + formatMoney(d.monto1150);
+                return "$" + formatMoney(d.monto1150);
             }
         },
         {
@@ -204,32 +206,32 @@ function fillTableLotificacionNeoData(empresa, idProyecto, idCliente, fechaIni, 
         },
         {
             data: function (d) {
-                return '$' + formatMoney(d.totcontrato);
+                return "$" + formatMoney(d.totcontrato);
             }
         },
         {
             data: function (d) {
-                return '$' + formatMoney(d.totcontratoint);
+                return "$" + formatMoney(d.totcontratoint);
             }
         },
         {
             data: function (d) {
-                return '$' + formatMoney(d.pagado_cap)
+                return "$" + formatMoney(d.pagado_cap)
             }
         },
         {
             data: function (d) {
-                return '$' + formatMoney(d.pagado_mor)
+                return "$" + formatMoney(d.pagado_mor)
             }
         },
         {
             data: function (d) {
-                return '$' + formatMoney(d.pagado_int)
+                return "$" + formatMoney(d.pagado_int)
             }
         },
         {
             data: function (d) {
-                return '$' + formatMoney(d.totcontratoint)
+                return "$" + formatMoney(d.totcontratoint)
             }
         }],
         columnDefs: [{
@@ -250,6 +252,7 @@ function fillTableLotificacionNeoData(empresa, idProyecto, idCliente, fechaIni, 
             }
         },
         initComplete: function () {
+            $("#spiner-loader").addClass('hide');
             $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
         }
     });

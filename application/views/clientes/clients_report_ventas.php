@@ -2,7 +2,7 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
     <div class="wrapper">
-        <?php $this->load->view('template/sidebar');   ?>
+        <?php $this->load->view('template/sidebar'); ?>
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -12,7 +12,7 @@
                                 <i class="fas fa-bookmark fa-2x"></i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Listado general de clienteeeeees</h3>
+                                <h3 class="card-title center-align">Listado general de clientes</h3>
                                 <div class="toolbar">
                                     <div class="row">
                                         <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-lg-offset-6 col-md-offset-6 col-sm-offset-6">
@@ -47,6 +47,9 @@
                                                     <th>ASESOR</th>
                                                     <th>COORDINADOR</th>
                                                     <th>GERENTE</th>
+                                                    <th>SUBDIRECTOR</th>
+                                                    <th>DIRECTOR REGIONAL</th>
+                                                    <th>DIRECTOR REGIONAL 2</th>
                                                     <th>TOTAL</th>
                                                     <th>ENGANCHE</th>
                                                     <th>PLAN ENGANCHE</th>
@@ -67,27 +70,12 @@
         <?php $this->load->view('template/footer_legend');?>
     </div><!--main-panel close-->
 </body>
-
 <?php $this->load->view('template/footer');?>
-
-<!--DATATABLE BUTTONS DATA EXPORT-->
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script src="<?= base_url() ?>dist/js/es.js"></script>
-<!-- DateTimePicker Plugin -->
 <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
-<!--  Full Calendar Plugin    -->
 <script src="<?= base_url() ?>dist/js/fullcalendar.min.js"></script>
 <script src="<?=base_url()?>dist/js/funciones-generales.js"></script>
-
-<!--  Plugin for Date Time Picker and Full Calendar Plugin-->
 <script src="<?= base_url() ?>dist/js/moment.min.js"></script>
 <script src="<?= base_url() ?>dist/js/es.js"></script>
-<!-- DateTimePicker Plugin -->
 <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/clientes/clientsReportVentas.js"></script>

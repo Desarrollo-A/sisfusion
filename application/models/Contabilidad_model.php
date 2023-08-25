@@ -73,7 +73,7 @@ class Contabilidad_model extends CI_Model
     }
 
     public function getInformationFromNeoData($empresa, $idProyecto, $idCliente, $fechaIni, $fechaFin, $dates)
-    {
+    {   
         return $this->programacion->query("EXEC [programacion].[dbo].[CDM025Lotificacion]
         @empresa = '$empresa', --Empresa a consultar, el cual es obligatorio
         @IdProyecto = ".($idProyecto == NULL ? 'NULL' : $idProyecto).", -- Proyecto a consultar en específico de valor entero, opcional (null)
