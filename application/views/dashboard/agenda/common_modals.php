@@ -15,7 +15,6 @@
                         <ul class="dropdown-menu dropdown-menu-right p-0" aria-labelledby="menuModal">
                             <li><a class="m-0" onclick="finalizarCita()">Finalizar evento</a></li>
                             <li><a class="m-0" onclick="confirmDelete()">Eliminar evento</a></li>
-                            <li><a class="m-0" data-dismiss="modal" style="border-top: 1px solid #eaeaea;">Cerrar ventana</a></li>
                         </ul>
                     </div>
                     <?php } ?>
