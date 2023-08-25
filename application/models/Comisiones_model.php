@@ -4906,7 +4906,7 @@ function getBonosPorUser($id,$estado){
     INNER JOIN pagos_bonos_ind b on b.id_bono=p.id_bono
     inner join opcs_x_cats opcs on opcs.id_opcion=u.id_rol
     WHERE 
-    -- $cadena
+    $cadena
      b.estado=$estado and opcs.id_catalogo=1");
 }
 
