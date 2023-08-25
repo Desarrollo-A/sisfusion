@@ -2366,7 +2366,7 @@ function getDatosRevisionFactura($proyecto,$condominio){
    function update_estatus_pausa($id_pago_i, $obs, $estatus) {
     $id_user_Vl = $this->session->userdata('id_usuario');
     $this->db->query("INSERT INTO  historial_comisiones VALUES ($id_pago_i, ".$id_user_Vl.", GETDATE(), 1, 'SE PAUSÓ COMISIÓN, MOTIVO: ".$obs."')");
-    return $this->db->query("UPDATEE pago_comision_ind SET estatus = ".$estatus.", comentario = '".$obs."',modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$id_pago_i.")");
+    return $this->db->query("UPDATE pago_comision_ind SET estatus = ".$estatus.", comentario = '".$obs."',modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$id_pago_i.")");
   }
 
 

@@ -2569,8 +2569,7 @@ public function LiquidarLote(){
      echo json_encode( array( "data" => $dat));
     }
 
-    public function resguardos()
-    {
+    public function resguardos(){
       $this->load->view('template/header');
       $this->load->view("ventas/revision_resguardo");
     }
@@ -2583,10 +2582,7 @@ public function LiquidarLote(){
      echo json_encode( array( "data" => $dat));
     }
 
-
-
-     public function retiros()
-    {
+    public function retiros(){
       $this->load->view('template/header');
       $this->load->view("ventas/retiros");
     }
@@ -2594,7 +2590,7 @@ public function LiquidarLote(){
     public function getDatosRetirosContraloria($proyecto,$condominio){
       $dat =  $this->Comisiones_model->getDatosRetirosContraloria($proyecto,$condominio)->result_array();
      for( $i = 0; $i < count($dat); $i++ ){
-         $dat[$i]['pa'] = 0;
+        $dat[$i]['pa'] = 0;
      }
      echo json_encode( array( "data" => $dat));
     }

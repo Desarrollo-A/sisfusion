@@ -51,10 +51,8 @@
                                 <textarea id="comentario" name="comentario" class="form-control" rows="3" required></textarea>
                             </div>
                             <div class="form-group">
-                                <center>
                                     <button type="submit" id="btn_abonar" class="btn btn-success">GUARDAR</button>
                                     <button class="btn btn-danger" type="button" data-dismiss="modal" >CANCELAR</button>
-                                </center>
                             </div>
                         </div>
                     </form>
@@ -81,7 +79,7 @@
                                         <div class="col-md-12">
                                             <div class="card card-plain">
                                                 <div class="card-content">
-                                                    <ul class="timeline-3" id="comments-list-remanente"></ul>
+                                                    <ul class="timeline-3 scroll-styles" style="height: 350px; overflow: auto" id="comments-list-remanente"></ul>
                                                 </div>
                                             </div>
                                         </div>
@@ -93,16 +91,6 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsremanente()"><b>Cerrar</b></button>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form method="post" id="form_interes">
-                        <div class="modal-body"></div>
-                    </form>
                 </div>
             </div>
         </div>
@@ -121,7 +109,6 @@
         <div class="modal fade modal-alertas" id="modal_refresh" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
-
                     <form method="post" id="form_refresh">
                         <div class="modal-body"></div>
                     </form>
@@ -160,7 +147,6 @@
                 </div>
             </div>
         </div>
-        <!-- END Modals -->
 
         <div class="content boxContent">
             <div class="container-fluid">
@@ -211,8 +197,7 @@
                                     <div class="form-group">
                                         <table class="table-striped table-hover" id="tabla_resguardo" name="tabla_resguardo">
                                             <thead>
-                                                <tr> 
-                                                    <th></th>
+                                                <tr>
                                                     <th>ID</th>
                                                     <th>PROYECTO</th>
                                                     <th>CONDOMINIO</th>

@@ -58,7 +58,6 @@ public function getGeneralStatusFromNeodata($proyecto, $condominio)
             for($i = 0; $i < COUNT($datos); $i++){
                 $data[$i] = $this->ComisionesNeo_model->getGeneralStatusFromNeodata($datos[$i]['referencia'], $datos[$i]['idResidencial']);
                     $final_data[$contador] = $this->ComisionesNeo_model->getLoteInformation($datos[$i]['idLote']);
-                    print_r($data[$i]);
                     $final_data[$contador]->reason = $data[$i]->Marca;
                     $contador ++;
             }

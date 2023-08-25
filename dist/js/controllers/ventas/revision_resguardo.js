@@ -1,4 +1,15 @@
 
+var totalLeon = 0;
+var totalQro = 0;
+var totalSlp = 0;
+var totalMerida = 0;
+var totalCdmx = 0;
+var totalCancun = 0;
+var tr;
+var tabla_resguardo2 ;
+var totaPen = 0;
+let titulos = [];
+
 function cleanCommentsremanente() {
     var myCommentsList = document.getElementById('comments-list-remanente');
     var myCommentsLote = document.getElementById('nameLote');
@@ -99,17 +110,6 @@ $('#filtro333').change(function(ruta){
     getHistoryCommissions(proyecto);
 });
 
-var totalLeon = 0;
-var totalQro = 0;
-var totalSlp = 0;
-var totalMerida = 0;
-var totalCdmx = 0;
-var totalCancun = 0;
-var tr;
-var tabla_resguardo2 ;
-var totaPen = 0;
-
-let titulos = [];
 $('#tabla_resguardo thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
     titulos.push(title);
@@ -171,12 +171,6 @@ function getAssimilatedCommissions(proyecto, condominio){
         destroy: true,
         ordering: false,
         columns: [{
-            "className": 'details-control',
-            "orderable": false,
-            "data" : null,
-            "defaultContent": '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i>'
-        },   
-        {
             "data": function( d ){
                 return '<p class="m-0">'+d.id_pago_i+'</p>';
             }
@@ -254,15 +248,8 @@ function getAssimilatedCommissions(proyecto, condominio){
         {
             "orderable": false,
             "data": function( data ){
-
                 var BtnStats;
-                if(id_usuario_general == 1875 || id_usuario_general == 10894){
-                    BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_remanente" data-toggle="tooltip" data-placement="top" title="HISTORIAL DEL PAGO">' +'<i class="fas fa-info"></i></button>';
-                }
-                else{
-                    BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_remanente" data-toggle="tooltip" data-placement="top" title="HISTORIAL DEL PAGO">' +'<i class="fas fa-info"></i></button>'+
-                    '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.id_pago_i+'" data-code="'+data.cbbtton+'" ' + 'class="btn-data btn-warning cambiar_estatus" data-toggle="tooltip" data-placement="top" title="PAUSAR SOLICITUD">' + '<i class="fas fa-ban"></i></button>';
-                }
+                BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_remanente" data-toggle="tooltip" data-placement="top" title="HISTORIAL DEL PAGO">' +'<i class="fas fa-info"></i></button>';
                 return '<div class="d-flex justify-center">'+BtnStats+'</div>';
             }
         }],
@@ -288,26 +275,11 @@ function getAssimilatedCommissions(proyecto, condominio){
         });
     });
 
-    $('#tabla_resguardo tbody').on('click', 'td.details-control', function () {
-        var tr = $(this).closest('tr');
-        var row = tabla_1.row(tr);
-
-        if (row.child.isShown()) {
-            row.child.hide();
-            tr.removeClass('shown');
-            $(this).parent().find('.animacion').removeClass("fa-caret-down").addClass("fa-caret-right");
-        }
-        else {
-            $(this).parent().find('.animacion').removeClass("fa-caret-right").addClass("fa-caret-down");
-        }
-    });
-
     $("#tabla_resguardo tbody").on("click", ".consultar_logs_remanente", function(e){
         e.preventDefault();
         e.stopImmediatePropagation();
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
-
         $("#seeInformationModalremanente").modal();
         $("#nameLote").append('<p><h5>HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $.getJSON("getComments/"+id_pago).done( function( data ){
@@ -319,7 +291,6 @@ function getAssimilatedCommissions(proyecto, condominio){
 
     $('#tabla_resguardo').on('click', 'input', function() {
         tr = $(this).closest('tr');
-
         var row = tabla_resguardo2.row(tr).data();
         if (row.pa == 0) {
             row.pa = row.impuesto;
@@ -330,21 +301,7 @@ function getAssimilatedCommissions(proyecto, condominio){
             totaPen -= parseFloat(row.pa);
             row.pa = 0;
         }
-
         $("#totpagarPen").html(formatMoney(totaPen));
-    });
-
-    $("#tabla_resguardo tbody").on("click", ".cambiar_estatus", function(){
-        var tr = $(this).closest('tr');
-        var row = tabla_resguardo2.row( tr );
-        id_pago_i = $(this).val();
-
-        $("#modal_nuevas .modal-body").html("");
-        $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><p>¿Está seguro de pausar la comisión de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b> <i>'+row.data().usuario+'</i>?</p></div></div>');
-        $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><input type="text" class="form-control input-gral observaciones" name="observaciones" required placeholder="Describe mótivo por el cual se pauso la solicitud"></input></div></div>');
-        $("#modal_nuevas .modal-body").append('<input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'">');
-        $("#modal_nuevas .modal-body").append('<div class="row d-flex justify-end"><div class="col-md-3"><button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CERRAR</button></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="PAUSAR"></div></div></div>');
-        $("#modal_nuevas").modal();
     });
 
     $("#tabla_resguardo tbody").on("click", ".despausar_estatus", function(){
@@ -361,7 +318,6 @@ function getAssimilatedCommissions(proyecto, condominio){
     $("#tabla_resguardo tbody").on("click", ".consultar_documentos", function(){
         id_com = $(this).val();
         id_pj = $(this).attr("data-personalidad");
-
         $("#seeInformationModal").modal();
         $.getJSON( general_base_url + "Comisiones/getDatosDocumentos/"+id_com+"/"+id_pj).done( function( data ){
             $.each( data, function( i, v){
@@ -372,41 +328,12 @@ function getAssimilatedCommissions(proyecto, condominio){
                 else{
                     $("#seeInformationModal .documents").append('<div class="col-md-7"><label style="font-size:10px; margin:0; color:#0a548b;"><b>'+(v.nombre).substr(0, 52)+'</b></label></div> <div class="col-md-5"><label style="font-size:10px; margin:0; color:#0a548b;"><b>('+v.expediente+')</label></b> - <button onclick="preview_info(&#39;'+(v.expediente)+'&#39;)" style="border:none; background-color:#fff;"><i class="fa fa-file" aria-hidden="true" style="font-size: 12px; color:#0a548b;"></i></button></div>');
                 }
-
                 $("#seeInformationModal .documents").append('</div>');
             });
-        });
-
-        $.getJSON( general_base_url + "Comisiones/getDatosFactura/"+id_com).done( function( data ){
-            $("#seeInformationModal .facturaInfo").append('<div class="row">');
-            
-            if (!data.datos_solicitud['id_factura'] == '' && !data.datos_solicitud['id_factura'] == '0'){
-                $("#seeInformationModal .facturaInfo").append('<BR><div class="col-md-12"><label style="font-size:14px; margin:0; color:gray;"><b>NOMBRE EMISOR</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['nombre']+' '+data.datos_solicitud['apellido_paterno']+' '+data.datos_solicitud['apellido_materno']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-4"><label style="font-size:14px; margin:0; color:gray;"><b> LOTE</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['nombreLote']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-4"><label style="font-size:14px; margin:0; color:gray;"><b>TOTAL FACT.</b></label><br><label style="font-size:12px; margin:0; color:gray;">$ '+data.datos_solicitud['total']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-4"><label style="font-size:14px; margin:0; color:gray;"><b>MONTO COMSN.</b></label><br><label style="font-size:12px; margin:0; color:gray;">$ '+data.datos_solicitud['porcentaje_dinero']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-4"><label style="font-size:14px; margin:0; color:gray;"><b>FOLIO</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['folio_factura']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-4"><label style="font-size:14px; margin:0; color:gray;"><b>FECHA FACTURA</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['fecha_factura']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-4"><label style="font-size:14px; margin:0; color:gray;"><b>FECHA CAPTURA</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['fecha_ingreso']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-3"><label style="font-size:14px; margin:0; color:gray;"><b>MÉTODO</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['metodo_pago']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-3"><label style="font-size:14px; margin:0; color:gray;"><b>RÉGIMEN F.</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['regimen']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-3"><label style="font-size:14px; margin:0; color:gray;"><b>FORMA P.</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['forma_pago']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-3"><label style="font-size:14px; margin:0; color:gray;"><b>CFDI</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['cfdi']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-3"><label style="font-size:14px; margin:0; color:gray;"><b>UNIDAD</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['unidad']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-3"><label style="font-size:14px; margin:0; color:gray;"><b>CLAVE PROD.</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['claveProd']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-6"><label style="font-size:14px; margin:0; color:gray;"><b>UUID</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['uuid']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-12"><label style="font-size:14px; margin:0; color:gray;"><b>DESCRIPCIÓN</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['descripcion']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-            }
-            else {
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-12"><label style="font-size:10px; margin:0; color:orange;">SIN HAY DATOS A MOSTRAR</label></div>');
-            }
-
-            $("#seeInformationModal .facturaInfo").append('</div>');
         });
     });
 }
 
-//FIN TABLA  ****************************************************************************************
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     $($.fn.dataTable.tables(true)).DataTable()
     .columns.adjust();
@@ -487,12 +414,9 @@ $("#form_refresh").submit( function(e) {
     }
 });
 
-$("#form_despausar").submit( function(e) {
-    e.preventDefault();
-}).validate({
+$("#form_despausar").submit( function(e) { e.preventDefault(); }).validate({
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
-        console.log(data);
         data.append("id_pago_i", id_pago_i);
         $.ajax({
             url: general_base_url + "Comisiones/despausar_solicitud/",
@@ -502,7 +426,7 @@ $("#form_despausar").submit( function(e) {
             processData: false,
             dataType: 'json',
             method: 'POST',
-            type: 'POST', // For jQuery < 1.9
+            type: 'POST',
             success: function(data){
                 if( data[0] ){
                     $("#modal_despausar").modal('toggle' );
@@ -560,7 +484,6 @@ $("#roles").change(function() {
         for( var i = 0; i<len; i++){
             var id = data[i]['id_usuario'];
             var name = data[i]['name_user'];
-    
             $("#usuarioid").append($('<option>').val(id).attr('data-value', id).text(name));
         }
         if(len<=0){
@@ -588,7 +511,6 @@ $("#usuarioid").change(function() {
             var name = data[i]['nombreLote'];
             var comision = data[i]['id_pago_i'];
             let comtotal = data[i]['comision_total'] -data[i]['abono_pagado'];
-
             
             $("#idloteorigen").append(`<option value='${comision},${comtotal.toFixed(2)}'>${name}  -   ${ formatMoney(comtotal.toFixed(2))}</option>`);
         }
@@ -640,11 +562,9 @@ $("#idloteorigen").change(function() {
         $.post('getInformacionDataResguardo/'+id, function(data) {
             var disponible = (data[0]['comision_total']-data[0]['abono_pagado']);
             var idecomision = data[0]['id_pago_i'];
-        
             document.getElementById('montodisponible').innerHTML = '';
             $("#montodisponible").append('<input type="hidden" name="valor_comision" id="valor_comision" value="'+disponible+'">');
             $("#idmontodisponible").val(formatMoney(disponible));
-        
             $("#montodisponible").append('<input type="hidden" name="ide_comision" id="ide_comision" value="'+idecomision+'">');
             var len = data.length;
         
