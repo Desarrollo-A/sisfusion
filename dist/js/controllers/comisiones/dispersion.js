@@ -885,6 +885,7 @@ function showDetailModal(idPlan) {
 }
 
 $('#btn-detalle-plan').on('click', function () {
+    cleanElement('mHeader');
     $('#planes-div').show();
     $('#planes').empty().selectpicker('refresh');
     $.ajax({

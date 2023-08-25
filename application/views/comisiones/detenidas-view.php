@@ -33,8 +33,7 @@
                                                     <th>MODALIDAD</th>
                                                     <th>CONTRATACIÓN</th>
                                                     <th>PLAN DE VENTA</th>
-                                                    <th>FECHA MOVIMIENTO</th> 
-                                                   
+                                                    <th>FECHA DE MOVIMIENTO</th> 
                                                     <th>MOTIVO</th>
                                                     <th>ACCIONES</th>
                                                 </tr>
@@ -50,9 +49,7 @@
         </div>
         <?php $this->load->view('template/footer_legend');?>
     </div>
-
     <?php $this->load->view('template/footer'); ?>
-    <!--DATATABLE BUTTONS DATA EXPORT-->
-
+    <script src="<?= base_url() ?>dist/js/funciones-generales.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/comisiones_detenidas.js"></script>
 </body>

@@ -183,7 +183,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 center-align centered" id="insideC">
+                                                    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 center-align centered" id="insideC">
                                                         <div class="form-group div_last_name d-flex justify-end">
                                                             <button type="button" class="btn btn-danger btn-simple" onclick="cleanFiltersC()" id="cleanButton">LIMPIAR</button>
                                                             <button type="button" class="btn btn-primary" id="searchButtonC">BUSCAR</button>

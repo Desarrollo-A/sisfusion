@@ -662,18 +662,25 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 
     function getGeneralClientsReport(){
         return $this->db->query("SELECT CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente,
-                                r.nombreResidencial, cn.nombre nombreCondominio, l.nombreLote, l.sup, l.precio, l.totalNeto2, 
-                                l.referencia, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor,
-                                CONCAT(uu.nombre, ' ', uu.apellido_paterno, ' ', uu.apellido_materno) coordinador,
-                                CONCAT(uuu.nombre, ' ', uuu.apellido_paterno, ' ', uuu.apellido_materno) gerente
-                                FROM lotes l 
-                                INNER JOIN clientes cl ON cl.idLote = l.idLote
-                                INNER JOIN condominios cn ON cn.idCondominio = l.idCondominio
-                                INNER JOIN residenciales r ON r.idResidencial = cn.idResidencial
-                                LEFT JOIN usuarios u ON u.id_usuario = cl.id_asesor
-                                LEFT JOIN usuarios uu ON uu.id_usuario = cl.id_coordinador
-                                LEFT JOIN usuarios uuu ON uuu.id_usuario = cl.id_gerente
-                                WHERE cl.status = 1 AND l.status = 1 AND l.idStatusLote IN (2, 3) ORDER BY r.nombreResidencial, cn.nombre, l.nombreLote");
+		r.nombreResidencial, cn.nombre nombreCondominio, l.nombreLote, l.sup, l.precio, l.totalNeto2, 
+		l.referencia, 
+		CASE WHEN u.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) END asesor,
+		CASE WHEN uu.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(uu.nombre, ' ', uu.apellido_paterno, ' ', uu.apellido_materno) END  coordinador,
+		CASE WHEN uuu.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(uuu.nombre, ' ', uuu.apellido_paterno, ' ', uuu.apellido_materno) END gerente,
+		CASE WHEN sb.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(sb.nombre, ' ', sb.apellido_paterno, ' ', sb.apellido_materno)END subdirector,
+        CASE WHEN dr.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(dr.nombre, ' ', dr.apellido_paterno, ' ', dr.apellido_materno) END dRegional,
+        CASE WHEN dr2.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(dr2.nombre, ' ', dr2.apellido_paterno, ' ', dr2.apellido_materno) END dRegional2
+		FROM lotes l 
+		INNER JOIN clientes cl ON cl.idLote = l.idLote
+		INNER JOIN condominios cn ON cn.idCondominio = l.idCondominio
+		INNER JOIN residenciales r ON r.idResidencial = cn.idResidencial
+		LEFT JOIN usuarios u ON u.id_usuario = cl.id_asesor
+		LEFT JOIN usuarios uu ON uu.id_usuario = cl.id_coordinador
+		LEFT JOIN usuarios uuu ON uuu.id_usuario = cl.id_gerente
+		LEFT JOIN usuarios sb ON sb.id_usuario = cl.id_subdirector
+        LEFT JOIN usuarios dr ON dr.id_usuario = cl.id_regional
+        LEFT JOIN usuarios dr2 ON dr2.id_usuario = cl.id_regional_2
+		WHERE cl.status = 1 AND l.status = 1 AND l.idStatusLote IN (2, 3) ORDER BY r.nombreResidencial, cn.nombre, l.nombreLote");
     }
 
     function getClientsInStatusFifteen($idCondominio)

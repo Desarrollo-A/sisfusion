@@ -3728,7 +3728,39 @@ function getInformacionDataResguardo($var){
 
    
 
+function UpdateRetiro($datos,$id,$opcion){
 
+    $motivo = '';
+    if($opcion == 'Borrar' ||  $opcion == 'Rechazar' ){
+$motivo = $datos['motivodel'];
+        $datos = ['estatus' => $datos['estatus']];
+    }
+
+    //echo $datos['monto'];
+    $comentario = '';
+    $respuesta = $this->db->update("resguardo_conceptos", $datos, " id_rc = $id");
+    if($opcion == 'Autorizar'){
+        $comentario = 'SE AUTORIZÓ ESTE RETIRO';
+       
+      }elseif($opcion == 'Borrar'){
+        $comentario = 'SE ELIMINÓ ESTE RETIRO, MOTIVO: '.$motivo;
+
+      }elseif($opcion == 'Rechazar'){
+        $comentario = 'SE RECHAZÓ ESTE RETIRO, MOTIVO: '.$motivo;
+
+      }elseif($opcion == 'Actualizar'){
+        $comentario = 'SE ACTUALIZÓ RETIRO POR MOTIVO DE: '.$datos["conceptos"].' POR LA CANTIDAD DE: '.$datos["monto"].' ';
+
+      }
+   // $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = 12,modificado_por='".$this->session->userdata('id_usuario')."' WHERE estatus = 100 AND descuento_aplicado = 1 AND id_pago_i = $id_bono");
+    $respuesta = $this->db->query("INSERT INTO  historial_retiros VALUES ($id, ".$this->session->userdata('id_usuario').", GETDATE(), 1, '$comentario')");
+
+    if (! $respuesta ) {
+    return 0;
+    } else {
+    return 1;
+    }
+    }
         
 
 
@@ -4000,12 +4032,13 @@ return 1;
         function getHistorialAbono2($pago){
         $this->db->query("SET LANGUAGE Español;");
         return $this->db->query("SELECT DISTINCT(hc.comentario), hc.id_pago_b, hc.id_usuario, 
-        convert(nvarchar(20), hc.fecha_creacion, 113) date_final,
+        convert(nvarchar(20), hc.fecha_creacion, 113) date_final,pci.estado,
         hc.fecha_creacion as fecha_movimiento, pci.abono, CONVERT(VARCHAR,pci.fecha_abono,20) AS fecha_abono,
-        CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario
+        CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario, oxp.nombre
         FROM historial_bonos hc 
         INNER JOIN pagos_bonos_ind pci ON pci.id_pago_bono = hc.id_pago_b
         INNER JOIN usuarios u ON u.id_usuario = hc.id_usuario 
+        INNER JOIN opcs_x_cats oxp ON id_opcion = pci.estado and oxp.id_catalogo = 46
         WHERE hc.id_pago_b = $pago
         ORDER BY hc.fecha_creacion DESC");
         }
@@ -4225,31 +4258,80 @@ function TieneAbonos($id){
                         }
                 }
                 function getPrestamos(){
-                return $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) as nombre,
-                p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,SUM(pci.abono_neodata) as total_pagado,opc.nombre as tipo,opc.id_opcion,
-                (SELECT TOP 1 rpp2.fecha_creacion FROM relacion_pagos_prestamo rpp2 WHERE rpp2.id_prestamo = rpp.id_prestamo ORDER BY rpp2.id_relacion_pp DESC) AS fecha_creacion_referencia,
-                rpp.id_prestamo as id_prestamo2
-                FROM prestamos_aut p 
-                INNER JOIN usuarios u ON u.id_usuario=p.id_usuario 
-                LEFT JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = p.id_prestamo
-                LEFT JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus in (18,19,20,21,22,23,24,25,26,29) AND pci.descuento_aplicado = 1
-                left join opcs_x_cats opc on opc.id_opcion=p.tipo and opc.id_catalogo=23
-                WHERE p.estatus in(1,2,3,0)
-                group by rpp.id_prestamo, u.nombre,u.apellido_paterno,u.apellido_materno,p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,opc.nombre,opc.id_opcion");
-            }
-            function getPrestamosXporUsuario(){
-                return $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) as nombre,
-                p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,SUM(pci.abono_neodata) as total_pagado,opc.nombre as tipo,opc.id_opcion,
-                (SELECT TOP 1 rpp2.fecha_creacion FROM relacion_pagos_prestamo rpp2 WHERE rpp2.id_prestamo = rpp.id_prestamo ORDER BY rpp2.id_relacion_pp DESC) AS fecha_creacion_referencia,
-                rpp.id_prestamo as id_prestamo2
-                FROM prestamos_aut p 
-                INNER JOIN usuarios u ON u.id_usuario = p.id_usuario and u.id_usuario = ".$this->session->userdata('id_usuario')." 
-                LEFT JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = p.id_prestamo
-                LEFT JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus in (18,19,20,21,22,23,24,25,26) AND pci.descuento_aplicado = 1
-                left join opcs_x_cats opc on opc.id_opcion=p.tipo and opc.id_catalogo=23
-                WHERE p.estatus in(1,2,3,0) 
-                group by rpp.id_prestamo, u.nombre,u.apellido_paterno,u.apellido_materno,p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente, opc.nombre,opc.id_opcion");
-            }
+                    return $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) as nombre,
+                    p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,SUM(pci.abono_neodata) as total_pagado,opc.nombre as tipo,opc.id_opcion,
+                    (SELECT TOP 1 rpp2.fecha_creacion FROM relacion_pagos_prestamo rpp2 WHERE rpp2.id_prestamo = rpp.id_prestamo ORDER BY rpp2.id_relacion_pp DESC) AS fecha_creacion_referencia,
+                    rpp.id_prestamo as id_prestamo2
+                    FROM prestamos_aut p 
+                    INNER JOIN usuarios u ON u.id_usuario=p.id_usuario 
+                    LEFT JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = p.id_prestamo
+                    LEFT JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus in (18,19,20,21,22,23,24,25,26,28,29) AND pci.descuento_aplicado = 1
+                    left join opcs_x_cats opc on opc.id_opcion=p.tipo and opc.id_catalogo=23
+                    WHERE p.estatus in(1,2,3,0)
+                    group by rpp.id_prestamo, u.nombre,u.apellido_paterno,u.apellido_materno,p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,opc.nombre,opc.id_opcion");
+                }
+                function getPrestamosXporUsuario(){
+                    return $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) as nombre, p.evidenciaDocs as evidencia ,
+                    p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,SUM(pci.abono_neodata) as total_pagado,opc.nombre as tipo,opc.id_opcion,
+                    (SELECT TOP 1 rpp2.fecha_creacion FROM relacion_pagos_prestamo rpp2 WHERE rpp2.id_prestamo = rpp.id_prestamo ORDER BY rpp2.id_relacion_pp DESC) AS fecha_creacion_referencia,
+                    rpp.id_prestamo as id_prestamo2
+                    FROM prestamos_aut p 
+                    INNER JOIN usuarios u ON u.id_usuario = p.id_usuario and u.id_usuario = ".$this->session->userdata('id_usuario')." 
+                    LEFT JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = p.id_prestamo
+                    LEFT JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus in (18,19,20,21,22,23,24,25,26,28) AND pci.descuento_aplicado = 1
+                    left join opcs_x_cats opc on opc.id_opcion=p.tipo and opc.id_catalogo=23
+                    WHERE p.estatus in(1,2,3,0) 
+                    group by rpp.id_prestamo, u.nombre,u.apellido_paterno,u.apellido_materno,p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,p.evidenciaDocs,opc.nombre,opc.id_opcion");
+                }
+                public function getGeneralDataPrestamo($idPrestamo)
+                {
+                    $result = $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u .apellido_materno) AS nombre_completo, 
+                        pa.monto as monto_prestado, pa.pago_individual, pa.num_pagos, pa.n_p as num_pago_act, SUM(pci.abono_neodata) as total_pagado, 
+                        (pa.monto - SUM(pci.abono_neodata)) as pendiente
+                        FROM prestamos_aut pa
+                        JOIN usuarios u ON u.id_usuario = pa.id_usuario
+                        JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
+                        JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i 
+                        AND pci.estatus IN(18,19,20,21,22,23,24,25,26,28,29) AND pci.descuento_aplicado = 1
+                        WHERE pa.id_prestamo = $idPrestamo
+                        GROUP BY u.nombre, u.apellido_paterno, u.apellido_materno, pa.monto, pa.pago_individual, pa.num_pagos, pa.n_p");
+                    return $result->row();
+                }
+
+    public function getDetailPrestamo($idPrestamo)
+    {
+        $this->db->query("SET LANGUAGE Español;");
+        $result = $this->db->query("SELECT pci.id_pago_i,hc.comentario, l.nombreLote, CONVERT(NVARCHAR, rpp.fecha_creacion, 6) as fecha_pago, pci.abono_neodata, rpp.np,pcs.nombre as tipo,re.nombreResidencial,
+        CASE WHEN pa.estatus=1 THEN 'Activo' WHEN pa.estatus=2 THEN 'Liquidado' WHEN pa.estatus=3 THEN 'Liquidado' END AS estatus,sed.nombre as sede
+                FROM prestamos_aut pa
+                INNER JOIN usuarios u ON u.id_usuario = pa.id_usuario
+                INNER JOIN sedes sed ON sed.id_sede = (CASE u.id_usuario 
+                 WHEN 2 THEN 2 
+                 WHEN 3 THEN 2 
+                 WHEN 1980 THEN 2 
+                 WHEN 1981 THEN 2 
+                 WHEN 1982 THEN 2 
+                 WHEN 1988 THEN 2 
+                 WHEN 4 THEN 5
+                 WHEN 5 THEN 3
+                 WHEN 607 THEN 1 
+                 WHEN 7092 THEN 4
+                     WHEN 9629 THEN 2
+                 ELSE u.id_sede END) and sed.estatus = 1
+                INNER JOIN opcs_x_cats pcs ON pcs.id_opcion=pa.tipo AND pcs.id_catalogo=23
+                INNER JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
+                INNER JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus IN(18,19,20,21,22,23,24,25,26,28,29) AND pci.descuento_aplicado = 1
+                INNER JOIN comisiones c ON c.id_comision = pci.id_comision
+                INNER JOIN lotes l ON l.idLote = c.id_lote
+                INNER JOIN condominios con ON con.idCondominio=l.idCondominio
+                INNER JOIN residenciales re ON re.idResidencial=con.idResidencial
+                INNER JOIN historial_comisiones hc ON hc.id_pago_i = rpp.id_pago_i 
+                and (hc.comentario like 'DESCUENTO POR%' or hc.comentario like '%, POR MOTIVO DE PRESTAMO' or hc.comentario like '%CONFERENCIA%'or hc.comentario like '%PENALIZACIÓN%' or hc.comentario like '%NOMINA%') and hc.estatus=1
+                WHERE pa.id_prestamo = $idPrestamo
+                ORDER BY np ASC");
+        return $result->result_array();
+    }
+
 
 
                 function InsertPago($id_prestamo,$id_user,$pago,$usuario){
@@ -4854,7 +4936,7 @@ function getBonosPorUser($id,$estado){
     WHEN 9629 THEN 2
     ELSE u.id_sede END) and sed.estatus = 1
     INNER JOIN pagos_bonos_ind b on b.id_bono=p.id_bono
-    inner join opcs_x_cats opcs on opcs.id_opcion=u.id_rol WHERE $cadena b.estado=$estado and opcs.id_catalogo=1");
+    inner join opcs_x_cats opcs on opcs.id_opcion=u.id_rol WHERE b.estado=$estado and opcs.id_catalogo=1");
 }
 
 /*--------------planes-----------*/
@@ -6281,6 +6363,7 @@ public function getDataDispersionPagoEspecial($val = '') {
 
     public function getDataDetenidas()
     {
+        $this->db->query("SET LANGUAGE Español;");
         $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre as nombreCondominio,
         l.nombreLote, l.tipo_venta, vc.id_cliente AS compartida, l.idStatusContratacion,
         hl.motivo, hl.comentario,l.totalNeto2, l.registro_comision, 
@@ -6325,6 +6408,35 @@ public function getDataDispersionPagoEspecial($val = '') {
     }
 
     
+    function getPrestamoxUser($id,$tipo){
+        return $this->db->query("SELECT id_usuario FROM prestamos_aut WHERE id_usuario=$id AND estatus=1 and tipo=$tipo");
+    }
+   
+    public function updatePrestamosEdit($clave, $data){
+        try {
+            $this->db->where('id_prestamo', $clave);
+            if($this->db->update('prestamos_aut', $data))
+            {
+                return TRUE;
+            }else{
+                return FALSE;
+            }               
+        }
+        catch(Exception $e) {
+            return $e->getMessage();
+        }     
+}
+
+public function BorrarPrestamo($id_prestamo){
+    $respuesta = $this->db->query("UPDATE prestamos_aut SET estatus=0,modificado_por=".$this->session->userdata('id_usuario')." WHERE id_prestamo=$id_prestamo ");
+    $respuesta = $this->db->query("INSERT INTO historial_log VALUES($id_prestamo,".$this->session->userdata('id_usuario').",GETDATE(),1,'SE CANCELÓ EL PRÉSTAMO','prestamos_aut',NULL)");
+
+    if (! $respuesta ) {
+    return 0;
+    } else {
+    return 1;
+    }
+}
 
     public function getPrestamosTable($mes=0, $anio=0)
     {
@@ -6356,7 +6468,7 @@ public function getDataDispersionPagoEspecial($val = '') {
                 JOIN relacion_pagos_prestamo rpp1 ON rpp1.id_prestamo = pa1.id_prestamo
                 JOIN pago_comision_ind pci1 ON pci1.id_pago_i = rpp1.id_pago_i 
                 GROUP BY pa1.monto, pa1.id_usuario) pend ON pend.id_usuario = pa.id_usuario
-            AND pci.estatus in(18,19,20,21,22,23,24,25,26) AND pci.descuento_aplicado = 1
+            AND pci.estatus in(18,19,20,21,22,23,24,25,26,28,29) AND pci.descuento_aplicado = 1
         WHERE MONTH(pci.fecha_pago_intmex) = $mes AND YEAR(pci.fecha_pago_intmex) = $anio
         GROUP BY pci.id_pago_i, pa.id_prestamo, u.nombre, u.apellido_paterno, 
         u .apellido_materno, 
@@ -6366,7 +6478,6 @@ public function getDataDispersionPagoEspecial($val = '') {
             ORDER BY pa.id_usuario ASC, pa.id_prestamo ASC");
         return $result->result_array();
     }
-
     function lista_estatus_descuentos(){
         return $this->db->query(" SELECT * FROM opcs_x_cats where id_catalogo=23 and id_opcion in(18,19,20,21,22,23,24,25,26,29)");
     }

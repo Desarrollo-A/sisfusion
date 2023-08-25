@@ -82,7 +82,7 @@
                 <div class="modal-content">
                     <div class="modal-body pb-0">
                         <div class="row">
-                            <div id="detalle-tabla-div"class="col-lg-12">
+                            <div id="detalle-tabla-div"class="container-fluid">
                             </div>
                         </div>
                     </div>
@@ -148,5 +148,6 @@
         <?php $this->load->view('template/footer_legend');?>
     </div>
     <?php $this->load->view('template/footer');?>
+    <script src="<?= base_url() ?>dist/js/funciones-generales.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/liquidadas.js"></script>
 </body>
