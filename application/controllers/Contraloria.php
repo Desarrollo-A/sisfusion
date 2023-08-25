@@ -101,11 +101,6 @@ class Contraloria extends CI_Controller {
         $this->load->view("contraloria/vista_envio_RL_contraloria");
     }
 
-    public function envio_RL_contraloria_2() {
-		$this->load->view('template/header');
-	 	$this->load->view("contraloria/vista_envio_RL_contraloria_2");
-	}
-
     public function estatus_12_contraloria() {
         $this->load->view('template/header');
         $this->load->view("contraloria/vista_12_contraloria");
@@ -979,7 +974,6 @@ class Contraloria extends CI_Controller {
             ->initialize()
             ->from('Ciudad Maderas')
             ->to('tester.ti2@ciudadmaderas.com')
-            // ->to($correosEntregar)
             ->subject('EXPEDIENTE RECHAZADO-CONTRALORÍA (5. REVISIÓN 100%)')
             ->view($this->load->view('mail/contraloria/editar-registro-lote-rechazo-proceso5', [
                 'encabezados' => $encabezados,
@@ -1165,7 +1159,7 @@ class Contraloria extends CI_Controller {
             $data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
             $id_asig = $data_asig->contador;
             $arreglo["asig_jur"] = $id_asig == 2765 ? 2876 : ($id_asig == 2876 ? 10463 : 2765);
-        } else if ($assigned_location == 4) { // EXPEDIENTES CIUDAD DE MÉXICO
+        } else if ($assigned_location == 4 || $assigned_location == 15) { // EXPEDIENTES CIUDAD DE MÉXICO
             $id_sede_jur = 4;
             $data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
             $id_asig = $data_asig->contador;
@@ -2466,6 +2460,10 @@ class Contraloria extends CI_Controller {
     }
 
     public function getGeneralClientsReport(){
+        ini_set('max_execution_time', 900);
+        set_time_limit(900);
+        ini_set('memory_limit','2048M');
+        
         $data['data'] = $this->Contraloria_model->getGeneralClientsReport()->result_array();
         echo json_encode($data);
     }
@@ -2640,12 +2638,12 @@ class Contraloria extends CI_Controller {
 
     public function lotes_apartados() {
         $this->validateSession();
-        /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/
         if ($this->session->userdata('id_usuario') == FALSE) {
             redirect(base_url());
         }
-                $this->load->view('template/header');
-                $this->load->view("contraloria/vista_lotes_precio_enganche");
+        
+        $this->load->view('template/header');
+        $this->load->view("contraloria/vista_lotes_precio_enganche");
     }
 
     public function backExp() {

@@ -165,7 +165,7 @@ function fillTable(data_search) {
 				}else{
 					telefono = 'SIN TELÉFONO';
 				}
-				return telefono 
+				return telefono;
 			}
 		},
 		{
@@ -176,7 +176,7 @@ function fillTable(data_search) {
 				}else{
 					correo = d.correo;
 				}
-				return correo
+				return correo;
 			}
 		},
 		{
@@ -187,7 +187,7 @@ function fillTable(data_search) {
 				}else{
 					lugar_prospeccion = d.lugar_prospeccion;
 				}
-				return lugar_prospeccion 
+				return lugar_prospeccion;
 			}
 		},
 		{
@@ -198,7 +198,7 @@ function fillTable(data_search) {
 				}else{
 					asesor = d.nombre_asesor;
 				}
-				return asesor
+				return asesor;
 			}
 		},
 		{
@@ -209,7 +209,7 @@ function fillTable(data_search) {
 				}else{
 					coordinador = d.nombre_coordinador;
 				}
-				return coordinador 
+				return coordinador;
 			}
 		},
 		{
@@ -220,12 +220,12 @@ function fillTable(data_search) {
 				}else{
 					gerente = d.nombre_gerente;
 				}
-				return gerente 
+				return gerente;
 			}
 		},
 		{
 			data: function (d) {
-				return  myFunctions.convertDateYMDHMS(d.fecha_creacion)  
+				return  myFunctions.convertDateYMDHMS(d.fecha_creacion);
 			}
 		},
 		{
@@ -252,7 +252,7 @@ function fillTable(data_search) {
 				}else{
 					sede = d.sede_nombre;
 				}
-				return   sede 
+				return sede;
 			}
 		}],
 		columnDefs: [{
@@ -346,7 +346,7 @@ function fillTableClientes(data_search) {
 		destroy: true,
 		columns: [{
 			data: function (d) {
-				return d.idLote 
+				return d.idLote;
 			}
 		},
 		{
@@ -356,12 +356,12 @@ function fillTableClientes(data_search) {
 		},
 		{
 			data: function (d) {
-				return d.nombreCondominio 
+				return d.nombreCondominio;
 			}
 		},
 		{
 			data: function (d) {
-				return d.nombreLote 
+				return d.nombreLote;
 			}
 		},
 		{
@@ -372,7 +372,7 @@ function fillTableClientes(data_search) {
 				}else{
 					cliente = d.nombreCliente;
 				}
-				return cliente 
+				return cliente;
 			}
 		},
 		{
@@ -393,27 +393,27 @@ function fillTableClientes(data_search) {
 				}else{
 					referencia = d.referencia;
 				}
-				return referencia 
+				return referencia;
 			}
 		},
 		{
 			data: function (d) {
-				return myFunctions.convertDateYMDHMS(d.fechaApartado)
+				return myFunctions.convertDateYMDHMS(d.fechaApartado);
 			}
 		},
 		{
 			data: function (d) {
-				return formatMoney(d.engancheCliente) 
+				return formatMoney(d.engancheCliente);
 			}
 		},
 		{
 			data: function (d) {
-				return myFunctions.convertDateYMDHMS(d.fechaEnganche) 
+				return myFunctions.convertDateYMDHMS(d.fechaEnganche);
 			}
 		},
 		{
 			data: function (d) {
-				return myFunctions.convertDateYMDHMS(d.fechaCreacionProspecto)  
+				return myFunctions.convertDateYMDHMS(d.fechaCreacionProspecto); 
 			}
 		},
 		{
@@ -498,7 +498,7 @@ $('#verDet thead tr:eq(0) th').each( function (i) {
         }
     });
     $('[data-toggle="tooltip"]').tooltip();
-    })
+})
 
 
 $(document).ready(function () {
@@ -592,10 +592,10 @@ function changeSedeC(){
 	let sedes = $('#sedeC').val();
 	if(sedes.length>0){
 		$('#fechasFiltroC').removeClass('hide');
-		$('#insideC').addClass('col-md-offset-8 col-lg-offset-8');
+		$('#insideC').addClass('col-md-offset-7 col-lg-offset-7');
 		}else{
 		$('#fechasFiltroC').addClass('hide');
-		$('#insideC').removeClass('col-md-offset-8 col-lg-offset-8');
+		$('#insideC').removeClass('col-md-offset-7 col-lg-offset-7');
 	}
 }
 
@@ -635,8 +635,8 @@ function cleanFiltersC(){
 		$('#fechasFiltroC').addClass('hide');
 		$('#beginDateC').val('');
 		$('#endDateC').val('');
-		$('#insideC').addClass('col-md-4 col-lg-4');
-		$('#insideC').removeClass('col-md-offset-8 col-lg-offset-8');
+		$('#insideC').addClass('col-md-5 col-lg-5');
+		$('#insideC').removeClass('col-md-offset-7 col-lg-offset-7');
 		tabla_valores_cliente.clear().draw();
 		tabla_valores_cliente.destroy();
 	}

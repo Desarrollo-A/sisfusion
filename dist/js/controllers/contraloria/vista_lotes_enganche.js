@@ -1,9 +1,10 @@
+let typeTransaction = 0;
 let subtitulo = ''; 
 let option = '';
 let ubicacion =`<div class="col-12 col-sm-12 col-md-4 col-lg-12">
 <div id="ubicacion" style="display:none">
     <label class="control-label label-gral">Ubicación</label>
-    <select id="ubicacion_sede" name="ubicacion_sede" class="selectpicker select-gral m-0" data-style="btn btn-round" style="text-align:center"></select>
+    <select id="ubicacion_sede" name="ubicacion_sede" class="selectpicker select-gral m-0" data-style="btn btn-round" overflow-hidden data-container="body" style="text-align:center"></select>
 </div>
 </div>`;
 let precio = `<div class="col-12 col-sm-12 col-md-4 col-lg-12">
@@ -67,71 +68,36 @@ $('#tabla_historial thead tr:eq(0) th').each( function (i) {
 
 $(document).ready(function(){
     llenarSelectPrincipal();
-    $.post(general_base_url + "Contraloria/lista_proyecto", function(data) {
-        var len = data.length;
-        for( var i = 0; i<len; i++)
-        {
-            var id = data[i]['idResidencial'];
-            var name = data[i]['descripcion'];
-            $("#proyecto").append($('<option>').val(id).text(name.toUpperCase()));
-        }
-        $("#proyecto").selectpicker('refresh');
-    }, 'json'); 
-document.getElementById('subtitulo').innerHTML = subtitulo;
+    getResidenciales();
+    document.getElementById('subtitulo').innerHTML = subtitulo;
 });
 
-$('#proyecto').change( function() {
-    index_proyecto = $(this).val();
-    $("#condominio").html("");
-    $(document).ready(function(){
-        $.post(general_base_url + "Contraloria/lista_condominio/"+index_proyecto, function(data) {
-            var len = data.length;
-            for( var i = 0; i<len; i++)
-            {
-                var id = data[i]['idCondominio'];
-                var name = data[i]['nombre'];
-                $("#condominio").append($('<option>').val(id).text(name.toUpperCase()));
-            }
-            $("#condominio").selectpicker('refresh');
-        }, 'json');
-    });
+$('#residenciales').change( function() {
+    $("#condominios").html("");
+    let idResidencial = $(this).val();
+    getCondominios(idResidencial);
 });
 
-$('#condominio').change( function() {
-    index_condominio = $(this).val();
-    $("#lote").html("");
-    $(document).ready(function(){
-        $.post(general_base_url + "Contraloria/lista_lote_apartado/"+index_condominio, function(data) {
-            var len = data.length;
-            for( var i = 0; i<len; i++)
-            {
-                var id = data[i]['idLote'];
-                var name = data[i]['nombreLote'];
-                $("#lote").append($('<option>').val(id).text(name.toUpperCase()));
-            }
-            $("#lote").selectpicker('refresh');
-        }, 'json');
-    });
+$('#condominios').change( function() {
+    $("#lotes").html("");
+    let idCondominio = $(this).val();
+    getLotes(idCondominio);
 });
 
-$('#lote').change( function() {
+$('#lotes').change( function() {
     $('#tabla_historial').removeClass('hide');
     llenarSelectPrincipal();    
     index_lote = $(this).val();
     tabla_expediente = $("#tabla_historial").DataTable({
-        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
         bAutoWidth:true,
         destroy: true,
-        buttons: [
-            
-        ],
-        ajax:
-            {
-                url: general_base_url+'Contraloria/get_lote_historial/'+index_lote,
-                dataSrc: ""
-            },
+        ajax: {
+            url: general_base_url+'Contraloria/get_lote_historial/'+index_lote,
+            dataSrc: ""
+        },
         language: {
             url: general_base_url+"static/spanishLoader_v2.json",
             paginate: {
@@ -145,32 +111,37 @@ $('#lote').change( function() {
         bLengthChange: false,
         bInfo: true,
         fixedColumns: true,
-        columns:
-            [
-                {data: function (d) {
-                        return d.idLote
-                    } 
-                },
-                {data: 'nombreLote'},
-                {data: 'cliente'},
-                {data: 'fechaApartado'},
-                {data: 'asesor'},
-                {data: 'coordinador'},
-                {data: 'gerente'},
-                {data: 'saldo'},
-                {data: 'enganche'},
-                {data: 'engancheContra'},
-                {data: 'nombre_ubicacion'},
-                {data: 'lote'},
-                {data: 'contratacion'},
-                {
-                    data: function(d){
-                        $('[data-toggle="tooltip"]').tooltip();
-                        opciones = `<center><button id="modificar" data-toggle="tooltip" data-placement="top" data-bandera9=${d.validacion_estatus_9} data-registroComision=${d.registro_comision} data-idLote=${d.idLote} class="btn-data btn-orangeYellow" data-toggle="tooltip" data-placement="top" title="Modificar"><i class="far fa-edit"></i></button></center>`;
-                        return opciones;
-                    }
-                }
-            ]
+        columns:[{
+            data: function (d) {
+                return d.idLote
+            } 
+        },
+        {data: 'nombreLote'},
+        {data: 'cliente'},
+        {
+            data: function(d){
+                return d.fechaApartado.split('.')[0]
+            }
+        },
+        {data: 'asesor'},
+        {data: 'coordinador'},
+        {data: 'gerente'},
+        {data: 'subdirector'},
+        {data: 'regional'},
+        {data: 'regional2'},
+        {data: 'saldo'},
+        {data: 'enganche'},
+        {data: 'engancheContra'},
+        {data: 'nombre_ubicacion'},
+        {data: 'lote'},
+        {data: 'contratacion'},
+        {
+            data: function(d){
+                $('[data-toggle="tooltip"]').tooltip();
+                opciones = `<center><button id="modificar" data-toggle="tooltip" data-placement="top" data-bandera9=${d.validacion_estatus_9} data-registroComision=${d.registro_comision} data-idLote=${d.idLote} class="btn-data btn-orangeYellow" data-toggle="tooltip" data-placement="top" title="Modificar"><i class="far fa-edit"></i></button></center>`;
+                return opciones;
+            }
+        }]
     });
     $('[data-toggle="tooltip"]').tooltip();
 });
@@ -188,17 +159,15 @@ $(document).on('click', '#modificar', function () {
     $('#registroComision').val(banderaComision);
     engancheContra == null || engancheContra == '$0.00' ? $("#modificacion option[value='Enganche']").prop("disabled",true) : '';
     ubicacionContra == null || ubicacionContra == 0 ? $("#modificacion option[value='Ubicacion']").prop("disabled",true) : '';
+    
     if(bandera9 == 1 && (banderaComision  == 8 || banderaComision == 0)){
-        //TIENE ESTATUS 9 REGISTRADO Y RECESIÓN O NUEVA COMISIÓN => SI SE PUEDE ACTUALIZAR PRECIO
         $("#modificacion option[value='Precio']").prop("disabled",false);
         $('#modificacion').selectpicker('refresh');
     }else if(bandera9 == 1 && (banderaComision  != 8 && banderaComision != 0)){
-        //TIENE ESTATUS 9 REGISTRADO Y COMISIÓN ACTIVA => NO SE PUEDE MODIFICAR PRECIO LOTE
         $("#modificacion option[value='Precio']").prop("disabled",true);
         $('#modificacion').selectpicker('refresh');
         $('#preciodesc').prop("disabled",true);
-    }else if(bandera9 != 1 && (banderaComision  == 8 || banderaComision == 0 )){
-        //NO SE TIENE ESTATUS 9 REGISTRADO Y LA COMISIÓN ES NUEVA O TIENE UNA RECESIÓN => NO SE PUEDE MODIFICAR EL PRECIO DEL LOTE 
+    }else if(bandera9 != 1 && (banderaComision  == 8 || banderaComision == 0 )){ 
         $("#modificacion option[value='Precio']").prop("disabled",true);
         $('#modificacion').selectpicker('refresh');
         $('#preciodesc').prop("disabled",true);
@@ -250,15 +219,15 @@ function limpiarCampos(){
 }
 
 $(document).on("submit", "#form_modificacion", function (e) {
-    console.log( $('#ubicacion_sede').val());
     e.preventDefault();
     e.stopImmediatePropagation();
-    let idLote = $("#idLote").val();
     let data = new FormData($(this)[0]);
     let precioVacio = $('#modificacion').val().includes('Precio');
     let engancheVacio = $('#modificacion').val().includes('Enganche');
+    let ubicacion = $('#modificacion').val().includes('Ubicacion');
+
     data.append('ubicacion', $('#ubicacion_sede').val());
-    let validar = validateData(engancheVacio,precioVacio);
+    let validar = validateData(engancheVacio,precioVacio,ubicacion);
 
     if(validar == true){
     $('#spiner-loader').removeClass('hide');
@@ -278,12 +247,11 @@ $(document).on("submit", "#form_modificacion", function (e) {
             }
         });
     }    
-
 });
 
-function validateData(engancheVacio, precioVacio){
+function validateData(engancheVacio, precioVacio,ubicacionVacio){
     validate = false;
-    if(engancheVacio && precioVacio){
+    if( (engancheVacio && precioVacio) || (engancheVacio && ubicacionVacio) ){
         if( $('#enganches').val() == '' && $('#preciodesc').val() == '' ){
             alerts.showNotification("top", "right", "Faltan datos", "warning");
         }
@@ -297,7 +265,6 @@ function validateData(engancheVacio, precioVacio){
             validate = true;
         }
         return validate;
-        
     }
     else if(engancheVacio){
         if( $('#enganches').val() == '' ){
@@ -306,7 +273,6 @@ function validateData(engancheVacio, precioVacio){
         else{
             validate = true;
         }
-        
         return validate;
     }
     else if(precioVacio){
@@ -317,6 +283,9 @@ function validateData(engancheVacio, precioVacio){
             validate = true;
         }
         return validate;
+    }
+    else if( ubicacionVacio ){
+        return ubicacionVacio;
     }
 
 }
@@ -359,8 +328,8 @@ $("#preciodesc").on({
     "keyup": function (event) {
         $(event.target).val(function (index, value ) {
             return value.replace(/\D/g, "")
-                        .replace(/([0-9])([0-9]{2})$/, '$1.$2')
-                        .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
+            .replace(/([0-9])([0-9]{2})$/, '$1.$2')
+            .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
         });
     }
 });
@@ -372,8 +341,8 @@ $("#enganches").on({
     "keyup": function (event) {
         $(event.target).val(function (index, value ) {
             return value.replace(/\D/g, "")
-                        .replace(/([0-9])([0-9]{2})$/, '$1.$2')
-                        .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
+            .replace(/([0-9])([0-9]{2})$/, '$1.$2')
+            .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
         });
     }
 });

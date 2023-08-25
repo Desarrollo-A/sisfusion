@@ -20,6 +20,7 @@ $("#tabla_bonos").prop("hidden", true);
 });
 
 $('#roles').change(function(ruta){
+    $("#spiner-loader").removeClass('hide');
     roles = $('#roles').val();
     users = $('#users').val();
     if(users == '' || users == null || users == undefined){
@@ -29,6 +30,7 @@ $('#roles').change(function(ruta){
 });
 
 $('#users').change(function(ruta){
+    $("#spiner-loader").removeClass('hide');
     roles = $('#roles').val();
     users = $('#users').val();
     if(users == '' || users == null || users == undefined){
@@ -246,6 +248,9 @@ function getBonusCommissions(roles, users){
         data: function( d ){
         }
     },
+    initComplete: function(){
+        $("#spiner-loader").addClass('hide');
+    }
     });
 
     $("#tabla_bonos tbody").on("click", ".consulta_abonos", function(e){

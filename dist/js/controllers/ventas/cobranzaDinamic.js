@@ -149,8 +149,21 @@ $('#tableDinamicMKTD thead tr:eq(0) th').each( function (i) {
     $('input', this).on('keyup change', function () {
         if ($('#tableDinamicMKTD').DataTable().column(i).search() !== this.value) {
             $('#tableDinamicMKTD').DataTable().column(i).search(this.value).draw();
-        }
+
+            var total = 0;
+            var index = tableDinamicMKTD2.rows({
+                selected: true,
+                search: 'applied'
+            }).indexes();
+
+            var data = tableDinamicMKTD2.rows(index).data();
+            $.each(data, function(i, v) {
+                total += parseFloat(v.monto_vendido);
+            });
+            document.getElementById("myText_vendido").textContent = formatMoney(total);
+        }        
     });
+    
     titulos.push(title);    
     $('[data-toggle="tooltip"]').tooltip({
         trigger: "hover"

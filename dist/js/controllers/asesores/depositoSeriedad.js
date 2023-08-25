@@ -211,6 +211,12 @@ $("#tabla_deposito_seriedad").ready( function(){
         $('#asignar_prospecto_a_cliente').modal();
     });
 
+    $('#tabla_deposito_seriedad').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
+    });
+
     let titulos_encabezado = [];
     $('#table_prospectos thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
@@ -1641,47 +1647,19 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 });
 
 function construirBotonEstatus(data, fechaVenc, classButton, atributoButton = '', titulo = 'ENVIAR ESTATUS') {
-    return `<a href='#' 
-                ${atributoButton}
-                data-tiComp='${data.tipo_comprobanteD}'
-                data-nomLote='${data.nombreLote}'
-                data-idCliente='${data.id_cliente}'
-                data-nombreResidencial='${data.nombreResidencial}'
-                data-nombreCondominio='${data.nombreCondominio}'
-                data-nombreLote='${data.nombreLote}'
-                data-idCondominio='${data.idCondominio}'
-                data-idLote='${data.idLote}'
-                data-fechavenc='${fechaVenc}'
-                class="btn-data btn-green ${classButton}"
-                data-toggle="tooltip"
-                data-placement="top"
-                title="${titulo}">
-        <i class="fas fa-check"></i>
-    </a>`;
+    return `<a href='#' ${atributoButton} data-tiComp='${data.tipo_comprobanteD}' data-nomLote='${data.nombreLote}' data-idCliente='${data.id_cliente}' data-nombreResidencial='${data.nombreResidencial}' data-nombreCondominio='${data.nombreCondominio}' data-nombreLote='${data.nombreLote}' data-idCondominio='${data.idCondominio}' data-idLote='${data.idLote}' data-fechavenc='${fechaVenc}' class="btn-data btn-green ${classButton}" data-toggle="tooltip" data-placement="top" title="${titulo}"> <i class="fas fa-check"></i></a>`;
 }
 
 function generarBotonesAutorizacion(clienteData) {
     let botones = '';
     if (clienteData.autorizacion_correo === null || clienteData.autorizacion_sms === null) {
         botones += `
-            <button class="btn-data btn-violetDeep btn-rounded btn-autorizacion"
-                    data-toggle="tooltip" 
-                    data-placement="left" 
-                    title="ENVÍO DE VERIFICACIONES"
-                    data-idCliente='${clienteData.id_cliente}'>
-                <i class="fas fa-send"></i>
-            </button>
+            <button class="btn-data btn-violetDeep btn-rounded btn-autorizacion" data-toggle="tooltip"  data-placement="left" title="ENVÍO DE VERIFICACIONES" data-idCliente='${clienteData.id_cliente}'><i class="fas fa-send"></i></button>
         `;
     }
     if (parseInt(clienteData.autorizacion_correo) === ESTATUS_AUTORIZACION.ENVIADO || parseInt(clienteData.autorizacion_sms) === ESTATUS_AUTORIZACION.ENVIADO) {
         botones += `
-            <button class="btn-data btn-azure btn-rounded btn-reenvio"
-                    data-toggle="tooltip" 
-                    data-placement="left" 
-                    title="REENVÍO DE VERIFICACIÓN"
-                    data-idCliente='${clienteData.id_cliente}'>
-                <i class="fas fa-rotate-right"></i>
-            </button>
+            <button class="btn-data btn-azure btn-rounded btn-reenvio" data-toggle="tooltip" data-placement="left" title="REENVÍO DE VERIFICACIÓN" data-idCliente='${clienteData.id_cliente}'><i class="fas fa-rotate-right"></i></button>
         `;
     }
 
@@ -1692,13 +1670,7 @@ function generarBotonesAutorizacion(clienteData) {
             parseInt(clienteData.autorizacion_sms) === ESTATUS_AUTORIZACION.ENVIADO
     ) {
         botones += `
-            <button class="btn-data btn-yellow btn-rounded btn-solicitar"
-                    data-toggle="tooltip" 
-                    data-placement="left"
-                    title="SOLICITAR EDICIÓN DEL REGISTRO" 
-                    data-idCliente='${clienteData.id_cliente}'>
-                <i class="fas fa-hand-paper-o"></i>
-            </button>
+            <button class="btn-data btn-yellow btn-rounded btn-solicitar" data-toggle="tooltip" data-placement="left" title="SOLICITAR EDICIÓN DEL REGISTRO" data-idCliente='${clienteData.id_cliente}'><i class="fas fa-hand-paper-o"></i></button>
         `;
     }
 

@@ -151,3 +151,17 @@
       }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
     }
   }
+
+function removeCRMEvents(){
+  if (typeof calendar !== 'undefined') {
+    const srcEventos = calendar.getEventSources();
+    srcEventos.forEach(event => {
+      if(
+          event['internalEventSource']['extendedProps'].hasOwnProperty('title') &&
+          event['internalEventSource']['extendedProps']['title'] == "sourceCRM"
+      ) {
+        event.remove();
+      }
+    });
+  }
+}

@@ -2,7 +2,7 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body class="">
 	<div class="wrapper ">
-		<?php  $this->load->view('template/sidebar'); ?>
+		<?php $this->load->view('template/sidebar'); ?>
 		<!--Contenido de la página-->
 		<div class="content boxContent">
 			<div class="container-fluid">
@@ -76,5 +76,4 @@
 	<script src="<?= base_url() ?>dist/js/moment.min.js"></script>
 	<script src="<?= base_url() ?>dist/js/es.js"></script>
 	<script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
-
 </body>

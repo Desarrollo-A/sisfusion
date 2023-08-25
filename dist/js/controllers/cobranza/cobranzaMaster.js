@@ -92,205 +92,205 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
         },
         destroy: true,
         ordering: false,
-        columns: [
-            {
-                data: function (d) {
-                    return d.idLote;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.nombreLote;
-                }
-            },
-            {
-                data: function (d) {
-                    if(d.rec == 8){
-                        return '-';
-                    }else{
-                        if(d.precioTotalLote == '$0.00')
-                            return '<span style="color: #960034">' + d.total_sindesc + '</span>'
-                        else
-                            return '<span style="font-weight: 700">'+d.precioTotalLote+'</span>';
-                    }
-                }
-            },
-            {
-                data: function (d) {
-                    if(d.rec == 8){
-                    return '-';
-                    }else{
-                    return d.fechaApartado;
-                }
-                }
-            },
-            {
-                data: function (d) {
-                    if(d.rec == 8){
-                    return '-';
-                    }else{
-                    return d.plaza;
-                }
-                }
-            },
-            {
-                data: function (d) {
-                    var labelStatus;
-
-                    if(d.rec == 8){
-                        labelStatus = '<span class="label lbl-warning">VENTA CANCELADA</span>';
-                    }else{
-
-                    switch (d.registroComision) {
-                        case 2:
-                        case '2':
-                            labelStatus = '<span class="label lbl-sky">SOLICITUD ENVIADA</span>';
-                            break;
-                        case 3:
-                        default:
-                            labelStatus = '<span class="label lbl-gray">SIN SOLICITAR</span>';
-                            break;
-                    }
-                }
-                    return labelStatus;
-                }
-            },
-            {
-                data: function (d) {
-                    var labelStatus;
-                    if(d.rec == 8){
-                        labelStatus = '<span class="label lbl-warning">RECISIÓN DE CONTRATO</span>';
-                    }else{
-                    switch (d.estatusEvidencia) {
-                        case 1:
-                        case '1':
-                            labelStatus = '<span class="label lbl-green">ENVIADA A COBRANZA</span>';
-                            break;
-                        case 10:
-                        case '10':
-                            labelStatus = '<span class="label lbl-warning">COBRANZA RECHAZÓ LA EVIDENCIA AL GERENTE</span>';
-                            break;
-                        case 2:
-                        case '2':
-                            labelStatus = '<span class="label lbl-sky">ENVIADA A CONTRALORÍA</span>';
-                            break;
-                        case 20:
-                        case '20':
-                            labelStatus = '<span class="label lbl-warning">CONTRALORÍA RECHAZÓ LA EVIDENCIA</span>';
-                            break;
-                        case 3:
-                        case '3':
-                            labelStatus = '<span class="label lbl-violetDeep">EVIDENCIA ACEPTADA</span>';
-                            break;
-                        default:
-                            labelStatus = '<span class="label lbl-warning">NO SE HA INTEGRADO EVIDENCIA</span>';
-                            break;
-                    }
-                    }
-                    return labelStatus;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.idStatusContratacion;
-                }
-            },
-            {
-                data: function (d) {
-                    var labelStatus;
-                    if(d.rec == 8){
-                            labelStatus = '<span class="label lbl-warning">VENTA CANCELADA</span>';
-                    }else{
-                    switch (d.idStatusLote) {
-                        case 1:
-                        case '1':
-                            labelStatus = '<span class="label lbl-green">DISPONIBLE</span>';
-                            break;
-                        case 2:
-                        case '2':
-                            labelStatus = '<span class="label lbl-sky">CONTRATADO</span>';
-                            break;
-                        case 3:
-                        case '3':
-                            labelStatus = '<span class="label lbl-orangeYellow">APARTADO</span>';
-                            break;
-                        default:
-                            labelStatus = '<span class="label lbl-warning">SIN ESTATUS REGISTRADO</span>';
-                            break;
-                    }
-                }
-                    return labelStatus;
-                }
-            },
-            {
-                data: function (d) {
-                    var labelStatus;
-                    if(d.rec == 8){
-                            labelStatus = '<span class="label lbl-brown">RECISIÓN DE CONTRATO</span>';
-                    }else{
-                        switch (d.registroComision) {
-                            case 0:
-                            case '0':
-                            case 2:
-                            case '2':
-                                labelStatus = '<span class="label" style="background:#27AE60;">SIN DISPERSAR</span>';
-                                break;
-                            case 7:
-                            case '7':
-                                labelStatus = '<span class="label lbl-warning">LIQUIDADA</span>';
-                                break;
-                            case 8:
-                            case '8':
-                            case 88:
-                            case '88':
-                                labelStatus = '<span class="label lbl-brown">RECISIÓN DE CONTRATO</span>';
-                                break;
-                            case 1:
-                            case '1':
-                            default:
-                                labelStatus = '<span class="label lbl-violetBoots">ACTIVA</span>';
-                                break;
-                        }
-                }
-                    return labelStatus;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.comisionTotal;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.abonoDispersado;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.abonoPagado;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.lugar_prospeccion;
-                }
-            },
-            {
-                // Info
-                data: function (d) {
-                    let btns = '';
-                    if(d.rec == 8){
-                        btns = '';
-                    }else{
-                    btns = '<button class="btn-data btn-blueMaderas" data-idLote="' + d.idLote + '" data-registroComision="' + d.registroComision + '" id="verifyNeodataStatus" data-toggle="tooltip" data-placement="top" title="VER MÁS"></body><i class="fas fa-info"></i></button>';
-                    if (d.estatusEvidencia == 3 && (d.registroComision == 0 ) && (d.idStatusContratacion == 11 || d.idStatusContratacion == 15))
-                        btns += '<button class="btn-data btn-green" data-idLote="' + d.idLote + '" id="requestCommissionPayment" title="Solicitar pago"><i class="fas fa-money-bill-wave"></i></button>';
-                    }
-                    return '<div class="d-flex justify-center">'+btns+'</div>';
-                }
-                
+        columns: [{
+            data: function (d) {
+                return d.idLote;
             }
-        ],
+        },
+        {
+            data: function (d) {
+                return d.nombreLote;
+            }
+        },
+        {
+            data: function (d) {
+                if(d.rec == 8){
+                    return '-';
+                }else{
+                    if(d.precioTotalLote == '$0.00')
+                        return '<span style="color: #960034">' + d.total_sindesc + '</span>'
+                    else
+                        return '<span style="font-weight: 700">'+d.precioTotalLote+'</span>';
+                }
+            }
+        },
+        {
+            data: function (d) {
+                if(d.rec == 8){
+                return '-';
+                }else{
+                return d.fechaApartado;
+            }
+            }
+        },
+        {
+            data: function (d) {
+                if(d.rec == 8){
+                return '-';
+                }else{
+                return d.plaza;
+            }
+            }
+        },
+        {
+            data: function (d) {
+                var labelStatus;
+
+                if(d.rec == 8){
+                    labelStatus = '<span class="label lbl-warning">VENTA CANCELADA</span>';
+                }else{
+
+                switch (d.registroComision) {
+                    case 2:
+                    case '2':
+                        labelStatus = '<span class="label lbl-sky">SOLICITUD ENVIADA</span>';
+                        break;
+                    case 3:
+                    default:
+                        labelStatus = '<span class="label lbl-gray">SIN SOLICITAR</span>';
+                        break;
+                }
+            }
+                return labelStatus;
+            }
+        },
+        {
+            data: function (d) {
+                var labelStatus;
+                if(d.rec == 8){
+                    labelStatus = '<span class="label lbl-warning">RECISIÓN DE CONTRATO</span>';
+                }else{
+                switch (d.estatusEvidencia) {
+                    case 1:
+                    case '1':
+                        labelStatus = '<span class="label lbl-green">ENVIADA A COBRANZA</span>';
+                        break;
+                    case 10:
+                    case '10':
+                        labelStatus = '<span class="label lbl-warning">COBRANZA RECHAZÓ LA EVIDENCIA AL GERENTE</span>';
+                        break;
+                    case 2:
+                    case '2':
+                        labelStatus = '<span class="label lbl-sky">ENVIADA A CONTRALORÍA</span>';
+                        break;
+                    case 20:
+                    case '20':
+                        labelStatus = '<span class="label lbl-warning">CONTRALORÍA RECHAZÓ LA EVIDENCIA</span>';
+                        break;
+                    case 3:
+                    case '3':
+                        labelStatus = '<span class="label lbl-violetDeep">EVIDENCIA ACEPTADA</span>';
+                        break;
+                    default:
+                        labelStatus = '<span class="label lbl-warning">NO SE HA INTEGRADO EVIDENCIA</span>';
+                        break;
+                }
+                }
+                return labelStatus;
+            }
+        },
+        {
+            data: function (d) {
+                return d.idStatusContratacion;
+            }
+        },
+        {
+            data: function (d) {
+                var labelStatus;
+                if(d.rec == 8){
+                        labelStatus = '<span class="label lbl-warning">VENTA CANCELADA</span>';
+                }else{
+                switch (d.idStatusLote) {
+                    case 1:
+                    case '1':
+                        labelStatus = '<span class="label lbl-green">DISPONIBLE</span>';
+                        break;
+                    case 2:
+                    case '2':
+                        labelStatus = '<span class="label lbl-sky">CONTRATADO</span>';
+                        break;
+                    case 3:
+                    case '3':
+                        labelStatus = '<span class="label lbl-orangeYellow">APARTADO</span>';
+                        break;
+                    default:
+                        labelStatus = '<span class="label lbl-warning">SIN ESTATUS REGISTRADO</span>';
+                        break;
+                }
+            }
+                return labelStatus;
+            }
+        },
+        {
+            data: function (d) {
+                var labelStatus;
+                if(d.rec == 8){
+                        labelStatus = '<span class="label lbl-brown">RECISIÓN DE CONTRATO</span>';
+                }else{
+                    switch (d.registroComision) {
+                        case 0:
+                        case '0':
+                        case 2:
+                        case '2':
+                            labelStatus = '<span class="label" style="background:#27AE60;">SIN DISPERSAR</span>';
+                            break;
+                        case 7:
+                        case '7':
+                            labelStatus = '<span class="label lbl-warning">LIQUIDADA</span>';
+                            break;
+                        case 8:
+                        case '8':
+                        case 88:
+                        case '88':
+                            labelStatus = '<span class="label lbl-brown">RECISIÓN DE CONTRATO</span>';
+                            break;
+                        case 1:
+                        case '1':
+                        default:
+                            labelStatus = '<span class="label lbl-violetBoots">ACTIVA</span>';
+                            break;
+                    }
+            }
+                return labelStatus;
+            }
+        },
+        {
+            data: function (d) {
+                return d.comisionTotal;
+            }
+        },
+        {
+            data: function (d) {
+                return d.abonoDispersado;
+            }
+        },
+        {
+            data: function (d) {
+                return d.abonoPagado;
+            }
+        },
+        {
+            data: function (d) {
+                if (d.descuento_mdb == 1) 
+                    return d.lugar_prospeccion + ' Martha Debayle';
+                else
+                    return d.lugar_prospeccion;
+            }
+        },
+        {
+            data: function (d) {
+                let btns = '';
+                if(d.rec == 8){
+                    btns = '';
+                }else{
+                btns = '<button class="btn-data btn-blueMaderas" data-idLote="' + d.idLote + '" data-registroComision="' + d.registroComision + '" id="verifyNeodataStatus" data-toggle="tooltip" data-placement="top" title="VER MÁS"></body><i class="fas fa-info"></i></button>';
+                if (d.estatusEvidencia == 3 && (d.registroComision == 0 ) && (d.idStatusContratacion == 11 || d.idStatusContratacion == 15))
+                    btns += '<button class="btn-data btn-green" data-idLote="' + d.idLote + '" id="requestCommissionPayment" title="Solicitar pago"><i class="fas fa-money-bill-wave"></i></button>';
+                }
+                return '<div class="d-flex justify-center">'+btns+'</div>';
+            }
+            
+        }],
         columnDefs: [{
             visible: false,
             searchable: false

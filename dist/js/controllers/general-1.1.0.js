@@ -535,30 +535,22 @@ $(document).ready(function() {
                         switch (columnIdx) {
                             case 0:
                                 return 'ESTADO';
-                                break;
                             case 1:
                                 return 'ETAPA';
-                                break;
                             case 2:
                                 return 'PROSPECTO';
                             case 3:
                                 return 'ASESOR';
-                                break;
                             case 4:
                                 return 'GERENTE';
-                                break;
                             case 5:
                                 return 'SUBDIRECTOR';
-                                break;
                             case 6:
                                 return 'LP';
-                                break;
                             case 7:
                                 return 'CREACIÓN';
-                                break;
                             case 8:
                                 return 'VENCIMIENTO';
-                                break;
                         }
                     }
                 }

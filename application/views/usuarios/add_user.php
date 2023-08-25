@@ -37,53 +37,47 @@
                                     <div class="toolbar">
                                         <form name="my_add_user_form" id="my_add_user_form">
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 mb-1">
-                                                <label class="control-label label-gral"><span class="isRequired">*</span>Nombre</label>
+                                                <label class="control-label">Nombre (<span class="isRequired">*</span>)</label>
                                                 <input id="name" name="name" type="text" class="form-control input-gral" required>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 mb-1">
-                                                <label class="control-label label-gral"><span class="isRequired">*</span>Apellido paterno</label>
+                                                <label class="control-label">Apellido paterno (<span class="isRequired">*</span>)</label>
                                                 <input id="last_name" name="last_name" type="text" class="form-control input-gral" required>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 mb-1">
-                                                <label class="control-label label-gral">Apellido materno</label>
+                                                <label class="control-label">Apellido materno</label>
                                                 <input id="mothers_last_name" name="mothers_last_name" type="text" class="form-control input-gral">
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 mb-1">
-                                                <label class="control-label label-gral"><span class="isRequired">*</span>Correo electrónico</label>
+                                                <label class="control-label">Correo electrónico (<span class="isRequired">*</span>)</label>
                                                 <input id="email" name="email" type="email" class="form-control input-gral" required>
                                             </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
-                                                <label class="control-label label-gral"><span class="isRequired">*</span>Forma de pago</label>
-                                                <select id="payment_method" name="payment_method" class="form-control payment_method input-gral pl-0" required>
-											        <option value="0" disabled selected>Seleccione una opción</option>
-                                                </select>
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 overflow-hidden">
+                                                <label class="control-label">Forma de pago (<span class="isRequired">*</span>)</label>
+                                                <select id="payment_method" name="payment_method" class="form-control payment_method input-gral pl-0" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required></select>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 mb-1">
-                                                <label class="control-label label-gral"><span class="isRequired">*</span>Teléfono celular</label>
+                                                <label class="control-label">Teléfono celular (<span class="isRequired">*</span>)</label>
                                                 <input id="phone_number" name="phone_number" type="number" class="form-control input-gral" required maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                             </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 mb-1">
-                                                <label class="control-label label-gral"><span class="isRequired">*</span>Sede</label>
-                                                <select id="headquarter" name="headquarter" class="form-control headquarter input-gral pl-0" required onchange="cleadFieldsHeadquarterChange()">
-											        <option value="0" disabled selected>Seleccione una opción</option>
-                                                </select>
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 overflow-hidden mb-1">
+                                                <label class="control-label">Sede (<span class="isRequired">*</span>)</label>
+                                                <select id="headquarter" name="headquarter" class="form-control headquarter input-gral pl-0" required onchange="cleadFieldsHeadquarterChange()" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body"></select>
                                             </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 mb-1">
-                                                <label class="control-label label-gral"><span class="isRequired">*</span>Tipo de miembro</label>
-                                                <select id="member_type" name="member_type" class="form-control member_type input-gral pl-0" required onchange="getLeadersList()">
-											        <option value="0" disabled selected>Seleccione una opción</option>
-                                                </select>
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 overflow-hidden mb-1">
+                                                <label class="control-label">Tipo de miembro (<span class="isRequired">*</span>)</label>
+                                                <select id="member_type" name="member_type" class="form-control member_type input-gral pl-0" required onchange="getLeadersList()" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body"></select>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 mb-1">
-                                                <label class="control-label label-gral"><span class="isRequired">*</span>Lider</label>
-                                                <select id="leader" name="leader" class="form-control input-gral" required></select>
+                                                <label class="control-label">Lider (<span class="isRequired">*</span>)</label>
+                                                <select id="leader" name="leader" class="form-control input-gral" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required></select>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 mb-1">
-                                                <label class="control-label label-gral"><span class="isRequired">*</span>Nombre de usuario</label>
+                                                <label class="control-label">Nombre de usuario (<span class="isRequired">*</span>)</label>
                                                 <input id="username" name="username" type="text" class="form-control input-gral" autocomplete="off" required>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 mb-1">
-                                                <label class="control-label"><span class="isRequired">*</span>Contraseña</label>
+                                                <label class="control-label">Contraseña (<span class="isRequired">*</span>)</label>
                                                 <input type="password" id="contrasena" name="contrasena" class="form-control input-gral" required="" maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" autocomplete="false" readonly onfocus="this.removeAttribute('readonly');">
                                                 <span id="showPass" onclick="showPassword()">
                                                     <i class="fa fa-eye-slash" aria-hidden="true"></i>
@@ -109,8 +103,4 @@
     </div>
     <?php $this->load->view('template/footer');?>
     <script src="<?=base_url()?>dist/js/controllers/usuarios-1.1.0.js"></script>
-    <script>
-        userId = <?= $this->session->userdata('id_usuario') ?>;
-        rolId = <?= $this->session->userdata('id_rol') ?>;
-    </script>
 </body>
