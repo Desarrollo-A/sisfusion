@@ -30,19 +30,19 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
-                                            <div class="form-group">
-                                                <label class="control-label" for="mes">Año (<span class="isRequired">*</span>)</label>
-                                                <select name="anio" id="anio" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                            <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                                                <div class="form-group">
+                                                    <label class="control-label">Año (<span class="isRequired">*</span>)</label>
+                                                    <select name="anio" id="anio" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
-                                            <div class="form-group">
-                                                <label class="control-label" for="mes">Mes(<span class="isRequired">*</span>)</label>
-                                                <select name="mes" id="mes" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body"  required></select>
+                                            <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                                                <div class="form-group">
+                                                    <label class="control-label">Mes(<span class="isRequired">*</span>)</label>
+                                                    <select name="mes" id="mes" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body"  required></select>
+                                                </div>
                                             </div>
-                                        </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 overflow-hidden">
+                                            <div class="col-12 col-sm-6 col-md-6 col-lg-3 overflow-hidden">
                                                 <div class="form-group">
                                                     <label class="control-label">Plaza</label>
                                                     <select name="plaza" id="plaza" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required> 
@@ -75,15 +75,15 @@
                                                     <th>PLAZA</th>
                                                     <th>ESTATUS</th>
                                                 </tr>
-                                        </thead>
-                                    </table>
+                                            </thead>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
         <?php $this->load->view('template/footer_legend');?>
     </div>
     <?php $this->load->view('template/footer');?>

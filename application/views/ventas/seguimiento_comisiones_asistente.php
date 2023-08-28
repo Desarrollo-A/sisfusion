@@ -5,11 +5,8 @@
 <?php $this->load->view('template/sidebar'); ?>
 
     <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons" onclick="cleanCommentsAsimilados()">clear</i></button>
-                </div>
+        <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
+            <div class="modal-content"> 
                 <div class="modal-body">
                     <div role="tabpanel">
                         <ul class="nav" role="tablist">
@@ -19,7 +16,7 @@
                             <div role="tabpanel" class="tab-pane active" id="changelogTab">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div class="card card-plain">
+                                        <div class="card card-plain m-0">
                                             <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
                                                 <ul class="timeline-3" id="comments-list-asimilados"></ul>
                                             </div>
@@ -52,29 +49,29 @@
                             <div class="toolbar">
                                 <div class="container-fluid p-0">
                                     <div class="row">
-                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 overflow-hidden">
-                                            <div class="form-group">
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
+                                            <div class="form-group overflow-hidden">
                                                 <label class="m-0" for="puestos">Puesto(<span class="text-danger">*</span>)</label>
                                                 <select class="selectpicker select-gral" name="puestos" id="puestos" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required></select>
                                             </div>
                                         </div>
 
-                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 overflow-hidden">
-                                            <div class="form-group">
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
+                                            <div class="form-group overflow-hidden">
                                                 <label class="m-0" for="usuarios">Usuarios(<span class="text-danger">*</span>)</label>
                                                 <select class="selectpicker select-gral" name="usuarios" id="usuarios" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required></select>
                                             </div>
                                         </div>
 
-                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 overflow-hidden">
-                                            <div class="form-group">
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
+                                            <div class="form-group overflow-hidden">
                                                 <label class="m-0" for="proyectos">Proyecto</label>
                                                 <select class="selectpicker select-gral" name="proyectos" id="proyectos" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body"></select>
                                             </div>
                                         </div>
 
-                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 overflow-hidden">
-                                            <div class="form-group">
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
+                                            <div class="form-group overflow-hidden">
                                                 <label class="m-0" for="estatus">Estatus</label>
                                                 <select class="selectpicker select-gral" name="estatus" id="estatus" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body"></select>
                                             </div>
@@ -92,9 +89,9 @@
                                             <th>CONDOMINIO</th>
                                             <th>LOTE</th>
                                             <th>REFERENCIA</th>
-                                            <th>PRECIO LOTE</th>
-                                            <th>TOTAL COMISION</th>
-                                            <th>PAGO CLIENTE</th>
+                                            <th>PRECIO DEL LOTE</th>
+                                            <th>TOTAL DE COMISIÓN</th>
+                                            <th>PAGO DEL CLIENTE</th>
                                             <th>DISPERSADO</th>
                                             <th>PAGADO</th>
                                             <th>PENDIENTE</th>

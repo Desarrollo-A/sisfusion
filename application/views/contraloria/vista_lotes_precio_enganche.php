@@ -3,7 +3,6 @@
 <body class="">
     <div class="wrapper ">
         <?php $this->load->view('template/sidebar'); ?> 
-        <!--MODAL-->
         <div class="modal fade" id="modal_aprobar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -21,8 +20,7 @@
                             <div class="container-fluid">
                                 <div class="row">
                                     <div class="col-sm-12 col-md-12 col-lg-12">
-                                        <select id="modificacion" class="selectpicker select-gral m-0" data-style="btn btn-round" title="SELECCIONA UNA OPCIÓN" 
-                                        data-size="7" data-live-search="true" multiple required></select>
+                                        <select id="modificacion" class="selectpicker select-gral m-0" data-style="btn btn-round" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" multiple required></select>
                                     </div>
                                     <div id="selects"></div>
                                 </div>
@@ -36,7 +34,6 @@
                 </div>
             </div>
         </div>
-        <!---END MODAL-->
 
         <div class="content boxContent">
             <div class="container-fluid">
@@ -57,22 +54,19 @@
                                             <div class="col-md-4 form-group">
                                                 <div class="form-group select-is-empty">
                                                     <label class="control-label">Proyecto</label>
-                                                    <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-container="body"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" required>
-                                                    </select>
+                                                    <select name="residenciales" id="residenciales" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-container="body"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" required></select>
                                                 </div>
                                             </div>
                                             <div class="col-md-4 form-group">
                                                 <div class="form-group select-is-empty">
                                                     <label class="control-label">Condominio</label>
-                                                    <select name="condominio" id="condominio"  class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-container="body"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" required>
-                                                    </select>
+                                                    <select name="condominios" id="condominios"  class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-container="body"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" required></select>
                                                 </div>
                                             </div>
                                             <div class="col-md-4 form-group">
                                                 <div class="form-group select-is-empty">
                                                     <label class="control-label">Lote</label>
-                                                    <select name="lote" id="lote" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-container="body"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" required>
-                                                    </select>
+                                                    <select name="lotes" id="lotes" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-container="body"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" required></select>
                                                 </div>
                                             </div>
                                         </div>
@@ -89,6 +83,9 @@
                                                 <th>ASESOR</th>
                                                 <th>COORDINADOR</th>
                                                 <th>GERENTE</th>
+                                                <th>SUBDIRECTOR</th>
+                                                <th>DIRECTOR REGIONAL</th>
+                                                <th>DIRECTOR REGIONAL 2</th>
                                                 <th>TOTAL</th>
                                                 <th>ENGANCHE DE ADMINISTRACIÓN</th>
                                                 <th>ENGANCHE DE CONTRALORÍA</th>
@@ -110,6 +107,4 @@
     </div>
 </body>
 <?php $this->load->view('template/footer');?>
-
-<!-- MODAL WIZARD -->
 <script src="<?=base_url()?>dist/js/controllers/contraloria/vista_lotes_enganche.js"></script>

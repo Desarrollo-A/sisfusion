@@ -10,7 +10,7 @@
 				margin: 0!important;
 			}
 		</style>
-		<!-- modal para revision status 5 100% -->
+		
 		<div class="modal fade " id="envARevCE" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog">
 				<div class="modal-content" >

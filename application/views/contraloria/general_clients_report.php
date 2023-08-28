@@ -45,7 +45,7 @@
             </div>
         </div>
         <?php $this->load->view('template/footer_legend'); ?>
-    </div><!--main-panel close-->
+    </div>
     <?php $this->load->view('template/footer'); ?>
     <script src="<?= base_url() ?>dist/js/controllers/mktd-1.1.0.js"></script>
     <script src="<?=base_url()?>dist/js/funciones-generales.js"></script>
@@ -53,5 +53,4 @@
     <script src="<?= base_url() ?>dist/js/moment.min.js"></script>
     <script src="<?= base_url() ?>dist/js/es.js"></script>
     <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
-
 </body>
