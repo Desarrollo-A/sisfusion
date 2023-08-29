@@ -312,7 +312,7 @@ $(document).ready(function () {
                                 $("#modal_NEODATA .modal-body").append(`<div class="row mb-1"><div class="col-md-6"><h5><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;">Anticipo menor al 5%</b></h5></div><div class="col-md-6"><h5>Plan de venta <i>${descripcion_plan}</i></h5></div></div>`);
                                     bandera_anticipo = 0;
                                 }else if(total>=(diezporciento)){
-                                // *********Si el monto el igual o mayor a 10% se dispensará lo proporcional al 12.5%
+                                // *********Si el monto el igual o mayor a 10% se dispensará lo proporcional al 12.5% / se dispersa la mitad
                                     $("#modal_NEODATA .modal-body").append(`<div class="row mb-1"><div class="col-md-6"><h5><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;">Anticipo mayor/igual al 10% </b></h5></div><div class="col-md-6"><h5>Plan de venta <i>${descripcion_plan}</i></h5></div></div>`); 
                                     bandera_anticipo = 1;
                                 } else if(total>=(cincoporciento-1) && total<(diezporciento)){
@@ -354,8 +354,8 @@ $(document).ready(function () {
                                             case 0:// monto < 5% se dispersará solo lo proporcional
                                             saldo1C = (total*(0.125*v.porcentaje_decimal));
                                             break;
-                                            case 1:// monto igual o mayor a 10% dispersar 12.5%
-                                            saldo1C = (total_comision1*(0.125*v.porcentaje_decimal));
+                                            case 1:// monto igual o mayor a 10% dispersar 12.5% / la mitad
+                                            saldo1C = (total_comision1/2);
                                             break;
                                             case 2: // monto entre 5% y 10% dispersar 4 parte
                                             saldo1C = (total_comision1/4);

@@ -1743,13 +1743,13 @@ class Comisiones_model extends CI_Model {
     }
 
     function insert_dispersion_individual($id_comision, $id_usuario, $abono_nuevo, $pago){
-        if($id_usuario == 2){
-            return false;
-        }else{
+        // if($id_usuario == 2){
+        //     return false;
+        // }else{
             $respuesta = $this->db->query("INSERT INTO pago_comision_ind (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, estatus, pago_neodata, creado_por, comentario,modificado_por) VALUES (".$id_comision.", ".$id_usuario.", ".$abono_nuevo.", GETDATE(), GETDATE(), 1, ".$pago.", ".$this->session->userdata('id_usuario').", 'NUEVO PAGO','".$this->session->userdata('id_usuario')."')");
             $insert_id_2 = $this->db->insert_id();
             $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($insert_id_2, ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'DISPERSÓ PAGO DE COMISIÓN')");
-        }
+        // }
         if (! $respuesta ) {
             return 0;
             } else {
