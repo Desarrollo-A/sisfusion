@@ -70,7 +70,7 @@ let titulos = [];
 $('#tabla_descuentos thead tr:eq(0) th').each(function(i) {
     var title = $(this).text();
     titulos.push(title);
-    $(this).html('<input type="text" class="textoshead"  placeholder="' + title + '"/>');
+    $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
     $('input', this).on('keyup change', function() {
 
         if (tabla_nuevas.column(i).search() !== this.value) {
@@ -190,15 +190,15 @@ function DescuentosxDirectivos(user) {
         {
             "data": function(d) {
                 if (d.estatus == 1) {
-                    return '<center><span class="label label-warning">ACTIVO</span><center>';
+                    return '<center><span class="label lbl-orange">ACTIVO</span><center>';
                 } else if (d.estatus == 3) {
-                    return '<center><span class="label label-danger">CANCELADO</span><center>';
+                    return '<center><span class="label lbl-warning">CANCELADO</span><center>';
                 } else if (d.estatus == 2) {
-                    return '<center><span class="label label-success">APROBADO</span><center>';
+                    return '<center><span class="label lbl-green">APROBADO</span><center>';
                 } else if (d.estatus == 4) {
-                    return '<center><span class="label label-danger">RECHAZADO DIRECTIVO</span><center>';
+                    return '<center><span class="label lbl-warning">RECHAZADO DIRECTIVO</span><center>';
                 }else if (d.estatus == 67) {
-                    return '<center><span class="label label-info">INGRESO EXTRA</span><center>';
+                    return '<center><span class="label lbl-azure">INGRESO EXTRA</span><center>';
                 }
             }
         },
@@ -217,16 +217,16 @@ function DescuentosxDirectivos(user) {
             "orderable": false,
             "data": function(d) {
                 if(id_rol_general != 17 ){
-                    return `<div class="d-flex justify-center"><button class="btn-data btn-details-grey btn-log" value="${d.id_rc}" ><i class="fas fa-info"></i></button></div>`;
+                    return `<div class="d-flex justify-center"><button class="btn-data btn-details-grey btn-log" data-toggle="tooltip" data-placement="top" title="HISTORIAL" value="${d.id_rc}"><i class="fas fa-info"></i></button></div>`;
                 }else{
                     if (d.estatus == 1 || d.estatus == 67) {
-                        return `<div class="d-flex justify-center"><button class="btn-data btn-warning btn-delete" value="${d.id_rc},${d.monto},${d.usuario}" ><i class="fas fa-trash" ></i></button>
-                        <button class="btn-data btn-sky btn-update" value="${d.id_rc},${d.monto},${d.usuario}"><i class="fas fa-pencil-alt"></i></button>
-                        <button class="btn-data btn-details-grey btn-log" value="${d.id_rc}"><i class="fas fa-info"></i></button></div>`;
+                        return `<div class="d-flex justify-center"><button class="btn-data btn-warning btn-delete" data-toggle="tooltip" data-placement="top" title="ELIMINAR" value="${d.id_rc},${d.monto},${d.usuario}" ><i class="fas fa-trash" ></i></button>
+                        <button class="btn-data btn-sky btn-update" data-toggle="tooltip" data-placement="top" title="ACTUALIZAR INFORMACIÓN" value="${d.id_rc},${d.monto},${d.usuario}"><i class="fas fa-pencil-alt"></i></button>
+                        <button class="btn-data btn-details-grey btn-log" data-toggle="tooltip" data-placement="top" title="HISTORIAL" value="${d.id_rc}"><i class="fas fa-info"></i></button></div>`;
                     } else if (d.estatus == 3 || d.estatus == 4) {
-                        return `<div class="d-flex justify-center"><button class="btn-data btn-details-grey btn-log" value="${d.id_rc}" ><i class="fas fa-info"></i></button></div>`;
+                        return `<div class="d-flex justify-center"><button class="btn-data btn-details-grey btn-log" data-toggle="tooltip" data-placement="top" title="HISTORIAL" value="${d.id_rc}" ><i class="fas fa-info"></i></button></div>`;
                     } else if (d.estatus == 2) {
-                        return `<div class="d-flex justify-center"><button class="btn-data btn-details-grey btn-log" value="${d.id_rc}" ><i class="fas fa-info"></i></button></div>`;
+                        return `<div class="d-flex justify-center"><button class="btn-data btn-details-grey btn-log" data-toggle="tooltip" data-placement="top" title="HISTORIAL" value="${d.id_rc}" ><i class="fas fa-info"></i></button></div>`;
                     }
                 }
             }
@@ -248,6 +248,12 @@ function DescuentosxDirectivos(user) {
         initComplete: function(){
             $("#spiner-loader").addClass('hide');
         }
+    });
+
+    $('#tabla_descuentos').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
     });
 
     $("#tabla_descuentos tbody").on("click", ".btn-delete", function() {

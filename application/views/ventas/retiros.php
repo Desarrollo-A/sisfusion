@@ -33,17 +33,17 @@
                     </div>
                     <form method="post" id="form_descuentos">
                         <div class="modal-body">
-                            <div class="form-group overflow-hidden">
+                            <div class="form-group overflow-hidden overflow-hidden">
                                 <label class="control-label">Puesto del usuario</label>
                                 <select class="selectpicker select-gral m-0 roles" name="roles" id="roles" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required>
                                     <option value="2">Sub director</option>
                                     <option value="1">Director</option>
                                 </select>
                             </div>
-                            <div class="form-group" id="users"><label class="label">Usuario</label>
+                            <div class="form-group overflow-hidden" id="users"><label class="control-label">Usuario</label>
                                 <select id="usuarioid" name="usuarioid" class="selectpicker select-gral m-0 directorSelect" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required></select>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group overflow-hidden">
                                 <label class="control-label">Opción</label>
                                 <select id="opc" name="opc" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required>
                                     <option value="1">RETIRO</option>
@@ -97,25 +97,25 @@
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                             <div class="form-group text-center">
-                                                <h4 class="title-tot center-align m-0">Total resguardo:</h4>
+                                                <h4 class="title-tot center-align m-0">Total resguardo</h4>
                                                 <p class="category input-tot pl-1" name="totalpv" id="totalp">$0.00</p>
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                             <div class="form-group text-center">
-                                                <h4 class="title-tot center-align m-0">Ingresos extras:</h4>
+                                                <h4 class="title-tot center-align m-0">Ingresos extras</h4>
                                                 <p class="category input-tot pl-1" name="totalx" id="totalx">$0.00</p>
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                             <div class="form-group text-center">
-                                                <h4 class="title-tot center-align m-0">Saldo disponible:</h4>
+                                                <h4 class="title-tot center-align m-0">Saldo disponible</h4>
                                                 <p class="category input-tot pl-1" name="totalpv3" id="totalp3">$0.00</p>
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                             <div class="form-group text-center">
-                                                <h4 class="title-tot center-align m-0">Descuentos aplicados:</h4>
+                                                <h4 class="title-tot center-align m-0">Descuentos aplicados</h4>
                                                 <p class="category input-tot pl-1" name="totalpv2" id="totalp2">$0.00</p>
                                             </div>
                                         </div>
