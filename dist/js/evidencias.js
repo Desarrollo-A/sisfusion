@@ -5,7 +5,7 @@ $(document).on('click', '.seeAuts', function () {
         $('#auts-loads').empty();
         var statusProceso;
         $.each(JSON.parse(data), function (i, item) {
-            let usuario = "<small class='label bg-blue' style='background-color: #fff;border-radius: 15px; border: 1px solid #333;color: black;font-size: 0.9em'>"+item['creado_por']+"</small>";
+            let usuario = "<small class='label lbl-gray'>"+item['creado_por']+"</small>";
             if (item['estatus'] == 1) {
                 statusProceso = "<small class='label lbl-green'>Enviada a cobranza</small>";
             } else if (item['estatus'] == 10) {
@@ -19,9 +19,7 @@ $(document).on('click', '.seeAuts', function () {
             } else {
                 statusProceso = "<small class='label lbl-gray'>N/A</small>";
             }
-            $('#auts-loads').append('<div class="col col-xs-12 col-sm-7 col-md-7 col-lg-7"><label>Solicitud de autorización:  ' + statusProceso + '</label></div><div class="col col-xs-12 col-sm-5 col-md-5 col-lg-5" style="font-size: 0.8em;text-align: right"><small>' + item['fecha_creacion'] + ' ' +  usuario + '</small></div>');
-            $('#auts-loads').append('<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12"><p style="text-align: justify;"><i>' + item['comentario_autorizacion'] + '</i></p>' +
-                '</div>');
+            $('#auts-loads').append('<div class="boxContent" style="margin-bottom:20px; padding: 10px; background: #f7f7f7; border-radius:15px"><div class="row"><div class="col col-xs-12 col-sm-7 col-md-7 col-lg-7"><label class="m-0" style="font-size: 11px; font-weight: 100;">Solicitud de autorización (' + item['fecha_creacion'] + ')  </label></div></div><div class="row"><div class="col col-xs-12 col-sm-6 col-md-6 col-lg-6"><small>' + statusProceso + '</small></div><div class="col col-xs-12 col-sm-6 col-md-6 col-lg-6 d-flex justify-end"><small>' +  usuario + '</small></div></div><div class="row mt-2"><div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12"><p style="text-align: justify;">' + item['comentario_autorizacion'] + '</p>' +'</div></div></div>');
         });
         $('#verAutorizacionEvidencia').modal('show');
     });

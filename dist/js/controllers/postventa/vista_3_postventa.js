@@ -589,9 +589,7 @@ function preguntaenvARevCE() {
 
 
     if (comentario.length <= 0) {
-
         alerts.showNotification('top', 'right', 'Todos los campos son requeridos', 'danger')
-
     } else if (comentario.length > 0) {
 
         var botonEnviar = document.getElementById('enviarenvARevCE');
@@ -626,14 +624,10 @@ function preguntaenvARevCE() {
                 $('#tabla_estatus3').DataTable().ajax.reload();
                 alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
             }
-
-
         });
-
-
     }
-
 }
+
 function enviarAStatus6CE() {
     /*esta funcion envia directo a status 6 despues de un rechazo*/
     var idLote = $("#idLoteDirSt6").val();
@@ -656,9 +650,7 @@ function enviarAStatus6CE() {
         "comentario": comentario,
         "tipo_venta": tipo_venta,
     };
-
-
-
+    
     if (comentario.length <= 0) {
 
         alerts.showNotification('top', 'right', 'Todos los campos son requeridos', 'danger')

@@ -3728,7 +3728,39 @@ function getInformacionDataResguardo($var){
 
    
 
+function UpdateRetiro($datos,$id,$opcion){
 
+    $motivo = '';
+    if($opcion == 'Borrar' ||  $opcion == 'Rechazar' ){
+$motivo = $datos['motivodel'];
+        $datos = ['estatus' => $datos['estatus']];
+    }
+
+    //echo $datos['monto'];
+    $comentario = '';
+    $respuesta = $this->db->update("resguardo_conceptos", $datos, " id_rc = $id");
+    if($opcion == 'Autorizar'){
+        $comentario = 'SE AUTORIZÓ ESTE RETIRO';
+       
+      }elseif($opcion == 'Borrar'){
+        $comentario = 'SE ELIMINÓ ESTE RETIRO, MOTIVO: '.$motivo;
+
+      }elseif($opcion == 'Rechazar'){
+        $comentario = 'SE RECHAZÓ ESTE RETIRO, MOTIVO: '.$motivo;
+
+      }elseif($opcion == 'Actualizar'){
+        $comentario = 'SE ACTUALIZÓ RETIRO POR MOTIVO DE: '.$datos["conceptos"].' POR LA CANTIDAD DE: '.$datos["monto"].' ';
+
+      }
+   // $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = 12,modificado_por='".$this->session->userdata('id_usuario')."' WHERE estatus = 100 AND descuento_aplicado = 1 AND id_pago_i = $id_bono");
+    $respuesta = $this->db->query("INSERT INTO  historial_retiros VALUES ($id, ".$this->session->userdata('id_usuario').", GETDATE(), 1, '$comentario')");
+
+    if (! $respuesta ) {
+    return 0;
+    } else {
+    return 1;
+    }
+    }
         
 
 
