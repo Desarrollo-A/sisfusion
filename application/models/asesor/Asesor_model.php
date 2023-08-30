@@ -142,7 +142,8 @@ class Asesor_model extends CI_Model {
     { // DATA FROM DEPOSITO_SERIEDAD_CONSULTA
         ini_set('max_execution_time', 300);
         set_time_limit(300);
-        $query = $this->db->query("SELECT '2' qry, '2' dsType, cl.idCliente as id_cliente, cl.idAsesor id_asesor, '0' id_coordinador,cl.idGerente id_gerente, '0' id_sede, CONCAT(cl.primerNombre, ' ', cl.segundoNombre) nombre, cl.apellidoPaterno apellido_paterno, 
+        $query = $this->db->query("SELECT '2' qry, '2' dsType, cl.idCliente as id_cliente, cl.idAsesor id_asesor, '0' id_coordinador,cl.idGerente id_gerente, '0' id_sede, CONCAT(cl.primerNombre, ' ', cl.segundoNombre) nombre, cl.apellidoPaterno apellido_paterno,
+        UPPER(CONCAT(CONCAT(cl.primerNombre, ' ', cl.segundoNombre), ' ', cl.apellidoPaterno, ' ', cl.apellidoMaterno)) nombreCliente,
         cl.apellidoMaterno apellido_materno, cl.status ,cl.idLote, convert(varchar,cl.fechaApartado,20) as fechaApartado, convert(varchar,cl.fechaVencimiento,20) as fechaVencimiento, cl.usuario, cond.idCondominio, cl.fechaApartado fecha_creacion, 
         cl.creado_por, cl.fechaApartado fecha_modificacion, cl.usuario modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial,
         cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, convert(varchar,lotes.fechaVenc,20) as fechaVenc, lotes.modificado, lotes.observacionContratoUrgente as vl, lotes.idStatusContratacion, cl.concepto, '666' as id_prospecto,
