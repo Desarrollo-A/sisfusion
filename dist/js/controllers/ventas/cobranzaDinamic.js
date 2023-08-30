@@ -177,7 +177,7 @@ function getAssimilatedCommissions(mes, anio, plaza, gerente){
             total += parseFloat(v.monto_vendido);
         });
         var to = formatMoney(total);
-        document.getElementById("myText_vendido").textContent =to;
+        document.getElementById("myText_vendido").textContent = to;
     });
 
     $("#tableDinamicMKTD").prop("hidden", false);
