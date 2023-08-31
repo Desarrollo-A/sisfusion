@@ -9,6 +9,8 @@ function readyAgenda(){
     $('#signInGoogleModal').modal('toggle');
   }
 
+  createGoogleCalendar();
+
   getUsersAndEvents(id_rol_general, id_usuario_general, true);    
 }
 
@@ -19,59 +21,61 @@ const getTimeZone = () => {
 
 $('[data-toggle="tooltip"]').tooltip();
 
-let calendarEl = document.getElementById('calendar');
-calendar = new FullCalendar.Calendar(calendarEl, {
-  longPressDelay: 0,
-  headerToolbar: {
-    start: 'prev next today appointments googleBtn',
-    center: 'title',
-    end:   'timeGridDay timeGridWeek dayGridMonth',
-  },
-  customButtons: {
-    appointments: {
-      text: 'Citas',
-      click: function(){
-        $("#allAppointmentsModal").modal();
-        createTable();
+const createGoogleCalendar = () => {
+  let calendarEl = document.getElementById('calendar');
+  calendar = new FullCalendar.Calendar(calendarEl, {
+    longPressDelay: 0,
+    headerToolbar: {
+      start: 'prev next today appointments googleBtn',
+      center: 'title',
+      end:   'timeGridDay timeGridWeek dayGridMonth',
+    },
+    customButtons: {
+      appointments: {
+        text: 'Citas',
+        click: function(){
+          $("#allAppointmentsModal").modal();
+          createTable();
+        }
+      },
+    },
+    timeZone: 'none',
+    locale: 'es',
+    initialView: 'dayGridMonth',
+    allDaySlot: false,
+    selectable: (id_rol_general == 2 || id_rol_general == 3) ? false : true,
+    weekends: true,
+    height: 'auto',
+    contentHeight: 600,
+    eventTimeFormat: {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true
+    },
+    views: {
+      timeGridWeek: {
+        titleFormat: { year: 'numeric', month: 'long', day: 'numeric' },
+      },
+      dayGridMonth: {
+        dayMaxEvents: 4
       }
     },
-  },
-  timeZone: 'none',
-  locale: 'es',
-  initialView: 'dayGridMonth',
-  allDaySlot: false,
-  selectable: (id_rol_general == 2 || id_rol_general == 3) ? false : true,
-  weekends: true,
-  height: 'auto',
-  contentHeight: 600,
-  eventTimeFormat: {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true
-  },
-  views: {
-    timeGridWeek: {
-      titleFormat: { year: 'numeric', month: 'long', day: 'numeric' },
+    eventClick: function(info) {
+      if (info.event.url) {
+        window.open(info.event.url, "_blank");
+        info.jsEvent.preventDefault();
+      }
+      else modalEvent(info.event.id);
     },
-    dayGridMonth: {
-      dayMaxEvents: 4
+    select: function(info) {
+      cleanModal();
+      setDatesToModalInsert(info);
     }
-  },
-  eventClick: function(info) {
-    if (info.event.url) {
-      window.open(info.event.url, "_blank");
-      info.jsEvent.preventDefault();
-    }
-    else modalEvent(info.event.id);
-  },
-  select: function(info) {
-    cleanModal();
-    setDatesToModalInsert(info);
-  }
-});
+  });
 
-calendar.render();
-isSignInGoogle();
+  calendar.render();
+  isSignInGoogle();
+}
 
 function listUpcomingEvents(tokenGoogleCalendar) {
   arrayEvents = [];
