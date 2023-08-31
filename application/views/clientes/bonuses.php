@@ -15,10 +15,6 @@
                                 <div class="card-content">
                                     <h4 class="card-title">Bonificaciones</h4>
                                     <div class="header text-center">
-<!--                                        <h3 class="title">Bonificaciones</h3>-->
-<!--                                        <p class="category">Lorem ipsue honasg juklas fumpos llorsma asiup miupn aubc-->
-                                            <!--<a target="_blank" href="https://gionkunz.github.io/chartist-js/">Chartist.js</a>. Please checkout their
-                                            <a href="https://gionkunz.github.io/chartist-js/getting-started.html" target="_blank">full documentation.</a>-->
                                         </p>
                                     </div>
 									<div class="container-fluid">

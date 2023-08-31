@@ -3,8 +3,7 @@
 <body class="">
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
-
-        <style type="text/css">        
+        <style>        
             #modal_nuevas{
                 z-index: 1041!important;
             }

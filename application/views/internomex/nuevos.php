@@ -1,35 +1,31 @@
 <body>
 <div class="wrapper">
-
     <?php $this->load->view('template/sidebar'); ?>
-
-
-
-<style type="text/css">
-    ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-        color: white;
-        opacity: 0.4;
-
-        ::-moz-placeholder { /* Firefox 19+ */
+    <style type="text/css">
+        ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
             color: white;
             opacity: 0.4;
-        }
 
-        :-ms-input-placeholder { /* IE 10+ */
-            color: white;
-            opacity: 0.4;
-        }
+            ::-moz-placeholder { /* Firefox 19+ */
+                color: white;
+                opacity: 0.4;
+            }
 
-        :-moz-placeholder { /* Firefox 18- */
-            color: white;
-            opacity: 0.4;
+            :-ms-input-placeholder { /* IE 10+ */
+                color: white;
+                opacity: 0.4;
+            }
+
+            :-moz-placeholder { /* Firefox 18- */
+                color: white;
+                opacity: 0.4;
+            }
         }
-    }
-    th {
-        background: #003D82;
-        color: white;
-    }
-</style>
+        th {
+            background: #003D82;
+            color: white;
+        }
+    </style>
 
     <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
