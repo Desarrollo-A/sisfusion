@@ -7359,6 +7359,21 @@ public function BorrarPrestamo($id_prestamo){
         $query = $this->db->query($cmd);
         return $query;
     }
+
+    function getHistorialDescuentosPorUsuario() {
+        $id_usuario = $this->session->userdata('id_usuario');
+        return $this->db->query("SELECT pci.id_pago_i, re.nombreResidencial, cn.nombre nombreCondominio, lo.nombreLote, lo.referencia, 
+        FORMAT(ISNULL(lo.totalNeto2, 0.00), 'C') precioLote,
+        FORMAT(co.comision_total, 'C') comisionTotal,
+        FORMAT(pci.abono_neodata, 'C') montoDescuento, ISNULL(oxc0.nombre, 'SIN ESPECIFICAR') tipoDescuento
+        FROM pago_comision_ind pci	
+        INNER JOIN comisiones co ON co.id_comision = pci.id_comision AND co.id_usuario = pci.id_usuario
+        INNER JOIN lotes lo ON lo.idLote = co.id_lote AND lo.status = 1
+        INNER JOIN condominios cn ON cn.idCondominio = lo.idCondominio
+        INNER JOIN residenciales re ON re.idResidencial = cn.idResidencial
+        LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = pci.estatus AND oxc0.id_catalogo = 23
+        WHERE pci.id_usuario = $id_usuario AND pci.descuento_aplicado = 1")->result_array();
+    }
 }
 
 

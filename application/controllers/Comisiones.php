@@ -5490,4 +5490,8 @@ public function descuentosCapitalHumano(){
      echo json_encode($result);
      }
 
+  public function getHistorialDescuentosPorUsuario() {      
+    echo json_encode(array( "data" => $this->Comisiones_model->getHistorialDescuentosPorUsuario()));
+  }
+
 }
