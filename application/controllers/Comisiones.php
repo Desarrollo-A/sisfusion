@@ -2564,8 +2564,7 @@ public function LiquidarLote(){
      echo json_encode( array( "data" => $dat));
     }
 
-    public function resguardos()
-    {
+    public function resguardos(){
       $this->load->view('template/header');
       $this->load->view("ventas/revision_resguardo");
     }
@@ -2578,10 +2577,7 @@ public function LiquidarLote(){
      echo json_encode( array( "data" => $dat));
     }
 
-
-
-     public function retiros()
-    {
+    public function retiros(){
       $this->load->view('template/header');
       $this->load->view("ventas/retiros");
     }
@@ -2589,7 +2585,7 @@ public function LiquidarLote(){
     public function getDatosRetirosContraloria($proyecto,$condominio){
       $dat =  $this->Comisiones_model->getDatosRetirosContraloria($proyecto,$condominio)->result_array();
      for( $i = 0; $i < count($dat); $i++ ){
-         $dat[$i]['pa'] = 0;
+        $dat[$i]['pa'] = 0;
      }
      echo json_encode( array( "data" => $dat));
     }
@@ -3638,13 +3634,9 @@ echo json_encode($respuesta);
               $contador = 0;
               for($i = 0; $i < COUNT($datos); $i++){
                   $data[$i] = $this->ComisionesNeo_model->getGeneralStatusFromNeodata($datos[$i]['referencia'], $datos[$i]['idResidencial']);
-               //  echo var_dump($data);
-                  // if($data[$i]->Marca != 1){
-                      $final_data[$contador] = $this->ComisionesNeo_model->getLoteInformation($datos[$i]['idLote']);
-                      //array_push($final_data, $data[$i]->Marca);
-                      $final_data[$contador]->reason = $data[$i]->Marca;
-                      $contador ++;
-                  // }
+                  $final_data[$contador] = $this->ComisionesNeo_model->getLoteInformation($datos[$i]['idLote']);
+                  $final_data[$contador]->reason = $data[$i]->Marca;
+                  $contador ++;
               }
               if (COUNT($final_data) > 0) {
                   echo json_encode(array("data" => $final_data));
@@ -4018,17 +4010,17 @@ public function lista_sedes()
          
          }
          
-         function pausar_solicitud(){
-           $respuesta = array( FALSE );
-           if($this->input->post("id_pago")){
-              $respuesta = array( $this->Comisiones_model->update_estatus_pausa( $this->input->post("id_pago_i"), $this->input->post("observaciones")));
-           }
-           echo json_encode( $respuesta );
-         }
-         function pausar_solicitudM(){
+        function pausar_solicitud(){
           $respuesta = array( FALSE );
           if($this->input->post("id_pago")){
-             $respuesta = array( $this->Comisiones_model->update_estatus_pausaM( $this->input->post("id_pago_i"), $this->input->post("observaciones")));
+              $respuesta = array( $this->Comisiones_model->update_estatus_pausa( $this->input->post("id_pago_i"), $this->input->post("observaciones")));
+          }
+            echo json_encode( $respuesta );
+        }
+        function pausar_solicitudM(){
+          $respuesta = array( FALSE );
+          if($this->input->post("id_pago")){
+            $respuesta = array( $this->Comisiones_model->update_estatus_pausaM( $this->input->post("id_pago_i"), $this->input->post("observaciones")));
           }
           echo json_encode( $respuesta );
         }

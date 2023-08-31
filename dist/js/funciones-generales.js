@@ -327,12 +327,6 @@ function checkDecimal(decimal) {
   return str;
 }
 
-const formatMiles = (number) => {
-  const exp = /(\d)(?=(\d{3})+(?!\d))/g;
-  const rep = '$1,';
-  return number.toString().replace(exp,rep);
-}
-
 function cleanElement(e) { 
   var myElement = document.getElementById(e);
   myElement.innerHTML = '';

@@ -6,29 +6,25 @@
 
     <style type="text/css">
         ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-  color: white;
- opacity: 0.4;
-
-  ::-moz-placeholder { /* Firefox 19+ */
-  color: white;
-  opacity: 0.4;
-}
-:-ms-input-placeholder { /* IE 10+ */
-  color: white;
-  opacity: 0.4;
-}
-:-moz-placeholder { /* Firefox 18- */
-  color: white;
-  opacity: 0.4;
-}
-
-.addNewRecord {    
-    background-image: linear-gradient(to bottom, #ffffff,#e0ffff 100%) !important;   
-}
-
-
-}
-</style>
+            color: white;
+            opacity: 0.4;
+            ::-moz-placeholder { /* Firefox 19+ */
+                color: white;
+                opacity: 0.4;
+            }   
+            :-ms-input-placeholder { /* IE 10+ */
+                color: white;
+                opacity: 0.4;
+            }
+            :-moz-placeholder { /* Firefox 18- */
+                color: white;
+                opacity: 0.4;
+            }
+            .addNewRecord {    
+                background-image: linear-gradient(to bottom, #ffffff,#e0ffff 100%) !important;   
+            }
+        }
+    </style>
 
 	<div class="content">
         <div class="container-fluid">
