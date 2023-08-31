@@ -6002,101 +6002,29 @@ class RegistroCliente extends CI_Controller {
 
     function getLotesAsesor($condominio,$residencial) {
         $data['lotes'] = $this->registrolote_modelo->getLotesAsesor($condominio,$residencial);
-        $data2 = array();
-        if(count($data['lotes'])<=0)
-        {
+
+        if(count($data['lotes']) <= 0) {
             $data['lotes'][0]['idLote'] = 0;
             $data['lotes'][0]['nombreLote'] = 'SIN LOTES PARA ESTE ASESOR';
             echo json_encode($data['lotes']);
+            return;
         }
-        else{
-            // echo json_encode($data['lotes']);
-            if($this->session->userdata('id_rol') == 5 || /*$this->session->userdata('id_rol') == 6 || */$this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 7)
-            {
-                for($k=0; $k < count($data['lotes']); $k++)
-                {
-                    if($data['lotes'][$k]['venta_compartida'] == 2)
-                    {
-                        $data2[$k] = $data['lotes'][$k];
-                    }
-                }
-                // print_r(json_encode($data['lotes']));
-                // echo '<br>';
-                // // print_r($data2);
-                //
 
-                $data2 = array_values($data2);
-                $longitud = count($data['lotes']);
-                // print_r($longitud);
-                //
-                $falgRepeat=0;
-                for($k=0; $k < $longitud; $k++)
-                {
-                    for($t=0; $t < count($data2); $t++){
-                        if($data['lotes'][$k]['idLote'] == $data2[$t]['idLote'] && $data['lotes'][$k]['venta_compartida'] == 2)//
-                        {
-                            $falgRepeat = $falgRepeat + 1;
-                        }
-                        if($falgRepeat>1){
-                            unset($data['lotes'][$k]);
-                        }else{
-                            $array_final[$k] = $data['lotes'][$k];
-                        }
-
-                        /*if($data['lotes'][$k]['idLote'] == $data2[$t]['idLote'] && $data['lotes'][$k]['venta_compartida'] == 2)
-                        {
-                            unset($data['lotes'][$k]);
-                        }
-                        else
-                        {
-                            $array_final[$k] = $data['lotes'][$k];
-                        }*/
-                    }
-
-                }
-
-
-                $array_filtrado=array();
-                $flag = 0;
-                foreach($data['lotes'] as $key => $result){
-                    // print_r($result['idLote']);
-                    // echo '<br>';
-                    if(count($data2)>0){
-                        foreach($data2 as $key2 => $result2){
-                            if($result['idLote'] == $result2['idLote']){
-                                // print_r($result2);
-                                // echo '<br>';
-                                if($flag==0){
-                                    // echo '>';
-                                    // print_r($result);
-                                    // echo '<br>';
-                                    array_push($array_filtrado, $result);
-                                }
-                                $flag = $flag + 1;
-                            }else{
-                                array_push($array_filtrado, $result);
-                                // print_r($result);
-                                // echo '<br>';
-
-                            }
-
-                        }
-
-                    }else{
-                        array_push($array_filtrado, $result);
-                    }
-                }
-                // print_r(json_encode($array_filtrado));
-                //
-
-                $data['lotes'] = array_values($array_filtrado);
-                echo json_encode($data['lotes']);
-            }
-            else
-            {
-                echo json_encode($data['lotes']);
-            }
+        if (
+            $this->session->userdata('id_rol') != 5 &&
+            $this->session->userdata('id_rol') != 3 &&
+            $this->session->userdata('id_rol') != 9 &&
+            $this->session->userdata('id_rol') != 7
+        ) {
+            echo json_encode($data['lotes']);
+            return;
         }
+
+        $data['lotes'] = array_values(array_filter($data['lotes'], function($row) {
+            return $row['venta_compartida'] != 2;
+        }));
+
+        echo json_encode(array_map('unserialize', array_unique(array_map('serialize', $data['lotes']))));
     }
 
 
