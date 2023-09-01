@@ -4689,7 +4689,7 @@ class Asesor extends CI_Controller
         }
 
         $codigo = $this->getCodigoVerificacion(6);
-        $url = base_url()."Api/autSms/$idCliente?cod=$codigo";
+        $url = base_url()."Api/autorizacionSms/$idCliente?cod=$codigo";
         $resultadoSms = $this->smsAut($url, "00$lada$telefonoCliente");
 
         if (!$resultadoSms) {
@@ -4777,7 +4777,7 @@ class Asesor extends CI_Controller
                 return;
             }
 
-            $url = base_url()."Api/autSms/$idCliente?cod=$cliente->codigo_sms";
+            $url = base_url()."Api/autorizacionSms/$idCliente?cod=$cliente->codigo_sms";
 
             $resultadoSms = $this->smsAut($url, "00$cliente->lada_tel$cliente->telefono2");
 
