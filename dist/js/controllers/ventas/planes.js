@@ -13,10 +13,7 @@ $(document).ready(function() {
         }
         $("#sede").selectpicker('refresh');
     }, 'json');
-
-    //Función para mandar parametros por defecto en filtros de fecha
     setIniDatesXMonth("#fechainicio", "#fechafin");
-    //Función para mandar estatus vacio por defecto 
     sinPlanesDiv();
 
 });
@@ -71,7 +68,6 @@ $("input[data-type='currency']").on({
     }
 });
 
-//Agregar formato tipo moneda y decimales para ciertas condiciones 
 function formatCurrency(input, blur) {
     var input_val = input.val();
     if (input_val === "") { return; }
@@ -102,7 +98,6 @@ function formatCurrency(input, blur) {
     input[0].setSelectionRange(caret_pos, caret_pos);
 }
 
-//Fn para obtener las condiciones y descuentos que pertenecen a ellas (tablas condiciones en BD)
 function getDescuentosYCondiciones(primeraCarga, tipoCondicion){
     $('#spiner-loader').removeClass('hide');
 
@@ -404,7 +399,6 @@ async function ConsultarPlanes(){
                 
                 dataPaquetes.forEach(function (element, indexPaquetes) {
                     let idPaquete = element.id_paquete;
-                    console.log(idPaquete)
                     var indexActual = document.getElementById('index');
                     var indexNext = (document.getElementById('index').value - 1) + 2;
                     indexActual.value = indexNext;
@@ -427,21 +421,13 @@ async function ConsultarPlanes(){
                     let descuentosByPlan = dataDescuentosByPlan.filter(desc => desc.id_paquete == idPaquete);
                     if(existe != undefined){
                         const check =  document.getElementById(`inlineCheckbox1_${indexNext}_${indexCondicion}`);
-                           check.checked = true; 
-                          PrintSelectDesc(check, nombreCondicion, idCondicion, indexCondicion, indexNext, descuentosByPlan, lenDesCon, indexPaquetes);
-                          if(indexPaquetes == dataPaquetes.length -1){
+                        check.checked = true; 
+                        PrintSelectDesc(check, nombreCondicion, idCondicion, indexCondicion, indexNext, descuentosByPlan, lenDesCon, indexPaquetes);
+                        if(indexPaquetes == dataPaquetes.length -1){
                             $('#spiner-loader').addClass('hide');
                         }
- 
-                    }
-                      //  dataDescuentosByPlan.forEach(function (elementData, indexData) {
-                         //   const check =  document.getElementById(`inlineCheckbox1_${indexNext}_${indexCondicion}`);
-                         //   check.checked = true;
-
-                           //  PrintSelectDesc(indexNext, nombreCondicion, idCondicion, indexCondicion, indexNext, elementData, lenDesCon, indexPaquetes);
-                    //    });                  
+                    }                  
                     });
-                
                     if( lenDesCon <= 0 ){
                         $("#tipo_descuento_"+indexNext).append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
                     }
@@ -547,7 +533,6 @@ function llenar(e, indexGral, indexCondiciones, dataDescuentosByPlan, id_select,
     }
 }
 
-//Se introducen todas las opcines para cada uno de los select que pertenecen a un plan
 function PrintSelectDesc(e, nombreCondicion, idCondicion, indexCondiciones, indexGral, dataDescuentosByPlan=[], lenDesCon = 0, indexPaquetes = 0){
     console.log(dataDescuentosByPlan);
     nombreCondicion = (nombreCondicion.replace(/ /g,'')).replace(/[^a-zA-Z ]/g, "");
@@ -556,7 +541,6 @@ function PrintSelectDesc(e, nombreCondicion, idCondicion, indexCondiciones, inde
     let rowDetail = boxDetail.find( '.rowDetailDiscount');
     let descuentosArray = descuentosYCondiciones[indexCondiciones]['data'];
 
-    //Si la condición en el plan ES checkeada
     if($(`#inlineCheckbox1_${indexGral}_${indexCondiciones}`).is(':checked')){
         console.log('CHECKEADO')
         console.log('indexGral: '+indexGral)

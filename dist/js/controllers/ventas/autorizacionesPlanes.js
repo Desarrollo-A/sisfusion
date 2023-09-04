@@ -2,7 +2,27 @@ let descuentosYCondiciones;
 $('#li-plan').addClass(id_rol_global == 17 ? 'hidden' : '')
 llenarTipoDescuentos();
 
-$(document).ready(function(){ /**FUNCIÓN PARA LLENAR EL SELECT DE LOS FILTROS DE ESTATUS */
+sp = {
+    initFormExtendedDatetimepickers: function () {
+        $('.datepicker').datetimepicker({
+            format: 'DD/MM/YYYY',
+            icons: {
+                date: "fa fa-calendar",
+                up: "fa fa-chevron-up",
+                down: "fa fa-chevron-down",
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-screenshot',
+                clear: 'fa fa-trash',
+                close: 'fa fa-remove',
+                inline: true,
+                debug: true
+            }
+        });
+    }
+}
+
+$(document).ready(function(){
     $.post('getCatalogo', {
         id_catalogo: 90
     }, function (data) {        
@@ -11,7 +31,7 @@ $(document).ready(function(){ /**FUNCIÓN PARA LLENAR EL SELECT DE LOS FILTROS D
             var id = data[i]['id_opcion'];
             var name = data[i]['nombre'];
             $("#estatusAut").append($('<option>').val(id).text(name));
-                if(i == data.length -1) { //DESPUES DE LA ULTIMA OPCIÓN DE LOS ESTATUS, AGREGAR LA OPCIÓN "TODOS" PARA TRAER TODOS LOS ESTATUS
+                if(i == data.length -1) { 
                     $("#estatusAut").append($('<option>').val(0).text('Todos'));
                 }
         } 
@@ -25,13 +45,9 @@ $(document).ready(function(){ /**FUNCIÓN PARA LLENAR EL SELECT DE LOS FILTROS D
 
 function verificarEdicion(){
     if($('#idSolicitudAut').val() == ''){
-        //NO SE HA SELECCIONADO NINGUN PLAN Y DEJA CAMBIAR ENTRE PESTAÑAS
     }else{
         $("#modalConfirm").modal();
-    }
-    //verificar si la variable de id_autorizacion esta llena
-    /* si si, ejecutar modal y preguntar si desea eliminar los datos cargados al editar, si si recargar tabla y limpiar form de planes
-      si no, ejecutar modal y preguntar si desea eliminar los datos cargados al editar, si no regresar al otro div de cargar plan*/ 
+    } 
 }
 $(document).on('click', '#btnCancel', function (e) { 
     $('#li-plan').addClass('active');
@@ -50,19 +66,18 @@ $(document).on('click', '#btnLimpiar', function (e) {
         $('#idSolicitudAut').val('');
         $('#paquetes').val('');	
         document.getElementById('accion').value = 1;
-        setIniDatesXMonth("#fechainicio", "#fechafin");
+        setInitialValues();
         sinPlanesDiv();
         $(".leyendItems").addClass('d-none');
         $("#btn_save").addClass('d-none');
         $("#modalConfirm").modal('toggle');
 });
 
-
     let titulos = [];
     $('#autorizacionesPVentas thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
         titulos.push(title);
-        $(this).html('<input type="text"  class="textoshead" placeholder="' + title + '"/>');
+        $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
         $('input', this).on('keyup change', function() {
             if (tablaAutorizacion.column(i).search() !== this.value) {
                 tablaAutorizacion.column(i).search(this.value).draw();
@@ -73,6 +88,7 @@ $(document).on('click', '#btnLimpiar', function (e) {
             }
         });
     });
+
     ConsultarTabla();
     function ConsultarTabla(opcion = 1,anio = '',estatus = ''){
     tablaAutorizacion = $("#autorizacionesPVentas").DataTable({
@@ -106,19 +122,16 @@ $(document).on('click', '#btnLimpiar', function (e) {
         destroy: true,
         ordering: false,
         columns: [{  
-            "width": "2%",
             "data": function( d ){
                 return '<p class="m-0">'+d.id_autorizacion+'</p>';
             }
         },
         {  
-            "width": "10%",
             "data": function( d ){
                 return `<p class="m-0">${d.sede}</p>`;
             }
         },
         {  
-            "width": "10%",
             "data": function( d ){
                 let residencial = d.nombreResidencial.split(',');
                 
@@ -131,52 +144,44 @@ $(document).on('click', '#btnLimpiar', function (e) {
             }
         },
         {  
-            "width": "10%",
             "data": function( d ){
                 let fecha_inicio = moment(d.fecha_inicio,'YYYY/MM/DD').format('DD/MM/YYYY');
                 return `<p class="m-0"><b>${fecha_inicio}</b></p>`;
             }
         },
         {
-            "width": "15%",
             "data": function( d ){
                 let fecha_fin = moment(d.fecha_fin,'YYYY/MM/DD').format('DD/MM/YYYY');
                 return `<p class="m-0"><b>${fecha_fin}</b></p>`;
             }
         },
         {
-            "width": "10%",
             "data": function( d ){
                 return `<p class="m-0">${d.tipoLote}</p>`;
             }
         },
         {  
-            "width": "5%",
             "data": function( d ){
                     return `<p class="m-0">${d.tipoSuperficie}</p>`;  
             }
         },
         {
-            "width": "5%",
             "data": function( d ){
                     return `<p class="m-0"><span class="label ${d.colorEstatus}">${d.estatusA}</span></p>`;  
             }
         },
         {
-            "width": "5%",
             "data": function( d ){
-               let fecha_creacion = moment(d.fecha_creacion.split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss')
+                let fecha_creacion = moment(d.fecha_creacion.split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss')
                 return `<p class="m-0">${fecha_creacion}</p>`;
         }
         },
         {  
-            "width": "5%",
             "data": function( d ){
                 return `<p class="m-0">${d.creadoPor}</p>`;
-             }
+            }
         },
         {  
-            "width": "5%",
             "data": function( d ){
                 $('[data-toggle="tooltip"]').tooltip();
                 let botones = '';
@@ -206,7 +211,7 @@ $(document).on('click', '#btnLimpiar', function (e) {
                 }
                 botones += `<button data-idAutorizacion="${d.id_autorizacion}" id="btnHistorial" class="btn-data btn-gray" data-toggle="tooltip" data-placement="top" title="Historial de movimientos"><i class="fas fa-info"></i></button>`; ;
                 return '<div class="d-flex justify-center">' + botones + '<div>';
-             }
+            }
         }],
         columnDefs: [{}],
         ajax: {
@@ -223,16 +228,15 @@ $(document).on('click', '#btnLimpiar', function (e) {
             [1, 'asc']
         ]
     });
+    $('#autorizacionesPVentas').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
+    });
 }
 
 function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechazar,idAutorizacion,estatus_autorizacion){
         let botones = '';
-        /**Permisos
-         * 1.- vista
-         * 2.- Editar
-         * 3.- Avanzar
-         * 4.- Rechazar
-         * */
             if(permisoVista == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" id="btnVer" class="btn-data btn-sky" data-toggle="tooltip" data-placement="top" title="Ver planes de venta"><i class="fas fa-eye"></i></button>`;   }
             if(permisoEditar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" id="btnEditar" class="btn-data btn-yellow" data-toggle="tooltip" data-placement="top" title="Editar planes"><i class="fas fa-edit"></i></button>`; }
             if(permisoAvanzar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="1" data-estatus="${estatus_autorizacion}" id="btnAvanzar" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Avanzar autorización"><i class="fas fa-thumbs-up"></i></button>`;  }
@@ -243,9 +247,8 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
     $(document).on('click', '#btnEditar', function (e) {
         e.preventDefault();
         $('#spiner-loader').removeClass('hide');
-
         var data = tablaAutorizacion.row($(this).parents('tr')).data();
-        document.getElementById('fechainicio').value =  data.fecha_inicio;
+        document.getElementById('fechainicio').value = data.fecha_inicio;
         document.getElementById('fechafin').value = data.fecha_fin;
         document.getElementById('accion').value = 2;
         document.getElementById('idSolicitudAut').value = data.id_autorizacion;
@@ -263,7 +266,6 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         for (let m = 0; m < residenciales.length; m++) {
             residencialesSelect.push(residenciales[m]);
         }
-
         setTimeout(() => {
             $(`#residencial`).val(residencialesSelect).trigger('change');
         }, 1000);
@@ -299,9 +301,9 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         let idAutorizacion = $(this).attr('data-idAutorizacion');
         let estatus = $(this).attr('data-estatus');
         let tipo = $(this).attr('data-tipo');
-         tipo == 1  ? $('#modalAutorizacion').addClass("modal-sm") : $('#modalAutorizacion').addClass("modal-md") ;
-         document.getElementById('titleAvance').innerHTML = tipo == 1 ? '¿Estás seguro de avanzar está autorización?' : '¿Estás seguro de rechazar está autorización?';
-         $('#id_autorizacion').val(idAutorizacion);
+        tipo == 1  ? $('#modalAutorizacion').addClass("modal-sm") : $('#modalAutorizacion').addClass("modal-md") ;
+        document.getElementById('titleAvance').innerHTML = tipo == 1 ? '¿Estás seguro de avanzar está autorización?' : '¿Estás seguro de rechazar está autorización?';
+        $('#id_autorizacion').val(idAutorizacion);
         $('#estatus').val(estatus);
         $('#tipo').val(tipo);
         document.getElementById('modal-body').innerHTML = tipo == 2 ? `<textarea class="text-modal scroll-styles" max="255" type="text" name="comentario" id="comentario" autofocus="true" onkeyup="javascript:this.value=this.value.toUpperCase();" placeholder="Escriba aquí su comentario"></textarea>
@@ -410,7 +412,6 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
                 if(existe != undefined){
                     crearDivs(dataPaquetes[m],tiposDescuentos,descuentosByPlan);
                 }
-
                 if(m == dataPaquetes.length -1){
                     $('#spiner-loader').addClass('hide');
                 }
@@ -450,7 +451,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
                     if(descuentosByPlan[o].id_condicion == tiposDescuentos[m].condicion.id_condicion){
                         let porcentaje = descuentosByPlan[o].id_condicion == 4 || descuentosByPlan[o].id_condicion == 12 ? '$'+formatMoney(descuentosByPlan[o].porcentaje) : (descuentosByPlan[o].id_condicion == 13 ? descuentosByPlan[o].porcentaje : descuentosByPlan[o].porcentaje + '%'  )
                         $(`#tipoDescPaquete_${dataPaquete.id_paquete}_${tiposDescuentos[m].condicion.id_condicion}`).append(`
-                           <span class="label lbl-green" style="margin: 0 5px">${porcentaje} ${descuentosByPlan[o].id_condicion == 13 ? '' :(descuentosByPlan[o].msi_descuento != null && descuentosByPlan[o].msi_descuento != 0 ? ' +  '+descuentosByPlan[o].msi_descuento+'MSI' : '')}</span>`);
+                            <span class="label lbl-green" style="margin: 0 5px">${porcentaje} ${descuentosByPlan[o].id_condicion == 13 ? '' :(descuentosByPlan[o].msi_descuento != null && descuentosByPlan[o].msi_descuento != 0 ? ' +  '+descuentosByPlan[o].msi_descuento+'MSI' : '')}</span>`);
                     }
                 }
             }       
@@ -470,11 +471,13 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
             $("#sede").selectpicker('refresh');
         }, 'json');
     
-        //Función para mandar parametros por defecto en filtros de fecha
-        setIniDatesXMonth("#beginDate", "#endDate");
-        //Función para mandar estatus vacio por defecto 
+        sp.initFormExtendedDatetimepickers();
+        $('.datepicker').datetimepicker({ locale: 'es' });
+        setInitialValues();
         sinPlanesDiv();
     });
+
+    
 
     async function llenarTipoDescuentos(){
         descuentosYCondiciones = await getDescuentosYCondiciones();
@@ -528,7 +531,6 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         }
     });
     
-    //Agregar formato tipo moneda y decimales para ciertas condiciones 
     function formatCurrency(input, blur) {
         var input_val = input.val();
         if (input_val === "") { return; }
@@ -558,8 +560,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         caret_pos = updated_len - original_len + caret_pos;
         input[0].setSelectionRange(caret_pos, caret_pos);
     }
-    
-    //Fn para obtener las condiciones y descuentos que pertenecen a ellas (tablas condiciones en BD)
+
     function getDescuentosYCondiciones(){
         $('#spiner-loader').removeClass('hide');
         return new Promise ((resolve, reject) => {   
@@ -751,7 +752,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
     }
     
     async function GenerarCard(){
-        if($('#sede').val() != '' && $('#residencial').val() != '' && $('input[name="tipoLote"]').is(':checked') && $('#beginDate').val() != '' && $('#endDate').val() != '' && $('input[name="superficie"]').is(':checked') ){
+        if($('#sede').val() != '' && $('#residencial').val() != '' && $('input[name="tipoLote"]').is(':checked') && $('#fechainicio').val() != '' && $('#fechafin').val() != '' && $('input[name="superficie"]').is(':checked') ){
             var indexActual = document.getElementById('index');
             var indexNext = (document.getElementById('index').value - 1) + 2;
             indexActual.value = indexNext;
@@ -804,6 +805,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
                 $('#ModalAlert .btnSave').css("opacity","1");
                 if(data == 1){
                     tablaAutorizacion.ajax.reload();
+                    tablaAutorizacion.columns.adjust();
                     ClearAll();
                     alerts.showNotification("top", "right", "Planes almacenados correctamente.", "success");	
                 }else{
@@ -823,15 +825,15 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
     //Fn para consultar los planes de ventas existente según parametros seleccionados
     async function ConsultarPlanes(){
         $('#paquetes').val() == '' ? $('#spiner-loader').removeClass('hide'): '';
-        if($('#sede').val() != '' && $('#residencial').val() != '' && $('input[name="tipoLote"]').is(':checked') && $('#beginDate').val() != '' && $('#endDate').val() != '' && $('input[name="superficie"]').is(':checked') ){
+        if($('#sede').val() != '' && $('#residencial').val() != '' && $('input[name="tipoLote"]').is(':checked') && $('#fechainicio').val() != '' && $('#fechafin').val() != '' && $('input[name="superficie"]').is(':checked') ){
             let params = {
                 'sede':$('#sede').val(),
                 'residencial':$('#residencial').val(),
                 'superficie':$('#super').val(),
                 'fin':$('#fin').val(),
                 'tipolote':$('#tipo_l').val(),
-                'fechaInicio':$('#beginDate').val(),
-                'fechaFin':$('#endDate').val(),
+                'fechaInicio':$('#fechainicio').val(),
+                'fechaFin':$('#fechafin').val(),
                 'paquetes':$('#paquetes').val(),
                 'accion':$('#accion').val()};
             ClearAll2();
@@ -916,7 +918,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         document.getElementById('showPackage').innerHTML = '';
         $('#index').val(0);	
         $('#idSolicitudAut').val('');
-        setIniDatesXMonth("#fechainicio", "#fechafin");
+        setInitialValues();
         sinPlanesDiv();
         $(".leyendItems").addClass('d-none');
         $("#btn_save").addClass('d-none');
@@ -1123,8 +1125,8 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         if(origen == 1){
             $('#tipo_l').val(tipo_l);
         }
-        var dinicio = $('#beginDate').val();
-        var dfin = $('#endDate').val();
+        var dinicio = $('#fechainicio').val();
+        var dfin = $('#fechafin').val();
         var sede = $('#sede').val();
         var proyecto = $('#residencial').val();
         var containerTipoLote = document.querySelector('.boxTipoLote');
@@ -1169,3 +1171,25 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
                 </div>
             </div>`);
     }
+
+function setInitialValues() {
+    // BEGIN DATE
+    const fechaInicio = new Date();
+    // Iniciar en este año, este mes, en el día 1
+    const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
+    // END DATE
+    const fechaFin = new Date();
+    // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
+    const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
+    finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
+    finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
+    finalBeginDate2 = [('0' + beginDate.getDate()).slice(-2), ('0' + (beginDate.getMonth() + 1)).slice(-2), beginDate.getFullYear()].join('/');
+    finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
+
+    $('#fechainicio').val(finalBeginDate);
+    $('#fechafin').val(finalEndDate);
+}
+
+$(window).resize(function(){
+    tablaAutorizacion.columns.adjust();
+});
