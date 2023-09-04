@@ -221,15 +221,19 @@ $(document).on('click', '.revisarSolicitud', function (e) {
         }
         cnt += '    </div>';
         cnt += '    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">';
-        cnt += '    <label class="control-label">Comentario cobranza:</label><br>';
+        cnt += '    <label>Comentario cobranza</label><br>';
         cnt += '        <p style="text-align: justify;padding: 10px">' + data[0]['comentario_autorizacion'] + '</p>';
         cnt += '    </div>';
         cnt += '    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding-bottom: 10px">';
-        cnt += '        <div class="col-md-6">';
-        cnt += '            <label><input type="radio" class="d-none" name="accion" id="rechazoGer" value="0" required> Rechazar a cobranza</label>';
-        cnt += '        </div>';
+        cnt += '    <div class="radio-with-icon-autorizacones d-flex justify-center">';
+        cnt += '    <div class="boxContent" style="margin-bottom:20px; padding: 10px; background: #f7f7f7; border-radius:15px">';
+        cnt += '    <p class="radioOption-Item m-0">';            
+        cnt += '            <label><input type="radio" class="d-none" name="accion" id="rechazoGer" value="0" required> Rechazar a cobranza</label>'; 
+        cnt += '    </p>';
         cnt += '        <div class="col-md-6">';
         cnt += '            <label><input type="radio" name="accion" id="avanzaContra" value="1" required> Aceptar</label>';
+        cnt += '        </div>';
+        cnt += '        </div>';
         cnt += '        </div>';
         cnt += '        <div class="col-md-12">';
         cnt += '            <label>Escribe un comentario: </label>';
