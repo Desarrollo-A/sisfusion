@@ -1,5 +1,5 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
-class Restructura_model extends CI_Model
+class Reestructura_model extends CI_Model
 {
     function __construct()
     {

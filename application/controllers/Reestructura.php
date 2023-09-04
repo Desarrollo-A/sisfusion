@@ -1,10 +1,10 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Restructura extends CI_Controller{
+class Reestructura extends CI_Controller{
 	public function __construct()
 	{
 		parent::__construct();
-        $this->load->model(array('Restructura_model','General_model'));
+        $this->load->model(array('Reestructura_model','General_model'));
         $this->load->library(array('session','form_validation', 'get_menu','permisos_sidebar'));
 		$this->load->helper(array('url', 'form'));
 		$this->load->database('default');
@@ -21,4 +21,15 @@ class Restructura extends CI_Controller{
 		if($this->session->userdata('id_usuario') == "" || $this->session->userdata('id_rol') == "")
 			redirect(base_url() . "index.php/login");
 	}
+
+	public function index(){
+		$this->load->view('template/header');
+		$this->load->view("template/home");
+		$this->load->view('template/footer');
+	}
+
+	public function reubicarCliente(){
+		$this->load->view('template/header');
+        $this->load->view("reestructura/reubicarCliente_view");
+	}	
 }
