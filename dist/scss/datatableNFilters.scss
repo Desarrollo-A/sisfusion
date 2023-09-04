@@ -358,6 +358,17 @@ table{
         width: fit-content;
     }
 }
+.subBoxDetail{
+    background-color: $platinum;
+    border-radius: 10px;
+    padding: 15px 0;
+    width: 100%;
+    margin: auto;
+    label{
+        color: $gray;
+        font-weight: 100;
+    }
+}
 .dataTables_scroll .container-fluid{
     padding-top: 5px;
     padding-bottom: 5px;

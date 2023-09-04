@@ -978,7 +978,8 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
 
 
       $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
-      if($valida_tventa[0]['tipo_venta'] == 1 ){
+      var_dump($valida_tventa);
+	  if($valida_tventa[0]['tipo_venta'] == 1 ){
           if($valida_tventa[0]['idStatusContratacion'] == 6 && $valida_tventa[0]['idMovimiento']==112){
               $statusContratacion = 1;
               $idMovimiento = 109;
@@ -987,6 +988,7 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
           $statusContratacion = 1;
           $idMovimiento = 96;
       }
+	  exit;
 
 	$arreglo=array();
 	$arreglo["idStatusContratacion"]=$statusContratacion;

@@ -253,11 +253,13 @@ $("#editUserForm").on('submit', function(e){
         beforeSend: function(){
         },
         success: function(data) {
-            console.log(data);
-            if (data == 1) {
+            data = JSON.parse(data);
+            if (data.respuesta == 1) {
+                all_users_datatable.ajax.reload();
                 $('#editUserModal').modal("hide");
                 alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
-                $('#all_users_datatable').DataTable().ajax.reload(null, false);
+            } else if (data.respuesta == 0) {
+                alerts.showNotification("top", "right", data.message, "warning");
             } else {
                 alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
             }
