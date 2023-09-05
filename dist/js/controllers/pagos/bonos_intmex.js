@@ -41,7 +41,7 @@ $("#tabla_bono_revision").ready(function() {
             action: function(){
                 if ($('input[name="idTQ[]"]:checked').length > 0 ) {
                     var idbono = $(tabla_nuevas.$('input[name="idTQ[]"]:checked')).map(function () { return this.value; }).get();
-                    $.get(general_base_url+"Pagos/enviarBonosMex/"+idbono).done(function () {
+                    $.get(general_base_url+"Comisiones/enviarBonosMex/"+idbono).done(function () {
                         $("#myModalEnviadas").modal('toggle');
                         tabla_nuevas.ajax.reload();
                         $("#myModalEnviadas .modal-body").html("");
