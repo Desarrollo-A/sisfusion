@@ -3,7 +3,9 @@
 
 <body class="">
     <div class="wrapper">
+
     <?php $this->load->view('template/sidebar'); ?>
+    
         <!-- BEGUIN Modals -->
         <div class="modal" tabindex="-1" role="dialog" id="uploadModal">
             <div class="modal-dialog" role="document">

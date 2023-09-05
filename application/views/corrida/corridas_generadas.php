@@ -23,8 +23,6 @@
 <div class="wrapper ">
     <?php $this->load->view('template/sidebar'); ?>
 
-
-
     <div class="modal fade" id="avisoModal" >
         <div class="modal-dialog">
             <div class="modal-content" >

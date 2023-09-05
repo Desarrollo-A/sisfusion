@@ -4,21 +4,6 @@
     <div class="wrapper ">
         <?php $this->load->view('template/sidebar'); ?>
 
-        <!-- Modals -->
-        <!-- modal  AGREGAR PLAN DE ENGANCHE-->
-        <!--<div class="modal fade modal-alertas" id="modal_enganche" role="dialog">
-            <div class="modal-dialog modal-md">
-                <div class="modal-content">
-                    <div class="modal-header bg-red">
-                    </div>
-                    <form method="post" id="form_enganche">
-                        <div class="modal-body"></div>
-                    </form>
-                </div>
-            </div>
-        </div>-->
-        <!-- modal -->
-
         <!-- modal verifyNEODATA -->
         <div class="modal fade modal-alertas" id="modal_NEODATA" role="dialog">
             <div class="modal-dialog modal-lg">

@@ -235,7 +235,7 @@ $(document).ready(function () {
                                 <div class="col-md-4"><h4>Aplicado neodata: <b>${formatMoney(data[0].Aplicado)}</b></h4></div><div class="col-md-4">${cadena}</div>
                                 </div><br>`);
                                 $.getJSON( general_base_url + "Comisiones/getDatosAbonadoDispersion/"+idLote).done( function( data ){
-                                    $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-3"><p style="font-zise:10px;"><b>USUARIOS</b></p></div><div class="col-md-1"><b>%</b></div><div class="col-md-2"><b>TOT. COMISIÓN</b></div><div class="col-md-2"><b><b>ABONADO</b></div><div class="col-md-2"><b>PENDIENTE</b></div><div class="col-md-2"><b>DISPONIBLE</b></div></div>');
+                                    $("#modal_NEODATA .modal-body").append('<div class="row rowTitulos"><div class="col-md-3"><p style="font-zise:10px;"><b>USUARIOS</b></p></div><div class="col-md-1"><b>%</b></div><div class="col-md-2"><b>TOT. COMISIÓN</b></div><div class="col-md-2"><b><b>ABONADO</b></div><div class="col-md-2"><b>PENDIENTE</b></div><div class="col-md-2"><b>DISPONIBLE</b></div></div>');
                                     let contador=0;
                                     let coor = data.length;
                                     for (let index = 0; index < data.length; index++) {
@@ -295,27 +295,34 @@ $(document).ready(function () {
                                         $("#modal_NEODATA .modal-body").append(`
                                         <div class="row">
                                             <div class="col-md-3">
+                                                <label id="" class="control-label labelNombre hide">Usuarios</label>
                                                 <input class="form-control input-gral" required readonly="true" value="${v.colaborador}" style="font-size:12px;${v.descuento == 1 ? 'color:red;' : ''}">
                                                 <b><p style="font-size:12px;${v.descuento == 1 ? 'color:red;' : ''}">${v.descuento != "1" ?  v.rol : v.rol +' Incorrecto' }</p></b>
                                             </div>
                                             <div class="col-md-1">
+                                                <label id="" class="control-label labelPorcentaje hide">%</label>
                                                 <input class="form-control input-gral" required readonly="true" style=" padding:8px; ${v.descuento == 1 ? 'color:red;' : ''}" value="${parseFloat(v.porcentaje_decimal)}%">
                                             </div>
                                             <div class="col-md-2">
+                                                <label id="" class="control-label labelTC hide">Total de la comisión</label>
                                                 <input class="form-control input-gral" required readonly="true" style="${v.descuento == 1 ? 'color:red;' : ''}" value="${formatMoney(v.comision_total)}">
                                             </div>
                                             <div class="col-md-2">
+                                                <label id="" class="control-label labelAbonado hide">Abonado</label>
                                                 <input class="form-control input-gral" required readonly="true" style="${v.descuento == 1 ? 'color:red;' : ''}" value="${formatMoney(v.abono_pagado)}">
                                             </div>
                                             <div class="col-md-2">
+                                                <label id="" class="control-label labelPendiente hide">Pendiente</label>
                                                 <input class="form-control input-gral" required style="${pending < 0 ? 'color:red' : ''}" readonly="true" value="${formatMoney(pending)}">
                                             </div>
                                             <div class="col-md-2">
+                                                <label id="" class="control-label labelDisponible hide">Disponible</label>
                                                 <input class="form-control input-gral decimals"  data-old="" id="inputEdit" readonly="true"  value="${formatMoney(saldo)}">
                                             </div>
                                         </div>`);
                                         counts++
                                     });
+                                responsive(maxWidth);
                                 });
                             });
                         break;
@@ -408,5 +415,26 @@ function showDetailModal(idPlan) {
     });
 }
 
-
+function responsive(maxWidth) {
+    if (maxWidth.matches ) { //true mayor 991
+        $('.labelNombre').removeClass('hide');
+        $('.labelPorcentaje').removeClass('hide');
+        $('.labelTC').removeClass('hide');
+        $('.labelAbonado').removeClass('hide');
+        $('.labelPendiente').removeClass('hide');
+        $('.labelDisponible').removeClass('hide');
+        $('.rowTitulos').addClass('hide');
+    } else { //false menor 991
+        $('.labelNombre').addClass('hide');
+        $('.labelPorcentaje').addClass('hide');
+        $('.labelTC').addClass('hide');
+        $('.labelAbonado').addClass('hide');
+        $('.labelPendiente').addClass('hide');
+        $('.labelDisponible').addClass('hide');
+        $('.rowTitulos').removeClass('hide');
+    }
+}
+var maxWidth = window.matchMedia("(max-width: 992px)");
+responsive(maxWidth);
+maxWidth.addListener(responsive);
 

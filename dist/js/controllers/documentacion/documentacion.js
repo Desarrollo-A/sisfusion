@@ -12,6 +12,7 @@ const rolesPermitidosCartaDomicilio = [5, 2, 6];
 const movimientosPermitidosEstatus2 = [31, 85, 20, 63, 73, 82, 92, 96, 99, 102, 104, 107, 108, 109, 111];
 const rolesPermitidosEstatus2 = [7, 9, 3, 2];
 const rolesPermitidosEstatus2AsesorInactivo = [6];
+
 const AccionDoc = {
     DOC_NO_CARGADO: 1, // NO HAY DOCUMENTO CARGADO
     DOC_CARGADO: 2, // LA RAMA TIENE UN DOCUMENTO CARGADO
@@ -432,13 +433,19 @@ $(document).on('click', '.verDocumento', function () {
         const urlProspecto =  ($itself.attr('data-lp') == 6) ? 'printProspectInfoMktd' : 'printProspectInfo';
         pathUrl = `${general_base_url}clientes/${urlProspecto}/`+$itself.attr('data-idProspeccion');
     }
-    Shadowbox.open({
-        content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="${pathUrl}"></iframe></div>`,
-        player: "html",
-        title: `Visualizando archivo: ${$itself.attr('data-expediente')}`,
-        width: 985,
-        height: 660
-    });
+
+    if ( screen.width > 480 && screen.width < 800 ){
+        window.location.href = `${pathUrl}`;
+    }
+    else{
+        Shadowbox.open({
+            content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="${pathUrl}"></iframe></div>`,
+            player: "html",
+            title: `Visualizando archivo: ${$itself.attr('data-expediente')}`,
+            width: 985,
+            height: 660
+        });
+    }
 });
 
 $(document).on("click", ".addRemoveFile", function (e) {
