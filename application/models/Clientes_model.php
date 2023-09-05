@@ -1444,7 +1444,7 @@ function getStatusMktdPreventa(){
         switch ($this->session->userdata('id_rol')) {
             case '19': // SUBDIRECTOR MKTD
                 $query = $this->db->query(
-                    "SELECT c.id_prospecto, c.vigencia, c.tipo, c.telefono, c.telefono_2, 
+                    "SELECT TOP 10 c.id_prospecto, c.vigencia, c.tipo, c.telefono, c.telefono_2, 
                     CONVERT(VARCHAR, c.fecha_vencimiento, 20) AS fecha_vencimiento,
                     CONVERT(VARCHAR, c.fecha_creacion, 20) AS fecha_creacion,
                     UPPER(CONCAT (c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno)) nombre,
@@ -4195,20 +4195,14 @@ function getStatusMktdPreventa(){
                             DATEDIFF(YEAR, CONVERT(date, REPLACE(REPLACE(REPLACE(REPLACE(TRIM(cli.fecha_nacimiento),' DE ', '/'), '-', '/'), ' ', '/'),'.', '/'), 103), GETDATE())
                         ELSE
                             NULL
-                    END AS edad, cli.edadFirma, cli.ocupacion
+                    END AS edad, cli.edadFirma, cli.ocupacion, cli.originario_de
             FROM residenciales AS res
-            INNER JOIN condominios AS con
-            ON res.idResidencial = con.idResidencial
-            INNER JOIN lotes AS lot
-            ON con.idCondominio = lot.idCondominio
-            INNER JOIN statuscontratacion AS sc
-            ON lot.idStatusContratacion = SC.idStatusContratacion
-            INNER JOIN statuslote AS sl
-            ON lot.idStatusLote = SL.idStatusLote
-            LEFT JOIN clientes AS cli
-            ON lot.idCliente = cli.id_cliente
-            INNER JOIN opcs_x_cats AS oxc
-            ON cli.personalidad_juridica = oxc.id_opcion
+            INNER JOIN condominios AS con ON res.idResidencial = con.idResidencial
+            INNER JOIN lotes AS lot ON con.idCondominio = lot.idCondominio
+            INNER JOIN statuscontratacion AS sc ON lot.idStatusContratacion = SC.idStatusContratacion
+            INNER JOIN statuslote AS sl ON lot.idStatusLote = SL.idStatusLote
+            LEFT JOIN clientes AS cli ON lot.idCliente = cli.id_cliente
+            INNER JOIN opcs_x_cats AS oxc ON cli.personalidad_juridica = oxc.id_opcion
             LEFT JOIN (SELECT   cli.id_cliente, cli.fecha_nacimiento, 
                                 meses.dia_fecha AS dia_fecha_nac, meses_render.num_mes AS mes_fecha_nac,
                                 REPLACE(REPLACE(

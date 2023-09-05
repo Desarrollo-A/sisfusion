@@ -12,6 +12,7 @@ const rolesPermitidosCartaDomicilio = [5, 2, 6];
 const movimientosPermitidosEstatus2 = [31, 85, 20, 63, 73, 82, 92, 96, 99, 102, 104, 107, 108, 109, 111];
 const rolesPermitidosEstatus2 = [7, 9, 3, 2];
 const rolesPermitidosEstatus2AsesorInactivo = [6];
+
 const AccionDoc = {
     DOC_NO_CARGADO: 1, // NO HAY DOCUMENTO CARGADO
     DOC_CARGADO: 2, // LA RAMA TIENE UN DOCUMENTO CARGADO
@@ -30,6 +31,7 @@ const TipoDoc = {
     EVIDENCIA_MKTD_OLD: 66, // EXISTE LA RAMA CON LA EVIDENCIA DE MKTD (OLD)
     AUTORIZACIONES: 'autorizacion',
     PROSPECTO: 'prospecto',
+    APOSTILLDO_CONTRATO: 31
 };
 
 const observacionContratoUrgente = 1; // Bandera para inhabilitar
@@ -290,7 +292,7 @@ function cargarTabla(idLote, idCliente = '') {
                         }
                         return `<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`;
                     }
-                    if (data.tipo_doc == TipoDoc.CARTA_DOMICILIO) { // CARTA DOMICILIO
+                    if (data.tipo_doc == TipoDoc.CARTA_DOMICILIO || data.tipo_doc == TipoDoc.APOSTILLDO_CONTRATO) { // CARTA DOMICILIO || APOSTILLADO CONTRATO
                         if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
                             buttonMain = (
                                 includesArray(movimientosPermitidosCartaDomicilio, data.idMovimiento) &&
@@ -432,13 +434,19 @@ $(document).on('click', '.verDocumento', function () {
         const urlProspecto =  ($itself.attr('data-lp') == 6) ? 'printProspectInfoMktd' : 'printProspectInfo';
         pathUrl = `${general_base_url}clientes/${urlProspecto}/`+$itself.attr('data-idProspeccion');
     }
-    Shadowbox.open({
-        content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="${pathUrl}"></iframe></div>`,
-        player: "html",
-        title: `Visualizando archivo: ${$itself.attr('data-expediente')}`,
-        width: 985,
-        height: 660
-    });
+
+    if ( screen.width > 480 && screen.width < 800 ){
+        window.location.href = `${pathUrl}`;
+    }
+    else{
+        Shadowbox.open({
+            content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="${pathUrl}"></iframe></div>`,
+            player: "html",
+            title: `Visualizando archivo: ${$itself.attr('data-expediente')}`,
+            width: 985,
+            height: 660
+        });
+    }
 });
 
 $(document).on("click", ".addRemoveFile", function (e) {

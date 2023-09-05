@@ -12,7 +12,7 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content p-1" >
                     <div class="modal-header">
-                        <h5 >Agregar nueva carpeta</h5>
+                        <h5 >Editar carpeta</h5>
                     </div>
                     <form  enctype="multipart/form-data" id="formAdminE">
                         <div class="form-group col-lg-12 m-0">
@@ -123,11 +123,8 @@
                                                 <th>ID</th>
                                                 <th>CARPETA</th>
                                                 <th>DESCRIPCIÓN</th>
-                                                <th>ARCHIVO</th>
                                                 <th>ESTATUS</th>
-                                                <th>USUARIO</th>
                                                 <th>FECHA DE CREACIÓN</th>
-                                                <th>FECHA DE MODIFICACIÓN</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>

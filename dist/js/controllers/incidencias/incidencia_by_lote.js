@@ -942,7 +942,7 @@ $(".buscarLote").click( function() {
                     if(data.registro_comision == 0 || data.registro_comision == 8) {
                         BtnStats += '<button class="btn-data btn-sky cambiar_precio" title="Cambiar precio" value="' + data.idLote +'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-pencil-alt"></i></button>';
                         if(data.tipo_venta == 'null' || data.tipo_venta == 0 || data.tipo_venta == null){
-                            BtnStats += '<button href="#" value="'+data.idLote+'" data-nombre="'+data.nombreLote+'" data-tipo="'+data.tipo+'" data-tipo="I" class="btn-data btn-orangeYellow tipo_venta" title="Cambiar tipo de venta"><i class="fas fa-map-marker-alt"></i></button><button href="#" value="'+data.idLote+'" data-idLote="'+data.idLote+'"  data-cliente="'+data.id_cliente+'" data-sedesName="'+data.nombre+'"  data-sedes="'+data.id_sede+'" data-nombre="'+data.nombreLote+'" data-tipo="'+data.tipo+'" data-tipo="1" class="btn-data btn-violetDeep cambioSede"  title="Cambio de sede"> <i class="fas fa-map-signs"></i> </button> '
+                            BtnStats += '<button href="#" value="'+data.idLote+'" data-nombre="'+data.nombreLote+'" data-tipo="'+data.tipo+'" data-tipo="I" class="btn-data btn-orangeYellow tipo_venta" title="Cambiar tipo de venta"><i class="fas fa-map-marker-alt"></i></button><button href="#" value="'+data.idLote+'" data-idLote="'+data.idLote+'"  data-cliente="'+data.id_cliente+'" data-sedesName="'+data.sede+'"  data-sedes="'+data.id_sede+'" data-nombre="'+data.nombreLote+'" data-tipo="'+data.tipo+'" data-tipo="1" class="btn-data btn-violetDeep cambioSede"  title="Cambio de sede"> <i class="fas fa-map-signs"></i> </button> '
 
                         }     
                     }
@@ -994,7 +994,7 @@ $(".buscarLote").click( function() {
         </div>`);
 
         $("#modal_pagadas .modal-footer").append(`
-            <button type="button" class="btn btn-danger btn-simple"  data-dismiss="modal" value="CANCELAR"> CANCELAR</button>
+            <button type="button" class="btn btn-danger btn-simple" id="btn-cancelar" name="btn-cancelar"  data-dismiss="modal" value="CANCELAR"> CANCELAR</button>
             <button type="submit" disabled id="btn-save" class="btn btn-gral-data" value="GUARDAR">GUARDAR</button>
             `);
         $("#modal_pagadas").modal();
@@ -1004,10 +1004,17 @@ $(".buscarLote").click( function() {
         var tr = $(this).closest('tr');
         var row = tabla_inventario.row( tr );
         idLote = $(this).val();
+
         tipo = $(this).attr("data-tipo");
+        let ventaTipo 
+        if(tipo == 'null' || tipo == undefined ){
+            ventaTipo = 'Sin tipo de venta';
+        }else{
+            ventaTipo = tipo;
+        }
         $("#modal_pagadas .modal-body").html("");
         $("#modal_pagadas .modal-footer").html("");
-        $("#modal_pagadas .modal-body").append(`<h4 class="modal-title">Cambiar tipo de venta del lote <b>${row.data().nombreLote}</b></h4><br><em>Tipo de venta actual: <b>${ tipo == 'null' ? 'Sin tipo de venta' : tipo }</b></em>`);
+        $("#modal_pagadas .modal-body").append(`<h4 class="modal-title">Cambiar tipo de venta del lote <b>${row.data().nombreLote}</b></h4><br><em>Tipo de venta actual: <b>${ ventaTipo }</b></em>`);
         $("#modal_pagadas .modal-body").append(`<input type="hidden" name="idLote" id="idLote" readonly="true" value="${idLote}"><input type="hidden" name="precioAnt" id="precioAnt" readonly="true" value="">
         `);
         $("#modal_pagadas .modal-body").append(`
@@ -1102,7 +1109,27 @@ $(".buscarLote").click( function() {
                                 $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><i class="fa fa-info-circle" style="color:gray;"></i> <i>'+row.data().nombreLote+'</i></b></h3></div></div><br>');
                                 $.getJSON( general_base_url + "Incidencias/getDatosAbonadoDispersion/"+idLote+"/"+1).done( function( data ){
                                     
-                                    $("#modal_NEODATA .modal-body").append(` <div class="row"><div class="col-md-2"><p style="font-zise:10px;"><b>USUARIOS</b></p></div><div class="col-md-1"><b>%</b></div><div class="col-md-2"><b>TOT. COMISIÓN</b></div><div class="col-md-2"><b><b>ABONADO</b></div><div class="col-md-2"><b>PENDIENTE</b></div><div class="col-md-3">ACCIONES</div></div>`);
+                                    $("#modal_NEODATA .modal-body").append(`
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <p style="font-zise:10px;">
+                                                    <b>USUARIOS</b></p>
+                                            </div>
+                                            <div class="col-md-1">
+                                                <b>%</b>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <b>TOT. COMISIÓN</b>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <b><b>ABONADO</b>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <b>PENDIENTE</b>
+                                            </div>
+                                            <div class="col-md-3">ACCIONES
+                                            </div>
+                                        </div>`);
                                     let contador=0;
                                         
                                     for (let index = 0; index < data.length; index++) {
@@ -1226,7 +1253,7 @@ $(".buscarLote").click( function() {
                                         <button type="button" id="btnAdd_${i}"  data-toggle="tooltip" 
                                         data-placement="top" title="AGREGAR PAGO" 
                                         ${v.descuento == 1 || v.descuento > 1  ? 'style="display:none" ' : 'style="display:show" '} 
-                                        onclick="AgregarPago(${i}, ${pending},'${v.colaborador}','${v.id_rol_general}')" 
+                                        onclick="AgregarPago(${i}, ${pending},'${v.colaborador}','${v.rol}')" 
                                         class="btn btn-dark btn-success btn-fab btn-fab-mini"><span class="material-icons">add</span>
                                         </button>
                                         `;
@@ -1240,7 +1267,7 @@ $(".buscarLote").click( function() {
                                         <input id="id_usuario_${i}" type="hidden" name="id_usuario_${i}" value="${v.id_usuario}">
                                         <input class="form-control ng-invalid ng-invalid-required" required readonly="true" value="${v.colaborador}" 
                                             style="font-size:12px; ${v.descuento == 1 ? 'color:red;' : ''} "><b>
-                                            <p style="font-size:12px; ${v.descuento == 1 ? 'color:red;' : ''} ">${ v.descuento == "1" ? v.id_rol_general+' Incorrecto' : v.id_rol_general}</b>
+                                            <p style="font-size:12px; ${v.descuento == 1 ? 'color:red;' : ''} ">${ v.descuento == "1" ? v.rol+' Incorrecto' : v.rol}</b>
                                             <b style="color:${v.descuento > 1 && v.observaciones != 'COMISIÓN CEDIDA'  ? 'red' : 'green'}; 
                                             font-size:10px;">${v.observaciones == 'COMISIÓN CEDIDA' ? '(COMISIÓN CEDIDA)' : ''} ${v.descuento > 1 && v.observaciones != 'COMISIÓN CEDIDA'  ? '(CEDIÓ COMISIÓN)' : ''}<b></p>
                                         </div>
@@ -1364,6 +1391,7 @@ $(document).on('click', '.update_bandera', function(e){
 });
 
 $("#my_updatebandera_form").on('submit', function(e){
+  
     e.preventDefault();
     $.ajax({
         type: 'POST',
@@ -1391,9 +1419,15 @@ $("#my_updatebandera_form").on('submit', function(e){
 });
 
 $("#form_pagadas").submit(function(e) {;
+    
     e.preventDefault();
 }).validate({
+    
     submitHandler: function(form) {
+        $('#btn-save').prop('disabled', true);
+        $('#btn-cancelar').prop('disabled', true);
+        $("#btn-save").hide(1000);
+        $("#btn-cancelar").hide(1000);
         var data = new FormData($(form)[0]);
         $.ajax({
             url: general_base_url + "Incidencias/CambiarPrecioLote",
@@ -1407,7 +1441,9 @@ $("#form_pagadas").submit(function(e) {;
             success: function(data) {
                 if (data == 1) {
                     $("#modal_pagadas").modal('toggle');
+
                     $('#tabla_incidencias_contraloria').DataTable().ajax.reload();
+               
                     alerts.showNotification("top", "right", "Precio Actualizado", "success");
                 }else if(data == 2){
                     $("#modal_pagadas").modal('toggle');
@@ -1495,6 +1531,7 @@ function Confirmacion(i,name){
 function validar()
 {
 //    var input1 = document.getElementById();   
+
 }
 
 // 
@@ -1503,12 +1540,21 @@ function AgregarPago(i,pendiente,colab,id_rol_general){
     $('#modal_add .modal-body').html(''); 
     $('#modal_add .modal-footer').html(''); 
     let comisionTotal = replaceAll($('#comision_total_'+i).val(), ',','');
+    let comision1  = replaceAll(comisionTotal, '$','');
+
+    console.log(comisionTotal)
     let abonado = replaceAll($('#abonado_'+i).val(), ',','');
-    let pendiente2 = parseFloat(comisionTotal-abonado);
+    let abono1  = replaceAll(abonado, '$','');
+
+    let cosos2 = (comision1 - abono1);
+    
+    let pendiente2 = (cosos2.toFixed(3));
+
     pendiente=pendiente2;
+    // toFixed(2); 
     $("#modal_add .modal-header").append('<h4 class="card-title"><b>Agregar Pago</b></h4>');
     $("#modal_add .modal-body").append(`
-    <div id="inputhidden"><p>El monto no puede ser mayor a <b>$${formatMoney(pendiente)}</b> para el <b>
+    <div id="inputhidden"><p>El monto no puede ser mayor a <b>${formatMoney(pendiente)}</b> para el <b>
     ${id_rol_general} - ${colab} </b> , en caso de ser mayor válida si hay algún pago en <b>NUEVAS</b> que puedas quitar.</p>
         <div class="form-group">
             <input id="monotAdd" name="monotAdd" min="1" class="form-control input-gral"  type="number" onblur="verifica_pago(${pendiente})" placeholder="Monto a abonar" maxlength="6"/>
@@ -1601,7 +1647,7 @@ function ToparComision(i){
                 $('#comision_total_'+i).val(formatMoney(abonado));
                 let pendiente = parseFloat(abonado - abonado);
                 $('#pendiente_'+i).val(formatMoney(pendiente));
-                $('#modal_avisos').modal('hide');
+                $('#modal_NEODATA').modal('hide');
                 alerts.showNotification("top", "right", "Comisión detenida con éxito.", "success");
             }
             else{

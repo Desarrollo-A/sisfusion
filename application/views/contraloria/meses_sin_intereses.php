@@ -202,7 +202,6 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
-                                <!--                                <button type="button" id="guardar" class="btn btn-primary">Registrar</button>-->
                             </div>
                         </div>
                     </div>

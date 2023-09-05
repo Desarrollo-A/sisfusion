@@ -4,79 +4,23 @@
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
         <!-- Modals -->
-        <div class="modal fade modal-alertas" id="miModal" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header bg-red">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">BONOS</h4>
-                    </div>
-                    <form method="post" id="form_bonos">
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label class="label">Puesto del usuario</label>
-                                <select class="selectpicker" name="roles" id="roles" required>
-                                    <option value="">----Seleccionar-----</option>
-                                    <option value="7">Asesor</option>
-                                    <option value="9">Coordinador</option>
-                                    <option value="3">Gerente</option>
-                                    <option value="2">Sub director</option>
-                                </select>
-                            </div>
-                            <div class="form-group" id="users"></div>
-                            <div class="form-group row">
-                                <div class="col-md-4">
-                                    <label class="label">Bono</label>
-                                    <input class="form-control" type="text" id="monto" name="monto">
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="label">Meses a pagar</label>
-                                    <select class="form-control" name="numeroP" id="numeroP" required>
-                                        <option value="">-------SELECCIONAR--------</option>
-                                        <option value="6">6</option>
-                                        <option value="12">12</option>
-                                        <option value="24">24</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="label">Pago</label>
-                                    <input class="form-control" id="pago" type="text" name="pago" readonly>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="label">Comentario</label>
-                                <textarea id="comentario" name="comentario" class="form-control" rows="3"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <center>
-                                    <button type="submit" class="btn btn-success">GUARDAR</button>
-                                    <button class="btn btn-danger" type="button" data-dismiss="modal">CANCELAR</button>
-                                </center>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!--<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                    <div class="modal-body"></div>
-                </div>
-            </div>
-        </div>-->
-
         <div class="modal fade modal-alertas" id="modal_bonos" role="dialog">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
-                    <form method="post" id="form_bonos">
-                        <div class="modal-body"></div>
-                        <div class="modal-footer"></div>
-                    </form>
+                    <div class="modal-body"></div>
+                    <div class="modal-footer"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade modal-alertas" id="modalBonos2" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-body"></div>
+                    <div class="modal-footer"></div>
                 </div>
             </div>
         </div>
@@ -165,16 +109,16 @@
                                                                 <th>ID</th>
                                                                 <th>USUARIO</th>
                                                                 <th>PUESTO</th>
-                                                                <th>MONTO BONO</th>
+                                                                <th>MONTO DEL BONO</th>
                                                                 <th>ABONADO</th>
                                                                 <th>PENDIENTE</th>
-                                                                <th>TOTAL PAGOS</th>
+                                                                <th>TOTAL DE PAGOS</th>
                                                                 <th>PAGO INDIVIDUAL</th>
                                                                 <th>IMPUESTO</th>
                                                                 <th>TOTAL A PAGAR</th>
                                                                 <th>ESTATUS</th>
                                                                 <th>FECHA DE REGISTRO</th>
-                                                                <th>OPCIONES</th>
+                                                                <th>ACCIONES</th>
                                                             </tr>
                                                         </thead>
                                                     </table>
@@ -204,16 +148,16 @@
                                                                 <th>ID</th>
                                                                 <th>USUARIO</th>
                                                                 <th>PUESTO</th>
-                                                                <th>MONTO BONO</th>
+                                                                <th>MONTO DEL BONO</th>
                                                                 <th>ABONADO</th>
                                                                 <th>PENDIENTE</th>
-                                                                <th>TOTAL PAGOS</th>
+                                                                <th>TOTAL DE PAGOS</th>
                                                                 <th>PAGO INDIVIDUAL</th>
                                                                 <th>IMPUESTO</th>
                                                                 <th>TOTAL A PAGAR</th>
                                                                 <th>ESTATUS</th>
                                                                 <th>FECHA DE REGISTRO</th>
-                                                                <th>OPCIONES</th>
+                                                                <th>ACCIONES</th>
                                                             </tr>
                                                         </thead>
                                                     </table>
@@ -242,16 +186,16 @@
                                                                 <th>ID</th>
                                                                 <th>USUARIO</th>
                                                                 <th>PUESTO</th>
-                                                                <th>MONTO BONO</th>
+                                                                <th>MONTO DEL BONO</th>
                                                                 <th>ABONADO</th>
                                                                 <th>PENDIENTE</th>
-                                                                <th>TOTAL PAGOS</th>
+                                                                <th>TOTAL DE PAGOS</th>
                                                                 <th>PAGO INDIVIDUAL</th>
                                                                 <th>IMPUESTO</th>
                                                                 <th>TOTAL A PAGAR</th>
                                                                 <th>ESTATUS</th>
                                                                 <th>FECHA DE REGISTRO</th>
-                                                                <th>OPCIONES</th>
+                                                                <th>ACCIONES</th>
                                                             </tr>
                                                         </thead>
                                                     </table>

@@ -2,8 +2,8 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
     <div class="wrapper">
-
         <?php $this->load->view('template/sidebar'); ?>
+        
         <div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">

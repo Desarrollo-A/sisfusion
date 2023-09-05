@@ -357,6 +357,7 @@
                                                     <th>CONTRATACIÓN</th>
                                                     <th>PLAN DE VENTA</th>
                                                     <th>FECHA DE NEODATA</th>
+                                                    <th>ULTIMA DISPERSIÓN</th>
                                                     <th>ACCIONES</th>
                                                 </tr>
                                             </thead>
