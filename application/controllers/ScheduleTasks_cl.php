@@ -118,7 +118,7 @@ class ScheduleTasks_cl extends CI_Controller {
                 'adriana.perez@ciudadmaderas.com',
                 'fernanda.monjaraz@ciudadmaderas.com',
                 'grisell.malagon@ciudadmaderas.com',
-                'karen.ponce@ciudadmaderas.com',
+                'stephanie.quintero@ciudadmaderas.com',
                 'luz.angeles@ciudadmaderas.com',
                 'irene.vallejo@ciudadmaderas.com',
                 'leydi.sanchez@ciudadmaderas.com',
