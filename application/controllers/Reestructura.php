@@ -31,5 +31,25 @@ class Reestructura extends CI_Controller{
 	public function reubicarCliente(){
 		$this->load->view('template/header');
         $this->load->view("reestructura/reubicarCliente_view");
-	}	
+	}
+	
+	public function reestructura(){
+		$this->load->view('template/header');
+        $this->load->view("reestructura/reestructura_view");
+	}
+
+	public function lista_proyecto() {
+        echo json_encode($this->Reestructura_model->get_proyecto_lista()->result_array());
+    }
+
+	function getregistros()
+    {
+        $index_proyecto = $this->input->post('index_proyecto');
+        $dato = $this->Reestructura_model->get_valor_lote($index_proyecto);
+        if ($dato != null) {
+            echo json_encode($dato);
+        }else{
+            echo json_encode(array());
+        }
+    }
 }

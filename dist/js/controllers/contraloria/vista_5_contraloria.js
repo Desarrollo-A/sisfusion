@@ -188,8 +188,7 @@ $("#tabla_ingresar_5").ready(function () {
                             (data.idStatusContratacion == 2 && data.idMovimiento == 4) ||
                             (data.idStatusContratacion == 2 && data.idMovimiento == 84) ||
                             (data.idStatusContratacion == 2 && data.idMovimiento == 101) ||
-                            (data.idStatusContratacion == 2 && data.idMovimiento == 103)
-                          ) {
+                            (data.idStatusContratacion == 2 && data.idMovimiento == 103)) {
 
                             cntActions = 
                             '<button href="#" data-idLote="' +
