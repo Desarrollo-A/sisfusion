@@ -367,6 +367,41 @@ class Documentacion extends CI_Controller {
             echo json_encode(2); // EL ARCHIVO NO SE PUDO MOVER
         }
     }
+
+    function crearFolder()
+    {
+        $folder = 'NOMBRE-LOTE-EJEMPLO-001';
+        $result = mkdir('static/documentos/contratacion-reubicacion/'.$folder, 0777, TRUE);
+        echo ($result) ? 'Folder creado' : 'No se creó';
+    }
+
+    function moverArchivos($idLoteAnterior, $idLoteNuevo, $idClienteAnterior, $idClienteNuevo)
+    {
+        $loteNuevoInfo = $this->Documentacion_model->obtenerLotePorId($idLoteNuevo);
+        $docAnterior = $this->Documentacion_model->obtenerDocumentacionActiva($idLoteAnterior, $idClienteAnterior);
+        $dataInfo = [];
+        $modificado = date('Y-m-d H:i:s');
+
+        foreach ($docAnterior as $doc) {
+            $dataInfo[] = [
+                'movimiento' => $doc['movimiento'],
+                'expediente' => $doc['expediente'],
+                'modificado' => $modificado,
+                'status' => 1,
+                'idCliente' => $idClienteNuevo,
+                'idCondominio' => $loteNuevoInfo->idCondominio,
+                'idLote' => $idLoteNuevo,
+                'idUser' => NULL,
+                'tipo_documento' => 0,
+                'id_autorizacion' => 0,
+                'tipo_doc' => $doc['tipo_doc'],
+                'estatus_validacion' => 0
+            ];
+        }
+
+        $this->Documentacion_model->darBajaDocumentacion($idLoteAnterior);
+        $this->General_model->insertBatch('historial_documento', $dataInfo);
+
+        echo 'Salió todo fine';
+    }
 }
-
-

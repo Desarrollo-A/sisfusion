@@ -96,5 +96,21 @@ class Documentacion_model extends CI_Model {
 		$result = $this->db->query("SELECT id_cliente, UPPER(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno)) nombreCliente, status FROM clientes WHERE idLote = $idLote AND isNULL(noRecibo, '') != 'CANCELADO' ORDER BY status DESC")->result_array();
 		return count($result) > 0 ? $result: array();
 	}
-    
+
+    public function obtenerDocumentacionActiva($idLote, $idCliente)
+    {
+        $query = $this->db->query("SELECT * FROM historial_documento WHERE idLote = $idLote AND idCliente = $idCliente AND status = 1");
+        return $query->result_array();
+    }
+
+    public function obtenerLotePorId($idLote)
+    {
+        $query = $this->db->query("SELECT * FROM lotes WHERE idLote = $idLote");
+        return $query->row();
+    }
+
+    public function darBajaDocumentacion($idLote)
+    {
+        $this->db->query("UPDATE historial_documento SET status = 0 WHERE status = 1 and idLote = $idLote ");
+    }
 }
