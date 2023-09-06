@@ -22,7 +22,9 @@ class Reestructura_model extends CI_Model
 
 
     public function aplicaLiberacion($datos){
-        $row = $this->db->query("SELECT idLote, nombreLote, status, sup,totalNeto2,idCliente,registro_comision,tipo_venta FROM lotes WHERE idLote=".$datos['idLote']." AND status = 1")->result_array();
+        $row = $this->db->query("SELECT idLote, nombreLote, status, sup,
+        (CASE WHEN totalNeto2 IS NULL THEN 0.00 ELSE totalNeto2 END) totalNeto2,idCliente,registro_comision,
+        (CASE WHEN tipo_venta IS NULL THEN 0 ELSE tipo_venta END) tipo_venta FROM lotes WHERE idLote=".$datos['idLote']." AND status = 1")->result_array();
         $registro_comision = $datos['tipo'] == 7 ? 9 : 8;
         $idStatusLote = $datos['tipo'] == 9 ? 13 : 1;
         $datos['tipo'] == 7 ? $this->db->query("UPDATE lotes SET tipo_venta=".$row[0]['tipo_venta'].",usuario='".$datos['userLiberacion']."' WHERE idLote=".$datos['idLoteNuevo']." ") : '';
