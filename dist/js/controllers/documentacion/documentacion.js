@@ -7,11 +7,12 @@ const usuariosPermitidosContratoEspecial = [2762, 2747];
 const movimientosPermitidosContratoFirmado = [45];
 const movimientosPermitidosCorrida = [35, 22, 62, 75, 94, 106];
 const rolesPermitidosContraloria = [17, 70];
-const movimientosPermitidosCartaDomicilio = [37, 7, 64, 66, 77, 41];
-const rolesPermitidosCartaDomicilio = [5, 2, 6];
+const movimientosPermitidosEstatus8 = [37, 7, 64, 66, 77, 41];
+const rolesPermitidosEstatus8 = [5, 2, 6];
+const rolesPermitidosAsesorOOAMEstatus8 = [7];
 const movimientosPermitidosEstatus2 = [31, 85, 20, 63, 73, 82, 92, 96, 99, 102, 104, 107, 108, 109, 111];
 const rolesPermitidosEstatus2 = [7, 9, 3, 2];
-const rolesPermitidosEstatus2AsesorInactivo = [6];
+const rolesPermitidosAsesorInactivo = [6];
 
 const AccionDoc = {
     DOC_NO_CARGADO: 1, // NO HAY DOCUMENTO CARGADO
@@ -31,7 +32,10 @@ const TipoDoc = {
     EVIDENCIA_MKTD_OLD: 66, // EXISTE LA RAMA CON LA EVIDENCIA DE MKTD (OLD)
     AUTORIZACIONES: 'autorizacion',
     PROSPECTO: 'prospecto',
-    APOSTILLDO_CONTRATO: 31
+    APOSTILLDO_CONTRATO: 31,
+    CARTA: 32,
+    RESCISION: 33,
+    ARCHIVO_PEND_JURIDICO: 34
 };
 
 const observacionContratoUrgente = 1; // Bandera para inhabilitar
@@ -295,8 +299,8 @@ function cargarTabla(idLote, idCliente = '') {
                     if (data.tipo_doc == TipoDoc.CARTA_DOMICILIO || data.tipo_doc == TipoDoc.APOSTILLDO_CONTRATO) { // CARTA DOMICILIO || APOSTILLADO CONTRATO
                         if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
                             buttonMain = (
-                                includesArray(movimientosPermitidosCartaDomicilio, data.idMovimiento) &&
-                                includesArray(rolesPermitidosCartaDomicilio, id_rol_general) &&
+                                includesArray(movimientosPermitidosEstatus8, data.idMovimiento) &&
+                                includesArray(rolesPermitidosEstatus8, id_rol_general) &&
                                 parseInt(data.status8Flag) !== status8Flag
                             )
                                 // ESTÁ EN ESTATUS 8 Y ES ASISTENTES GERENTES EL QUE CONSULTA, SE VEA A MONSTRAR ENABLED EL BOTÓN PARA CARGAR EL ARCHIVO
@@ -309,8 +313,8 @@ function cargarTabla(idLote, idCliente = '') {
                         buttonMain = crearBotonAccion(AccionDoc.DOC_CARGADO, data); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
                         // ESTÁ EN ESTATUS 8 Y ES ASISTENTES GERENTES EL QUE CONSULTA, SE VEA A MONSTRAR EL BOTÓN PARA ELIMINAR EL ARCHIVO
                         if (
-                            includesArray(movimientosPermitidosCartaDomicilio, data.idMovimiento) &&
-                            includesArray(rolesPermitidosCartaDomicilio, id_rol_general) &&
+                            includesArray(movimientosPermitidosEstatus8, data.idMovimiento) &&
+                            includesArray(rolesPermitidosEstatus8, id_rol_general) &&
                             parseInt(data.status8Flag) !== status8Flag
                         ) {
                             buttonDelete  = crearBotonAccion(AccionDoc.ELIMINAR_DOC, data);
@@ -334,6 +338,50 @@ function cargarTabla(idLote, idCliente = '') {
                         }
                         return `<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`;
                     }
+
+                    if (data.tipo_doc === TipoDoc.RESCISION) { // EXISTE LA RAMA DE RESCISIÓN DE CONTRATO
+                        if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
+                            buttonMain = (
+                                includesArray(movimientosPermitidosEstatus8, parseInt(data.idMovimiento)) &&
+                                (
+                                    (
+                                        includesArray(rolesPermitidosAsesorOOAMEstatus8, parseInt(id_rol_general)) &&
+                                        parseInt(data.id_asesor) === parseInt(id_usuario_general) &&
+                                        parseInt(data.estatusAsesor) === 1
+                                    ) ||
+                                    (
+                                        includesArray(rolesPermitidosAsesorInactivo, id_rol_general) &&
+                                        parseInt(data.estatusAsesor) !== 1
+                                    )
+                                )
+                            )
+                                ? crearBotonAccion(AccionDoc.SUBIR_DOC, data)
+                                : crearBotonAccion(AccionDoc.DOC_NO_CARGADO);
+
+                            return `<div class="d-flex justify-center">${buttonMain}</div>`;
+                        }
+
+                        buttonMain = crearBotonAccion(AccionDoc.DOC_CARGADO, data);
+                        if (
+                            includesArray(movimientosPermitidosEstatus8, parseInt(data.idMovimiento)) &&
+                            (
+                                (
+                                    includesArray(rolesPermitidosAsesorOOAMEstatus8, parseInt(id_rol_general)) &&
+                                    parseInt(data.id_asesor) === parseInt(id_usuario_general) &&
+                                    parseInt(data.estatusAsesor) === 1
+                                ) ||
+                                (
+                                    includesArray(rolesPermitidosAsesorInactivo, id_rol_general) &&
+                                    parseInt(data.estatusAsesor) !== 1
+                                )
+                            )
+                        ) {
+                            buttonDelete  = crearBotonAccion(AccionDoc.ELIMINAR_DOC, data);
+                        }
+
+                        return `<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`;
+                    }
+
                     if (data.tipo_doc === TipoDoc.DS_NEW && data.expediente === "Depósito de seriedad") { // EXISTE EL DEPÓSITO DE SERIEDAD (VERSIÓN NUVEA)
                         buttonMain = crearBotonAccion(AccionDoc.DOC_CARGADO, data); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
                         return `<div class="d-flex justify-center">${buttonMain}</div>`;
@@ -354,6 +402,7 @@ function cargarTabla(idLote, idCliente = '') {
                         buttonMain = crearBotonAccion(AccionDoc.DOC_CARGADO, data); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
                         return `<div class="d-flex justify-center">${buttonMain}</div>`;
                     }
+
                     // ES EL RESTO DEL EXPEDIENTE (HISTORIAL DOCUMENTOS)
                     if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
                         buttonMain = (
@@ -361,14 +410,12 @@ function cargarTabla(idLote, idCliente = '') {
                             (
                                 (
                                     includesArray(rolesPermitidosEstatus2, parseInt(id_rol_general)) &&
+                                    parseInt(data.id_asesor) === parseInt(id_usuario_general) &&
                                     parseInt(data.estatusAsesor) === 1
                                 ) ||
                                 (
-                                    parseInt(data.id_asesor) === parseInt(id_usuario_general) ||
-                                    (
-                                        includesArray(rolesPermitidosEstatus2AsesorInactivo, id_rol_general) &&
-                                        parseInt(data.estatusAsesor) !== 1
-                                    )
+                                    includesArray(rolesPermitidosAsesorInactivo, id_rol_general) &&
+                                    parseInt(data.estatusAsesor) !== 1
                                 )
                             )
                         )
@@ -386,14 +433,12 @@ function cargarTabla(idLote, idCliente = '') {
                         (
                             (
                                 includesArray(rolesPermitidosEstatus2, parseInt(id_rol_general)) &&
+                                parseInt(data.id_asesor) === parseInt(id_usuario_general) &&
                                 parseInt(data.estatusAsesor) === 1
                             ) ||
                             (
-                                parseInt(data.id_asesor) === parseInt(id_usuario_general) ||
-                                (
-                                    includesArray(rolesPermitidosEstatus2AsesorInactivo, id_rol_general) &&
-                                    parseInt(data.estatusAsesor) !== 1
-                                )
+                                includesArray(rolesPermitidosAsesorInactivo, id_rol_general) &&
+                                parseInt(data.estatusAsesor) !== 1
                             )
                         )
                     ) {
@@ -413,7 +458,7 @@ function cargarTabla(idLote, idCliente = '') {
 
 $(document).on('click', '.verDocumento', function () {
     const $itself = $(this);
-    let pathUrl = `${general_base_url}static/documentos/cliente/${obtenerPathDoc($itself.attr('data-tipoDocumento'))}`+$itself.attr('data-expediente');
+    let pathUrl = general_base_url+$itself.attr('data-expediente');
 
     if ($itself.attr('data-tipoDocumento') === TipoDoc.DS_NEW || $itself.attr('data-tipoDocumento') === TipoDoc.DS_OLD) {
         const idCliente = $itself.attr('data-idCliente');
@@ -421,24 +466,26 @@ $(document).on('click', '.verDocumento', function () {
             ? 'deposito_seriedad' : 'deposito_seriedad_ds';
         pathUrl = `${general_base_url}asesor/${urlDs}/${idCliente}/1`;
     }
+
     if (parseInt($itself.attr('data-tipoDocumento')) === TipoDoc.CORRIDA) {
         descargarArchivo(pathUrl, $itself.attr('data-expediente'));
         alerts.showNotification('top', 'right', 'El documento <b>' + $itself.attr('data-expediente') + '</b> se ha descargado con éxito.', 'success');
         return;
     }
+
     if ($itself.attr('data-tipoDocumento') === TipoDoc.AUTORIZACIONES) {
         abrirModalAutorizaciones($itself.attr('data-idLote'));
         return;
     }
+
     if ($itself.attr('data-tipoDocumento') === TipoDoc.PROSPECTO) {
         const urlProspecto =  ($itself.attr('data-lp') == 6) ? 'printProspectInfoMktd' : 'printProspectInfo';
         pathUrl = `${general_base_url}clientes/${urlProspecto}/`+$itself.attr('data-idProspeccion');
     }
 
-    if ( screen.width > 480 && screen.width < 800 ){
+    if ( screen.width > 480 && screen.width < 800 ) {
         window.location.href = `${pathUrl}`;
-    }
-    else{
+    } else {
         Shadowbox.open({
             content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="${pathUrl}"></iframe></div>`,
             player: "html",
