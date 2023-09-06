@@ -96,5 +96,88 @@ class Documentacion_model extends CI_Model {
 		$result = $this->db->query("SELECT id_cliente, UPPER(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno)) nombreCliente, status FROM clientes WHERE idLote = $idLote AND isNULL(noRecibo, '') != 'CANCELADO' ORDER BY status DESC")->result_array();
 		return count($result) > 0 ? $result: array();
 	}
-    
+
+    public function obtenerDocumentacionActiva($idLote, $idCliente)
+    {
+        $query = $this->db->query("SELECT * FROM historial_documento WHERE idLote = $idLote AND idCliente = $idCliente AND status = 1");
+        return $query->result_array();
+    }
+
+    public function obtenerLotePorId($idLote)
+    {
+        $query = $this->db->query("SELECT * FROM lotes WHERE idLote = $idLote");
+        return $query->row();
+    }
+
+    public function obtenerDocumentacionPorReubicacion()
+    {
+        $query = $this->db->query('SELECT * FROM opcs_x_cats WHERE id_catalogo = 98 AND estatus = 1');
+        return $query->result_array();
+    }
+
+    /**
+     * Función para buscar el path donde se encuentra el archivo en los diferentes tipos de proceso de contratación
+     *
+     * @param $tipoDocumento
+     * @param $tipoContratacion
+     * @param $nombreLote
+     * @param bool $eliminarArchivo bandera para saber si se eliminará el archivo o no para no afectar los archivos del patch viejo
+     * @param $nombreDocumento
+     * @return string
+     */
+    public function getCarpetaArchivo(
+        $tipoDocumento, $tipoContratacion = 1, $nombreLote = '', $nombreDocumento = '', $eliminarArchivo = false
+    ): string
+    {
+        if ($tipoContratacion == 1) {
+            return $this->obtenerPathViejoContratacion($tipoDocumento);
+        }
+
+        if ($tipoContratacion == 2) {
+            if ($eliminarArchivo) {
+                return $this->obtenerPathNuevoContratacion($nombreLote, $tipoContratacion);
+            }
+
+            if (empty($nombreDocumento)) {
+                return $this->obtenerPathNuevoContratacion($nombreLote, $tipoContratacion);
+            }
+
+            $pathViejo = $this->obtenerPathViejoContratacion($tipoDocumento);
+            $pathNuevo = $this->obtenerPathNuevoContratacion($nombreLote, $tipoContratacion);
+            return (file_exists($pathViejo.$nombreDocumento)) ? $pathViejo : $pathNuevo;
+        }
+
+        return '';
+    }
+
+    private function obtenerPathViejoContratacion($tipoDocumento): string
+    {
+        $pathBase = 'static/documentos/cliente/';
+
+        if ($tipoDocumento == 7) { // CORRIDA FINANCIERA: CONTRALORÍA
+            return "{$pathBase}corrida/";
+        }
+
+        if ($tipoDocumento == 8) { // CONTRATO: JURÍDICO
+            return "{$pathBase}contrato/";
+        }
+
+        if ($tipoDocumento == 30) { // CONTRATO FIRMADO: CONTRALORÍA
+            return "{$pathBase}contratoFirmado/";
+        }
+
+        // EL RESTO DE DOCUMENTOS SE GUARDAN EN LA CARPETA DE EXPEDIENTES
+        return "{$pathBase}expediente/";
+    }
+
+    private function obtenerPathNuevoContratacion($nombreLote, $tipoContratacion): string
+    {
+        $pathBase = 'static/documentos/';
+
+        if ($tipoContratacion == 2) { // Reubicación
+            return "{$pathBase}contratacion-reubicacion/$nombreLote/";
+        }
+
+        return $pathBase;
+    }
 }
