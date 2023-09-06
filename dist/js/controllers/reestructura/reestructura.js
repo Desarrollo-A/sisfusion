@@ -56,13 +56,13 @@ $(document).on('click', '#saveLi', function(){
     var nombreLot = $("#nombreLoteAv").val();
     var precio = $("#precioAv").val();
 
-    datos = {
-        "idLote": idLote,
-        "nombreLote": nombreLot,
-        "precio": precio,
-        "tipoLiberacion": 9,
-    };
 
+    var datos = new FormData();
+    datos.append("idLote", idLote);
+    datos.append("nombreLote", nombreLot);
+    datos.append("precio", precio);
+    datos.append("tipoLiberacion", 9); 
+    
     $.ajax({
         method: 'POST',
         url: general_base_url + 'Reestructura/aplicarLiberacion',

@@ -53,10 +53,9 @@ class Reestructura extends CI_Controller{
     }
 
 	public function aplicarLiberacion(){
-
 				$dataPost = $_POST;
-				$comentarioLiberacion = $dataPost['tipoLiberacion'] == 7 ? 'LIBERADO POR REUBICACIÓN' : ( $dataPost['tipoLiberacion'] == 9 ? 'LIBERACIÓN JURIDICA' : ($dataPost['tipoLiberacion'] == 8 ? 'LIBERADO POR REESTRUCTURA' : '') );
-				$observacionLiberacion = $dataPost['tipoLiberacion'] == 7 ? 'LIBERADO POR REUBICACIÓN' : ( $dataPost['tipoLiberacion'] == 9 ? 'LIBERACIÓN JURIDICA' : ($dataPost['tipoLiberacion'] == 8 ? 'LIBERADO POR REESTRUCTURA' : '') );
+				$comentarioLiberacion = $dataPost['tipoLiberacion'] == 7 ? 'LIBERADO POR REUBICACIÓN' : ( $dataPost['tipoLiberacion'] == 9 ? 'LIBERACIÓN JURÍDICA' : ($dataPost['tipoLiberacion'] == 8 ? 'LIBERADO POR REESTRUCTURA' : '') );
+				$observacionLiberacion = $dataPost['tipoLiberacion'] == 7 ? 'LIBERADO POR REUBICACIÓN' : ( $dataPost['tipoLiberacion'] == 9 ? 'LIBERACIÓN JURÍDICA' : ($dataPost['tipoLiberacion'] == 8 ? 'LIBERADO POR REESTRUCTURA' : '') );
                 $datos["nombreLote"] = $dataPost['nombreLote'];
                 $datos["precio"] = $dataPost['precio'];
                 $datos["comentarioLiberacion"] = $comentarioLiberacion;
@@ -67,6 +66,7 @@ class Reestructura extends CI_Controller{
                 $datos["userLiberacion"] = $this->session->userdata('id_usuario');
 				$dataPost['tipoLiberacion'] == 7 ? $datos['idLoteNuevo'] = $dataPost['idLoteNuevo'] : '' ;
                 $datos["tipo"] = $dataPost['tipoLiberacion'];
+				$datos["idLote"] = $dataPost['idLote'];
                 $update = $this->Reestructura_model->aplicaLiberacion($datos);
 
                 if ($update == TRUE) {
