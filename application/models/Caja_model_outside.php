@@ -19,19 +19,15 @@
     }
 
 
-    public function getResidencialDis2($rol)
-    {
-
-        $val_idStatusLote = ($rol == 8 || $rol == 4 || $rol == 11) ? ('1,101,102') : ('1');
-
-
-        return $this->db->query("SELECT residenciales.idResidencial, residenciales.nombreResidencial, CAST(residenciales.descripcion AS varchar(MAX)) as descripcion FROM residenciales
-            INNER JOIN condominios ON residenciales.idResidencial = condominios.idResidencial
-            INNER JOIN lotes ON condominios.idCondominio = lotes.idCondominio WHERE lotes.idStatusLote in (" . $val_idStatusLote . ") AND lotes.status IN ( 1 ) AND
-            (lotes.idMovimiento = 0 OR lotes.idMovimiento IS NULL )
-            group by residenciales.idResidencial, residenciales.nombreResidencial, CAST(residenciales.descripcion AS varchar(MAX))
-            ORDER BY CAST(residenciales.descripcion AS varchar(MAX))")->result_array();
-
+    public function getResidencialDis2($rol) {
+        $val_idStatusLote = in_array($rol, array(8, 4, 11)) ? "1, 101, 102" : "1";
+        return $this->db->query("SELECT re.idResidencial, re.nombreResidencial, CAST(re.descripcion AS varchar(MAX)) as descripcion 
+        FROM residenciales re
+        INNER JOIN condominios co ON co.idResidencial = re.idResidencial
+        INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND lo.idStatusLote in ($val_idStatusLote) AND lo.status IN ( 1 ) AND (lo.idMovimiento = 0 OR lo.idMovimiento IS NULL )
+        WHERE re.idResidencial NOT IN (21, 22, 25, 30)
+        group by re.idResidencial, re.nombreResidencial, CAST(re.descripcion AS varchar(MAX))
+        ORDER BY CAST(re.descripcion AS varchar(MAX))")->result_array();
     }
 
 
@@ -98,15 +94,11 @@
         WHERE lotes.status = 1 AND lotes.idStatusLote in ($val_idStatusLote) AND lotes.idCondominio = $condominio")->result_array();
     }
 
-    public function getResidencial()
-    {
-        $this->db->select('idResidencial as id_proy, nombreResidencial as siglas, descripcion as nproyecto');
-        $this->db->from('residenciales');
-        $this->db->where('status', '1');
-        $this->db->order_by('nombreResidencial', 'asc');
-        $query = $this->db->get();
-
-        return $query->result_array();
+    public function getResidencial() {
+        return $this->db->query("SELECT idResidencial as id_proy, nombreResidencial as siglas, descripcion as nproyecto
+        FROM residenciales
+        WHERE status = 1 AND idResidencial NOT IN (21, 22, 25, 30)
+        ORDER BY nombreResidencial ")->result_array();
     }
 
 

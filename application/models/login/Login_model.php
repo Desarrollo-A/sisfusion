@@ -23,7 +23,7 @@ class login_model extends CI_Model {
 		WHEN (u.id_sede = '13' AND sb.id_lider = 3) THEN 7092 ELSE 0 END id_regional_2,
 		u.id_rol, u.id_sede, u.nombre, u.apellido_paterno, u.apellido_materno,
 		u.correo, u.usuario, u.contrasena, u.telefono, u.tiene_hijos, u.estatus, u.sesion_activa, u.imagen_perfil, u.fecha_creacion, u.creado_por, u.modificado_por, u.forma_pago, u.jerarquia_user,
-		hr.controlador
+		hr.controlador, u.tipo
 		FROM usuarios u
 		LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
 		LEFT JOIN usuarios ge ON ge.id_usuario = us.id_lider

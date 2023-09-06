@@ -49,10 +49,10 @@ $("#tabla_ingresar_5").ready(function () {
                 titleAttr: 'Registro estatus 5',
                 title: "Registro estatus 5",
                 exportOptions: {
-                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
                     format: {
                         header: function (d, columnIdx) {
-                            return ' ' + titulosInventario[columnIdx -1] + ' ';
+                            return ' ' + titulosInventario[columnIdx - 1] + ' ';
                         }
                     }
                 }
@@ -66,10 +66,10 @@ $("#tabla_ingresar_5").ready(function () {
                 orientation: 'landscape',
                 pageSize: 'LEGAL',
                 exportOptions: {
-                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
                     format: {
                         header: function (d, columnIdx) {
-                            return ' ' + titulosInventario[columnIdx -1]  + ' ';
+                            return ' ' + titulosInventario[columnIdx - 1]  + ' ';
                         }
                     }
                 }
@@ -99,6 +99,11 @@ $("#tabla_ingresar_5").ready(function () {
                         return `<span class="label lbl-warning">CORRECIÓN</span>`;
                     else 
                         return `<span class="label lbl-green">NUEVO</span>`;
+                }
+            },
+            {
+                data: function (d) {
+                    return `<span class='label lbl-violetBoots'>${d.tipo_proceso}</span>`;
                 }
             },
             {
