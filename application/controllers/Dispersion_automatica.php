@@ -43,9 +43,8 @@ class Dispersion_automatica extends CI_Controller
     // estatus 0 entro y fallo
     $QUERY_V = $this->db->query("SELECT MAX(idResidencial) DATA_V FROM residenciales ");
   // estatus  19 aqui falla.
-    $estatus = 19;
     $DAT = $QUERY_V->row()->DATA_V;    
-    $lotePruebas = 66018;
+   
     //  echo json_encode($this->ComisionesNeo_model->getStatusNeodata($lotePruebas)->result_array(),JSON_NUMERIC_CHECK);
     // estatus 18 antes de entrar a for 
     $estatus = 18;
@@ -60,24 +59,17 @@ class Dispersion_automatica extends CI_Controller
         $data = array();
          $datos = $this->ComisionesNeo_model->getLotesPagadosAutomatica($j);
         $final_data = array();                     
-         echo($j);
-         echo('<pre>');
     // 1
         for($i = 0; $i < COUNT($datos); $i++){
             $data[$i] = $this->ComisionesNeo_model->getGeneralStatusFromNeodata($datos[$i]['referencia'], $datos[$i]['idResidencial']);
               // echo('<pre>');
-
-               echo json_encode($datos[$i] );
-              echo('datos');
+            if(!empty($data)){   
+               echo json_encode($data[$i] );
               // echo('</pre>');
-              echo('<pre>');
-                echo json_encode($data[$i] );
-              echo('</pre>');
-              echo('data');
-            if(!empty($data)){
-                echo('pre!!!!!!!!!!!!!!!!!!!!!!!!!!');
-              // echo json_encode($datos[$i] );
-              // echo('</pre>');
+              
+                if($data[$i] != null){
+                  echo('111111111111111111' );
+                
                 if($data[$i]->Marca == 1){
                   echo('lollll!!!!!!!!!!!!!!!!!!!!!!l.!!!!');
                   if($data[$i]->Aplicado > ($datos[$i]['ultimo_pago']+100)){
@@ -85,24 +77,96 @@ class Dispersion_automatica extends CI_Controller
                        $d2 = $this->ComisionesNeo_model->getStatusNeodata($datos[$i]['id_lote'] )->result_array();   
                        echo json_encode($d2);
                        echo('<pre>');
+                       echo json_encode($datos[$i] );
                       $porcentajeLote = $this->Dispersion_automatica_model->porcentajeLotes($datos[$i]['id_lote'] );
+                      echo(COUNT($porcentajeLote)); 
+                      echo('<pre>');
+                      echo('////////////////////////////////////////////');
+                      echo('</pre>');
+                      foreach($porcentajeLote as $porcentaLote ){
+                        
+                        echo('<pre>');
+                        echo json_encode($porcentaLote);
+                        echo('cliente2');
+                        echo('</pre>');
+                        // for($i=0;$i<sizeof($id_comision);$i++){
+                        //   $var_n = str_replace($replace,"",$abono_nuevo[$i]);
+                          
+                        //   if($penalizacion == 1 && ($val_rol[$i] == 3 || $val_rol[$i] == 7 || $val_rol[$i] == 9)){
+                        //   // $respuesta = $this->Comisiones_model->insert_penalizacion_individual($id_comision[$i], $id_usuario[$i], $val_rol[$i], $var_n, $pago, $idCliente);
+                        //   }else{
+                        //     $respuesta = $this->Comisiones_model->insert_dispersion_individual($id_comision[$i], $id_usuario[$i], $var_n, $pago);
+                        //   }
+                        // }     
+                        //   for($i=0;$i<sizeof($id_comision);$i++){
+                        //   $var_n = str_replace($replace,"",$abono_nuevo[$i]);
+                          
+                        //   if($penalizacion == 1 && ($val_rol[$i] == 3 || $val_rol[$i] == 7 || $val_rol[$i] == 9)){
+                        //     $respuesta = $this->Comisiones_model->insert_penalizacion_individual($id_comision[$i], $id_usuario[$i], $val_rol[$i], $var_n, $pago, $idCliente);
+                        //   }else{
+                        //     $respuesta = $this->Comisiones_model->insert_dispersion_individual($id_comision[$i], $id_usuario[$i], $var_n, $pago);
+                        //   }
+                        // }
+
+
+                      }
+                      echo('////////////////////////////////////////////');
+                        echo('</pre>');
+                       echo('<pre>');
+                       echo('cliente');
+                       echo json_encode($porcentajeLote[0]['id_cliente'] );
+                       echo('</pre>');
+                       echo('<pre>');
+                       echo('plan');
+
+                       echo json_encode($porcentajeLote );
+                       echo('</pre>');
+                       //  ,$porcentajeLote[0]['plan_comision']
+                      // $this->Comisiones_model->porcentajes($cliente,$tipoVenta)
+                       echo('porcentaje');
+                       echo('</pre>');
+                       echo('<pre>');
+                      //  $dtosPorcentajes = $this->Comisiones_model->porcentajes($cliente,$tipoVenta)
+                       echo json_encode($data[$i] );
+                      $PorcentajeUsuarios = $this->Comisiones_model->porcentajes($porcentajeLote[0]['id_cliente'],$porcentajeLote[0]['plan_comision']);
                       echo('</pre>');    
                       echo('<pre>');
-                      echo json_encode($porcentajeLote);
-                      echo('porcentaje');
+                      echo('porcentaje1');
+                      echo json_encode($PorcentajeUsuarios);
+              
+                      echo('porcentaje2');
                       echo('</pre>');    
                        
+                
+                      
+
                       // $this->ComisionesNeo/getStatusNeodata
                       // getStatusNeodatagetStatusNeodata
                       //   $this->ComisionesNeo_model->UpdateBanderaPagoComision($datos[$i]['id_lote'], $data[$i]->Bonificado, $data[$i]->FechaAplicado, $data[$i]->fpoliza, $data[$i]->Aplicado);
                       // $contador ++;
                     }else{
+                      echo('<pre>');
+                      echo json_encode($datos[$i] );
+                     $porcentajeLote = $this->Dispersion_automatica_model->porcentajeLotes($datos[$i]['id_lote'] );
+                      echo('</pre>');
+
+                      $PorcentajeUsuarios = $this->Comisiones_model->porcentajes($porcentajeLote[0]['id_cliente'],$porcentajeLote[0]['plan_comision']);
+                      echo('</pre>');    
+                      echo('<pre>');
+                      echo('porcentaje3');
+                      echo json_encode($PorcentajeUsuarios);
+                      echo('porcentaje4');
+                      echo('</pre>');    
+
+
                //         $this->ComisionesNeo_model->UpdateBanderaPagoComisionNO($datos[$i]['id_lote']);
                     }
                 }else{
                     // $this->ComisionesNeo_model->UpdateBanderaPagoComisionNO($datos[$i]['id_lote']);
                 }
                 // $this->ComisionesNeo_model->UpdateBanderaPagoComisionNO($datos[$i]['id_lote']);
+              }
+            
               }else{
             }
         }
@@ -135,11 +199,13 @@ class Dispersion_automatica extends CI_Controller
     $lote_1 =  $this->input->post("idLote");
     $bonificacion =  $this->input->post("bonificacion");
     $responses = $this->Comisiones_model->validateDispersionCommissions($lote_1)->result_array();
+    
     if(sizeof($responses) > 0 && $responses[0]['bandera'] != 0) {
       $respuesta[0] = 2;
   } else {
   
           $disparador =  $this->input->post("id_disparador");
+
           if($disparador == '1' || $disparador == 1){
               $lote_1 =  $this->input->post("idLote");
               $pending_1 =  $this->input->post("pending");
@@ -244,6 +310,24 @@ class Dispersion_automatica extends CI_Controller
   }
   echo json_encode( $respuesta );
   }
+
+  function e(){
+    
+    
+    $lote_1 =  $this->input->post("idLote");
+    $pending_1 =  $this->input->post("pending");
+    $abono_nuevo = $this->input->post("abono_nuevo[]");
+    $rol = $this->input->post("rol[]");
+    $id_comision = $this->input->post("id_comision[]");
+    $pago = $this->input->post("pago_neo");
+    $suma = 0;
+    $replace = [",","$"];
+
+
+
+  } 
+
+
 
 }
 

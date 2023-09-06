@@ -22,7 +22,7 @@
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
                                 <i class="fas fa-expand fa-2x"></i>
@@ -63,7 +63,7 @@
                                                 <th>TOTAL</th>
                                                 <th>FECHA DE ESTATUS 9</th>
                                                 <th>USUARIO</th>
-                                                <th>FECHA APARTADO</th>
+                                                <th>FECHA DE APARTADO</th>
                                                 <th>REUBICACIÓN</th>
                                                 <th>FECHA DE REUBICACIÓN</th>
                                             </tr>
@@ -77,8 +77,6 @@
             </div>
         </div>
         <?php $this->load->view('template/footer_legend'); ?>
-    </div>
-    </div>
     </div>
 </body>
 <?php $this->load->view('template/footer');?>

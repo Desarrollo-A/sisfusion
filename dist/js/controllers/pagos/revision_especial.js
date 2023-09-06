@@ -4,43 +4,30 @@ function cleanCommentsremanente() {
     myCommentsList.innerHTML = '';
     myCommentsLote.innerHTML = '';
 }
-var totalLeon = 0;
-var totalQro = 0;
-var totalSlp = 0;
-var totalMerida = 0;
-var totalCdmx = 0;
-var totalCancun = 0;
+
 var tr;
 var tabla_especial2 ;
 var totaPen = 0;
 let titulos = [];
 
-//INICIO TABLA QUERETARO*************************************
 $('#tabla_especial thead tr:eq(0) th').each( function (i) {
     if(i != 0){
         var title = $(this).text();
         titulos.push(title);
-        $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>');
+        $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
         $('input', this).on('keyup change', function() {
             if (tabla_especial2.column(i).search() !== this.value) {
-                tabla_especial2
-                .column(i)
-                .search(this.value)
-                .draw();
-
+                tabla_especial2.column(i).search(this.value).draw();
                 var total = 0;
                 var index = tabla_especial2.rows({
                 selected: true,
                 search: 'applied'
             }).indexes();
-
                 var data = tabla_especial2.rows(index).data();
                 $.each(data, function(i, v) {
                     total += parseFloat(v.impuesto);
                 });
-
-                var to1 = formatMoney(total);
-                document.getElementById("totpagarremanente").textcontent = formatMoney(total);
+                document.getElementById("totpagarremanente").textcontent = formatMoney(numberTwoDecimal(total));
             }
         });
     }
@@ -55,15 +42,32 @@ $(document).ready(function getAssimilatedCommissions(){
         $.each(json.data, function(i, v) {
             total += parseFloat(v.impuesto);
         });
-        var to = formatMoney(total);
-        document.getElementById("totpagarremanente").textContent = '$' + to;
+        var to = formatMoney(numberTwoDecimal(total));
+        document.getElementById("totpagarremanente").textContent = to;
     });
 
     $("#tabla_especial").ready("hidden", false);
+
     tabla_especial2 = $("#tabla_especial").DataTable({
-        dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
-        width: 'auto',
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: "100%",
+        scrollX: true,
+        bAutoWidth:true,
         buttons: [{
+            extend: 'excelHtml5',
+            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+            className: 'btn buttons-excel',
+            title: 'Comisiones especiales',
+            exportOptions: {
+                columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14],
+                format: {
+                    header: function (d, columnIdx) {
+                        return ' ' + titulos[columnIdx-1] + ' ';
+                    }
+                }
+            },
+            },
+            {
             text: '<i class="fa fa-check"></i> MARCAR COMO PAGADA',
             action: function() {
                 if ($('input[name="idTQ[]"]:checked').length > 0) {
@@ -71,7 +75,6 @@ $(document).ready(function getAssimilatedCommissions(){
                     var idcomision = $(tabla_especial2.$('input[name="idTQ[]"]:checked')).map(function() {
                         return this.value;
                     }).get();
-                    
                     var com2 = new FormData();
                     com2.append("idcomision", idcomision); 
                     $.ajax({
@@ -122,56 +125,7 @@ $(document).ready(function getAssimilatedCommissions(){
             },
             attr: {
                 class: 'btn btn-azure',
-                style: 'position: relative; float: right;',
             }
-        },
-        {
-            extend: 'excelHtml5',
-            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-            className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
-            title: 'REMANENTE_CONTRALORÍA_SISTEMA_COMISIONES',
-            exportOptions: {
-                columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14],
-                format: {
-                    header:  function (d, columnIdx) {
-                        if(columnIdx == 0){
-                            return ' '+d +' ';
-                        }else if(columnIdx == 1){
-                            return 'ID PAGO';
-                        }else if(columnIdx == 2){
-                            return 'PROYECTO';
-                        }else if(columnIdx == 3){
-                            return 'CONDOMINIO';
-                        }else if(columnIdx == 4){
-                            return 'NOMBRE LOTE ';
-                        }else if(columnIdx == 5){
-                            return 'REFERENCIA';
-                        }else if(columnIdx == 6){
-                            return 'PRECIO LOTE';
-                        }else if(columnIdx == 7){
-                            return 'EMPRESA';
-                        }else if(columnIdx == 8){
-                            return 'TOT. COMISIÓN';
-                        }else if(columnIdx == 9){
-                            return 'P. CLIENTE';
-                        }else if(columnIdx == 10){
-                            return 'TOT. PAGAR';
-                        }else if(columnIdx == 11){
-                            return 'TIPO VENTA';
-                        }else if(columnIdx == 12){
-                            return 'COMISIONISTA';
-                        }else if(columnIdx == 13){
-                            return 'PUESTO';
-                        }else if(columnIdx == 14){
-                            return 'FECH. ENVÍO';
-                        }
-                        else if(columnIdx != 15 && columnIdx !=0){
-                            return ' '+titulos[columnIdx-1] +' ';
-                        }
-                    }
-                }
-            },
         }],
         pagingType: "full_numbers",
         fixedHeader: true,
@@ -185,110 +139,105 @@ $(document).ready(function getAssimilatedCommissions(){
         destroy: true,
         ordering: false,
         columns: [{
-            "width": "3%" },
+        },
         {
-            "width": "5%",
-            "data": function( d ){
+            data: function( d ){
                 return '<p class="m-0">'+d.id_pago_i+'</p>';
             }
         },
         {
-            "width": "5%",
-            "data": function( d ){
+            data: function( d ){
                 return '<p class="m-0">'+d.proyecto+'</p>';
             }
         },
         {
-            "width": "7%",
-            "data": function( d ){
+            data: function( d ){
                 return '<p class="m-0">'+d.condominio+'</p>';
             }
         },
         {
-            "width": "7%",
-            "data": function( d ){
+            data: function( d ){
                 return '<p class="m-0"><b>'+d.lote+'</b></p>';
             }
         },
         {
-            "width": "7%",
-            "data": function( d ){
+            data: function( d ){
                 return '<p class="m-0">'+d.referencia+'</p>';
             }
         },
         {
-            "width": "7%",
-            "data": function( d ){
-                return '<p class="m-0">$'+formatMoney(d.precio_lote)+'</p>';
+            data: function( d ){
+                if(d.precio_lote == "" || d.precio_lote == null)
+                    return '<p class="m-0"> $0.00</p>'
+                else
+                    return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.precio_lote))+'</p>';
             }
         },
         {
-            "width": "5%",
-            "data": function( d ){
+            data: function( d ){
                 return '<p class="m-0"><b>'+d.empresa+'</p>';
             }
         },
         {
-            "width": "7%",
-            "data": function( d ){
-                return '<p class="m-0">$'+formatMoney(d.comision_total)+'</p>';
+            data: function( d ){
+                if(d.comision_total == "" || d.comision_total == null)
+                    return '<p class="m-0"> $0.00</p>'
+                else
+                    return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.comision_total))+'</p>';
             }
         },
         {
-            "width": "5%",
-            "data": function( d ){
-                return '<p class="m-0">$'+formatMoney(d.pago_neodata)+'</p>';
-            }
-        },
-
-        {
-            "width": "7%",
-            "data": function( d ){
-                return '<p class="m-0"><b>$'+formatMoney(d.impuesto)+'</b></p>';
+            data: function( d ){
+                if(d.pago_neodata == "" || d.pago_neodata == null)
+                    return '<p class="m-0"> $0.00</p>'
+                else
+                    return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.pago_neodata))+'</p>';
             }
         },
         {
-            "width": "7%",
-            "data": function( d ){
+            data: function( d ){
+                if(d.impuesto == "" || d.impuesto == null)
+                    return '<p class="m-0"> $0.00</p>'
+                else
+                    return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.impuesto))+'</b></p>';
+            }
+        },
+        {
+            data: function( d ){
+                let porcentajeDecimal = numberTwoDecimal(d.porcentaje_decimal);
+                let porcentajeAbono = numberTwoDecimal(d.porcentaje_abono); 
                 if(d.lugar_prospeccion == 6){
-                    return '<p class="m-0">COMISIÓN + MKTD <br><b> ('+d.porcentaje_decimal+'% de '+d.porcentaje_abono+'%)</b></p>';
+                    return '<p class="m-0">COMISIÓN + MKTD <br><b> ('+porcentajeDecimal+'% de '+porcentajeAbono+'%)</b></p>';
                 }
                 else{
-                    return '<p class="m-0">COMISIÓN <br><b> ('+d.porcentaje_decimal+'% de '+d.porcentaje_abono+'%)</b></p>';
+                    return '<p class="m-0">COMISIÓN <br><b> ('+porcentajeDecimal+'% de '+porcentajeAbono+'%)</b></p>';
                 }
             
             }
         },
         {
-            "width": "9%",
-            "data": function( d ){
+            data: function( d ){
                 return '<p class="m-0"><b>'+d.usuario+'</b></i></p>';
             }
         },
         {
-            "width": "7%",
-            "data": function( d ){
+            data: function( d ){
                 return '<p class="m-0"><i> '+d.puesto+'</i></p>';
             }
         },
         {
-            "width": "7%",
-            "data": function( d ){
+            data: function( d ){
                 var BtnStats1;
-                BtnStats1 =  '<p class="m-0">'+d.fecha_creacion+'</p>';
+                BtnStats1 =  '<p class="m-0">'+d.fecha_creacion.split('.')[0]+'</p>';
                 return BtnStats1;
-
             }
         },
         {
-            "width": "8%",
             "orderable": false,
-            "data": function( data ){
+            data: function( data ){
                 var BtnStats;
-                
                 BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_remanente" title="Detalles">' +'<i class="fas fa-info"></i></button>'+
-
-                '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.id_pago_i+'" data-code="'+data.cbbtton+'" ' + 'class="btn-data btn-warning cambiar_estatus" title="Pausar solicitud">' + '<i class="fas fa-ban"></i></button>';
+                '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.id_pago_i+'" data-code="'+data.cbbtton+'" ' + 'class="btn-data btn-warning cambiar_estatus" title="Pausar la solicitud">' + '<i class="fas fa-ban"></i></button>';
                 return '<div class="d-flex justify-center">'+BtnStats+'</div>';
             }
         }],
@@ -301,7 +250,7 @@ $(document).ready(function getAssimilatedCommissions(){
             render: function (d, type, full, meta){
                 if(full.estatus == 4){
                     if(full.id_comision){
-                        return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
+                        return '<input type="checkbox" name="idTQ[]" class="individualCheck" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
                     }
                     else{
                         return '';
@@ -320,7 +269,7 @@ $(document).ready(function getAssimilatedCommissions(){
             "url": general_base_url + "Pagos/getDatosEspecialRContraloria/",
             "type": "POST",
             cache: false,
-            "data": function( d ){
+            data: function( d ){
             }
         },
     });
@@ -328,17 +277,33 @@ $(document).ready(function getAssimilatedCommissions(){
     $("#tabla_especial tbody").on("click", ".consultar_logs_remanente", function(e){
         e.preventDefault();
         e.stopImmediatePropagation();
-
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
-
         $("#seeInformationModalremanente").modal();
-        $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
+        $("#nameLote").append('<p><h5 class="text-center">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $.getJSON("getComments/"+id_pago).done( function( data ){
+            $('#spiner-loader').addClass('hide');
             $.each( data, function(i, v){
-                $("#comments-list-remanente").append('<div class="col-lg-12"><p><i style="color:gray;">'+v.comentario+'</i><br><b style="color:#3982C0">'+v.fecha_movimiento+'</b><b style="color:gray;"> - '+v.nombre_usuario+'</b></p></div>');
+                $("#comments-list-remanente").append('<li>\n' +
+                '  <div class="container-fluid">\n' +
+                '    <div class="row">\n' +
+                '      <div class="col-md-6">\n' +
+                '        <a><b> ' +v.comentario.toUpperCase()+ '</b></a><br>\n' +
+                '      </div>\n' +
+                '      <div class="float-end text-right">\n' +
+                '        <a>' + v.fecha_movimiento.split(".")[0] + '</a>\n' +
+                '      </div>\n' +
+                '      <div class="col-md-12">\n' +
+                '        <p class="m-0"><small>Usuario: </small><b> ' + v.nombre_usuario + '</b></p>\n'+
+                '      </div>\n' +
+                '    <h6>\n' +
+                '    </h6>\n' +
+                '    </div>\n' +
+                '  </div>\n' +
+                '</li>');
             });
         });
+        $('#spiner-loader').removeClass('hide');
     });
 
     $('#tabla_especial').on('click', 'input', function() {
@@ -353,51 +318,50 @@ $(document).ready(function getAssimilatedCommissions(){
             totaPen -= parseFloat(row.pa);
             row.pa = 0;
         }
-
-        $("#totpagarPen").html(formatMoney(totaPen));
+        $("#totpagarPen").html(formatMoney(numberTwoDecimal(totaPen)));
     });
 
     $("#tabla_especial tbody").on("click", ".cambiar_estatus", function(){
         var tr = $(this).closest('tr');
         var row = tabla_especial2.row( tr );
         id_pago_i = $(this).val();
-
         $("#modal_nuevas .modal-body").html("");
-        $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><p>¿Está seguro de pausar la comisión de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b> <i>'+row.data().usuario+'</i>?</p></div></div>');
-        $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><input type="hidden" name="value_pago" value="1"><input type="hidden" name="estatus" value="6"><input type="text" class="form-control observaciones" name="observaciones" required placeholder="Describe mótivo por el cual se va activar nuevamente la solicitud"></input></div></div>');
-        $("#modal_nuevas .modal-body").append('<input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'">');
-        $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-md-6"></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="PAUSAR"></div><div class="col-md-3"><button type="button" class="btn btn-danger" data-dismiss="modal">CANCELAR</button></div></div>');
+        $("#modal_nuevas .modal-body").append(
+            '<div class="row">'+
+                '<div class="col-lg-12">'+
+                    '<p>¿Está seguro de pausar la comisión de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b>'+
+                    '<i>'+row.data().usuario+'</i>?</p>'+
+                '</div>'+
+            '</div>'+
+            '<div class="row">'+
+                '<div class="col-lg-12">'+
+                    '<input type="hidden" name="value_pago" value="1">'+
+                    '<input type="hidden" name="estatus" value="6">'+
+                    '<input type="text" class="form-control input-gral observaciones" name="observaciones" required placeholder="Describe mótivo por el cual se va activar nuevamente la solicitud"></input>'+
+                '</div>'+
+            '</div>'+
+            '<input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'">'+
+            '<div class="row">'+
+            '<div class="d-flex justify-end">'+
+                '<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CANCELAR</button>'+
+                '<button type="submit" class="btn btn-primary" value="PAUSAR">PAUSAR</button>'+
+        '</div>');
         $("#modal_nuevas").modal();
     });
 });
-//FIN TABLA  ****************************************************************************************
 
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     $($.fn.dataTable.tables(true)).DataTable()
     .columns.adjust();
 });
 
-$(window).resize(function(){
-    tabla_especial2.columns.adjust();
-});
-
-function formatMoney( n ) {
-    var c = isNaN(c = Math.abs(c)) ? 2 : c,
-    d = d == undefined ? "." : d,
-    t = t == undefined ? "," : t,
-    s = n < 0 ? "-" : "",
-    i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
-    j = (j = i.length) > 3 ? j % 3 : 0;
-    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
-};
-
 //Función para pausar la solicitud
 $("#form_interes").submit( function(e) {
+    $('#spiner-loader').removeClass('hide');
     e.preventDefault();
 }).validate({
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
-        console.log(data);
         data.append("id_pago_i", id_pago_i);
         $.ajax({
             url: general_base_url + "Pagos/despausar_solicitud/",
@@ -414,28 +378,67 @@ $("#form_interes").submit( function(e) {
                     alerts.showNotification("top", "right", "Se ha pausado la comisión exitosamente", "success");
                     setTimeout(function() {
                         tabla_especial2.ajax.reload();
-                        // tabla_otras2.ajax.reload();
-                    }, 3000);
+                        $('#spiner-loader').addClass('hide');
+                    }, 1000);
                 }else{
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
-
+                    $('#spiner-loader').addClass('hide');
                 }
             },error: function( ){
                 alert("ERROR EN EL SISTEMA");
             }
         });
+        $("#totpagarPen").html(formatMoney(0));
     }
 });
 
+// Selección de CheckBox
+$(document).on("click", ".individualCheck", function() {
+    totaPen = 0;
+    tabla_especial2.$('input[type="checkbox"]').each(function () {
+        let totalChecados = tabla_especial2.$('input[type="checkbox"]:checked') ;
+        let totalCheckbox = tabla_especial2.$('input[type="checkbox"]');
+        if(this.checked){
+            tr = this.closest('tr');
+            row = tabla_especial2.row(tr).data();
+            totaPen += parseFloat(row.impuesto); 
+        }
+        // Al marcar todos los CheckBox Marca CB total
+        if( totalChecados.length == totalCheckbox.length )
+            $("#all").prop("checked", true);
+        else 
+            $("#all").prop("checked", false); // si se desmarca un CB se desmarca CB total
+    });
+    $("#totpagarPen").html(formatMoney(numberTwoDecimal(totaPen)));
+});
+// Función de selección total
 function selectAll(e) {
     tota2 = 0;
-    $(tabla_especial2.$('input[type="checkbox"]')).each(function (i, v) {
-        if (!$(this).prop("checked")) {
-            $(this).prop("checked", true);
-            tota2 += parseFloat(tabla_especial2.row($(this).closest('tr')).data().impuesto);
-        } else {
-            $(this).prop("checked", false);
-        }
-        $("#totpagarPen").html(formatMoney(tota2));
-    });
+    if(e.checked == true){
+        $(tabla_especial2.$('input[type="checkbox"]')).each(function (i, v) {
+            tr = this.closest('tr');
+            row = tabla_especial2.row(tr).data();
+            tota2 += parseFloat(row.impuesto);
+            if(v.checked == false){
+                $(v).prop("checked", true);
+            }
+        }); 
+        $("#totpagarPen").html(formatMoney(numberTwoDecimal(tota2)));
+    }
+    if(e.checked == false){
+        $(tabla_especial2.$('input[type="checkbox"]')).each(function (i, v) {
+            if(v.checked == true){
+                $(v).prop("checked", false);
+            }
+        }); 
+        $("#totpagarPen").html(formatMoney(0));
+    }
 }
+
+$('body').tooltip({
+    selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
+    trigger: 'hover',
+    container: 'body'
+}).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
+    $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
+});

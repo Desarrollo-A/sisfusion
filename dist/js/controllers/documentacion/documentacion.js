@@ -1,7 +1,9 @@
 $('[data-toggle="tooltip"]').tooltip();
 
 const movimientosPermitidosContrato = [36, 6, 23, 76, 83, 95, 97, 112];
+const rolesPermitidosContratoEspecial = [8];
 const rolesPermitidosContrato = [15];
+const usuariosPermitidosContratoEspecial = [2762, 2747];
 const movimientosPermitidosContratoFirmado = [45];
 const movimientosPermitidosCorrida = [35, 22, 62, 75, 94, 106];
 const rolesPermitidosContraloria = [17, 70];
@@ -10,6 +12,7 @@ const rolesPermitidosCartaDomicilio = [5, 2, 6];
 const movimientosPermitidosEstatus2 = [31, 85, 20, 63, 73, 82, 92, 96, 99, 102, 104, 107, 108, 109, 111];
 const rolesPermitidosEstatus2 = [7, 9, 3, 2];
 const rolesPermitidosEstatus2AsesorInactivo = [6];
+
 const AccionDoc = {
     DOC_NO_CARGADO: 1, // NO HAY DOCUMENTO CARGADO
     DOC_CARGADO: 2, // LA RAMA TIENE UN DOCUMENTO CARGADO
@@ -165,17 +168,22 @@ function cargarTabla(idLote, idCliente = '') {
             }
         });
     });
+
+    const url = ((id_rol_general == 8 || includesArray(usuariosPermitidosContratoEspecial, id_usuario_general)) && funcionVista == 'replaceDocumentView') 
+    ? `${general_base_url}registroCliente/expedientesReplace/${idLote}`
+    : `${general_base_url}registroCliente/expedientesWS/${idLote}/${idCliente}`;
+
     documentacionLoteTabla = $('#tableDoct').DataTable({
         destroy: true,
         ajax: {
-            url: `${general_base_url}registroCliente/expedientesWS/${idLote}/${idCliente}`,
+            url: url,
             dataSrc: ""
         },
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
         ordering: false,
-        bAutoWidth: true,
+        bAutoWidth:true,
         pageLength: 20,
         buttons: [
             {
@@ -235,6 +243,21 @@ function cargarTabla(idLote, idCliente = '') {
                             : crearBotonAccion(AccionDoc.DOC_CARGADO, data);
                         return `<div class="d-flex justify-center">${buttonMain}</div>`;
                     }
+
+                    if (data.tipo_doc == TipoDoc.CONTRATO && (includesArray(rolesPermitidosContratoEspecial, id_rol_general) || includesArray(usuariosPermitidosContratoEspecial, id_usuario_general))) {
+                        if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
+                            buttonMain = crearBotonAccion(AccionDoc.SUBIR_DOC, data)
+
+                            return `<div class="d-flex justify-center">${buttonMain}</div>`;
+                        }
+
+                        // LA RAMA TIENE UN DOCUMENTO CARGADO
+                        buttonMain = crearBotonAccion(AccionDoc.DOC_CARGADO, data); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
+                        buttonDelete = crearBotonAccion(AccionDoc.ELIMINAR_DOC, data);
+
+                        return `<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`;
+                    }
+
                     if (data.tipo_doc == TipoDoc.CONTRATO) { // CONTRATO
                         if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
                             buttonMain = (includesArray(movimientosPermitidosContrato, data.idMovimiento) && includesArray(rolesPermitidosContrato, id_rol_general))
@@ -334,8 +357,19 @@ function cargarTabla(idLote, idCliente = '') {
                     if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
                         buttonMain = (
                             includesArray(movimientosPermitidosEstatus2, parseInt(data.idMovimiento)) &&
-                            includesArray(rolesPermitidosEstatus2, parseInt(id_rol_general)) &&
-                            parseInt(data.id_asesor) === parseInt(id_usuario_general)
+                            (
+                                (
+                                    includesArray(rolesPermitidosEstatus2, parseInt(id_rol_general)) &&
+                                    parseInt(data.estatusAsesor) === 1
+                                ) ||
+                                (
+                                    parseInt(data.id_asesor) === parseInt(id_usuario_general) ||
+                                    (
+                                        includesArray(rolesPermitidosEstatus2AsesorInactivo, id_rol_general) &&
+                                        parseInt(data.estatusAsesor) !== 1
+                                    )
+                                )
+                            )
                         )
                             // ESTÁ EN ESTATUS 2 Y ES ASESOR, COORDINADOR, GERENTE O SUBDIRECTOR EL QUE CONSULTA, SE VEA A MONSTRAR ENABLED EL BOTÓN PARA CARGAR EL ARCHIVO
                             ? crearBotonAccion(AccionDoc.SUBIR_DOC, data)
@@ -347,9 +381,20 @@ function cargarTabla(idLote, idCliente = '') {
                     buttonMain = crearBotonAccion(AccionDoc.DOC_CARGADO, data); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
                     // ESTÁ EN ESTATUS 2 Y ES ASESOR, COORDINADOR, GERENTE O SUBDIRECTOR EL QUE CONSULTA, SE VEA A MONSTRAR EL BOTÓN PARA ELIMINAR EL ARCHIVO
                     if (
-                        movimientosPermitidosEstatus2.includes(parseInt(data.idMovimiento)) &&
-                        rolesPermitidosEstatus2.includes(parseInt(id_rol_general)) &&
-                        parseInt(data.id_asesor) === parseInt(id_usuario_general)
+                        includesArray(movimientosPermitidosEstatus2, parseInt(data.idMovimiento)) &&
+                        (
+                            (
+                                includesArray(rolesPermitidosEstatus2, parseInt(id_rol_general)) &&
+                                parseInt(data.estatusAsesor) === 1
+                            ) ||
+                            (
+                                parseInt(data.id_asesor) === parseInt(id_usuario_general) ||
+                                (
+                                    includesArray(rolesPermitidosEstatus2AsesorInactivo, id_rol_general) &&
+                                    parseInt(data.estatusAsesor) !== 1
+                                )
+                            )
+                        )
                     ) {
                         buttonDelete = crearBotonAccion(AccionDoc.ELIMINAR_DOC, data);
                     }
@@ -388,13 +433,19 @@ $(document).on('click', '.verDocumento', function () {
         const urlProspecto =  ($itself.attr('data-lp') == 6) ? 'printProspectInfoMktd' : 'printProspectInfo';
         pathUrl = `${general_base_url}clientes/${urlProspecto}/`+$itself.attr('data-idProspeccion');
     }
-    Shadowbox.open({
-        content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="${pathUrl}"></iframe></div>`,
-        player: "html",
-        title: `Visualizando archivo: ${$itself.attr('data-expediente')}`,
-        width: 985,
-        height: 660
-    });
+
+    if ( screen.width > 480 && screen.width < 800 ){
+        window.location.href = `${pathUrl}`;
+    }
+    else{
+        Shadowbox.open({
+            content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="${pathUrl}"></iframe></div>`,
+            player: "html",
+            title: `Visualizando archivo: ${$itself.attr('data-expediente')}`,
+            width: 985,
+            height: 660
+        });
+    }
 });
 
 $(document).on("click", ".addRemoveFile", function (e) {
@@ -472,7 +523,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
         data.append("accion", accion);
         data.append('tituloDocumento', $('#tituloDocumento').val());
         $.ajax({
-            url: "subirArchivo",
+            url: `${general_base_url}Documentacion/subirArchivo`,
             data: data,
             cache: false,
             contentType: false,
@@ -505,7 +556,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
         data.append("idDocumento", $("#idDocumento").val());
         data.append("tipoDocumento", parseInt($("#tipoDocumento").val()));
         $.ajax({
-            url: "eliminarArchivo",
+            url: `${general_base_url}Documentacion/eliminarArchivo`,
             data: data,
             cache: false,
             contentType: false,

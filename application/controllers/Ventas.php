@@ -24,8 +24,7 @@ class Ventas extends CI_Controller {
 
 	public function index() {
         $id_rol = $this->session->userdata('id_rol');
-		if($id_rol == FALSE || ($id_rol != '1' && $id_rol != '2' && $id_rol != '3' && $id_rol != '4' && $id_rol != '5'
-                && $id_rol != '7' && $id_rol != '9' && $id_rol != '6' && $id_rol != '18' && $id_rol != '63')) {
+		if($id_rol == FALSE || ($id_rol != '1' && $id_rol != '2' && $id_rol != '3' && $id_rol != '4' && $id_rol != '5' && $id_rol != '7' && $id_rol != '9' && $id_rol != '6' && $id_rol != '18' && $id_rol != '63')) {
 			redirect(base_url().'login');
 		}
         switch ($id_rol) {
@@ -114,7 +113,6 @@ class Ventas extends CI_Controller {
     }
 
     public function statusOffice(){
-        $a = 0;
         if (isset($_POST) && !empty($_POST)) {
             $direccion = $this->input->post("idDireccionS");
             $status = $this->input->post("status");

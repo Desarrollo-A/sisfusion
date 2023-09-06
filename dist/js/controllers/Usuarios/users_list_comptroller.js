@@ -253,9 +253,7 @@ $("#editUserForm").on('submit', function(e){
         beforeSend: function(){
         },
         success: function(data) {
-            data = JSON.parse(data);
-            if (data.respuesta == 1) {
-                all_users_datatable.ajax.reload();
+            if (data == 1) {
                 $('#editUserModal').modal("hide");
                 alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
             } else if (data.respuesta == 0) {

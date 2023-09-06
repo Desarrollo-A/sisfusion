@@ -237,25 +237,62 @@ class Usuarios extends CI_Controller
             $resultadoCH = $res->resultado;
         }
         else {
-            $arrayChecar = array (
-                'id_rol' => $_POST['member_type'],
-                'id_sede' => $_POST['headquarter'],
-                'id_lider' => $_POST['leader']
-            );
-            $validacion = validateUserVts($arrayChecar);
-            if($validacion['respuesta']==1){
-                //continuar con la lógica
-            }else{
-                echo json_encode(array("result" => false,
-                    "respuesta" => 0,
-                    "message" => $validacion['mensaje']));
+
+            if($this->session->userdata('id_rol') == 4 || $this->session->userdata('id_rol') == 5 || $this->session->userdata('id_rol') == 6){
+                $arrayChecar = array (
+                    'id_rol' => $_POST['member_type'],
+                    'id_sede' => $_POST['headquarter'],
+                    'id_lider' => $_POST['leader']
+                );
+                $validacion = validateUserVts($arrayChecar);
+
+
+                if($validacion['respuesta']==1){
+                    //continuar con la lógica
+                }
+                else{
+                    switch ($this->session->userdata('id_rol')){
+                        case 4:
+                        case 5:
+                        case 6:
+                            $usr = $this->Usuarios_modelo->getUserInformation($_POST['id_usuario']);
+                            $usr = $usr[0];
+                            $rolActual = $usr['id_rol'];
+                            $sedeActual = $usr['id_sede'];
+                            $liderActual = $usr['id_lider'];
+//                            print_r($_POST['member_type']);
+//                            echo '<br>'.$rolActual;
+//                            echo '<br><br>';
+//                            print_r($_POST['headquarter']);
+//                            echo '<br>'.$sedeActual;
+//                            echo '<br><br>';
+//                            print_r($_POST['leader']);
+//                            echo '<br>'.$liderActual;
+//                            echo '<br><br>';
+//                            exit;
+                            if($_POST['member_type'] != $rolActual || $_POST['headquarter'] != $sedeActual || $_POST['leader'] != $liderActual){
+
+                                echo json_encode(array("result" => false,
+                                    "respuesta" => $validacion['respuesta'],
+                                    "message" => $validacion['mensaje']));
+                                exit;
+                            }else{
+//                                print_r('sigue lógica normal');
+//                                exit;
+                            }
+
+                            break;
+                    }
+
+                }
             }
+
             $sedeCH = 0;
             $sucursal = 0;
             if ($_POST['member_type'] == 3 || $_POST['member_type'] == 7 || $_POST['member_type'] == 9 || $_POST['member_type'] == 2) {
                 $usersCH = 1;
                 #actualizar los registros en caso de que haya modificado de lider o tipo de miembro
-                /* 
+                /*
                 SEDES CAPITAL HUMANO
                 9 -- cancun
                 4 ---cdmx
@@ -346,9 +383,9 @@ class Usuarios extends CI_Controller
 
         if ($usersCH == 0) {
             $response = $this->Usuarios_modelo->updateUser($data, $this->input->post("id_usuario"));
+            $mensajeLeyenda = ($response == 1) ? 'Usuario Actualizado correctamente' : 'No se pudo actualizar el usuario';
         } else {
             $result = json_decode($resultadoCH);
-            // $result = json_decode(1);
             if ($result == 1) {
                 $response = $this->Usuarios_modelo->updateUser($data, $this->input->post("id_usuario"));
                 $mensajeLeyenda = 'Usuario Actualizado correctamente';
@@ -360,7 +397,7 @@ class Usuarios extends CI_Controller
 
         $respuestaView = array(
             'respuesta' => $response,
-            'mensaje' =>$mensajeLeyenda
+            'message' => $mensajeLeyenda
         );
         echo json_encode($respuestaView);
     }
@@ -376,7 +413,6 @@ class Usuarios extends CI_Controller
     public function validateSession()
     {
         if ($this->session->userdata('id_usuario') == "" || $this->session->userdata('id_rol') == "") {
-            //echo "<script>console.log('No hay sesión iniciada');</script>";
             redirect(base_url() . "index.php/login");
         }
     }
@@ -486,8 +522,6 @@ class Usuarios extends CI_Controller
     /**---------------------------------------- */
     public function getChangeLogUsers($id_usuario)
     {
-        /*print_r($id_usuario);
-        exit;*/
         $data = $this->Usuarios_modelo->getChangeLogUsers($id_usuario);
         echo json_encode($data);
     }
@@ -561,19 +595,19 @@ class Usuarios extends CI_Controller
         $datosCH['dcontrato']['idcoordinador'] = $coordAndGerente->id_coordinador;
         $datosCH['dcontrato']['idgerente'] = $coordAndGerente->id_gerente;
 
-        $resultado = $this->Usuarios_modelo->ServicePostCH($url, $datosCH);
-        $r = json_decode($resultado);
-        if (isset($r->resultado)) {
-            if ($r->resultado == 1) {
-                return json_decode($r->resultado);
-            } else {
-                return json_decode(0);
-            }
-        } else {
-            return json_decode(0);
-        }
+//        $resultado = $this->Usuarios_modelo->ServicePostCH($url, $datosCH);
+//        $r = json_decode($resultado);
+//        if (isset($r->resultado)) {
+//            if ($r->resultado == 1) {
+//                return json_decode($r->resultado);
+//            } else {
+//                return json_decode(0);
+//            }
+//        } else {
+//            return json_decode(0);
+//        }
 
-        // return json_decode(1);
+        return json_decode(1);
     }
 
     private function actualizarProspectoPorRol($idOwner, $rolNuevo, $rolActual, $idLiderNuevo, $sede): object

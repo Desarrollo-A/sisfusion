@@ -3,8 +3,7 @@
 <body class="">
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
-
-        <style type="text/css">        
+        <style>        
             #modal_nuevas{
                 z-index: 1041!important;
             }
@@ -13,7 +12,7 @@
                 z-index: 1041!important;
             }
         </style>
-        <!-- MODALS -->
+
         <div class="modal fade modal-alertas" id="autorizar-modal" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -64,7 +63,6 @@
                 </div>
             </div>
         </div>
-        <!-- END Modals -->
 
         <div class="content boxContent">
             <div class="container-fluid">

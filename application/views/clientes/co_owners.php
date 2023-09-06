@@ -6,11 +6,6 @@
         .label-inf {
             color: #333;
         }
-        /*.modal-body-scroll{
-            height: 100px;
-            width: 100%;
-            overflow-y: auto;
-        }*/
         select:invalid {
             border: 2px dashed red;
         }

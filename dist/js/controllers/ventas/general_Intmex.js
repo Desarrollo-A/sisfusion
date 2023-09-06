@@ -362,7 +362,6 @@ $("#form_refresh").submit( function(e) {
 }).validate({
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
-        console.log(data);
         data.append("id_pago_i", id_pago_i);
         $.ajax({
             url: general_base_url + "Comisiones/refresh_solicitud/",
@@ -458,7 +457,6 @@ $("#form_multiples").submit( function(e) {
 }).validate({
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
-        console.log(data);
         $.ajax({
             url: general_base_url + "Comisiones/IntMexPagadosByProyect",
             data: data,

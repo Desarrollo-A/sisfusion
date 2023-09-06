@@ -2295,10 +2295,6 @@ function saveNotaria(){
         for ($i = 0; $i < count($data); $i++) {
             $a = 0;
             if ( $data[$i]['tiempo'] != 0 && $data[$i]['tiempo'] != null){
-              //  $startDate = $data[$i]['fecha_creacion'];
-               // $endDate = ( $i+1 < count($data) ) ? $data[$i+1]['fecha_creacion'] : date('Y-m-d h:i:s');
-
-                //$result = $this->getWorkingDays($startDate, $endDate, $data[$i]['tiempo']);
                 if($data[$i]['dias_vencimiento'] >= $data[$i]['dias']){
                     $data[$i]['atrasado'] = "EN TIEMPO";
                     $data[$i]['diferencia'] = $data[$i]['tiempo'];
@@ -2337,14 +2333,14 @@ function saveNotaria(){
         $this->load->view("postventa/status3revision");
     }
 
-     function getStatus3VP(){
-         $data = $this->Postventa_model->getStatus3VP();
-         if($data != null) {
-             echo json_encode($data);
-         } else {
-             echo json_encode(array());
-         }
-     }
+    function getStatus3VP(){
+        $data = $this->Postventa_model->getStatus3VP();
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
 
     public function rechazarStatus(){
         $idLote=$this->input->post('idLote');

@@ -76,9 +76,7 @@
                 <div class="modal-content">
                     <div class="modal-header"></div>
                     <form method="post" id="form_multiples">
-                        
                         <div class="modal-body">
-
                         </div>
                         <div class="modal-footer"></div>
                     </form>
@@ -120,7 +118,7 @@
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
                                 <i class="fas fa-wallet fa-2x"></i>
@@ -133,7 +131,7 @@
                                 <div class="toolbar">
                                     <div class="container-fluid p-0">
                                         <div class="row">
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                 <div class="form-group d-flex justify-center align-center">
                                                     <h4 class="title-tot center-align m-0">Disponible:</h4>
                                                     <p class="input-tot pl-1" name="totpagarremanente" id="totpagarremanente">$0.00</p>
@@ -150,14 +148,14 @@
                                             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                                 <div class="form-group">
                                                     <label class="control-label" for="filtro33">Puesto</label>
-                                                    <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" required>
+                                                    <select name="filtro33" id="filtro33" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" required>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                                 <div class="form-group">
                                                     <label class="control-label" for="filtro44">Usuario</label>
-                                                    <select class="selectpicker select-gral" id="filtro44" name="filtro44[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                                    <select class="selectpicker select-gral m-0" id="filtro44" name="filtro44[]" data-style="btn " data-show-subtext="true" data-container="body" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 d-flex align-end">
@@ -174,7 +172,7 @@
                                             <thead>
                                                 <tr>
                                                     <th></th>
-                                                    <th>ID</th>
+                                                    <th>ID PAGO</th>
                                                     <th>PROYECTO</th>
                                                     <th>CONDOMINIO</th>
                                                     <th>LOTE</th>
@@ -183,13 +181,13 @@
                                                     <th>EMPRESA</th>
                                                     <th>TOTAL DE LA COMPRA</th>
                                                     <th>PAGO DEL CLIENTE</th>
-                                                    <th>A PAGAR</th>
+                                                    <th>TOTAL A PAGAR</th>
                                                     <th>TIPO DE VENTA</th>
                                                     <th>USUARIO</th>
                                                     <th>RFC</th>
                                                     <th>PUESTO</th>
                                                     <th>FECHA DE ENVÍO</th>
-                                                    <th>MÁS</th>
+                                                    <th>ACCIONES</th>
                                                 </tr>
                                             </thead>
                                         </table>
@@ -203,7 +201,6 @@
         </div>
         <?php $this->load->view('template/footer_legend');?>
     </div>
-    </div><!--main-panel close-->
     <?php $this->load->view('template/footer');?>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_remanente_intmex.js"></script>
 </body>

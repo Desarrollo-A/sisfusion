@@ -83,7 +83,6 @@ $("#tabla_ingresar_5").ready(function () {
             }
         },
         pageLength: 11,
-        bAutoWidth: true,
         fixedColumns: true,
         ordering: false,
         scrollX: true,
@@ -189,8 +188,7 @@ $("#tabla_ingresar_5").ready(function () {
                             (data.idStatusContratacion == 2 && data.idMovimiento == 4) ||
                             (data.idStatusContratacion == 2 && data.idMovimiento == 84) ||
                             (data.idStatusContratacion == 2 && data.idMovimiento == 101) ||
-                            (data.idStatusContratacion == 2 && data.idMovimiento == 103)
-                          ) {
+                            (data.idStatusContratacion == 2 && data.idMovimiento == 103)) {
 
                             cntActions = 
                             '<button href="#" data-idLote="' +

@@ -189,15 +189,15 @@ function fillTableInventario(sede) {
 				},
 				{
 					data: function (d) {
-						if (d.id_cliente_reubicacion == 0)
-							return `<span class="label lbl-oceanGreen"">REUBICADO</span>`;
+						if (d.id_cliente_reubicacion != 0 && d.id_cliente_reubicacion != null)
+							return `<span class="label lbl-oceanGreen">REUBICADO</span>`;
 						else
 							return `<span class="label lbl-pink">NO APLICA</span>`;
 					}
 				},
 				{
 					data: function (d) {
-						if (d.id_cliente_reubicacion == 0)
+						if (d.id_cliente_reubicacion != 0 && d.id_cliente_reubicacion != null)
 							return d.fechaAlta;
 						else
 							return 'NO APLICA';

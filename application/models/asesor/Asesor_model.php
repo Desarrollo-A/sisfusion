@@ -142,7 +142,8 @@ class Asesor_model extends CI_Model {
     { // DATA FROM DEPOSITO_SERIEDAD_CONSULTA
         ini_set('max_execution_time', 300);
         set_time_limit(300);
-        $query = $this->db->query("SELECT '2' qry, '2' dsType, cl.idCliente as id_cliente, cl.idAsesor id_asesor, '0' id_coordinador,cl.idGerente id_gerente, '0' id_sede, CONCAT(cl.primerNombre, ' ', cl.segundoNombre) nombre, cl.apellidoPaterno apellido_paterno, cl.correo, cl.telefono2, 
+        $query = $this->db->query("SELECT '2' qry, '2' dsType, cl.idCliente as id_cliente, cl.idAsesor id_asesor, '0' id_coordinador,cl.idGerente id_gerente, '0' id_sede, CONCAT(cl.primerNombre, ' ', cl.segundoNombre) nombre, cl.apellidoPaterno apellido_paterno, cl.correo, cl.telefono2,
+        UPPER(CONCAT(CONCAT(cl.primerNombre, ' ', cl.segundoNombre), ' ', cl.apellidoPaterno, ' ', cl.apellidoMaterno)) nombreCliente,
         cl.apellidoMaterno apellido_materno, cl.status ,cl.idLote, convert(varchar,cl.fechaApartado,20) as fechaApartado, convert(varchar,cl.fechaVencimiento,20) as fechaVencimiento, cl.usuario, cond.idCondominio, cl.fechaApartado fecha_creacion, 
         cl.creado_por, cl.fechaApartado fecha_modificacion, cl.usuario modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial,
         cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, convert(varchar,lotes.fechaVenc,20) as fechaVenc, lotes.modificado, lotes.observacionContratoUrgente as vl, lotes.idStatusContratacion, cl.concepto, '666' as id_prospecto,
@@ -835,22 +836,34 @@ class Asesor_model extends CI_Model {
     public function registroClienteDS($id_condominio) {
         ini_set('max_execution_time', 300);
         set_time_limit(300);
-        $id_asesor = $this->session->userdata('id_usuario');
-        if ($id_condominio != 0 && $id_asesor == 9651)
-            $where = "AND cond.idCondominio = $id_condominio";
-        else
-            $where = "";
-		$query = $this->db-> query("SELECT cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.nombre, cl.apellido_paterno, 
+
+        $whereAsistente = '';
+        $whereAsesor = '';
+        $whereCondominio = '';
+
+        if ($this->session->userdata('id_rol') == 6) {
+            $idLider = $this->session->userdata('id_lider');
+            $whereAsistente = "AND cl.id_gerente = $idLider AND us.estatus != 1";
+        } else {
+            $idAsesor = $this->session->userdata('id_usuario');
+            $whereAsesor = "AND cl.id_asesor = $idAsesor";
+
+            if ($id_condominio != 0 && $idAsesor == 9651) {
+                $whereCondominio .= "AND cond.idCondominio = $id_condominio";
+            }
+        }
+
+		$query = $this->db->query("SELECT cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.nombre, cl.apellido_paterno, 
         cl.apellido_materno, cl.status ,cl.idLote, fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, 
         cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial,
         cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, convert(varchar,lotes.fechaVenc,20) as fechaVenc, lotes.modificado, 1 estatus
         FROM clientes AS cl			
         INNER JOIN usuarios AS us ON cl.id_asesor = us.id_usuario
         INNER JOIN lotes AS lotes ON lotes.idLote = cl.idLote AND lotes.idCliente = cl.id_cliente AND lotes.idStatusLote = 3
-        INNER JOIN condominios AS cond ON lotes.idCondominio = cond.idCondominio $where
+        INNER JOIN condominios AS cond ON lotes.idCondominio = cond.idCondominio $whereCondominio
         INNER JOIN residenciales AS residencial ON cond.idResidencial=residencial.idResidencial
         LEFT JOIN deposito_seriedad AS ds ON ds.id_cliente = cl.id_cliente	
-        WHERE cl.id_coordinador NOT IN (2562, 2541) AND cl.id_asesor = $id_asesor
+        WHERE cl.id_coordinador NOT IN (2562, 2541) $whereAsesor $whereAsistente 
         AND idStatusContratacion IN (1, 2, 3) AND idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96, 99, 102, 104, 107, 108, 109, 111) AND 
         cl.status = 1 ORDER BY cl.id_cliente ASC");
 		return $query->result_array();
@@ -1047,7 +1060,7 @@ class Asesor_model extends CI_Model {
                 LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9
                 LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote AND cm.id_cliente=cl.id_cliente AND cm.bandera_estatus = 1
                 WHERE l.status = 1 AND ec.id_evidencia IS NULL AND cm.id_coment IS NULL
-                -- AND l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 63526)  ");
+                AND l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 63526)  ");
         return $query->result_array();
     }
     public function getEvidenciaGte()

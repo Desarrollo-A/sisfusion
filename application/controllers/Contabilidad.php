@@ -5,12 +5,11 @@ class Contabilidad extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(array('Contabilidad_model', 'asesor/Asesor_model'));
+        $this->load->model(array('Contabilidad_model'));
         $this->load->library(array('session', 'form_validation', 'get_menu','permisos_sidebar'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
         $this->programacion = $this->load->database('programacion', TRUE);
-
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
         $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
@@ -182,9 +181,11 @@ class Contabilidad extends CI_Controller
         $idProyecto = $this->input->post("idProyecto");
         $idCliente = $this->input->post("idCliente");
         $dates = $this->input->post("dates");
-        $fechaIni = date("Y-m-d", strtotime($this->input->post("fechaIni")));
-        $fechaFin = date("Y-m-d", strtotime($this->input->post("fechaFin")));
-        $data['data'] = $this->Contabilidad_model->getInformationFromNeoData($this->input->post("empresa"), $idProyecto, $idCliente, $fechaIni, $fechaFin, $dates)->result_array();
+        $fechaInicio = explode('/', $this->input->post("fechaIni"));
+        $fechaFin = explode('/', $this->input->post("fechaFin"));
+        $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+        $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
+        $data['data'] = $this->Contabilidad_model->getInformationFromNeoData($this->input->post("empresa"), $idProyecto, $idCliente, $beginDate, $endDate, $dates)->result_array();
         echo json_encode($data);
     }
 

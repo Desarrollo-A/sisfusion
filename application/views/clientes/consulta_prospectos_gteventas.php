@@ -31,6 +31,9 @@
                                                     <th>MEDIO</th>
                                                     <th>ASESOR</th>
                                                     <th>GERENTE</th>
+                                                    <th>SUBDIRECTOR</th>
+                                                    <th>DIRECTOR REGIONAL</th>
+                                                    <th>DIRECTOR REGIONAL 2</th>
                                                     <th>CREACIÓN</th>
                                                     <th>VENCIMIENTO</th>
                                                     <th>ÚLTIMA MODIFICACIÓN</th>
@@ -73,7 +76,7 @@
 
 $('#mktdProspectsTable thead tr:eq(0) th').each( function (i) {
 
-      if(i != 9){
+      if(i != 12){
         var title = $(this).text();
         $(this).html('<input type="text" class="textoshead"  placeholder="'+title+'"/>' );
         $( 'input', this ).on('keyup change', function () {
@@ -103,30 +106,28 @@ $('#mktdProspectsTable thead tr:eq(0) th').each( function (i) {
                              switch (columnIdx) {
                                  case 0:
                                      return 'ESTADO';
-                                     break;
                                  case 1:
                                      return 'ETAPA';
-                                     break;
                                  case 2:
                                      return 'PROSPECTO';
                                  case 3:
                                      return 'MEDIO';
-                                     break;
                                  case 4:
                                      return 'ASESOR';
-                                     break;
                                  case 5:
                                      return 'GERENTE';
-                                     break;
                                  case 6:
-                                     return 'CREACIÓN';
-                                     break;
+                                     return 'SUBDIRECTOR';
                                  case 7:
-                                     return 'VENCIMIENTO';
-                                     break;
+                                     return 'DIRECTOR REGIONAL';
                                  case 8:
+                                     return 'DIRECTOR REGIONAL 2';
+                                 case 9:
+                                     return 'CREACIÓN';
+                                 case 10:
+                                     return 'VENCIMIENTO';
+                                 case 11:
                                      return 'ÚLTIMA MODIFICACIÓN';
-                                     break;
                              }
                          }
                      }
@@ -196,6 +197,21 @@ $('#mktdProspectsTable thead tr:eq(0) th').each( function (i) {
                 },
                 { data: function (d) {
                         return d.gerente;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return (d.subdirector === '  ') ? 'SIN ESPECIFICAR' : d.subdirector;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return (d.regional === '  ') ? 'SIN ESPECIFICAR' : d.regional;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return (d.regional_2 === '  ') ? 'SIN ESPECIFICAR' : d.regional_2;
                     }
                 },
                 { data: function (d) {

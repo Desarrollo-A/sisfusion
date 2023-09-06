@@ -87,6 +87,8 @@
                                                                 <th class="disabled-sorting text-right"><center>Asesor</center></th>
                                                                 <th class="disabled-sorting text-right"><center>Gerente</center></th>
                                                                 <th class="disabled-sorting text-right"><center>Subdirector</center></th>
+                                                                <th class="disabled-sorting text-right"><center>Director Regional</center></th>
+                                                                <th class="disabled-sorting text-right"><center>Director Regional 2</center></th>
                                                                 <th class="disabled-sorting text-right"><center>LP</center></th>
                                                                 <th class="disabled-sorting text-right"><center>Creación</center></th>
                                                                 <th class="disabled-sorting text-right"><center>Vencimiento</center></th>

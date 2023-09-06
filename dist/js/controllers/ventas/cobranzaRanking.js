@@ -1,10 +1,4 @@
-
-function cleanCommentsData() {
-    var myCommentsList = document.getElementById('comments-list-asimilados');
-    myCommentsList.innerHTML = '';
-}
-
-$('#mes').change(function(ruta) {
+$('#mes').change(function() {
     anio = $('#anio').val();
     mes = $('#mes').val();
     if(anio == ''){
@@ -12,9 +6,15 @@ $('#mes').change(function(ruta) {
     }else{
         getAssimilatedCommissions(mes, anio);
     }
+    $('#tabla_historialGral').removeClass('hide');
 });
 
-$('#anio').change(function(ruta) {
+$('#anio').change(function() {
+    for (let index = 0; index < meses.length; index++) {
+        datos = datos + `<option value="${meses[index]['id']}">${meses[index]['mes']}</option>`;
+        $('#mes').html(datos);
+        $('#mes').selectpicker('refresh');
+        }
     mes = $('#mes').val();
     if(mes == ''){
         mes=0;
@@ -23,9 +23,68 @@ $('#anio').change(function(ruta) {
     if (anio == '' || anio == null || anio == undefined) {
         anio = 0;
     }
-    $('#tabla_historialGral').removeClass('hide');
-    getAssimilatedCommissions(mes, anio);
 });
+
+let meses = [
+    {
+        id: '01',
+        mes:'ENERO'
+    },
+    {
+        id:'02',
+        mes:'FEBRERO'
+    },
+    {
+        id:'03',
+        mes:'MARZO'
+    },
+    {
+        id:'04',
+        mes:'ABRIL'
+    },
+    {
+        id:'05',
+        mes:'MAYO'
+    },
+    {
+        id:'06',
+        mes:'JUNIO'
+    },
+    {
+        id:'07',
+        mes:'JULIO'
+    },
+    {
+        id:'08',
+        mes:'AGOSTO'
+    },
+    {
+        id:'09',
+        mes:'SEPTIEMBRE'
+    },
+    {
+        id:'10',
+        mes:'OCTUBRE'
+    },
+    {
+        id:'11',
+        mes:'NOVIEMBRE'
+    },
+    {
+        id:'12',
+        mes:'DICIEMBRE'
+    }
+];
+let anios = [2019,2020,2021,2022,2023];
+let datos = '';
+let datosA = '';
+
+for (let index = 0; index < anios.length; index++) {
+    datosA = datosA + `<option value="${anios[index]}">${anios[index]}</option>`;
+}
+$('#anio').html(datosA);
+$('#anio').selectpicker('refresh');
+
 
 var tr;
 var tabla_historialGral2;
@@ -46,7 +105,7 @@ let titulos = [];
 $('#tabla_historialGral thead tr:eq(0) th').each(function(i) {
     var title = $(this).text();
     titulos.push(title);
-    $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>');
+    $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
     $('input', this).on('keyup change', function() {
         if (tabla_historialGral2.column(i).search() !== this.value) {
             tabla_historialGral2.column(i).search(this.value).draw();
@@ -69,7 +128,7 @@ function getAssimilatedCommissions(mes, anio) {
             titleAttr: 'Descargar archivo de Excel',
             title: 'REPORTE MKTD',
             exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,15,16,17,18],
+                columns: [0,1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,15,16,17],
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulos[columnIdx] + ' ';
@@ -93,12 +152,6 @@ function getAssimilatedCommissions(mes, anio) {
         ordering: false,
         destroy: true,
         columns: [
-            {
-            className: 'details-control',
-            orderable: false,
-            data : null,
-            defaultContent: '<i class="material-icons" style="color:#003D82;" title="Click para más detalles">play_circle_filled</i>'
-            },
             {
                 data: function(d) {
                     var lblStats;
@@ -174,7 +227,7 @@ function getAssimilatedCommissions(mes, anio) {
                 data: function(d) {
                     let compar ='';
                     if(d.idc_mktd != null){
-                        return compar = '<span class="label lbl-cerulean">COMPARTIDA</span><br>'+'<p style="font-size: .8em"><b>' +d.sede1+' / '+d.sede2+ '</b></p>';
+                        return compar = '<span class="label lbl-cerulean">COMPARTIDA</span><br>'+'<p style="font-size: .8em"><b>' +d.sd1+' / '+d.sd2+ '</b></p>';
                     }
                     if (d.status == 0 || d.status == '0'){
                         return '<span class="label lbl-warning">CANCELADO</span>'+compar+'';
@@ -192,7 +245,6 @@ function getAssimilatedCommissions(mes, anio) {
             {
                 data: function(d) {
                     if(d.idStatusContratacion>8){
-                        console.log(d.comision_total);
                         if(d.comision_total==null)
                             return '<p style="font-size: .8em">' +formatMoney(d.comision_total) + '</p>';
                         
@@ -245,28 +297,28 @@ function getAssimilatedCommissions(mes, anio) {
             {
                 data: function(d) {
                     $label = '';
-                //     if(d.idStatusContratacion>8){
-                //     switch(d.bandera){
-                //         case 7:
-                //         case '7':
-                        // $label = '<span class="label lbl-violetDeep">LIQUIDADA</span>';
-                //         break;
-                //         case 1:
-                //         case 55:
-                //         case '1':
-                //         case '55':
-                //         case 0:
-                //         case '0':
-                //         $label = '<span class="label lbl-violetDeep">ACTIVA</span>';
-                //         break;
-                //         default:
+                    if(d.idStatusContratacion>8){
+                    switch(d.bandera){
+                        case 7:
+                        case '7':
                         $label = '<span class="label lbl-violetDeep">LIQUIDADA</span>';
-                //         break;
-                //     }
-                // }
-                    // else{
-                    //     $label = '<p style="font-size: .8em; color: orange;"><b>NA</b></p>';
-                    // }
+                        break;
+                        case 1:
+                        case 55:
+                        case '1':
+                        case '55':
+                        case 0:
+                        case '0':
+                        $label = '<span class="label lbl-azure">ACTIVA</span>';
+                        break;
+                        default:
+                        $label = '<span class="label lbl-gray">SIN DISPERSAR</span>';
+                        break;
+                    }
+                }
+                    else{
+                        $label = '<span class="label lbl-orangeYellow">No aplica</span>';
+                    }
                     return $label;
                     
                 }
@@ -279,17 +331,17 @@ function getAssimilatedCommissions(mes, anio) {
                     let BtnStatsCOM = '';
                     if(d.idc_mktd == null)
                     {
-                    BtnStatsCOM =  '<button class="btn-data btn-green compartir_mktd" title="COMPARTIR" value="' + d.idLote +'"><i class="fas fa-share"></i></button>';
+                    BtnStatsCOM =  '<button data-toggle="tooltip"  data-placement="top" class="btn-data btn-green compartir_mktd" title="COMPARTIR" value="' + d.idLote +'"><i class="fas fa-share"></i></button>';
                     }
                     if (d.status == 0){
-                        BtnStats = '<button href="#" value="' + d.idLote + '" data-value="' + d.id_cliente + '"  data-code="' + d.cbbtton + '" ' + 'class="btn-data btn-orangeYellow bitacora_reporte_marketing" title="Ver detalles">' + '<i class="fas fa-copy"></i></button>';
+                        BtnStats = '<button data-toggle="tooltip"  data-placement="top" href="#" value="' + d.idLote + '" data-value="' + d.id_cliente + '"  data-code="' + d.cbbtton + '" ' + 'class="btn-data btn-orangeYellow bitacora_reporte_marketing" title="Ver detalles">' + '<i class="fas fa-eye"></i></button>';
                     }
                     else{
-                        BtnStats = '<button href="#" value="' + d.idLote + '" data-value="' + d.id_cliente + '"  data-code="' + d.cbbtton + '" ' + 'class="btn-data btn-orangeYellow bitacora_reporte_marketing" title="Ver detalles">' + '<i class="fas fa-copy"></i></button> <button href="#" value="' + d.idLote + '" data-value="' + d.id_cliente + '" data-code="' + d.cbbtton + '" ' + 'class="btn-data btn-blueMaderas add_reporte_marketing" title="Añadir mas detalles">' + '<i class="fas fa-pen"></i></button>';
-                    if (d.idStatusContratacion >= 1 && d.idStatusContratacion <= 8) {
-                        BtnPrecio = '<button href="#" value="' + d.idLote + '" data-value="' + d.precio + '"  data-code="' + d.nombreLote + '" ' + 'class="btn-data btn-sky reporte_marketing" title="Agregar precio">' + '<i class="fas fa-dollar-sign"></i></button>';
+                        BtnStats = '<button data-toggle="tooltip"  data-placement="top" href="#" value="' + d.idLote + '" data-value="' + d.id_cliente + '"  data-code="' + d.cbbtton + '" ' + 'class="btn-data btn-orangeYellow bitacora_reporte_marketing" title="Ver detalles">' + '<i class="fas fa-eye"></i></button> <button href="#" value="' + d.idLote + '" data-value="' + d.id_cliente + '" data-code="' + d.cbbtton + '" ' + 'class="btn-data btn-blueMaderas add_reporte_marketing" title="Añadir comentarios">' + '<i class="fas fa-pen"></i></button>';
+                        if (d.idStatusContratacion >= 1 && d.idStatusContratacion <= 8) {
+                            BtnPrecio = '<button data-toggle="tooltip"  data-placement="top" href="#" value="' + d.idLote + '" data-value="' + d.precio + '"  data-code="' + d.nombreLote + '" ' + 'class="btn-data btn-sky reporte_marketing" title="Agregar precio">' + '<i class="fas fa-dollar-sign"></i></button>';
+                        }
                     }
-                }
                     return "<div class='d-flex justify-center'>" + BtnStats + BtnPrecio + BtnStatsCOM +"</div>";
                 }
             }
@@ -313,7 +365,24 @@ function getAssimilatedCommissions(mes, anio) {
         $("#seeInformationMarketing").modal();
         $.getJSON("getDataMarketing/" + lote + "/" + cliente).done(function(data) {
             $.each(data, function(i, v) {
-                $("#comments-list-asimilados").append('<div class="col-lg-12"><p style="color:gray;"><b>COMENTARIO: </b><i style="color:gray;">' + v.comentario + '</i></p><p style="color:gray;"><b>FECHA PROSPECCIÓN: </b><i style="color:gray;">' + v.fecha_prospecion_mktd + '</i></p><p style="color:gray;"><b>CREADO POR: </b> ' + v.nombre + '<p><b style="color:#896597">' + v.fecha_creacion + '</b></p><hr></div>');
+                $("#comments-list-asimilados").append('<li>\n' +
+                '  <div class="container-fluid">\n' +
+                '    <div class="row">\n' +
+                '      <div class="col-md-6">\n' +
+                '        <a><b>Comentario: ' +v.comentario.toUpperCase()+ '</b></a><br>\n' +
+                '      </div>\n' +
+                '      <div class="float-end text-right">\n' +
+                '        <a>' + v.fecha_creacion.split(".")[0] + '</a>\n' +
+                '      </div>\n' +
+                '      <div class="col-md-12">\n' +
+                '        <p class="m-0"><small>Usuario: </small><b>' + v.nombre + '</b></p>\n'+
+                '        <p class="m-0"><small>Fecha de prospeccion: </small><b>' + v.prospeccion.split(" ")[0] + '</b></p>\n'+
+                '      </div>\n' +
+                '    <h6>\n' +
+                '    </h6>\n' +
+                '    </div>\n' +
+                '  </div>\n' +
+                '</li>');
             });
         });
     });
@@ -326,9 +395,35 @@ function getAssimilatedCommissions(mes, anio) {
         $("#modal_nuevas .modal-body").html("");
         $("#modal_nuevas .modal-footer").html("");
         $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><p>Añadir comentarios a <b>' + row.data().nombreLote + '</b><input type="hidden" name="lote" id="lote" value="' + lote + '"><input type="hidden" name="cliente" id="cliente" value="' + cliente + '">');
-        $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-md-12"><div class="form-group"><label class="label">Fecha prospección</label><input class="form-control" type="date" id="fecha" name="fecha" value=""></div></div></div>');
-        $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-md-12"><div class="form-group"><label class="label">Comentarios adicionales</label><textarea id="comentario" name="comentario" class="form-control" rows="3" required></textarea></div></div></div>');
-        $("#modal_nuevas .modal-footer").append('<div class="row"><div class="col-md-12"><input type="submit" class="btn btn-success" value="Aceptar"><button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button></div></div>');
+        $("#modal_nuevas .modal-body").append(
+                                            '<div class="row">'+
+                                                '<div class="col-md-12">'+
+                                                    '<div class="form-group mt-0">'+
+                                                        '<div>'+
+                                                            '<label class="control-label ml-0">Fecha de prospección</label>'+
+                                                        '</div>'+
+                                                        '<div>'+
+                                                            '<input class="form-control" type="date" id="fecha" name="fecha" value="">'+
+                                                        '</div>'+
+                                                    '</div>'+
+                                                '</div>'+
+                                            '</div>');
+        $("#modal_nuevas .modal-body").append(
+                                            '<div class="row">'+
+                                                '<div class="col-md-12">'+
+                                                    '<div class="form-group mt-0">'+
+                                                        '<label class="control-label ml-0">Comentarios adicionales</label>'+
+                                                        '<textarea id="comentario" name="comentario" class="text-modal" rows="3" required></textarea>'+
+                                                    '</div>'+
+                                                '</div>'+
+                                            '</div>');
+        $("#modal_nuevas .modal-footer").append(
+                                            '<div class="row">'+
+                                                '<div class="col-md-12">'+
+                                                    '<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>'+
+                                                    '<input type="submit" class="btn btn-primary" value="Aceptar">'+
+                                                '</div>'+
+                                            '</div>');
         $("#modal_nuevas").modal();
     });
 
@@ -344,23 +439,47 @@ function getAssimilatedCommissions(mes, anio) {
         <center><h6>Cambiar precio al lote <b>${nombre}</b></h6></center>
         </div>
         </div>`);
-        $("#modal_precio .modal-body").append(`<div class="row"><div class="col-md-12"><div class="form-group"><label class="label">Precio</label><input class="form-control" type="number" id="precioL" name="precioL" value="${formatMoney(numberTwoDecimal(precio))}"><input type="hidden" value="${lote}" readonly name="idLote" id="idLote"></div></div></div>`);
-        $("#modal_precio .modal-footer").append('<div class="row"><div class="col-md-12"><input type="submit" class="btn btn-success" value="Aceptar"><button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button></div></div>');
+        $("#modal_precio .modal-body").append(`
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group mt-0">
+                    <div>
+                        <label class="control-label">Precio</label>
+                    </div>
+                    <div>
+                        <input style="width:100%; height:50px !important"class="input-gral" type="number" id="precioL" name="precioL" value="${formatMoney(precio)}">
+                        <input type="hidden" value="${lote}" readonly name="idLote" id="idLote">
+                    </div>
+                </div>
+            </div>
+        </div>`);
+        $("#modal_precio .modal-footer").append(`
+        <div class="row">
+            <div class="col-md-12">
+                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
+                <input type="submit" class="btn btn-primary" value="Aceptar">
+            </div>
+        </div>`);
         $("#modal_precio").modal();
     });
 
-    $("#tabla_historialGral tbody").on("click", ".compartir_mktd", function(){
+    $("#tabla_historialGral tbody").off("click", ".compartir_mktd").on("click", ".compartir_mktd", function(){
         var lote =  $(this).val();
         $("#modal_mktd .modal-footer").html("");
         $("#modal_mktd .modal-footer").append(`
         <input type="hidden" value="${lote}" id="idlote" name="idlote">
         `);
-        $("#modal_mktd .modal-footer").append('<br><div class="row"><div class="col-md-6"><center><input type="submit" class="btn btn-success" value="GUARDAR"></center></div><div class="col-md-6"><center><input type="button" class="btn btn-danger"  data-dismiss="modal" value="CANCELAR"></center></div></div>');
+        $("#modal_mktd .modal-footer").append('<br>'+
+        '<div class="row pr-3">'+
+            '<input type="button" class="btn btn-danger btn-simple"  data-dismiss="modal" value="CANCELAR">'+
+            '<input id="guardar" type="submit" class="btn btn-primary" value="GUARDAR">'+
+        '');
         $("#modal_mktd").modal();
     });
 
     $("#form_mktd").submit( function(e) {
         e.preventDefault();
+        e.stopImmediatePropagation();
         var plaza1 = $('#plaza1').val();
         var plaza2=$('#plaza2').val();
         var idLote=$('#idlote').val();
@@ -396,7 +515,6 @@ function getAssimilatedCommissions(mes, anio) {
     }).validate({
         submitHandler: function(form) {
             var data = new FormData($(form)[0]);
-            console.log(data);
             $.ajax({
                 url: general_base_url + 'Comisiones/agregar_comentarios',
                 data: data,
@@ -471,40 +589,15 @@ function getAssimilatedCommissions(mes, anio) {
     });
 }
 
-//FIN TABLA  
-$('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-    $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
+$('body').tooltip({
+    selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
+    trigger: 'hover',
+    container: 'body'
+}).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
+    $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
 });
 
-$(window).resize(function() {
-    tabla_historialGral2.columns.adjust();
-});
-
-$(document).ready(function() {
-    $.getJSON(general_base_url + "Comisiones/report_plazas").done(function(data) {
-        $(".report_plazas").html();
-        $(".report_plazas1").html();
-        $(".report_plazas2").html();
-        if (data[0].id_plaza == '0' || data[1].id_plaza == 0) {
-            if (data[0].plaza00 == null || data[0].plaza00 == 'null' || data[0].plaza00 == '') {
-                $(".report_plazas").append('<label style="color: #6a2c70;">&nbsp;<b>Porcentaje:</b> ' + data[0].plaza01 + '%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Restante</b> 0%</label>');
-            } else {
-                $(".report_plazas").append('<label style="color: #6a2c70;">&nbsp;<b>Porcentaje:</b> ' + data[0].plaza01 + '%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Restante</b> ' + data[0].plaza00 + '%</label>');
-            }
-        }
-        if (data[1].id_plaza == '1' || data[1].id_plaza == 1) {
-            if (data[1].plaza10 == null || data[1].plaza10 == 'null' || data[1].plaza10 == '') {
-                $(".report_plazas1").append('<label style="color: #b83b5e;">&nbsp;<b>Porcentaje:</b> ' + data[1].plaza11 + '%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Restante</b> 0%</label>');
-            } else {
-                $(".report_plazas1").append('<label style="color: #b83b5e;">&nbsp;<b>Porcentaje:</b> ' + data[1].plaza11 + '%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Restante</b> ' + data[1].plaza10 + '%</label>');
-            }
-        }
-        if (data[2].id_plaza == '2' || data[2].id_plaza == 2) {
-            if (data[2].plaza20 == null || data[2].plaza20 == 'null' || data[2].plaza20 == '') {
-                $(".report_plazas2").append('<label style="color: #f08a5d;">&nbsp;<b>Porcentaje:</b> ' + data[2].plaza21 + '%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Restante</b> 0%</label>');
-            } else {
-                $(".report_plazas2").append('<label style="color: #f08a5d;">&nbsp;<b>Porcentaje:</b> ' + data[2].plaza21 + '%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Restante</b> ' + data[2].plaza20 + '%</label>');
-            }
-        }
-    });
-});
+function cleanCommentsData() {
+    var myCommentsList = document.getElementById('comments-list-asimilados');
+    myCommentsList.innerHTML = '';
+}

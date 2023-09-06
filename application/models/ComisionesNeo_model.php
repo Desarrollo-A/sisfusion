@@ -228,13 +228,19 @@ class ComisionesNeo_model extends CI_Model {
                                 CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreAsesor,
                                 CONCAT(uu.nombre, ' ', uu.apellido_paterno, ' ', uu.apellido_materno) nombreCoordinador,
                                 CONCAT(uuu.nombre, ' ', uuu.apellido_paterno, ' ', uuu.apellido_materno) nombreGerente,
+                                CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END subdirector,
+                                CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END regional,
+                                CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END regional2,
                                 'Sin pago reflejado en NEODATA' reason
                                 FROM lotes l 
                                 INNER JOIN condominios c ON c.idCondominio = l.idCondominio 
                                 INNER JOIN residenciales r ON r.idResidencial = c.idResidencial 
                                 INNER JOIN clientes cl ON cl.id_cliente = l.idCliente 
                                 INNER JOIN usuarios u ON u.id_usuario = cl.id_asesor 
-                                LEFT JOIN usuarios uu ON uu.id_usuario = cl.id_coordinador 
+                                LEFT JOIN usuarios uu ON uu.id_usuario = cl.id_coordinador
+                                LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
+                                LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
+                                LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2 
                                 INNER JOIN usuarios uuu ON uuu.id_usuario = cl.id_gerente 
                                 WHERE l.status = 1 AND cl.status = 1 AND l.idLote = $idLote ORDER BY r.nombreResidencial, c.nombre, l.nombreLote, nombreCliente")->row();
     }
@@ -333,7 +339,7 @@ class ComisionesNeo_model extends CI_Model {
         INNER JOIN lotes l ON l.idLote = p.id_lote
         INNER JOIN condominios c ON c.idCondominio = l.idCondominio
         INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
-        WHERE p.bandera = 1 
+        WHERE p.bandera = 2
         AND l.registro_comision IN (1,5) 
         AND l.idStatusContratacion = 15 
         AND p.ultimo_pago > 0 
@@ -341,5 +347,6 @@ class ComisionesNeo_model extends CI_Model {
         $query =  $this->db->query($cmd);
         return $query->result_array();
     }
+    
 
 }

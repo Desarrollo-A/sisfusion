@@ -60,7 +60,6 @@ $("#tabla_envio_RL").ready(function () {
             [10, 25, 50, -1],
             [10, 25, 50, "Todos"]
         ],
-        bAutoWidth: true,
         fixedColumns: true,
         ordering: false,
         scrollX: true,
@@ -141,6 +140,18 @@ $('#tabla_envio_RL').on('draw.dt', function() {
     });
 });    
 
+var num = 1;
+function saltoLinea(value) {
+    if (value.length >= 13 * num) {
+        document.getElementById('contratos').value = value;
+        ++num;
+    }
+}
+
+$(document).on('click', '.sendCont', function () {
+    $('#enviarContratos').modal();
+});
+
 $(document).ready(function () {
     $("#btn_show").click(function () {
         var validaCont = $('#contratos').val();
@@ -211,24 +222,29 @@ $(document).ready(function () {
                     response = JSON.parse(data);
                     if (response.message == 'OK') {
                         $('#btn_show').prop('disabled', false);
+                        $('#enviarContratos').modal('hide');
                         $('#tabla_envio_RL').DataTable().ajax.reload();
                         alerts.showNotification("top", "right", "Contratos enviado.", "success");
                     } else if (response.message == 'VOID') {
                         $('#btn_show').prop('disabled', false);
+                        $('#enviarContratos').modal('hide');
                         $('#tabla_envio_RL').DataTable().ajax.reload();
                         alerts.showNotification("top", "right", "No hay contratos por registrar.", "danger");
                     } else if (response.message == 'ERROR') {
                         $('#btn_show').prop('disabled', false);
+                        $('#enviarContratos').modal('hide');
                         $('#tabla_envio_RL').DataTable().ajax.reload();
                         alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
                     } else if (response.message == 'NODETECTED') {
                         $('#btn_show').prop('disabled', false);
+                        $('#enviarContratos').modal('hide');
                         $('#tabla_envio_RL').DataTable().ajax.reload();
                         alerts.showNotification("top", "right", "No se encontro el número de contrato.", "danger");
                     }
                 },
                 error: function (data) {
                     $('#btn_show').prop('disabled', false);
+                    $('#enviarContratos').modal('hide');
                     $('#tabla_envio_RL').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
                 }

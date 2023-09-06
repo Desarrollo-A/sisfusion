@@ -300,3 +300,34 @@ function convertDateDDMMYYYYToYYYYMMDD(date)
 function numberTwoDecimal(x) {
   return parseFloat(x).toFixed(2);
 } 
+
+/**
+ * Función que muestra tres decimales
+ * Comisiones 
+ */
+
+function convertirPorcentajes(value) {
+  const fixed = Number(value).toFixed(3);
+  const partes = fixed.split(".");
+  const numeroEntero = partes[0];
+  const numeroDecimal = checkDecimal(partes[1]);
+  if (numeroDecimal === '') {
+      return `${numeroEntero}`;
+  }
+  return `${numeroEntero}.${numeroDecimal}`;
+}
+
+function checkDecimal(decimal) {
+  let str = '';
+  for (let i = 0; i < decimal.length; i++) {
+      if (decimal.charAt(i) !== '0') {
+          str += decimal.charAt(i);
+      }
+  }
+  return str;
+}
+
+function cleanElement(e) { 
+  var myElement = document.getElementById(e);
+  myElement.innerHTML = '';
+}

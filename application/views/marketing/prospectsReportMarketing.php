@@ -1,6 +1,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
+
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
         <div class="modal fade" id="verDetalles" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"aria-hidden="true" data-backdrop="static" data-keyboard="false">
@@ -23,8 +24,6 @@
                                             <th>USUARIO</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -35,6 +34,7 @@
                 </div>
             </div>
         </div>
+
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -87,7 +87,7 @@
                                                         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 hide" id="fechasFiltro">
                                                             <div class="container-fluid ">
                                                                 <div class="row">
-                                                                    <div class="col-md-12 p-r">
+                                                                    <div class="col-md-12 p-0">
                                                                         <div class="form-group d-flex">
                                                                             <input type="text" class="form-control datepicker" id="beginDate"/>
                                                                             <input type="text" class="form-control datepicker" id="endDate" />
@@ -100,7 +100,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 center-align centered" id="inside">
-                                                            <div class="form-group">
+                                                            <div class="form-group d-flex justify-end">
                                                                 <button type="button" class="btn btn-danger btn-simple" onclick="cleanFilters()" id="cleanButton">LIMPIAR</button>
                                                                 <button type="button" class="btn btn-primary" id="searchButton">BUSCAR</button>
                                                             </div>
@@ -173,7 +173,7 @@
                                                     <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 hide" id="fechasFiltroC">
                                                         <div class="container-fluid ">
                                                             <div class="row">
-                                                                <div class="col-md-12 p-r">
+                                                                <div class="col-md-12 p-0">
                                                                     <div class="form-group d-flex">
                                                                         <input type="text" class="form-control datepicker beginDate" id="beginDateC"/>
                                                                         <input type="text" class="form-control datepicker endDate" id="endDateC" />
@@ -183,8 +183,8 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 center-align centered" id="insideC">
-                                                        <div class="form-group div_last_name">
+                                                    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 center-align centered" id="insideC">
+                                                        <div class="form-group div_last_name d-flex justify-end">
                                                             <button type="button" class="btn btn-danger btn-simple" onclick="cleanFiltersC()" id="cleanButton">LIMPIAR</button>
                                                             <button type="button" class="btn btn-primary" id="searchButtonC">BUSCAR</button>
                                                         </div>

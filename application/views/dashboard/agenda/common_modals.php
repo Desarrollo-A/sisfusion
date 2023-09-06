@@ -15,7 +15,6 @@
                         <ul class="dropdown-menu dropdown-menu-right p-0" aria-labelledby="menuModal">
                             <li><a class="m-0" onclick="finalizarCita()">Finalizar evento</a></li>
                             <li><a class="m-0" onclick="confirmDelete()">Eliminar evento</a></li>
-                            <li><a class="m-0" data-dismiss="modal" style="border-top: 1px solid #eaeaea;">Cerrar ventana</a></li>
                         </ul>
                     </div>
                     <?php } ?>
@@ -38,6 +37,15 @@
                             <label class="label-gral m-0">Prospecto</label>
                             <input id="textProspecto" name="textProspecto" type="text" class="form-control input-gral" disabled>
                             <input id="prospectoE" name="prospectoE" type="text" class="form-control input-gral d-none">
+                        </div>
+                        <div id="organizadorDiv">
+                            <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 form-group m-0 pr-0">
+                                <i class="fas fa-user iconMod fa-lg"></i>
+                            </div>
+                            <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 form-group m-0 overflow-hidden">
+                                <label class="label-gral m-0">Organizador</label>
+                                <input id="organizador" name="organizador" type="text" class="form-control input-gral" disabled>
+                            </div>
                         </div>
                         <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 form-group m-0 pr-0">
                             <i class="fas fa-pencil-alt iconMod fa-lg"></i>
@@ -284,3 +292,29 @@
             </div>
         </div>
     </div>
+
+<div class="modal fade" id="signInGoogleModal" tabindex="-1" role="dialog" aria-labelledby="signInGoogleModal"
+     aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-body pt-2">
+                <div class="material-datatables">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h3 class="m-0 text-center">Iniciar sesión con Google</h3>
+                            <p class="text-center mt-2">
+                                Para que el calendario se sincronice con Google Calendar, es necesario iniciar sesión con su cuenta de Google
+                            </p>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="d-flex justify-end">
+                                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
+                                <button type="button" id="signInGoogleButton" class="btn btn-primary">Iniciar sesión</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

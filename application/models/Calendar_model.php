@@ -28,13 +28,16 @@ class Calendar_model extends CI_Model {
     }
 
     function getAppointmentData($idAgenda){
-        $query = $this->db->query("SELECT a.id_cita, a.idCliente, a.idOrganizador, a.fecha_cita, a.fecha_final, a.fecha_creacion, a.titulo, a.descripcion, CONCAT(p.nombre, ' ', p.apellido_paterno, ' ', p.apellido_materno) AS nombre, p.telefono, p.telefono_2 ,  a.id_direccion,
-        (CASE WHEN a.id_direccion IS NOT NULL THEN dir.nombre ELSE a.direccion END) direccion, a.medio, oxc.nombre as nombre_medio, a.estatus, a.idGoogle
-        FROM agenda a
-        INNER JOIN prospectos p ON p.id_prospecto = a.idCliente
-		INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = a.medio
-        LEFT JOIN direcciones dir ON dir.id_direccion = a.id_direccion 
-		WHERE a.id_cita = $idAgenda AND oxc.id_catalogo = 65");
+        $query = $this->db->query("SELECT a.id_cita, a.idCliente, a.idOrganizador, a.fecha_cita, a.fecha_final, a.fecha_creacion, a.titulo, a.descripcion, 
+            CONCAT(p.nombre, ' ', p.apellido_paterno, ' ', p.apellido_materno) AS nombre, p.telefono, p.telefono_2 ,  a.id_direccion,
+            (CASE WHEN a.id_direccion IS NOT NULL THEN dir.nombre ELSE a.direccion END) direccion, a.medio, oxc.nombre as nombre_medio, a.estatus, a.idGoogle,
+            CONCAT(org.nombre, ' ', org.apellido_paterno, ' ', org.apellido_materno) AS nombreOrganizador
+            FROM agenda a
+            INNER JOIN prospectos p ON p.id_prospecto = a.idCliente
+            INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = a.medio
+            INNER JOIN usuarios org ON org.id_usuario = a.idOrganizador
+            LEFT JOIN direcciones dir ON dir.id_direccion = a.id_direccion 
+            WHERE a.id_cita = $idAgenda AND oxc.id_catalogo = 65");
         return $query->result_array();
     }
 

@@ -49,7 +49,7 @@ class Services_model extends CI_Model
             if($error['code'] == "23000/2627"){
                 $message = "El nombre de usuario ya se encuentra registrado";
             }else{
-                $message = "Error desconocido";
+                $message = "Error desconocido ";
             }
             return $finalAnswer = array("result" => false,
                                         "code" => $error['code'],

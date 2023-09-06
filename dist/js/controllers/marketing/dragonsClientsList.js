@@ -20,23 +20,21 @@ function fillDragonsClientsTable() {
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                className: 'btn buttons-excel',
-                titleAttr: 'Descargar archivo de Excel',
-				title: 'LISTA DE CLIENTES MARKETING DRAGON',
-                exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
-					format: {
-                        header: function (d, columnIdx) {
-                            return ' ' + titulos[columnIdx] + ' ';
-                        }
-                    }
-                }
-            }
-        ],
+        buttons: [{
+			extend: 'excelHtml5',
+			text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+			className: 'btn buttons-excel',
+			titleAttr: 'Descargar archivo de Excel',
+			title: 'LISTA DE CLIENTES MARKETING DRAGON',
+			exportOptions: {
+				columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+				format: {
+					header: function (d, columnIdx) {
+						return ' ' + titulos[columnIdx] + ' ';
+					}
+				}
+			}
+		}],
         language: {
             url: "../static/spanishLoader_v2.json",
             paginate: {
@@ -46,94 +44,91 @@ function fillDragonsClientsTable() {
         },
         destroy: true,
         ordering: false,
-        columns: [
-			{
-				data: function (d) {
-					return d.idLote;
-				}
-			},
-			{
-				data: function (d) {
-					return d.nombreProyecto.toUpperCase();
-				}
-			},
-			{
-				data: function (d) {
-					return d.nombreCondominio;
-				}
-			},
-			{
-				data: function (d) {
-					return d.nombreLote;
-				}
-			},
-			{
-				data: function (d) {
-					return d.nombreCliente;
-				}
-			},
-			{
-				data: function (d) {
-					let numero_recibo;
-					if(d.noRecibo == null)
-						numero_recibo = 'SIN RECIBO';
-					else
-						numero_recibo = d.noRecibo;
-					return numero_recibo;
-				}
-			},
-			{
-				data: function (d) {
-					return d.referencia;
-				}
-			},
-			{
-				data: function (d) {
-					return d.fechaApartado;
-				}
-			},
-			{
-				data: function (d) {
-					return formatMoney(d.engancheCliente)
-				}
-			},
-			{
-				data: function (d) {
-					return d.fechaEnganche;
-				}
-			},
-			{
-				data: function (d) {
-					return   d.fechaCreacionProspecto;
-				}
-			},
-			{
-				data: function (d) {
-					return `<span class="label lbl-oceanGreen">${d.id_prospecto}</span>`;
-				}
-			},
-			{
-				data: function (d) {
-					let validateData = d.id_dragon == 0 ? 'NO DISPONIBLE' : d.id_dragon;
-					return `<span class="label lbl-azure">${validateData}</span>`;
-				}
-			},
-			{
-				data: function (d) {
-					return `<span class="label lbl-violetDeep">${d.nombreStatusContratacion}</span>`;
-				}
-			},
-			{
-				data: function (d) {
-					let btns = `<div class="d-flex align-center justify-center">`;
-                    btns += `<button class="btn-data btn-blueMaderas reviewEvidence" data-lote ="${d.nombreLote}" data-nombre-archivo="${d.nombre_archivo}" data-toggle="tooltip"  data-placement="top" title="VER EVIDENCIA"></body><i class="fas fa-file"></i></button>`;
-                    btns += `<button class="btn-data btn-orangeYellow see-information" data-id-prospecto = "${d.id_prospecto}" data-toggle="tooltip"  data-placement="top" title="BITÁCORA DE CAMBIOS"></body><i class="fas fa-eye"></i></button>`;
-					btns += '</div>';
-                    return btns;
-				}
+        columns: [{
+			data: function (d) {
+				return d.idLote;
 			}
-
-		],
+		},
+		{
+			data: function (d) {
+				return d.nombreProyecto;
+			}
+		},
+		{
+			data: function (d) {
+				return d.nombreCondominio;
+			}
+		},
+		{
+			data: function (d) {
+				return d.nombreLote;
+			}
+		},
+		{
+			data: function (d) {
+				return d.nombreCliente;
+			}
+		},
+		{
+			data: function (d) {
+				let numero_recibo;
+				if(d.noRecibo == null)
+					numero_recibo = 'SIN RECIBO';
+				else
+					numero_recibo = d.noRecibo;
+				return numero_recibo;
+			}
+		},
+		{
+			data: function (d) {
+				return d.referencia;
+			}
+		},
+		{
+			data: function (d) {
+				return d.fechaApartado;
+			}
+		},
+		{
+			data: function (d) {
+				return formatMoney(d.engancheCliente)
+			}
+		},
+		{
+			data: function (d) {
+				return d.fechaEnganche;
+			}
+		},
+		{
+			data: function (d) {
+				return   d.fechaCreacionProspecto;
+			}
+		},
+		{
+			data: function (d) {
+				return `<span class="label lbl-oceanGreen">${d.id_prospecto}</span>`;
+			}
+		},
+		{
+			data: function (d) {
+				let validateData = d.id_dragon == 0 ? 'NO DISPONIBLE' : d.id_dragon;
+				return `<span class="label lbl-azure">${validateData}</span>`;
+			}
+		},
+		{
+			data: function (d) {
+				return `<span class="label lbl-violetDeep">${d.nombreStatusContratacion}</span>`;
+			}
+		},
+		{
+			data: function (d) {
+				let btns = `<div class="d-flex align-center justify-center">`;
+				btns += `<button class="btn-data btn-blueMaderas reviewEvidence" data-lote ="${d.nombreLote}" data-nombre-archivo="${d.nombre_archivo}" data-toggle="tooltip"  data-placement="top" title="VER EVIDENCIA"></body><i class="fas fa-file"></i></button>`;
+				btns += `<button class="btn-data btn-orangeYellow see-information" data-id-prospecto = "${d.id_prospecto}" data-toggle="tooltip"  data-placement="top" title="BITÁCORA DE CAMBIOS"></body><i class="fas fa-eye"></i></button>`;
+				btns += '</div>';
+				return btns;
+			}
+		}],
         columnDefs: [{
             visible: false,
             searchable: false
@@ -216,4 +211,3 @@ function fillChangelog(v) {
         '    </div>\n' +
         '</li>');
 }
-

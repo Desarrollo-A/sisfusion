@@ -662,18 +662,25 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 
     function getGeneralClientsReport(){
         return $this->db->query("SELECT CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente,
-                                r.nombreResidencial, cn.nombre nombreCondominio, l.nombreLote, l.sup, l.precio, l.totalNeto2, 
-                                l.referencia, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) asesor,
-                                CONCAT(uu.nombre, ' ', uu.apellido_paterno, ' ', uu.apellido_materno) coordinador,
-                                CONCAT(uuu.nombre, ' ', uuu.apellido_paterno, ' ', uuu.apellido_materno) gerente
-                                FROM lotes l 
-                                INNER JOIN clientes cl ON cl.idLote = l.idLote
-                                INNER JOIN condominios cn ON cn.idCondominio = l.idCondominio
-                                INNER JOIN residenciales r ON r.idResidencial = cn.idResidencial
-                                LEFT JOIN usuarios u ON u.id_usuario = cl.id_asesor
-                                LEFT JOIN usuarios uu ON uu.id_usuario = cl.id_coordinador
-                                LEFT JOIN usuarios uuu ON uuu.id_usuario = cl.id_gerente
-                                WHERE cl.status = 1 AND l.status = 1 AND l.idStatusLote IN (2, 3) ORDER BY r.nombreResidencial, cn.nombre, l.nombreLote");
+		r.nombreResidencial, cn.nombre nombreCondominio, l.nombreLote, l.sup, l.precio, l.totalNeto2, 
+		l.referencia, 
+		CASE WHEN u.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) END asesor,
+		CASE WHEN uu.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(uu.nombre, ' ', uu.apellido_paterno, ' ', uu.apellido_materno) END  coordinador,
+		CASE WHEN uuu.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(uuu.nombre, ' ', uuu.apellido_paterno, ' ', uuu.apellido_materno) END gerente,
+		CASE WHEN sb.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(sb.nombre, ' ', sb.apellido_paterno, ' ', sb.apellido_materno)END subdirector,
+        CASE WHEN dr.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(dr.nombre, ' ', dr.apellido_paterno, ' ', dr.apellido_materno) END dRegional,
+        CASE WHEN dr2.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(dr2.nombre, ' ', dr2.apellido_paterno, ' ', dr2.apellido_materno) END dRegional2
+		FROM lotes l 
+		INNER JOIN clientes cl ON cl.idLote = l.idLote
+		INNER JOIN condominios cn ON cn.idCondominio = l.idCondominio
+		INNER JOIN residenciales r ON r.idResidencial = cn.idResidencial
+		LEFT JOIN usuarios u ON u.id_usuario = cl.id_asesor
+		LEFT JOIN usuarios uu ON uu.id_usuario = cl.id_coordinador
+		LEFT JOIN usuarios uuu ON uuu.id_usuario = cl.id_gerente
+		LEFT JOIN usuarios sb ON sb.id_usuario = cl.id_subdirector
+        LEFT JOIN usuarios dr ON dr.id_usuario = cl.id_regional
+        LEFT JOIN usuarios dr2 ON dr2.id_usuario = cl.id_regional_2
+		WHERE cl.status = 1 AND l.status = 1 AND l.idStatusLote IN (2, 3) ORDER BY r.nombreResidencial, cn.nombre, l.nombreLote");
     }
 
     function getClientsInStatusFifteen($idCondominio)
@@ -841,6 +848,9 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 									CONCAT(asesor.nombre,' ',asesor.apellido_paterno,' ',asesor.apellido_materno) as asesor,
 									CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno,' ',coordinador.apellido_materno) as coordinador,
 									CONCAT(gerente.nombre,' ',gerente.apellido_paterno,' ',gerente.apellido_materno) as gerente,
+                                    CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END subdirector,
+                                    CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END regional,
+                                    CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END regional2,
 									FORMAT(ISNULL(lot.totalValidado, 0), 'C') as enganche,FORMAT(ISNULL(lot.totalNeto, 0), 'C') as engancheContra, lot.ubicacion, CONCAT('', FORMAT(lot.totalNeto2, 'C', 'en-US')) as saldo, s.id_sede, s.nombre as nombre_ubicacion,
 									sl.nombre as lote, sc.nombreStatus as contratacion,
 									(CASE WHEN hl.idLote IS NULL THEN 0 ELSE 1 END) validacion_estatus_9,lot.registro_comision
@@ -851,6 +861,9 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 									LEFT JOIN statuscontratacion sc ON sc.idStatusContratacion = lot.idStatusContratacion
 									INNER JOIN condominios con ON con.idCondominio = lot.idCondominio
 									INNER JOIN residenciales res ON res.idResidencial = con.idResidencial
+                                    LEFT JOIN usuarios u3 ON u3.id_usuario = cli.id_subdirector
+                                    LEFT JOIN usuarios u4 ON u4.id_usuario = cli.id_regional
+                                    LEFT JOIN usuarios u5 ON u5.id_usuario = cli.id_regional_2
 									LEFT JOIN usuarios asesor ON cli.id_asesor = asesor.id_usuario
 									LEFT JOIN usuarios coordinador ON cli.id_coordinador = coordinador.id_usuario
 									LEFT JOIN usuarios gerente ON cli.id_gerente = gerente.id_usuario
@@ -1354,7 +1367,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         $modificado_por = $this->session->userdata('id_usuario');
         $this->db->query("UPDATE clientes SET id_asesor=$id_asesor,id_coordinador=$id_coordinador,id_gerente=$id_gerente,id_subdirector=$id_subdirector,id_regional=$id_regional,id_regional_2=$id_regional_2,modificado_por='$modificado_por'  WHERE id_cliente=$id_cliente;");
 
-        for($m=0; $m < $datos['indexVC'] ; $m++) { 
+        for($m=0; $m < $datos['indexVC'] ; $m++) {
             $id_vcompartida = $datos['id_vcompartida_'.$m];
             $id_asesor = $datos['id_asesor_'.$m];
             $id_coordinador = $datos['id_coordinador_'.$m];
@@ -1372,49 +1385,5 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
             $this->db->trans_commit();
             return true;
         }
-     }
-
-    public function getAllDsByLider($idLider)
-    {
-        $query = $this->db->query("
-            SELECT cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.nombre, cl.apellido_paterno,
-                cl.apellido_materno, cl.status, cl.idLote, fechaApartado, fechaVencimiento, cl.usuario, cond.idCondominio, cl.fecha_creacion,
-                cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre AS nombreCondominio, residencial.nombreResidencial AS nombreResidencial,
-                cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado
-            FROM deposito_seriedad AS ds
-            INNER JOIN clientes AS cl ON ds.id_cliente = cl.id_cliente
-            INNER JOIN lotes AS lotes ON lotes.idLote=cl.idLote AND lotes.idCliente = cl.id_cliente AND cl.status = 1
-            LEFT JOIN condominios AS cond ON lotes.idCondominio=cond.idCondominio
-            LEFT JOIN residenciales AS residencial ON cond.idResidencial=residencial.idResidencial
-            WHERE idStatusContratacion IN (1, 2, 3) AND 
-                idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND 
-                cl.status = 1 AND
-                lotes.idLote IN (
-                    SELECT l.idLote
-                    FROM lotes l 
-                    INNER JOIN clientes c ON c.id_cliente = l.idCliente
-                    INNER JOIN usuarios u ON u.id_usuario = c.id_asesor AND u.estatus != 1
-                    WHERE l.status = 1 AND 
-                        l.idStatusContratacion IN (1, 2, 3) AND 
-                        l.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND 
-                        c.status = 1 AND 
-                        c.id_gerente = $idLider
-            
-                    UNION ALL
-            
-                    SELECT l.idLote
-                    FROM lotes l 
-                    INNER JOIN clientes c ON c.id_cliente = l.idCliente AND c.id_coordinador IN (2562, 2541) AND c.id_asesor != 1908
-                    INNER JOIN usuarios u ON u.id_usuario = c.id_asesor
-                    INNER JOIN usuarios uu ON uu.id_usuario = u.id_lider AND 
-                        (uu.id_lider = $idLider OR u.id_lider = $idLider)
-                    WHERE l.status = 1 AND 
-                        l.idStatusContratacion IN (1, 2, 3) AND 
-                        l.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND 
-                        c.status = 1
-                )
-            ORDER BY cl.id_Cliente ASC
-        ");
-        return $query->result_array();
     }
 }

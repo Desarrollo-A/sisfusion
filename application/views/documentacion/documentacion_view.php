@@ -205,7 +205,8 @@
     <link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
     <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
     <script type="text/javascript">
-        const tieneAcciones = <?=$hasActions?>;
+        const tieneAcciones = <?=$tieneAcciones?>;
+        const funcionVista = "<?=$funcionVista ?? ''?>";
     </script>
     <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/documentacion/documentacion.js"></script>

@@ -41,11 +41,11 @@
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>  
 
-            <div class="modal fade" id="modalData" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static"data-keyboard="false">
+            <div class="modal fade" id="modalData" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
                 <div class="modal-dialog modal-md">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal"aria-hidden="true">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                                 <i class="material-icons">clear</i>
                             </button>
                             <h4 class="modal-title">Usuario y Contraseña :</h4>
@@ -64,13 +64,12 @@
                                     <input  class="form-control input-gral pl-1 pr-1" readonly type="text" id="passPC" name="passPC" value="" >
                                 </div>
                             </div>
-                            <div class="modal-footer"> 
-                        </div>
+                            <div class="modal-footer"></div>
                     </div>
                 </div>    
             </div>
-          
-            <div class="modal fade" id="BajaUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static"data-keyboard="false">
+        
+            <div class="modal fade" id="BajaUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -104,9 +103,7 @@
                 <div class="modal-dialog modal-md ">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <button type="button" class="close" onclick="BajaConfirmM()" aria-hidden="true">
-                                <i class="material-icons">clear</i>
-                            </button>
+                            <button type="button" class="close" onclick="BajaConfirmM()" aria-hidden="true"><i class="material-icons">clear</i></button>
                             <h4 class="modal-title"><h4 id="msj"></h4><b id="nameUs2"></b>?</h4>
                         </div>
                         <form id="BajaConfirmForm" name="BajaConfirmForm" method="post">
@@ -135,13 +132,11 @@
                         </div>
                         <div class="modal-body">
                             <div role="tabpanel">
-                                <!-- Nav tabs -->
                                 <ul class="nav nav-tabs" role="tablist" style="background: #003d82;">
                                     <li role="presentation" class="active">
                                         <a href="#changelogUsersTab" aria-controls="changelogUsersTab" role="tab" data-toggle="tab">Bitácora de cambios</a>
                                     </li>
                                 </ul>
-                                <!-- Tab panes -->
                                 <div class="tab-content">
                                     <div role="tabpanel" class="tab-pane active" id="changelogUsersTab">
                                         <div class="row">
@@ -164,8 +159,7 @@
                 </div>
             </div>
 
-            <!-- -->
-            <div class="modal fade" id="editUserModal" tabindex="-1" role="dialog"aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static"data-keyboard="false">
+            <div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -207,8 +201,7 @@
                                         <div class="col-sm-3">
                                             <div class="form-group overflow-hidden">
                                                 <label class="control-label">Forma de pago (<small class="isRequired">*</small>)</label>
-                                                <select class="selectpicker select-gral payment_method m-0" id="payment_method" name="payment_method" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una forma de pago" data-size="7" data-container="body" required disabled>
-                                                </select>
+                                                <select class="selectpicker select-gral payment_method m-0" id="payment_method" name="payment_method" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required disabled></select>
                                             </div>
                                         </div>
                                         <div class="col-sm-3">
@@ -228,24 +221,24 @@
                                     <div class="col-sm-6">
                                         <div class="form-group overflow-hidden">
                                             <label class="control-label">Sede (<small class="isRequired">*</small>)</label>
-                                            <select class="selectpicker select-gral m-0" id="headquarter" name="headquarter" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una sede" data-size="7" data-container="body" required onchange="cleadFieldsHeadquarterChange()">
-                                            </select>
+                                            <select class="selectpicker select-gral m-0" id="headquarter" name="headquarter" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required onchange="cleadFieldsHeadquarterChange()"></select>
                                         </div>
                                     </div>
-                                    <div class="col-estructura"></div>
+                                    <div class="col-estructura">
+                                    </div>
                                     <div class="col-sm-6" id="tipoMiembro_column">
                                         <div class="form-group overflow-hidden">
                                             <label class="control-label">Tipo de miembro (<small class="isRequired">*</small>)</label>
-                                                <select class="selectpicker select-gral m-0" id="member_type" name="member_type" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione un rol" data-size="7" data-container="body" required onchange="getLeadersList()">
-                                                </select>
+                                            <select class="selectpicker select-gral m-0" id="member_type" name="member_type" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required onchange="getLeadersList()"></select>
                                         </div>
                                     </div>
-                                    <div class="simbolico_column" id="simbolico_column"></div>
+                                    <div class="simbolico_column">
+                                    </div>
                                         <div class="col-sm-6">
                                             <div class="form-group overflow-hidden">
                                                 <input type="hidden" name="rol_actual" id="rol_actual">
                                                 <label class="control-label">Líder (<small class="isRequired">*</small>)</label>
-                                                <select class="selectpicker select-gral m-0" id="leader" name="leader" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione un lider" data-size="7" data-container="body" required></select>
+                                                <select class="selectpicker select-gral m-0" id="leader" name="leader" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                             </div>
                                         </div>
                                     </div>
@@ -272,8 +265,7 @@
                                                 <div class="boxInfoEsp">
                                                     <i class="fas fa-info" data-toggle="tooltip" data-placement="bottom" title="Sede de asignación del asesor"></i>
                                                 </div>
-                                                <select class="selectpicker select-gral m-0" id="sedech" name="sedech" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" data-container="body" required>
-                                                </select>
+                                                <select class="selectpicker select-gral m-0" id="sedech" name="sedech" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
@@ -282,8 +274,7 @@
                                                 <div class="boxInfoEsp" data-toggle="tooltip" data-placement="bottom" title="Oficina en la que se encuentra ubicado el asesor">
                                                     <i class="fas fa-info"></i>
                                                 </div>
-                                                <select class="selectpicker select-gral m-0" id="sucursal" name="sucursal" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" data-container="body" required>
-                                                </select>
+                                                <select class="selectpicker select-gral m-0" id="sucursal" name="sucursal" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                             </div>
                                         </div>
                                     </div>
@@ -386,7 +377,6 @@
         <?php $this->load->view('template/footer_legend'); ?>
     </div>
     </body>
-
     <?php $this->load->view('template/footer'); ?>
     <script src="<?= base_url() ?>dist/js/controllers/usuarios-1.1.0.js"></script>
     </html>
