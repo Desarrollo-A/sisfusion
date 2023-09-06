@@ -2356,7 +2356,7 @@ class Caja_outside extends CI_Controller {
             //$data['lider'] = $this->caja_model_outside->getLider($dataJson->id_gerente);
             if ($dataJson->id_asesor == $dataJson->id_coordinador)
                 $id_coordinador = 0;
-            else if($dataJson->id_coordinador == $dataJson->id_gerente &&)
+            else if($dataJson->id_coordinador == $dataJson->id_gerente)
                 $id_coordinador = 0;
             else
                 $id_coordinador = $dataJson->id_coordinador;
