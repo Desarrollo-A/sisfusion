@@ -130,7 +130,7 @@ class VentasAsistentes_model extends CI_Model {
 
             $filtroGerente = "";
             if ($id_usuario == 12318) { // EMMA CECILIA MALDONADO RAMÍREZ
-                $filtroGerente = "AND cl.id_gerente IN ($id_lider, 11196, 5637)";
+                $filtroGerente = "AND cl.id_gerente IN ($id_lider, 11196, 5637, 2599)";
                 $filtroSede = "";
             } else if (in_array($id_usuario, array(7097, 7096, 10924, 7324, 5620, 13094))) // GRISELL MALAGON, EDGAR AGUILAR Y DALIA PONCE
                 $filtroSede = "AND l.ubicacion IN ('4', '9', '13', '14')"; // Ciudad de México, San Miguel de Allende, Estado de México Occidente y Estado de México Norte
@@ -298,7 +298,7 @@ class VentasAsistentes_model extends CI_Model {
 
             $filtroGerente = "";
             if ($id_usuario == 12318) { // EMMA CECILIA MALDONADO RAMÍREZ
-                $filtroGerente = "AND cl.id_gerente IN ($id_lider, 11196, 5637)";
+                $filtroGerente = "AND cl.id_gerente IN ($id_lider, 11196, 5637, 2599)";
                 $filtroSede = "";
             } else if (in_array($id_usuario, array(7097, 7096, 10924, 7324, 5620, 13094))) // GRISELL MALAGON, EDGAR AGUILAR Y DALIA PONCE
                 $filtroSede = "AND l.ubicacion IN ('4', '9', '13', '14')"; // Ciudad de México, San Miguel de Allende, Estado de México Occidente y Estado de México Norte

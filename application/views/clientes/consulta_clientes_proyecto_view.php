@@ -37,6 +37,7 @@
                                                     <th>FECHA DE NACIMIENTO</th>
                                                     <th>EDAD</th>
                                                     <th>OCUPACIÓN</th>
+                                                    <th>ORIGINARIO DE</th>
                                                 </tr>
                                                 </thead>
                                             </table>

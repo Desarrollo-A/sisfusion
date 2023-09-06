@@ -31,6 +31,7 @@ const TipoDoc = {
     EVIDENCIA_MKTD_OLD: 66, // EXISTE LA RAMA CON LA EVIDENCIA DE MKTD (OLD)
     AUTORIZACIONES: 'autorizacion',
     PROSPECTO: 'prospecto',
+    APOSTILLDO_CONTRATO: 31
 };
 
 const observacionContratoUrgente = 1; // Bandera para inhabilitar
@@ -291,7 +292,7 @@ function cargarTabla(idLote, idCliente = '') {
                         }
                         return `<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`;
                     }
-                    if (data.tipo_doc == TipoDoc.CARTA_DOMICILIO) { // CARTA DOMICILIO
+                    if (data.tipo_doc == TipoDoc.CARTA_DOMICILIO || data.tipo_doc == TipoDoc.APOSTILLDO_CONTRATO) { // CARTA DOMICILIO || APOSTILLADO CONTRATO
                         if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
                             buttonMain = (
                                 includesArray(movimientosPermitidosCartaDomicilio, data.idMovimiento) &&
