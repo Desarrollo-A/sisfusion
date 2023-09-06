@@ -34,9 +34,56 @@ $('#tabla_clientes thead tr:eq(0) th').each(function (i) {
     });
 });
 
+$(document).on('click', '.reesVal', function (){
+    $('#liberarReestructura').modal();
+    $('#idLoteenvARevCE').val($(this).attr('data-idLote'));
+    $('#nombreLoteAv').val($(this).attr('data-nombreLote'));
+    $('#precioAv').val($(this).attr('data-precio'));
+});
+
 $(document).on('click', '.stat5Rev', function () {
     $('#aceptarReestructura').modal();
     $('#idLoteenvARevCE').val($(this).attr('data-idLote'));
+});
+
+$(document).on('click', '.reesInfo', function (){
+    $('#modal_historial').modal();
+});
+
+$(document).on('click', '#saveLi', function(){
+
+    var idLote = $("#idLoteenvARevCE").val();
+    var nombreLot = $("#nombreLoteAv").val();
+    var precio = $("#precioAv").val();
+
+    datos = {
+        "idLote": idLote,
+        "nombreLote": nombreLot,
+        "precio": precio,
+        "tipoLiberacion": 9,
+    };
+
+    $.ajax({
+        method: 'POST',
+        url: general_base_url + 'Reestructura/aplicarLiberacion',
+        data: datos,
+        processData: false,
+        contentType: false,
+        success: function(data) {
+            if (data == 1) {
+            $('#tabla_bonos').DataTable().ajax.reload(null, false);
+            closeModalEng();
+            $('#modal_abono').modal('hide');
+            alerts.showNotification("top", "right", "Abono registrado con éxito.", "success");
+            document.getElementById("form_abono").reset(); 
+            }
+        },
+        error: function(){
+            closeModalEng();
+            $('#modal_abono').modal('hide');
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
 });
 
 $(document).on('click', '#save2', function () {
@@ -44,11 +91,7 @@ $(document).on('click', '#save2', function () {
     let grabado = $("#grabado").val();
     let proJur = $("#procesoJ").val();
     let comentario = $("#comentario2").val();
-    console.log(idLote);
-    console.log(grabado);
-    console.log(proJur);
-    console.log(comentario);
-    
+
     parametros = {
         "idLote": idLote,
         "comentario": comentario,
@@ -135,7 +178,9 @@ function fillTable(index_proyecto) {
         },
         {
             data: function (d) {
-                return `<center><button class="stat5Rev btn-data btn-green" data-toggle="tooltip" data-placement="top" title= "VALIDAR REESTRUCTURACIÓN" data-idcliente="${d.id_cliente}" data-idLote="${d.idLote}"><i class="fas fa-thumbs-up"></i></button></center>`;
+                return '<div class="d-flex justify-center"><button class="btn-data btn-green reesVal" data-toggle="tooltip" data-placement="top" title= "LIBERAR LOTE" data-idLote="' +d.idLote+ '" data-nombreLote="' +d.nombreLote+ '" data-precio="' +d.precio+ '"><i class="fas fa-thumbs-up"></i></button>'
+                +'<button class="btn-data btn-deepGray stat5Rev" data-toggle="tooltip" data-placement="top" title= "VALIDAR REESTRUCTURACIÓN" data-idLote="' +d.idLote+ '"><i class="fas fa-solid fa-paper-plane"></i></button>'
+                +'<button class="btn-data btn-blueMaderas reesInfo" data-toggle="tooltip" data-placement="top" title="HISTORIAL"><i class="fas fa-info"></i></button></div>';
             }
         }],
         columnDefs: [{

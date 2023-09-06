@@ -38,12 +38,11 @@ class Reestructura extends CI_Controller{
         $this->load->view("reestructura/reestructura_view");
 	}
 
-	public function lista_proyecto() {
+	public function lista_proyecto(){
         echo json_encode($this->Reestructura_model->get_proyecto_lista()->result_array());
     }
 
-	function getregistros()
-    {
+	public function getregistros(){
         $index_proyecto = $this->input->post('index_proyecto');
         $dato = $this->Reestructura_model->get_valor_lote($index_proyecto);
         if ($dato != null) {
