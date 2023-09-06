@@ -71,16 +71,14 @@ $(document).on('click', '#saveLi', function(){
         contentType: false,
         success: function(data) {
             if (data == 1) {
-            $('#tabla_bonos').DataTable().ajax.reload(null, false);
-            closeModalEng();
-            $('#modal_abono').modal('hide');
-            alerts.showNotification("top", "right", "Abono registrado con éxito.", "success");
-            document.getElementById("form_abono").reset(); 
+            $('#tabla_clientes').DataTable().ajax.reload(null, false);
+            $('#liberarReestructura').modal('hide');
+            alerts.showNotification("top", "right", "Lote liberado.", "success"); 
             }
         },
         error: function(){
             closeModalEng();
-            $('#modal_abono').modal('hide');
+            $('#liberarReestructura').modal('hide');
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
@@ -154,33 +152,45 @@ function fillTable(index_proyecto) {
         },
         {
             data: function (d) {
-                return '<p class="m-0">' + d.idLote + '</p>'
+                return '<p class="m-0">' + d.idLote + '</p>';
             }
         },
         {
             data: function (d) {
-                return '<p class="m-0">' + d.superficie + '</p>'
+                return '<p class="m-0">' + d.superficie + '</p>';
             }
         },
         {
             data: function (d){
-                return '<p class="m-0">' + formatMoney(d.precio) + '</p>'
+                return '<p class="m-0">' + formatMoney(d.precio) + '</p>';
+            }
+        },
+        {
+            data: function (d){
+                return '<p class="m-0">' + d.nombreCliente + '</p>'
             }
         },
         {
             data: function (d) {
                 if(d.observacion == null || d.observacion == "NULL"){
-                    return '<p class="m-0">SIN OBSERVACIÓN</p>';
+                    return '<span class="label lbl-azure">SIN OBSERVACIONES</span>';
+                }else if(d.observacion == "LIBERACIÓN JURÍDICA"){
+                    return '<span class="label lbl-green">LIBERACIÓN JURÍDICA</span>';
                 }else{
                     return '<p class="m-0">' + d.observacion + '</p>';
-                } 
+                }
             }
         },
         {
             data: function (d) {
-                return '<div class="d-flex justify-center"><button class="btn-data btn-green reesVal" data-toggle="tooltip" data-placement="top" title= "LIBERAR LOTE" data-idLote="' +d.idLote+ '" data-nombreLote="' +d.nombreLote+ '" data-precio="' +d.precio+ '"><i class="fas fa-thumbs-up"></i></button>'
-                +'<button class="btn-data btn-deepGray stat5Rev" data-toggle="tooltip" data-placement="top" title= "VALIDAR REESTRUCTURACIÓN" data-idLote="' +d.idLote+ '"><i class="fas fa-solid fa-paper-plane"></i></button>'
-                +'<button class="btn-data btn-blueMaderas reesInfo" data-toggle="tooltip" data-placement="top" title="HISTORIAL"><i class="fas fa-info"></i></button></div>';
+                if(d.observacion == "LIBERACIÓN JURÍDICA"){
+                    return '<div class="d-flex justify-center"><button class="btn-data btn-deepGray stat5Rev" data-toggle="tooltip" data-placement="top" title= "VALIDAR REESTRUCTURACIÓN" data-idLote="' +d.idLote+ '"><i class="fas fa-solid fa-paper-plane"></i></button>'
+                    +'<button class="btn-data btn-blueMaderas reesInfo" data-toggle="tooltip" data-placement="top" title="HISTORIAL"><i class="fas fa-info"></i></button></div>';
+                }else{
+                    return '<div class="d-flex justify-center"><button class="btn-data btn-green reesVal" data-toggle="tooltip" data-placement="top" title= "LIBERAR LOTE" data-idLote="' +d.idLote+ '" data-nombreLote="' +d.nombreLote+ '" data-precio="' +d.precio+ '"><i class="fas fa-thumbs-up"></i></button>'
+                    +'<button class="btn-data btn-deepGray stat5Rev" data-toggle="tooltip" data-placement="top" title= "VALIDAR REESTRUCTURACIÓN" data-idLote="' +d.idLote+ '"><i class="fas fa-solid fa-paper-plane"></i></button>'
+                    +'<button class="btn-data btn-blueMaderas reesInfo" data-toggle="tooltip" data-placement="top" title="HISTORIAL"><i class="fas fa-info"></i></button></div>';
+                }
             }
         }],
         columnDefs: [{
