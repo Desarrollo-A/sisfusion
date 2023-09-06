@@ -125,6 +125,7 @@
                                                     <th>ID LOTE </th>
                                                     <th>SUPERFICIE</th>
                                                     <th>PRECIO</th>
+                                                    <th>NOMBRE</th>
                                                     <th>OBSERVACIÓN EN LIBERACIÓN</th>
                                                     <th>ACCIONES</th>
                                                 </tr>
