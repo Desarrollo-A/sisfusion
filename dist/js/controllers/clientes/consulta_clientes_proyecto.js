@@ -5,15 +5,10 @@ $( document ).ready(function() {
         var title = $(this).text();
         titulos_encabezado.push(title);
         num_colum_encabezado.push(i);
-        $(this).html(`<input class="textoshead"
-                             data-toggle="tooltip" 
-                             data-placement="top"
-                             title="${title}"
-                             placeholder="${title}"/>` );
+        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>` );
         $( 'input', this ).on('keyup change', function () {
-            if ($('#tabla_clientes').DataTable().column(i).search() !== this.value ) {
+            if ($('#tabla_clientes').DataTable().column(i).search() !== this.value)
                 $('#tabla_clientes').DataTable().column(i).search(this.value).draw();
-            }
         });
     });
 
@@ -81,6 +76,11 @@ $( document ).ready(function() {
                 {
                     data: function (d) {
                         return (d.ocupacion == null || d.ocupacion == '') ? 'SIN ESPECIFICAR' : d.ocupacion;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return (d.originario_de == null || d.originario_de == '') ? 'SIN ESPECIFICAR' : d.originario_de;
                     }
                 }
             ]

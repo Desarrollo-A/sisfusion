@@ -16,7 +16,7 @@ class Pagos_model extends CI_Model {
             $filtro = '';
             if($this->session->userdata("id_rol") == 18)
             {
-                $filtro = "and u.id_rol in(18, 19, 20, 25, 26, 27, 28, 30, 36)  ";
+                $filtro = "and u.id_rol in (18, 19, 20, 25, 26, 27, 28, 30, 36)  ";
             }
         
             $cmd = "SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) as nombre,
@@ -661,7 +661,7 @@ function update_estatus_pausaM($id_pago_i, $obs) {
             INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23 
             INNER JOIN opinion_cumplimiento opn ON opn.id_usuario = u.id_usuario  and opn.estatus IN (2) 
             INNER JOIN facturas fa ON fa.id_comision = pci1.id_pago_i
-            --  $filtro02
+             $filtro02
             GROUP BY re.idResidencial, re.nombreResidencial, u.nombre, u.apellido_paterno, u.apellido_materno, pci1.id_usuario, u.forma_pago, oxcest.id_opcion, re.empresa, re.idResidencial, opn.estatus, opn.archivo_name, fa.uuid,fa.nombre_archivo,fa.bandera, u.rfc
             ORDER BY u.nombre");
         }

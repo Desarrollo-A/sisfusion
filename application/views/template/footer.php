@@ -7,7 +7,6 @@
 <script src="<?=base_url()?>dist/js/bootstrap.min.js" type="text/javascript"></script>
 <script src="<?=base_url()?>dist/js/material.min.js" type="text/javascript"></script>
 <script src="<?=base_url()?>dist/js/perfect-scrollbar.jquery.min.js" type="text/javascript"></script>
-<!--<script src="--><?//=base_url()?><!--dist/bower_components/select2/dist/js/select2.full.min.js"></script>-->
 <!-- Forms Validations Plugin -->
 <script src="<?=base_url()?>dist/js/jquery.validate.min.js"></script>
 <!--  Plugin for Date Time Picker and Full Calendar Plugin-->
@@ -69,12 +68,6 @@
 
 	$(document).ready(function() {
 		demo.initDashboardPageCharts();
-
-        <?php
-            if ($this->session->userdata('no_show_modal_info')==0) {
-                echo '$("#avisoNovedades").modal("toggle");';
-            }
-        ?>
 	});
 
     function validaCheckSession(){

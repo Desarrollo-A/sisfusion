@@ -31,7 +31,7 @@
                         <label tabindex='-1' for='typeSale1'>Con enganche</label>
                     </li>
                     <li class='c-filter__item'>
-                        <input type="checkbox" class="d-none" value="2" name="conSinEnganche" id="typeSale2">
+                        <input type="checkbox" class="d-none" value="2" name="conSinEnganche" id="typeSale2" checked>
                         <label tabindex='-1' for='typeSale2'>Sin enganche</label>
                     </li>
                     <li class='c-filter__item'>
@@ -39,11 +39,11 @@
                         <label tabindex='-1' for='typeLote1'>Habitacionales</label>
                     </li>
                     <li class='c-filter__item'>
-                        <input type="checkbox" class="d-none" value="1" name="typeLote" id="typeLote2">
+                        <input type="checkbox" class="d-none" value="1" name="typeLote" id="typeLote2" checked>
                         <label tabindex='-1' for='typeLote2'>Comerciales</label>
                     </li>
                     <li class='c-filter__item'>
-                        <input type="checkbox" class="d-none" value="1" name="typeConstruccion" id="typeBuild2">
+                        <input type="checkbox" class="d-none" value="1" name="typeConstruccion" id="typeBuild2" checked>
                         <label tabindex='-1' for='typeBuild2'>Con casa</label>
                     </li>
                     <li class='c-filter__item'>
