@@ -379,11 +379,12 @@ class Documentacion extends CI_Controller {
     {
         $loteNuevoInfo = $this->Documentacion_model->obtenerLotePorId($idLoteNuevo);
         $docAnterior = $this->Documentacion_model->obtenerDocumentacionActiva($idLoteAnterior, $idClienteAnterior);
-        $dataInfo = [];
+        $docPorReubicacion = $this->Documentacion_model->obtenerDocumentacionPorReubicacion();
+        $documentacion = [];
         $modificado = date('Y-m-d H:i:s');
 
         foreach ($docAnterior as $doc) {
-            $dataInfo[] = [
+            $documentacion[] = [
                 'movimiento' => $doc['movimiento'],
                 'expediente' => $doc['expediente'],
                 'modificado' => $modificado,
@@ -399,8 +400,26 @@ class Documentacion extends CI_Controller {
             ];
         }
 
-        $this->Documentacion_model->darBajaDocumentacion($idLoteAnterior);
-        $this->General_model->insertBatch('historial_documento', $dataInfo);
+        foreach ($docPorReubicacion as $doc) {
+            $documentacion[] = [
+                'movimiento' => $doc['nombre'],
+                'expediente' => NULL,
+                'modificado' => NULL,
+                'status' => 1,
+                'idCliente' => $idClienteNuevo,
+                'idCondominio' => $loteNuevoInfo->idCondominio,
+                'idLote' => $idLoteNuevo,
+                'idUser' => NULL,
+                'tipo_documento' => 0,
+                'id_autorizacion' => 0,
+                'tipo_doc' => $doc['id_opcion'],
+                'estatus_validacion' => 0
+            ];
+        }
+
+        $this->Documentacion_model->darBajaDocumentacion($idLoteAnterior, $idClienteAnterior);
+        $this->Documentacion_model->darBajaDocumentacion($idLoteNuevo, $idClienteNuevo);
+        $this->General_model->insertBatch('historial_documento', $documentacion);
 
         echo 'Salió todo fine';
     }

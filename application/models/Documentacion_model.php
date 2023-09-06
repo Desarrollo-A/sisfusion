@@ -109,8 +109,14 @@ class Documentacion_model extends CI_Model {
         return $query->row();
     }
 
-    public function darBajaDocumentacion($idLote)
+    public function darBajaDocumentacion($idLote, $idCliente)
     {
-        $this->db->query("UPDATE historial_documento SET status = 0 WHERE status = 1 and idLote = $idLote ");
+        $this->db->query("UPDATE historial_documento SET status = 0 WHERE status = 1 and idLote = $idLote AND idCliente = $idCliente");
+    }
+
+    public function obtenerDocumentacionPorReubicacion()
+    {
+        $query = $this->db->query('SELECT * FROM opcs_x_cats WHERE id_catalogo = 98 AND estatus = 1');
+        return $query->result_array();
     }
 }
