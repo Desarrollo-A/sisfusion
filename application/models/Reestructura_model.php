@@ -70,4 +70,27 @@ class Reestructura_model extends CI_Model
 
         return $query->result();
     }
+
+    public function obtenerDocumentacionActiva($idLote, $idCliente)
+    {
+        $query = $this->db->query("SELECT * FROM historial_documento WHERE idLote = $idLote AND idCliente = $idCliente AND status = 1");
+        return $query->result_array();
+    }
+
+    public function obtenerLotePorId($idLote)
+    {
+        $query = $this->db->query("SELECT lo.*,
+            cl.personalidad_juridica
+            FROM lotes lo
+            INNER JOIN clientes cl ON lo.idLote = cl.idLote
+            WHERE lo.idLote = $idLote AND cl.status = 1");
+        return $query->row();
+    }
+
+    public function obtenerDocumentacionPorReubicacion($personalidadJuridica)
+    {
+        $idCatalogo = ($personalidadJuridica == 1) ? 101 : 98;
+        $query = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo = $idCatalogo AND estatus = 1");
+        return $query->result_array();
+    }
 }

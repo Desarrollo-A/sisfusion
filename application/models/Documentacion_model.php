@@ -97,24 +97,6 @@ class Documentacion_model extends CI_Model {
 		return count($result) > 0 ? $result: array();
 	}
 
-    public function obtenerDocumentacionActiva($idLote, $idCliente)
-    {
-        $query = $this->db->query("SELECT * FROM historial_documento WHERE idLote = $idLote AND idCliente = $idCliente AND status = 1");
-        return $query->result_array();
-    }
-
-    public function obtenerLotePorId($idLote)
-    {
-        $query = $this->db->query("SELECT * FROM lotes WHERE idLote = $idLote");
-        return $query->row();
-    }
-
-    public function obtenerDocumentacionPorReubicacion()
-    {
-        $query = $this->db->query('SELECT * FROM opcs_x_cats WHERE id_catalogo = 98 AND estatus = 1');
-        return $query->result_array();
-    }
-
     /**
      * Función para buscar el path donde se encuentra el archivo en los diferentes tipos de proceso de contratación
      *
