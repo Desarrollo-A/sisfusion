@@ -1350,7 +1350,7 @@
 		WHEN (us.id_sede = '13' AND u0.id_lider = 3) THEN 7092
 		ELSE 0 END id_regional_2
         FROM usuarios us
-        INNER JOIN usuarios u0 ON u0.id_usuario = us.id_lider
+        LEFT JOIN usuarios u0 ON u0.id_usuario = us.id_lider
         WHERE us.id_usuario IN ($id_gerente)")->result_array();
     }
 
