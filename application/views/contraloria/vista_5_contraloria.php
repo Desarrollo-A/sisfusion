@@ -142,7 +142,8 @@
 										<thead>
 											<tr>
 												<th></th>
-												<th>TIPO</th>
+												<th>TIPO DE EXPEDIENTE</th>
+												<th>TIPO DE PROCESO</th>
 												<th>PROYECTO</th>
 												<th>CONDOMINIO</th>
 												<th>LOTE</th>
