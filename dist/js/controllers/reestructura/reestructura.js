@@ -3,7 +3,7 @@ $(document).ready(function () {
     $('#spiner-loader').removeClass('hide');
     $.post(general_base_url + "Reestructura/lista_proyecto", function (data) {
         var len = data.length;
-        var ids = '30,21,25,13';
+        var ids = '1, 11, 28, 14, 12, 32, 22, 34';
         $("#proyecto").append($('<option>').val(ids).text('SELECCIONAR TODOS'));
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
@@ -98,11 +98,63 @@ $(document).on('click', '#save2', function () {
     };
 });
 
+function open_Mb(){
+    $("#catalogoRee").modal();   
+}
+
+$(document).on("click","#btnMultiRol",function(){
+    $('#multirol').append(`
+            <div class="col-md-12 aligned-row">
+                <div class="col-md-10 pr-0 pr-0">
+                    <div class="form-group text-left m-0">
+                        <label class="control-label">Nueva opción (<small class="isRequired">*</small>)</label>
+                        <input class="form-control input-gral inpCat" id="inpCat" name="inpCat"></input>
+                    </div>
+                </div>
+                <div class="col-md-2 justify-center d-flex align-end">
+                    <div class="form-group m-0 p-0">
+                        <button class="btn-data btn-green mb-1 opcCat" id="opcCat" name="opcCat" type="button" data-toggle="tooltip" data-placement="top" title="Eliminar rol"><i class="fas fa-check"></i></button>
+                    </div>
+                </div>
+            </div>
+        `);
+        // $('[data-toggle="tooltip"]').tooltip();
+        // for (var i = 0; i < puestos.length; i++) {
+        //     var id = puestos[i].id;
+        //     var name = puestos[i].nombre;
+        //     $(`#multi_${index}`).append($('<option>').val(id).text(name.toUpperCase()));
+        // }
+        // for (var i = 0; i < sedes.length; i++) {
+        //     var id = sedes[i].id;
+        //     var name = sedes[i].nombre;
+        //     $(`#sedes_${index}`).append($('<option>').val(id).text(name.toUpperCase()));
+        // }
+        // $(`#multi_${index}`).selectpicker('refresh');
+        // $(`#sedes_${index}`).selectpicker('refresh');
+        // index = parseInt(index + 1);
+        // $('#index').val(index);
+});
+
+$(document).on('click', '#opcCat', function () {
+    var nombreLot = $("#nombreLoteAv").val();
+});
+
+
 function fillTable(index_proyecto) {
     tabla_valores_cliente = $("#tabla_clientes").DataTable({
         width: '100%',
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         buttons: [{
+            text: '<i class="fas fa-tags"></i> CATÁLOGO',
+            action: function() {
+                open_Mb();
+            },
+            attr: {
+                class: 'btn btn-azure',
+                style: 'position: relative; float: right',
+            },
+            },
+            {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
@@ -176,6 +228,10 @@ function fillTable(index_proyecto) {
                     return '<span class="label lbl-azure">SIN OBSERVACIONES</span>';
                 }else if(d.observacion == "LIBERACIÓN JURÍDICA"){
                     return '<span class="label lbl-green">LIBERACIÓN JURÍDICA</span>';
+                }else if(d.observacion == "Liberado por Yola"){
+                    return '<span class="label lbl-gray">LIBERADO POR YOLANDA</span>';
+                }else if(d.observacion == "LIBERADO POR CORREO"){
+                    return '<span class="label lbl-orangeYellow">LIBERADO POR CORREO</span>';
                 }else{
                     return '<p class="m-0">' + d.observacion + '</p>';
                 }

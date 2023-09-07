@@ -98,7 +98,6 @@
                 </div>
             </div>
 
-                                              
             <div class="modal fade" id="BajaConfirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
                 <div class="modal-dialog modal-md ">
                     <div class="modal-content">
@@ -330,8 +329,8 @@
                             <div class="modal-footer">
                                 <div class="row">
                                     <div class="col-lg-12">
-                                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                                <button type="submit" class="btn btn-primary" id="btnS">Aceptar</button>
+                                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-primary" id="btnS">Aceptar</button>
                                     </div>
                                 </div>
                             </div>

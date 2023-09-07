@@ -25,6 +25,32 @@
 			</div>
 		</div>
 
+        <div class="modal fade" id="catalogoRee" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog">
+				<div class="modal-content" > 
+					<div class="modal-header">
+                        <div class="row d-flex justify-center align-center">
+                            <div class="col-xs-12 col-sm-7 col-md-7 col-lg-7 ">
+						        <h4 class="modal-title text-right">CATALOGO</h4>
+                            </div>
+                            <div class="col-xs-12 col-sm-5 col-md-5 col-lg-5 p-0">
+                                <button class="btn-data btn-green btnMultiRol" id="btnMultiRol" data-toggle="tooltip" data-placement="top" title= "VALIDAR REESTRUCTURACIÓN" data-idLote="' +d.idLote+ '"><i class="fas fa-plus"></i></button>
+                            </div>
+                        </div>
+					</div>
+					<div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row aligned-row" id="multirol"></div>
+                        </div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+						<button type="button" id="save2" name="save2" class="btn btn-primary">Registrar</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
         <div class="modal fade" id="aceptarReestructura" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog">
 				<div class="modal-content" > 
@@ -32,19 +58,12 @@
 						<h4 class="modal-title text-center">Validar lote para reestructura</h4>
 					</div>
 					<div class="modal-body">
-                        <div class="row p-1">
-                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                <label>Grabado</label>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <label>OPCIONES</label>
                                 <select name="grabado" id="grabado" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required>
-                                    <option value="1">SI</option>
-                                    <option value="0">NO</option>
-                                </select>
-                            </div>
-                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                <label>Proceso juridico</label>
-                                <select name="procesoJ" id="procesoJ" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required>
-                                    <option value="1">SI</option>
-                                    <option value="0">NO</option>
+                                    <option value="1">GRABAMEN</option>
+                                    <option value="0">JURÍDICO</option>
                                 </select>
                             </div>
                         </div>
@@ -53,7 +72,7 @@
                             <textarea class="text-modal" id="comentario2" rows="3"></textarea>
                         </div>
                         <br>
-                        <!-- <input type="hidden" name="idLote" id="idLoteenvARevCE" >            -->
+                        <!-- <input type="hidden" name="idLote" id="idLoteenvARevCE" > -->
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
