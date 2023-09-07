@@ -92,30 +92,28 @@ class Reestructura extends CI_Controller{
     }
 
 	public function aplicarLiberacion(){
-				$dataPost = $_POST;
-				$comentarioLiberacion = $dataPost['tipoLiberacion'] == 7 ? 'LIBERADO POR REUBICACIÓN' : ( $dataPost['tipoLiberacion'] == 9 ? 'LIBERACIÓN JURÍDICA' : ($dataPost['tipoLiberacion'] == 8 ? 'LIBERADO POR REESTRUCTURA' : '') );
-				$observacionLiberacion = $dataPost['tipoLiberacion'] == 7 ? 'LIBERADO POR REUBICACIÓN' : ( $dataPost['tipoLiberacion'] == 9 ? 'LIBERACIÓN JURÍDICA' : ($dataPost['tipoLiberacion'] == 8 ? 'LIBERADO POR REESTRUCTURA' : '') );
-                $datos["nombreLote"] = $dataPost['nombreLote'];
-                $datos["precio"] = $dataPost['precio'];
-                $datos["comentarioLiberacion"] = $comentarioLiberacion;
-                $datos["observacionLiberacion"] = $observacionLiberacion;
-                $datos["fechaLiberacion"] = date('Y-m-d H:i:s');
-                $datos["modificado"] = date('Y-m-d H:i:s');
-                $datos["status"] = 1;
-                $datos["userLiberacion"] = $this->session->userdata('id_usuario');
-				$dataPost['tipoLiberacion'] == 7 ? $datos['idLoteNuevo'] = $dataPost['idLoteNuevo'] : '' ;
-                $datos["tipo"] = $dataPost['tipoLiberacion'];
-				$datos["idLote"] = $dataPost['idLote'];
-                $update = $this->Reestructura_model->aplicaLiberacion($datos);
+		$dataPost = $_POST;
+		$comentarioLiberacion = $dataPost['tipoLiberacion'] == 7 ? 'LIBERADO POR REUBICACIÓN' : ( $dataPost['tipoLiberacion'] == 9 ? 'LIBERACIÓN JURÍDICA' : ($dataPost['tipoLiberacion'] == 8 ? 'LIBERADO POR REESTRUCTURA' : '') );
+		$observacionLiberacion = $dataPost['tipoLiberacion'] == 7 ? 'LIBERADO POR REUBICACIÓN' : ( $dataPost['tipoLiberacion'] == 9 ? 'LIBERACIÓN JURÍDICA' : ($dataPost['tipoLiberacion'] == 8 ? 'LIBERADO POR REESTRUCTURA' : '') );
+		$datos["nombreLote"] = $dataPost['nombreLote'];
+		$datos["precio"] = $dataPost['precio'];
+		$datos["comentarioLiberacion"] = $comentarioLiberacion;
+		$datos["observacionLiberacion"] = $observacionLiberacion;
+		$datos["fechaLiberacion"] = date('Y-m-d H:i:s');
+		$datos["modificado"] = date('Y-m-d H:i:s');
+		$datos["status"] = 1;
+		$datos["userLiberacion"] = $this->session->userdata('id_usuario');
+		$dataPost['tipoLiberacion'] == 7 ? $datos['idLoteNuevo'] = $dataPost['idLoteNuevo'] : '' ;
+		$datos["tipo"] = $dataPost['tipoLiberacion'];
+		$datos["idLote"] = $dataPost['idLote'];
+		$update = $this->Reestructura_model->aplicaLiberacion($datos);
 
-                if ($update == TRUE) {
-                    $response['message'] = 'SUCCESS';
-                    echo json_encode(1);
-                } else {
-                    $response['message'] = 'ERROR';
-                    echo json_encode(0);
-                }
-        
+		if ($update == TRUE) {
+			$response['message'] = 'SUCCESS';
+			echo json_encode(1);
+		} else {
+			$response['message'] = 'ERROR';
+			echo json_encode(0);
+		}    
 	}
 }
- 
