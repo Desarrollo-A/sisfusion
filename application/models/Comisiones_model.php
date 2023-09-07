@@ -213,7 +213,8 @@ class Comisiones_model extends CI_Model {
 
     public function getDataDispersionPago() {
         $this->db->query("SET LANGUAGE Español;");
-        $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre as nombreCondominio, l.nombreLote,  
+
+        $query = $this->db->query("SELECT DISTINCT(l.idLote), cl.id_cliente_reubicacion ,  res.nombreResidencial, cond.nombre as nombreCondominio, l.nombreLote,  
         CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombreCliente, vc.id_cliente AS compartida, l.idStatusContratacion, l.totalNeto2, pc.fecha_modificacion, 
         convert(nvarchar, pc.ultima_dispersion, 6) ultima_dispersion, convert(nvarchar, pc.fecha_modificacion, 6) fecha_sistema, convert(nvarchar, pc.fecha_neodata, 6) fecha_neodata, se.nombre as sede, l.registro_comision, l.referencia, cl.id_cliente, 
         CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) as asesor, 
@@ -236,7 +237,16 @@ class Comisiones_model extends CI_Model {
         LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision
         LEFT JOIN sedes se ON se.id_sede = cl.id_sede       
         LEFT JOIN penalizaciones pe ON pe.id_lote = l.idLote AND pe.id_cliente = l.idCliente
-        WHERE (l.idLote IN (13969,7167,7168,10304,17231,18338,18549,23730,27250,31850,32573,73591) AND l.registro_comision not in (7) AND pc.bandera in (0)) OR (l.idStatusContratacion >= 9 AND cl.status = 1 AND l.status = 1 AND (l.registro_comision in (0,8,2)  or (l.registro_comision in (1,8) AND pc.bandera in (0))) AND (tipo_venta IS NULL OR tipo_venta IN (0,1,2)) AND cl.fechaApartado >= '2020-03-01' AND ISNULL(l.totalNeto2, 0) > 0) ORDER BY l.idLote");
+        WHERE (l.idLote IN (13969,7167,7168,10304,17231,18338,18549,23730,27250,31850,32573,73591) 
+        AND l.registro_comision not in (7) 
+        AND pc.bandera in (0)) OR (l.idStatusContratacion >= 9 
+        AND cl.status = 1 
+        AND l.status = 1 
+        AND (l.registro_comision in (0,8,2,9)  or (l.registro_comision in (1,8,9) 
+        AND pc.bandera in (0))) 
+        AND (tipo_venta IS NULL OR tipo_venta IN (0,1,2)) 
+        AND cl.fechaApartado >= '2020-03-01' 
+        AND ISNULL(l.totalNeto2, 0) > 0) ORDER BY l.idLote");
         return $query;
     }
 
@@ -5127,8 +5137,25 @@ class Comisiones_model extends CI_Model {
         return $query->result_array();
     }
 
-    public function updateBanderaDetenida($idLote, $updateHistorial, $nuevoRegistroComision  = false){
-        if($nuevoRegistroComision != false ) {
+    function updateBandera($id_pagoc, $param) {
+         $response = $this->db->query("UPDATE pago_comision SET bandera = ".$param." WHERE id_lote IN (".$id_pagoc.")");
+
+        if($param == 55){
+          $response = $this->db->query("UPDATE lotes SET registro_comision = 1 WHERE idLote IN (".$id_pagoc.")");
+        }
+
+        if (! $response ) {
+            return $finalAnswer = 0;
+        } else {
+            return $finalAnswer = 1;
+        }
+    }
+
+    public function updateBanderaDetenida($idLote, $updateHistorial, $nuevoRegistroComision  = FALSE  )
+    {
+
+        var_dump($nuevoRegistroComision);
+        if($nuevoRegistroComision >= 0 ) {
             if ($updateHistorial) {
                 $this->db->query("UPDATE lotes SET registro_comision = $nuevoRegistroComision, modificado=".$this->session->userdata('id_usuario')." WHERE idLote = $idLote");
                 return (bool)($this->db->query("UPDATE historial_log SET estatus = 0 WHERE tabla = 'pago_comision' AND estatus = 1 AND identificador = $idLote"));
@@ -5136,7 +5163,7 @@ class Comisiones_model extends CI_Model {
                 return (bool)($this->db->query("UPDATE lotes SET registro_comision = $nuevoRegistroComision, modificado=".$this->session->userdata('id_usuario')." WHERE idLote = $idLote"));
             }
         }else {
-            return 'error';
+            return  'error1';
         }
     }
 
@@ -5573,6 +5600,30 @@ class Comisiones_model extends CI_Model {
         $query = $this->db->query($cmd);
         return $query;
     }
+
+
+// aqui enmpieza la reubicacación
+    public  function reubicadas($idCliente) {
+        $crm = "	SELECT 
+        CONCAT(usu.nombre , ' ' , usu.apellido_paterno , ' ', usu.apellido_materno ) as nombre_comisionista 
+        , cr.id_comision_reubicada, cr.id_usuario, cr.comision_total, 
+        cr.porcentaje_decimal, cr.rol_generado, cr.idCliente, cr.idLote
+        FROM comisionesReubicadas cr
+        INNER JOIN  usuarios usu on usu.id_usuario = cr.id_usuario
+        where idCliente = $idCliente";
+        $query = $this->db->query($crm );
+        return  $query->result();
+    }
+
+
+// fin de la reubicacion 
+}
+
+
+
+
+
+
 
     function insert_penalizacion_individual($id_comision, $id_usuario, $rol, $abono_nuevo, $pago, $idCliente){
         $validar = $this->db->query("SELECT pa.id_prestamo, pa.monto, rp.total, (pa.monto-rp.total) pendiente FROM prestamos_aut pa

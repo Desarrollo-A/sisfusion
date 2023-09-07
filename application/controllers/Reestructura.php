@@ -109,11 +109,19 @@ class Reestructura extends CI_Controller{
 		$update = $this->Reestructura_model->aplicaLiberacion($datos);
 
 		if ($update == TRUE) {
-			$response['message'] = 'SUCCESS';
 			echo json_encode(1);
 		} else {
-			$response['message'] = 'ERROR';
 			echo json_encode(0);
-		}    
+		}		
 	}
-}
+
+	public function setReestructura(){
+		$dataPost = $_POST;
+		$insert = $this->Reestructura_model->setReestructura($dataPost);
+		if ($insert == TRUE) {
+			echo json_encode(1);
+		} else {
+			echo json_encode(0);
+		}
+	}
+} 

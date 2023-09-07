@@ -22,7 +22,6 @@ $(document).ready( function() {
         $('#headquarter').selectpicker('refresh');
         $('#member_type').selectpicker('refresh');
     });
-
     $(".select-is-empty").removeClass("is-empty");
     fillUsersTable();
 });
