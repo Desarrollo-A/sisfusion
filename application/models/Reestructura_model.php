@@ -110,4 +110,17 @@ class Reestructura_model extends CI_Model
         }
         
     }
+    public function setReestructura($datos){
+        $this->db->trans_begin();
+        $fecha = date('Y-m-d H:i:s');
+        $creado_por = $this->session->userdata('id_usuario');
+        $this->db->query("INSERT INTO ventas_compartidas VALUES(".$datos['idCliente'].",".$datos['id_asesor'].",0,".$datos['id_gerente'].",2,'$fecha',$creado_por,".$datos['id_subdirector'].",'$fecha','$creado_por',0,NULL)");
+        if ($this->db->trans_status() === FALSE){
+            $this->db->trans_rollback();
+            return false;
+        } else {
+            $this->db->trans_commit();
+            return true;
+        }
+    }
 }
