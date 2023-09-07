@@ -104,39 +104,25 @@ function open_Mb(){
 
 $(document).on("click","#btnMultiRol",function(){
     $('#multirol').append(`
-            <div class="col-md-12 aligned-row">
-                <div class="col-md-10 pr-0 pr-0">
-                    <div class="form-group text-left m-0">
-                        <label class="control-label">Nueva opción (<small class="isRequired">*</small>)</label>
-                        <input class="form-control input-gral inpCat" id="inpCat" name="inpCat"></input>
-                    </div>
-                </div>
-                <div class="col-md-2 justify-center d-flex align-end">
-                    <div class="form-group m-0 p-0">
-                        <button class="btn-data btn-green mb-1 opcCat" id="opcCat" name="opcCat" type="button" data-toggle="tooltip" data-placement="top" title="Eliminar rol"><i class="fas fa-check"></i></button>
-                    </div>
+        <div class="col-md-12 aligned-row">
+            <div class="col-md-10 pr-0 pr-0">
+                <div class="form-group text-left m-0">
+                    <label class="control-label">Nueva opción (<small class="isRequired">*</small>)</label>
+                    <input class="form-control input-gral inpCat" id="inpCat" name="inpCat"></input>
                 </div>
             </div>
-        `);
-        // $('[data-toggle="tooltip"]').tooltip();
-        // for (var i = 0; i < puestos.length; i++) {
-        //     var id = puestos[i].id;
-        //     var name = puestos[i].nombre;
-        //     $(`#multi_${index}`).append($('<option>').val(id).text(name.toUpperCase()));
-        // }
-        // for (var i = 0; i < sedes.length; i++) {
-        //     var id = sedes[i].id;
-        //     var name = sedes[i].nombre;
-        //     $(`#sedes_${index}`).append($('<option>').val(id).text(name.toUpperCase()));
-        // }
-        // $(`#multi_${index}`).selectpicker('refresh');
-        // $(`#sedes_${index}`).selectpicker('refresh');
-        // index = parseInt(index + 1);
-        // $('#index').val(index);
+            <div class="col-md-2 justify-center d-flex align-end">
+                <div class="form-group m-0 p-0">
+                    <button class="btn-data btn-green mb-1 opcCat" id="opcCat" name="opcCat" type="button" data-toggle="tooltip" data-placement="top" title="Eliminar rol"><i class="fas fa-check"></i></button>
+                </div>
+            </div>
+        </div>
+    `);
 });
 
 $(document).on('click', '#opcCat', function () {
-    var nombreLot = $("#nombreLoteAv").val();
+    var nombreLot = $("#inpCat").val();
+    console.log(nombreLot);
 });
 
 

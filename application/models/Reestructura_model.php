@@ -86,6 +86,10 @@ class Reestructura_model extends CI_Model
 		INNER JOIN residenciales res ON res.idResidencial = lotx.proyectoReubicacion");
     }
 
+    function get_catalogo_resstructura(){
+        return $this->db->query("SELECT id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo = 100");
+    }
+
     public function get_valor_lote($id_proyecto)
     {
         return $this->db->query("SELECT res.nombreResidencial,con.nombre AS condominio, lot.nombreLote, lot.idLote ,lot.sup AS superficie, lot.precio, CONCAT(cli.nombre,' ',cli.apellido_paterno,' ',cli.apellido_materno) nombreCliente,lot.observacionLiberacion AS observacion 
