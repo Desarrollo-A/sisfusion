@@ -71,4 +71,51 @@ class Reestructura extends CI_Controller{
             echo json_encode(array());
         }
 	}
+	
+	public function reestructura(){
+		$this->load->view('template/header');
+        $this->load->view("reestructura/reestructura_view");
+	}
+
+	public function lista_proyecto(){
+        echo json_encode($this->Reestructura_model->get_proyecto_lista()->result_array());
+    }
+
+	public function getregistros(){
+        $index_proyecto = $this->input->post('index_proyecto');
+        $dato = $this->Reestructura_model->get_valor_lote($index_proyecto);
+        if ($dato != null) {
+            echo json_encode($dato);
+        }else{
+            echo json_encode(array());
+        }
+    }
+
+	public function aplicarLiberacion(){
+				$dataPost = $_POST;
+				$comentarioLiberacion = $dataPost['tipoLiberacion'] == 7 ? 'LIBERADO POR REUBICACIÓN' : ( $dataPost['tipoLiberacion'] == 9 ? 'LIBERACIÓN JURÍDICA' : ($dataPost['tipoLiberacion'] == 8 ? 'LIBERADO POR REESTRUCTURA' : '') );
+				$observacionLiberacion = $dataPost['tipoLiberacion'] == 7 ? 'LIBERADO POR REUBICACIÓN' : ( $dataPost['tipoLiberacion'] == 9 ? 'LIBERACIÓN JURÍDICA' : ($dataPost['tipoLiberacion'] == 8 ? 'LIBERADO POR REESTRUCTURA' : '') );
+                $datos["nombreLote"] = $dataPost['nombreLote'];
+                $datos["precio"] = $dataPost['precio'];
+                $datos["comentarioLiberacion"] = $comentarioLiberacion;
+                $datos["observacionLiberacion"] = $observacionLiberacion;
+                $datos["fechaLiberacion"] = date('Y-m-d H:i:s');
+                $datos["modificado"] = date('Y-m-d H:i:s');
+                $datos["status"] = 1;
+                $datos["userLiberacion"] = $this->session->userdata('id_usuario');
+				$dataPost['tipoLiberacion'] == 7 ? $datos['idLoteNuevo'] = $dataPost['idLoteNuevo'] : '' ;
+                $datos["tipo"] = $dataPost['tipoLiberacion'];
+				$datos["idLote"] = $dataPost['idLote'];
+                $update = $this->Reestructura_model->aplicaLiberacion($datos);
+
+                if ($update == TRUE) {
+                    $response['message'] = 'SUCCESS';
+                    echo json_encode(1);
+                } else {
+                    $response['message'] = 'ERROR';
+                    echo json_encode(0);
+                }
+        
+	}
 }
+ 
