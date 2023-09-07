@@ -4991,9 +4991,7 @@ class Comisiones_model extends CI_Model {
     }
 
     public function findUsuariosByPuestoAsistente($puesto, $id_lider, $id_usuario) {
-        if ($id_usuario == 10795)  
-            $id_lider .= ", 671";
-        else if ($id_usuario == 12449)  
+        if ($id_usuario == 12449)  
             $id_lider .= ", 654";
         else if ($id_usuario == 10270)  
             $id_lider .= ", 113";
