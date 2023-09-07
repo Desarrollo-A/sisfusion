@@ -31,37 +31,91 @@ class Reestructura extends CI_Controller{
 	public function reubicarCliente(){
 		$this->load->view('template/header');
         $this->load->view("reestructura/reubicarCliente_view");
-	}	
+	}
 
-	public function getListaClientesReubicar(){
+    public function getListaClientesReubicar(){
         $data = $this->Reestructura_model->getListaClientesReubicar();
         echo json_encode($data);
-	}
+    }
 
-	public function getProyectosDisponibles(){
-		$data = $this->Reestructura_model->getProyectosDisponibles();
+    public function getProyectosDisponibles(){
+        $data = $this->Reestructura_model->getProyectosDisponibles();
         echo json_encode($data);
-	}
+    }
 
-	public function getCondominiosDisponibles(){
+    public function getCondominiosDisponibles(){
         $idProyecto = $this->input->post('idProyecto');
 
-		$data = $this->Reestructura_model->getCondominiosDisponibles($idProyecto);
+        $data = $this->Reestructura_model->getCondominiosDisponibles($idProyecto);
         if ($data != null) {
             echo json_encode($data);
         } else {
             echo json_encode(array());
         }
-	}
+    }
 
-	public function getLotesDisponibles(){
-		$idCondominio = $this->input->post('idCondominio');
+    public function getLotesDisponibles(){
+        $idCondominio = $this->input->post('idCondominio');
 
-		$data = $this->Reestructura_model->getLotesDisponibles($idCondominio);
+        $data = $this->Reestructura_model->getLotesDisponibles($idCondominio);
         if ($data != null) {
             echo json_encode($data);
         } else {
             echo json_encode(array());
         }
-	}
+    }
+
+    public function reestructura(){
+        $this->load->view('template/header');
+        $this->load->view("reestructura/reestructura_view");
+    }
+
+    public function lista_proyecto(){
+        echo json_encode($this->Reestructura_model->get_proyecto_lista()->result_array());
+    }
+
+    public function getregistros(){
+        $index_proyecto = $this->input->post('index_proyecto');
+        $dato = $this->Reestructura_model->get_valor_lote($index_proyecto);
+        if ($dato != null) {
+            echo json_encode($dato);
+        }else{
+            echo json_encode(array());
+        }
+    }
+
+    public function aplicarLiberacion(){
+        $dataPost = $_POST;
+        $comentarioLiberacion = $dataPost['tipoLiberacion'] == 7 ? 'LIBERADO POR REUBICACIÓN' : ( $dataPost['tipoLiberacion'] == 9 ? 'LIBERACIÓN JURÍDICA' : ($dataPost['tipoLiberacion'] == 8 ? 'LIBERADO POR REESTRUCTURA' : '') );
+        $observacionLiberacion = $dataPost['tipoLiberacion'] == 7 ? 'LIBERADO POR REUBICACIÓN' : ( $dataPost['tipoLiberacion'] == 9 ? 'LIBERACIÓN JURÍDICA' : ($dataPost['tipoLiberacion'] == 8 ? 'LIBERADO POR REESTRUCTURA' : '') );
+        $datos["nombreLote"] = $dataPost['nombreLote'];
+        $datos["precio"] = $dataPost['precio'];
+        $datos["comentarioLiberacion"] = $comentarioLiberacion;
+        $datos["observacionLiberacion"] = $observacionLiberacion;
+        $datos["fechaLiberacion"] = date('Y-m-d H:i:s');
+        $datos["modificado"] = date('Y-m-d H:i:s');
+        $datos["status"] = 1;
+        $datos["userLiberacion"] = $this->session->userdata('id_usuario');
+        $dataPost['tipoLiberacion'] == 7 ? $datos['idLoteNuevo'] = $dataPost['idLoteNuevo'] : '' ;
+        $datos["tipo"] = $dataPost['tipoLiberacion'];
+        $datos["idLote"] = $dataPost['idLote'];
+        $update = $this->Reestructura_model->aplicaLiberacion($datos);
+
+        if ($update == TRUE) {
+            echo json_encode(1);
+        } else {
+            echo json_encode(0);
+        }
+
+    }
+
+    public function setReestructura(){
+        $dataPost = $_POST;
+        $insert = $this->Reestructura_model->setReestructura($dataPost);
+        if ($insert == TRUE) {
+            echo json_encode(1);
+        } else {
+            echo json_encode(0);
+        }
+    }
 }
