@@ -87,6 +87,7 @@ class Asesor_model extends CI_Model {
         CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END subdirector,
         CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END regional,
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END regional2,
+        ISNULL(oxc0.nombre, 'Normal') tipo_proceso,
         cl.tipo_comprobanteD, cl.autorizacion_correo, cl.autorizacion_sms,
         ISNULL(tipo_correo_aut.total, 0) AS total_sol_correo_aut, ISNULL(tipo_correo_pend.total, 0) AS total_sol_correo_pend, 
         ISNULL(tipo_correo_rech.total, 0) AS total_sol_correo_rech,
@@ -102,6 +103,7 @@ class Asesor_model extends CI_Model {
         LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
         LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
         LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
+        LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
         LEFT JOIN autorizaciones AS aut ON cl.id_cliente = aut.idCliente AND lotes.idLote = aut.idLote
         LEFT JOIN codigo_autorizaciones acc ON cl.id_cliente = acc.id_cliente AND acc.tipo = 2
         LEFT JOIN codigo_autorizaciones acs ON cl.id_cliente = acs.id_cliente AND acs.tipo = 3
@@ -148,6 +150,7 @@ class Asesor_model extends CI_Model {
         cl.creado_por, cl.fechaApartado fecha_modificacion, cl.usuario modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial,
         cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, convert(varchar,lotes.fechaVenc,20) as fechaVenc, lotes.modificado, lotes.observacionContratoUrgente as vl, lotes.idStatusContratacion, cl.concepto, '666' as id_prospecto,
         cl.flag_compartida, 'SIN ESPECIFICAR' asesor, 'SIN ESPECIFICAR' coordinador, 'SIN ESPECIFICAR' gerente, 'SIN ESPECIFICAR' subdirector, 'SIN ESPECIFICAR' regional, 'SIN ESPECIFICAR' regional2, 
+        'Normal' tipo_proceso,
         aut.estatus as estatus, 'NULL' as tipo_comprobanteD, c.autorizacion_correo, c.autorizacion_sms,
         ISNULL(tipo_correo_aut.total, 0) AS total_sol_correo_aut, ISNULL(tipo_correo_pend.total, 0) AS total_sol_correo_pend, 
         ISNULL(tipo_correo_rech.total, 0) AS total_sol_correo_rech,
@@ -209,6 +212,7 @@ class Asesor_model extends CI_Model {
         CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END subdirector,
         CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END regional,
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END regional2,
+        ISNULL(oxc0.nombre, 'Normal') tipo_proceso,
         cl.tipo_comprobanteD, cl.autorizacion_correo, cl.autorizacion_sms, 
 	    ISNULL(tipo_correo_aut.total, 0) AS total_sol_correo_aut, ISNULL(tipo_correo_pend.total, 0) AS total_sol_correo_pend, 
         ISNULL(tipo_correo_rech.total, 0) AS total_sol_correo_rech,
@@ -225,6 +229,7 @@ class Asesor_model extends CI_Model {
         LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
         LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
         LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
+        LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
         LEFT JOIN autorizaciones AS aut ON cl.id_cliente = aut.idCliente AND lotes.idLote = aut.idLote
 		LEFT JOIN codigo_autorizaciones acc ON cl.id_cliente = acc.id_cliente AND acc.tipo = 2
         LEFT JOIN codigo_autorizaciones acs ON cl.id_cliente = acs.id_cliente AND acs.tipo = 3

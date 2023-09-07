@@ -3436,7 +3436,7 @@
 					$sede = "";
 				}
 				else if ($this->session->userdata('id_usuario') == 12318) { // EMMA CECILIA MALDONADO RAMÍREZ
-					$id_lider = $id_lider . ', 11196, 5637, 2599';
+					$id_lider = $id_lider . ', 11196, 5637, 2599, 1507';
 					$sede = "";
 				} else if ($this->session->userdata('id_usuario') == 11607) { // JOSE ENRIQUE HINOJOSA GUERRERO
 					$id_lider = $id_lider . ', 2411'; // VE LO DE SU GERENTE ACTUAL + LOS REGISTROS DE MAGDALENA ESPARZA HERNANDEZ CUANDO ERA GERENTE

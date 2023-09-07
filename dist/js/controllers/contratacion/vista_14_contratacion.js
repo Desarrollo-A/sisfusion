@@ -26,12 +26,9 @@ $("#tabla_ingresar_14").ready(function () {
             filename:'Registro Estatus 14',
             titleAttr: 'Descargar archivo de Excel',
             exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7],
+                columns: [1, 2, 3, 4, 5, 6, 7, 8],
                 format: {
                     header: function (d, columnIdx) {
-                        if (columnIdx == 0) {
-                            return ' ' + d + ' ';
-                        }
                         return ' ' + titulos[columnIdx - 1] + ' ';
                     }
                 }
@@ -57,6 +54,11 @@ $("#tabla_ingresar_14").ready(function () {
         {
             data: function (d) {
                 return `<span class="label lbl-green">${d.tipo_venta}</span>`;
+            }
+        },
+        {
+            data: function (d) {
+                return `<span class='label lbl-violetBoots'>${d.tipo_proceso}</span>`;
             }
         },
         {
