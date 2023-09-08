@@ -1808,8 +1808,8 @@ class Comisiones_model extends CI_Model {
     public function validateDispersionCommissions($lote){
         return $this->db->query("SELECT count(*) dispersion, pc.bandera 
         FROM comisiones com
-        LEFT JOIN pago_comision pc ON pc.id_lote = com.id_lote and pc.bandera = 1
-        WHERE com.id_lote = $lote AND com.id_usuario = 2 AND com.estatus = 1 AND com.fecha_creacion <= GETDATE() GROUP BY pc.bandera");
+        LEFT JOIN pago_comision pc ON pc.id_lote = com.id_lote and pc.bandera = 0
+        WHERE com.id_lote = $lote /*AND com.id_usuario = 2*/ AND com.estatus = 1 AND com.fecha_creacion <= GETDATE() GROUP BY pc.bandera");
     }
 
     function getDatosNuevasAContraloria($proyecto, $condominio){
