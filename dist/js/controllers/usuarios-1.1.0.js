@@ -10,7 +10,7 @@ $(document).ready( function() {
             }
             if (data[i]['id_catalogo'] == 1)
                 $("#member_type").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
-            if (data[i]['id_catalogo'] == 0)
+            if (data[i]['id_catalogo'] == 0){
                 $("#headquarter").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
                 sedes.push({
                     id : data[i]['id_opcion'],
@@ -22,7 +22,6 @@ $(document).ready( function() {
         $('#headquarter').selectpicker('refresh');
         $('#member_type').selectpicker('refresh');
     });
-
     $(".select-is-empty").removeClass("is-empty");
     fillUsersTable();
 });

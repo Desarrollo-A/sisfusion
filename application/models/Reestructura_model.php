@@ -82,17 +82,29 @@ class Reestructura_model extends CI_Model
         INNER JOIN condominios con ON con.idCondominio = lot.idCondominio
         INNER JOIN residenciales res on res.idResidencial = con.idResidencial
         INNER JOIN loteXReubicacion lotx ON lotx.proyectoReubicacion = con.idResidencial and lotx.idProyecto in ($id_proyecto)
-        LEFT JOIN clientes cli ON cli.id_cliente = lot.idCliente and cli.status in (1,0) and lot.idStatusLote in (13,2,3)")->result();
+        LEFT JOIN clientes cli ON cli.id_cliente = lot.idCliente and cli.status in (1,0) and lot.idStatusLote in (15,2,3)")->result();
     }
 
 
     public function aplicaLiberacion($datos){
-        $row = $this->db->query("SELECT idLote, nombreLote, status, sup,
+
+        $comentarioLiberacion = $datos['tipoLiberacion'] == 7 ? 'LIBERADO POR REUBICACIÓN' : ( $datos['tipoLiberacion'] == 9 ? 'LIBERACIÓN JURÍDICA' : ($datos['tipoLiberacion'] == 8 ? 'LIBERADO POR REESTRUCTURA' : '') );
+        $observacionLiberacion = $datos['tipoLiberacion'] == 7 ? 'LIBERADO POR REUBICACIÓN' : ( $datos['tipoLiberacion'] == 9 ? 'LIBERACIÓN JURÍDICA' : ($datos['tipoLiberacion'] == 8 ? 'LIBERADO POR REESTRUCTURA' : '') );
+        $datos["comentarioLiberacion"] = $comentarioLiberacion;
+        $datos["observacionLiberacion"] = $observacionLiberacion;
+        $datos["fechaLiberacion"] = date('Y-m-d H:i:s');
+        $datos["modificado"] = date('Y-m-d H:i:s');
+        $datos["status"] = 1;
+        $datos["userLiberacion"] = $this->session->userdata('id_usuario');
+        $datos["tipo"] = $datos['tipoLiberacion'];
+
+
+        $row = $this->db->query("SELECT idLote, nombreLote, status, sup,precio,
         (CASE WHEN totalNeto2 IS NULL THEN 0.00 ELSE totalNeto2 END) totalNeto2,
         (CASE WHEN idCliente = 0  OR idCliente IS NULL THEN 0 ELSE idCliente END) idCliente,registro_comision,
         (CASE WHEN tipo_venta IS NULL THEN 0 ELSE tipo_venta END) tipo_venta FROM lotes WHERE idLote=".$datos['idLote']." AND status = 1")->result_array();
         $registro_comision = $datos['tipo'] == 7 ? 9 : 8;
-        $idStatusLote = $datos['tipo'] == 9 ? 13 : 1;
+        $idStatusLote = $datos['tipo'] == 9 ? 15 : 1;
         $this->db->trans_begin();
         $datos['tipo'] == 7 ? $this->db->query("UPDATE lotes SET tipo_venta=".$row[0]['tipo_venta'].",usuario='".$datos['userLiberacion']."' WHERE idLote=".$datos['idLoteNuevo']." ") : '';
         $banderaComisionCl = $datos['tipo'] == 7 ? ' ,banderaComisionCl ='.$row[0]['registro_comision'] : '';
@@ -129,18 +141,18 @@ class Reestructura_model extends CI_Model
         }
 
 
-        $data_l = array(
-            'nombreLote'=> $datos['nombreLote'],
-            'comentarioLiberacion'=> $datos['comentarioLiberacion'],
-            'observacionLiberacion'=> $datos['observacionLiberacion'],
-            'precio'=> $datos['precio'],
-            'fechaLiberacion'=> $datos['fechaLiberacion'],
-            'modificado'=> $datos['modificado'],
-            'status'=> $datos['status'],
-            'idLote'=> $row[0]['idLote'],
-            'tipo'=> $datos['tipo'],
-            'userLiberacion'=> $datos['userLiberacion'],
-            'id_cliente' => (count($id_cliente)>=1 ) ? $id_cliente[0]['id_cliente'] : 0
+                $data_l = array(
+                    'nombreLote'=> $row[0]['nombreLote'],
+                    'comentarioLiberacion'=> $datos['comentarioLiberacion'],
+                    'observacionLiberacion'=> $datos['observacionLiberacion'],
+                    'precio'=> $row[0]['precio'],
+                    'fechaLiberacion'=> $datos['fechaLiberacion'],
+                    'modificado'=> $datos['modificado'],
+                    'status'=> $datos['status'],
+                    'idLote'=> $row[0]['idLote'],
+                    'tipo'=> $datos['tipo'],
+                    'userLiberacion'=> $datos['userLiberacion'],
+                    'id_cliente' => (count($id_cliente)>=1 ) ? $id_cliente[0]['id_cliente'] : 0
 
         );
 
@@ -160,9 +172,9 @@ class Reestructura_model extends CI_Model
                     observacionLiberacion = '".$datos['observacionLiberacion']."', idStatusLote = $idStatusLote, 
                     fechaLiberacion = GETDATE(), 
                     userLiberacion = '".$datos['userLiberacion']."',
-                    precio = ".$datos['precio'].", total = ((".$row[0]['sup'].") * ".$datos['precio']."),
-                    enganche = (((".$row[0]['sup'].") * ".$datos['precio'].") * 0.1), 
-                    saldo = (((".$row[0]['sup'].") * ".$datos['precio'].") - (((".$row[0]['sup'].") * ".$datos['precio'].") * 0.1)),
+                    precio = ".$row[0]['precio'].", total = ((".$row[0]['sup'].") * ".$row[0]['precio']."),
+                    enganche = (((".$row[0]['sup'].") * ".$row[0]['precio'].") * 0.1), 
+                    saldo = (((".$row[0]['sup'].") * ".$row[0]['precio'].") - (((".$row[0]['sup'].") * ".$row[0]['precio'].") * 0.1)),
                     asig_jur = 0
                     WHERE idLote IN (".$datos['idLote'].") and status = 1");
 
