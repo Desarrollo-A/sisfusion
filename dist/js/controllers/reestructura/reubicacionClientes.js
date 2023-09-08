@@ -141,6 +141,7 @@ $(document).on('click', '.btn-reubicar', function () {
     const total = row.data().total;
     const idProyecto = $(this).attr("data-idProyecto");
     const tipoLote = $(this).attr("data-tipoLote");
+    const idCliente = $(this).attr("data-idCliente");
 
     changeSizeModal('modal-md');
     appendBodyModal(`
@@ -190,6 +191,7 @@ $(document).on('click', '.btn-reubicar', function () {
                 </div>
                 <input type="hidden" id="superficie" value="${superficie}">
                 <input type="hidden" id="tipoLote" value="${tipoLote}">
+                <input type="hidden" id="idCliente" name="idCliente" value="${idCliente}">
                 <div class="row mt-2">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
                         <button type="button" class="btn btn-simple btn-danger" onclick="hideModal()">Cancelar</button>
@@ -267,24 +269,23 @@ $(document).on("change", "#loteAOcupar", function(e){
     const superficie = $itself.attr("data-superficie");
     const total = $itself.attr("data-total");
     const html = `
-            <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                <div class="p-2 pt-1" style="background-color: #eaeaea; border-radius:15px">
-                    <h5 class="mb-0 mt-2 text-center">LOTE SELECCIONADO</h5>
-                    <span class="w-100 d-flex justify-between">
-                        <p class="m-0">Lote</p>
-                        <p class="m-0"><b>${nombre}</b></p>
-                    </span>
-                    <span class="w-100 d-flex justify-between">
-                        <p class="m-0">Superficie</p>
-                        <p class="m-0"><b>${superficie}</b></p>
-                    </span>
-                    <span class="w-100 d-flex justify-between">
-                        <p class="m-0">Precio metro</p>
-                        <p class="m-0"><b>$${formatMoney(total)}</b></p>
-                    </span>
-                <div>
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="p-2 pt-1" style="background-color: #eaeaea; border-radius:15px">
+                <h5 class="mb-0 mt-2 text-center">LOTE SELECCIONADO</h5>
+                <span class="w-100 d-flex justify-between">
+                    <p class="m-0">Lote</p>
+                    <p class="m-0"><b>${nombre}</b></p>
+                </span>
+                <span class="w-100 d-flex justify-between">
+                    <p class="m-0">Superficie</p>
+                    <p class="m-0"><b>${superficie}</b></p>
+                </span>
+                <span class="w-100 d-flex justify-between">
+                    <p class="m-0">Precio metro</p>
+                    <p class="m-0"><b>$${formatMoney(total)}</b></p>
+                </span>
             <div>
-            <input type="hidden" id="idLoteAOcupar" name="idLoteAOcupar" value="${superficie}">
+        <div>
     `; 
     
     $("#infoLoteSeleccionado").append(html);
@@ -293,19 +294,39 @@ $(document).on("change", "#loteAOcupar", function(e){
 $(document).on("submit", "#formReubicar", function(e){
     $('#spiner-loader').removeClass('hide');
     e.preventDefault();
-    let idSolicitud = $("#idSolicitud").val();
     let data = new FormData($(this)[0]);
-    data.append("idSolicitud", idSolicitud);
-    data.append("tipoContratoAnt", $("#tipoContratoAnt").val());
-    if( $("#clienteI").val() == "uno" ){
-      if( $("#tipoContratoAnt").val() != '' ){
-        setNewInformacion(data);
-      }
-      else{
-        alerts.showNotification('top', 'right', 'Debes seleccionar el tipo de contrato anterior', 'danger');
-      }
-    }
-    else{
-      setNewInformacion(data);
-    }
+
+    $.ajax({
+        url : 'setReubicacion',
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST', 
+        success: function(data){
+            response = JSON.parse(data);
+            if(response.message == 'OK') {
+                $('#save1').prop('disabled', false);
+                $('#editReg').modal('hide');
+                $('#tabla_reporte_11').DataTable().ajax.reload();
+                alerts.showNotification("top", "right", "Estatus enviado.", "success");
+            } else if(response.message == 'FALSE'){
+                $('#save1').prop('disabled', false);
+                $('#editReg').modal('hide');
+                $('#tabla_reporte_11').DataTable().ajax.reload();
+                alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
+            } else if(response.message == 'ERROR'){
+                $('#save1').prop('disabled', false);
+                $('#editReg').modal('hide');
+                $('#tabla_reporte_11').DataTable().ajax.reload();
+                alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+            }
+        },
+        error: function( data ){
+                $('#save1').prop('disabled', false);
+                $('#editReg').modal('hide');
+                $('#tabla_reporte_11').DataTable().ajax.reload();
+                alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+        }
+    });
 });

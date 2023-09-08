@@ -50,7 +50,7 @@ class Reestructura_model extends CI_Model
         FROM loteXReubicacion lr
         INNER JOIN residenciales re ON re.idResidencial = lr.proyectoReubicacion AND re.status = 1
 		INNER JOIN condominios co ON co.idResidencial = re.idResidencial AND co.tipo_lote = $tipoLote
-		INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND lo.sup >= $superficie AND lo.idStatusLote = 13 AND lo.status = 1
+		INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND lo.sup >= $superficie AND lo.idStatusLote = 15 AND lo.status = 1
         WHERE lr.idProyecto = $proyecto
 		GROUP BY lr.proyectoReubicacion, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100)))");
 
@@ -61,7 +61,7 @@ class Reestructura_model extends CI_Model
         $query = $this->db->query("SELECT lo.idCondominio, co.nombre, COUNT(*) disponibles
         FROM condominios co
         INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio
-        WHERE lo.idStatusLote = 13 AND lo.status = 1
+        WHERE lo.idStatusLote = 15 AND lo.status = 1
         AND co.idResidencial = $proyecto AND lo.sup >= $superficie AND co.tipo_lote = $tipoLote
         GROUP BY lo.idCondominio, co.nombre");
 
@@ -74,7 +74,7 @@ class Reestructura_model extends CI_Model
 			WHEN sup = ($superficie + 2)THEN '1%' ELSE '8%' END a_favor,
             lo.idLote, lo.nombreLote, lo.sup, lo.precio, lo.total
             FROM lotes lo
-            WHERE lo.idCondominio = $condominio AND lo.idStatusLote = 13 AND lo.status = 1
+            WHERE lo.idCondominio = $condominio AND lo.idStatusLote = 15 AND lo.status = 1
             AND lo.sup >= $superficie");
 
         return $query->result();
@@ -90,13 +90,13 @@ class Reestructura_model extends CI_Model
         return $this->db->query("SELECT id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo = 100");
     }
 
-    public function get_valor_lote($id_proyecto)
-    {
+    public function get_valor_lote($id_proyecto){
+        ini_set('memory_limit', -1);
         return $this->db->query("SELECT res.nombreResidencial,con.nombre AS condominio, lot.nombreLote, lot.idLote ,lot.sup AS superficie, lot.precio, CONCAT(cli.nombre,' ',cli.apellido_paterno,' ',cli.apellido_materno) nombreCliente,lot.observacionLiberacion AS observacion 
         FROM lotes lot
-        INNER JOIN condominios con ON con.idCondominio = lot.idCondominio
-        INNER JOIN residenciales res on res.idResidencial = con.idResidencial
-        INNER JOIN loteXReubicacion lotx ON lotx.proyectoReubicacion = con.idResidencial and lotx.idProyecto in ($id_proyecto)
+        INNER JOIN condominios con ON con.idCondominio = lot.idCondominio 
+        INNER JOIN residenciales res on res.idResidencial = con.idResidencial 
+        INNER JOIN loteXReubicacion lotx ON lotx.proyectoReubicacion = con.idResidencial and lotx.proyectoReubicacion in ($id_proyecto) 
         LEFT JOIN clientes cli ON cli.id_cliente = lot.idCliente and cli.status in (1,0) and lot.idStatusLote in (15,2,3)")->result();
     }
 
@@ -205,5 +205,10 @@ class Reestructura_model extends CI_Model
             $this->db->trans_commit();
             return true;
         }
+    }
+
+    public function getSelectedSup($idLote){
+        $query = $this->db->query("SELECT sup FROM lotes WHERE idLote = $idLote");
+        return $query;
     }
 }
