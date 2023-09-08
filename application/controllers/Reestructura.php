@@ -118,4 +118,105 @@ class Reestructura extends CI_Controller{
             echo json_encode(0);
         }
     }
+
+    function moverArchivos($idLoteAnterior, $idLoteNuevo, $idClienteAnterior, $idClienteNuevo)
+    {
+        $loteNuevoInfo = $this->Reestructura_model->obtenerLotePorId($idLoteNuevo);
+        $docAnterior = $this->Reestructura_model->obtenerDocumentacionActiva($idLoteAnterior, $idClienteAnterior);
+        $docPorReubicacion = $this->Reestructura_model->obtenerDocumentacionPorReubicacion($loteNuevoInfo->personalidad_juridica);
+        $documentacion = [];
+        $modificado = date('Y-m-d H:i:s');
+
+        foreach ($docAnterior as $doc) {
+            $documentacion[] = [
+                'movimiento' => $doc['movimiento'],
+                'expediente' => $doc['expediente'],
+                'modificado' => $modificado,
+                'status' => 1,
+                'idCliente' => $idClienteNuevo,
+                'idCondominio' => $loteNuevoInfo->idCondominio,
+                'idLote' => $idLoteNuevo,
+                'idUser' => NULL,
+                'tipo_documento' => 0,
+                'id_autorizacion' => 0,
+                'tipo_doc' => $doc['tipo_doc'],
+                'estatus_validacion' => 0
+            ];
+        }
+
+        foreach ($docPorReubicacion as $doc) {
+            $documentacion[] = [
+                'movimiento' => $doc['nombre'],
+                'expediente' => NULL,
+                'modificado' => $modificado,
+                'status' => 1,
+                'idCliente' => $idClienteNuevo,
+                'idCondominio' => $loteNuevoInfo->idCondominio,
+                'idLote' => $idLoteNuevo,
+                'idUser' => NULL,
+                'tipo_documento' => 0,
+                'id_autorizacion' => 0,
+                'tipo_doc' => $doc['id_opcion'],
+                'estatus_validacion' => 0
+            ];
+        }
+
+        if (!file_exists("static/documentos/contratacion-reubicacion/$loteNuevoInfo->nombreLote/")) {
+            $result = mkdir("static/documentos/contratacion-reubicacion/$loteNuevoInfo->nombreLote", 0777, TRUE);
+            if (!$result) {
+                echo 'No se pudo crear el folder';
+                return;
+            }
+        }
+
+        $this->General_model->insertBatch('historial_documento', $documentacion);
+
+        echo 'Salió todo fine';
+    }
+
+    public function copiarDSAnteriorAlNuevo($idClienteAnterior, $idClienteNuevo)
+    {
+        $dsAnterior = $this->Reestructura_model->obtenerDSPorIdCliente($idClienteAnterior);
+        $residencial = $this->Reestructura_model->obtenerResidencialPorIdCliente($idClienteNuevo);
+        $coopropietarios = $this->Reestructura_model->obtenerCopropietariosPorIdCliente($idClienteAnterior);
+        $dsData = [];
+        $coopropietariosData = [];
+
+        foreach ($dsAnterior as $clave => $valor) {
+            if(in_array($clave, ['id', 'id_cliente', 'clave'])) {
+                continue;
+            }
+
+            if ($clave == 'proyecto') {
+                $dsData = array_merge([$clave => $residencial->nombreResidencial], $dsData);
+                continue;
+            }
+
+            $dsData = array_merge([$clave => $valor], $dsData);
+        }
+
+        foreach ($coopropietarios as $coopropietario) {
+            $dataTmp = [];
+
+            foreach ($coopropietario as $clave => $valor) {
+                if (in_array($clave, ['id_copropietario'])) {
+                    continue;
+                }
+
+                if ($clave == 'id_cliente') {
+                    $dataTmp = array_merge([$clave => $idClienteNuevo], $dataTmp);
+                    continue;
+                }
+
+                $dataTmp = array_merge([$clave => $valor], $dataTmp);
+            }
+
+            $coopropietariosData[] = $dataTmp;
+        }
+
+        $this->General_model->updateRecord('deposito_seriedad', $dsData, 'id_cliente', $idClienteNuevo);
+        $this->General_model->insertBatch('copropietarios', $coopropietariosData);
+
+        echo 'Salió todo bien';
+    }
 }

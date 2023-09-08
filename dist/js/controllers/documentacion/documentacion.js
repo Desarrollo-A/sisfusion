@@ -34,7 +34,8 @@ const TipoDoc = {
     APOSTILLDO_CONTRATO: 31,
     CARTA: 32,
     RESCISION: 33,
-    ARCHIVO_PEND_JURIDICO: 34
+    CARTA_PODER: 34,
+    RESCISION_FIRMADA: 35
 };
 
 const observacionContratoUrgente = 1; // Bandera para inhabilitar
@@ -320,7 +321,7 @@ function cargarTabla(idLote, idCliente = '') {
                         }
                         return `<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`;
                     }
-                    if (data.tipo_doc == TipoDoc.CONTRATO_FIRMADO) { // CONTRATO FIRMADO
+                    if (data.tipo_doc == TipoDoc.CONTRATO_FIRMADO || data.tipo_doc == TipoDoc.RESCISION_FIRMADA) { // CONTRATO FIRMADO
                         if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
                             buttonMain = (includesArray(movimientosPermitidosContratoFirmado, data.idMovimiento) && includesArray(rolesPermitidosEstatus6And15, id_rol_general))
                                 // ESTÁ EN ESTATUS 15 Y ES CONTRALORÍA EL QUE CONSULTA, SE VEA A MONSTRAR ENABLED EL BOTÓN PARA CARGAR EL ARCHIVO

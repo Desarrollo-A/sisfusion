@@ -188,4 +188,51 @@ class Reestructura_model extends CI_Model
             return true;
         }
     }
+
+    public function obtenerDocumentacionActiva($idLote, $idCliente)
+    {
+        $query = $this->db->query("SELECT * FROM historial_documento WHERE idLote = $idLote AND idCliente = $idCliente AND status = 1");
+        return $query->result_array();
+    }
+
+    public function obtenerLotePorId($idLote)
+    {
+        $query = $this->db->query("SELECT lo.*,
+            cl.personalidad_juridica
+            FROM lotes lo
+            INNER JOIN clientes cl ON lo.idLote = cl.idLote
+            WHERE lo.idLote = $idLote AND cl.status = 1");
+        return $query->row();
+    }
+
+    public function obtenerDocumentacionPorReubicacion($personalidadJuridica)
+    {
+        $idCatalogo = ($personalidadJuridica == 1) ? 101 : 98;
+        $query = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo = $idCatalogo AND estatus = 1");
+        return $query->result_array();
+    }
+
+    public function obtenerDSPorIdCliente($idCliente)
+    {
+        $query = $this->db->query("SELECT * FROM deposito_seriedad WHERE id_cliente = $idCliente");
+        return $query->row();
+    }
+
+    public function obtenerResidencialPorIdCliente($idCliente)
+    {
+        $query = $this->db->query("SELECT re.* 
+            FROM clientes cl 
+            INNER JOIN lotes lo ON cl.idLote = lo.idLote
+            INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
+            INNER JOIN residenciales re ON co.idResidencial = re.idResidencial
+            WHERE id_cliente = $idCliente
+        ");
+        return $query->row();
+    }
+
+    public function obtenerCopropietariosPorIdCliente($idCliente)
+    {
+        $query = $this->db->query("SELECT * FROM copropietarios WHERE id_cliente = $idCliente");
+        return $query->result_array();
+    }
 }
