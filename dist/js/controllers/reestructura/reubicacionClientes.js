@@ -304,29 +304,9 @@ $(document).on("submit", "#formReubicar", function(e){
         processData: false,
         type: 'POST', 
         success: function(data){
-            response = JSON.parse(data);
-            if(response.message == 'OK') {
-                $('#save1').prop('disabled', false);
-                $('#editReg').modal('hide');
-                $('#tabla_reporte_11').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", "Estatus enviado.", "success");
-            } else if(response.message == 'FALSE'){
-                $('#save1').prop('disabled', false);
-                $('#editReg').modal('hide');
-                $('#tabla_reporte_11').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
-            } else if(response.message == 'ERROR'){
-                $('#save1').prop('disabled', false);
-                $('#editReg').modal('hide');
-                $('#tabla_reporte_11').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
-            }
+            console.log();
         },
         error: function( data ){
-                $('#save1').prop('disabled', false);
-                $('#editReg').modal('hide');
-                $('#tabla_reporte_11').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
         }
     });
 });
