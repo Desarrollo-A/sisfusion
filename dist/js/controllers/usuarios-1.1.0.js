@@ -25,7 +25,7 @@ $(document).ready( function() {
     $(".select-is-empty").removeClass("is-empty");
     fillUsersTable();
 });
-console.log(sedes);
+
 $(document).on('change', '#leader', function() {
     let sede = $('#headquarter').val();
     let puesto = $('#member_type').val();

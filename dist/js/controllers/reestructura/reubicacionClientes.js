@@ -1,8 +1,15 @@
+const TIPO_LOTE = Object.freeze({
+    HABITACIONAL: 0,
+    COMERCIAL: 1
+});
+
+const PROYECTO = Object.freeze({
+    NORTE: 21,
+    PRIVADAPENINSULA: 25
+});
+
 let titulosTabla = [];
 
-$(document).ready(function () {
-    fillTable();
-});
 
 $('#reubicacionClientes thead tr:eq(0) th').each(function (i) {
     const title = $(this).text();
@@ -16,180 +23,198 @@ $('#reubicacionClientes thead tr:eq(0) th').each(function (i) {
     $('[data-toggle="tooltip"]').tooltip();
 });
 
-function fillTable() {
-    $('#reubicacionClientes').DataTable({
-        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        width: '100%',
-        scrollX: true,
-        buttons: [{
-            extend: 'excelHtml5',
-            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-            className: 'btn buttons-excel',
-            titleAttr: 'Lotes para reubicar',
-            title:"Lotes para reubicar",
-            exportOptions: {
-                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-                format: {
-                    header: function (d, columnIdx) {
-                        return ' ' + titulosTabla[columnIdx] + ' ';
-                    }
+$('#reubicacionClientes').DataTable({
+    dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+    width: '100%',
+    scrollX: true,
+    buttons: [{
+        extend: 'excelHtml5',
+        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+        className: 'btn buttons-excel',
+        titleAttr: 'Lotes para reubicar',
+        title:"Lotes para reubicar",
+        exportOptions: {
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+            format: {
+                header: function (d, columnIdx) {
+                    return ' ' + titulosTabla[columnIdx] + ' ';
                 }
+            }
+        }
+    },
+    {
+        extend: 'pdfHtml5',
+        text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
+        className: 'btn buttons-pdf',
+        titleAttr: 'Lotes para reubicar',
+        title:"Lotes para reubicar",
+        orientation: 'landscape',
+        pageSize: 'LEGAL',
+        exportOptions: {
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+            format: {
+                header: function (d, columnIdx) {
+                    return ' ' + titulosTabla[columnIdx] + ' ';
+                }
+            }
+        }
+    }],
+    columnDefs: [{
+        searchable: false,
+        visible: false
+    }],
+    pageLength: 10,
+    bAutoWidth: false,
+    fixedColumns: true,
+    ordering: false,
+    language: {
+        url: general_base_url+"static/spanishLoader_v2.json",
+        paginate: {
+            previous: "<i class='fa fa-angle-left'>",
+            next: "<i class='fa fa-angle-right'>"
+        }
+    },
+    order: [[4, "desc"]],
+    destroy: true,
+    columns: [
+        { "data": "nombreResidencial" },
+        { "data": "nombreCondominio" },
+        { "data": "nombreLote" },
+        { "data": "idLote" },
+        { "data": "cliente" },
+        { "data": "nombreAsesor" },
+        { "data": "nombreCoordinador" },
+        { "data": "nombreGerente" },
+        { "data": "nombreSubdirector" },
+        { "data": "nombreRegional" },
+        { "data": "nombreRegional2" },
+        { "data": "fechaApartado" },
+        { "data": "sup"},
+        {
+            "data": function (d) {
+                if( d.costom2f == 'SIN ESPECIFICAR')
+                    return d.costom2f;
+                else
+                    return `$${formatMoney(d.costom2f)}`;
             }
         },
         {
-            extend: 'pdfHtml5',
-            text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
-            className: 'btn buttons-pdf',
-            titleAttr: 'Lotes para reubicar',
-            title:"Lotes para reubicar",
-            orientation: 'landscape',
-            pageSize: 'LEGAL',
-            exportOptions: {
-                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-                format: {
-                    header: function (d, columnIdx) {
-                        return ' ' + titulosTabla[columnIdx] + ' ';
-                    }
-                }
-            }
-        }],
-        columnDefs: [{
-            searchable: false,
-            visible: false
-        }],
-        pageLength: 10,
-        bAutoWidth: false,
-        fixedColumns: true,
-        ordering: false,
-        language: {
-            url: general_base_url+"static/spanishLoader_v2.json",
-            paginate: {
-                previous: "<i class='fa fa-angle-left'>",
-                next: "<i class='fa fa-angle-right'>"
+            "data": function (d) {
+                return `$${formatMoney(d.total)}`;
             }
         },
-        order: [[4, "desc"]],
-        destroy: true,
-        columns: [
-            { "data": "nombreResidencial" },
-            { "data": "nombreCondominio" },
-            { "data": "nombreLote" },
-            { "data": "idLote" },
-            { "data": "cliente" },
-            { "data": "nombreAsesor" },
-            { "data": "nombreCoordinador" },
-            { "data": "nombreGerente" },
-            { "data": "nombreSubdirector" },
-            { "data": "nombreRegional" },
-            { "data": "nombreRegional2" },
-            { "data": "fechaApartado" },
-            { "data": "sup"},
-            {
-                "data": function (d) {
-                    if( d.costom2f == 'SIN ESPECIFICAR')
-                        return d.costom2f;
-                    else
-                        return `$${formatMoney(d.costom2f)}`;
-                }
-            },
-            {
-                "data": function (d) {
-                    return `$${formatMoney(d.total)}`;
-                }
-            },
-            {
-                "data": function (d) {
-                    return `<div class="d-flex justify-center">
-                        <button class="btn-data btn-sky btn-reubicar"
-                                data-toggle="tooltip" 
-                                data-placement="left"
-                                title="REUBICAR CLIENTE"
-                                data-idCliente="${d.idCliente}"
-                                data-idProyecto="${d.idProyecto}"
-                        >
-                            <i class="fas fa-route"></i>
-                        </button>
-                    </div>`;
-                }
+        {
+            "data": function (d) {
+                return `<div class="d-flex justify-center">
+                    <button class="btn-data btn-sky btn-reubicar"
+                            data-toggle="tooltip" 
+                            data-placement="left"
+                            title="REUBICAR CLIENTE"
+                            data-idCliente="${d.idCliente}"
+                            data-idProyecto="${d.idProyecto}"
+                            data-tipoLote="${d.tipo_lote}">
+                        <i class="fas fa-route"></i>
+                    </button>
+                </div>`;
             }
-        ],
-        ajax: {
-            url: `${general_base_url}reestructura/getListaClientesReubicar`,
-            dataSrc: "",
-            type: "POST",
-            cache: false,
-        },
-        initComplete: function () {
-            $('[data-toggle="tooltip"]').tooltip({
-                trigger: "hover"
-            });
-        },
-    });
-}
+        }
+    ],
+    ajax: {
+        url: `${general_base_url}reestructura/getListaClientesReubicar`,
+        dataSrc: "",
+        type: "POST",
+        cache: false,
+    },
+    initComplete: function () {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
+    },
+});
 
 $(document).on('click', '.btn-reubicar', function () {
     const tr = $(this).closest('tr');
     const row = $('#reubicacionClientes').DataTable().row(tr);
+    const cliente = row.data().cliente;
+    const nombreLote = row.data().nombreLote;
+    const superficie = row.data().sup;
+    const total = row.data().total;
+    const idProyecto = $(this).attr("data-idProyecto");
+    const tipoLote = $(this).attr("data-tipoLote");
+    const idCliente = $(this).attr("data-idCliente");
+
     changeSizeModal('modal-md');
     appendBodyModal(`
-        <div class="row">
-            <div class="col-12 text-center">
-                <h3>Reubicación del cliente</h3>
+        <form method="post" id="formReubicar">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h3 class="m-0">Reubicación del cliente</h3>
+                        <h6 class="m-0">${cliente}</h6>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 overflow-hidden">
+                        <label class="lbl-gral">Proyecto</label>
+                        <select name="proyectoAOcupar" title="SELECCIONA UNA OPCIÓN" id="proyectoAOcupar" class="selectpicker m-0 select-gral" data-live-search="true" data-container="body" data-width="100%">
+                        </select>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
+                        <label class="lbl-gral">Condominio</label>
+                        <select name="condominioAOcupar" title="SELECCIONA UNA OPCIÓN" id="condominioAOcupar" class="selectpicker m-0 select-gral" data-live-search="true" data-container="body" data-width="100%">
+                        </select>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
+                        <label class="lbl-gral">Lote</label>
+                        <select name="loteAOcupar" title="SELECCIONA UNA OPCIÓN" id="loteAOcupar" class="selectpicker m-0 select-gral" data-live-search="true" data-container="body" data-width="100%">
+                        </select>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="p-2 pt-1" style="background-color: #eaeaea; border-radius:15px">
+                            <h5 class="text-center">LOTE ACTUAL</h5>
+                            <span class="w-100 d-flex justify-between">
+                                <p class="m-0">Lote</p>
+                                <p class="m-0"><b>${nombreLote}</b></p>
+                            </span>
+                            <span class="w-100 d-flex justify-between">
+                                <p class="m-0">Superficie</p>
+                                <p class="m-0"><b>${superficie}</b></p>
+                            </span>
+                            <span class="w-100 d-flex justify-between">
+                                <p class="m-0">Total</p>
+                                <p class="m-0"><b>$${formatMoney(total)}</b></p>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="infoLoteSeleccionado">
+                </div>
+                <input type="hidden" id="superficie" value="${superficie}">
+                <input type="hidden" id="tipoLote" value="${tipoLote}">
+                <input type="hidden" id="idCliente" name="idCliente" value="${idCliente}">
+                <div class="row mt-2">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
+                        <button type="button" class="btn btn-simple btn-danger" onclick="hideModal()">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Aceptar</button>
+                    </div>
+                </div>
             </div>
-            <div class="col-12 col-sm-4 col-md-4 col-lg-4 overflow-hidden">
-                <label class="lbl-gral">Proyecto</label>
-                <select name="proyectoAOcupar" title="SELECCIONA UNA OPCIÓN" id="proyectoAOcupar" class="selectpicker m-0 select-gral" data-live-search="true" data-container="body" data-width="100%">
-                </select>
-            </div>
-            <div class="col-12 col-sm-4 col-md-4 col-lg-4 overflow-hidden">
-                <label class="lbl-gral">Condominio</label>
-                <select name="condominioAOcupar" title="SELECCIONA UNA OPCIÓN" id="condominioAOcupar" class="selectpicker m-0 select-gral" data-live-search="true" data-container="body" data-width="100%">
-                </select>
-            </div>
-            <div class="col-12 col-sm-4 col-md-4 col-lg-4 overflow-hidden">
-                <label class="lbl-gral">Lote</label>
-                <select name="loteAOcupar" title="SELECCIONA UNA OPCIÓN" id="loteAOcupar" class="selectpicker m-0 select-gral" data-live-search="true" data-container="body" data-width="100%">
-                </select>
-            </div>
-            <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                <h5 class="mb-0 mt-2">Lote actual</h5>
-                <span class="w-100 d-flex justify-between">
-                    <label class="m-0">Cliente</label>
-                    <label class="m-0">${row.data().cliente}</label>
-                </span>
-                <span class="w-100 d-flex justify-between">
-                    <label class="m-0">Lote</label>
-                    <label class="m-0">${row.data().nombreLote}</label>
-                </span>
-                <span class="w-100 d-flex justify-between">
-                    <label class="m-0">Superficie</label>
-                    <label class="m-0">${row.data().nombreLote}</label>
-                </span>
-                <span class="w-100 d-flex justify-between">
-                    <label class="m-0">Total</label>
-                    <label class="m-0">${row.data().total}</label>
-                </span>
-            <div>
-            <div class="container-fluid" id="infoLoteSeleccionado">
-            <div>
-        </div>
+        </form>
     `);
-    appendFooterModal(`
-        <button type="button" class="btn btn-simple btn-danger" onclick="hideModal()">Cancelar</button>
-        <button type="button" class="btn btn-primary">Aceptar</button>
-    `);
-    getProyectosAOcupar();
     showModal();
+
+    getProyectosAOcupar(idProyecto, superficie, tipoLote);
 });
 
-function getProyectosAOcupar() {
+function getProyectosAOcupar(idProyecto, superficie, tipoLote) {
     $('#spiner-loader').removeClass('hide');
-    $.post("getProyectosDisponibles", function(data) {
+    $.post("getProyectosDisponibles", {"idProyecto" : idProyecto, "superficie" : superficie, "tipoLote": tipoLote}, function(data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
-            var id = data[i]['idProyecto'];
+            var id = data[i]['proyectoReubicacion'];
             var name = data[i]['descripcion'];
-            $("#proyectoAOcupar").append($('<option>').val(id).text(name));
+            var disponible = data[i]['disponibles'];
+            $("#proyectoAOcupar").append($('<option>').val(id).text(name +' ('+ disponible + ')'));
         }
         $('#spiner-loader').addClass('hide');
         $("#proyectoAOcupar").selectpicker('refresh');
@@ -200,7 +225,9 @@ $(document).on("change", "#proyectoAOcupar", function(e){
     $('#spiner-loader').removeClass('hide');
     $("#condominioAOcupar").html("");
     idProyecto = $(this).val();
-    $.post("getCondominiosDisponibles", {"idProyecto": idProyecto}, function(data) {
+    superficie = $("#superficie").val();
+    tipoLote = $("#tipoLote").val();
+    $.post("getCondominiosDisponibles", {"idProyecto": idProyecto, "superficie": superficie, "tipoLote": tipoLote}, function(data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['idCondominio'];
@@ -217,7 +244,9 @@ $(document).on("change", "#condominioAOcupar", function(e){
     $('#spiner-loader').removeClass('hide');
     $("#loteAOcupar").html("");
     idCondominio = $(this).val();
-    $.post("getLotesDisponibles", {"idCondominio": idCondominio}, function(data) {
+    superficie = $("#superficie").val();
+
+    $.post("getLotesDisponibles", {"idCondominio": idCondominio, "superficie": superficie}, function(data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['idLote'];
@@ -225,7 +254,8 @@ $(document).on("change", "#condominioAOcupar", function(e){
             var precioMetro = data[i]['precio'];
             var superficie = data[i]['sup'];
             var total = data[i]['total'];
-            $("#loteAOcupar").append($('<option>').val(id).attr('data-nombre', name).attr('data-precioMetro', precioMetro).attr('data-superficie', superficie).attr('data-total', total).text(name));
+            var a_favor = data[i]['a_favor'];
+            $("#loteAOcupar").append($('<option>').val(id).attr('data-nombre', name).attr('data-precioMetro', precioMetro).attr('data-superficie', superficie).attr('data-total', total).addClass('green').text(name +' ('+ a_favor + ')'));
         }
         $('#spiner-loader').addClass('hide');
         $("#loteAOcupar").selectpicker('refresh');
@@ -233,27 +263,50 @@ $(document).on("change", "#condominioAOcupar", function(e){
 });
 
 $(document).on("change", "#loteAOcupar", function(e){
-    const $itself = $(this);
+    $("#infoLoteSeleccionado").html("");
+    const $itself = $(this).find(':selected');
     const nombre = $itself.attr("data-nombre");
-    const precioMetro = $itself.attr("data-precioMetro");
     const superficie = $itself.attr("data-superficie");
     const total = $itself.attr("data-total");
     const html = `
         <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-            <h5 class="mb-0 mt-2">Lote seleccionado</h5>
-            <span class="w-100 d-flex justify-between">
-                <label class="m-0">Lote</label>
-                <label class="m-0">${nombre}</label>
-            </span>
-            <span class="w-100 d-flex justify-between">
-                <label class="m-0">Superficie</label>
-                <label class="m-0">${superficie}</label>
-            </span>
-            <span class="w-100 d-flex justify-between">
-                <label class="m-0">Precio metro</label>
-                <label class="m-0">${total}</label>
-            </span>
-        <div>`; 
-
+            <div class="p-2 pt-1" style="background-color: #eaeaea; border-radius:15px">
+                <h5 class="mb-0 mt-2 text-center">LOTE SELECCIONADO</h5>
+                <span class="w-100 d-flex justify-between">
+                    <p class="m-0">Lote</p>
+                    <p class="m-0"><b>${nombre}</b></p>
+                </span>
+                <span class="w-100 d-flex justify-between">
+                    <p class="m-0">Superficie</p>
+                    <p class="m-0"><b>${superficie}</b></p>
+                </span>
+                <span class="w-100 d-flex justify-between">
+                    <p class="m-0">Precio metro</p>
+                    <p class="m-0"><b>$${formatMoney(total)}</b></p>
+                </span>
+            <div>
+        <div>
+    `; 
+    
     $("#infoLoteSeleccionado").append(html);
 })
+
+$(document).on("submit", "#formReubicar", function(e){
+    $('#spiner-loader').removeClass('hide');
+    e.preventDefault();
+    let data = new FormData($(this)[0]);
+
+    $.ajax({
+        url : 'setReubicacion',
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST', 
+        success: function(data){
+            console.log();
+        },
+        error: function( data ){
+        }
+    });
+});
