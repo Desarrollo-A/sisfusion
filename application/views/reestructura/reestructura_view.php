@@ -34,6 +34,7 @@
 						        <h4 class="modal-title text-right">CATALOGO</h4>
                             </div>
                             <div class="col-xs-12 col-sm-5 col-md-5 col-lg-5 p-0">
+                                <input type="hidden" id="indexCo" name="indexCo" value="0">
                                 <button class="btn-data btn-green btnMultiRol" id="btnMultiRol" data-toggle="tooltip" data-placement="top" title= "VALIDAR REESTRUCTURACIÓN" data-idLote="' +d.idLote+ '"><i class="fas fa-plus"></i></button>
                             </div>
                         </div>
@@ -45,7 +46,7 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-						<button type="button" id="save2" name="save2" class="btn btn-primary">Registrar</button>
+						<button type="button" id="nuevaOpcion" name="nuevaOpcion" class="btn btn-primary nuevaOpcion">Registrar</button>
 					</div>
 				</div>
 			</div>
@@ -61,22 +62,19 @@
                         <div class="row">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                 <label>OPCIONES</label>
-                                <select name="grabado" id="grabado" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required>
-                                    <option value="1">GRABAMEN</option>
-                                    <option value="0">JURÍDICO</option>
-                                </select>
+                                <select name="grabado" id="grabado" class="selectpicker select-gral m-0 grabado" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1">
-                            <label>Comentario</label>
+                            <label>COMENTARIO</label>
                             <textarea class="text-modal" id="comentario2" rows="3"></textarea>
                         </div>
                         <br>
-                        <!-- <input type="hidden" name="idLote" id="idLoteenvARevCE" > -->
+                        <input type="hidden" name="idLoteCatalogo" id="idLoteCatalogo" >
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-						<button type="button" id="save2" name="save2" class="btn btn-primary">Registrar</button>
+						<button type="button" id="cancelarValidacion" class="btn btn-danger btn-simple cancelarValidacion" data-dismiss="modal">Cancelar</button>
+						<button type="button" id="guardarValidacion" name="guardarValidacion" class="btn btn-primary guardarValidacion">Registrar</button>
 					</div>
 				</div>
 			</div>

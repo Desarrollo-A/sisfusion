@@ -239,10 +239,7 @@
                             <div class="col-md-12 pr-0">
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0"><span class="isRequired">*</span> Tipo de escrituración</label>
-                                    <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
-                                             data-size="7" id="tipoE" name="tipoE"
-                                            data-live-search="true" required>
-                                    </select>
+                                    <select class="selectpicker m-0" data-style="btn btn-primary btn-round" data-size="7" id="tipoE" name="tipoE" data-live-search="true" required></select>
                                 </div>
                             </div>
                         </div>
@@ -250,11 +247,7 @@
                             <div class="col-md-4 pr-0">
                                 <div class="form-group text-left m-0">
                                     <label class="control-label label-gral m-0"><span class="isRequired">*</span> Estatus de pago</label>
-                                    <select class="selectpicker m-0" data-style="btn btn-primary btn-round"
-                                             data-size="7" id="estatusPago" name="estatusPago"
-                                            data-live-search="true" required>
-                                            <option value ="default" selected disabled>Seleccione una opción</option>
-                                    </select>
+                                    <select class="selectpicker m-0" data-style="btn btn-primary btn-round" data-size="7" id="estatusPago" name="estatusPago" data-live-search="true" required><option value ="default" selected disabled>Seleccione una opción</option></select>
                                 </div>
                             </div>
                             <div class="col-md-4 pr-0">
@@ -320,7 +313,7 @@
                             </div>
                         </div>
                         <!--INFORMACIÓN DE NOTARÍA-->
-                         <!----------------------------->
+                        <!----------------------------->
                                 <div class="row">
                                     <div class="col-md-12 pr-0" >
                                         <div class="form-group text-left m-0">

@@ -1,3 +1,5 @@
+
+
 $(document).ready(function () {
     $("#tabla_clientes").addClass('hide');
     $('#spiner-loader').removeClass('hide');
@@ -13,6 +15,18 @@ $(document).ready(function () {
         $("#proyecto").selectpicker('refresh');
         $('#spiner-loader').addClass('hide');
     }, 'json');
+    
+    $.post(general_base_url + "Reestructura/lista_catalogo_opciones", function (data) {
+        var len = data.length;
+        for (var i = 0; i < len; i++) {
+            var id = data[i]['id_opcion'];
+            var name = data[i]['nombre'];            
+            $("#grabado").append($('<option>').val(id).text(name.toUpperCase()));
+        }
+        $('.indexCo').val($(this).attr(id));
+        $("#grabado").selectpicker('refresh');
+        $('#spiner-loader').addClass('hide');
+    }, 'json'); 
 });
 
 $('#proyecto').change(function () {
@@ -35,15 +49,56 @@ $('#tabla_clientes thead tr:eq(0) th').each(function (i) {
 });
 
 $(document).on('click', '.reesVal', function (){
-    $('#liberarReestructura').modal();
     $('#idLoteenvARevCE').val($(this).attr('data-idLote'));
     $('#nombreLoteAv').val($(this).attr('data-nombreLote'));
     $('#precioAv').val($(this).attr('data-precio'));
+    $('#liberarReestructura').modal();
 });
 
 $(document).on('click', '.stat5Rev', function () {
+    document.getElementById("idLoteCatalogo").value = "";
+    document.getElementById("comentario2").value = "";
+    $('#idLoteCatalogo').val($(this).attr('data-idLote'));
+    $('#grabado').val('').trigger('change');
     $('#aceptarReestructura').modal();
-    $('#idLoteenvARevCE').val($(this).attr('data-idLote'));
+});
+
+$(document).on('click', '.guardarValidacion', function(){
+    var idLoteCa = $('#idLoteCatalogo').val();
+    var opcionValidacion = $('#grabado').val();
+    var comentarioValidacion = $('#comentario2').val();
+
+    if(opcionValidacion == ''){
+        alerts.showNotification("top", "right", "Selecciona una opción", "warning");
+        return;
+    }
+
+    var datos = new FormData();
+    datos.append("idLote", idLoteCa);
+    datos.append("opcionReestructura", opcionValidacion);
+    datos.append("comentario", comentarioValidacion);
+    
+    $.ajax({
+        method: 'POST',
+        url: general_base_url + 'Reestructura/validarLote',
+        data: datos,
+        processData: false,
+        contentType: false,
+        success: function(data) {
+            if (data == 1) {
+            $('#tabla_clientes').DataTable().ajax.reload(null, false);
+            $('#aceptarReestructura').modal('hide');
+            alerts.showNotification("top", "right", "Información actualizada.", "success");
+            $('#idLoteCatalogo').val('');
+            $('#grabado').val('');
+            $('#comentario2').val('');
+            }
+        },
+        error: function(){
+            $('#aceptarReestructura').modal('hide');
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
 });
 
 $(document).on('click', '.reesInfo', function (){
@@ -55,9 +110,8 @@ $(document).on('click', '#saveLi', function(){
     var idLote = $("#idLoteenvARevCE").val();
     var nombreLot = $("#nombreLoteAv").val();
     var precio = $("#precioAv").val();
-
-
     var datos = new FormData();
+
     datos.append("idLote", idLote);
     datos.append("nombreLote", nombreLot);
     datos.append("precio", precio);
@@ -73,7 +127,10 @@ $(document).on('click', '#saveLi', function(){
             if (data == 1) {
             $('#tabla_clientes').DataTable().ajax.reload(null, false);
             $('#liberarReestructura').modal('hide');
-            alerts.showNotification("top", "right", "Lote liberado.", "success"); 
+            alerts.showNotification("top", "right", "Lote liberado.", "success");
+            $('#idLoteenvARevCE').val('');
+            $('#nombreLoteAv').val('');
+            $('#precioAv').val('');
             }
         },
         error: function(){
@@ -84,18 +141,8 @@ $(document).on('click', '#saveLi', function(){
     });
 });
 
-$(document).on('click', '#save2', function () {
-    var idLote = $("#idLoteenvARevCE").val();
-    let grabado = $("#grabado").val();
-    let proJur = $("#procesoJ").val();
-    let comentario = $("#comentario2").val();
+$(document).on('click', '#nuevaOpcion', function () {
 
-    parametros = {
-        "idLote": idLote,
-        "comentario": comentario,
-        "grabado": grabado,
-        "procesoJuridico": proJur,
-    };
 });
 
 function open_Mb(){
@@ -118,6 +165,13 @@ $(document).on("click","#btnMultiRol",function(){
             </div>
         </div>
     `);
+    for (var i = 0; i < puestos.length; i++) {
+        var name = puestos[i].nombre;
+        $(`#multi_${index}`).append($('<option>').val(id).text(name.toUpperCase()));
+    }
+    $(multi).selectpicker('refresh');
+    index = parseInt(index + 1);
+    $('#index').val(index);
 });
 
 $(document).on('click', '#opcCat', function () {
@@ -131,7 +185,7 @@ function fillTable(index_proyecto) {
         width: '100%',
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         buttons: [{
-            text: '<i class="fas fa-tags"></i> CATÁLOGO',
+        text: '<i class="fas fa-tags"></i> CATÁLOGO',
             action: function() {
                 open_Mb();
             },
@@ -139,13 +193,13 @@ function fillTable(index_proyecto) {
                 class: 'btn btn-azure',
                 style: 'position: relative; float: right',
             },
-            },
-            {
-            extend: 'excelHtml5',
-            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-            className: 'btn buttons-excel',
-            titleAttr: 'Reestructuración',
-            title: 'Reestructuración',
+        },
+        {
+        extend: 'excelHtml5',
+        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+        className: 'btn buttons-excel',
+        titleAttr: 'Reestructuración',
+        title: 'Reestructuración',
             exportOptions: {
                 columns: [0,1,2,3,4,5,6],
                 format: {
@@ -257,7 +311,7 @@ function fillTable(index_proyecto) {
             [1, 'asc']
         ],
     });
-
+    
     $('#tabla_clientes').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"

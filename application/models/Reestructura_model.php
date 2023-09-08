@@ -24,9 +24,14 @@ class Reestructura_model extends CI_Model
         INNER JOIN condominios con ON con.idCondominio = lot.idCondominio
         INNER JOIN residenciales res on res.idResidencial = con.idResidencial
         INNER JOIN loteXReubicacion lotx ON lotx.proyectoReubicacion = con.idResidencial and lotx.proyectoReubicacion in ($id_proyecto)
-        LEFT JOIN clientes cli ON cli.id_cliente = lot.idCliente and cli.status in (1,0) and lot.idStatusLote in (13,2,3)")->result();
+        LEFT JOIN clientes cli ON cli.id_cliente = lot.idCliente and cli.status in (1,0)
+        WHERE lot.idStatusLote in (15,2,3)")->result();
     }
 
+    public function actualizarValidacion($datos)
+    {
+        return $this->db->query("UPDATE lotes SET opcionReestructura = ".$datos['opcionReestructura'].", comentario = '".$datos['comentario']."', usuario = ".$datos['userLiberacion']." where idLote = ".$datos['idLote']." ");
+    }
 
     public function aplicaLiberacion($datos){
         $row = $this->db->query("SELECT idLote, nombreLote, status, sup,
@@ -34,7 +39,7 @@ class Reestructura_model extends CI_Model
         (CASE WHEN idCliente = 0  OR idCliente IS NULL THEN 0 ELSE idCliente END) idCliente,registro_comision,
         (CASE WHEN tipo_venta IS NULL THEN 0 ELSE tipo_venta END) tipo_venta FROM lotes WHERE idLote=".$datos['idLote']." AND status = 1")->result_array();
         $registro_comision = $datos['tipo'] == 7 ? 9 : 8;
-        $idStatusLote = $datos['tipo'] == 9 ? 13 : 1;
+        $idStatusLote = $datos['tipo'] == 9 ? 15 : 1;
         $datos['tipo'] == 7 ? $this->db->query("UPDATE lotes SET tipo_venta=".$row[0]['tipo_venta'].",usuario='".$datos['userLiberacion']."' WHERE idLote=".$datos['idLoteNuevo']." ") : '';
         $this->db->trans_begin();
 
