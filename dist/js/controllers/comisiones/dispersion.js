@@ -388,7 +388,7 @@ $(document).ready(function () {
                                 let abonado=0;
                                 let porcentaje_abono=0;
                                 let total_comision=0;
-                                $.getJSON( general_base_url + "Comisiones/porcentajes/"+idCliente+"/"+plan_comision).done( function( resultArr ){
+                                $.post(general_base_url + "Reestructura/lista_proyecto",{idCliente:idCliente,plan_comision:plan_comision}, function (resultArr) {
                                     $.each( resultArr, function( i, v){
                                         let porcentajeAse =  v.porcentaje_decimal;
                                         let total_comision1=0;
