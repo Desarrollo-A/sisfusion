@@ -22,7 +22,19 @@ class Reestructura_model extends CI_Model
 
 
     public function aplicaLiberacion($datos){
-        $row = $this->db->query("SELECT idLote, nombreLote, status, sup,
+
+        $comentarioLiberacion = $datos['tipoLiberacion'] == 7 ? 'LIBERADO POR REUBICACIÓN' : ( $datos['tipoLiberacion'] == 9 ? 'LIBERACIÓN JURÍDICA' : ($datos['tipoLiberacion'] == 8 ? 'LIBERADO POR REESTRUCTURA' : '') );
+        $observacionLiberacion = $datos['tipoLiberacion'] == 7 ? 'LIBERADO POR REUBICACIÓN' : ( $datos['tipoLiberacion'] == 9 ? 'LIBERACIÓN JURÍDICA' : ($datos['tipoLiberacion'] == 8 ? 'LIBERADO POR REESTRUCTURA' : '') );
+        $datos["comentarioLiberacion"] = $comentarioLiberacion;
+        $datos["observacionLiberacion"] = $observacionLiberacion;
+        $datos["fechaLiberacion"] = date('Y-m-d H:i:s');
+        $datos["modificado"] = date('Y-m-d H:i:s');
+        $datos["status"] = 1;
+        $datos["userLiberacion"] = $this->session->userdata('id_usuario');
+        $datos["tipo"] = $datos['tipoLiberacion'];
+
+
+        $row = $this->db->query("SELECT idLote, nombreLote, status, sup,precio,
         (CASE WHEN totalNeto2 IS NULL THEN 0.00 ELSE totalNeto2 END) totalNeto2,
         (CASE WHEN idCliente = 0  OR idCliente IS NULL THEN 0 ELSE idCliente END) idCliente,registro_comision,
         (CASE WHEN tipo_venta IS NULL THEN 0 ELSE tipo_venta END) tipo_venta FROM lotes WHERE idLote=".$datos['idLote']." AND status = 1")->result_array();
@@ -65,10 +77,10 @@ class Reestructura_model extends CI_Model
 
 
                 $data_l = array(
-                    'nombreLote'=> $datos['nombreLote'],
+                    'nombreLote'=> $row[0]['nombreLote'],
                     'comentarioLiberacion'=> $datos['comentarioLiberacion'],
                     'observacionLiberacion'=> $datos['observacionLiberacion'],
-                    'precio'=> $datos['precio'],
+                    'precio'=> $row[0]['precio'],
                     'fechaLiberacion'=> $datos['fechaLiberacion'],
                     'modificado'=> $datos['modificado'],
                     'status'=> $datos['status'],
@@ -95,9 +107,9 @@ class Reestructura_model extends CI_Model
                     observacionLiberacion = '".$datos['observacionLiberacion']."', idStatusLote = $idStatusLote, 
                     fechaLiberacion = GETDATE(), 
                     userLiberacion = '".$datos['userLiberacion']."',
-                    precio = ".$datos['precio'].", total = ((".$row[0]['sup'].") * ".$datos['precio']."),
-                    enganche = (((".$row[0]['sup'].") * ".$datos['precio'].") * 0.1), 
-                    saldo = (((".$row[0]['sup'].") * ".$datos['precio'].") - (((".$row[0]['sup'].") * ".$datos['precio'].") * 0.1)),
+                    precio = ".$row[0]['precio'].", total = ((".$row[0]['sup'].") * ".$row[0]['precio']."),
+                    enganche = (((".$row[0]['sup'].") * ".$row[0]['precio'].") * 0.1), 
+                    saldo = (((".$row[0]['sup'].") * ".$row[0]['precio'].") - (((".$row[0]['sup'].") * ".$row[0]['precio'].") * 0.1)),
                     asig_jur = 0
                     WHERE idLote IN (".$datos['idLote'].") and status = 1");
 
