@@ -141,37 +141,6 @@ class Reestructura extends CI_Controller{
 
 		$proceso = ( $anteriorSup == $nuevaSup || (($anteriorSup + 2) == $nuevaSup)) ? 2 : 5;
 
-		// foreach($clienteAnterior[0] as $clave => $valor){
-		// 	if(in_array($clave, ['id_cliente'])){
-		// 		continue;
-		// 	}
-
-		// 	if( $clave == 'id_asesor'){
-		// 		$dataNew = array_merge([$clave => $idAsesor, $dataNew]);
-		// 	}
-		// 	else if( $clave == 'id_coordinador'){
-		// 		$dataNew = array_merge([$clave => 0, $dataNew]);
-		// 	}
-		// 	else if( $clave == 'id_gerente'){
-		// 		$dataNew = array_merge([$clave => $idLider, $dataNew]);
-		// 	}
-		// 	else if( $clave == 'idLote'){
-		// 		$dataNew = array_merge([$clave => $loteAOcupar, $dataNew]);
-		// 	}
-		// 	else if( $clave == 'idCondominio'){
-		// 		$dataNew = array_merge([$clave => $idCondominio, $dataNew]);
-		// 	}
-		// 	else if( $clave == 'plan_comision'){
-		// 		$dataNew = array_merge([$clave => $planComision, $dataNew]);
-		// 	}
-		// 	else if( $clave == 'id_cliente_reubicacion'){
-		// 		$dataNew = array_merge([$clave => $idClienteAnterior, $dataNew]);
-		// 	}
-
-		// 	$dataNew = array_merge([$clave => $valor], $dataNew);
-		// }
-
-		
 		$data['id_asesor'] = $idAsesor->id_asesor;
 		$data['id_coordinador'] = 0;
 		$data['id_gerente'] = $idLider;
@@ -256,5 +225,7 @@ class Reestructura extends CI_Controller{
 		$data['banderaComisionCl'] = $cliente[0]->banderaComisionCl;
 		$data['proceso'] = $proceso;
 		$data['totalNeto2Cl'] = 0;
+
+		
 	}
 } 

@@ -70,12 +70,12 @@ class Reestructura_model extends CI_Model
 
     public function getLotesDisponibles($condominio, $superficie){
         $query = $this->db->query("SELECT
-		    CASE WHEN sup = $superficie THEN '1%' 
-			WHEN sup = ($superficie + 2)THEN '1%' ELSE '8%' END a_favor,
-            lo.idLote, lo.nombreLote, lo.sup, lo.precio, lo.total
-            FROM lotes lo
-            WHERE lo.idCondominio = $condominio AND lo.idStatusLote = 15 AND lo.status = 1
-            AND lo.sup >= $superficie");
+        CASE WHEN sup = $superficie THEN '1%' 
+        WHEN sup = ($superficie + 2)THEN '1%' ELSE '8%' END a_favor,
+        lo.idLote, lo.nombreLote, lo.sup, lo.precio, lo.total
+        FROM lotes lo
+        WHERE lo.idCondominio = $condominio AND lo.idStatusLote = 15 AND lo.status = 1
+        AND lo.sup >= $superficie");
 
         return $query->result();
     }
