@@ -119,4 +119,50 @@ class Reestructura extends CI_Controller{
 
         echo 'Salió todo fine';
     }
+
+    public function copiarDSAnteriorAlNuevo($idClienteAnterior, $idClienteNuevo)
+    {
+        $dsAnterior = $this->Reestructura_model->obtenerDSPorIdCliente($idClienteAnterior);
+        $residencial = $this->Reestructura_model->obtenerResidencialPorIdCliente($idClienteNuevo);
+        $coopropietarios = $this->Reestructura_model->obtenerCopropietariosPorIdCliente($idClienteAnterior);
+        $dsData = [];
+        $coopropietariosData = [];
+
+        foreach ($dsAnterior as $clave => $valor) {
+            if(in_array($clave, ['id', 'id_cliente', 'clave'])) {
+                continue;
+            }
+
+            if ($clave == 'proyecto') {
+                $dsData = array_merge([$clave => $residencial->nombreResidencial], $dsData);
+                continue;
+            }
+
+            $dsData = array_merge([$clave => $valor], $dsData);
+        }
+
+        foreach ($coopropietarios as $coopropietario) {
+            $dataTmp = [];
+
+            foreach ($coopropietario as $clave => $valor) {
+                if (in_array($clave, ['id_copropietario'])) {
+                    continue;
+                }
+
+                if ($clave == 'id_cliente') {
+                    $dataTmp = array_merge([$clave => $idClienteNuevo], $dataTmp);
+                    continue;
+                }
+
+                $dataTmp = array_merge([$clave => $valor], $dataTmp);
+            }
+
+            $coopropietariosData[] = $dataTmp;
+        }
+
+        $this->General_model->updateRecord('deposito_seriedad', $dsData, 'id_cliente', $idClienteNuevo);
+        $this->General_model->insertBatch('copropietarios', $coopropietariosData);
+
+        echo 'Salió todo bien';
+    }
 }
