@@ -4,7 +4,7 @@ class Reestructura extends CI_Controller{
 	public function __construct()
 	{
 		parent::__construct();
-        $this->load->model(array('Reestructura_model','General_model'));
+        $this->load->model(array('Reestructura_model','General_model', 'caja_model_outside'));
         $this->load->library(array('session','form_validation', 'get_menu','permisos_sidebar'));
 		$this->load->helper(array('url', 'form'));
 		$this->load->database('default');
@@ -99,7 +99,7 @@ class Reestructura extends CI_Controller{
         } else {
             echo json_encode(0);
         }
-        
+
 	}
 
     public function setReestructura(){
@@ -226,102 +226,289 @@ class Reestructura extends CI_Controller{
         $nuevaSup = intval($nuevaSup[0]->sup);
         $anteriorSup = intval($clienteAnterior[0]->sup);
 
-        $proceso = ( $anteriorSup == $nuevaSup || (($anteriorSup + 2) == $nuevaSup)) ? 2 : 5;
+		$proceso = ( $anteriorSup == $nuevaSup || (($anteriorSup + 2) == $nuevaSup)) ? 2 : 5;
 
-        $data = array(
-            'id_asesor' => $idAsesor,
-            'id_coordinador' => 0,
-            'id_gerente' => $idLider,
-            'id_sede' => $clienteAnterior[0]->id_sede,
-            'nombre' => $clienteAnterior[0]->nombre,
-            'apellido_paterno' => $clienteAnterior[0]->apellido_paterno,
-            'apellido_materno' => $clienteAnterior[0]->apellido_materno,
-            'personalidad_juridica' => $clienteAnterior[0]->personalidad_juridica,
-            'nacionalidad' => $clienteAnterior[0]->nacionalidad,
-            'rfc' => $clienteAnterior[0]->rfc,
-            'curp' => $clienteAnterior[0]->curp,
-            'correo' => $clienteAnterior[0]->correo,
-            'telefono1' => $clienteAnterior[0]->telefono1,
-            'telefono2' => $clienteAnterior[0]->telefono2,
-            'telefono3' => $clienteAnterior[0]->telefono3,
-            'fecha_nacimiento' => $clienteAnterior[0]->fecha_nacimiento,
-            'lugar_prospeccion' => $clienteAnterior[0]->lugar_prospeccion,
-            'medio_publicitario' => $clienteAnterior[0]->medio_publicitario,
-            'otro_lugar' => $clienteAnterior[0]->otro_lugar,
-            'plaza_venta' => $clienteAnterior[0]->plaza_venta,
-            'tipo' => $clienteAnterior[0]->tipo,
-            'estado_civil' => $clienteAnterior[0]->estado_civil,
-            'regimen_matrimonial' => $clienteAnterior[0]->regimen_matrimonial,
-            'nombre_conyuge' => $clienteAnterior[0]->nombre_conyuge,
-            'domicilio_particular' => $clienteAnterior[0]->domicilio_particular,
-            'originario_de' => $clienteAnterior[0]->originario_de,
-            'tipo_vivienda' => $clienteAnterior[0]->tipo_vivienda,
-            'ocupacion' => $clienteAnterior[0]->ocupacion,
-            'empresa' => $clienteAnterior[0]->empresa,
-            'puesto' => $clienteAnterior[0]->puesto,
-            'edadFirma' => $clienteAnterior[0]->edadFirma,
-            'antiguedad' => $clienteAnterior[0]->antiguedad,
-            'domicilio_empresa' => $clienteAnterior[0]->domicilio_empresa,
-            'telefono_empresa' => $clienteAnterior[0]->telefono_empresa,
-            'noRecibo' => $clienteAnterior[0]->noRecibo,
-            'engancheCliente' => $clienteAnterior[0]->engancheCliente,
-            'concepto' => $clienteAnterior[0]->concepto,
-            'fechaEnganche' => $clienteAnterior[0]->fechaEnganche,
-            'idTipoPago' => $clienteAnterior[0]->idTipoPago,
-            'expediente' => $clienteAnterior[0]->expediente,
-            'status' => $clienteAnterior[0]->status,
-            'idLote' => $loteAOcupar,
-            'fechaApartado' => $clienteAnterior[0]->fechaApartado,
-            'fechaVencimiento' => $clienteAnterior[0]->fechaVencimiento,
-            'usuario' => $clienteAnterior[0]->usuario,
-            'idCondominio' => $idCondominio,
-            'fecha_creacion' => $clienteAnterior[0]->fecha_creacion,
-            'creado_por' => $clienteAnterior[0]->creado_por,
-            'fecha_modificacion' => $clienteAnterior[0]->fecha_modificacion,
-            'modificado_por' => $clienteAnterior[0]->modificado_por,
-            'autorizacion' => $clienteAnterior[0]->autorizacion,
-            'idAut' => $clienteAnterior[0]->idAut,
-            'motivoAut' => $clienteAnterior[0]->motivoAut,
-            'id_prospecto' => $clienteAnterior[0]->id_prospecto,
-            'idReferido' => $clienteAnterior[0]->idReferido,
-            'descuento_mdb' => $clienteAnterior[0]->descuento_mdb,
-            'id_subdirector' => $lineaVenta[0]->id_subdirector,
-            'id_regional' => $lineaVenta[0]->id_regional,
-            'plan_comision' => 0,
-            'flag_compartida' => $clienteAnterior[0]->flag_compartida,
-            'precio_cl' => $clienteAnterior[0]->precio_cl,
-            'total_cl' => $clienteAnterior[0]->total_cl,
-            'ubicacion_cl' => $clienteAnterior[0]->ubicacion_cl,
-            'totalNeto_cl' => $clienteAnterior[0]->totalNeto_cl,
-            'totalNeto2_cl' => $clienteAnterior[0]->totalNeto2_cl,
-            'registro_comision_cl' => $clienteAnterior[0]->registro_comision_cl,
-            'totalValidado_cl' => $clienteAnterior[0]->totalValidado_cl,
-            'tipo_venta_cl' => $clienteAnterior[0]->tipo_venta_cl,
-            'id_regional_2' => $clienteAnterior[0]->id_regional_2,
-            'rl' => $clienteAnterior[0]->rl,
-            'tipo_nc' => $clienteAnterior[0]->tipo_nc,
-            'printPagare' => $clienteAnterior[0]->printPagare,
-            'estructura' => $clienteAnterior[0]->estructura,
-            'tipo_casa' => $clienteAnterior[0]->tipo_casa,
-            'apartadoXReubicacion' => $clienteAnterior[0]->apartadoXReubicacion,
-            'id_cliente_reubicacion' => $clienteAnterior[0]->id_cliente,
-            'fechaAlta' => $clienteAnterior[0]->fechaAlta,
-            'tipo_comprobanteD' => $clienteAnterior[0]->tipo_comprobanteD,
-            'regimen_fac' => $clienteAnterior[0]->regimen_fac,
-            'cp_fac' => $clienteAnterior[0]->cp_fac,
-            'cancelacion_proceso' => $clienteAnterior[0]->cancelacion_proceso,
-            'banderaComisionCl' => $clienteAnterior[0]->banderaComisionCl,
-            'proceso' => $proceso,
-            'totalNeto2Cl' => 0
+		$validateLote = $this->caja_model_outside->validate($loteAOcupar);
+        ($validateLote == 1) ? TRUE : FALSE;
+        if ($validateLote == FALSE) {
+            $dataError['ERROR'] = array(
+                'titulo' => 'ERROR',
+                'resultado' => FALSE,
+                'message' => 'Error, el lote no esta disponible 1'
+            );
+            if ($dataError != null) {
+                echo json_encode($dataError);
+            } else {
+                echo json_encode(array());
+            }
+            exit;
+        }
+
+		$data = array(
+			'id_asesor' => $idAsesor,
+			'id_coordinador' => 0,
+			'id_gerente' => $idLider,
+			'id_sede' => $clienteAnterior[0]->id_sede,
+			'nombre' => $clienteAnterior[0]->nombre,
+			'apellido_paterno' => $clienteAnterior[0]->apellido_paterno,
+			'apellido_materno' => $clienteAnterior[0]->apellido_materno,
+			'personalidad_juridica' => $clienteAnterior[0]->personalidad_juridica,
+			'nacionalidad' => $clienteAnterior[0]->nacionalidad,
+			'rfc' => $clienteAnterior[0]->rfc,
+			'curp' => $clienteAnterior[0]->curp,
+			'correo' => $clienteAnterior[0]->correo,
+			'telefono1' => $clienteAnterior[0]->telefono1,
+			'telefono2' => $clienteAnterior[0]->telefono2,
+			'telefono3' => $clienteAnterior[0]->telefono3,
+			'fecha_nacimiento' => $clienteAnterior[0]->fecha_nacimiento,
+			'lugar_prospeccion' => $clienteAnterior[0]->lugar_prospeccion,
+			'medio_publicitario' => $clienteAnterior[0]->medio_publicitario,
+			'otro_lugar' => $clienteAnterior[0]->otro_lugar,
+			'plaza_venta' => $clienteAnterior[0]->plaza_venta,
+			'tipo' => $clienteAnterior[0]->tipo,
+			'estado_civil' => $clienteAnterior[0]->estado_civil,
+			'regimen_matrimonial' => $clienteAnterior[0]->regimen_matrimonial,
+			'nombre_conyuge' => $clienteAnterior[0]->nombre_conyuge,
+			'domicilio_particular' => $clienteAnterior[0]->domicilio_particular,
+			'originario_de' => $clienteAnterior[0]->originario_de,
+			'tipo_vivienda' => $clienteAnterior[0]->tipo_vivienda,
+			'ocupacion' => $clienteAnterior[0]->ocupacion,
+			'empresa' => $clienteAnterior[0]->empresa,
+			'puesto' => $clienteAnterior[0]->puesto,
+			'edadFirma' => $clienteAnterior[0]->edadFirma,
+			'antiguedad' => $clienteAnterior[0]->antiguedad,
+			'domicilio_empresa' => $clienteAnterior[0]->domicilio_empresa,
+			'telefono_empresa' => $clienteAnterior[0]->telefono_empresa,
+			'noRecibo' => $clienteAnterior[0]->noRecibo,
+			'engancheCliente' => $clienteAnterior[0]->engancheCliente,
+			'concepto' => $clienteAnterior[0]->concepto,
+			'fechaEnganche' => $clienteAnterior[0]->fechaEnganche,
+			'idTipoPago' => $clienteAnterior[0]->idTipoPago,
+			'expediente' => $clienteAnterior[0]->expediente,
+			'status' => $clienteAnterior[0]->status,
+			'idLote' => $loteAOcupar, 
+			'fechaApartado' => $clienteAnterior[0]->fechaApartado,
+			'fechaVencimiento' => $clienteAnterior[0]->fechaVencimiento,
+			'usuario' => $clienteAnterior[0]->usuario,
+			'idCondominio' => $idCondominio,
+			'fecha_creacion' => $clienteAnterior[0]->fecha_creacion,
+			'creado_por' => $clienteAnterior[0]->creado_por,
+			'fecha_modificacion' => $clienteAnterior[0]->fecha_modificacion,
+			'modificado_por' => $clienteAnterior[0]->modificado_por,
+			'autorizacion' => $clienteAnterior[0]->autorizacion,
+			'idAut' => $clienteAnterior[0]->idAut,
+			'motivoAut' => $clienteAnterior[0]->motivoAut,
+			'id_prospecto' => $clienteAnterior[0]->id_prospecto,
+			'idReferido' => $clienteAnterior[0]->idReferido,
+			'descuento_mdb' => $clienteAnterior[0]->descuento_mdb,
+			'id_subdirector' => $lineaVenta[0]->id_subdirector,
+			'id_regional' => $lineaVenta[0]->id_regional,
+			'plan_comision' => 0,
+			'flag_compartida' => $clienteAnterior[0]->flag_compartida,
+			'precio_cl' => $clienteAnterior[0]->precio_cl,
+			'total_cl' => $clienteAnterior[0]->total_cl,
+			'ubicacion_cl' => $clienteAnterior[0]->ubicacion_cl,
+			'totalNeto_cl' => $clienteAnterior[0]->totalNeto_cl,
+			'totalNeto2_cl' => $clienteAnterior[0]->totalNeto2_cl,
+			'registro_comision_cl' => $clienteAnterior[0]->registro_comision_cl,
+			'totalValidado_cl' => $clienteAnterior[0]->totalValidado_cl,
+			'tipo_venta_cl' => $clienteAnterior[0]->tipo_venta_cl,
+			'id_regional_2' => $clienteAnterior[0]->id_regional_2,
+			'rl' => $clienteAnterior[0]->rl,
+			'tipo_nc' => $clienteAnterior[0]->tipo_nc,
+			'printPagare' => $clienteAnterior[0]->printPagare,
+			'estructura' => $clienteAnterior[0]->estructura,
+			'tipo_casa' => $clienteAnterior[0]->tipo_casa,
+			'apartadoXReubicacion' => $clienteAnterior[0]->apartadoXReubicacion,
+			'id_cliente_reubicacion' => $clienteAnterior[0]->id_cliente,
+			'fechaAlta' => $clienteAnterior[0]->fechaAlta,
+			'tipo_comprobanteD' => $clienteAnterior[0]->tipo_comprobanteD,
+			'regimen_fac' => $clienteAnterior[0]->regimen_fac,
+			'cp_fac' => $clienteAnterior[0]->cp_fac,
+			'cancelacion_proceso' => $clienteAnterior[0]->cancelacion_proceso,
+			'banderaComisionCl' => $clienteAnterior[0]->banderaComisionCl,
+			'proceso' => $proceso,
+			'totalNeto2Cl' => 0
+		);
+
+		$response =  $this->db->insert('clientes', $data);
+		if ($response){
+			$insertedId = $this->db->insert_id();
+			date_default_timezone_set('America/Mexico_City');
+			$horaActual = date('H:i:s');
+			$horaInicio = date("08:00:00");
+			$horaFin = date("16:00:00");
+			if ($horaActual > $horaInicio and $horaActual < $horaFin) {
+				$fechaAccion = date("Y-m-d H:i:s");
+				$hoy_strtotime2 = strtotime($fechaAccion);
+				$sig_fecha_dia2 = date('D', $hoy_strtotime2);
+				$sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+				if ($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
+					$sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
+					$sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
+					$sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
+					$sig_fecha_feriado2 == "25-12") {
+					$fecha = $fechaAccion;
+					$i = 0;
+					while ($i <= 6) {
+						$hoy_strtotime = strtotime($fecha);
+						$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+						$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+						$sig_fecha_dia = date('D', $sig_strtotime);
+						$sig_fecha_feriado = date('d-m', $sig_strtotime);
+						if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+							$sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+							$sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+							$sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+							$sig_fecha_feriado == "25-12") {
+						} else {
+							$fecha = $sig_fecha;
+							$i++;
+						}
+						$fecha = $sig_fecha;
+					}
+					$fechaFull = $fecha;
+				} else {
+					$fecha = $fechaAccion;
+					$i = 0;
+					while ($i <= 5) {
+						$hoy_strtotime = strtotime($fecha);
+						$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+						$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+						$sig_fecha_dia = date('D', $sig_strtotime);
+						$sig_fecha_feriado = date('d-m', $sig_strtotime);
+						if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+							$sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+							$sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+							$sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+							$sig_fecha_feriado == "25-12") {
+						} else {
+							$fecha = $sig_fecha;
+							$i++;
+						}
+						$fecha = $sig_fecha;
+					}
+					$fechaFull = $fecha;
+				}
+			} elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
+				$fechaAccion = date("Y-m-d H:i:s");
+				$hoy_strtotime2 = strtotime($fechaAccion);
+				$sig_fecha_dia2 = date('D', $hoy_strtotime2);
+				$sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+				if ($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
+					$sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
+					$sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
+					$sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
+					$sig_fecha_feriado2 == "25-12") {
+					$fecha = $fechaAccion;
+					$i = 0;
+					while ($i <= 6) {
+						$hoy_strtotime = strtotime($fecha);
+						$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+						$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+						$sig_fecha_dia = date('D', $sig_strtotime);
+						$sig_fecha_feriado = date('d-m', $sig_strtotime);
+						if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+							$sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+							$sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+							$sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+							$sig_fecha_feriado == "25-12") {
+						} else {
+							$fecha = $sig_fecha;
+							$i++;
+						}
+						$fecha = $sig_fecha;
+					}
+					$fechaFull = $fecha;
+				} else {
+					$fecha = $fechaAccion;
+					$i = 0;
+					while ($i <= 6) {
+						$hoy_strtotime = strtotime($fecha);
+						$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+						$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+						$sig_fecha_dia = date('D', $sig_strtotime);
+						$sig_fecha_feriado = date('d-m', $sig_strtotime);
+						if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+							$sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+							$sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+							$sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+							$sig_fecha_feriado == "25-12") {
+						} else {
+							$fecha = $sig_fecha;
+							$i++;
+						}
+						$fecha = $sig_fecha;
+					}
+					$fechaFull = $fecha;
+				}
+			}
+		}
+		else{
+			$dataError['ERROR'] = array(
+				'titulo' => 'ERROR',
+				'resultado' => FALSE,
+				'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.'
+			);
+			if ($dataError != null) {
+				echo json_encode($dataError);
+			} else {
+				echo json_encode(array());
+			}
+			exit;
+		}
+		$insertedId = $this->db->insert_id();
+
+		$dataUpdateLote = array(
+            'idCliente' => $insertedId,
+            'idStatusContratacion' => 1,
+            'idMovimiento' => 31,
+            'comentario' => 'OK',
+            'usuario' => $datosView->id_usuario,
+            'perfil' => 'caja',
+            'modificado' => date('Y-m-d h:i:s'),
+            'fechaVenc' => $fechaFull,
+            'IdStatusLote' => 3
         );
 
-        $response =  $this->db->insert('clientes', $data);
-        $insertedId = $this->db->insert_id();
+		/*termina la actualizacion del cliente*/
+        $dataInsertHistorialLote = array(
+            'nombreLote' => $data['condominio'][0]['nombreLote'],
+            'idStatusContratacion' => 1,
+            'idMovimiento' => 31,
+            'modificado' => date('Y-m-d h:i:s'),
+            'fechaVenc' => date('Y-m-d h:i:s'),
+            'idLote' => $data['condominio'][0]['idLote'],
+            'idCondominio' => $data['condominio'][0]['idCondominio'],
+            'idCliente' => $last_id,
+            'usuario' => $datosView->id_usuario,
+            'perfil' => 'caja',
+            'comentario' => 'OK',
+            'status' => 1
+        );
 
-        if ($response) {
-            print_r("exito");
-        } else {
-            print_r("nah");
+        if (! $this->caja_model_outside->insertLotToHist($dataInsertHistorialLote)) {
+			$dataError['ERROR'] = array(
+				'titulo' => 'ERROR',
+				'resultado' => FALSE,
+				'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.'
+			);
+			if ($dataError != null) {
+				echo json_encode($dataError);
+			} else {
+				echo json_encode(array());
+			}
+			exit;
         }
-    }
-}
+
+
+        if ($response){
+			print_r("exito");
+		}
+		else{
+			print_r("nah");
+
+		}
+
+	}
+} 
