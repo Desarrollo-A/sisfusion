@@ -5004,6 +5004,7 @@ for ($d=0; $d <count($dos) ; $d++) {
       
       $datosRegistro = $this->Comisiones_model->ultimoRegistro($idLote);
       $nuevoRegistroComision = $datosRegistro->anterior;
+      var_dump($nuevoRegistroComision);
      $response = $this->Comisiones_model->updateBanderaDetenida($idLote , $bandera, $nuevoRegistroComision);
      echo json_encode($response);
     }
@@ -5481,6 +5482,21 @@ public function descuentosCapitalHumano(){
      }
      echo json_encode($result);
      }
+    public function bajarReubicados(){
+
+      $lo6te_1 =  $this->input->post("idLote");
+
+
+    }
+
+    public function comisionesReubicaciones (){
+      $idCliente =  $this->input->post("idCliente");
+      // var_dump($idCliente);
+      $resulto = $this->Comisiones_model->reubicadas($idCliente);
+      echo json_encode($resulto);
+
+
+    }
 
   public function getHistorialDescuentosPorUsuario() {      
     echo json_encode(array( "data" => $this->Comisiones_model->getHistorialDescuentosPorUsuario()));
