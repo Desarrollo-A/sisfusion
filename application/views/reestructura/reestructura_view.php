@@ -10,7 +10,7 @@
 				<div class="modal-content" > 
 					<div class="modal-body">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
-                            <h4>¿Esta usted seguro de liberar el lote?</h4>
+                            <h4>¿Está usted seguro de liberar el lote?</h4>
                         </div>
                         <br>
                         <input type="hidden" name="idLote" id="idLoteenvARevCE" >
@@ -30,23 +30,75 @@
 				<div class="modal-content" > 
 					<div class="modal-header">
                         <div class="row d-flex justify-center align-center">
-                            <div class="col-xs-12 col-sm-7 col-md-7 col-lg-7 ">
-						        <h4 class="modal-title text-right">CATALOGO</h4>
-                            </div>
-                            <div class="col-xs-12 col-sm-5 col-md-5 col-lg-5 p-0">
-                                <button class="btn-data btn-green btnMultiRol" id="btnMultiRol" data-toggle="tooltip" data-placement="top" title= "VALIDAR REESTRUCTURACIÓN" data-idLote="' +d.idLote+ '"><i class="fas fa-plus"></i></button>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
+						        <h4 class="modal-title text-center">CATALOGO</h4>
                             </div>
                         </div>
 					</div>
 					<div class="modal-body">
-                        <div class="container-fluid">
-                            <div class="row aligned-row" id="multirol"></div>
+                        <div class="material-datatables">
+                            <div class="form-group">
+                                <table class="table-striped table-hover" id="tableCatalogo" name="tableCatalogo">
+                                    <thead>
+                                        <tr>
+                                            <th>OPCIÓN CATALOGO</th>
+                                            <th>ACCIONES</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
                         </div>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-						<button type="button" id="save2" name="save2" class="btn btn-primary">Registrar</button>
+						<button type="button" id="nuevaOpcion" name="nuevaOpcion" class="btn btn-primary nuevaOpcion">Registrar</button>
 					</div>
+				</div>
+			</div>
+		</div>
+
+        <div class="modal fade" id="modalBorrar" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog modal-sm">
+				<div class="modal-content"> 
+					<div class="modal-body">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
+                            <h4>¿Está seguro de borrar la opción?</h4>
+                        </div>
+                        <br>
+                        <input type="hidden" name="idOpcion" id="idOpcion">       
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+						<button type="button" id="borrarOp" name="borrarOp" class="btn btn-primary">Aceptar</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+        <div class="modal fade modal-alertas" id="catalogoNuevo" role="dialog">
+			<div class="modal-dialog modal-sm">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title text-center">Cargar nueva opción</h5>
+					</div>
+					<form id="addNewDesc">
+						<input type="hidden" value="0" name="id_opcion" id="id_opcion">
+						<div class="form-group d-flex justify-center">
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+								<input type="text" class="form-control input-gral" id="inputCatalogo" name="inputCatalogo" required>
+							</div>
+						</div>
+						<div class="container-fluid">
+							<div class="row mt-1 mb-1">
+								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+									<input type="button" class="btn btn-danger btn-simple m-0" data-dismiss="modal" value="CANCELAR">
+								</div>
+								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+									<input type="button" class="btn btn-primary" name="guardarCatalogo"  id="guardarCatalogo" value="GUARDAR">
+								</div>
+							</div>
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>
@@ -61,22 +113,19 @@
                         <div class="row">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                 <label>OPCIONES</label>
-                                <select name="grabado" id="grabado" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required>
-                                    <option value="1">GRABAMEN</option>
-                                    <option value="0">JURÍDICO</option>
-                                </select>
+                                <select name="grabado" id="grabado" class="selectpicker select-gral m-0 grabado" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1">
-                            <label>Comentario</label>
+                            <label>COMENTARIO</label>
                             <textarea class="text-modal" id="comentario2" rows="3"></textarea>
                         </div>
                         <br>
-                        <!-- <input type="hidden" name="idLote" id="idLoteenvARevCE" > -->
+                        <input type="hidden" name="idLoteCatalogo" id="idLoteCatalogo" >
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-						<button type="button" id="save2" name="save2" class="btn btn-primary">Registrar</button>
+						<button type="button" id="cancelarValidacion" class="btn btn-danger btn-simple cancelarValidacion" data-dismiss="modal">Cancelar</button>
+						<button type="button" id="guardarValidacion" name="guardarValidacion" class="btn btn-primary guardarValidacion">Registrar</button>
 					</div>
 				</div>
 			</div>
