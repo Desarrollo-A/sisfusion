@@ -1,49 +1,37 @@
 <?php
 
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-
-class Asesor extends CI_Controller
-{
-    public function __construct()
-    {
+class Asesor extends CI_Controller {
+    public function __construct() {
         parent::__construct();
-        $this->load->model('model_queryinventario');
         $this->load->model('asesor/Asesor_model');
-        $this->load->model('Contraloria_model');
-        $this->load->model('registrolote_modelo');
-        $this->load->model('caja_model_outside');
-        $this->load->model('General_model');
-        $this->load->model('Clientes_model');
+        $this->load->model(array('model_queryinventario', 'registrolote_modelo', 'caja_model_outside', 'Contraloria_model', 'General_model', 'Clientes_model'));
         $this->load->model([
             'opcs_catalogo/valores/AutorizacionClienteOpcs',
             'opcs_catalogo/valores/TipoAutorizacionClienteOpcs'
         ]);
 
-        $this->load->library(array('session', 'form_validation'));
-        //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
-        $this->load->library(array('session', 'form_validation', 'get_menu','permisos_sidebar'));
-        $this->load->library('email');
-
-        $this->load->helper(array('url', 'form'));
+        $this->load->library(array('session','form_validation', 'get_menu', 'Jwt_actions', 'Pdf', 'email', 'permisos_sidebar'));
+        $this->load->helper(array('url','form'));
         $this->load->database('default');
-        $this->load->library('Pdf');
         date_default_timezone_set('America/Mexico_City');
         $this->validateSession();
-
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
-        $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
-        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
+        $rutaUrl = substr($_SERVER["REQUEST_URI"],1);
+        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl,$this->session->userdata('opcionesMenu'));
     }
     public function index()
     {
-        if ($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '7') {
-            redirect(base_url() . 'login');
+        if($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '7')
+        {
+            redirect(base_url().'login');
         }
         $this->load->view('template/header');
         $this->load->view('asesor/inicio_asesor_view');
         $this->load->view('template/footer');
     }
+
     public function homeView()
     {
         if ($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '61') {
@@ -158,76 +146,75 @@ class Asesor extends CI_Controller
             echo json_encode(array());
         }
     }
-    public function getLegalPersonality()
-    {
+    public function getLegalPersonality(){
         echo json_encode($this->Asesor_model->getLegalPersonality()->result_array());
     }
-    public function getAdvertising()
-    {
+
+    public function getAdvertising(){
         echo json_encode($this->Asesor_model->getAdvertising()->result_array());
     }
-    public function getSalesPlaza()
-    {
+
+    public function getSalesPlaza(){
         echo json_encode($this->Asesor_model->getSalesPlaza()->result_array());
     }
-    public function getCivilStatus()
-    {
+
+    public function getCivilStatus(){
         echo json_encode($this->Asesor_model->getCivilStatus()->result_array());
     }
-    public function getMatrimonialRegime()
-    {
+
+    public function getMatrimonialRegime(){
         echo json_encode($this->Asesor_model->getMatrimonialRegime()->result_array());
     }
-    public function getState()
-    {
+
+    public function getState(){
         echo json_encode($this->Asesor_model->getState()->result_array());
     }
-    public function getParentesco()
-    {
+
+    public function getParentesco(){
         echo json_encode($this->Asesor_model->getParentesco()->result_array());
     }
-    public function getModalidad()
-    {
+
+    public function getModalidad(){
         echo json_encode($this->Asesor_model->getModalidad()->result_array());
     }
-    public function getMediosVenta()
-    {
+
+    public function getMediosVenta(){
         echo json_encode($this->Asesor_model->getMediosVenta()->result_array());
     }
-    public function getPlan()
-    {
+
+    public function getPlan(){
         echo json_encode($this->Asesor_model->getPlan()->result_array());
     }
-    public function getProspectsList()
-    {
+
+    public function getProspectsList(){
         $data['data'] = $this->Asesor_model->getProspectsList()->result_array();
         echo json_encode($data);
     }
-    public function getProspectInformation($id_prospecto)
-    {
+
+    public function getProspectInformation($id_prospecto){
         echo json_encode($this->Asesor_model->getProspectInformation($id_prospecto)->result_array());
     }
-    public function getInformationToPrint($id_prospecto)
-    {
+
+    public function getInformationToPrint($id_prospecto){
         echo json_encode($this->Asesor_model->getInformationToPrint($id_prospecto)->result_array());
     }
-    public function getComments($id_prospecto)
-    {
+
+    public function getComments($id_prospecto){
         echo json_encode($this->Asesor_model->getComments($id_prospecto)->result_array());
     }
-    public function getChangelog($id_prospecto)
-    {
+
+    public function getChangelog($id_prospecto){
         echo json_encode($this->Asesor_model->getChangelog($id_prospecto)->result_array());
     }
-    public function saveComment()
-    {
-        if (isset($_POST) && !empty($_POST)) {
-            $response = $this->Asesor_model->saveComment($this->session->userdata('id_usuario'), $this->input->post("id_prospecto"), $this->input->post("observations"));
+
+    public function saveComment(){
+        if(isset($_POST) && !empty($_POST)){
+            $response = $this->Asesor_model->saveComment($this->session->userdata('id_usuario'),$this->input->post("id_prospecto"),$this->input->post("observations"));
             echo json_encode($response);
         }
     }
-    public function updateProspect()
-    {
+
+    public function updateProspect(){
         $specify = $_POST['specify'];
         if ($specify == '' || $specify == null) {
             $final_specification = 0;

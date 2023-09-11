@@ -8,9 +8,24 @@ const PROYECTO = Object.freeze({
     PRIVADAPENINSULA: 25
 });
 
+const STATUSLOTE = Object.freeze({
+    DISPONIBLE : 1,
+    CONTRATADO : 2,
+    APARTADO : 3,
+    ENGANCHE : 4,
+    INTERCAMBIO : 6,
+    DIRECCIÓN : 7,
+    BLOQUEO : 8,
+    CONTRATADO_POR_INTERCAMBIO : 9,
+    APARTADO_CASAS : 10,
+    DONACIÓN : 11,
+    INTERCAMBIO_ESCRITURADO : 12,
+    DISPONIBLE_REUBICACIÓN : 15,
+    PARTICULAR : 102,
+    APARTADO_REUBICACIÓN : 16,
+});
+
 let titulosTabla = [];
-
-
 $('#reubicacionClientes thead tr:eq(0) th').each(function (i) {
     const title = $(this).text();
     titulosTabla.push(title);
@@ -187,7 +202,7 @@ $(document).on('click', '.btn-reubicar', function () {
                         </div>
                     </div>
                 </div>
-                <div class="row" id="infoLoteSeleccionado">
+                <div class="row mt-2" id="infoLoteSeleccionado">
                 </div>
                 <input type="hidden" id="superficie" value="${superficie}">
                 <input type="hidden" id="tipoLote" value="${tipoLote}">
@@ -295,7 +310,6 @@ $(document).on("submit", "#formReubicar", function(e){
     $('#spiner-loader').removeClass('hide');
     e.preventDefault();
     let data = new FormData($(this)[0]);
-
     $.ajax({
         url : 'setReubicacion',
         data: data,
@@ -304,9 +318,16 @@ $(document).on("submit", "#formReubicar", function(e){
         processData: false,
         type: 'POST', 
         success: function(data){
-            console.log();
+            data = JSON.parse(data);
+            console.log(data);
+            alerts.showNotification("top", "right", ""+data.message+"", ""+data.color+"");
+            $('#reubicacionClientes').DataTable().ajax.reload();
+            $('#spiner-loader').addClass('hide');
+            hideModal();
         },
         error: function( data ){
+            alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+            hideModal();
         }
     });
 });
