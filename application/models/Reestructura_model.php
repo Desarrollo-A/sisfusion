@@ -19,7 +19,6 @@ class Reestructura_model extends CI_Model
         ISNULL (ds.costom2f, 'SIN ESPECIFICAR') costom2f, SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16, 2)) * lo.sup, lo.precio * lo.sup) ELSE lo.totalNeto2 END) total, co.tipo_lote, oxc.nombre nombreTipoLote
         FROM lotes lo
         INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1
-        -- LEFT JOIN clientes cl2 ON cl.id_cliente_reubicacion = cl.id_cliente AND cl2.status = 1
         INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
         INNER JOIN residenciales re ON co.idResidencial = re.idResidencial
         INNER JOIN loteXReubicacion lr ON lr.idProyecto = re.idResidencial
@@ -31,7 +30,7 @@ class Reestructura_model extends CI_Model
         LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
         LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = co.tipo_lote AND oxc.id_catalogo = 27
-        -- WHERE cl2.id_cliente IS NULL
+        
         GROUP BY lr.idProyecto, lo.idLote, lo.nombreLote,  cl.fechaApartado, co.nombre, re.nombreResidencial,
         lo.idCliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, 
         u0.id_usuario, u0.nombre, u0.apellido_paterno, u0.apellido_materno,
@@ -208,7 +207,7 @@ class Reestructura_model extends CI_Model
     }
 
     public function getSelectedSup($idLote){
-        $query = $this->db->query("SELECT sup FROM lotes WHERE idLote = $idLote");
+        $query = $this->db->query("SELECT sup, nombreLote FROM lotes WHERE idLote = $idLote");
         return $query;
     }
 }

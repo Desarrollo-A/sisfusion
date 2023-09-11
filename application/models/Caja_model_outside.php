@@ -464,7 +464,6 @@
         $this->db->insert('clientes', $data);
         $query = $this->db->query("SELECT IDENT_CURRENT('clientes') as lastId")->result_array();
         return $query;
-
     }
 
     public function addClientToLote($idLote, $data)
@@ -1180,75 +1179,7 @@
                     $update_pcasas["enganche"] = ($update_pcasas["total"] * 0.1);
                     $update_pcasas["saldo"] = ($update_pcasas["total"] - $update_pcasas["enganche"]);
 
-                } /*if($array_casas[$c][1] == 'STELLA'){
-             
-             if(
-                 $array_casas[$c][2] == 'CCMP-LAMAY-011' || $array_casas[$c][2] == 'CCMP-LAMAY-021' || $array_casas[$c][2] == 'CCMP-LAMAY-030' ||
-                 $array_casas[$c][2] == 'CCMP-LAMAY-031' || $array_casas[$c][2] == 'CCMP-LAMAY-032' || $array_casas[$c][2] == 'CCMP-LAMAY-045' ||
-                 $array_casas[$c][2] == 'CCMP-LAMAY-046' || $array_casas[$c][2] == 'CCMP-LAMAY-047' || $array_casas[$c][2] == 'CCMP-LAMAY-054' || 
-                 $array_casas[$c][2] == 'CCMP-LAMAY-064' || $array_casas[$c][2] == 'CCMP-LAMAY-079' || $array_casas[$c][2] == 'CCMP-LAMAY-080' ||
-                 $array_casas[$c][2] == 'CCMP-LAMAY-090' || $array_casas[$c][2] == 'CCMP-LIRIO-010' ||
-                 
-                 $array_casas[$c][2] == 'CCMP-LIRIO-10' ||
-                 $array_casas[$c][2] == 'CCMP-LIRIO-033' || $array_casas[$c][2] == 'CCMP-LIRIO-048' || $array_casas[$c][2] == 'CCMP-LIRIO-049' ||
-                 $array_casas[$c][2] == 'CCMP-LIRIO-067' || $array_casas[$c][2] == 'CCMP-LIRIO-089' || $array_casas[$c][2] == 'CCMP-LIRIO-091' ||
-                 $array_casas[$c][2] == 'CCMP-LIRIO-098' || $array_casas[$c][2] == 'CCMP-LIRIO-100'
-             
-             ){
-                 $total = $info->total;
-                 $update_pcasas["total"]= ($total + 2029185.00);
-                 $update_pcasas["enganche"]= ($update_pcasas["total"] * 0.1);
-                 $update_pcasas["saldo"]= ($update_pcasas["total"] - $update_pcasas["enganche"]);
- 
-             
-             } else {
-                 
-                 $total = $info->total;
-                 $update_pcasas["total"]= ($total + 2104340.00);
-                 $update_pcasas["enganche"]= ($update_pcasas["total"] * 0.1);
-                 $update_pcasas["saldo"]= ($update_pcasas["total"] - $update_pcasas["enganche"]);
-                 
-             
-             }
-             
-             $update_pcasas["nombreLote"]=$array_casas[$c][3];
- 
- 
-             } else if($array_casas[$c][1] == 'AURA'){
-                     
-             if(
- 
-                 $array_casas[$c][2] == 'CCMP-LAMAY-011' || $array_casas[$c][2] == 'CCMP-LAMAY-021' || $array_casas[$c][2] == 'CCMP-LAMAY-030' ||
-                 $array_casas[$c][2] == 'CCMP-LAMAY-031' || $array_casas[$c][2] == 'CCMP-LAMAY-032' || $array_casas[$c][2] == 'CCMP-LAMAY-045' ||
-                 $array_casas[$c][2] == 'CCMP-LAMAY-046' || $array_casas[$c][2] == 'CCMP-LAMAY-047' || $array_casas[$c][2] == 'CCMP-LAMAY-054' || 
-                 $array_casas[$c][2] == 'CCMP-LAMAY-064' || $array_casas[$c][2] == 'CCMP-LAMAY-079' || $array_casas[$c][2] == 'CCMP-LAMAY-080' ||
-                 $array_casas[$c][2] == 'CCMP-LAMAY-090' || $array_casas[$c][2] == 'CCMP-LIRIO-010' ||
-                 
-                 $array_casas[$c][2] == 'CCMP-LIRIO-10' ||
-                 $array_casas[$c][2] == 'CCMP-LIRIO-033' || $array_casas[$c][2] == 'CCMP-LIRIO-048' || $array_casas[$c][2] == 'CCMP-LIRIO-049' ||
-                 $array_casas[$c][2] == 'CCMP-LIRIO-067' || $array_casas[$c][2] == 'CCMP-LIRIO-089' || $array_casas[$c][2] == 'CCMP-LIRIO-091' ||
-                 $array_casas[$c][2] == 'CCMP-LIRIO-098' || $array_casas[$c][2] == 'CCMP-LIRIO-100'
-             
-             ){
-                 $total = $info->total;
-                 $update_pcasas["total"]= ($total + 1037340.00);
-                 $update_pcasas["enganche"]= ($update_pcasas["total"] * 0.1);
-                 $update_pcasas["saldo"]= ($update_pcasas["total"] - $update_pcasas["enganche"]);
-             
-             } else {
-                     
-                 $total = $info->total;
-                 $update_pcasas["total"]= ($total + 1075760.00);
-                 $update_pcasas["enganche"]= ($update_pcasas["total"] * 0.1);
-                 $update_pcasas["saldo"]= ($update_pcasas["total"] - $update_pcasas["enganche"]);
-             
-             }
-             
-             
-             $update_pcasas["nombreLote"]=$array_casas[$c][3];
- 
- 
-             }*/ else if ($array_casas[$c][1] == 'TERRENO') {
+                }  else if ($array_casas[$c][1] == 'TERRENO') {
 
                     $tipo_casa = 0;//TIPO DE CASA PARA GUARDARLO EN CLIENTES
                     $t = (($info->precio + 500) * $info->sup);

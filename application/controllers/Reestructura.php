@@ -130,12 +130,13 @@ class Reestructura extends CI_Controller{
         $loteAOcupar = $this->input->post('loteAOcupar');
         $idCondominio = $this->input->post('condominioAOcupar');
         $idAsesor = $this->session->userdata('id_usuario');
+		$nombreAsesor = $this->session->userdata('nombre') . ' ' . $this->session->userdata('apellido_paterno') . ' ' . $this->session->userdata('apellido_materno');
         $idLider = $this->session->userdata('id_lider');
 		
 		$clienteAnterior = $this->General_model->getCliente($idClienteAnterior)->result();
 		$lineaVenta = $this->General_model->getLider($idLider)->result();
-		$nuevaSup = $this->Reestructura_model->getSelectedSup($loteAOcupar)->result();
-		$nuevaSup = intval($nuevaSup[0]->sup);
+		$loteSelected = $this->Reestructura_model->getSelectedSup($loteAOcupar)->result();
+		$nuevaSup = intval($loteSelected[0]->sup);
 		$anteriorSup = intval($clienteAnterior[0]->sup);
 
 		$proceso = ( $anteriorSup == $nuevaSup || (($anteriorSup + 2) == $nuevaSup)) ? 2 : 5;
@@ -143,13 +144,14 @@ class Reestructura extends CI_Controller{
 		$validateLote = $this->caja_model_outside->validate($loteAOcupar);
         ($validateLote == 1) ? TRUE : FALSE;
         if ($validateLote == FALSE) {
-            $dataError['ERROR'] = array(
-                'titulo' => 'ERROR',
-                'resultado' => FALSE,
-                'message' => 'Error, el lote no esta disponible 1'
+            $response = array(
+				'titulo' => 'FALSE',
+				'resultado' => FALSE,
+				'message' => 'Error, el lote no esta disponible',
+				'color' => 'danger'
             );
-            if ($dataError != null) {
-                echo json_encode($dataError);
+            if ($response != null) {
+                echo json_encode($response);
             } else {
                 echo json_encode(array());
             }
@@ -243,9 +245,8 @@ class Reestructura extends CI_Controller{
 			'totalNeto2Cl' => 0
 		);
 
-		$response =  $this->db->insert('clientes', $data);
-		if ($response){
-			$insertedId = $this->db->insert_id();
+		if($idClienteInsert = $this->caja_model_outside->insertClient($data)){
+        	$insertedId = $idClienteInsert[0]["lastId"];
 			date_default_timezone_set('America/Mexico_City');
 			$horaActual = date('H:i:s');
 			$horaInicio = date("08:00:00");
@@ -357,70 +358,87 @@ class Reestructura extends CI_Controller{
 			}
 		}
 		else{
-			$dataError['ERROR'] = array(
+			$response = array(
 				'titulo' => 'ERROR',
 				'resultado' => FALSE,
-				'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.'
+				'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
+				'color' => 'danger'
 			);
-			if ($dataError != null) {
-				echo json_encode($dataError);
+			if ($response != null) {
+				echo json_encode($response);
 			} else {
 				echo json_encode(array());
 			}
 			exit;
 		}
-		$insertedId = $this->db->insert_id();
 
 		$dataUpdateLote = array(
             'idCliente' => $insertedId,
             'idStatusContratacion' => 1,
             'idMovimiento' => 31,
             'comentario' => 'OK',
-            'usuario' => $datosView->id_usuario,
-            'perfil' => 'caja',
+            'usuario' => $nombreAsesor,
+            'perfil' => 'ooam',
             'modificado' => date('Y-m-d h:i:s'),
             'fechaVenc' => $fechaFull,
-            'IdStatusLote' => 3
+            'IdStatusLote' => 16
         );
+
+		if ($this->caja_model_outside->addClientToLote($loteAOcupar, $dataUpdateLote)) {
+		} else {
+			$response = array(
+				'titulo' => 'ERROR',
+				'resultado' => FALSE,
+				'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
+				'color' => 'danger'
+			);
+			if ($response != null) {
+				echo json_encode($response);
+			} else {
+				echo json_encode(array());
+			}
+			exit;
+		}
 
 		/*termina la actualizacion del cliente*/
         $dataInsertHistorialLote = array(
-            'nombreLote' => $data['condominio'][0]['nombreLote'],
-            'idStatusContratacion' => 1,
-            'idMovimiento' => 31,
-            'modificado' => date('Y-m-d h:i:s'),
-            'fechaVenc' => date('Y-m-d h:i:s'),
-            'idLote' => $data['condominio'][0]['idLote'],
-            'idCondominio' => $data['condominio'][0]['idCondominio'],
-            'idCliente' => $last_id,
-            'usuario' => $datosView->id_usuario,
-            'perfil' => 'caja',
-            'comentario' => 'OK',
-            'status' => 1
+			'nombreLote' => $loteSelected[0]->nombreLote,
+			'idStatusContratacion' => 1,
+			'idMovimiento' => 31,
+			'modificado' => date('Y-m-d h:i:s'),
+			'fechaVenc' => date('Y-m-d h:i:s'),
+			'idLote' => $loteAOcupar,
+			'idCondominio' => $idCondominio,
+			'idCliente' => $insertedId,
+			'usuario' => $idAsesor,
+			'perfil' => 'ooam',
+			'comentario' => 'OK',
+			'status' => 1
         );
         
+
         if (! $this->caja_model_outside->insertLotToHist($dataInsertHistorialLote)) {
-			$dataError['ERROR'] = array(
+			$response = array(
 				'titulo' => 'ERROR',
 				'resultado' => FALSE,
-				'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.'
+				'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
+				'color' => 'danger'
 			);
-			if ($dataError != null) {
-				echo json_encode($dataError);
+			if ($response != null) {
+				echo json_encode($response);
 			} else {
 				echo json_encode(array());
 			}
 			exit;
         }
+
+		$response = array(
+			'titulo' => 'OK',
+			'resultado' => TRUE,
+			'message' => 'Proceso realizado correctamente ',
+			'color' => 'success'
+		);
 		
-
-        if ($response){
-			print_r("exito");
-		}
-		else{
-			print_r("nah");
-
-		}
-
+		echo json_encode($response);
 	}
 } 
