@@ -4399,11 +4399,15 @@ public function getDatosHistorialPagoEstatus($proyecto, $condominio, $usuario) {
     }
 
   
-    public function porcentajes($cliente,$tipoVenta = ''){
-      if($tipoVenta != ''){
-        echo json_encode($this->Comisiones_model->porcentajes($cliente,$tipoVenta)->result_array(),JSON_NUMERIC_CHECK);
+    public function porcentajes(){
+      $plan_comision = $this->input->post("plan_comision");
+      $cliente = $this->input->post("idCliente");
+
+      
+      if(in_array($plan_comision,array(53,54,55))){
+        echo json_encode($this->Comisiones_model->porcentajeReestructura($cliente,$plan_comision)->result_array(),JSON_NUMERIC_CHECK);
       }else{
-        echo json_encode($this->Comisiones_model->porcentajeReestructura($cliente)->result_array(),JSON_NUMERIC_CHECK);
+        echo json_encode($this->Comisiones_model->porcentajes($cliente,$plan_comision)->result_array(),JSON_NUMERIC_CHECK);
       }
     }
       public function ReporteTotalMktd($mes,$anio){

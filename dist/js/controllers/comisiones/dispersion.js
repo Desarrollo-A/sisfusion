@@ -193,7 +193,7 @@ $(document).ready(function () {
                                             data-penalizacion="${d.penalizacion}" data-nombreLote="${d.nombreLote}" 
                                             data-cliente_reubicacion="${d.id_cliente_reubicacion}"
                                             data-banderaPenalizacion="${d.bandera_penalizacion}" data-cliente="${d.id_cliente}" 
-                                            data-plan="${d.plan_comision}"  data-tipov="${d.tipo_venta}" data-descplan="${d.plan_descripcion}" 
+                                            data-tipov="${d.tipo_venta}" data-descplan="${d.plan_descripcion}" 
                                             data-code="${d.cbbtton}" 
                                             class="btn-data btn-violetChin verify_neodata_reubicado" data-toggle="tooltip"  
                                             data-placement="top" title="Verificar en NEODATA Reubicados">
@@ -207,8 +207,6 @@ $(document).ready(function () {
                         }
                         BtnStats += '<button href="#" value="'+d.idLote+'" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'"  data-penalizacion="'+d.penalizacion+'"data-nombreLote="'+d.nombreLote+'" data-banderaPenalizacion="'+d.bandera_penalizacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data '+varColor + ' verify_neodata" data-toggle="tooltip"  data-placement="top" title="'+ Mensaje +'">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
                         BtnStats += `<button href="#" value="${d.idLote}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas btn-detener btn-warning" data-toggle="tooltip"  data-placement="top" title="Detener"> <i class="material-icons">block</i> </button>`;
-                     
- 
                     }
                 }
                 return '<div class="d-flex justify-center">'+BtnStats+'</div>';
@@ -388,7 +386,8 @@ $(document).ready(function () {
                                 let abonado=0;
                                 let porcentaje_abono=0;
                                 let total_comision=0;
-                                $.post(general_base_url + "Reestructura/lista_proyecto",{idCliente:idCliente,plan_comision:plan_comision}, function (resultArr) {
+                                $.post(general_base_url + "Comisiones/porcentajes",{idCliente:idCliente,plan_comision:plan_comision}, function (resultArr) {
+                                    resultArr = JSON.parse(resultArr);
                                     $.each( resultArr, function( i, v){
                                         let porcentajeAse =  v.porcentaje_decimal;
                                         let total_comision1=0;
@@ -431,6 +430,7 @@ $(document).ready(function () {
                                                         <div class="col-md-3">
                                                             <label id="" class="control-label labelNombre hide">Usuarios</label>
                                                             <input type="hidden" name="penalizacion" id="penalizacion" value="${penalizacion}"><input type="hidden" name="nombreLote" id="nombreLote" value="${nombreLote}">
+                                                            <input type="hidden" name="plan_c" id="plan_c" value="${plan_comision}">
                                                             <input id="id_usuario" type="hidden" name="id_usuario[]" value="${v.id_usuario}"><input id="id_rol" type="hidden" name="id_rol[]" value="${v.id_rol}"><input id="num_usuarios" type="hidden" name="num_usuarios[]" value="${v.num_usuarios}">
                                                             <input class="form-control input-gral" required readonly="true" value="${v.nombre}" style="font-size:12px;"><b><p style="font-size:12px;">${v.detail_rol}</p></b>
                                                         </div>
