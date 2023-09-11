@@ -180,7 +180,7 @@ public function activar_bandera_neo(){
         }
     }
     $this->ComisionesNeo_model->UpdateBanderaPagoComisionAnticipo();
-    $this->ComisionesNeo_model->UpdateBanderaPagoComisionNewNeo();
+    //$this->ComisionesNeo_model->UpdateBanderaPagoComisionNewNeo();
 }
 
 }

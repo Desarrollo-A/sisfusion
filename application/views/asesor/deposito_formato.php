@@ -4,9 +4,6 @@
 <body>
 <div class="wrapper">
     <?php
-
-    ?>
-    <?php
         if(in_array($this->session->userdata('id_rol'), array(7, 9, 3, 6, 2)) || in_array($this->session->userdata('id_usuario'), array(2752, 2826, 2810, 2855, 2815, 5957, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012, 12931)) AND $onlyView==0){
             $readOnly = '';
             $statsInput = '';

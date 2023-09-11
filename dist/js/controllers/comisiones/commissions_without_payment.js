@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    $("#tabla_comisiones_sin_pago").prop("hidden", true);
     $('#spiner-loader').removeClass('hide');
     $.post(general_base_url + "Contratacion/lista_proyecto", function (data) {
         $('#spiner-loader').addClass('hide');
@@ -19,7 +20,6 @@ $('#proyecto').change( function(){
     $("#condominio").html("");
     $(document).ready(function(){
         $.post(general_base_url + "Contratacion/lista_condominio/"+index_proyecto, function(data) {
-            $('#spiner-loader').addClass('hide');
             var len = data.length;
             for( var i = 0; i<len; i++)
             {
@@ -36,7 +36,6 @@ $('#proyecto').change( function(){
 $('#condominio').change( function(){
     index_proyecto = $('#proyecto').val();
     index_condominio = $(this).val();
-    // SE MANDA LLAMAR FUNCTION QUE LLENA LA DATA TABLE DE COMISINONES SIN PAGO EN NEODATA
     fillCommissionTableWithoutPayment(index_proyecto, index_condominio);
 });
 
@@ -48,7 +47,7 @@ let titulos = [];
 $('#tabla_comisiones_sin_pago thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
     titulos.push(title);
-    $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
+    $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>' );
     $( 'input', this ).on('keyup change', function () {
         if ($('#tabla_comisiones_sin_pago').DataTable().column(i).search() !== this.value ) {
             $('#tabla_comisiones_sin_pago').DataTable().column(i).search(this.value).draw();
@@ -59,6 +58,7 @@ $('#tabla_comisiones_sin_pago thead tr:eq(0) th').each( function (i) {
 
 
 function fillCommissionTableWithoutPayment (proyecto, condominio) {
+    $("#tabla_comisiones_sin_pago").prop("hidden", false);
     tabla_comisiones_sin_pago = $("#tabla_comisiones_sin_pago").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
@@ -94,51 +94,66 @@ function fillCommissionTableWithoutPayment (proyecto, condominio) {
         }],
         columns: [{
             data: function(d) {
-                return '<p class="m-0">' + d.idLote + '</p>';
+                return d.idLote;
             }
         },
         {
             data: function(d) {
-                return '<p class="m-0">' + d.nombreResidencial + '</p>';
+                return d.nombreResidencial;
             }
         },
         {
             data: function(d) {
-                return '<p class="m-0">' + d.nombreCondominio + '</p>';
+                return d.nombreCondominio;
             }
         },
         {
             data: function(d) {
-                return '<p class="m-0">' + d.nombreLote + '</p>';
+                return d.nombreLote;
             }
         },
         {
             data: function(d) {
-                return '<p class="m-0">' + d.nombreCliente + ' </p>';
+                return d.nombreCliente;
             }
         },
         {
             data: function(d) {
-                return '<p class="m-0">' + d.nombreAsesor + '</p>';
+                return d.nombreAsesor;
             }
         },
         {
             data: function(d) {
-                return '<p class="m-0">' + d.nombreCoordinador + '</p>';
+                return d.nombreCoordinador;
             }
         },
         {
             data: function(d) {
-                return '<p class="m-0">' + d.nombreGerente + '</p>';
+                return d.nombreGerente;
             }
         },
         {
             data: function(d) {
-                return '<p class="m-0">' + d.reason + '</p>';
+                return d.subdirector;
+            }
+        },
+        {
+            data: function(d) {
+                return d.regional;
+            }
+        },
+        {
+            data: function(d) {
+                return d.regional2;
+            }
+        },
+        {
+            data: function(d) {
+                return d.reason;
             }
         }],
         columnDefs: [{
-            defaultContent: "",
+            defaultContent: "Sin especificar",
             targets: "_all",
             searchable: true,
             orderable: false
@@ -149,5 +164,9 @@ function fillCommissionTableWithoutPayment (proyecto, condominio) {
             cache: false,
             data: function(d) {}
         },
+        initComplete: function(){
+            $("#tablaInv").removeClass('hide');
+            $('#spiner-loader').addClass('hide');
+        }
     });
 }

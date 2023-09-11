@@ -1,7 +1,7 @@
 
 <body class="">
 <div class="wrapper ">
-	<?php $this->load->view('template/sidebar', $dato); ?>
+	<?php $this->load->view('template/sidebar'); ?>
  
 	<style type="text/css">
 		::-webkit-input-placeholder { /* Chrome/Opera/Safari */

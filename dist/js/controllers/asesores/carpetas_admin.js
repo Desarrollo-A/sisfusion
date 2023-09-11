@@ -75,10 +75,6 @@ $(document).ready(function () {
     });
 
     $tableCarpetas = $('#tableCarpetas').DataTable({
-        lengthMenu: [
-            [10, 25, 50, -1],
-            [10, 25, 50, "Todos"]
-        ],
         dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
@@ -93,70 +89,35 @@ $(document).ready(function () {
         },
         destroy: true,
         ordering: false,
-        columns: [{ 
-            data: function (d) {
-                return d.id_archivo;
-            }
-        },
-        { 
-            data: function (d) {
-                return d.nombre;
-            }
-        },
-        { 
-            data: function (d) {
-                return d.descripcion;
-            }
-        },
-        { 
-            data: function (d) {
-                return d.archivo;
-            }
-        },
-        { 
-            data: function (d) {
-                if (d.estatus == 1) {
-                    return '<center><span class="label lbl-green">Activo</span><center>';
-                } else {
-                    return '<center><span class="label lbl-warning">Inactivo</span><center>';
+        columns: [
+            { data: 'id_archivo' },
+            { data: 'nombre' },
+            { data: 'descripcion' },
+            { 
+                data: function (d) {
+                    if (d.estatus == 1)
+                        return '<center><span class="label lbl-green">Activo</span><center>';
+                    else
+                        return '<center><span class="label lbl-warning">Inactivo</span><center>';
+                }
+            },
+            { data: 'fecha_creacion' },
+            { 
+                data: function (d) {
+                    return id_rol_general == 53 ? "N/A" : '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas editarCarpeta" data-toggle="tooltip" data-placement="top" title="MODIFICAR" data-id-carpeta="' + d.id_archivo +'"><i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-deepGray preview" data-toggle="tooltip" data-placement="top" title="VER DOCUMENTO" data-id-carpeta="' + d.id_archivo +'"><i class="far fa-eye"></i></button></div>';
                 }
             }
-        },
-        { 
-            data: function (d) {
-                return d.usuario;
-            }
-        },
-        { 
-            data: function (d) {
-                return d.fecha_creacion;
-            }
-        },
-        { 
-            data: function (d) {
-                console.log(d.fecha_modificacion);
-                if(d.fecha_modificacion == "1900-01-01 00:00:00" || d.fecha_modificacion == null){
-                    return '<p>SIN MODIFICACIÓN</p>'
-                }else{
-                    return d.fecha_modificacion;
-                }
-            }
-        },
-        { 
-            data: function (d) {
-                return id_rol_general == 53 ? "N/A" : '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas editarCarpeta" data-toggle="tooltip" data-placement="top" title="MODIFICAR" data-id-carpeta="' + d.id_archivo +'"><i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-deepGray preview" data-toggle="tooltip" data-placement="top" title="VER DOCUMENTO" data-id-carpeta="' + d.id_archivo +'"><i class="far fa-eye"></i></button></div>';
-            }
-        }],
+        ],
         columnDefs: [{
-            "searchable": true,
-            "orderable": false,
-            "targets": 0
+            searchable: true,
+            orderable: false,
+            targets: 0
         }],
         ajax: {
-            "url": "getCarpetas",
-            "type": "POST",
+            url: "getCarpetas",
+            type: "POST",
             cache: false,
-            "data": function( d ){
+            data: function( d ){
             }
         },
     });

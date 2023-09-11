@@ -132,6 +132,18 @@ $(document).ready(function () {
                 return fechaNeodata+rescisionLote;
             }},
             { data: function (d) {
+                var ultima_dispersion;
+
+                if( d.ultima_dispersion == null ) {
+                    ultima_dispersion ='<span class="label lbl-gray">Sin Definir</span>';
+                }else {
+                    ultima_dispersion = '<br><span class="label lbl-lightBlue">'+d.ultima_dispersion+'</span>';
+                }
+                
+                return ultima_dispersion;
+            }},
+            
+            { data: function (d) {
                 var BtnStats = '';
                 var RegresaActiva = '';
                 if(d.penalizacion == 1 && d.bandera_penalizacion == 0 && d.id_porcentaje_penalizacion != '4') {
@@ -363,7 +375,7 @@ $(document).ready(function () {
                                             saldo1C = (total*(0.125*v.porcentaje_decimal));
                                             break;
                                             case 1:// monto igual o mayor a 10% dispersar 12.5% / la mitad
-                                            saldo1C = (total_comision1/2);
+                                            saldo1C = (total_comision1 / 2);
                                             break;
                                             case 2: // monto entre 5% y 10% dispersar 4 parte
                                             saldo1C = (total_comision1/4);

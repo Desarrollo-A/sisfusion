@@ -1,10 +1,6 @@
 <body>
 <div class="wrapper">
-
     <?php $this->load->view('template/sidebar'); ?>
-
-
-
 
 <style type="text/css">
     ::-webkit-input-placeholder { /* Chrome/Opera/Safari */

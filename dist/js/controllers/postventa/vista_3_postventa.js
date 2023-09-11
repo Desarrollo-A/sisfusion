@@ -454,8 +454,7 @@ function preguntaenvARevCE() {
     };
     if (comentario.length <= 0) {
         alerts.showNotification('top', 'right', 'Todos los campos son requeridos', 'danger')
-    }
-    else if (comentario.length > 0) {
+    } else if (comentario.length > 0) {
         var botonEnviar = document.getElementById('enviarenvARevCE');
         botonEnviar.disabled = true;
         $.ajax({
@@ -511,6 +510,7 @@ function enviarAStatus6CE() {
         "comentario": comentario,
         "tipo_venta": tipo_venta,
     };
+    
     if (comentario.length <= 0) {
         alerts.showNotification('top', 'right', 'Todos los campos son requeridos', 'danger')
     } 

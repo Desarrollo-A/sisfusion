@@ -259,7 +259,7 @@ function getAssimilatedCommissions(proyecto, condominio){
             "orderable": false,
             "data": function( data ){
                 var BtnStats;
-                BtnStats = `<button href="#" value="${data.id_pago_i}" data-value="${data.nombreLote}" data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_asimilados" title="DETALLES" data-toggle="tooltip" data-placement="top"><i class="fas fa-info"></i></button>`;
+                BtnStats = `<button href="#" value="${data.id_pago_i}" data-value="${data.nombreLote}" data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultarDetalleDelPago" title="DETALLES" data-toggle="tooltip" data-placement="top"><i class="fas fa-info"></i></button>`;
                 return '<div class="d-flex justify-center">'+BtnStats+'</div>';
             }
         }],
@@ -286,22 +286,6 @@ function getAssimilatedCommissions(proyecto, condominio){
     $('#tabla_historialGral').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
-        });
-    });
-
-    $("#tabla_historialGral tbody").on("click", ".consultar_logs_asimilados", function(e){
-        $('#spiner-loader').removeClass('hide');
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        id_pago = $(this).val();
-        lote = $(this).attr("data-value");
-        $("#seeInformationModalAsimilados").modal();
-        $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
-        $.getJSON("getComments/"+id_pago).done( function( data ){
-            $.each( data, function(i, v){
-                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>Usuario: </small><b>'+v.nombre_usuario+' </b></a><br></div><div class="float-end text-right"><a> '+v.fecha_movimiento+' </a></div><div class="col-md-12"><p class="m-0"><small>Comentario: </small><b>'+v.comentario+'</b></p></div><h6></h6></div></div></li>');
-                $('#spiner-loader').addClass('hide');
-            });
         });
     });
 }
@@ -486,7 +470,7 @@ function getAssimilatedCancelacion(proyecto, condominio){
             "orderable": false,
             "data": function( data ){
                 var BtnStats;
-                BtnStats = `<button href="#" value="${data.id_pago_i}" data-value="${data.nombreLote}" data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_asimilados" title="DETALLES" data-toggle="tooltip" data-placement="top"><i class="fas fa-info"></i></button>`;
+                BtnStats = `<button href="#" value="${data.id_pago_i}" data-value="${data.nombreLote}" data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultarDetalleDelPago" title="DETALLES" data-toggle="tooltip" data-placement="top"><i class="fas fa-info"></i></button>`;
                 return '<div class="d-flex justify-center">'+BtnStats+'</div>';
             }
         }],
@@ -514,26 +498,6 @@ function getAssimilatedCancelacion(proyecto, condominio){
     $('#tabla_comisiones_canceladas').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
-        });
-    });
-
-    $("#tabla_comisiones_canceladas tbody").on("click", ".consultar_logs_asimilados", function(e){
-        $('#spiner-loader').removeClass('hide');
-
-        e.preventDefault();
-        e.stopImmediatePropagation();
-
-        id_pago = $(this).val();
-        lote = $(this).attr("data-value");
-
-        $("#seeInformationModalAsimilados").modal();
-        $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
-        $.getJSON("getComments/"+id_pago).done( function( data ){
-            $.each( data, function(i, v){
-                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>NOMBRE DEL USUARIO: </small><b>'+v.nombre_usuario+' </b></a><br></div><div class="float-end text-right"><a> '+v.fecha_movimiento+' </a></div><div class="col-md-12"><p class="m-0"><small>COMENTARIOS: </small><b>'+v.comentario+'</b></p></div><h6></h6></div></div></li>');
-                $('#spiner-loader').addClass('hide');
-
-            });
         });
     });
 }
@@ -838,3 +802,106 @@ function asignarValorColumnasDT(nombre_datatable) {
         columnas_datatable[`${nombre_datatable}`] = {titulos_encabezados: [], num_encabezados: []};
     }
 }
+
+let titulosHistorialDescuentos = [];
+$('#tablaHistorialDescuentos thead tr:eq(0) th').each(function (i) {
+    var title = $(this).text();
+    titulosHistorialDescuentos.push(title);
+    $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
+    $('input', this).on('keyup change', function () {
+        if ($('#tablaHistorialDescuentos').DataTable().column(i).search() !== this.value) {
+            $('#tablaHistorialDescuentos').DataTable().column(i).search(this.value).draw();
+        }
+    });
+	$('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
+});
+
+function consultarHistorialDescuentos() {
+    tablaHistorialDescuentos = $("#tablaHistorialDescuentos").DataTable({
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%', 
+        scrollX:true,  
+        ordering: false,             
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                className: 'btn buttons-excel',
+                titleAttr: 'Descargar archivo de Excel',
+                title: 'HISTORIAL DESCUENTOS',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                    format: {
+                        header: function (d, columnIdx) {
+                            return ' ' + titulosHistorialDescuentos[columnIdx] + ' ';
+                        }
+                    }
+                }
+            }
+        ],
+        pagingType: "full_numbers",
+        fixedHeader: true,
+        language: {
+            url: `${general_base_url}/static/spanishLoader_v2.json`,
+            paginate: {
+                previous: "<i class='fa fa-angle-left'>",
+                next: "<i class='fa fa-angle-right'>"
+            }
+        },
+        destroy: true,
+        deferRender: true,
+        columns: 
+        [
+            {data: 'id_pago_i'},
+            {data: 'nombreResidencial'},
+            {data: 'nombreCondominio'},
+            {data: 'nombreLote'},
+            {data: 'referencia'},
+            {data: 'precioLote'},
+            {data: 'comisionTotal'},
+            {data: 'montoDescuento'},
+            {
+                data: function(d){
+                    return `<p class="m-0"><span class="label lbl-green">${d.tipoDescuento}</span></p>`;
+                }
+            },
+            { 
+                data: function(d) {
+                    return `<div class="d-flex justify-center"><button href="#" value="${d.id_pago_i}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas consultarDetalleDelPago" title="VER MÁS DETALLES" data-toggle="tooltip" data-placement="top"><i class="fas fa-info"></i></button></div>`;
+                }
+            }
+        ],
+        columnDefs: [{
+			defaultContent: "",
+			targets: "_all",
+			searchable: true,
+			orderable: false
+		}],
+        initComplete: function () {
+            $('[data-toggle="tooltip"]').tooltip({
+                trigger: "hover"
+            });
+        },
+        ajax: {
+            url: `${general_base_url}Comisiones/getHistorialDescuentosPorUsuario`,
+            type: "POST",
+            cache: false,
+        }
+    });
+}
+
+$(document).on('click', '.consultarDetalleDelPago', function(e) {
+    $('#spiner-loader').removeClass('hide');
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    id_pago = $(this).val();
+    lote = $(this).attr("data-value");
+    $("#seeInformationModalAsimilados").modal();
+    $("#nameLote").append(`<p><h5>HISTORIAL DEL PAGO DE: <b>${lote}</b></h5></p>`);
+    $.getJSON(`getComments/${id_pago}`).done( function( data ){
+        $.each( data, function(i, v){
+            $("#comments-list-asimilados").append(`<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>Usuario: </small><b>${v.nombre_usuario}</b></a><br></div><div class="float-end text-right"><a>${v.fecha_movimiento}</a></div><div class="col-md-12"><p class="m-0"><small>Comentario: </small><b>${v.comentario}</b></p></div><h6></h6></div></div></li>`);
+            $('#spiner-loader').addClass('hide');
+        });
+    });
+});
