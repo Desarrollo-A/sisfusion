@@ -128,7 +128,7 @@ class Reestructura extends CI_Controller{
 		$nuevaSup = intval($loteSelected[0]->sup);
 		$anteriorSup = intval($clienteAnterior[0]->sup);
 
-		$proceso = ( $anteriorSup == $nuevaSup || (($anteriorSup + 2) == $nuevaSup)) ? 2 : 5;
+		$proceso = ( $anteriorSup == $nuevaSup || (($anteriorSup + 2) == $nuevaSup)) ? 2 : 4;
 
 		$validateLote = $this->caja_model_outside->validate($loteAOcupar);
 
@@ -218,7 +218,8 @@ class Reestructura extends CI_Controller{
 			'estructura' => $clienteAnterior[0]->estructura,
 			'tipo_casa' => $clienteAnterior[0]->tipo_casa,
 			'apartadoXReubicacion' => $clienteAnterior[0]->apartadoXReubicacion,
-			'id_cliente_reubicacion' => $clienteAnterior[0]->id_cliente,
+			'id_cliente_reubicacion' => $clienteAnterior[0]->id_cliente_reubicacion,
+            'id_cliente_reubicacion_2' => $clienteAnterior[0]->id_cliente,
 			'fechaAlta' => $clienteAnterior[0]->fechaAlta,
 			'tipo_comprobanteD' => $clienteAnterior[0]->tipo_comprobanteD,
 			'regimen_fac' => $clienteAnterior[0]->regimen_fac,
@@ -364,7 +365,7 @@ class Reestructura extends CI_Controller{
             'perfil' => 'ooam',
             'modificado' => date('Y-m-d h:i:s'),
             'fechaVenc' => $fechaFull,
-            'IdStatusLote' => 16
+            'IdStatusLote' => 3
         );
 
         if (!$this->caja_model_outside->addClientToLote($loteAOcupar, $dataUpdateLote)) {

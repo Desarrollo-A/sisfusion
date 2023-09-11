@@ -115,7 +115,7 @@ class Documentacion_model extends CI_Model {
             return $this->obtenerPathViejoContratacion($tipoDocumento);
         }
 
-        if ($tipoContratacion == 2) {
+        if ($tipoContratacion == 2 || $tipoContratacion == 4) {
             if ($eliminarArchivo) {
                 return $this->obtenerPathNuevoContratacion($nombreLote, $tipoContratacion);
             }
@@ -156,7 +156,7 @@ class Documentacion_model extends CI_Model {
     {
         $pathBase = 'static/documentos/';
 
-        if ($tipoContratacion == 2) { // Reubicación
+        if ($tipoContratacion == 2 || $tipoContratacion == 4) { // Reubicación
             return "{$pathBase}contratacion-reubicacion/$nombreLote/";
         }
 
