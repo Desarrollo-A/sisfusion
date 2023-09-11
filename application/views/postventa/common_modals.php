@@ -4,11 +4,9 @@
     .modal-backdrop{
         z-index:9;
     }
- 
 
 </style>
 
-<!-------->
 <div class="modal fade" id="modalPausar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">

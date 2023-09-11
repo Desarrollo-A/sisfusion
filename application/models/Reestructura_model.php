@@ -14,7 +14,15 @@ class Reestructura_model extends CI_Model
     }
 
     function get_catalogo_resstructura(){
-        return $this->db->query("SELECT id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo = 100");
+        return $this->db->query("SELECT id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo = 100 and estatus = 1");
+    }
+
+    function  insertOpcion(){
+        return $this->db->query("SELECT TOP (1) id_opcion + 1 AS lastId FROM opcs_x_cats WHERE id_catalogo = 100 ORDER BY id_opcion DESC")->row();
+    }
+
+    function nuevaOpcion($datos){
+        return $this->db->query("INSERT INTO opcs_x_cats values(".$datos['id'].",100,'".$datos['nombre']."',1,'".$datos['fecha_creacion']."',1,NULL)");
     }
 
     public function get_valor_lote($id_proyecto)
@@ -31,6 +39,10 @@ class Reestructura_model extends CI_Model
     public function actualizarValidacion($datos)
     {
         return $this->db->query("UPDATE lotes SET opcionReestructura = ".$datos['opcionReestructura'].", comentario = '".$datos['comentario']."', usuario = ".$datos['userLiberacion']." where idLote = ".$datos['idLote']." ");
+    }
+
+    public function borrarOpcionModel($datos){
+        return $this->db->query("UPDATE opcs_x_cats SET estatus = 0 WHERE id_catalogo = 100 AND id_opcion = ".$datos['idOpcion']."");
     }
 
     public function aplicaLiberacion($datos){

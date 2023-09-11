@@ -46,6 +46,39 @@ class Reestructura extends CI_Controller{
 		echo json_encode($this->Reestructura_model->get_catalogo_resstructura()->result_array());
 	}
 
+	public function insertarOpcionN (){
+		$idOpcion = $this->Reestructura_model->insertOpcion();
+		$idOpcion = $idOpcion->lastId;
+		$dataPost = $_POST;
+		$datos["id"] = $idOpcion;
+		$datos["nombre"] = $dataPost['nombre'];
+		$datos["fecha_creacion"] = date('Y-m-d H:i:s');
+
+		$insert = $this->Reestructura_model->nuevaOpcion($datos);
+
+		if ($insert == TRUE) {
+			$response['message'] = 'SUCCESS';
+			echo json_encode(1);
+		} else {
+			$response['message'] = 'ERROR';
+			echo json_encode(0);
+		}
+	}
+
+	public function borrarOpcion(){
+		$dataPost = $_POST;
+		$datos["idOpcion"] = $dataPost['idOpcion'];
+
+		$update = $this->Reestructura_model->borrarOpcionModel($datos);
+		if ($update == TRUE) {
+			$response['message'] = 'SUCCESS';
+			echo json_encode(1);
+		} else {
+			$response['message'] = 'ERROR';
+			echo json_encode(0);
+		}
+	}
+
 	public function validarLote(){
 
 		$dataPost = $_POST;
