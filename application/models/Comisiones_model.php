@@ -38,7 +38,7 @@ class Comisiones_model extends CI_Model {
         LEFT JOIN sedes se ON se.id_sede = cl.id_sede 
         LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado, idStatusContratacion, idMovimiento FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39 
         GROUP BY idLote, idCliente, idStatusContratacion, idMovimiento) hl ON hl.idLote = l.idLote AND hl.idCliente = l.idCliente
-        WHERE ((hl.idStatusContratacion = 9 AND hl.idMovimiento = 39) OR l.idLote IN (7167, 7168, 10304,  17231, 18338, 18549, 23730, 27250) AND l.registro_comision not in (7)) AND l.idStatusContratacion >= 9 AND cl.status = 1 AND l.status = 1 AND l.registro_comision in (1) AND pc.bandera in (1, 5, 55) AND tipo_venta IS NOT NULL AND tipo_venta IN (1,2,7)
+        WHERE ((hl.idStatusContratacion = 9 AND hl.idMovimiento = 39) OR l.idLote IN (7167, 7168, 10304,  17231, 18338, 18549, 23730, 27250) AND l.registro_comision not in (7)) AND l.idStatusContratacion >= 9 AND cl.status = 1 AND l.status = 1 AND l.registro_comision in (1) AND pc.bandera in (1, 5, 55, 110, 150) AND tipo_venta IS NOT NULL AND tipo_venta IN (1,2,7)
         ORDER BY l.idLote");
         return $query;
     }
@@ -227,7 +227,7 @@ class Comisiones_model extends CI_Model {
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
         INNER JOIN usuarios ae ON ae.id_usuario = cl.id_asesor
-        LEFT JOIN pago_comision pc ON pc.id_lote = l.idLote AND pc.bandera in (0)
+        LEFT JOIN pago_comision pc ON pc.id_lote = l.idLote AND pc.bandera in (0,100)
         LEFT JOIN (SELECT id_cliente FROM ventas_compartidas WHERE estatus = 1) AS vc ON vc.id_cliente = cl.id_cliente
         LEFT JOIN usuarios co ON co.id_usuario = cl.id_coordinador
         LEFT JOIN usuarios ge ON ge.id_usuario = cl.id_gerente
@@ -2266,18 +2266,7 @@ class Comisiones_model extends CI_Model {
         return $this->db->query("UPDATE lotes SET ubicacion_dos = ".$plaza." WHERE idLote IN (".$idLote.")");
     }
 
-    function updateBandera($id_pagoc, $param) {
-        $response = $this->db->query("UPDATE pago_comision SET bandera = ".$param." WHERE id_lote IN (".$id_pagoc.")");
-        if($param == 55){
-            $response = $this->db->query("UPDATE lotes SET registro_comision = 1 WHERE idLote IN (".$id_pagoc.")");
-        }
-        
-        if (! $response ) {
-            return $finalAnswer = 0;
-        } else {
-            return $finalAnswer = 1;
-        }
-    }
+ 
 
     function ComisionesEnviar($usuario,$recidencial,$opc){
         switch ($opc) {
@@ -5138,18 +5127,18 @@ class Comisiones_model extends CI_Model {
     }
 
     function updateBandera($id_pagoc, $param) {
-         $response = $this->db->query("UPDATE pago_comision SET bandera = ".$param." WHERE id_lote IN (".$id_pagoc.")");
+        $response = $this->db->query("UPDATE pago_comision SET bandera = ".$param." WHERE id_lote IN (".$id_pagoc.")");
 
-        if($param == 55){
-          $response = $this->db->query("UPDATE lotes SET registro_comision = 1 WHERE idLote IN (".$id_pagoc.")");
-        }
+       if($param == 55){
+         $response = $this->db->query("UPDATE lotes SET registro_comision = 1 WHERE idLote IN (".$id_pagoc.")");
+       }
 
-        if (! $response ) {
-            return $finalAnswer = 0;
-        } else {
-            return $finalAnswer = 1;
-        }
-    }
+       if (! $response ) {
+           return $finalAnswer = 0;
+       } else {
+           return $finalAnswer = 1;
+       }
+   }
 
     public function updateBanderaDetenida($idLote, $updateHistorial, $nuevoRegistroComision  = FALSE  )
     {
@@ -5614,17 +5603,7 @@ class Comisiones_model extends CI_Model {
         $query = $this->db->query($crm );
         return  $query->result();
     }
-
-
-// fin de la reubicacion 
-}
-
-
-
-
-
-
-
+ 
     function insert_penalizacion_individual($id_comision, $id_usuario, $rol, $abono_nuevo, $pago, $idCliente){
         $validar = $this->db->query("SELECT pa.id_prestamo, pa.monto, rp.total, (pa.monto-rp.total) pendiente FROM prestamos_aut pa
         LEFT JOIN (SELECT SUM(pci.abono_neodata) total, rp.id_prestamo FROM relacion_pagos_prestamo rp
