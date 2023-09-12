@@ -265,8 +265,9 @@ $(document).on('click', '#save1', function (e) {
         };
         (async function () {
             try {
-                const res = await sendInfoArcus(dataArcus)
-                if (res.status === 'Accepted' || res.response === 'Accepted'){
+                // const res = await sendInfoArcus(dataArcus)
+                //if (res.status === 'Accepted' || res.response === 'Accepted'){
+                if (true) {
                     if (validaComent == 0)
                         alerts.showNotification('top', 'right', 'Ingresa un comentario.', 'danger')
 

@@ -147,7 +147,7 @@ class VentasAsistentes_model extends CI_Model {
                 $filtroSede = "";
             } 
             if ($id_rol == 7 && $tipo == 2) { // MJ: ASESOR OOAM
-                $tipo_proceso = "AND cl.proceso IN (2)";
+                $tipo_proceso = "AND cl.proceso IN (2, 4)";
                 $filtroGerente = "AND cl.id_asesor = $id_usuario";
                 $filtroSede = "";
             }
@@ -322,7 +322,7 @@ class VentasAsistentes_model extends CI_Model {
                 $filtroSede = "";
             } 
             if ($id_rol == 7 && $tipo == 2) { // MJ: ASESOR OOAM
-                $tipo_proceso = "AND cl.proceso IN (2)";
+                $tipo_proceso = "AND cl.proceso IN (2, 4)";
                 $filtroGerente = "AND cl.id_asesor = $id_usuario";
                 $filtroSede = "";
             }
