@@ -234,7 +234,7 @@ class Asistente_gerente extends CI_Controller {
 			echo json_encode($data);
 		}
 
-}
+    }
 	
     public function editar_registro_loteRechazo_asistentes_proceceso8(){
   $idLote=$this->input->post('idLote');
