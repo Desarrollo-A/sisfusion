@@ -277,8 +277,8 @@
 		WHEN u2.id_usuario = 7092 THEN 3 
 		WHEN u2.id_usuario IN (9471,681,609,690) THEN 607 
 		WHEN u2.id_lider = 692 THEN u0.id_lider
-        WHEN u2.id_lider = 703 THEN 4
-        WHEN u2.id_lider = 7886 THEN 5
+        WHEN u2.id_lider = 703 THEN 4
+        WHEN u2.id_lider = 7886 THEN 5
 		ELSE 0 END END) id_regional,
 			(CASE u1.id_rol WHEN 3 THEN (CASE WHEN u2.id_lider = 2 THEN 'NO APLICA' ELSE CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) END) ELSE CASE 
 		WHEN u2.id_usuario = 7092 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
@@ -1421,8 +1421,8 @@
 		WHEN u3.id_usuario = 7092 THEN 3 
 		WHEN u2.id_usuario IN (9471,681,609,690) THEN 607 
 		WHEN u2.id_lider = 692 THEN u0.id_lider
-        WHEN u2.id_lider = 703 THEN 4
-        WHEN u2.id_lider = 7886 THEN 5
+        WHEN u2.id_lider = 703 THEN 4
+        WHEN u2.id_lider = 7886 THEN 5
 		ELSE 0 END END) id_regional,
 			(CASE u1.id_rol WHEN 3 THEN (CASE WHEN u2.id_lider = 2 THEN 'NO APLICA' ELSE CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) END) ELSE CASE 
 		WHEN u3.id_usuario = 7092 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 

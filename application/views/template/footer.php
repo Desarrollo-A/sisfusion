@@ -3,8 +3,9 @@
 <script src="<?=base_url()?>dist/js/jquery-ui.min.js" type="text/javascript"></script>
 <script src="<?=base_url()?>dist/js/popper.min.js" type="text/javascript"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
-
+<!-- Bootstrap CORE -->
 <script src="<?=base_url()?>dist/js/bootstrap.min.js" type="text/javascript"></script>
+<!-- Material -->
 <script src="<?=base_url()?>dist/js/material.min.js" type="text/javascript"></script>
 <script src="<?=base_url()?>dist/js/perfect-scrollbar.jquery.min.js" type="text/javascript"></script>
 <!-- Forms Validations Plugin -->
@@ -65,14 +66,12 @@
     let id_rol_general = <?= (empty($this->session->userdata('id_rol')) ? 0 : $this->session->userdata('id_rol')) ?>;
     let id_usuario_general =  <?= (empty($this->session->userdata('id_usuario')) ? 0 : $this->session->userdata('id_usuario')) ?>;
 
-
 	$(document).ready(function() {
 		demo.initDashboardPageCharts();
 	});
 
     function validaCheckSession(){
-        if($('#no_mostrar_session:checkbox:checked').length > 0)
-        {
+        if($('#no_mostrar_session:checkbox:checked').length > 0){
             $.post('<?=base_url()?>index.php/Login/noShowModalSession',  function(data) {
             });
             <?php echo "console.log(".$this->session->userdata('no_show_modal_info').");";?>
