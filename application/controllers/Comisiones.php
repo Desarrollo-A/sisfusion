@@ -4295,6 +4295,7 @@ public function getDatosHistorialPagoEstatus($proyecto, $condominio, $usuario) {
         $tipo_venta_insert = $this->input->post('tipo_venta_insert'); 
         $lugar_p = $this->input->post('lugar_p');
         $totalNeto2 = $this->input->post('totalNeto2');
+        $plan_comision = $this->input->post('plan_c');
         $banderita = 0;
         $PorcentajeAsumar=0;
         // 1.- validar tipo venta
@@ -4331,6 +4332,7 @@ public function getDatosHistorialPagoEstatus($proyecto, $condominio, $usuario) {
         $respuesta = $this->Comisiones_model->UpdateLoteDisponible($lote_1);
         $respuesta = $this->Comisiones_model->InsertPagoComision($lote_1,str_replace($replace,"",$total_comision),str_replace($replace,"",$abonado),$porcentaje_abono,str_replace($replace,"",$pendiente),$this->session->userdata('id_usuario'),str_replace($replace,"",$pago_neo),str_replace($replace,"",$bonificacion)); 
         
+        $banderita = in_array($plan_comision,array(64,65,66)) ? 0 : $banderita;
         if($banderita == 1){
           $total_com = $totalNeto2 * (($PorcentajeAsumar) / 100 );
           $respuesta = $this->Comisiones_model->InsertNeo($lote_1,4824,$total_com,$this->session->userdata('id_usuario'),$PorcentajeAsumar,($pivote*$PorcentajeAsumar),str_replace($replace,"",$pago_neo),45,$idCliente,$tipo_venta_insert);
@@ -4402,9 +4404,7 @@ public function getDatosHistorialPagoEstatus($proyecto, $condominio, $usuario) {
     public function porcentajes(){
       $plan_comision = $this->input->post("plan_comision");
       $cliente = $this->input->post("idCliente");
-
-      
-      if(in_array($plan_comision,array(53,54,55))){
+      if(in_array($plan_comision,array(64,65,66))){
         echo json_encode($this->Comisiones_model->porcentajeReestructura($cliente,$plan_comision)->result_array(),JSON_NUMERIC_CHECK);
       }else{
         echo json_encode($this->Comisiones_model->porcentajes($cliente,$plan_comision)->result_array(),JSON_NUMERIC_CHECK);

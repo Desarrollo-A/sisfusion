@@ -4379,21 +4379,14 @@ class Comisiones_model extends CI_Model {
     }
     
     public function porcentajeReestructura($clienteData,$plan_comision){
-        $inner = '';
-        $tabla = 'cA';
-        if($plan_comision == 53){
-            //REESTRUCTURA
-            $tabla = 'v1';
-            $inner = 'INNER JOIN ventas_compartidas v1 ON v1.id_cliente = cA.id_cliente and v1.estatus = 2';
-        }
+
         return $this->db->query(" DECLARE @idCliente INTEGER
         SET @idCliente = $clienteData 
         /*ASESOR*/
         (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comAs/1 porcentaje_decimal, ((lo.totalNeto2/100)*(pl.comAs/1)) comision_total, (pl.neoAs/1) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.asesor as id_rol,  CASE WHEN cA.estructura = 1 THEN 'Asesor Financiero' ELSE 'Asesor' END detail_rol, 5 as rolVal
         FROM clientes cA 
         INNER JOIN lotes lo ON lo.idCliente = cA.id_cliente 
-        $inner
-        INNER JOIN usuarios u1 ON u1.id_usuario = $tabla.id_asesor
+        INNER JOIN usuarios u1 ON u1.id_usuario = cA.id_asesor
         INNER JOIN plan_comision pl ON pl.id_plan = $plan_comision and pl.asesor not in (0) 
         WHERE cA.id_cliente = @idCliente)
         UNION  /*GERENTE*/
@@ -4404,8 +4397,7 @@ class Comisiones_model extends CI_Model {
         CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.gerente as id_rol,  CASE WHEN cA.estructura = 1 THEN 'Embajador' ELSE 'Gerente' END detail_rol, 3 as rolVal  
         FROM clientes cA 
         INNER JOIN lotes lo ON lo.idCliente = cA.id_cliente 
-        $inner
-        INNER JOIN usuarios u1 ON u1.id_usuario = $tabla.id_gerente 
+        INNER JOIN usuarios u1 ON u1.id_usuario = cA.id_gerente 
         INNER JOIN plan_comision pl ON pl.id_plan = $plan_comision 
         WHERE cA.id_cliente = @idCliente)
         UNION  /*SUBDIRECTOR*/
@@ -4417,8 +4409,7 @@ class Comisiones_model extends CI_Model {
         CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.subdirector as id_rol, CASE WHEN cA.estructura = 1 THEN 'Subdirector Comercial' ELSE 'Subdirector' END detail_rol, 2 as rolVal  
         FROM clientes cA 
         INNER JOIN lotes lo ON lo.idCliente = cA.id_cliente 
-        $inner
-        INNER JOIN usuarios u1 ON u1.id_usuario = $tabla.id_subdirector 
+        INNER JOIN usuarios u1 ON u1.id_usuario = cA.id_subdirector 
         INNER JOIN plan_comision pl ON pl.id_plan = $plan_comision and pl.subdirector not in (0)
         WHERE cA.id_cliente = @idCliente)
         UNION /*DIRECTOR*/

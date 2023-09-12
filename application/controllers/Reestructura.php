@@ -63,13 +63,4 @@ class Reestructura extends CI_Controller{
         
 	}
 
-	public function setReestructura(){
-		$dataPost = $_POST;
-		$insert = $this->Reestructura_model->setReestructura($dataPost);
-		if ($insert == TRUE) {
-			echo json_encode(1);
-		} else {
-			echo json_encode(0);
-		}
-	}
 } 
