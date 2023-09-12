@@ -487,7 +487,7 @@ $(document).ready(function () {
                                                         <input type="hidden" name="pending" id="pending" value="${pending}">
                                                         <input type="hidden" name="idLote" id="idLote" value="${idLote}">
                                                         <input id="rol" type="hidden" name="id_comision[]" value="${v.id_comision}">
-                                                        <input id="rol" type="hidden" name="rol[]" value="${v.id_usuario}">
+                                                        <input id="id_usuario" type="hidden" name="id_usuario[]" value="${v.id_usuario}">
                                                         <input class="form-control input-gral" required readonly="true" value="${v.colaborador}" style="font-size:12px;${v.descuento == 1 ? 'color:red;' : ''}">
                                                         <b><p style="font-size:12px;${v.descuento == 1 ? 'color:red;' : ''}">${v.descuento != "1" ?  v.rol : v.rol +' Incorrecto' }</p></b>
                                                     </div>
@@ -1020,3 +1020,18 @@ function responsive(maxWidth) {
 var maxWidth = window.matchMedia("(max-width: 992px)");
 responsive(maxWidth);
 maxWidth.addListener(responsive);
+
+function function_totales(){
+    $.getJSON(`${general_base_url}Comisiones/getMontoDispersado`).done( function( data ){
+        $cadena = '<b>$'+formatMoney(data[0].monto)+'</b>';
+        document.getElementById("monto_label").innerHTML = $cadena ;
+    });
+    $.getJSON(`${general_base_url}Comisiones/getPagosDispersado`).done( function( data ){
+        $cadena01 = '<b>'+data[0].pagos+'</b>';
+        document.getElementById("pagos_label").innerHTML = $cadena01 ;
+    });
+    $.getJSON(`${general_base_url}Comisiones/getLotesDispersado`).done( function( data ){
+        $cadena02 = '<b>'+data[0].lotes+'</b>';
+        document.getElementById("lotes_label").innerHTML = $cadena02 ;
+    });  
+}
