@@ -120,17 +120,26 @@ $('#reubicacionClientes').DataTable({
         },
         {
             "data": function (d) {
-                return `<div class="d-flex justify-center">
-                    <button class="btn-data btn-sky btn-reubicar"
+                let btns = '';
+                if(d.idProyecto == PROYECTO.NORTE || d.idProyecto == PROYECTO.PRIVADAPENINSULA){
+                    btns +=  `<button class="btn-data btn-sky btn-reestructurar"
                             data-toggle="tooltip" 
                             data-placement="left"
-                            title="REUBICAR CLIENTE"
-                            data-idCliente="${d.idCliente}"
-                            data-idProyecto="${d.idProyecto}"
-                            data-tipoLote="${d.tipo_lote}">
-                        <i class="fas fa-route"></i>
-                    </button>
-                </div>`;
+                            title="REESTRUCTURAR"
+                            data-idCliente="${d.idCliente}">
+                            <i class="fas fa-map-marker"></i>
+                    </button>`;
+                }
+                btns += `<button class="btn-data btn-green btn-reubicar"
+                        data-toggle="tooltip" 
+                        data-placement="left"
+                        title="REUBICAR CLIENTE"
+                        data-idCliente="${d.idCliente}"
+                        data-idProyecto="${d.idProyecto}"
+                        data-tipoLote="${d.tipo_lote}">
+                    <i class="fas fa-route"></i>
+                </button>`;
+                return `<div class="d-flex justify-center">${btns}</div>`;
             }
         }
     ],
@@ -147,10 +156,43 @@ $('#reubicacionClientes').DataTable({
     },
 });
 
+$(document).on('click', '.btn-reestructurar', function () {
+    const tr = $(this).closest('tr');
+    const row = $('#reubicacionClientes').DataTable().row(tr);
+    const idCliente = $(this).attr("data-idCliente");
+    const nombreCliente = row.data().cliente;
+    const nombreLote = row.data().nombreLote;
+
+
+    changeSizeModal('modal-md');
+    appendBodyModal(`
+        <form method="post" id="formReestructura">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h3 class="m-0">Reubicación del cliente</h3>
+                        <h6 class="m-0">${nombreCliente}</h6>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2">
+                        <p class="text-center">¿Está seguro que desea reestructurar el lote <b>${nombreLote}</b>? <br>Recuerde que al realizar este movimiento el lote sufrirá algunos cambios al confirmar.</p>
+                        <input type="hidden" id="idCliente" name="idCliente" value="${idCliente}">
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
+                        <button type="button" class="btn btn-simple btn-danger" onclick="hideModal()">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Aceptar</button>
+                    </div>
+                </div>
+            </div>
+        </form>`);
+    showModal();
+});
+
 $(document).on('click', '.btn-reubicar', function () {
     const tr = $(this).closest('tr');
     const row = $('#reubicacionClientes').DataTable().row(tr);
-    const cliente = row.data().cliente;
+    const nombreCliente = row.data().cliente;
     const nombreLote = row.data().nombreLote;
     const superficie = row.data().sup;
     const total = row.data().total;
@@ -165,7 +207,7 @@ $(document).on('click', '.btn-reubicar', function () {
                 <div class="row">
                     <div class="col-12 text-center">
                         <h3 class="m-0">Reubicación del cliente</h3>
-                        <h6 class="m-0">${cliente}</h6>
+                        <h6 class="m-0">${nombreCliente}</h6>
                     </div>
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 overflow-hidden">
                         <label class="lbl-gral">Proyecto</label>
@@ -220,6 +262,7 @@ $(document).on('click', '.btn-reubicar', function () {
 
     getProyectosAOcupar(idProyecto, superficie, tipoLote);
 });
+
 
 function getProyectosAOcupar(idProyecto, superficie, tipoLote) {
     $('#spiner-loader').removeClass('hide');
@@ -312,6 +355,32 @@ $(document).on("submit", "#formReubicar", function(e){
     let data = new FormData($(this)[0]);
     $.ajax({
         url : 'setReubicacion',
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST', 
+        success: function(data){
+            data = JSON.parse(data);
+            console.log(data);
+            alerts.showNotification("top", "right", ""+data.message+"", ""+data.color+"");
+            $('#reubicacionClientes').DataTable().ajax.reload();
+            $('#spiner-loader').addClass('hide');
+            hideModal();
+        },
+        error: function( data ){
+            alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+            hideModal();
+        }
+    });
+});
+
+$(document).on("submit", "#formReestructura", function(e){
+    $('#spiner-loader').removeClass('hide');
+    e.preventDefault();
+    let data = new FormData($(this)[0]);
+    $.ajax({
+        url : 'setReestructura',
         data: data,
         cache: false,
         contentType: false,
