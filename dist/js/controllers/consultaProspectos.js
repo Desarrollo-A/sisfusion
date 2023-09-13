@@ -6,22 +6,39 @@ $(document).ready(function() {
     getStatusRecordatorio();
 });
 
+let titulosListadoProspectos = [];
+
 $('#prospects-datatable thead tr:eq(0) th').each(function (i) {
     const title = $(this).text();
-    if (i != 12){
-        $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
-        $('input', this).on('keyup change', function () {
-            if ($("#prospects-datatable").DataTable().column(i).search() !== this.value) {
-                $("#prospects-datatable").DataTable().column(i).search(this.value).draw();
-            }
-        });
-    }
+    titulosListadoProspectos.push(title);
+    $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
+    $('input', this).on('keyup change', function () {
+        if ($("#prospects-datatable").DataTable().column(i).search() !== this.value)
+            $("#prospects-datatable").DataTable().column(i).search(this.value).draw();
+    });
 });
 
 function fillTable(transaction, beginDate, endDate, where) {
     prospectsTable = $('#prospects-datatable').DataTable({
-        dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                className: 'btn buttons-excel',
+                titleAttr: 'LISTADO DE PROSPECTOS CRM',
+                title: "LISTADO DE PROSPECTOS CRM",
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6],
+                    format: {
+                        header: function (d, columnIdx) {
+                            return ' ' + titulosListadoProspectos[columnIdx] + ' ';
+                        }
+                    }
+                }
+            }
+        ],
         bAutoWidth: true,
         columns: [
         {
@@ -86,7 +103,7 @@ function fillTable(transaction, beginDate, endDate, where) {
                 if(d.nombre_lp == '' || d.nombre_lp === null ){
                     return 'SIN ESPECIFICAR';
                 }else{
-                    if (d.nombre_lp == 'MKTD Dragon')
+                    if (d.nombre_lp == 'MKTD DRAGON')
                         id_dragon = '<br><span class="label lbl-blueMaderas">'+ d.id_dragon +'</span>';
                     else
                         id_dragon = '';

@@ -1077,5 +1077,32 @@ class Reporte_model extends CI_Model {
                         END";
         return $enganche;
     }
+    function getLotesContrato($beginDate, $endDate){
+        $whereDinamico = '';
+        if($beginDate=='' || $endDate==''){
+            $whereDinamico = '';
+        }else {
+            $whereDinamico = " AND cl.fechaApartado BETWEEN '".$beginDate." 00:00:00.000' AND '".$endDate." 23:59:59.99'";
+        }
+        $query = $this->db->query("SELECT 
+        r.nombreResidencial as proyecto, l.nombreLote, l.referencia,
+        CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) AS nombreCliente, cl.id_cliente,
+        CONCAT(asesor.nombre,' ', asesor.apellido_paterno,' ', asesor.apellido_materno) AS nombreAsesor,
+        ISNULL(sedes.nombre,'NA') AS nombreSede, 
+        ISNULL(sedes.id_sede, 0) AS id_sede, 
+        ISNULL(sedes.abreviacion,'NA') AS abreviacion, 
+        cl.fechaApartado, 
+        ISNULL(hd.expediente,'NA') AS expediente,  
+        ISNULL(hd.modificado,'') AS modificado
+        FROM lotes l
+        INNER JOIN condominios c ON c.idCondominio = l.idCondominio
+        INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
+        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
+        LEFT JOIN usuarios asesor ON asesor.id_usuario = cl.id_asesor
+        LEFT JOIN sedes ON sedes.id_sede = cl.id_sede
+        LEFT JOIN historial_documento hd ON hd.idLote = l.idLote AND hd.tipo_doc=30
+        WHERE l.idStatusContratacion=15 AND l.idMovimiento=45 AND l.idStatusLote=2 $whereDinamico");
+        return $query->result_array();
+    }
 
 }

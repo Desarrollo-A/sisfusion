@@ -213,7 +213,8 @@ class Comisiones_model extends CI_Model {
 
     public function getDataDispersionPago() {
         $this->db->query("SET LANGUAGE Español;");
-        $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre as nombreCondominio, l.nombreLote,  
+
+        $query = $this->db->query("SELECT DISTINCT(l.idLote), cl.id_cliente_reubicacion ,  res.nombreResidencial, cond.nombre as nombreCondominio, l.nombreLote,  
         CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombreCliente, vc.id_cliente AS compartida, l.idStatusContratacion, l.totalNeto2, pc.fecha_modificacion, 
         convert(nvarchar, pc.ultima_dispersion, 6) ultima_dispersion, convert(nvarchar, pc.fecha_modificacion, 6) fecha_sistema, convert(nvarchar, pc.fecha_neodata, 6) fecha_neodata, se.nombre as sede, l.registro_comision, l.referencia, cl.id_cliente, 
         CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) as asesor, 
@@ -236,7 +237,16 @@ class Comisiones_model extends CI_Model {
         LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision
         LEFT JOIN sedes se ON se.id_sede = cl.id_sede       
         LEFT JOIN penalizaciones pe ON pe.id_lote = l.idLote AND pe.id_cliente = l.idCliente
-        WHERE (l.idLote IN (13969,7167,7168,10304,17231,18338,18549,23730,27250,31850,32573,73591) AND l.registro_comision not in (7) AND pc.bandera in (0)) OR (l.idStatusContratacion >= 9 AND cl.status = 1 AND l.status = 1 AND (l.registro_comision in (0,8,2)  or (l.registro_comision in (1,8) AND pc.bandera in (0))) AND (tipo_venta IS NULL OR tipo_venta IN (0,1,2)) AND cl.fechaApartado >= '2020-03-01' AND ISNULL(l.totalNeto2, 0) > 0) ORDER BY l.idLote");
+        WHERE (l.idLote IN (13969,7167,7168,10304,17231,18338,18549,23730,27250,31850,32573,73591) 
+        AND l.registro_comision not in (7) 
+        AND pc.bandera in (0)) OR (l.idStatusContratacion >= 9 
+        AND cl.status = 1 
+        AND l.status = 1 
+        AND (l.registro_comision in (0,8,2,9)  or (l.registro_comision in (1,8,9) 
+        AND pc.bandera in (0))) 
+        AND (tipo_venta IS NULL OR tipo_venta IN (0,1,2)) 
+        AND cl.fechaApartado >= '2020-03-01' 
+        AND ISNULL(l.totalNeto2, 0) > 0) ORDER BY l.idLote");
         return $query;
     }
 
@@ -4368,9 +4378,65 @@ class Comisiones_model extends CI_Model {
                 }
     }
     
+    public function porcentajeReestructura($clienteData){
+        return $this->db->query(" 
+        SET @idCliente = $clienteData 
+        /* ASESORES */
+        (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comAs/1 porcentaje_decimal, ((lo.totalNeto2/100)*(pl.comAs/1)) comision_total, (pl.neoAs/1) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.asesor as id_rol,  CASE WHEN cA.estructura = 1 THEN 'Asesor Financiero' ELSE 'Asesor' END detail_rol, 5 as rolVal
+        FROM clientes cA 
+        INNER JOIN lotes lo ON lo.idCliente = cA.id_cliente 
+        INNER JOIN ventas_compartidas v1 ON v1.id_cliente = cA.id_cliente and v1.estatus = 2
+        INNER JOIN usuarios u1 ON u1.id_usuario = v1.id_asesor
+        INNER JOIN plan_comision pl ON pl.id_plan = 53 and pl.asesor not in (0) 
+        WHERE cA.id_cliente = @idCliente)
+        UNION  /* COORDINADORES */
+        (SELECT DISTINCT(u1.id_usuario) AS id_usuario, 
+        (pl.comCo/1)*((SELECT COUNT(id_coordinador) FROM clientes cD WHERE cD.status = 1 AND cD.id_coordinador = u1.id_usuario and cD.id_cliente = @idCliente)+(SELECT COUNT(id_coordinador) FROM ventas_compartidas vD WHERE vD.estatus = 2 AND vD.id_coordinador = u1.id_usuario AND vD.id_cliente = @idCliente)) porcentaje_decimal, 
+        ((lo.totalNeto2/100)*(pl.comCo/1))*((SELECT COUNT(id_coordinador) FROM clientes cD WHERE cD.status = 1 AND cD.id_coordinador = u1.id_usuario and cD.id_cliente = @idCliente)+(SELECT COUNT(id_coordinador) FROM ventas_compartidas vD WHERE vD.estatus = 2 AND vD.id_coordinador = u1.id_usuario AND vD.id_cliente = @idCliente)) comision_total, 
+        (pl.neoCo/1)*((SELECT COUNT(id_coordinador) FROM clientes cD WHERE cD.status = 1 AND cD.id_coordinador = u1.id_usuario and cD.id_cliente = @idCliente)+(SELECT COUNT(id_coordinador) FROM ventas_compartidas vD WHERE vD.estatus = 2 AND vD.id_coordinador = u1.id_usuario AND vD.id_cliente = @idCliente)) porcentaje_neodata, 
+        CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.coordinador as id_rol,  CASE WHEN cA.estructura = 1 THEN 'Líder comercial' ELSE 'Coordinador' END detail_rol, 4 as rolVal
+        FROM clientes cA 
+        INNER JOIN lotes lo ON lo.idCliente = cA.id_cliente 
+        INNER JOIN ventas_compartidas v1 ON v1.id_cliente = cA.id_cliente and v1.estatus = 2
+        INNER JOIN usuarios u1 ON u1.id_usuario = v1.id_coordinador 
+        INNER JOIN plan_comision pl ON pl.id_plan = 53 and pl.coordinador not in (0) 
+        WHERE cA.id_cliente = @idCliente)
+        UNION  /* GERENTES */
+        (SELECT DISTINCT(u1.id_usuario) AS id_usuario, 
+        (pl.comGe/1)*((SELECT COUNT(id_gerente) FROM clientes cD WHERE cD.status = 1 AND cD.id_gerente = u1.id_usuario and cD.id_cliente = @idCliente)+(SELECT COUNT(id_gerente) FROM ventas_compartidas vD WHERE vD.estatus = 2 AND vD.id_gerente = u1.id_usuario AND vD.id_cliente = @idCliente)) porcentaje_decimal, 
+        ((lo.totalNeto2/100)*(pl.comGe/1))*((SELECT COUNT(id_gerente) FROM clientes cD WHERE cD.status = 1 AND cD.id_gerente = u1.id_usuario and cD.id_cliente = @idCliente)+(SELECT COUNT(id_gerente) FROM ventas_compartidas vD WHERE vD.estatus = 2 AND vD.id_gerente = u1.id_usuario AND vD.id_cliente = @idCliente)) comision_total, 
+        (pl.neoGe/1)*((SELECT COUNT(id_gerente) FROM clientes cD WHERE cD.status = 1 AND cD.id_gerente = u1.id_usuario and cD.id_cliente = @idCliente)+(SELECT COUNT(id_gerente) FROM ventas_compartidas vD WHERE vD.estatus = 2 AND vD.id_gerente = u1.id_usuario AND vD.id_cliente = @idCliente)) porcentaje_neodata, 
+        CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.gerente as id_rol,  CASE WHEN cA.estructura = 1 THEN 'Embajador' ELSE 'Gerente' END detail_rol, 3 as rolVal  
+        FROM clientes cA 
+        INNER JOIN lotes lo ON lo.idCliente = cA.id_cliente 
+        INNER JOIN ventas_compartidas v1 ON v1.id_cliente = cA.id_cliente and v1.estatus = 2
+        INNER JOIN usuarios u1 ON u1.id_usuario = v1.id_gerente 
+        INNER JOIN plan_comision pl ON pl.id_plan = 53 
+        WHERE cA.id_cliente = @idCliente)
+        UNION  /* SUBDIRECTORES */
+        (SELECT DISTINCT(u1.id_usuario) AS id_usuario, 
+        (pl.comSu/1)*((SELECT COUNT(id_gerente) FROM clientes cD WHERE cD.status = 1 AND cD.id_subdirector = u1.id_usuario and cD.id_cliente = @idCliente)+(SELECT COUNT(id_gerente) FROM ventas_compartidas vD WHERE vD.estatus = 2 AND vD.id_subdirector = u1.id_usuario AND vD.id_cliente = @idCliente)) porcentaje_decimal, 
+        ((lo.totalNeto2/100)*(pl.comSu/1))*((SELECT COUNT(id_gerente) FROM clientes cD WHERE cD.status = 1 AND cD.id_subdirector = u1.id_usuario and cD.id_cliente = @idCliente)+(SELECT COUNT(id_gerente) FROM ventas_compartidas vD WHERE vD.estatus = 2 AND vD.id_subdirector = u1.id_usuario AND vD.id_cliente = @idCliente)) comision_total, 
+        (pl.neoSu/1)*((SELECT COUNT(id_gerente) FROM clientes cD WHERE cD.status = 1 AND cD.id_subdirector = u1.id_usuario and cD.id_cliente = @idCliente)+(SELECT COUNT(id_gerente) FROM ventas_compartidas vD WHERE vD.estatus = 2 AND vD.id_subdirector = 
+        u1.id_usuario AND vD.id_cliente = @idCliente)) porcentaje_neodata, 
+        CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.subdirector as id_rol, CASE WHEN cA.estructura = 1 THEN 'Subdirector Comercial' ELSE 'Subdirector' END detail_rol, 2 as rolVal  
+        FROM clientes cA 
+        INNER JOIN lotes lo ON lo.idCliente = cA.id_cliente 
+        INNER JOIN ventas_compartidas v1 ON v1.id_cliente = cA.id_cliente and v1.estatus = 2
+        INNER JOIN usuarios u1 ON u1.id_usuario = v1.id_subdirector 
+        INNER JOIN plan_comision pl ON pl.id_plan = 53 and pl.subdirector not in (0)
+        WHERE cA.id_cliente = @idCliente)
+        UNION
+        (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comDi porcentaje_decimal, ((lo.totalNeto2/100)*(pl.comDi)) comision_total, (pl.neoDi) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.director as id_rol, CASE WHEN cA.estructura = 1 THEN 'Director Comercial General' ELSE 'Director' END detail_rol, 1 as rolVal
+        FROM clientes cA 
+        INNER JOIN lotes lo ON lo.idCliente = cA.id_cliente 
+        INNER JOIN usuarios u1 ON u1.id_usuario = 2
+        INNER JOIN plan_comision pl ON pl.id_plan = 53 and pl.director not in (0)
+        WHERE cA.id_cliente = @idCliente)
+    ");
+    }
     
     public function porcentajes($clienteData, $tipoVenta){
-
         $addCondition = " UNION  /* DIRECTOR */
         (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comDi porcentaje_decimal, ((lo.totalNeto2/100)*(pl.comDi)) comision_total, (pl.neoDi) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.director as id_rol, CASE WHEN cA.estructura = 1 THEN 'Director Comercial General' ELSE 'Director' END detail_rol, 1 as rolVal
         FROM clientes cA 
@@ -5127,8 +5193,25 @@ class Comisiones_model extends CI_Model {
         return $query->result_array();
     }
 
-    public function updateBanderaDetenida($idLote, $updateHistorial, $nuevoRegistroComision  = false){
-        if($nuevoRegistroComision != false ) {
+    function updateBandera($id_pagoc, $param) {
+         $response = $this->db->query("UPDATE pago_comision SET bandera = ".$param." WHERE id_lote IN (".$id_pagoc.")");
+
+        if($param == 55){
+          $response = $this->db->query("UPDATE lotes SET registro_comision = 1 WHERE idLote IN (".$id_pagoc.")");
+        }
+
+        if (! $response ) {
+            return $finalAnswer = 0;
+        } else {
+            return $finalAnswer = 1;
+        }
+    }
+
+    public function updateBanderaDetenida($idLote, $updateHistorial, $nuevoRegistroComision  = FALSE  )
+    {
+
+        var_dump($nuevoRegistroComision);
+        if($nuevoRegistroComision >= 0 ) {
             if ($updateHistorial) {
                 $this->db->query("UPDATE lotes SET registro_comision = $nuevoRegistroComision, modificado=".$this->session->userdata('id_usuario')." WHERE idLote = $idLote");
                 return (bool)($this->db->query("UPDATE historial_log SET estatus = 0 WHERE tabla = 'pago_comision' AND estatus = 1 AND identificador = $idLote"));
@@ -5136,7 +5219,7 @@ class Comisiones_model extends CI_Model {
                 return (bool)($this->db->query("UPDATE lotes SET registro_comision = $nuevoRegistroComision, modificado=".$this->session->userdata('id_usuario')." WHERE idLote = $idLote"));
             }
         }else {
-            return 'error';
+            return  'error1';
         }
     }
 
@@ -5573,6 +5656,30 @@ class Comisiones_model extends CI_Model {
         $query = $this->db->query($cmd);
         return $query;
     }
+
+
+// aqui enmpieza la reubicacación
+    public  function reubicadas($idCliente) {
+        $crm = "	SELECT 
+        CONCAT(usu.nombre , ' ' , usu.apellido_paterno , ' ', usu.apellido_materno ) as nombre_comisionista 
+        , cr.id_comision_reubicada, cr.id_usuario, cr.comision_total, 
+        cr.porcentaje_decimal, cr.rol_generado, cr.idCliente, cr.idLote
+        FROM comisionesReubicadas cr
+        INNER JOIN  usuarios usu on usu.id_usuario = cr.id_usuario
+        where idCliente = $idCliente";
+        $query = $this->db->query($crm );
+        return  $query->result();
+    }
+
+
+// fin de la reubicacion 
+}
+
+
+
+
+
+
 
     function insert_penalizacion_individual($id_comision, $id_usuario, $rol, $abono_nuevo, $pago, $idCliente){
         $validar = $this->db->query("SELECT pa.id_prestamo, pa.monto, rp.total, (pa.monto-rp.total) pendiente FROM prestamos_aut pa

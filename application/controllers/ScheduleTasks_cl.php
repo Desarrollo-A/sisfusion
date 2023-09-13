@@ -125,7 +125,9 @@ class ScheduleTasks_cl extends CI_Controller {
                 'monserrat.cazares@ciudadmaderas.com',
                 'danae.perez@ciudadmaderas.com',
                 'nestor.vera@ciudadmaderas.com',
-                'dirce.pardenilla@ciudadmaderas.com')*/
+                'dirce.pardenilla@ciudadmaderas.com',
+                'nohemi.castillo@ciudadmaderas.com',
+                'esmeralda.vega@ciudadmaderas.com')*/
             ->subject('Acumulado de lotes sin integrar Expediente al: '.date("Y-m-d H:i:s"))
             ->view($this->load->view('mail/schedule-tasks-cl/send-rv-5', [
                 'encabezados' => $encabezados,
@@ -1190,7 +1192,8 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
                 'leydi.sanchez@ciudadmaderas.com',
                 'nohemi.castillo@ciudadmaderas.com',
                 'lorena.serrato@ciudadmaderas.com',
-                'yaretzi.rosales@ciudadmaderas.com')*/
+                'yaretzi.rosales@ciudadmaderas.com',
+                'esmeralda.vega@ciudadmaderas.com')*/
             ->subject('Cambio de contraseña ASESOR COMODÍN.')
             ->view($this->load->view('mail/schedule-tasks-cl/change-password', [
                 'encabezados' => $encabezados,
