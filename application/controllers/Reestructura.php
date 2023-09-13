@@ -66,10 +66,30 @@ class Reestructura extends CI_Controller{
 	}
 
 	public function borrarOpcion(){
+
 		$dataPost = $_POST;
 		$datos["idOpcion"] = $dataPost['idOpcion'];
-
 		$update = $this->Reestructura_model->borrarOpcionModel($datos);
+
+		if ($update == TRUE) {
+			$response['message'] = 'SUCCESS';
+			echo json_encode(1);
+		} else {
+			$response['message'] = 'ERROR';
+			echo json_encode(0);
+		}
+	}
+
+	public function getHistorial($id_prospecto){
+        echo json_encode($this->Reestructura_model->historialModel($id_prospecto)->result_array());
+    }
+
+	public function editarOpcion(){
+		$dataPost = $_POST;
+		$datos["idOpcionEdit"] = $dataPost['idOpcionEdit'];
+		$datos["editarCatalogo"] = $dataPost['editarCatalogo'];
+		$update = $this->Reestructura_model->editarOpcionModel($datos);
+
 		if ($update == TRUE) {
 			$response['message'] = 'SUCCESS';
 			echo json_encode(1);

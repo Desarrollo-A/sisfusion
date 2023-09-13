@@ -82,6 +82,14 @@ public $controller = 'Postventa';
             $this->load->view("postventa/notaria");
     }
 
+    public function cancelacion(){
+        if($this->session->userdata('id_rol') == FALSE){
+            redirect(base_url());
+        }
+            $this->load->view('template/header');
+            $this->load->view("postventa/cancelacionReestructura");
+    }
+
     public function getProyectos()
     {
         $data = $this->Postventa_model->getProyectos()->result_array();
@@ -110,6 +118,10 @@ public $controller = 'Postventa';
             echo json_encode($data);
         else
             echo json_encode(array());
+    }
+
+    public function lista_proyecto(){
+        echo json_encode($this->Postventa_model->get_proyecto_lista()->result_array());
     }
 
     public function getClient()

@@ -51,7 +51,6 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-						<button type="button" id="nuevaOpcion" name="nuevaOpcion" class="btn btn-primary nuevaOpcion">Registrar</button>
 					</div>
 				</div>
 			</div>
@@ -103,6 +102,34 @@
 			</div>
 		</div>
 
+        <div class="modal fade modal-alertas" id="editarModel" role="dialog">
+			<div class="modal-dialog modal-sm">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title text-center">Editar opción</h5>
+					</div>
+					<form id="addNewDesc">
+						<input type="hidden" value="0" name="id_opcionEdit" id="id_opcionEdit">
+						<div class="form-group d-flex justify-center">
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+								<input type="text" class="form-control input-gral" id="editarCatalogo" name="editarCatalogo" required>
+							</div>
+						</div>
+						<div class="container-fluid">
+							<div class="row mt-1 mb-1">
+								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+									<input type="button" class="btn btn-danger btn-simple m-0" data-dismiss="modal" value="CANCELAR">
+								</div>
+								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+									<input type="button" class="btn btn-primary" name="guardarEdit"  id="guardarEdit" value="GUARDAR">
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
         <div class="modal fade" id="aceptarReestructura" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog">
 				<div class="modal-content" > 
@@ -134,18 +161,18 @@
         <div class="modal fade" id="modal_historial" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
+                    <div class="modal-header">
+						<h4 class="modal-title text-center">HISTORIAL LOTE</h4>
+					</div>
                     <div class="modal-body">
                         <div role="tabpanel">
-                            <ul>
-                                <div id="nameLote"></div>
-                            </ul>
                             <div class="tab-content">
-                                <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                                <div role="tabpanel" class="tab-pane active" id="historialTap">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="card card-plain">
                                                 <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
-                                                    <ul class="timeline-3" id="comments-list-asimilados"></ul>
+                                                    <ul class="timeline-3" id="historialLine"></ul>
                                                 </div>
                                             </div>
                                         </div>

@@ -45,6 +45,22 @@ class Reestructura_model extends CI_Model
         return $this->db->query("UPDATE opcs_x_cats SET estatus = 0 WHERE id_catalogo = 100 AND id_opcion = ".$datos['idOpcion']."");
     }
 
+    public function editarOpcionModel($datos){
+        return $this->db->query("UPDATE opcs_x_cats set nombre = '".$datos['editarCatalogo']."' where id_opcion = ".$datos['idOpcionEdit']." and id_catalogo = 100");
+    }
+
+    public function historialModel($id_prospecto){
+        return $this->db->query("(SELECT aud.id_auditoria, oxc.nombre, oxcs.nombre as nombreNuevo, aud.fecha_creacion, CONCAT(usu.nombre,' ', usu.apellido_paterno,' ', usu.apellido_materno) AS creado_por from auditoria aud
+        INNER JOIN opcs_x_cats  oxc on oxc.id_opcion = aud.anterior and oxc.id_catalogo = 100 and aud.col_afect = 'opcionReestructura'
+        INNER JOIN opcs_x_cats  oxcs on oxcs.id_opcion = aud.nuevo and oxcs.id_catalogo = 100 and aud.col_afect = 'opcionReestructura'
+        INNER JOIN usuarios usu on usu.id_usuario = aud.creado_por
+        where aud.anterior != 'NULL' AND tabla = 'lotes' and col_afect = 'opcionReestructura' and id_parametro = $id_prospecto)
+        UNION ALL
+        (SELECT aud.id_auditoria, aud.anterior, aud.nuevo, aud.fecha_creacion, CONCAT(usu.nombre,' ', usu.apellido_paterno,' ', usu.apellido_materno) AS creado_por from auditoria aud
+        INNER JOIN usuarios usu on usu.id_usuario = aud.creado_por
+        where aud.anterior != 'NULL' AND tabla = 'lotes'  and col_afect = 'comentario' and id_parametro = $id_prospecto)");
+    } 
+
     public function aplicaLiberacion($datos){
         $row = $this->db->query("SELECT idLote, nombreLote, status, sup,
         (CASE WHEN totalNeto2 IS NULL THEN 0.00 ELSE totalNeto2 END) totalNeto2,
