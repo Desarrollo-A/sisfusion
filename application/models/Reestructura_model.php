@@ -272,7 +272,7 @@ class Reestructura_model extends CI_Model
     {
         $query = $this->db->query("SELECT * FROM lotes WHERE idLote = (
 	        SELECT idLote FROM clientes WHERE id_cliente = (
-		        SELECT id_cliente_reubicacion FROM clientes WHERE id_cliente = $idCliente
+		        SELECT id_cliente_reubicacion_2 FROM clientes WHERE id_cliente = $idCliente
 	        )
         )");
         return $query->row();
@@ -281,5 +281,17 @@ class Reestructura_model extends CI_Model
     public function getSelectedSup($idLote){
         $query = $this->db->query("SELECT sup, nombreLote FROM lotes WHERE idLote = $idLote");
         return $query;
+    }
+
+    public function loteLiberadoPorReubicacion($idLote): bool
+    {
+        $query = $this->db->query("SELECT * FROM historial_liberacion WHERE idLote = $idLote AND tipo = 7");
+        return count($query->result_array()) > 0;
+    }
+
+    public function obtenerClientePorId($idCliente)
+    {
+        $query = $this->db->query("SELECT * FROM clientes WHERE id_cliente = $idCliente");
+        return $query->row();
     }
 }
