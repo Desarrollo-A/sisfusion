@@ -8,7 +8,7 @@ class Reestructura_model extends CI_Model
 
     public function getListaClientesReubicar() {
         ini_set('memory_limit', -1);
-        $query = $this->db->query("SELECT lr.idProyecto, lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, 
+        $query = $this->db->query("SELECT cl.proceso, lr.idProyecto, lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, 
         CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, co.nombre AS nombreCondominio, re.nombreResidencial,
         CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
         CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
@@ -18,7 +18,7 @@ class Reestructura_model extends CI_Model
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2, lo.sup, 
         ISNULL (ds.costom2f, 'SIN ESPECIFICAR') costom2f, SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16, 2)) * lo.sup, lo.precio * lo.sup) ELSE lo.totalNeto2 END) total, co.tipo_lote, oxc.nombre nombreTipoLote
         FROM lotes lo
-        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1
+        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.proceso NOT IN (2,3,4)
         INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
         INNER JOIN residenciales re ON co.idResidencial = re.idResidencial
         INNER JOIN loteXReubicacion lr ON lr.idProyecto = re.idResidencial
@@ -30,8 +30,9 @@ class Reestructura_model extends CI_Model
         LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
         LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = co.tipo_lote AND oxc.id_catalogo = 27
-        
-        GROUP BY lr.idProyecto, lo.idLote, lo.nombreLote,  cl.fechaApartado, co.nombre, re.nombreResidencial,
+        INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39
+            GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
+        GROUP BY cl.proceso, lr.idProyecto, lo.idLote, lo.nombreLote,  cl.fechaApartado, co.nombre, re.nombreResidencial,
         lo.idCliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, 
         u0.id_usuario, u0.nombre, u0.apellido_paterno, u0.apellido_materno,
         u1.id_usuario, u1.nombre, u1.apellido_paterno, u1.apellido_materno,
@@ -69,8 +70,7 @@ class Reestructura_model extends CI_Model
 
     public function getLotesDisponibles($condominio, $superficie){
         $query = $this->db->query("SELECT
-        CASE WHEN sup = $superficie THEN '1%' 
-        WHEN sup = ($superficie + 2)THEN '1%' ELSE '8%' END a_favor,
+        CASE WHEN (lo.sup - $superficie) <= 2 THEN '1%' ELSE '8%' END a_favor,
         lo.idLote, lo.nombreLote, lo.sup, lo.precio, lo.total
         FROM lotes lo
         WHERE lo.idCondominio = $condominio AND lo.idStatusLote = 15 AND lo.status = 1
