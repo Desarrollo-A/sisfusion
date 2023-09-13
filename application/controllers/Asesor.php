@@ -2977,14 +2977,14 @@ class Asesor extends CI_Controller {
         $id_cliente = $this->input->post('idCliente');
         $tipo_comprobante = $this->input->post('tipo_comprobante');
 
-        if ($this->session->userdata('id_rol') != 17) {
-            $cliente = $this->Clientes_model->clienteAutorizacion($id_cliente);
-            if (intval($cliente->autorizacion_correo) !== AutorizacionClienteOpcs::VALIDADO || intval($cliente->autorizacion_sms) !== AutorizacionClienteOpcs::VALIDADO) {
-                $data['message'] = 'VERIFICACION CORREO/SMS';
-                echo json_encode($data);
-                return;
-            }
-        }
+//        if ($this->session->userdata('id_rol') != 17) {
+//            $cliente = $this->Clientes_model->clienteAutorizacion($id_cliente);
+//            if (intval($cliente->autorizacion_correo) !== AutorizacionClienteOpcs::VALIDADO || intval($cliente->autorizacion_sms) !== AutorizacionClienteOpcs::VALIDADO) {
+//                $data['message'] = 'VERIFICACION CORREO/SMS';
+//                echo json_encode($data);
+//                return;
+//            }
+//        }
         
 
         $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
@@ -3023,12 +3023,18 @@ class Asesor extends CI_Controller {
         if(count($data)>=1){
             $data['message'] = 'OBSERVACION_CONTRATO';
             echo json_encode($data);
-        }else{
-        if ($this->session->userdata('id_rol') == 17 || $this->session->userdata('id_rol') == 70)
-            $documentsNumber = 3;
-        else
-            $documentsNumber = $tipo_comprobante == 1 ? 3 : 4; //se valida si quiere la carta de domicilio para que  no valide el comp de domicilio
+        } else {
         $dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
+        if ($this->session->userdata('id_rol') == 17 || $this->session->userdata('id_rol') == 70) {
+            $documentsNumber = 3;
+        } else {
+            $documentsNumber = $tipo_comprobante == 1 ? 3 : 4; //se valida si quiere la carta de domicilio para que  no valide el comp de domicilio
+
+            if (in_array($dataClient[0]['proceso'], [2,3,4])) {
+                $documentsNumber += ($dataClient[0]['personalidad_juridica'] == 1) ? 2 : 1;
+            }
+        }
+
         $documentsValidation = $this->Asesor_model->validateDocumentation($idLote, $dataClient[0]['personalidad_juridica'], $tipo_comprobante, $dataClient[0]['proceso']);
         $validacion = $this->Asesor_model->getAutorizaciones($idLote, $id_cliente);
         $validacionIM = $this->Asesor_model->getInicioMensualidadAut($idLote, $id_cliente); //validacion para verificar si tiene inicio de autorizacion de mensualidad pendiente
