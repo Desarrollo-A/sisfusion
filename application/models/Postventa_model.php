@@ -870,9 +870,9 @@ function checkBudgetInfo($idSolicitud){
         $user = $this->session->userdata;
         $id_usuario = $user['id_usuario'] ;
         $dataCliente = array(
-            'id_asesor' => $id_usuario,
-            'id_coordinador' => $id_usuario,
-            'id_gerente' => ($user['idGerente'] == '' || !empty($user['idGerente']) ) ? NULL : $user['idGerente'],
+            'id_asesor' => 0,
+            'id_coordinador' => 0,
+            'id_gerente' => 0,
             'id_sede' => $user['id_sede'],
             'nombre' => $datos['nombre2'],
             'apellido_paterno' => $datos['ape1'],

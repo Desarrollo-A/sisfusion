@@ -34,14 +34,14 @@ class Reestructura_model extends CI_Model
         $datos["tipo"] = $datos['tipoLiberacion'];
 
 
-        $row = $this->db->query("SELECT idLote, nombreLote, status, sup,precio,
+        $row = $this->db->query("SELECT idLote, nombreLote, status, sup,precio,ubicacion,
         (CASE WHEN totalNeto2 IS NULL THEN 0.00 ELSE totalNeto2 END) totalNeto2,
         (CASE WHEN idCliente = 0  OR idCliente IS NULL THEN 0 ELSE idCliente END) idCliente,registro_comision,
         (CASE WHEN tipo_venta IS NULL THEN 0 ELSE tipo_venta END) tipo_venta FROM lotes WHERE idLote=".$datos['idLote']." AND status = 1")->result_array();
         $registro_comision = ($datos['tipo'] == 7 || $datos['tipo'] == 8) ? 9 : 8;
-        $idStatusLote = $datos['tipo'] == 9 ? 15 : 1;
+        $idStatusLote = $datos['tipo'] == 9 ? 15 :($datos['tipo'] == 8  ? 3 : 1);
         $this->db->trans_begin();
-        ($datos['tipo'] == 7 || $datos['tipo'] == 8) ? $this->db->query("UPDATE lotes SET tipo_venta=".$row[0]['tipo_venta'].",usuario='".$datos['userLiberacion']."' WHERE idLote=".$datos['idLoteNuevo']." ") : '';
+        //($datos['tipo'] == 7 || $datos['tipo'] == 8) ? $this->db->query("UPDATE lotes SET tipo_venta=".$row[0]['tipo_venta'].",usuario='".$datos['userLiberacion']."' WHERE idLote=".$datos['idLoteNuevo']." ") : '';
             $banderaComisionCl = ($datos['tipo'] == 7 || $datos['tipo'] == 8) ? ' ,banderaComisionCl ='.$row[0]['registro_comision'] : '';
             $id_cliente = $this->db->query("SELECT id_cliente FROM clientes WHERE status = 1 AND idLote IN (" . $row[0]['idLote'] . ") ")->result_array();
             $this->db->query("UPDATE historial_documento SET status = 0 WHERE status = 1 AND idLote IN (".$row[0]['idLote'].") ");
@@ -88,12 +88,17 @@ class Reestructura_model extends CI_Model
                     'tipo'=> $datos['tipo'],
                     'userLiberacion'=> $datos['userLiberacion'],
                     'id_cliente' => (count($id_cliente)>=1 ) ? $id_cliente[0]['id_cliente'] : 0
-
                     );
 
                     $this->db->insert('historial_liberacion',$data_l);
-                    $this->db->query("UPDATE lotes SET idStatusContratacion = 0,
-                    idMovimiento = 0, comentario = 'NULL', idCliente = 0, usuario = 'NULL', perfil = 'NULL ', 
+
+                    $idStatusContratacion = $datos["tipo"] == 8 ? 1 : 0;
+                    $idClienteNuevo = $datos["tipo"] == 8 ? $datos['idClienteNuevo'] : 0 ;
+                    $idMovimiento = $datos["tipo"] == 8 ? 31 : 0;
+                    $tipo_venta = $datos["tipo"] == 8 ? $row[0]['tipo_venta'] : 0;
+                    $ubicacion = $datos["tipo"] == 8 ? $row[0]['ubicacion'] : 0;
+                    $this->db->query("UPDATE lotes SET idStatusContratacion = $idStatusContratacion,
+                    idMovimiento = $idMovimiento, comentario = 'NULL', idCliente = $idClienteNuevo, usuario = 'NULL', perfil = 'NULL ', 
                     fechaVenc = null, modificado = null, status8Flag = 0, 
                     ubicacion = 0, totalNeto = 0, totalNeto2 = 0,
                     casa = (CASE WHEN idCondominio IN (759, 639) THEN 1 ELSE 0 END),
@@ -101,7 +106,7 @@ class Reestructura_model extends CI_Model
                     fechaSolicitudValidacion = null, 
                     fechaRL = null, 
                     registro_comision = $registro_comision,
-                    tipo_venta = 0, 
+                    tipo_venta = $tipo_venta, 
                     observacionContratoUrgente = null,
                     firmaRL = 'NULL', comentarioLiberacion = '".$datos['comentarioLiberacion']."', 
                     observacionLiberacion = '".$datos['observacionLiberacion']."', idStatusLote = $idStatusLote, 
