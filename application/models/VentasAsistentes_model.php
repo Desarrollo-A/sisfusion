@@ -101,7 +101,7 @@ class VentasAsistentes_model extends CI_Model {
         $id_usuario = $this->session->userdata('id_usuario');
         $id_lider = $this->session->userdata('id_lider');
         $tipo = $this->session->userdata('tipo');
-        $tipo_proceso = "AND cl.proceso IN (0, 1, 3)";
+        $tipo_proceso = "AND cl.proceso IN (0, 1)";
         if (in_array($id_rol, array(17, 70))) { // MJ: ES CONTRALORÍA Y EJECUTIVO DE CONTRALORÍA JR
             $filtroUsuarioBR = '';
             if($id_usuario == 2815 || $id_usuario == 12931)
@@ -147,7 +147,7 @@ class VentasAsistentes_model extends CI_Model {
                 $filtroSede = "";
             } 
             if ($id_rol == 7 && $tipo == 2) { // MJ: ASESOR OOAM
-                $tipo_proceso = "AND cl.proceso IN (2, 4)";
+                $tipo_proceso = "AND cl.proceso IN (2, 3, 4)";
                 $filtroGerente = "AND cl.id_asesor = $id_usuario";
                 $filtroSede = "";
             }
@@ -279,7 +279,7 @@ class VentasAsistentes_model extends CI_Model {
         $id_sede = $this->session->userdata('id_sede');
         $id_lider = $this->session->userdata('id_lider');
         $tipo = $this->session->userdata('tipo');
-        $tipo_proceso = "AND cl.proceso IN (0, 1, 3)";
+        $tipo_proceso = "AND cl.proceso IN (0, 1)";
         if (in_array($id_rol, array(17, 70))){ // MJ: ES CONTRALORÍA Y EJECUTIVO CONTRALORÍA JR
             $filtroUsuarioBR = '';
             if($id_usuario == 2815 || $id_usuario == 12931)
@@ -322,7 +322,7 @@ class VentasAsistentes_model extends CI_Model {
                 $filtroSede = "";
             } 
             if ($id_rol == 7 && $tipo == 2) { // MJ: ASESOR OOAM
-                $tipo_proceso = "AND cl.proceso IN (2, 4)";
+                $tipo_proceso = "AND cl.proceso IN (2, 3, 4)";
                 $filtroGerente = "AND cl.id_asesor = $id_usuario";
                 $filtroSede = "";
             }
