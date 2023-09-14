@@ -198,9 +198,7 @@ $("#deleteRol").on('submit', function(e){
         contentType: false,
         cache: false,
         processData:false,
-        beforeSend: function(){
-            // Actions before send post
-        },
+        beforeSend: function(){},
         success: function(data) {
             if (data == true) {
                 alerts.showNotification("top", "right", "El rol se ha eliminado correctamente", "success");

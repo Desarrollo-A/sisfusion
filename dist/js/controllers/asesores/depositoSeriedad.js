@@ -766,7 +766,7 @@ $(document).on('click', '#save1', function(e) {
                     $('#save1').prop('disabled', false);
                     $('#modal1').modal('hide');
                     $('#tabla_deposito_seriedad').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Asegúrate de incluir los documentos: IDENTIFICACIÓN OFICIAL "+comprobante_domicilio+", RECIBOS DE APARTADO Y ENGANCHE Y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.", "danger");
+                    alerts.showNotification("top", "right", response.error_message, "danger");
                 } else if(response.message == 'ERROR'){
                     $('#save1').prop('disabled', false);
                     $('#modal1').modal('hide');
@@ -842,7 +842,7 @@ $(document).on('click', '#guardar_re3pv', function(e) {
                     $('#guardar_re3pv').prop('disabled', false);
                     $('#enviarNuevamenteEstatus3PV  ').modal('hide');
                     $('#tabla_deposito_seriedad').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Asegúrate de incluir los documentos: IDENTIFICACIÓN OFICIAL "+comprobante_domicilio+", RECIBOS DE APARTADO Y ENGANCHE Y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.", "danger");
+                    alerts.showNotification("top", "right", response.error_message, "danger");
                 } else if(response.message == 'ERROR'){
                     $('#guardar_re3pv').prop('disabled', false);
                     $('#enviarNuevamenteEstatus3PV  ').modal('hide');
@@ -913,7 +913,7 @@ $(document).on('click', '#save2', function(e) {
                     $('#save2').prop('disabled', false);
                     $('#modal2').modal('hide');
                     $('#tabla_deposito_seriedad').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Asegúrate de incluir los documentos; IDENTIFICACIÓN OFICIAL "+comprobante_domicilio+", RECIBOS DE APARTADO Y ENGANCHE y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.", "danger");
+                    alerts.showNotification("top", "right", response.error_message, "danger");
                 } else if(response.message == 'ERROR'){
                     $('#save2').prop('disabled', false);
                     $('#modal2').modal('hide');
@@ -974,7 +974,7 @@ $(document).on('click', '#save3', function(e) {
                     $('#save3').prop('disabled', false);
                     $('#modal3').modal('hide');
                     $('#tabla_deposito_seriedad').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Asegúrate de incluir los documentos; IDENTIFICACIÓN OFICIAL "+comprobante_domicilio+", RECIBOS DE APARTADO Y ENGANCHE y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.", "danger");
+                    alerts.showNotification("top", "right", response.error_message, "danger");
                 } else if(response.message == 'ERROR'){
                     $('#save3').prop('disabled', false);
                     $('#modal3').modal('hide');

@@ -1400,28 +1400,8 @@ class Asesor_model extends CI_Model {
         $query = $this->db->query("SELECT id_cliente, idLote, personalidad_juridica, proceso FROM clientes WHERE idLote IN ($idLote) AND status = 1");
         return $query->result_array();
     }
-    public function validateDocumentation($idLote, $legalPersonality, $tipo_comprobante, $proceso)
-    {
-        /*
-        LEGAL PERSONALITY VALUES
-            1 PM
-            2   PF
-        */
-        $cd = ", 3"; //comprobante domicilio
-        $documentosExtra = ""; // DOCUMENTOS EXTRA PARA LA REESTRUCTURA Y PARA LAS REUBICACIONES
-        if($tipo_comprobante == 1)
-            $cd = "";
-        if(in_array($proceso, array(2, 3, 4))) { // Reubicación, Reestructura o Reubicación excedente
-            if ($legalPersonality == 1) // PARA PM TAMBIÉN PEDIMOS LA CARTA PODER
-                $documentosExtra = ", 32, 34";
-            else // SI ES PF SÓLO PEDIMOS LA CARTA
-                $documentosExtra = ", 32";
-        }
-        if ($this->session->userdata('id_rol') == 17)
-            $documentOptions = $legalPersonality == 2 ? "2 $cd $documentosExtra" : "2 $cd 4, 10, 11 $documentosExtra";
-        else
-            $documentOptions = $legalPersonality == 2 ? "2 $cd , 4 $documentosExtra" : "2 $cd, 4, 10, 11, 12 $documentosExtra";
 
+    public function validateDocumentation($idLote, $documentOptions) {
         $query = $this->db->query("SELECT expediente, idCliente, tipo_doc FROM historial_documento WHERE idLote IN ($idLote) AND 
         status = 1 AND expediente IS NOT NULL AND tipo_doc IN ($documentOptions)
         UNION ALL
@@ -1429,6 +1409,7 @@ class Asesor_model extends CI_Model {
         (SELECT id_cliente FROM clientes WHERE idLote = $idLote AND status = 1) AND desarrollo IS NOT NULL");
         return $query->result_array();
     }
+
     //Se verifica si el lote fue prospectado por marketing digital
     public function verificarMarketing($idLote)
     {
