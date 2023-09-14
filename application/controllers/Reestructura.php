@@ -370,7 +370,7 @@ class Reestructura extends CI_Controller{
             'IdStatusLote' => 3
         );
 
-        if (!$this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $loteAOcupar, )) {
+        if (!$this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $loteAOcupar)) {
             $this->db->trans_rollback();
 
             echo json_encode([
