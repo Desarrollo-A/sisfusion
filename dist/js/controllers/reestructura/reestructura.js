@@ -64,7 +64,6 @@ $(document).on('click', '.stat5Rev', function () {
         }
         $('.indexCo').val($(this).attr(id));
         $("#grabado").selectpicker('refresh');
-        $('#spiner-loader').addClass('hide');
     }, 'json');
 
     $('#idLoteCatalogo').val($(this).attr('data-idLote'));
@@ -76,6 +75,7 @@ $(document).on('click', '.guardarValidacion', function(){
     var idLoteCa = $('#idLoteCatalogo').val();
     var opcionValidacion = $('#grabado').val();
     var comentarioValidacion = $('#comentario2').val();
+    $("#spiner-loader").removeClass('hide');
 
     if(comentarioValidacion == ''){
         comentarioValidacion = "SIN COMENTARIO";
@@ -105,10 +105,12 @@ $(document).on('click', '.guardarValidacion', function(){
             $('#idLoteCatalogo').val('');
             $('#grabado').val('');
             $('#comentario2').val('');
+            $("#spiner-loader").addClass('hide');
             }
         },
         error: function(){
             $('#aceptarReestructura').modal('hide');
+            $("#spiner-loader").addClass('hide');
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
@@ -120,10 +122,14 @@ $(document).on('click', '.reesInfo', function (){
 
     $.getJSON("getHistorial/" + id_prospecto).done(function(data) {
 
-        if(data.length == 0){
+        array=  data.sort(function(a, b) {
+            return a.id_auditoria-b.id_auditoria; 
+        });
+
+        if(array.length == 0){
             $('#historialLine').append("SIN DATOS POR MOSTRAR");
         }else{
-            $.each(data, function(i, v) {
+            $.each(array, function(i, v) {
                 fillChangelog(v);
             });
         }
@@ -163,8 +169,8 @@ $(document).on('click', '#saveLi', function(){
         error: function(){
             closeModalEng();
             $('#liberarReestructura').modal('hide');
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
             $("#spiner-loader").addClass('hide');
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
 });
@@ -181,6 +187,7 @@ function open_Mdc(){
 $(document).on('click', '#guardarCatalogo', function(){
     var ipuntCat = $("#inputCatalogo").val();
     var datos = new FormData();
+    $("#spiner-loader").removeClass('hide');
 
     datos.append("nombre", ipuntCat);
 
@@ -194,13 +201,14 @@ $(document).on('click', '#guardarCatalogo', function(){
             if (data == 1) {
             $('#tableCatalogo').DataTable().ajax.reload(null, false);
             $('#catalogoNuevo').modal('hide');
+            $("#spiner-loader").addClass('hide');
             alerts.showNotification("top", "right", "Opción insertada correctamente.", "success");
             $('#inputCatalogo').val('');
             }
         },
         error: function(){
-            closeModalEng();
             $('#catalogoNuevo').modal('hide');
+            $("#spiner-loader").addClass('hide');
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
@@ -215,6 +223,7 @@ $(document).on('click', '#borrarOpcion', function () {
 $(document).on('click', '#borrarOp', function(){
     var idOpcion = $("#idOpcion").val();
     var datos = new FormData();
+    $("#spiner-loader").removeClass('hide');
 
     datos.append("idOpcion", idOpcion);
 
@@ -227,11 +236,13 @@ $(document).on('click', '#borrarOp', function(){
         success: function(data) {
             if (data == 1) {
             $('#tableCatalogo').DataTable().ajax.reload(null, false);
+            $("#spiner-loader").addClass('hide');
             $('#modalBorrar').modal('hide');
             alerts.showNotification("top", "right", "Opción Eliminada.", "success");
             }
         },
         error: function(){
+            $("#spiner-loader").addClass('hide');
             $('#modalBorrar').modal('hide');
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
@@ -247,6 +258,7 @@ $(document).on('click', '#guardarEdit', function(){
     var idOpcionEdit = $('#id_opcionEdit').val();
     var editarCatalogo = $("#editarCatalogo").val();
     var datos = new FormData();
+    $("#spiner-loader").removeClass('hide');
 
     datos.append("idOpcionEdit", idOpcionEdit);
     datos.append("editarCatalogo", editarCatalogo);
@@ -260,6 +272,7 @@ $(document).on('click', '#guardarEdit', function(){
         success: function(data) {
             if (data == 1) {
             $('#tableCatalogo').DataTable().ajax.reload(null, false);
+            $("#spiner-loader").addClass('hide');
             $('#editarModel').modal('hide');
             alerts.showNotification("top", "right", "Opcion editada correctamente.", "success");
             $('#editarCatalogo').val('');
@@ -268,6 +281,7 @@ $(document).on('click', '#guardarEdit', function(){
         },
         error: function(){
             $('#editarModel').modal('hide');
+            $("#spiner-loader").addClass('hide');
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
@@ -430,6 +444,17 @@ function fillTable(index_proyecto) {
         });
     });
 }
+
+
+$('#tableCatalogo thead tr:eq(0) th').each(function (i) {
+    var title = $(this).text();
+    $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
+    $( 'input', this ).on('keyup change', function () {
+        if ($('#tableCatalogo').DataTable().column(i).search() !== this.value ) {
+            $('#tableCatalogo').DataTable().column(i).search(this.value).draw();
+        }
+    });
+});
 
 function fillTableC(index_proyecto) {
     tabla_valores_catalogos = $("#tableCatalogo").DataTable({
