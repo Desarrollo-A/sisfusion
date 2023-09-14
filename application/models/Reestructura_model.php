@@ -244,6 +244,12 @@ class Reestructura_model extends CI_Model
         return $query->result_array();
     }
 
+    public function obtenerDocumentacionPorReestructura()
+    {
+        $query = $this->db->query('SELECT * FROM opcs_x_cats WHERE id_catalogo = 102 AND estatus = 1');
+        return $query->result_array();
+    }
+
     public function obtenerDSPorIdCliente($idCliente)
     {
         $query = $this->db->query("SELECT * FROM deposito_seriedad WHERE id_cliente = $idCliente");
@@ -292,6 +298,23 @@ class Reestructura_model extends CI_Model
     public function obtenerClientePorId($idCliente)
     {
         $query = $this->db->query("SELECT * FROM clientes WHERE id_cliente = $idCliente");
+        return $query->row();
+    }
+
+    public function informacionCartaPdf($idClienteNuevo)
+    {
+        $query = $this->db->query("SELECT CONCAT(clN.nombre, ' ', clN.apellido_paterno, ' ', clN.apellido_materno) AS nombreCliente, 
+            loN.nombreLote AS loteNuevo, condN.nombre_condominio AS condNuevo, resN.descripcion AS desarrolloNuevo,
+            loA.nombreLote AS loteAnterior, condA.nombre_condominio AS condAnterior, resA.descripcion AS desarrolloAnterior
+        FROM clientes clN
+        INNER JOIN lotes loN ON clN.idLote = loN.idLote
+        INNER JOIN condominios condN ON loN.idCondominio = condN.idCondominio
+        INNER JOIN residenciales resN ON condN.idResidencial = resN.idResidencial
+        INNER JOIN clientes clA ON clN.id_cliente_reubicacion_2 = clA.id_cliente
+        INNER JOIN lotes loA ON clA.idLote = loA.idLote
+        INNER JOIN condominios condA ON loA.idCondominio = condA.idCondominio
+        INNER JOIN residenciales resA ON condA.idResidencial = resA.idResidencial
+        WHERE clN.id_cliente = $idClienteNuevo");
         return $query->row();
     }
 }

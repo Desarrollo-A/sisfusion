@@ -420,7 +420,8 @@ class Reestructura extends CI_Controller{
             return;
         }
 
-        if (!$this->moverExpediente($clienteAnterior[0]->idLote, $loteAOcupar, $idClienteAnterior, $idClienteInsert)) {
+        $expediente = $this->Reestructura_model->obtenerDocumentacionPorReubicacion($clienteAnterior[0]->personalidad_juridica);
+        if (!$this->moverExpediente($clienteAnterior[0]->idLote, $loteAOcupar, $idClienteAnterior, $idClienteInsert, $expediente)) {
             $this->db->trans_rollback();
 
             echo json_encode([
@@ -453,11 +454,10 @@ class Reestructura extends CI_Controller{
         ]);
 	}
 
-    function moverExpediente($idLoteAnterior, $idLoteNuevo, $idClienteAnterior, $idClienteNuevo): bool
+    function moverExpediente($idLoteAnterior, $idLoteNuevo, $idClienteAnterior, $idClienteNuevo, $expediente): bool
     {
         $loteNuevoInfo = $this->Reestructura_model->obtenerLotePorId($idLoteNuevo);
         $docAnterior = $this->Reestructura_model->obtenerDocumentacionActiva($idLoteAnterior, $idClienteAnterior);
-        $docPorReubicacion = $this->Reestructura_model->obtenerDocumentacionPorReubicacion($loteNuevoInfo->personalidad_juridica);
         $documentacion = [];
         $modificado = date('Y-m-d H:i:s');
 
@@ -478,7 +478,7 @@ class Reestructura extends CI_Controller{
             ];
         }
 
-        foreach ($docPorReubicacion as $doc) {
+        foreach ($expediente as $doc) {
             $documentacion[] = [
                 'movimiento' => $doc['nombre'],
                 'expediente' => NULL,
@@ -549,5 +549,49 @@ class Reestructura extends CI_Controller{
         $resultCop = (empty($coopropietariosData)) ? true : $this->General_model->insertBatch('copropietarios', $coopropietariosData);
 
         return $resultDs && $resultCop;
+    }
+
+    public function imprimirCarta($idCliente)
+    {
+        $this->load->library('Pdf');
+        $meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+        $info = $this->Reestructura_model->informacionCartaPdf($idCliente);
+
+        $html = $this->load->view('pdf/reestructura/carta-reubicacion', [
+            'dia' => date('d'),
+            'mes' => $meses[date('n') - 1],
+            'anio' => date('Y'),
+            'nombreCliente' => $info->nombreCliente,
+            'loteAnterior' => $info->loteAnterior,
+            'condAnterior' => $info->condAnterior,
+            'desarrolloAnterior' => $info->desarrolloAnterior,
+            'loteNuevo' => $info->loteNuevo,
+            'condNuevo' => $info->condNuevo,
+            'desarrolloNuevo' => $info->desarrolloNuevo
+        ], true);
+
+        $pdf = new TCPDF('P', 'mm', 'LETTER', 'UTF-8', false);
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetTitle('CARTA SOLICITUD REUBICACIÓN');
+        $pdf->SetSubject('CARTA');
+        $pdf->SetKeywords('CRM');
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+        $pdf->SetAutoPageBreak(TRUE);
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+        $pdf->setPrintHeader(false);
+        $pdf->SetFont('Helvetica', '', 9, '', true);
+        $pdf->SetMargins(30, 15, 30);
+        $pdf->AddPage('P', 'LETTER');
+        $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+        $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+        $pdf->getBreakMargin();
+        $pdf->Image('dist/img/ar4c.png', 120, 0, 300, 0, 'PNG', '', '', false, 150, '', false, false, 0, false, false, false);
+        $pdf->setPageMark();
+
+        $pdf->writeHTML($html);
+        ob_end_clean();
+
+        $pdf->Output(utf8_decode("Carta.pdf"));
     }
 } 

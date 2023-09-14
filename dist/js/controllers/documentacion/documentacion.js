@@ -35,7 +35,8 @@ const TipoDoc = {
     CARTA: 32,
     RESCISION: 33,
     CARTA_PODER: 34,
-    RESCISION_FIRMADA: 35
+    RESCISION_FIRMADA: 35,
+    ADDENDUM: 36
 };
 
 const observacionContratoUrgente = 1; // Bandera para inhabilitar
@@ -263,7 +264,7 @@ function cargarTabla(idLote, idCliente = '') {
                         return `<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`;
                     }
 
-                    if (data.tipo_doc == TipoDoc.CONTRATO || data.tipo_doc == TipoDoc.RESCISION) { // CONTRATO
+                    if (data.tipo_doc == TipoDoc.CONTRATO || data.tipo_doc == TipoDoc.RESCISION || data.tipo_doc == TipoDoc.ADDENDUM) { // CONTRATO
                         if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
                             buttonMain = (includesArray(movimientosPermitidosEstatus7, data.idMovimiento) && includesArray(rolesPermitidosEstatus7, id_rol_general))
                                 // ESTÁ EN ESTATUS 7 Y ES JURÍDICO EL QUE CONSULTA, SE VEA A MONSTRAR ENABLED EL BOTÓN PARA CARGAR EL ARCHIVO
@@ -708,24 +709,6 @@ function getAtributos(type) {
         buttonTipoAccion = '2';
     }
     return [buttonTitulo, buttonEstatus, buttonClassColor, buttonClassAccion, buttonTipoAccion, buttonIcono]
-}
-
-/**
- * @param {number} tipoDocumento
- * @returns {string}
- */
-function obtenerPathDoc(tipoDocumento) {
-    if (parseInt(tipoDocumento) === TipoDoc.CORRIDA) { // CORRIDA FINANCIERA: CONTRALORÍA
-        return 'corrida/';
-    }
-    if (parseInt(tipoDocumento) === TipoDoc.CONTRATO) { // CONTRATO: JURÍDICO
-        return 'contrato/';
-    }
-    if (parseInt(tipoDocumento) === TipoDoc.CONTRATO_FIRMADO) { // CONTRATO FIRMADO: CONTRALORÍA
-        return 'contratoFirmado/';
-    }
-    // EL RESTO DE DOCUMENTOS SE GUARDAN EN LA CARPETA DE EXPEDIENTES
-    return 'expediente/';
 }
 
 /**

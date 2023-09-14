@@ -727,6 +727,7 @@ class Asesor extends CI_Controller {
             $data[$i]['correo'] = $query[0]->correo;
             $data[$i]['telefono'] = $query[0]->telefono2;
             $data[$i]['tipo_proceso'] = $query[0]->tipo_proceso;
+            $data[$i]['proceso'] = $query[0]->proceso;
         }
         if ($data != null) {
             echo json_encode($data);

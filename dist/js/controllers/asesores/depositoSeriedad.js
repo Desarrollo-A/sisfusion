@@ -697,6 +697,16 @@ function fillDataTable(idCondominio) {
                     ) {
                         buttons += `<button class="btn-data btn-green abrir_prospectos btn-fab btn-fab-mini" data-toggle="tooltip" data-placement="left" title="ASIGNAR PROSPECTO" data-idCliente="${d.id_cliente}" data-nomCliente="${d.nombreCliente}"> <i class="fas fa-user-check"></i></button>`;
                     }
+
+                    // Botón para descargar la carta de reubicación
+                    if (idMovimiento === MOVIMIENTOS.NUEVO_APARTADO) {
+                        if ([2, 3, 4].includes(parseInt(d.proceso))) {
+                            if ([2,4].includes(parseInt(d.proceso))) {
+                                const url = `${general_base_url}Reestructura/imprimirCarta/${d.id_cliente}`;
+                                buttons += `<a href="${url}" target="_blank" class="btn-data btn-orangeYellow btn-fab btn-fab-mini" data-toggle="tooltip" data-placement="left" title="DESCARGAR CARTA REUBICACIÓN"><i class="fas fa-download"></i></a>`;
+                            }
+                        }
+                    }
                     return '<div class="d-flex justify-center">'+buttons+'</div>';
                 }
             }
