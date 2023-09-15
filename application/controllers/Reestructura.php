@@ -241,7 +241,7 @@ class Reestructura extends CI_Controller{
             echo json_encode([
                 'titulo' => 'ERROR',
                 'resultado' => FALSE,
-                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción (1).',
+                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
                 'color' => 'danger'
             ]);
             return;
@@ -377,7 +377,7 @@ class Reestructura extends CI_Controller{
             echo json_encode([
                 'titulo' => 'ERROR',
                 'resultado' => FALSE,
-                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción (2).',
+                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
                 'color' => 'danger'
             ]);
             return;
@@ -393,7 +393,7 @@ class Reestructura extends CI_Controller{
             echo json_encode([
                 'titulo' => 'ERROR',
                 'resultado' => FALSE,
-                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción (3).',
+                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
                 'color' => 'danger'
             ]);
             return;
@@ -420,7 +420,7 @@ class Reestructura extends CI_Controller{
             echo json_encode([
                 'titulo' => 'ERROR',
                 'resultado' => FALSE,
-                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción (4).',
+                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
                 'color' => 'danger'
             ]);
             return;
@@ -432,7 +432,7 @@ class Reestructura extends CI_Controller{
             echo json_encode([
                 'titulo' => 'ERROR',
                 'resultado' => FALSE,
-                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción (5).',
+                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
                 'color' => 'danger'
             ]);
             return;
@@ -445,7 +445,7 @@ class Reestructura extends CI_Controller{
             echo json_encode([
                 'titulo' => 'ERROR',
                 'resultado' => FALSE,
-                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción (6).',
+                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
                 'color' => 'danger'
             ]);
             return;
@@ -457,7 +457,7 @@ class Reestructura extends CI_Controller{
             echo json_encode([
                 'titulo' => 'ERROR',
                 'resultado' => FALSE,
-                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción (7).',
+                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
                 'color' => 'danger'
             ]);
             return;
