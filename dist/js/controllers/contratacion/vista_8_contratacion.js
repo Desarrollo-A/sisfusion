@@ -31,7 +31,7 @@ $(document).ready(function () {
             filename:'Registro de Estatus 8',
             titleAttr: 'Descargar archivo de Excel',
             exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8],
+                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulos[columnIdx - 1] + ' ';
@@ -59,6 +59,11 @@ $(document).ready(function () {
         {
             data: function (d) {
                 return `<span class="label lbl-green">${d.tipo_venta}</span>`;
+            }
+        },
+        {
+            data: function (d) {
+                return `<span class='label lbl-violetBoots'>${d.tipo_proceso}</span>`;
             }
         },
         {

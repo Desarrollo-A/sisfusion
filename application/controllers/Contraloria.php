@@ -603,21 +603,13 @@ class Contraloria extends CI_Controller {
         $this->load->view("contraloria/integracionExpediente");
     }
 
-    public function getRevision2(){
-        ini_set('max_execution_time', 900);
-        set_time_limit(900);
-        ini_set('memory_limit','2048M');
-
-        $fechaInicio = $this->input->post('beginDate');
-        $fechaFinal = $this->input->post('endDate');
-        $data=array();
-        $data = $this->registrolote_modelo->getRevision2($fechaInicio, $fechaFinal);
-        if ($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }
-    }
+    public function getRevision2() {
+		$data = $this->registrolote_modelo->getRevision2($this->input->post('beginDate'), $this->input->post('endDate'));	
+        if ($data != null)
+			echo json_encode($data);
+		else
+			echo json_encode(array());
+	}
 
     public function expRevisados() {
         $this->load->view('template/header');

@@ -25,7 +25,7 @@ $("#tabla_ingresar_13").ready(function () {
                 titleAttr: 'Registro estatus 13',
                 title: "Registro estatus 13",
                 exportOptions: {
-                    columns: [1, 2, 3, 4, 5, 6, 7, 8],
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + titulosInventario[columnIdx -1]  + ' ';
@@ -42,7 +42,7 @@ $("#tabla_ingresar_13").ready(function () {
                 orientation: 'landscape',
                 pageSize: 'LEGAL',
                 exportOptions: {
-                    columns: [1, 2, 3, 4, 5, 6, 7, 8],
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + titulosInventario[columnIdx -1]  + ' ';
@@ -77,6 +77,11 @@ $("#tabla_ingresar_13").ready(function () {
             {
                 data: function (d) {
                     return `<span class="label lbl-green">${d.tipo_venta}</span>`;
+                }
+            },
+            {
+                data: function (d) {
+                    return `<span class='label lbl-violetBoots'>${d.tipo_proceso}</span>`;
                 }
             },
             {

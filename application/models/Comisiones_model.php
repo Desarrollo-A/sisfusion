@@ -1840,8 +1840,8 @@ class Comisiones_model extends CI_Model {
     public function validateDispersionCommissions($lote){
         return $this->db->query("SELECT count(*) dispersion, pc.bandera 
         FROM comisiones com
-        LEFT JOIN pago_comision pc ON pc.id_lote = com.id_lote and pc.bandera = 1
-        WHERE com.id_lote = $lote AND com.id_usuario = 2 AND com.estatus = 1 AND com.fecha_creacion <= GETDATE() GROUP BY pc.bandera");
+        LEFT JOIN pago_comision pc ON pc.id_lote = com.id_lote and pc.bandera = 0
+        WHERE com.id_lote = $lote /*AND com.id_usuario = 2*/ AND com.estatus = 1 AND com.fecha_creacion <= GETDATE() GROUP BY pc.bandera");
     }
 
     function getDatosNuevasAContraloria($proyecto, $condominio){
@@ -5076,9 +5076,7 @@ class Comisiones_model extends CI_Model {
     }
 
     public function findUsuariosByPuestoAsistente($puesto, $id_lider, $id_usuario) {
-        if ($id_usuario == 10795)  
-            $id_lider .= ", 671";
-        else if ($id_usuario == 12449)  
+        if ($id_usuario == 12449)  
             $id_lider .= ", 654";
         else if ($id_usuario == 10270)  
             $id_lider .= ", 113";

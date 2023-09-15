@@ -41,7 +41,7 @@ class Documentacion extends CI_Controller {
         $tipoDocumento = $this->input->post('tipoDocumento');
         $documentName = "{$this->input->post('tituloDocumento')}.$fileExt";
 
-        $folder = $this->getCarpetaDeArchivo($tipoDocumento);
+        $folder = $this->Documentacion_model->getCarpetaArchivo($tipoDocumento, $lote->proceso, $lote->nombreLote);
 
         if ($tipoDocumento != 7) { // SE VA A SUBIR EL EXPEDIENTE O EL CONTRATO
             $res = $this->actualizarRamaDeDocumento($file, $folder, $documentName, $idDocumento);
@@ -101,7 +101,9 @@ class Documentacion extends CI_Controller {
             ->getFilename($idDocumento)
             ->row()
             ->expediente;
-        $folder = $this->getCarpetaDeArchivo($tipoDocumento);
+
+        $folder = $this->Documentacion_model->getCarpetaArchivo($tipoDocumento, $infoLote->proceso, $infoLote->nombreLote, $filename, true);
+
         $file = $folder . $filename;
 
         if (file_exists($file)) {
@@ -160,23 +162,6 @@ class Documentacion extends CI_Controller {
             $this->email->send();
 
         echo json_encode($response);
-    }
-
-    private function getCarpetaDeArchivo($tipoDocumento): string {
-        if ($tipoDocumento == 7) { // CORRIDA FINANCIERA: CONTRALORÍA
-            return 'static/documentos/cliente/corrida/';
-        }
-
-        if ($tipoDocumento == 8) { // CONTRATO: JURÍDICO
-            return 'static/documentos/cliente/contrato/';
-        }
-
-        if ($tipoDocumento == 30) { // CONTRATO FIRMADO: CONTRALORÍA
-            return 'static/documentos/cliente/contratoFirmado/';
-        }
-
-        // EL RESTO DE DOCUMENTOS SE GUARDAN EN LA CARPETA DE EXPEDIENTES
-        return 'static/documentos/cliente/expediente/';
     }
 
     function reasonsForRejectionByDocument() {
@@ -330,6 +315,26 @@ class Documentacion extends CI_Controller {
         echo json_encode($response);
     }
 
+    public function getCarpetaDeArchivo($tipoDocumento): string
+    {
+        $pathBase = 'static/documentos/cliente/';
+
+        if ($tipoDocumento == 7) { // CORRIDA FINANCIERA: CONTRALORÍA
+            return "{$pathBase}corrida/";
+        }
+
+        if ($tipoDocumento == 8) { // CONTRATO: JURÍDICO
+            return "{$pathBase}contrato/";
+        }
+
+        if ($tipoDocumento == 30) { // CONTRATO FIRMADO: CONTRALORÍA
+            return "{$pathBase}contratoFirmado/";
+        }
+
+        // EL RESTO DE DOCUMENTOS SE GUARDAN EN LA CARPETA DE EXPEDIENTES
+        return "{$pathBase}expediente/";
+    }
+
     public function uploadFile(){
         $file = $_FILES["uploadedDocument"];
         $idLote = $this->input->post('idLote');
@@ -368,5 +373,3 @@ class Documentacion extends CI_Controller {
         }
     }
 }
-
-

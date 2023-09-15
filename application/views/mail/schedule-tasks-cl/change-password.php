@@ -1,5 +1,5 @@
 <div class="text-center">
-    <h3>A continuación se muestra usuario, nueva contraseña y tiempo de validez para la información dada.</h3>
+    <h3>A continuación se muestra usuario, nueva contraseña y tiempo de validez del usuario comodín.</h3>
 </div>
 
 <div>

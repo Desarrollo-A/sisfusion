@@ -212,6 +212,10 @@ class Postventa_model extends CI_Model
         ORDER BY n.idNotaria");
     }
 
+    function get_proyecto_lista(){
+        return $this->db->query("SELECT idResidencial, CONCAT(nombreResidencial, ' - ', descripcion) AS descripcion FROM residenciales WHERE idResidencial IN (21, 30, 25, 13)");
+    }
+
     function listSedes(){
         return $this->db->query("SELECT * FROM sedes WHERE estatus = 1");
      }

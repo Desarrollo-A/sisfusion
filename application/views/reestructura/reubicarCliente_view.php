@@ -1,6 +1,5 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
-
 <body>
     <div class="wrapper">
         <?php  $this->load->view('template/sidebar'); ?>
@@ -30,6 +29,9 @@
                                                 <th>DIRECTOR REGIONAL</th>
                                                 <th>DIRECTOR REGIONAL 2</th>
                                                 <th>FECHA DE APARTADO</th>
+                                                <th>SUPERFICIE</th>
+                                                <th>COSTO M2 FINAL</th>
+                                                <th>TOTAL</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>
@@ -46,8 +48,4 @@
 </body>
 <?php $this->load->view('template/footer');?>
 <script src="<?=base_url()?>dist/js/core/modal-general.js"></script>
-<script src="<?=base_url()?>dist/js/funciones-generales.js"></script>
-<script src="<?=base_url()?>dist/js/controllers/clientes/reubicacionClientes.js"></script>
-<script src="<?= base_url() ?>dist/js/moment.min.js"></script>
-<script src="<?= base_url() ?>dist/js/es.js"></script>
-<script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
+<script src="<?=base_url()?>dist/js/controllers/reestructura/reubicacionClientes.js"></script>

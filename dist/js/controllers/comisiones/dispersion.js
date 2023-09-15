@@ -408,7 +408,7 @@ $(document).ready(function () {
                                             saldo1C = (total*(0.125*v.porcentaje_decimal));
                                             break;
                                             case 1:// monto igual o mayor a 10% dispersar 12.5% / la mitad
-                                            saldo1C = (total_comision1/2);
+                                            saldo1C = (total_comision1 / 2);
                                             break;
                                             case 2: // monto entre 5% y 10% dispersar 4 parte
                                             saldo1C = (total_comision1/4);

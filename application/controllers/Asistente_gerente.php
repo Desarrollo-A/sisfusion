@@ -234,7 +234,7 @@ class Asistente_gerente extends CI_Controller {
 			echo json_encode($data);
 		}
 
-}
+    }
 	
     public function editar_registro_loteRechazo_asistentes_proceceso8(){
   $idLote=$this->input->post('idLote');
@@ -313,29 +313,6 @@ class Asistente_gerente extends CI_Controller {
     $arreglo2["idLote"]= $idLote;  
     $arreglo2["idCondominio"]= $idCondominio;          
     $arreglo2["idCliente"]= $idCliente;
-
-      // $datos= $this->VentasAsistentes_model->getCorreoSt($idCliente);
-      // $lp = $this->VentasAsistentes_model->get_lp($idLote);
-      // $correosEntregar = [];
-
-      // if(empty($lp)){
-      //    $correos = array_unique(explode(',', $datos[0]["correos"]));
-      // } else {
-      //    $correos = array_unique(explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com'));
-      // }
-
-      // foreach($correos as $email)
-      // {
-      // 	if(trim($email) != 'gustavo.mancilla@ciudadmaderas.com'){
-      // 		if (trim($email) != ''){
-      //            if(trim($email) == 'diego.perez@ciudadmaderas.com'){
-      //                array_push($correosEntregar, 'analista.comercial@ciudadmaderas.com');
-      //            } else {
-      //                array_push($correosEntregar, $email);
-      //            }
-      // 		}
-      // 	}
-      // }
 
     $infoLote = (array)$this->VentasAsistentes_model->getNameLote($idLote);
 
@@ -976,12 +953,7 @@ $i = 0;
 		$data['message'] = 'FALSE';
 		echo json_encode($data);
 	}
-
-
-
   }
-
-
 
 public function editar_registro_loteRevision_asistentes_proceceso8(){
 

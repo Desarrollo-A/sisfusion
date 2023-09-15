@@ -886,7 +886,6 @@ class Caja_outside extends CI_Controller {
             //print_r($dataDocs);
             $dataDC = array();
             for ($i = 0; $i < count($dataDocs); $i++) {
-                //print_r($dataDocs[$i]['id_opcion']);
                 $dataDC[$i]['id_opcion'] = $dataDocs[$i]['id_opcion'];
                 $dataDC[$i]['id_catalogo'] = $dataDocs[$i]['id_catalogo'];
                 $dataDC[$i]['nombre'] = $dataDocs[$i]['nombre'];
@@ -894,7 +893,7 @@ class Caja_outside extends CI_Controller {
                 $dataDC[$i]['fecha_creacion'] = $dataDocs[$i]['fecha_creacion'];
                 $dataDC[$i]['creado_por'] = $dataDocs[$i]['creado_por'];
 
-                //print_r('Se debe de imprimir esto alv '.$data[$i]->nombre.': '.$data[$i]->id_opcion);
+                
                 $dataInsertHistorialDocumento = array(
                     'movimiento' => $dataDC[$i]['nombre'],/*nombre comp del mov*/
                     'modificado' => date('Y-m-d H:m:i'),/*date ahorita*/
@@ -903,10 +902,8 @@ class Caja_outside extends CI_Controller {
                     'idLote' => $data['condominio'][0]['idLote'],
                     'tipo_doc' => $dataDC[$i]['id_opcion']/*tipo num*/
                 );
-                /*inserta el documento justo aqui alv*/
+
                 $this->caja_model_outside->insertDocToHist($dataInsertHistorialDocumento);
-                //print_r($dataInsertHistorialDocumento);
-                /*termina la insersión*/
             }
 
         } elseif ($data['prospecto'][0]['personalidad_juridica'] == 2 || $data['prospecto'][0]['personalidad_juridica'] == 3) {
@@ -928,19 +925,11 @@ class Caja_outside extends CI_Controller {
                     'idLote' => $data['condominio'][0]['idLote'],
                     'tipo_doc' => $dataDocs[$i]['id_opcion']/*tipo num*/
                 );
-                /*inserta el documento justo aqui alv*/
+                
                 $this->caja_model_outside->insertDocToHist($dataInsertHistorialDocumento);
-                /*termina la insersión*/
+                
             }
         }
-        /*jala la evidencia si viene del LP 6*/
-        /**/
-
-        /*$rspns = '';
-        if ($data['prospecto'][0]['lugar_prospeccion'] == 6) //no activada hasta 12 04 21
-        {
-            $rspns = $this->addEvidenceToEvidencia_cliente($last_id, $id_prospecto);
-        }*/
 
         /***************************************/
         $this->actualizaProspecto($id_prospecto);
