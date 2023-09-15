@@ -2587,7 +2587,7 @@ public function validateSettledCommissions($idlote){
 public function validateDispersionCommissions($lote){
     return $this->db->query("SELECT count(*) dispersion, pc.bandera FROM comisiones com
     LEFT JOIN pago_comision pc ON pc.id_lote = com.id_lote and pc.bandera = 1
-    WHERE com.id_lote = $lote AND com.id_usuario = 2 AND com.estatus = 1 AND com.fecha_creacion <= GETDATE() GROUP BY pc.bandera");
+    WHERE com.id_lote = $lote AND com.estatus = 1 AND com.fecha_creacion <= GETDATE() GROUP BY pc.bandera");
 }
 
  
@@ -7374,16 +7374,29 @@ public function BorrarPrestamo($id_prestamo){
 
 // aqui enmpieza la reubicacación
     public  function reubicadas($idCliente) {
-        $crm = "	SELECT 
-        CONCAT(usu.nombre , ' ' , usu.apellido_paterno , ' ', usu.apellido_materno ) as nombre_comisionista 
+        $crm = "SELECT  CONCAT(usu.nombre , ' ' , usu.apellido_paterno , ' ', usu.apellido_materno ) as nombre_comisionista 
         , cr.id_comision_reubicada, cr.id_usuario, cr.comision_total, 
-        cr.porcentaje_decimal, cr.rol_generado, cr.idCliente, cr.idLote
-        FROM comisionesReubicadas cr
+        cr.porcentaje_decimal, cr.rol_generado,oxc.nombre as rol ,cr.idCliente, cr.idLote
+        ,lo.totalNeto2  , cl.plan_comision , pc.descripcion, cr.nombreLote 
+		FROM comisionesReubicadas cr
         INNER JOIN  usuarios usu on usu.id_usuario = cr.id_usuario
-        where idCliente = $idCliente";
+		INNER JOIN 	opcs_x_cats oxc ON  oxc.id_catalogo = 1 and oxc.id_opcion = cr.rol_generado
+		INNER JOIN lotes lo ON lo.idLote = cr.idLote
+        INNER JOIN clientes cl on cr.idCliente = cl.id_cliente
+		inner JOIN plan_comision pc on pc.id_plan = cl.plan_comision 
+
+        where cr.idCliente = $idCliente";
         $query = $this->db->query($crm );
         return  $query->result();
     }
+    public function  suma($idCliente){
+        $cmd = "SELECT SUM(cr.comision_total)
+                FROM comisionesReubicadas cr
+                where cr.idCliente in ( $idCliente)";
+                $query = $this->db->query($crm );
+                return  $query->result();
+
+    } 
 
 
 // fin de la reubicacion 
