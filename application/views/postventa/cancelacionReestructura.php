@@ -33,11 +33,7 @@
                                                     <th>PROYECTO</th>
                                                     <th>CONDOMINIO</th>
                                                     <th>LOTE</th>
-                                                    <th>ID LOTE </th>
-                                                    <th>SUPERFICIE</th>
-                                                    <th>PRECIO</th>
-                                                    <th>NOMBRE</th>
-                                                    <th>OBSERVACIÓN EN LIBERACIÓN</th>
+                                                    <th>COMENTARIO LIBERACION</th>
                                                 </tr>
                                             </thead>
                                         </table>

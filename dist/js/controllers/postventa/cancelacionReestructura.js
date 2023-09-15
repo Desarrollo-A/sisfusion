@@ -7,7 +7,7 @@ $(document).ready(function () {
         $("#proyecto").append($('<option>').val(ids).text('SELECCIONAR TODOS'));
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
-            var name = data[i]['descripcion'];            
+            var name = data[i]['nombre'];            
             $("#proyecto").append($('<option>').val(id).text(name.toUpperCase()));
         }
         $("#proyecto").selectpicker('refresh');
@@ -18,7 +18,6 @@ $(document).ready(function () {
 $('#proyecto').change(function () {
     $("#spiner-loader").removeClass('hide');
     let index_proyecto = $(this).val();
-    console.log(index_proyecto);
     $("#tabla_cancelacion").removeClass('hide');
     fillTable(index_proyecto);
 });
@@ -43,10 +42,10 @@ function fillTable(index_proyecto) {
         extend: 'excelHtml5',
         text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
         className: 'btn buttons-excel',
-        titleAttr: 'Reestructuración',
-        title: 'Reestructuración',
+        titleAttr: 'Cancelacion por reestructuración',
+        title: 'Cancelacion por reestructuración',
             exportOptions: {
-                columns: [0,1,2,3,4,5,6],
+                columns: [0,1,2,3],
                 format: {
                     header: function (d, columnIdx) {
                         return ' '+titulos_intxt[columnIdx] +' ';
@@ -89,37 +88,12 @@ function fillTable(index_proyecto) {
         },
         {
             data: function (d) {
-                return '<p class="m-0">' + d.idLote + '</p>';
-            }
-        },
-        {
-            data: function (d) {
-                return '<p class="m-0">' + d.superficie + '</p>';
-            }
-        },
-        {
-            data: function (d){
-                return '<p class="m-0">' + formatMoney(d.precio) + '</p>';
-            }
-        },
-        {
-            data: function (d){
-                return '<p class="m-0">' + d.nombreCliente + '</p>'
-            }
-        },
-        {
-            data: function (d) {
-                if(d.observacion == null || d.observacion == "NULL"){
-                    return '<span class="label lbl-azure">SIN OBSERVACIONES</span>';
-                }else if(d.observacion == "LIBERACIÓN JURÍDICA"){
-                    return '<span class="label lbl-green">LIBERACIÓN JURÍDICA</span>';
-                }else if(d.observacion == "Liberado por Yola"){
-                    return '<span class="label lbl-gray">LIBERADO POR YOLANDA</span>';
-                }else if(d.observacion == "LIBERADO POR CORREO"){
-                    return '<span class="label lbl-orangeYellow">LIBERADO POR CORREO</span>';
-                }else{
-                    return '<p class="m-0">' + d.observacion + '</p>';
+                if(d.comentarioLiberacion == "CANCELACION POR REESTRUCTURA"){
+                    return '<span class="label lbl-azure">CANCELACIÓN POR REESTRUCTURA</span>';
+                }else if(d.comentarioLiberacion == "RECESION DE CONTRATO"){
+                    return '<span class="label lbl-green">RECESION DE CONTRATO</span>';
                 }
+                return '<p class="m-0">' + d.comentarioLiberacion + '</p>';
             }
         }],
         columnDefs: [{
@@ -129,7 +103,7 @@ function fillTable(index_proyecto) {
             orderable: false
         }],
         ajax: {
-            url: general_base_url + "Reestructura/getregistros",
+            url: general_base_url + "PostVenta/getregistros",
             dataSrc: "",
             type: "POST",
             cache: false,
@@ -145,7 +119,7 @@ function fillTable(index_proyecto) {
         ],
     });
     
-    $('#tabla_clientes').on('draw.dt', function() {
+    $('#tabla_cancelacion').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
         });

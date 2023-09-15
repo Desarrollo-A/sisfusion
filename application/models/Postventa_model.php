@@ -213,7 +213,16 @@ class Postventa_model extends CI_Model
     }
 
     function get_proyecto_lista(){
-        return $this->db->query("SELECT idResidencial, CONCAT(nombreResidencial, ' - ', descripcion) AS descripcion FROM residenciales WHERE idResidencial IN (21, 30, 25, 13)");
+        return $this->db->query("SELECT idResidencial, CONCAT(nombreResidencial, ' - ', descripcion) AS nombre FROM residenciales WHERE idResidencial IN (21, 30, 25, 13)");
+    }
+
+    function get_cancelacion($id_proyecto){
+        ini_set('memory_limit', -1);
+        return $this->db->query("SELECT res.nombreResidencial, con.nombre AS condominio, lot.nombreLote, lot.comentarioLiberacion
+		FROM lotes lot
+		INNER JOIN condominios con ON con.idCondominio = lot.idCondominio
+		INNER JOIN residenciales res ON res.idResidencial = con.idResidencial AND res.idResidencial IN ($id_proyecto)
+		WHERE lot.idStatusLote = 1 AND lot.idMovimiento = 0 AND lot.idStatusContratacion = 0 AND lot.comentarioLiberacion LIKE '%CANCELACION POR REESTRUCTURA%' AND lot.idCliente = 0 OR lot.comentarioLiberacion LIKE '%RECESION DE CONTRATO%'")->result();
     }
 
     function listSedes(){
