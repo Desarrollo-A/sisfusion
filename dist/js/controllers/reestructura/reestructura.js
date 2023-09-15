@@ -25,9 +25,11 @@ $(document).ready(function () {
 });
 
 $('#proyecto').change(function () {
-    $("#spiner-loader").removeClass('hide');
     let index_proyecto = $(this).val();
+
+    $("#spiner-loader").removeClass('hide');
     $("#tabla_clientes").removeClass('hide');
+
     fillTable(index_proyecto);
 });
 
@@ -119,6 +121,7 @@ $(document).on('click', '.guardarValidacion', function(){
 $(document).on('click', '.reesInfo', function (){
     id_prospecto = $(this).attr("data-idLote");
     $('#historialLine').html('');
+    $("#spiner-loader").removeClass('hide');
 
     $.getJSON("getHistorial/" + id_prospecto).done(function(data) {
 
@@ -127,9 +130,11 @@ $(document).on('click', '.reesInfo', function (){
         });
 
         if(array.length == 0){
+            $("#spiner-loader").addClass('hide');
             $('#historialLine').append("SIN DATOS POR MOSTRAR");
         }else{
             $.each(array, function(i, v) {
+                $("#spiner-loader").addClass('hide');
                 fillChangelog(v);
             });
         }
@@ -167,7 +172,6 @@ $(document).on('click', '#saveLi', function(){
             }
         },
         error: function(){
-            closeModalEng();
             $('#liberarReestructura').modal('hide');
             $("#spiner-loader").addClass('hide');
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
@@ -327,7 +331,7 @@ function fillTable(index_proyecto) {
         titleAttr: 'Reestructuración',
         title: 'Reestructuración',
             exportOptions: {
-                columns: [0,1,2,3,4,5,6],
+                columns: [0,1,2,3,4,5,6,7],
                 format: {
                     header: function (d, columnIdx) {
                         return ' '+titulos_intxt[columnIdx] +' ';
