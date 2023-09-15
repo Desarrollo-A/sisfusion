@@ -267,7 +267,7 @@ class Reestructura_model extends CI_Model
         $query = $this->db->query("SELECT lo.*,
             cl.personalidad_juridica
             FROM lotes lo
-            INNER JOIN clientes cl ON lo.idLote = cl.idLote
+            LEFT JOIN clientes cl ON lo.idLote = cl.idLote
             WHERE lo.idLote = $idLote AND cl.status = 1");
         return $query->row();
     }
@@ -276,6 +276,12 @@ class Reestructura_model extends CI_Model
     {
         $idCatalogo = ($personalidadJuridica == 1) ? 101 : 98;
         $query = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo = $idCatalogo AND estatus = 1");
+        return $query->result_array();
+    }
+
+    public function obtenerDocumentacionPorReestructura()
+    {
+        $query = $this->db->query('SELECT * FROM opcs_x_cats WHERE id_catalogo = 102 AND estatus = 1');
         return $query->result_array();
     }
 
@@ -307,14 +313,43 @@ class Reestructura_model extends CI_Model
     {
         $query = $this->db->query("SELECT * FROM lotes WHERE idLote = (
 	        SELECT idLote FROM clientes WHERE id_cliente = (
-		        SELECT id_cliente_reubicacion FROM clientes WHERE id_cliente = $idCliente
+		        SELECT id_cliente_reubicacion_2 FROM clientes WHERE id_cliente = $idCliente
 	        )
         )");
         return $query->row();
     }
 
     public function getSelectedSup($idLote){
-        $query = $this->db->query("SELECT sup, nombreLote FROM lotes WHERE idLote = $idLote");
+        $query = $this->db->query("SELECT idLote, sup, nombreLote FROM lotes WHERE idLote = $idLote");
         return $query;
+    }
+
+    public function loteLiberadoPorReubicacion($idLote): bool
+    {
+        $query = $this->db->query("SELECT * FROM historial_liberacion WHERE idLote = $idLote AND tipo = 7");
+        return count($query->result_array()) > 0;
+    }
+
+    public function obtenerClientePorId($idCliente)
+    {
+        $query = $this->db->query("SELECT * FROM clientes WHERE id_cliente = $idCliente");
+        return $query->row();
+    }
+
+    public function informacionCartaPdf($idClienteNuevo)
+    {
+        $query = $this->db->query("SELECT CONCAT(clN.nombre, ' ', clN.apellido_paterno, ' ', clN.apellido_materno) AS nombreCliente, 
+            loN.nombreLote AS loteNuevo, condN.nombre_condominio AS condNuevo, resN.descripcion AS desarrolloNuevo,
+            loA.nombreLote AS loteAnterior, condA.nombre_condominio AS condAnterior, resA.descripcion AS desarrolloAnterior
+        FROM clientes clN
+        INNER JOIN lotes loN ON clN.idLote = loN.idLote
+        INNER JOIN condominios condN ON loN.idCondominio = condN.idCondominio
+        INNER JOIN residenciales resN ON condN.idResidencial = resN.idResidencial
+        INNER JOIN clientes clA ON clN.id_cliente_reubicacion_2 = clA.id_cliente
+        INNER JOIN lotes loA ON clA.idLote = loA.idLote
+        INNER JOIN condominios condA ON loA.idCondominio = condA.idCondominio
+        INNER JOIN residenciales resA ON condA.idResidencial = resA.idResidencial
+        WHERE clN.id_cliente = $idClienteNuevo");
+        return $query->row();
     }
 }

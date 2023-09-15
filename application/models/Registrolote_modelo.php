@@ -3420,14 +3420,10 @@
 				$sede = "";
 				if ($this->session->userdata('id_usuario') == 11656) // Dulce María Facundo Torres VERÁ USUARIOS DE LA GERENCIA ACTUAL (7886 JESSIKA GUADALUPE NEAVES FLORES) Y LO DE SU ANTERIOR GERENCIA (106 ANA KARINA ARTEAGA LARA)
                         $id_lider = $this->session->userdata('id_lider') . ', 106';
-				else if ($this->session->userdata('id_usuario') == 10795) { // ALMA GALICIA ACEVEDO QUEZADA 
-					$id_lider = $id_lider . ', 671';
-					$sede = "AND clientes.id_sede = 12";
+				else if ($this->session->userdata('id_usuario') == 12963) { // 	YUMICO BELEN VILLA NAVA 
+					$id_lider = $id_lider . ', 9999, 7519';
+					$sede = "AND clientes.id_sede = 8";
 				}	
-				else if ($this->session->userdata('id_usuario') == 12855) { // ARIADNA ZORAIDA ALDANA ZAPATA
-					$id_lider = $id_lider . ', 654';
-					$sede = "AND clientes.id_sede = 12";
-				}
 				else if ($this->session->userdata('id_usuario') == 10270) { // ANDRES BARRERA VENEGAS
 					$id_lider = $id_lider . ', 113';
 					$sede = "AND clientes.id_sede IN (4, 13)";

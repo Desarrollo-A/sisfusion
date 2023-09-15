@@ -127,7 +127,8 @@ class ScheduleTasks_cl extends CI_Controller {
                 'nestor.vera@ciudadmaderas.com',
                 'dirce.pardenilla@ciudadmaderas.com',
                 'nohemi.castillo@ciudadmaderas.com',
-                'esmeralda.vega@ciudadmaderas.com')*/
+                'esmeralda.vega@ciudadmaderas.com',
+                'yaretzi.rosales@ciudadmaderas.com')*/
             ->subject('Acumulado de lotes sin integrar Expediente al: '.date("Y-m-d H:i:s"))
             ->view($this->load->view('mail/schedule-tasks-cl/send-rv-5', [
                 'encabezados' => $encabezados,

@@ -488,11 +488,7 @@ function getStatusMktdPreventa(){
         if ($id_rol == 3) // MJ: GERENTE
             $where = "pr.id_gerente = $id_usuario";
         else if ($id_rol == 6) { // MJ: ASISTENTE DE GERENTE
-            if ($id_usuario == 10795) // ALMA GALICIA ACEVEDO QUEZADA
-                $where = "pr.id_gerente IN ($id_lider, 671) AND pr.id_sede = 12";
-            else if ($id_usuario == 12855) // ARIADNA ZORAIDA ALDANA ZAPATA
-                $where = "pr.id_gerente IN ($id_lider, 654) AND pr.id_sede = 12";
-            else if ($id_usuario == 10270) // ANDRES BARRERA VENEGAS
+            if ($id_usuario == 10270) // ANDRES BARRERA VENEGAS
                 $where = "pr.id_gerente IN ($id_lider, 113) AND pr.id_sede IN (4, 13)";
             else if ($id_usuario == 12318) // EMMA CECILIA MALDONADO RAMÍREZ
                 $where = "pr.id_gerente IN ($id_lider, 11196, 5637, 2599, 1507) AND pr.id_sede IN (8, 10)";
@@ -4306,8 +4302,6 @@ function getStatusMktdPreventa(){
     }
 
     public function getCancelacionesProceso($idLider, $idRol, $fechaInicio, $fechaFin) {
-        if ($this->session->userdata('id_usuario') == 10795) // ALMA GARCIA ACEVEDO QUEZADA
-            $idLider = $idLider . ", 671";
         $condicion = ($idRol == 6) ? "AND cl.id_gerente IN ($idLider)" : "AND cl.cancelacion_proceso = 1";
 
         $query = $this->db->query("SELECT lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, 

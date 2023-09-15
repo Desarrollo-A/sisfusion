@@ -87,7 +87,7 @@ class Asesor_model extends CI_Model {
         CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END subdirector,
         CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END regional,
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END regional2,
-        ISNULL(oxc0.nombre, 'Normal') tipo_proceso,
+        ISNULL(oxc0.nombre, 'Normal') tipo_proceso, cl.proceso,
         cl.tipo_comprobanteD, cl.autorizacion_correo, cl.autorizacion_sms,
         ISNULL(tipo_correo_aut.total, 0) AS total_sol_correo_aut, ISNULL(tipo_correo_pend.total, 0) AS total_sol_correo_pend, 
         ISNULL(tipo_correo_rech.total, 0) AS total_sol_correo_rech,
@@ -150,7 +150,7 @@ class Asesor_model extends CI_Model {
         cl.creado_por, cl.fechaApartado fecha_modificacion, cl.usuario modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial,
         cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, convert(varchar,lotes.fechaVenc,20) as fechaVenc, lotes.modificado, lotes.observacionContratoUrgente as vl, lotes.idStatusContratacion, cl.concepto, '666' as id_prospecto,
         cl.flag_compartida, 'SIN ESPECIFICAR' asesor, 'SIN ESPECIFICAR' coordinador, 'SIN ESPECIFICAR' gerente, 'SIN ESPECIFICAR' subdirector, 'SIN ESPECIFICAR' regional, 'SIN ESPECIFICAR' regional2, 
-        'Normal' tipo_proceso,
+        'Normal' tipo_proceso, c.proceso,
         aut.estatus as estatus, 'NULL' as tipo_comprobanteD, c.autorizacion_correo, c.autorizacion_sms,
         ISNULL(tipo_correo_aut.total, 0) AS total_sol_correo_aut, ISNULL(tipo_correo_pend.total, 0) AS total_sol_correo_pend, 
         ISNULL(tipo_correo_rech.total, 0) AS total_sol_correo_rech,
@@ -212,7 +212,7 @@ class Asesor_model extends CI_Model {
         CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END subdirector,
         CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END regional,
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END regional2,
-        ISNULL(oxc0.nombre, 'Normal') tipo_proceso,
+        ISNULL(oxc0.nombre, 'Normal') tipo_proceso, cl.proceso,
         cl.tipo_comprobanteD, cl.autorizacion_correo, cl.autorizacion_sms, 
 	    ISNULL(tipo_correo_aut.total, 0) AS total_sol_correo_aut, ISNULL(tipo_correo_pend.total, 0) AS total_sol_correo_pend, 
         ISNULL(tipo_correo_rech.total, 0) AS total_sol_correo_rech,
@@ -1397,24 +1397,11 @@ class Asesor_model extends CI_Model {
     }
     public function getLegalPersonalityByLote($idLote)
     {
-        $query = $this->db->query("SELECT id_cliente, idLote, personalidad_juridica FROM clientes WHERE idLote IN ($idLote) AND status = 1");
+        $query = $this->db->query("SELECT id_cliente, idLote, personalidad_juridica, proceso FROM clientes WHERE idLote IN ($idLote) AND status = 1");
         return $query->result_array();
     }
-    public function validateDocumentation($idLote, $legalPersonality, $tipo_comprobante)
-    {
-        /*
-        LEGAL PERSONALITY VALUES
-            1 PM
-            2   PF
-        */
-        $cd=', 3';//comprobante domicilio
-        if($tipo_comprobante==1){
-            $cd = '';
-        }
-        if ($this->session->userdata('id_rol') == 17)
-            $documentOptions = $legalPersonality == 2 ? '2'.$cd : '2 '.$cd.', 4, 10, 11';
-        else
-            $documentOptions = $legalPersonality == 2 ? '2'.$cd.', 4' : '2'.$cd.', 4, 10, 11, 12';
+
+    public function validateDocumentation($idLote, $documentOptions) {
         $query = $this->db->query("SELECT expediente, idCliente, tipo_doc FROM historial_documento WHERE idLote IN ($idLote) AND 
         status = 1 AND expediente IS NOT NULL AND tipo_doc IN ($documentOptions)
         UNION ALL
@@ -1422,6 +1409,7 @@ class Asesor_model extends CI_Model {
         (SELECT id_cliente FROM clientes WHERE idLote = $idLote AND status = 1) AND desarrollo IS NOT NULL");
         return $query->result_array();
     }
+
     //Se verifica si el lote fue prospectado por marketing digital
     public function verificarMarketing($idLote)
     {

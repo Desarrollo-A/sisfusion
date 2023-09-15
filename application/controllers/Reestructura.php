@@ -216,11 +216,12 @@ class Reestructura extends CI_Controller{
         $idAsesor = $this->session->userdata('id_usuario');
 		$nombreAsesor = $this->session->userdata('nombre') . ' ' . $this->session->userdata('apellido_paterno') . ' ' . $this->session->userdata('apellido_materno');
         $idLider = $this->session->userdata('id_lider');
-		$clienteAnterior = $this->General_model->getCliente($idClienteAnterior)->result();
-		$lineaVenta = $this->General_model->getLider($idLider)->result();
-		$loteSelected = $this->Reestructura_model->getSelectedSup($loteAOcupar)->result();
-		$nuevaSup = floatval($loteSelected[0]->sup);
-		$anteriorSup = floatval($clienteAnterior[0]->sup);
+		$clienteAnterior = $this->General_model->getCliente($idClienteAnterior)->row();
+        $loteAnterior = $this->Reestructura_model->getSelectedSup($clienteAnterior->idLote)->row();
+        $loteSelected = $this->Reestructura_model->getSelectedSup($loteAOcupar)->row();
+        $lineaVenta = $this->General_model->getLider($idLider)->row();
+		$nuevaSup = floatval($loteSelected->sup);
+		$anteriorSup = floatval($loteAnterior->sup);
 		$proceso = ( $anteriorSup == $nuevaSup || (($nuevaSup - $anteriorSup) <= 2)) ? 2 : 4;
 
 		$validateLote = $this->caja_model_outside->validate($loteAOcupar);
@@ -234,13 +235,13 @@ class Reestructura extends CI_Controller{
             return;
         }
 
-        if (!$this->copiarClienteANuevo($loteSelected, $idCondominio, $clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso)) {
+        if (!$this->copiarClienteANuevo($clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $loteSelected, $idCondominio)) {
             $this->db->trans_rollback();
 
             echo json_encode([
                 'titulo' => 'ERROR',
                 'resultado' => FALSE,
-                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
+                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción (1).',
                 'color' => 'danger'
             ]);
             return;
@@ -376,7 +377,7 @@ class Reestructura extends CI_Controller{
             echo json_encode([
                 'titulo' => 'ERROR',
                 'resultado' => FALSE,
-                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
+                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción (2).',
                 'color' => 'danger'
             ]);
             return;
@@ -392,14 +393,14 @@ class Reestructura extends CI_Controller{
             echo json_encode([
                 'titulo' => 'ERROR',
                 'resultado' => FALSE,
-                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
+                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción (3).',
                 'color' => 'danger'
             ]);
             return;
         }
 
         $dataInsertHistorialLote = array(
-			'nombreLote' => $loteSelected[0]->nombreLote,
+			'nombreLote' => $loteSelected->nombreLote,
 			'idStatusContratacion' => 1,
 			'idMovimiento' => 31,
 			'modificado' => date('Y-m-d h:i:s'),
@@ -419,7 +420,7 @@ class Reestructura extends CI_Controller{
             echo json_encode([
                 'titulo' => 'ERROR',
                 'resultado' => FALSE,
-                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
+                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción (4).',
                 'color' => 'danger'
             ]);
             return;
@@ -431,19 +432,20 @@ class Reestructura extends CI_Controller{
             echo json_encode([
                 'titulo' => 'ERROR',
                 'resultado' => FALSE,
-                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
+                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción (5).',
                 'color' => 'danger'
             ]);
             return;
         }
 
-        if (!$this->moverExpediente($clienteAnterior[0]->idLote, $loteAOcupar, $idClienteAnterior, $idClienteInsert)) {
+        $expediente = $this->Reestructura_model->obtenerDocumentacionPorReubicacion($clienteAnterior->personalidad_juridica);
+        if (!$this->moverExpediente($clienteAnterior->idLote, $loteAOcupar, $idClienteAnterior, $idClienteInsert, $expediente)) {
             $this->db->trans_rollback();
 
             echo json_encode([
                 'titulo' => 'ERROR',
                 'resultado' => FALSE,
-                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
+                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción (6).',
                 'color' => 'danger'
             ]);
             return;
@@ -455,7 +457,7 @@ class Reestructura extends CI_Controller{
             echo json_encode([
                 'titulo' => 'ERROR',
                 'resultado' => FALSE,
-                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
+                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción (7).',
                 'color' => 'danger'
             ]);
             return;
@@ -470,11 +472,10 @@ class Reestructura extends CI_Controller{
         ]);
 	}
 
-    function moverExpediente($idLoteAnterior, $idLoteNuevo, $idClienteAnterior, $idClienteNuevo): bool
+    function moverExpediente($idLoteAnterior, $idLoteNuevo, $idClienteAnterior, $idClienteNuevo, $expediente): bool
     {
         $loteNuevoInfo = $this->Reestructura_model->obtenerLotePorId($idLoteNuevo);
         $docAnterior = $this->Reestructura_model->obtenerDocumentacionActiva($idLoteAnterior, $idClienteAnterior);
-        $docPorReubicacion = $this->Reestructura_model->obtenerDocumentacionPorReubicacion($loteNuevoInfo->personalidad_juridica);
         $documentacion = [];
         $modificado = date('Y-m-d H:i:s');
 
@@ -495,7 +496,7 @@ class Reestructura extends CI_Controller{
             ];
         }
 
-        foreach ($docPorReubicacion as $doc) {
+        foreach ($expediente as $doc) {
             $documentacion[] = [
                 'movimiento' => $doc['nombre'],
                 'expediente' => NULL,
@@ -522,52 +523,43 @@ class Reestructura extends CI_Controller{
         return $this->General_model->insertBatch('historial_documento', $documentacion);
     }
 
-    public function copiarClienteANuevo($loteSelected = null, $idCondominio = null, $clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso){
+    public function copiarClienteANuevo($clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $loteSelected = null, $idCondominio = null) {
         $dataCliente = [];
-        $arrayReestructura = ['idCliente', 'idLote', 'idCondominio'];
-        $arrayReubicacion = ['idCliente'];
+        $camposOmitir = ['id_cliente'];
         foreach ($clienteAnterior as $clave => $valor) {
-            if(in_array($clave, $proceso == 2 ? $arrayReestructura : $arrayReestructura)) {
+            if(in_array($clave, $camposOmitir)) {
                 continue;
             }
 
+            // TODO: Faltan agregar campos en clientes (ej. id_cliente_reubicacion_2)
             if ($clave == 'id_asesor') {
                 $dataCliente = array_merge([$clave => $idAsesor], $dataCliente);
                 continue;
-            }
-            else if ($clave == 'id_coordinador') {
+            } else if ($clave == 'id_coordinador') {
                 $dataCliente = array_merge([$clave => 0], $dataCliente);
                 continue;
-            }
-            else if ($clave == 'id_gerente') {
+            } else if ($clave == 'id_gerente') {
                 $dataCliente = array_merge([$clave => $idLider], $dataCliente);
                 continue;
-            }
-            else if ($clave == 'idLote' && $proceso != 2) {
-                $dataCliente = array_merge([$clave =>$loteSelected], $dataCliente);
+            } else if ($clave == 'idLote' && in_array($proceso, [2,4])) {
+                $dataCliente = array_merge([$clave => $loteSelected->idLote], $dataCliente);
                 continue;
-            }
-            else if ($clave == 'idCondominio' && $proceso != 2) {
+            } else if ($clave == 'idCondominio' && in_array($proceso, [2,4])) {
                 $dataCliente = array_merge([$clave =>  $idCondominio], $dataCliente);
                 continue;
-            }
-            else if ($clave == 'id_subdirector') {
+            } else if ($clave == 'id_subdirector') {
                 $dataCliente = array_merge([$clave => $lineaVenta->id_subdirector], $dataCliente);
                 continue;
-            }
-            else if ($clave == 'id_regional') {
+            } else if ($clave == 'id_regional') {
                 $dataCliente = array_merge([$clave =>  $lineaVenta->id_regional], $dataCliente);
                 continue;
-            }
-            else if ($clave == 'plan_comision') {
+            } else if ($clave == 'plan_comision') {
                 $dataCliente = array_merge([$clave =>  $proceso == 3 ? 64 : $proceso == 2 ? 65 : 66 ], $dataCliente);
                 continue;
-            }
-            else if ($clave == 'proceso') {
+            } else if ($clave == 'proceso') {
                 $dataCliente = array_merge([$clave =>  $proceso], $dataCliente);
                 continue;
-            }
-            else if ($clave == 'totalNeto2Cl') {
+            } else if ($clave == 'totalNeto2Cl') {
                 $dataCliente = array_merge([$clave =>  0], $dataCliente);
                 continue;
             }
@@ -623,5 +615,49 @@ class Reestructura extends CI_Controller{
         $resultCop = (empty($coopropietariosData)) ? true : $this->General_model->insertBatch('copropietarios', $coopropietariosData);
 
         return $resultDs && $resultCop;
+    }
+
+    public function imprimirCarta($idCliente)
+    {
+        $this->load->library('Pdf');
+        $meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+        $info = $this->Reestructura_model->informacionCartaPdf($idCliente);
+
+        $html = $this->load->view('pdf/reestructura/carta-reubicacion', [
+            'dia' => date('d'),
+            'mes' => $meses[date('n') - 1],
+            'anio' => date('Y'),
+            'nombreCliente' => $info->nombreCliente,
+            'loteAnterior' => $info->loteAnterior,
+            'condAnterior' => $info->condAnterior,
+            'desarrolloAnterior' => $info->desarrolloAnterior,
+            'loteNuevo' => $info->loteNuevo,
+            'condNuevo' => $info->condNuevo,
+            'desarrolloNuevo' => $info->desarrolloNuevo
+        ], true);
+
+        $pdf = new TCPDF('P', 'mm', 'LETTER', 'UTF-8', false);
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetTitle('CARTA SOLICITUD REUBICACIÓN');
+        $pdf->SetSubject('CARTA');
+        $pdf->SetKeywords('CRM');
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+        $pdf->SetAutoPageBreak(TRUE);
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+        $pdf->setPrintHeader(false);
+        $pdf->SetFont('Helvetica', '', 9, '', true);
+        $pdf->SetMargins(30, 15, 30);
+        $pdf->AddPage('P', 'LETTER');
+        $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+        $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+        $pdf->getBreakMargin();
+        $pdf->Image('dist/img/ar4c.png', 120, 0, 300, 0, 'PNG', '', '', false, 150, '', false, false, 0, false, false, false);
+        $pdf->setPageMark();
+
+        $pdf->writeHTML($html);
+        ob_end_clean();
+
+        $pdf->Output(utf8_decode("Carta.pdf"));
     }
 } 
