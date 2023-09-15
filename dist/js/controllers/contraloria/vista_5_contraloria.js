@@ -415,10 +415,14 @@ $(document).on('click', '.stat5Rev', function () {
     }
 
     if (proceso == 2 || proceso == 3 || proceso == 4) {
-        $('#tipo_ventaenvARevCE').val(tipoVenta).change();
-        $('#ubicacion').val(ubicacion).change();
+        if (tipoVenta != 0) {
+            $('#tipo_ventaenvARevCE').val(tipoVenta).change();
+            $('#tipo_ventaenvARevCE').prop('disabled', 'disabled');
+        }
 
-        $('#tipo_ventaenvARevCE').prop('disabled', 'disabled');
+        if (ubicacion != 0) {
+            $('#ubicacion').val(ubicacion).change();
+        }
     } else {
         $('#tipo_ventaenvARevCE').prop('disabled', false);
     }

@@ -236,7 +236,7 @@ class General_model extends CI_Model
     }
 
     function getCliente($cliente){
-        return $this->db->query("SELECT cl.*, lo.sup 
+        return $this->db->query("SELECT cl.*
         FROM clientes cl
         INNER JOIN lotes lo ON lo.idLote = cl.idLote
         WHERE cl.id_cliente = $cliente");

@@ -267,7 +267,7 @@ class Reestructura_model extends CI_Model
         $query = $this->db->query("SELECT lo.*,
             cl.personalidad_juridica
             FROM lotes lo
-            INNER JOIN clientes cl ON lo.idLote = cl.idLote
+            LEFT JOIN clientes cl ON lo.idLote = cl.idLote
             WHERE lo.idLote = $idLote AND cl.status = 1");
         return $query->row();
     }
@@ -320,7 +320,7 @@ class Reestructura_model extends CI_Model
     }
 
     public function getSelectedSup($idLote){
-        $query = $this->db->query("SELECT sup, nombreLote FROM lotes WHERE idLote = $idLote");
+        $query = $this->db->query("SELECT idLote, sup, nombreLote FROM lotes WHERE idLote = $idLote");
         return $query;
     }
 
