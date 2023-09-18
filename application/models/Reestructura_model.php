@@ -50,7 +50,7 @@ class Reestructura_model extends CI_Model
         FROM loteXReubicacion lr
         INNER JOIN residenciales re ON re.idResidencial = lr.proyectoReubicacion AND re.status = 1
 		INNER JOIN condominios co ON co.idResidencial = re.idResidencial AND co.tipo_lote = $tipoLote
-		INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND lo.sup >= $superficie AND lo.idStatusLote = 15 AND lo.status = 1
+		INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND (lo.sup >= $superficie OR lo.sup <= $superficie - 0.5) AND lo.idStatusLote = 15 AND lo.status = 1
         WHERE lr.idProyecto = $proyecto
 		GROUP BY lr.proyectoReubicacion, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100)))");
 
@@ -62,7 +62,7 @@ class Reestructura_model extends CI_Model
         FROM condominios co
         INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio
         WHERE lo.idStatusLote = 15 AND lo.status = 1
-        AND co.idResidencial = $proyecto AND lo.sup >= $superficie AND co.tipo_lote = $tipoLote
+        AND co.idResidencial = $proyecto AND (lo.sup >= $superficie OR lo.sup <= $superficie - 0.5) AND co.tipo_lote = $tipoLote
         GROUP BY lo.idCondominio, co.nombre");
 
         return $query->result();
@@ -74,7 +74,7 @@ class Reestructura_model extends CI_Model
         lo.idLote, lo.nombreLote, lo.sup, lo.precio, lo.total
         FROM lotes lo
         WHERE lo.idCondominio = $condominio AND lo.idStatusLote = 15 AND lo.status = 1
-        AND lo.sup >= $superficie");
+        AND (lo.sup >= $superficie OR lo.sup <= $superficie - 0.5)");
 
         return $query->result();
     }
@@ -150,7 +150,7 @@ class Reestructura_model extends CI_Model
         (CASE WHEN totalNeto2 IS NULL THEN 0.00 ELSE totalNeto2 END) totalNeto2,
         (CASE WHEN idCliente = 0  OR idCliente IS NULL THEN 0 ELSE idCliente END) idCliente,registro_comision,
         (CASE WHEN tipo_venta IS NULL THEN 0 ELSE tipo_venta END) tipo_venta FROM lotes WHERE idLote=".$datos['idLote']." AND status = 1")->result_array();
-        $registro_comision = $datos['tipo'] == 7 ? 9 : 8;
+        $registro_comision = ($datos['tipo'] == 7 || $datos['tipo'] == 8) ? 9 : 8;
         $idStatusLote = $datos['tipo'] == 9 ? 15 : 1;
         $datos['tipo'] == 7 ? $this->db->query("UPDATE lotes SET tipo_venta=".$row[0]['tipo_venta'].",usuario='".$datos['userLiberacion']."' WHERE idLote=".$datos['idLoteNuevo']." ") : '';
         $this->db->trans_begin();
@@ -313,7 +313,7 @@ class Reestructura_model extends CI_Model
     {
         $query = $this->db->query("SELECT * FROM lotes WHERE idLote = (
 	        SELECT idLote FROM clientes WHERE id_cliente = (
-		        SELECT id_cliente_reubicacion_2 FROM clientes WHERE id_cliente = $idCliente
+		        SELECT id_cliente_reubicacion FROM clientes WHERE id_cliente = $idCliente
 	        )
         )");
         return $query->row();
@@ -336,7 +336,7 @@ class Reestructura_model extends CI_Model
         return $query->row();
     }
 
-    public function informacionCartaPdf($idClienteNuevo)
+    public function informacionCartaReubicacionPdf($idClienteNuevo)
     {
         $query = $this->db->query("SELECT CONCAT(clN.nombre, ' ', clN.apellido_paterno, ' ', clN.apellido_materno) AS nombreCliente, 
             loN.nombreLote AS loteNuevo, condN.nombre_condominio AS condNuevo, resN.descripcion AS desarrolloNuevo,
@@ -345,11 +345,23 @@ class Reestructura_model extends CI_Model
         INNER JOIN lotes loN ON clN.idLote = loN.idLote
         INNER JOIN condominios condN ON loN.idCondominio = condN.idCondominio
         INNER JOIN residenciales resN ON condN.idResidencial = resN.idResidencial
-        INNER JOIN clientes clA ON clN.id_cliente_reubicacion_2 = clA.id_cliente
+        INNER JOIN clientes clA ON clN.id_cliente_reubicacion = clA.id_cliente
         INNER JOIN lotes loA ON clA.idLote = loA.idLote
         INNER JOIN condominios condA ON loA.idCondominio = condA.idCondominio
         INNER JOIN residenciales resA ON condA.idResidencial = resA.idResidencial
         WHERE clN.id_cliente = $idClienteNuevo");
+        return $query->row();
+    }
+
+    public function informacionCartaReestructuraPdf($idCliente)
+    {
+        $query = $this->db->query("SELECT CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) AS nombreCliente, 
+            lo.nombreLote AS loteNuevo, cond.nombre_condominio AS cond, res.descripcion AS desarrollo
+        FROM clientes cl
+        INNER JOIN lotes lo ON cl.idLote = lo.idLote
+        INNER JOIN condominios cond ON lo.idCondominio = cond.idCondominio
+        INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
+        WHERE cl.id_cliente = $idCliente");
         return $query->row();
     }
 }

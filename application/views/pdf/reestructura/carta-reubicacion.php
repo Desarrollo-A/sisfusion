@@ -25,7 +25,7 @@
     </div>
     <div>
         <p style="text-align: justify; font-size: 14px;">
-            Por medio de este conducto, el suscrito <u><?=$nombreCliente?></u> manifiesto mi solicitud de rescisión de contrato,
+            Por medio de este conducto, el suscrito(a) <u><?=$nombreCliente?></u> manifiesto mi solicitud de rescisión de contrato,
             correspondiente al lote <u><?=$loteAnterior?></u> del condominio <u><?=$condAnterior?></u> en el desarrollo <u><?=$desarrolloAnterior?></u>.
         </p>
     </div>
