@@ -242,7 +242,7 @@ class Reestructura extends CI_Controller{
             return;
         }
 
-        $expediente = $this->Reestructura_model->obtenerDocumentacionPorReubicacion($clienteAnterior->personalidad_juridica);
+        $expediente = $this->Reestructura_model->obtenerDocumentacionPorReestructura();
         if (!$this->moverExpediente($clienteAnterior->idLote, $loteAOcupar, $idClienteAnterior, $idClienteInsert, $expediente)) {
             $this->db->trans_rollback();
 
