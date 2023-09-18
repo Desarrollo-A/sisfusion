@@ -423,25 +423,25 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     case '1': //SIN DEFINIR
                     case 1: //SIN DEFINIr
                         return `<p class="mb-1"><span class="label lbl-dark-blue">SIN DEFINIR FORMA DE PAGO</span></p>
-                                <p><span class="label lbl-green">REVISAR CON RH</span></p>`.split("\n").join("").split("  ").join("");
+                                <p><span class="label lbl-green">REVISAR CON RH ${d.estatus_actual}</span></p>`.split("\n").join("").split("  ").join("");
                     case '2': //FACTURA
                     case 2: //FACTURA
                         return `<p class="mb-1"><span class="label lbl-dark-blue">FACTURA</span></p>
-                                <p style="font-size: .5em"><span class="label lbl-green">SUBIR XML</span></p>`.split("\n").join("").split("  ").join("");
+                                <p style="font-size: .5em"><span class="label lbl-green">SUBIR XML ${d.estatus_actual}</span></p>`.split("\n").join("").split("  ").join("");
                     case '3': //ASIMILADOS
                     case 3: //ASIMILADOS
                         return `<p class="mb-1"><span class="label lbl-dark-blue" >ASIMILADOS</span></p>
-                                <p style="font-size: .5em"><span class="label lbl-green">LISTA PARA APROBAR</span></p>`.split("\n").join("").split("  ").join("");
+                                <p style="font-size: .5em"><span class="label lbl-green">LISTA PARA APROBAR ${d.estatus_actual}</span></p>`.split("\n").join("").split("  ").join("");
                     case '4': //RD
                     case 4: //RD
                         return `<p class="mb-1"><span class="label lbl-dark-blue">REMANENTE DIST.</span></p>
-                                <p style="font-size: .5em"><span class="label lbl-green">LISTA PARA APROBAR</span><</p>`.split("\n").join("").split("  ").join("");
+                                <p style="font-size: .5em"><span class="label lbl-green">LISTA PARA APROBAR ${d.estatus_actual}</span></p>`.split("\n").join("").split("  ").join("");
                     case '5':
                     case 5:
-                        return `<p class="mb-1"><span class="label lbl-dark-blue">FACTURA EXTRANJERO</span></p>`;
+                        return `<p class="mb-1"><span class="label lbl-dark-blue">FACTURA EXTRANJERO ${d.estatus_actual}</span></p>`;
                     default:
                         return `<p class="mb-1"><span class="label lbl-dark-blue">DOCUMENTACIÓN FALTANTE</span></p>
-                                <p><span class="label lbl-green">REVISAR CON RH</span></p>`.split("\n").join("").split("  ").join("");
+                                <p><span class="label lbl-green">REVISAR CON RH ${d.estatus_actual}</span></p>`.split("\n").join("").split("  ").join("");
                 }
             }
         },
