@@ -95,6 +95,11 @@ function fillTable(index_proyecto) {
                 }
                 return '<p class="m-0">' + d.comentarioLiberacion + '</p>';
             }
+        },
+        {
+            data: function(d){
+                return '<p class="m-0">'+d.idLote+'</p>';
+            }
         }],
         columnDefs: [{
             defaultContent: "",
