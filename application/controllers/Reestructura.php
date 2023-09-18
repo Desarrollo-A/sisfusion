@@ -496,7 +496,7 @@ class Reestructura extends CI_Controller{
             } else if ($clave == 'totalNeto2Cl') {
                 $dataCliente = array_merge([$clave =>  0], $dataCliente);
                 continue;
-            } else if ($clave == 'id_cliente_reubicacion_2') {
+            } else if ($clave == 'id_cliente_reubicacion') {
                 $dataCliente = array_merge([$clave =>  $clienteAnterior->id_cliente], $dataCliente);
                 continue;
             }

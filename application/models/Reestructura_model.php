@@ -313,7 +313,7 @@ class Reestructura_model extends CI_Model
     {
         $query = $this->db->query("SELECT * FROM lotes WHERE idLote = (
 	        SELECT idLote FROM clientes WHERE id_cliente = (
-		        SELECT id_cliente_reubicacion_2 FROM clientes WHERE id_cliente = $idCliente
+		        SELECT id_cliente_reubicacion FROM clientes WHERE id_cliente = $idCliente
 	        )
         )");
         return $query->row();
@@ -345,7 +345,7 @@ class Reestructura_model extends CI_Model
         INNER JOIN lotes loN ON clN.idLote = loN.idLote
         INNER JOIN condominios condN ON loN.idCondominio = condN.idCondominio
         INNER JOIN residenciales resN ON condN.idResidencial = resN.idResidencial
-        INNER JOIN clientes clA ON clN.id_cliente_reubicacion_2 = clA.id_cliente
+        INNER JOIN clientes clA ON clN.id_cliente_reubicacion = clA.id_cliente
         INNER JOIN lotes loA ON clA.idLote = loA.idLote
         INNER JOIN condominios condA ON loA.idCondominio = condA.idCondominio
         INNER JOIN residenciales resA ON condA.idResidencial = resA.idResidencial
