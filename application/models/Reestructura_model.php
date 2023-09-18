@@ -336,7 +336,7 @@ class Reestructura_model extends CI_Model
         return $query->row();
     }
 
-    public function informacionCartaPdf($idClienteNuevo)
+    public function informacionCartaReubicacionPdf($idClienteNuevo)
     {
         $query = $this->db->query("SELECT CONCAT(clN.nombre, ' ', clN.apellido_paterno, ' ', clN.apellido_materno) AS nombreCliente, 
             loN.nombreLote AS loteNuevo, condN.nombre_condominio AS condNuevo, resN.descripcion AS desarrolloNuevo,
@@ -350,6 +350,18 @@ class Reestructura_model extends CI_Model
         INNER JOIN condominios condA ON loA.idCondominio = condA.idCondominio
         INNER JOIN residenciales resA ON condA.idResidencial = resA.idResidencial
         WHERE clN.id_cliente = $idClienteNuevo");
+        return $query->row();
+    }
+
+    public function informacionCartaReestructuraPdf($idCliente)
+    {
+        $query = $this->db->query("SELECT CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) AS nombreCliente, 
+            lo.nombreLote AS loteNuevo, cond.nombre_condominio AS cond, res.descripcion AS desarrollo
+        FROM clientes cl
+        INNER JOIN lotes lo ON cl.idLote = lo.idLote
+        INNER JOIN condominios cond ON lo.idCondominio = cond.idCondominio
+        INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
+        WHERE cl.id_cliente = $idCliente");
         return $query->row();
     }
 }
