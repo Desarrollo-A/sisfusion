@@ -277,8 +277,8 @@
 		WHEN u2.id_usuario = 7092 THEN 3 
 		WHEN u2.id_usuario IN (9471,681,609,690) THEN 607 
 		WHEN u2.id_lider = 692 THEN u0.id_lider
-        WHEN u2.id_lider = 703 THEN 4
-        WHEN u2.id_lider = 7886 THEN 5
+        WHEN u2.id_lider = 703 THEN 4
+        WHEN u2.id_lider = 7886 THEN 5
 		ELSE 0 END END) id_regional,
 			(CASE u1.id_rol WHEN 3 THEN (CASE WHEN u2.id_lider = 2 THEN 'NO APLICA' ELSE CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) END) ELSE CASE 
 		WHEN u2.id_usuario = 7092 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
@@ -456,7 +456,6 @@
         $this->db->insert('clientes', $data);
         $query = $this->db->query("SELECT IDENT_CURRENT('clientes') as lastId")->result_array();
         return $query;
-
     }
 
     public function addClientToLote($idLote, $data)
@@ -470,13 +469,11 @@
     public function validate($idLote)
     {
         $this->db->where("idLote", $idLote);
-        $this->db->where_in('idStatusLote', array('1', '101', '102'));
+        $this->db->where_in('idStatusLote', array('1', '101', '102', '15'));
         $this->db->where("(idStatusContratacion = 0 OR idStatusContratacion IS NULL)");
         $query = $this->db->get('lotes');
         $valida = (empty($query->result())) ? 0 : 1;
         return $valida;
-        //var_dump( $valida);
-
     }
 
     //VERIFICAMOS PARA EL APARTADO EN LINEA QUE SE ENCUENTRE EN ESTATUS 99
@@ -1172,75 +1169,7 @@
                     $update_pcasas["enganche"] = ($update_pcasas["total"] * 0.1);
                     $update_pcasas["saldo"] = ($update_pcasas["total"] - $update_pcasas["enganche"]);
 
-                } /*if($array_casas[$c][1] == 'STELLA'){
-             
-             if(
-                 $array_casas[$c][2] == 'CCMP-LAMAY-011' || $array_casas[$c][2] == 'CCMP-LAMAY-021' || $array_casas[$c][2] == 'CCMP-LAMAY-030' ||
-                 $array_casas[$c][2] == 'CCMP-LAMAY-031' || $array_casas[$c][2] == 'CCMP-LAMAY-032' || $array_casas[$c][2] == 'CCMP-LAMAY-045' ||
-                 $array_casas[$c][2] == 'CCMP-LAMAY-046' || $array_casas[$c][2] == 'CCMP-LAMAY-047' || $array_casas[$c][2] == 'CCMP-LAMAY-054' || 
-                 $array_casas[$c][2] == 'CCMP-LAMAY-064' || $array_casas[$c][2] == 'CCMP-LAMAY-079' || $array_casas[$c][2] == 'CCMP-LAMAY-080' ||
-                 $array_casas[$c][2] == 'CCMP-LAMAY-090' || $array_casas[$c][2] == 'CCMP-LIRIO-010' ||
-                 
-                 $array_casas[$c][2] == 'CCMP-LIRIO-10' ||
-                 $array_casas[$c][2] == 'CCMP-LIRIO-033' || $array_casas[$c][2] == 'CCMP-LIRIO-048' || $array_casas[$c][2] == 'CCMP-LIRIO-049' ||
-                 $array_casas[$c][2] == 'CCMP-LIRIO-067' || $array_casas[$c][2] == 'CCMP-LIRIO-089' || $array_casas[$c][2] == 'CCMP-LIRIO-091' ||
-                 $array_casas[$c][2] == 'CCMP-LIRIO-098' || $array_casas[$c][2] == 'CCMP-LIRIO-100'
-             
-             ){
-                 $total = $info->total;
-                 $update_pcasas["total"]= ($total + 2029185.00);
-                 $update_pcasas["enganche"]= ($update_pcasas["total"] * 0.1);
-                 $update_pcasas["saldo"]= ($update_pcasas["total"] - $update_pcasas["enganche"]);
- 
-             
-             } else {
-                 
-                 $total = $info->total;
-                 $update_pcasas["total"]= ($total + 2104340.00);
-                 $update_pcasas["enganche"]= ($update_pcasas["total"] * 0.1);
-                 $update_pcasas["saldo"]= ($update_pcasas["total"] - $update_pcasas["enganche"]);
-                 
-             
-             }
-             
-             $update_pcasas["nombreLote"]=$array_casas[$c][3];
- 
- 
-             } else if($array_casas[$c][1] == 'AURA'){
-                     
-             if(
- 
-                 $array_casas[$c][2] == 'CCMP-LAMAY-011' || $array_casas[$c][2] == 'CCMP-LAMAY-021' || $array_casas[$c][2] == 'CCMP-LAMAY-030' ||
-                 $array_casas[$c][2] == 'CCMP-LAMAY-031' || $array_casas[$c][2] == 'CCMP-LAMAY-032' || $array_casas[$c][2] == 'CCMP-LAMAY-045' ||
-                 $array_casas[$c][2] == 'CCMP-LAMAY-046' || $array_casas[$c][2] == 'CCMP-LAMAY-047' || $array_casas[$c][2] == 'CCMP-LAMAY-054' || 
-                 $array_casas[$c][2] == 'CCMP-LAMAY-064' || $array_casas[$c][2] == 'CCMP-LAMAY-079' || $array_casas[$c][2] == 'CCMP-LAMAY-080' ||
-                 $array_casas[$c][2] == 'CCMP-LAMAY-090' || $array_casas[$c][2] == 'CCMP-LIRIO-010' ||
-                 
-                 $array_casas[$c][2] == 'CCMP-LIRIO-10' ||
-                 $array_casas[$c][2] == 'CCMP-LIRIO-033' || $array_casas[$c][2] == 'CCMP-LIRIO-048' || $array_casas[$c][2] == 'CCMP-LIRIO-049' ||
-                 $array_casas[$c][2] == 'CCMP-LIRIO-067' || $array_casas[$c][2] == 'CCMP-LIRIO-089' || $array_casas[$c][2] == 'CCMP-LIRIO-091' ||
-                 $array_casas[$c][2] == 'CCMP-LIRIO-098' || $array_casas[$c][2] == 'CCMP-LIRIO-100'
-             
-             ){
-                 $total = $info->total;
-                 $update_pcasas["total"]= ($total + 1037340.00);
-                 $update_pcasas["enganche"]= ($update_pcasas["total"] * 0.1);
-                 $update_pcasas["saldo"]= ($update_pcasas["total"] - $update_pcasas["enganche"]);
-             
-             } else {
-                     
-                 $total = $info->total;
-                 $update_pcasas["total"]= ($total + 1075760.00);
-                 $update_pcasas["enganche"]= ($update_pcasas["total"] * 0.1);
-                 $update_pcasas["saldo"]= ($update_pcasas["total"] - $update_pcasas["enganche"]);
-             
-             }
-             
-             
-             $update_pcasas["nombreLote"]=$array_casas[$c][3];
- 
- 
-             }*/ else if ($array_casas[$c][1] == 'TERRENO') {
+                }  else if ($array_casas[$c][1] == 'TERRENO') {
 
                     $tipo_casa = 0;//TIPO DE CASA PARA GUARDARLO EN CLIENTES
                     $t = (($info->precio + 500) * $info->sup);
@@ -1421,8 +1350,8 @@
 		WHEN u3.id_usuario = 7092 THEN 3 
 		WHEN u2.id_usuario IN (9471,681,609,690) THEN 607 
 		WHEN u2.id_lider = 692 THEN u0.id_lider
-        WHEN u2.id_lider = 703 THEN 4
-        WHEN u2.id_lider = 7886 THEN 5
+        WHEN u2.id_lider = 703 THEN 4
+        WHEN u2.id_lider = 7886 THEN 5
 		ELSE 0 END END) id_regional,
 			(CASE u1.id_rol WHEN 3 THEN (CASE WHEN u2.id_lider = 2 THEN 'NO APLICA' ELSE CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) END) ELSE CASE 
 		WHEN u3.id_usuario = 7092 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 

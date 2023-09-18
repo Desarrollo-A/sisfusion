@@ -484,6 +484,11 @@ $(document).on('click', '#save1', function (e) {
                     $('#editReg').modal('hide');
                     $('#Jtabla').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                } else if (response.message == 'DOCUMENTS') {
+                    $('#save1').prop('disabled', false);
+                    $('#editReg').modal('hide');
+                    $('#Jtabla').DataTable().ajax.reload();
+                    alerts.showNotification("top", "right", response.documentos, "danger");
                 }
             },
             error: function (data) {
@@ -538,6 +543,11 @@ $(document).on('click', '#save2', function (e) {
                     $('#editLoteRev').modal('hide');
                     $('#Jtabla').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                } else if (response.message == 'DOCUMENTS') {
+                    $('#save1').prop('disabled', false);
+                    $('#editReg').modal('hide');
+                    $('#Jtabla').DataTable().ajax.reload();
+                    alerts.showNotification("top", "right", response.documentos, "danger");
                 }
             },
             error: function (data) {
@@ -700,6 +710,11 @@ $(document).on('click', '#save5', function (e) {
                     $('#rev8').modal('hide');
                     $('#Jtabla').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                } else if (response.message == 'DOCUMENTS') {
+                    $('#save1').prop('disabled', false);
+                    $('#editReg').modal('hide');
+                    $('#Jtabla').DataTable().ajax.reload();
+                    alerts.showNotification("top", "right", response.documentos, "danger");
                 }
             },
             error: function (data) {

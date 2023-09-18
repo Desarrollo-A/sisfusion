@@ -256,7 +256,8 @@ $("#editUserForm").on('submit', function(e){
             if (data == 1) {
                 $('#editUserModal').modal("hide");
                 alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
-                $('#all_users_datatable').DataTable().ajax.reload(null, false);
+            } else if (data.respuesta == 0) {
+                alerts.showNotification("top", "right", data.message, "warning");
             } else {
                 alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
             }

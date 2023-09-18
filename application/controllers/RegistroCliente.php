@@ -4,9 +4,7 @@ class RegistroCliente extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('registrolote_modelo');
-        $this->load->model('asesor/Asesor_model');
-        $this->load->model('General_model');
+        $this->load->model(['registrolote_modelo', 'asesor/Asesor_model', 'General_model', 'Documentacion_model']);
         $this->load->model([
             'opcs_catalogo/valores/EstatusAutorizacionesOpcs',
             'opcs_catalogo/valores/TipoAutorizacionClienteOpcs'
@@ -6234,6 +6232,27 @@ class RegistroCliente extends CI_Controller {
 		echo json_encode($datos);
 	}
 
+    function obtenerArchivoConPath($row)
+    {
+        if (!isset($row['expediente'])) {
+            return $row;
+        }
+
+        if (
+                $row['tipo_doc'] === 'ds_new' ||
+                $row['tipo_doc'] === 'ds_old' ||
+                $row['tipo_doc'] === 'autorizacion' ||
+                $row['tipo_doc'] === 'prospecto'
+        ) {
+            return $row;
+        }
+
+        $path = $this->Documentacion_model->getCarpetaArchivo($row['tipo_doc'], $row['proceso'], $row['nombreLote'], $row['expediente']);
+
+        $row['expediente'] = $path.$row['expediente'];
+
+        return $row;
+    }
 
     public function expedientesWS($lotes, $cliente = '') {
         $query = $this->registrolote_modelo->getdp($lotes, $cliente);
@@ -6250,6 +6269,8 @@ class RegistroCliente extends CI_Controller {
         );
 
         if ($data != null) {
+            $data = array_map(array( $this, 'obtenerArchivoConPath'), $data);
+
             echo json_encode($data);
         } else {
             echo json_encode(array());

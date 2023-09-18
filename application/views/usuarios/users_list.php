@@ -179,7 +179,7 @@
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="form-group">
-                                                <label class="control-label"><small class="isRequired"></small>Apellido paterno</label>
+                                                <label class="control-label">Apellido paterno (<span class="isRequired">*</span>)</label>
                                                 <input id="last_name" onkeyup="javascript:this.value=this.value.toUpperCase();" onchange="validateInputs(this);" name="last_name" type="text" class="form-control input-gral" required>
                                             </div>
                                         </div>
@@ -242,6 +242,15 @@
                                         </div>
                                     </div>
                                 </div>
+                                <!---LÍNEA DE VENTA--->
+                                <div class="container-fluid" id="lineaVenta"></div>
+                                <!--MULTIROL--->
+                                <div id="btnmultirol" class="container-fluid"></div>
+                                <input type="hidden" name="index" id="index" value="0">
+                                <div class="container-fluid">
+                                    <div class="row aligned-row" id="multirol"></div>
+                                </div>
+                                <!------------->
                                 <div class="container-fluid mt-1" id="ch">
                                     <div class="row">
                                         <div class="col-md-12 d-flex justify-end">
@@ -301,6 +310,35 @@
                     </div>
                 </div>
             </div>
+            <!-----MODAL PARA AVISO ELIMNAR ROL------->
+            <div class="modal fade" id="modalDelRol" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static"data-keyboard="false">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h6>¿Esta seguro que que desea eliminar este rol?</h6>
+                    </div>
+                        <form id="deleteRol" name="deleteRol" method="post">
+                            <div class="modal-body">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <input type="hidden" name="idRU" id="idRU">
+                                        <input type="hidden" name="indice" id="indice">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-primary" id="btnS">Aceptar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div> 
+            <!---------------------------------------->
     
         <div class="content boxContent">
             <div class="container-fluid">

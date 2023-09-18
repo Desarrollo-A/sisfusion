@@ -68,13 +68,14 @@
             'VENTAS-ASESOR' primerNom, 'VENTAS' ubic, lo.nombreLote, UPPER(CONCAT(cl.primerNombre, ' ', cl.segundoNombre, ' ', cl.apellidoPaterno, ' ', cl.apellidoMaterno)) nombreCliente,
             cl.rfc, co.nombre, re.nombreResidencial, cl.fechaApartado, cl.idCliente id_cliente, cl.idCliente idDocumento, CONVERT(VARCHAR,ds.fechaCrate,120) AS modificado,
             lo.idLote, lo.observacionContratoUrgente, '' nombreAsesor, '' nombreCoordinador, '' nombreGerente, '' nombreSubdirector, '' nombreRegional, '' nombreRegional2,
-            'ds_old' tipo_doc, l.status8Flag, u0.estatus AS estatusAsesor
+            'ds_old' tipo_doc, l.status8Flag, u0.estatus AS estatusAsesor, cli.proceso
             FROM cliente_consulta cl
             INNER JOIN lotes_consulta lo ON lo.idLote = cl.idLote
             INNER JOIN lotes l ON lo.idLote = l.idLote    
             INNER JOIN deposito_seriedad_consulta ds ON ds.idCliente = cl.idCliente
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+            INNER JOIN clientes cli ON cli.id_cliente = cl.idCliente
             LEFT JOIN usuarios u0 ON u0.id_usuario = cl.idAsesor
             WHERE cl.status=1 AND lo.status=1 AND cl.idLote = $lotes")
             ->result_array();
@@ -3419,14 +3420,10 @@
 				$sede = "";
 				if ($this->session->userdata('id_usuario') == 11656) // Dulce María Facundo Torres VERÁ USUARIOS DE LA GERENCIA ACTUAL (7886 JESSIKA GUADALUPE NEAVES FLORES) Y LO DE SU ANTERIOR GERENCIA (106 ANA KARINA ARTEAGA LARA)
                         $id_lider = $this->session->userdata('id_lider') . ', 106';
-				else if ($this->session->userdata('id_usuario') == 10795) { // ALMA GALICIA ACEVEDO QUEZADA 
-					$id_lider = $id_lider . ', 671';
-					$sede = "AND clientes.id_sede = 12";
+				else if ($this->session->userdata('id_usuario') == 12963) { // 	YUMICO BELEN VILLA NAVA 
+					$id_lider = $id_lider . ', 9999, 7519';
+					$sede = "AND clientes.id_sede = 8";
 				}	
-				else if ($this->session->userdata('id_usuario') == 12855) { // ARIADNA ZORAIDA ALDANA ZAPATA
-					$id_lider = $id_lider . ', 654';
-					$sede = "AND clientes.id_sede = 12";
-				}
 				else if ($this->session->userdata('id_usuario') == 10270) { // ANDRES BARRERA VENEGAS
 					$id_lider = $id_lider . ', 113';
 					$sede = "AND clientes.id_sede IN (4, 13)";
@@ -3542,7 +3539,7 @@
         CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
         CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2,
-        lo.status8Flag, u0.estatus AS estatusAsesor
+        lo.status8Flag, u0.estatus AS estatusAsesor, cl.proceso
 		FROM historial_documento hd
 		INNER JOIN lotes lo ON lo.idLote = hd.idLote
 		INNER JOIN clientes cl ON  lo.idCliente = cl.id_cliente AND cl.idLote = lo.idLote AND cl.status = 1
@@ -3583,7 +3580,7 @@
         CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
         CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2,
-		'ds_new' tipo_doc, lo.status8Flag, u0.estatus AS estatusAsesor
+		'ds_new' tipo_doc, lo.status8Flag, u0.estatus AS estatusAsesor, cl.proceso
 		FROM clientes cl
 		INNER JOIN lotes lo ON lo.idLote = cl.idLote
 		INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
@@ -3624,7 +3621,7 @@
         CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
         CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2,
-		'autorizacion' tipo_doc, lo.status8Flag, u0.estatus AS estatusAsesor
+		'autorizacion' tipo_doc, lo.status8Flag, u0.estatus AS estatusAsesor, cl.proceso
 		FROM autorizaciones aut
 		INNER JOIN lotes lo ON lo.idLote = aut.idLote
 		INNER JOIN clientes cl ON aut.idCliente = cl.id_cliente
@@ -3665,7 +3662,7 @@
         CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
         CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2,
-        l.status8Flag, u0.estatus AS estatusAsesor
+        l.status8Flag, u0.estatus AS estatusAsesor, cl.proceso
 		FROM clientes cl
 		INNER JOIN lotes l ON l.idLote = cl.idLote
 		INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
@@ -3704,7 +3701,7 @@
         CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
         CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2,
-        lo.status8Flag, u0.estatus AS estatusAsesor
+        lo.status8Flag, u0.estatus AS estatusAsesor, cl.proceso
         FROM clientes cl
         INNER JOIN lotes lo ON lo.idLote = cl.idLote
         INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
@@ -3811,11 +3808,12 @@
 
 	public function getNameLote($idLote){
 		$query = $this->db-> query("SELECT l.idLote, l.nombreLote, cond.nombre, res.nombreResidencial, 
-            l.observacionContratoUrgente
+            l.observacionContratoUrgente, cl.proceso
             FROM lotes l
             INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
             INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
-		    where l.idLote = $idLote");
+            INNER JOIN clientes cl ON cl.idLote = l.idLote
+		    where l.idLote = $idLote AND cl.status = 1");
 		return $query->row();
 	}
 
@@ -3912,13 +3910,14 @@
 			UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, 
 			cl.rfc, cond.nombre, res.nombreResidencial, 
 			u.nombre as primerNom, u.apellido_paterno as apellidoPa, u.apellido_materno as apellidoMa, sedes.abreviacion as ubic, 
-			hd.movimiento, hd.movimiento, cond.idCondominio, hd.tipo_doc, lotes.idMovimiento, cl.id_asesor,
+			hd.movimiento, cond.idCondominio, hd.tipo_doc, lotes.idMovimiento, cl.id_asesor,
 			CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
 			CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
 			CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
 			CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
 			CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
-			CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2
+			CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2,
+			lotes.status8Flag, u0.estatus AS estatusAsesor, cl.proceso, cl.flag_compartida, lo.observacionContratoUrgente, hd.tipo_doc
 			FROM historial_documento hd
 			INNER JOIN lotes ON lotes.idLote = hd.idLote
 			INNER JOIN clientes cl ON  hd.idCliente = cl.id_cliente

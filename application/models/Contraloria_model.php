@@ -60,7 +60,8 @@ class Contraloria_model extends CI_Model {
 		(SELECT UPPER(concat(usuarios.nombre,' ', usuarios.apellido_paterno, ' ', usuarios.apellido_materno))
 		FROM historial_lotes left join usuarios on historial_lotes.usuario = CAST(usuarios.id_usuario AS varchar)
 		WHERE idHistorialLote =(SELECT MAX(idHistorialLote) FROM historial_lotes WHERE idLote IN (l.idLote) 
-		AND (perfil IN ('13', '32', 'contraloria', '17', '70')) AND status = 1)) as lastUc, ISNULL(oxc0.nombre, 'Normal') tipo_proceso
+		AND (perfil IN ('13', '32', 'contraloria', '17', '70')) AND status = 1)) as lastUc, ISNULL(oxc0.nombre, 'Normal') tipo_proceso,
+        cl.proceso, l.ubicacion
         FROM lotes l
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
@@ -78,7 +79,7 @@ class Contraloria_model extends CI_Model {
 		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
         concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-		cond.idCondominio, s.nombre, ISNULL(oxc0.nombre, 'Normal')
+		cond.idCondominio, s.nombre, ISNULL(oxc0.nombre, 'Normal'), cl.proceso
 		ORDER BY l.nombreLote");
         return $query->result_array();
     }
@@ -226,6 +227,8 @@ class Contraloria_model extends CI_Model {
 			$filtroSede = "";
 		else  if($id_usuario == 9453) // MJ: JARENI HERNANDEZ CASTILLO VE MÉRIDA, SLP, MONTERREY y TEXAS USA
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3', '11', '10')";
+        else  if($id_usuario == 12554) // MJ: MINERVA GARCIA MEDIANA VE MONTERREY Y TEXAS USA
+            $filtroSede = "AND l.ubicacion IN ('$id_sede', '10')";
 		else if ($id_sede == 3) // CONTRALORÍA PENÍNSULA TAMBIÉN VE EXPEDIENTES DE CANCÚN
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
 		else if ($id_sede == 5) // CONTRALORÍA LEÓN TAMBIÉN VE EXPEDIENTES DE GUADALAJARA
@@ -469,6 +472,8 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
             $filtroSede = "";
         else  if($id_usuario == 9453) // MJ: JARENI HERNANDEZ CASTILLO VE MÉRIDA, SLP, MONTERREY Y TEXAS USA
             $filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3', '11', '10')";
+        else  if($id_usuario == 12554) // MJ: MINERVA GARCIA MEDIANA VE MONTERREY Y TEXAS USA
+            $filtroSede = "AND l.ubicacion IN ('$id_sede', '10')";
         else if ($id_sede == 3) // CONTRALORÍA PENÍNSULA TAMBIÉN VE EXPEDIENTES DE CANCÚN
             $filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
         else if ($id_sede == 5) // CONTRALORÍA LEÓN TAMBIÉN VE EXPEDIENTES DE GUADALAJARA

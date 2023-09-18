@@ -1,17 +1,17 @@
 $('[data-toggle="tooltip"]').tooltip();
 
-const movimientosPermitidosContrato = [36, 6, 23, 76, 83, 95, 97, 112];
+const movimientosPermitidosEstatus7 = [36, 6, 23, 76, 83, 95, 97, 112];
 const rolesPermitidosContratoEspecial = [8];
-const rolesPermitidosContrato = [15];
+const rolesPermitidosEstatus7 = [15];
 const usuariosPermitidosContratoEspecial = [2762, 2747];
 const movimientosPermitidosContratoFirmado = [45];
-const movimientosPermitidosCorrida = [35, 22, 62, 75, 94, 106];
-const rolesPermitidosContraloria = [17, 70];
-const movimientosPermitidosCartaDomicilio = [37, 7, 64, 66, 77, 41];
-const rolesPermitidosCartaDomicilio = [5, 2, 6];
+const movimientosPermitidosEstatus6 = [35, 22, 62, 75, 94, 106];
+const rolesPermitidosEstatus6And15 = [17, 70];
+const movimientosPermitidosEstatus8 = [37, 7, 64, 66, 77, 41];
+const rolesPermitidosEstatus8 = [5, 2, 6];
 const movimientosPermitidosEstatus2 = [31, 85, 20, 63, 73, 82, 92, 96, 99, 102, 104, 107, 108, 109, 111];
 const rolesPermitidosEstatus2 = [7, 9, 3, 2];
-const rolesPermitidosEstatus2AsesorInactivo = [6];
+const rolesPermitidosAsesorInactivo = [6];
 
 const AccionDoc = {
     DOC_NO_CARGADO: 1, // NO HAY DOCUMENTO CARGADO
@@ -31,7 +31,12 @@ const TipoDoc = {
     EVIDENCIA_MKTD_OLD: 66, // EXISTE LA RAMA CON LA EVIDENCIA DE MKTD (OLD)
     AUTORIZACIONES: 'autorizacion',
     PROSPECTO: 'prospecto',
-    APOSTILLDO_CONTRATO: 31
+    APOSTILLDO_CONTRATO: 31,
+    CARTA: 32,
+    RESCISION: 33,
+    CARTA_PODER: 34,
+    RESCISION_FIRMADA: 35,
+    ADDENDUM: 36
 };
 
 const observacionContratoUrgente = 1; // Bandera para inhabilitar
@@ -58,8 +63,8 @@ $(document).ready(function () {
 });
 
 $(document).on('change', '.btn-file :file', function () {
-    const input = $(this), 
-        numFiles = input.get(0).files ? input.get(0).files.length : 1, 
+    const input = $(this),
+        numFiles = input.get(0).files ? input.get(0).files.length : 1,
         label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
     input.trigger('fileselect', [numFiles, label]);
 });
@@ -75,7 +80,7 @@ $('#idResidencial').change(function () {
             for (let i = 0; i < response.length; i++) {
                 $("#idCondominio").append($('<option>').val(response[i]['idCondominio']).text(response[i]['nombre']));
             }
-            
+
             $('#idCondominio').selectpicker('refresh');
         },
         complete: function () {
@@ -95,7 +100,7 @@ $('#idCondominio').change(function () {
             for (let i = 0; i < response.length; i++) {
                 $("#idLote").append($('<option>').val(response[i]['idLote'] + ',' + response[i]['venta_compartida']).text(response[i]['nombreLote']));
             }
-            
+
             $('#idLote').selectpicker('refresh');
         },
         complete: function () {
@@ -170,9 +175,9 @@ function cargarTabla(idLote, idCliente = '') {
         });
     });
 
-    const url = ((id_rol_general == 8 || includesArray(usuariosPermitidosContratoEspecial, id_usuario_general)) && funcionVista == 'replaceDocumentView') 
-    ? `${general_base_url}registroCliente/expedientesReplace/${idLote}`
-    : `${general_base_url}registroCliente/expedientesWS/${idLote}/${idCliente}`;
+    const url = ((id_rol_general == 8 || includesArray(usuariosPermitidosContratoEspecial, id_usuario_general)) && funcionVista == 'replaceDocumentView')
+        ? `${general_base_url}registroCliente/expedientesReplace/${idLote}`
+        : `${general_base_url}registroCliente/expedientesWS/${idLote}/${idCliente}`;
 
     documentacionLoteTabla = $('#tableDoct').DataTable({
         destroy: true,
@@ -259,9 +264,9 @@ function cargarTabla(idLote, idCliente = '') {
                         return `<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`;
                     }
 
-                    if (data.tipo_doc == TipoDoc.CONTRATO) { // CONTRATO
+                    if (data.tipo_doc == TipoDoc.CONTRATO || data.tipo_doc == TipoDoc.RESCISION || data.tipo_doc == TipoDoc.ADDENDUM) { // CONTRATO
                         if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
-                            buttonMain = (includesArray(movimientosPermitidosContrato, data.idMovimiento) && includesArray(rolesPermitidosContrato, id_rol_general))
+                            buttonMain = (includesArray(movimientosPermitidosEstatus7, data.idMovimiento) && includesArray(rolesPermitidosEstatus7, id_rol_general))
                                 // ESTÁ EN ESTATUS 7 Y ES JURÍDICO EL QUE CONSULTA, SE VEA A MONSTRAR ENABLED EL BOTÓN PARA CARGAR EL ARCHIVO
                                 ? crearBotonAccion(AccionDoc.SUBIR_DOC, data)
                                 // ESTÁ EN CUALQUIER OTRO ESTATUS O NO ES JURÍDICO QUIEN CONSULTA, SE VA A MOSTRAR EL BOTÓN DISABLED
@@ -270,24 +275,24 @@ function cargarTabla(idLote, idCliente = '') {
                         }
                         // LA RAMA TIENE UN DOCUMENTO CARGADO
                         buttonMain = crearBotonAccion(AccionDoc.DOC_CARGADO, data); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
-                        if (includesArray(movimientosPermitidosContrato, data.idMovimiento) && includesArray(rolesPermitidosContrato, id_rol_general)) {
+                        if (includesArray(movimientosPermitidosEstatus7, data.idMovimiento) && includesArray(rolesPermitidosEstatus7, id_rol_general)) {
                             buttonDelete = crearBotonAccion(AccionDoc.ELIMINAR_DOC, data);
                         }
                         return `<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`;
                     }
                     if (data.tipo_doc == TipoDoc.CORRIDA) { // CORRIDA
                         if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
-                            buttonMain = (includesArray(movimientosPermitidosCorrida, data.idMovimiento) && includesArray(rolesPermitidosContraloria, id_rol_general))
-                                    // ESTÁ EN ESTATUS 6 Y ES CONTRALORÍA EL QUE CONSULTA, SE VEA A MONSTRAR ENABLED EL BOTÓN PARA CARGAR EL ARCHIVO
-                                    ? crearBotonAccion(AccionDoc.SUBIR_DOC, data)
-                                    // ESTÁ EN CUALQUIER OTRO ESTATUS O NO ES JURÍDICO QUIEN CONSULTA, SE VA A MOSTRAR EL BOTÓN DISABLED
-                                    : crearBotonAccion(AccionDoc.DOC_NO_CARGADO, data);
+                            buttonMain = (includesArray(movimientosPermitidosEstatus6, data.idMovimiento) && includesArray(rolesPermitidosEstatus6And15, id_rol_general))
+                                // ESTÁ EN ESTATUS 6 Y ES CONTRALORÍA EL QUE CONSULTA, SE VEA A MONSTRAR ENABLED EL BOTÓN PARA CARGAR EL ARCHIVO
+                                ? crearBotonAccion(AccionDoc.SUBIR_DOC, data)
+                                // ESTÁ EN CUALQUIER OTRO ESTATUS O NO ES JURÍDICO QUIEN CONSULTA, SE VA A MOSTRAR EL BOTÓN DISABLED
+                                : crearBotonAccion(AccionDoc.DOC_NO_CARGADO, data);
                             return `<div class="d-flex justify-center">${buttonMain}</div>`;
                         }
                         // LA RAMA TIENE UN DOCUMENTO CARGADO
                         buttonMain = crearBotonAccion(AccionDoc.DOC_CARGADO, data); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
                         // ESTÁ EN ESTATUS 6 Y ES CONTRALORÍA EL QUE CONSULTA, SE VEA A MONSTRAR EL BOTÓN PARA ELIMINAR EL ARCHIVO
-                        if (includesArray(movimientosPermitidosCorrida, data.idMovimiento) && includesArray(rolesPermitidosContraloria, id_rol_general)) {
+                        if (includesArray(movimientosPermitidosEstatus6, data.idMovimiento) && includesArray(rolesPermitidosEstatus6And15, id_rol_general)) {
                             buttonDelete  = crearBotonAccion(AccionDoc.ELIMINAR_DOC, data);
                         }
                         return `<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`;
@@ -295,8 +300,8 @@ function cargarTabla(idLote, idCliente = '') {
                     if (data.tipo_doc == TipoDoc.CARTA_DOMICILIO || data.tipo_doc == TipoDoc.APOSTILLDO_CONTRATO) { // CARTA DOMICILIO || APOSTILLADO CONTRATO
                         if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
                             buttonMain = (
-                                includesArray(movimientosPermitidosCartaDomicilio, data.idMovimiento) &&
-                                includesArray(rolesPermitidosCartaDomicilio, id_rol_general) &&
+                                includesArray(movimientosPermitidosEstatus8, data.idMovimiento) &&
+                                includesArray(rolesPermitidosEstatus8, id_rol_general) &&
                                 parseInt(data.status8Flag) !== status8Flag
                             )
                                 // ESTÁ EN ESTATUS 8 Y ES ASISTENTES GERENTES EL QUE CONSULTA, SE VEA A MONSTRAR ENABLED EL BOTÓN PARA CARGAR EL ARCHIVO
@@ -309,17 +314,17 @@ function cargarTabla(idLote, idCliente = '') {
                         buttonMain = crearBotonAccion(AccionDoc.DOC_CARGADO, data); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
                         // ESTÁ EN ESTATUS 8 Y ES ASISTENTES GERENTES EL QUE CONSULTA, SE VEA A MONSTRAR EL BOTÓN PARA ELIMINAR EL ARCHIVO
                         if (
-                            includesArray(movimientosPermitidosCartaDomicilio, data.idMovimiento) &&
-                            includesArray(rolesPermitidosCartaDomicilio, id_rol_general) &&
+                            includesArray(movimientosPermitidosEstatus8, data.idMovimiento) &&
+                            includesArray(rolesPermitidosEstatus8, id_rol_general) &&
                             parseInt(data.status8Flag) !== status8Flag
                         ) {
                             buttonDelete  = crearBotonAccion(AccionDoc.ELIMINAR_DOC, data);
                         }
                         return `<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`;
                     }
-                    if (data.tipo_doc == TipoDoc.CONTRATO_FIRMADO) { // CONTRATO FIRMADO
+                    if (data.tipo_doc == TipoDoc.CONTRATO_FIRMADO || data.tipo_doc == TipoDoc.RESCISION_FIRMADA) { // CONTRATO FIRMADO
                         if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
-                            buttonMain = (includesArray(movimientosPermitidosContratoFirmado, data.idMovimiento) && includesArray(rolesPermitidosContraloria, id_rol_general))
+                            buttonMain = (includesArray(movimientosPermitidosContratoFirmado, data.idMovimiento) && includesArray(rolesPermitidosEstatus6And15, id_rol_general))
                                 // ESTÁ EN ESTATUS 15 Y ES CONTRALORÍA EL QUE CONSULTA, SE VEA A MONSTRAR ENABLED EL BOTÓN PARA CARGAR EL ARCHIVO
                                 ? crearBotonAccion(AccionDoc.SUBIR_DOC, data)
                                 // ESTÁ EN CUALQUIER OTRO ESTATUS O NO ES JURÍDICO QUIEN CONSULTA, SE VA A MOSTRAR EL BOTÓN DISABLED
@@ -329,11 +334,12 @@ function cargarTabla(idLote, idCliente = '') {
                         // LA RAMA TIENE UN DOCUMENTO CARGADO
                         buttonMain = crearBotonAccion(AccionDoc.DOC_CARGADO, data); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
                         // ESTÁ EN ESTATUS 8 Y ES CONTRALORÍA EL QUE CONSULTA, SE VEA A MONSTRAR EL BOTÓN PARA ELIMINAR EL ARCHIVO
-                        if (includesArray(movimientosPermitidosContratoFirmado, data.idMovimiento) && includesArray(rolesPermitidosContraloria, id_rol_general)) {
+                        if (includesArray(movimientosPermitidosContratoFirmado, data.idMovimiento) && includesArray(rolesPermitidosEstatus6And15, id_rol_general)) {
                             buttonDelete  = crearBotonAccion(AccionDoc.ELIMINAR_DOC, data);
                         }
                         return `<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`;
                     }
+
                     if (data.tipo_doc === TipoDoc.DS_NEW && data.expediente === "Depósito de seriedad") { // EXISTE EL DEPÓSITO DE SERIEDAD (VERSIÓN NUVEA)
                         buttonMain = crearBotonAccion(AccionDoc.DOC_CARGADO, data); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
                         return `<div class="d-flex justify-center">${buttonMain}</div>`;
@@ -354,6 +360,7 @@ function cargarTabla(idLote, idCliente = '') {
                         buttonMain = crearBotonAccion(AccionDoc.DOC_CARGADO, data); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
                         return `<div class="d-flex justify-center">${buttonMain}</div>`;
                     }
+
                     // ES EL RESTO DEL EXPEDIENTE (HISTORIAL DOCUMENTOS)
                     if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
                         buttonMain = (
@@ -361,14 +368,12 @@ function cargarTabla(idLote, idCliente = '') {
                             (
                                 (
                                     includesArray(rolesPermitidosEstatus2, parseInt(id_rol_general)) &&
+                                    parseInt(data.id_asesor) === parseInt(id_usuario_general) &&
                                     parseInt(data.estatusAsesor) === 1
                                 ) ||
                                 (
-                                    parseInt(data.id_asesor) === parseInt(id_usuario_general) ||
-                                    (
-                                        includesArray(rolesPermitidosEstatus2AsesorInactivo, id_rol_general) &&
-                                        parseInt(data.estatusAsesor) !== 1
-                                    )
+                                    includesArray(rolesPermitidosAsesorInactivo, id_rol_general) &&
+                                    parseInt(data.estatusAsesor) !== 1
                                 )
                             )
                         )
@@ -386,14 +391,12 @@ function cargarTabla(idLote, idCliente = '') {
                         (
                             (
                                 includesArray(rolesPermitidosEstatus2, parseInt(id_rol_general)) &&
+                                parseInt(data.id_asesor) === parseInt(id_usuario_general) &&
                                 parseInt(data.estatusAsesor) === 1
                             ) ||
                             (
-                                parseInt(data.id_asesor) === parseInt(id_usuario_general) ||
-                                (
-                                    includesArray(rolesPermitidosEstatus2AsesorInactivo, id_rol_general) &&
-                                    parseInt(data.estatusAsesor) !== 1
-                                )
+                                includesArray(rolesPermitidosAsesorInactivo, id_rol_general) &&
+                                parseInt(data.estatusAsesor) !== 1
                             )
                         )
                     ) {
@@ -413,7 +416,7 @@ function cargarTabla(idLote, idCliente = '') {
 
 $(document).on('click', '.verDocumento', function () {
     const $itself = $(this);
-    let pathUrl = `${general_base_url}static/documentos/cliente/${obtenerPathDoc($itself.attr('data-tipoDocumento'))}`+$itself.attr('data-expediente');
+    let pathUrl = general_base_url+$itself.attr('data-expediente');
 
     if ($itself.attr('data-tipoDocumento') === TipoDoc.DS_NEW || $itself.attr('data-tipoDocumento') === TipoDoc.DS_OLD) {
         const idCliente = $itself.attr('data-idCliente');
@@ -421,24 +424,26 @@ $(document).on('click', '.verDocumento', function () {
             ? 'deposito_seriedad' : 'deposito_seriedad_ds';
         pathUrl = `${general_base_url}asesor/${urlDs}/${idCliente}/1`;
     }
+
     if (parseInt($itself.attr('data-tipoDocumento')) === TipoDoc.CORRIDA) {
         descargarArchivo(pathUrl, $itself.attr('data-expediente'));
         alerts.showNotification('top', 'right', 'El documento <b>' + $itself.attr('data-expediente') + '</b> se ha descargado con éxito.', 'success');
         return;
     }
+
     if ($itself.attr('data-tipoDocumento') === TipoDoc.AUTORIZACIONES) {
         abrirModalAutorizaciones($itself.attr('data-idLote'));
         return;
     }
+
     if ($itself.attr('data-tipoDocumento') === TipoDoc.PROSPECTO) {
         const urlProspecto =  ($itself.attr('data-lp') == 6) ? 'printProspectInfoMktd' : 'printProspectInfo';
         pathUrl = `${general_base_url}clientes/${urlProspecto}/`+$itself.attr('data-idProspeccion');
     }
 
-    if ( screen.width > 480 && screen.width < 800 ){
+    if ( screen.width > 480 && screen.width < 800 ) {
         window.location.href = `${pathUrl}`;
-    }
-    else{
+    } else {
         Shadowbox.open({
             content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="${pathUrl}"></iframe></div>`,
             player: "html",
@@ -512,7 +517,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
         if (!statusValidateExtension) { // MJ: ARCHIVO VÁLIDO PARA CARGAR
             alerts.showNotification("top", "right",
                 `El archivo que has intentado cargar con la extensión <b>${extensionDeDocumento}</b> no es válido. `+
-                    `Recuerda seleccionar un archivo ${extensionesPermitidas}`, "warning");
+                `Recuerda seleccionar un archivo ${extensionesPermitidas}`, "warning");
             return;
         }
         const nombreDocumento = $("#nombreDocumento").val();
@@ -704,24 +709,6 @@ function getAtributos(type) {
         buttonTipoAccion = '2';
     }
     return [buttonTitulo, buttonEstatus, buttonClassColor, buttonClassAccion, buttonTipoAccion, buttonIcono]
-}
-
-/**
- * @param {number} tipoDocumento
- * @returns {string}
- */
-function obtenerPathDoc(tipoDocumento) {
-    if (parseInt(tipoDocumento) === TipoDoc.CORRIDA) { // CORRIDA FINANCIERA: CONTRALORÍA
-        return 'corrida/';
-    }
-    if (parseInt(tipoDocumento) === TipoDoc.CONTRATO) { // CONTRATO: JURÍDICO
-        return 'contrato/';
-    }
-    if (parseInt(tipoDocumento) === TipoDoc.CONTRATO_FIRMADO) { // CONTRATO FIRMADO: CONTRALORÍA
-        return 'contratoFirmado/';
-    }
-    // EL RESTO DE DOCUMENTOS SE GUARDAN EN LA CARPETA DE EXPEDIENTES
-    return 'expediente/';
 }
 
 /**
