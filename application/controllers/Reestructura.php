@@ -562,7 +562,7 @@ class Reestructura extends CI_Controller{
                 $dataCliente = array_merge([$clave =>  0], $dataCliente);
                 continue;
             } else if ($clave == 'id_cliente_reubicacion_2') {
-                $dataCliente = array_merge([$clave =>  $clienteAnterior], $dataCliente);
+                $dataCliente = array_merge([$clave =>  $clienteAnterior->id_cliente], $dataCliente);
                 continue;
             }
 
