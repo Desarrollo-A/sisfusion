@@ -218,7 +218,7 @@ class Postventa_model extends CI_Model
 
     function get_cancelacion($id_proyecto){
         ini_set('memory_limit', -1);
-        return $this->db->query("SELECT res.nombreResidencial, con.nombre AS condominio, lot.nombreLote, lot.comentarioLiberacion
+        return $this->db->query("SELECT res.nombreResidencial, con.nombre AS condominio, lot.nombreLote, lot.comentarioLiberacion, lot.idLote
 		FROM lotes lot
 		INNER JOIN condominios con ON con.idCondominio = lot.idCondominio
 		INNER JOIN residenciales res ON res.idResidencial = con.idResidencial AND res.idResidencial IN ($id_proyecto)
@@ -227,7 +227,7 @@ class Postventa_model extends CI_Model
 
     function listSedes(){
         return $this->db->query("SELECT * FROM sedes WHERE estatus = 1");
-     }
+    }
 
     function updateNotarias($idnotaria){
 

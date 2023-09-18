@@ -34,6 +34,7 @@
                                                     <th>CONDOMINIO</th>
                                                     <th>LOTE</th>
                                                     <th>COMENTARIO LIBERACION</th>
+                                                    <th>ID LOTE</th>
                                                 </tr>
                                             </thead>
                                         </table>
