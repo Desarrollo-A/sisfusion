@@ -52,7 +52,7 @@ class Comisiones extends CI_Controller
   public function getDataDispersionPago() {
     $data['data'] = $this->Comisiones_model->getDataDispersionPago()->result_array();
     echo json_encode($data);
-    }
+  }
     
 
   public function getPlanesComisiones($val = ''){
@@ -1736,16 +1736,15 @@ public function agregar_comision(){
 function getDatosAbonado($idlote){
   echo json_encode($this->Comisiones_model->getDatosAbonado($idlote)->result_array());
 }
-function getDatosAbonadoDispersion($idlote){
-  echo json_encode($this->Comisiones_model->getDatosAbonadoDispersion($idlote)->result_array());
+function getDatosAbonadoDispersion($idlote,$ooam){
+  echo json_encode($this->Comisiones_model->getDatosAbonadoDispersion($idlote, $ooam)->result_array());
 }
-
 
 function getDatosAbonadoSuma1($idlote){
   echo json_encode($this->Comisiones_model->getDatosAbonadoSuma1($idlote)->result_array());
 }
-function getDatosAbonadoSuma11($idlote){
-  echo json_encode($this->Comisiones_model->getDatosAbonadoSuma11($idlote)->result_array());
+function getDatosAbonadoSuma11($idlote,$ooam){
+  echo json_encode($this->Comisiones_model->getDatosAbonadoSuma11($idlote,$ooam)->result_array());
 }
  
 
@@ -4274,7 +4273,7 @@ public function getDatosHistorialPagoEstatus($proyecto, $condominio, $usuario) {
       $totalFilas = $responses->num_rows(); 
 
      
-      if(!empty($responses) && $totalFilas == 0 && ($disparador == '0' || $disparador == 0)) {
+      if((!empty($responses) && $totalFilas == 0 && ($disparador == '0' || $disparador == 0))||($disparador == '2' || $disparador == 2)) {
         // echo "entra a primera";
         // INICIA PRIMERA VALIDACION DE DISPERSION
         $this->db->trans_begin();
@@ -4403,12 +4402,9 @@ public function getDatosHistorialPagoEstatus($proyecto, $condominio, $usuario) {
   
     public function porcentajes(){
       $plan_comision = $this->input->post("plan_comision");
+      $totalNeto2 = $this->input->post("totalNeto2");
       $cliente = $this->input->post("idCliente");
-      if(in_array($plan_comision,array(64,65,66))){
-        echo json_encode($this->Comisiones_model->porcentajeReestructura($cliente,$plan_comision)->result_array(),JSON_NUMERIC_CHECK);
-      }else{
-        echo json_encode($this->Comisiones_model->porcentajes($cliente,$plan_comision)->result_array(),JSON_NUMERIC_CHECK);
-      }
+        echo json_encode($this->Comisiones_model->porcentajes($cliente,$totalNeto2,$plan_comision)->result_array(),JSON_NUMERIC_CHECK);
     }
       public function ReporteTotalMktd($mes,$anio){
         $resultado = array();
