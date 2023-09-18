@@ -100,6 +100,8 @@ class VentasAsistentes_model extends CI_Model {
         $id_rol = $this->session->userdata('id_rol');
         $id_usuario = $this->session->userdata('id_usuario');
         $id_lider = $this->session->userdata('id_lider');
+        $tipo = $this->session->userdata('tipo');
+        $tipo_proceso = "AND cl.proceso IN (0, 1)";
         if (in_array($id_rol, array(17, 70))) { // MJ: ES CONTRALORÍA Y EJECUTIVO DE CONTRALORÍA JR
             $filtroUsuarioBR = '';
             if($id_usuario == 2815 || $id_usuario == 12931)
@@ -130,7 +132,7 @@ class VentasAsistentes_model extends CI_Model {
 
             $filtroGerente = "";
             if ($id_usuario == 12318) { // EMMA CECILIA MALDONADO RAMÍREZ
-                $filtroGerente = "AND cl.id_gerente IN ($id_lider, 11196, 5637)";
+                $filtroGerente = "AND cl.id_gerente IN ($id_lider, 11196, 5637, 2599, 1507)";
                 $filtroSede = "";
             } else if (in_array($id_usuario, array(7097, 7096, 10924, 7324, 5620, 13094))) // GRISELL MALAGON, EDGAR AGUILAR Y DALIA PONCE
                 $filtroSede = "AND l.ubicacion IN ('4', '9', '13', '14')"; // Ciudad de México, San Miguel de Allende, Estado de México Occidente y Estado de México Norte
@@ -144,7 +146,11 @@ class VentasAsistentes_model extends CI_Model {
                 $filtroGerente = "AND cl.id_subdirector IN ($id_lider)";
                 $filtroSede = "";
             } 
-
+            if ($id_rol == 7 && $tipo == 2) { // MJ: ASESOR OOAM
+                $tipo_proceso = "AND cl.proceso IN (2, 3, 4)";
+                $filtroGerente = "AND cl.id_asesor = $id_usuario";
+                $filtroSede = "";
+            }
             $where = "l.idStatusContratacion IN (7, 11) AND l.idMovimiento IN (37, 7, 64, 66, 77, 41) AND l.status8Flag = 0 AND cl.status = 1 $filtroSede $filtroGerente";
         }
 
@@ -155,9 +161,9 @@ class VentasAsistentes_model extends CI_Model {
         CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
         CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
         CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
-        cond.idCondominio, cl.expediente, UPPER(mo.descripcion) AS descripcion
+        cond.idCondominio, cl.expediente, UPPER(mo.descripcion) AS descripcion, ISNULL(oxc0.nombre, 'Normal') tipo_proceso
         FROM lotes l
-        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote and cl.status = 1
+        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote AND cl.status = 1 $tipo_proceso
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
         INNER JOIN movimientos mo ON mo.idMovimiento = l.idMovimiento
@@ -166,6 +172,7 @@ class VentasAsistentes_model extends CI_Model {
         LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
         LEFT JOIN sedes sd ON sd.id_sede = l.ubicacion
         LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
+        LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
         WHERE $where
         GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc, sd.nombre,
@@ -174,7 +181,7 @@ class VentasAsistentes_model extends CI_Model {
         CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
         CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
         CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-        cond.idCondominio, cl.expediente, mo.descripcion
+        cond.idCondominio, cl.expediente, mo.descripcion, ISNULL(oxc0.nombre, 'Normal')
         ORDER BY l.nombreLote");
 		return $query->result();
 	}
@@ -271,6 +278,8 @@ class VentasAsistentes_model extends CI_Model {
         $id_usuario = $this->session->userdata('id_usuario');
         $id_sede = $this->session->userdata('id_sede');
         $id_lider = $this->session->userdata('id_lider');
+        $tipo = $this->session->userdata('tipo');
+        $tipo_proceso = "AND cl.proceso IN (0, 1)";
         if (in_array($id_rol, array(17, 70))){ // MJ: ES CONTRALORÍA Y EJECUTIVO CONTRALORÍA JR
             $filtroUsuarioBR = '';
             if($id_usuario == 2815 || $id_usuario == 12931)
@@ -298,7 +307,7 @@ class VentasAsistentes_model extends CI_Model {
 
             $filtroGerente = "";
             if ($id_usuario == 12318) { // EMMA CECILIA MALDONADO RAMÍREZ
-                $filtroGerente = "AND cl.id_gerente IN ($id_lider, 11196, 5637)";
+                $filtroGerente = "AND cl.id_gerente IN ($id_lider, 11196, 5637, 2599, 1507)";
                 $filtroSede = "";
             } else if (in_array($id_usuario, array(7097, 7096, 10924, 7324, 5620, 13094))) // GRISELL MALAGON, EDGAR AGUILAR Y DALIA PONCE
                 $filtroSede = "AND l.ubicacion IN ('4', '9', '13', '14')"; // Ciudad de México, San Miguel de Allende, Estado de México Occidente y Estado de México Norte
@@ -312,6 +321,11 @@ class VentasAsistentes_model extends CI_Model {
                 $filtroGerente = "AND cl.id_subdirector IN ($id_lider)";
                 $filtroSede = "";
             } 
+            if ($id_rol == 7 && $tipo == 2) { // MJ: ASESOR OOAM
+                $tipo_proceso = "AND cl.proceso IN (2, 3, 4)";
+                $filtroGerente = "AND cl.id_asesor = $id_usuario";
+                $filtroSede = "";
+            }
             $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1 $filtroSede $filtroGerente";
         }
         $query = $this->db->query(" SELECT l.idLote, cl.id_cliente,
@@ -322,9 +336,9 @@ class VentasAsistentes_model extends CI_Model {
         CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) AS asesor,
         CONCAT(coordinador.nombre, ' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) AS coordinador,
         CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) AS gerente,
-        cond.idCondominio, l.observacionContratoUrgente AS vl, sd.nombre as nombreSede
+        cond.idCondominio, l.observacionContratoUrgente AS vl, sd.nombre as nombreSede, ISNULL(oxc0.nombre, 'Normal') tipo_proceso
         FROM lotes l
-        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote
+        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote AND cl.status = 1 $tipo_proceso
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
         LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
@@ -332,6 +346,7 @@ class VentasAsistentes_model extends CI_Model {
         LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
         LEFT JOIN sedes sd ON sd.id_sede = l.ubicacion
         LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
+        LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
         WHERE $where
         GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
@@ -339,7 +354,7 @@ class VentasAsistentes_model extends CI_Model {
         tv.tipo_venta, CONCAT(asesor.nombre,' ',asesor.apellido_paterno, ' ', asesor.apellido_materno),
         CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
         CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-        cond.idCondominio, l.observacionContratoUrgente, sd.nombre
+        cond.idCondominio, l.observacionContratoUrgente, sd.nombre, ISNULL(oxc0.nombre, 'Normal')
         ORDER BY l.nombreLote");
 		return $query->result();
 	}

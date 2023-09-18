@@ -35,14 +35,16 @@ $(document).ready(function () {
 $("#Jtabla").ready(function () {
     let titulos = [];
     $('#Jtabla thead tr:eq(0) th').each(function (i) {
-        var title = $(this).text();
-        titulos.push(title);
-        $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
-        $('input', this).on('keyup change', function () {
-            if (tabla_6.column(i).search() !== this.value) {
-                tabla_6.column(i).search(this.value).draw();
-            }
-        });
+        if (i != 0) {
+            var title = $(this).text();
+            titulos.push(title);
+            $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
+            $('input', this).on('keyup change', function () {
+                if (tabla_6.column(i).search() !== this.value) {
+                    tabla_6.column(i).search(this.value).draw();
+                }
+            });
+        }
     });
 
     tabla_6 = $("#Jtabla").DataTable({
@@ -53,10 +55,10 @@ $("#Jtabla").ready(function () {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Registro de clientes',
+            titleAttr: 'Registro de estatus 7',
             title: 'Registro de cilentes',
             exportOptions: {
-                columns: [1,2, 3, 4, 5, 6, 7, 8, 9, 10],
+                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                 format: 
                 {
                     header:  function (d, columnIdx) {
@@ -85,16 +87,20 @@ $("#Jtabla").ready(function () {
         },
         {
             data: function (d) {
-                return `<span class="label lbl-oceanGreen">${d.tipo_venta}</span>`;
+                return `<span class="label lbl-green">${d.tipo_venta}</span>`;
             }
         },
         {
             data: function (d) {
-                if(d.etapa == null){
-                    return '<p class="m-0">' + d.nombreResidencial + '</p>' + '<b><p class="m-0">SIN ESPECIFICAR</p></b>';
-                } else {
-                    return '<p class="m-0">' + d.nombreResidencial + '</p>' + '<b><p class="m-0">' + d.etapa + '</p></b>';
-                }
+                return `<span class='label lbl-violetBoots'>${d.tipo_proceso}</span>`;
+            }
+        },
+        {
+            data: function (d) {
+                if(d.etapa == null || d.etapa == "NULL")
+                    return `<p class="m-0">${d.nombreResidencial}</p><b><p class="m-0">SIN ESPECIFICAR</p></b>`;
+                else
+                    return `<p class="m-0">${d.nombreResidencial}</p><b><p class="m-0">${d.etapa}</p></b>`;
             }
         },
         {
@@ -478,6 +484,11 @@ $(document).on('click', '#save1', function (e) {
                     $('#editReg').modal('hide');
                     $('#Jtabla').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                } else if (response.message == 'DOCUMENTS') {
+                    $('#save1').prop('disabled', false);
+                    $('#editReg').modal('hide');
+                    $('#Jtabla').DataTable().ajax.reload();
+                    alerts.showNotification("top", "right", response.documentos, "danger");
                 }
             },
             error: function (data) {
@@ -532,6 +543,11 @@ $(document).on('click', '#save2', function (e) {
                     $('#editLoteRev').modal('hide');
                     $('#Jtabla').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                } else if (response.message == 'DOCUMENTS') {
+                    $('#save1').prop('disabled', false);
+                    $('#editReg').modal('hide');
+                    $('#Jtabla').DataTable().ajax.reload();
+                    alerts.showNotification("top", "right", response.documentos, "danger");
                 }
             },
             error: function (data) {
@@ -694,6 +710,11 @@ $(document).on('click', '#save5', function (e) {
                     $('#rev8').modal('hide');
                     $('#Jtabla').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                } else if (response.message == 'DOCUMENTS') {
+                    $('#save1').prop('disabled', false);
+                    $('#editReg').modal('hide');
+                    $('#Jtabla').DataTable().ajax.reload();
+                    alerts.showNotification("top", "right", response.documentos, "danger");
                 }
             },
             error: function (data) {

@@ -1,8 +1,8 @@
 var getInfo1 = new Array(7);
 var getInfo3 = new Array(6);
 
-var estatusPermitidosEstatus11 = ["7", "8", "10", "12"];
-var movimientosPermitidosEstatus11 = ["40", "67", "72", "37", "7", "64", "77", "38", "65"];
+var estatusPermitidosEstatus11 = [7, 8, 10, 12];
+var movimientosPermitidosEstatus11 = [40, 67, 72, 37, 7, 64, 77, 38, 65];
 
 let titulos = [];
 $("#tabla_ingresar_11").ready(function () {
@@ -75,8 +75,8 @@ $("#tabla_ingresar_11").ready(function () {
 			{
 				data: function (d) {
 					var fechaVenc;
-					if (estatusPermitidosEstatus11.includes(d.idStatusContratacion) && movimientosPermitidosEstatus11.includes(d.idMovimiento))
-						fechaVenc = d.fechaVenc2;
+					if (estatusPermitidosEstatus11.includes(parseInt(d.idStatusContratacion)) && movimientosPermitidosEstatus11.includes(parseInt(d.idMovimiento)))
+						fechaVenc = d.fechaVenc2 || '';
 					else
 						fechaVenc = 'N/A';
 					return fechaVenc;
@@ -124,7 +124,7 @@ $("#tabla_ingresar_11").ready(function () {
 					if (d.vl == '1')
 						cntActions = 'En proceso de Liberación';
 					else {
-						if (estatusPermitidosEstatus11.includes(d.idStatusContratacion) && movimientosPermitidosEstatus11.includes(d.idMovimiento)) {
+						if (estatusPermitidosEstatus11.includes(parseInt(d.idStatusContratacion)) && movimientosPermitidosEstatus11.includes(parseInt(d.idMovimiento))) {
 							cntActions = `<button href="#" data-idLote="${d.idLote}" data-nomLote="${d.nombreLote}" data-idCond="${d.idCondominio}"
 								data-idCliente="${d.id_cliente}" data-fecVen="${d.fechaVenc}" data-ubic="${d.ubicacion}" data-tot="${d.totalNeto}"
 								class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="Registrar estatus">

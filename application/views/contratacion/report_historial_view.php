@@ -4,7 +4,6 @@
 	<div class="wrapper ">
 		<?php $this->load->view('template/sidebar'); ?>
 		
-		<!--Contenido de la página-->
 		<div class="content boxContent">
 			<div class="container-fluid">
 				<div class="row">

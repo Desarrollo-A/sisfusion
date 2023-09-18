@@ -22,7 +22,7 @@ $("#tabla_envio_RL").ready(function () {
                 titleAttr: 'Envío contrato a RL',
                 title: "Envío contrato a RL",
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + titulosInventario[columnIdx]  + ' ';
@@ -39,7 +39,7 @@ $("#tabla_envio_RL").ready(function () {
                 orientation: 'landscape',
                 pageSize: 'LEGAL',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + titulosInventario[columnIdx]  + ' ';
@@ -67,6 +67,11 @@ $("#tabla_envio_RL").ready(function () {
             {
                 data: function (d) {
                     return `<span class="label lbl-green">${d.tipo_venta}</span>`;
+                }
+            },
+            {
+                data: function (d) {
+                    return `<span class='label lbl-violetBoots'>${d.tipo_proceso}</span>`;
                 }
             },
             {

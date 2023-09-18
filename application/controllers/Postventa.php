@@ -11,9 +11,8 @@ public $controller = 'Postventa';
         $this->jwt_actions->authorize('2278',$_SERVER['HTTP_HOST']);
         $this->validateSession();
         date_default_timezone_set('America/Mexico_City');
-        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
         $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
+
         $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
     }
 
@@ -83,6 +82,14 @@ public $controller = 'Postventa';
             $this->load->view("postventa/notaria");
     }
 
+    public function cancelacion(){
+        if($this->session->userdata('id_rol') == FALSE){
+            redirect(base_url());
+        }
+            $this->load->view('template/header');
+            $this->load->view("postventa/cancelacionReestructura");
+    }
+
     public function getProyectos()
     {
         $data = $this->Postventa_model->getProyectos()->result_array();
@@ -111,6 +118,20 @@ public $controller = 'Postventa';
             echo json_encode($data);
         else
             echo json_encode(array());
+    }
+
+    public function lista_proyecto(){
+        echo json_encode($this->Postventa_model->get_proyecto_lista()->result_array());
+    }
+
+    public function getregistros(){
+        $index_proyecto = $this->input->post('index_proyecto');
+        $dato = $this->Postventa_model->get_cancelacion($index_proyecto);
+        if ($dato != null) {
+            echo json_encode($dato);
+        }else{
+            echo json_encode(array());
+        }
     }
 
     public function getClient()
@@ -2334,14 +2355,14 @@ function saveNotaria(){
         $this->load->view("postventa/status3revision");
     }
 
-     function getStatus3VP(){
-         $data = $this->Postventa_model->getStatus3VP();
-         if($data != null) {
-             echo json_encode($data);
-         } else {
-             echo json_encode(array());
-         }
-     }
+    function getStatus3VP(){
+        $data = $this->Postventa_model->getStatus3VP();
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
 
     public function rechazarStatus(){
         $idLote=$this->input->post('idLote');

@@ -234,4 +234,29 @@ class General_model extends CI_Model
     function listSedes(){
         return $this->db->query("SELECT * FROM sedes WHERE estatus = 1");
     }
+
+    function getCliente($cliente){
+        return $this->db->query("SELECT cl.*
+        FROM clientes cl
+        INNER JOIN lotes lo ON lo.idLote = cl.idLote
+        WHERE cl.id_cliente = $cliente");
+    }
+
+    public function getLider($id_gerente) {
+        return $this->db->query("SELECT us.id_lider as id_subdirector, 
+		(CASE 
+        WHEN us.id_lider = 7092 THEN 3 
+        WHEN us.id_lider IN (9471, 681, 609, 690, 2411) THEN 607 
+		WHEN us.id_lider = 692 THEN u0.id_lider
+        WHEN us.id_lider = 703 THEN 4
+        WHEN us.id_lider = 7886 THEN 5
+        ELSE 0 END) id_regional,
+		CASE 
+		WHEN (us.id_sede = '13' AND u0.id_lider = 7092) THEN 3
+		WHEN (us.id_sede = '13' AND u0.id_lider = 3) THEN 7092
+		ELSE 0 END id_regional_2
+        FROM usuarios us
+        INNER JOIN usuarios u0 ON u0.id_usuario = us.id_lider
+        WHERE us.id_usuario IN ($id_gerente)");
+    }
 }

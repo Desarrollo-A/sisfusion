@@ -1,4 +1,6 @@
-$(document).ready( function() {
+
+var puestos = [{id : 59, nombre : 'Director regional'}], sedes = []; 
+$(document).ready( function() { 
     $('[data-toggle="tooltip"]').tooltip(); 
     code = '';
     $.getJSON("fillSelectsForUsers").done(function(data) {
@@ -8,18 +10,227 @@ $(document).ready( function() {
             }
             if (data[i]['id_catalogo'] == 1)
                 $("#member_type").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
-            if (data[i]['id_catalogo'] == 0)
+            if (data[i]['id_catalogo'] == 0){
                 $("#headquarter").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+                sedes.push({
+                    id : data[i]['id_opcion'],
+                    nombre : data[i]['nombre']
+                });
+            }
         }
         $('#payment_method').selectpicker('refresh');
         $('#headquarter').selectpicker('refresh');
         $('#member_type').selectpicker('refresh');
     });
-
     $(".select-is-empty").removeClass("is-empty");
     fillUsersTable();
 });
 
+$(document).on('change', '#leader', function() {
+    let sede = $('#headquarter').val();
+    let puesto = $('#member_type').val();
+    let lider = $('#leader').val();
+    console.log(puesto);
+    document.getElementById('lineaVenta').innerHTML = '';
+    let puestosVentas = [3,7,9];
+    let sedeSelected = document.getElementById("headquarter");
+    let selectedSede = sedeSelected.options[sedeSelected.selectedIndex].text;
+    let puestoSelected = document.getElementById("member_type");
+    let selectedPuesto = puestoSelected.options[puestoSelected.selectedIndex].text;
+    let nombreSelected = $('#name').val() + ' ' + $('#last_name').val() + ' ' + $('#mothers_last_name').val();
+    if(puestosVentas.includes(parseInt(puesto))){
+        $.post("consultarLinea",{
+            sede: sede,
+            puesto: puesto,
+            lider : lider
+        },
+        function (data) {
+    let arraySedes = puesto == 7 ? ( data[0].banderaGer == 0 ? [data[0].idSedeCoor,data[0].idSedeGer,data[0].idSedeSub,data[0].idSedeReg] : [data[0].idSedeGer,data[0].idSedeSub,data[0].idSedeReg]) : ( puesto == 9 ? sede == 2 ? [data[0].idSedeGer,data[0].idSedeSub] : [data[0].idSedeGer,data[0].idSedeSub,data[0].idSedeReg] : sede == 2 ? [data[0].idSedeSub] : [data[0].idSedeSub,data[0].idSedeReg]);
+console.log(arraySedes);
+    let buscarDiff = arraySedes.filter(element => element != sede);
+    if(buscarDiff.length > 0){
+        $('#btn_acept').prop('disabled', true);
+    }else{
+        $('#btn_acept').prop('disabled', false);
+    }
+
+    /*if(data[0].banderaGer == 1 && puesto == 7){
+        console.log('entra aqui')
+        data[0].sub = data[0].gerente, data[0].gerente = data[0].coordinador, data[0].coordinador = 'N/A';
+        data[0].puestoSub = data[0].puestoGer, data[0].puestoGer = data[0].puestoCoor, data[0].puestoCoor = 'Coordinador de ventas';
+        data[0].sedeSubdirector = data[0].sedeGerente, data[0].sedeGerente = data[0].sedeCoor, data[0].sedeCoor = 'N/A';
+    }*/
+    let tabla = `
+    <div class="row subBoxDetail">
+        <div class=" col-sm-12 col-sm-12 col-lg-12 text-center" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>NUEVA LÍNEA DE VENTAS</b></label></div>
+        <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label><b>Nombre </b></label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label><b>Puesto</b></label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label><b>Sede</b></label></div>
+        <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${nombreSelected}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${selectedPuesto}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${selectedSede}</label></div>`;
+        tabla += puesto == 7  ? `<div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].coordinador}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoCoor}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeCoor}</label></div>` : '';
+        tabla += puesto == 3 ? '' : `<div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].gerente}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoGer}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeGerente}</label></div>`;
+        tabla += `<div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].sub}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoSub}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeSubdirector}</label></div>`;
+        tabla += sede == 2 ? '' : `<div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].regional_1}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoReg}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeReg}</label></div>`;
+        tabla += `</div>`;
+            /*let tabla = puesto == 7 ? `
+                <div class="row subBoxDetail">
+                    <div class=" col-sm-12 col-sm-12 col-lg-12 text-center" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>NUEVA LÍNEA DE VENTAS</b></label></div>
+                    <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label><b>Nombre </b></label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label><b>Puesto</b></label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label><b>Sede</b></label></div>
+                    <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${nombreSelected}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${selectedPuesto}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${selectedSede}</label></div>
+                    <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].coordinador}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoCoor}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeCoor}</label></div>
+                    <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].gerente}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoGer}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeGerente}</label></div>
+                    <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].sub}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoSub}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeSubdirector}</label></div>
+                    <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].regional_1}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoReg}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeReg}</label></div>
+                </div>
+                ` :( puesto == 9 ? `
+            <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label><b>${nombreSelected}</b></label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label><b>${selectedPuesto}</b></label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label><b>${selectedSede}</b></label></div>
+
+            ` : (puesto == 3 ? `
+            <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label><b>${nombreSelected}</b></label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label><b>${selectedPuesto}</b></label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label><b>${selectedSede}</b></label></div>
+            ` : ''));*/
+            /*$('#lineaVenta').append(`
+                <div class="row subBoxDetail">
+                    <div class=" col-sm-12 col-sm-12 col-lg-12 text-center" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>Nueva línea de ventas</b></label></div>
+                    <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label><b>Nombre </b></label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label><b>Puesto</b></label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label><b>Sede</b></label></div>
+                </div>
+            `);*/
+                $('#lineaVenta').append(tabla);
+        },"json");
+    }
+});
+$(document).on('change', '#member_type', function() {
+    document.getElementById('lineaVenta').innerHTML = '';
+    console.log($(this).val());
+    //MOC: SI SE DETECTA UN SUBDIRECTOR Ó DIR. REGIONAL AGREGAR OPCIÓN DE MULTIROL
+    if($(this).val() == 2 || $(this).val() == 59){
+        $('#btnmultirol').append(`
+        <button class="btn-data btn-green" type="button" id="btnMultiRol" data-toggle="tooltip" data-placement="top" title="Agregar rol"><i class="fas fa-user-plus"></i></button>
+        `);
+    }else{
+        document.getElementById('btnmultirol').innerHTML = '';
+        document.getElementById('multirol').innerHTML = '';
+        $('#index').val(0);
+    }
+});
+function validarSede(indexActual){
+    console.log(indexActual);
+    console.log('entra');
+    let index = parseInt($('#index').val());
+let c = 0;
+    for (let j = 0; j < index; j++) {
+        if(document.getElementById(`sedes_${j}`)){
+            console.log('existe');
+            if(j != indexActual){
+                let sedeActual = $(`#sedes_${indexActual}`).val();
+                let sedes = $(`#sedes_${j}`).val();
+                console.log(sedeActual);
+                console.log(sedes);
+                if(sedeActual == sedes){
+                    c++;
+                    alerts.showNotification("top", "right", "LA SEDE SELECCIONADA YA FUE SELECCIONADA", "warning");
+                    $('#btn_acept').prop('disabled', true);
+                }
+            }
+        }
+    }
+    if(c == 0){
+        $('#btn_acept').prop('disabled', false);
+    }
+
+}
+
+$(document).on("click","#btnMultiRol",function(){
+    let index = parseInt($('#index').val());
+    $('#multirol').append(`
+            <div class="col-md-12 aligned-row" id="mult_${index}">
+                <div class="col-md-6 pr-0 pr-0">
+                    <div class="form-group text-left m-0">
+                        <label class="control-label">Tipo de miembro (<small class="isRequired">*</small>)</label>
+                        <select class="selectpicker select-gral m-0" name="multi_${index}" id="multi_${index}" data-style="btn"
+                        data-show-subtext="true"
+                        title="Selecciona una opción"
+                        data-size="7"
+                        data-live-search="true" data-container="body"
+                        ></select>
+                    </div>
+                </div>
+                <div class="col-md-4 pr-0 pr-0">
+                    <div class="form-group text-left m-0">
+                        <label class="control-label">Sede (<small class="isRequired">*</small>)</label>
+                        <select class="selectpicker select-gral m-0" onchange="validarSede(${index},'sedes_');" name="sedes_${index}" id="sedes_${index}" data-style="btn"
+                        data-show-subtext="true"
+                        title="Selecciona una opción"
+                        data-size="7"
+                        data-live-search="true" data-container="body"
+                        ></select>
+                    </div>
+                </div>
+                <div class="col-md-2 justify-center d-flex align-end">
+                    <div class="form-group m-0 p-0">
+                        <button class="btn-data btn-warning mb-1" type="button" onclick="borrarMulti(${index})" data-toggle="tooltip" data-placement="top" title="Eliminar rol"><i class="fa fa-trash"></i></button>
+                    </div>
+                </div>
+            </div>
+        `);
+        $('[data-toggle="tooltip"]').tooltip();
+        console.log(puestos);
+        for (var i = 0; i < puestos.length; i++) {
+            var id = puestos[i].id;
+            var name = puestos[i].nombre;
+            $(`#multi_${index}`).append($('<option>').val(id).text(name.toUpperCase()));
+        }
+        for (var i = 0; i < sedes.length; i++) {
+            var id = sedes[i].id;
+            var name = sedes[i].nombre;
+            $(`#sedes_${index}`).append($('<option>').val(id).text(name.toUpperCase()));
+        }
+        $(`#multi_${index}`).selectpicker('refresh');
+        $(`#sedes_${index}`).selectpicker('refresh');
+        index = parseInt(index + 1);
+        $('#index').val(index);
+});
+
+$("#deleteRol").on('submit', function(e){
+    let indice = $('#indice').val();
+    e.preventDefault();
+    $.ajax({
+        type: 'POST',
+        url: 'borrarMulti',
+        data: new FormData(this),
+        contentType: false,
+        cache: false,
+        processData:false,
+        beforeSend: function(){},
+        success: function(data) {
+            if (data == true) {
+                alerts.showNotification("top", "right", "El rol se ha eliminado correctamente", "success");
+                $('#modalDelRol').modal('toggle');
+                document.getElementById(`mult_${indice}`).innerHTML = '';
+                document.getElementById("deleteRol").reset();
+            } else {
+                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            }
+        },
+        error: function(){
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+});
+function borrarMulti(index,id = ''){
+    if( id != ''){
+        $('#idRU').val(id);
+        $('#indice').val(index);
+        $('#modalDelRol').modal('show');
+
+    /*  $.post("borrarMulti",
+        {
+          idRU: id,
+        },
+        function (data) {
+        },"json");*/
+    }else{
+        document.getElementById(`mult_${index}`).innerHTML = '';
+    }
+    
+  }
 let titulos = [];
 $('#all_users_datatable thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
@@ -464,6 +675,8 @@ $(document).on('click', '.change-user-status', function(e) {
 
 $(document).on('click', '.edit-user-information', function(e){
     id_usuario = $(this).attr("data-id-usuario");
+    document.getElementById('lineaVenta').innerHTML = '';
+    $('#btn_acept').prop('disabled', false);
     $('.simbolico_column').html('');
     $('.col-estructura').html('');
     $.getJSON("getUserInformation/"+id_usuario).done( function( data ){
@@ -500,7 +713,7 @@ $(document).on('click', '.edit-user-information', function(e){
                     $('#tipoMiembro_column').addClass('col-sm-3');
                     var row_add = $('.simbolico_column');
                     row_add.append(`
-                    <div class="col-sm-3">
+                    <div class="col-sm-3 mt-3">
                         <div class="form-group label-floating select-is-empty div_membertype">
                             <label class="control-label"><small class="isRequired">*</small>¿Asesor simbólico?</label>
                             <select class="selectpicker select-gral m-0" id="simbolicoType" name="simbolicoType" data-style="btn" data-show-subtext="true" 
@@ -712,7 +925,7 @@ $(document).on('click', '.see-changes-log', function(){
 function fillChangelogUsers(v) {
     var nombreMovimiento;
     var dataMovimiento;
-    
+    document.getElementById('changelogUsers').innerHTML = '';
     switch (v.col_afect) {
         case 'nombre':
             nombreMovimiento = 'Nombre';

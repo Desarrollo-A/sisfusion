@@ -49,7 +49,7 @@ $("#tabla_ingresar_6").ready(function () {
                 titleAttr: 'Registro estatus 6',
                 title: "Registro estatus 6",
                 exportOptions: {
-                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + titulosInventario[columnIdx -1]  + ' ';
@@ -66,7 +66,7 @@ $("#tabla_ingresar_6").ready(function () {
                 orientation: 'landscape',
                 pageSize: 'LEGAL',
                 exportOptions: {
-                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + titulosInventario[columnIdx -1]  + ' ';
@@ -98,6 +98,11 @@ $("#tabla_ingresar_6").ready(function () {
                     return `<span class="label lbl-green">${d.tipo_venta}</span>`;
                 }
             },
+            {
+                data: function (d) {
+                        return `<span class='label lbl-violetBoots'>${d.tipo_proceso}</span>`;
+                    }
+                },
             {
                 data: function (d) {
                     return '<p class="m-0">' + d.nombreResidencial + '</p>';
