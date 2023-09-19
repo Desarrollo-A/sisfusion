@@ -3,6 +3,7 @@ class Reestructura_model extends CI_Model
 {
     function __construct()
     {
+        $this->load->library('email');
         parent::__construct();
     }
 
@@ -234,8 +235,8 @@ class Reestructura_model extends CI_Model
 
                     if(!in_array($datos["tipo"],array(7,8,9))){
                         $encabezados = [
-                            'usuario'       =>  'id Lote',
-                            'contraseña'    =>  'Nombre lote',
+                            'idLote'       =>  'ID LOTE',
+                            'nombreLote'    =>  'NOMBRE LOTE',
                             'fechaAccion'   =>  'FECHA CREACIÓN'
                         ];
                 
