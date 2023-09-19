@@ -88,7 +88,7 @@
 							</div>
 						</div>
 						<div class="container-fluid">
-							<div class="row mt-1 mb-1">
+							<div class="row mt-1 mb-1 d-flex align-center">
 								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 									<input type="button" class="btn btn-danger btn-simple m-0" data-dismiss="modal" value="CANCELAR">
 								</div>
@@ -116,9 +116,9 @@
 							</div>
 						</div>
 						<div class="container-fluid">
-							<div class="row mt-1 mb-1">
+							<div class="row mt-1 mb-1 d-flex align-center">
 								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-									<input type="button" class="btn btn-danger btn-simple m-0" data-dismiss="modal" value="CANCELAR">
+									<input type="button" class="btn btn-danger btn-simple m-0 align-center" data-dismiss="modal" value="CANCELAR">
 								</div>
 								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 									<input type="button" class="btn btn-primary" name="guardarEdit"  id="guardarEdit" value="GUARDAR">

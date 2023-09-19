@@ -311,11 +311,7 @@ class Reestructura_model extends CI_Model
 
     public function buscarLoteAnteriorPorIdClienteNuevo($idCliente)
     {
-        $query = $this->db->query("SELECT * FROM lotes WHERE idLote = (
-	        SELECT idLote FROM clientes WHERE id_cliente = (
-		        SELECT id_cliente_reubicacion_2 FROM clientes WHERE id_cliente = $idCliente
-	        )
-        )");
+        $query = $this->db->query("SELECT * FROM lotes WHERE idLote = (SELECT idLote FROM clientes WHERE id_cliente = (SELECT id_cliente_reubicacion_2 FROM clientes WHERE id_cliente = $idCliente))");
         return $query->row();
     }
 

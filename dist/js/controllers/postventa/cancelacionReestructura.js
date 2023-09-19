@@ -42,10 +42,10 @@ function fillTable(index_proyecto) {
         extend: 'excelHtml5',
         text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
         className: 'btn buttons-excel',
-        titleAttr: 'Cancelacion por reestructuración',
-        title: 'Cancelacion por reestructuración',
+        titleAttr: 'CANCELACIÓN POR REESTRUCTURACIÓN',
+        title: 'CANCELACIÓN POR REESTRUCTURACIÓN',
             exportOptions: {
-                columns: [0,1,2,3],
+                columns: [0,1,2,3,4],
                 format: {
                     header: function (d, columnIdx) {
                         return ' '+titulos_intxt[columnIdx] +' ';
