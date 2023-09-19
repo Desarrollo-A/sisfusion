@@ -50,7 +50,7 @@ class Reestructura_model extends CI_Model
         FROM loteXReubicacion lr
         INNER JOIN residenciales re ON re.idResidencial = lr.proyectoReubicacion AND re.status = 1
 		INNER JOIN condominios co ON co.idResidencial = re.idResidencial AND co.tipo_lote = $tipoLote
-		INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND (lo.sup >= $superficie OR lo.sup <= $superficie - 0.5) AND lo.idStatusLote = 15 AND lo.status = 1
+		INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND (lo.sup >= $superficie - 0.5) AND lo.idStatusLote = 15 AND lo.status = 1
         WHERE lr.idProyecto = $proyecto
 		GROUP BY lr.proyectoReubicacion, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100)))");
 
@@ -62,7 +62,7 @@ class Reestructura_model extends CI_Model
         FROM condominios co
         INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio
         WHERE lo.idStatusLote = 15 AND lo.status = 1
-        AND co.idResidencial = $proyecto AND (lo.sup >= $superficie OR lo.sup <= $superficie - 0.5) AND co.tipo_lote = $tipoLote
+        AND co.idResidencial = $proyecto AND (lo.sup >= $superficie - 0.5) AND co.tipo_lote = $tipoLote
         GROUP BY lo.idCondominio, co.nombre");
 
         return $query->result();
@@ -74,7 +74,7 @@ class Reestructura_model extends CI_Model
         lo.idLote, lo.nombreLote, lo.sup, lo.precio, lo.total
         FROM lotes lo
         WHERE lo.idCondominio = $condominio AND lo.idStatusLote = 15 AND lo.status = 1
-        AND (lo.sup >= $superficie OR lo.sup <= $superficie - 0.5)");
+        AND (lo.sup >= $superficie - 0.5)");
 
         return $query->result();
     }
