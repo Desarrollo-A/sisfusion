@@ -493,7 +493,7 @@ class Reestructura extends CI_Controller{
                 $dataCliente = array_merge([$clave =>  $lineaVenta->id_regional], $dataCliente);
                 continue;
             } else if ($clave == 'plan_comision') {
-                $dataCliente = array_merge([$clave =>  $proceso == 3 ? 64 : $proceso == 2 ? 65 : 66 ], $dataCliente);
+                $dataCliente = array_merge([$clave =>  $proceso == 3 ? 64 : ($proceso == 2 ? 65 : 66) ], $dataCliente);
                 continue;
             } else if ($clave == 'proceso') {
                 $dataCliente = array_merge([$clave =>  $proceso], $dataCliente);
@@ -825,5 +825,19 @@ class Reestructura extends CI_Controller{
         ob_end_clean();
 
         $pdf->Output(utf8_decode("Carta.pdf"));
+    }
+	public function cancelarLotes(){
+		$this->load->view('template/header');
+        $this->load->view("reestructura/cancelacion_view");
+    }
+
+	public function getregistrosLotes(){
+        $index_proyecto = $this->input->post('index_proyecto');
+        $dato = $this->Reestructura_model->getLotes($index_proyecto);
+        if ($dato != null) {
+            echo json_encode($dato);
+        }else{
+            echo json_encode(array());
+        }
     }
 } 

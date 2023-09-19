@@ -444,7 +444,6 @@ class Usuarios extends CI_Controller
     /**-------------OPNION DE CUMPLIMIENTO-------- */
     public function SubirPDF($id = '')
     {
-
         $id_usuario = $this->session->userdata('id_usuario');
         $nombre = $this->session->userdata('nombre');
         $opc = 0;

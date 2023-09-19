@@ -378,4 +378,14 @@ class Reestructura_model extends CI_Model
         WHERE cl.id_cliente = $idCliente");
         return $query->row();
     }
+    public function getLotes($id_proyecto){
+        ini_set('memory_limit', -1);
+        return $this->db->query("SELECT res.nombreResidencial,con.nombre AS condominio, lot.nombreLote, lot.idLote ,lot.sup AS superficie, lot.precio, CONCAT(cli.nombre,' ',cli.apellido_paterno,' ',cli.apellido_materno) nombreCliente,lot.observacionLiberacion AS observacion 
+        FROM lotes lot
+        INNER JOIN condominios con ON con.idCondominio = lot.idCondominio
+        INNER JOIN residenciales res ON res.idResidencial = con.idResidencial
+        INNER JOIN loteXReubicacion lotx ON lotx.proyectoReubicacion = con.idResidencial AND lotx.proyectoReubicacion IN ($id_proyecto)
+        INNER JOIN clientes cli ON cli.id_cliente = lot.idCliente AND cli.status IN (1)
+        WHERE cli.proceso IN(0,1)")->result();
+    }
 }
