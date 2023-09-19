@@ -170,7 +170,7 @@ $(document).on('click', '.btn-reestructurar', function () {
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12 text-center">
-                        <h3 class="m-0">Reubicación del cliente</h3>
+                        <h3 class="m-0">Restructuración del cliente</h3>
                         <h6 class="m-0">${nombreCliente}</h6>
                     </div>
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2">

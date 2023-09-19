@@ -702,8 +702,13 @@ function fillDataTable(idCondominio) {
                     if (idMovimiento === MOVIMIENTOS.NUEVO_APARTADO) {
                         if ([2, 3, 4].includes(parseInt(d.proceso))) {
                             if ([2,4].includes(parseInt(d.proceso))) {
-                                const url = `${general_base_url}Reestructura/imprimirCarta/${d.id_cliente}`;
+                                const url = `${general_base_url}Reestructura/imprimirCartaReubicacion/${d.id_cliente}`;
                                 buttons += `<a href="${url}" target="_blank" class="btn-data btn-orangeYellow btn-fab btn-fab-mini" data-toggle="tooltip" data-placement="left" title="DESCARGAR CARTA REUBICACIÓN"><i class="fas fa-download"></i></a>`;
+                            }
+
+                            if (parseInt(d.proceso) === 3) {
+                                const url = `${general_base_url}Reestructura/imprimirCartaReestructura/${d.id_cliente}`;
+                                buttons += `<a href="${url}" target="_blank" class="btn-data btn-orangeYellow btn-fab btn-fab-mini" data-toggle="tooltip" data-placement="left" title="DESCARGAR CARTA REESTRUCTURA"><i class="fas fa-download"></i></a>`;
                             }
                         }
                     }
