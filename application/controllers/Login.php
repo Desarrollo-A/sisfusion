@@ -222,7 +222,7 @@ class Login extends CI_Controller
 						$_SESSION['rutaController'] = '';
 						$_SESSION['datos4'] = [];
 						$data['certificado'] = $_SERVER["HTTP_HOST"] == 'localhost' ? 'http://' : 'https://';
-						$id_rol = $check_user[0]->tipo == 2 ? 86 : $check_user[0]->id_rol;
+						$id_rol = $check_user[0]->tipo == 2 ? 86 :( in_array($check_user[0]->id_usuario,array(13400,13399,13398,13397,13395)) ? 7 : $check_user[0]->id_rol);
 						$datos = $this->get_menu->get_menu_data($id_rol, $check_user[0]->id_usuario, $check_user[0]->estatus);
 						$opcionesMenu = $this->get_menu->get_menu_opciones();
 						$_SESSION['rutaActual'] = $_SERVER["HTTP_HOST"] == 'prueba.gphsis.com' || $_SERVER["HTTP_HOST"] == 'localhost' ? '/sisfusion/' : '/';
