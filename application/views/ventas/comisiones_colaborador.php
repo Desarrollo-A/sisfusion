@@ -11,14 +11,14 @@
             $forma_pago = $row->forma_pago;
             if( $forma_pago  == 2 ||  $forma_pago == '2'){
                 if(count($opn_cumplimiento) == 0){
-                    $cadena = '<a href="https://maderascrm.gphsis.com/index.php/Usuarios/configureProfile"> <span class="label label-danger" style="background:red;">  SIN OPINIÓN DE CUMPLIMIENTO, CLIC AQUI PARA SUBIRLA ></span> </a>';
+                    $cadena = '<a href="'.base_url().'Usuarios/configureProfile"> <span class="label label-danger" style="background:red;">  SIN OPINIÓN DE CUMPLIMIENTO, CLIC AQUI PARA SUBIRLA ></span> </a>';
                 } 
                 else{
                     if($opn_cumplimiento[0]['estatus'] == 1){
                         $cadena = '<button type="button" class="btn btn-info subir_factura_multiple" >SUBIR FACTURAS</button>';
                     }
                     else if($opn_cumplimiento[0]['estatus'] == 0){
-                        $cadena ='<a href="https://maderascrm.gphsis.com/index.php/Usuarios/configureProfile"> <span class="label label-danger" style="background:orange;">  SIN OPINIÓN DE CUMPLIMIENTO, CLIC AQUI PARA SUBIRLA</span> </a>';
+                        $cadena ='<a href="'.base_url().'Usuarios/configureProfile"> <span class="label label-danger" style="background:orange;">  SIN OPINIÓN DE CUMPLIMIENTO, CLIC AQUI PARA SUBIRLA</span> </a>';
                     }
                     else if($opn_cumplimiento[0]['estatus'] == 2){
                         $cadena = '<button type="button" class="btn btn-info subir_factura_multiple" >SUBIR FACTURAS</button>';
@@ -336,7 +336,7 @@
                                     <div class="tab-content p-2">
                                         <div class="tab-pane active" id="nuevas-1">
                                             <div class="encabezadoBox">
-                                                <p class="card-title pl-2">Comisiones nuevas disponibles para solicitar tu pago, para ver más detalles podrás consultarlo en el historial<a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>Da clic aquí para ir al historial</b></a></p>
+                                                <p class="card-title pl-2">Comisiones nuevas disponibles para solicitar tu pago, para ver más detalles podrás consultarlo en el historial<a href="<?=base_url()?>Comisiones/historial_colaborador"><b>Da clic aquí para ir al historial</b></a></p>
                                                 <?php
                                                     if($this->session->userdata('forma_pago') == 3){
                                                 ?>

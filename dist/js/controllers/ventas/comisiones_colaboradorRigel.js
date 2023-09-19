@@ -491,26 +491,26 @@ function fillCommissionTableNUEVAS(proyecto,condominio){
                 switch (d.forma_pago) {
                     case '1': //SIN DEFINIR
                     case 1: //SIN DEFINIr
-                        return '<p class="m-0"><span class="label lbl-gray">SIN DEFINIR FORMA DE PAGO</span><br><span class="label lbl-yellow">REVISAR CON RH</span></p>';
+                        return `<p class="m-0"><span class="label lbl-gray">SIN DEFINIR FORMA DE PAGO</span><br><span class="label lbl-yellow">REVISAR CON RH  ${d.estatus_actual}</span></p>`;
                     break;
 
                     case '2': //FACTURA
                     case 2: //FACTURA
-                        return '<p class="m-0"><span class="label lbl-sky">FACTURA</span></p><p style="font-size: .5em"><span class="label lbl-melon" >SUBIR XML</span></p>';
+                        return `<p class="m-0"><span class="label lbl-sky">FACTURA</span></p><p style="font-size: .5em"><span class="label lbl-melon" >SUBIR XML  ${d.estatus_actual}</span></p>`;
                     break;
 
                     case '3': //ASIMILADOS
                     case 3: //ASIMILADOS
-                        return '<p class="m-0"><span class="label lbl-blueMaderas">ASIMILADOS</span></p><p style="font-size: .5em"><span class="label lbl-oceanGreen">LISTA PARA APROBAR</span></p>';
+                        return `<p class="m-0"><span class="label lbl-blueMaderas">ASIMILADOS</span></p><p style="font-size: .5em"><span class="label lbl-oceanGreen">LISTA PARA APROBAR  ${d.estatus_actual}</span></p>`;
                     break;
 
                     case '4': //RD
                     case 4: //RD
-                        return '<p class="m-0"><span class="label lbl-violetBoots">REMANENTE DIST.</span></p><p style="font-size: .5em"><span class="label lbl-oceanGreen">LISTA PARA APROBAR</span></p>';
+                        return `<p class="m-0"><span class="label lbl-violetBoots">REMANENTE DIST.</span></p><p style="font-size: .5em"><span class="label lbl-oceanGreen">LISTA PARA APROBAR  ${d.estatus_actual}</span></p>`;
                     break;
 
                     default:
-                        return '<p class="m-0"><span class="label lbl-gray">DOCUMENTACIÓN FALTANTE</span><br><span class="label lbl-yellow">REVISAR CON RH</span></p>';
+                        return `<p class="m-0"><span class="label lbl-gray">DOCUMENTACIÓN FALTANTE</span><br><span class="label lbl-yellow">REVISAR CON RH  ${d.estatus_actual}</span></p>`;
                     break;
                 }
             }

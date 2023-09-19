@@ -71,15 +71,7 @@ $(document).ready(function () {
             {data: 'idLote'},
             {data: 'nombreCliente'},
             { data: function (d) {
-                var labelTipoVenta;
-                if(d.tipo_venta == 1) {
-                    labelTipoVenta ='<span class="label lbl-warning">Particular</span>';
-                }else if(d.tipo_venta == 2) {
-                    labelTipoVenta ='<span class="label lbl-green">Normal</span>';
-                }else{
-                    labelTipoVenta ='<span class="label lbl-gray">Sin Definir</span>';
-                }
-                return labelTipoVenta;
+                    return `<span class="label ${d.claseTipo_venta}">${d.tipo_venta}</span><br><span class="${d.colorProcesoCl}">${d.procesoCl}</span>`;
             }},
             { data: function (d) {
                 var labelCompartida;
