@@ -50,7 +50,7 @@ class Reestructura_model extends CI_Model
         FROM loteXReubicacion lr
         INNER JOIN residenciales re ON re.idResidencial = lr.proyectoReubicacion AND re.status = 1
 		INNER JOIN condominios co ON co.idResidencial = re.idResidencial AND co.tipo_lote = $tipoLote
-		INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND (lo.sup >= $superficie OR lo.sup <= $superficie - 0.5) AND lo.idStatusLote = 15 AND lo.status = 1
+		INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND (lo.sup >= $superficie - 0.5) AND lo.idStatusLote = 15 AND lo.status = 1
         WHERE lr.idProyecto = $proyecto
 		GROUP BY lr.proyectoReubicacion, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100)))");
 
@@ -62,7 +62,7 @@ class Reestructura_model extends CI_Model
         FROM condominios co
         INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio
         WHERE lo.idStatusLote = 15 AND lo.status = 1
-        AND co.idResidencial = $proyecto AND (lo.sup >= $superficie OR lo.sup <= $superficie - 0.5) AND co.tipo_lote = $tipoLote
+        AND co.idResidencial = $proyecto AND (lo.sup >= $superficie - 0.5) AND co.tipo_lote = $tipoLote
         GROUP BY lo.idCondominio, co.nombre");
 
         return $query->result();
@@ -74,7 +74,7 @@ class Reestructura_model extends CI_Model
         lo.idLote, lo.nombreLote, lo.sup, lo.precio, lo.total
         FROM lotes lo
         WHERE lo.idCondominio = $condominio AND lo.idStatusLote = 15 AND lo.status = 1
-        AND (lo.sup >= $superficie OR lo.sup <= $superficie - 0.5)");
+        AND (lo.sup >= $superficie - 0.5)");
 
         return $query->result();
     }
@@ -131,12 +131,12 @@ class Reestructura_model extends CI_Model
         (SELECT aud.id_auditoria, aud.anterior, aud.nuevo, aud.fecha_creacion, CONCAT(usu.nombre,' ', usu.apellido_paterno,' ', usu.apellido_materno) AS creado_por from auditoria aud
         INNER JOIN usuarios usu on usu.id_usuario = aud.creado_por
         where aud.anterior != 'NULL' AND tabla = 'lotes'  and col_afect = 'comentario' and id_parametro = $id_prospecto)");
-    } 
+    }
 
     public function aplicaLiberacion($datos){
 
-        $comentarioLiberacion = $datos['tipoLiberacion'] == 7 ? 'LIBERADO POR REUBICACIÓN' : ( $datos['tipoLiberacion'] == 9 ? 'LIBERACIÓN JURÍDICA' : ($datos['tipoLiberacion'] == 8 ? 'LIBERADO POR REESTRUCTURA' : 'CANCELACIÓN POR REESTRUCTURA') );
-        $observacionLiberacion = $datos['tipoLiberacion'] == 7 ? 'LIBERADO POR REUBICACIÓN' : ( $datos['tipoLiberacion'] == 9 ? 'LIBERACIÓN JURÍDICA' : ($datos['tipoLiberacion'] == 8 ? 'LIBERADO POR REESTRUCTURA' : 'CANCELACIÓN POR REESTRUCTURA') );
+        $comentarioLiberacion = $datos['tipoLiberacion'] == 7 ? 'LIBERADO POR REUBICACIÓN' : ( $datos['tipoLiberacion'] == 9 ? 'LIBERACIÓN JURÍDICA' : ($datos['tipoLiberacion'] == 8 ? 'LIBERADO POR REESTRUCTURA' : 'CANCELACIÓN DE CONTRATO') );
+        $observacionLiberacion = $datos['tipoLiberacion'] == 7 ? 'LIBERADO POR REUBICACIÓN' : ( $datos['tipoLiberacion'] == 9 ? 'LIBERACIÓN JURÍDICA' : ($datos['tipoLiberacion'] == 8 ? 'LIBERADO POR REESTRUCTURA' : 'CANCELACIÓN DE CONTRATO') );
         $datos["comentarioLiberacion"] = $comentarioLiberacion;
         $datos["observacionLiberacion"] = $observacionLiberacion;
         $datos["fechaLiberacion"] = date('Y-m-d H:i:s');
@@ -152,7 +152,7 @@ class Reestructura_model extends CI_Model
         (CASE WHEN tipo_venta IS NULL THEN 0 ELSE tipo_venta END) tipo_venta FROM lotes WHERE idLote=".$datos['idLote']." AND status = 1")->result_array();
         $registro_comision = ($datos['tipo'] == 7 || $datos['tipo'] == 8) ? 9 : 8;
         $idStatusLote = $datos['tipo'] == 9 ? 15 :($datos['tipo'] == 8  ? 3 : 1);
-        $sqlIdCliente = $datos['tipo'] == 8 ? ' AND id_cliente='.$datos['idClienteNuevo'] : '';
+        $sqlIdCliente = $datos['tipo'] == 8 ? ' AND id_cliente='.$row[0]['idCliente'] : '';
         $this->db->trans_begin();
         //($datos['tipo'] == 7 || $datos['tipo'] == 8) ? $this->db->query("UPDATE lotes SET tipo_venta=".$row[0]['tipo_venta'].",usuario='".$datos['userLiberacion']."' WHERE idLote=".$datos['idLoteNuevo']." ") : '';
             $banderaComisionCl = ($datos['tipo'] == 7 || $datos['tipo'] == 8) ? ' ,banderaComisionCl ='.$row[0]['registro_comision'] : '';
@@ -232,6 +232,34 @@ class Reestructura_model extends CI_Model
                     asig_jur = 0
                     WHERE idLote IN (".$datos['idLote'].") and status = 1");
 
+                    if(!in_array($datos["tipo"],array(7,8,9))){
+                        $encabezados = [
+                            'usuario'       =>  'id Lote',
+                            'contraseña'    =>  'Nombre lote',
+                            'fechaAccion'   =>  'FECHA CREACIÓN'
+                        ];
+                
+                        $contenido[] = [
+                            'idLote'      =>  $row[0]['idLote'],
+                            'nombreLote'   =>  $row[0]['nombreLote'],
+                            'fechaAccion'  =>  date('Y-m-d H:i:s')
+                        ];
+                
+                        $this->email
+                            ->initialize()
+                            ->from('Ciudad Maderas')
+                            ->to('programador.analista16@ciudadmaderas.com')
+                            ->subject('Notificación de liberación')
+                            ->view($this->load->view('mail/reestructura/mailLiberacion', [
+                                'encabezados' => $encabezados,
+                                'contenido' => $contenido
+                            ], true));
+                
+                
+                        $result = $this->email->send();
+                
+                    }
+
         if ($this->db->trans_status() === FALSE){
             $this->db->trans_rollback();
             return false;
@@ -240,19 +268,6 @@ class Reestructura_model extends CI_Model
             return true;
         }
 
-    }
-    public function setReestructura($datos){
-        $this->db->trans_begin();
-        $fecha = date('Y-m-d H:i:s');
-        $creado_por = $this->session->userdata('id_usuario');
-        $this->db->query("INSERT INTO ventas_compartidas VALUES(".$datos['idCliente'].",".$datos['id_asesor'].",0,".$datos['id_gerente'].",2,'$fecha',$creado_por,".$datos['id_subdirector'].",'$fecha','$creado_por',0,NULL)");
-        if ($this->db->trans_status() === FALSE){
-            $this->db->trans_rollback();
-            return false;
-        } else {
-            $this->db->trans_commit();
-            return true;
-        }
     }
 
     public function obtenerDocumentacionActiva($idLote, $idCliente)
