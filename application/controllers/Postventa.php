@@ -124,6 +124,16 @@ public $controller = 'Postventa';
         echo json_encode($this->Postventa_model->get_proyecto_lista()->result_array());
     }
 
+    public function getregistros(){
+        $index_proyecto = $this->input->post('index_proyecto');
+        $dato = $this->Postventa_model->get_cancelacion($index_proyecto);
+        if ($dato != null) {
+            echo json_encode($dato);
+        }else{
+            echo json_encode(array());
+        }
+    }
+
     public function getClient()
     {
         $idLote = $this->input->post("idLote");

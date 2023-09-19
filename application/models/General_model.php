@@ -235,8 +235,8 @@ class General_model extends CI_Model
         return $this->db->query("SELECT * FROM sedes WHERE estatus = 1");
     }
 
-    function getCliente($cliente){
-        return $this->db->query("SELECT cl.*, lo.sup 
+    function getClienteNLote($cliente){
+        return $this->db->query("SELECT cl.*, lo.sup, lo.idCondominio, lo.nombreLote
         FROM clientes cl
         INNER JOIN lotes lo ON lo.idLote = cl.idLote
         WHERE cl.id_cliente = $cliente");

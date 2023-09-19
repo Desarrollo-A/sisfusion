@@ -31,7 +31,7 @@
 					<div class="modal-header">
                         <div class="row d-flex justify-center align-center">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
-						        <h4 class="modal-title text-center">CATÁLOGO</h4>
+						        <h4 class="modal-title text-center">CATALOGO</h4>
                             </div>
                         </div>
 					</div>
@@ -41,7 +41,7 @@
                                 <table class="table-striped table-hover" id="tableCatalogo" name="tableCatalogo">
                                     <thead>
                                         <tr>
-                                            <th>OPCIÓN CATÁLOGO</th>
+                                            <th>OPCIÓN CATALOGO</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>
@@ -182,7 +182,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsAsimilados()"><b>Cerrar</b></button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" ><b>Cerrar</b></button>
                     </div>
                 </div>
             </div>

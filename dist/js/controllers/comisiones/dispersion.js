@@ -144,9 +144,9 @@ $(document).ready(function () {
                 var BtnStats = '';
 
                 var ACTIVAR = '';
-                var Mensaje2 = '';
                 var Mensaje = 'Verificar en NEODATA';
-                
+                var Mensaje2 = 'Verificar en NEODATA Reubicados';
+                varColor2  = 'btn-gray';
                 var RegresaActiva = '';
                 if(d.penalizacion == 1 && d.bandera_penalizacion == 0 && d.id_porcentaje_penalizacion != '4') {
                     BtnStats += `<button href="#" value="${d.idLote}" data-value="${d.nombreLote}" data-cliente="${d.id_cliente}" class="btn-data btn-blueMaderas btn-penalizacion" data-toggle="tooltip"  data-placement="top" title="Aprobar Penalización"> <i class="material-icons">check</i></button>
@@ -177,28 +177,34 @@ $(document).ready(function () {
                         }
 
                         BtnStats = ' ';
-                        if(d.registro_comision == 9 ) {
-                            BtnStats += `
-                                    <button href="#" id="verify_neodata_reubicado" name="verify_neodata_reubicado"
-                                            value="${d.idLote}" data-value="${d.registro_comision}" 
-                                            data-totalNeto2 = "${d.totalNeto2}" data-estatus="${d.idStatusContratacion}" 
-                                            data-penalizacion="${d.penalizacion}" data-nombreLote="${d.nombreLote}" 
-                                            data-cliente_reubicacion="${d.id_cliente_reubicacion}"
-                                            data-banderaPenalizacion="${d.bandera_penalizacion}" data-cliente="${d.id_cliente}" 
-                                            data-tipov="${d.tipo_venta}" data-descplan="${d.plan_descripcion}" 
-                                            data-code="${d.cbbtton}" 
-                                            class="btn-data btn-violetChin verify_neodata_reubicado" data-toggle="tooltip"  
-                                            data-placement="top" title="Verificar en NEODATA Reubicados">
-                                        <span class="material-icons">verified_user</span>
-                                    </button> `;
-                                    ACTIVAR = 'disabled ';
-                                }
+
+                        if(d.liberaOOAM == 1 && d.ooamComisiones <= 0) { //OAAM 1° DISPERSIÓN
+                            Finalrc = 2;
+                            valorDisparador = 2;
+                            ooam = 1;
+                        } else if(d.liberaOOAM == 1 && d.ooamComisiones > 0){ //OOAM 2° DISPERSIÓN
+                            Finalrc = d.registro_comision;
+                            valorDisparador = 2;
+                            ooam = 1;
+                        } else{
+                            Finalrc = d.registro_comision;
+                            valorDisparador = 0;
+                            ooam = 0;
+                        }
+
+                        if(d.registro_comision == 9) {
+                            //Primer dispersion a ventas cliente anterior OOAM
+                            BtnStats += '<button href="#" value="'+d.idLote+'" data-value="9" data-totalNeto2 = "'+d.totalNeto2Cl+'" data-clienteReubicacion="'+d.id_cliente_reubicacion+'" data-ooam="'+ooam+'"  data-estatus="'+d.idStatusContratacion+'" data-penalizacion="'+d.penalizacion+'"data-nombreLote="'+d.nombreLote+'" data-banderaPenalizacion="'+d.bandera_penalizacion+'" data-cliente="'+d.id_cliente_reubicacion+'" data-plan="'+d.plan_comision+'" data-tipov="'+d.tipo_venta+'" data-disparador="'+valorDisparador+'" data-descplan="'+d.plan_descripcionReu+'" data-code="'+d.cbbtton+'" ' +'class="btn-data '+varColor2 +' verify_neodata" data-toggle="tooltip"  data-placement="top" title="'+ Mensaje2 +'">'+'<span class="material-icons">verified_user</span></button>';
+                            ACTIVAR = 'disabled ';
+                        } else{
+                            BtnStats += '<button href="#" value="'+d.idLote+'" data-value="'+Finalrc+'" data-totalNeto2 = "'+d.totalNeto2+'" data-ooam="'+ooam+'" data-estatus="'+d.idStatusContratacion+'"  data-penalizacion="'+d.penalizacion+'"data-nombreLote="'+d.nombreLote+'" data-banderaPenalizacion="'+d.bandera_penalizacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'" data-disparador="'+valorDisparador+'" data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data '+varColor +' verify_neodata" data-toggle="tooltip"  data-placement="top" title="'+ Mensaje +'">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
+                            BtnStats += `<button href="#" value="${d.idLote}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas btn-detener btn-warning" data-toggle="tooltip"  data-placement="top" title="Detener"> <i class="material-icons">block</i> </button>`;
+                        }
 
                         if(d.fecha_modificacion != null && d.registro_comision != 8 ) {
                             RegresaActiva = '<button href="#" data-idpagoc="' + d.idLote + '" data-nombreLote="' + d.nombreLote + '"  ' +'class="btn-data btn-violetChin update_bandera" data-toggle="tooltip" data-placement="top" title="Enviar a activas">' +'<i class="fas fa-undo-alt"></i></button>';
                         }
-                        BtnStats += '<button href="#" value="'+d.idLote+'" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'"  data-penalizacion="'+d.penalizacion+'"data-nombreLote="'+d.nombreLote+'" data-banderaPenalizacion="'+d.bandera_penalizacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data '+varColor + ' verify_neodata" data-toggle="tooltip"  data-placement="top" title="'+ Mensaje +'">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
-                        BtnStats += `<button href="#" value="${d.idLote}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas btn-detener btn-warning" data-toggle="tooltip"  data-placement="top" title="Detener"> <i class="material-icons">block</i> </button>`;
+                        
                     }
                 }
                 return '<div class="d-flex justify-center">'+BtnStats+'</div>';
@@ -299,6 +305,11 @@ $(document).ready(function () {
         totalNeto2 = $(this).attr("data-totalNeto2");
         id_estatus = $(this).attr("data-estatus");
         idCliente = $(this).attr("data-cliente");
+        disparador = $(this).attr("data-disparador");
+        ooamDispersion = $(this).attr("data-ooam");
+        id_cliente_reubicacion = $(this).attr("data-clienteReubicacion");
+
+
         plan_comision = $(this).attr("data-plan");
         descripcion_plan = $(this).attr("data-descplan");
         tipo_venta = $(this).attr("data-tipov");
@@ -378,7 +389,7 @@ $(document).ready(function () {
                                 let abonado=0;
                                 let porcentaje_abono=0;
                                 let total_comision=0;
-                                $.post(general_base_url + "Comisiones/porcentajes",{idCliente:idCliente,plan_comision:plan_comision}, function (resultArr) {
+                                $.post(general_base_url + "Comisiones/porcentajes",{idCliente:idCliente,totalNeto2:totalNeto2,plan_comision:plan_comision,id_cliente_reubicacion:id_cliente_reubicacion}, function (resultArr) {
                                     resultArr = JSON.parse(resultArr);
                                     $.each( resultArr, function( i, v){
                                         let porcentajeAse =  v.porcentaje_decimal;
@@ -458,7 +469,8 @@ $(document).ready(function () {
                                                     <input type="hidden" name="bonificacion" id="bonificacion" value="${formatMoney(data[0].Bonificado)}">
                                                     <input type="hidden" name="pendiente" id="pendiente" value="${formatMoney(total_comision-abonado)}">
                                                     <input type="hidden" name="idCliente" id="idCliente" value="${idCliente}">
-                                                    <input type="hidden" name="id_disparador" id="id_disparador" value="0">
+                                                    <input type="hidden" name="id_disparador" id="id_disparador" value="${disparador}">
+                                                    <input type="hidden" name="ooamValor" id="ooamValor" value="${ooamDispersion}">
                                                     <input type="hidden" name="totalNeto2" id="totalNeto2" value="${totalNeto2}">
                                                     `);
                                                 }
@@ -468,7 +480,7 @@ $(document).ready(function () {
                                 });
                             }
                             else{
-                                $.getJSON( general_base_url + "Comisiones/getDatosAbonadoSuma11/"+idLote).done( function( data1 ){
+                                $.getJSON( general_base_url + "Comisiones/getDatosAbonadoSuma11/"+idLote+"/"+ooamDispersion).done( function( data1 ){
                                     let total0 = parseFloat((data[0].Aplicado));
                                     let total = 0;
                                     if(total0 > 0){
@@ -492,7 +504,7 @@ $(document).ready(function () {
                                     <div class="col-md-4"><h4>Aplicado neodata: <b>${formatMoney(data[0].Aplicado)}</b></h4></div><div class="col-md-4">${cadena}</div>
                                     </div><br>`);
 
-                                    $.getJSON( general_base_url + "Comisiones/getDatosAbonadoDispersion/"+idLote).done( function( data ){
+                                    $.getJSON( general_base_url + "Comisiones/getDatosAbonadoDispersion/"+idLote+"/"+ooamDispersion).done( function( data ){
                                         $("#modal_NEODATA .modal-body").append(`
                                                         <div class="row">
                                                             <div class="col-md-3"><p style="font-size:10px;"><b>USUARIOS</b></p></div>

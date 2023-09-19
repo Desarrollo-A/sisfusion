@@ -253,4 +253,10 @@ class Juridico_model extends CI_Model {
 		return $query->row();
 	}
 
+    public function validateDocumentation($idLote, $documentOptions) {
+        $query = $this->db->query("SELECT expediente, idCliente, tipo_doc 
+            FROM historial_documento 
+            WHERE idLote = $idLote AND status = 1 AND expediente IS NOT NULL AND tipo_doc IN ($documentOptions)");
+        return $query->result_array();
+    }
 }
