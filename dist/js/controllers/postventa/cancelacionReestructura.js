@@ -3,11 +3,11 @@ $(document).ready(function () {
     
     $.post(general_base_url + "Postventa/lista_proyecto", function (data) {
         var len = data.length;
-        var ids = '21, 30, 25, 13';
+        var ids = '1, 11, 28, 14, 12, 32, 22, 34';
         $("#proyecto").append($('<option>').val(ids).text('SELECCIONAR TODOS'));
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
-            var name = data[i]['nombre'];            
+            var name = data[i]['descripcion'];            
             $("#proyecto").append($('<option>').val(id).text(name.toUpperCase()));
         }
         $("#proyecto").selectpicker('refresh');
@@ -42,10 +42,10 @@ function fillTable(index_proyecto) {
         extend: 'excelHtml5',
         text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
         className: 'btn buttons-excel',
-        titleAttr: 'Cancelacion por reestructuración',
-        title: 'Cancelacion por reestructuración',
+        titleAttr: 'CANCELACIÓN POR REESTRUCTURACIÓN',
+        title: 'CANCELACIÓN POR REESTRUCTURACIÓN',
             exportOptions: {
-                columns: [0,1,2,3],
+                columns: [0,1,2,3,4],
                 format: {
                     header: function (d, columnIdx) {
                         return ' '+titulos_intxt[columnIdx] +' ';
@@ -88,8 +88,8 @@ function fillTable(index_proyecto) {
         },
         {
             data: function (d) {
-                if(d.comentarioLiberacion == "CANCELACION POR REESTRUCTURA"){
-                    return '<span class="label lbl-azure">CANCELACIÓN POR REESTRUCTURA</span>';
+                if(d.comentarioLiberacion == "CANCELACIÓN DE CONTRATO"){
+                    return '<span class="label lbl-azure">CANCELACIÓN DE CONTRATO</span>';
                 }else if(d.comentarioLiberacion == "RECESION DE CONTRATO"){
                     return '<span class="label lbl-green">RECESION DE CONTRATO</span>';
                 }
