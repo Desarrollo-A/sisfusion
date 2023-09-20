@@ -339,6 +339,8 @@ class Reestructura extends CI_Controller{
 		$nuevaSup = floatval($loteSelected->sup);
 		$anteriorSup = floatval($clienteAnterior->sup);
 		$proceso = ( $anteriorSup == $nuevaSup || (($nuevaSup - $anteriorSup) <= 2)) ? 2 : 4;
+        $tipo_venta = $clienteAnterior->tipo_venta;
+        $ubicacion = $clienteAnterior->ubicacion;
 
 		$validateLote = $this->caja_model_outside->validate($loteAOcupar);
         if ($validateLote == 0) {
@@ -366,7 +368,7 @@ class Reestructura extends CI_Controller{
             return;
         }
 
-        if (!$this->updateLote($idClienteInsert, $nombreAsesor, $loteAOcupar)) {
+        if (!$this->updateLote($idClienteInsert, $nombreAsesor, $loteAOcupar, $tipo_venta, $ubicacion)) {
             $this->db->trans_rollback();
 
             echo json_encode([
@@ -515,7 +517,7 @@ class Reestructura extends CI_Controller{
         return $this->caja_model_outside->insertClient($dataCliente);
     }
 
-    function updateLote($idClienteInsert, $nombreAsesor, $loteAOcupar){
+    function updateLote($idClienteInsert, $nombreAsesor, $loteAOcupar, $tipo_venta, $ubicacion){
         date_default_timezone_set('America/Mexico_City');
         $horaActual = date('H:i:s');
         $horaInicio = date("08:00:00");
@@ -635,9 +637,9 @@ class Reestructura extends CI_Controller{
             'perfil' => 'ooam',
             'modificado' => date('Y-m-d h:i:s'),
             'fechaVenc' => $fechaFull,
-            'IdStatusLote' => 3
-            'tipo_venta' =>
-            'ubicacion' =>
+            'IdStatusLote' => 3,
+            'tipo_venta' => $tipo_venta,
+            'ubicacion' =>$ubicacion
         );
 
         $resultLote = $this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $loteAOcupar);
