@@ -3,6 +3,7 @@ class Reestructura_model extends CI_Model
 {
     function __construct()
     {
+        $this->load->library('email');
         parent::__construct();
     }
 
@@ -232,6 +233,34 @@ class Reestructura_model extends CI_Model
                     asig_jur = 0
                     WHERE idLote IN (".$datos['idLote'].") and status = 1");
 
+                    if(!in_array($datos["tipo"],array(7,8,9))){
+                        $encabezados = [
+                            'idLote'       =>  'ID LOTE',
+                            'nombreLote'    =>  'NOMBRE LOTE',
+                            'fechaAccion'   =>  'FECHA CREACIÓN'
+                        ];
+                
+                        $contenido[] = [
+                            'idLote'      =>  $row[0]['idLote'],
+                            'nombreLote'   =>  $row[0]['nombreLote'],
+                            'fechaAccion'  =>  date('Y-m-d H:i:s')
+                        ];
+                
+                        $this->email
+                            ->initialize()
+                            ->from('Ciudad Maderas')
+                            ->to('programador.analista16@ciudadmaderas.com')
+                            ->subject('Notificación de liberación')
+                            ->view($this->load->view('mail/reestructura/mailLiberacion', [
+                                'encabezados' => $encabezados,
+                                'contenido' => $contenido
+                            ], true));
+                
+                
+                        $result = $this->email->send();
+                
+                    }
+
         if ($this->db->trans_status() === FALSE){
             $this->db->trans_rollback();
             return false;
@@ -241,6 +270,7 @@ class Reestructura_model extends CI_Model
         }
 
     }
+
     public function setReestructura($datos){
         $this->db->trans_begin();
         $fecha = date('Y-m-d H:i:s');
@@ -340,7 +370,7 @@ class Reestructura_model extends CI_Model
         INNER JOIN lotes loN ON clN.idLote = loN.idLote
         INNER JOIN condominios condN ON loN.idCondominio = condN.idCondominio
         INNER JOIN residenciales resN ON condN.idResidencial = resN.idResidencial
-        INNER JOIN clientes clA ON clN.id_cliente_reubicacion = clA.id_cliente
+        INNER JOIN clientes clA ON clN.id_cliente_reubicacion_2 = clA.id_cliente
         INNER JOIN lotes loA ON clA.idLote = loA.idLote
         INNER JOIN condominios condA ON loA.idCondominio = condA.idCondominio
         INNER JOIN residenciales resA ON condA.idResidencial = resA.idResidencial

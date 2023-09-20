@@ -174,7 +174,6 @@ class Reestructura extends CI_Controller{
         } else {
             echo json_encode(0);
         }
-
 	}
 
     public function setReestructura(){
@@ -340,6 +339,8 @@ class Reestructura extends CI_Controller{
 		$nuevaSup = floatval($loteSelected->sup);
 		$anteriorSup = floatval($clienteAnterior->sup);
 		$proceso = ( $anteriorSup == $nuevaSup || (($nuevaSup - $anteriorSup) <= 2)) ? 2 : 4;
+        $tipo_venta = $clienteAnterior->tipo_venta;
+        $ubicacion = $clienteAnterior->ubicacion;
 
 		$validateLote = $this->caja_model_outside->validate($loteAOcupar);
         if ($validateLote == 0) {
@@ -367,7 +368,7 @@ class Reestructura extends CI_Controller{
             return;
         }
 
-        if (!$this->updateLote($idClienteInsert, $nombreAsesor, $loteAOcupar)) {
+        if (!$this->updateLote($idClienteInsert, $nombreAsesor, $loteAOcupar, $tipo_venta, $ubicacion)) {
             $this->db->trans_rollback();
 
             echo json_encode([
@@ -470,8 +471,8 @@ class Reestructura extends CI_Controller{
 
     public function copiarClienteANuevo($clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $loteSelected = null, $idCondominio = null) {
         $dataCliente = [];
-        $camposOmitir = ['id_cliente','nombreLote', 'sup'];
-        
+        $camposOmitir = ['id_cliente','nombreLote', 'sup', 'tipo_venta', 'ubicacion'];
+
         foreach ($clienteAnterior as $clave => $valor) {
             if(in_array($clave, $camposOmitir)) {
                 continue;
@@ -505,7 +506,7 @@ class Reestructura extends CI_Controller{
             } else if ($clave == 'totalNeto2Cl') {
                 $dataCliente = array_merge([$clave =>  0], $dataCliente);
                 continue;
-            } else if ($clave == 'id_cliente_reubicacion') {
+            } else if ($clave == 'id_cliente_reubicacion_2') {
                 $dataCliente = array_merge([$clave =>  $clienteAnterior->id_cliente], $dataCliente);
                 continue;
             }
@@ -516,7 +517,7 @@ class Reestructura extends CI_Controller{
         return $this->caja_model_outside->insertClient($dataCliente);
     }
 
-    function updateLote($idClienteInsert, $nombreAsesor, $loteAOcupar){
+    function updateLote($idClienteInsert, $nombreAsesor, $loteAOcupar, $tipo_venta, $ubicacion){
         date_default_timezone_set('America/Mexico_City');
         $horaActual = date('H:i:s');
         $horaInicio = date("08:00:00");
@@ -636,7 +637,9 @@ class Reestructura extends CI_Controller{
             'perfil' => 'ooam',
             'modificado' => date('Y-m-d h:i:s'),
             'fechaVenc' => $fechaFull,
-            'IdStatusLote' => 3
+            'IdStatusLote' => 3,
+            'tipo_venta' => $tipo_venta,
+            'ubicacion' =>$ubicacion
         );
 
         $resultLote = $this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $loteAOcupar);
