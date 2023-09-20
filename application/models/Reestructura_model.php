@@ -234,8 +234,8 @@ class Reestructura_model extends CI_Model
 
                     if(!in_array($datos["tipo"],array(7,8,9))){
                         $encabezados = [
-                            'idLote'       =>  'ID LOTE',
-                            'nombreLote'    =>  'NOMBRE LOTE',
+                            'usuario'       =>  'id Lote',
+                            'contraseña'    =>  'Nombre lote',
                             'fechaAccion'   =>  'FECHA CREACIÓN'
                         ];
                 
@@ -269,7 +269,7 @@ class Reestructura_model extends CI_Model
         }
 
     }
-    
+
     public function setReestructura($datos){
         $this->db->trans_begin();
         $fecha = date('Y-m-d H:i:s');
