@@ -214,7 +214,7 @@ class Comisiones_model extends CI_Model {
     public function getDataDispersionPago() {
         $this->db->query("SET LANGUAGE Español;");
 
-        $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre as nombreCondominio, l.nombreLote,cl.proceso,  
+        $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre as nombreCondominio, l.nombreLote,cl.proceso, 
         CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombreCliente, vc.id_cliente AS compartida, l.idStatusContratacion, l.totalNeto2, pc.fecha_modificacion, 
         convert(nvarchar, pc.ultima_dispersion, 6) ultima_dispersion, convert(nvarchar, pc.fecha_modificacion, 6) fecha_sistema, convert(nvarchar, pc.fecha_neodata, 6) fecha_neodata, se.nombre as sede, l.referencia, cl.id_cliente, 
         CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) as asesor, 
@@ -224,12 +224,10 @@ class Comisiones_model extends CI_Model {
         CONCAT(di.nombre, ' ', di.apellido_paterno, ' ', di.apellido_materno) as director, (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, cl.plan_comision,cl.id_subdirector, cl.id_sede, cl.id_prospecto, l.tipo_venta, cl.lugar_prospeccion,(CASE WHEN pe.id_penalizacion IS NOT NULL AND pe.estatus not in (3) THEN 1 ELSE 0 END) penalizacion, pe.bandera as bandera_penalizacion, pe.id_porcentaje_penalizacion,l.referencia, pe.dias_atraso, (CASE WHEN clr.plan_comision IN (0) OR clr.plan_comision IS NULL THEN '-' ELSE plr.descripcion END) AS plan_descripcionReu, clr.totalNeto2Cl, 
         CASE WHEN (liquidada2-liquidada) = 0 THEN 1 ELSE 0 END liberaOOAM, ooamComisiones,
         (CASE WHEN clr.banderaComisionCl = 7 AND registro_comision IN (9) THEN 0 ELSE l.registro_comision END) AS registro_comision,
-		--para dispersar a ooam desde 0 si ya esta liquidada
+		/*para dispersar a ooam desde 0 si ya esta liquidada*/
         (CASE WHEN clr.banderaComisionCl = 7 AND registro_comision IN (9) THEN 0 ELSE cl.id_cliente_reubicacion_2 END) AS id_cliente_reubicacion_2, 
-		-- si esta liquidada el cliente anterior ya no se considera
+		/*si esta liquidada el cliente anterior ya no se considera*/
         ISNULL(reub.reubicadas, 0) reubicadas, pc.bandera
-
-        
         FROM lotes l
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
         INNER JOIN condominios cond ON l.idCondominio = cond.idCondominio
@@ -250,16 +248,15 @@ class Comisiones_model extends CI_Model {
 
         LEFT JOIN (select COUNT(*) liquidada, id_lote FROM comisiones WHERE liquidada = 1 GROUP BY id_lote) liq
 		ON liq.id_lote = l.idLote
-
 		LEFT JOIN (select COUNT(*) liquidada2, id_lote FROM comisiones WHERE ooam = 0 GROUP BY id_lote) liq2
 		ON liq2.id_lote = l.idLote
 
-        LEFT JOIN (select COUNT(*) ooamComisiones, id_lote FROM comisiones WHERE ooam = 1 GROUP BY id_lote) ooam
+        LEFT JOIN (select COUNT(*) ooamComisiones, id_lote FROM comisiones WHERE ooam = 2 GROUP BY id_lote) ooam
 		ON ooam.id_lote = l.idLote
 
         LEFT JOIN (select COUNT(*) reubicadas, idCliente FROM comisionesReubicadas GROUP BY idCliente) reub ON reub.idCliente = clr.id_cliente
 
-        WHERE l.idLote IN (l.idLote IN (13969,7167,7168,10304,17231,18338,18549,23730,27250,31850,32573,73591) 
+        WHERE l.idLote IN  (l.idLote IN (13969,7167,7168,10304,17231,18338,18549,23730,27250,31850,32573,73591) 
         AND l.registro_comision not in (7) 
         AND pc.bandera in (0)) OR (l.idStatusContratacion >= 9 
         AND cl.status = 1 
@@ -1313,10 +1310,12 @@ class Comisiones_model extends CI_Model {
         $request = $this->db->query("SELECT lugar_prospeccion, estructura FROM clientes WHERE idLote = $idlote AND status = 1")->row();
         $estrucura = $request->estructura;
        
-        if($ooam == 1)
+        if($ooam == 1){
             $filtroOOAM = 'AND liquidada not in (1)';
-            else
+        } else {
             $filtroOOAM = ' ';
+        }
+           
        
             
         return $this->db->query("SELECT com.id_comision, com.id_usuario, lo.totalNeto2, lo.idLote, res.idResidencial, lo.referencia, lo.tipo_venta, com.id_lote, lo.nombreLote, com.porcentaje_decimal, CONCAT(us.nombre,' ' ,us.apellido_paterno,' ',us.apellido_materno) colaborador, CASE WHEN $estrucura = 1 THEN oxc2.nombre ELSE oxc.nombre END as rol, com.comision_total, pci.abono_pagado, com.rol_generado,/* pc.porcentaje_saldos, (CASE us.id_usuario WHEN 832 THEN 25  ELSE pc.porcentaje_saldos END) porcentaje_saldos,*/com.descuento
