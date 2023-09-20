@@ -187,6 +187,8 @@ class Reestructura extends CI_Controller{
         $loteAOcupar = $clienteAnterior->idLote;
 		$lineaVenta = $this->General_model->getLider($idLider)->row();
         $proceso = 3;
+        $tipo_venta = $clienteAnterior->tipo_venta;
+        $ubicacion = $clienteAnterior->ubicacion;
 
         $expediente = $this->Reestructura_model->obtenerDocumentacionPorReestructura();
         $loteNuevoInfo = $this->Reestructura_model->obtenerLotePorId($loteAOcupar);
@@ -290,7 +292,7 @@ class Reestructura extends CI_Controller{
             return;
         }
 
-        if (!$this->updateLote($idClienteInsert, $nombreAsesor, $loteAOcupar)) {
+        if (!$this->updateLote($idClienteInsert, $nombreAsesor, $loteAOcupar, $tipo_venta, $ubicacion)) {
             $this->db->trans_rollback();
 
             echo json_encode([
@@ -846,4 +848,10 @@ class Reestructura extends CI_Controller{
             echo json_encode(array());
         }
     }
-} 
+
+    public function obtenerClientePorId($idCliente)
+    {
+        $cliente = $this->Reestructura_model->obtenerClientePorId($idCliente);
+        echo json_encode($cliente);
+    }
+}
