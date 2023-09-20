@@ -450,13 +450,28 @@ $(document).ready(function () {
                                         let saldo1C = 0;
                                         switch(bandera_anticipo){
                                             case 0:// monto < 5% se dispersará solo lo proporcional
-                                            saldo1C = (total*(0.125*v.porcentaje_decimal));
+                                            operacionValidar = (total*(0.125*v.porcentaje_decimal));
+                                            if(operacionValidar > v.comision_total){
+                                                saldo1C = v.comision_total;
+                                            }else{
+                                                saldo1C = operacionValidar;
+                                            }
                                             break;
                                             case 1:// monto igual o mayor a 10% dispersar 12.5% / la mitad
-                                            saldo1C = (total_comision1 / 2);
+                                            operacionValidar = (total_comision1 / 2);
+                                            if(operacionValidar > v.comision_total){
+                                                saldo1C = v.comision_total;
+                                            }else{
+                                                saldo1C = operacionValidar;
+                                            }
                                             break;
                                             case 2: // monto entre 5% y 10% dispersar 4 parte
-                                            saldo1C = (total_comision1/4);
+                                            operacionValidar = (total_comision1/4);
+                                            if(operacionValidar > v.comision_total){
+                                                saldo1C = v.comision_total;
+                                            }else{
+                                                saldo1C = operacionValidar;
+                                            }
                                             break;
                                         }
                                         total_comision = parseFloat(total_comision) + parseFloat(v.comision_total);
