@@ -218,7 +218,7 @@ function fillChangelogUsers(v) {
     dataMovimiento = '<b>Valor anterior:</b> ' + v.anterior + '\n' +
         '            <br>\n' +
         '            <b>Valor nuevo:</b> ' + v.nuevo + '\n';
-   $("#changelogUsers").append('<li class="timeline-inverted">\n' +
+            $("#changelogUsers").append('<li class="timeline-inverted">\n' +
         '    <div class="timeline-badge success"><span class="material-icons">done</span></div>\n' +
         '    <div class="timeline-panel">\n' +
         '            <label><h6 style="text-transform:uppercase">' + nombreMovimiento + '</h6></label><br>\n' +

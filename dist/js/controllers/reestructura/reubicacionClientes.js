@@ -237,10 +237,6 @@ $(document).on('click', '.btn-reubicar', function () {
                                 <p class="m-0">Superficie</p>
                                 <p class="m-0"><b>${superficie}</b></p>
                             </span>
-                            <span class="w-100 d-flex justify-between">
-                                <p class="m-0">Total</p>
-                                <p class="m-0"><b>$${formatMoney(total)}</b></p>
-                            </span>
                         </div>
                     </div>
                 </div>
@@ -337,10 +333,6 @@ $(document).on("change", "#loteAOcupar", function(e){
                 <span class="w-100 d-flex justify-between">
                     <p class="m-0">Superficie</p>
                     <p class="m-0"><b>${superficie}</b></p>
-                </span>
-                <span class="w-100 d-flex justify-between">
-                    <p class="m-0">Precio metro</p>
-                    <p class="m-0"><b>$${formatMoney(total)}</b></p>
                 </span>
             <div>
         <div>

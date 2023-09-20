@@ -259,8 +259,7 @@ class Comisiones_model extends CI_Model {
 
         LEFT JOIN (select COUNT(*) reubicadas, idCliente FROM comisionesReubicadas GROUP BY idCliente) reub ON reub.idCliente = clr.id_cliente
 
-        WHERE l.idLote IN (69400,80891,81765,81869,82047, 82073,82101) 
-        /* (l.idLote IN (13969,7167,7168,10304,17231,18338,18549,23730,27250,31850,32573,73591) 
+        WHERE l.idLote IN (l.idLote IN (13969,7167,7168,10304,17231,18338,18549,23730,27250,31850,32573,73591) 
         AND l.registro_comision not in (7) 
         AND pc.bandera in (0)) OR (l.idStatusContratacion >= 9 
         AND cl.status = 1 
@@ -269,7 +268,7 @@ class Comisiones_model extends CI_Model {
         AND pc.bandera in (0))) 
         AND (tipo_venta IS NULL OR tipo_venta IN (0,1,2)) 
         AND cl.fechaApartado >= '2020-03-01' 
-        AND ISNULL(l.totalNeto2, 0) > 0) */ ORDER BY l.idLote");
+        AND ISNULL(l.totalNeto2, 0) > 0) ORDER BY l.idLote");
         return $query;
     }
 
