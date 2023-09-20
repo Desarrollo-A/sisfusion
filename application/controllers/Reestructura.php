@@ -174,7 +174,6 @@ class Reestructura extends CI_Controller{
         } else {
             echo json_encode(0);
         }
-
 	}
 
     public function setReestructura(){
@@ -470,7 +469,7 @@ class Reestructura extends CI_Controller{
 
     public function copiarClienteANuevo($clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $loteSelected = null, $idCondominio = null) {
         $dataCliente = [];
-        $camposOmitir = ['id_cliente','nombreLote', 'sup'];
+        $camposOmitir = ['id_cliente','nombreLote', 'sup', 'tipo_venta', 'ubicacion'];
 
         foreach ($clienteAnterior as $clave => $valor) {
             if(in_array($clave, $camposOmitir)) {
@@ -637,6 +636,8 @@ class Reestructura extends CI_Controller{
             'modificado' => date('Y-m-d h:i:s'),
             'fechaVenc' => $fechaFull,
             'IdStatusLote' => 3
+            'tipo_venta' =>
+            'ubicacion' =>
         );
 
         $resultLote = $this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $loteAOcupar);
