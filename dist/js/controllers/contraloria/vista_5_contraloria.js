@@ -417,7 +417,6 @@ $(document).on('click', '.stat5Rev', function () {
     if (proceso == 2 || proceso == 3 || proceso == 4) {
         if (tipoVenta != 0) {
             $('#tipo_ventaenvARevCE').val(tipoVenta).change();
-            $('#tipo_ventaenvARevCE').prop('disabled', 'disabled');
         }
 
         if (ubicacion != 0) {

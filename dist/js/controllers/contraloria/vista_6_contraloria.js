@@ -166,7 +166,7 @@ $("#tabla_ingresar_6").ready(function () {
                         if (data.idStatusContratacion == 5 && data.idMovimiento == 35 && getFileExtension(data.expediente) == 'xlxs' || data.idStatusContratacion == 2 && data.idMovimiento == 62 && getFileExtension(data.expediente) == 'xlxs') {
                             cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" ' +
-                                'class="regCorrElab btn-data btn-green" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
+                                'class="regCorrEla btn-data btn-green" data-proceso="'+ data.proceso +'" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
                                 '<i class="fas fa-thumbs-up"></i></button>';
                             cntActions += '<center><button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" ' +
@@ -179,7 +179,7 @@ $("#tabla_ingresar_6").ready(function () {
                                 'class="btn-data btn-blueMaderas noCorrida" data-toggle="tooltip" data-placement="top" title="INFORMACIÓN"><i class="fas fa-exclamation"></i></button>';
                             cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" ' +
-                                'class="regCorrElab btn-data btn-green" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
+                                'class="regCorrElab btn-data btn-green" data-proceso="'+ data.proceso +'" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
                                 '<i class="fas fa-thumbs-up"></i></button>';
                             cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" ' +
@@ -190,7 +190,7 @@ $("#tabla_ingresar_6").ready(function () {
                         else if (data.idStatusContratacion == 5 && data.idMovimiento == 106 && getFileExtension(data.expediente) == 'xlxs' || data.idStatusContratacion == 2 && data.idMovimiento == 62 && getFileExtension(data.expediente) == 'xlxs') {
                             cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" ' +
-                                'class="regCorrElab btn-data btn-green" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
+                                'class="regCorrElab btn-data btn-green" data-proceso="'+ data.proceso +'" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
                                 '<i class="fas fa-thumbs-up"></i></button>';
                             cntActions += '<center><button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" ' +
@@ -203,7 +203,7 @@ $("#tabla_ingresar_6").ready(function () {
                                 'class="btn-data btn-blueMaderas noCorrida" data-toggle="tooltip" data-placement="top" title="INFORMACIÓN"><i class="fas fa-exclamation"></i></button>';
                             cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" ' +
-                                'class="regCorrElab btn-data btn-green" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
+                                'class="regCorrElab btn-data btn-green" data-proceso="'+ data.proceso +'" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
                                 '<i class="fas fa-thumbs-up"></i></button>';
                             cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" ' +
@@ -361,15 +361,27 @@ function getFileExtension(filename) {
 }
 
 $(document).on('click', '.regCorrElab', function () {
+    const idCLiente = $(this).attr('data-idCliente');
+
     $('#nombreLoteregCor').val($(this).attr('data-nomLote'));
     $('#idLoteregCor').val($(this).attr('data-idLote'));
     $('#idCondominioregCor').val($(this).attr('data-idCond'));
-    $('#idClienteregCor').val($(this).attr('data-idCliente'));
+    $('#idClienteregCor').val(idCLiente);
     $('#fechaVencregCor').val($(this).attr('data-fecVen'));
     $('#nomLoteFakeEregCor').val($(this).attr('data-nomLote'));
-    nombreLote = $(this).data("nomlote");
-    $(".lote").html(nombreLote);
-    $('#regCorrElab').modal();
+    const proceso = $(this).attr('data-proceso');
+    console.log(idCLiente);
+    if (proceso != 2 && proceso != 4){
+        console.log("We are");
+        nombreLote = $(this).data("nomlote");
+        $(".lote").html(nombreLote);
+        $('#regCorrElab').modal();
+        return;
+    }
+
+    $.getJSON(`${general_base_url}contraloria/obtenerLoteAnteriorPorIdClienteNuevo/${idCLiente}`, function(data){
+        console.log(data);
+    });
 });
 
 function preguntaRegCorr() {
