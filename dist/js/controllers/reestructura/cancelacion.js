@@ -143,7 +143,7 @@ function fillTable(index_proyecto) {
         },
         {
             data: function (d) {
-                    return '<div class="d-flex justify-center"><button class="btn-data btn-green cancel" data-toggle="tooltip" data-placement="top" title= "CANCELAR CONTRATO" data-idLote="' +d.idLote+ '" data-nombreLote="' +d.nombreLote+ '"><i class="fas fa-user-times"></i></button>';
+                    return '<div class="d-flex justify-center"><button class="btn-data btn-warning cancel" data-toggle="tooltip" data-placement="top" title= "CANCELAR CONTRATO" data-idLote="' +d.idLote+ '" data-nombreLote="' +d.nombreLote+ '"><i class="fas fa-user-times"></i></button>';
             }
         }],
         columnDefs: [{

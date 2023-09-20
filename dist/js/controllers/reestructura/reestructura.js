@@ -449,7 +449,6 @@ function fillTable(index_proyecto) {
     });
 }
 
-
 $('#tableCatalogo thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
     $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');

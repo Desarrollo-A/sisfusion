@@ -4268,12 +4268,11 @@ public function getDatosHistorialPagoEstatus($proyecto, $condominio, $usuario) {
       $penalizacion = $this->input->post("penalizacion");
       $nombreLote =  $this->input->post("nombreLote");
       $disparador =  $this->input->post("id_disparador");
-      $ooam =  $this->input->post("ooamValor");
+      $ooam = $this->input->post("ooamValor");
 
       $responses = $this->Comisiones_model->validateDispersionCommissions($lote_1);
       $totalFilas = $responses->num_rows(); 
-
-     
+ 
       if((!empty($responses) && $totalFilas == 0 && ($disparador == '0' || $disparador == 0))||($disparador == '2' || $disparador == 2)) {
         // echo "entra a primera";
         // INICIA PRIMERA VALIDACION DE DISPERSION
@@ -4347,7 +4346,7 @@ public function getDatosHistorialPagoEstatus($proyecto, $condominio, $usuario) {
           $respuesta = true;
         }
       
-      } else if($responses->row()->bandera == 0 && ($disparador == '1' || $disparador == 1)){
+      } else if($responses->row()->bandera == 0 && ($disparador == '1' || $disparador == 1 || $disparador == '2' || $disparador == 2)){
         $this->db->trans_begin();
         $lote_1 =  $this->input->post("idLote");
         $pending_1 =  $this->input->post("pending");
@@ -4389,9 +4388,7 @@ public function getDatosHistorialPagoEstatus($proyecto, $condominio, $usuario) {
           $this->db->trans_commit();
           $respuesta = true;
         }
- 
       }
- 
       else if($responses->row()->bandera != 0) {
         $respuesta[0] = 2;
       } else{
@@ -4405,9 +4402,10 @@ public function getDatosHistorialPagoEstatus($proyecto, $condominio, $usuario) {
       $plan_comision = $this->input->post("plan_comision");
       $totalNeto2 = $this->input->post("totalNeto2");
       $cliente = $this->input->post("idCliente");
-      $clienteReubicacion = $this->input->post("id_cliente_reubicacion");
-
-      if($clienteReubicacion!=null){
+      $clienteReubicacion = $this->input->post("id_cliente_reubicacion_2");
+      $reubicadas = $this->input->post("reubicadas");
+      
+      if($clienteReubicacion!=null && $reubicadas!= 0){
         echo json_encode($this->Comisiones_model->porcentajesReubicacion($clienteReubicacion)->result_array(),JSON_NUMERIC_CHECK);
       }else{
         echo json_encode($this->Comisiones_model->porcentajes($cliente,$totalNeto2,$plan_comision)->result_array(),JSON_NUMERIC_CHECK);
