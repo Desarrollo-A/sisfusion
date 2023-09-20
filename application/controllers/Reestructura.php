@@ -471,7 +471,7 @@ class Reestructura extends CI_Controller{
     public function copiarClienteANuevo($clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $loteSelected = null, $idCondominio = null) {
         $dataCliente = [];
         $camposOmitir = ['id_cliente','nombreLote', 'sup'];
-        
+
         foreach ($clienteAnterior as $clave => $valor) {
             if(in_array($clave, $camposOmitir)) {
                 continue;
@@ -505,7 +505,7 @@ class Reestructura extends CI_Controller{
             } else if ($clave == 'totalNeto2Cl') {
                 $dataCliente = array_merge([$clave =>  0], $dataCliente);
                 continue;
-            } else if ($clave == 'id_cliente_reubicacion') {
+            } else if ($clave == 'id_cliente_reubicacion_2') {
                 $dataCliente = array_merge([$clave =>  $clienteAnterior->id_cliente], $dataCliente);
                 continue;
             }
