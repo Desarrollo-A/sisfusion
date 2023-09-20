@@ -372,7 +372,6 @@ $(document).on('click', '.regCorrElab', function () {
     const proceso = $(this).attr('data-proceso');
     console.log(idCLiente);
     if (proceso != 2 && proceso != 4){
-        console.log("We are");
         nombreLote = $(this).data("nomlote");
         $(".lote").html(nombreLote);
         $('#regCorrElab').modal();
@@ -380,7 +379,10 @@ $(document).on('click', '.regCorrElab', function () {
     }
 
     $.getJSON(`${general_base_url}contraloria/obtenerLoteAnteriorPorIdClienteNuevo/${idCLiente}`, function(data){
-        console.log(data);
+        $('#totalNeto').val(data.totalNeto);
+        nombreLote = $(this).data("nomlote");
+        $(".lote").html(nombreLote);
+        $('#regCorrElab').modal();
     });
 });
 
