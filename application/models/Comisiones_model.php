@@ -259,8 +259,7 @@ class Comisiones_model extends CI_Model {
 
         LEFT JOIN (select COUNT(*) reubicadas, idCliente FROM comisionesReubicadas GROUP BY idCliente) reub ON reub.idCliente = clr.id_cliente
 
-        WHERE l.idLote IN (69400,80891,81765,81869,82047, 82073,82101) 
-        /* (l.idLote IN (13969,7167,7168,10304,17231,18338,18549,23730,27250,31850,32573,73591) 
+        WHERE l.idLote IN (l.idLote IN (13969,7167,7168,10304,17231,18338,18549,23730,27250,31850,32573,73591) 
         AND l.registro_comision not in (7) 
         AND pc.bandera in (0)) OR (l.idStatusContratacion >= 9 
         AND cl.status = 1 
@@ -269,7 +268,7 @@ class Comisiones_model extends CI_Model {
         AND pc.bandera in (0))) 
         AND (tipo_venta IS NULL OR tipo_venta IN (0,1,2)) 
         AND cl.fechaApartado >= '2020-03-01' 
-        AND ISNULL(l.totalNeto2, 0) > 0) */ ORDER BY l.idLote");
+        AND ISNULL(l.totalNeto2, 0) > 0) ORDER BY l.idLote");
         return $query;
     }
 
@@ -1846,9 +1845,6 @@ class Comisiones_model extends CI_Model {
         return $query ;
     }
     
-    public function validateSettledCommissions($idlote){
-        return $this->db->query("SELECT * FROM comisiones WHERE id_lote = $idlote");
-    }
 
     public function validateDispersionCommissions($lote){
         return $this->db->query("SELECT count(*) dispersion, pc.bandera 
@@ -5657,16 +5653,30 @@ class Comisiones_model extends CI_Model {
 
 
 // aqui enmpieza la reubicacación
-    public  function porcentajesReubicacion($idCliente) {
-        return $this->db->query("SELECT CONCAT(usu.nombre , ' ' , usu.apellido_paterno , ' ', usu.apellido_materno ) AS nombre, cr.id_comision_reubicada, cr.id_usuario, cr.comision_total, cr.porcentaje_decimal, cr.rol_generado AS id_rol, oxc.nombre AS detail_rol, cr.idCliente, cr.idLote, lo.totalNeto2  , cl.plan_comision , pc.descripcion, cr.nombreLote 
-        FROM comisionesReubicadas cr
-        INNER JOIN usuarios usu ON usu.id_usuario = cr.id_usuario
-        INNER JOIN opcs_x_cats oxc ON oxc.id_catalogo = 1 AND oxc.id_opcion = cr.rol_generado
-        INNER JOIN lotes lo ON lo.idLote = cr.idLote
-        INNER JOIN clientes cl ON cr.idCliente = cl.id_cliente
-        INNER JOIN plan_comision pc ON pc.id_plan = cl.plan_comision 
-        WHERE cr.idCliente = $idCliente");
+    public  function reubicadas($idCliente) {
+        $crm = "SELECT  CONCAT(usu.nombre , ' ' , usu.apellido_paterno , ' ', usu.apellido_materno ) as nombre_comisionista 
+        , cr.id_comision_reubicada, cr.id_usuario, cr.comision_total, 
+        cr.porcentaje_decimal, cr.rol_generado,oxc.nombre as rol ,cr.idCliente, cr.idLote
+        ,lo.totalNeto2  , cl.plan_comision , pc.descripcion, cr.nombreLote 
+		FROM comisionesReubicadas cr
+        INNER JOIN  usuarios usu on usu.id_usuario = cr.id_usuario
+		INNER JOIN 	opcs_x_cats oxc ON  oxc.id_catalogo = 1 and oxc.id_opcion = cr.rol_generado
+		INNER JOIN lotes lo ON lo.idLote = cr.idLote
+        INNER JOIN clientes cl on cr.idCliente = cl.id_cliente
+		inner JOIN plan_comision pc on pc.id_plan = cl.plan_comision 
+
+        where cr.idCliente = $idCliente";
+        $query = $this->db->query($crm );
+        return  $query->result();
     }
+    public function  suma($idCliente){
+        $cmd = "SELECT SUM(cr.comision_total)
+                FROM comisionesReubicadas cr
+                where cr.idCliente in ( $idCliente)";
+                $query = $this->db->query($crm );
+                return  $query->result();
+
+    } 
 
 
 // fin de la reubicacion 

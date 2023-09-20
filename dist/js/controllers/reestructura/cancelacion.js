@@ -1,7 +1,7 @@
 $(document).ready(function () {
-    $("#tabla_cancelacion").addClass('hide');
-    
-    $.post(general_base_url + "Postventa/lista_proyecto", function (data) {
+    $("#tabla_lotes").addClass('hide');
+    $('#spiner-loader').removeClass('hide');
+    $.post(general_base_url + "Reestructura/lista_proyecto", function (data) {
         var len = data.length;
         var ids = '1, 11, 28, 14, 12, 32, 22, 34';
         $("#proyecto").append($('<option>').val(ids).text('SELECCIONAR TODOS'));
@@ -12,40 +12,75 @@ $(document).ready(function () {
         }
         $("#proyecto").selectpicker('refresh');
         $('#spiner-loader').addClass('hide');
-    }, 'json');
+    }, 'json');   
 });
 
 $('#proyecto').change(function () {
-    $("#spiner-loader").removeClass('hide');
     let index_proyecto = $(this).val();
-    $("#tabla_cancelacion").removeClass('hide');
+    $("#spiner-loader").removeClass('hide');
+    $("#tabla_lotes").removeClass('hide');
     fillTable(index_proyecto);
 });
 
 let titulos_intxt = [];
-$('#tabla_cancelacion thead tr:eq(0) th').each(function (i) {
+$('#tabla_lotes thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
     titulos_intxt.push(title);
     $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
     $( 'input', this ).on('keyup change', function () {
-        if ($('#tabla_cancelacion').DataTable().column(i).search() !== this.value ) {
-            $('#tabla_cancelacion').DataTable().column(i).search(this.value).draw();
+        if ($('#tabla_lotes').DataTable().column(i).search() !== this.value ) {
+            $('#tabla_lotes').DataTable().column(i).search(this.value).draw();
+        }
+    });
+});
+
+$(document).on('click', '.cancel', function (){
+    $('#idLote').val($(this).attr('data-idLote'));
+    $('#cancelarLote').modal();
+});
+
+$(document).on('click', '#saveCancel', function(){
+    var idLote = $("#idLote").val();
+    var datos = new FormData();
+    $("#spiner-loader").removeClass('hide');
+    datos.append("idLote", idLote);
+    datos.append("tipoLiberacion", 3);
+    $.ajax({
+        method: 'POST',
+        url: general_base_url + 'Reestructura/aplicarLiberacion',
+        data: datos,
+        processData: false,
+        contentType: false,
+        success: function(data) {
+            if (data == 1) {
+            $('#tabla_lotes').DataTable().ajax.reload(null, false);
+            $("#spiner-loader").addClass('hide');
+            $('#cancelarLote').modal('hide');
+            alerts.showNotification("top", "right", "Opcion editada correctamente.", "success");
+            $('#idLote').val('');
+            }
+        },
+        error: function(){
+            $('#cancelarLote').modal('hide');
+            $("#spiner-loader").addClass('hide');
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
 });
 
 function fillTable(index_proyecto) {
-    tabla_cancelacion = $("#tabla_cancelacion").DataTable({
+    tabla_valores_cliente = $("#tabla_lotes").DataTable({
         width: '100%',
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        buttons: [{
+        buttons: [
+        {
         extend: 'excelHtml5',
         text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
         className: 'btn buttons-excel',
-        titleAttr: 'CANCELACIÓN POR REESTRUCTURACIÓN',
-        title: 'CANCELACIÓN POR REESTRUCTURACIÓN',
+        titleAttr: 'Reestructuración',
+        title: 'Reestructuración',
             exportOptions: {
-                columns: [0,1,2,3,4],
+                columns: [0,1,2,3,4,5,6],
                 format: {
                     header: function (d, columnIdx) {
                         return ' '+titulos_intxt[columnIdx] +' ';
@@ -88,17 +123,27 @@ function fillTable(index_proyecto) {
         },
         {
             data: function (d) {
-                if(d.comentarioLiberacion == "CANCELACIÓN DE CONTRATO"){
-                    return '<span class="label lbl-azure">CANCELACIÓN DE CONTRATO</span>';
-                }else if(d.comentarioLiberacion == "RECESION DE CONTRATO"){
-                    return '<span class="label lbl-green">RECESION DE CONTRATO</span>';
-                }
-                return '<p class="m-0">' + d.comentarioLiberacion + '</p>';
+                return '<p class="m-0">' + d.idLote + '</p>';
             }
         },
         {
-            data: function(d){
-                return '<p class="m-0">'+d.idLote+'</p>';
+            data: function (d) {
+                return '<p class="m-0">' + d.superficie + '</p>';
+            }
+        },
+        {
+            data: function (d){
+                return '<p class="m-0">' + formatMoney(d.precio) + '</p>';
+            }
+        },
+        {
+            data: function (d){
+                return '<p class="m-0">' + d.nombreCliente + '</p>'
+            }
+        },
+        {
+            data: function (d) {
+                    return '<div class="d-flex justify-center"><button class="btn-data btn-warning cancel" data-toggle="tooltip" data-placement="top" title= "CANCELAR CONTRATO" data-idLote="' +d.idLote+ '" data-nombreLote="' +d.nombreLote+ '"><i class="fas fa-user-times"></i></button>';
             }
         }],
         columnDefs: [{
@@ -108,7 +153,7 @@ function fillTable(index_proyecto) {
             orderable: false
         }],
         ajax: {
-            url: general_base_url + "PostVenta/getregistros",
+            url: general_base_url + "Reestructura/getregistrosLotes",
             dataSrc: "",
             type: "POST",
             cache: false,
@@ -124,9 +169,12 @@ function fillTable(index_proyecto) {
         ],
     });
     
-    $('#tabla_cancelacion').on('draw.dt', function() {
+    $('#tabla_lotes').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
         });
     });
 }
+
+
+
