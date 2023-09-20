@@ -846,4 +846,10 @@ class Reestructura extends CI_Controller{
             echo json_encode(array());
         }
     }
-} 
+
+    public function obtenerClientePorId($idCliente)
+    {
+        $cliente = $this->Reestructura_model->obtenerClientePorId($idCliente);
+        echo json_encode($cliente);
+    }
+}
