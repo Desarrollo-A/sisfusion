@@ -270,6 +270,20 @@ class Reestructura_model extends CI_Model
 
     }
 
+    public function setReestructura($datos){
+        $this->db->trans_begin();
+        $fecha = date('Y-m-d H:i:s');
+        $creado_por = $this->session->userdata('id_usuario');
+        $this->db->query("INSERT INTO ventas_compartidas VALUES(".$datos['idCliente'].",".$datos['id_asesor'].",0,".$datos['id_gerente'].",2,'$fecha',$creado_por,".$datos['id_subdirector'].",'$fecha','$creado_por',0,NULL)");
+        if ($this->db->trans_status() === FALSE){
+            $this->db->trans_rollback();
+            return false;
+        } else {
+            $this->db->trans_commit();
+            return true;
+        }
+    }
+
     public function obtenerDocumentacionActiva($idLote, $idCliente)
     {
         $query = $this->db->query("SELECT * FROM historial_documento WHERE idLote = $idLote AND idCliente = $idCliente AND status = 1");
@@ -325,11 +339,7 @@ class Reestructura_model extends CI_Model
 
     public function buscarLoteAnteriorPorIdClienteNuevo($idCliente)
     {
-        $query = $this->db->query("SELECT * FROM lotes WHERE idLote = (
-	        SELECT idLote FROM clientes WHERE id_cliente = (
-		        SELECT id_cliente_reubicacion FROM clientes WHERE id_cliente = $idCliente
-	        )
-        )");
+        $query = $this->db->query("SELECT * FROM lotes WHERE idLote = (SELECT idLote FROM clientes WHERE id_cliente = (SELECT id_cliente_reubicacion_2 FROM clientes WHERE id_cliente = $idCliente))");
         return $query->row();
     }
 
@@ -359,7 +369,7 @@ class Reestructura_model extends CI_Model
         INNER JOIN lotes loN ON clN.idLote = loN.idLote
         INNER JOIN condominios condN ON loN.idCondominio = condN.idCondominio
         INNER JOIN residenciales resN ON condN.idResidencial = resN.idResidencial
-        INNER JOIN clientes clA ON clN.id_cliente_reubicacion = clA.id_cliente
+        INNER JOIN clientes clA ON clN.id_cliente_reubicacion_2 = clA.id_cliente
         INNER JOIN lotes loA ON clA.idLote = loA.idLote
         INNER JOIN condominios condA ON loA.idCondominio = condA.idCondominio
         INNER JOIN residenciales resA ON condA.idResidencial = resA.idResidencial

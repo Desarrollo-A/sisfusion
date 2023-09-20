@@ -213,7 +213,9 @@ class Postventa_model extends CI_Model
     }
 
     function get_proyecto_lista(){
-        return $this->db->query("SELECT idResidencial, CONCAT(nombreResidencial, ' - ', descripcion) AS nombre FROM residenciales WHERE idResidencial IN (21, 30, 25, 13)");
+        return $this->db->query("SELECT lotx.proyectoReubicacion AS idResidencial, CONCAT(res.nombreResidencial, ' - ' , res.descripcion) AS descripcion  
+        FROM loteXReubicacion lotx
+		INNER JOIN residenciales res ON res.idResidencial = lotx.proyectoReubicacion");
     }
 
     function get_cancelacion($id_proyecto){
@@ -222,7 +224,7 @@ class Postventa_model extends CI_Model
 		FROM lotes lot
 		INNER JOIN condominios con ON con.idCondominio = lot.idCondominio
 		INNER JOIN residenciales res ON res.idResidencial = con.idResidencial AND res.idResidencial IN ($id_proyecto)
-		WHERE lot.idStatusLote = 1 AND lot.idMovimiento = 0 AND lot.idStatusContratacion = 0 AND lot.comentarioLiberacion LIKE '%CANCELACION POR REESTRUCTURA%' AND lot.idCliente = 0 OR lot.comentarioLiberacion LIKE '%RECESION DE CONTRATO%'")->result();
+		WHERE lot.idStatusLote = 1 AND lot.idMovimiento = 0 AND lot.idStatusContratacion = 0 AND lot.comentarioLiberacion LIKE '%CANCELACIÓN DE CONTRATO%' AND lot.idCliente = 0 OR lot.comentarioLiberacion LIKE '%RECESION DE CONTRATO%'")->result();
     }
 
     function listSedes(){
@@ -246,7 +248,6 @@ class Postventa_model extends CI_Model
             } else {
             return 1;
             }
-
     }
     
     function changeStatus($id_solicitud, $type, $comentarios,$area_rechazo)
@@ -320,7 +321,7 @@ class Postventa_model extends CI_Model
 
         $this->db->query("UPDATE solicitudes_escrituracion SET id_estatus =".$actividades_x_estatus->estatus_siguiente." $banderasStatus2 $banderasStatusRechazo $fechaFirma  WHERE id_solicitud = $id_solicitud");
         return $this->db->query("INSERT INTO historial_escrituracion (id_solicitud, numero_estatus,tipo_movimiento, descripcion, fecha_creacion, creado_por, fecha_modificacion, modificado_por, estatus_siguiente)
-         VALUES($id_solicitud,".$actividades_x_estatus->estatus_actual.",$num_movimiento,'".$comentarios."',GETDATE(),$idUsuario,GETDATE(),$idUsuario,".$actividades_x_estatus->estatus_siguiente.");");
+        VALUES($id_solicitud,".$actividades_x_estatus->estatus_actual.",$num_movimiento,'".$comentarios."',GETDATE(),$idUsuario,GETDATE(),$idUsuario,".$actividades_x_estatus->estatus_siguiente.");");
     }
 
     function generateFilename($idSolicitud, $tipoDoc)

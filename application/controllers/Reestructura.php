@@ -193,7 +193,10 @@ class Reestructura extends CI_Controller{
         $loteNuevoInfo = $this->Reestructura_model->obtenerLotePorId($loteAOcupar);
         $documentacionActiva = $this->Reestructura_model->obtenerDocumentacionActiva($clienteAnterior->idLote, $idClienteAnterior);
 
-        if (!$this->copiarClienteANuevo($clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso)) {
+        $clienteNuevo = $this->copiarClienteANuevo($clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso);
+        $idClienteInsert = $clienteNuevo[0]['lastId'];
+
+        if (!$idClienteInsert) {
             $this->db->trans_rollback();
 
             echo json_encode([
@@ -349,7 +352,10 @@ class Reestructura extends CI_Controller{
             return;
         }
 
-        if (!$this->copiarClienteANuevo($clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $loteSelected, $idCondominio)) {
+        $clienteNuevo = $this->copiarClienteANuevo($clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $loteSelected, $idCondominio);
+        $idClienteInsert = $clienteNuevo[0]['lastId'];
+
+        if (!$idClienteInsert) {
             $this->db->trans_rollback();
 
             echo json_encode([
@@ -360,8 +366,6 @@ class Reestructura extends CI_Controller{
             ]);
             return;
         }
-
-        $idClienteInsert = $this->db->insert_id();
 
         if (!$this->updateLote($idClienteInsert, $nombreAsesor, $loteAOcupar)) {
             $this->db->trans_rollback();
@@ -467,7 +471,7 @@ class Reestructura extends CI_Controller{
     public function copiarClienteANuevo($clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $loteSelected = null, $idCondominio = null) {
         $dataCliente = [];
         $camposOmitir = ['id_cliente','nombreLote', 'sup'];
-        
+
         foreach ($clienteAnterior as $clave => $valor) {
             if(in_array($clave, $camposOmitir)) {
                 continue;
@@ -501,7 +505,7 @@ class Reestructura extends CI_Controller{
             } else if ($clave == 'totalNeto2Cl') {
                 $dataCliente = array_merge([$clave =>  0], $dataCliente);
                 continue;
-            } else if ($clave == 'id_cliente_reubicacion') {
+            } else if ($clave == 'id_cliente_reubicacion_2') {
                 $dataCliente = array_merge([$clave =>  $clienteAnterior->id_cliente], $dataCliente);
                 continue;
             }
@@ -509,8 +513,7 @@ class Reestructura extends CI_Controller{
             $dataCliente = array_merge([$clave => $valor], $dataCliente);
         }
 
-        $resultCliente = $this->General_model->addRecord('clientes', $dataCliente);
-        return $resultCliente;
+        return $this->caja_model_outside->insertClient($dataCliente);
     }
 
     function updateLote($idClienteInsert, $nombreAsesor, $loteAOcupar){
