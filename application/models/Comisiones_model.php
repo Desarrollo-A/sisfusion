@@ -259,7 +259,7 @@ class Comisiones_model extends CI_Model {
         LEFT JOIN (select COUNT(*) liquidada2, id_lote FROM comisiones WHERE ooam = 0 GROUP BY id_lote) liq2
         ON liq2.id_lote = l.idLote
 
-        LEFT JOIN (select COUNT(*) ooamComisiones, id_lote FROM comisiones WHERE ooam = 2 GROUP BY id_lote) ooam
+        LEFT JOIN (select COUNT(*) ooamComisiones, id_lote FROM comisiones WHERE ooam = 1 GROUP BY id_lote) ooam
         ON ooam.id_lote = l.idLote
 
         LEFT JOIN (select COUNT(*) reubicadas, idCliente FROM comisionesReubicadas GROUP BY idCliente) reub ON reub.idCliente = clr.id_cliente
@@ -1330,8 +1330,6 @@ class Comisiones_model extends CI_Model {
             $filtroOOAM = ' ';
         }
            
-       
-            
         return $this->db->query("SELECT com.id_comision, com.id_usuario, lo.totalNeto2, lo.idLote, res.idResidencial, lo.referencia, lo.tipo_venta, com.id_lote, lo.nombreLote, com.porcentaje_decimal, CONCAT(us.nombre,' ' ,us.apellido_paterno,' ',us.apellido_materno) colaborador, CASE WHEN $estrucura = 1 THEN oxc2.nombre ELSE oxc.nombre END as rol, com.comision_total, pci.abono_pagado, com.rol_generado,/* pc.porcentaje_saldos, (CASE us.id_usuario WHEN 832 THEN 25  ELSE pc.porcentaje_saldos END) porcentaje_saldos,*/com.descuento
         FROM comisiones com
         LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision FROM pago_comision_ind 
@@ -1806,7 +1804,7 @@ class Comisiones_model extends CI_Model {
             $this->db->query("UPDATE comisiones SET liquidada = 1 
             FROM comisiones com
             LEFT JOIN (SELECT SUM(abono_neodata) abonado, id_comision FROM pago_comision_ind GROUP BY id_comision) as pci ON pci.id_comision = com.id_comision
-            WHERE com.id_comision = $id_comision AND com.ooam NOT in (2) AND (com.comision_total-abonado) < 1");
+            WHERE com.id_comision = $id_comision AND com.ooam NOT in (1) AND (com.comision_total-abonado) < 1");
                 
             return 1;
             }
@@ -4346,6 +4344,11 @@ class Comisiones_model extends CI_Model {
         if($porcentaje != 0 && $porcentaje != ''){
             $respuesta =  $this->db->query("INSERT INTO comisiones ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [ooam], [loteReubicado], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado],[idCliente],[modificado_por]) VALUES (".$idLote.", ".$id_usuario.", ".$TotComision.", 1, 'NUEVA DISPERSIÓN - $tipo_venta ', $ooam, NULL, ".$user.", GETDATE(), ".$porcentaje.", GETDATE(), ".$rol.",".$idCliente.",'".$this->session->userdata('id_usuario')."')");
             $insert_id = $this->db->insert_id();
+
+            $respuesta = $this->db->query("UPDATE comisiones SET liquidada = 1 
+            FROM comisiones com
+            LEFT JOIN (SELECT SUM(abono_neodata) abonado, id_comision FROM pago_comision_ind GROUP BY id_comision) as pci ON pci.id_comision = com.id_comision
+            WHERE com.id_comision = $insert_id AND com.ooam NOT in (1) AND (com.comision_total-abonado) < 1");
 
             $respuesta = $this->db->query("INSERT INTO pago_comision_ind (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, estatus, pago_neodata, creado_por, comentario, modificado_por) VALUES (".$insert_id.", ".$id_usuario.", ".$abono.", GETDATE(), GETDATE(), 1 , ".$pago.",'$user', 'PAGO 1 - NEDOATA', '$user')");
             $insert_id_2 = $this->db->insert_id();
