@@ -12,6 +12,7 @@ class Contraloria extends CI_Controller {
         $this->load->helper(array('url','form'));
         $this->load->database('default');
         $this->load->library('email');
+        $this->load->model('Reestructura_model');
         $this->validateSession();
         date_default_timezone_set('America/Mexico_City');
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
@@ -213,6 +214,17 @@ class Contraloria extends CI_Controller {
     public function getregistroStatus13ContratacionContraloria() {
         $datos = array();
         $datos = $this->Contraloria_model->registroStatusContratacion13();
+
+        if($datos != null) {
+            echo json_encode($datos);
+        } else {
+            echo json_encode(array());
+        }
+
+    }
+
+    public function obtenerLoteAnteriorPorIdClienteNuevo($id_cliente) {
+        $datos = $this->Reestructura_model->buscarLoteAnteriorPorIdClienteNuevo($id_cliente);
 
         if($datos != null) {
             echo json_encode($datos);

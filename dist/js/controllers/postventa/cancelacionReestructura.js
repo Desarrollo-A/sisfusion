@@ -108,7 +108,7 @@ function fillTable(index_proyecto) {
             orderable: false
         }],
         ajax: {
-            url: general_base_url + "PostVenta/getregistros",
+            url: general_base_url + "Postventa/getregistros",
             dataSrc: "",
             type: "POST",
             cache: false,
