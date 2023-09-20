@@ -254,7 +254,7 @@ class Comisiones_model extends CI_Model {
 		LEFT JOIN (select COUNT(*) liquidada2, id_lote FROM comisiones WHERE ooam = 0 GROUP BY id_lote) liq2
 		ON liq2.id_lote = l.idLote
 
-        LEFT JOIN (select COUNT(*) ooamComisiones, id_lote FROM comisiones WHERE ooam = 1 GROUP BY id_lote) ooam
+        LEFT JOIN (select COUNT(*) ooamComisiones, id_lote FROM comisiones WHERE ooam = 2 GROUP BY id_lote) ooam
 		ON ooam.id_lote = l.idLote
 
         LEFT JOIN (select COUNT(*) reubicadas, idCliente FROM comisionesReubicadas GROUP BY idCliente) reub ON reub.idCliente = clr.id_cliente
@@ -1314,10 +1314,12 @@ class Comisiones_model extends CI_Model {
         $request = $this->db->query("SELECT lugar_prospeccion, estructura FROM clientes WHERE idLote = $idlote AND status = 1")->row();
         $estrucura = $request->estructura;
        
-        if($ooam == 1)
+        if($ooam == 1){
             $filtroOOAM = 'AND liquidada not in (1)';
-            else
+        } else {
             $filtroOOAM = ' ';
+        }
+           
        
             
         return $this->db->query("SELECT com.id_comision, com.id_usuario, lo.totalNeto2, lo.idLote, res.idResidencial, lo.referencia, lo.tipo_venta, com.id_lote, lo.nombreLote, com.porcentaje_decimal, CONCAT(us.nombre,' ' ,us.apellido_paterno,' ',us.apellido_materno) colaborador, CASE WHEN $estrucura = 1 THEN oxc2.nombre ELSE oxc.nombre END as rol, com.comision_total, pci.abono_pagado, com.rol_generado,/* pc.porcentaje_saldos, (CASE us.id_usuario WHEN 832 THEN 25  ELSE pc.porcentaje_saldos END) porcentaje_saldos,*/com.descuento

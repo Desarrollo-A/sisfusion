@@ -199,14 +199,20 @@ $(document).ready(function () {
                         // }
                         // let 
 
-                        if((d.registro_comision == 0 && d.id_cliente_reubicacion_2 == 0 && d.reubicadas == 0 && d.bandera != 0) || (d.liberaOOAM == 1 && d.registro_comision == 1 && d.bandera != 0) ){//LIQUIDADA
+                        if((d.registro_comision == 0 && d.id_cliente_reubicacion_2 == 0 && d.reubicadas == 0 && d.bandera != 0) || (d.liberaOOAM == 1 && d.registro_comision == 1 && d.ooamComisiones < 1) ){//LIQUIDADA
                             ooam = 2;
                             valorDisparador = 2; //el 2 es exclusivamente para OOAM
                             reg_com = 0;
                             console.log("entra a LIQUIDADA "+d.idLote);
 
-                        }else if(d.registro_comision == 9 && d.id_cliente_reubicacion_2 != 0 && d.reubicadas == 1){//DEUDA
+                        }else if(d.registro_comision == 9 && d.id_cliente_reubicacion_2 != 0 && d.reubicadas == 1){//segunda dispersion OOAM
                             ooam = 0;
+                            valorDisparador = 0; //el 2 es exclusivamente para OOAM
+                            reg_com = d.registro_comision;
+                            console.log("entra a segunda dispersion OOAM"+d.idLote);
+
+                        } else if(d.liberaOOAM == 1 && d.registro_comision == 1 && d.ooamComisiones > 1){//DEUDA
+                            ooam = 1;
                             valorDisparador = 0; //el 2 es exclusivamente para OOAM
                             reg_com = d.registro_comision;
                             console.log("entra a DEUDA"+d.idLote);
@@ -347,7 +353,7 @@ $(document).ready(function () {
         tipo_venta = $(this).attr("data-tipov");
         bandera_penalizacion = $(this).attr("data-banderaPenalizacion");
 
-        alert(registro_comision);
+        // alert(registro_comision);
 
         if(parseFloat(totalNeto2) > 0){
             $("#modal_NEODATA .modal-body").html("");
