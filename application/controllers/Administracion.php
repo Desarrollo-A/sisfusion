@@ -60,6 +60,7 @@ class Administracion extends CI_Controller{
 		  	$dataPer[$i]['tipo_venta']=$data[$i]->tipo_venta;
 		  	$dataPer[$i]['descripcion']=$data[$i]->descripcion;
 		  	$dataPer[$i]['totalNeto']=$data[$i]->totalNeto;
+			$dataPer[$i]['totalValidado']=$data[$i]->totalValidado;
 		  	$dataPer[$i]['vl']=$data[$i]->vl;
 		  	$dataPer[$i]['nombreSede']=$data[$i]->nombreSede;
 		  	$horaInicio = date("08:00:00");
