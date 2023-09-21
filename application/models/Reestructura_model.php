@@ -83,7 +83,8 @@ class Reestructura_model extends CI_Model
     function get_proyecto_lista(){
         return $this->db->query("SELECT lotx.proyectoReubicacion AS idResidencial, CONCAT(res.nombreResidencial, ' - ' , res.descripcion) AS descripcion  
         FROM loteXReubicacion lotx
-		INNER JOIN residenciales res ON res.idResidencial = lotx.proyectoReubicacion");
+		INNER JOIN residenciales res ON res.idResidencial = lotx.proyectoReubicacion
+		GROUP BY lotx.proyectoReubicacion, CONCAT(res.nombreResidencial, ' - ' , res.descripcion)");
     }
 
     function get_catalogo_resstructura(){
