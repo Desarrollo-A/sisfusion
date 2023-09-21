@@ -937,6 +937,10 @@ class Contraloria extends CI_Controller {
 //                array_push($correosEntregar, 'analista.comercial@ciudadmaderas.com');
 //                continue;
 //            }
+//            if (trim($email) == 'MALDAIR.CIUDADMADERAS@GMAIL.COM') { // CUANDO DETECTA EL CORREO DEL GERENTE 4223-MARIO ALDAIR ROSADO VAZQUEZ SE LE ENVÍA TAMBIÉN A 479-MARBELLA DEL SOCORRO DZUL CALÁN
+//                array_push($correosEntregar, 'ASISTENTE.PENINSULA1@CIUDADMADERAS.COM');
+//                continue;
+//            }
 //
 //            array_push($correosEntregar, $email);
 //        }
