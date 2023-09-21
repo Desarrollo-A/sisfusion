@@ -315,19 +315,19 @@ $("#tabla_ingresar_6").ready(function () {
         getInfo1[6] = $(this).attr("data-fecven");
         nombreLote = $(this).data("nomlote");
         const proceso = $(this).attr('data-proceso');
-    if (proceso != 2 && proceso != 4){
-        nombreLote = $(this).data("nomlote");
-        $(".lote").html(nombreLote);
-        $('#regRevCorrElab').modal('show');
-        return;
-    }
+        if (proceso != 2 && proceso != 4){
+            nombreLote = $(this).data("nomlote");
+            $(".lote").html(nombreLote);
+            $('#regRevCorrElab').modal('show');
+            return;
+        }
 
-    $.getJSON(`${general_base_url}contraloria/obtenerLoteAnteriorPorIdClienteNuevo/${idCLiente}`, function(data){
-        $('#totalNetoR').val(data.totalNeto);
-        nombreLote = $(this).data("nomlote");
-        $(".lote").html(nombreLote);
-        $('#regRevCorrElab').modal('show');
-    });   
+        $.getJSON(`${general_base_url}contraloria/obtenerLoteAnteriorPorIdClienteNuevo/${idCLiente}`, function(data){
+            $('#totalNetoR').val(`$${formatMoney(data.totalNeto)}`);
+            nombreLote = $(this).data("nomlote");
+            $(".lote").html(nombreLote);
+            $('#regRevCorrElab').modal('show');
+        });
     });
 
     $("#tabla_ingresar_6 tbody").on("click", ".revStaCE", function (e) {
@@ -343,19 +343,19 @@ $("#tabla_ingresar_6").ready(function () {
         nombreLote = $(this).data("nomlote");
     
         const proceso = $(this).attr('data-proceso');
-    if (proceso != 2 && proceso != 4){
-        nombreLote = $(this).data("nomlote");
-        $(".lote").html(nombreLote);
-        $('#regRevA7').modal('show');
-        return;
-    }
+        if (proceso != 2 && proceso != 4){
+            nombreLote = $(this).data("nomlote");
+            $(".lote").html(nombreLote);
+            $('#regRevA7').modal('show');
+            return;
+        }
 
-    $.getJSON(`${general_base_url}contraloria/obtenerLoteAnteriorPorIdClienteNuevo/${idCLiente}`, function(data){
-        $('#totalNetoRevA7').val(data.totalNeto);
-        nombreLote = $(this).data("nomlote");
-        $(".lote").html(nombreLote);
-        $('#regRevA7').modal('show');
-    });
+        $.getJSON(`${general_base_url}contraloria/obtenerLoteAnteriorPorIdClienteNuevo/${idCLiente}`, function(data){
+            $('#totalNetoRevA7').val(`$${formatMoney(data.totalNeto)}`);
+            nombreLote = $(this).data("nomlote");
+            $(".lote").html(nombreLote);
+            $('#regRevA7').modal('show');
+        });
     });
 
     $("#tabla_ingresar_6 tbody").on("click", ".return1", function (e) {
@@ -379,7 +379,7 @@ $("#tabla_ingresar_6").ready(function () {
     }
 
     $.getJSON(`${general_base_url}contraloria/obtenerLoteAnteriorPorIdClienteNuevo/${idCLiente}`, function(data){
-        $('#totalReturn1').val(data.totalNeto);
+        $('#totalReturn1').val(`$${formatMoney(data.totalNeto)}`);
         nombreLote = $(this).data("nomlote");
         $(".lote").html(nombreLote);
         $('#modal_return1').modal('show');
@@ -419,7 +419,7 @@ $(document).on('click', '.regCorrElab', function () {
     }
 
     $.getJSON(`${general_base_url}contraloria/obtenerLoteAnteriorPorIdClienteNuevo/${idCLiente}`, function(data){
-        $('#totalNeto').val(data.totalNeto);
+        $('#totalNeto').val(`$${formatMoney(data.totalNeto)}`);
         nombreLote = $(this).data("nomlote");
         $(".lote").html(nombreLote);
         $('#regCorrElab').modal();
