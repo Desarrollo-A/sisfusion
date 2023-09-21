@@ -59,6 +59,7 @@
                                             <th>FECHA DE APARTADO</th>
                                             <th>FECHA DE REALIZADO</th>
                                             <th>FECHA DE VENICMIENTO</th>
+                                            <th>REPRESENTANTE LEGAL</th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -78,4 +79,4 @@
 <script src="<?= base_url() ?>dist/js/es.js"></script>
 <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
 <script src="<?= base_url() ?>dist/js/fullcalendar.min.js"></script>
-<script src="<?=base_url()?>dist/js/controllers/contraloria/status10.js"></script>
+<script src="<?=base_url()?>dist/js/controllers/contraloria/status10.js?=1.1.2"></script>
