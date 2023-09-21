@@ -209,8 +209,6 @@ class Reestructura extends CI_Controller{
             return;
         }
 
-        $idClienteInsert = $this->db->insert_id();
-
         $dataInsertHistorialLote = array(
 			'nombreLote' => $clienteAnterior->nombreLote,
 			'idStatusContratacion' => 1,
