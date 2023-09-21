@@ -1124,20 +1124,20 @@ class Juridico extends CI_Controller
         if ($cliente[0]['proceso'] == 2 || $cliente[0]['proceso'] == 4) {
             $totalDocumentosValidar = 2;
             $documentosValidar = '8,33';
-            $nombreDocumentos = ['CONTRATO', 'RESCISIÓN DE CONTRATO'];
+            $nombreDocumentos = 'CONTRATO y RESCISIÓN DE CONTRATO';
         } else if ($cliente[0]['proceso'] == 3) {
             $totalDocumentosValidar = 2;
             $documentosValidar = '8,36';
-            $nombreDocumentos = ['CONTRATO', 'ADDENDUM'];
+            $nombreDocumentos = 'CONTRATO y ADDENDUM';
         } else {
             $totalDocumentosValidar = 1;
             $documentosValidar = '8';
-            $nombreDocumentos = ['CONTRATO'];
+            $nombreDocumentos = 'CONTRATO';
         }
 
         $documentos = $this->Juridico_model->validateDocumentation($idLote, $documentosValidar);
         return (count($documentos) < $totalDocumentosValidar)
-            ? ['status' => false, 'documentos' => implode(', ', $nombreDocumentos)]
+            ? ['status' => false, 'documentos' => $nombreDocumentos]
             : ['status' => true];
     }
 }

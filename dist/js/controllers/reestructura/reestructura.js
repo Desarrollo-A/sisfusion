@@ -84,6 +84,7 @@ $(document).on('click', '.guardarValidacion', function(){
     } 
 
     if(opcionValidacion == ''){
+        $("#spiner-loader").addClass('hide');
         alerts.showNotification("top", "right", "Selecciona una opción", "warning");
         return;
     }
@@ -498,8 +499,7 @@ function fillTableC(index_proyecto) {
         },
         {
             data: function (d) {
-                return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas editarOpcion" id="editarOpcion" name="editarOpcion" data-toggle="tooltip" data-placement="top" title="EDITAR OPCIÓN" data-idOpcion="' +d.id_opcion+ '"><i class="fas fa-edit"></i></button>'
-                +'<button class="btn-data btn-warning borrarOpcion" id="borrarOpcion" name="borrarOpcion" data-toggle="tooltip" data-placement="top" title= "ELIMINAR OPCIÓN" data-idOpcion="' +d.id_opcion+ '"><i class="fas fa-trash"></i></button></div>';        
+                return '<div class="d-flex justify-center"><button class="btn-data btn-warning borrarOpcion" id="borrarOpcion" name="borrarOpcion" data-toggle="tooltip" data-placement="top" title= "ELIMINAR OPCIÓN" data-idOpcion="' +d.id_opcion+ '"><i class="fas fa-trash"></i></button></div>';        
             }
         }],
         columnDefs: [{
