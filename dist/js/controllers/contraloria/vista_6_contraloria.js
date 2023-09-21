@@ -393,7 +393,6 @@ $(document).on('click', '.regCorrElab', function () {
     $('#fechaVencregCor').val($(this).attr('data-fecVen'));
     $('#nomLoteFakeEregCor').val($(this).attr('data-nomLote'));
 
-    console.log(totalNeto);
     if (totalNeto > 0) {
         $('#totalNeto').val(`$${formatMoney(totalNeto)}`);
     }
