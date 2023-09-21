@@ -78,7 +78,11 @@ class Reestructura extends CI_Controller{
     }
 
     public function lista_proyecto(){
-        echo json_encode($this->Reestructura_model->get_proyecto_lista()->result_array());
+		if($this->session->userdata('id_rol') == 2){
+			echo json_encode($this->Reestructura_model->get_proyecto_listaCancelaciones()->result_array());
+		}else{
+			echo json_encode($this->Reestructura_model->get_proyecto_lista()->result_array());
+		}
     }
 
 	public function lista_catalogo_opciones(){
@@ -208,8 +212,6 @@ class Reestructura extends CI_Controller{
             ]);
             return;
         }
-
-        $idClienteInsert = $this->db->insert_id();
 
         $dataInsertHistorialLote = array(
 			'nombreLote' => $clienteAnterior->nombreLote,
