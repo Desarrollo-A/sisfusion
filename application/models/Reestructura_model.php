@@ -3,6 +3,7 @@ class Reestructura_model extends CI_Model
 {
     function __construct()
     {
+        $this->load->library('email');
         parent::__construct();
     }
 
@@ -150,12 +151,12 @@ class Reestructura_model extends CI_Model
         (CASE WHEN totalNeto2 IS NULL THEN 0.00 ELSE totalNeto2 END) totalNeto2,
         (CASE WHEN idCliente = 0  OR idCliente IS NULL THEN 0 ELSE idCliente END) idCliente,registro_comision,
         (CASE WHEN tipo_venta IS NULL THEN 0 ELSE tipo_venta END) tipo_venta FROM lotes WHERE idLote=".$datos['idLote']." AND status = 1")->result_array();
-        $registro_comision = ($datos['tipo'] == 7 || $datos['tipo'] == 8) ? 9 : 8;
+        $registro_comision = ($datos['tipo'] == 8 || $datos['tipo'] == 9) ? 9 : 8;
         $idStatusLote = $datos['tipo'] == 9 ? 15 :($datos['tipo'] == 8  ? 3 : 1);
         $sqlIdCliente = $datos['tipo'] == 8 ? ' AND id_cliente='.$row[0]['idCliente'] : '';
         $this->db->trans_begin();
         //($datos['tipo'] == 7 || $datos['tipo'] == 8) ? $this->db->query("UPDATE lotes SET tipo_venta=".$row[0]['tipo_venta'].",usuario='".$datos['userLiberacion']."' WHERE idLote=".$datos['idLoteNuevo']." ") : '';
-            $banderaComisionCl = ($datos['tipo'] == 7 || $datos['tipo'] == 8) ? ' ,banderaComisionCl ='.$row[0]['registro_comision'] : '';
+            $banderaComisionCl = (in_array($datos['tipo'],array(7,8,9))) ? ' ,banderaComisionCl ='.$row[0]['registro_comision'] : '';
             $id_cliente = $this->db->query("SELECT id_cliente FROM clientes WHERE status = 1 AND idLote IN (" . $row[0]['idLote'] . ") ")->result_array();
             $this->db->query("UPDATE historial_documento SET status = 0 WHERE status = 1 AND idLote IN (".$row[0]['idLote'].") ");
             $this->db->query("UPDATE prospectos SET tipo = 0, estatus_particular = 4, modificado_por = 1, fecha_modificacion = GETDATE() WHERE id_prospecto IN (SELECT id_prospecto FROM clientes WHERE status = 1 AND idLote = ".$row[0]['idLote'].")");
@@ -234,8 +235,8 @@ class Reestructura_model extends CI_Model
 
                     if(!in_array($datos["tipo"],array(7,8,9))){
                         $encabezados = [
-                            'usuario'       =>  'id Lote',
-                            'contraseña'    =>  'Nombre lote',
+                            'idLote'       =>  'ID LOTE',
+                            'nombreLote'    =>  'NOMBRE LOTE',
                             'fechaAccion'   =>  'FECHA CREACIÓN'
                         ];
                 
