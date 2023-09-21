@@ -1,7 +1,7 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 class Administracion extends CI_Controller{
 	public function __construct()
-	{
+	{ 
 		parent::__construct();
 		$this->load->model('Administracion_model');
 		$this->load->model('registrolote_modelo');
