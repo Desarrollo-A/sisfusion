@@ -18,6 +18,7 @@ class Administracion extends CI_Controller{
 		$rutaUrl = substr($_SERVER["REQUEST_URI"],1);
 		$this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl,$this->session->userdata('opcionesMenu'));
     }
+	
 
 	public function index() {
 		if (!in_array($this->session->userdata('id_rol'), array('11', '34' , '23', '35' , '26', '41' ,'38' ,'39', '31' , '49', '50' , '40', '54' , '58', '10', '18', '19', '20', 
