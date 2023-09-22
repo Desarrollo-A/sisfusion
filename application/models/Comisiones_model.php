@@ -220,7 +220,7 @@ class Comisiones_model extends CI_Model {
     public function getDataDispersionPago() {
         $this->db->query("SET LANGUAGE Español;");
 
-        $query = $this->db->query("SELECT DISTINCT(l.idLote), cl.id_cliente_reubicacion ,  res.nombreResidencial, cond.nombre as nombreCondominio,
+        $query = $this->db->query("SELECT DISTINCT(l.idLote), cl.id_cliente_reubicacion, res.nombreResidencial, cond.nombre as nombreCondominio,
         l.nombreLote,
         (CASE WHEN l.tipo_venta = 1 THEN 'Particular' WHEN l.tipo_venta = 2 THEN 'NORMAL' ELSE ' SIN DEFINIR' END) tipo_venta,
         (CASE WHEN l.tipo_venta = 1 THEN 'lbl-warning' WHEN l.tipo_venta = 2 THEN 'lbl-green' ELSE 'lbl-gray' END) claseTipo_venta,
@@ -233,13 +233,18 @@ class Comisiones_model extends CI_Model {
         CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_materno) as coordinador,
         CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno) as gerente, 
         CONCAT(su.nombre, ' ', su.apellido_paterno, ' ', su.apellido_materno) as subdirector, (CASE WHEN re.id_usuario IN (0) OR re.id_usuario IS NULL THEN 'NA' ELSE CONCAT(re.nombre, ' ', re.apellido_paterno, ' ', re.apellido_materno) END) regional,
-        CONCAT(di.nombre, ' ', di.apellido_paterno, ' ', di.apellido_materno) as director, (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, cl.plan_comision,cl.id_subdirector, cl.id_sede, cl.id_prospecto, cl.lugar_prospeccion,(CASE WHEN pe.id_penalizacion IS NOT NULL AND pe.estatus not in (3) THEN 1 ELSE 0 END) penalizacion, pe.bandera as bandera_penalizacion, pe.id_porcentaje_penalizacion,l.referencia, pe.dias_atraso, (CASE WHEN clr.plan_comision IN (0) OR clr.plan_comision IS NULL THEN '-' ELSE plr.descripcion END) AS plan_descripcionReu, clr.totalNeto2Cl, 
-        CASE WHEN (liquidada2-liquidada) = 0 THEN 1 ELSE 0 END liberaOOAM, ooamComisiones,
-        (CASE WHEN clr.banderaComisionCl = 7 AND registro_comision IN (9) THEN 0 ELSE l.registro_comision END) AS registro_comision,
-		/*para dispersar a ooam desde 0 si ya esta liquidada*/
-        (CASE WHEN clr.banderaComisionCl = 7 AND registro_comision IN (9) THEN 0 ELSE cl.id_cliente_reubicacion_2 END) AS id_cliente_reubicacion_2, 
-		/*si esta liquidada el cliente anterior ya no se considera*/
-        ISNULL(reub.reubicadas, 0) reubicadas, pc.bandera
+        CONCAT(di.nombre, ' ', di.apellido_paterno, ' ', di.apellido_materno) as director, (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, cl.plan_comision,cl.id_subdirector, cl.id_sede, 
+        cl.id_prospecto, cl.lugar_prospeccion,(CASE WHEN pe.id_penalizacion IS NOT NULL AND pe.estatus not in (3) THEN 1 ELSE 0 END) penalizacion, pe.bandera as bandera_penalizacion, pe.id_porcentaje_penalizacion,l.referencia, pe.dias_atraso, 
+        
+        (CASE WHEN clr.plan_comision IN (0) OR clr.plan_comision IS NULL THEN '-' ELSE plr.descripcion END) AS descripcion_planReu, clr.plan_comision plan_comisionReu,
+		clr.totalNeto2Cl, 
+
+        CASE WHEN (liquidada2-liquidada) = 0 THEN 1 ELSE 0 END validaLiquidadas, 
+        (CASE WHEN clr.banderaComisionCl in (0,8) AND l.registro_comision IN (9) THEN 1
+		WHEN clr.banderaComisionCl = 1 AND l.registro_comision IN (9) THEN 2 
+		WHEN clr.banderaComisionCl = 7 AND l.registro_comision IN (9) THEN 3 ELSE 0 END) AS bandera_dispersion, 
+        l.registro_comision, cl.id_cliente_reubicacion_2, ISNULL(reub.reubicadas, 0) reubicadas, CONCAT(l.nombreLote,'</b> <i>(',lor.nombreLote,')</i><b>') as nombreLoteReub
+
         FROM lotes l
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
         INNER JOIN condominios cond ON l.idCondominio = cond.idCondominio
@@ -258,16 +263,10 @@ class Comisiones_model extends CI_Model {
         LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
         LEFT JOIN clientes clr ON clr.id_cliente = cl.id_cliente_reubicacion_2
         LEFT JOIN plan_comision plr ON plr.id_plan = clr.plan_comision
-        LEFT JOIN (select COUNT(*) liquidada, id_lote FROM comisiones WHERE liquidada = 1 GROUP BY id_lote) liq
-		ON liq.id_lote = l.idLote
-		LEFT JOIN (select COUNT(*) liquidada2, id_lote FROM comisiones WHERE ooam = 0 GROUP BY id_lote) liq2
-		ON liq2.id_lote = l.idLote
-
-        LEFT JOIN (select COUNT(*) ooamComisiones, id_lote FROM comisiones WHERE ooam = 2 GROUP BY id_lote) ooam
-		ON ooam.id_lote = l.idLote
-
+        LEFT JOIN lotes lor ON lor.idLote = clr.idLote
+        LEFT JOIN (select COUNT(*) liquidada, id_lote FROM comisiones WHERE liquidada = 1 GROUP BY id_lote) liq ON liq.id_lote = l.idLote
+		LEFT JOIN (select COUNT(*) liquidada2, id_lote FROM comisiones WHERE ooam = 0 GROUP BY id_lote) liq2 ON liq2.id_lote = l.idLote
         LEFT JOIN (select COUNT(*) reubicadas, idCliente FROM comisionesReubicadas GROUP BY idCliente) reub ON reub.idCliente = clr.id_cliente
-
         WHERE (l.idLote IN (13969,7167,7168,10304,17231,18338,18549,23730,27250,31850,32573,73591) 
         AND l.registro_comision not in (7) 
         AND pc.bandera in (0)) OR (l.idStatusContratacion >= 9 
@@ -275,8 +274,10 @@ class Comisiones_model extends CI_Model {
         AND l.status = 1 
         AND (l.registro_comision in (0,8,2,9) or (l.registro_comision in (1,8,9) 
         AND pc.bandera in (0))) 
-        AND (tipo_venta IS NULL OR tipo_venta IN (0,1,2)) 
+        AND (l.tipo_venta IS NULL OR l.tipo_venta IN (0,1,2)) 
         AND cl.fechaApartado >= '2020-03-01' 
+        AND (cl.id_subdirector IS NOT NULL AND cl.id_subdirector != '' AND cl.id_subdirector != 0 )
+
         AND ISNULL(l.totalNeto2, 0) > 0) ORDER BY l.idLote");
 
         return $query;
