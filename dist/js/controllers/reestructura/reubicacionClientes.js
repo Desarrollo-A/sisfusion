@@ -163,7 +163,6 @@ $(document).on('click', '.btn-reestructurar', function () {
     const nombreCliente = row.data().cliente;
     const nombreLote = row.data().nombreLote;
 
-
     changeSizeModal('modal-md');
     appendBodyModal(`
         <form method="post" id="formReestructura">
@@ -174,7 +173,7 @@ $(document).on('click', '.btn-reestructurar', function () {
                         <h6 class="m-0">${nombreCliente}</h6>
                     </div>
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2">
-                        <p class="text-center">¿Está seguro que desea reestructurar el lote <b>${nombreLote}</b>? <br>Recuerde que al realizar este movimiento el lote sufrirá algunos cambios al confirmar.</p>
+                        <p class="text-center">¿Estás seguro que deseas reestructurar el lote <b>${nombreLote}</b>? <br>Recuerda que al realizar este movimiento, el lote sufrirá algunos cambios al confirmar.</p>
                         <input type="hidden" id="idCliente" name="idCliente" value="${idCliente}">
                     </div>
                 </div>
@@ -277,7 +276,9 @@ function getProyectosAOcupar(idProyecto, superficie, tipoLote) {
 
 $(document).on("change", "#proyectoAOcupar", function(e){
     $('#spiner-loader').removeClass('hide');
+    $("#infoLoteSeleccionado").html("");
     $("#condominioAOcupar").html("");
+    $("#loteAOcupar").selectpicker('refresh');
     idProyecto = $(this).val();
     superficie = $("#superficie").val();
     tipoLote = $("#tipoLote").val();
@@ -297,6 +298,7 @@ $(document).on("change", "#proyectoAOcupar", function(e){
 $(document).on("change", "#condominioAOcupar", function(e){
     $('#spiner-loader').removeClass('hide');
     $("#loteAOcupar").html("");
+    $("#infoLoteSeleccionado").html("");
     idCondominio = $(this).val();
     superficie = $("#superficie").val();
 

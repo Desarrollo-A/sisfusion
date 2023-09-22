@@ -24,21 +24,22 @@ const AccionDoc = {
 };
 
 const TipoDoc = {
-  CONTRATO: 8,
-  CORRIDA: 7,
-  CARTA_DOMICILIO: 29,
-  CONTRATO_FIRMADO: 30,
-  DS_NEW: "ds_new",
-  DS_OLD: "ds_old",
-  EVIDENCIA_MKTD_OLD: 66, // EXISTE LA RAMA CON LA EVIDENCIA DE MKTD (OLD)
-  AUTORIZACIONES: "autorizacion",
-  PROSPECTO: "prospecto",
-  APOSTILLDO_CONTRATO: 31,
-  CARTA: 32,
-  RESCISION: 33,
-  CARTA_PODER: 34,
-  RESCISION_FIRMADA: 35,
-  ADDENDUM: 36,
+    CONTRATO: 8,
+    CORRIDA: 7,
+    CARTA_DOMICILIO: 29,
+    CONTRATO_FIRMADO: 30,
+    DS_NEW: 'ds_new',
+    DS_OLD: 'ds_old',
+    EVIDENCIA_MKTD_OLD: 66, // EXISTE LA RAMA CON LA EVIDENCIA DE MKTD (OLD)
+    AUTORIZACIONES: 'autorizacion',
+    PROSPECTO: 'prospecto',
+    APOSTILLDO_CONTRATO: 31,
+    CARTA: 32,
+    RESCISION: 33,
+    CARTA_PODER: 34,
+    RESCISION_FIRMADA: 35,
+    ADDENDUM: 36,
+    ADDENDUM_FIRMADO: 37
 };
 
 const observacionContratoUrgente = 1; // Bandera para inhabilitar
@@ -398,7 +399,8 @@ function cargarTabla(idLote, idCliente = "") {
           }
           if (
             data.tipo_doc == TipoDoc.CONTRATO_FIRMADO ||
-            data.tipo_doc == TipoDoc.RESCISION_FIRMADA
+            data.tipo_doc == TipoDoc.RESCISION_FIRMADA ||
+            data.tipo_doc == TipoDoc.ADDENDUM_FIRMADO
           ) {
             // CONTRATO FIRMADO
             if (data.expediente == null || data.expediente === "") {
