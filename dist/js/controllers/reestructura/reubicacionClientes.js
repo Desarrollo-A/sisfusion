@@ -277,7 +277,9 @@ function getProyectosAOcupar(idProyecto, superficie, tipoLote) {
 
 $(document).on("change", "#proyectoAOcupar", function(e){
     $('#spiner-loader').removeClass('hide');
+    $("#infoLoteSeleccionado").html("");
     $("#condominioAOcupar").html("");
+    $("#loteAOcupar").selectpicker('refresh');
     idProyecto = $(this).val();
     superficie = $("#superficie").val();
     tipoLote = $("#tipoLote").val();
@@ -297,6 +299,7 @@ $(document).on("change", "#proyectoAOcupar", function(e){
 $(document).on("change", "#condominioAOcupar", function(e){
     $('#spiner-loader').removeClass('hide');
     $("#loteAOcupar").html("");
+    $("#infoLoteSeleccionado").html("");
     idCondominio = $(this).val();
     superficie = $("#superficie").val();
 
