@@ -47,10 +47,19 @@ const createGoogleCalendar = () => {
     weekends: true,
     height: 'auto',
     contentHeight: 600,
-    eventTimeFormat: {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true
+    eventTimeFormat: function ({date}) {
+      let hora
+      if (date.hour === 0) {
+        hora = 12;
+      } else if (date.hour > 12) {
+        hora = date.hour - 12;
+      } else {
+        hora = date.hour;
+      }
+
+      const minutosStr = (date.minute < 10) ? `0${date.minute}` : date.minute;
+
+      return (date.hour < 12) ? `${hora}:${minutosStr} am` : `${hora}:${minutosStr} pm`;
     },
     views: {
       timeGridWeek: {
