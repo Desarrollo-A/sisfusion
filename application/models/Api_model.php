@@ -111,4 +111,46 @@ class Api_model extends CI_Model
         $validacionFecha")->result_array(); 
     }
 
+    public function getInformacionProspectos($year, $month){
+        $month1 = $month;
+        $month2 = $month;
+        
+        if(!isset($month) || $month <= 0){
+            $month1 = 1;
+            $month2 = 12;
+        }
+        
+        $query = $this->db->query("select 
+                            pr.id_prospecto, 
+                            pr.nombre,
+                            pr.apellido_paterno,
+                            pr.apellido_materno,
+                            pr.personalidad_juridica,
+                            pr.rfc,
+                            pr.correo,
+                            pr.telefono,
+                            pr.telefono_2,
+                            pr.tipo,
+                            pr.lugar_prospeccion,
+                            pr.fecha_creacion,
+                            pr.id_asesor,
+                            Upper(us.nombre) as nombre_asesor
+                                FROM
+                                    prospectos pr
+                                INNER JOIN 
+                                    opcs_x_cats opx ON opx.id_opcion = pr.personalidad_juridica AND opx.id_catalogo = 10
+                                INNER JOIN 
+                                    opcs_x_cats opx1 ON opx1.id_opcion = pr.lugar_prospeccion AND opx1.id_catalogo = 9
+                                INNER JOIN
+                                    opcs_x_cats opx2 ON opx2.id_opcion = pr.tipo AND opx2.id_catalogo = 8
+                                INNER JOIN
+                                    usuarios us ON us.id_usuario = pr.id_asesor
+                                WHERE 
+                                    YEAR(pr.fecha_creacion) = ? AND MONTH(pr.fecha_creacion) BETWEEN ? AND ?",
+                            array( $year, $month1, $month2 )
+                        );
+
+        return $query->result_array();
+    }
+
 }
