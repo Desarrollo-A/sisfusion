@@ -125,16 +125,16 @@ class Api_model extends CI_Model
                             pr.nombre,
                             pr.apellido_paterno,
                             pr.apellido_materno,
-                            pr.personalidad_juridica,
-                            pr.rfc,
-                            pr.correo,
+                            opx.nombre personalidad_juridica,
+                            COALESCE(pr.rfc, '') as rfc,
+                            COALESCE(pr.correo, '') as correo,
                             pr.telefono,
-                            pr.telefono_2,
-                            pr.tipo,
-                            pr.lugar_prospeccion,
+                            COALESCE(pr.telefono_2, '') as telefono_2,
+                            opx2.nombre tipo,
+                            opx1.nombre lugar_prospeccion,
                             pr.fecha_creacion,
                             pr.id_asesor,
-                            Upper(us.nombre) as nombre_asesor
+                            Upper(concat(us.nombre, ' ' , us.apellido_paterno, ' ', us.apellido_materno)) as nombre_asesor
                                 FROM
                                     prospectos pr
                                 INNER JOIN 
