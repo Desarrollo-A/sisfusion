@@ -209,5 +209,5 @@
         const funcionVista = "<?=$funcionVista ?? ''?>";
     </script>
     <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
-    <script src="<?= base_url() ?>dist/js/controllers/documentacion/documentacion.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/documentacion/documentacion.js?=1.1.2"></script>
 </body>
