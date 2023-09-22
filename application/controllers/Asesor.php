@@ -3384,6 +3384,8 @@ class Asesor extends CI_Controller {
         $dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
         $id_rol = $this->session->userdata('id_rol');
 
+        console.log($id_rol);
+        
         if (in_array($id_rol, array(13, 32, 17, 70)))
             $documentsNumber = 3;
         else

@@ -965,6 +965,7 @@ $(document).on('click', '#save3', function(e) {
             type: 'POST',
             success: function(data){
                 response = JSON.parse(data);
+                console.log(response.message);
                 if(response.message == 'OK') {
                     $('#save3').prop('disabled', false);
                     $('#modal3').modal('hide');
