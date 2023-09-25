@@ -192,5 +192,9 @@ class Contratacion extends CI_Controller
         $this->validateSession();
         echo json_encode($this->Contratacion_model->getSedesPorDesarrollos()->result_array());
     }
+
+    public function getInformationHistorialEstatus($id_parametro){
+        echo json_encode($this->Contratacion_model->getInformationHistorialEstatus($id_parametro)->result_array());
+    }
     
 }
