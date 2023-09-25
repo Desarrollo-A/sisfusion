@@ -72,7 +72,7 @@ function fillTrimestral(beginDate, endDate) {
             titleAttr: 'Descargar archivo de Excel',
             title:'Reporte trimestral',
             exportOptions: {
-                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulos[columnIdx] + ' ';
@@ -98,15 +98,46 @@ function fillTrimestral(beginDate, endDate) {
                 {data: 'fechaApartado'},
                 {data: 'nombreSede'},
                 {data: 'tipo_venta'},
-                {data: 'fechaEstatus9'}
-            ]
+                {data: 'fechaEstatus9'},
+                {data: 'estatusActual'},
+                {data: 'cliente'},
+                {data: function (n) {
+                    return formatMoney(n.enganche);
+                }},
+                {
+                    data: function(d){
+                        if(d.estatus == 'Contratado')
+                            return `<center><span class="label lbl-green">CONTRATADO</span><center>`;
+                        else if(d.estatus == 'Apartado')
+                            return `<center><span class="label lbl-sky">APARTADO</span><center>`;   
+                        else       
+                            return `<center><span class="label lbl-warning">CANCELADO</span><center>`;            
+                    }         
+                }
+            ],
+            initComplete: function() {
+                $('[data-toggle="tooltip"]').tooltip();
+                $('#spiner-loader').addClass('hide');
+            }
     });
 }
+
+function formatMoney( n ) {
+    const formatter = new Intl.NumberFormat('es-MX', {
+        style: 'currency',
+        maximumFractionDigits: 4,
+        currency: 'MXN'
+    });
+    return formatter.format(n);
+}
+
 
 $(document).on("click", "#searchByDateRange", function () {
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
     fillTrimestral(finalBeginDate, finalEndDate);
+    $('#tablaInventario').removeClass('hide');
+	$('#spiner-loader').removeClass('hide');
 });
 
 $('body').tooltip({
