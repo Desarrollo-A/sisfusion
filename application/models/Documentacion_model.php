@@ -111,7 +111,7 @@ class Documentacion_model extends CI_Model {
         $tipoDocumento, $tipoContratacion = 1, $nombreLote = '', $nombreDocumento = '', $eliminarArchivo = false
     ): string
     {
-        if ($tipoContratacion == 1) {
+        if ($tipoContratacion == 0 || $tipoContratacion == 1) {
             return $this->obtenerPathViejoContratacion($tipoDocumento);
         }
 
