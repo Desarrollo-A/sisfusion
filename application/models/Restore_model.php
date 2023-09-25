@@ -38,7 +38,7 @@ class Restore_model extends CI_Model {
             $this->db->trans_commit();
             return true;
         }
-    }
+    } 
 
     public function return_status_uno($datos){
         $replace = ["$", ","];
@@ -79,7 +79,7 @@ class Restore_model extends CI_Model {
                 col_afect
                 ,MAX(fecha_creacion) as fecha_creacion, id_parametro
             FROM auditoria WHERE id_parametro = $idlote AND tabla = 'lotes'
-            AND col_afect IN ('tipo_venta', 'registro_comision', 'ubicacion', 'ubicacion_dos', 'totalNeto2','totalNeto','totalValidado') 
+            AND col_afect IN ('tipo_venta', 'registro_comision', 'ubicacion', 'ubicacion_dos', 'totalNeto2','totalNeto','totalValidado','precio') 
             GROUP BY col_afect, id_parametro
         )
         SELECT
@@ -121,6 +121,9 @@ class Restore_model extends CI_Model {
                 elseif($row['col_afect'] == 'totalValidado'){
                     $param = $totalValidado == 'N/A' ? $row['anterior'] : str_replace($replace,"",$totalValidado);
                     $AND .= ", totalValidado =  $param";
+                }elseif($row['col_afect'] == 'precio'){
+                    $param =  $row['anterior'];
+                    $AND .= ", precio =  $param";
                 }
             }
         }

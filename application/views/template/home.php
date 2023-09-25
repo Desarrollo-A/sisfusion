@@ -2,11 +2,8 @@
 <body class="">
 	<div class="wrapper ">
 		<?php
-		/*-------------------------------------------------------*/
 		$this->load->view('template/sidebar');
-		/*--------------------------------------------------------*/
 		?>
-
 
 		<div class="content" id="boxHome">
 		<?=$this->session->flashdata('error_usuario')?>
@@ -53,7 +50,7 @@
 		}
 	}
 
-	function displayClock() {
+	var displayClock = function() {
 		const months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
 		const date = new Date()
 		const time = getFormattedTime(date)
@@ -74,5 +71,5 @@
 		document.getElementById("saludoTxt").textContent = saludo
 	}
 
-	displayClock();
+	setInterval(displayClock, 1000);
 </script>

@@ -2,10 +2,8 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <link href="<?= base_url() ?>dist/css/documentTree.css" rel="stylesheet"/>
 <body id="mainBody">
-    <div class="wrapper ">
-        
-    <?php $this->load->view('template/sidebar'); ?>
-
+    <div class="wrapper ">  
+        <?php $this->load->view('template/sidebar'); ?>
 
         <div class="modal fade" id="modalInfo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm" role="document">

@@ -68,13 +68,14 @@
             'VENTAS-ASESOR' primerNom, 'VENTAS' ubic, lo.nombreLote, UPPER(CONCAT(cl.primerNombre, ' ', cl.segundoNombre, ' ', cl.apellidoPaterno, ' ', cl.apellidoMaterno)) nombreCliente,
             cl.rfc, co.nombre, re.nombreResidencial, cl.fechaApartado, cl.idCliente id_cliente, cl.idCliente idDocumento, CONVERT(VARCHAR,ds.fechaCrate,120) AS modificado,
             lo.idLote, lo.observacionContratoUrgente, '' nombreAsesor, '' nombreCoordinador, '' nombreGerente, '' nombreSubdirector, '' nombreRegional, '' nombreRegional2,
-            'ds_old' tipo_doc, l.status8Flag, u0.estatus AS estatusAsesor
+            'ds_old' tipo_doc, l.status8Flag, u0.estatus AS estatusAsesor, cli.proceso
             FROM cliente_consulta cl
             INNER JOIN lotes_consulta lo ON lo.idLote = cl.idLote
             INNER JOIN lotes l ON lo.idLote = l.idLote    
             INNER JOIN deposito_seriedad_consulta ds ON ds.idCliente = cl.idCliente
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+            INNER JOIN clientes cli ON cli.id_cliente = cl.idCliente
             LEFT JOIN usuarios u0 ON u0.id_usuario = cl.idAsesor
             WHERE cl.status=1 AND lo.status=1 AND cl.idLote = $lotes")
             ->result_array();
@@ -1558,9 +1559,11 @@
         concat(ge.nombre,' ', ge.apellido_paterno, ' ', ge.apellido_materno) as gerente, lotes.totalNeto2, lotes.referencia,
         UPPER(CASE CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno) WHEN '' THEN hd.usuario ELSE 
         CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno) END) nombreUsuario,
-		cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta
+		cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta,
+		ISNULL(hd2.expediente, 0) documentoCargado
         FROM lotes as lotes
         INNER JOIN clientes as cl ON lotes.idLote=cl.idLote AND cl.status=1
+
         LEFT JOIN sedes AS s ON s.id_sede = cl.id_sede
         INNER JOIN condominios as cond ON lotes.idCondominio=cond.idCondominio
         INNER JOIN residenciales as residencial ON cond.idResidencial=residencial.idResidencial
@@ -1571,6 +1574,10 @@
         WHERE idStatusContratacion = 15 AND idMovimiento = 45 
         GROUP BY idStatusContratacion, idMovimiento, idLote, status, usuario) hd ON hd.idLote = lotes.idLote AND hd.idStatusContratacion = 15 AND hd.idMovimiento = 45 AND hd.status = 1
         LEFT JOIN usuarios u ON CAST(u.id_usuario AS VARCHAR(45)) = CAST(hd.usuario AS VARCHAR(45))
+				
+		LEFT JOIN historial_documento hd2 ON hd2.idLote = lotes.idLote AND hd2.idCliente = lotes.idCliente AND hd2.tipo_doc = 30
+
+
         WHERE lotes.status = 1 AND lotes.idStatusContratacion = 15 AND lotes.idMovimiento = 45
         GROUP BY lotes.idLote, s.nombre, cl.id_cliente, cl.nombre, cl.apellido_materno, cl.apellido_paterno,
         lotes.nombreLote, lotes.idStatusContratacion, lotes.idMovimiento, hd.modificado,
@@ -1578,8 +1585,8 @@
         residencial.nombreResidencial, cond.nombre, lotes.ubicacion, lotes.tipo_venta,
         cl.id_gerente, cl.id_coordinador, concat(us.nombre,' ', us.apellido_paterno, ' ', us.apellido_materno),
         concat(ge.nombre,' ', ge.apellido_paterno,' ', ge.apellido_materno), idAsesor, lotes.fechaSolicitudValidacion, lotes.firmaRL,
-        lotes.validacionEnganche, cl.fechaApartado, lotes.totalNeto2, lotes.referencia, CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno), hd.usuario,
-		cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '')");
+        lotes.validacionEnganche, cl.fechaApartado, lotes.totalNeto2, lotes.referencia,  CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno), hd.usuario,
+		cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), ''), hd2.expediente");
         return $query->result();
     }
 
@@ -3125,29 +3132,38 @@
 	}
 
 	function getRevision2($fechaInicio, $fechaFinal) {
-		$filter = " AND hd.modificado BETWEEN '$fechaInicio 00:00:00' AND '$fechaFinal 23:59:59'";
-
-
-		$this->db->select(" CONVERT(VARCHAR,hd.modificado,20) AS modificado, hd.idHistorialLote, hd.nombreLote, hd.idStatusContratacion, hd.idMovimiento, CONVERT(VARCHAR,hd.fechaVenc,20) AS fechaVenc, l.idLote, CONVERT(VARCHAR,cl.fechaApartado, 20) AS fechaApartado, cond.nombre as nombreCondominio, res.nombreResidencial,   
-		CONCAT(ase.nombre, ' ', ase.apellido_paterno, ' ', ase.apellido_materno) as asesor,
-		CONCAT(ger.nombre, ' ', ger.apellido_paterno, ' ', ger.apellido_materno) as gerente, 
-		CONCAT(coo.nombre, ' ', coo.apellido_paterno, ' ', coo.apellido_materno) as coordinador, hd.usuario, CAST(hd.comentario AS NVARCHAR(100)) comentario, 
-		UPPER((CASE WHEN mov.id_usuario IS NOT null THEN CONCAT(mov.nombre, ' ', mov.apellido_paterno, ' ', mov.apellido_materno) WHEN mov2.id_usuario IS NOT null THEN CONCAT(mov2.nombre, ' ', mov2.apellido_paterno, ' ', mov2.apellido_materno) ELSE hd.usuario END)) result");
-		$this->db->join('clientes cl', 'hd.idCliente = cl.id_cliente');
-		$this->db->join('lotes l', 'hd.idLote = l.idLote');
-		$this->db->join('condominios cond', 'cond.idCondominio = l.idCondominio');
-		$this->db->join('residenciales res', 'cond.idResidencial = res.idResidencial');
-		$this->db->join('usuarios ase', 'cl.id_asesor = ase.id_usuario', 'LEFT');
-		$this->db->join('usuarios coo', 'cl.id_coordinador = coo.id_usuario', 'LEFT');
-		$this->db->join('usuarios ger', 'cl.id_gerente = ger.id_usuario', 'LEFT');
-		$this->db->join('usuarios mov', 'CAST(hd.usuario AS VARCHAR(45)) = CAST(mov.id_usuario AS VARCHAR(45))', 'LEFT');
-		$this->db->join('usuarios mov2', 'SUBSTRING(mov2.usuario, 1, 20) = SUBSTRING(hd.usuario, 1, 20)', 'LEFT');
-		$this->db->where('(hd.idStatusContratacion = 2 AND hd.idMovimiento in (4,74,84,93) AND cl.status = 1 AND hd.status = 1 AND l.status = 1)'.$filter);
-		$this->db->group_by('hd.idHistorialLote, hd.nombreLote, hd.idStatusContratacion, hd.idMovimiento, hd.fechaVenc, l.idLote, fechaApartado, cond.nombre, res.nombreResidencial, ase.nombre, ase.apellido_paterno, ase.apellido_materno, ger.nombre, ger.apellido_paterno, ger.apellido_materno, coo.nombre, coo.apellido_paterno, coo.apellido_materno, mov.nombre, mov.apellido_paterno, mov.apellido_materno, mov2.nombre, mov2.apellido_paterno, mov2.apellido_materno,mov2.usuario, hd.usuario, mov.id_usuario, mov2.id_usuario, CAST(hd.comentario AS NVARCHAR(100)),hd.modificado');
-		$this->db->order_by('hd.modificado','ASC');
-		$query = $this->db->get('historial_lotes hd');
-		return $query->result();
+		$filter = " AND hl.modificado BETWEEN '$fechaInicio 00:00:00' AND '$fechaFinal 23:59:59'";
+		return $this->db->query("SELECT hl.modificado, hl.fechaVenc, CAST(hl.comentario AS NVARCHAR(480)) comentario, hl.usuario, 
+		lo.idLote, cl.fechaApartado, co.nombre as nombreCondominio, re.nombreResidencial, lo.nombreLote,
+		CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno) asesor,
+		CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno) coordinador, 
+		CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) gerente, 
+		CASE 
+		WHEN mov.id_usuario IS NOT NULL THEN CONCAT(mov.nombre, ' ', mov.apellido_paterno, ' ', mov.apellido_materno) 
+		WHEN mov2.id_usuario IS NOT null THEN CONCAT(mov2.nombre, ' ', mov2.apellido_paterno, ' ', mov2.apellido_materno) 
+		ELSE hl.usuario END result
+		FROM lotes lo
+		INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1
+		INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+		INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+		INNER JOIN (SELECT * FROM historial_lotes WHERE idMovimiento IN (20, 63, 85, 92) AND status = 1) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
+		$filter
+		LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+		LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+		LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+		LEFT JOIN usuarios mov ON CAST(hl.usuario AS VARCHAR(45)) = CAST(mov.id_usuario AS VARCHAR(45))
+		LEFT JOIN usuarios mov2 ON SUBSTRING(mov2.usuario, 1, 20) = SUBSTRING(hl.usuario, 1, 20)
+		WHERE lo.status = 1 --AND lo.idLote IN (69149, 82657)
+		GROUP BY hl.modificado, hl.fechaVenc, CAST(hl.comentario AS NVARCHAR(480)), hl.usuario,
+		lo.idLote, cl.fechaApartado, co.nombre, re.nombreResidencial, lo.nombreLote,
+		u0.nombre, u0.apellido_paterno, u0.apellido_materno, 
+		u1.nombre, u1.apellido_paterno, u1.apellido_materno, 
+		u2.nombre, u2.apellido_paterno, u2.apellido_materno, 
+		mov.id_usuario, mov.nombre, mov.apellido_paterno, mov.apellido_materno, mov2.nombre, 
+		mov2.id_usuario, mov2.apellido_paterno, mov2.apellido_materno,mov2.usuario
+		ORDER BY hl.modificado ASC")->result_array();
 	}
+	
 	function getRevision5($datos,$typeTransaction, $beginDate, $endDate, $where) {
         if ($typeTransaction == 1 || $typeTransaction == 3) {  // FIRST LOAD || SEARCH BY DATE RANGE
             $filter = " AND cl.fechaApartado BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
@@ -3196,7 +3212,8 @@
 		CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
 		CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
 		UPPER(CASE CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno) WHEN '' THEN hd.usuario ELSE 
-		CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno) END) nombreUsuario
+		CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno) END) nombreUsuario,
+		ISNULL(oxc0.nombre, 'SIN ESPECIFICAR') representanteLegal
 		FROM historial_lotes hd
 		INNER JOIN clientes cl ON hd.idCliente = cl.id_cliente
 		INNER JOIN lotes l ON hd.idLote = l.idLote AND l.status = 1
@@ -3206,6 +3223,7 @@
 		LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
 		LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
 		LEFT JOIN usuarios u ON CAST(u.id_usuario AS VARCHAR(45)) = CAST(hd.usuario AS VARCHAR(45))
+		LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.rl AND oxc0.id_catalogo = 77
 		WHERE (hd.idStatusContratacion = 10 and hd.idMovimiento  = 40 and cl.status = 1)
 		AND hd.status = 1 ".$filter." ORDER BY hd.modificado asc");
         return $query->result();
@@ -3410,14 +3428,10 @@
 				$sede = "";
 				if ($this->session->userdata('id_usuario') == 11656) // Dulce María Facundo Torres VERÁ USUARIOS DE LA GERENCIA ACTUAL (7886 JESSIKA GUADALUPE NEAVES FLORES) Y LO DE SU ANTERIOR GERENCIA (106 ANA KARINA ARTEAGA LARA)
                         $id_lider = $this->session->userdata('id_lider') . ', 106';
-				else if ($this->session->userdata('id_usuario') == 10795) { // ALMA GALICIA ACEVEDO QUEZADA 
-					$id_lider = $id_lider . ', 671';
-					$sede = "AND clientes.id_sede = 12";
+				else if ($this->session->userdata('id_usuario') == 12963) { // 	YUMICO BELEN VILLA NAVA 
+					$id_lider = $id_lider . ', 9999, 7519';
+					$sede = "AND clientes.id_sede = 8";
 				}	
-				else if ($this->session->userdata('id_usuario') == 12855) { // ARIADNA ZORAIDA ALDANA ZAPATA
-					$id_lider = $id_lider . ', 654';
-					$sede = "AND clientes.id_sede = 12";
-				}
 				else if ($this->session->userdata('id_usuario') == 10270) { // ANDRES BARRERA VENEGAS
 					$id_lider = $id_lider . ', 113';
 					$sede = "AND clientes.id_sede IN (4, 13)";
@@ -3426,7 +3440,7 @@
 					$sede = "";
 				}
 				else if ($this->session->userdata('id_usuario') == 12318) { // EMMA CECILIA MALDONADO RAMÍREZ
-					$id_lider = $id_lider . ', 11196, 5637';
+					$id_lider = $id_lider . ', 11196, 5637, 2599, 1507';
 					$sede = "";
 				} else if ($this->session->userdata('id_usuario') == 11607) { // JOSE ENRIQUE HINOJOSA GUERRERO
 					$id_lider = $id_lider . ', 2411'; // VE LO DE SU GERENTE ACTUAL + LOS REGISTROS DE MAGDALENA ESPARZA HERNANDEZ CUANDO ERA GERENTE
@@ -3533,7 +3547,7 @@
         CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
         CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2,
-        lo.status8Flag, u0.estatus AS estatusAsesor
+        lo.status8Flag, u0.estatus AS estatusAsesor, cl.proceso
 		FROM historial_documento hd
 		INNER JOIN lotes lo ON lo.idLote = hd.idLote
 		INNER JOIN clientes cl ON  lo.idCliente = cl.id_cliente AND cl.idLote = lo.idLote AND cl.status = 1
@@ -3574,7 +3588,7 @@
         CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
         CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2,
-		'ds_new' tipo_doc, lo.status8Flag, u0.estatus AS estatusAsesor
+		'ds_new' tipo_doc, lo.status8Flag, u0.estatus AS estatusAsesor, cl.proceso
 		FROM clientes cl
 		INNER JOIN lotes lo ON lo.idLote = cl.idLote
 		INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
@@ -3615,7 +3629,7 @@
         CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
         CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2,
-		'autorizacion' tipo_doc, lo.status8Flag, u0.estatus AS estatusAsesor
+		'autorizacion' tipo_doc, lo.status8Flag, u0.estatus AS estatusAsesor, cl.proceso
 		FROM autorizaciones aut
 		INNER JOIN lotes lo ON lo.idLote = aut.idLote
 		INNER JOIN clientes cl ON aut.idCliente = cl.id_cliente
@@ -3656,7 +3670,7 @@
         CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
         CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2,
-        l.status8Flag, u0.estatus AS estatusAsesor
+        l.status8Flag, u0.estatus AS estatusAsesor, cl.proceso
 		FROM clientes cl
 		INNER JOIN lotes l ON l.idLote = cl.idLote
 		INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
@@ -3695,7 +3709,7 @@
         CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
         CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2,
-        lo.status8Flag, u0.estatus AS estatusAsesor
+        lo.status8Flag, u0.estatus AS estatusAsesor, cl.proceso
         FROM clientes cl
         INNER JOIN lotes lo ON lo.idLote = cl.idLote
         INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
@@ -3722,7 +3736,8 @@
 			$condicionToAsesor = 'autorizaciones.id_sol='.$this->session->userdata('id_usuario').' AND';
 		}
 		$query = $this->db-> query("SELECT res.nombreResidencial, cond.nombre as nombreCondominio, lotes.nombreLote, autorizaciones.estatus, autorizaciones.autorizacion,
-		autorizaciones.fecha_creacion, solicitante.usuario as sol, autorizador.usuario as aut, id_autorizacion, autorizaciones.idLote,
+		autorizaciones.fecha_creacion, solicitante.usuario as sol, autorizador.usuario as aut, autorizaciones.id_autorizacion as aut_id, autorizaciones.idLote,
+		his.fecha_ultimo_movimiento as ultima_fecha,
 		CONCAT(autorizador.nombre,' ',autorizador.apellido_paterno,' ',autorizador.apellido_materno) AS nombreAUT
 		FROM autorizaciones
         INNER JOIN lotes ON lotes.idLote = autorizaciones.idLote
@@ -3731,6 +3746,8 @@
 		INNER JOIN residenciales res ON res.idResidencial = cond.idResidencial
 		INNER JOIN usuarios solicitante ON autorizaciones.id_sol = solicitante.id_usuario
 		INNER JOIN usuarios autorizador ON autorizaciones.id_aut = autorizador.id_usuario
+		INNER JOIN (SELECT id_autorizacion, MAX(fecha_creacion) fecha_ultimo_movimiento FROM historial_autorizaciones
+		GROUP BY id_autorizacion) his ON his.id_autorizacion = autorizaciones.id_autorizacion
 		WHERE clientes.status = 1 AND ".$condicionToAsesor." lotes.idLote=".$idLote);
 		return $query->result_array();
 	}
@@ -3802,11 +3819,12 @@
 
 	public function getNameLote($idLote){
 		$query = $this->db-> query("SELECT l.idLote, l.nombreLote, cond.nombre, res.nombreResidencial, 
-            l.observacionContratoUrgente
+            l.observacionContratoUrgente, cl.proceso
             FROM lotes l
             INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
             INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
-		    where l.idLote = $idLote");
+            INNER JOIN clientes cl ON cl.idLote = l.idLote
+		    where l.idLote = $idLote AND cl.status = 1");
 		return $query->row();
 	}
 
@@ -3903,13 +3921,14 @@
 			UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, 
 			cl.rfc, cond.nombre, res.nombreResidencial, 
 			u.nombre as primerNom, u.apellido_paterno as apellidoPa, u.apellido_materno as apellidoMa, sedes.abreviacion as ubic, 
-			hd.movimiento, hd.movimiento, cond.idCondominio, hd.tipo_doc, lotes.idMovimiento, cl.id_asesor,
+			hd.movimiento, cond.idCondominio, hd.tipo_doc, lotes.idMovimiento, cl.id_asesor,
 			CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
 			CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
 			CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
 			CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
 			CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
-			CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2
+			CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2,
+			lotes.status8Flag, u0.estatus AS estatusAsesor, cl.proceso, cl.flag_compartida, lo.observacionContratoUrgente, hd.tipo_doc
 			FROM historial_documento hd
 			INNER JOIN lotes ON lotes.idLote = hd.idLote
 			INNER JOIN clientes cl ON  hd.idCliente = cl.id_cliente

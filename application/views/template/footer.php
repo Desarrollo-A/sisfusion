@@ -3,11 +3,11 @@
 <script src="<?=base_url()?>dist/js/jquery-ui.min.js" type="text/javascript"></script>
 <script src="<?=base_url()?>dist/js/popper.min.js" type="text/javascript"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
-
+<!-- Bootstrap CORE -->
 <script src="<?=base_url()?>dist/js/bootstrap.min.js" type="text/javascript"></script>
+<!-- Material -->
 <script src="<?=base_url()?>dist/js/material.min.js" type="text/javascript"></script>
 <script src="<?=base_url()?>dist/js/perfect-scrollbar.jquery.min.js" type="text/javascript"></script>
-<!--<script src="--><?//=base_url()?><!--dist/bower_components/select2/dist/js/select2.full.min.js"></script>-->
 <!-- Forms Validations Plugin -->
 <script src="<?=base_url()?>dist/js/jquery.validate.min.js"></script>
 <!--  Plugin for Date Time Picker and Full Calendar Plugin-->
@@ -47,6 +47,7 @@
 <script src="<?=base_url()?>dist/js/fullcalendar/main.js"></script>
 <script src="<?=base_url()?>dist/js/fullcalendar/locales-all.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/general/main_services.js"></script>
+<script src="<?=base_url()?>dist/js/funciones-generales.js"></script>
 
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
@@ -66,20 +67,12 @@
     let id_rol_general = <?= (empty($this->session->userdata('id_rol')) ? 0 : $this->session->userdata('id_rol')) ?>;
     let id_usuario_general =  <?= (empty($this->session->userdata('id_usuario')) ? 0 : $this->session->userdata('id_usuario')) ?>;
 
-
 	$(document).ready(function() {
 		demo.initDashboardPageCharts();
-
-        <?php
-            if ($this->session->userdata('no_show_modal_info')==0) {
-                echo '$("#avisoNovedades").modal("toggle");';
-            }
-        ?>
 	});
 
     function validaCheckSession(){
-        if($('#no_mostrar_session:checkbox:checked').length > 0)
-        {
+        if($('#no_mostrar_session:checkbox:checked').length > 0){
             $.post('<?=base_url()?>index.php/Login/noShowModalSession',  function(data) {
             });
             <?php echo "console.log(".$this->session->userdata('no_show_modal_info').");";?>

@@ -212,9 +212,24 @@ class Postventa_model extends CI_Model
         ORDER BY n.idNotaria");
     }
 
+    function get_proyecto_lista(){
+        return $this->db->query("SELECT lotx.proyectoReubicacion AS idResidencial, CONCAT(res.nombreResidencial, ' - ' , res.descripcion) AS descripcion  
+        FROM loteXReubicacion lotx
+		INNER JOIN residenciales res ON res.idResidencial = lotx.proyectoReubicacion");
+    }
+
+    function get_cancelacion($id_proyecto){
+        ini_set('memory_limit', -1);
+        return $this->db->query("SELECT res.nombreResidencial, con.nombre AS condominio, lot.nombreLote, lot.comentarioLiberacion, lot.idLote
+		FROM lotes lot
+		INNER JOIN condominios con ON con.idCondominio = lot.idCondominio
+		INNER JOIN residenciales res ON res.idResidencial = con.idResidencial AND res.idResidencial IN ($id_proyecto)
+		WHERE lot.idStatusLote = 1 AND lot.idMovimiento = 0 AND lot.idStatusContratacion = 0 AND lot.comentarioLiberacion LIKE '%CANCELACIÓN DE CONTRATO%' AND lot.idCliente = 0 OR lot.comentarioLiberacion LIKE '%RECESION DE CONTRATO%'")->result();
+    }
+
     function listSedes(){
         return $this->db->query("SELECT * FROM sedes WHERE estatus = 1");
-     }
+    }
 
     function updateNotarias($idnotaria){
 
@@ -233,7 +248,6 @@ class Postventa_model extends CI_Model
             } else {
             return 1;
             }
-
     }
     
     function changeStatus($id_solicitud, $type, $comentarios,$area_rechazo)
@@ -307,7 +321,7 @@ class Postventa_model extends CI_Model
 
         $this->db->query("UPDATE solicitudes_escrituracion SET id_estatus =".$actividades_x_estatus->estatus_siguiente." $banderasStatus2 $banderasStatusRechazo $fechaFirma  WHERE id_solicitud = $id_solicitud");
         return $this->db->query("INSERT INTO historial_escrituracion (id_solicitud, numero_estatus,tipo_movimiento, descripcion, fecha_creacion, creado_por, fecha_modificacion, modificado_por, estatus_siguiente)
-         VALUES($id_solicitud,".$actividades_x_estatus->estatus_actual.",$num_movimiento,'".$comentarios."',GETDATE(),$idUsuario,GETDATE(),$idUsuario,".$actividades_x_estatus->estatus_siguiente.");");
+        VALUES($id_solicitud,".$actividades_x_estatus->estatus_actual.",$num_movimiento,'".$comentarios."',GETDATE(),$idUsuario,GETDATE(),$idUsuario,".$actividades_x_estatus->estatus_siguiente.");");
     }
 
     function generateFilename($idSolicitud, $tipoDoc)
@@ -870,9 +884,9 @@ function checkBudgetInfo($idSolicitud){
         $user = $this->session->userdata;
         $id_usuario = $user['id_usuario'] ;
         $dataCliente = array(
-            'id_asesor' => $id_usuario,
-            'id_coordinador' => $id_usuario,
-            'id_gerente' => ($user['idGerente'] == '' || !empty($user['idGerente']) ) ? NULL : $user['idGerente'],
+            'id_asesor' => 0,
+            'id_coordinador' => 0,
+            'id_gerente' => 0,
             'id_sede' => $user['id_sede'],
             'nombre' => $datos['nombre2'],
             'apellido_paterno' => $datos['ape1'],

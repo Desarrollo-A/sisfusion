@@ -8,6 +8,7 @@ class Usuarios extends CI_Controller
         $this->load->model(array('Usuarios_modelo'));
         $this->load->model('asesor/Asesor_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
         $this->load->model('Clientes_model');
+        $this->load->model('General_model');
         //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
         $this->load->library(array('session', 'form_validation', 'get_menu', 'formatter','permisos_sidebar'));
         $this->load->helper(array('url', 'form'));
@@ -318,7 +319,7 @@ class Usuarios extends CI_Controller
                     "idasesor" => $this->input->post("id_usuario")
                 );
 
-                $resultadoCH = $this->actualizarProspecto($this->input->post("id_usuario"), $_POST['leader'], $_POST['member_type'], $_POST['rol_actual'], $_POST['headquarter'], $sucursal, $datosCH);
+                $resultadoCH = 1;// $this->actualizarProspecto($this->input->post("id_usuario"), $_POST['leader'], $_POST['member_type'], $_POST['rol_actual'], $_POST['headquarter'], $sucursal, $datosCH);
             }
             $nueva_estructura = (isset($_POST['nueva_estructura'])) ? $_POST['nueva_estructura'] : 0;
             if(isset($_POST["simbolicoType"])){
@@ -327,7 +328,7 @@ class Usuarios extends CI_Controller
                 $simbolicoPropiedad = NULL;
             }
 
-            $data = array(
+            $data = array( 
                 "nombre" => $this->formatter->eliminar_tildes(strtoupper(trim($_POST['name']))),
                 "apellido_paterno" => $this->formatter->eliminar_tildes(strtoupper(trim($_POST['last_name']))),
                 "apellido_materno" => $this->formatter->eliminar_tildes(strtoupper(trim($_POST['mothers_last_name']))),
@@ -346,6 +347,38 @@ class Usuarios extends CI_Controller
                 "sucursalch" => $sucursal,
                 "simbolico" => $simbolicoPropiedad
             );
+        }
+        $insertData = array();
+        $commonData = array();
+        $updateArrayData = [];
+        $dataPost = $_POST;
+        //var_dump($dataPost);
+        if($dataPost['index'] != 0){
+           // echo "si entra";
+            for ($i = 0; $i < $dataPost['index']; $i++) {
+                if(isset($dataPost['multi_'.$i]) && !isset($dataPost['idRU_'.$i])){
+                    $commonData = array(
+                        "idUsuario" => (int)$dataPost['id_usuario'],
+                        "idSede" => $dataPost['sedes_'.$i],
+                        "idRol" => $dataPost['multi_'.$i],
+                        "creado_por" => (int)$this->session->userdata('id_usuario'),
+                        "fecha_creacion" => date("Y-m-d H:i:s"),
+                        "modificado_por" => (int)$this->session->userdata('id_usuario'),
+                        "fecha_modificacion" => date("Y-m-d H:i:s"),
+
+                    );
+                    array_push($insertData, $commonData);
+                }
+                if(isset($dataPost['idRU_'.$i])){
+                        $updateArrayData[] = array(
+                            'idSede' => $dataPost['sedes_'.$i],
+                            'idRol' => $dataPost['multi_'.$i],
+                            "idRU" => $dataPost['idRU_'.$i]
+                        ); 
+                }
+              }
+              count($insertData) > 0 ? $this->General_model->insertBatch("roles_x_usuario", $insertData) : '';
+             count($updateArrayData) > 0 ? $this->General_model->updateBatch("roles_x_usuario", $updateArrayData, "idRU") : '';
         }
 
         if ($usersCH == 0) {
@@ -372,6 +405,8 @@ class Usuarios extends CI_Controller
     public function getUserInformation($id_usuario){
         $data = $this->Usuarios_modelo->getUserInformation($id_usuario);
         $data[0]['contrasena'] = desencriptar($data[0]['contrasena']);
+        $data[0]['multirol'] = $this->Usuarios_modelo->getUserMultirol($id_usuario);
+
         echo json_encode($data);
     }
 
@@ -409,7 +444,6 @@ class Usuarios extends CI_Controller
     /**-------------OPNION DE CUMPLIMIENTO-------- */
     public function SubirPDF($id = '')
     {
-
         $id_usuario = $this->session->userdata('id_usuario');
         $nombre = $this->session->userdata('nombre');
         $opc = 0;
@@ -637,5 +671,23 @@ class Usuarios extends CI_Controller
             'id_coordinador' => $dataProspecto['id_coordinador'],
             'id_gerente' => $dataProspecto['id_gerente']
         ];
+    }
+
+    public function borrarMulti(){
+        $idRU = $this->input->post("idRU");
+        $modificado_por = $this->session->userdata('id_usuario');
+        $result = $this->Usuarios_modelo->borrarMulti($idRU,$modificado_por);
+        if($result){
+            echo json_encode(1);
+        }else{
+            echo json_encode(0);
+        }
+    }
+    public function consultarLinea(){
+        $sede = $this->input->post("sede");
+        $puesto = $this->input->post("puesto");
+        $lider = $this->input->post("lider");
+        $result = $this->Usuarios_modelo->consultarLinea($sede,$puesto,$lider)->result_array();
+        echo json_encode($result,JSON_NUMERIC_CHECK);
     }
 }

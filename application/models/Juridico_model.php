@@ -33,7 +33,8 @@ class Juridico_model extends CI_Model {
 		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
         concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
-        concat(juridico.nombre,' ', juridico.apellido_paterno, ' ', juridico.apellido_materno) as juridico, se.nombre nombreSede
+        concat(juridico.nombre,' ', juridico.apellido_paterno, ' ', juridico.apellido_materno) as juridico, se.nombre nombreSede,
+		ISNULL(oxc0.nombre, 'Normal') tipo_proceso
 		FROM lotes l
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote $whereOne
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
@@ -45,14 +46,16 @@ class Juridico_model extends CI_Model {
 		LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
 		LEFT JOIN usuarios juridico ON l.asig_jur = juridico.id_usuario
 		LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
-        WHERE l.idStatusContratacion IN (6, 7) AND l.idMovimiento IN (36, 6, 23, 76, 83, 95, 97) AND cl.status = 1
+		LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
+        WHERE l.status = 1 AND l.idStatusContratacion IN (6, 7) AND l.idMovimiento IN (36, 6, 23, 76, 83, 95, 97) AND cl.status = 1
         GROUP BY l.idLote, cl.id_cliente, cl.fechaApartado, cl.nombre, cl.apellido_paterno, cl.apellido_materno, l.nombreLote, l.idStatusContratacion,
         l.idMovimiento, l.modificado, cl.rfc, CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
         tv.tipo_venta, cond.idCondominio, l.observacionContratoUrgente, et.descripcion,
 		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
         concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-		concat(juridico.nombre,' ', juridico.apellido_paterno, ' ', juridico.apellido_materno), se.nombre
+		concat(juridico.nombre,' ', juridico.apellido_paterno, ' ', juridico.apellido_materno), se.nombre,
+		ISNULL(oxc0.nombre, 'Normal')
         ORDER BY l.modificado DESC");
 		} 
 		else {
@@ -74,7 +77,8 @@ class Juridico_model extends CI_Model {
 			concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
 			concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
 			concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
-	        concat(juridico.nombre,' ', juridico.apellido_paterno, ' ', juridico.apellido_materno) as juridico, se.nombre nombreSede
+	        concat(juridico.nombre,' ', juridico.apellido_paterno, ' ', juridico.apellido_materno) as juridico, se.nombre nombreSede,
+			ISNULL(oxc0.nombre, 'Normal') tipo_proceso
 			FROM lotes l
 			INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote
 			INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
@@ -86,14 +90,16 @@ class Juridico_model extends CI_Model {
 			LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
 			LEFT JOIN usuarios juridico ON l.asig_jur = juridico.id_usuario
 			LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
-			WHERE l.idStatusContratacion IN (6, 7) AND l.idMovimiento IN (36, 6, 23, 76, 83, 95, 97, 112) AND cl.status = 1 $filtroSede $filtroAsignacion
+			LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
+			WHERE l.status = 1 AND l.idStatusContratacion IN (6, 7) AND l.idMovimiento IN (36, 6, 23, 76, 83, 95, 97, 112) AND cl.status = 1 $filtroSede $filtroAsignacion
 			GROUP BY l.idLote, cl.id_cliente, cl.fechaApartado, cl.nombre, cl.apellido_paterno, cl.apellido_materno, l.nombreLote, l.idStatusContratacion,
 			l.idMovimiento, l.modificado, cl.rfc, CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
 			tv.tipo_venta, cond.idCondominio, l.observacionContratoUrgente, et.descripcion,
 			concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
 			concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
 			concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-			concat(juridico.nombre,' ', juridico.apellido_paterno, ' ', juridico.apellido_materno), se.nombre
+			concat(juridico.nombre,' ', juridico.apellido_paterno, ' ', juridico.apellido_materno), se.nombre,
+			ISNULL(oxc0.nombre, 'Normal')
 			ORDER BY l.modificado DESC");
 		}
 		return $query->result();
@@ -247,4 +253,10 @@ class Juridico_model extends CI_Model {
 		return $query->row();
 	}
 
+    public function validateDocumentation($idLote, $documentOptions) {
+        $query = $this->db->query("SELECT expediente, idCliente, tipo_doc 
+            FROM historial_documento 
+            WHERE idLote = $idLote AND status = 1 AND expediente IS NOT NULL AND tipo_doc IN ($documentOptions)");
+        return $query->result_array();
+    }
 }

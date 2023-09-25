@@ -3,8 +3,9 @@
 
 <body class="">
     <div class="wrapper">
+
     <?php $this->load->view('template/sidebar'); ?>
-        <!-- BEGUIN Modals -->
+    
         <div class="modal" tabindex="-1" role="dialog" id="uploadModal">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -13,10 +14,7 @@
                         <div class="file-gph">
                             <input class="d-none" type="file" id="fileElm">
                             <input class="file-name" id="file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
-                            <label class="upload-btn m-0" for="fileElm">
-                                <span>Seleccionar</span>
-                                <i class="fas fa-folder-open"></i>
-                            </label>
+                            <label class="upload-btn m-0" for="fileElm"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -27,7 +25,6 @@
             </div>
         </div>
 
-        <!-- INICIO Modal editar monto internomex -->
         <div class="modal fade" id="editMontoInternomex" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -61,9 +58,7 @@
                 </div>
             </div>
         </div>
-        <!-- FIN Modal editar monto internomex -->
 
-        <!-- INICIO Modal para bitácora -->
         <div class="modal fade" id="changesBitacora" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
                 <div class="modal-content">
@@ -76,14 +71,12 @@
                     </div>
                     <div class="modal-body">
                         <div role="tabpanel">
-                            <!-- Nav tabs -->
                             <ul class="nav nav-tabs" role="tablist"
                                 style="background: #003d82;">
                                 <li role="presentation" class="active">
                                     <a href="#changelogUsersTab" aria-controls="changelogUsersTab" role="tab" data-toggle="tab">Bitácora de cambios</a>
                                 </li>
                             </ul>
-                            <!-- Tab panes -->
                             <div class="tab-content">
                                 <div role="tabpanel" class="tab-pane active"
                                     id="changelogUsersTab">
@@ -108,7 +101,6 @@
                 </div>
             </div>
         </div>
-        <!-- END Modals -->
 
         <div class="content boxContent">
             <div class="container-fluid">
@@ -129,7 +121,6 @@
                                         <h7>A través de este panel podrás consultar el monto final pagado en cada corte de comisiones. Por mes se guardará un solo registro, el módulo precargará la información encontrada en el año corriente. En caso de querer consultar una fecha en particular, podrás hacerlo a través de los filtros situados en la parte superior derecha (a partir del corte del mes de diciembre del 2022 se podrá acceder a esta información).</h7>
                                         </div>
                                         <?php } ?>
-
                                     <?php if($this->session->userdata('id_rol') == 31){?>
                                         <div class="row aligned-row pb-3" id="tipo_pago_selector">
                                             <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">

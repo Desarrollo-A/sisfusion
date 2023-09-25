@@ -20,11 +20,13 @@ class Api_model extends CI_Model
             return false;
     }
 
-    function getAdviserLeaderInformation($id_asesor)
-    {
-        return $this->db->query("SELECT us.id_rol, us.id_sede, us.id_lider id_coordinador, us.gerente_id 
-        id_gerente, us.subdirector_id id_subdirector, us.regional_id id_regional 
-        FROM usuarios us WHERE us.id_usuario = $id_asesor")->row();
+    function getAdviserLeaderInformation($id_asesor) {
+        return $this->db->query("SELECT u.id_rol, u.id_sede, u.id_lider id_coordinador, ge.id_usuario id_gerente, sb.id_usuario id_subdirector, ISNULL(CASE rg.id_usuario WHEN 2 THEN 0 ELSE rg.id_usuario END, 0) id_regional FROM usuarios u 
+        LEFT JOIN usuarios uu ON uu.id_usuario = u.id_lider
+		LEFT JOIN usuarios ge ON ge.id_usuario = uu.id_lider
+        LEFT JOIN usuarios sb ON sb.id_usuario = ge.id_lider
+        LEFT JOIN usuarios rg ON rg.id_usuario = sb.id_lider
+        WHERE u.id_usuario = $id_asesor")->row();
     }
 
     function generateFilename($idLote, $idDocumento)
@@ -107,6 +109,48 @@ class Api_model extends CI_Model
         WHERE u0.id_rol = 7 AND rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%'
         AND id_usuario NOT IN (821, 1366, 1923, 4340, 4062, 4064, 4065, 4067, 4068, 4069, 6578, 712 , 9942, 4415, 3, 607, 13151, 12845)
         $validacionFecha")->result_array(); 
+    }
+
+    public function getInformacionProspectos($year, $month){
+        $month1 = $month;
+        $month2 = $month;
+        
+        if(!isset($month) || $month <= 0){
+            $month1 = 1;
+            $month2 = 12;
+        }
+        
+        $query = $this->db->query("select 
+                            pr.id_prospecto, 
+                            pr.nombre,
+                            pr.apellido_paterno,
+                            pr.apellido_materno,
+                            opx.nombre personalidad_juridica,
+                            COALESCE(pr.rfc, '') as rfc,
+                            COALESCE(pr.correo, '') as correo,
+                            pr.telefono,
+                            COALESCE(pr.telefono_2, '') as telefono_2,
+                            opx2.nombre tipo,
+                            opx1.nombre lugar_prospeccion,
+                            pr.fecha_creacion,
+                            pr.id_asesor,
+                            Upper(concat(us.nombre, ' ' , us.apellido_paterno, ' ', us.apellido_materno)) as nombre_asesor
+                                FROM
+                                    prospectos pr
+                                INNER JOIN 
+                                    opcs_x_cats opx ON opx.id_opcion = pr.personalidad_juridica AND opx.id_catalogo = 10
+                                INNER JOIN 
+                                    opcs_x_cats opx1 ON opx1.id_opcion = pr.lugar_prospeccion AND opx1.id_catalogo = 9
+                                INNER JOIN
+                                    opcs_x_cats opx2 ON opx2.id_opcion = pr.tipo AND opx2.id_catalogo = 8
+                                INNER JOIN
+                                    usuarios us ON us.id_usuario = pr.id_asesor
+                                WHERE 
+                                    YEAR(pr.fecha_creacion) = ? AND MONTH(pr.fecha_creacion) BETWEEN ? AND ?",
+                            array( $year, $month1, $month2 )
+                        );
+
+        return $query->result_array();
     }
 
 }

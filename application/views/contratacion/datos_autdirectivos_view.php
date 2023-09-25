@@ -10,7 +10,7 @@
 <body>
 	<div class="wrapper">
 		<?php
-		    $this->load->view('template/sidebar', '');
+		    $this->load->view('template/sidebar');
 		?>
 
 		<!-- Modals -->

@@ -1,49 +1,37 @@
 <?php
 
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-
-class Asesor extends CI_Controller
-{
-    public function __construct()
-    {
+class Asesor extends CI_Controller {
+    public function __construct() {
         parent::__construct();
-        $this->load->model('model_queryinventario');
         $this->load->model('asesor/Asesor_model');
-        $this->load->model('Contraloria_model');
-        $this->load->model('registrolote_modelo');
-        $this->load->model('caja_model_outside');
-        $this->load->model('General_model');
-        $this->load->model('Clientes_model');
+        $this->load->model(array('model_queryinventario', 'registrolote_modelo', 'caja_model_outside', 'Contraloria_model', 'General_model', 'Clientes_model'));
         $this->load->model([
             'opcs_catalogo/valores/AutorizacionClienteOpcs',
             'opcs_catalogo/valores/TipoAutorizacionClienteOpcs'
         ]);
 
-        $this->load->library(array('session', 'form_validation'));
-        //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
-        $this->load->library(array('session', 'form_validation', 'get_menu','permisos_sidebar'));
-        $this->load->library('email');
-
-        $this->load->helper(array('url', 'form'));
+        $this->load->library(array('session','form_validation', 'get_menu', 'Jwt_actions', 'Pdf', 'email', 'permisos_sidebar'));
+        $this->load->helper(array('url','form'));
         $this->load->database('default');
-        $this->load->library('Pdf');
         date_default_timezone_set('America/Mexico_City');
         $this->validateSession();
-
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
-        $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
-        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
+        $rutaUrl = substr($_SERVER["REQUEST_URI"],1);
+        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl,$this->session->userdata('opcionesMenu'));
     }
     public function index()
     {
-        if ($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '7') {
-            redirect(base_url() . 'login');
+        if($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '7')
+        {
+            redirect(base_url().'login');
         }
         $this->load->view('template/header');
         $this->load->view('asesor/inicio_asesor_view');
         $this->load->view('template/footer');
     }
+
     public function homeView()
     {
         if ($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '61') {
@@ -158,76 +146,75 @@ class Asesor extends CI_Controller
             echo json_encode(array());
         }
     }
-    public function getLegalPersonality()
-    {
+    public function getLegalPersonality(){
         echo json_encode($this->Asesor_model->getLegalPersonality()->result_array());
     }
-    public function getAdvertising()
-    {
+
+    public function getAdvertising(){
         echo json_encode($this->Asesor_model->getAdvertising()->result_array());
     }
-    public function getSalesPlaza()
-    {
+
+    public function getSalesPlaza(){
         echo json_encode($this->Asesor_model->getSalesPlaza()->result_array());
     }
-    public function getCivilStatus()
-    {
+
+    public function getCivilStatus(){
         echo json_encode($this->Asesor_model->getCivilStatus()->result_array());
     }
-    public function getMatrimonialRegime()
-    {
+
+    public function getMatrimonialRegime(){
         echo json_encode($this->Asesor_model->getMatrimonialRegime()->result_array());
     }
-    public function getState()
-    {
+
+    public function getState(){
         echo json_encode($this->Asesor_model->getState()->result_array());
     }
-    public function getParentesco()
-    {
+
+    public function getParentesco(){
         echo json_encode($this->Asesor_model->getParentesco()->result_array());
     }
-    public function getModalidad()
-    {
+
+    public function getModalidad(){
         echo json_encode($this->Asesor_model->getModalidad()->result_array());
     }
-    public function getMediosVenta()
-    {
+
+    public function getMediosVenta(){
         echo json_encode($this->Asesor_model->getMediosVenta()->result_array());
     }
-    public function getPlan()
-    {
+
+    public function getPlan(){
         echo json_encode($this->Asesor_model->getPlan()->result_array());
     }
-    public function getProspectsList()
-    {
+
+    public function getProspectsList(){
         $data['data'] = $this->Asesor_model->getProspectsList()->result_array();
         echo json_encode($data);
     }
-    public function getProspectInformation($id_prospecto)
-    {
+
+    public function getProspectInformation($id_prospecto){
         echo json_encode($this->Asesor_model->getProspectInformation($id_prospecto)->result_array());
     }
-    public function getInformationToPrint($id_prospecto)
-    {
+
+    public function getInformationToPrint($id_prospecto){
         echo json_encode($this->Asesor_model->getInformationToPrint($id_prospecto)->result_array());
     }
-    public function getComments($id_prospecto)
-    {
+
+    public function getComments($id_prospecto){
         echo json_encode($this->Asesor_model->getComments($id_prospecto)->result_array());
     }
-    public function getChangelog($id_prospecto)
-    {
+
+    public function getChangelog($id_prospecto){
         echo json_encode($this->Asesor_model->getChangelog($id_prospecto)->result_array());
     }
-    public function saveComment()
-    {
-        if (isset($_POST) && !empty($_POST)) {
-            $response = $this->Asesor_model->saveComment($this->session->userdata('id_usuario'), $this->input->post("id_prospecto"), $this->input->post("observations"));
+
+    public function saveComment(){
+        if(isset($_POST) && !empty($_POST)){
+            $response = $this->Asesor_model->saveComment($this->session->userdata('id_usuario'),$this->input->post("id_prospecto"),$this->input->post("observations"));
             echo json_encode($response);
         }
     }
-    public function updateProspect()
-    {
+
+    public function updateProspect(){
         $specify = $_POST['specify'];
         if ($specify == '' || $specify == null) {
             $final_specification = 0;
@@ -739,6 +726,8 @@ class Asesor extends CI_Controller
             $data[$i]['total_sol_sms_rech'] = $query[0]->total_sol_sms_rech;
             $data[$i]['correo'] = $query[0]->correo;
             $data[$i]['telefono'] = $query[0]->telefono2;
+            $data[$i]['tipo_proceso'] = $query[0]->tipo_proceso;
+            $data[$i]['proceso'] = $query[0]->proceso;
         }
         if ($data != null) {
             echo json_encode($data);
@@ -2982,45 +2971,40 @@ class Asesor extends CI_Controller
         }
 
     }
-    public function intExpAsesor()
-    {
+    public function intExpAsesor() {
         $idLote = $this->input->post('idLote');
         $nombreLote = $this->input->post('nombreLote');
         $id_cliente = $this->input->post('idCliente');
         $tipo_comprobante = $this->input->post('tipo_comprobante');
 
-        if ($this->session->userdata('id_rol') != 17) {
-            $cliente = $this->Clientes_model->clienteAutorizacion($id_cliente);
+        /*if ($this->session->userdata('id_rol') != 17) {
+           $cliente = $this->Clientes_model->clienteAutorizacion($id_cliente);
             if (intval($cliente->autorizacion_correo) !== AutorizacionClienteOpcs::VALIDADO || intval($cliente->autorizacion_sms) !== AutorizacionClienteOpcs::VALIDADO) {
                 $data['message'] = 'VERIFICACION CORREO/SMS';
                 echo json_encode($data);
                 return;
             }
-        }
-        
+        }*/
 
         $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
-        if($valida_tventa[0]['tipo_venta'] == 1 ){
-            if($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 104 || $valida_tventa[0]['idStatusContratacion'] == 2 && $valida_tventa[0]['idMovimiento'] == 108){
+        if($valida_tventa[0]['tipo_venta'] == 1 ) {
+            if($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 104 || $valida_tventa[0]['idStatusContratacion'] == 2 && $valida_tventa[0]['idMovimiento'] == 108) {
                 $statusContratacion = 2;
                 $idMovimiento = 105;
-            }elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 109 || $valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 111 ){
+            } elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 109 || $valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 111 ) {
                 $statusContratacion = 2;
                 $idMovimiento = 110;
-            }
-            elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 102){ #rechazo del status 5
+            } elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 102) { #rechazo del status 5
                 $statusContratacion = 2;
                 $idMovimiento = 113;
-            }
-            elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 107){ #rechazo del status 6
+            } elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 107) { #rechazo del status 6
                 $statusContratacion = 2;
                 $idMovimiento = 114;
-            }
-            else{
+            } else {
                 $statusContratacion = 3;
                 $idMovimiento = 98;
             }
-        }else{
+        } else {
             $statusContratacion = 2;
             $idMovimiento = 84;
         }
@@ -3032,171 +3016,220 @@ class Asesor extends CI_Controller
         $arreglo["modificado"] = date("Y-m-d H:i:s");
         $arreglo["comentario"] = $this->input->post('comentario');
         $data = $this->Asesor_model->revisaOU($idLote);
-        if(count($data)>=1){
+
+        if(count($data) >= 1) {
             $data['message'] = 'OBSERVACION_CONTRATO';
             echo json_encode($data);
-        }else{
-        if ($this->session->userdata('id_rol') == 17 || $this->session->userdata('id_rol') == 70)
-            $documentsNumber = 3;
-        else
-            $documentsNumber = $tipo_comprobante == 1 ? 3 : 4; //se valida si quiere la carta de domicilio para que  no valide el comp de domicilio
+            return;
+        }
+
+        if (!$this->validarDocumentosEstatus2($idLote, $tipo_comprobante, $id_cliente)) {
+            return;
+        }
+
+        date_default_timezone_set('America/Mexico_City');
+        $horaActual = date('H:i:s');
+        $horaInicio = date("08:00:00");
+        $horaFin = date("16:00:00");
+        if ($horaActual > $horaInicio and $horaActual < $horaFin) {
+            $fechaAccion = date("Y-m-d H:i:s");
+            $hoy_strtotime2 = strtotime($fechaAccion);
+            $sig_fecha_dia2 = date('D', $hoy_strtotime2);
+            $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+            if ($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
+                $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
+                $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
+                $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
+                $sig_fecha_feriado2 == "25-12") {
+                $fecha = $fechaAccion;
+                $i = 0;
+                while ($i <= 0) {
+                    $hoy_strtotime = strtotime($fecha);
+                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                    $sig_fecha_dia = date('D', $sig_strtotime);
+                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
+                    if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                        $sig_fecha_feriado == "25-12") {
+                    } else {
+                        $fecha = $sig_fecha;
+                        $i++;
+                    }
+                    $fecha = $sig_fecha;
+                }
+                $arreglo["fechaVenc"] = $fecha;
+            } else {
+                $fecha = $fechaAccion;
+                $i = 0;
+                while ($i <= 0) {
+                    $hoy_strtotime = strtotime($fecha);
+                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                    $sig_fecha_dia = date('D', $sig_strtotime);
+                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
+                    if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                        $sig_fecha_feriado == "25-12") {
+                    } else {
+                        $fecha = $sig_fecha;
+                        $i++;
+                    }
+                    $fecha = $sig_fecha;
+                }
+                $arreglo["fechaVenc"] = $fecha;
+            }
+        }
+        elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
+            $fechaAccion = date("Y-m-d H:i:s");
+            $hoy_strtotime2 = strtotime($fechaAccion);
+            $sig_fecha_dia2 = date('D', $hoy_strtotime2);
+            $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+            if ($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
+                $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
+                $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
+                $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
+                $sig_fecha_feriado2 == "25-12") {
+                $fecha = $fechaAccion;
+                $i = 0;
+                while ($i <= 0) {
+                    $hoy_strtotime = strtotime($fecha);
+                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                    $sig_fecha_dia = date('D', $sig_strtotime);
+                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
+                    if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                        $sig_fecha_feriado == "25-12") {
+                    } else {
+                        $fecha = $sig_fecha;
+                        $i++;
+                    }
+                    $fecha = $sig_fecha;
+                }
+                $arreglo["fechaVenc"] = $fecha;
+            } else {
+                $fecha = $fechaAccion;
+                $i = 0;
+                while ($i <= 0) {
+                    $hoy_strtotime = strtotime($fecha);
+                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                    $sig_fecha_dia = date('D', $sig_strtotime);
+                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
+                    if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                        $sig_fecha_feriado == "25-12") {
+                    } else {
+                        $fecha = $sig_fecha;
+                        $i++;
+                    }
+                    $fecha = $sig_fecha;
+                }
+                $arreglo["fechaVenc"] = $fecha;
+            }
+        }
+
+        $arreglo2 = array();
+        $arreglo2["idStatusContratacion"] = $statusContratacion;
+        $arreglo2["idMovimiento"] = $idMovimiento;
+        $arreglo2["nombreLote"] = $nombreLote;
+        $arreglo2["usuario"] = $this->session->userdata('id_usuario');
+        $arreglo2["perfil"] = $this->session->userdata('id_rol');
+        $arreglo2["modificado"] = date("Y-m-d H:i:s");
+        $arreglo2["fechaVenc"] = $this->input->post('fechaVenc');
+        $arreglo2["idLote"] = $idLote;
+        $arreglo2["idCondominio"] = $this->input->post('idCondominio');
+        $arreglo2["idCliente"] = $this->input->post('idCliente');
+        $arreglo2["comentario"] = $this->input->post('comentario');
+        $validate = $this->Asesor_model->validateSt2($idLote);
+
+        if ($validate == 1) {
+            if ($this->Asesor_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) {
+                $data['message'] = 'OK';
+                echo json_encode($data);
+            } else {
+                $data['message'] = 'ERROR';
+                echo json_encode($data);
+            }
+        } else {
+            $data['message'] = 'FALSE';
+            echo json_encode($data);
+        }
+    }
+
+    public function validarDocumentosEstatus2($idLote, $tipo_comprobante, $id_cliente): bool
+    {
+        $comprobante_domicilio = ", 3"; // COMPROBANTE DE DOMICILIO
+        $comprobante_domicilio_label = ", COMPROBANTE DE DOMICILIO";
+        $documentosExtra = ""; // DOCUMENTOS EXTRA PARA LA REESTRUCTURA Y PARA LAS REUBICACIONES
+        $documentosExtra_label = ""; // DOCUMENTOS EXTRA PARA LA REESTRUCTURA Y PARA LAS REUBICACIONES
+        $error_message = "";
         $dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
-        $documentsValidation = $this->Asesor_model->validateDocumentation($idLote, $dataClient[0]['personalidad_juridica'], $tipo_comprobante);
+
+        if (in_array($this->session->userdata('id_rol'), [17, 70])) { // ES CONTRALORÍA
+            $documentsNumber = 3;
+            $documentOptions = $dataClient[0]['personalidad_juridica'] == 2 ? "2 $comprobante_domicilio $documentosExtra" : "2 $comprobante_domicilio 4, 10, 11 $documentosExtra";
+        } else { // ES COMERCIALIZACIÓN
+            if($tipo_comprobante == 1) {
+                $comprobante_domicilio = "";
+                $comprobante_domicilio_label = "";
+                $documentsNumber = 3;
+            }
+            else
+                $documentsNumber = 4;
+            if (in_array($dataClient[0]['proceso'], [2, 3, 4])) {
+                if ($dataClient[0]['personalidad_juridica'] == 1) { // PARA PM TAMBIÉN PEDIMOS LA CARTA PODER
+                    $documentosExtra = in_array($dataClient[0]['proceso'], [2, 4]) ? ", 32, 34" : ", 32";
+                    $documentsNumber += in_array($dataClient[0]['proceso'], [2, 4]) ? 2 : 1;
+                    $documentosExtra_label = in_array($dataClient[0]['proceso'], [2, 4]) ? ", CARTA, CARTA PODER" : "CARTA";
+                }
+                else { // SI ES PF SÓLO PEDIMOS LA CARTA
+                    $documentosExtra = ", 32";
+                    $documentsNumber += 1;
+                    $documentosExtra_label = ", CARTA";
+                }
+            }
+            $error_message = "Asegúrate de incluir los documentos: IDENTIFICACIÓN OFICIAL$comprobante_domicilio_label $documentosExtra_label, RECIBOS DE APARTADO Y ENGANCHE Y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.";
+            $documentOptions = $dataClient[0]['personalidad_juridica'] == 2 ? "2 $comprobante_domicilio , 4 $documentosExtra" : "2 $comprobante_domicilio, 4, 10, 11, 12 $documentosExtra";
+        }
+
+        $documentsValidation = $this->Asesor_model->validateDocumentation($idLote, $documentOptions);
         $validacion = $this->Asesor_model->getAutorizaciones($idLote, $id_cliente);
         $validacionIM = $this->Asesor_model->getInicioMensualidadAut($idLote, $id_cliente); //validacion para verificar si tiene inicio de autorizacion de mensualidad pendiente
+
         if(COUNT($documentsValidation) != $documentsNumber && COUNT($documentsValidation) < $documentsNumber) {
             $data['message'] = 'MISSING_DOCUMENTS';
+            $data['error_message'] = $error_message;
             echo json_encode($data);
+            return false;
         }
-        else if($validacion) {
+
+        if($validacion) {
             $data['message'] = 'MISSING_AUTORIZATION';
             echo json_encode($data);
+            return false;
         }
-        else if(count($validacionIM)>0){
+
+        if(count($validacionIM) > 0) {
             if($validacionIM[0]['tipoPM']==3 AND $validacionIM[0]['expediente'] == ''){
                 $data['message'] = 'MISSING_AUTFI';
                 echo json_encode($data);
+                return false;
             }
         }
-        else {
-            date_default_timezone_set('America/Mexico_City');
-            $horaActual = date('H:i:s');
-            $horaInicio = date("08:00:00");
-            $horaFin = date("16:00:00");
-            if ($horaActual > $horaInicio and $horaActual < $horaFin) {
-                $fechaAccion = date("Y-m-d H:i:s");
-                $hoy_strtotime2 = strtotime($fechaAccion);
-                $sig_fecha_dia2 = date('D', $hoy_strtotime2);
-                $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
-                if ($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
-                    $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
-                    $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
-                    $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
-                    $sig_fecha_feriado2 == "25-12") {
-                    $fecha = $fechaAccion;
-                    $i = 0;
-                    while ($i <= 0) {
-                        $hoy_strtotime = strtotime($fecha);
-                        $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                        $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                        $sig_fecha_dia = date('D', $sig_strtotime);
-                        $sig_fecha_feriado = date('d-m', $sig_strtotime);
-                        if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
-                            $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-                            $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-                            $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                            $sig_fecha_feriado == "25-12") {
-                        } else {
-                            $fecha = $sig_fecha;
-                            $i++;
-                        }
-                        $fecha = $sig_fecha;
-                    }
-                    $arreglo["fechaVenc"] = $fecha;
-                } else {
-                    $fecha = $fechaAccion;
-                    $i = 0;
-                    while ($i <= 0) {
-                        $hoy_strtotime = strtotime($fecha);
-                        $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                        $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                        $sig_fecha_dia = date('D', $sig_strtotime);
-                        $sig_fecha_feriado = date('d-m', $sig_strtotime);
-                        if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
-                            $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-                            $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-                            $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                            $sig_fecha_feriado == "25-12") {
-                        } else {
-                            $fecha = $sig_fecha;
-                            $i++;
-                        }
-                        $fecha = $sig_fecha;
-                    }
-                    $arreglo["fechaVenc"] = $fecha;
-                }
-            }
-            elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
-                $fechaAccion = date("Y-m-d H:i:s");
-                $hoy_strtotime2 = strtotime($fechaAccion);
-                $sig_fecha_dia2 = date('D', $hoy_strtotime2);
-                $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
-                if ($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
-                    $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
-                    $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
-                    $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
-                    $sig_fecha_feriado2 == "25-12") {
-                    $fecha = $fechaAccion;
-                    $i = 0;
-                    while ($i <= 0) {
-                        $hoy_strtotime = strtotime($fecha);
-                        $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                        $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                        $sig_fecha_dia = date('D', $sig_strtotime);
-                        $sig_fecha_feriado = date('d-m', $sig_strtotime);
-                        if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
-                            $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-                            $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-                            $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                            $sig_fecha_feriado == "25-12") {
-                        } else {
-                            $fecha = $sig_fecha;
-                            $i++;
-                        }
-                        $fecha = $sig_fecha;
-                    }
-                    $arreglo["fechaVenc"] = $fecha;
-                } else {
-                    $fecha = $fechaAccion;
-                    $i = 0;
-                    while ($i <= 0) {
-                        $hoy_strtotime = strtotime($fecha);
-                        $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                        $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                        $sig_fecha_dia = date('D', $sig_strtotime);
-                        $sig_fecha_feriado = date('d-m', $sig_strtotime);
-                        if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
-                            $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-                            $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-                            $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                            $sig_fecha_feriado == "25-12") {
-                        } else {
-                            $fecha = $sig_fecha;
-                            $i++;
-                        }
-                        $fecha = $sig_fecha;
-                    }
-                    $arreglo["fechaVenc"] = $fecha;
-                }
-            }
-            $arreglo2 = array();
-            $arreglo2["idStatusContratacion"] = $statusContratacion;
-            $arreglo2["idMovimiento"] = $idMovimiento;
-            $arreglo2["nombreLote"] = $nombreLote;
-            $arreglo2["usuario"] = $this->session->userdata('id_usuario');
-            $arreglo2["perfil"] = $this->session->userdata('id_rol');
-            $arreglo2["modificado"] = date("Y-m-d H:i:s");
-            $arreglo2["fechaVenc"] = $this->input->post('fechaVenc');
-            $arreglo2["idLote"] = $idLote;
-            $arreglo2["idCondominio"] = $this->input->post('idCondominio');
-            $arreglo2["idCliente"] = $this->input->post('idCliente');
-            $arreglo2["comentario"] = $this->input->post('comentario');
-            $validate = $this->Asesor_model->validateSt2($idLote);
-            if ($validate == 1) {
-                if ($this->Asesor_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) {
-                    $data['message'] = 'OK';
-                    echo json_encode($data);
-                } else {
-                    $data['message'] = 'ERROR';
-                    echo json_encode($data);
-                }
-            } else {
-                $data['message'] = 'FALSE';
-                echo json_encode($data);
-            }
-        }
-        }
+
+        return true;
     }
+
     public function editar_registro_loteRevision_asistentesAContraloria6_proceceso2()
     {
         $idLote = $this->input->post('idLote');
@@ -3370,193 +3403,185 @@ class Asesor extends CI_Controller
         $dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
         $id_rol = $this->session->userdata('id_rol');
 
-        if (in_array($id_rol, array(13, 32, 17, 70)))
-            $documentsNumber = 3;
-        else
-            $documentsNumber = $tipo_comprobante == 1 ? 3 : 4; //se valida si quiere la carta de domicilio para que  no valide el comp de domicilio
+        if (!$this->validarDocumentosEstatus2($idLote, $tipo_comprobante, $idCliente)) {
+            return;
+        }
 
-        $documentsValidation = $this->Asesor_model->validateDocumentation($idLote, $dataClient[0]['personalidad_juridica'], $tipo_comprobante);
-
-        if (COUNT($documentsValidation) < $documentsNumber) {
-            $data['message'] = 'MISSING_DOCUMENTS';
-            echo json_encode($data);
-        } else {
-            $arreglo = array();
-            $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
-            $statusContratacion = 2;
-            $idMovimiento = 4;
-            if($valida_tventa[0]['tipo_venta'] == 1) {
-                if($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 20) {
-                    $statusContratacion = 3;
-                    $idMovimiento = 98;
-                }
+        $arreglo = array();
+        $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
+        $statusContratacion = 2;
+        $idMovimiento = 4;
+        if($valida_tventa[0]['tipo_venta'] == 1) {
+            if($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 20) {
+                $statusContratacion = 3;
+                $idMovimiento = 98;
             }
+        }
 
-            $arreglo["idStatusContratacion"] = $statusContratacion;
-            $arreglo["idMovimiento"] = $idMovimiento;
-            $arreglo["comentario"] = $comentario;
-            $arreglo["usuario"] = $this->session->userdata('id_usuario');
-            $arreglo["perfil"] = $this->session->userdata('id_rol');
-            $arreglo["modificado"] = date("Y-m-d H:i:s");
+        $arreglo["idStatusContratacion"] = $statusContratacion;
+        $arreglo["idMovimiento"] = $idMovimiento;
+        $arreglo["comentario"] = $comentario;
+        $arreglo["usuario"] = $this->session->userdata('id_usuario');
+        $arreglo["perfil"] = $this->session->userdata('id_rol');
+        $arreglo["modificado"] = date("Y-m-d H:i:s");
 
-            date_default_timezone_set('America/Mexico_City');
-            $horaActual = date('H:i:s');
-            $horaInicio = date("08:00:00");
-            $horaFin = date("16:00:00");
+        date_default_timezone_set('America/Mexico_City');
+        $horaActual = date('H:i:s');
+        $horaInicio = date("08:00:00");
+        $horaFin = date("16:00:00");
 
-            if ($horaActual > $horaInicio and $horaActual < $horaFin) {
+        if ($horaActual > $horaInicio and $horaActual < $horaFin) {
 
-                $fechaAccion = date("Y-m-d H:i:s");
-                $hoy_strtotime2 = strtotime($fechaAccion);
-                $sig_fecha_dia2 = date('D', $hoy_strtotime2);
-                $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+            $fechaAccion = date("Y-m-d H:i:s");
+            $hoy_strtotime2 = strtotime($fechaAccion);
+            $sig_fecha_dia2 = date('D', $hoy_strtotime2);
+            $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
 
-                if ($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
-                    $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
-                    $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
-                    $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
-                    $sig_fecha_feriado2 == "25-12") {
+            if ($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
+                $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
+                $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
+                $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
+                $sig_fecha_feriado2 == "25-12") {
 
-                    $fecha = $fechaAccion;
+                $fecha = $fechaAccion;
 
-                    $i = 0;
-                    while ($i <= 0) {
-                        $hoy_strtotime = strtotime($fecha);
-                        $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                        $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                        $sig_fecha_dia = date('D', $sig_strtotime);
-                        $sig_fecha_feriado = date('d-m', $sig_strtotime);
+                $i = 0;
+                while ($i <= 0) {
+                    $hoy_strtotime = strtotime($fecha);
+                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                    $sig_fecha_dia = date('D', $sig_strtotime);
+                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
 
-                        if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
-                            $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-                            $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-                            $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                            $sig_fecha_feriado == "25-12") {
-                        } else {
-                            $fecha = $sig_fecha;
-                            $i++;
-                        }
+                    if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                        $sig_fecha_feriado == "25-12") {
+                    } else {
                         $fecha = $sig_fecha;
-
+                        $i++;
                     }
-                    $arreglo["fechaVenc"] = $fecha;
-                } else {
-
-                    $fecha = $fechaAccion;
-                    $i = 0;
-                    while ($i <= -1) {
-                        $hoy_strtotime = strtotime($fecha);
-                        $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                        $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                        $sig_fecha_dia = date('D', $sig_strtotime);
-                        $sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-                        if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
-                            $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-                            $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-                            $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                            $sig_fecha_feriado == "25-12") {
-                        } else {
-                            $fecha = $sig_fecha;
-                            $i++;
-                        }
-                        $fecha = $sig_fecha;
-                    }
-                    $arreglo["fechaVenc"] = $fecha;
+                    $fecha = $sig_fecha;
 
                 }
-
-            } elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
-
-                $fechaAccion = date("Y-m-d H:i:s");
-                $hoy_strtotime2 = strtotime($fechaAccion);
-                $sig_fecha_dia2 = date('D', $hoy_strtotime2);
-                $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
-
-                if ($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
-                    $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
-                    $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
-                    $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
-                    $sig_fecha_feriado2 == "25-12") {
-
-                    $fecha = $fechaAccion;
-                    $i = 0;
-
-                    while ($i <= 0) {
-                        $hoy_strtotime = strtotime($fecha);
-                        $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                        $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                        $sig_fecha_dia = date('D', $sig_strtotime);
-                        $sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-
-                        if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
-                            $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-                            $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-                            $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                            $sig_fecha_feriado == "25-12") {
-                        } else {
-                            $fecha = $sig_fecha;
-                            $i++;
-                        }
-                        $fecha = $sig_fecha;
-                    }
-                    $arreglo["fechaVenc"] = $fecha;
-                } else {
-
-                    $fecha = $fechaAccion;
-
-                    $i = 0;
-                    while ($i <= 0) {
-                        $hoy_strtotime = strtotime($fecha);
-                        $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                        $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                        $sig_fecha_dia = date('D', $sig_strtotime);
-                        $sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-                        if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
-                            $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-                            $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-                            $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                            $sig_fecha_feriado == "25-12") {
-                        } else {
-                            $fecha = $sig_fecha;
-                            $i++;
-                        }
-                        $fecha = $sig_fecha;
-                    }
-                    $arreglo["fechaVenc"] = $fecha;
-                }
-            }
-
-
-            $arreglo2 = array();
-            $arreglo2["idStatusContratacion"] = $statusContratacion;
-            $arreglo2["idMovimiento"] = $idMovimiento;
-            $arreglo2["nombreLote"] = $nombreLote;
-            $arreglo2["comentario"] = $comentario;
-            $arreglo2["usuario"] = $this->session->userdata('id_usuario');
-            $arreglo2["perfil"] = $this->session->userdata('id_rol');
-            $arreglo2["modificado"] = date("Y-m-d H:i:s");
-            $arreglo2["fechaVenc"] = $fechaVenc;
-            $arreglo2["idLote"] = $idLote;
-            $arreglo2["idCondominio"] = $idCondominio;
-            $arreglo2["idCliente"] = $idCliente;
-
-            $validate = $this->Asesor_model->validateSt2($idLote);
-
-            if ($validate == 1) {
-                if ($this->Asesor_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) {
-                    $data['message'] = 'OK';
-                    echo json_encode($data);
-                } else {
-                    $data['message'] = 'ERROR';
-                    echo json_encode($data);
-                }
+                $arreglo["fechaVenc"] = $fecha;
             } else {
-                $data['message'] = 'FALSE';
+
+                $fecha = $fechaAccion;
+                $i = 0;
+                while ($i <= -1) {
+                    $hoy_strtotime = strtotime($fecha);
+                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                    $sig_fecha_dia = date('D', $sig_strtotime);
+                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+                    if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                        $sig_fecha_feriado == "25-12") {
+                    } else {
+                        $fecha = $sig_fecha;
+                        $i++;
+                    }
+                    $fecha = $sig_fecha;
+                }
+                $arreglo["fechaVenc"] = $fecha;
+
+            }
+
+        } elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
+
+            $fechaAccion = date("Y-m-d H:i:s");
+            $hoy_strtotime2 = strtotime($fechaAccion);
+            $sig_fecha_dia2 = date('D', $hoy_strtotime2);
+            $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+
+            if ($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
+                $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
+                $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
+                $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
+                $sig_fecha_feriado2 == "25-12") {
+
+                $fecha = $fechaAccion;
+                $i = 0;
+
+                while ($i <= 0) {
+                    $hoy_strtotime = strtotime($fecha);
+                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                    $sig_fecha_dia = date('D', $sig_strtotime);
+                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+
+                    if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                        $sig_fecha_feriado == "25-12") {
+                    } else {
+                        $fecha = $sig_fecha;
+                        $i++;
+                    }
+                    $fecha = $sig_fecha;
+                }
+                $arreglo["fechaVenc"] = $fecha;
+            } else {
+
+                $fecha = $fechaAccion;
+
+                $i = 0;
+                while ($i <= 0) {
+                    $hoy_strtotime = strtotime($fecha);
+                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                    $sig_fecha_dia = date('D', $sig_strtotime);
+                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+                    if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+                        $sig_fecha_feriado == "25-12") {
+                    } else {
+                        $fecha = $sig_fecha;
+                        $i++;
+                    }
+                    $fecha = $sig_fecha;
+                }
+                $arreglo["fechaVenc"] = $fecha;
+            }
+        }
+
+
+        $arreglo2 = array();
+        $arreglo2["idStatusContratacion"] = $statusContratacion;
+        $arreglo2["idMovimiento"] = $idMovimiento;
+        $arreglo2["nombreLote"] = $nombreLote;
+        $arreglo2["comentario"] = $comentario;
+        $arreglo2["usuario"] = $this->session->userdata('id_usuario');
+        $arreglo2["perfil"] = $this->session->userdata('id_rol');
+        $arreglo2["modificado"] = date("Y-m-d H:i:s");
+        $arreglo2["fechaVenc"] = $fechaVenc;
+        $arreglo2["idLote"] = $idLote;
+        $arreglo2["idCondominio"] = $idCondominio;
+        $arreglo2["idCliente"] = $idCliente;
+
+        $validate = $this->Asesor_model->validateSt2($idLote);
+
+        if ($validate == 1) {
+            if ($this->Asesor_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) {
+                $data['message'] = 'OK';
+                echo json_encode($data);
+            } else {
+                $data['message'] = 'ERROR';
                 echo json_encode($data);
             }
+        } else {
+            $data['message'] = 'FALSE';
+            echo json_encode($data);
         }
     }
     
@@ -4689,7 +4714,7 @@ class Asesor extends CI_Controller
         }
 
         $codigo = $this->getCodigoVerificacion(6);
-        $url = base_url()."Api/autSms/$idCliente?cod=$codigo";
+        $url = base_url()."Api/autorizacionSms/$idCliente?cod=$codigo";
         $resultadoSms = $this->smsAut($url, "00$lada$telefonoCliente");
 
         if (!$resultadoSms) {
@@ -4777,7 +4802,7 @@ class Asesor extends CI_Controller
                 return;
             }
 
-            $url = base_url()."Api/autSms/$idCliente?cod=$cliente->codigo_sms";
+            $url = base_url()."Api/autorizacionSms/$idCliente?cod=$cliente->codigo_sms";
 
             $resultadoSms = $this->smsAut($url, "00$cliente->lada_tel$cliente->telefono2");
 

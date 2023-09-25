@@ -49,10 +49,10 @@ $("#tabla_ingresar_5").ready(function () {
                 titleAttr: 'Registro estatus 5',
                 title: "Registro estatus 5",
                 exportOptions: {
-                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
                     format: {
                         header: function (d, columnIdx) {
-                            return ' ' + titulosInventario[columnIdx -1] + ' ';
+                            return ' ' + titulosInventario[columnIdx - 1] + ' ';
                         }
                     }
                 }
@@ -66,10 +66,10 @@ $("#tabla_ingresar_5").ready(function () {
                 orientation: 'landscape',
                 pageSize: 'LEGAL',
                 exportOptions: {
-                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
                     format: {
                         header: function (d, columnIdx) {
-                            return ' ' + titulosInventario[columnIdx -1]  + ' ';
+                            return ' ' + titulosInventario[columnIdx - 1]  + ' ';
                         }
                     }
                 }
@@ -99,6 +99,11 @@ $("#tabla_ingresar_5").ready(function () {
                         return `<span class="label lbl-warning">CORRECIÓN</span>`;
                     else 
                         return `<span class="label lbl-green">NUEVO</span>`;
+                }
+            },
+            {
+                data: function (d) {
+                    return `<span class='label lbl-violetBoots'>${d.tipo_proceso}</span>`;
                 }
             },
             {
@@ -188,8 +193,7 @@ $("#tabla_ingresar_5").ready(function () {
                             (data.idStatusContratacion == 2 && data.idMovimiento == 4) ||
                             (data.idStatusContratacion == 2 && data.idMovimiento == 84) ||
                             (data.idStatusContratacion == 2 && data.idMovimiento == 101) ||
-                            (data.idStatusContratacion == 2 && data.idMovimiento == 103)
-                          ) {
+                            (data.idStatusContratacion == 2 && data.idMovimiento == 103)) {
 
                             cntActions = 
                             '<button href="#" data-idLote="' +
@@ -208,7 +212,9 @@ $("#tabla_ingresar_5").ready(function () {
                             '" title= "REGISTRAR STATUS" ' +
                             'data-tipo-venta="' +
                             data.tipo_venta +
-                            '" class="stat5Rev btn-data btn-green" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
+                            '"' +
+                            ' data-proceso="'+data.proceso+'" ' +
+                            'class="stat5Rev btn-data btn-green" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
                             '<i class="fas fa-thumbs-up"></i></button>';
 
                             cntActions +=
@@ -387,9 +393,10 @@ $("#tabla_ingresar_5").ready(function () {
 
 /*modal para enviar a revision corrida elaborada*/
 $(document).on('click', '.stat5Rev', function () {
-    var idLote = $(this).attr("data-idLote");
-    var nomLote = $(this).attr("data-nomLote");
     const tipoVenta = $(this).attr('data-tipo-venta');
+    const proceso = $(this).attr('data-proceso');
+    const ubicacion = $(this).attr('data-ubic');
+
     $('#nombreLoteenvARevCE').val($(this).attr('data-nomLote'));
     $('#idLoteenvARevCE').val($(this).attr('data-idLote'));
     $('#idCondominioenvARevCE').val($(this).attr('data-idCond'));
@@ -397,6 +404,7 @@ $(document).on('click', '.stat5Rev', function () {
     $('#fechaVencenvARevCE').val($(this).attr('data-fecVen'));
     $('#nomLoteFakeenvARevCE').val($(this).attr('data-nomLote'));
     $('#tvLbl').removeClass('hide');
+
     if (tipoVenta == 1) {
         $('#tipo-venta-options-div').attr('hidden', true);
         $('#tipo-venta-particular-div').attr('hidden', false);
@@ -405,6 +413,19 @@ $(document).on('click', '.stat5Rev', function () {
         $('#tipo-venta-options-div').attr('hidden', false);
         $('#tipo-venta-particular-div').attr('hidden', true);
     }
+
+    if (proceso == 2 || proceso == 3 || proceso == 4) {
+        if (tipoVenta != 0) {
+            $('#tipo_ventaenvARevCE').val(tipoVenta).change();
+        }
+
+        if (ubicacion != 0) {
+            $('#ubicacion').val(ubicacion).change();
+        }
+    } else {
+        $('#tipo_ventaenvARevCE').prop('disabled', false);
+    }
+
     $('#enviarenvARevCE').removeAttr('onClick', 'preguntaenvARevCE2()');
     $('#enviarenvARevCE').attr('onClick', 'preguntaenvARevCE()');
     $("#comentarioenvARevCE").val('');
