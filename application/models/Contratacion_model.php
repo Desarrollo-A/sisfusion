@@ -252,5 +252,17 @@ class Contratacion_model extends CI_Model {
       INNER JOIN sedes se ON se.id_sede = re.sede_residencial
       WHERE re.status = 1 GROUP BY re.sede_residencial, se.nombre");
    }
+
+   function getInformationHistorialEstatus($id_parametro){
+      return $this->db->query("SELECT au.id_auditoria, au.id_parametro, sl1.nombre valorAnterior, sl2.nombre valorNuevo,
+      au.fecha_creacion,
+      CASE WHEN au.creado_por = 'null' THEN 'SIN ESPECIFICAR' WHEN ISNUMERIC(au.creado_por) = 1 
+      THEN UPPER(CONCAT(us.nombre, ' ', us.apellido_paterno,' ', us.apellido_materno)) ELSE au.creado_por END creado_por
+      FROM auditoria au 
+      INNER JOIN statuslote sl1 ON sl1.idStatusLote = au.anterior
+      INNER JOIN statuslote sl2 ON sl2.idStatusLote = au.nuevo
+      LEFT JOIN usuarios us ON us.id_usuario = TRY_CAST (au.creado_por AS INT)
+      WHERE id_parametro = $id_parametro AND tabla = 'lotes' AND col_afect = 'idStatusLote' ORDER BY id_auditoria");
+  }
      
 }

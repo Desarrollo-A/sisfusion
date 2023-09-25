@@ -41,6 +41,10 @@
                                                 <th>SEDE</th>
                                                 <th>TIPO DE VENTA</th>
                                                 <th>FECHA DE CONTRATACIÓN</th>
+                                                <th>PROCESO DE CONTRATACIÓN</th>
+                                                <th>CLIENTE</th>
+                                                <th>ENGANCHE</th>
+                                                <th>ESTATUS DE VENTA</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -56,5 +60,5 @@
     <?php $this->load->view('template/footer');?>
     <script src="<?= base_url() ?>dist/js/es.js"></script>
     <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
-    <script src="<?=base_url()?>dist/js/controllers/contraloria/reportesTrimestrales.js"></script>
+    <script src="<?=base_url()?>dist/js/controllers/contraloria/reportesTrimestrales.js?V=1.1.1"></script>
 </body>
