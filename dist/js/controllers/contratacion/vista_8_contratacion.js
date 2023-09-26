@@ -378,6 +378,7 @@ $(document).on('click', '#save1', function (e) {
         alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
 
     if (validaComent == 1) {
+        $("#spiner-loader").removeClass('hide');
         $('#save1').prop('disabled', true);
         $.ajax({
             url: `${general_base_url}Asistente_gerente/editar_registro_lote_asistentes_proceceso8`,
@@ -390,21 +391,25 @@ $(document).on('click', '#save1', function (e) {
                 response = JSON.parse(data);
                 if (response.message == 'OK') {
                     $('#save1').prop('disabled', false);
+                    $("#spiner-loader").addClass('hide');
                     $('#editReg').modal('hide');
                     $('#Jtabla').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "Estatus enviado.", "success");
                 } else if (response.message == 'MISSING_CARTA_UPLOAD') {
                     $('#save1').prop('disabled', false);
+                    $("#spiner-loader").addClass('hide');
                     $('#editReg').modal('hide');
                     $('#Jtabla').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "Primero debes subir la Carta de Domicilio CM antes de avanzar el expediente", "danger");
                 } else if (response.message == 'FALSE') {
                     $('#save1').prop('disabled', false);
+                    $("#spiner-loader").addClass('hide');
                     $('#editReg').modal('hide');
                     $('#Jtabla').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
                 } else if (response.message == 'ERROR') {
                     $('#save1').prop('disabled', false);
+                    $("#spiner-loader").addClass('hide');
                     $('#editReg').modal('hide');
                     $('#Jtabla').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
@@ -412,6 +417,7 @@ $(document).on('click', '#save1', function (e) {
             },
             error: function (data) {
                 $('#save1').prop('disabled', false);
+                $("#spiner-loader").addClass('hide');
                 $('#editReg').modal('hide');
                 $('#Jtabla').DataTable().ajax.reload();
                 alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
@@ -548,6 +554,7 @@ $(document).on('click', '#save5', function (e) {
         alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
 
     if (validaComent == 1) {
+        $("#spiner-loader").removeClass('hide');
         $('#save5').prop('disabled', true);
         $.ajax({
             url: `${general_base_url}Asistente_gerente/editar_registro_loteRevision_asistentesAadministracion11_proceceso8/`,
@@ -560,22 +567,26 @@ $(document).on('click', '#save5', function (e) {
                 response = JSON.parse(data);
                 if (response.message == 'OK') {
                     $('#save5').prop('disabled', false);
+                    $("#spiner-loader").addClass('hide');
                     $('#rev8').modal('hide');
                     $('#Jtabla').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "Estatus enviado.", "success");
                 } else if (response.message == 'FALSE') {
                     $('#save5').prop('disabled', false);
+                    $("#spiner-loader").addClass('hide');
                     $('#rev8').modal('hide');
                     $('#Jtabla').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
                 } else if(response.message == 'MISSING_CARTA_UPLOAD'){
                     $('#save5').prop('disabled', false);
+                    $("#spiner-loader").addClass('hide');
                     $('#rev8').modal('hide');
                     $('#Jtabla').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "Primero debes subir la Carta de Domicilio CM antes de avanzar el expediente", "danger");
                 }
                 else if (response.message == 'ERROR') {
                     $('#save5').prop('disabled', false);
+                    $("#spiner-loader").addClass('hide');
                     $('#rev8').modal('hide');
                     $('#Jtabla').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
@@ -583,6 +594,7 @@ $(document).on('click', '#save5', function (e) {
             },
             error: function (data) {
                 $('#save5').prop('disabled', false);
+                $("#spiner-loader").addClass('hide');
                 $('#rev8').modal('hide');
                 $('#Jtabla').DataTable().ajax.reload();
                 alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");

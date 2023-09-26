@@ -3,7 +3,10 @@ $(document).ready(function () {
     $('#spiner-loader').removeClass('hide');
     $.post(general_base_url + "Reestructura/lista_proyecto", function (data) {
         var len = data.length;
-        var ids = '1, 11, 28, 14, 12, 32, 22, 34';
+        const ids = data.map((row) => {
+            return row.idResidencial;
+        }).join(',');
+        
         $("#proyecto").append($('<option>').val(ids).text('SELECCIONAR TODOS'));
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];

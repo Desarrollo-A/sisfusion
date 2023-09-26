@@ -79,9 +79,7 @@ class Reestructura_model extends CI_Model
 		INNER JOIN opcs_x_cats op2 ON op2.id_catalogo = 103 AND op2.id_opcion = 2
 		INNER JOIN opcs_x_cats op3 ON op3.id_catalogo = 103 AND op3.id_opcion = 3
 		WHERE lo.idCondominio = $condominio AND lo.idStatusLote = 15 AND lo.status = 1 AND (lo.sup >= $superficie - 0.5)");
-
         
-
         return $query->result();
     }
 
@@ -245,32 +243,18 @@ class Reestructura_model extends CI_Model
                     asig_jur = 0
                     WHERE idLote IN (".$datos['idLote'].") and status = 1");
 
-                    if(!in_array($datos["tipo"],array(7,8,9))){
-                        $encabezados = [
-                            'idLote'       =>  'ID LOTE',
-                            'nombreLote'    =>  'NOMBRE LOTE',
-                            'fechaAccion'   =>  'FECHA CREACIÓN'
-                        ];
-                
-                        $contenido[] = [
-                            'idLote'      =>  $row[0]['idLote'],
-                            'nombreLote'   =>  $row[0]['nombreLote'],
-                            'fechaAccion'  =>  date('Y-m-d H:i:s')
-                        ];
-                
+                    if(!in_array($datos["tipo"],array(7,8,9))) {
                         $this->email
                             ->initialize()
                             ->from('Ciudad Maderas')
-                            ->to('programador.analista16@ciudadmaderas.com')
+                            ->to('programador.analista24@ciudadmaderas.com')
                             ->subject('Notificación de liberación')
                             ->view($this->load->view('mail/reestructura/mailLiberacion', [
-                                'encabezados' => $encabezados,
-                                'contenido' => $contenido
+                                'lote' => $row[0]['nombreLote'],
+                                'fechaApartado' => $datos['fechaLiberacion']
                             ], true));
                 
-                
-                        $result = $this->email->send();
-                
+                        $this->email->send();
                     }
 
         if ($this->db->trans_status() === FALSE){

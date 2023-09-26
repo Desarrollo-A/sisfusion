@@ -2,14 +2,20 @@ $(document).ready(function () {
     $("#tabla_clientes").addClass('hide');
     $('#spiner-loader').removeClass('hide');
     $.post(general_base_url + "Reestructura/lista_proyecto", function (data) {
+        
         var len = data.length;
-        var ids = '1, 11, 28, 14, 12, 32, 22, 34';
+        const ids = data.map((row) => {
+            return row.idResidencial;
+        }).join(',');
+
         $("#proyecto").append($('<option>').val(ids).text('SELECCIONAR TODOS'));
+
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
             var name = data[i]['descripcion'];            
             $("#proyecto").append($('<option>').val(id).text(name.toUpperCase()));
         }
+        
         $("#proyecto").selectpicker('refresh');
         $('#spiner-loader').addClass('hide');
     }, 'json');
@@ -411,11 +417,11 @@ function fillTable(index_proyecto) {
         {
             data: function (d) {
                 if(d.observacion == "LIBERACIÓN JURÍDICA"){
-                    return '<div class="d-flex justify-center"><button class="btn-data btn-deepGray stat5Rev" data-toggle="tooltip" data-placement="top" title= "VALIDAR REESTRUCTURACIÓN" data-idLote="' +d.idLote+ '"><i class="fas fa-solid fa-paper-plane"></i></button>'
+                    return '<div class="d-flex justify-center"><button class="btn-data btn-deepGray stat5Rev" data-toggle="tooltip" data-placement="top" title= "VALIDAR REESTRUCTURACIÓN" data-idLote="' +d.idLote+ '"><i class="fas fa-edit"></i></button>'
                     +'<button class="btn-data btn-blueMaderas reesInfo" data-toggle="tooltip" data-placement="top" data-idLote="' +d.idLote+ '" title="HISTORIAL"><i class="fas fa-info"></i></button></div>';
                 }else{
                     return '<div class="d-flex justify-center"><button class="btn-data btn-green reesVal" data-toggle="tooltip" data-placement="top" title= "LIBERAR LOTE" data-idLote="' +d.idLote+ '" data-nombreLote="' +d.nombreLote+ '" data-precio="' +d.precio+ '"><i class="fas fa-thumbs-up"></i></button>'
-                    +'<button class="btn-data btn-deepGray stat5Rev" data-toggle="tooltip" data-placement="top" title= "VALIDAR REESTRUCTURACIÓN" data-idLote="' +d.idLote+ '"><i class="fas fa-solid fa-paper-plane"></i></button>'
+                    +'<button class="btn-data btn-deepGray stat5Rev" data-toggle="tooltip" data-placement="top" title= "VALIDAR REESTRUCTURACIÓN" data-idLote="' +d.idLote+ '"><i class="fas fa-edit"></i></button>'
                     +'<button class="btn-data btn-blueMaderas reesInfo" data-toggle="tooltip" data-placement="top" data-idLote="' +d.idLote+ '" title="HISTORIAL"><i class="fas fa-info"></i></button></div>';
                 }
             }
@@ -427,7 +433,7 @@ function fillTable(index_proyecto) {
             orderable: false
         }],
         ajax: {
-            url: general_base_url + "Reestructura/getregistros",
+            url: general_base_url + "Reestructura/getRegistros",
             dataSrc: "",
             type: "POST",
             cache: false,

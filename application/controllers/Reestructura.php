@@ -78,7 +78,7 @@ class Reestructura extends CI_Controller{
     }
 
     public function lista_proyecto(){
-		if($this->session->userdata('id_rol') == 2){
+		if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_usuario') == 10878){
 			echo json_encode($this->Reestructura_model->get_proyecto_listaCancelaciones()->result_array());
 		}else{
 			echo json_encode($this->Reestructura_model->get_proyecto_lista()->result_array());
@@ -160,7 +160,7 @@ class Reestructura extends CI_Controller{
 		} 
 	}
 
-	public function getregistros(){
+	public function getRegistros(){
         $index_proyecto = $this->input->post('index_proyecto');
         $dato = $this->Reestructura_model->get_valor_lote($index_proyecto);
         if ($dato != null) {
