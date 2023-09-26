@@ -175,7 +175,7 @@ class Comisiones_model extends CI_Model {
             }
             if($condominio == 0){
                 $add_fil = ' AND com.id_usuario = '.$user_data.' AND re.idResidencial = '.$proyecto.'';
-            }else{
+            } else{
                 $add_fil = ' AND com.id_usuario = '.$user_data.' AND co.idCondominio = '.$condominio.'';
             }
 
@@ -236,14 +236,13 @@ class Comisiones_model extends CI_Model {
         CONCAT(di.nombre, ' ', di.apellido_paterno, ' ', di.apellido_materno) as director, (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, cl.plan_comision,cl.id_subdirector, cl.id_sede, 
         cl.id_prospecto, cl.lugar_prospeccion,(CASE WHEN pe.id_penalizacion IS NOT NULL AND pe.estatus not in (3) THEN 1 ELSE 0 END) penalizacion, pe.bandera as bandera_penalizacion, pe.id_porcentaje_penalizacion,l.referencia, pe.dias_atraso, 
         
-        (CASE WHEN clr.plan_comision IN (0) OR clr.plan_comision IS NULL THEN '-' ELSE plr.descripcion END) AS descripcion_planReu, clr.plan_comision plan_comisionReu,
-		clr.totalNeto2Cl, 
+        (CASE WHEN clr.plan_comision IN (0) OR clr.plan_comision IS NULL THEN '-' ELSE plr.descripcion END) AS descripcion_planReu, clr.plan_comision plan_comisionReu, clr.totalNeto2Cl, 
 
-        CASE WHEN (liquidada2-liquidada) = 0 THEN 1 ELSE 0 END validaLiquidadas, 
+        (CASE WHEN (liquidada2-liquidada) = 0 THEN 1 ELSE 0 END) AS validaLiquidadas, 
         (CASE WHEN clr.banderaComisionCl in (0,8) AND l.registro_comision IN (9) THEN 1
 		WHEN clr.banderaComisionCl = 1 AND l.registro_comision IN (9) THEN 2 
 		WHEN clr.banderaComisionCl = 7 AND l.registro_comision IN (9) THEN 3 ELSE 0 END) AS bandera_dispersion, 
-        l.registro_comision, cl.id_cliente_reubicacion_2, ISNULL(reub.reubicadas, 0) reubicadas, CONCAT(l.nombreLote,'</b> <i>(',lor.nombreLote,')</i><b>') as nombreLoteReub
+        l.registro_comision, cl.id_cliente_reubicacion_2, ISNULL(reub.reubicadas, 0) reubicadas, CONCAT(l.nombreLote,'</b> <i>(',lor.nombreLote,')</i><b>') as nombreLoteReub, ISNULL(ooamDis.dispersar, 0) banderaOOAM, lor.nombreLote as nombreOtro
 
         FROM lotes l
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
@@ -265,8 +264,9 @@ class Comisiones_model extends CI_Model {
         LEFT JOIN plan_comision plr ON plr.id_plan = clr.plan_comision
         LEFT JOIN lotes lor ON lor.idLote = clr.idLote
         LEFT JOIN (select COUNT(*) liquidada, id_lote FROM comisiones WHERE liquidada = 1 GROUP BY id_lote) liq ON liq.id_lote = l.idLote
-		LEFT JOIN (select COUNT(*) liquidada2, id_lote FROM comisiones WHERE ooam = 0 GROUP BY id_lote) liq2 ON liq2.id_lote = l.idLote
+		LEFT JOIN (select COUNT(*) liquidada2, id_lote FROM comisiones WHERE ooam = 2 GROUP BY id_lote) liq2 ON liq2.id_lote = l.idLote
         LEFT JOIN (select COUNT(*) reubicadas, idCliente FROM comisionesReubicadas GROUP BY idCliente) reub ON reub.idCliente = clr.id_cliente
+        LEFT JOIN (select COUNT(*) dispersar, id_lote FROM comisiones WHERE ooam = 1 GROUP BY id_lote) ooamDis ON ooamDis.id_lote = l.idLote
         WHERE (l.idLote IN (13969,7167,7168,10304,17231,18338,18549,23730,27250,31850,32573,73591) 
         AND l.registro_comision not in (7) 
         AND pc.bandera in (0)) OR (l.idStatusContratacion >= 9 
@@ -1809,7 +1809,7 @@ class Comisiones_model extends CI_Model {
             $this->db->query("UPDATE comisiones SET liquidada = 1 
             FROM comisiones com
             LEFT JOIN (SELECT SUM(abono_neodata) abonado, id_comision FROM pago_comision_ind GROUP BY id_comision) as pci ON pci.id_comision = com.id_comision
-            WHERE com.id_comision = $id_comision AND com.ooam NOT in (1) AND (com.comision_total-abonado) < 1");
+            WHERE com.id_comision = $id_comision AND com.ooam IN (2) AND (com.comision_total-abonado) < 1");
                 
             return 1;
             }
@@ -4344,16 +4344,16 @@ class Comisiones_model extends CI_Model {
             }
     } 
     
-    public function InsertNeo($idLote, $id_usuario, $TotComision,$user, $porcentaje,$abono,$pago,$rol,$idCliente,$tipo_venta,$ooam){
+    public function InsertNeo($idLote, $id_usuario, $TotComision,$user, $porcentaje,$abono,$pago,$rol,$idCliente,$tipo_venta,$ooam, $nombreOtro){
         
         if($porcentaje != 0 && $porcentaje != ''){
-            $respuesta =  $this->db->query("INSERT INTO comisiones ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [ooam], [loteReubicado], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado],[idCliente],[modificado_por]) VALUES (".$idLote.", ".$id_usuario.", ".$TotComision.", 1, 'NUEVA DISPERSIÓN - $tipo_venta ', $ooam, NULL, ".$user.", GETDATE(), ".$porcentaje.", GETDATE(), ".$rol.",".$idCliente.",'".$this->session->userdata('id_usuario')."')");
+            $respuesta =  $this->db->query("INSERT INTO comisiones ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [ooam], [loteReubicado], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado],[idCliente],[modificado_por]) VALUES (".$idLote.", ".$id_usuario.", ".$TotComision.", 1, 'NUEVA DISPERSIÓN - $tipo_venta ', $ooam, '".$nombreOtro."', ".$user.", GETDATE(), ".$porcentaje.", GETDATE(), ".$rol.",".$idCliente.",'".$this->session->userdata('id_usuario')."')");
             $insert_id = $this->db->insert_id();
 
             $respuesta = $this->db->query("UPDATE comisiones SET liquidada = 1 
             FROM comisiones com
             LEFT JOIN (SELECT SUM(abono_neodata) abonado, id_comision FROM pago_comision_ind GROUP BY id_comision) as pci ON pci.id_comision = com.id_comision
-            WHERE com.id_comision = $insert_id AND com.ooam NOT in (1) AND (com.comision_total-abonado) < 1");
+            WHERE com.id_comision = $insert_id AND com.ooam IN (2) AND (com.comision_total-abonado) < 1");
 
             $respuesta = $this->db->query("INSERT INTO pago_comision_ind (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, estatus, pago_neodata, creado_por, comentario, modificado_por) VALUES (".$insert_id.", ".$id_usuario.", ".$abono.", GETDATE(), GETDATE(), 1 , ".$pago.",'$user', 'PAGO 1 - NEDOATA', '$user')");
             $insert_id_2 = $this->db->insert_id();
@@ -5238,7 +5238,7 @@ class Comisiones_model extends CI_Model {
        }
    }
 
-    public function updateBanderaDetenida($idLote, $updateHistorial, $nuevoRegistroComision  = FALSE  )
+    public function updateBanderaDetenida($idLote, $updateHistorial, $nuevoRegistroComision = FALSE  )
     {
 
         var_dump($nuevoRegistroComision);
