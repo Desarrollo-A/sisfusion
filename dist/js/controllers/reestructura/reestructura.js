@@ -310,7 +310,7 @@ function fillChangelog(v) {
                 </div>
                 <div class="col-md-12">
                     <p class="m-0"><small>Valor anterior: </small><b>  ${v.nombre.toUpperCase()} </b></p>
-                    <p class="m-0"><small>Valor Nuevo: </small><b> ${v.nombreNuevo.toUpperCase()} </b></p>
+                    <p class="m-0"><small>Valor nuevo: </small><b> ${v.nombreNuevo.toUpperCase()} </b></p>
                 </div>
             </div>
         </div>
@@ -396,6 +396,9 @@ function fillTable(index_proyecto) {
         },
         {
             data: function (d){
+                if (d.nombreCliente === null || d.nombreCliente === '') {
+                    return '<p class="m-0">SIN ESPECIFICAR</p>';
+                }
                 return '<p class="m-0">' + d.nombreCliente + '</p>'
             }
         },

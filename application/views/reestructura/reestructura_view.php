@@ -41,7 +41,7 @@
                                 <table class="table-striped table-hover" id="tableCatalogo" name="tableCatalogo">
                                     <thead>
                                         <tr>
-                                            <th>OPCIÓN CATÁLOGO</th>
+                                            <th>NOMBRE</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>
@@ -219,7 +219,7 @@
                                                     <th>LOTE</th>
                                                     <th>ID LOTE </th>
                                                     <th>SUPERFICIE</th>
-                                                    <th>PRECIO</th>
+                                                    <th>PRECIO M2</th>
                                                     <th>NOMBRE</th>
                                                     <th>ESTATUS</th>
                                                     <th>ESTATUS CATALOGO</th>
