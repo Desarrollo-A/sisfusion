@@ -433,7 +433,7 @@ function fillTable(index_proyecto) {
             orderable: false
         }],
         ajax: {
-            url: general_base_url + "Reestructura/getregistros",
+            url: general_base_url + "Reestructura/getRegistros",
             dataSrc: "",
             type: "POST",
             cache: false,

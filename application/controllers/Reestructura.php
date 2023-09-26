@@ -156,7 +156,7 @@ class Reestructura extends CI_Controller{
 		} 
 	}
 
-	public function getregistros(){
+	public function getRegistros(){
         $index_proyecto = $this->input->post('index_proyecto');
         $dato = $this->Reestructura_model->get_valor_lote($index_proyecto);
         if ($dato != null) {
