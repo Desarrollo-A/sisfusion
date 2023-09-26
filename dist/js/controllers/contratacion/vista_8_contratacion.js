@@ -364,7 +364,6 @@ $(document).on('click', '#save1', function (e) {
     var comentario = $("#comentario").val();
     var validaComent = ($("#comentario").val().length == 0) ? 0 : 1;
     var dataExp1 = new FormData();
-    $("#spiner-loader").removeClass('hide');
     dataExp1.append("idCliente", getInfo1[0]);
     dataExp1.append("nombreResidencial", getInfo1[1]);
     dataExp1.append("nombreCondominio", getInfo1[2]);
@@ -379,6 +378,7 @@ $(document).on('click', '#save1', function (e) {
         alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
 
     if (validaComent == 1) {
+        $("#spiner-loader").removeClass('hide');
         $('#save1').prop('disabled', true);
         $.ajax({
             url: `${general_base_url}Asistente_gerente/editar_registro_lote_asistentes_proceceso8`,
@@ -541,7 +541,6 @@ $(document).on('click', '#save5', function (e) {
     var comentario = $("#comentario5").val();
     var validaComent = ($("#comentario5").val().length == 0) ? 0 : 1;
     var dataExp5 = new FormData();
-    $("#spiner-loader").removeClass('hide');
     dataExp5.append("idCliente", getInfo5[0]);
     dataExp5.append("nombreResidencial", getInfo5[1]);
     dataExp5.append("nombreCondominio", getInfo5[2]);
@@ -555,6 +554,7 @@ $(document).on('click', '#save5', function (e) {
         alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
 
     if (validaComent == 1) {
+        $("#spiner-loader").removeClass('hide');
         $('#save5').prop('disabled', true);
         $.ajax({
             url: `${general_base_url}Asistente_gerente/editar_registro_loteRevision_asistentesAadministracion11_proceceso8/`,
