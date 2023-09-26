@@ -364,6 +364,7 @@ $(document).on('click', '#save1', function (e) {
     var comentario = $("#comentario").val();
     var validaComent = ($("#comentario").val().length == 0) ? 0 : 1;
     var dataExp1 = new FormData();
+    $("#spiner-loader").removeClass('hide');
     dataExp1.append("idCliente", getInfo1[0]);
     dataExp1.append("nombreResidencial", getInfo1[1]);
     dataExp1.append("nombreCondominio", getInfo1[2]);
@@ -390,21 +391,25 @@ $(document).on('click', '#save1', function (e) {
                 response = JSON.parse(data);
                 if (response.message == 'OK') {
                     $('#save1').prop('disabled', false);
+                    $("#spiner-loader").addClass('hide');
                     $('#editReg').modal('hide');
                     $('#Jtabla').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "Estatus enviado.", "success");
                 } else if (response.message == 'MISSING_CARTA_UPLOAD') {
                     $('#save1').prop('disabled', false);
+                    $("#spiner-loader").addClass('hide');
                     $('#editReg').modal('hide');
                     $('#Jtabla').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "Primero debes subir la Carta de Domicilio CM antes de avanzar el expediente", "danger");
                 } else if (response.message == 'FALSE') {
                     $('#save1').prop('disabled', false);
+                    $("#spiner-loader").addClass('hide');
                     $('#editReg').modal('hide');
                     $('#Jtabla').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
                 } else if (response.message == 'ERROR') {
                     $('#save1').prop('disabled', false);
+                    $("#spiner-loader").addClass('hide');
                     $('#editReg').modal('hide');
                     $('#Jtabla').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
@@ -412,6 +417,7 @@ $(document).on('click', '#save1', function (e) {
             },
             error: function (data) {
                 $('#save1').prop('disabled', false);
+                $("#spiner-loader").addClass('hide');
                 $('#editReg').modal('hide');
                 $('#Jtabla').DataTable().ajax.reload();
                 alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
@@ -535,6 +541,7 @@ $(document).on('click', '#save5', function (e) {
     var comentario = $("#comentario5").val();
     var validaComent = ($("#comentario5").val().length == 0) ? 0 : 1;
     var dataExp5 = new FormData();
+    $("#spiner-loader").removeClass('hide');
     dataExp5.append("idCliente", getInfo5[0]);
     dataExp5.append("nombreResidencial", getInfo5[1]);
     dataExp5.append("nombreCondominio", getInfo5[2]);
@@ -560,22 +567,26 @@ $(document).on('click', '#save5', function (e) {
                 response = JSON.parse(data);
                 if (response.message == 'OK') {
                     $('#save5').prop('disabled', false);
+                    $("#spiner-loader").addClass('hide');
                     $('#rev8').modal('hide');
                     $('#Jtabla').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "Estatus enviado.", "success");
                 } else if (response.message == 'FALSE') {
                     $('#save5').prop('disabled', false);
+                    $("#spiner-loader").addClass('hide');
                     $('#rev8').modal('hide');
                     $('#Jtabla').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
                 } else if(response.message == 'MISSING_CARTA_UPLOAD'){
                     $('#save5').prop('disabled', false);
+                    $("#spiner-loader").addClass('hide');
                     $('#rev8').modal('hide');
                     $('#Jtabla').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "Primero debes subir la Carta de Domicilio CM antes de avanzar el expediente", "danger");
                 }
                 else if (response.message == 'ERROR') {
                     $('#save5').prop('disabled', false);
+                    $("#spiner-loader").addClass('hide');
                     $('#rev8').modal('hide');
                     $('#Jtabla').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
@@ -583,6 +594,7 @@ $(document).on('click', '#save5', function (e) {
             },
             error: function (data) {
                 $('#save5').prop('disabled', false);
+                $("#spiner-loader").addClass('hide');
                 $('#rev8').modal('hide');
                 $('#Jtabla').DataTable().ajax.reload();
                 alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
