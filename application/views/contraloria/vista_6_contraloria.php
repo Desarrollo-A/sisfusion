@@ -28,7 +28,7 @@
 								<br>
 							</div>
 							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-								<label  class="control-label" id="tvLbl">Enganche</label>
+								<label  class="control-label" id="tvLbl">Enganche / Cantidad traspaso</label>
 								<input class="form-control input-gral m-0" name="totalNeto" id="totalNeto" oncopy="return false" onpaste="return false" type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" autocomplete="off">
 							</div>
 							<input type="hidden" name="idLote" id="idLoteregCor" >
@@ -104,7 +104,7 @@
 								<br>
 							</div>
 							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-								<label class="control-label" id="tvLbl">Enganche</label>
+								<label class="control-label" id="tvLbl">Enganche / Cantidad traspaso</label>
 								<input class="form-control input-gral" name="totalNeto" id="totalNetoR" oncopy="return false" onpaste="return false" type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" autocomplete="off">
 							</div>
 						</div>
@@ -132,7 +132,7 @@
 								<br>
 							</div>
 							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-								<label class="control-label" id="tvLbl">Enganche</label>
+								<label class="control-label" id="tvLbl">Enganche / Cantidad traspaso</label>
 								<input class="form-control input-gral" name="totalNeto" id="totalNetoRevA7" oncopy="return false" onpaste="return false" type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" autocomplete="off">
 							</div>
 						</div>
@@ -200,7 +200,7 @@
 								<br>
 							</div>
 							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-								<label class="control-label" id="tvLbl">Enganche</label>
+								<label class="control-label" id="tvLbl">Enganche / Cantidad traspaso</label>
 								<input class="form-control input-gral" name="totalNeto" id="totalReturn1" oncopy="return false" onpaste="return false" type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" autocomplete="off">
 							</div>
 						</div>

@@ -1,12 +1,12 @@
 $(document).ready(function () {
     $("#tabla_cancelacion").addClass('hide');
     
-    $.post(general_base_url + "Postventa/lista_proyecto", function (data) {
+    $.post(general_base_url + "Reestructura/lista_proyecto", function (data) {
         var len = data.length;
         const ids = data.map((row) => {
             return row.idResidencial;
         }).join(',');
-        
+
         $("#proyecto").append($('<option>').val(ids).text('SELECCIONAR TODOS'));
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
