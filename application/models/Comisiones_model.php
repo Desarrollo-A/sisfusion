@@ -1334,8 +1334,8 @@ class Comisiones_model extends CI_Model {
         $request = $this->db->query("SELECT lugar_prospeccion, estructura FROM clientes WHERE idLote = $idlote AND status = 1")->row();
         $estrucura = $request->estructura;
        
-        if($ooam == 1){
-            $filtroOOAM = 'AND liquidada not in (1)';
+        if($ooam == 1 || $ooam == 2){
+            $filtroOOAM = 'AND ooam in ('.$ooam.')';
         } else {
             $filtroOOAM = ' ';
         }
@@ -1768,6 +1768,8 @@ class Comisiones_model extends CI_Model {
         $respuesta =  $this->db->query("UPDATE pago_comision_ind SET estatus = 0,modificado_por='".$this->session->userdata('id_usuario')."' WHERE abono_neodata = 0");
         $respuesta =  $this->db->query("UPDATE comisiones SET estatus = 0,modificado_por='".$this->session->userdata('id_usuario')."' WHERE comision_total = 0");
         $respuesta =  $this->db->query("UPDATE lotes SET registro_comision = 1 WHERE idLote = $lote");
+        $respuesta =  $this->db->query("UPDATE lotes SET registro_comision = 1 WHERE idLote = $lote");
+        $respuesta =  $this->db->query("UPDATE comisiones SET liquidada = 1 FROM comisiones com LEFT JOIN (SELECT SUM(abono_neodata) abonado, id_comision FROM pago_comision_ind GROUP BY id_comision) as pci ON pci.id_comision = com.id_comision WHERE com.ooam IN (2) AND (com.comision_total-abonado) < 1   ");     
         if (! $respuesta ) {
         return 0;
         } else {
@@ -1806,16 +1808,15 @@ class Comisiones_model extends CI_Model {
         $insert_id_2 = $this->db->insert_id();
 
         $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($insert_id_2, ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'DISPERSÓ PAGO DE COMISIÓN')");
-        
+
+        $respuesta = $this->db->query("UPDATE comisiones SET liquidada = 1 
+        FROM comisiones com
+        LEFT JOIN (SELECT SUM(abono_neodata) abonado, id_comision FROM pago_comision_ind GROUP BY id_comision) as pci ON pci.id_comision = com.id_comision
+        WHERE com.id_comision = $id_comision AND com.ooam IN (2) AND (com.comision_total-abonado) < 1");
+
         if (! $respuesta ) {
             return 0;
-            } else {
-
-            $this->db->query("UPDATE comisiones SET liquidada = 1 
-            FROM comisiones com
-            LEFT JOIN (SELECT SUM(abono_neodata) abonado, id_comision FROM pago_comision_ind GROUP BY id_comision) as pci ON pci.id_comision = com.id_comision
-            WHERE com.id_comision = $id_comision AND com.ooam IN (2) AND (com.comision_total-abonado) < 1");
-                
+            } else {   
             return 1;
             }
     }
