@@ -1334,8 +1334,8 @@ class Comisiones_model extends CI_Model {
         $request = $this->db->query("SELECT lugar_prospeccion, estructura FROM clientes WHERE idLote = $idlote AND status = 1")->row();
         $estrucura = $request->estructura;
        
-        if($ooam == 1 || $ooam == 2){
-            $filtroOOAM = 'AND ooam in ('.$ooam.')';
+        if($ooam == 1){
+            $filtroOOAM = 'AND liquidada not in (1)';
         } else {
             $filtroOOAM = ' ';
         }
@@ -1768,8 +1768,6 @@ class Comisiones_model extends CI_Model {
         $respuesta =  $this->db->query("UPDATE pago_comision_ind SET estatus = 0,modificado_por='".$this->session->userdata('id_usuario')."' WHERE abono_neodata = 0");
         $respuesta =  $this->db->query("UPDATE comisiones SET estatus = 0,modificado_por='".$this->session->userdata('id_usuario')."' WHERE comision_total = 0");
         $respuesta =  $this->db->query("UPDATE lotes SET registro_comision = 1 WHERE idLote = $lote");
-        $respuesta =  $this->db->query("UPDATE lotes SET registro_comision = 1 WHERE idLote = $lote");
-        $respuesta =  $this->db->query("UPDATE comisiones SET liquidada = 1 FROM comisiones com LEFT JOIN (SELECT SUM(abono_neodata) abonado, id_comision FROM pago_comision_ind GROUP BY id_comision) as pci ON pci.id_comision = com.id_comision WHERE com.ooam IN (2) AND (com.comision_total-abonado) < 1   ");     
         if (! $respuesta ) {
         return 0;
         } else {
@@ -1808,15 +1806,16 @@ class Comisiones_model extends CI_Model {
         $insert_id_2 = $this->db->insert_id();
 
         $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($insert_id_2, ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'DISPERSÓ PAGO DE COMISIÓN')");
-
-        $respuesta = $this->db->query("UPDATE comisiones SET liquidada = 1 
-        FROM comisiones com
-        LEFT JOIN (SELECT SUM(abono_neodata) abonado, id_comision FROM pago_comision_ind GROUP BY id_comision) as pci ON pci.id_comision = com.id_comision
-        WHERE com.id_comision = $id_comision AND com.ooam IN (2) AND (com.comision_total-abonado) < 1");
-
+        
         if (! $respuesta ) {
             return 0;
-            } else {   
+            } else {
+
+            $this->db->query("UPDATE comisiones SET liquidada = 1 
+            FROM comisiones com
+            LEFT JOIN (SELECT SUM(abono_neodata) abonado, id_comision FROM pago_comision_ind GROUP BY id_comision) as pci ON pci.id_comision = com.id_comision
+            WHERE com.id_comision = $id_comision AND com.ooam IN (2) AND (com.comision_total-abonado) < 1");
+                
             return 1;
             }
     }
@@ -5697,7 +5696,7 @@ class Comisiones_model extends CI_Model {
 
 // aqui enmpieza la reubicacación
     public  function porcentajesReubicacion($idCliente) {
-        return $this->db->query("SELECT CONCAT(usu.nombre , ' ' , usu.apellido_paterno , ' ', usu.apellido_materno ) AS nombre, cr.id_comision_reubicada, cr.id_usuario, cr.comision_total, cr.porcentaje_decimal, cr.rol_generado AS id_rol, oxc.nombre AS detail_rol, cr.idCliente, cr.idLote, lo.totalNeto2  , cl.plan_comision , pc.descripcion, cr.nombreLote 
+        return $this->db->query("SELECT CONCAT(usu.nombre , ' ' , usu.apellido_paterno , ' ', usu.apellido_materno ) AS nombre, cr.id_comision_reubicada, cr.id_usuario, cr.comision_total, cr.porcentaje_decimal, cr.rol_generado AS id_rol, oxc.nombre AS detail_rol, cr.idCliente, cr.idLote, lo.totalNeto2, cl.plan_comision , pc.descripcion, cr.nombreLote 
         FROM comisionesReubicadas cr
         INNER JOIN usuarios usu ON usu.id_usuario = cr.id_usuario
         INNER JOIN opcs_x_cats oxc ON oxc.id_catalogo = 1 AND oxc.id_opcion = cr.rol_generado
