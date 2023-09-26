@@ -58,11 +58,13 @@
                                                 <th>CONDOMINIO</th>
                                                 <th>LOTE</th>
                                                 <th>REFERENCIA</th>
+                                                <th>CLIENTE</th>
                                                 <th>GERENTE</th>
                                                 <th>ENGANCHE</th>
                                                 <th>TOTAL</th>
                                                 <th>FECHA DE ESTATUS 9</th>
                                                 <th>USUARIO</th>
+                                                <th>COMENTARIO</th>
                                                 <th>FECHA DE APARTADO</th>
                                                 <th>REUBICACIÓN</th>
                                                 <th>FECHA DE REUBICACIÓN</th>
@@ -80,7 +82,7 @@
     </div>
 </body>
 <?php $this->load->view('template/footer');?>
-<script src="<?=base_url()?>dist/js/controllers/contraloria/status9Report.js"></script>
+<script src="<?=base_url()?>dist/js/controllers/contraloria/status9Report.js?v=1.1.1"></script>
 <script src="<?= base_url() ?>dist/js/es.js"></script>
 <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
 <script src="<?= base_url() ?>dist/js/fullcalendar.min.js"></script>

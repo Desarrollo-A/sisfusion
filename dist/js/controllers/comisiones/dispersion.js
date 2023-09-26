@@ -192,28 +192,28 @@ $(document).ready(function () {
                         // let 
 
                         if((d.registro_comision == 0 && d.id_cliente_reubicacion_2 == 0 && d.reubicadas == 0 && d.bandera != 0) || (d.liberaOOAM == 1 && d.registro_comision == 1 && d.ooamComisiones < 1) ){//LIQUIDADA
-                            ooam = 1;
+                            ooam = 2;
                             valorDisparador = 2; //el 2 es exclusivamente para OOAM
                             reg_com = 0;
-                            // console.log("entra a LIQUIDADA "+d.idLote);
+                            console.log("entra a LIQUIDADA "+d.idLote);
 
                         }else if(d.registro_comision == 9 && d.id_cliente_reubicacion_2 != 0 && d.reubicadas == 1){//segunda dispersion OOAM
                             ooam = 0;
                             valorDisparador = 0; //el 2 es exclusivamente para OOAM
                             reg_com = d.registro_comision;
-                            // console.log("entra a segunda dispersion OOAM"+d.idLote);
+                            console.log("entra a segunda dispersion OOAM"+d.idLote);
 
                         } else if(d.liberaOOAM == 1 && d.registro_comision == 1 && d.ooamComisiones > 1){//DEUDA
-                            ooam = 2;
+                            ooam = 1;
                             valorDisparador = 0; //el 2 es exclusivamente para OOAM
                             reg_com = d.registro_comision;
-                            // console.log("entra a DEUDA"+d.idLote);
+                            console.log("entra a DEUDA"+d.idLote);
 
                         } else if(d.registro_comision == 9 && d.id_cliente_reubicacion_2 != 0 && d.reubicadas == 0){// NUEVA
                             ooam = 0;
                             valorDisparador = 0; //el 2 es exclusivamente para OOAM
                             reg_com = d.registro_comision;
-                            // console.log("entra a NUEVA"+d.idLote);
+                            console.log("entra a NUEVA"+d.idLote);
                             
                         }else{
                             ooam = 0;
@@ -224,11 +224,11 @@ $(document).ready(function () {
                         if(d.registro_comision == 9) {
                             
                             //Primer dispersion a ventas cliente anterior OOAM
-                            BtnStats += '<button href="#" value="'+d.idLote+'" data-value="9" data-totalNeto2 = "'+d.totalNeto2Cl+'" data-clienteReubicacion="'+d.id_cliente_reubicacion_2+'" data-ooam="'+ooam+'" data-reubicadas="'+d.reubicadas+'" data-estatus="'+d.idStatusContratacion+'" data-penalizacion="'+d.penalizacion+'"data-nombreLote="'+d.nombreLote+'" data-banderaPenalizacion="'+d.bandera_penalizacion+'" data-cliente="'+d.id_cliente_reubicacion_2+'" data-plan="'+d.plan_comision+'" data-tipov="'+d.tipo_venta+'" data-disparador="'+valorDisparador+'" data-descplan="'+d.plan_descripcionReu+'" data-code="'+d.cbbtton+'" ' +'class="btn-data '+varColor2 +' verify_neodata" data-toggle="tooltip" data-placement="top" title="'+ Mensaje2 +'">'+'<span class="material-icons">verified_user</span></button>';
+                            BtnStats += '<button href="#" value="'+d.idLote+'" data-value="9" data-totalNeto2 = "'+d.totalNeto2Cl+'" data-clienteReubicacion="'+d.id_cliente_reubicacion_2+'" data-ooam="'+ooam+'" data-reubicadas="'+d.reubicadas+'"  data-estatus="'+d.idStatusContratacion+'" data-penalizacion="'+d.penalizacion+'"data-nombreLote="'+d.nombreLote+'" data-banderaPenalizacion="'+d.bandera_penalizacion+'" data-cliente="'+d.id_cliente_reubicacion_2+'" data-plan="'+d.plan_comision+'" data-tipov="'+d.tipo_venta+'" data-disparador="'+valorDisparador+'" data-descplan="'+d.plan_descripcionReu+'" data-code="'+d.cbbtton+'" ' +'class="btn-data '+varColor2 +' verify_neodata" data-toggle="tooltip" data-placement="top" title="'+ Mensaje2 +'">'+'<span class="material-icons">verified_user</span></button>';
                             ACTIVAR = 'disabled ';
                         } else{
                             BtnStats += '<button href="#" value="'+d.idLote+'" data-value="'+reg_com+'" data-totalNeto2 = "'+d.totalNeto2+'" data-ooam="'+ooam+'" data-reubicadas="'+d.reubicadas+'" data-estatus="'+d.idStatusContratacion+'" data-penalizacion="'+d.penalizacion+'"data-nombreLote="'+d.nombreLote+'" data-banderaPenalizacion="'+d.bandera_penalizacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'" data-disparador="'+valorDisparador+'" data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'"' +'class="btn-data '+varColor +' verify_neodata" data-toggle="tooltip" data-placement="top" title="'+ Mensaje +'">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
-                            BtnStats += `<button href="#" value="${d.idLote}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas btn-detener btn-warning" data-toggle="tooltip" data-placement="top" title="Detener"> <i class="material-icons">block</i> </button>`;
+                            BtnStats += `<button href="#" value="${d.idLote}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas btn-detener btn-warning" data-toggle="tooltip"  data-placement="top" title="Detener"> <i class="material-icons">block</i> </button>`;
                         }
 
                         if(d.fecha_modificacion != null && d.registro_comision != 8 ) {

@@ -30,7 +30,7 @@ class Administracion_model extends CI_Model {
         LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
         LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes 
         WHERE idStatusContratacion IN (7, 8) AND idMovimiento IN (37, 7, 64, 77, 67, 38, 65) AND status = 1 GROUP BY idLote, idCliente) hl ON hl.idLote = l.idLote AND hl.idCliente = l.idCliente
-        WHERE l.idStatusContratacion IN (7, 8) AND  l.idMovimiento IN (38, 65, 37, 7, 64, 77, 67) AND ISNULL(l.validacionEnganche, 'NULL') NOT IN ('VALIDADO')
+        WHERE l.status = 1 AND l.idStatusContratacion IN (7, 8) AND  l.idMovimiento IN (38, 65, 37, 7, 64, 77, 67) AND ISNULL(l.validacionEnganche, 'NULL') NOT IN ('VALIDADO')
         GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, CONVERT(varchar, l.modificado, 20), cl.rfc, l.totalNeto, l.totalValidado, CONVERT(varchar, l.fechaSolicitudValidacion, 20),
         CAST(l.comentario AS varchar(MAX)), CONVERT(varchar, l.fechaVenc, 20), l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,

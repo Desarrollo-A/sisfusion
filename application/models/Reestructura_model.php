@@ -89,6 +89,12 @@ class Reestructura_model extends CI_Model
 		INNER JOIN residenciales res ON res.idResidencial = lotx.proyectoReubicacion
 		GROUP BY lotx.proyectoReubicacion, CONCAT(res.nombreResidencial, ' - ' , res.descripcion)");
     }
+    function get_proyecto_listaCancelaciones(){
+        return $this->db->query("SELECT lotx.idProyecto AS idResidencial, CONCAT(res.nombreResidencial, ' - ' , res.descripcion) AS descripcion  
+        FROM loteXReubicacion lotx
+		INNER JOIN residenciales res ON res.idResidencial = lotx.idProyecto 
+		GROUP BY lotx.idProyecto,CONCAT(res.nombreResidencial, ' - ' , res.descripcion)");
+    }
 
     function get_catalogo_resstructura(){
         return $this->db->query("SELECT id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo = 100 and estatus = 1");
@@ -399,7 +405,7 @@ class Reestructura_model extends CI_Model
         FROM lotes lot
         INNER JOIN condominios con ON con.idCondominio = lot.idCondominio
         INNER JOIN residenciales res ON res.idResidencial = con.idResidencial
-        INNER JOIN loteXReubicacion lotx ON lotx.proyectoReubicacion = con.idResidencial AND lotx.proyectoReubicacion IN ($id_proyecto)
+        INNER JOIN loteXReubicacion lotx ON lotx.idProyecto = con.idResidencial AND lotx.idProyecto IN ($id_proyecto)
         INNER JOIN clientes cli ON cli.id_cliente = lot.idCliente AND cli.status IN (1)
         WHERE cli.proceso IN(0,1)")->result();
     }
