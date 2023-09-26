@@ -74,7 +74,7 @@
 			</div>
 		</div>
 
-        <div class="modal fade modal-alertas" id="ÁNuevo" role="dialog">
+        <div class="modal fade modal-alertas" id="catalogoNuevo" role="dialog">
 			<div class="modal-dialog modal-sm">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -221,6 +221,8 @@
                                                     <th>SUPERFICIE</th>
                                                     <th>PRECIO</th>
                                                     <th>NOMBRE</th>
+                                                    <th>ESTATUS</th>
+                                                    <th>ESTATUS CATALOGO</th>
                                                     <th>OBSERVACIÓN EN LIBERACIÓN</th>
                                                     <th>ACCIONES</th>
                                                 </tr>

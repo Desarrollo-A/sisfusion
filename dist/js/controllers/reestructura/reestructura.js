@@ -400,6 +400,24 @@ function fillTable(index_proyecto) {
             }
         },
         {
+            data: function (d){
+                if(d.nombreOp !=  null){
+                    return '<p class="m-0">' + d.nombreOp + '</p>'
+                }else{
+                    return '<p class="m-0">N/A</p>'
+                }
+            }
+        },
+        {
+            data: function (d){
+                if(d.comentario != null){
+                    return '<p class="m-0">' + d.comentario + '</p>'
+                }else{
+                    return '<p class="m-0"> - </p>'
+                }
+            }
+        },
+        {
             data: function (d) {
                 if(d.observacion == null || d.observacion == "NULL"){
                     return '<span class="label lbl-azure">SIN OBSERVACIONES</span>';
