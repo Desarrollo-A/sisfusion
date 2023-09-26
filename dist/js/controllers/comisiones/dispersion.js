@@ -469,7 +469,7 @@ $(document).ready(function () {
 
         if(parseFloat(totalNeto2) > 0){
 
-            alert( disparador);
+            // alert( disparador);
             $("#modal_NEODATA .modal-body").html("");
             $("#modal_NEODATA .modal-footer").html("");
             $.getJSON( general_base_url + "ComisionesNeo/getStatusNeodata/"+idLote).done( function( data ){
