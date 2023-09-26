@@ -4,19 +4,9 @@
     }
 </style>
 
-<div class="text-center">
-    <h1>CRM</h1>
-</div>
-
 <div>
-    <h3>Notificación de liberación de lotes</h3>
-</div>
-
-<div>
-    <?php
-    $this->load->view('template/mail/componentes/tabla', [
-        'encabezados' => $encabezados,
-        'contenido' => $contenido
-    ])
-    ?>
+    <p>
+        Espero que se encuentre bien. A través de este medio se le informa que, lamentablemente, la venta asociada al lote
+        <?=$lote?> que se realizó el <?=$fechaApartado?> ha sido cancelado.
+    </p>
 </div>

@@ -31,7 +31,7 @@
 					<div class="modal-header">
                         <div class="row d-flex justify-center align-center">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
-						        <h4 class="modal-title text-center">CATALOGO</h4>
+						        <h4 class="modal-title text-center">CATÁLOGO</h4>
                             </div>
                         </div>
 					</div>
@@ -41,7 +41,7 @@
                                 <table class="table-striped table-hover" id="tableCatalogo" name="tableCatalogo">
                                     <thead>
                                         <tr>
-                                            <th>OPCIÓN CATALOGO</th>
+                                            <th>OPCIÓN CATÁLOGO</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>
@@ -74,7 +74,7 @@
 			</div>
 		</div>
 
-        <div class="modal fade modal-alertas" id="catalogoNuevo" role="dialog">
+        <div class="modal fade modal-alertas" id="ÁNuevo" role="dialog">
 			<div class="modal-dialog modal-sm">
 				<div class="modal-content">
 					<div class="modal-header">
