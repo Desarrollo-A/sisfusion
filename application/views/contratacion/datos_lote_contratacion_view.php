@@ -9,7 +9,6 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title">Consulta de historial <b id="nomLoteHistorial"></b></h4>
                     </div>
                     <div class="modal-body">
@@ -23,6 +22,9 @@
                                 </li>
                                 <li role="presentation">
                                     <a href="#tabVentasCompartidas" aria-controls="tabVentasCompartidas" role="tab" data-toggle="tab">Ventas compartidas</a>
+                                </li>
+                                <li role="presentation">
+                                    <a href="#tabHistorialEstatus" aria-controls="tabHistorialEstatus" role="tab" data-toggle="tab">Historial Estatus</a>
                                 </li>
                                 <li role="presentation" id="divTabClausulas">
                                     <a href="#tabClausulas" aria-controls="tabClausulas" role="tab" data-toggle="tab">Cláusulas</a>
@@ -96,6 +98,17 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div role="tabpanel" class="tab-pane" id="tabHistorialEstatus">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="card card-plain">
+                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                                    <ul class="timeline-3" id="HistorialEstatus"></ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div role="tabpanel" class="tab-pane" id="tabClausulas">
                                     <div class="row">
                                         <div class="col-md-12">
@@ -139,77 +152,111 @@
                             <div class="card-content">
                                 <h3 class="card-title center-align">Inventario lotes</h3>
 
-                                <form method="POST">
-                                    <div class="toolbar">
-                                        <div class="row">
-                                            <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                                <div class="radio_container w-100">
-                                                    <input class="d-none" type="radio" name="opcion" value="opcion1" id="one" onchange="this.form.submit()">
-                                                    <label for="one" class="w-50">Inventario lotes</label>
-                                                    <input class="d-none" type="radio" name="opcion" value="opcion2" id="two" onchange="this.form.submit()">
-                                                    <label for="two" class="w-50">Descargar</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-
                                 <?php
-                                if (isset($_POST['opcion'])) {
-                                    $opcion = $_POST['opcion'];
-
-                                    if ($opcion === "opcion1") {
+                                if (in_array($this->session->userdata('id_rol'), array(70, 71, 73, 17))) {
                                 ?>
-                                        <script>
-                                            document.getElementById("one").checked = true;
-                                        </script>
+                                    <form method="POST">
                                         <div class="toolbar">
                                             <div class="row">
-                                                <div class="col-md-4 form-group">
-                                                    <div class="form-group overflow-hidden">
-                                                        <label class="control-label" for="idResidencial">Proyecto</label>
-                                                        <select id="idResidencial" name="idResidencial" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" size="5" data-container="body" required></select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4 form-group">
-                                                    <div class="form-group overflow-hidden">
-                                                        <label class="control-label" for="idCondominioInventario">Condominio</label>
-                                                        <select name="idCondominioInventario" id="idCondominioInventario" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4 form-group">
-                                                    <div class="form-group overflow-hidden">
-                                                        <label class="control-label" for="idEstatus">Estatus</label>
-                                                        <select name="idEstatus" id="idEstatus" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
+                                                <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                                    <div class="radio_container w-100">
+                                                        <input class="d-none" type="radio" name="opcion" value="opcion1" id="one" onchange="this.form.submit()">
+                                                        <label for="one" class="w-50">Inventario lotes</label>
+                                                        <input class="d-none" type="radio" name="opcion" value="opcion2" id="two" onchange="this.form.submit()">
+                                                        <label for="two" class="w-50">Descargar</label>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+                                    </form>
 
                                     <?php
-                                    } else if ($opcion === "opcion2") {
+                                    if (isset($_POST['opcion'])) {
+                                        $opcion = $_POST['opcion'];
+
+                                        if ($opcion === "opcion1") {
                                     ?>
-                                        <script>
-                                            document.getElementById("two").checked = true;
-                                        </script>
-                                        <div class="toolbar" id="contenido">
-                                            <div class="row">
-                                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                            <script>
+                                                document.getElementById("one").checked = true;
+                                            </script>
+                                            <div class="toolbar">
+                                                <div class="row">
                                                     <div class="col-md-4 form-group">
-                                                        <div class="form-group select-is-empty">
-                                                            <label class="control-label">Sedes por proyecto</label>
-                                                            <select name="sedes" id="sedes" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" required>
-                                                            </select>
+                                                        <div class="form-group overflow-hidden">
+                                                            <label class="control-label" for="idResidencial">Proyecto</label>
+                                                            <select id="idResidencial" name="idResidencial" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" size="5" data-container="body" required></select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 form-group">
+                                                        <div class="form-group overflow-hidden">
+                                                            <label class="control-label" for="idCondominioInventario">Condominio</label>
+                                                            <select name="idCondominioInventario" id="idCondominioInventario" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 form-group">
+                                                        <div class="form-group overflow-hidden">
+                                                            <label class="control-label" for="idEstatus">Estatus</label>
+                                                            <select name="idEstatus" id="idEstatus" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+
+                                        <?php
+                                        } else if ($opcion === "opcion2") {
+                                        ?>
+                                            <script>
+                                                document.getElementById("two").checked = true;
+                                            </script>
+                                            <div class="toolbar" id="contenido">
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                        <div class="col-md-4 form-group">
+                                                            <div class="form-group select-is-empty">
+                                                                <label class="control-label">Sedes por proyecto</label>
+                                                                <select name="sedes" id="sedes" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" required>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                    <?php
+                                        }
+                                    }
+                                    ?>
 
                                 <?php
-                                    }
+                                } else {
+                                ?>
+
+                                    <div class="toolbar">
+                                        <div class="row">
+                                            <div class="col-md-4 form-group">
+                                                <div class="form-group overflow-hidden">
+                                                    <label class="control-label" for="idResidencial">Proyecto</label>
+                                                    <select id="idResidencial" name="idResidencial" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" size="5" data-container="body" required></select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 form-group">
+                                                <div class="form-group overflow-hidden">
+                                                    <label class="control-label" for="idCondominioInventario">Condominio</label>
+                                                    <select name="idCondominioInventario" id="idCondominioInventario" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 form-group">
+                                                <div class="form-group overflow-hidden">
+                                                    <label class="control-label" for="idEstatus">Estatus</label>
+                                                    <select name="idEstatus" id="idEstatus" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php
                                 }
                                 ?>
+
 
                                 <div class="material-datatables">
                                     <table class="table-striped table-hover hide" id="tablaInventario" name="tablaInventario">
@@ -261,6 +308,6 @@
         <?php $this->load->view('template/footer_legend'); ?>
     </div>
     <?php $this->load->view('template/footer'); ?>
-    <script src="<?= base_url() ?>dist/js/controllers/contratacion/datos_lote_contratacion.js?=v.2.2.2"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/contratacion/datos_lote_contratacion.js?=v.4.4.4"></script>
     <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
 </body>

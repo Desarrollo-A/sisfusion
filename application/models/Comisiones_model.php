@@ -220,19 +220,25 @@ class Comisiones_model extends CI_Model {
     public function getDataDispersionPago() {
         $this->db->query("SET LANGUAGE Español;");
 
-        $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre as nombreCondominio, l.nombreLote, (CASE WHEN l.tipo_venta = 1 THEN 'Particular' WHEN l.tipo_venta = 2 THEN 'NORMAL' ELSE ' SIN DEFINIR' END) tipo_venta, (CASE WHEN l.tipo_venta = 1 THEN 'lbl-warning' WHEN l.tipo_venta = 2 THEN 'lbl-green' ELSE 'lbl-gray' END) claseTipo_venta, (CASE WHEN cl.proceso = 0 THEN '' ELSE oxc0.nombre END) procesoCl, (CASE WHEN cl.proceso = 0 THEN '' ELSE 'label lbl-violetBoots' END) colorProcesoCl, cl.proceso, 
+        $query = $this->db->query("SELECT DISTINCT(l.idLote), cl.id_cliente_reubicacion ,  res.nombreResidencial, cond.nombre as nombreCondominio,
+        l.nombreLote,
+        (CASE WHEN l.tipo_venta = 1 THEN 'Particular' WHEN l.tipo_venta = 2 THEN 'NORMAL' ELSE ' SIN DEFINIR' END) tipo_venta,
+        (CASE WHEN l.tipo_venta = 1 THEN 'lbl-warning' WHEN l.tipo_venta = 2 THEN 'lbl-green' ELSE 'lbl-gray' END) claseTipo_venta,
+        (CASE WHEN cl.proceso = 0 THEN '' ELSE oxc0.nombre END) procesoCl,
+        (CASE WHEN cl.proceso = 0 THEN '' ELSE 'label lbl-violetBoots' END) colorProcesoCl,
+        cl.proceso, 
         CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombreCliente, vc.id_cliente AS compartida, l.idStatusContratacion, l.totalNeto2, pc.fecha_modificacion, 
         convert(nvarchar, pc.ultima_dispersion, 6) ultima_dispersion, convert(nvarchar, pc.fecha_modificacion, 6) fecha_sistema, convert(nvarchar, pc.fecha_neodata, 6) fecha_neodata, se.nombre as sede, l.referencia, cl.id_cliente, 
         CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) as asesor, 
         CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_materno) as coordinador,
         CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno) as gerente, 
         CONCAT(su.nombre, ' ', su.apellido_paterno, ' ', su.apellido_materno) as subdirector, (CASE WHEN re.id_usuario IN (0) OR re.id_usuario IS NULL THEN 'NA' ELSE CONCAT(re.nombre, ' ', re.apellido_paterno, ' ', re.apellido_materno) END) regional,
-        CONCAT(di.nombre, ' ', di.apellido_paterno, ' ', di.apellido_materno) as director, (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, cl.plan_comision,cl.id_subdirector, cl.id_sede, cl.id_prospecto, l.tipo_venta, cl.lugar_prospeccion,(CASE WHEN pe.id_penalizacion IS NOT NULL AND pe.estatus not in (3) THEN 1 ELSE 0 END) penalizacion, pe.bandera as bandera_penalizacion, pe.id_porcentaje_penalizacion,l.referencia, pe.dias_atraso, (CASE WHEN clr.plan_comision IN (0) OR clr.plan_comision IS NULL THEN '-' ELSE plr.descripcion END) AS plan_descripcionReu, clr.totalNeto2Cl, 
+        CONCAT(di.nombre, ' ', di.apellido_paterno, ' ', di.apellido_materno) as director, (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, cl.plan_comision,cl.id_subdirector, cl.id_sede, cl.id_prospecto, cl.lugar_prospeccion,(CASE WHEN pe.id_penalizacion IS NOT NULL AND pe.estatus not in (3) THEN 1 ELSE 0 END) penalizacion, pe.bandera as bandera_penalizacion, pe.id_porcentaje_penalizacion,l.referencia, pe.dias_atraso, (CASE WHEN clr.plan_comision IN (0) OR clr.plan_comision IS NULL THEN '-' ELSE plr.descripcion END) AS plan_descripcionReu, clr.totalNeto2Cl, 
         CASE WHEN (liquidada2-liquidada) = 0 THEN 1 ELSE 0 END liberaOOAM, ooamComisiones,
         (CASE WHEN clr.banderaComisionCl = 7 AND registro_comision IN (9) THEN 0 ELSE l.registro_comision END) AS registro_comision,
-        /*para dispersar a ooam desde 0 si ya esta liquidada*/
+		/*para dispersar a ooam desde 0 si ya esta liquidada*/
         (CASE WHEN clr.banderaComisionCl = 7 AND registro_comision IN (9) THEN 0 ELSE cl.id_cliente_reubicacion_2 END) AS id_cliente_reubicacion_2, 
-        /*si esta liquidada el cliente anterior ya no se considera*/
+		/*si esta liquidada el cliente anterior ya no se considera*/
         ISNULL(reub.reubicadas, 0) reubicadas, pc.bandera
         FROM lotes l
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
@@ -252,15 +258,13 @@ class Comisiones_model extends CI_Model {
         LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
         LEFT JOIN clientes clr ON clr.id_cliente = cl.id_cliente_reubicacion_2
         LEFT JOIN plan_comision plr ON plr.id_plan = clr.plan_comision
-        LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
-
         LEFT JOIN (select COUNT(*) liquidada, id_lote FROM comisiones WHERE liquidada = 1 GROUP BY id_lote) liq
-        ON liq.id_lote = l.idLote
-        LEFT JOIN (select COUNT(*) liquidada2, id_lote FROM comisiones WHERE ooam = 0 GROUP BY id_lote) liq2
-        ON liq2.id_lote = l.idLote
+		ON liq.id_lote = l.idLote
+		LEFT JOIN (select COUNT(*) liquidada2, id_lote FROM comisiones WHERE ooam = 0 GROUP BY id_lote) liq2
+		ON liq2.id_lote = l.idLote
 
-        LEFT JOIN (select COUNT(*) ooamComisiones, id_lote FROM comisiones WHERE ooam = 1 GROUP BY id_lote) ooam
-        ON ooam.id_lote = l.idLote
+        LEFT JOIN (select COUNT(*) ooamComisiones, id_lote FROM comisiones WHERE ooam = 2 GROUP BY id_lote) ooam
+		ON ooam.id_lote = l.idLote
 
         LEFT JOIN (select COUNT(*) reubicadas, idCliente FROM comisionesReubicadas GROUP BY idCliente) reub ON reub.idCliente = clr.id_cliente
 
@@ -4455,10 +4459,17 @@ class Comisiones_model extends CI_Model {
             $rol5 = 'pl.otro2';//TITULACIÓN
         }
 
+
+         if($plan_comision == 64 ||$plan_comision == 65 ||$plan_comision == 66 ){
+            $joinLotes = 'INNER JOIN lotes lo ON lo.idLote = cA.idLote';
+        }else{
+            $joinLotes = 'INNER JOIN lotes lo ON lo.idCliente = cA.id_cliente';
+        }
+
         $addCondition = " UNION  /* DIRECTOR */
         (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comDi porcentaje_decimal, (($totalNeto/100)*(pl.comDi)) comision_total, (pl.neoDi) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.director as id_rol, CASE WHEN cA.estructura = 1 THEN 'Director Comercial General' ELSE 'Director' END detail_rol, 1 as rolVal
         FROM clientes cA 
-        INNER JOIN lotes lo ON lo.idCliente = cA.id_cliente 
+        $joinLotes  
         INNER JOIN usuarios u1 ON u1.id_usuario = 2
         INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.director not in (0)
         WHERE cA.id_cliente = @idCliente)
@@ -4466,7 +4477,7 @@ class Comisiones_model extends CI_Model {
         UNION  /* MARKETING-ADMINISTRACION */
         (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comMk porcentaje_decimal, (($totalNeto/100)*(pl.comMk)) comision_total, (pl.neoMk) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, $rol3 as id_rol, (CASE WHEN pl.id_plan = 66 THEN 'Administración' ELSE 'Marketing' END) detail_rol, 6 as rolVal
         FROM clientes cA 
-        INNER JOIN lotes lo ON lo.idCliente = cA.id_cliente 
+        $joinLotes  
         INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.mktd not in (0)
         INNER JOIN usuarios u1 ON u1.id_usuario = $innerMktd
         WHERE cA.id_cliente = @idCliente)
@@ -4474,7 +4485,7 @@ class Comisiones_model extends CI_Model {
         UNION  /* OTRO PRIMERO - Contabilidad */
         (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comOt porcentaje_decimal, (($totalNeto/100)*(pl.comOt)) comision_total, (pl.neoOt) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, $rol4 as id_rol, (CASE WHEN pl.otro = 45 THEN 'Empresa' WHEN pl.otro = 2 THEN 'Subdirector' WHEN pl.id_o = 11053 THEN 'Internomex' WHEN pl.id_o = 12841 THEN 'Arcus' WHEN pl.id_plan = 66 THEN 'Contabilidad' ELSE 'Influencer' END) detail_rol, (CASE WHEN pl.otro = 2 THEN 2 ELSE 7 END) as rolVal
         FROM clientes cA 
-        INNER JOIN lotes lo ON lo.idCliente = cA.id_cliente 
+        $joinLotes  
         INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.otro not in (0)
         INNER JOIN usuarios u1 ON u1.id_usuario = $innerOtro
         INNER JOIN opcs_x_cats opc ON opc.id_opcion = u1.id_rol AND opc.id_catalogo = 1
@@ -4483,7 +4494,7 @@ class Comisiones_model extends CI_Model {
         UNION  /* OTRO SEGUNDO - Titulación */
         (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comOt2 porcentaje_decimal, (($totalNeto/100)*(pl.comOt2)) comision_total, (pl.neoOt2) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, $rol5 as id_rol, (CASE WHEN pl.otro2 = 45 THEN 'Empresa' WHEN pl.otro2 = 2 THEN 'Subdirector' WHEN pl.id_o2 = 11054 THEN 'Internomex' WHEN pl.id_o2 = 12841 THEN 'Arcus' WHEN pl.id_plan = 66 THEN 'Titulación' ELSE 'Influencer' END) detail_rol, 8 as rolVal
         FROM clientes cA 
-        INNER JOIN lotes lo ON lo.idCliente = cA.id_cliente 
+        $joinLotes  
         INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.otro2 not in (0)
         INNER JOIN usuarios u1 ON u1.id_usuario = $innerOtro2
         INNER JOIN opcs_x_cats opc ON opc.id_opcion = u1.id_rol AND opc.id_catalogo = 1
@@ -4513,7 +4524,7 @@ class Comisiones_model extends CI_Model {
             /* ASESORES */
             (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comAs/@numAsesores porcentaje_decimal, (($totalNeto/100)*(pl.comAs/@numAsesores)) comision_total, (pl.neoAs/@numAsesores) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.asesor as id_rol,  CASE WHEN cA.estructura = 1 THEN 'Asesor Financiero' ELSE 'Asesor' END detail_rol, 5 as rolVal
             FROM clientes cA 
-            INNER JOIN lotes lo ON lo.idCliente = cA.id_cliente 
+            $joinLotes  
             INNER JOIN ventas_compartidas v1 ON v1.id_cliente = cA.id_cliente and v1.estatus = 1 and cA.status = 1
             INNER JOIN usuarios u1 ON u1.id_usuario = v1.id_asesor OR u1.id_usuario = cA.id_asesor
             INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.asesor not in (0) 
@@ -4526,7 +4537,7 @@ class Comisiones_model extends CI_Model {
             (pl.neoCo/@numAsesores)*((SELECT COUNT(id_coordinador) FROM clientes cD WHERE cD.status = 1 AND cD.id_coordinador = u1.id_usuario and cD.id_cliente = @idCliente)+(SELECT COUNT(id_coordinador) FROM ventas_compartidas vD WHERE vD.estatus = 1 AND vD.id_coordinador = u1.id_usuario AND vD.id_cliente = @idCliente)) porcentaje_neodata, 
             CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.coordinador as id_rol,  CASE WHEN cA.estructura = 1 THEN 'Líder comercial' ELSE 'Coordinador' END detail_rol, 4 as rolVal
             FROM clientes cA 
-            INNER JOIN lotes lo ON lo.idCliente = cA.id_cliente 
+            $joinLotes  
             INNER JOIN ventas_compartidas v1 ON v1.id_cliente = cA.id_cliente and v1.estatus = 1 and cA.status = 1
             INNER JOIN usuarios u1 ON u1.id_usuario = v1.id_coordinador OR u1.id_usuario = cA.id_coordinador
             INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.coordinador not in (0) 
@@ -4539,7 +4550,7 @@ class Comisiones_model extends CI_Model {
             (pl.neoGe/@numAsesores)*((SELECT COUNT(id_gerente) FROM clientes cD WHERE cD.status = 1 AND cD.id_gerente = u1.id_usuario and cD.id_cliente = @idCliente)+(SELECT COUNT(id_gerente) FROM ventas_compartidas vD WHERE vD.estatus = 1 AND vD.id_gerente = u1.id_usuario AND vD.id_cliente = @idCliente)) porcentaje_neodata, 
             CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.gerente as id_rol,  CASE WHEN cA.estructura = 1 THEN 'Embajador' ELSE 'Gerente' END detail_rol, 3 as rolVal  
             FROM clientes cA 
-            INNER JOIN lotes lo ON lo.idCliente = cA.id_cliente 
+            $joinLotes  
             INNER JOIN ventas_compartidas v1 ON v1.id_cliente = cA.id_cliente and v1.estatus = 1 and cA.status = 1
             INNER JOIN usuarios u1 ON u1.id_usuario = v1.id_gerente OR u1.id_usuario = cA.id_gerente
             INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.gerente not in (0) 
@@ -4553,7 +4564,7 @@ class Comisiones_model extends CI_Model {
             u1.id_usuario AND vD.id_cliente = @idCliente)) porcentaje_neodata, 
             CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.subdirector as id_rol, CASE WHEN cA.estructura = 1 THEN 'Subdirector Comercial' ELSE 'Subdirector' END detail_rol, 2 as rolVal  
             FROM clientes cA 
-            INNER JOIN lotes lo ON lo.idCliente = cA.id_cliente 
+            $joinLotes  
             INNER JOIN ventas_compartidas v1 ON v1.id_cliente = cA.id_cliente and v1.estatus = 1 and cA.status = 1
             INNER JOIN usuarios u1 ON u1.id_usuario = v1.id_subdirector OR u1.id_usuario = cA.id_subdirector
             INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.subdirector not in (0)
@@ -4567,7 +4578,7 @@ class Comisiones_model extends CI_Model {
             (pl.neoRe/@numAsesores)*((SELECT COUNT(id_gerente) FROM clientes cD WHERE cD.status = 1 AND cD.id_regional = u1.id_usuario and cD.id_cliente = @idCliente)+(SELECT COUNT(id_gerente) FROM ventas_compartidas vD WHERE vD.estatus = 1 AND vD.id_regional = u1.id_usuario AND vD.id_cliente = @idCliente)) porcentaje_neodata, 
             CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.subdirector as id_rol, 'Director Regional' detail_rol, 2 as rolVal  
             FROM clientes cA 
-            INNER JOIN lotes lo ON lo.idCliente = cA.id_cliente 
+            $joinLotes  
             INNER JOIN ventas_compartidas v1 ON v1.id_cliente = cA.id_cliente and v1.estatus = 1 and cA.status = 1
             INNER JOIN usuarios u1 ON u1.id_usuario = v1.id_regional OR u1.id_usuario = cA.id_regional
             INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.regional not in (0)
@@ -4584,7 +4595,7 @@ class Comisiones_model extends CI_Model {
             (pl.neoAs) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.asesor as id_rol, 
             CASE WHEN cA.estructura = 1 THEN 'Asesor Financiero' ELSE 'Asesor' END detail_rol, 5 as rolVal
             FROM clientes cA 
-            INNER JOIN lotes lo ON lo.idCliente = cA.id_cliente 
+            $joinLotes  
             INNER JOIN usuarios u1 ON u1.id_usuario = cA.id_asesor
             INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.asesor not in (0)
             WHERE cA.id_cliente = @idCliente)
@@ -4594,7 +4605,7 @@ class Comisiones_model extends CI_Model {
             (pl.neoCo) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, $rol1 as id_rol, CASE WHEN cA.estructura = 1 THEN 'Líder comercial' WHEN pl.id_plan = 66 THEN 'Postventa' ELSE 'Coordinador' END detail_rol, 
             CASE WHEN pl.id_plan = 66 THEN 9 ELSE 4 END rolVal
             FROM clientes cA 
-            INNER JOIN lotes lo ON lo.idCliente = cA.id_cliente 
+            $joinLotes  
             INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.coordinador not in (0)
             INNER JOIN usuarios u1 ON u1.id_usuario = $innerCoord
             WHERE cA.id_cliente = @idCliente)
@@ -4603,7 +4614,7 @@ class Comisiones_model extends CI_Model {
             (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comGe porcentaje_decimal, (($totalNeto/100)*(pl.comGe)) comision_total,
             (pl.neoGe) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.gerente as id_rol, CASE WHEN cA.estructura = 1 THEN 'Embajador' ELSE 'Gerente' END detail_rol, 3 as rolVal  
             FROM clientes cA 
-            INNER JOIN lotes lo ON lo.idCliente = cA.id_cliente 
+            $joinLotes  
             INNER JOIN usuarios u1 ON u1.id_usuario = cA.id_gerente
             INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.gerente not in (0)
             WHERE cA.id_cliente = @idCliente)
@@ -4612,7 +4623,7 @@ class Comisiones_model extends CI_Model {
             (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comSu porcentaje_decimal, (($totalNeto/100)*(pl.comSu)) comision_total,
             (pl.neoSu) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.subdirector as id_rol, CASE WHEN cA.estructura = 1 THEN 'Subdirector Comercial' ELSE 'Subdirector' END detail_rol, 2 as rolVal  
             FROM clientes cA 
-            INNER JOIN lotes lo ON lo.idCliente = cA.id_cliente 
+            $joinLotes  
             INNER JOIN usuarios u1 ON u1.id_usuario = cA.id_subdirector
             INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.subdirector not in (0)
             WHERE cA.id_cliente = @idCliente)
@@ -4624,7 +4635,7 @@ class Comisiones_model extends CI_Model {
             CASE WHEN pl.id_plan = 66 THEN 9 ELSE 2 END rolVal
 
             FROM clientes cA 
-            INNER JOIN lotes lo ON lo.idCliente = cA.id_cliente 
+            $joinLotes  
             INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.regional not in (0)
             INNER JOIN usuarios u1 ON u1.id_usuario = $innerReg
             WHERE cA.id_cliente = @idCliente)
