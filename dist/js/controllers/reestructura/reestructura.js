@@ -410,7 +410,7 @@ function fillTable(index_proyecto) {
         },
         {
             data: function (d){
-                if(d.comentario != null){
+                if(d.comentario != null && d.comentario != 'NULL'){
                     return '<p class="m-0">' + d.comentario + '</p>'
                 }else{
                     return '<p class="m-0"> - </p>'
@@ -489,7 +489,7 @@ function fillTableC(index_proyecto) {
         width: '100%',
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         buttons: [{
-        text: '<i class="fas fa-check"></i> Agregar opción',
+        text: '<i class="fas fa-check"></i> Agregar',
             action: function() {
                 open_Mdc();
             },

@@ -139,7 +139,7 @@
 					<div class="modal-body">
                         <div class="row">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                <label>OPCIONES</label>
+                                <label>ESTATUS</label>
                                 <select name="grabado" id="grabado" class="selectpicker select-gral m-0 grabado" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                             </div>
                         </div>
