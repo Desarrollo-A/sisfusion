@@ -4269,11 +4269,12 @@ public function getDatosHistorialPagoEstatus($proyecto, $condominio, $usuario) {
       $nombreLote =  $this->input->post("nombreLote");
       $disparador =  $this->input->post("id_disparador");
       $ooam = $this->input->post("ooamValor");
+      $nombreOtro = $this->input->post("nombreOtro");
 
       $responses = $this->Comisiones_model->validateDispersionCommissions($lote_1);
       $totalFilas = $responses->num_rows(); 
  
-      if((!empty($responses) && $totalFilas == 0 && ($disparador == '0' || $disparador == 0))||($disparador == '2' || $disparador == 2)) {
+      if((!empty($responses) && $totalFilas == 0 && ($disparador == '0' || $disparador == 0))||($disparador == '1' || $disparador == 1)||($disparador == '' || $disparador == 3)) {
         // echo "entra a primera";
         // INICIA PRIMERA VALIDACION DE DISPERSION
         $this->db->trans_begin();
@@ -4323,7 +4324,7 @@ public function getDatosHistorialPagoEstatus($proyecto, $condominio, $usuario) {
           if($penalizacion == 1 && ($id_rol[$i] == 3 || $id_rol[$i] == 7 || $id_rol[$i] == 9)){
             $respuesta = $this->Comisiones_model->InsertNeoPenalizacion($lote_1,$id_usuario[$i],str_replace($replace,"",$comision_total[$i]),$this->session->userdata('id_usuario'),$porcentaje[$i],str_replace($replace,"",$comision_dar[$i]),str_replace($replace,"",$pago_neo),$id_rol[$i],$idCliente,$tipo_venta_insert,$nombreLote);
           } else{
-            $respuesta = $this->Comisiones_model->InsertNeo($lote_1,$id_usuario[$i],str_replace($replace,"",$comision_total[$i]),$this->session->userdata('id_usuario'),$porcentaje[$i],str_replace($replace,"",$comision_dar[$i]),str_replace($replace,"",$pago_neo),$id_rol[$i],$idCliente,$tipo_venta_insert,$ooam);
+            $respuesta = $this->Comisiones_model->InsertNeo($lote_1,$id_usuario[$i],str_replace($replace,"",$comision_total[$i]),$this->session->userdata('id_usuario'),$porcentaje[$i],str_replace($replace,"",$comision_dar[$i]),str_replace($replace,"",$pago_neo),$id_rol[$i],$idCliente,$tipo_venta_insert,$ooam, $nombreOtro);
           }
           // echo '<br>'.$respuesta.'<br>';
         }
@@ -4334,7 +4335,7 @@ public function getDatosHistorialPagoEstatus($proyecto, $condominio, $usuario) {
         $banderita = in_array($plan_comision,array(64,65,66)) ? 0 : $banderita;
         if($banderita == 1){
           $total_com = $totalNeto2 * (($PorcentajeAsumar) / 100 );
-          $respuesta = $this->Comisiones_model->InsertNeo($lote_1,4824,$total_com,$this->session->userdata('id_usuario'),$PorcentajeAsumar,($pivote*$PorcentajeAsumar),str_replace($replace,"",$pago_neo),45,$idCliente,$tipo_venta_insert,$ooam);
+          $respuesta = $this->Comisiones_model->InsertNeo($lote_1,4824,$total_com,$this->session->userdata('id_usuario'),$PorcentajeAsumar,($pivote*$PorcentajeAsumar),str_replace($replace,"",$pago_neo),45,$idCliente,$tipo_venta_insert,$ooam, $nombreOtro);
         }
         //TERMINA PRIMERA VALIDACION DE DISPERSION
 
@@ -4346,7 +4347,7 @@ public function getDatosHistorialPagoEstatus($proyecto, $condominio, $usuario) {
           $respuesta = true;
         }
       
-      } else if($responses->row()->bandera == 0 && ($disparador == '1' || $disparador == 1 || $disparador == '2' || $disparador == 2)){
+      } else if($responses->row()->bandera == 0 && ($disparador == '2' || $disparador == 2)){
         $this->db->trans_begin();
         $lote_1 =  $this->input->post("idLote");
         $pending_1 =  $this->input->post("pending");
@@ -5029,7 +5030,7 @@ for ($d=0; $d <count($dos) ; $d++) {
       $motivo       =  $this->input->post('motivo'); 
 
       //se cambio a esta forma para limpiar el insert y teneer claro los datos que se envian
-      $response = $this->Comisiones_model->insertHistorialLog(   $id_pagoc,  $id_usuario, $estatus, $descripcion, $tabla, $motivo);
+      $response = $this->Comisiones_model->insertHistorialLog( $id_pagoc,  $id_usuario, $estatus, $descripcion, $tabla, $motivo);
         if ($response) {
           $bandera = false;
 
