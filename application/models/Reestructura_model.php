@@ -246,7 +246,7 @@ class Reestructura_model extends CI_Model
                     asig_jur = 0
                     WHERE idLote IN (".$datos['idLote'].") and status = 1");
 
-                    /*if(!in_array($datos["tipo"],array(7,8,9))) {
+                    if(!in_array($datos["tipo"],array(7,8,9))) {
                         $this->email
                             ->initialize()
                             ->from('Ciudad Maderas')
@@ -259,7 +259,7 @@ class Reestructura_model extends CI_Model
                             ], true));
                 
                         $this->email->send();
-                    }*/
+                    }
 
         if ($this->db->trans_status() === FALSE){
             $this->db->trans_rollback();
