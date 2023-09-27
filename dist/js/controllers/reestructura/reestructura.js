@@ -309,7 +309,7 @@ function fillChangelog(v) {
                     <a> ${v.fecha_creacion} </a>
                 </div>
                 <div class="col-md-12">
-                    <p class="m-0"><small>Valor anterior: </small><b>  ${v.nombre.toUpperCase()} </b></p>
+                    <p class="m-0"><small>Valor anterior: </small><b>  ${(v.nombre) ? v.nombre.toUpperCase() : '-'} </b></p>
                     <p class="m-0"><small>Valor nuevo: </small><b> ${v.nombreNuevo.toUpperCase()} </b></p>
                 </div>
             </div>
