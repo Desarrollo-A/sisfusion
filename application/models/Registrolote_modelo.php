@@ -3229,8 +3229,6 @@
         return $query->result();
 	}
     function getRevision7($beginDate, $endDate) {
-		$filter = " AND cl.fechaApartado BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
-
         $query = $this->db->query("SELECT idHistorialLote, hd.nombreLote, hd.idStatusContratacion, hd.idMovimiento, CONVERT(VARCHAR,hd.modificado,20) AS modificado, 
 		CONVERT(VARCHAR,hd.fechaVenc,20) AS fechaVenc, lotes.idLote, CONVERT(VARCHAR,cl.fechaApartado,20) AS fechaApartado, cond.nombre as nombreCondominio,
 		lotes.comentario, res.nombreResidencial, s.nombre as nombreSede,
@@ -3241,7 +3239,7 @@
 		UPPER(CASE CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno) WHEN '' THEN hd.usuario ELSE 
 		CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno) END) nombreUsuario
 		FROM historial_lotes hd
-		INNER JOIN clientes cl ON hd.idCliente = cl.id_cliente
+		INNER JOIN clientes cl ON hd.idCliente = cl.id_cliente AND cl.fechaApartado BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'
 		INNER JOIN sedes s ON s.id_sede = cl.id_sede
 		INNER JOIN lotes lotes ON hd.idLote = lotes.idLote AND lotes.status = 1
 		INNER JOIN condominios cond ON cond.idCondominio = lotes.idCondominio
@@ -3250,9 +3248,8 @@
 		LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
 		LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
 		LEFT JOIN usuarios u ON CAST(u.id_usuario AS VARCHAR(45)) = (SELECT TOP 1 usuario FROM historial_lotes WHERE idLote = lotes.idLote AND status = 1 AND idStatusContratacion = 6 ORDER BY modificado DESC)
-		WHERE (hd.idStatusContratacion =5 and hd.idMovimiento=22 and cl.status = 1
-		or hd.idStatusContratacion = 3 and hd.idMovimiento = 82 and cl.status = 1)
-		AND hd.status = 1 ".$filter." ORDER BY hd.modificado asc");
+		WHERE hd.idMovimiento IN (22, 82) and cl.status = 1
+		AND hd.status = 1 $filter ORDER BY hd.modificado asc");
         return $query->result();
     }
 	function getDirectores(){
