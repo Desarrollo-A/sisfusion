@@ -78,7 +78,7 @@ class Reestructura extends CI_Controller{
     }
 
     public function lista_proyecto(){
-		if($this->session->userdata('id_rol') == 2){
+		if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_usuario') == 10878){
 			echo json_encode($this->Reestructura_model->get_proyecto_listaCancelaciones()->result_array());
 		}else{
 			echo json_encode($this->Reestructura_model->get_proyecto_lista()->result_array());
@@ -160,7 +160,7 @@ class Reestructura extends CI_Controller{
 		} 
 	}
 
-	public function getregistros(){
+	public function getRegistros(){
         $index_proyecto = $this->input->post('index_proyecto');
         $dato = $this->Reestructura_model->get_valor_lote($index_proyecto);
         if ($dato != null) {
@@ -178,7 +178,6 @@ class Reestructura extends CI_Controller{
         } else {
             echo json_encode(0);
         }
-
 	}
 
     public function setReestructura(){
@@ -192,6 +191,8 @@ class Reestructura extends CI_Controller{
         $loteAOcupar = $clienteAnterior->idLote;
 		$lineaVenta = $this->General_model->getLider($idLider)->row();
         $proceso = 3;
+        $tipo_venta = $clienteAnterior->tipo_venta;
+        $ubicacion = $clienteAnterior->ubicacion;
 
         $expediente = $this->Reestructura_model->obtenerDocumentacionPorReestructura();
         $loteNuevoInfo = $this->Reestructura_model->obtenerLotePorId($loteAOcupar);
@@ -211,8 +212,6 @@ class Reestructura extends CI_Controller{
             ]);
             return;
         }
-
-        $idClienteInsert = $this->db->insert_id();
 
         $dataInsertHistorialLote = array(
 			'nombreLote' => $clienteAnterior->nombreLote,
@@ -295,7 +294,7 @@ class Reestructura extends CI_Controller{
             return;
         }
 
-        if (!$this->updateLote($idClienteInsert, $nombreAsesor, $loteAOcupar)) {
+        if (!$this->updateLote($idClienteInsert, $nombreAsesor, $loteAOcupar, $tipo_venta, $ubicacion)) {
             $this->db->trans_rollback();
 
             echo json_encode([
@@ -344,6 +343,8 @@ class Reestructura extends CI_Controller{
 		$nuevaSup = floatval($loteSelected->sup);
 		$anteriorSup = floatval($clienteAnterior->sup);
 		$proceso = ( $anteriorSup == $nuevaSup || (($nuevaSup - $anteriorSup) <= 2)) ? 2 : 4;
+        $tipo_venta = $clienteAnterior->tipo_venta;
+        $ubicacion = $clienteAnterior->ubicacion;
 
 		$validateLote = $this->caja_model_outside->validate($loteAOcupar);
         if ($validateLote == 0) {
@@ -371,7 +372,7 @@ class Reestructura extends CI_Controller{
             return;
         }
 
-        if (!$this->updateLote($idClienteInsert, $nombreAsesor, $loteAOcupar)) {
+        if (!$this->updateLote($idClienteInsert, $nombreAsesor, $loteAOcupar, $tipo_venta, $ubicacion)) {
             $this->db->trans_rollback();
 
             echo json_encode([
@@ -474,7 +475,7 @@ class Reestructura extends CI_Controller{
 
     public function copiarClienteANuevo($clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $loteSelected = null, $idCondominio = null) {
         $dataCliente = [];
-        $camposOmitir = ['id_cliente','nombreLote', 'sup'];
+        $camposOmitir = ['id_cliente','nombreLote', 'sup', 'tipo_venta', 'ubicacion'];
 
         foreach ($clienteAnterior as $clave => $valor) {
             if(in_array($clave, $camposOmitir)) {
@@ -520,7 +521,7 @@ class Reestructura extends CI_Controller{
         return $this->caja_model_outside->insertClient($dataCliente);
     }
 
-    function updateLote($idClienteInsert, $nombreAsesor, $loteAOcupar){
+    function updateLote($idClienteInsert, $nombreAsesor, $loteAOcupar, $tipo_venta, $ubicacion){
         date_default_timezone_set('America/Mexico_City');
         $horaActual = date('H:i:s');
         $horaInicio = date("08:00:00");
@@ -640,7 +641,9 @@ class Reestructura extends CI_Controller{
             'perfil' => 'ooam',
             'modificado' => date('Y-m-d h:i:s'),
             'fechaVenc' => $fechaFull,
-            'IdStatusLote' => 3
+            'IdStatusLote' => 3,
+            'tipo_venta' => $tipo_venta,
+            'ubicacion' =>$ubicacion
         );
 
         $resultLote = $this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $loteAOcupar);
@@ -847,4 +850,10 @@ class Reestructura extends CI_Controller{
             echo json_encode(array());
         }
     }
-} 
+
+    public function obtenerClientePorId($idCliente)
+    {
+        $cliente = $this->Reestructura_model->obtenerClientePorId($idCliente);
+        echo json_encode($cliente);
+    }
+}

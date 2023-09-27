@@ -14,6 +14,33 @@ $(document).ready(function () {
     }, 'json');
 });
 
+$(document).ready(function () {
+	$.post(`${general_base_url}Contratacion/sedesPorDesarrollos`, function (data) {
+		var len = data.length;
+		for (var i = 0; i < len; i++) {
+			var id = data[i]['id_sede'];
+			var name = data[i]['nombre'];
+			$("#sedes").append($('<option>').val(id).text(name.toUpperCase()));
+		}
+		$("#sedes").selectpicker('refresh');
+	}, 'json');
+});
+
+$(document).on('change', "#sedes", function () {
+	$('#tablaInventario').removeClass('hide');
+	$('#spiner-loader').removeClass('hide');
+    index_idResidencial = $(this).val();
+    $("#idCondominioInventario").html("");
+    $(document).ready(function () {
+        $.post(`${general_base_url}Contratacion/lista_condominio/${index_idResidencial}`, function (data) {
+            for (var i = 0; i < data.length; i++) {
+                $("#idCondominioInventario").append($('<option>').val(data[i]['idCondominio']).text(data[i]['nombre']));
+            }
+            $("#idCondominioInventario").selectpicker('refresh');
+        }, 'json');
+    });   
+});
+
 $('#idResidencial').change(function () {
     $('#spiner-loader').removeClass('hide');
     $('#tablaInventario').removeClass('hide');
@@ -25,7 +52,6 @@ $('#idResidencial').change(function () {
                 $("#idCondominioInventario").append($('<option>').val(data[i]['idCondominio']).text(data[i]['nombre']));
             }
             $("#idCondominioInventario").selectpicker('refresh');
-            $('#spiner-loader').addClass('hide');
         }, 'json');
     });    
 });
@@ -42,10 +68,11 @@ $('#tablaInventario thead tr:eq(0) th').each(function (i) {
     });
 });
 
-$(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', function () {
-    ix_idResidencial = ($("#idResidencial").val().length <= 0) ? 0 : $("#idResidencial").val();
+$(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus, #sedes',  function () {
+    ix_idResidencial = ($("#idResidencial").val() == '') ? 0 : $("#idResidencial").val();
     ix_idCondominio = $("#idCondominioInventario").val() == '' ? 0 : $("#idCondominioInventario").val();
     ix_idEstatus = $("#idEstatus").val() == '' ? 0 : $("#idEstatus").val();
+    ix_sedes = ($("#sedes").val() == '') ? 0 : $("#sedes").val();
     tabla_inventario = $("#tablaInventario").DataTable({
         dom: "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'B><'col-12 col-sm-12 col-md-6 col-lg-6 p-0'f>rt>"+"<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
@@ -54,7 +81,7 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
         destroy: true,
         searching: true,
         ajax: {
-            url: `${general_base_url}Contratacion/get_inventario/${ix_idEstatus}/${ix_idCondominio}/${ix_idResidencial}`,
+            url: `${general_base_url}Contratacion/get_inventario/${ix_idEstatus}/${ix_idCondominio}/${ix_idResidencial}/${ix_sedes}`,
             dataSrc: ""
         },
         buttons: [{
@@ -292,6 +319,7 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
         }],
         initComplete: function() {
             $('[data-toggle="tooltip"]').tooltip();
+            $('#spiner-loader').addClass('hide');
         }
     });  
 });
@@ -300,6 +328,9 @@ $(document).on("click", ".ver_historial", function () {
     let $itself = $(this);
     let element = document.getElementById("divTabClausulas");
     let idLote = $(this).val();
+
+    $("#HistorialEstatus").html('');
+    
     if ($itself.attr('data-tipo-venta') == 'Venta de particulares') {
         $.getJSON(`${general_base_url}Contratacion/getClauses/${idLote}`).done(function (data) {
             $('#clauses_content').html(data[0]['nombre']);
@@ -316,7 +347,46 @@ $(document).on("click", ".ver_historial", function () {
     consultarHistoriaLiberacion(idLote);
     // LLENA LA TABLA CON EL LISTADO DE COMISIONISTAS COMO VENTAS COMPARTIDAS DEL LOTE X
     consultarVentasCompartidas(idLote);
+
+    //CONSULTA EL HISTORIAL DEL ESTATUS
+    $.getJSON(`${general_base_url}Contratacion/getInformationHistorialEstatus/${idLote}`).done(function (data) {
+        if (data.length == 0) {
+            $("#HistorialEstatus").append('<b>NO HAY REGISTROS</b');
+        } else {
+            fillChangelog(data);
+        }
+    });
 });
+
+function fillChangelog(v) {
+    for (var i = 0; i < v.length; i++) {
+    $("#HistorialEstatus").append('<li>\n' +
+    '    <div class="container-fluid">\n' +
+    '       <div class="row">\n' +
+   /*  '           <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">\n' +
+    '               <a><small>Campo: </small><b></b></a><br>\n' +
+    '           </div>\n' + */
+    '           <div class="float-end text-right">\n' +
+    '               <p>' + v[i].fecha_creacion + '</p>\n' +
+    '           </div>\n' +
+    '           <div class="col-md-12">\n' +
+    '             <p class="m-0"><small>Usuario: </small><b> ' + v[i].creado_por + '</b></p>\n'+
+    '             <p class="m-0"><small>Valor anterior: </small><b> ' + v[i].valorAnterior + '</b></p>\n' +
+    '             <p class="m-0"><small>Valor Nuevo: </small><b> ' + v[i].valorNuevo + '</b></p>\n' +
+    '           </div>\n' +
+    '        <h6>\n' +
+    '        </h6>\n' +
+    '       </div>\n' +
+    '    </div>\n' +
+    '</li>');
+    }
+}
+
+
+function cleanComments() {
+    var myChangelog = document.getElementById('HistorialEstatus');
+    myChangelog.innerHTML = '';
+}
 
 
 let titulostablaHistorialContratacion = [];
@@ -511,3 +581,7 @@ function consultarVentasCompartidas(idLote) {
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
 });
+
+
+
+

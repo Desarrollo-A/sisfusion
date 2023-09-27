@@ -71,7 +71,7 @@ class Contraloria_model extends CI_Model {
 		LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
 		LEFT JOIN sedes s ON cl.id_sede = s.id_sede 
         LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
-		WHERE l.idStatusContratacion IN (2) AND l.idMovimiento IN (4, 74, 84, 93, 101, 103) AND cl.status = 1
+		WHERE l.status = 1 AND l.idStatusContratacion IN (2) AND l.idMovimiento IN (4, 74, 84, 93, 101, 103) AND cl.status = 1
         GROUP BY l.idLote, l.referencia, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
         CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
@@ -131,7 +131,7 @@ class Contraloria_model extends CI_Model {
 		(SELECT concat(usuarios.nombre,' ', usuarios.apellido_paterno, ' ', usuarios.apellido_materno)
 		FROM historial_lotes left join usuarios on historial_lotes.usuario = usuarios.id_usuario
 		WHERE idHistorialLote = (SELECT MAX(idHistorialLote) FROM historial_lotes WHERE idLote IN (l.idLote) AND (perfil IN ('13', '32', 'contraloria', '17', '70')) AND status = 1)) as lastUc,
-        ISNULL(oxc0.nombre, 'Normal') tipo_proceso
+        ISNULL(oxc0.nombre, 'Normal') tipo_proceso, l.totalNeto
 	    FROM lotes l
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
@@ -142,7 +142,7 @@ class Contraloria_model extends CI_Model {
 		LEFT JOIN sedes sd ON sd.id_sede = l.ubicacion
 		LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
         LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
-		WHERE l.idStatusContratacion IN ('5', '2') AND l.idMovimiento IN ('35', '22', '62', '75', '94', '106', '108') and cl.status = 1
+		WHERE l.status = 1 AND l.idStatusContratacion IN ('5', '2') AND l.idMovimiento IN ('35', '22', '62', '75', '94', '106', '108') and cl.status = 1
 	    GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
         CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
@@ -150,7 +150,7 @@ class Contraloria_model extends CI_Model {
 		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
         concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-		cond.idCondominio, cl.expediente, sd.nombre, ISNULL(oxc0.nombre, 'Normal')
+		cond.idCondominio, cl.expediente, sd.nombre, ISNULL(oxc0.nombre, 'Normal'), l.totalNeto
 		ORDER BY l.nombreLote");
         return $query->result();
     }
@@ -256,7 +256,7 @@ class Contraloria_model extends CI_Model {
 		LEFT JOIN sedes sd ON sd.id_sede = l.ubicacion
 		LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
         LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
-		WHERE l.idStatusContratacion IN (8, 11) AND l.idMovimiento IN (38, 65, 41) 
+		WHERE l.status = 1 AND l.idStatusContratacion IN (8, 11) AND l.idMovimiento IN (38, 65, 41) 
 		AND l.status8Flag = 1 AND l.validacionEnganche != 'NULL' AND l.validacionEnganche IS NOT NULL
 		AND (l.totalNeto2 = 0.00 OR l.totalNeto2 = '0.00' OR l.totalNeto2 <= 0.00 OR l.totalNeto2 IS NULL)
 		AND cl.status = 1 $filtroSede
@@ -396,7 +396,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		LEFT JOIN sedes se ON se.id_sede = l.ubicacion
 		LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
         LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
-		WHERE l.idStatusContratacion IN (9) AND l.idMovimiento IN (39, 26) AND cl.status = 1 $filtroSede
+		WHERE l.status = 1 AND l.idStatusContratacion IN (9) AND l.idMovimiento IN (39, 26) AND cl.status = 1 $filtroSede
 		GROUP BY l.idLote, cl.id_cliente, l.validacionEnganche, l.firmaRL,
 		l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.perfil, cond.nombre, se.nombre,
 		res.nombreResidencial, l.ubicacion, tv.tipo_venta, l.numContrato, l.observacionContratoUrgente,
@@ -440,7 +440,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		LEFT JOIN sedes se ON se.id_sede = l.ubicacion
 		LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
         LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
-		WHERE l.idStatusContratacion IN (12, 11, 10) AND l.idMovimiento IN (42, 41, 40) 
+		WHERE l.status = 1 AND l.idStatusContratacion IN (12, 11, 10) AND l.idMovimiento IN (42, 41, 40) 
 		AND l.status8Flag = 1 AND l.validacionEnganche != 'NULL' AND l.validacionEnganche IS NOT NULL
 		AND l.totalNeto2 != 0.00 AND l.totalNeto2 != '0.00' AND l.totalNeto2 > 0.00
 		AND cl.status = 1 $filtroSede
@@ -503,7 +503,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
         LEFT JOIN prospectos pro ON cl.id_prospecto = pro.id_prospecto
         LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
-		WHERE l.idStatusContratacion IN (14) AND l.idMovimiento IN (44, 69, 80) AND cl.status = 1 $filtroSede
+		WHERE l.status = 1 AND l.idStatusContratacion IN (14) AND l.idMovimiento IN (44, 69, 80) AND cl.status = 1 $filtroSede
 		GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
 		l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
 		CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
@@ -816,7 +816,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) nombreGerente,
 		FORMAT(lotes.totalNeto, 'C') enganche, FORMAT(lotes.totalNeto2, 'C') total, CONVERT(VARCHAR,cl.fechaApartado,120) AS fechaApartado, CONVERT(VARCHAR,hd.modificado,120) AS modificado,
 		UPPER(CASE CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno) WHEN '' THEN hd.usuario ELSE 
-		CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno) END) nombreUsuario,
+		CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno) END) nombreUsuario, hd.comentario, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno )) nombreCliente,
         cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta
 		FROM historial_lotes hd
 		INNER JOIN clientes cl ON hd.idCliente = cl.id_cliente $filter

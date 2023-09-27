@@ -126,7 +126,7 @@ $("#tabla_ingresar_11").ready(function () {
 					else {
 						if (estatusPermitidosEstatus11.includes(parseInt(d.idStatusContratacion)) && movimientosPermitidosEstatus11.includes(parseInt(d.idMovimiento))) {
 							cntActions = `<button href="#" data-idLote="${d.idLote}" data-nomLote="${d.nombreLote}" data-idCond="${d.idCondominio}"
-								data-idCliente="${d.id_cliente}" data-fecVen="${d.fechaVenc}" data-ubic="${d.ubicacion}" data-tot="${d.totalNeto}"
+								data-idCliente="${d.id_cliente}" data-fecVen="${d.fechaVenc}" data-ubic="${d.ubicacion}" data-tot="${d.totalNeto}" data-totv="${d.totalValidado}"
 								class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="Registrar estatus">
 								<i class="far fa-thumbs-up"></i></button>`;
 							cntActions += `<button href="#" data-idLote="${d.idLote}" data-nomLote="${d.nombreLote}" data-idCond="${d.idCondominio}"
@@ -190,6 +190,7 @@ $("#tabla_ingresar_11").ready(function () {
 		getInfo1[5] = $(this).attr("data-idLote");
 		getInfo1[6] = $(this).attr("data-fecven");
 		getInfo1[7] = $(this).attr("data-tot");
+		getInfo1[8] = $(this).attr("data-totv");
 		nombreLote = $(this).data("nomlote");
 		$(".lote").html(nombreLote);
 		let val = getInfo1[7];
@@ -197,6 +198,13 @@ $("#tabla_ingresar_11").ready(function () {
 			val = 0;
 		document.getElementById("totalNeto").value = val;
 		$('#totalNeto').click();
+
+		let tov = getInfo1[8];
+		if (tov == '.00' || tov == 'null')
+			tov = 0;
+		document.getElementById("totalValidado").value = tov;
+		$('#totalValidado').click();
+
 		$('#editReg').modal('show');
 	});
 

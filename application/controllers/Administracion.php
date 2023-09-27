@@ -3,7 +3,7 @@
 if (!defined('BASEPATH')) exit('No direct script access allowed');
 class Administracion extends CI_Controller{
 	public function __construct()
-	{
+	{ 
 		parent::__construct();
 		$this->load->model('Administracion_model');
 		$this->load->model('registrolote_modelo');
@@ -22,6 +22,7 @@ class Administracion extends CI_Controller{
 		$rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
         $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
     }
+	
 
 
 	public function index() {
@@ -65,6 +66,7 @@ class Administracion extends CI_Controller{
 		  	$dataPer[$i]['tipo_venta']=$data[$i]->tipo_venta;
 		  	$dataPer[$i]['descripcion']=$data[$i]->descripcion;
 		  	$dataPer[$i]['totalNeto']=$data[$i]->totalNeto;
+			$dataPer[$i]['totalValidado']=$data[$i]->totalValidado;
 		  	$dataPer[$i]['vl']=$data[$i]->vl;
 		  	$dataPer[$i]['nombreSede']=$data[$i]->nombreSede;
 		  	$horaInicio = "08:00:00";
