@@ -10,7 +10,7 @@
 				<div class="modal-content" > 
 					<div class="modal-body">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
-                            <h4>¿Está usted seguro de liberar el lote?</h4>
+                            <h4>¿Estás seguro de liberar el lote?</h4>
                         </div>
                         <br>
                         <input type="hidden" name="idLote" id="idLoteenvARevCE" >
@@ -222,7 +222,7 @@
                                                     <th>PRECIO M2</th>
                                                     <th>NOMBRE</th>
                                                     <th>ESTATUS</th>
-                                                    <th>ESTATUS CATALOGO</th>
+                                                    <th>COMENTARIO</th>
                                                     <th>OBSERVACIÓN EN LIBERACIÓN</th>
                                                     <th>ACCIONES</th>
                                                 </tr>

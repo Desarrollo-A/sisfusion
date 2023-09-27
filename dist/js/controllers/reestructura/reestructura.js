@@ -413,8 +413,8 @@ function fillTable(index_proyecto) {
         },
         {
             data: function (d){
-                if(d.comentario != null && d.comentario != 'NULL'){
-                    return '<p class="m-0">' + d.comentario + '</p>'
+                if(d.comentarioReubicacion != null && d.comentarioReubicacion != 'NULL'){
+                    return '<p class="m-0">' + d.comentarioReubicacion + '</p>'
                 }else{
                     return '<p class="m-0"> - </p>'
                 }
@@ -422,22 +422,16 @@ function fillTable(index_proyecto) {
         },
         {
             data: function (d) {
-                if(d.observacion == null || d.observacion == "NULL"){
-                    return '<span class="label lbl-azure">SIN OBSERVACIONES</span>';
-                }else if(d.observacion == "LIBERACIÓN JURÍDICA"){
+                if(d.liberadoReubicacion == "LIBERACIÓN JURÍDICA"){
                     return '<span class="label lbl-green">LIBERACIÓN JURÍDICA</span>';
-                }else if(d.observacion == "Liberado por Yola"){
-                    return '<span class="label lbl-gray">LIBERADO POR YOLANDA</span>';
-                }else if(d.observacion == "LIBERADO POR CORREO"){
-                    return '<span class="label lbl-orangeYellow">LIBERADO POR CORREO</span>';
                 }else{
-                    return '<p class="m-0">' + d.observacion + '</p>';
+                    return '<span class="label lbl-azure">SIN OBSERVACIONES</span>';
                 }
             }
         },
         {
             data: function (d) {
-                if(d.observacion == "LIBERACIÓN JURÍDICA"){
+                if(d.liberadoReubicacion ==  "LIBERACIÓN JURÍDICA"){
                     return '<div class="d-flex justify-center"><button class="btn-data btn-deepGray stat5Rev" data-toggle="tooltip" data-placement="top" title= "VALIDAR REESTRUCTURACIÓN" data-idLote="' +d.idLote+ '"><i class="fas fa-edit"></i></button>'
                     +'<button class="btn-data btn-blueMaderas reesInfo" data-toggle="tooltip" data-placement="top" data-idLote="' +d.idLote+ '" title="HISTORIAL"><i class="fas fa-info"></i></button></div>';
                 }else{
