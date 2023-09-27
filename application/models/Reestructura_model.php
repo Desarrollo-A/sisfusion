@@ -223,6 +223,7 @@ class Reestructura_model extends CI_Model
                     $idMovimiento = $datos["tipo"] == 8 ? 31 : 0;
                     $tipo_venta = $datos["tipo"] == 8 ? $row[0]['tipo_venta'] : 0;
                     $ubicacion = $datos["tipo"] == 8 ? $row[0]['ubicacion'] : 0;
+                    $motivo_change_status =  $datos["tipoLiberacion"] == 3 ? $datos['obsLiberacion'] : 'LOTE LIBERADO';
                     $this->db->query("UPDATE lotes SET idStatusContratacion = $idStatusContratacion,
                     idMovimiento = $idMovimiento, comentario = 'NULL', idCliente = $idClienteNuevo, usuario = 'NULL', perfil = 'NULL ', 
                     fechaVenc = null, modificado = null, status8Flag = 0, 
@@ -231,6 +232,7 @@ class Reestructura_model extends CI_Model
                     totalValidado = 0, validacionEnganche = 'NULL', 
                     fechaSolicitudValidacion = null, 
                     fechaRL = null, 
+                    motivo_change_status='$motivo_change_status',
                     registro_comision = $registro_comision,
                     tipo_venta = $tipo_venta, 
                     observacionContratoUrgente = null,
@@ -252,7 +254,8 @@ class Reestructura_model extends CI_Model
                             ->subject('Notificación de liberación')
                             ->view($this->load->view('mail/reestructura/mailLiberacion', [
                                 'lote' => $row[0]['nombreLote'],
-                                'fechaApartado' => $datos['fechaLiberacion']
+                                'fechaApartado' => $datos['fechaLiberacion'],
+                                'Observaciones' => $datos['obsLiberacion']
                             ], true));
                 
                         $this->email->send();

@@ -70,7 +70,7 @@ function getRpClientes()
     }
 
     function getSalesPlaza(){
-        return $this->db->query("SELECT id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo = 5 AND estatus = 1 ORDER BY nombre");
+        return $this->db->query("SELECT id_sede AS id_opcion, nombre FROM sedes WHERE estatus = 1 ORDER BY nombre");
     }
 
     function getCivilStatus(){
@@ -1105,7 +1105,7 @@ function getStatusMktdPreventa(){
             FROM prospectos p 
             LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = p.personalidad_juridica AND oxc.id_catalogo = 10
             LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = p.lugar_prospeccion AND oxc2.id_catalogo = 9
-            LEFT JOIN opcs_x_cats oxc3 ON oxc3.id_opcion = p.plaza_venta AND oxc3.id_catalogo = 5
+            LEFT JOIN sedes oxc3 ON oxc3.id_sede = p.plaza_venta
             LEFT JOIN opcs_x_cats oxc4 ON oxc4.id_opcion = p.nacionalidad AND oxc4.id_catalogo = 11
             LEFT JOIN usuarios us ON us.id_usuario = p.id_asesor
             LEFT JOIN usuarios us2 ON us2.id_usuario = p.id_coordinador
@@ -1182,7 +1182,7 @@ function getStatusMktdPreventa(){
                 WHEN parametro_modificado = 'GERENTE' THEN (SELECT CONCAT( apellido_paterno,' ',apellido_materno,' ',nombre) as nombre FROM usuarios WHERE id_usuario = nuevo)
                 WHEN parametro_modificado = 'TIPO' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 8)
                 WHEN parametro_modificado = 'LUGAR DE PROSPECCIÓN' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 9)
-                WHEN parametro_modificado = 'PLAZA DE VENTA' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 5)
+                WHEN parametro_modificado = 'PLAZA DE VENTA' THEN (SELECT nombre FROM sedes WHERE id_sede = nuevo)
                 WHEN parametro_modificado = 'ZONA DE VENTA' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 6)
                 WHEN parametro_modificado = 'MÉTODO DE PROSPECCIÓN' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 7)
                 WHEN parametro_modificado = 'ESTADO CIVIL' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 18)
@@ -1201,7 +1201,7 @@ function getStatusMktdPreventa(){
                 WHEN parametro_modificado = 'GERENTE' THEN (SELECT CONCAT( apellido_paterno,' ',apellido_materno,' ',nombre) as nombre FROM usuarios WHERE id_usuario = anterior)
                 WHEN parametro_modificado = 'TIPO' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 8)
                 WHEN parametro_modificado = 'LUGAR DE PROSPECCIÓN' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 9)
-                WHEN parametro_modificado = 'PLAZA DE VENTA' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 5)
+                WHEN parametro_modificado = 'PLAZA DE VENTA' THEN (SELECT nombre FROM sedes WHERE id_sede = anterior)
                 WHEN parametro_modificado = 'ZONA DE VENTA' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 6)
                 WHEN parametro_modificado = 'MÉTODO DE PROSPECCIÓN' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 7)
                 WHEN parametro_modificado = 'ESTADO CIVIL' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 18)
@@ -3818,9 +3818,10 @@ function getStatusMktdPreventa(){
     }
 
     function getCatalogs(){
-        return $this->db->query("SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo IN (5, 7, 9, 10, 11, 18, 19, 38) AND estatus = 1 ORDER BY id_catalogo, 
-        (CASE id_catalogo WHEN 9 THEN (CASE id_opcion WHEN 31 THEN ' ' WHEN 6 THEN '' ELSE nombre END) WHEN 11 THEN (CASE id_opcion WHEN 0 THEN '' ELSE nombre END) ELSE nombre END)");
-        //return $this->db->query("SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo IN (5, 7, 9, 10, 11, 18, 19, 38) AND estatus = 1 ORDER BY id_catalogo, id_opcion");
+        return $this->db->query("(SELECT 5 AS id_catalogo,id_sede AS id_opcion,nombre FROM sedes WHERE estatus=1)
+        UNION ALL
+        (SELECT id_catalogo, id_opcion AS id_opcion, nombre
+        FROM opcs_x_cats WHERE id_catalogo IN (7, 9, 10, 11, 18, 19, 38) AND estatus = 1)");
     }
     
     function getregistrosLP(){

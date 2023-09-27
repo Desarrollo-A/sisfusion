@@ -100,9 +100,9 @@ $("#tabla_ingresar_6").ready(function () {
             },
             {
                 data: function (d) {
-                        return `<span class='label lbl-violetBoots'>${d.tipo_proceso}</span>`;
-                    }
-                },
+                    return `<span class='label lbl-violetBoots'>${d.tipo_proceso}</span>`;
+                }
+            },
             {
                 data: function (d) {
                     return '<p class="m-0">' + d.nombreResidencial + '</p>';

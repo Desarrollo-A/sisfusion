@@ -45,8 +45,8 @@ $(document).on('change', '#leader', function() {
             lider : lider
         },
         function (data) {
-    let arraySedes = puesto == 7 ? ( data[0].banderaGer == 0 ? [data[0].idSedeCoor,data[0].idSedeGer,data[0].idSedeSub,data[0].idSedeReg] : [data[0].idSedeGer,data[0].idSedeSub,data[0].idSedeReg]) : ( puesto == 9 ? sede == 2 ? [data[0].idSedeGer,data[0].idSedeSub] : [data[0].idSedeGer,data[0].idSedeSub,data[0].idSedeReg] : sede == 2 ? [data[0].idSedeSub] : [data[0].idSedeSub,data[0].idSedeReg]);
-console.log(arraySedes);
+        let sedesSinRegional = [5,2,3,6];
+        let arraySedes = puesto == 7 ? ( data[0].banderaGer == 0 ? [data[0].idSedeCoor,data[0].idSedeGer,data[0].idSedeSub,data[0].idSedeReg] : [data[0].idSedeGer,data[0].idSedeSub,data[0].idSedeReg]) : ( puesto == 9 ? sedesSinRegional.includes(parseInt(sede)) ? [data[0].idSedeGer,data[0].idSedeSub] : [data[0].idSedeGer,data[0].idSedeSub,data[0].idSedeReg] : sedesSinRegional.includes(parseInt(sede)) ? [data[0].idSedeSub] : [data[0].idSedeSub,data[0].idSedeReg]);
     let buscarDiff = arraySedes.filter(element => element != sede);
     if(buscarDiff.length > 0){
         $('#btn_acept').prop('disabled', true);
@@ -68,7 +68,7 @@ console.log(arraySedes);
         tabla += puesto == 7  ? `<div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].coordinador}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoCoor}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeCoor}</label></div>` : '';
         tabla += puesto == 3 ? '' : `<div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].gerente}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoGer}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeGerente}</label></div>`;
         tabla += `<div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].sub}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoSub}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeSubdirector}</label></div>`;
-        tabla += sede == 2 ? '' : `<div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].regional_1}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoReg}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeReg}</label></div>`;
+        tabla += sedesSinRegional.includes(parseInt(sede)) ? '' : `<div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].regional_1}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoReg}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeReg}</label></div>`;
         tabla += `</div>`;
             /*let tabla = puesto == 7 ? `
                 <div class="row subBoxDetail">

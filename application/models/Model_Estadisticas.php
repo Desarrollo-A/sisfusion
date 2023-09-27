@@ -150,7 +150,7 @@ class Model_Estadisticas extends CI_Model {
         INNER JOIN usuarios t2 ON c.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = c.id_sede 
         LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede 
         LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         LEFT JOIN observaciones o ON (c.id_cliente = o.id_cliente)
         WHERE (c.id_asesor = '$asesor' AND c.id_sede = '$sede' AND c.otro_lugar = '$lugar')
@@ -184,7 +184,7 @@ class Model_Estadisticas extends CI_Model {
         INNER JOIN usuarios t2 ON c.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = c.id_sede 
         LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON (c.territorio_venta = ot.id_sede)
         LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         LEFT JOIN observaciones o ON (c.id_cliente = o.id_cliente)
         WHERE (c.id_asesor = '$asesor' AND c.id_sede = '$sede' AND c.lugar_prospeccion = 6)
@@ -224,7 +224,7 @@ class Model_Estadisticas extends CI_Model {
         INNER JOIN usuarios t2 ON c.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = c.id_sede
         LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
         LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         LEFT JOIN observaciones o ON (c.id_cliente = o.id_cliente)
         WHERE (lugar_prospeccion = 6)
@@ -250,7 +250,7 @@ class Model_Estadisticas extends CI_Model {
         INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = p.id_sede 
         LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON (p.plaza_venta = ot.id_sede)
         LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         WHERE ( lugar_prospeccion = 6)
         AND p.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59'  ORDER BY MONTH(p.fecha_creacion)");
@@ -275,7 +275,7 @@ class Model_Estadisticas extends CI_Model {
         INNER JOIN usuarios t2 ON c.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = c.id_sede
         LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
         LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         LEFT JOIN observaciones o ON (c.id_cliente = o.id_cliente)
         WHERE (c.id_sede = '$sede' AND otro_lugar = '$lugar')
@@ -301,7 +301,7 @@ class Model_Estadisticas extends CI_Model {
         INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = p.id_sede 
         LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON (p.plaza_venta = ot.id_sede)
         LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         WHERE (p.id_sede = '$sede' AND otro_lugar = '$lugar')
         AND p.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59'  ORDER BY MONTH(p.fecha_creacion)");
@@ -381,7 +381,7 @@ class Model_Estadisticas extends CI_Model {
         INNER JOIN usuarios t2 ON c.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = c.id_sede
         LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
         LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         LEFT JOIN observaciones o ON (c.id_cliente = o.id_cliente)
         WHERE (c.id_sede = '$sede' AND lugar_prospeccion = 6)
@@ -407,7 +407,7 @@ class Model_Estadisticas extends CI_Model {
         INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = p.id_sede 
         LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON (p.plaza_venta = ot.id_sede)
         LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         WHERE (p.id_sede = '$sede' AND lugar_prospeccion = 6)
         AND p.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59'  ORDER BY MONTH(p.fecha_creacion)");
@@ -432,7 +432,7 @@ class Model_Estadisticas extends CI_Model {
         INNER JOIN usuarios t2 ON c.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = c.id_sede
         LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
         LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         LEFT JOIN observaciones o ON (c.id_cliente = o.id_cliente)
         WHERE (c.otro_lugar = '$lugar')
@@ -458,7 +458,7 @@ class Model_Estadisticas extends CI_Model {
         INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = p.id_sede 
         LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON (p.plaza_venta = ot.id_sede)
         LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         WHERE (p.otro_lugar = '$lugar')
         AND p.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59'  ORDER BY MONTH(p.fecha_creacion)");
@@ -686,7 +686,7 @@ WHERE lugar_prospeccion = 6 GROUP BY otro_lugar ORDER BY otro_lugar;");
         IF(om.nombre IS NULL, 'N/D', om.nombre  )AS MedioPublicitario 
         FROM clientes c INNER JOIN sedes se ON se.id_sede = c.id_sede 
         LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9) 
-        LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON (c.territorio_venta = ot.id_sede)
         LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         WHERE (c.id_asesor = '$user' AND c.tipo = '$tipo') AND c.fecha_creacion 
         BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59'  ORDER BY MONTH(c.fecha_creacion)");
@@ -705,7 +705,7 @@ WHERE lugar_prospeccion = 6 GROUP BY otro_lugar ORDER BY otro_lugar;");
         IF(om.nombre IS NULL, 'N/D', om.nombre  )AS MedioPublicitario 
         FROM clientes c INNER JOIN sedes se ON se.id_sede = c.id_sede 
         LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9) 
-        LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON (c.territorio_venta = ot.id_sede)
         LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         WHERE (c.id_asesor = '$user' AND c.tipo = '$tipo')
          AND c.fecha_creacion BETWEEN '$current_year/01/01 00:00:00' AND '$current_year/12/31 23:59:59'  ORDER BY MONTH(c.fecha_creacion)");
@@ -723,7 +723,7 @@ WHERE lugar_prospeccion = 6 GROUP BY otro_lugar ORDER BY otro_lugar;");
         IF(om.nombre IS NULL, 'N/D', om.nombre  )AS MedioPublicitario 
         FROM clientes c INNER JOIN sedes se ON se.id_sede = c.id_sede 
         LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9) 
-        LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
         LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         WHERE (c.id_asesor = '$user') AND c.fecha_creacion 
         BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59'  ORDER BY MONTH(c.fecha_creacion)");
@@ -745,7 +745,7 @@ WHERE lugar_prospeccion = 6 GROUP BY otro_lugar ORDER BY otro_lugar;");
                 FROM clientes c INNER JOIN usuarios s ON c.id_asesor = s.id_usuario 
                 INNER JOIN sedes se ON se.id_sede = c.id_sede 
                 LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
                 LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                 WHERE (c.id_gerente = '$user' ) AND (c.fecha_creacion BETWEEN '$current_year/01/01 00:00:00' AND '$current_year/12/31 23:59:59')
                 ORDER BY c.fecha_creacion");
@@ -767,7 +767,7 @@ WHERE lugar_prospeccion = 6 GROUP BY otro_lugar ORDER BY otro_lugar;");
                 FROM clientes c INNER JOIN usuarios s ON c.id_asesor = s.id_usuario 
                 INNER JOIN sedes se ON se.id_sede = c.id_sede 
                 LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
                 LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                 WHERE (c.id_gerente = '$user' and c.tipo = '$tipo') AND (c.fecha_creacion BETWEEN '$current_year/01/01 00:00:00' AND '$current_year/12/31 23:59:59')
                 ORDER BY c.fecha_creacion");
@@ -789,7 +789,7 @@ WHERE lugar_prospeccion = 6 GROUP BY otro_lugar ORDER BY otro_lugar;");
                 FROM clientes c INNER JOIN usuarios s ON c.id_asesor = s.id_usuario 
                 INNER JOIN sedes se ON se.id_sede = c.id_sede 
                 LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
                 LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                 WHERE (c.id_coordinador = '$user' ) AND (c.fecha_creacion BETWEEN '$current_year/01/01 00:00:00' AND '$current_year/12/31 23:59:59')
                 ORDER BY c.fecha_creacion");
@@ -812,7 +812,7 @@ AS Gerencia,
                  INNER JOIN usuarios t2 ON c.id_gerente = t2.id_usuario
                  INNER JOIN sedes se ON se.id_sede = c.id_sede 
                  LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                 LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                 LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
                  LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                  WHERE (c.id_gerente = '$gerente') AND
                  (c.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59') ORDER BY c.fecha_creacion");
@@ -835,7 +835,7 @@ AS Gerencia,
                  INNER JOIN sedes se ON se.id_sede = c.id_sede 
                  INNER JOIN usuarios t2 ON c.id_gerente = t2.id_usuario
                  LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                 LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                 LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
                  LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                  WHERE (c.id_gerente = '$gerente' AND c.tipo = '$tipo' AND c.id_coordinador = '$coordinador') AND
                  (c.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59') ORDER BY c.fecha_creacion");
@@ -858,7 +858,7 @@ AS Gerencia,
                  INNER JOIN usuarios t2 ON c.id_gerente = t2.id_usuario
                  INNER JOIN sedes se ON se.id_sede = c.id_sede 
                  LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                 LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                 LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
                  LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                  WHERE (c.id_gerente = '$gerente' AND c.id_coordinador = '$coordinador') AND
                  (c.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59') ORDER BY c.fecha_creacion");
@@ -881,7 +881,7 @@ AS Gerencia,
                  INNER JOIN usuarios t2 ON c.id_gerente = t2.id_usuario
                  INNER JOIN sedes se ON se.id_sede = c.id_sede 
                  LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                 LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                 LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
                  LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                  WHERE (c.id_gerente = '$gerente' AND c.tipo = $tipo) AND
                  (c.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59') ORDER BY c.fecha_creacion LIMIT 3000");
@@ -901,7 +901,7 @@ AS Gerencia,
                 FROM clientes c INNER JOIN usuarios s ON c.id_asesor = s.id_usuario 
                 INNER JOIN sedes se ON se.id_sede = c.id_sede 
                 LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
                 LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                 WHERE (c.id_gerente = '$user' AND c.tipo = '$tipo' AND c.id_asesor = '$asesor') AND
                 (c.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59') ORDER BY c.fecha_creacion");
@@ -921,7 +921,7 @@ AS Gerencia,
                  FROM clientes c INNER JOIN usuarios s ON c.id_asesor = s.id_usuario 
                  INNER JOIN sedes se ON se.id_sede = c.id_sede 
                  LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                 LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                 LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
                  LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                  WHERE (c.id_coordinador = '$user' AND c.tipo = '$tipo' AND c.id_asesor = '$asesor') AND
                  (c.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59') ORDER BY c.fecha_creacion");
@@ -942,7 +942,7 @@ AS Gerencia,
                  FROM clientes c INNER JOIN usuarios s ON c.id_asesor = s.id_usuario 
                  INNER JOIN sedes se ON se.id_sede = c.id_sede 
                  LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                 LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                 LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
                  LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                  WHERE (c.id_coordinador = '$user' AND c.tipo = '$tipo') AND
                  (c.fecha_creacion BETWEEN '$current_year/01/01 00:00:00' AND '$current_year/12/31 23:59:59') ORDER BY c.fecha_creacion");
@@ -962,7 +962,7 @@ AS Gerencia,
                 FROM clientes c INNER JOIN usuarios s ON c.id_asesor = s.id_usuario 
                 INNER JOIN sedes se ON se.id_sede = c.id_sede 
                 LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
                 LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                 WHERE (c.id_coordinador = '$user' AND c.id_asesor = '$asesor') AND
                 (c.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59') ORDER BY c.fecha_creacion");
@@ -983,7 +983,7 @@ AS Gerencia,
                 FROM clientes c INNER JOIN usuarios s ON c.id_asesor = s.id_usuario 
                 INNER JOIN sedes se ON se.id_sede = c.id_sede 
                 LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
                 LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                 WHERE c.id_gerente IN (SELECT id_lider FROM usuarios WHERE id_usuario = '$user') AND (c.fecha_creacion BETWEEN '$current_year/01/01 00:00:00' AND '$current_year/12/31 23:59:59')
                 ORDER BY c.fecha_creacion");
@@ -1004,7 +1004,7 @@ AS Gerencia,
                 FROM clientes c INNER JOIN usuarios s ON c.id_asesor = s.id_usuario 
                 INNER JOIN sedes se ON se.id_sede = c.id_sede 
                 LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
                 LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                 WHERE c.id_gerente IN (SELECT id_lider FROM usuarios WHERE id_usuario = '$user') AND (c.fecha_creacion BETWEEN '$current_year/01/01 00:00:00' AND '$current_year/12/31 23:59:59')
                 AND c.tipo = '$tipo' ORDER BY c.fecha_creacion");
@@ -1024,7 +1024,7 @@ AS Gerencia,
                 FROM clientes c INNER JOIN usuarios s ON c.id_asesor = s.id_usuario 
                 INNER JOIN sedes se ON se.id_sede = c.id_sede 
                 LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
                 LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                 WHERE c.id_gerente IN (SELECT id_lider FROM usuarios WHERE id_usuario = '$user') AND (c.tipo = '$tipo' AND c.id_asesor = '$asesor')
                 AND (c.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59')
@@ -1045,7 +1045,7 @@ AS Gerencia,
                 FROM clientes c INNER JOIN usuarios s ON c.id_asesor = s.id_usuario 
                 INNER JOIN sedes se ON se.id_sede = c.id_sede 
                 LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
                 LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                 WHERE c.id_gerente IN (SELECT id_lider FROM usuarios WHERE id_usuario = '$user') AND (c.id_asesor = '$asesor')
                 AND (c.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59')
@@ -1066,7 +1066,7 @@ AS Gerencia,
                 FROM clientes c INNER JOIN usuarios s ON c.id_asesor = s.id_usuario 
                 INNER JOIN sedes se ON se.id_sede = c.id_sede 
                 LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
                 LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                 WHERE c.id_gerente = '$user' AND (c.id_asesor = '$asesor')
                 AND (c.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59')
@@ -1087,7 +1087,7 @@ AS Gerencia,
                 FROM clientes c INNER JOIN usuarios s ON c.id_asesor = s.id_usuario 
                 INNER JOIN sedes se ON se.id_sede = c.id_sede 
                 LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
                 LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                 WHERE c.id_gerente = '$user' AND (c.id_coordinador = '$coordinador')
                 AND (c.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59')
@@ -1108,7 +1108,7 @@ AS Gerencia,
                 FROM clientes c INNER JOIN usuarios s ON c.id_asesor = s.id_usuario 
                 INNER JOIN sedes se ON se.id_sede = c.id_sede 
                 LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
                 LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                 WHERE c.id_gerente IN(SELECT id_lider FROM usuarios WHERE id_usuario = '$user' AND id_rol = 6) AND (c.id_coordinador = '$coordinador')
                 AND (c.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59')
@@ -1129,7 +1129,7 @@ AS Gerencia,
                 FROM clientes c INNER JOIN usuarios s ON c.id_asesor = s.id_usuario 
                 INNER JOIN sedes se ON se.id_sede = c.id_sede 
                 LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
                 LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                 WHERE c.id_gerente = '$user' AND c.tipo = '$tipo' AND (c.id_coordinador = '$coordinador')
                 AND (c.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59')
@@ -1150,7 +1150,7 @@ AS Gerencia,
                 FROM clientes c INNER JOIN usuarios s ON c.id_asesor = s.id_usuario 
                 INNER JOIN sedes se ON se.id_sede = c.id_sede 
                 LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
                 LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                 WHERE c.id_gerente IN(SELECT id_lider FROM usuarios WHERE id_usuario = '$user' AND id_rol = 6) AND c.tipo = '$tipo' AND (c.id_coordinador = '$coordinador')
                 AND (c.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59')
@@ -1186,7 +1186,7 @@ AS Gerencia,
         INNER JOIN usuarios t2 ON t2.id_usuario = c.id_gerente
         INNER JOIN sedes se ON se.id_sede = c.id_sede 
         LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
         LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         WHERE (c.fecha_creacion BETWEEN '$current_year/01/01 00:00:00' AND '$current_year/12/31 23:59:59')
         ORDER BY c.fecha_creacion");
@@ -1211,7 +1211,7 @@ AS Gerencia,
         INNER JOIN usuarios t2 ON c.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = c.id_sede 
         LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
         LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         WHERE (c.fecha_creacion BETWEEN '$current_year/01/01 00:00:00' AND '$current_year/12/31 23:59:59') AND c.tipo = '$tipo'
         ORDER BY c.fecha_creacion");
@@ -1234,7 +1234,7 @@ AS Gerencia,
                 INNER JOIN usuarios t2 ON c.id_gerente = t2.id_usuario
                 INNER JOIN sedes se ON se.id_sede = c.id_sede 
                 LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
                 LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                 WHERE t1.id_rol = 7 AND (c.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59') AND (c.tipo = '$tipo' AND c.id_asesor = '$asesor')
                 ORDER BY c.fecha_creacion");
@@ -1257,7 +1257,7 @@ AS Gerencia,
         INNER JOIN usuarios t2 ON c.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = c.id_sede 
         LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
         LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         WHERE t1.id_rol = 7 AND (c.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59') AND (c.id_asesor = '$asesor')
         ORDER BY c.fecha_creacion");
@@ -1316,7 +1316,7 @@ AS Gerencia,
                 INNER JOIN usuarios t2 ON c.id_gerente = t2.id_usuario
                 INNER JOIN sedes se ON se.id_sede = c.id_sede 
                 LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
                 LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                 WHERE c.id_sede IN (SELECT id_sede FROM usuarios WHERE id_usuario = '$user')
                 AND (c.fecha_creacion BETWEEN '$current_year/01/01 00:00:00' AND '$current_year/12/31 23:59:59')
@@ -1341,7 +1341,7 @@ AS Gerencia,
                 INNER JOIN usuarios t2 ON c.id_gerente = t2.id_usuario
                 INNER JOIN sedes se ON se.id_sede = c.id_sede 
                 LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
                 LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                 WHERE FIND_IN_SET(c.id_sede, '$sedes')
                 AND (c.fecha_creacion BETWEEN '$current_year/01/01 00:00:00' AND '$current_year/12/31 23:59:59')
@@ -1364,7 +1364,7 @@ AS Gerencia,
                 INNER JOIN usuarios t2 ON c.id_gerente = t2.id_usuario
                 INNER JOIN sedes se ON se.id_sede = c.id_sede 
                 LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
                 LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                 WHERE (c.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59') AND (c.tipo = '$tipo' AND c.id_asesor = '$asesor') 
                 AND c.id_sede IN (SELECT id_sede FROM usuarios WHERE id_usuario = $user) ORDER BY MONTH(c.fecha_creacion)");
@@ -1386,7 +1386,7 @@ AS Gerencia,
                 INNER JOIN usuarios t2 ON c.id_gerente = t2.id_usuario
                 INNER JOIN sedes se ON se.id_sede = c.id_sede 
                 LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
                 LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                 WHERE c.id_sede IN (SELECT id_sede FROM usuarios WHERE id_usuario = '$user')
                 AND (c.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59') AND (c.id_asesor = '$asesor') ORDER BY c.fecha_creacion");
@@ -1410,7 +1410,7 @@ AS Gerencia,
         INNER JOIN usuarios t2 ON c.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = c.id_sede 
         LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
         LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         WHERE c.id_sede IN (SELECT id_sede FROM usuarios WHERE id_usuario = '$user')
         AND (c.fecha_creacion BETWEEN '$current_year/01/01 00:00:00' AND '$current_year/12/31 23:59:59')
@@ -1436,7 +1436,7 @@ AS Gerencia,
         INNER JOIN usuarios t2 ON c.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = c.id_sede 
         LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
         LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         WHERE FIND_IN_SET(c.id_sede, '$sedes') AND c.tipo = '$tipo'
         AND (c.fecha_creacion BETWEEN '$current_year/01/01 00:00:00' AND '$current_year/12/31 23:59:59')
@@ -1461,7 +1461,7 @@ AS Gerencia,
                 INNER JOIN usuarios t2 ON c.id_gerente = t2.id_usuario
                 INNER JOIN sedes se ON se.id_sede = c.id_sede 
                 LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
                 LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                 WHERE c.id_sede IN (SELECT id_sede FROM usuarios WHERE id_usuario = '$subdir')
                 AND (c.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59')
@@ -1485,7 +1485,7 @@ AS Gerencia,
         INNER JOIN usuarios t2 ON c.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = c.id_sede 
         LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
         LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         WHERE c.id_sede IN (SELECT id_sede FROM usuarios WHERE id_usuario = '$subdir')
         AND (c.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59')
@@ -1511,7 +1511,7 @@ AS Gerencia,
                 INNER JOIN usuarios t2 ON c.id_gerente = t2.id_usuario
                 INNER JOIN sedes se ON se.id_sede = c.id_sede 
                 LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
                 LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                 WHERE (c.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59')
                 AND c.tipo = $tipo
@@ -1536,7 +1536,7 @@ AS Gerencia,
                 INNER JOIN usuarios t2 ON c.id_gerente = t2.id_usuario
                 INNER JOIN sedes se ON se.id_sede = c.id_sede 
                 LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
                 LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                 WHERE c.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59' ORDER BY c.fecha_creacion");
 	}
@@ -1557,7 +1557,7 @@ AS Gerencia,
                 INNER JOIN usuarios t2 ON c.id_gerente = t2.id_usuario
                 INNER JOIN sedes se ON se.id_sede = c.id_sede 
                 LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
                 LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                 WHERE  (c.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59') AND (c.tipo = '$tipo' AND c.id_asesor = '$asesor')
                 AND c.id_sede IN (SELECT id_sede FROM usuarios WHERE id_usuario = $user)
@@ -1580,7 +1580,7 @@ AS Gerencia,
                 INNER JOIN usuarios t2 ON c.id_gerente = t2.id_usuario
                 INNER JOIN sedes se ON se.id_sede = c.id_sede 
                 LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
                 LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                 WHERE (c.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59') AND (c.id_asesor = '$asesor') 
                 AND c.id_sede IN (SELECT id_sede FROM usuarios WHERE id_usuario = $user)
@@ -1767,7 +1767,7 @@ AS Gerencia,
         INNER JOIN usuarios t2 ON c.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = c.id_sede
         LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
         LEFT JOIN opcs_x_cats om ON (cñ.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         LEFT JOIN observaciones o ON (c.id_cliente = o.id_cliente)
         WHERE (c.id_sede = '$sede' AND c.lugar_prospeccion = '$lugar')
@@ -1794,7 +1794,7 @@ AS Gerencia,
         INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = p.id_sede 
         LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede 
         LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         WHERE p.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59'  ORDER BY MONTH(p.fecha_creacion)");
 
@@ -1818,7 +1818,7 @@ AS Gerencia,
         INNER JOIN usuarios t2 ON c.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = c.id_sede
         LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
         LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         LEFT JOIN observaciones o ON (c.id_cliente = o.id_cliente)
         WHERE (c.id_sede = '$sede' AND lugar_prospeccion = '$lugar')
@@ -1844,7 +1844,7 @@ AS Gerencia,
         INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = p.id_sede 
         LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
         LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         WHERE  (p.id_sede = '$sede' AND p.lugar_prospeccion = '$lugar')
         AND p.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59'  ORDER BY MONTH(p.fecha_creacion)");
@@ -1868,7 +1868,7 @@ AS Gerencia,
         INNER JOIN usuarios t2 ON c.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = c.id_sede 
         LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
         LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         LEFT JOIN observaciones o ON (c.id_cliente = o.id_cliente)
         WHERE (c.id_sede = '$sede')
@@ -1894,7 +1894,7 @@ AS Gerencia,
         INNER JOIN usuarios t2 ON c.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = c.id_sede
         LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
         LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         LEFT JOIN observaciones o ON (c.id_cliente = o.id_cliente)
         WHERE (c.lugar_prospeccion = '$lugar')
@@ -1920,7 +1920,7 @@ AS Gerencia,
         INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = p.id_sede 
         LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
         LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         WHERE  (p.lugar_prospeccion = '$lugar') AND
         p.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59'  ORDER BY MONTH(p.fecha_creacion)");
@@ -1945,7 +1945,7 @@ AS Gerencia,
         INNER JOIN usuarios t2 ON c.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = c.id_sede
         LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
         LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         LEFT JOIN observaciones o ON (c.id_cliente = o.id_cliente)
         WHERE (c.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59')
@@ -1970,7 +1970,7 @@ AS Gerencia,
         INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = p.id_sede 
         LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
         LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         WHERE p.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59'  ORDER BY MONTH(p.fecha_creacion)");
 	}
@@ -1993,7 +1993,7 @@ AS Gerencia,
         INNER JOIN usuarios t2 ON c.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = c.id_sede
         LEFT JOIN opcs_x_cats oc ON (c.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (c.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON c.territorio_venta = ot.id_sede
         LEFT JOIN opcs_x_cats om ON (c.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         LEFT JOIN observaciones o ON (c.id_cliente = o.id_cliente)
         WHERE (c.id_sede = '$sede')
@@ -2019,7 +2019,7 @@ AS Gerencia,
         INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = p.id_sede 
         LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
         LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         WHERE  (p.id_sede = '$sede')
         AND p.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59'  ORDER BY MONTH(p.fecha_creacion)");
