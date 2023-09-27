@@ -218,7 +218,7 @@ class Contraloria_model extends CI_Model {
 		where l.idLote = ".$idLote." ");
         return $query->row();
     }
-
+ 
 
 	public function registroStatusContratacion9 () {
 		$id_sede = $this->session->userdata('id_sede');
@@ -232,7 +232,7 @@ class Contraloria_model extends CI_Model {
 		else if ($id_sede == 3) // CONTRALORÍA PENÍNSULA TAMBIÉN VE EXPEDIENTES DE CANCÚN
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
 		else if ($id_sede == 5) // CONTRALORÍA LEÓN TAMBIÉN VE EXPEDIENTES DE GUADALAJARA
-			$filtroSede = "AND l.ubicacion IN ('$id_sede', '12')";
+			$filtroSede = "AND l.ubicacion IN ('$id_sede', '12','16')";
         else if ($id_sede == 4) // CONTRALORÍA CIUDAD DE MÉXICO TAMBIÉN VE EXPEDIENTES DE PUEBLA
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '15')";
 		else
@@ -378,7 +378,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         else if ($id_sede == 3) // CONTRALORÍA PENÍNSULA TAMBIÉN VE EXPEDIENTES DE CANCÚN
             $filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
         else if ($id_sede == 5) // CONTRALORÍA LEÓN TAMBIÉN VE EXPEDIENTES DE GUADALAJARA
-            $filtroSede = "AND l.ubicacion IN ('$id_sede', '12')";
+            $filtroSede = "AND l.ubicacion IN ('$id_sede', '12','16')";
         else if ($id_sede == 4) // CONTRALORÍA CIUDAD DE MÉXICO TAMBIÉN VE EXPEDIENTES DE PUEBLA
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '15')";
         else
@@ -415,7 +415,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		else if ($id_sede == 3) // CONTRALORÍA PENÍNSULA TAMBIÉN VE EXPEDIENTES DE CANCÚN
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
 		else if ($id_sede == 5) // CONTRALORÍA LEÓN TAMBIÉN VE EXPEDIENTES DE GUADALAJARA
-			$filtroSede = "AND l.ubicacion IN ('$id_sede', '12')";
+			$filtroSede = "AND l.ubicacion IN ('$id_sede', '12','16')";
         else if ($id_sede == 4) // CONTRALORÍA CIUDAD DE MÉXICO TAMBIÉN VE EXPEDIENTES DE PUEBLA
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '15')";
 		else
@@ -477,7 +477,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         else if ($id_sede == 3) // CONTRALORÍA PENÍNSULA TAMBIÉN VE EXPEDIENTES DE CANCÚN
             $filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
         else if ($id_sede == 5) // CONTRALORÍA LEÓN TAMBIÉN VE EXPEDIENTES DE GUADALAJARA
-            $filtroSede = "AND l.ubicacion IN ('$id_sede', '12')";
+            $filtroSede = "AND l.ubicacion IN ('$id_sede', '12','16')";
         else if ($id_sede == 4) // CONTRALORÍA CIUDAD DE MÉXICO TAMBIÉN VE EXPEDIENTES DE PUEBLA
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '15')";
         else
@@ -741,7 +741,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         $this->db->where("idLote",$idLote);
         $this->db->where_in('ubicacion', array('1', '2', '4', '5', '3'));
         $query = $this->db->get('lotes');
-        $valida = (empty($query->result())) ? 0 : $query->result_array();
+        $valida = (empty($query->result())) ? array(0 => array('ubicacion' => 0)) : $query->result_array();
         return $valida;
     }
 

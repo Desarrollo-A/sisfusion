@@ -334,7 +334,7 @@ class Incidencias_model extends CI_Model {
         if($rolSelect == 7){
             $cmdRol = 'SET id_asesor = '.$newColab ;   
         }else if($rolSelect == 9){
-            $cmdRol = 'SET id_cordinador = '.$newColab;
+            $cmdRol = 'SET id_coordinador = '.$newColab;
         }else if($rolSelect == 3){
             $cmdRol = 'SET id_gerente = '.$newColab ;
         }else if($rolSelect == 2){
