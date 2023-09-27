@@ -64,6 +64,7 @@ class Administracion extends CI_Controller{
 			$dataPer[$i]['totalValidado']=$data[$i]->totalValidado;
 		  	$dataPer[$i]['vl']=$data[$i]->vl;
 		  	$dataPer[$i]['nombreSede']=$data[$i]->nombreSede;
+		  	$dataPer[$i]['tipo_proceso']=$data[$i]->tipo_proceso;
 		  	$horaInicio = date("08:00:00");
 		  	$horaFin = date("16:00:00");
 		  	$arregloFechas = array();  
