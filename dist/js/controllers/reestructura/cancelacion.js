@@ -44,9 +44,15 @@ $(document).on('click', '.cancel', function (){
 
 $(document).on('click', '#saveCancel', function(){
     var idLote = $("#idLote").val();
+    var obsLiberacion = $("#obsLiberacion").val();
+    if(obsLiberacion.trim() == ''){
+        alerts.showNotification("top", "right", "Debe ingresar una observación.", "warning");
+        return false;
+    }
     var datos = new FormData();
     $("#spiner-loader").removeClass('hide');
     datos.append("idLote", idLote);
+    datos.append("obsLiberacion", obsLiberacion);
     datos.append("tipoLiberacion", 3);
     $.ajax({
         method: 'POST',
@@ -61,6 +67,7 @@ $(document).on('click', '#saveCancel', function(){
             $('#cancelarLote').modal('hide');
             alerts.showNotification("top", "right", "Opcion editada correctamente.", "success");
             $('#idLote').val('');
+            $('#obsLiberacion').val('');
             }
         },
         error: function(){

@@ -123,10 +123,10 @@ class VentasAsistentes_model extends CI_Model {
                 $filtroSede = "AND l.ubicacion IN ('$id_sede')";
                 
             if (in_array($id_usuario, array(28, 3)))
-                $filtroSede = "AND l.ubicacion IN ('2', '4', '13', '14', '15')";
+                $filtroSede = "AND l.ubicacion IN ('2', '4', '13', '14', '15','16')";
 
             if (in_array($id_usuario, array(28, 3)))
-                $filtroSede = "AND l.ubicacion IN ('2', '4', '13', '14', '15')";
+                $filtroSede = "AND l.ubicacion IN ('2', '4', '13', '14', '15','16')";
 
             $filtroGerente = "";
             if ($id_usuario == 12318) { // EMMA CECILIA MALDONADO RAMÍREZ
@@ -294,7 +294,7 @@ class VentasAsistentes_model extends CI_Model {
                 $filtroSede = "AND l.ubicacion IN ('$id_sede')";
 
             if (in_array($id_usuario, array(28, 3)))
-                $filtroSede = "AND l.ubicacion IN ('2', '4', '13', '14', '15')";
+                $filtroSede = "AND l.ubicacion IN ('2', '4', '13', '14', '15','16')";
 
             $filtroGerente = "";
             if ($id_usuario == 12318) { // EMMA CECILIA MALDONADO RAMÍREZ

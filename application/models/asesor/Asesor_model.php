@@ -270,7 +270,7 @@ class Asesor_model extends CI_Model {
         UPPER(nac.nombre) as nacionalidad
         FROM prospectos p
         LEFT JOIN opcs_x_cats lp ON lp.id_opcion=p.lugar_prospeccion AND lp.id_catalogo = 9
-        LEFT JOIN opcs_x_cats pv ON pv.id_opcion=p.plaza_venta AND pv.id_catalogo = 5
+        LEFT JOIN sedes pv ON pv.id_sede=p.plaza_venta
         LEFT JOIN opcs_x_cats nac ON nac.id_opcion=p.nacionalidad AND nac.id_catalogo = 11
         WHERE p.estatus = 1 AND id_asesor = $id_asesor AND p.lugar_prospeccion != 6");
         return $query->result();
@@ -309,7 +309,7 @@ class Asesor_model extends CI_Model {
     }
     function getSalesPlaza()
     {
-        return $this->db->query("SELECT id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo = 5 AND estatus = 1 ORDER BY nombre");
+        return $this->db->query("SELECT id_sede AS id_opcion, nombre FROM sedes WHERE id_catalogo = 5 ORDER BY nombre");
     }
     function getCivilStatus()
     {
