@@ -668,12 +668,17 @@ class Contraloria extends CI_Controller {
     }
 
     public function getRevision7() {
+        $fechaInicio = explode('/', $this->input->post("beginDate"));
+        $fechaFin = explode('/', $this->input->post("endDate"));
+        $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+        $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
         $data=array();
-        $data = $this->registrolote_modelo->getRevision7($this->input->post("beginDate"), $this->input->post("endDate"));
-        if($data != null)
+        $data = $this->registrolote_modelo->getRevision7( $beginDate, $endDate);
+        if($data != null) {
             echo json_encode($data);
-        else
+        } else {
             echo json_encode(array());
+        }
     }
 
     public function getregistroStatus5ContratacionContraloria() {
@@ -686,7 +691,7 @@ class Contraloria extends CI_Controller {
         }
     }
 
-    public function editar_registro_loteRechazo_contraloria_proceso5() {
+    public function editar_registro_lote_contraloria_proceceso5() {
         $idLote=$this->input->post('idLote');
         $idCondominio=$this->input->post('idCondominio');
         $nombreLote=$this->input->post('nombreLote');
@@ -756,7 +761,7 @@ class Contraloria extends CI_Controller {
         echo json_encode($this->Contraloria_model->get_tventa()->result_array());
     }
 
-    public function editar_registro_loteRechazo_contraloria_proceceso5() {
+    public function editar_registro_loteRechazo_contraloria_proceso5() {
         $idLote=$this->input->post('idLote');
         $idCondominio=$this->input->post('idCondominio');
         $nombreLote=$this->input->post('nombreLote');
@@ -792,7 +797,7 @@ class Contraloria extends CI_Controller {
         $arreglo=array();
         $arreglo["idStatusContratacion"]= $idStatC1;
         $arreglo["idMovimiento"]=$idMov1;
-        $arreglo["motivoRechazo"]=$motivoRechazo;
+        $arreglo["comentario"]=$motivoRechazo;
         $arreglo["usuario"]=$this->session->userdata('id_usuario');
         $arreglo["perfil"]=$this->session->userdata('id_rol');
         $arreglo["modificado"]=$modificado;
@@ -801,7 +806,7 @@ class Contraloria extends CI_Controller {
         $arreglo2["idStatusContratacion"]=$idStaC;
         $arreglo2["idMovimiento"]=$idMov;
         $arreglo2["nombreLote"]=$nombreLote;
-        $arreglo2["motivoRechazo"]=$motivoRechazo;
+        $arreglo2["comentario"]=$motivoRechazo;
         $arreglo2["usuario"]=$this->session->userdata('id_usuario');
         $arreglo2["perfil"]=$this->session->userdata('id_rol');
         $arreglo2["modificado"]=date("Y-m-d H:i:s");
@@ -822,36 +827,36 @@ class Contraloria extends CI_Controller {
 
         $contenido[] = array_merge($infoLote, ["motivoRechazo" => $motivoRechazo, "fechaHora" => date("Y-m-d H:i:s")]);
 
-        $this->email
-            ->initialize()
-            ->from('Ciudad Maderas')
-            ->to('tester.ti2@ciudadmaderas.com')
-            ->subject('EXPEDIENTE RECHAZADO-CONTRALORÍA (5. REVISIÓN 100%)')
-            ->view($this->load->view('mail/contraloria/editar-registro-lote-rechazo-proceso5', [
-                'encabezados' => $encabezados,
-                'contenido' => $contenido,
-                'comentario' => $motivoRechazo
-            ], true));
+        // $this->email
+        //     ->initialize()
+        //     ->from('Ciudad Maderas')
+        //     ->to('tester.ti2@ciudadmaderas.com')
+        //     ->subject('EXPEDIENTE RECHAZADO-CONTRALORÍA (5. REVISIÓN 100%)')
+        //     ->view($this->load->view('mail/contraloria/editar-registro-lote-rechazo-proceso5', [
+        //         'encabezados' => $encabezados,
+        //         'contenido' => $contenido,
+        //         'comentario' => $motivoRechazo
+        //     ], true));
 
-        $this->email->send();
+        // $this->email->send();
 
         $validate = $this->Contraloria_model->validateSt5($idLote);
 
 
         if($validate == 1){
-            
+
             if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){
                 $data['status'] = true;
-                $data['message'] = 'Estatus enviado';
+                $data['message'] = "Estatus enviado";
                 echo json_encode($data);
             }else{
                 $data['status'] = false;
-                $data['message'] = 'El estatus ya fue registrado';
+                $data['message'] = "El estatus ya fue registrado";
                 echo json_encode($data);
             }
         }else {
             $data['status'] = false;
-            $data['message'] = 'Error al enviar la solicitud';
+            $data['message'] = "Error al enviar la solicitud";
             echo json_encode($data);
         }
     }

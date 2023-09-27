@@ -461,7 +461,7 @@ function envRechazo(){
     var validaMotivo = ($("#motivoRechazo").val().trim() == '') ? 0 : 1;
 
     if(validaMotivo == 0)
-        alerts.showNotification("top", "right", "Todos los campos son requeridos");
+        alerts.showNotification("top", "right", "Todos los campos son requeridos", "danger");
     else
         validationPass = true;
 
@@ -478,12 +478,13 @@ function envRechazo(){
             "idMovimiento" : idMovimiento
         };
 
-        $.ajax({
+        $.ajax({   
             url : 'editar_registro_loteRechazo_contraloria_proceso5',
             data : parametros,
             type : 'POST',
             success : function(data){
-                response = JSON.parse(data);
+                console.log(data);
+                console.log(response = JSON.parse(data));
 
                 $('#rechazarStatus').modal('hide');
                 $('#tabla_ingresar_5').DataTable().ajax.reload();
@@ -494,7 +495,7 @@ function envRechazo(){
                     alerts.showNotification("top", "right", response.message, "danger");
             },
             error : function(){
-                alerts.showNotification("top", "right", "No se pueden enviar los datos");
+                alerts.showNotification("top", "right", "No se pueden enviar los datos", "danger");
             }
         });
     }
