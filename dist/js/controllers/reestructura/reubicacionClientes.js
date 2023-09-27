@@ -278,6 +278,7 @@ $(document).on("change", "#proyectoAOcupar", function(e){
     $('#spiner-loader').removeClass('hide');
     $("#infoLoteSeleccionado").html("");
     $("#condominioAOcupar").html("");
+    $("#loteAOcupar").html("");
     $("#loteAOcupar").selectpicker('refresh');
     idProyecto = $(this).val();
     superficie = $("#superficie").val();

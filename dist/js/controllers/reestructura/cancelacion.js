@@ -3,7 +3,10 @@ $(document).ready(function () {
     $('#spiner-loader').removeClass('hide');
     $.post(general_base_url + "Reestructura/lista_proyecto", function (data) {
         var len = data.length;
-        var ids = '1, 11, 28, 14, 12, 32, 22, 34';
+        const ids = data.map((row) => {
+            return row.idResidencial;
+        }).join(',');
+        
         $("#proyecto").append($('<option>').val(ids).text('SELECCIONAR TODOS'));
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
@@ -41,9 +44,15 @@ $(document).on('click', '.cancel', function (){
 
 $(document).on('click', '#saveCancel', function(){
     var idLote = $("#idLote").val();
+    var obsLiberacion = $("#obsLiberacion").val();
+    if(obsLiberacion.trim() == ''){
+        alerts.showNotification("top", "right", "Debe ingresar una observación.", "warning");
+        return false;
+    }
     var datos = new FormData();
     $("#spiner-loader").removeClass('hide');
     datos.append("idLote", idLote);
+    datos.append("obsLiberacion", obsLiberacion);
     datos.append("tipoLiberacion", 3);
     $.ajax({
         method: 'POST',
@@ -58,6 +67,7 @@ $(document).on('click', '#saveCancel', function(){
             $('#cancelarLote').modal('hide');
             alerts.showNotification("top", "right", "Opcion editada correctamente.", "success");
             $('#idLote').val('');
+            $('#obsLiberacion').val('');
             }
         },
         error: function(){

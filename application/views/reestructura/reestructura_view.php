@@ -10,7 +10,7 @@
 				<div class="modal-content" > 
 					<div class="modal-body">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
-                            <h4>¿Está usted seguro de liberar el lote?</h4>
+                            <h4>¿Estás seguro de liberar el lote?</h4>
                         </div>
                         <br>
                         <input type="hidden" name="idLote" id="idLoteenvARevCE" >
@@ -31,7 +31,7 @@
 					<div class="modal-header">
                         <div class="row d-flex justify-center align-center">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
-						        <h4 class="modal-title text-center">CATALOGO</h4>
+						        <h4 class="modal-title text-center">CATÁLOGO</h4>
                             </div>
                         </div>
 					</div>
@@ -41,7 +41,7 @@
                                 <table class="table-striped table-hover" id="tableCatalogo" name="tableCatalogo">
                                     <thead>
                                         <tr>
-                                            <th>OPCIÓN CATALOGO</th>
+                                            <th>NOMBRE</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>
@@ -139,7 +139,7 @@
 					<div class="modal-body">
                         <div class="row">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                <label>OPCIONES</label>
+                                <label>ESTATUS</label>
                                 <select name="grabado" id="grabado" class="selectpicker select-gral m-0 grabado" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                             </div>
                         </div>
@@ -219,8 +219,10 @@
                                                     <th>LOTE</th>
                                                     <th>ID LOTE </th>
                                                     <th>SUPERFICIE</th>
-                                                    <th>PRECIO</th>
+                                                    <th>PRECIO M2</th>
                                                     <th>NOMBRE</th>
+                                                    <th>ESTATUS</th>
+                                                    <th>COMENTARIO</th>
                                                     <th>OBSERVACIÓN EN LIBERACIÓN</th>
                                                     <th>ACCIONES</th>
                                                 </tr>

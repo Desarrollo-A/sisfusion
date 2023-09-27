@@ -315,9 +315,20 @@ $(document).on('submit', '#deposito-seriedad-form', async function (e) {
 
     const clienteInfo = await obtenerCliente(cliente);
 
+<<<<<<< HEAD
     
     if (clienteInfo.proceso !== 2 && clienteInfo.proceso !== 4) {
         if ( ![17, 70, 71, 73].includes(id_rol_general) && costoFinalM2 > costoListaM2 || ![17, 70, 71, 73].includes(id_rol_general) && costoFinalM2 < ((costoListaM2 * .80))){
+=======
+    if (![2,3,4].includes(clienteInfo.proceso)) {
+        if (costoFinalM2 > costoListaM2 || costoFinalM2 < ((costoListaM2 * .80))) {
+            alerts.showNotification('top', 'right', 'El COSTO POR M2 FINAL no debe ser superior al COSTO POR M2 LISTA ni debe ser inferior al 20% de descuento del COSTO POR M2 LISTA.', 'danger');
+            return;
+        }
+    } else {
+        if (costoListaM2 > 0) {
+            if (costoFinalM2 > costoListaM2 || costoFinalM2 < ((costoListaM2 * .80))) {
+>>>>>>> d1fe9030f70809a05a76833621e5789709110169
                 alerts.showNotification('top', 'right', 'El COSTO POR M2 FINAL no debe ser superior al COSTO POR M2 LISTA ni debe ser inferior al 20% de descuento del COSTO POR M2 LISTA.', 'danger');
                 return;
         }    
