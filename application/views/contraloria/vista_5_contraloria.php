@@ -15,7 +15,7 @@
 			<div class="modal-dialog">
 				<div class="modal-content" >
 					<div class="modal-header">
-						<h4 class="modal-title text-center"><label>Registro estatus 5 - <b><span class="lote"></span></b></label></h4>
+						<h4 class="modal-title text-center"><label>Registro estatus 5 - <b><span class="lote" id="tituloLote"></span></b></label></h4>
 					</div>
 					<div class="modal-body">
 						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -32,7 +32,7 @@
 							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6"id="tipo-venta-particular-div" hidden>
 								<h6><b>Tipo de venta particular</b></h6>
 							</div>
-							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 overflow-hidden">
+							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 overflow-hidden" id="ubicacion-options-div" hidden>
 								<label class="control-label" id="tvLbl">Ubicación</label>
 								<select required="required" name="ubicacion" id="ubicacion" class="selectpicker select-gral" data-style="btn" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-container="body" data-size="7">
 								</select>
@@ -42,6 +42,9 @@
 							<input type="hidden" name="idCondominio" id="idCondominioenvARevCE" >
 							<input type="hidden" name="fechaVenc" id="fechaVencenvARevCE" >
 							<input type="hidden" name="nombreLote" id="nombreLoteenvARevCE"  >
+							<input type="hidden" name="nombreResidencial" id="nomResidencialARev">
+							<input type="hidden" name="nomCondominio" id="nomCondominioARev">
+							<input type="hidden" name="idMov" id="idMovARev">
 						</div>
 					</div>
 					<div class="modal-footer"></div>
@@ -59,66 +62,33 @@
 			<div class="modal-dialog">
 				<div class="modal-content" >
 					<div class="modal-header">
-						<h4 class="modal-title text-center"><label>Rechazo estatus 5 - <b><span class="lote"></span></b></label></h4>	
+						<h4 class="modal-title text-center"><label>Rechazo estatus 5 - <b><span class="lote" id="tituloLote2"></span></b></label></h4>	
 					</div>
 					<div class="modal-body">
 						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-							<label class="control-label">Comentario</label>
-							<textarea class="text-modal" id="motivoRechazo" rows="3"></textarea>
-							<input type="hidden" name="idCliente" id="idClienterechCor" >
-							<input type="hidden" name="idCondominio" id="idCondominiorechCor" >
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+								<label class="control-label">Comentario</label>
+								<textarea class="text-modal" id="motivoRechazo" rows="3"></textarea>								
+							</div>
+							<input type="hidden" name="idLote2" id="idLoteenvARevCE2" >
+							<input type="hidden" name="idCliente2" id="idClienteenvARevCE2" >
+							<input type="hidden" name="idCondominio2" id="idCondominioenvARevCE2" >
+							<input type="hidden" name="fechaVenc2" id="fechaVencenvARevCE2" >
+							<input type="hidden" name="nombreLote2" id="nombreLoteenvARevCE2"  >
+							<input type="hidden" name="nombreResidencial2" id="nomResidencialARev2">
+							<input type="hidden" name="nomCondominio2" id="nomCondominioARev2">
+							<input type="hidden" name="idMov2" id="idMovARev2">
 						</div>
 					</div>
 					<div class="modal-footer"></div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-						<button type="button" id="guardar" class="btn btn-primary">Registrar</button>
+						<button type="button" id="guardar" onClick="envRechazo()" class="btn btn-primary">Registrar</button>
 					</div>
 				</div>
 			</div>
 		</div>
-
-		<!-- modal  ENVIA A ASESOR por rechazo 2-->
-		<div class="modal fade" id="rechazarStatus_2" data-backdrop="static" data-keyboard="false">
-			<div class="modal-dialog">
-				<div class="modal-content" > 
-					<div class="modal-header">
-						<h4 class="modal-title text-center"><label>Rechazo estatus 5 - <b><span class="lote"></span></b></label></h4>
-					</div>
-					<div class="modal-body">
-					<label>Comentario</label>
-						<textarea class="text-modal" id="comentario2" rows="3"></textarea>
-						<br>              
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-						<button type="button" id="save2" class="btn btn-primary">Registrar</button>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- modal -->
-
-		<!-- modal  ENVIA A JURIDICO por rechazo 1-->
-		<div class="modal fade" id="envARev2" data-backdrop="static" data-keyboard="false">
-			<div class="modal-dialog">
-				<div class="modal-content" > 
-					<div class="modal-header">
-						<h4 class="modal-title text-center"><label>Registro estatus 5 - <b><span class="lote"></span></b></label></h4>
-					</div>
-					<div class="modal-body">
-						<label>Comentario</label>
-						<textarea class="text-modal" id="comentario1" rows="3"></textarea>
-						<br>              
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-						<button type="button" id="save1" class="btn btn-primary"> Registrar</button>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- modal -->
+		<!-- fin modal rechazo -->
 
 		<div class="content boxContent">
 			<div class="container-fluid">
@@ -171,4 +141,4 @@
 </body>
 <?php $this->load->view('template/footer');?>
 
-<script src="<?= base_url() ?>dist/js/controllers/contraloria/vista_5_contraloria.js"></script>
+<script src="<?= base_url() ?>dist/js/controllers/contraloria/vista_5_contraloria_nuevo.js"></script>
