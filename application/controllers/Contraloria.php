@@ -691,7 +691,7 @@ class Contraloria extends CI_Controller {
         }
     }
 
-    public function editar_registro_lote_contraloria_proceceso5() {
+    public function editar_registro_lote_contraloria_proceso5() {
         $idLote=$this->input->post('idLote');
         $idCondominio=$this->input->post('idCondominio');
         $nombreLote=$this->input->post('nombreLote');
@@ -703,6 +703,8 @@ class Contraloria extends CI_Controller {
         $tipo_venta=$this->input->post('tipo_venta');
         $idMovimiento = $this->input->post("idMovimiento");
 
+        $arreglo=array();
+
         if(in_array($idMovimiento, [4, 84, 101, 103])){
             $idMovRegistro = 35;
             $arreglo["ubicacion"]= $ubicacion;
@@ -712,7 +714,7 @@ class Contraloria extends CI_Controller {
             $idMovRegistro = 75;
         }
 
-        $arreglo=array();
+        
         $arreglo["idStatusContratacion"]= 5;
         $arreglo["idMovimiento"]=$idMovRegistro;
         $arreglo["comentario"]=$comentario;
@@ -773,6 +775,8 @@ class Contraloria extends CI_Controller {
         $idMovimiento = $this->input->post('idMovimiento');
         $modificado=date("Y-m-d H:i:s");
 
+        $arreglo=array();
+        
         if(in_array($idMovimiento, [4, 84, 101, 103])){
             $valida_tl = $this->Contraloria_model->checkTipoVenta($idLote);
             $arreglo["fechaVenc"]= $fechaVenc;
@@ -794,7 +798,7 @@ class Contraloria extends CI_Controller {
             $idMov = 92;
         }
 
-        $arreglo=array();
+        
         $arreglo["idStatusContratacion"]= $idStatC1;
         $arreglo["idMovimiento"]=$idMov1;
         $arreglo["comentario"]=$motivoRechazo;

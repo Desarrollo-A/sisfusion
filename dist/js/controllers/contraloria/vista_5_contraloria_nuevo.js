@@ -12,9 +12,6 @@ $('#tabla_ingresar_5 thead tr:eq(0) th').each(function (i) {
     }
 });
 
-var getInfo1 = new Array(6);
-var getInfo2 = new Array(6);
-
 $(document).ready(function () {
     $.post("get_tventa", function (data) {
         var len = data.length;
@@ -341,10 +338,11 @@ $(document).on('click', '.statRev', function () {
         if ([2, 3, 4].includes(proceso)) {
             if (tipoVenta != 0) {
                 $('#tipo_ventaenvARevCE').val(tipoVenta).change();
+                document.getElementById("tipo_ventaenvARevCE").value = tipoVenta;
             }
     
             if (ubicacion != 0) {
-                $('#ubicacion').val(ubicacion).change();
+                document.getElementById("ubicacion").value = ubicacion;
             }
         } else {
             $('#tipo_ventaenvARevCE').prop('disabled', false);
@@ -361,21 +359,22 @@ $(document).on('click', '.statRev', function () {
 });
 
 function preguntaenvARevCE() {
+
     var idLote = $("#idLoteenvARevCE").val();
     var idCondominio = $("#idCondominioenvARevCE").val();
     var nombreLote = $("#nombreLoteenvARevCE").val();
     var idCliente = $("#idClienteenvARevCE").val();
     var fechaVenc = $("#fechaVencenvARevCE").val();
-    var ubicacion = $("#ubicacion").val();
+    var ubicacion = document.getElementById("ubicacion").value;
     var comentario = $("#comentarioenvARevCE").val();
-    var tipo_venta = $('#tipo_ventaenvARevCE').val();
+    var tipo_venta = document.getElementById('tipo_ventaenvARevCE').value;
     var nombreResidencial = $('#nomResidencialARev').val();
     var nombreCondominio = $("#nomCondominioARev").val();
     var idMovimiento = parseInt($("#idMovARev").val());
 
     var validatventa = ($("#tipo_ventaenvARevCE").val().trim() == '') ? 0 : 1;
-    var validaUbicacion = ($("#ubicacion").val().trim() == '') ? 0 : 1;
-    var validaComentario = ($("#comentarioenvARevCE").val().trim() == '') ? 0 : 1;
+    var validaUbicacion = (document.getElementById("ubicacion").value.trim() == '') ? 0 : 1;
+    var validaComentario = (document.getElementById("comentarioenvARevCE").value.trim() == '') ? 0 : 1;
     var validationPass = false;
 
     if([4, 84, 101, 103].includes(idMovimiento)){
@@ -407,7 +406,7 @@ function preguntaenvARevCE() {
         };
 
         $.ajax({
-            url  : 'editar_registro_lote_contraloria_proceceso5',
+            url  : 'editar_registro_lote_contraloria_proceso5',
             data : parametros,
             type : 'POST',
             success : function(data){
