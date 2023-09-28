@@ -327,10 +327,9 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus, #
 $(document).on("click", ".ver_historial", function () {
     let $itself = $(this);
     let element = document.getElementById("divTabClausulas");
+    let elementHistorialEstatus = document.getElementById("divTabHistorialEstatus");
     let idLote = $(this).val();
-
-    $("#HistorialEstatus").html('');
-    
+    let rolesContraloria = [17, 70, 71, 73];
     if ($itself.attr('data-tipo-venta') == 'Venta de particulares') {
         $.getJSON(`${general_base_url}Contratacion/getClauses/${idLote}`).done(function (data) {
             $('#clauses_content').html(data[0]['nombre']);
@@ -347,41 +346,20 @@ $(document).on("click", ".ver_historial", function () {
     consultarHistoriaLiberacion(idLote);
     // LLENA LA TABLA CON EL LISTADO DE COMISIONISTAS COMO VENTAS COMPARTIDAS DEL LOTE X
     consultarVentasCompartidas(idLote);
-
-    //CONSULTA EL HISTORIAL DEL ESTATUS
-    $.getJSON(`${general_base_url}Contratacion/getInformationHistorialEstatus/${idLote}`).done(function (data) {
-        if (data.length == 0) {
-            $("#HistorialEstatus").append('<b>NO HAY REGISTROS</b');
-        } else {
-            fillChangelog(data);
-        }
-    });
-});
-
-function fillChangelog(v) {
-    for (var i = 0; i < v.length; i++) {
-    $("#HistorialEstatus").append('<li>\n' +
-    '    <div class="container-fluid">\n' +
-    '       <div class="row">\n' +
-   /*  '           <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">\n' +
-    '               <a><small>Campo: </small><b></b></a><br>\n' +
-    '           </div>\n' + */
-    '           <div class="float-end text-right">\n' +
-    '               <p>' + v[i].fecha_creacion + '</p>\n' +
-    '           </div>\n' +
-    '           <div class="col-md-12">\n' +
-    '             <p class="m-0"><small>Usuario: </small><b> ' + v[i].creado_por + '</b></p>\n'+
-    '             <p class="m-0"><small>Valor anterior: </small><b> ' + v[i].valorAnterior + '</b></p>\n' +
-    '             <p class="m-0"><small>Valor Nuevo: </small><b> ' + v[i].valorNuevo + '</b></p>\n' +
-    '           </div>\n' +
-    '        <h6>\n' +
-    '        </h6>\n' +
-    '       </div>\n' +
-    '    </div>\n' +
-    '</li>');
+    //CONSULTA EL HISTORIAL DE LOS MOVIMIENTOS DEL IDSTTAUSLOTE
+    if (rolesContraloria.includes(id_rol_general)) {
+        $.getJSON(`${general_base_url}Contratacion/getInformationHistorialEstatus/${idLote}`).done(function (data) {
+            if (data.length == 0)
+                $("#HistorialEstatus").append('<b>NO HAY REGISTROS</b');
+            else
+                fillChangelog(data);
+        });
+        elementHistorialEstatus.classList.remove("hide");
+    } else {
+        elementHistorialEstatus.classList.add("hide");
+        $("#HistorialEstatus").html('');
     }
-}
-
+});
 
 function cleanComments() {
     var myChangelog = document.getElementById('HistorialEstatus');
@@ -582,6 +560,69 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
 });
 
+function fillChangelog(v) {
+    for (var i = 0; i < v.length; i++) {
+    $("#HistorialEstatus").append('<li>\n' +
+    '    <div class="container-fluid">\n' +
+    '       <div class="row">\n' +
+    '           <div class="float-end text-right">\n' +
+    '               <p>' + v[i].fecha_creacion + '</p>\n' +
+    '           </div>\n' +
+    '           <div class="col-md-12">\n' +
+    '             <p class="m-0"><small>Usuario: </small><b> ' + v[i].creado_por + '</b></p>\n'+
+    '             <p class="m-0"><small>Valor anterior: </small><b> ' + v[i].valorAnterior + '</b></p>\n' +
+    '             <p class="m-0"><small>Valor Nuevo: </small><b> ' + v[i].valorNuevo + '</b></p>\n' +
+    '           </div>\n' +
+    '        <h6>\n' +
+    '        </h6>\n' +
+    '       </div>\n' +
+    '    </div>\n' +
+    '</li>');
+    }
+}
 
+
+/*cambio de tab para switcheat*/
+$('input[type=radio][name=modoSubida]').change(function(e) {
+    let selectorInv = $('#selectoresInv');
+    let selectorDescInv = $('#selectoresDescInv');
+    if (this.value == 1) {
+        console.log(1);
+
+        selectorInv.removeClass('hide');
+        selectorDescInv.addClass('hide');
+        // flagTipoUploadMeses=1;
+        // //se queda asi ta cual
+        // //se debe mostrar el proyecto nomás
+        // $('#contenedor-condominio').addClass('hide');
+        // $('#filtro3').attr('onChange', 'changeCondominio()');
+        // $('#filtro3').val('default').selectpicker('deselectAll');
+        // $('#filtro3').selectpicker('refresh');
+        // $('#filtro4').empty();
+        // $('#filtro4').selectpicker('refresh');
+        // $('#tabla_msni').DataTable().clear().destroy();
+        // $('#typeTransaction').val(this.value);
+        //
+        // $('.anclaClass').attr('placeholder', 'ID CONDOMINIO');
+    }
+    else if (this.value == 0) {
+        console.log(2);
+        selectorInv.addClass('hide');
+        selectorDescInv.removeClass('hide');
+
+
+        // flagTipoUploadMeses=0;
+
+        // //se debe mostrar el proyecto y condominio nomás
+        // $('#contenedor-condominio').removeClass('hide');
+        // $('#filtro3').attr('onChange', 'changeLote()');
+        // $('#filtro3').val('default').selectpicker('deselectAll');
+        // $('#filtro3').selectpicker('refresh');
+        // $('#tabla_msni').DataTable().clear().destroy();
+        // $('#typeTransaction').val(this.value);
+        //
+        // $('.anclaClass').attr('placeholder', 'ID LOTE');
+    }
+});
 
 
