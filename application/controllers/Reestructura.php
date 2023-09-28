@@ -661,11 +661,14 @@ class Reestructura extends CI_Controller{
             : $docInfo;
         $documentacion = [];
         $modificado = date('Y-m-d H:i:s');
+        $documentosSinPasar = (is_null($docInfo)) ? [3, 11, 7, 8] : [3, 11];
 
         foreach ($docAnterior as $doc) {
+            $expedienteAnterior = in_array($doc['tipo_doc'], $documentosSinPasar) ? null : $doc['expediente'];
+
             $documentacion[] = [
                 'movimiento' => $doc['movimiento'],
-                'expediente' => $doc['expediente'],
+                'expediente' => $expedienteAnterior,
                 'modificado' => $modificado,
                 'status' => 1,
                 'idCliente' => $idClienteNuevo,
@@ -680,6 +683,36 @@ class Reestructura extends CI_Controller{
         }
 
         foreach ($expediente as $doc) {
+            if (is_null($docInfo)) {
+                $indexExpedienteAnterior = null;
+
+                if ($doc['id_opcion'] == 39) {
+                    $indexExpedienteAnterior = array_search(7, array_column($docAnterior, 'tipo_doc'));
+                }
+
+                if ($doc['id_opcion'] == 40) {
+                    $indexExpedienteAnterior = array_search(8, array_column($docAnterior, 'tipo_doc'));
+                }
+
+                if (!is_null($indexExpedienteAnterior)) {
+                    $documentacion[] = [
+                        'movimiento' => $doc['nombre'],
+                        'expediente' => $docAnterior[$indexExpedienteAnterior]['expediente'],
+                        'modificado' => $modificado,
+                        'status' => 1,
+                        'idCliente' => $idClienteNuevo,
+                        'idCondominio' => $loteNuevoInfo->idCondominio,
+                        'idLote' => $idLoteNuevo,
+                        'idUser' => NULL,
+                        'tipo_documento' => 0,
+                        'id_autorizacion' => 0,
+                        'tipo_doc' => $doc['id_opcion'],
+                        'estatus_validacion' => 0
+                    ];
+                    continue;
+                }
+            }
+
             $documentacion[] = [
                 'movimiento' => $doc['nombre'],
                 'expediente' => NULL,
