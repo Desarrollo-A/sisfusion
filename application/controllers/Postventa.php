@@ -127,6 +127,7 @@ public $controller = 'Postventa';
     public function getregistros(){
         $index_proyecto = $this->input->post('index_proyecto');
         $dato = $this->Postventa_model->get_cancelacion($index_proyecto);
+
         if ($dato != null) {
             echo json_encode($dato);
         }else{
