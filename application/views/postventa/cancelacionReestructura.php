@@ -33,6 +33,7 @@
                                                     <th>PROYECTO</th>
                                                     <th>CONDOMINIO</th>
                                                     <th>LOTE</th>
+                                                    <th>CLIENTE</th>
                                                     <th>COMENTARIO LIBERACION</th>
                                                     <th>ID LOTE</th>
                                                 </tr>
