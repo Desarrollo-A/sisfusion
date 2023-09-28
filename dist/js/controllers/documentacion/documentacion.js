@@ -39,6 +39,7 @@ const TipoDoc = {
   CARTA_PODER: 34,
   RESCISION_FIRMADA: 35,
   ADDENDUM: 36,
+  COMPLEMENTO_ENGANCHE: 38
 };
 
 const observacionContratoUrgente = 1; // Bandera para inhabilitar
@@ -398,7 +399,8 @@ function cargarTabla(idLote, idCliente = "") {
           }
           if (
             data.tipo_doc == TipoDoc.CONTRATO_FIRMADO ||
-            data.tipo_doc == TipoDoc.RESCISION_FIRMADA
+            data.tipo_doc == TipoDoc.RESCISION_FIRMADA ||
+            data.tipo_doc == TipoDoc.COMPLEMENTO_ENGANCHE
           ) {
             // CONTRATO FIRMADO
             if (data.expediente == null || data.expediente === "") {
@@ -428,7 +430,6 @@ function cargarTabla(idLote, idCliente = "") {
             }
             return `<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`;
           }
-
           if (
             data.tipo_doc === TipoDoc.DS_NEW &&
             data.expediente === "Depósito de seriedad"

@@ -870,6 +870,12 @@ class Contraloria extends CI_Controller {
         echo json_encode($this->Contraloria_model->get_tventa()->result_array());
     }
 
+    public function get_enganches()
+    {
+        echo json_encode($this->Contraloria_model->get_enganches()->result_array());
+    }
+
+
     public function editar_registro_loteRechazo_contraloria_proceceso5() {
         $idLote=$this->input->post('idLote');
         $idCondominio=$this->input->post('idCondominio');
@@ -1005,6 +1011,8 @@ class Contraloria extends CI_Controller {
         $charactersNoPermit = array('$',',');
         $totalNeto = $this->input->post('totalNeto');
         $totalNeto = str_replace($charactersNoPermit, '', $totalNeto);
+        $tipo_enganche = $this->input->post('tipo_enganche');
+        $estatus_enganche = $this->input->post('estatus_enganche');
 
         $arreglo = array();
         $arreglo["idStatusContratacion"] = 6;
@@ -1143,6 +1151,7 @@ class Contraloria extends CI_Controller {
         $arreglo2["idLote"] = $idLote;
         $arreglo2["idCondominio"] = $idCondominio;
         $arreglo2["idCliente"] = $idCliente;
+        
         $ub_jur = $this->Contraloria_model->val_ub($idLote);
         $id_sede_jur = '';
         $assigned_location = $ub_jur[0]['ubicacion'];
@@ -1214,6 +1223,14 @@ class Contraloria extends CI_Controller {
             }else{
                 if ($this->Contraloria_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) {
                     ($assigned_location == 1 || $assigned_location == 2 || $assigned_location == 4 || $assigned_location == 5 || $assigned_location == 3) ? $this->Contraloria_model->update_asig_jur($arreglo["asig_jur"], $id_sede_jur) : '';
+
+                    $this->db->query("UPDATE clientes SET tipo_enganche = $tipo_enganche, estatus_enganche = $estatus_enganche WHERE idLote = $idLote AND status = 1");
+
+                    if($estatus_enganche == 2){
+                        $this->db->query("INSERT INTO historial_documento (movimiento, expediente, modificado, status, idCliente, idCondominio, idLote, idUser, tipo_documento, id_autorizacion, tipo_doc) 
+                        VAlUES ('COMPLEMENTO DE ENGANCHE', NULL, GETDATE(), 1, $idCliente, $idCondominio, $idLote, NULL, 0, 0, 38);");
+                    }
+
                     $data['message'] = 'OK';
                     echo json_encode($data);
                 } else {
