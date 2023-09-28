@@ -300,18 +300,4 @@ class Reporte extends CI_Controller {
         }
     }
 
-    public function lotesEstatusSeisSinTraspaso(){
-        $this->validateSession();
-        $this->load->view('template/header');
-        $this->load->view("reportes/lotesEstatusSeisSinTraspaso_view");
-    }
-
-    public function getLotesEstatusSeisSinTraspaso(){
-        $data = $this->Reporte_model->getLotesEstatusSeisSinTraspaso()->result_array();
-        if($data != null)
-            echo json_encode($data);
-        else
-            echo json_encode(array());
-    }
-
 }

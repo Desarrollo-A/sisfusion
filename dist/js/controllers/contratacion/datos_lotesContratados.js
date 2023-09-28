@@ -113,7 +113,7 @@ $(document).ready(function () {
             {
                 data: function (d) {
                     if (d.documentoCargado != 0)
-                    return '<span class="label lbl-green">CARGADO</span>';
+                        return '<span class="label lbl-green">CARGADO</span>';
                     else
                         return '<span class="label lbl-orangeYellow">SIN REGISTRO</span>';
                 }
