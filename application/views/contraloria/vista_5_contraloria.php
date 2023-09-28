@@ -141,4 +141,4 @@
 </body>
 <?php $this->load->view('template/footer');?>
 
-<script src="<?= base_url() ?>dist/js/controllers/contraloria/vista_5_contraloria_nuevo.js"></script>
+<script src="<?= base_url() ?>dist/js/controllers/contraloria/vista_5_contraloria.js"></script>
