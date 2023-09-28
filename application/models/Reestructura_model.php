@@ -110,7 +110,7 @@ class Reestructura_model extends CI_Model
 
     public function get_valor_lote($id_proyecto){
         ini_set('memory_limit', -1);
-        return $this->db->query("SELECT res.nombreResidencial,con.nombre AS condominio, lot.nombreLote, lot.idLote ,lot.sup AS superficie, lot.precio, CONCAT(cli.nombre,' ',cli.apellido_paterno,' ',cli.apellido_materno) nombreCliente,lot.liberadoReubicacion AS observacion, oxc.nombre AS nombreOp, lot.comentarioReubicacion, lot.liberadoReubicacion  
+        return $this->db->query("SELECT res.nombreResidencial,con.nombre AS condominio, lot.nombreLote, lot.idLote ,lot.sup AS superficie, lot.precio, CONCAT(cli.nombre,' ',cli.apellido_paterno,' ',cli.apellido_materno) nombreCliente,lot.liberadoReubicacion AS observacion, oxc.nombre AS nombreOp, lot.comentarioReubicacion  
         FROM lotes lot
         INNER JOIN condominios con ON con.idCondominio = lot.idCondominio
         INNER JOIN residenciales res on res.idResidencial = con.idResidencial
@@ -135,14 +135,14 @@ class Reestructura_model extends CI_Model
 
     public function historialModel($id_prospecto){
         return $this->db->query("(SELECT aud.id_auditoria, oxc.nombre, oxcs.nombre as nombreNuevo, aud.fecha_creacion, CONCAT(usu.nombre,' ', usu.apellido_paterno,' ', usu.apellido_materno) AS creado_por from auditoria aud
-        LEFT JOIN opcs_x_cats  oxc on oxc.id_opcion = aud.anterior and oxc.id_catalogo = 100 and aud.col_afect = 'opcionReestructura'
+        INNER JOIN opcs_x_cats  oxc on oxc.id_opcion = aud.anterior and oxc.id_catalogo = 100 and aud.col_afect = 'opcionReestructura'
         INNER JOIN opcs_x_cats  oxcs on oxcs.id_opcion = aud.nuevo and oxcs.id_catalogo = 100 and aud.col_afect = 'opcionReestructura'
         INNER JOIN usuarios usu on usu.id_usuario = aud.creado_por
-        where tabla = 'lotes' and col_afect = 'opcionReestructura' and id_parametro = $id_prospecto)
+        where aud.anterior != 'NULL' AND tabla = 'lotes' and col_afect = 'opcionReestructura' and id_parametro = $id_prospecto)
         UNION ALL
         (SELECT aud.id_auditoria, aud.anterior, aud.nuevo, aud.fecha_creacion, CONCAT(usu.nombre,' ', usu.apellido_paterno,' ', usu.apellido_materno) AS creado_por from auditoria aud
         INNER JOIN usuarios usu on usu.id_usuario = aud.creado_por
-        where tabla = 'lotes'  and col_afect = 'comentarioReubicacion' and id_parametro = $id_prospecto)");
+        where aud.anterior != 'NULL' AND tabla = 'lotes'  and col_afect = 'comentario' and id_parametro = $id_prospecto)");
     }
 
     public function aplicaLiberacion($datos){
@@ -364,8 +364,8 @@ class Reestructura_model extends CI_Model
     public function informacionCartaReubicacionPdf($idClienteNuevo)
     {
         $query = $this->db->query("SELECT CONCAT(clN.nombre, ' ', clN.apellido_paterno, ' ', clN.apellido_materno) AS nombreCliente, 
-            loN.nombreLote AS loteNuevo, condN.nombre_condominio AS condNuevo, resN.descripcion AS desarrolloNuevo,
-            loA.nombreLote AS loteAnterior, condA.nombre_condominio AS condAnterior, resA.descripcion AS desarrolloAnterior
+            loN.nombreLote AS loteNuevo, condN.nombre AS condNuevo, resN.descripcion AS desarrolloNuevo,
+            loA.nombreLote AS loteAnterior, condA.nombre AS condAnterior, resA.descripcion AS desarrolloAnterior
         FROM clientes clN
         INNER JOIN lotes loN ON clN.idLote = loN.idLote
         INNER JOIN condominios condN ON loN.idCondominio = condN.idCondominio
@@ -381,7 +381,7 @@ class Reestructura_model extends CI_Model
     public function informacionCartaReestructuraPdf($idCliente)
     {
         $query = $this->db->query("SELECT CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) AS nombreCliente, 
-            lo.nombreLote AS loteNuevo, cond.nombre_condominio AS cond, res.descripcion AS desarrollo
+            lo.nombreLote AS loteNuevo, cond.nombre AS cond, res.descripcion AS desarrollo
         FROM clientes cl
         INNER JOIN lotes lo ON cl.idLote = lo.idLote
         INNER JOIN condominios cond ON lo.idCondominio = cond.idCondominio
