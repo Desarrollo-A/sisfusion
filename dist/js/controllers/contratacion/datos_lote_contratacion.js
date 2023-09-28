@@ -582,3 +582,47 @@ function fillChangelog(v) {
 }
 
 
+/*cambio de tab para switcheat*/
+$('input[type=radio][name=modoSubida]').change(function(e) {
+    let selectorInv = $('#selectoresInv');
+    let selectorDescInv = $('#selectoresDescInv');
+    if (this.value == 1) {
+        console.log(1);
+
+        selectorInv.removeClass('hide');
+        selectorDescInv.addClass('hide');
+        // flagTipoUploadMeses=1;
+        // //se queda asi ta cual
+        // //se debe mostrar el proyecto nomás
+        // $('#contenedor-condominio').addClass('hide');
+        // $('#filtro3').attr('onChange', 'changeCondominio()');
+        // $('#filtro3').val('default').selectpicker('deselectAll');
+        // $('#filtro3').selectpicker('refresh');
+        // $('#filtro4').empty();
+        // $('#filtro4').selectpicker('refresh');
+        // $('#tabla_msni').DataTable().clear().destroy();
+        // $('#typeTransaction').val(this.value);
+        //
+        // $('.anclaClass').attr('placeholder', 'ID CONDOMINIO');
+    }
+    else if (this.value == 0) {
+        console.log(2);
+        selectorInv.addClass('hide');
+        selectorDescInv.removeClass('hide');
+
+
+        // flagTipoUploadMeses=0;
+
+        // //se debe mostrar el proyecto y condominio nomás
+        // $('#contenedor-condominio').removeClass('hide');
+        // $('#filtro3').attr('onChange', 'changeLote()');
+        // $('#filtro3').val('default').selectpicker('deselectAll');
+        // $('#filtro3').selectpicker('refresh');
+        // $('#tabla_msni').DataTable().clear().destroy();
+        // $('#typeTransaction').val(this.value);
+        //
+        // $('.anclaClass').attr('placeholder', 'ID LOTE');
+    }
+});
+
+

@@ -151,6 +151,48 @@
                             </div>
                             <div class="card-content">
                                 <h3 class="card-title center-align">Inventario lotes</h3>
+                                <div class="toolbar">
+                                    <div class="row">
+                                        <div class=" col col-xs-12 col-sm-12 col-md-12 col-lg-12" id="selectorModo">
+                                            <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6 pb-3">
+                                                <div class="radio_container w-100">
+                                                    <input class="d-none generate" type="radio" name="modoSubida"
+                                                           id="condominioM" checked value="1">
+                                                    <label for="condominioM" class="w-50">Inventario Lotes</label>
+                                                    <input class="d-none find-results" type="radio" name="modoSubida"
+                                                           id="loteM" value="0">
+                                                    <label for="loteM" class="w-50">Descargar inventario sede</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12" id="selectoresInv">
+                                            <div class="col-md-4 form-group">
+                                                <div class="form-group overflow-hidden">
+                                                    <label class="control-label" for="idResidencial">Proyecto</label>
+                                                    <select id="idResidencial" name="idResidencial" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" size="5" data-container="body" required></select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 form-group">
+                                                <div class="form-group overflow-hidden">
+                                                    <label class="control-label" for="idCondominioInventario">Condominio</label>
+                                                    <select name="idCondominioInventario" id="idCondominioInventario" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 form-group">
+                                                <div class="form-group overflow-hidden">
+                                                    <label class="control-label" for="idEstatus">Estatus</label>
+                                                    <select name="idEstatus" id="idEstatus" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 hide" id="selectoresDescInv">
+                                            <div class="col-md-4 form-group">
+                                                <div class="form-group select-is-empty">
+                                                    <label class="control-label">Sedes por proyecto</label>
+                                                    <select name="sedes" id="sedes" class="selectpicker select-gral m-0"
+                                                            data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN"
+                                                            data-size="7" data-live-search="true" required>
+                                                    </select>
 
                                 <?php
                                 if (in_array($this->session->userdata('id_rol'), array(70, 71, 73, 17))) {
