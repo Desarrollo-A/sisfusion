@@ -661,7 +661,7 @@ class Reestructura extends CI_Controller{
             : $docInfo;
         $documentacion = [];
         $modificado = date('Y-m-d H:i:s');
-        $documentosSinPasar = (is_null($docInfo)) ? [3, 11, 7, 8] : [3, 11];
+        $documentosSinPasar = (is_null($docInfo)) ? [7,8] : [];
 
         foreach ($docAnterior as $doc) {
             $expedienteAnterior = in_array($doc['tipo_doc'], $documentosSinPasar) ? null : $doc['expediente'];
