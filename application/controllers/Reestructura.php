@@ -903,5 +903,24 @@ class Reestructura extends CI_Controller{
         else
             echo json_encode(array());
     }
+
+    public function asignacionCartera(){
+		$this->load->view('template/header');
+        $this->load->view("reestructura/asignacionCartera_view");
+	}	
+
+    public function getListaAsignacionCartera(){
+        $data = $this->Reestructura_model->getListaAsignacionCartera();
+        echo json_encode($data);
+    }
+
+    public function getListaUsuariosParaAsignacion() {
+        echo json_encode($this->Reestructura_model->getListaUsuariosParaAsignacion());
+    }
+
+    public function setAsesor() {
+        $updateData = array("id_usuario_asignado" => $this->input->post('idAsesor'), "usuario" => $this->session->userdata('id_usuario'));
+        echo json_encode($this->General_model->updateRecord("lotes", $updateData, "idLote", $this->input->post('idLote')));
+    }
     
 }
