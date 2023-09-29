@@ -429,7 +429,7 @@ $(document).on('click', '.rechazoCorrida', function (e) {
     e.preventDefault();
 });
 
-$("#guardar").click(function () {   
+$("#guardar").click(function () {
     var motivoRechazo = $("#motivoRechazo").val();
     var idCondominioR = $("#idClienterechCor").val();
     var idClienteR = $("#idCondominiorechCor").val();
