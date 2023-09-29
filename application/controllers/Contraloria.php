@@ -831,18 +831,18 @@ class Contraloria extends CI_Controller {
 
         $contenido[] = array_merge($infoLote, ["motivoRechazo" => $motivoRechazo, "fechaHora" => date("Y-m-d H:i:s")]);
 
-        // $this->email
-        //     ->initialize()
-        //     ->from('Ciudad Maderas')
-        //     ->to('tester.ti2@ciudadmaderas.com')
-        //     ->subject('EXPEDIENTE RECHAZADO-CONTRALORÍA (5. REVISIÓN 100%)')
-        //     ->view($this->load->view('mail/contraloria/editar-registro-lote-rechazo-proceso5', [
-        //         'encabezados' => $encabezados,
-        //         'contenido' => $contenido,
-        //         'comentario' => $motivoRechazo
-        //     ], true));
+        $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to('tester.ti2@ciudadmaderas.com')
+            ->subject('EXPEDIENTE RECHAZADO-CONTRALORÍA (5. REVISIÓN 100%)')
+            ->view($this->load->view('mail/contraloria/editar-registro-lote-rechazo-proceso5', [
+                'encabezados' => $encabezados,
+                'contenido' => $contenido,
+                'comentario' => $motivoRechazo
+            ], true));
 
-        // $this->email->send();
+        $this->email->send();
 
         $validate = $this->Contraloria_model->validateSt5($idLote);
 
