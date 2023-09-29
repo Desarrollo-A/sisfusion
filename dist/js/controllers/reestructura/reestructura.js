@@ -396,7 +396,7 @@ function fillTable(index_proyecto) {
         },
         {
             data: function (d){
-                if (d.nombreCliente === null || d.nombreCliente === '') {
+                if (d.nombreCliente === null || d.nombreCliente.trim() === '') {
                     return '<p class="m-0">SIN ESPECIFICAR</p>';
                 }
                 return '<p class="m-0">' + d.nombreCliente + '</p>'
