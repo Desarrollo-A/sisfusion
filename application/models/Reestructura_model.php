@@ -147,7 +147,7 @@ class Reestructura_model extends CI_Model
 
     public function aplicaLiberacion($datos){
         
-        $comentarioLiberacion = $datos['tipoLiberacion'] == 7 ? 'LIBERADO POR REUBICACIÓN' : ( $datos['tipoLiberacion'] == 9 ? 'LIBERACIÓN JURÍDICA' : ($datos['tipoLiberacion'] == 8 ? 'LIBERADO POR REESTRUCTURA' : $datos['obsLiberacion']) );
+        $comentarioLiberacion = $datos['tipoLiberacion'] == 7 ? 'LIBERADO POR REUBICACIÓN' : ( $datos['tipoLiberacion'] == 9 ? 'LIBERACIÓN JURÍDICA' : ($datos['tipoLiberacion'] == 8 ? 'LIBERADO POR REESTRUCTURA' : $datos['obsLiberacion']));
         $observacionLiberacion = $datos['tipoLiberacion'] == 7 ? 'LIBERADO POR REUBICACIÓN' : ( $datos['tipoLiberacion'] == 9 ? 'LIBERACIÓN JURÍDICA' : ($datos['tipoLiberacion'] == 8 ? 'LIBERADO POR REESTRUCTURA' : 'CANCELACIÓN DE CONTRATO') );
         $datos["comentarioLiberacion"] = $comentarioLiberacion;
         $datos["observacionLiberacion"] = $observacionLiberacion;
@@ -247,18 +247,18 @@ class Reestructura_model extends CI_Model
                     WHERE idLote IN (".$datos['idLote'].") and status = 1");
 
                     if(!in_array($datos["tipo"],array(7,8,9))) {
-                        // $this->email
-                        //     ->initialize()
-                        //     ->from('Ciudad Maderas')
-                        //     ->to('programador.analista24@ciudadmaderas.com')
-                        //     ->subject('Notificación de liberación')
-                        //     ->view($this->load->view('mail/reestructura/mailLiberacion', [
-                        //         'lote' => $row[0]['nombreLote'],
-                        //         'fechaApartado' => $datos['fechaLiberacion'],
-                        //         'Observaciones' => $datos['obsLiberacion']
-                        //     ], true));
+                        $this->email
+                            ->initialize()
+                            ->from('Ciudad Maderas')
+                            ->to('programador.analista24@ciudadmaderas.com')
+                            ->subject('Notificación de liberación')
+                            ->view($this->load->view('mail/reestructura/mailLiberacion', [
+                                'lote' => $row[0]['nombreLote'],
+                                'fechaApartado' => $datos['fechaLiberacion'],
+                                'Observaciones' => $datos['obsLiberacion']
+                            ], true));
                 
-                        // $this->email->send();
+                        $this->email->send();
                     }
 
         if ($this->db->trans_status() === FALSE){

@@ -95,18 +95,13 @@ function fillTable(index_proyecto) {
             }
         },
         {
-            data: function (d) {
-                if(d.comentarioLiberacion == "CANCELACIÓN DE CONTRATO"){
-                    return '<span class="label lbl-azure">CANCELACIÓN DE CONTRATO</span>';
-                }else if(d.comentarioLiberacion == "RECESION DE CONTRATO"){
-                    return '<span class="label lbl-green">RECESION DE CONTRATO</span>';
-                }
-                return '<p class="m-0">' + d.comentarioLiberacion + '</p>';
+            data: function(d){
+                return '<p class="m-0">'+d.idLote+'</p>';
             }
         },
         {
             data: function(d){
-                return '<p class="m-0">'+d.idLote+'</p>';
+                return '<p class="m-0">'+d.comentarioLiberacion+'</p>';
             }
         }],
         columnDefs: [{
