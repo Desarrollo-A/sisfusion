@@ -110,7 +110,11 @@ class Reestructura_model extends CI_Model
 
     public function get_valor_lote($id_proyecto){
         ini_set('memory_limit', -1);
-        return $this->db->query("SELECT res.nombreResidencial,con.nombre AS condominio, lot.nombreLote, lot.idLote ,lot.sup AS superficie, lot.precio, CONCAT(cli.nombre,' ',cli.apellido_paterno,' ',cli.apellido_materno) nombreCliente,lot.liberadoReubicacion AS observacion, oxc.nombre AS nombreOp, lot.comentarioReubicacion, lot.liberadoReubicacion  
+        return $this->db->query("SELECT res.nombreResidencial,con.nombre AS condominio, lot.nombreLote,
+         lot.idLote ,lot.sup AS superficie, lot.precio, CONCAT(cli.nombre,' ',cli.apellido_paterno,' ',cli.apellido_materno) nombreCliente,
+         lot.liberadoReubicacion AS observacion, oxc.nombre AS nombreOp, 
+         lot.comentarioReubicacion, lot.liberadoReubicacion ,
+         lot.liberaBandera 
         FROM lotes lot
         INNER JOIN condominios con ON con.idCondominio = lot.idCondominio
         INNER JOIN residenciales res on res.idResidencial = con.idResidencial
@@ -398,5 +402,25 @@ class Reestructura_model extends CI_Model
         INNER JOIN loteXReubicacion lotx ON lotx.idProyecto = con.idResidencial AND lotx.idProyecto IN ($id_proyecto)
         INNER JOIN clientes cli ON cli.id_cliente = lot.idCliente AND cli.status IN (1)
         WHERE cli.proceso IN(0,1)")->result();
+    }
+    function banderaLiberada($clave , $data){
+        try {
+            $this->db->where('idLote', $clave);
+            $this->db->update('lotes', $data);
+            $afftectedRows = $this->db->affected_rows();
+            return $afftectedRows > 0 ? TRUE : FALSE ;
+        }
+        catch(Exception $e) {
+            return $e->getMessage();
+        }
+    }
+    function get_proyecto_lista_yola($where = null){
+        return $this->db->query("SELECT lotx.proyectoReubicacion AS idResidencial,
+         CONCAT(res.nombreResidencial, ' - ' , res.descripcion) AS descripcion  
+        FROM loteXReubicacion lotx
+        
+		INNER JOIN residenciales res ON res.idResidencial = lotx.proyectoReubicacion
+        $where
+		GROUP BY lotx.proyectoReubicacion, CONCAT(res.nombreResidencial, ' - ' , res.descripcion)");
     }
 }

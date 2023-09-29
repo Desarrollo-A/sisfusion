@@ -78,11 +78,18 @@ class Reestructura extends CI_Controller{
     }
 
     public function lista_proyecto(){
+        $bandera = $this->input->post('bandera');
 		if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_usuario') == 10878){
 			echo json_encode($this->Reestructura_model->get_proyecto_listaCancelaciones()->result_array());
-		}else{
+		}else if($this->session->userdata('id_usuario') == 5107 && $bandera == 1)
+        {
+          $where = ' and idResidencial  IN (22,4,21,12) ';
+          echo json_encode($this->Reestructura_model->get_proyecto_lista_yola($where)->result_array());
+        }
+        else{
 			echo json_encode($this->Reestructura_model->get_proyecto_lista()->result_array());
 		}
+
     }
 
 	public function lista_catalogo_opciones(){
@@ -855,5 +862,28 @@ class Reestructura extends CI_Controller{
     {
         $cliente = $this->Reestructura_model->obtenerClientePorId($idCliente);
         echo json_encode($cliente);
+    }
+
+    public function cambiarBandera  ()
+    {
+        $bandera   =  $this->input->post('bandera');
+        $idLote    =  $this->input->post('idLoteBandera');
+           $arr_update = array( 
+                            "liberaBandera"   => $bandera,
+                            );
+      $update = $this->Reestructura_model->banderaLiberada($idLote,$arr_update);                           
+      if($update){
+        $respuesta =  array(
+          "response_code" => 200, 
+          "response_type" => 'success',
+          "message" => "Se ha liberado  satisfactoriamente");
+      }else{
+        $respuesta =  array(
+          "response_code" => 400, 
+          "response_type" => 'warning',
+          "message" => "Lote no actualizado, inténtalo más tarde ");
+      }
+      echo json_encode ($respuesta);             
+  
     }
 }
