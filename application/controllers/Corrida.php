@@ -757,17 +757,17 @@ legend {
 								<b>Superficie:</b> '.$informacion_loteCorrida->sup.'m<sup>2</sup>
 								</td>
 								<td style="font-size: 1.4em;">
-								<b>Precio m2:</b> '.money_format('%(#10n',$informacion_loteCorrida->precio).' 
+								<b>Precio m2:</b> '.$this->money_format('%(#10n',$informacion_loteCorrida->precio).' 
 								</td> 
 								<td style="font-size: 1.4em;">
-								<b>Total:</b> '.money_format('%(#10n',$informacion_loteCorrida->total).'
+								<b>Total:</b> '.$this->money_format('%(#10n',$informacion_loteCorrida->total).'
 								</td>
 								<td style="font-size: 1.4em;">
 								<b>Porcentaje:</b> '.$informacion_loteCorrida->porcentaje.'%
 								</td>
 							
 								<td style="font-size: 1.4em;">
-								<b>Enganche:</b> '.money_format('%(#10n',$informacion_loteCorrida->enganche).'
+								<b>Enganche:</b> '.$this->money_format('%(#10n',$informacion_loteCorrida->enganche).'
 								</td>
 							</tr>		
 					  </table>

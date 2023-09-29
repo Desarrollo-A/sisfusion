@@ -28,7 +28,7 @@ $("#tabla_ingresar_11").ready(function () {
 			titleAttr: 'Descargar archivo de Excel',
 			title: 'REGISTRO ESTATUS 11',
 			exportOptions: {
-				columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+				columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
 				format: {
 					header: function (d, columnIdx) {
 						if (columnIdx == 0)
@@ -61,6 +61,11 @@ $("#tabla_ingresar_11").ready(function () {
 					return `<span class="label lbl-green">${d.tipo_venta}</span>`;
 				}
 			},
+			{
+                data: function (d) {
+                    return `<span class='label lbl-violetBoots'>${d.tipo_proceso}</span>`;
+                }
+            },
 			{ data: 'nombreResidencial' },
 			{ data: 'nombreCondominio' },
 			{ data: 'nombreLote' },

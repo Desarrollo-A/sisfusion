@@ -14,6 +14,7 @@
                         </div>
                         <br>
                         <input type="hidden" name="idLote" id="idLote">
+                        <textarea name="obsLiberacion" id="obsLiberacion" placeholder="Observaciones" class="text-modal" required row="4"></textarea>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>

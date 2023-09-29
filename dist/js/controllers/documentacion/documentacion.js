@@ -800,29 +800,21 @@ function abrirModalAutorizaciones(idLote) {
           statusProceso = "<small class='label lbl-gray'>N/A</small>";
         }
 
-        item["ultima_fecha"] = moment(item["ultima_fecha"].split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss')
-        let fecha = item["ultima_fecha"].split(' ')[0];
+        item["ultima_fecha"] = moment(item["ultima_fecha"].split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss');
 
         $("#auts-loads").append(`
             <div class="container-fluid" style="background-color: #f7f7f7; border-radius: 15px; padding: 15px; margin-bottom: 15px">
                 <div class="row">
-                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 float-end text-right">
-                    <b>
-                    ${item["ultima_fecha"]}</b>
-                </div>
+                  <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 float-end text-right">
+                      ${item["ultima_fecha"]}
+                  </div>
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-7">
                         <span style="font-weight:100; font-size: 12px">Solicitud de autorización: <b>${statusProceso}</b></span>
-                        <span style="font-weight:100; font-size: 12px">Autoriza:${item[
-                          "nombreAUT"
-                        ]
-                          .split(":")
-                          .shift()}</span>
+                        <span style="font-weight:100; font-size: 12px">Autoriza:${item["nombreAUT"].split(":").shift()}</span>
                     </div>
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <p style="text-align: justify;">
-                            <span class="font-weight:400">${
-                              item["autorizacion"]
-                            }</span>
+                            <span class="font-weight:400">${item["autorizacion"]}</span>
                         </p>
                     </div>
                 </div>
