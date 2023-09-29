@@ -406,6 +406,7 @@ function preguntaRegCorr() {
                     $('#tabla_ingresar_6').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
                 }
+                $("#totalNeto").val('');
             },
             error: function (data) {
                 $('#enviarAContraloriaGuardar').prop('disabled', false);
