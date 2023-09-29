@@ -24,7 +24,6 @@ $(document).ready(function () {
     $('.datepicker').datetimepicker({ locale: 'es' });
 
     setIniDatesXYear('#beginDate', '#endDate');
-    console.log($('#beginDate').val());
     fillTable(convertDateDDMMYYYYToYYYYMMDD('01/04/2023'), convertDateDDMMYYYYToYYYYMMDD($('#endDate').val()));
     $('#spiner-loader').removeClass('hide');
 });
@@ -54,14 +53,14 @@ function fillTable(fechaInicio, fechaFin) {
     $("#Jtabla").DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
-        scrollX:true,
-        stateSave: true,
+        scrollX: true,
+        bAutoWidth: true,
         "bDestroy": true,
         buttons: [
             {
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                className: 'btn buttons-excel',
+                className: 'btn buttons-excel tooltipButtons',
                 titleAttr: 'Descargar archivo Excel',
                 title: "Integración de expediente",
                 exportOptions: {
@@ -76,7 +75,7 @@ function fillTable(fechaInicio, fechaFin) {
             {
                 extend: 'pdfHtml5',
                 text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
-                className: 'btn buttons-pdf',
+                className: 'btn buttons-pdf tooltipButtons',
                 titleAttr: 'Descargar archivo PDF',
                 title: "Integración de expediente",
                 orientation: 'landscape',
@@ -103,7 +102,6 @@ function fillTable(fechaInicio, fechaFin) {
             [10, 25, 50, -1],
             [10, 25, 50, "Todos"]
         ],
-        bAutoWidth: false,
         fixedColumns: true,
         ordering: false,
         columns: [{
@@ -119,6 +117,11 @@ function fillTable(fechaInicio, fechaFin) {
             {
                 data: function (data){
                     return data.referencia
+                }
+            },
+            {
+                data: function (data){
+                    return data.fechaApartado
                 }
             },
             {
@@ -169,6 +172,15 @@ function fillTable(fechaInicio, fechaFin) {
         },
         order: [[1, 'asc']]
     });
+
+
+    $('#Jtabla').on('init.dt', function() {
+        $('.tooltipButtons')
+            .attr('data-toggle', 'tooltip')
+            .attr('data-placement', 'top');
+
+        $('[data-toggle="tooltip"]').tooltip();
+    });
 }
 
 function setIniDatesXYear(inicioFecha, finFecha) {
@@ -203,3 +215,7 @@ $(document).on('click', '.verDocumento', function () {
         height: 660
     });
 });
+
+
+
+

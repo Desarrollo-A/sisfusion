@@ -162,7 +162,7 @@
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-						<h4 class="modal-title text-center">HISTORIAL LOTE</h4>
+						<h4 class="modal-title text-center">HISTORIAL MOVIMIENTOS</h4>
 					</div>
                     <div class="modal-body">
                         <div role="tabpanel">

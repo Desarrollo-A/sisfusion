@@ -1124,11 +1124,11 @@ class Juridico extends CI_Controller
         if ($cliente[0]['proceso'] == 2 || $cliente[0]['proceso'] == 4) {
             $totalDocumentosValidar = 2;
             $documentosValidar = '8,33';
-            $nombreDocumentos = 'CONTRATO y RESCISIÓN DE CONTRATO';
+            $nombreDocumentos = 'CONTRATO y DOCUMENTO DE REUBICACIÓN';
         } else if ($cliente[0]['proceso'] == 3) {
             $totalDocumentosValidar = 2;
             $documentosValidar = '8,36';
-            $nombreDocumentos = 'CONTRATO y ADDENDUM';
+            $nombreDocumentos = 'CONTRATO y DOCUMENTO DE REESTRUCTURA';
         } else {
             $totalDocumentosValidar = 1;
             $documentosValidar = '8';

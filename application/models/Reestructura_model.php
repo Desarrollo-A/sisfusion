@@ -223,6 +223,7 @@ class Reestructura_model extends CI_Model
                     $idMovimiento = $datos["tipo"] == 8 ? 31 : 0;
                     $tipo_venta = $datos["tipo"] == 8 ? $row[0]['tipo_venta'] : 0;
                     $ubicacion = $datos["tipo"] == 8 ? $row[0]['ubicacion'] : 0;
+                    $motivo_change_status =  $datos["tipoLiberacion"] == 3 ? $datos['obsLiberacion'] : 'LOTE LIBERADO';
                     $this->db->query("UPDATE lotes SET idStatusContratacion = $idStatusContratacion,
                     idMovimiento = $idMovimiento, comentario = 'NULL', idCliente = $idClienteNuevo, usuario = 'NULL', perfil = 'NULL ', 
                     fechaVenc = null, modificado = null, status8Flag = 0, 
@@ -231,6 +232,7 @@ class Reestructura_model extends CI_Model
                     totalValidado = 0, validacionEnganche = 'NULL', 
                     fechaSolicitudValidacion = null, 
                     fechaRL = null, 
+                    motivo_change_status='$motivo_change_status',
                     registro_comision = $registro_comision,
                     tipo_venta = $tipo_venta, 
                     observacionContratoUrgente = null,
@@ -252,7 +254,8 @@ class Reestructura_model extends CI_Model
                             ->subject('Notificación de liberación')
                             ->view($this->load->view('mail/reestructura/mailLiberacion', [
                                 'lote' => $row[0]['nombreLote'],
-                                'fechaApartado' => $datos['fechaLiberacion']
+                                'fechaApartado' => $datos['fechaLiberacion'],
+                                'Observaciones' => $datos['obsLiberacion']
                             ], true));
                 
                         $this->email->send();
@@ -395,5 +398,21 @@ class Reestructura_model extends CI_Model
         INNER JOIN loteXReubicacion lotx ON lotx.idProyecto = con.idResidencial AND lotx.idProyecto IN ($id_proyecto)
         INNER JOIN clientes cli ON cli.id_cliente = lot.idCliente AND cli.status IN (1)
         WHERE cli.proceso IN(0,1)")->result();
+    }
+
+    public function getLotesEstatusSeisSinTraspaso(){
+        return $this->db->query("SELECT re.nombreResidencial, co.nombre nombreCondominio, lo.nombreLote, lo.idLote, lo.referencia, lo.sup,
+        UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, FORMAT(lo.totalNeto, 'C') totalATraspasar,
+        ISNULL(tv.tipo_venta, 'Sin especificar') tipo_venta, ISNULL(oxc0.nombre, 'Normal') tipo_proceso
+        FROM lotes lo
+        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.proceso IN (2, 3, 4)
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+        INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes 
+        WHERE status = 1 AND idStatusContratacion = 6 AND idMovimiento = 36 GROUP BY idLote, idCliente) hl
+        ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
+        LEFT JOIN tipo_venta tv ON tv.id_tventa = lo.tipo_venta
+        LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
+        WHERE lo.status  = 1 AND ISNULL(lo.validacionEnganche, 'NULL') NOT IN ('VALIDADO')");
     }
 }

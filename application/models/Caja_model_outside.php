@@ -1380,4 +1380,41 @@
 		0 id_subdirector, 'NO APLICA' subdirector,0 id_regional, 'NO APLICA' regional, 0 id_regional_2, 'NO APLICA' regional_2 FROM usuarios WHERE id_usuario = 12874)")->result();
     }
 
+    function checkTipoJuridico($id_cliente){
+        //función para revisar el tipo de personalidad juridica
+        $data = $this->db->query("SELECT * FROM clientes WHERE id_cliente=".$id_cliente);
+        return $data->row();
+    }
+    function documentacionActual($id_cliente){
+        $query = $this->db->query("SELECT hd.*, cl.personalidad_juridica 
+        FROM clientes cl 
+        INNER JOIN historial_documento hd ON cl.id_cliente=hd.idCliente WHERE hd.idCliente=".$id_cliente);
+        return $query->result_array();
+    }
+    function nuevaDocByTP($personaJuridica){
+        $tipoPersonalidad = 0;
+        switch ($personaJuridica){
+            case 1:
+                $tipoPersonalidad = 32;
+                break;
+            case 2:
+                $tipoPersonalidad = 31;
+                break;
+        }
+        //obtiene la documentacion por tipo de persona
+        $data = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo=".$tipoPersonalidad." AND estatus=1");
+        return $data->result_array();
+    }
+    function deshabDocsByLoteCliente($idLote, $idCliente){
+        //deshabilita los registros por idLote y idCliente
+        $dataActualiza = array(
+            'status' => 0
+        );
+        $this->db->where("idLote", $idLote);
+        $this->db->where("idCliente", $idCliente);
+        $this->db->update('historial_documento', $dataActualiza);
+        return $this->db->affected_rows();
+//        return 5;//prueba
+    }
+
 }
