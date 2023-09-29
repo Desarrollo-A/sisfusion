@@ -9,6 +9,7 @@ class Reestructura_model extends CI_Model
 
     public function getListaClientesReubicar() {
         ini_set('memory_limit', -1);
+        $id_usuario = $this->session->userdata('id_usuario');
         $query = $this->db->query("SELECT cl.proceso, lr.idProyecto, lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, 
         CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, co.nombre AS nombreCondominio, re.nombreResidencial,
         CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
@@ -33,6 +34,7 @@ class Reestructura_model extends CI_Model
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = co.tipo_lote AND oxc.id_catalogo = 27
         INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39
             GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
+        WHERE lo.liberaBandera = 1 AND lo.id_usuario_asignado = $id_usuario
         GROUP BY cl.proceso, lr.idProyecto, lo.idLote, lo.nombreLote,  cl.fechaApartado, co.nombre, re.nombreResidencial,
         lo.idCliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, 
         u0.id_usuario, u0.nombre, u0.apellido_paterno, u0.apellido_materno,
@@ -110,7 +112,11 @@ class Reestructura_model extends CI_Model
 
     public function get_valor_lote($id_proyecto){
         ini_set('memory_limit', -1);
-        return $this->db->query("SELECT res.nombreResidencial,con.nombre AS condominio, lot.nombreLote, lot.idLote ,lot.sup AS superficie, lot.precio, CONCAT(cli.nombre,' ',cli.apellido_paterno,' ',cli.apellido_materno) nombreCliente,lot.liberadoReubicacion AS observacion, oxc.nombre AS nombreOp, lot.comentarioReubicacion  
+        return $this->db->query("SELECT res.nombreResidencial,con.nombre AS condominio, lot.nombreLote,
+         lot.idLote ,lot.sup AS superficie, lot.precio, CONCAT(cli.nombre,' ',cli.apellido_paterno,' ',cli.apellido_materno) nombreCliente,
+         lot.liberadoReubicacion AS observacion, oxc.nombre AS nombreOp, 
+         lot.comentarioReubicacion, lot.liberadoReubicacion ,
+         lot.liberaBandera 
         FROM lotes lot
         INNER JOIN condominios con ON con.idCondominio = lot.idCondominio
         INNER JOIN residenciales res on res.idResidencial = con.idResidencial
@@ -146,8 +152,8 @@ class Reestructura_model extends CI_Model
     }
 
     public function aplicaLiberacion($datos){
-
-        $comentarioLiberacion = $datos['tipoLiberacion'] == 7 ? 'LIBERADO POR REUBICACIÓN' : ( $datos['tipoLiberacion'] == 9 ? 'LIBERACIÓN JURÍDICA' : ($datos['tipoLiberacion'] == 8 ? 'LIBERADO POR REESTRUCTURA' : 'CANCELACIÓN DE CONTRATO') );
+        
+        $comentarioLiberacion = $datos['tipoLiberacion'] == 7 ? 'LIBERADO POR REUBICACIÓN' : ( $datos['tipoLiberacion'] == 9 ? 'LIBERACIÓN JURÍDICA' : ($datos['tipoLiberacion'] == 8 ? 'LIBERADO POR REESTRUCTURA' : $datos['obsLiberacion']));
         $observacionLiberacion = $datos['tipoLiberacion'] == 7 ? 'LIBERADO POR REUBICACIÓN' : ( $datos['tipoLiberacion'] == 9 ? 'LIBERACIÓN JURÍDICA' : ($datos['tipoLiberacion'] == 8 ? 'LIBERADO POR REESTRUCTURA' : 'CANCELACIÓN DE CONTRATO') );
         $datos["comentarioLiberacion"] = $comentarioLiberacion;
         $datos["observacionLiberacion"] = $observacionLiberacion;
@@ -414,5 +420,76 @@ class Reestructura_model extends CI_Model
         LEFT JOIN tipo_venta tv ON tv.id_tventa = lo.tipo_venta
         LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
         WHERE lo.status  = 1 AND ISNULL(lo.validacionEnganche, 'NULL') NOT IN ('VALIDADO')");
+    }
+
+    public function getListaAsignacionCartera() {
+        ini_set('memory_limit', -1);
+        $id_usuario = $this->session->userdata('id_usuario');
+        return $this->db->query("SELECT cl.proceso, lr.idProyecto, lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, 
+        CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, co.nombre AS nombreCondominio, re.nombreResidencial,
+        CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
+        CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
+        CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
+        CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
+        CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
+        CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2, lo.sup, 
+        CASE WHEN u6.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u6.nombre, ' ', u6.apellido_paterno, ' ', u6.apellido_materno)) END nombreAsesorAsignado, 
+        ISNULL (ds.costom2f, 'SIN ESPECIFICAR') costom2f, SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16, 2)) * lo.sup, lo.precio * lo.sup) ELSE lo.totalNeto2 END) total, 
+        co.tipo_lote, oxc.nombre nombreTipoLote, ISNULL(u6.id_usuario, 0) idAsesorAsignado
+        FROM lotes lo
+        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.proceso NOT IN (2,3,4)
+        INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
+        INNER JOIN residenciales re ON co.idResidencial = re.idResidencial
+        INNER JOIN loteXReubicacion lr ON lr.idProyecto = re.idResidencial
+        LEFT JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
+        INNER JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+        LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+        LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+        LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
+        LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
+        LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = co.tipo_lote AND oxc.id_catalogo = 27
+        INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39
+            GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
+        LEFT JOIN usuarios u6 ON u6.id_usuario = id_usuario_asignado
+        WHERE lo.liberaBandera = 1 AND lo.idLote IN (38006, 48458, 48495, 48619)
+        GROUP BY cl.proceso, lr.idProyecto, lo.idLote, lo.nombreLote,  cl.fechaApartado, co.nombre, re.nombreResidencial,
+        lo.idCliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, 
+        u0.id_usuario, u0.nombre, u0.apellido_paterno, u0.apellido_materno,
+        u1.id_usuario, u1.nombre, u1.apellido_paterno, u1.apellido_materno,
+        u2.id_usuario, u2.nombre, u2.apellido_paterno, u2.apellido_materno,
+        u3.id_usuario, u3.nombre, u3.apellido_paterno, u3.apellido_materno,
+        u4.id_usuario, u4.nombre, u4.apellido_paterno, u4.apellido_materno,
+        u5.id_usuario, u5.nombre, u5.apellido_paterno, u5.apellido_materno,
+        u6.id_usuario, u6.nombre, u6.apellido_paterno, u6.apellido_materno,
+        ds.costom2f, lo.sup, co.tipo_lote, oxc.nombre")->result_array();
+    }
+
+    public function getListaUsuariosParaAsignacion() {
+        return $this->db->query("SELECT id_usuario, UPPER(CONCAT(nombre , ' ', apellido_paterno, ' ', apellido_materno, ' ')) nombreUsuario 
+        FROM usuarios 
+        WHERE estatus = 1 AND tipo = 2")->result_array();
+    }
+
+}
+    function banderaLiberada($clave , $data){
+        try {
+            $this->db->where('idLote', $clave);
+            $this->db->update('lotes', $data);
+            $afftectedRows = $this->db->affected_rows();
+            return $afftectedRows > 0 ? TRUE : FALSE ;
+        }
+        catch(Exception $e) {
+            return $e->getMessage();
+        }
+    }
+    function get_proyecto_lista_yola($where = null){
+        return $this->db->query("SELECT lotx.proyectoReubicacion AS idResidencial,
+         CONCAT(res.nombreResidencial, ' - ' , res.descripcion) AS descripcion  
+        FROM loteXReubicacion lotx
+        
+		INNER JOIN residenciales res ON res.idResidencial = lotx.proyectoReubicacion
+        $where
+		GROUP BY lotx.proyectoReubicacion, CONCAT(res.nombreResidencial, ' - ' , res.descripcion)");
     }
 }

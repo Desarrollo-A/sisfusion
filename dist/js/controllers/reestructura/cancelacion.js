@@ -45,6 +45,7 @@ $(document).on('click', '.cancel', function (){
 $(document).on('click', '#saveCancel', function(){
     var idLote = $("#idLote").val();
     var obsLiberacion = $("#obsLiberacion").val();
+    
     if(obsLiberacion.trim() == ''){
         alerts.showNotification("top", "right", "Debe ingresar una observación.", "warning");
         return false;
