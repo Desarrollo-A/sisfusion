@@ -1226,8 +1226,8 @@ class Contraloria extends CI_Controller {
         $fechaVenc=$this->input->post('fechaVenc', true);
         $charactersNoPermit = array('$', ',');
         $totalNeto = $this->input->post('totalNeto', true);
-        $idMovimiento = $this->input->post('idMovimiento', true);
-        $perfil = $this->input->post('perfil', true);
+        $idMovimiento = intval($this->input->post('idMovimiento', true));
+        $perfil = intval($this->input->post('perfil', true));
         $totalNeto = str_replace($charactersNoPermit, '', $totalNeto);
         $idMovNuevo = 0;
         
