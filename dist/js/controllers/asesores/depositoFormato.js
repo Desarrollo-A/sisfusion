@@ -256,7 +256,7 @@ $(document).on('click', '#copropietario-collapse', function () {
     }
 });
 
-$(document).on('submit', '#deposito-seriedad-form', function (e) {
+$(document).on('submit', '#deposito-seriedad-form', async function (e) {
     e.preventDefault();
     if (!$("input[name='tipo_vivienda']").is(':checked')) {
         alerts.showNotification('top', 'right', 'Debes seleccionar un tipo de vivienda', 'danger');
@@ -295,12 +295,26 @@ $(document).on('submit', '#deposito-seriedad-form', function (e) {
         }, 1500);
         return;
     }
+
     const costoListaM2 = parseFloat($('#costoM2').val().replace('$', '').replace(',', ''));
     const costoFinalM2 = parseFloat($('#costom2f').val().replace('$', '').replace(',', ''));
-    if (costoFinalM2 > costoListaM2 || costoFinalM2 < ((costoListaM2 * .80))) {
-        alerts.showNotification('top', 'right', 'El COSTO POR M2 FINAL no debe ser superior al COSTO POR M2 LISTA ni debe ser inferior al 20% de descuento del COSTO POR M2 LISTA.', 'danger');
-        return;
+
+    const clienteInfo = await obtenerCliente(cliente);
+
+    if (![2,3,4].includes(clienteInfo.proceso)) {
+        if (costoFinalM2 > costoListaM2 || costoFinalM2 < ((costoListaM2 * .80))) {
+            alerts.showNotification('top', 'right', 'El COSTO POR M2 FINAL no debe ser superior al COSTO POR M2 LISTA ni debe ser inferior al 20% de descuento del COSTO POR M2 LISTA.', 'danger');
+            return;
+        }
+    } else {
+        if (costoListaM2 > 0) {
+            if (costoFinalM2 > costoListaM2 || costoFinalM2 < ((costoListaM2 * .80))) {
+                alerts.showNotification('top', 'right', 'El COSTO POR M2 FINAL no debe ser superior al COSTO POR M2 LISTA ni debe ser inferior al 20% de descuento del COSTO POR M2 LISTA.', 'danger');
+                return;
+            }
+        }
     }
+
     if (!validateInputArray('telefono2_cop[]', 'Celular')) {
         return;
     }
@@ -349,6 +363,14 @@ $(document).on('submit', '#deposito-seriedad-form', function (e) {
         }
     });
 });
+
+function obtenerCliente() {
+    return new Promise((resolve) => {
+        $.getJSON(`${general_base_url}Reestructura/obtenerClientePorId/${cliente}`, function (data) {
+            resolve(data);
+        });
+    });
+}
 
 /**
  * @param {string} input

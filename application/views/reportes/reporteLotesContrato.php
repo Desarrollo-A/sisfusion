@@ -46,6 +46,7 @@
                                                 <th>PROYECTO</th>
                                                 <th>LOTE</th>
                                                 <th>REFERENCIA</th>
+                                                <th>FECHA APARTADO</th>
                                                 <th>USUARIO</th>
                                                 <th>CLIENTE</th>
                                                 <th>SEDE</th>

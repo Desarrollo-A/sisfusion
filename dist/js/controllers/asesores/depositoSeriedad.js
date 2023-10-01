@@ -776,7 +776,7 @@ $(document).on('click', '#save1', function(e) {
                     $('#save1').prop('disabled', false);
                     $('#modal1').modal('hide');
                     $('#tabla_deposito_seriedad').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Error al envial la solicitud.", "danger");
+                    alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
                 } else if(response.message == 'MISSING_AUTORIZACION'){
                     $('#save1').prop('disabled', false);
                     $('#modal1').modal('hide');
@@ -792,6 +792,11 @@ $(document).on('click', '#save1', function(e) {
                     $('#modal1').modal('hide');
                     $('#tabla_deposito_seriedad').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "El correo electrónico y/o número telefónico no están verificados.", "danger");
+                } else if (response.message == 'MISSING_AUTFI') {
+                    $('#save1').prop('disabled', false);
+                    $('#modal1').modal('hide');
+                    $('#tabla_deposito_seriedad').DataTable().ajax.reload();
+                    alerts.showNotification("top", "right", "Autorización de mensualidad pendiente.", "danger");
                 }
             },
             error: function(){
@@ -985,6 +990,21 @@ $(document).on('click', '#save3', function(e) {
                     $('#modal3').modal('hide');
                     $('#tabla_deposito_seriedad').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                } else if(response.message == 'MISSING_AUTORIZACION'){
+                    $('#save3').prop('disabled', false);
+                    $('#modal3').modal('hide');
+                    $('#tabla_deposito_seriedad').DataTable().ajax.reload();
+                    alerts.showNotification("top", "right", "EN PROCESO DE AUTORIZACIÓN. Hasta que la autorización no haya sido aceptada o rechazada, no podrás avanzar la solicitud.", "danger");
+                } else if(response.message == 'OBSERVACION_CONTRATO'){
+                    $('#save3').prop('disabled', false);
+                    $('#modal3').modal('hide');
+                    $('#tabla_deposito_seriedad').DataTable().ajax.reload();
+                    alerts.showNotification("top", "right", "EN PROCESO DE LIBERACIÓN. No podrás avanzar la solicitud hasta que el proceso de liberación haya concluido", "danger");
+                } else if (response.message == 'MISSING_AUTFI') {
+                    $('#save3').prop('disabled', false);
+                    $('#modal3').modal('hide');
+                    $('#tabla_deposito_seriedad').DataTable().ajax.reload();
+                    alerts.showNotification("top", "right", "Autorización de mensualidad pendiente.", "danger");
                 }
             },
             error: function( data ){

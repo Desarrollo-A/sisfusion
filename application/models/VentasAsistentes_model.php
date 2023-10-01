@@ -100,8 +100,6 @@ class VentasAsistentes_model extends CI_Model {
         $id_rol = $this->session->userdata('id_rol');
         $id_usuario = $this->session->userdata('id_usuario');
         $id_lider = $this->session->userdata('id_lider');
-        $tipo = $this->session->userdata('tipo');
-        $tipo_proceso = "AND cl.proceso IN (0, 1)";
         if (in_array($id_rol, array(17, 70))) { // MJ: ES CONTRALORÍA Y EJECUTIVO DE CONTRALORÍA JR
             $filtroUsuarioBR = '';
             if($id_usuario == 2815 || $id_usuario == 12931)
@@ -125,10 +123,10 @@ class VentasAsistentes_model extends CI_Model {
                 $filtroSede = "AND l.ubicacion IN ('$id_sede')";
                 
             if (in_array($id_usuario, array(28, 3)))
-                $filtroSede = "AND l.ubicacion IN ('2', '4', '13', '14', '15')";
+                $filtroSede = "AND l.ubicacion IN ('2', '4', '13', '14', '15','16')";
 
             if (in_array($id_usuario, array(28, 3)))
-                $filtroSede = "AND l.ubicacion IN ('2', '4', '13', '14', '15')";
+                $filtroSede = "AND l.ubicacion IN ('2', '4', '13', '14', '15','16')";
 
             $filtroGerente = "";
             if ($id_usuario == 12318) { // EMMA CECILIA MALDONADO RAMÍREZ
@@ -146,11 +144,6 @@ class VentasAsistentes_model extends CI_Model {
                 $filtroGerente = "AND cl.id_subdirector IN ($id_lider)";
                 $filtroSede = "";
             } 
-            if ($id_rol == 7 && $tipo == 2) { // MJ: ASESOR OOAM
-                $tipo_proceso = "AND cl.proceso IN (2, 3, 4)";
-                $filtroGerente = "AND cl.id_asesor = $id_usuario";
-                $filtroSede = "";
-            }
             $where = "l.idStatusContratacion IN (7, 11) AND l.idMovimiento IN (37, 7, 64, 66, 77, 41) AND l.status8Flag = 0 AND cl.status = 1 $filtroSede $filtroGerente";
         }
 
@@ -163,7 +156,7 @@ class VentasAsistentes_model extends CI_Model {
         CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
         cond.idCondominio, cl.expediente, UPPER(mo.descripcion) AS descripcion, ISNULL(oxc0.nombre, 'Normal') tipo_proceso
         FROM lotes l
-        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote AND cl.status = 1 $tipo_proceso
+        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote AND cl.status = 1
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
         INNER JOIN movimientos mo ON mo.idMovimiento = l.idMovimiento
@@ -278,8 +271,6 @@ class VentasAsistentes_model extends CI_Model {
         $id_usuario = $this->session->userdata('id_usuario');
         $id_sede = $this->session->userdata('id_sede');
         $id_lider = $this->session->userdata('id_lider');
-        $tipo = $this->session->userdata('tipo');
-        $tipo_proceso = "AND cl.proceso IN (0, 1)";
         if (in_array($id_rol, array(17, 70))){ // MJ: ES CONTRALORÍA Y EJECUTIVO CONTRALORÍA JR
             $filtroUsuarioBR = '';
             if($id_usuario == 2815 || $id_usuario == 12931)
@@ -303,7 +294,7 @@ class VentasAsistentes_model extends CI_Model {
                 $filtroSede = "AND l.ubicacion IN ('$id_sede')";
 
             if (in_array($id_usuario, array(28, 3)))
-                $filtroSede = "AND l.ubicacion IN ('2', '4', '13', '14', '15')";
+                $filtroSede = "AND l.ubicacion IN ('2', '4', '13', '14', '15','16')";
 
             $filtroGerente = "";
             if ($id_usuario == 12318) { // EMMA CECILIA MALDONADO RAMÍREZ
@@ -321,11 +312,6 @@ class VentasAsistentes_model extends CI_Model {
                 $filtroGerente = "AND cl.id_subdirector IN ($id_lider)";
                 $filtroSede = "";
             } 
-            if ($id_rol == 7 && $tipo == 2) { // MJ: ASESOR OOAM
-                $tipo_proceso = "AND cl.proceso IN (2, 3, 4)";
-                $filtroGerente = "AND cl.id_asesor = $id_usuario";
-                $filtroSede = "";
-            }
             $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1 $filtroSede $filtroGerente";
         }
         $query = $this->db->query(" SELECT l.idLote, cl.id_cliente,
@@ -338,7 +324,7 @@ class VentasAsistentes_model extends CI_Model {
         CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) AS gerente,
         cond.idCondominio, l.observacionContratoUrgente AS vl, sd.nombre as nombreSede, ISNULL(oxc0.nombre, 'Normal') tipo_proceso
         FROM lotes l
-        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote AND cl.status = 1 $tipo_proceso
+        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote AND cl.status = 1
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
         LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario

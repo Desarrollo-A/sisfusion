@@ -1,9 +1,12 @@
 $(document).ready(function () {
     $("#tabla_cancelacion").addClass('hide');
     
-    $.post(general_base_url + "Postventa/lista_proyecto", function (data) {
+    $.post(general_base_url + "Reestructura/lista_proyecto", function (data) {
         var len = data.length;
-        var ids = '1, 11, 28, 14, 12, 32, 22, 34';
+        const ids = data.map((row) => {
+            return row.idResidencial;
+        }).join(',');
+
         $("#proyecto").append($('<option>').val(ids).text('SELECCIONAR TODOS'));
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
@@ -88,17 +91,17 @@ function fillTable(index_proyecto) {
         },
         {
             data: function (d) {
-                if(d.comentarioLiberacion == "CANCELACIÓN DE CONTRATO"){
-                    return '<span class="label lbl-azure">CANCELACIÓN DE CONTRATO</span>';
-                }else if(d.comentarioLiberacion == "RECESION DE CONTRATO"){
-                    return '<span class="label lbl-green">RECESION DE CONTRATO</span>';
-                }
-                return '<p class="m-0">' + d.comentarioLiberacion + '</p>';
+                return '<p class="m-0">' + d.nombreCliente + '</p>';
             }
         },
         {
             data: function(d){
                 return '<p class="m-0">'+d.idLote+'</p>';
+            }
+        },
+        {
+            data: function(d){
+                return '<p class="m-0">'+d.comentarioLiberacion+'</p>';
             }
         }],
         columnDefs: [{
@@ -108,7 +111,7 @@ function fillTable(index_proyecto) {
             orderable: false
         }],
         ajax: {
-            url: general_base_url + "PostVenta/getregistros",
+            url: general_base_url + "Postventa/getregistros",
             dataSrc: "",
             type: "POST",
             cache: false,

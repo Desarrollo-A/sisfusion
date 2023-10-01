@@ -33,8 +33,9 @@
                                                     <th>PROYECTO</th>
                                                     <th>CONDOMINIO</th>
                                                     <th>LOTE</th>
-                                                    <th>COMENTARIO LIBERACION</th>
+                                                    <th>CLIENTE</th>
                                                     <th>ID LOTE</th>
+                                                    <th>COMENTARIO</th>
                                                 </tr>
                                             </thead>
                                         </table>

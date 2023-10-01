@@ -47,7 +47,7 @@ class Juridico_model extends CI_Model {
 		LEFT JOIN usuarios juridico ON l.asig_jur = juridico.id_usuario
 		LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
 		LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
-        WHERE l.idStatusContratacion IN (6, 7) AND l.idMovimiento IN (36, 6, 23, 76, 83, 95, 97) AND cl.status = 1
+        WHERE l.status = 1 AND l.idStatusContratacion IN (6, 7) AND l.idMovimiento IN (36, 6, 23, 76, 83, 95, 97) AND cl.status = 1
         GROUP BY l.idLote, cl.id_cliente, cl.fechaApartado, cl.nombre, cl.apellido_paterno, cl.apellido_materno, l.nombreLote, l.idStatusContratacion,
         l.idMovimiento, l.modificado, cl.rfc, CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
         tv.tipo_venta, cond.idCondominio, l.observacionContratoUrgente, et.descripcion,
@@ -91,7 +91,7 @@ class Juridico_model extends CI_Model {
 			LEFT JOIN usuarios juridico ON l.asig_jur = juridico.id_usuario
 			LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
 			LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
-			WHERE l.idStatusContratacion IN (6, 7) AND l.idMovimiento IN (36, 6, 23, 76, 83, 95, 97, 112) AND cl.status = 1 $filtroSede $filtroAsignacion
+			WHERE l.status = 1 AND l.idStatusContratacion IN (6, 7) AND l.idMovimiento IN (36, 6, 23, 76, 83, 95, 97, 112) AND cl.status = 1 $filtroSede $filtroAsignacion
 			GROUP BY l.idLote, cl.id_cliente, cl.fechaApartado, cl.nombre, cl.apellido_paterno, cl.apellido_materno, l.nombreLote, l.idStatusContratacion,
 			l.idMovimiento, l.modificado, cl.rfc, CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
 			tv.tipo_venta, cond.idCondominio, l.observacionContratoUrgente, et.descripcion,

@@ -131,6 +131,7 @@
                                                 <tr>
                                                     <th></th>
                                                     <th>TIPO DE VENTA</th>
+                                                    <th>TIPO DE PROCESO</th>
                                                     <th>PROYECTO</th>
                                                     <th>CONDOMINIO</th>
                                                     <th>LOTE</th>
