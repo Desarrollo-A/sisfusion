@@ -33,9 +33,9 @@ $(document).ready(function () {
             text: '<i class="fa fa-file-excel-o" aria-hidden="true" title="DESCARGAR ARCHIVO DE EXCEL"></i>',
             className: 'btn buttons-excel',
             titleAttr: 'DESCARGAR ARCHIVO DE EXCEL',
-            title: 'Dispersión de pago',
+            title: 'Reporte Comisiones Dispersión',
             exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8,9,10,11],
+                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulos_intxt[columnIdx] + ' ';
@@ -67,7 +67,6 @@ $(document).ready(function () {
             },
             {data: 'nombreResidencial'},
             {data: 'nombreCondominio'},
-            // {data: 'nombreLote'},
             { data: function (d) {
                 if(d.id_cliente_reubicacion_2 >1 ) {
                     nombreLote =  d.nombreLoteReub;
@@ -111,7 +110,7 @@ $(document).ready(function () {
                         labelEstatus ='<span class="label lbl-cerulean">SOLICITADO MKT</span>'+' '+d.plan_descripcion;
                     }else {
                         if(d.plan_descripcion=="-")
-                            return '<p>SIN PLAN</p>'
+                            return '<p>SIN PLAN</p>';
                         else
                             labelEstatus =`<label class="label lbl-azure btn-dataTable" data-toggle="tooltip"  data-placement="top"  title="VER MÁS DETALLES"><b><span  onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span></label>`;
                     }
@@ -119,55 +118,37 @@ $(document).ready(function () {
                 return labelEstatus;
             }},
             { data: function (d) {
-                var fechaNeodata;
                 var rescisionLote;
                 var reactivo;
-                fechaNeodata = '<br><span class="label lbl-azure">'+d.fecha_neodata+'</span>';
                 rescisionLote = '';
                 reactivo = '';
-                if(d.fecha_neodata <= '01 OCT 20' || d.fecha_neodata == null ) {
-                    fechaNeodata = '<span class="label lbl-gray">Sin Definir</span>';
-                }
                 if (d.registro_comision == 8){
                     rescisionLote = '<br><span class="label lbl-warning">Recisión Nueva Venta</span>';
                 }
                 if(d.id_cliente_reubicacion_2 != 0 ) {
-                    if(d.bandera_dispersion == 1 && d.registro_comision == 9){//NUEVA VENTAS 1°
-                        // reactivo = 'NUEVA VENTAS 1°';
+                    if((d.bandera_dispersion == 1 && d.registro_comision == 9) ||
+                    (d.bandera_dispersion == 2 && d.registro_comision == 9) ||
+                    (d.bandera_dispersion == 2  && d.registro_comision != 9) ||
+                    (d.bandera_dispersion == 1  && d.registro_comision != 9 && validarLiquidadas == 0 || (d.registro_comision == 1 && d.validaLiquidadas == 0 && d.banderaOOAM == 0))){
                         reactivo = '<br><span class="label lbl-gray">DISPERSIÓN VENTAS</span>';
-                    }else if(d.bandera_dispersion == 2 && d.registro_comision == 9){//REUBICADAS 1°
-                        // reactivo = 'REUBICADAS 1°';
-                        reactivo = '<br><span class="label lbl-gray">DISPERSIÓN VENTAS</span>';
-                    } else if(d.bandera_dispersion == 3  && d.registro_comision == 9){//LIQUIDADA 1°
-                        // reactivo = 'LIQUIDADA 1°';
-                        reactivo = '<br><span class="label lbl-lightBlue">DISPERSIÓN OOAM</span>';
-                    }else if(d.bandera_dispersion == 1  && d.registro_comision != 9 && validarLiquidadas == 0 || (d.registro_comision == 1 && d.validaLiquidadas == 0 && d.banderaOOAM == 0)){//NUEVA VENTAS 2°
-                        // reactivo = 'NUEVA VENTAS 2°';
-                        reactivo = '<br><span class="label lbl-gray">DISPERSIÓN VENTAS</span>';
-                    }else if(d.bandera_dispersion == 2  && d.registro_comision != 9){//REUBICADAS 2°
-                        // reactivo = 'REUBICADAS';
-                        reactivo = '<br><span class="label lbl-gray">DISPERSIÓN VENTAS</span>';
-                    } else if(d.bandera_dispersion == 3 && d.registro_comision != 9){//LIQUIDADA 2°
-                        // reactivo = 'LIQUIDADA 2°';
-                        reactivo = '<br><span class="label lbl-lightBlue">DISPERSIÓN OOAM</span>';
-                    } else if((d.registro_comision == 1 && d.validaLiquidadas == 1 && (d.banderaOOAM == 0 || d.banderaOOAM > 0 )) || (d.registro_comision == 1 && d.validaLiquidadas == 0 && d.banderaOOAM > 0)){// OOAM 1°
-                        // reactivo = 'OOAM 1-2°';
-                        reactivo = '<br><span class="label lbl-lightBlue">DISPERSIÓN OOAM</span>';
+                    } else if((d.bandera_dispersion == 3  && d.registro_comision == 9) ||
+                    (d.bandera_dispersion == 3 && d.registro_comision != 9) ||
+                    ((d.registro_comision == 1 && d.validaLiquidadas == 1 && (d.banderaOOAM == 0 || d.banderaOOAM > 0 )) || (d.registro_comision == 1 && d.validaLiquidadas == 0 && d.banderaOOAM > 0))){//LIQUIDADA 1°
+                        reactivo = '<br><span class="label lbl-lightBlue">DISPERSIÓN EEC</span>';
                     } 
                 }
-
-                return fechaNeodata+rescisionLote+reactivo;
+                return rescisionLote+reactivo;
             }},
             { data: function (d) {
-                var ultima_dispersion;
+                var fechaActualizacion;
 
-                if( d.ultima_dispersion == null ) {
-                    ultima_dispersion ='<span class="label lbl-gray">Sin Definir</span>';
+                if(d.fecha_sistema == null) {
+                    fechaActualizacion ='<span class="label lbl-gray">Sin Definir</span>';
                 }else {
-                    ultima_dispersion = '<br><span class="label lbl-lightBlue">'+d.ultima_dispersion+'</span>';
+                    fechaActualizacion = '<span class="label lbl-azure">'+d.fecha_sistema+'</span>';
                 }
                 
-                return ultima_dispersion;
+                return fechaActualizacion;
             }},
             
             { data: function (d) {
@@ -176,6 +157,11 @@ $(document).ready(function () {
                 var Mensaje = 'Verificar en NEODATA';
                 varColor2  = 'btn-gray';
                 var RegresaActiva = '';
+
+                if(d.fecha_sistema != null && d.registro_comision != 8 && d.registro_comision != 0) {
+                    RegresaActiva = '<button href="#" data-idpagoc="' + d.idLote + '" data-nombreLote="' + d.nombreLote + '"  ' +'class="btn-data btn-violetChin update_bandera" data-toggle="tooltip" data-placement="top" title="Enviar a activas">' +'<i class="fas fa-undo-alt"></i></button>';
+                }
+
                 if(d.penalizacion == 1 && d.bandera_penalizacion == 0 && d.id_porcentaje_penalizacion != '4') {
                     BtnStats += `<button href="#" value="${d.idLote}" data-value="${d.nombreLote}" data-cliente="${d.id_cliente}" class="btn-data btn-blueMaderas btn-penalizacion" data-toggle="tooltip"  data-placement="top" title="Aprobar Penalización"> <i class="material-icons">check</i></button>
                     <button href="#" value="${d.idLote}" data-value="${d.nombreLote}" data-cliente="${d.id_cliente}" class="btn-data btn-blueMaderas btn-Nopenalizacion btn-warning" data-toggle="tooltip"  data-placement="top" title="Rechazar Penalización"> <i class="material-icons">close</i> </button>`;
@@ -352,12 +338,7 @@ $(document).ready(function () {
                         }else{
                             BtnStats += ``;
                         
-                    }
-
-                        if(d.fecha_modificacion != null && d.registro_comision != 8 ) {
-                            RegresaActiva = '<button href="#" data-idpagoc="' + d.idLote + '" data-nombreLote="' + d.nombreLote + '"  ' +'class="btn-data btn-violetChin update_bandera" data-toggle="tooltip" data-placement="top" title="Enviar a activas">' +'<i class="fas fa-undo-alt"></i></button>';
-                        }
-                        
+                    }   
                     }
                 }
                 return '<div class="d-flex justify-center">'+BtnStats+'</div>';
@@ -404,10 +385,24 @@ $(document).ready(function () {
         const idLote = $(this).val();
         const nombreLote = $(this).attr("data-value");
         const statusLote = $(this).attr("data-statusLote");
+     
         $('#id-lote-detenido').val(idLote);
         $('#statusLote').val(statusLote);
+        $('#anterior').val(0);
+
         $("#detenciones-modal .modal-header").html("");
-        $("#detenciones-modal .modal-header").append('<h4 class="modal-title">Enviar a controversia: <b>'+nombreLote+'</b></h4>');
+                
+        $.getJSON( general_base_url + "ComisionesNeo/getStatusNeodata/"+idLote).done( function( data ){
+            if(data.length > 0){
+                $('#saldoNeodata').val(data[0].Aplicado);
+                $("#detenciones-modal .modal-header").append('<h4 class="modal-title">Enviar a controversia: <b>'+nombreLote+'</b></h4>');
+
+            } else{
+                $('#saldoNeodata').val(0);
+                $("#detenciones-modal .modal-header").append('<h4 class="modal-title">Sin localizar en NEODATA  <b>'+nombreLote+'</b>, el lote se enviará a controversia sin embargo hay que regresarlo manualmente ya que no detectamos saldo ligado a este lote y es indispensable para regresarlo automáticamente. </h4>');
+            }     
+        }); 
+
         $("#detenciones-modal").modal();
     });
 
@@ -842,11 +837,14 @@ $('#detenidos-form').on('submit', function (e) {
                 document.getElementById('detenerLote').disabled = false;
                 alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
                 $('#tabla_dispersar_comisiones').DataTable().ajax.reload();
+                $('#spiner-loader').addClass('hide');
             } else {
                 alerts.showNotification("top", "right", "Ocurrió un problema, vuelva a intentarlo más tarde.", "warning");
+                $('#spiner-loader').addClass('hide');
             }
         }, error: function(){
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            $('#spiner-loader').addClass('hide');
         }
     });
 });
@@ -1095,20 +1093,6 @@ $(document).on('click', '.update_bandera', function(e){
         $("#myUpdateBanderaModal").modal();
     $("#id_pagoc").val(id_pagoc);
     $("#param").val(1);
-});
-
-$("#tabla_dispersar_comisiones tbody").on('click', '.btn-detener', function () {
-    $("#motivo").val("");
-    $("#motivo").selectpicker('refresh');
-    $("#descripcion").val("");
-    const idLote = $(this).val();
-    const nombreLote = $(this).attr("data-value");
-    const statusLote = $(this).attr("data-statusLote");
-    $('#id-lote-detenido').val(idLote);
-    $('#statusLote').val(statusLote);
-    $("#detenciones-modal .modal-header").html("");
-    $("#detenciones-modal .modal-header").append('<h4 class="modal-title">Enviar a controversia: <b>'+nombreLote+'</b></h4>');
-    $("#detenciones-modal").modal();
 });
 
 function showDetailModal(idPlan) {
