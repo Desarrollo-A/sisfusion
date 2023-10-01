@@ -134,7 +134,7 @@ $("#tabla_ingresar_9").ready(function () {
                             '<i class="fas fa-thumbs-up"></i></button>';
                         cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                             'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '"  ' +
-                            'class="btn-data btn-warning cancelReg" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (JURIDICO)">' +
+                            'class="btn-data btn-warning cancelReg" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO DE ESTATUS">' +
                             '<i class="fas fa-thumbs-down"></i></button>';
                     } else
                         cntActions = 'N/A';

@@ -688,6 +688,7 @@ function Editar(i,precio,id_usuario){
 }
 
 function SaveAjuste(i){
+    document.getElementById('btn_vc').disabled=false;
     $('#spiner-loader').removeClass('hidden');
     $('#btn_'+i).removeClass('btn-success');
     $('#btn_'+i).addClass('btn-default');
@@ -1229,7 +1230,7 @@ $(".buscarLote").click( function() {
                                         <button type="button" id="btn_${i}" 
                                         ${(id_usuario_general != 1 && id_usuario_general != 2767 && id_usuario_general != 2826 && id_usuario_general != 4878 && id_usuario_general != 5957 && id_usuario_general != 2749) ? 'style="display:none" ' : 'style="display:show" '} 
                                         onclick="SaveAjuste(${i})" ${v.descuento == 1 || v.descuento > 1  ? 'style="display:none" ' : 'style="display:show" ' }  
-                                        data-toggle="tooltip" 
+                                        data-toggle="tooltip" disabled
                                         data-placement="top" title="GUARDAR PORCENTAJE" class="btn btn-dark btn-round btn-fab btn-fab-mini"><span class="material-icons">check</span>
                                         </button>`;
                                         // boton topar
@@ -1754,6 +1755,7 @@ function QuitarPago(i){
 
 function Editar(i,precio,id_usuario){
     $('#modal_avisos .modal-body').html('');
+    document.getElementById('btn_'+i).disabled=false;
     let precioLote = parseFloat(precio);
     let nuevoPorce1 = replaceAll($('#porcentaje_'+i).val(), ',',''); 
     let nuevoPorce = replaceAll(nuevoPorce1, '%',''); 
@@ -1862,6 +1864,8 @@ function Editar(i,precio,id_usuario){
 }
 
 function SaveAjuste(i){
+    document.getElementById('btn_'+i).disabled=true;
+    
     $('#btn_'+i).removeClass('btn-success');
     $('#btn_'+i).addClass('btn-default');
     let id_comision = $('#id_comision_'+i).val();
@@ -1888,6 +1892,7 @@ function SaveAjuste(i){
         type: 'POST', // For jQuery < 1.9
         success:function(response){
             alerts.showNotification("top", "right", "Modificación almacenada con éxito.", "success");
+
         }
     });
 }

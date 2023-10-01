@@ -48,7 +48,7 @@ sp = { //  SELECT PICKER
 function fillDataTable(typeTransaction, beginDate, endDate, where) {
     $('#Jtabla').dataTable( {
         "ajax": {
-            "url": `${general_base_url}index.php/contraloria/getRevision10`,
+            "url": `${general_base_url}Contraloria/getRevision10`,
             "dataSrc": "",
             "type": "POST",
             cache: false,
@@ -89,7 +89,7 @@ function fillDataTable(typeTransaction, beginDate, endDate, where) {
             titleAttr: 'Estatus 10 solicitud enganche',
             title:'Estatus 10 solicitud enganche',
             exportOptions: {
-                columns: [0,1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                columns: [0,1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulosInventario[columnIdx]  + ' ';
@@ -106,7 +106,7 @@ function fillDataTable(typeTransaction, beginDate, endDate, where) {
             orientation: 'landscape',
             pageSize: 'LEGAL',
             exportOptions: {
-                columns: [0,1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                columns: [0,1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulosInventario[columnIdx]  + ' ';
@@ -167,6 +167,12 @@ function fillDataTable(typeTransaction, beginDate, endDate, where) {
                     return data.fechaVenc;
                 }
             },
+            {
+                data: function (data)
+                {
+                    return data.representanteLegal;
+                }
+            }
         ]
     })
 }

@@ -52,7 +52,7 @@ function fillTable(typeTransaction, beginDate, endDate) {
                 titleAttr: 'REPORTE ESTATUS 9',
                 title: 'Reporte estatus 9',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + titulos[columnIdx] + ' ';
@@ -81,11 +81,13 @@ function fillTable(typeTransaction, beginDate, endDate) {
             { data: 'nombreCondominio' },
             { data: 'nombreLote' },
             { data: 'referencia' },
+            { data: 'nombreCliente' },
             { data: 'nombreGerente' },
             { data: 'enganche' },
             { data: 'total' },
             { data: 'modificado' },
             { data: 'nombreUsuario' },
+            { data: 'comentario' },
             { data: 'fechaApartado' },
             {
                 data: function (d) {
@@ -100,7 +102,7 @@ function fillTable(typeTransaction, beginDate, endDate) {
                     if (d.id_cliente_reubicacion != 0 && d.id_cliente_reubicacion != null)
                         return d.fechaAlta;
                     else
-                        return 'NO APLICA';
+                        return '<span class="label lbl-gray">NO APLICA</span>';
                 }
             }
         ],

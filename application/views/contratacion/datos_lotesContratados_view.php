@@ -38,6 +38,7 @@
                                                     <th>PRECIO DE FIANZA</th>
                                                     <th>REUBICACIÓN</th>
                                                     <th>FECHA DE REUBICACIÓN</th>
+                                                    <th>CONTRATO FIRMADO</th>
                                                 </tr>
                                             </thead>
                                         </table>
@@ -53,4 +54,4 @@
     </div>
 </body>
 <?php $this->load->view('template/footer');?>
-<script src="<?=base_url()?>dist/js/controllers/contratacion/datos_lotesContratados.js"></script>
+<script src="<?=base_url()?>dist/js/controllers/contratacion/datos_lotesContratados.js?v=1.1.1"></script>

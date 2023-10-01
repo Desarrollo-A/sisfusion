@@ -11,13 +11,14 @@ class Administracion_model extends CI_Model {
 
 	public function get_datos_lote_11 () {
         $query = $this->db-> query("SELECT l.idLote, cl.id_cliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
-        l.nombreLote, l.idStatusContratacion, l.idMovimiento, CONVERT(varchar, l.modificado, 20) modificado, cl.rfc, l.totalNeto, CONVERT(varchar, l.fechaSolicitudValidacion, 20) fechaSolicitudValidacion,
+        l.nombreLote, l.idStatusContratacion, l.idMovimiento, CONVERT(varchar, l.modificado, 20) modificado, cl.rfc, l.totalNeto, l.totalValidado, CONVERT(varchar, l.fechaSolicitudValidacion, 20) fechaSolicitudValidacion,
         CAST(l.comentario AS varchar(MAX)) as comentario, CONVERT(varchar, l.fechaVenc, 20) fechaVenc, l.perfil, cond.nombre as nombreCondominio, res.nombreResidencial, l.ubicacion,
         ISNULL(tv.tipo_venta, 'Sin especificar') tipo_venta, l.observacionContratoUrgente as vl,
         concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
         concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
-        cond.idCondominio, cl.expediente, mo.descripcion, se.nombre nombreSede, hl.modificado ultimaFechaEstatus7
+        cond.idCondominio, cl.expediente, mo.descripcion, se.nombre nombreSede, hl.modificado ultimaFechaEstatus7,
+        ISNULL(oxc0.nombre, 'Normal') tipo_proceso
         FROM lotes l
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote AND cl.status = 1
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
@@ -30,15 +31,16 @@ class Administracion_model extends CI_Model {
         LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
         LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes 
         WHERE idStatusContratacion IN (7, 8) AND idMovimiento IN (37, 7, 64, 77, 67, 38, 65) AND status = 1 GROUP BY idLote, idCliente) hl ON hl.idLote = l.idLote AND hl.idCliente = l.idCliente
-        WHERE l.idStatusContratacion IN (7, 8) AND  l.idMovimiento IN (38, 65, 37, 7, 64, 77, 67) AND ISNULL(l.validacionEnganche, 'NULL') NOT IN ('VALIDADO')
+        LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
+        WHERE l.status = 1 AND l.idStatusContratacion IN (7, 8) AND  l.idMovimiento IN (38, 65, 37, 7, 64, 77, 67) AND ISNULL(l.validacionEnganche, 'NULL') NOT IN ('VALIDADO')
         GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
-        l.nombreLote, l.idStatusContratacion, l.idMovimiento, CONVERT(varchar, l.modificado, 20), cl.rfc, l.totalNeto, CONVERT(varchar, l.fechaSolicitudValidacion, 20),
+        l.nombreLote, l.idStatusContratacion, l.idMovimiento, CONVERT(varchar, l.modificado, 20), cl.rfc, l.totalNeto, l.totalValidado, CONVERT(varchar, l.fechaSolicitudValidacion, 20),
         CAST(l.comentario AS varchar(MAX)), CONVERT(varchar, l.fechaVenc, 20), l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
         tv.tipo_venta, l.observacionContratoUrgente,
         concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
         concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-        cond.idCondominio, cl.expediente, mo.descripcion, se.nombre, hl.modificado
+        cond.idCondominio, cl.expediente, mo.descripcion, se.nombre, hl.modificado, ISNULL(oxc0.nombre, 'Normal')
         ORDER BY l.nombreLote");
         return $query->result();
     }
