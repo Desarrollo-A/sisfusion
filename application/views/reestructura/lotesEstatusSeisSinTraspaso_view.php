@@ -44,5 +44,5 @@
     <?php $this->load->view('template/footer');?>
     <script src="<?= base_url() ?>dist/js/es.js"></script>
     <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
-    <script src="<?=base_url()?>dist/js/controllers/reportes/lotesEstatusSeisSinTraspaso.js"></script>
+    <script src="<?=base_url()?>dist/js/controllers/reestructura/lotesEstatusSeisSinTraspaso.js"></script>
 </body>
