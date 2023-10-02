@@ -91,8 +91,8 @@ function fillTable(typeTransaction, beginDate, endDate, idResidencial,condominio
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
-                titleAttr: 'Registro de clientes',
-                title: 'Registro de estatus 7',
+                titleAttr: 'REGISTRO DE ESTATUS 7',
+                title: 'V',
                 exportOptions: {
                     columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                     format: 

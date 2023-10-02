@@ -418,8 +418,9 @@
 
 // filtro de condominios por residencial PARA SUR Y SAN LUIS
 	public function getResidencialQro() {
+		$where = !in_array($this->session->userdata('id_rol'), array(17, 70, 71, 73)) ? "AND idResidencial NOT IN (14)" : "";
 		$query = $this->db-> query("SELECT CONCAT(nombreResidencial, ' - ', UPPER(CONVERT(VARCHAR(50), descripcion))) nombreResidencial, idResidencial, descripcion, 
-		ciudad, empresa, clave_residencial, abreviatura, active_comission, sede_residencial, sede FROM residenciales WHERE status = 1");
+		ciudad, empresa, clave_residencial, abreviatura, active_comission, sede_residencial, sede FROM residenciales WHERE status = 1 $where");
 		return $query->result_array();
 	}
 
@@ -1574,10 +1575,7 @@
         WHERE idStatusContratacion = 15 AND idMovimiento = 45 
         GROUP BY idStatusContratacion, idMovimiento, idLote, status, usuario) hd ON hd.idLote = lotes.idLote AND hd.idStatusContratacion = 15 AND hd.idMovimiento = 45 AND hd.status = 1
         LEFT JOIN usuarios u ON CAST(u.id_usuario AS VARCHAR(45)) = CAST(hd.usuario AS VARCHAR(45))
-				
 		LEFT JOIN historial_documento hd2 ON hd2.idLote = lotes.idLote AND hd2.idCliente = lotes.idCliente AND hd2.tipo_doc = 30
-
-
         WHERE lotes.status = 1 AND lotes.idStatusContratacion = 15 AND lotes.idMovimiento = 45
         GROUP BY lotes.idLote, s.nombre, cl.id_cliente, cl.nombre, cl.apellido_materno, cl.apellido_paterno,
         lotes.nombreLote, lotes.idStatusContratacion, lotes.idMovimiento, hd.modificado,
@@ -3725,29 +3723,25 @@
         return $query->result_array();
     }
 
-		public function get_auts_by_lote($idLote)
-	{
-		$condicionToAsesor = '';
-		if($this->session->userdata('id_rol') == 7)
-		{
-			$condicionToAsesor = 'autorizaciones.id_sol='.$this->session->userdata('id_usuario').' AND';
+		public function get_auts_by_lote($idLote) {
+			$condicionToAsesor = '';
+			if($this->session->userdata('id_rol') == 7)
+				$condicionToAsesor = 'autorizaciones.id_sol='.$this->session->userdata('id_usuario').' AND';
+			return $this->db-> query("SELECT res.nombreResidencial, cond.nombre as nombreCondominio, lotes.nombreLote, autorizaciones.estatus, autorizaciones.autorizacion,
+			autorizaciones.fecha_creacion, solicitante.usuario as sol, autorizador.usuario as aut, autorizaciones.id_autorizacion as aut_id, autorizaciones.idLote,
+			his.fecha_ultimo_movimiento as ultima_fecha,
+			CONCAT(autorizador.nombre,' ',autorizador.apellido_paterno,' ',autorizador.apellido_materno) AS nombreAUT
+			FROM autorizaciones
+			INNER JOIN lotes ON lotes.idLote = autorizaciones.idLote
+			INNER JOIN clientes ON clientes.id_cliente = autorizaciones.idCliente
+			INNER JOIN condominios cond ON cond.idCondominio = lotes.idCondominio
+			INNER JOIN residenciales res ON res.idResidencial = cond.idResidencial
+			INNER JOIN usuarios solicitante ON autorizaciones.id_sol = solicitante.id_usuario
+			INNER JOIN usuarios autorizador ON autorizaciones.id_aut = autorizador.id_usuario
+			INNER JOIN (SELECT id_autorizacion, MAX(fecha_creacion) fecha_ultimo_movimiento FROM historial_autorizaciones
+			GROUP BY id_autorizacion) his ON his.id_autorizacion = autorizaciones.id_autorizacion
+			WHERE clientes.status = 1 AND ".$condicionToAsesor." lotes.idLote = $idLote")->result_array();
 		}
-		$query = $this->db-> query("SELECT res.nombreResidencial, cond.nombre as nombreCondominio, lotes.nombreLote, autorizaciones.estatus, autorizaciones.autorizacion,
-		autorizaciones.fecha_creacion, solicitante.usuario as sol, autorizador.usuario as aut, autorizaciones.id_autorizacion as aut_id, autorizaciones.idLote,
-		his.fecha_ultimo_movimiento as ultima_fecha,
-		CONCAT(autorizador.nombre,' ',autorizador.apellido_paterno,' ',autorizador.apellido_materno) AS nombreAUT
-		FROM autorizaciones
-        INNER JOIN lotes ON lotes.idLote = autorizaciones.idLote
-        INNER JOIN clientes ON clientes.id_cliente = autorizaciones.idCliente
-		INNER JOIN condominios cond ON cond.idCondominio = lotes.idCondominio
-		INNER JOIN residenciales res ON res.idResidencial = cond.idResidencial
-		INNER JOIN usuarios solicitante ON autorizaciones.id_sol = solicitante.id_usuario
-		INNER JOIN usuarios autorizador ON autorizaciones.id_aut = autorizador.id_usuario
-		INNER JOIN (SELECT id_autorizacion, MAX(fecha_creacion) fecha_ultimo_movimiento FROM historial_autorizaciones
-		GROUP BY id_autorizacion) his ON his.id_autorizacion = autorizaciones.id_autorizacion
-		WHERE clientes.status = 1 AND ".$condicionToAsesor." lotes.idLote=".$idLote);
-		return $query->result_array();
-	}
 
 	public function getcop($id_cliente){
 			$query = $this->db-> query("SELECT CONCAT(asesor.nombre,' ',asesor.apellido_paterno) AS nombreAsesor,

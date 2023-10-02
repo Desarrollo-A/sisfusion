@@ -25,7 +25,7 @@
         FROM residenciales re
         INNER JOIN condominios co ON co.idResidencial = re.idResidencial
         INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND lo.idStatusLote in ($val_idStatusLote) AND lo.status IN ( 1 ) AND (lo.idMovimiento = 0 OR lo.idMovimiento IS NULL )
-        WHERE re.idResidencial NOT IN (21, 22, 25, 30)
+        WHERE re.idResidencial NOT IN (21, 22, 25, 14)
         group by re.idResidencial, re.nombreResidencial, CAST(re.descripcion AS varchar(MAX))
         ORDER BY CAST(re.descripcion AS varchar(MAX))")->result_array();
     }
@@ -97,7 +97,7 @@
     public function getResidencial() {
         return $this->db->query("SELECT idResidencial as id_proy, nombreResidencial as siglas, descripcion as nproyecto
         FROM residenciales
-        WHERE status = 1 AND idResidencial NOT IN (21, 22, 25, 30)
+        WHERE status = 1 AND idResidencial NOT IN (21, 22, 25, 14)
         ORDER BY nombreResidencial ")->result_array();
     }
 
@@ -1378,6 +1378,43 @@
 		UNION ALL
 		(SELECT id_usuario as id_asesor,0 id_sede,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as asesor,0 id_coordinador ,'NO APLICA' coordinador, 0 id_gerente, 'NO APLICA' gerente,
 		0 id_subdirector, 'NO APLICA' subdirector,0 id_regional, 'NO APLICA' regional, 0 id_regional_2, 'NO APLICA' regional_2 FROM usuarios WHERE id_usuario = 12874)")->result();
+    }
+
+    function checkTipoJuridico($id_cliente){
+        //función para revisar el tipo de personalidad juridica
+        $data = $this->db->query("SELECT * FROM clientes WHERE id_cliente=".$id_cliente);
+        return $data->row();
+    }
+    function documentacionActual($id_cliente){
+        $query = $this->db->query("SELECT hd.*, cl.personalidad_juridica 
+        FROM clientes cl 
+        INNER JOIN historial_documento hd ON cl.id_cliente=hd.idCliente WHERE hd.idCliente=".$id_cliente);
+        return $query->result_array();
+    }
+    function nuevaDocByTP($personaJuridica){
+        $tipoPersonalidad = 0;
+        switch ($personaJuridica){
+            case 1:
+                $tipoPersonalidad = 32;
+                break;
+            case 2:
+                $tipoPersonalidad = 31;
+                break;
+        }
+        //obtiene la documentacion por tipo de persona
+        $data = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo=".$tipoPersonalidad." AND estatus=1");
+        return $data->result_array();
+    }
+    function deshabDocsByLoteCliente($idLote, $idCliente){
+        //deshabilita los registros por idLote y idCliente
+        $dataActualiza = array(
+            'status' => 0
+        );
+        $this->db->where("idLote", $idLote);
+        $this->db->where("idCliente", $idCliente);
+        $this->db->update('historial_documento', $dataActualiza);
+        return $this->db->affected_rows();
+//        return 5;//prueba
     }
 
 }

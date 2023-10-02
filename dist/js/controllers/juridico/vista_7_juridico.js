@@ -55,8 +55,8 @@ $("#Jtabla").ready(function () {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Registro de estatus 7',
-            title: 'Registro de cilentes',
+            titleAttr: 'REGISTRO DE ESTATUS 7',
+            title: 'REGISTRO DE ESTATUS 7',
             exportOptions: {
                 columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                 format: 

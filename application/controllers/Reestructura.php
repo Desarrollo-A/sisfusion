@@ -78,11 +78,13 @@ class Reestructura extends CI_Controller{
     }
 
     public function lista_proyecto(){
-		if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_usuario') == 10878){
+        $bandera = $this->input->post('bandera');
+		if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_usuario') == 10878)
 			echo json_encode($this->Reestructura_model->get_proyecto_listaCancelaciones()->result_array());
-		}else{
-			echo json_encode($this->Reestructura_model->get_proyecto_lista()->result_array());
-		}
+		else if($this->session->userdata('id_usuario') == 5107 && $bandera == 1) // MJ: SELECT DE LA VISTA LIBERAR
+          echo json_encode($this->Reestructura_model->get_proyecto_lista_yola()->result_array());
+        else // MJ: SELECT DE LA VISTA reestructura
+            echo json_encode($this->Reestructura_model->get_proyecto_lista(1)->result_array());
     }
 
 	public function lista_catalogo_opciones(){
@@ -661,11 +663,14 @@ class Reestructura extends CI_Controller{
             : $docInfo;
         $documentacion = [];
         $modificado = date('Y-m-d H:i:s');
+        $documentosSinPasar = (is_null($docInfo)) ? [7,8] : [];
 
         foreach ($docAnterior as $doc) {
+            $expedienteAnterior = in_array($doc['tipo_doc'], $documentosSinPasar) ? null : $doc['expediente'];
+
             $documentacion[] = [
                 'movimiento' => $doc['movimiento'],
-                'expediente' => $doc['expediente'],
+                'expediente' => $expedienteAnterior,
                 'modificado' => $modificado,
                 'status' => 1,
                 'idCliente' => $idClienteNuevo,
@@ -680,6 +685,36 @@ class Reestructura extends CI_Controller{
         }
 
         foreach ($expediente as $doc) {
+            if (is_null($docInfo)) {
+                $indexExpedienteAnterior = null;
+
+                if ($doc['id_opcion'] == 39) {
+                    $indexExpedienteAnterior = array_search(7, array_column($docAnterior, 'tipo_doc'));
+                }
+
+                if ($doc['id_opcion'] == 40) {
+                    $indexExpedienteAnterior = array_search(8, array_column($docAnterior, 'tipo_doc'));
+                }
+
+                if (!is_null($indexExpedienteAnterior)) {
+                    $documentacion[] = [
+                        'movimiento' => $doc['nombre'],
+                        'expediente' => $docAnterior[$indexExpedienteAnterior]['expediente'],
+                        'modificado' => $modificado,
+                        'status' => 1,
+                        'idCliente' => $idClienteNuevo,
+                        'idCondominio' => $loteNuevoInfo->idCondominio,
+                        'idLote' => $idLoteNuevo,
+                        'idUser' => NULL,
+                        'tipo_documento' => 0,
+                        'id_autorizacion' => 0,
+                        'tipo_doc' => $doc['id_opcion'],
+                        'estatus_validacion' => 0
+                    ];
+                    continue;
+                }
+            }
+
             $documentacion[] = [
                 'movimiento' => $doc['nombre'],
                 'expediente' => NULL,
@@ -855,5 +890,61 @@ class Reestructura extends CI_Controller{
     {
         $cliente = $this->Reestructura_model->obtenerClientePorId($idCliente);
         echo json_encode($cliente);
+    }
+
+    public function lotesEstatusSeisSinTraspaso(){
+        $this->validateSession();
+        $this->load->view('template/header');
+        $this->load->view("reestructura/lotesEstatusSeisSinTraspaso_view");
+    }
+
+    public function getLotesEstatusSeisSinTraspaso(){
+        $data = $this->Reestructura_model->getLotesEstatusSeisSinTraspaso()->result_array();
+        if($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
+
+    public function asignacionCartera(){
+		$this->load->view('template/header');
+        $this->load->view("reestructura/asignacionCartera_view");
+	}	
+
+    public function getListaAsignacionCartera(){
+        $data = $this->Reestructura_model->getListaAsignacionCartera();
+        echo json_encode($data);
+    }
+
+    public function getListaUsuariosParaAsignacion() {
+        echo json_encode($this->Reestructura_model->getListaUsuariosParaAsignacion());
+    }
+
+    public function setAsesor() {
+        $updateData = array("id_usuario_asignado" => $this->input->post('idAsesor'), "usuario" => $this->session->userdata('id_usuario'));
+        echo json_encode($this->General_model->updateRecord("lotes", $updateData, "idLote", $this->input->post('idLote')));
+    }
+    
+    public function cambiarBandera  ()
+    {
+        $bandera   =  $this->input->post('bandera');
+        $idLote    =  $this->input->post('idLoteBandera');
+           $arr_update = array( 
+                            "liberaBandera"   => $bandera,
+                            );
+      $update = $this->Reestructura_model->banderaLiberada($idLote,$arr_update);                           
+      if($update){
+        $respuesta =  array(
+          "response_code" => 200, 
+          "response_type" => 'success',
+          "message" => "Se ha liberado  satisfactoriamente");
+      }else{
+        $respuesta =  array(
+          "response_code" => 400, 
+          "response_type" => 'warning',
+          "message" => "Lote no actualizado, inténtalo más tarde ");
+      }
+      echo json_encode ($respuesta);             
+  
     }
 }

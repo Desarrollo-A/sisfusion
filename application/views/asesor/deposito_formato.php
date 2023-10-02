@@ -1021,7 +1021,7 @@
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">OBSERVACIONES (<small style="color: red;">*</small>)</label>
-                            <textarea class="form-control pr-2 pl-2 espaciosOff scroll-styles" <?php echo $readOnly; ?> id="observacion" name="observacion" required><?php echo $cliente[0]->observacion; ?></textarea>
+                            <textarea class="form-control pr-2 pl-2 espaciosOff scroll-styles" <?php echo $readOnly; ?> id="observacion" name="observacion" rows="10" required><?php echo $cliente[0]->observacion; ?></textarea>
                         </div>
                     </div>
                 </div>

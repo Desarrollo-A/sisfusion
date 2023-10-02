@@ -6,9 +6,8 @@ class Contratacion_model extends CI_Model {
         parent::__construct();
     }
 
-   function get_proyecto_lista() {
-      return $this->db->query("SELECT 
-      idResidencial, 
+   function get_proyecto_lista($WHERE = NULL) {
+      return $this->db->query("SELECT idResidencial, 
       UPPER(CONCAT(nombreResidencial, ' - '  ,descripcion)) descripcion, 
       ciudad, 
       status, 
@@ -19,7 +18,7 @@ class Contratacion_model extends CI_Model {
       sede_residencial, 
       sede FROM residenciales
       WHERE status = 1
-      ");
+      $WHERE");
    }
    
    function get_condominio_lista($proyecto) {
