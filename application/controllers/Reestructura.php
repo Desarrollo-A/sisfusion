@@ -79,17 +79,12 @@ class Reestructura extends CI_Controller{
 
     public function lista_proyecto(){
         $bandera = $this->input->post('bandera');
-		if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_usuario') == 10878){
+		if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_usuario') == 10878)
 			echo json_encode($this->Reestructura_model->get_proyecto_listaCancelaciones()->result_array());
-		}else if($this->session->userdata('id_usuario') == 5107 && $bandera == 1)
-        {
-          $where = ' and idResidencial  IN (22,4,21,12) ';
-          echo json_encode($this->Reestructura_model->get_proyecto_lista_yola($where)->result_array());
-        }
-        else{
-			echo json_encode($this->Reestructura_model->get_proyecto_lista()->result_array());
-		}
-
+		else if($this->session->userdata('id_usuario') == 5107 && $bandera == 1) // MJ: SELECT DE LA VISTA LIBERAR
+          echo json_encode($this->Reestructura_model->get_proyecto_lista_yola()->result_array());
+        else // MJ: SELECT DE LA VISTA reestructura
+            echo json_encode($this->Reestructura_model->get_proyecto_lista(1)->result_array());
     }
 
 	public function lista_catalogo_opciones(){
