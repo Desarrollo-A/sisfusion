@@ -136,11 +136,11 @@ class Documentacion_model extends CI_Model {
     {
         $pathBase = 'static/documentos/cliente/';
 
-        if ($tipoDocumento == 7) { // CORRIDA FINANCIERA: CONTRALORÍA
+        if ($tipoDocumento == 7 || $tipoDocumento == 39) { // CORRIDA FINANCIERA: CONTRALORÍA
             return "{$pathBase}corrida/";
         }
 
-        if ($tipoDocumento == 8) { // CONTRATO: JURÍDICO
+        if ($tipoDocumento == 8 || $tipoDocumento == 40) { // CONTRATO: JURÍDICO
             return "{$pathBase}contrato/";
         }
 
