@@ -900,11 +900,11 @@ class Reestructura extends CI_Controller{
     public function lotesEstatusSeisSinTraspaso(){
         $this->validateSession();
         $this->load->view('template/header');
-        $this->load->view("reportes/lotesEstatusSeisSinTraspaso_view");
+        $this->load->view("reestructura/lotesEstatusSeisSinTraspaso_view");
     }
 
     public function getLotesEstatusSeisSinTraspaso(){
-        $data = $this->Reporte_model->getLotesEstatusSeisSinTraspaso()->result_array();
+        $data = $this->Reestructura_model->getLotesEstatusSeisSinTraspaso()->result_array();
         if($data != null)
             echo json_encode($data);
         else

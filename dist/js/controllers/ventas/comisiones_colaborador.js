@@ -1,5 +1,6 @@
 const excluir_column = ['MÁS', ''];
 let columnas_datatable = {};
+console.log(userSede);
 let fin = userSede == 8 ? 16 : 13;
 $("#file-upload-extranjero").on('change', function () {
     $('#archivo-extranjero').val('');
