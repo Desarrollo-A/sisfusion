@@ -482,8 +482,7 @@ function envRechazo(){
             data : parametros,
             type : 'POST',
             success : function(data){
-                console.log(data);
-                console.log(response = JSON.parse(data));
+                response = JSON.parse(data);
 
                 $('#rechazarStatus').modal('hide');
                 $('#tabla_ingresar_5').DataTable().ajax.reload();
