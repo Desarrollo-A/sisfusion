@@ -138,7 +138,7 @@ $(document).on('click', '.btn-asignar-venta', function () {
     $("#nombreLote").val(nombreLote);
     //$('#payment_method').selectpicker('refresh');
     $("#idLote").val(idLote)
-    document.getElementById("mainLabelText").innerHTML = `Asinga un asesor para el seguimiento de la venta <b>${nombreLote}</b>`;
+    document.getElementById("mainLabelText").innerHTML = `Asigna un asesor para el seguimiento de la venta <b>${nombreLote}</b>`;
     $("#asignacionModal").modal("show");
 });
 
