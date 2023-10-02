@@ -277,7 +277,7 @@ class Juridico extends CI_Controller
 		}
 	}
 	
-    public function editar_registro_loteRevision_juridico_proceceso7(){
+    public function editar_registro_loteRevision_juridico_proceso7(){
         $idLote=$this->input->post('idLote');
         $idCondominio=$this->input->post('idCondominio');
         $nombreLote=$this->input->post('nombreLote');

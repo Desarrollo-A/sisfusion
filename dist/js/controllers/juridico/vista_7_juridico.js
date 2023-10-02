@@ -397,7 +397,7 @@ $(document).on('click', '#save1', function (e) {
         else {
         $('#save1').prop('disabled', true);
         $.ajax({
-            url: `${general_base_url}Juridico/editar_registro_loteRevision_juridico_proceceso7`,
+            url: `${general_base_url}Juridico/editar_registro_loteRevision_juridico_proceso7`,
             data: dataExp1,
             cache: false,
             contentType: false,
