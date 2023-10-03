@@ -110,7 +110,7 @@ $("#tabla_ingresar_6").ready(function () {
             },
             {
                 data: function (d) {
-                    return '<p class="m-0">' + (d.nombreCondominio).toUpperCase(); + '</p>';
+                    return '<p class="m-0">' + (d.nombreCondominio).toUpperCase() + '</p>';
                 }
             },
             {
