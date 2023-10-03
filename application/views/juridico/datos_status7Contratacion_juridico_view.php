@@ -132,7 +132,26 @@
                                 <p class="card-title pl-1">(7. Contrato elaborado)</p>
                             </div>
                             <div class="toolbar">
-                                <div class="row"></div>
+                                <div class="row">
+                                    <?php if ($this->session->userdata('id_usuario') == 2762 || $this->session->userdata('id_usuario') == 6096):?>
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="Cproyecto" class="Cproyecto">
+                                            <div class="pl-0">
+                                                <div class="form-group select-is-empty overflow-hidden">
+                                                    <label class="control-label">Desarrollo</label>
+                                                    <select id="proyecto" name="proyecto" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required></select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 hide" id="Ccondominio" class="Ccondominio">
+                                            <div class="pl-0">
+                                                <div class="form-group select-is-empty overflow-hidden">
+                                                    <label class="control-label">Condominio</label>
+                                                    <select id="condominio" name="condominio" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required></select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>                                   
+                                </div>
                             </div>
                             <div class="material-datatables">
                                 <div class="form-group">

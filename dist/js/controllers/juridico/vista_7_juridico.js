@@ -2,15 +2,21 @@ var idlote_global = 0;
 var getInfo1 = new Array(7);
 var getInfo2 = new Array(7);
 var getInfo3 = new Array(7);
-var getInfo4 = new Array(7);
-var getInfo5 = new Array(7);
-var getInfo7 = new Array(7);
-var getInfo8 = new Array(7);
+var getInfo4 = new Array(1);
 var idUsuario = id_usuario_general;
-var getInfo6 = new Array(1);
 var user, id, usuario;
 
 $(document).ready(function () {
+    $.post(general_base_url + "Contratacion/lista_proyecto", function (data) {
+        var len = data.length;
+        for (var i = 0; i < len; i++) {
+            var id = data[i]['idResidencial'];
+            var name = data[i]['descripcion'];
+            $("#proyecto").append($('<option>').val(id).text(name.toUpperCase()));
+        }
+        $("#proyecto").selectpicker('refresh');
+    }, 'json');
+    
     user = idUsuario;
     $.post(`${general_base_url}Contraloria/get_sede`, function (data) {
         var len = data.length;
@@ -338,7 +344,7 @@ $("#Jtabla").ready(function () {
 
     $("#Jtabla tbody").on("click", ".change_sede", function (e) {
         e.preventDefault();
-        getInfo6[0] = $(this).attr("data-lote");
+        getInfo4[0] = $(this).attr("data-lote");
         nombreLote = $(this).data("nomlote");
         $(".lote").html(nombreLote);
         $('#change_s').modal('show');
@@ -557,7 +563,7 @@ $(document).on('click', '#savecs', function (e) {
     var ubicacion = $("#ubicacion").val();
     var validaUbicacion = ($("#ubicacion").val().trim() == '') ? 0 : 1;
     var dataChange = new FormData();
-    dataChange.append("idLote", getInfo6[0]);
+    dataChange.append("idLote", getInfo4[0]);
     dataChange.append("ubicacion", ubicacion);
     if (validaUbicacion == 0)
         alerts.showNotification("top", "right", "Selecciona una sede.", "danger");
