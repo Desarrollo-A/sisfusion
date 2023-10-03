@@ -223,6 +223,11 @@ $(document).on('click', '.btn-reubicar', function () {
                         <select name="loteAOcupar" title="SELECCIONA UNA OPCIÓN" id="loteAOcupar" class="selectpicker m-0 select-gral" data-live-search="true" data-container="body" data-width="100%">
                         </select>
                     </div>
+                    <div class="col-12 col-sm-8 col-md-8 col-lg-8">
+                    </div>
+                    <div class="col-12 col-sm-4 col-md-4 col-lg-4">
+                        <button id="btnAddPropuesta" class="btn btn-gral d-none">Añadir</button>
+                    </div>
                 </div>
                 <div class="row mt-2">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12">
@@ -321,6 +326,7 @@ $(document).on("change", "#condominioAOcupar", function(e){
 
 $(document).on("change", "#loteAOcupar", function(e){
     $("#infoLoteSeleccionado").html("");
+    $('#btnAddPropuesta').removeClass('d-none');
     const $itself = $(this).find(':selected');
     const nombre = $itself.attr("data-nombre");
     const superficie = $itself.attr("data-superficie");
