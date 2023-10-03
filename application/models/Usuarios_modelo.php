@@ -1163,4 +1163,10 @@ class Usuarios_modelo extends CI_Model
         $response = $this->db->query($consulta);
         return $response;
     }
+
+
+    public function getOptionByIdRol($id_rol){
+        $query = $this->db->query("SELECT * FROM menu2 WHERE rol=".$id_rol." AND estatus=1");
+        return $query->result_array();
+    }
 }

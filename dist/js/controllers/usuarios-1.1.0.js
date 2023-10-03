@@ -97,7 +97,7 @@ console.log(arraySedes);
     }
 });
 $(document).on('change', '#member_type', function() {
-    document.getElementById('lineaVenta').innerHTML = '';
+    // document.getElementById('lineaVenta').innerHTML = '';
     console.log($(this).val());
     //MOC: SI SE DETECTA UN SUBDIRECTOR Ó DIR. REGIONAL AGREGAR OPCIÓN DE MULTIROL
     if($(this).val() == 2 || $(this).val() == 59){
@@ -105,8 +105,8 @@ $(document).on('change', '#member_type', function() {
         <button class="btn-data btn-green" type="button" id="btnMultiRol" data-toggle="tooltip" data-placement="top" title="Agregar rol"><i class="fas fa-user-plus"></i></button>
         `);
     }else{
-        document.getElementById('btnmultirol').innerHTML = '';
-        document.getElementById('multirol').innerHTML = '';
+        // document.getElementById('btnmultirol').innerHTML = '';
+        // document.getElementById('multirol').innerHTML = '';
         $('#index').val(0);
     }
 });
@@ -1009,3 +1009,56 @@ $(document).on('change', '#nueva_estructura', function() {
     $("#member_type").val('').selectpicker("refresh");
     $("#leader").val('').selectpicker("refresh");
 });
+
+function menuOptions(member_type){
+    let valueMemberType = member_type;
+    $.ajax({
+        url: general_base_url+'Usuarios/getMenuOptionsByRol/'+valueMemberType,
+        type: 'post',
+        dataType: 'json',
+        success:function(response){
+            printMenuCheck(response);
+        }
+    });
+}
+
+function printMenuCheck(data){
+    let contenedorHTML = document.getElementById('listadoHTML');
+    let containerMenu = document.getElementById('containerMenu');
+    contenedorHTML.innerHTML = '';
+    let contenidoInternoHTML = '';
+    let selectorTodo = '';
+    let arrayInterno = [];
+    let arrayJSON = '';
+    data.map((elemento, index)=>{
+        if(elemento.hijos == 1 || Number.isInteger(elemento.orden)){
+            contenidoInternoHTML += '<ul><li>'+elemento.nombre+'</li><ul>';
+            data.map((element2, index2)=>{
+                arrayInterno = [];
+                if(element2.hijos == 0 && ((element2.orden>=data[index].orden ) && (element2.orden<=(data[index].orden+1)))){
+                    arrayInterno.push(element2.padre);
+                    arrayInterno.push(element2.idmenu);
+                    arrayInterno.push(element2.orden);
+                    arrayJSON = JSON.stringify(arrayInterno);
+                    contenidoInternoHTML += '<li><input value="'+arrayJSON+'" type="checkbox" name="menu[]" id="'+element2.nombre+index2+'"> <label for="'+element2.nombre+index2+'"> '+element2.nombre+'</label></li>';
+                }
+            });
+            contenidoInternoHTML += '</ul></ul>';
+        }
+    });
+    selectorTodo = '<input type="checkbox" name="seleccionaTodo" class="seleccionaTodo" id="seleccionaTodo"/> <label for="seleccionaTodo"> Seleccionar todas las opciones</label>';
+    contenedorHTML.innerHTML += selectorTodo;
+    contenedorHTML.innerHTML += contenidoInternoHTML;
+    contenedorHTML.style.height = '300px';
+    contenedorHTML.style.overflowY = 'auto';
+    containerMenu.classList.remove('hide');
+}
+
+
+$(document).on('click', '#seleccionaTodo', function(){
+    if ($(this).is(':checked')) {
+        $('input:checkbox').attr('checked', true);
+    } else {
+        $('input:checkbox').attr('checked', false);
+    }
+})
