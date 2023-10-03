@@ -37,6 +37,18 @@ class Reestructura_model extends CI_Model
         return $query->result_array();
     }
 
+    public function getCliente($idCliente){
+        $query = $this->db->query("SELECT cl.nombre, cl.apellido_paterno, cl.apellido_materno, cl.telefono1, cl.correo, cl.domicilio_particular, cl.estado_civil AS idEstadoC, oxc.nombre as estado_civil, ocupacion FROM clientes cl
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.estado_civil AND oxc.id_catalogo = 18
+        WHERE id_cliente = $idCliente");
+        return $query->row();
+    }
+
+    public function getEstadoCivil(){
+        $query = $this->db->query("SELECT id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo = 18");
+        return $query->result_array();
+    }
+
     public function getProyectosDisponibles($proyecto, $superficie, $tipoLote){
         $query = $this->db->query("SELECT lr.proyectoReubicacion, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100))) descripcion, COUNT(*) disponibles
         FROM loteXReubicacion lr
@@ -118,6 +130,11 @@ class Reestructura_model extends CI_Model
     public function actualizarValidacion($datos)
     {
         return $this->db->query("UPDATE lotes SET opcionReestructura = ".$datos['opcionReestructura'].", comentarioReubicacion = '".$datos['comentario']."', usuario = ".$datos['userLiberacion']." where idLote = ".$datos['idLote']." ");
+    }
+
+    public function insertarCliente($datos)
+    {
+        return $this->db->query("INSERT INTO datos_x_cliente ([idLote],[nombre],[apellido_paterno],[apellido_materno],[estado_civil],[ine],[domicilio_particular],[correo],[telefono1],[ocupacion],[rescision],[fecha_creacion],[creado_por],[fecha_modificacion],[modificado_por]) VALUES (".$datos['idLote'].", '".$datos['nombreCli']."', '".$datos['apellidopCli']."', '".$datos['apellidomCli']."', ".$datos['estadoCli'].", '".$datos['ineCLi']."', '".$datos['domicilioCli']."', '".$datos['correoCli']."', '".$datos['telefonoCli']."', '".$datos['ocupacionCli']."', 'dontNOW', GETDATE(), 1, GETDATE(), 1) ");
     }
 
     public function borrarOpcionModel($datos){

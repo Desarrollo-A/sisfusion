@@ -139,6 +139,7 @@ $('#reubicacionClientes').DataTable({
                         data-tipoLote="${d.tipo_lote}">
                     <i class="fas fa-route"></i>
                 </button>`;
+                btns += `<button class="btn-data btn-blueMaderas infoUser" data-toggle="tooltip" data-placement="top" data-idCliente="${d.idCliente}" data-idLote="${d.idLote}" title="HISTORIAL"><i class="fas fa-user-edit"></i></button>`
                 return `<div class="d-flex justify-center">${btns}</div>`;
             }
         }
@@ -258,6 +259,91 @@ $(document).on('click', '.btn-reubicar', function () {
     getProyectosAOcupar(idProyecto, superficie, tipoLote);
 });
 
+$(document).on('click', '.infoUser', function (){
+    $('#idCliente').val($(this).attr('data-idCliente'));
+    $('#idLote').val($(this).attr('data-idLote'));
+
+    var idCliente = $("#idCliente").val();
+
+    $.getJSON("getCliente/" + idCliente, function(data) {
+        $('#nombreCli').val(data.nombre);
+        $('#apellidopCli').val(data.apellido_paterno);
+        $('#apellidomCli').val(data.apellido_materno);
+        $('#telefonoCli').val(data.telefono1);
+        $('#correoCli').val(data.correo);
+        $('#domicilioCli').val(data.domicilio_particular);
+        $("#estadoCli").append($('<option selected>').val(data.idEstadoC).text(data.estado_civil));
+        $('#ocupacionCli').val(data.ocupacion);
+
+        $.post("getEstadoCivil", function(data) {
+            var len = data.length;
+            for (var i = 0; i < len; i++) {
+                var id = data[i]['id_opcion'];
+                var name = data[i]['nombre'];
+
+                if(id == data.idEstadoC){
+                    $("#estadoCli").append($('<option selected>').val(id).text(name.toUpperCase()));    
+                }else{
+                    $("#estadoCli").append($('<option>').val(id).text(name.toUpperCase()));
+                }
+            }
+            $("#estadoCli").selectpicker('refresh');
+        }, 'json');
+
+        $('#clienteConsulta').modal();
+    }, 'json');
+});
+
+$(document).on('click', '#guardarCliente', function (){
+    var idLote = $('#idLote').val();
+    var nombreCli = $('#nombreCli').val();
+    var apellidopCli = $('#apellidopCli').val();
+    var apellidomCli = $('#apellidomCli').val();
+    var telefonoCli = $('#telefonoCli').val();
+    var correoCli = $('#correoCli').val();
+    var domicilioCli = $('#domicilioCli').val();
+    var estadoCli = $('#estadoCli').val();
+    var ineCLi = $('#ineCLi').val();
+    var ocupacionCli = $('#ocupacionCli').val();
+    
+
+
+    var datos = new FormData();
+    datos.append("idLote", idLote);
+    datos.append("nombreCli", nombreCli);
+    datos.append("apellidopCli", apellidopCli);
+    datos.append("apellidomCli", apellidomCli);
+    datos.append("telefonoCli", telefonoCli);
+    datos.append("correoCli", correoCli);
+    datos.append("domicilioCli", domicilioCli);
+    datos.append("estadoCli", estadoCli);
+    datos.append("ineCLi", ineCLi);
+    datos.append("ocupacionCli", ocupacionCli);
+
+    $.ajax({
+        method: 'POST',
+        url: general_base_url + 'Reestructura/insetarCliente',
+        data: datos,
+        processData: false,
+        contentType: false,
+        success: function(data) {
+            if (data == 1) {
+            $('#tabla_clientes').DataTable().ajax.reload(null, false);
+            $('#clienteConsulta').modal('hide');
+            alerts.showNotification("top", "right", "Información actualizada.", "success");
+            $('#idLoteCatalogo').val('');
+            $('#grabado').val('');
+            $('#comentario2').val('');
+            $("#spiner-loader").addClass('hide');
+            }
+        },
+        error: function(){
+            $('#aceptarReestructura').modal('hide');
+            $("#spiner-loader").addClass('hide');
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+});
 
 function getProyectosAOcupar(idProyecto, superficie, tipoLote) {
     $('#spiner-loader').removeClass('hide');
