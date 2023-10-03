@@ -8,7 +8,6 @@
  */
 class Login extends CI_Controller
 {
-	public $opcionInicio = '';
 	public function __construct()
 	{
 		parent::__construct();
@@ -18,9 +17,6 @@ class Login extends CI_Controller
 		$this->load->library(array('session','form_validation','get_menu'));
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
-//        $this->load->helper('language'); // cargo la libreria language
-//        $this->lang->load('generales'); // cargo los archivos del lenguaje
-
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
     }
@@ -50,10 +46,8 @@ class Login extends CI_Controller
 		return $token;
 	}
 
-
 	public function new_user()
 	{
-
 		if($this->input->post('token') && $this->input->post('token') == $this->session->userdata('token'))
 		{
 			$this->form_validation->set_rules('username', 'nombre de usuario', 'required|trim|min_length[2]|max_length[150]|xss_clean');
@@ -70,8 +64,6 @@ class Login extends CI_Controller
 				$id_rol = $this->input->post('id_rol');
 				$id_usuario = $this->input->post('id_usuario');
 				$imagen_perfil = $this->input->post('imagen_perfil');
-				// $idAsesor = $this->input->post('idAsesor');
-
 				$check_user = $this->login_model->login_user($usuario,$contrasena);
 				if(empty($check_user))
 				{
@@ -180,7 +172,6 @@ class Login extends CI_Controller
 					/*get ubicacion*/
 					$dataUbicacion = $this->login_model->getLocation($check_user[0]->id_sede);
 
-
 					if($check_user == TRUE)
 					{
 						echo '
@@ -223,14 +214,13 @@ class Login extends CI_Controller
 						$_SESSION['datos4'] = [];
 						$data['certificado'] = $_SERVER["HTTP_HOST"] == 'localhost' ? 'http://' : 'https://';
 						$id_rol = $check_user[0]->tipo == 2 ? 86 :( in_array($check_user[0]->id_usuario,array(13400,13399,13398,13397,13395)) ? 7 : $check_user[0]->id_rol);
-						$datos = $this->get_menu->get_menu_data($id_rol, $check_user[0]->id_usuario, $check_user[0]->estatus);
+						$datos = $this->get_menu->get_menu_data($id_rol,$check_user[0]->id_usuario,$check_user[0]->estatus);
 						$opcionesMenu = $this->get_menu->get_menu_opciones();
 						$_SESSION['rutaActual'] = $_SERVER["HTTP_HOST"] == 'prueba.gphsis.com' || $_SERVER["HTTP_HOST"] == 'localhost' ? '/sisfusion/' : '/';
 						$data['datos'] = $datos;
 						$data['opcionesMenu'] = array_column($opcionesMenu, 'pagina');
 						$this->session->set_userdata($data);
 						$this->index();
-						
 					}
 				}
 		}
