@@ -19,7 +19,7 @@ $(document).on("click", ".subir-archivo", function (e) {
         dataType: 'JSON',
         success: function (data) {
             $('#total-comision').html("");
-            $('#total-comision').append(`Total: ${formatMoney(data.total)}`);
+            $('#total-comision').append(`Total: $${formatMoney(data.total)}`);
             $('#addFileExtranjero').modal('show');
         }
     });
@@ -142,7 +142,7 @@ $(document).ready(function () {
     var dia = hoy.getDate();
     var mes = hoy.getMonth() + 1;
     var hora = hoy.getHours();
-
+   
     if (forma_pago == 3 && (((mes == 1 && dia == 9) || (mes == 1 && dia == 10 && hora <= 13)) || 
     ((mes == 2 && dia == 13) || (mes == 2 && dia == 14 && hora <= 13)) ||
     ((mes == 3 && dia == 13) || (mes == 3 && dia == 14 && hora <= 13)) ||
@@ -185,7 +185,7 @@ $('#proyecto_wp').change(function () {
 $('#condominio_wp').change(function () {
     index_proyecto = $('#proyecto_wp').val();
     index_condominio = $(this).val();
-// SE MANDA LLAMAR FUNCTION QUE LLENA LA DATA TABLE DE COMISINONES SIN PAGO EN NEODATA
+    // SE MANDA LLAMAR FUNCTION QUE LLENA LA DATA TABLE DE COMISINONES SIN PAGO EN NEODATA
     fillCommissionTableWithoutPayment(index_proyecto, index_condominio);
 });
 
@@ -212,7 +212,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     $.each(data, function (i, v) {
                         total += parseFloat(v.pago_cliente);
                     });
-                    document.getElementById("myText_nuevas").textContent = formatMoney(total);
+                    document.getElementById("myText_nuevas").textContent = '$' + formatMoney(total);
                 }
             });
         } else {
@@ -335,7 +335,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
             className: `btn btn-dt-youtube buttons-youtube`,
             titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de comisiones podrás visualizarlo en el siguiente tutorial',
             action: function (e, dt, button, config) {
-                window.open('https://youtu.be/S7HO2QTLaL0', '_blank');
+                window.open('https://youtu.be/6tDiInpg2Ao', '_blank');
             }
         }],
         language: {
@@ -368,27 +368,27 @@ $("#tabla_nuevas_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0">' + formatMoney(d.precio_lote) + '</p>';
+                return '<p class="m-0">$' + formatMoney(d.precio_lote) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">' + formatMoney(d.comision_total) + ' </p>';
+                return '<p class="m-0">$' + formatMoney(d.comision_total) + ' </p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">' + formatMoney(d.pago_neodata) + '</p>';
+                return '<p class="m-0">$' + formatMoney(d.pago_neodata) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">' + formatMoney(d.pago_cliente) + '</p>';
+                return '<p class="m-0">$' + formatMoney(d.pago_cliente) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"><b>' + formatMoney(d.impuesto) + '</b></p>';
+                return '<p class="m-0"><b>$' + formatMoney(d.impuesto) + '</b></p>';
             }
         },
         {
@@ -397,24 +397,34 @@ $("#tabla_nuevas_comisiones").ready(function () {
             }
         },
         {
-            "data": function (d) {
+            "data": function( d ){
                 var lblPenalizacion = '';
-                if (d.penalizacion == 1) {
-                    lblPenalizacion = '<p class="m-0" title="Penalización + 90 días"><span class="label lbl-orangeYellow">Penalización + 90 días</span></p>';
+
+                if (d.penalizacion == 1){
+                    lblPenalizacion ='<p class="m-0" title="PENALIZACIÓN + 90 DÍAS"><span class="label lbl-vividOrange"> + 90 DÍAS</span></p>';
                 }
-                if (d.bonificacion >= 1) {
-                    p1 = '<p class="m-0" title="Lote con bonificación en NEODATA"><span class="label lbl-melon">Bon.' + formatMoney(d.bonificacion) + '</span></p>';
+
+                if(d.bonificacion >= 1){
+                    p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-darkPink"">BON. $ '+formatMoney(d.bonificacion)+'</span></p>';
                 }
-                else {
+                else{
                     p1 = '';
                 }
-                if (d.lugar_prospeccion == 0) {
-                    p2 = '<p class="m-0" title="Lote con cancelación de CONTRATO"><span class="label lbl-warning">Recisión</span></p>';
+
+                if(d.lugar_prospeccion == 0){
+                    p2 = '<p class="m-0" title="LOTE CON CANCELACIÓN DE CONTRATO"><span class="label lbl-warning">RECISIÓN</span></p>';
                 }
-                else {
+                else{
                     p2 = '';
                 }
-                return p1 + p2 + lblPenalizacion;
+
+                if(d.id_cliente_reubicacion_2 != 0 ) {
+                    p3 = `<p class="${d.colorProcesoCl}">${d.procesoCl}</p>`;
+                }else{
+                    p3 = '';
+                }
+
+                return p1 + p2 + lblPenalizacion + p3;
             }
         },
         {
@@ -422,33 +432,87 @@ $("#tabla_nuevas_comisiones").ready(function () {
                 switch (d.forma_pago) {
                     case '1': //SIN DEFINIR
                     case 1: //SIN DEFINIr
-                        return `<p class="mb-1"><span class="label lbl-dark-blue">SIN DEFINIR FORMA DE PAGO</span></p>
-                                <p><span class="label lbl-green">REVISAR CON RH ${d.estatus_actual}</span></p>`.split("\n").join("").split("  ").join("");
+                        return `<p class="mb-1">
+                                    <span class="label lbl-dark-blue">
+                                        SIN DEFINIR FORMA DE PAGO
+                                    </span>
+                                </p>
+                                <p>
+                                    <span class="label lbl-green">
+                                        REVISAR CON RH
+                                    </span>
+                                </p>`.split("\n").join("").split("  ").join("");
                     case '2': //FACTURA
                     case 2: //FACTURA
-                        return `<p class="mb-1"><span class="label lbl-dark-blue">FACTURA</span></p>
-                                <p style="font-size: .5em"><span class="label lbl-green">SUBIR XML ${d.estatus_actual}</span></p>`.split("\n").join("").split("  ").join("");
+                        return `<p class="mb-1">
+                                    <span class="label lbl-dark-blue">
+                                        FACTURA
+                                    </span>
+                                </p>
+                                <p style="font-size: .5em">
+                                    <span class="label lbl-green">
+                                        SUBIR XML
+                                    </span>
+                                </p>`.split("\n").join("").split("  ").join("");
                     case '3': //ASIMILADOS
                     case 3: //ASIMILADOS
-                        return `<p class="mb-1"><span class="label lbl-dark-blue" >ASIMILADOS</span></p>
-                                <p style="font-size: .5em"><span class="label lbl-green">LISTA PARA APROBAR ${d.estatus_actual}</span></p>`.split("\n").join("").split("  ").join("");
+                        return `<p class="mb-1">
+                                    <span class="label lbl-dark-blue" >
+                                        ASIMILADOS 
+                                    </span>
+                                </p>
+                                <p style="font-size: .5em">
+                                    <span class="label lbl-green">
+                                        LISTA PARA APROBAR
+                                    </span>
+                                </p>`.split("\n").join("").split("  ").join("");
                     case '4': //RD
                     case 4: //RD
-                        return `<p class="mb-1"><span class="label lbl-dark-blue">REMANENTE DIST.</span></p>
-                                <p style="font-size: .5em"><span class="label lbl-green">LISTA PARA APROBAR ${d.estatus_actual}</span></p>`.split("\n").join("").split("  ").join("");
+                        return `<p class="mb-1">
+                                    <span class="label lbl-dark-blue">
+                                        REMANENTE DIST.
+                                    </span>
+                                </p>
+                                <p style="font-size: .5em">
+                                    <span class="label lbl-green">
+                                        LISTA PARA APROBAR
+                                    </span>
+                                </p>`.split("\n").join("").split("  ").join("");
                     case '5':
                     case 5:
-                        return `<p class="mb-1"><span class="label lbl-dark-blue">FACTURA EXTRANJERO ${d.estatus_actual}</span></p>`;
+                        return `<p class="mb-1">
+                                    <span class="label lbl-dark-blue">FACTURA EXTRANJERO</span>
+                                </p>
+                        `;
                     default:
-                        return `<p class="mb-1"><span class="label lbl-dark-blue">DOCUMENTACIÓN FALTANTE</span></p>
-                                <p><span class="label lbl-green">REVISAR CON RH ${d.estatus_actual}</span></p>`.split("\n").join("").split("  ").join("");
+                        return `<p class="mb-1">
+                                    <span class="label lbl-dark-blue">
+                                        DOCUMENTACIÓN FALTANTE
+                                    </span>
+                                </p>
+                                <p>
+                                    <span class="label lbl-green">
+                                        REVISAR CON RH
+                                    </span>
+                                </p>`.split("\n").join("").split("  ").join("");
                 }
             }
         },
         {
             "orderable": false,
             "data": function (data) {
-                return `<div class="d-flex justify-center"><button href="#" value="${data.id_pago_i}" data-value="${data.lote}" data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_nuevas" title="DETALLES" data-toggle="tooltip_nuevas" data-placement="top"><i class="fas fa-info"></i></button></div>`;
+                return `<div class="d-flex justify-center">
+                            <button href="#" 
+                                    value="${data.id_pago_i}"
+                                    data-value="${data.lote}"
+                                    data-code="${data.cbbtton}"
+                                    class="btn-data btn-blueMaderas consultar_logs_nuevas" 
+                                    title="DETALLES"
+                                    data-toggle="tooltip_nuevas" 
+                                    data-placement="top">
+                                <i class="fas fa-info"></i>
+                            </button>
+                        </div>`;
             }
         }],
         columnDefs: [{
@@ -461,6 +525,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     let actual=13;
                     if(userSede == 8){
                         actual=15;
+
                     }
                     var hoy = new Date();
                     var dia = hoy.getDate();
@@ -473,7 +538,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                         ((mes == 5 && dia == 8) || (mes == 5 && dia == 9 && hora <= 13)) ||
                         ((mes == 6 && dia == 12) || (mes == 6 && dia == 13 && hora <= 13)) ||
                         ((mes == 7 && dia == 10) || (mes == 7 && dia == 11 && hora <= fin)) ||
-                        ((mes == 8 && dia == 09) || (mes == 8 && dia == 10 && hora <= fin)) ||
+                        ((mes == 8 && dia == 9) || (mes == 8 && dia == 10 && hora <= fin)) ||
                         ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= fin)) ||
                         ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= fin)) ||
                         ((mes == 11 && dia == 13) || (mes == 11 && dia == 14 && hora <= fin)) ||
@@ -549,12 +614,14 @@ $("#tabla_nuevas_comisiones").ready(function () {
         $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DEL LOTE <b style="color:#39A1C0; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">' + lote + '</b></h5></p>');
         $.getJSON("getComments/" + id_pago).done(function (data) {
             $.each(data, function (i, v) {
-                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><b>' + v.comentario + '</b></a><br></div><div class="float-end text-right"><a>'+v.fecha_movimiento+'</a></div><div class="col-md-12"><p class="m-0"><small>MODIFICADO POR: </small><b> ' +v.nombre_usuario+ '</b></p></div><h6></h6></div></div></li>');
+                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:39A1C0;">' + v.comentario + '</i><br><b style="color:#39A1C0">' + v.fecha_movimiento + '</b><b style="color:gray;"> - ' + v.nombre_usuario + '</b></p></div>');
             });
         });
     });
 });
+//FIN TABLA NUEVA
 
+// INICIO TABLA EN PROCESO
 $("#tabla_revision_comisiones").ready(function () {
     asignarValorColumnasDT("tabla_revision_comisiones");
     $('#tabla_revision_comisiones thead tr:eq(0) th').each(function (i) {
@@ -567,7 +634,10 @@ $("#tabla_revision_comisiones").ready(function () {
         $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip_revision" data-placement="top" title="${title}" placeholder="${title}" ${readOnly}/>`);
         $('input', this).on('keyup change', function () {
             if (tabla_revision.column(i).search() !== this.value) {
-                tabla_revision.column(i).search(this.value).draw();
+                tabla_revision
+                    .column(i)
+                    .search(this.value)
+                    .draw();
                 var total = 0;
                 var index = tabla_revision.rows({
                     selected: true,
@@ -577,7 +647,7 @@ $("#tabla_revision_comisiones").ready(function () {
                 $.each(data, function (i, v) {
                     total += parseFloat(v.pago_cliente);
                 });
-                document.getElementById("myText_revision").textContent = formatMoney(total);
+                document.getElementById("myText_revision").textContent = '$' + formatMoney(total);
             }
         });
     });
@@ -615,7 +685,7 @@ $("#tabla_revision_comisiones").ready(function () {
             className: `btn btn-dt-youtube buttons-youtube`,
             titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de comisiones podrás visualizarlo en el siguiente tutorial',
             action: function (e, dt, button, config) {
-                window.open('https://youtu.be/S7HO2QTLaL0', '_blank');
+                window.open('https://youtu.be/6tDiInpg2Ao', '_blank');
             }
         }],
         pagingType: "full_numbers",
@@ -646,27 +716,27 @@ $("#tabla_revision_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0">' + formatMoney(d.precio_lote) + '</p>';
+                return '<p class="m-0">$' + formatMoney(d.precio_lote) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">' + formatMoney(d.comision_total) + ' </p>';
+                return '<p class="m-0">$' + formatMoney(d.comision_total) + ' </p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">' + formatMoney(d.pago_neodata) + '</p>';
+                return '<p class="m-0">$' + formatMoney(d.pago_neodata) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">' + formatMoney(d.pago_cliente) + '</p>';
+                return '<p class="m-0">$' + formatMoney(d.pago_cliente) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"><b>' + formatMoney(d.impuesto) + '</b></p>';
+                return '<p class="m-0"><b>$' + formatMoney(d.impuesto) + '</b></p>';
             }
         },
         {
@@ -675,24 +745,34 @@ $("#tabla_revision_comisiones").ready(function () {
             }
         },
         {
-            "data": function (d) {
+            "data": function( d ){
                 var lblPenalizacion = '';
-                if (d.penalizacion == 1) {
-                    lblPenalizacion = '<p class="m-0" title="Penalización + 90 días"><span class="label lbl-orangeYellow">Penalización + 90 días</span></p>';
+
+                if (d.penalizacion == 1){
+                    lblPenalizacion ='<p class="m-0" title="PENALIZACIÓN + 90 DÍAS"><span class="label lbl-vividOrange"> + 90 DÍAS</span></p>';
                 }
-                if (d.bonificacion >= 1) {
-                    p1 = '<p class="m-0" title="Lote con bonificación en NEODATA"><span class="label lbl-melon">Bon.' + formatMoney(d.bonificacion) + '</span></p>';
+
+                if(d.bonificacion >= 1){
+                    p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-darkPink"">BON. $ '+formatMoney(d.bonificacion)+'</span></p>';
                 }
-                else {
+                else{
                     p1 = '';
                 }
-                if (d.lugar_prospeccion == 0) {
-                    p2 = '<p class="m-0" title="Lote con cancelación de CONTRATO"><span class="label lbl-warning">Recisión</span></p>';
+
+                if(d.lugar_prospeccion == 0){
+                    p2 = '<p class="m-0" title="LOTE CON CANCELACIÓN DE CONTRATO"><span class="label lbl-warning">RECISIÓN</span></p>';
                 }
-                else {
+                else{
                     p2 = '';
                 }
-                return p1 + p2 + lblPenalizacion;
+
+                if(d.id_cliente_reubicacion_2 != 0 ) {
+                    p3 = `<p class="${d.colorProcesoCl}">${d.procesoCl}</p>`;
+                }else{
+                    p3 = '';
+                }
+
+                return p1 + p2 + lblPenalizacion + p3;
             }
         },
         {
@@ -736,12 +816,14 @@ $("#tabla_revision_comisiones").ready(function () {
         $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DEL LOTE <b style="color:#2242CB; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">' + lote + '</b></h5></p>');
         $.getJSON("getComments/" + id_pago).done(function (data) {
             $.each(data, function (i, v) {
-                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><b>' + v.comentario + '</b></a><br></div><div class="float-end text-right"><a>'+v.fecha_movimiento+'</a></div><div class="col-md-12"><p class="m-0"><small>MODIFICADO POR: </small><b> ' +v.nombre_usuario+ '</b></p></div><h6></h6></div></div></li>');
+                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:2242CB;">' + v.comentario + '</i><br><b style="color:#2242CB">' + v.fecha_movimiento + '</b><b style="color:gray;"> - ' + v.nombre_usuario + '</b></p></div>');
             });
         });
     });
 });
+// FIN TABLA PROCESO
 
+// INICIO TABLA INTERNOMEX
 $("#tabla_pagadas_comisiones").ready(function () {
     asignarValorColumnasDT("tabla_pagadas_comisiones");
     $('#tabla_pagadas_comisiones thead tr:eq(0) th').each(function (i) {
@@ -756,13 +838,16 @@ $("#tabla_pagadas_comisiones").ready(function () {
             if (tabla_pagadas.column(i).search() !== this.value) {
                 tabla_pagadas.column(i).search(this.value).draw();
                 var total = 0;
-                var index = tabla_pagadas.rows({selected: true,search: 'applied'}).indexes();
+                var index = tabla_pagadas.rows({
+                    selected: true,
+                    search: 'applied'
+                }).indexes();
                 var data = tabla_pagadas.rows(index).data();
                 $.each(data, function (i, v) {
                     total += parseFloat(v.pago_cliente);
                 });
                 var to1 = formatMoney(total);
-                document.getElementById("myText_pagadas").textContent = formatMoney(total);
+                document.getElementById("myText_pagadas").textContent = '$' + formatMoney(total);
             }
         });
     });
@@ -773,7 +858,7 @@ $("#tabla_pagadas_comisiones").ready(function () {
             total += parseFloat(v.pago_cliente);
         });
         var to = formatMoney(total);
-        document.getElementById("myText_pagadas").textContent = to;
+        document.getElementById("myText_pagadas").textContent = '$' + to;
     });
 
     tabla_pagadas = $("#tabla_pagadas_comisiones").DataTable({
@@ -804,7 +889,7 @@ $("#tabla_pagadas_comisiones").ready(function () {
             className: `btn btn-dt-youtube buttons-youtube`,
             titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de comisiones podrás visualizarlo en el siguiente tutorial',
             action: function (e, dt, button, config) {
-                window.open('https://youtu.be/S7HO2QTLaL0', '_blank');
+                window.open('https://youtu.be/6tDiInpg2Ao', '_blank');
             }
         }],
         language: {
@@ -831,27 +916,27 @@ $("#tabla_pagadas_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0"> ' + formatMoney(d.precio_lote) + '</p>';
+                return '<p class="m-0">$ ' + formatMoney(d.precio_lote) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"> ' + formatMoney(d.comision_total) + ' </p>';
+                return '<p class="m-0">$ ' + formatMoney(d.comision_total) + ' </p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"> ' + formatMoney(d.pago_neodata) + '</p>';
+                return '<p class="m-0">$ ' + formatMoney(d.pago_neodata) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"> ' + formatMoney(d.pago_cliente) + '</p>';
+                return '<p class="m-0">$ ' + formatMoney(d.pago_cliente) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"><b> ' + formatMoney(d.impuesto) + '</b></p>';
+                return '<p class="m-0"><b>$ ' + formatMoney(d.impuesto) + '</b></p>';
             }
         },
         {
@@ -860,24 +945,34 @@ $("#tabla_pagadas_comisiones").ready(function () {
             }
         },
         {
-            "data": function (d) {
+            "data": function( d ){
                 var lblPenalizacion = '';
-                if (d.penalizacion == 1) {
-                    lblPenalizacion = '<p class="m-0" title="Penalización + 90 días"><span class="label lbl-orangeYellow">Penalización + 90 días</span></p>';
+
+                if (d.penalizacion == 1){
+                    lblPenalizacion ='<p class="m-0" title="PENALIZACIÓN + 90 DÍAS"><span class="label lbl-vividOrange"> + 90 DÍAS</span></p>';
                 }
-                if (d.bonificacion >= 1) {
-                    p1 = '<p class="m-0" title="Lote con bonificación en NEODATA"><span class="label lbl-melon">Bon.' + formatMoney(d.bonificacion) + '</span></p>';
+
+                if(d.bonificacion >= 1){
+                    p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-darkPink"">BON. $ '+formatMoney(d.bonificacion)+'</span></p>';
                 }
-                else {
+                else{
                     p1 = '';
                 }
-                if (d.lugar_prospeccion == 0) {
-                        p2 = '<p class="m-0" title="Lote con cancelación de CONTRATO"><span class="label lbl-warning">Recisión</span></p>';
+
+                if(d.lugar_prospeccion == 0){
+                    p2 = '<p class="m-0" title="LOTE CON CANCELACIÓN DE CONTRATO"><span class="label lbl-warning">RECISIÓN</span></p>';
                 }
-                else {
+                else{
                     p2 = '';
                 }
-                return p1 + p2 + lblPenalizacion;
+
+                if(d.id_cliente_reubicacion_2 != 0 ) {
+                    p3 = `<p class="${d.colorProcesoCl}">${d.procesoCl}</p>`;
+                }else{
+                    p3 = '';
+                }
+
+                return p1 + p2 + lblPenalizacion + p3;
             }
         },
         {
@@ -921,13 +1016,14 @@ $("#tabla_pagadas_comisiones").ready(function () {
         $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DEL LOTE <b style="color:#9321B6; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">' + lote + '</b></h5></p>');
         $.getJSON("getComments/" + id_pago).done(function (data) {
             $.each(data, function (i, v) {
-                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><b>' + v.comentario + '</b></a><br></div><div class="float-end text-right"><a>'+v.fecha_movimiento+'</a></div><div class="col-md-12"><p class="m-0"><small>MODIFICADO POR: </small><b> ' +v.nombre_usuario+ '</b></p></div><h6></h6></div></div></li>');
+                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:9321B6;">' + v.comentario + '</i><br><b style="color:#9321B6">' + v.fecha_movimiento + '</b><b style="color:gray;"> - ' + v.nombre_usuario + '</b></p></div>');
             });
         });
     });
 });
+// FIN TABLA internomex
 
-
+// INICIO TABLA OTRAS
 $("#tabla_otras_comisiones").ready(function () {
     asignarValorColumnasDT("tabla_otras_comisiones");
     $('#tabla_otras_comisiones thead tr:eq(0) th').each(function (i) {
@@ -950,7 +1046,7 @@ $("#tabla_otras_comisiones").ready(function () {
                 $.each(data, function (i, v) {
                     total += parseFloat(v.pago_cliente);
                 });
-                document.getElementById("myText_pausadas").textContent = formatMoney(total);
+                document.getElementById("myText_pausadas").textContent = '$' + formatMoney(total);
             }
         });
     });
@@ -961,7 +1057,7 @@ $("#tabla_otras_comisiones").ready(function () {
             total += parseFloat(v.pago_cliente);
         });
         var to = formatMoney(total);
-        document.getElementById("myText_pausadas").textContent = to;
+        document.getElementById("myText_pausadas").textContent = '$' + to;
     });
 
     tabla_otras = $("#tabla_otras_comisiones").DataTable({
@@ -988,7 +1084,7 @@ $("#tabla_otras_comisiones").ready(function () {
             className: `btn btn-dt-youtube buttons-youtube`,
             titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de comisiones podrás visualizarlo en el siguiente tutorial',
             action: function (e, dt, button, config) {
-                window.open('https://youtu.be/S7HO2QTLaL0', '_blank');
+                window.open('https://youtu.be/6tDiInpg2Ao', '_blank');
             }
         }],
         pagingType: "full_numbers",
@@ -1019,27 +1115,27 @@ $("#tabla_otras_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0"> ' + formatMoney(d.precio_lote) + '</p>';
+                return '<p class="m-0">$ ' + formatMoney(d.precio_lote) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"> ' + formatMoney(d.comision_total) + ' </p>';
+                return '<p class="m-0">$ ' + formatMoney(d.comision_total) + ' </p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"> ' + formatMoney(d.pago_neodata) + '</p>';
+                return '<p class="m-0">$ ' + formatMoney(d.pago_neodata) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"> ' + formatMoney(d.pago_cliente) + '</p>';
+                return '<p class="m-0">$ ' + formatMoney(d.pago_cliente) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"><b> ' + formatMoney(d.impuesto) + '</b></p>';
+                return '<p class="m-0"><b>$ ' + formatMoney(d.impuesto) + '</b></p>';
             }
         },
         {
@@ -1048,24 +1144,34 @@ $("#tabla_otras_comisiones").ready(function () {
             }
         },
         {
-            "data": function (d) {
+            "data": function( d ){
                 var lblPenalizacion = '';
-                if (d.penalizacion == 1) {
-                    lblPenalizacion = '<p class="m-0" title="PENALIZACIÓN + 90 DÍAS"><span class="label lbl-orangeYellow">PENALIZACIÓN + 90 DÍAS</span></p>';
+
+                if (d.penalizacion == 1){
+                    lblPenalizacion ='<p class="m-0" title="PENALIZACIÓN + 90 DÍAS"><span class="label lbl-vividOrange"> + 90 DÍAS</span></p>';
                 }
-                if (d.bonificacion >= 1) {
-                    p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-melon">BON.' + formatMoney(d.bonificacion) + '</span></p>';
+
+                if(d.bonificacion >= 1){
+                    p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-darkPink"">BON. $ '+formatMoney(d.bonificacion)+'</span></p>';
                 }
-                else {
+                else{
                     p1 = '';
                 }
-                if (d.lugar_prospeccion == 0) {
+
+                if(d.lugar_prospeccion == 0){
                     p2 = '<p class="m-0" title="LOTE CON CANCELACIÓN DE CONTRATO"><span class="label lbl-warning">RECISIÓN</span></p>';
                 }
-                else {
+                else{
                     p2 = '';
                 }
-                return p1 + p2 + lblPenalizacion;
+
+                if(d.id_cliente_reubicacion_2 != 0 ) {
+                    p3 = `<p class="${d.colorProcesoCl}">${d.procesoCl}</p>`;
+                }else{
+                    p3 = '';
+                }
+
+                return p1 + p2 + lblPenalizacion + p3;
             }
         },
         {
@@ -1076,7 +1182,11 @@ $("#tabla_otras_comisiones").ready(function () {
         },
         {
             "data": function (data) {
-                return `<div class="d-flex justify-center"><button href="#" value="${data.id_pago_i}" data-value="${data.lote}" data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_pausadas" title="DETALLES" data-toggle="tooltip_pausadas"  data-placement="top"><i class="fas fa-info"></i></button></div>`;
+                return `<div class="d-flex justify-center">
+                            <button href="#" value="${data.id_pago_i}" data-value="${data.lote}" data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_pausadas" title="DETALLES" data-toggle="tooltip_pausadas"  data-placement="top">
+                                <i class="fas fa-info"></i>
+                            </button>
+                        </div>`;
             }
         }],
         columnDefs: [{
@@ -1107,11 +1217,12 @@ $("#tabla_otras_comisiones").ready(function () {
         $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DEL LOTE <b style="color:#CB7922; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">' + lote + '</b></h5></p>');
         $.getJSON("getComments/" + id_pago).done(function (data) {
             $.each(data, function (i, v) {
-                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><b>' + v.comentario + '</b></a><br></div><div class="float-end text-right"><a>'+v.fecha_movimiento+'</a></div><div class="col-md-12"><p class="m-0"><small>MODIFICADO POR: </small><b> ' +v.nombre_usuario+ '</b></p></div><h6></h6></div></div></li>');
+                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:CB7922;">' + v.comentario + '</i><br><b style="color:#CB7922">' + v.fecha_movimiento + '</b><b style="color:gray;"> - ' + v.nombre_usuario + '</b></p></div>');
             });
         });
     });
 });
+// FIN TABLA PAGADAS
 
 let titulos = [];
 $('#tabla_comisiones_sin_pago thead tr:eq(0) th').each(function (i) {
@@ -1135,9 +1246,9 @@ function fillCommissionTableWithoutPayment(proyecto, condominio) {
             text: `<i class="fa fa-file-excel-o" aria-hidden="true"></i>`,
             className: 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
-            title: 'Sin pago en NEODATA',
+            title: 'REPORTE DE COMISIONES PAUSADAS POR CONTRALORÍA',
             exportOptions: {
-                columns: [1,2,3,4,5,6,7,8,9,10,11],
+                columns: [0,1,2,3,4,5,6,7,8],
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados[columnIdx] + ' ';
@@ -1150,7 +1261,7 @@ function fillCommissionTableWithoutPayment(proyecto, condominio) {
             className: `btn btn-dt-youtube buttons-youtube`,
             titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de comisiones podrás visualizarlo en el siguiente tutorial',
             action: function (e, dt, button, config) {
-                window.open('https://youtu.be/S7HO2QTLaL0', '_blank');
+                window.open('https://youtu.be/6tDiInpg2Ao', '_blank');
             }
         }],
         pagingType: "full_numbers",
@@ -1188,7 +1299,7 @@ function fillCommissionTableWithoutPayment(proyecto, condominio) {
             data: function (d) {
                 return '<p class="m-0">' + d.nombreCliente + ' </p>';
             }
-        },
+        },   
         {
             data: function (d) {
                 return '<p class="m-0">' + d.nombreAsesor + '</p>';
@@ -1384,7 +1495,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
     ((mes == 5 && dia == 8) || (mes == 5 && dia == 9 && hora <= 13)) ||
     ((mes == 6 && dia == 12) || (mes == 6 && dia == 13 && hora <= 13)) ||
     ((mes == 7 && dia == 10) || (mes == 7 && dia == 11 && hora <= fin)) ||
-    ((mes == 8 && dia == 7) || (mes == 8 && dia == 8 && hora <= 13)) ||
+    ((mes == 8 && dia == 9) || (mes == 8 && dia == 10 && hora <= 13)) ||
     ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= 13)) ||
     ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= 13)) ||
     ((mes == 11 && dia == 13) || (mes == 11 && dia == 14 && hora <= 13)) ||
@@ -1468,6 +1579,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
     }
 });
 
+//FUNCION PARA LIMPIAR EL FORMULARIO CON DE PAGOS A PROVEEDOR.
 function resear_formulario() {
     $("#modal_formulario_solicitud input.form-control").prop("readonly", false).val("");
     $("#modal_formulario_solicitud textarea").html('');
@@ -1486,6 +1598,7 @@ function xml2() {
 }
 
 var justificacion_globla = "";
+
 function subir_xml(input) {
     var data = new FormData();
     documento_xml = input[0].files[0];
@@ -1619,7 +1732,7 @@ function cargar_info_xml(informacion_factura) {
     $("#rfcreceptor").val((informacion_factura.rfcreceptor ? informacion_factura.rfcreceptor[0] : '')).attr('readonly', true);
     $("#regimenFiscal").val((informacion_factura.regimenFiscal ? informacion_factura.regimenFiscal[0] : '')).attr('readonly', true);
     $("#formaPago").val((informacion_factura.formaPago ? informacion_factura.formaPago[0] : '')).attr('readonly', true);
-    $("#total").val((informacion_factura.total ? informacion_factura.total[0] : '')).attr('readonly', true);
+    $("#total").val(('$ ' + informacion_factura.total ? '$ ' + informacion_factura.total[0] : '')).attr('readonly', true);
     $("#cfdi").val((informacion_factura.usocfdi ? informacion_factura.usocfdi[0] : '')).attr('readonly', true);
     $("#metodopago").val((informacion_factura.metodoPago ? informacion_factura.metodoPago[0] : '')).attr('readonly', true);
     $("#unidad").val((informacion_factura.claveUnidad ? informacion_factura.claveUnidad[0] : '')).attr('readonly', true);
@@ -1666,7 +1779,7 @@ function cargar_info_xml2(informacion_factura) {
     $("#rfcreceptor").val((informacion_factura.rfcreceptor ? informacion_factura.rfcreceptor[0] : '')).attr('readonly', true);
     $("#regimenFiscal").val((informacion_factura.regimenFiscal ? informacion_factura.regimenFiscal[0] : '')).attr('readonly', true);
     $("#formaPago").val((informacion_factura.formaPago ? informacion_factura.formaPago[0] : '')).attr('readonly', true);
-    $("#total").val((informacion_factura.total ? informacion_factura.total[0] : '')).attr('readonly', true);
+    $("#total").val(('$ ' + informacion_factura.total ? '$ ' + informacion_factura.total[0] : '')).attr('readonly', true);
     $("#cfdi").val((informacion_factura.usocfdi ? informacion_factura.usocfdi[0] : '')).attr('readonly', true);
     $("#metodopago").val((informacion_factura.metodoPago ? informacion_factura.metodoPago[0] : '')).attr('readonly', true);
     $("#unidad").val((informacion_factura.claveUnidad ? informacion_factura.claveUnidad[0] : '')).attr('readonly', true);
@@ -1686,8 +1799,8 @@ function sumCheck() {
         }
     }
     var myCommentsList = document.getElementById('sumacheck');
-    myCommentsList.innerHTML = 'Suma seleccionada: ' + formatMoney(suma.toFixed(3));
-}
+    myCommentsList.innerHTML = 'Suma seleccionada: $ ' + formatMoney(suma.toFixed(3));
+} 
 
 function disabled() {
     for (let index = 0; index < c; index++) {
