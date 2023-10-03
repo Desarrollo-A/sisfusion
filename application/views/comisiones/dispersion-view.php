@@ -127,7 +127,9 @@
                     <form method="post" class="row" id="detenidos-form" autocomplete="off">
                         <div class="modal-body">
                             <input type="hidden" name="id_pagoc" id="id-lote-detenido">
-                            <input type="hidden" name="statusLote" id="statusLote">
+                            <input type="hidden" name="anterior" id="anterior">
+                            <input type="hidden" name="saldoNeodata" id="saldoNeodata">
+                            
                             <div class="col-lg-12" >
                                 <div class="form-group">
                                 <label for="motivo" class="control-label mt-0">Motivo (<span class="isRequired">*</span>)</label>
@@ -368,8 +370,8 @@
                                                     <th>MODALIDAD</th>
                                                     <th>CONTRATACIÓN</th>
                                                     <th>PLAN DE VENTA</th>
-                                                    <th>FECHA DE NEODATA</th>
-                                                    <th>ULTIMA DISPERSIÓN</th>
+                                                    <th>DETALLES</th>
+                                                    <th>FECHA ACTUALIZACIÓN</th>
                                                     <th>ACCIONES</th>
                                                 </tr>
                                             </thead>

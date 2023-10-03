@@ -36,13 +36,10 @@ class Comisiones extends CI_Controller
     if ($this->session->userdata('id_usuario') == "" || $this->session->userdata('id_rol') == "")
       redirect(base_url() . "index.php/login");
   }
-
-  // dispersion-view complete
-
+ 
   public function dispersion() {
     if ($this->session->userdata('id_rol') == FALSE)
         redirect(base_url());
-        
         $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
         $this->load->view('template/header');
         $this->load->view("comisiones/dispersion-view", $datos);
@@ -1063,7 +1060,7 @@ if( isset( $_FILES ) && !empty($_FILES) ){
               $respuesta['respuesta'] = array( TRUE );
               $respuesta['datos_xml'] = $datos_xml;
             }else{
-              $respuesta['respuesta'] = array( FALSE, "LA UNIDAD NO ES 'E48 (UNIDAD DE SERVICIO)', VERIFIQUE SU FACTURA.");
+              $respuesta['respuesta'] = array( FALSE, "LA UNIDAD NO ES 'E48 (UNIDAD DE SERVICIO)', VERIFIQUE SU FACTURA.");
             }//FINAL DE UNIDAD
             }else{
               $respuesta['respuesta'] = array( FALSE, "EL METODO DE PAGO NO ES 'PAGO EN UNA SOLA EXHIBICIÓN (PUE)', VERIFIQUE SU FACTURA.");
@@ -4404,8 +4401,8 @@ public function getDatosHistorialPagoEstatus($proyecto, $condominio, $usuario) {
       $clienteReubicacion = $this->input->post("id_cliente_reubicacion_2");
       $reubicadas = $this->input->post("reubicadas");
       
-      if($clienteReubicacion!=null && $reubicadas!= 0){
-        echo json_encode($this->Comisiones_model->porcentajesReubicacion($clienteReubicacion)->result_array(),JSON_NUMERIC_CHECK);
+      if($reubicadas!= 0){
+        echo json_encode($this->Comisiones_model->porcentajesReubicacion($cliente)->result_array(),JSON_NUMERIC_CHECK);
       }else{
         echo json_encode($this->Comisiones_model->porcentajes($cliente,$totalNeto2,$plan_comision)->result_array(),JSON_NUMERIC_CHECK);
       }
@@ -5026,9 +5023,16 @@ for ($d=0; $d <count($dos) ; $d++) {
       $descripcion  = $this->input->post('descripcion'); 
       $tabla        = 'pago_comision';
       $motivo       =  $this->input->post('motivo'); 
+      $anterior     =  $this->input->post('anterior'); 
+      $saldoNeodata     =  $this->input->post('saldoNeodata')?$this->input->post('saldoNeodata'):0; 
+      if($anterior == 0 || $anterior == 1){
+        $nuevo = $motivo;
+      }else{
+        $nuevo = null;
+      }
 
       //se cambio a esta forma para limpiar el insert y teneer claro los datos que se envian
-      $response = $this->Comisiones_model->insertHistorialLog( $id_pagoc,  $id_usuario, $estatus, $descripcion, $tabla, $motivo);
+      $response = $this->Comisiones_model->insertHistorialLog( $id_pagoc, $id_usuario, $estatus, $descripcion, $tabla, $motivo, $anterior, $nuevo, $saldoNeodata);
         if ($response) {
           $bandera = false;
 
@@ -5157,13 +5161,10 @@ for ($d=0; $d <count($dos) ; $d++) {
 
 
           // INSTALACIÓN PENALIZACIONES
-           public function changeLoteToPenalizacion()
+  public function changeLoteToPenalizacion()
     {
-      // echo $_POST['id_lote'];
-      // echo $_POST['id_cliente'];
-      
         $response = $this->Comisiones_model->insertHistorialLog($_POST['id_lote'], $this->session->userdata('id_usuario'), 1, 'SE ACEPTÓ PENALIZACIÓN',
-                'penalizaciones', 'NULL');
+                'penalizaciones', 'NULL', 'NULL', 'NULL',0);
         if ($response) {
           $response = $this->Comisiones_model->updatePenalizacion($_POST['id_lote'], $_POST['id_cliente']);
         }
@@ -5176,21 +5177,20 @@ for ($d=0; $d <count($dos) ; $d++) {
     public function changeLoteToPenalizacionCuatro()
     {
         $response = $this->Comisiones_model->insertHistorialLog($_POST['id_lote'], $this->session->userdata('id_usuario'), 1, 'SE ACEPTÓ PENALIZACIÓN + 160 DÍAS',
-                'penalizaciones', 'NULL');
+                'penalizaciones', 'NULL', 'NULL', 'NULL',0);
         if ($response) {
           $response = $this->Comisiones_model->updatePenalizacionCuatro($_POST['id_lote'], $_POST['id_cliente'], $_POST['asesor'], $_POST['coordinador'], $_POST['gerente']);
         }
         if($response){
           $response = $this->Comisiones_model->insertHistorialCancelado($_POST['id_lote'], $this->session->userdata('id_usuario'), $_POST['comentario_rechazado']);
         }
-
          echo json_encode($response);
     }
 
 
     public function cancelLoteToPenalizacion()
     {
-        $response = $this->Comisiones_model->insertHistorialLog($_POST['id_lote'], $this->session->userdata('id_usuario'), 1, 'SE CANCELÓ PENALIZACIÓN', 'penalizaciones', 'NULL');
+        $response = $this->Comisiones_model->insertHistorialLog($_POST['id_lote'], $this->session->userdata('id_usuario'), 1, 'SE CANCELÓ PENALIZACIÓN', 'penalizaciones', 'NULL', 'NULL', 'NULL',0);
         if ($response) {
           $response = $this->Comisiones_model->updatePenalizacionCancel($_POST['id_lote'], $_POST['id_cliente']);
         }
@@ -5414,16 +5414,17 @@ public function descuentosCapitalHumano(){
     public function ultimoRegistro (){
 
       $idLote   = $this->input->post('idLote');
-      $respusta = $this->comisiones_model->ultimoRegistro($idLote);
-      var_dump($respusta);
+      $respuesta = $this->comisiones_model->ultimoRegistro($idLote);
+      var_dump($respuesta);
     }
 
     public function ultimaDispersion (){
 
       $lote_1 =  $this->input->post("idLote");
       $insertArray = array(
-          'ultima_dispersion' => date('Y-m-d H:i:s'),
-                  );
+        'ultima_dispersion' => date('Y-m-d H:i:s'),
+        'fecha_modificacion' => date('Y-m-d H:i:s'),
+      );
       $respuesta =  $this->Comisiones_model->ultimaDispersion($lote_1,$insertArray);
 
       if($respuesta){

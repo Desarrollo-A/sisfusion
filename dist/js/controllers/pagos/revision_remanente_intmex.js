@@ -74,14 +74,28 @@ var tr;
 var tabla_remanente2 ;
 var totaPen = 0;
 
-$(document).on("click", ".Pagar", function() {            
+$(document).on("click", ".Pagar", function() {          
     $("#modal_multiples .modal-body").html("");
     $("#modal_multiples .modal-header").html("");
-    $("#modal_multiples .modal-header").append('<h4 class="card-title"><b>Marcar pagadas</b></h4>');
-    $("#modal_multiples .modal-footer").append(`<div class="row pr-2" id="borrarProyect"><button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="CloseModalDelete2()">CANCELAR</button><input type="submit" disabled id="btn-aceptar" class="btn btn-primary" value="ACEPTAR"></div>`);
-    $("#modal_multiples .modal-header").append(`<div class="row">
-    <div class="col-md-12"><select id="desarrolloSelect" name="desarrolloSelect" class="form-control desarrolloSelect ng-invalid ng-invalid-required" required data-live-search="true"></select></div></div>`);
-    $.post(general_base_url+'pagos/getDesarrolloSelectINTMEX/',{desarrollo :4}, function(data) {
+    $("#modal_multiples .modal-header").append(`<center> <h4 class="card-title"><b>Marcar pagadas</b></h4> </center>`);
+    $("#modal_multiples .modal-footer").append(`<div id="borrarProyect">
+        
+                <button type="button" class="btn btn-danger btn-simple " data-dismiss="modal" onclick="CloseModalDelete2()">CANCELAR</button>
+                <button type="submit" disabled id="btn-aceptar" class="btn btn-primary" value="ACEPTAR"> ACEPTAR</button>
+
+        </div>`);
+
+    $("#modal_multiples .modal-header").append(`
+    <div class="row">
+        <div class="col-md-12">
+            <select id="desarrolloSelect" name="desarrolloSelect" 
+                class="selectpicker select-gral desarrolloSelect ng-invalid ng-invalid-required" title="SELECCIONA UNA OPCIÓN"
+                required data-live-search="true">
+            </select>
+        </div>
+    </div>`);
+    
+    $.post(general_base_url + 'Pagos/getDesarrolloSelectINTMEX/', {desarrollo: 4 } ,function(data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_usuario'];
@@ -94,7 +108,7 @@ $(document).on("click", ".Pagar", function() {
         $("#desarrolloSelect").val(0);
         $("#desarrolloSelect").selectpicker('refresh');
     }, 'json');
-
+        
     $('#desarrolloSelect').change(function() {
         $("#modal_multiples .modal-body .bodypagos").html("");
         if(document.getElementById('bodypago2')){
@@ -106,26 +120,33 @@ $(document).on("click", ".Pagar", function() {
         var valorSeleccionado = $(this).val();
         var combo = document.getElementById("desarrolloSelect");
         var selected = combo.options[combo.selectedIndex].text;
-        $.getJSON(general_base_url + "Pagos/getPagosByProyect/"+ valorSeleccionado +"/"+ 4 ).done(function(data) {
+
+        $.getJSON(general_base_url + "Pagos/getPagosByProyect/"+valorSeleccionado+'/'+4).done(function(data) {
             let sumaComision = 0;
+            // console.log(data[0]);
             if (!data) {
                 $("#modal_multiples .modal-body").append('<div class="row"><div class="col-md-12">SIN DATOS A MOSTRAR</div></div>');
             } 
             else {
                 if(data.length > 0){
-                    $("#modal_multiples .modal-body ").append(`<div class="row bodypagos" >
-                    <p style='color:#9D9D9D;'>¿Estas seguro que deseas autorizar $<b style="color:green">${formatMoney(data[0][0].suma)}</b> de ${selected}?</div>`);
-                }
+                    $("#modal_multiples .modal-body ").append(`
+                    <center>
+                        <div class="row bodypagos" >
+                            <p style='color:#9D9D9D;'>¿Estas seguro que deseas autorizar $
+                            <b style="color:green">${formatMoney(data[0][0].suma)}</b> de ${selected}?</div>
+                    </center>
+                            `);
+                } 
                 
                 $("#modal_multiples .modal-body ").append(`<div  id="bodypago2"></div>`);
                 $.each(data[1], function(i, v) {
                     $("#modal_multiples .modal-body #bodypago2").append(`
                     <input type="hidden" name="ids[]" id="ids" value="${v.id_pago_i}"></div>`);
+                    
                 });
                 document.getElementById('btn-aceptar').disabled = false;
             }
         });
-
     });
 
     $("#modal_multiples").modal({

@@ -39,7 +39,7 @@ $(document).ready(function () {
                 titleAttr: 'Descargar archivo de Excel',
                 title: 'Reporte Comisiones Activas',
                 exportOptions: {
-                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                     format: {
                         header:  function (d, columnIdx) {
                             return ' ' + titulos_intxt[columnIdx]  + ' ';
@@ -72,12 +72,19 @@ $(document).ready(function () {
             },
             {data: 'nombreResidencial'},
             {data: 'nombreCondominio'},
-            {data: 'nombreLote'},
+            { data: function (d) {
+                if(d.id_cliente_reubicacion_2 >1 ) {
+                    nombreLote =  d.nombreLoteReub;
+                } else{
+                    nombreLote = d.nombreLote;
+                }
+                return nombreLote;
+            }},
             {data: 'idLote'},
             {data: 'nombreCliente'},
             { data: function (d) {
-                return `<span class="label ${d.claseTipo_venta}">${d.tipo_venta}</span><br><span class="${d.colorProcesoCl}">${d.procesoCl}</span>`;
-            }}, 
+                    return `<span class="label ${d.claseTipo_venta}">${d.tipo_venta}</span><br><span class="${d.colorProcesoCl}">${d.procesoCl}</span>`;
+            }},
             { data: function (d) {
                 var labelCompartida;
                 if(d.compartida == null) {
@@ -86,39 +93,64 @@ $(document).ready(function () {
                     labelCompartida ='<span class="label lbl-orangeYellow">Compartida</span>';
                 }
                 return labelCompartida;
-            }}, 
+            }},
             { data: function (d) {
                 var labelStatus;
                 if(d.idStatusContratacion == 15) {
-                    labelStatus ='<span class="label lbl-violetDeep">Contratado</span>';
+                    labelStatus ='<span class="label lbl-violetBoots">Contratado</span>';
                 }else {
-                    labelStatus ='<span class="label lbl-gray"><b>'+d.idStatusContratacion+'</b></span>';
+                    labelStatus ='<p class="m-0"><b>'+d.idStatusContratacion+'</b></p>';
                 }
                 return labelStatus;
             }},
             { data: function (d) {
                 var labelEstatus;
-                if(d.totalNeto2 == null) {
-                    labelEstatus ='<p class="m-0"><b>Sin Precio Lote</b></p>';
-                }else if(d.registro_comision == 2){
-                    labelEstatus ='<span class="label lbl-sky">SOLICITADO MKT</span>'+' '+d.plan_descripcion;
-                }else {
-                    if(d.plan_descripcion=="-")
-                        return '<p>SIN PLAN</p>'
-                    else
-                        labelEstatus =`<label class="label lbl-azure btn-dataTable" data-toggle="tooltip"  data-placement="top"  title="VER MÁS DETALLES"><b><span  onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span></label>`;
+                if(d.penalizacion == 1 && (d.bandera_penalizacion == 0 || d.bandera_penalizacion == 1) ){
+                    labelEstatus =`<p class="m-0"><b>Penalización ${d.dias_atraso} días</b></p><span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span>`;
+                }
+                else{
+                    if(d.totalNeto2 == null) {
+                        labelEstatus ='<p class="m-0"><b>Sin Precio Lote</b></p>';
+                    }else if(d.registro_comision == 2){
+                        labelEstatus ='<span class="label lbl-cerulean">SOLICITADO MKT</span>'+' '+d.plan_descripcion;
+                    }else {
+                        if(d.plan_descripcion=="-")
+                            return '<p>SIN PLAN</p>';
+                        else
+                            labelEstatus =`<label class="label lbl-azure btn-dataTable" data-toggle="tooltip"  data-placement="top"  title="VER MÁS DETALLES"><b><span  onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span></label>`;
+                    }
                 }
                 return labelEstatus;
             }},
-            
             { data: function (d) {
-                var ultima_dispersion;
-                if( d.ultima_dispersion == null ) {
-                    ultima_dispersion ='<span class="label lbl-deepGray">Sin Definir</span>';
-                }else {
-                    ultima_dispersion = '<br><span class="label lbl-lightBlue">'+d.ultima_dispersion+'</span>';
+                var rescisionLote;
+                var reactivo;
+                rescisionLote = '';
+                reactivo = '';
+                if(d.id_cliente_reubicacion_2 != 0) {
+                    if((d.bandera_dispersion == 1 && d.registro_comision == 9) ||
+                    (d.bandera_dispersion == 2 && d.registro_comision == 9) ||
+                    (d.bandera_dispersion == 2  && d.registro_comision != 9) ||
+                    (d.bandera_dispersion == 1  && d.registro_comision != 9 && validarLiquidadas == 0 || (d.registro_comision == 1 && d.validaLiquidadas == 0 && d.banderaOOAM == 0))){
+                        reactivo = '<span class="label lbl-gray">DISPERSIÓN VENTAS</span>';
+                    } else if((d.bandera_dispersion == 3  && d.registro_comision == 9) ||
+                    (d.bandera_dispersion == 3 && d.registro_comision != 9) ||
+                    ((d.registro_comision == 1 && d.validaLiquidadas == 1 && (d.banderaOOAM == 0 || d.banderaOOAM > 0 )) || (d.registro_comision == 1 && d.validaLiquidadas == 0 && d.banderaOOAM > 0))){//LIQUIDADA 1°
+                        reactivo = '<span class="label lbl-lightBlue">DISPERSIÓN EEC</span>';
+                    } 
                 }
-                return ultima_dispersion;
+                return rescisionLote+reactivo;
+            }},
+            { data: function (d) {
+                var fechaActualizacion;
+
+                if(d.fecha_sistema == null) {
+                    fechaActualizacion ='<span class="label lbl-gray">Sin Definir</span>';
+                }else {
+                    fechaActualizacion = '<span class="label lbl-azure">'+d.fecha_sistema+'</span>';
+                }
+                
+                return fechaActualizacion;
             }},
             { data: function (d) {
                 var BtnStats = '';
@@ -137,12 +169,10 @@ $(document).ready(function () {
                         BtnStats = 'Asignar Plan <br> Sede: '+d.sede;
                     } else{
                         varColor  = 'btn-deepGray';
-                            if(d.fecha_modificacion != null ) {
-                                RegresaActiva = '<button href="#" data-idpagoc="' + d.idLote + '" data-nombreLote="' + d.nombreLote + '"  ' +'class="btn-data btn-violetChin update_bandera" data-toggle="tooltip" data-placement="top" title="Regresar a dispersión ">' +'<i class="fas fa-undo-alt"></i></button>';
-                            }
-                            BtnStats += `<button href="#" value="${d.idLote}" 
-                            data-value="${d.nombreLote}" 
-                            data-idLote="${d.idLote}" class="btn-data btn-blueMaderas btn-detener btn-warning" title="DETENER"><i class="material-icons">block</i></button>`;
+                        if(d.fecha_sistema != null && d.registro_comision != 8 && d.registro_comision != 0) {
+                            RegresaActiva = '<button href="#" data-idpagoc="' + d.idLote + '" data-nombreLote="' + d.nombreLote + '"  ' +'class="btn-data btn-violetChin update_bandera" data-toggle="tooltip" data-placement="top" title="Enviar a activas">' +'<i class="fas fa-undo-alt"></i></button>';
+                        }
+                            BtnStats += `<button href="#" value="${d.idLote}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas btn-detener btn-warning" data-toggle="tooltip"  data-placement="top" title="Detener"> <i class="material-icons">block</i> </button>`;
 
                             if(d.ooam == 0 && d.ventas == 1){
 
@@ -205,20 +235,35 @@ $(document).ready(function () {
         }
     });
 
-    $("#tabla_comisiones_activas tbody").on('click', '.btn-detener', function () {
-            $("#motivo").val("");
-            $("#motivo").selectpicker('refresh');
-            $("#descripcion").val("");
-            const idLote = $(this).val();
-            const nombreLote = $(this).attr("data-value");
-            const statusLote = $(this).attr("data-statusLote");
-            $('#idLote').val(idLote);
-            $('#id-lote-detenido').val(idLote);
-            $('#statusLote').val(statusLote);
-            $("#detenciones-modal .modal-header").html("");
+    
+$("#tabla_comisiones_activas tbody").on('click', '.btn-detener', function () {
+    $("#motivo").val("");
+    $("#motivo").selectpicker('refresh');
+    $("#descripcion").val("");
+    const idLote = $(this).val();
+    const nombreLote = $(this).attr("data-value");
+    const statusLote = $(this).attr("data-statusLote");
+ 
+    $('#id-lote-detenido').val(idLote);
+    $('#statusLote').val(statusLote);
+    $('#anterior').val(0);
+
+    $("#detenciones-modal .modal-header").html("");
+            
+    $.getJSON( general_base_url + "ComisionesNeo/getStatusNeodata/"+idLote).done( function( data ){
+        if(data.length > 0){
+            $('#saldoNeodata').val(data[0].Aplicado);
             $("#detenciones-modal .modal-header").append('<h4 class="modal-title">Enviar a controversia: <b>'+nombreLote+'</b></h4>');
-            $("#detenciones-modal").modal();
-        });
+
+        } else{
+            $('#saldoNeodata').val(0);
+            $("#detenciones-modal .modal-header").append('<h4 class="modal-title">Sin localizar en NEODATA  <b>'+nombreLote+'</b>, el lote se enviará a controversia sin embargo hay que regresarlo manualmente ya que no detectamos saldo ligado a este lote y es indispensable para regresarlo automáticamente. </h4>');
+        }     
+    }); 
+
+    $("#detenciones-modal").modal();
+});
+
 
     $("#tabla_comisiones_activas tbody").on("click", ".verify_neodata", async function(){ 
         $("#modal_NEODATA .modal-header").html("");
@@ -404,7 +449,6 @@ $(document).ready(function () {
 $('#detenidos-form').on('submit', function (e) {
     document.getElementById('detenerLote').disabled = true;
     e.preventDefault();
-    $('#spiner-loader').removeClass('hide');
     $.ajax({
         type: 'POST',
         url: 'changeLoteToStopped',
@@ -414,12 +458,11 @@ $('#detenidos-form').on('submit', function (e) {
         processData:false,
         success: function (data) {
             if (data) {
-                debugger;
                 $('#detenciones-modal').modal("hide");
                 $("#id-lote-detenido").val("");
+                document.getElementById('detenerLote').disabled = false;
                 alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
                 $('#tabla_comisiones_activas').DataTable().ajax.reload();
-                document.getElementById('detenerLote').disabled = false;
                 $('#spiner-loader').addClass('hide');
             } else {
                 alerts.showNotification("top", "right", "Ocurrió un problema, vuelva a intentarlo más tarde.", "warning");
@@ -533,20 +576,6 @@ $(document).on('click', '.update_bandera', function(e){
     $("#myUpdateBanderaModal").modal();
     $("#id_pagoc").val(id_pagoc);
     $("#param").val(0);
-});
-
-$("#tabla_comisiones_activas tbody").on('click', '.btn-detener', function () {
-    $("#motivo").val("");
-    $("#motivo").selectpicker('refresh');
-    $("#descripcion").val("");
-    const idLote = $(this).val();
-    const nombreLote = $(this).attr("data-value");
-    const statusLote = $(this).attr("data-statusLote");
-    $('#id-lote-detenido').val(idLote);
-    $('#statusLote').val(statusLote);
-    $("#detenciones-modal .modal-header").html("");
-    $("#detenciones-modal .modal-header").append('<h4 class="modal-title">Enviar a controversia: <b>'+nombreLote+'</b></h4>');
-    $("#detenciones-modal").modal();
 });
 
 function showDetailModal(idPlan) {
