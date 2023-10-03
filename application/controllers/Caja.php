@@ -76,4 +76,20 @@ class Caja extends CI_Controller {
 		else
 			echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
     }
+
+	public function EditVentaParticular(){
+
+		$tipo_venta = $this->input->post('tipo_venta');
+        $id_usuario = $this->session->userdata('id_usuario');
+        $idLote=$this->input->post('idLote');
+
+		$dataToUpdate = array("tipo_venta"=> $tipo_venta, "usuario" => $this->session->userdata('id_usuario'));
+        $responseUpdate = $this->General_model->updateRecord("lotes", $dataToUpdate, "idLote", $idLote);
+
+		$dataToUpdate2 = array('estatus'=> 0);
+        $responseUpdate2 = $this->General_model->updateRecord("clausulas", $dataToUpdate2, "id_lote", $idLote);
+
+            $data['message'] = 'OK';
+            echo json_encode($data);
+	}
 }
