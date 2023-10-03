@@ -111,7 +111,7 @@ class Documentacion_model extends CI_Model {
         $tipoDocumento, $tipoContratacion = 1, $nombreLote = '', $nombreDocumento = '', $eliminarArchivo = false
     ): string
     {
-        if ($tipoContratacion == 1) {
+        if ($tipoContratacion == 0 || $tipoContratacion == 1) {
             return $this->obtenerPathViejoContratacion($tipoDocumento);
         }
 
@@ -136,11 +136,11 @@ class Documentacion_model extends CI_Model {
     {
         $pathBase = 'static/documentos/cliente/';
 
-        if ($tipoDocumento == 7) { // CORRIDA FINANCIERA: CONTRALORÍA
+        if ($tipoDocumento == 7 || $tipoDocumento == 39) { // CORRIDA FINANCIERA: CONTRALORÍA
             return "{$pathBase}corrida/";
         }
 
-        if ($tipoDocumento == 8) { // CONTRATO: JURÍDICO
+        if ($tipoDocumento == 8 || $tipoDocumento == 40) { // CONTRATO: JURÍDICO
             return "{$pathBase}contrato/";
         }
 

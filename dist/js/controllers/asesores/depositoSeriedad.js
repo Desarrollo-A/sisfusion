@@ -971,38 +971,38 @@ $(document).on('click', '#save3', function(e) {
             success: function(data){
                 response = JSON.parse(data);
                 if(response.message == 'OK') {
-                    $('#save1').prop('disabled', false);
-                    $('#modal1').modal('hide');
+                    $('#save3').prop('disabled', false);
+                    $('#modal3').modal('hide');
                     $('#tabla_deposito_seriedad').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "Estatus enviado.", "success");
                 } else if(response.message == 'FALSE'){
-                    $('#save1').prop('disabled', false);
-                    $('#modal1').modal('hide');
+                    $('#save3').prop('disabled', false);
+                    $('#modal3').modal('hide');
                     $('#tabla_deposito_seriedad').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
                 } else if(response.message == 'MISSING_DOCUMENTS'){
-                    $('#save1').prop('disabled', false);
-                    $('#modal1').modal('hide');
+                    $('#save3').prop('disabled', false);
+                    $('#modal3').modal('hide');
                     $('#tabla_deposito_seriedad').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", response.error_message, "danger");
                 } else if(response.message == 'ERROR'){
-                    $('#save1').prop('disabled', false);
-                    $('#modal1').modal('hide');
+                    $('#save3').prop('disabled', false);
+                    $('#modal3').modal('hide');
                     $('#tabla_deposito_seriedad').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
                 } else if(response.message == 'MISSING_AUTORIZACION'){
-                    $('#save1').prop('disabled', false);
-                    $('#modal1').modal('hide');
+                    $('#save3').prop('disabled', false);
+                    $('#modal3').modal('hide');
                     $('#tabla_deposito_seriedad').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "EN PROCESO DE AUTORIZACIÓN. Hasta que la autorización no haya sido aceptada o rechazada, no podrás avanzar la solicitud.", "danger");
                 } else if(response.message == 'OBSERVACION_CONTRATO'){
-                    $('#save1').prop('disabled', false);
-                    $('#modal1').modal('hide');
+                    $('#save3').prop('disabled', false);
+                    $('#modal3').modal('hide');
                     $('#tabla_deposito_seriedad').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "EN PROCESO DE LIBERACIÓN. No podrás avanzar la solicitud hasta que el proceso de liberación haya concluido", "danger");
                 } else if (response.message == 'MISSING_AUTFI') {
-                    $('#save1').prop('disabled', false);
-                    $('#modal1').modal('hide');
+                    $('#save3').prop('disabled', false);
+                    $('#modal3').modal('hide');
                     $('#tabla_deposito_seriedad').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "Autorización de mensualidad pendiente.", "danger");
                 }

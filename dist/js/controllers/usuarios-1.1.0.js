@@ -30,7 +30,6 @@ $(document).on('change', '#leader', function() {
     let sede = $('#headquarter').val();
     let puesto = $('#member_type').val();
     let lider = $('#leader').val();
-    console.log(puesto);
     document.getElementById('lineaVenta').innerHTML = '';
     let puestosVentas = [3,7,9];
     let sedeSelected = document.getElementById("headquarter");
@@ -45,8 +44,8 @@ $(document).on('change', '#leader', function() {
             lider : lider
         },
         function (data) {
-    let arraySedes = puesto == 7 ? ( data[0].banderaGer == 0 ? [data[0].idSedeCoor,data[0].idSedeGer,data[0].idSedeSub,data[0].idSedeReg] : [data[0].idSedeGer,data[0].idSedeSub,data[0].idSedeReg]) : ( puesto == 9 ? sede == 2 ? [data[0].idSedeGer,data[0].idSedeSub] : [data[0].idSedeGer,data[0].idSedeSub,data[0].idSedeReg] : sede == 2 ? [data[0].idSedeSub] : [data[0].idSedeSub,data[0].idSedeReg]);
-console.log(arraySedes);
+        let sedesSinRegional = [5,2,3,6];
+        let arraySedes = puesto == 7 ? ( data[0].banderaGer == 0 ? [data[0].idSedeCoor,data[0].idSedeGer,data[0].idSedeSub,data[0].idSedeReg] : [data[0].idSedeGer,data[0].idSedeSub,data[0].idSedeReg]) : ( puesto == 9 ? sedesSinRegional.includes(parseInt(sede)) ? [data[0].idSedeGer,data[0].idSedeSub] : [data[0].idSedeGer,data[0].idSedeSub,data[0].idSedeReg] : sedesSinRegional.includes(parseInt(sede)) ? [data[0].idSedeSub] : [data[0].idSedeSub,data[0].idSedeReg]);
     let buscarDiff = arraySedes.filter(element => element != sede);
     if(buscarDiff.length > 0){
         $('#btn_acept').prop('disabled', true);
@@ -54,12 +53,6 @@ console.log(arraySedes);
         $('#btn_acept').prop('disabled', false);
     }
 
-    /*if(data[0].banderaGer == 1 && puesto == 7){
-        console.log('entra aqui')
-        data[0].sub = data[0].gerente, data[0].gerente = data[0].coordinador, data[0].coordinador = 'N/A';
-        data[0].puestoSub = data[0].puestoGer, data[0].puestoGer = data[0].puestoCoor, data[0].puestoCoor = 'Coordinador de ventas';
-        data[0].sedeSubdirector = data[0].sedeGerente, data[0].sedeGerente = data[0].sedeCoor, data[0].sedeCoor = 'N/A';
-    }*/
     let tabla = `
     <div class="row subBoxDetail">
         <div class=" col-sm-12 col-sm-12 col-lg-12 text-center" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>NUEVA LÍNEA DE VENTAS</b></label></div>
@@ -68,37 +61,14 @@ console.log(arraySedes);
         tabla += puesto == 7  ? `<div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].coordinador}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoCoor}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeCoor}</label></div>` : '';
         tabla += puesto == 3 ? '' : `<div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].gerente}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoGer}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeGerente}</label></div>`;
         tabla += `<div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].sub}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoSub}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeSubdirector}</label></div>`;
-        tabla += sede == 2 ? '' : `<div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].regional_1}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoReg}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeReg}</label></div>`;
+        tabla += sedesSinRegional.includes(parseInt(sede)) ? '' : `<div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].regional_1}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoReg}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeReg}</label></div>`;
         tabla += `</div>`;
-            /*let tabla = puesto == 7 ? `
-                <div class="row subBoxDetail">
-                    <div class=" col-sm-12 col-sm-12 col-lg-12 text-center" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>NUEVA LÍNEA DE VENTAS</b></label></div>
-                    <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label><b>Nombre </b></label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label><b>Puesto</b></label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label><b>Sede</b></label></div>
-                    <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${nombreSelected}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${selectedPuesto}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${selectedSede}</label></div>
-                    <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].coordinador}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoCoor}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeCoor}</label></div>
-                    <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].gerente}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoGer}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeGerente}</label></div>
-                    <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].sub}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoSub}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeSubdirector}</label></div>
-                    <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].regional_1}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoReg}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeReg}</label></div>
-                </div>
-                ` :( puesto == 9 ? `
-            <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label><b>${nombreSelected}</b></label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label><b>${selectedPuesto}</b></label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label><b>${selectedSede}</b></label></div>
-
-            ` : (puesto == 3 ? `
-            <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label><b>${nombreSelected}</b></label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label><b>${selectedPuesto}</b></label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label><b>${selectedSede}</b></label></div>
-            ` : ''));*/
-            /*$('#lineaVenta').append(`
-                <div class="row subBoxDetail">
-                    <div class=" col-sm-12 col-sm-12 col-lg-12 text-center" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>Nueva línea de ventas</b></label></div>
-                    <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label><b>Nombre </b></label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label><b>Puesto</b></label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label><b>Sede</b></label></div>
-                </div>
-            `);*/
-                $('#lineaVenta').append(tabla);
+        $('#lineaVenta').append(tabla);
         },"json");
     }
 });
 $(document).on('change', '#member_type', function() {
-    // document.getElementById('lineaVenta').innerHTML = '';
-    console.log($(this).val());
+    document.getElementById('lineaVenta').innerHTML = '';
     //MOC: SI SE DETECTA UN SUBDIRECTOR Ó DIR. REGIONAL AGREGAR OPCIÓN DE MULTIROL
     if($(this).val() == 2 || $(this).val() == 59){
         $('#btnmultirol').append(`
@@ -111,18 +81,13 @@ $(document).on('change', '#member_type', function() {
     }
 });
 function validarSede(indexActual){
-    console.log(indexActual);
-    console.log('entra');
     let index = parseInt($('#index').val());
-let c = 0;
+    let c = 0;
     for (let j = 0; j < index; j++) {
         if(document.getElementById(`sedes_${j}`)){
-            console.log('existe');
             if(j != indexActual){
                 let sedeActual = $(`#sedes_${indexActual}`).val();
                 let sedes = $(`#sedes_${j}`).val();
-                console.log(sedeActual);
-                console.log(sedes);
                 if(sedeActual == sedes){
                     c++;
                     alerts.showNotification("top", "right", "LA SEDE SELECCIONADA YA FUE SELECCIONADA", "warning");
@@ -134,7 +99,6 @@ let c = 0;
     if(c == 0){
         $('#btn_acept').prop('disabled', false);
     }
-
 }
 
 $(document).on("click","#btnMultiRol",function(){
@@ -171,7 +135,6 @@ $(document).on("click","#btnMultiRol",function(){
             </div>
         `);
         $('[data-toggle="tooltip"]').tooltip();
-        console.log(puestos);
         for (var i = 0; i < puestos.length; i++) {
             var id = puestos[i].id;
             var name = puestos[i].nombre;
@@ -219,13 +182,6 @@ function borrarMulti(index,id = ''){
         $('#idRU').val(id);
         $('#indice').val(index);
         $('#modalDelRol').modal('show');
-
-    /*  $.post("borrarMulti",
-        {
-          idRU: id,
-        },
-        function (data) {
-        },"json");*/
     }else{
         document.getElementById(`mult_${index}`).innerHTML = '';
     }
@@ -332,7 +288,8 @@ function fillUsersTable() {
             data: function (d) {
                 var id_rol = id_rol_global;
                 if(id_rol == 8 && d.estatus == 1){
-                    if (id_usuario_general == 1297 || id_usuario_general == 1) { // filtro para soporte excluyendo ambos perfiles
+                    if (id_usuario_general == 1297 || id_usuario_general == 1) { 
+                        // filtro para soporte excluyendo ambos perfiles
                         return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-toggle="tooltip"  data-placement="top" title="EDITAR INFORMACIÓN" data-id-usuario="' + d.id_usuario +'"> '+
                         '<i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow  see-changes-log"  data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip"  data-placement="top" title="CONSULTA LA INFORMACIÓN" ><i class="fas fa-eye"></i> </button>' +
                             '<button class="btn-data btn-warning change-user-status"  id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'" data-idrol="'+d.id_rol+'" data-toggle="tooltip"  data-placement="top" title="DAR DE BAJA"><i class="fas fa-lock"></i></button>'+

@@ -24,22 +24,25 @@ const AccionDoc = {
 };
 
 const TipoDoc = {
-    CONTRATO: 8,
-    CORRIDA: 7,
-    CARTA_DOMICILIO: 29,
-    CONTRATO_FIRMADO: 30,
-    DS_NEW: 'ds_new',
-    DS_OLD: 'ds_old',
-    EVIDENCIA_MKTD_OLD: 66, // EXISTE LA RAMA CON LA EVIDENCIA DE MKTD (OLD)
-    AUTORIZACIONES: 'autorizacion',
-    PROSPECTO: 'prospecto',
-    APOSTILLDO_CONTRATO: 31,
-    CARTA: 32,
-    RESCISION: 33,
-    CARTA_PODER: 34,
-    RESCISION_FIRMADA: 35,
-    ADDENDUM: 36,
-    ADDENDUM_FIRMADO: 37
+  CONTRATO: 8,
+  CORRIDA: 7,
+  CARTA_DOMICILIO: 29,
+  CONTRATO_FIRMADO: 30,
+  DS_NEW: 'ds_new',
+  DS_OLD: 'ds_old',
+  EVIDENCIA_MKTD_OLD: 66, // EXISTE LA RAMA CON LA EVIDENCIA DE MKTD (OLD)
+  AUTORIZACIONES: 'autorizacion',
+  PROSPECTO: 'prospecto',
+  APOSTILLDO_CONTRATO: 31,
+  CARTA: 32,
+  DOCUMENTO_REUBICACION: 33,
+  CARTA_PODER: 34,
+  DOCUMENTO_REUBICACION_FIRMADO: 35,
+  DOCUMENTO_REESTRUCTURA: 36,
+  DOCUMENTO_REESTRUCTURA_FIRMADO: 37,
+  CONSTANCIA_SITUACION_FISCAL: 38,
+  CORRIDA_ANTERIOR: 39,
+  CONTRATO_ANTERIOR: 40
 };
 
 const observacionContratoUrgente = 1; // Bandera para inhabilitar
@@ -312,8 +315,8 @@ function cargarTabla(idLote, idCliente = "") {
 
           if (
             data.tipo_doc == TipoDoc.CONTRATO ||
-            data.tipo_doc == TipoDoc.RESCISION ||
-            data.tipo_doc == TipoDoc.ADDENDUM
+            data.tipo_doc == TipoDoc.DOCUMENTO_REUBICACION ||
+            data.tipo_doc == TipoDoc.DOCUMENTO_REESTRUCTURA
           ) {
             // CONTRATO
             if (data.expediente == null || data.expediente === "") {
@@ -399,8 +402,8 @@ function cargarTabla(idLote, idCliente = "") {
           }
           if (
             data.tipo_doc == TipoDoc.CONTRATO_FIRMADO ||
-            data.tipo_doc == TipoDoc.RESCISION_FIRMADA ||
-            data.tipo_doc == TipoDoc.ADDENDUM_FIRMADO
+            data.tipo_doc == TipoDoc.DOCUMENTO_REUBICACION_FIRMADO ||
+            data.tipo_doc == TipoDoc.DOCUMENTO_REESTRUCTURA_FIRMADO
           ) {
             // CONTRATO FIRMADO
             if (data.expediente == null || data.expediente === "") {
@@ -460,6 +463,16 @@ function cargarTabla(idLote, idCliente = "") {
           if (data.tipo_doc === TipoDoc.PROSPECTO) {
             // EXISTE LA RAMA DEL PROSPECTO
             buttonMain = crearBotonAccion(AccionDoc.DOC_CARGADO, data); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
+            return `<div class="d-flex justify-center">${buttonMain}</div>`;
+          }
+          if (data.tipo_doc == TipoDoc.CORRIDA_ANTERIOR || data.tipo_doc == TipoDoc.CONTRATO_ANTERIOR) {
+            if (data.expediente == null || data.expediente === "") {
+              buttonMain = crearBotonAccion(AccionDoc.DOC_NO_CARGADO, data);
+              return `<div class="d-flex justify-center">${buttonMain}</div>`;
+            }
+
+            // LA RAMA TIENE UN DOCUMENTO CARGADO
+            buttonMain = crearBotonAccion(AccionDoc.DOC_CARGADO, data);
             return `<div class="d-flex justify-center">${buttonMain}</div>`;
           }
 
@@ -787,29 +800,21 @@ function abrirModalAutorizaciones(idLote) {
           statusProceso = "<small class='label lbl-gray'>N/A</small>";
         }
 
-        item["ultima_fecha"] = moment(item["ultima_fecha"].split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss')
-        let fecha = item["ultima_fecha"].split(' ')[0];
+        item["ultima_fecha"] = moment(item["ultima_fecha"].split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss');
 
         $("#auts-loads").append(`
             <div class="container-fluid" style="background-color: #f7f7f7; border-radius: 15px; padding: 15px; margin-bottom: 15px">
                 <div class="row">
-                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 float-end text-right">
-                    <b>
-                    ${item["ultima_fecha"]}</b>
-                </div>
+                  <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 float-end text-right">
+                      ${item["ultima_fecha"]}
+                  </div>
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-7">
                         <span style="font-weight:100; font-size: 12px">Solicitud de autorización: <b>${statusProceso}</b></span>
-                        <span style="font-weight:100; font-size: 12px">Autoriza:${item[
-                          "nombreAUT"
-                        ]
-                          .split(":")
-                          .shift()}</span>
+                        <span style="font-weight:100; font-size: 12px">Autoriza:${item["nombreAUT"].split(":").shift()}</span>
                     </div>
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <p style="text-align: justify;">
-                            <span class="font-weight:400">${
-                              item["autorizacion"]
-                            }</span>
+                            <span class="font-weight:400">${item["autorizacion"]}</span>
                         </p>
                     </div>
                 </div>

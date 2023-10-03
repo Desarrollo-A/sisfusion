@@ -91,8 +91,8 @@ function fillTable(typeTransaction, beginDate, endDate, idResidencial,condominio
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
-                titleAttr: 'Registro de clientes',
-                title: 'Registro de estatus 7',
+                titleAttr: 'REGISTRO DE ESTATUS 7',
+                title: 'V',
                 exportOptions: {
                     columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                     format: 
@@ -253,10 +253,10 @@ function fillTable(typeTransaction, beginDate, endDate, idResidencial,condominio
                     } else {
                         cntActions = '';
                     }
-                    if (Array(2762, 6096, 6864, 10937, 10938, 12136, 12173, 13015, 2747).includes(user) ){
+                    if (Array(2762, 6096, 6864, 10937, 10938, 12136, 12173, 13015, 2747,13498).includes(user) ){
                         cntActions += '<button href="#" data-toggle="tooltip" data-placement="top" title= "CAMBIO DE SEDE" data-nomLote="' + data.nombreLote + '" data-lote="' + data.idLote + '" class="btn-data btn-gray change_sede"><span class="material-icons">pin_drop</span></button><br>';
                     }
-                    if ((Array("2762", "2845", "2747").includes(data.user) || Array(6096, 6864, 10937, 10938, 12136, 12173, 13015).includes(user))) {
+                    if ((Array("2762", "2845", "2747").includes(data.user) || Array(6096, 6864, 10937, 10938, 12136, 12173, 13015,13498).includes(user))) {
                         cntActions += '<button href="#" title= "REASIGNACIÓN" data-nomLote="' + data.nombreLote + '" data-usuario="' + data.juridico + '" data-lote="' + data.idLote + '" class="btn-data btn-warning change_user"><span class="material-icons">find_replace</span></button><br>';
                     }
                     var color = (data.idMovimiento == 36) ? '#58D68D' :

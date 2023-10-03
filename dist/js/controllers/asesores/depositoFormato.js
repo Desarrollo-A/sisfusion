@@ -301,7 +301,7 @@ $(document).on('submit', '#deposito-seriedad-form', async function (e) {
 
     const clienteInfo = await obtenerCliente(cliente);
 
-    if (clienteInfo.proceso !== 2 && clienteInfo.proceso !== 4) {
+    if (![2,3,4].includes(clienteInfo.proceso)) {
         if (costoFinalM2 > costoListaM2 || costoFinalM2 < ((costoListaM2 * .80))) {
             alerts.showNotification('top', 'right', 'El COSTO POR M2 FINAL no debe ser superior al COSTO POR M2 LISTA ni debe ser inferior al 20% de descuento del COSTO POR M2 LISTA.', 'danger');
             return;

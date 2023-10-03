@@ -1086,12 +1086,13 @@ class Usuarios_modelo extends CI_Model
     }
     function consultarLinea($sede,$puesto,$lider)
     {   
-        $columsQro = $sede == 2 ? '' : "         
+        $sedesSinRegional = array(5,2,3,6);
+        $columsQro = in_array($sede,$sedesSinRegional) ? '' : "         
             ,CONCAT(reg.nombre, ' ', reg.apellido_paterno, ' ', reg.apellido_materno) AS regional_1,
             regional.idSede idSedeReg,
             sedeReg.nombre as sedeReg,
             opcReg.nombre puestoReg ";
-        $leftQro = $sede == 2 ? '' : "         
+        $leftQro = in_array($sede,$sedesSinRegional) ? '' : "         
             LEFT JOIN (SELECT idUsuario,idSede,idRol FROM roles_x_usuario WHERE idRol=59 AND estatus=1) regional ON regional.idSede=$sede
             LEFT JOIN usuarios reg ON reg.id_usuario=regional.idUsuario
             LEFT JOIN sedes sedeReg ON sedeReg.id_sede = regional.idSede
