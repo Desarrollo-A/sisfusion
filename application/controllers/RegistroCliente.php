@@ -6238,6 +6238,10 @@ class RegistroCliente extends CI_Controller {
             return $row;
         }
 
+        if (trim($row['expediente']) === '') {
+            return $row;
+        }
+
         if (
                 $row['tipo_doc'] === 'ds_new' ||
                 $row['tipo_doc'] === 'ds_old' ||
