@@ -33,7 +33,6 @@ $(document).on('change', '#leader', function() {
     let sede = $('#headquarter').val();
     let puesto = $('#member_type').val();
     let lider = $('#leader').val();
-
     document.getElementById('lineaVenta').innerHTML = '';
 
     let puestosVentas = [3,7,9];
@@ -53,15 +52,15 @@ $(document).on('change', '#leader', function() {
         function (data) {
         let sedesSinRegional = [5,2,3,6];
         let arraySedes = puesto == 7 ? ( data[0].banderaGer == 0 ? [data[0].idSedeCoor,data[0].idSedeGer,data[0].idSedeSub,data[0].idSedeReg] : [data[0].idSedeGer,data[0].idSedeSub,data[0].idSedeReg]) : ( puesto == 9 ? sedesSinRegional.includes(parseInt(sede)) ? [data[0].idSedeGer,data[0].idSedeSub] : [data[0].idSedeGer,data[0].idSedeSub,data[0].idSedeReg] : sedesSinRegional.includes(parseInt(sede)) ? [data[0].idSedeSub] : [data[0].idSedeSub,data[0].idSedeReg]);
-        let buscarDiff = arraySedes.filter(element => element != sede);
-        
-        if(buscarDiff.length > 0){
-            $('#btn_acept').prop('disabled', true);
-        }else{
-            $('#btn_acept').prop('disabled', false);
-        }
-        
-        let tabla = `<div class="row subBoxDetail">
+    let buscarDiff = arraySedes.filter(element => element != sede);
+    if(buscarDiff.length > 0){
+        $('#btn_acept').prop('disabled', true);
+    }else{
+        $('#btn_acept').prop('disabled', false);
+    }
+
+    let tabla = `
+    <div class="row subBoxDetail">
         <div class=" col-sm-12 col-sm-12 col-lg-12 text-center" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>NUEVA LÍNEA DE VENTAS</b></label></div>
         <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label><b>Nombre </b></label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label><b>Puesto</b></label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label><b>Sede</b></label></div>
         <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${nombreSelected}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${selectedPuesto}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${selectedSede}</label></div>`;
@@ -70,7 +69,6 @@ $(document).on('change', '#leader', function() {
         tabla += `<div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].sub}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoSub}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeSubdirector}</label></div>`;
         tabla += sedesSinRegional.includes(parseInt(sede)) ? '' : `<div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].regional_1}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoReg}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeReg}</label></div>`;
         tabla += `</div>`;
-
         $('#lineaVenta').append(tabla);
         },"json");
     }
@@ -90,10 +88,8 @@ $(document).on('change', '#member_type', function() {
 });
 
 function validarSede(indexActual){
-    
     let index = parseInt($('#index').val());
     let c = 0;
-
     for (let j = 0; j < index; j++) {
         if(document.getElementById(`sedes_${j}`)){
             if(j != indexActual){
@@ -134,7 +130,6 @@ $(document).on("click","#btnMultiRol",function(){
                 </div>
             </div>`);
         $('[data-toggle="tooltip"]').tooltip();
-
         for (var i = 0; i < puestos.length; i++) {
             var id = puestos[i].id;
             var name = puestos[i].nombre;
@@ -291,7 +286,8 @@ function fillUsersTable() {
             data: function (d) {
                 var id_rol = id_rol_global;
                 if(id_rol == 8 && d.estatus == 1){
-                    if (id_usuario_general == 1297 || id_usuario_general == 1) { // filtro para soporte excluyendo ambos perfiles
+                    if (id_usuario_general == 1297 || id_usuario_general == 1) { 
+                        // filtro para soporte excluyendo ambos perfiles
                         return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-toggle="tooltip"  data-placement="top" title="EDITAR INFORMACIÓN" data-id-usuario="' + d.id_usuario +'"> '+
                         '<i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow  see-changes-log"  data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip"  data-placement="top" title="CONSULTA LA INFORMACIÓN" ><i class="fas fa-eye"></i> </button>' +
                             '<button class="btn-data btn-warning change-user-status"  id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'" data-idrol="'+d.id_rol+'" data-toggle="tooltip"  data-placement="top" title="DAR DE BAJA"><i class="fas fa-lock"></i></button>'+
