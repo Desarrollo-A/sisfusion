@@ -42,7 +42,8 @@ const TipoDoc = {
   DOCUMENTO_REESTRUCTURA_FIRMADO: 37,
   CONSTANCIA_SITUACION_FISCAL: 38,
   CORRIDA_ANTERIOR: 39,
-  CONTRATO_ANTERIOR: 40
+  CONTRATO_ANTERIOR: 40,
+  COMPLEMENTO_ENGANCHE: 45
 };
 
 const observacionContratoUrgente = 1; // Bandera para inhabilitar
@@ -370,7 +371,8 @@ function cargarTabla(idLote, idCliente = "") {
           }
           if (
             data.tipo_doc == TipoDoc.CARTA_DOMICILIO ||
-            data.tipo_doc == TipoDoc.APOSTILLDO_CONTRATO
+            data.tipo_doc == TipoDoc.APOSTILLDO_CONTRATO ||
+            data.tipo_doc == TipoDoc.COMPLEMENTO_ENGANCHE
           ) {
             // CARTA DOMICILIO || APOSTILLADO CONTRATO
             if (data.expediente == null || data.expediente === "") {
@@ -433,7 +435,6 @@ function cargarTabla(idLote, idCliente = "") {
             }
             return `<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`;
           }
-
           if (
             data.tipo_doc === TipoDoc.DS_NEW &&
             data.expediente === "Depósito de seriedad"

@@ -197,65 +197,133 @@ class Asistente_gerente extends CI_Controller {
 		$arreglo2["idCondominio"]= $idCondominio;          	
 		$arreglo2["idCliente"]= $idCliente;
 
+        $validaSinLiquidar = $this->VentasAsistentes_model->validaSinliquidar($idLote);
+        if ($validaSinLiquidar == 1) {
+                //se valida si existe complemento de enganche en el árbol de documentos
+                $ComplementoEnganche = $this->VentasAsistentes_model->validaComplementoEnganche($idLote);
 
-        $valida_rama = $this->VentasAsistentes_model->check_carta($idCliente);
-        if($valida_rama[0]['tipo_nc']==1){
-            $validacionCarta = $this->VentasAsistentes_model->validaCartaCM($idCliente);
-            if($validacionCarta[0]['tipo_comprobanteD']==1) {
-                if(count($validacionCarta)<=0){
-                    $data['message'] = 'MISSING_CARTA_RAMA';
+                if (empty($ComplementoEnganche->expediente) || $ComplementoEnganche->expediente == NULL) {
+                    $data['message'] = 'MISSING_COMPLEMENTO_DE_ENGANCHE';
                     echo json_encode($data);
-                    exit;
                 }else{
+
+                $valida_rama = $this->VentasAsistentes_model->check_carta($idCliente);
+                if($valida_rama[0]['tipo_nc']==1){
+                    $validacionCarta = $this->VentasAsistentes_model->validaCartaCM($idCliente);
                     if($validacionCarta[0]['tipo_comprobanteD']==1) {
-                        if ($validacionCarta[0]['expediente'] == '' || $validacionCarta[0]['expediente'] == NULL) {
-                            $data['message'] = 'MISSING_CARTA_UPLOAD';
+                        if(count($validacionCarta)<=0){
+                            $data['message'] = 'MISSING_CARTA_RAMA';
                             echo json_encode($data);
                             exit;
+                        }else{
+                            if($validacionCarta[0]['tipo_comprobanteD']==1) {
+                                if ($validacionCarta[0]['expediente'] == '' || $validacionCarta[0]['expediente'] == NULL) {
+                                    $data['message'] = 'MISSING_CARTA_UPLOAD';
+                                    echo json_encode($data);
+                                    exit;
+                                }
+                            }
                         }
                     }
+                }  
+
+                $validate = $this->VentasAsistentes_model->validateSt8($idLote);
+                if ($validate != 1) {
+                    $data['message'] = 'FALSE';
+                    echo json_encode($data);
+                    return;
                 }
-            }
-        }
 
-		$validate = $this->VentasAsistentes_model->validateSt8($idLote);
-        if ($validate != 1) {
-            $data['message'] = 'FALSE';
-            echo json_encode($data);
-            return;
-        }
+                if (!$this->VentasAsistentes_model->updateSt($idLote,$arreglo,$arreglo2)){
+                    $data['message'] = 'ERROR';
+                    echo json_encode($data);
+                    return;
+                }
 
-        if (!$this->VentasAsistentes_model->updateSt($idLote,$arreglo,$arreglo2)){
-            $data['message'] = 'ERROR';
-            echo json_encode($data);
-            return;
-        }
+                $cliente = $this->Reestructura_model->obtenerClientePorId($idCliente);
 
-        $cliente = $this->Reestructura_model->obtenerClientePorId($idCliente);
+                if (!in_array($cliente->proceso, [2,4])) {
+                    $data['message'] = 'OK';
+                    echo json_encode($data);
+                    return;
+                }
 
-        if (!in_array($cliente->proceso, [2,4])) {
-            $data['message'] = 'OK';
-            echo json_encode($data);
-            return;
-        }
+                $loteAnterior = $this->Reestructura_model->buscarLoteAnteriorPorIdClienteNuevo($idCliente);
+                if (!$this->Reestructura_model->loteLiberadoPorReubicacion($loteAnterior->idLote)) {
+                    $data = [
+                        'tipoLiberacion' => 7,
+                        'idLote' => $loteAnterior->idLote,
+                        'idLoteNuevo' => $idLote
+                    ];
 
-        $loteAnterior = $this->Reestructura_model->buscarLoteAnteriorPorIdClienteNuevo($idCliente);
-        if (!$this->Reestructura_model->loteLiberadoPorReubicacion($loteAnterior->idLote)) {
-            $data = [
-                'tipoLiberacion' => 7,
-                'idLote' => $loteAnterior->idLote,
-                'idLoteNuevo' => $idLote
-            ];
+                    if (!$this->Reestructura_model->aplicaLiberacion($data)) {
+                        $data['message'] = 'ERROR';
+                        echo json_encode($data);
+                        return;
+                    }
+                }
+            } 
 
-            if (!$this->Reestructura_model->aplicaLiberacion($data)) {
-                $data['message'] = 'ERROR';
+        } else {
+                $valida_rama = $this->VentasAsistentes_model->check_carta($idCliente);
+                if($valida_rama[0]['tipo_nc']==1){
+                    $validacionCarta = $this->VentasAsistentes_model->validaCartaCM($idCliente);
+                    if($validacionCarta[0]['tipo_comprobanteD']==1) {
+                        if(count($validacionCarta)<=0){
+                            $data['message'] = 'MISSING_CARTA_RAMA';
+                            echo json_encode($data);
+                            exit;
+                        }else{
+                            if($validacionCarta[0]['tipo_comprobanteD']==1) {
+                                if ($validacionCarta[0]['expediente'] == '' || $validacionCarta[0]['expediente'] == NULL) {
+                                    $data['message'] = 'MISSING_CARTA_UPLOAD';
+                                    echo json_encode($data);
+                                    exit;
+                                }
+                            }
+                        }
+                    }
+                }  
+
+                $validate = $this->VentasAsistentes_model->validateSt8($idLote);
+                if ($validate != 1) {
+                    $data['message'] = 'FALSE';
+                    echo json_encode($data);
+                    return;
+                }
+
+                if (!$this->VentasAsistentes_model->updateSt($idLote,$arreglo,$arreglo2)){
+                    $data['message'] = 'ERROR';
+                    echo json_encode($data);
+                    return;
+                }
+
+                $cliente = $this->Reestructura_model->obtenerClientePorId($idCliente);
+
+                if (!in_array($cliente->proceso, [2,4])) {
+                    $data['message'] = 'OK';
+                    echo json_encode($data);
+                    return;
+                }
+
+                $loteAnterior = $this->Reestructura_model->buscarLoteAnteriorPorIdClienteNuevo($idCliente);
+                if (!$this->Reestructura_model->loteLiberadoPorReubicacion($loteAnterior->idLote)) {
+                    $data = [
+                        'tipoLiberacion' => 7,
+                        'idLote' => $loteAnterior->idLote,
+                        'idLoteNuevo' => $idLote
+                    ];
+
+                    if (!$this->Reestructura_model->aplicaLiberacion($data)) {
+                        $data['message'] = 'ERROR';
+                        echo json_encode($data);
+                        return;
+                    }
+                }
+
+                $data['message'] = 'OK';
                 echo json_encode($data);
-                return;
-            }
         }
-
-        $data['message'] = 'OK';
-        echo json_encode($data);
     }
 	
     public function editar_registro_loteRechazo_asistentes_proceceso8(){
@@ -613,7 +681,6 @@ class Asistente_gerente extends CI_Controller {
         echo json_encode($data);
     }
 
-
     public function getStatCont14() {
       $data=array();
       $data = $this->VentasAsistentes_model->registroStatusContratacion14();
@@ -624,9 +691,6 @@ class Asistente_gerente extends CI_Controller {
           echo json_encode(array());
       }
     }
-
-
-
 
     public function editar_registro_lote_asistentes_proceceso14(){
 
@@ -1113,4 +1177,3 @@ class Asistente_gerente extends CI_Controller {
       }
     }
 }
-?>
