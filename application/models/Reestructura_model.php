@@ -468,4 +468,14 @@ class Reestructura_model extends CI_Model
 		GROUP BY lotx.idProyecto, CONCAT(re.nombreResidencial, ' - ' , re.descripcion)");
     }
 
+    function obtenerPropuestasXLote($idLote){
+        return $this->db->query("SELECT pl.idLote, pl.id_lotep, lo.nombreLote, lo.sup
+        FROM propuestas_x_lote pl
+        INNER JOIN lotes lo ON pl.id_lotep = lo.idLote
+        WHERE pl.idLote = $idLote;");
+    }
+
+    function getNuevaPropuesta($idLote, $lotesPropuestos){
+        return $this->db->query("SELECT * FROM propuestas_x_lote WHERE idLote = $idLote AND id_lotep NOT IN ($lotesPropuestos)");
+    }    
 }
