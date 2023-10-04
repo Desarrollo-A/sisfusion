@@ -468,4 +468,20 @@ class Reestructura_model extends CI_Model
 		GROUP BY lotx.idProyecto, CONCAT(re.nombreResidencial, ' - ' , re.descripcion)");
     }
 
+    function getListaLotesArchivosReestrucura(){
+        $query = $this->db->query("SELECT l.nombreLote, dxc.* FROM datos_x_cliente dxc INNER JOIN lotes l ON l.idLote = dxc.idLote");
+        return $query->result_array();
+    }
+    function getOpcionesLote($idLote){
+        $query = $this->db->query("SELECT l.nombreLote, pxl.*, dxc.rescision
+        FROM propuestas_x_lote pxl 
+        INNER JOIN lotes l ON pxl.id_lotep=l.idLote
+        INNER JOIN datos_x_cliente dxc ON pxl.idLote=dxc.idLote
+        WHERE pxl.idLote=".$idLote." AND pxl.estatus=1");
+        return $query->result_array();
+    }
+    function checkDocumentacion($idLote){
+        $query = $this->db->query("SELECT dxc.id_dxc, dxc.rescision, pxl.* FROM propuestas_x_lote pxl INNER JOIN datos_x_cliente dxc ON pxl.idLote=dxc.idLote WHERE pxl.idLote=".$idLote);
+        return $query->result_array();
+    }
 }
