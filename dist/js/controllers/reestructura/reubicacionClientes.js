@@ -262,6 +262,8 @@ $(document).on('click', '.btn-reubicar', function () {
 $(document).on('click', '.infoUser', function (){
     $('#idCliente').val($(this).attr('data-idCliente'));
     $('#idLote').val($(this).attr('data-idLote'));
+    $('#ineCLi').val('');
+    $("#estadoCli").empty();
 
     var idCliente = $("#idCliente").val();
 
@@ -305,8 +307,31 @@ $(document).on('click', '#guardarCliente', function (){
     var estadoCli = $('#estadoCli').val();
     var ineCLi = $('#ineCLi').val();
     var ocupacionCli = $('#ocupacionCli').val();
-    
 
+    if(ineCLi == ''){
+        alerts.showNotification("top", "right", "Captura el numero INE", "warning");
+        return;
+    }
+
+    if (telefonoCli == '' || telefonoCli == null){
+        alerts.showNotification("top", "right", "Captura el numero de telefono", "warning");
+        return;
+    }
+
+    if (correoCli == '' || correoCli == null){
+        alerts.showNotification("top", "right", "Captura el correo", "warning");
+        return;
+    }
+    
+    if (domicilioCli == '' || domicilioCli == null){
+        alerts.showNotification("top", "right", "Captura el domicilio", "warning");
+        return;
+    }
+
+    if(ocupacionCli == '' || ocupacionCli == null){
+        alerts.showNotification("top", "right", "Captura la ocupación", "warning");
+        return;
+    }
 
     var datos = new FormData();
     datos.append("idLote", idLote);
@@ -328,18 +353,17 @@ $(document).on('click', '#guardarCliente', function (){
         contentType: false,
         success: function(data) {
             if (data == 1) {
-            $('#tabla_clientes').DataTable().ajax.reload(null, false);
             $('#clienteConsulta').modal('hide');
-            alerts.showNotification("top", "right", "Información actualizada.", "success");
-            $('#idLoteCatalogo').val('');
-            $('#grabado').val('');
-            $('#comentario2').val('');
-            $("#spiner-loader").addClass('hide');
+            alerts.showNotification("top", "right", "Información capturada con exito.", "success");
+            $('#ineCLi').val('');
+            $('#telefonoCli').val('');
+            $('#correoCli').val('');
+            $('#domicilioCli').val('');
+            $('#ocupacionCli').val('');
             }
         },
         error: function(){
             $('#aceptarReestructura').modal('hide');
-            $("#spiner-loader").addClass('hide');
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
