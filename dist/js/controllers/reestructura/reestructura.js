@@ -647,14 +647,6 @@ $('#proyectoLiberado').change(function () {
 
     fillTable1(index_proyecto);
 });
-$('#proyectoLiberado').change(function () {
-    let index_proyecto = $(this).val();
-
-    $("#spiner-loader").removeClass('hide');
-    $("#tabla_clientes_liberar").removeClass('hide');
-
-    fillTable1(index_proyecto);
-});
 
 function fillTable1(index_proyecto) {
     tabla_valores_cliente = $("#tabla_clientes_liberar").DataTable({
@@ -773,7 +765,7 @@ function fillTable1(index_proyecto) {
             orderable: false
         }],
         ajax: {
-            url: general_base_url + "Reestructura/getRegistros",
+            url: general_base_url + "Reestructura/obtenerRegistrosLiberar",
             dataSrc: "",
             type: "POST",
             cache: false,
