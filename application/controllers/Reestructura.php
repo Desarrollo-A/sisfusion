@@ -947,4 +947,14 @@ class Reestructura extends CI_Controller{
       echo json_encode ($respuesta);             
   
     }
+
+    public function setAvance() {
+        $dataUpdateLote = array(
+			'estatus_preproceso' => $this->input->post('tipoTransaccion') + 1,
+			'usuario' => $this->session->userdata('id_usuario')
+        );
+        $response = $this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $this->input->post('idLote'));
+        echo json_encode($response);
+    }
+
 }

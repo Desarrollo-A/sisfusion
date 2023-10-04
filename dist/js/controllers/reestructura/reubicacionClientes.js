@@ -25,6 +25,8 @@ const STATUSLOTE = Object.freeze({
     APARTADO_REUBICACIÓN : 16,
 });
 
+const ESTATUS_PREPROCESO = ['PENDIENTE CARGA DE PROPUESTAS', 'REVISIÓN DE PROPUESTAS', 'ELABORACIÓN DE CORRIDAS', 'ELABORACIÓN DE CONTRATO Y RESICISIÓN', 'DOCUMENTACIÓN ENTREGADA', 'RECEPCIÓN DE DOCUMENTOS CONFIRMADA'];
+
 let titulosTabla = [];
 $('#reubicacionClientes thead tr:eq(0) th').each(function (i) {
     const title = $(this).text();
@@ -49,7 +51,7 @@ $('#reubicacionClientes').DataTable({
         titleAttr: 'Lotes para reubicar',
         title:"Lotes para reubicar",
         exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
             format: {
                 header: function (d, columnIdx) {
                     return ' ' + titulosTabla[columnIdx] + ' ';
@@ -66,7 +68,7 @@ $('#reubicacionClientes').DataTable({
         orientation: 'landscape',
         pageSize: 'LEGAL',
         exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
             format: {
                 header: function (d, columnIdx) {
                     return ' ' + titulosTabla[columnIdx] + ' ';
@@ -92,21 +94,21 @@ $('#reubicacionClientes').DataTable({
     order: [[4, "desc"]],
     destroy: true,
     columns: [
-        { "data": "nombreResidencial" },
-        { "data": "nombreCondominio" },
-        { "data": "nombreLote" },
-        { "data": "idLote" },
-        { "data": "cliente" },
-        { "data": "nombreAsesor" },
-        { "data": "nombreCoordinador" },
-        { "data": "nombreGerente" },
-        { "data": "nombreSubdirector" },
-        { "data": "nombreRegional" },
-        { "data": "nombreRegional2" },
-        { "data": "fechaApartado" },
-        { "data": "sup"},
+        { data: "nombreResidencial" },
+        { data: "nombreCondominio" },
+        { data: "nombreLote" },
+        { data: "idLote" },
+        { data: "cliente" },
+        { data: "nombreAsesor" },
+        { data: "nombreCoordinador" },
+        { data: "nombreGerente" },
+        { data: "nombreSubdirector" },
+        { data: "nombreRegional" },
+        { data: "nombreRegional2" },
+        { data: "fechaApartado" },
+        { data: "sup"},
         {
-            "data": function (d) {
+            data: function (d) {
                 if( d.costom2f == 'SIN ESPECIFICAR')
                     return d.costom2f;
                 else
@@ -114,37 +116,84 @@ $('#reubicacionClientes').DataTable({
             }
         },
         {
-            "data": function (d) {
+            data: function (d) {
                 return `$${formatMoney(d.total)}`;
             }
         },
         {
-            "data": function (d) {
+            data: function (d) {
+                return `<span class='label lbl-violetBoots'>${d.estatusPreproceso}</span>`;
+            }
+        },
+        {
+            data: function (d) {
                 let btns = '';
-                if(d.idProyecto == PROYECTO.NORTE || d.idProyecto == PROYECTO.PRIVADAPENINSULA){
-                    btns +=  `<button class="btn-data btn-sky btn-reestructurar"
+                const BTN_PROPUESTAS =  `<button class="btn-data btn-blueMaderas btn-asignar-propuestas"
                             data-toggle="tooltip" 
                             data-placement="left"
-                            title="REESTRUCTURAR"
+                            title="${d.id_estatus_preproceso == 0 ? 'ASIGNAR PROPUESTAS' : 'ACTUALIZAR PROPUESTAS'}"
                             data-idCliente="${d.idCliente}">
-                            <i class="fas fa-map-marker"></i>
+                            <i class="fas fa-user-edit"></i>
+                    </button>`;
+                const BTN_AVANCE =  `<button class="btn-data btn-green btn-avanzar"
+                    data-toggle="tooltip" 
+                    data-placement="left"
+                    title="ENVIAR A ${ESTATUS_PREPROCESO[d.id_estatus_preproceso + 1]}"
+                    data-idCliente="${d.idCliente}"
+                    data-tipoTransaccion="${d.id_estatus_preproceso}">
+                    <i class="fas fa-thumbs-up"></i>
+                </button>`;
+                const BTN_SUBIR_ARCHIVO =  `<button class="btn-data btn-blueMaderas btn-cargar-documentos"
+                    data-toggle="tooltip" 
+                    data-placement="left"
+                    title="CARGAR DOCUMENTACIÓN"
+                    data-idCliente="${d.idCliente}"
+                    data-tipoTransaccion="${d.id_estatus_preproceso}">
+                    <i class="fas fa-upload"></i>
+                </button>`;
+
+                if (d.id_estatus_preproceso == 0 && id_rol_general == 3) // Gerente: PENDIENTE CARGA DE PROPUESTAS
+                    btns += BTN_PROPUESTAS;
+                else if (d.id_estatus_preproceso == 1 && id_rol_general == 3) // Gerente: REVISIÓN DE PROPUESTAS
+                    btns += BTN_PROPUESTAS + BTN_AVANCE;
+                else if (d.id_estatus_preproceso == 2 && id_rol_general == 17) { // Contraloría: ELABORACIÓN DE CORRIDAS
+                    if (d.totalCorridas == 3)
+                        btns += BTN_AVANCE;
+                    btns += BTN_SUBIR_ARCHIVO
+                }
+                else if (d.id_estatus_preproceso == 3 && id_rol_general == 15) { // Jurídico: ELABORACIÓN DE CONTRATO Y RESICISIÓN
+                    if (d.totalContratos == 3 && d.totalRescision == 1)
+                        btns += BTN_AVANCE;
+                    btns += BTN_SUBIR_ARCHIVO
+                }
+                else if (d.id_estatus_preproceso == 4 && id_rol_general == 6) // Asistente gerente: DOCUMENTACIÓN ENTREGADA
+                    btns += BTN_AVANCE;
+                else if (d.id_estatus_preproceso == 5) { // EEC: CONFIRMACIÓN DE RECEPCIÓN DE DOCUMENTOS
+                    if(d.idProyecto == PROYECTO.NORTE || d.idProyecto == PROYECTO.PRIVADAPENINSULA){
+                        btns +=  `<button class="btn-data btn-sky btn-reestructurar"
+                                data-toggle="tooltip" 
+                                data-placement="left"
+                                title="REESTRUCTURAR"
+                                data-idCliente="${d.idCliente}">
+                                <i class="fas fa-map-marker"></i>
+                        </button>`;
+                    }
+                    btns += `<button class="btn-data btn-green btn-reubicar"
+                            data-toggle="tooltip" 
+                            data-placement="left"
+                            title="REUBICAR CLIENTE"
+                            data-idCliente="${d.idCliente}"
+                            data-idProyecto="${d.idProyecto}"
+                            data-tipoLote="${d.tipo_lote}">
+                        <i class="fas fa-route"></i>
                     </button>`;
                 }
-                btns += `<button class="btn-data btn-green btn-reubicar"
-                        data-toggle="tooltip" 
-                        data-placement="left"
-                        title="REUBICAR CLIENTE"
-                        data-idCliente="${d.idCliente}"
-                        data-idProyecto="${d.idProyecto}"
-                        data-tipoLote="${d.tipo_lote}">
-                    <i class="fas fa-route"></i>
-                </button>`;
                 return `<div class="d-flex justify-center">${btns}</div>`;
             }
         }
     ],
     ajax: {
-        url: `${general_base_url}reestructura/getListaClientesReubicar`,
+        url: `${general_base_url}Reestructura/getListaClientesReubicar`,
         dataSrc: "",
         type: "POST",
         cache: false,
@@ -385,6 +434,60 @@ $(document).on("submit", "#formReestructura", function(e){
             data = JSON.parse(data);
             console.log(data);
             alerts.showNotification("top", "right", ""+data.message+"", ""+data.color+"");
+            $('#reubicacionClientes').DataTable().ajax.reload();
+            $('#spiner-loader').addClass('hide');
+            hideModal();
+        },
+        error: function( data ){
+            alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+            hideModal();
+        }
+    });
+});
+
+$(document).on('click', '.btn-avanzar', function () {
+    const tr = $(this).closest('tr');
+    const row = $('#reubicacionClientes').DataTable().row(tr);
+    const nombreLote = row.data().nombreLote;
+    const idLote = row.data().idLote;
+    const tipoTransaccion = $(this).attr("data-tipoTransaccion");
+    changeSizeModal('modal-sm');
+    appendBodyModal(`
+        <form method="post" id="formAvanzarEstatus">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h6 class="m-0">¿Estás seguro de envíar el lote <b>${nombreLote}</b> a <b><i>${ESTATUS_PREPROCESO[parseInt(tipoTransaccion) + 1]}</i></b></h6>
+                    </div>                
+                    <input type="hidden" id="idLote" name="idLote" value="${idLote}">
+                    <input type="hidden" id="tipoTransaccion" name="tipoTransaccion" value="${tipoTransaccion}">
+                    <div class="row mt-2">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
+                            <button type="button" class="btn btn-simple btn-danger" onclick="hideModal()">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Aceptar</button>
+                        </div>
+                    </div>
+            </div>
+        </form>
+    `);
+    showModal();
+});
+
+$(document).on("submit", "#formAvanzarEstatus", function(e){
+    $('#spiner-loader').removeClass('hide');
+    e.preventDefault();
+    let data = new FormData();
+    data.append("idLote", $("#idLote").val());
+    data.append("tipoTransaccion", $("#tipoTransaccion").val());
+    $.ajax({
+        url : 'setAvance',
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST', 
+        success: function(data){
+            alerts.showNotification("top", "right", "El registro se ha avanzado con éxito.", "success");
             $('#reubicacionClientes').DataTable().ajax.reload();
             $('#spiner-loader').addClass('hide');
             hideModal();

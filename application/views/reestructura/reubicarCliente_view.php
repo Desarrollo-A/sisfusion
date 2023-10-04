@@ -32,6 +32,7 @@
                                                 <th>SUPERFICIE</th>
                                                 <th>COSTO M2 FINAL</th>
                                                 <th>TOTAL</th>
+                                                <th>ESTATUS</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>
