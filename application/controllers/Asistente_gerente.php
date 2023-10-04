@@ -4,7 +4,7 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Asistente_gerente extends CI_Controller {
     public function __construct() {
         parent::__construct();
-        $this->load->model(['VentasAsistentes_model', 'registrolote_modelo', 'asesor/Asesor_model', 'Reestructura_model']);
+        $this->load->model(['VentasAsistentes_model', 'registrolote_modelo', 'asesor/Asesor_model']);
         $this->load->library(array('session','form_validation'));
        //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
         $this->load->library(array('session','form_validation', 'get_menu','permisos_sidebar'));
@@ -229,29 +229,6 @@ class Asistente_gerente extends CI_Controller {
             $data['message'] = 'ERROR';
             echo json_encode($data);
             return;
-        }
-
-        $cliente = $this->Reestructura_model->obtenerClientePorId($idCliente);
-
-        if (!in_array($cliente->proceso, [2,4])) {
-            $data['message'] = 'OK';
-            echo json_encode($data);
-            return;
-        }
-
-        $loteAnterior = $this->Reestructura_model->buscarLoteAnteriorPorIdClienteNuevo($idCliente);
-        if (!$this->Reestructura_model->loteLiberadoPorReubicacion($loteAnterior->idLote)) {
-            $data = [
-                'tipoLiberacion' => 7,
-                'idLote' => $loteAnterior->idLote,
-                'idLoteNuevo' => $idLote
-            ];
-
-            if (!$this->Reestructura_model->aplicaLiberacion($data)) {
-                $data['message'] = 'ERROR';
-                echo json_encode($data);
-                return;
-            }
         }
 
         $data['message'] = 'OK';
@@ -584,29 +561,6 @@ class Asistente_gerente extends CI_Controller {
             $data['message'] = 'ERROR';
             echo json_encode($data);
             return;
-        }
-
-        $cliente = $this->Reestructura_model->obtenerClientePorId($idCliente);
-
-        if (!in_array($cliente->proceso, [2,4])) {
-            $data['message'] = 'OK';
-            echo json_encode($data);
-            return;
-        }
-
-        $loteAnterior = $this->Reestructura_model->buscarLoteAnteriorPorIdClienteNuevo($idCliente);
-        if (!$this->Reestructura_model->loteLiberadoPorReubicacion($loteAnterior->idLote)) {
-            $data = [
-                'tipoLiberacion' => 7,
-                'idLote' => $loteAnterior->idLote,
-                'idLoteNuevo' => $idLote
-            ];
-
-            if (!$this->Reestructura_model->aplicaLiberacion($data)) {
-                $data['message'] = 'ERROR';
-                echo json_encode($data);
-                return;
-            }
         }
 
         $data['message'] = 'OK';
@@ -1032,29 +986,6 @@ class Asistente_gerente extends CI_Controller {
             $data['message'] = 'ERROR';
             echo json_encode($data);
             return;
-        }
-
-        $cliente = $this->Reestructura_model->obtenerClientePorId($idCliente);
-
-        if (!in_array($cliente->proceso, [2,4])) {
-            $data['message'] = 'OK';
-            echo json_encode($data);
-            return;
-        }
-
-        $loteAnterior = $this->Reestructura_model->buscarLoteAnteriorPorIdClienteNuevo($idCliente);
-        if (!$this->Reestructura_model->loteLiberadoPorReubicacion($loteAnterior->idLote)) {
-            $data = [
-                'tipoLiberacion' => 7,
-                'idLote' => $loteAnterior->idLote,
-                'idLoteNuevo' => $idLote
-            ];
-
-            if (!$this->Reestructura_model->aplicaLiberacion($data)) {
-                $data['message'] = 'ERROR';
-                echo json_encode($data);
-                return;
-            }
         }
 
         $data['message'] = 'OK';

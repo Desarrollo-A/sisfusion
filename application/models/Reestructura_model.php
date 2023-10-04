@@ -66,9 +66,9 @@ class Reestructura_model extends CI_Model
 		WHEN (lo.sup - $superficie) <= 2 THEN op2.nombre
 		ELSE op3.nombre END a_favor, lo.idLote, lo.nombreLote, lo.sup, lo.precio, lo.total 
 		FROM lotes lo 
-		INNER JOIN opcs_x_cats op1 ON op1.id_catalogo = 103 AND op1.id_opcion = 1
-		INNER JOIN opcs_x_cats op2 ON op2.id_catalogo = 103 AND op2.id_opcion = 2
-		INNER JOIN opcs_x_cats op3 ON op3.id_catalogo = 103 AND op3.id_opcion = 3
+		INNER JOIN opcs_x_cats op1 ON op1.id_catalogo = 105 AND op1.id_opcion = 1
+		INNER JOIN opcs_x_cats op2 ON op2.id_catalogo = 105 AND op2.id_opcion = 2
+		INNER JOIN opcs_x_cats op3 ON op3.id_catalogo = 105 AND op3.id_opcion = 3
 		WHERE lo.idCondominio = $condominio AND lo.idStatusLote = 15 AND lo.status = 1 AND (lo.sup >= $superficie - 0.5)");
         
         return $query->result();
@@ -113,6 +113,23 @@ class Reestructura_model extends CI_Model
         INNER JOIN loteXReubicacion lotx ON lotx.proyectoReubicacion = con.idResidencial and lotx.proyectoReubicacion in ($id_proyecto)
         LEFT JOIN clientes cli ON cli.id_cliente = lot.idCliente and cli.status in (1,0)
         WHERE lot.idStatusLote in (15,2,3)")->result();
+    }
+
+    public function obtenerLotesLiberar($id_proyecto)
+    {
+        return $this->db->query("SELECT res.nombreResidencial,con.nombre AS condominio, lot.nombreLote,
+                lot.idLote ,lot.sup AS superficie, lot.precio, CONCAT(cli.nombre,' ',cli.apellido_paterno,' ',cli.apellido_materno) nombreCliente,
+                lot.liberadoReubicacion AS observacion, oxc.nombre AS nombreOp, 
+                lot.comentarioReubicacion, lot.liberadoReubicacion ,
+                lot.liberaBandera 
+            FROM lotes lot
+            INNER JOIN condominios con ON con.idCondominio = lot.idCondominio
+            INNER JOIN residenciales res on res.idResidencial = con.idResidencial
+            LEFT JOIN opcs_x_cats oxc on oxc.id_opcion = lot.opcionReestructura and id_catalogo = 100
+            INNER JOIN loteXReubicacion lotx ON lotx.proyectoReubicacion = con.idResidencial and lotx.idProyecto in ($id_proyecto)
+            LEFT JOIN clientes cli ON cli.id_cliente = lot.idCliente and cli.status in (1,0)
+            WHERE lot.idStatusLote in (15,2,3)")
+            ->result();
     }
 
     public function actualizarValidacion($datos)
@@ -468,4 +485,15 @@ class Reestructura_model extends CI_Model
 		GROUP BY lotx.idProyecto, CONCAT(re.nombreResidencial, ' - ' , re.descripcion)");
     }
 
+    public function expedienteReubicacion($idLote)
+    {
+        $query = $this->db->query("SELECT * FROM propuestas_x_lote WHERE idLote = $idLote AND estatus = 1");
+        return $query->row();
+    }
+
+    public function obtenerDatosClienteReubicacion($idLote)
+    {
+        $query = $this->db->query("SELECT * FROM datos_x_cliente WHERE idLote = $idLote");
+        return $query->row();
+    }
 }
