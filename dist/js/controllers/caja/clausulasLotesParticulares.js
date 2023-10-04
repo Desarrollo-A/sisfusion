@@ -58,7 +58,8 @@ $("#tablaClausulasLotesParticulares").ready(function () {
             {data: 'clausulas'},
             {
                 data: function (d) {
-                    return `<center><button class="btn-data btn-blueMaderas addEditClausulas" value="${d.id_clausula}" data-clausulas="${d.clausulas}" data-idlote="${d.idLote}" data-nombrelote="${d.nombreLote}" data-toggle="tooltip" data-placement="left" title="AGREGAR/EDITAR CLÁUSULAS"><i class="fas fa-edit"></i></button></center>`;
+                    return `<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas addEditClausulas" value="${d.id_clausula}" data-clausulas="${d.clausulas}" data-idlote="${d.idLote}" data-nombrelote="${d.nombreLote}" data-toggle="tooltip" data-placement="left" title="AGREGAR/EDITAR CLÁUSULAS"><i class="fas fa-edit"></i></button>
+                    <button class="btn-data btn-warning btn-delete addVentaParticular" data-idlote="${d.idLote}" data-nombrelote="${d.nombreLote}" data-toggle="tooltip" data-placement="left" title="REMOVER VENTA PARTICULAR"><i class="fas fa-trash"></i></button></div>`;
                 }
             }
         ],
@@ -79,9 +80,15 @@ $("#tablaClausulasLotesParticulares").ready(function () {
 $(document).on('click', '.addEditClausulas', function () {
     $('#clausulas').val($(this).data("clausulas"));
     $('#idLote').val($(this).data("idlote"));
-    $("#nombreLote").html($(this).data("nombrelote"));
+    $(".nombreLote").html($(this).data("nombrelote"));
     $('#id_clausula').val($(this).val());
     $('#addEditClausulasModal').modal();
+});
+
+$(document).on('click', '.addVentaParticular', function () {
+    $(".nombreLote").html($(this).data("nombrelote"));
+    $('#idLote').val($(this).data("idlote"));
+    $('#addVentaParticularModal').modal();
 });
 
 function addEditClausulas() {
@@ -113,4 +120,52 @@ function addEditClausulas() {
             }
         });
     }
+}
+
+function addVentaParticular() {
+    var dataExp = new FormData();
+    let idLote = $("#idLote").val();
+    let tipo_venta = $("#tipo_venta").val();
+    dataExp.append("idLote", idLote);
+    dataExp.append("tipo_venta", tipo_venta);
+
+    $("#spiner-loader").removeClass("hide");
+    $("#btnVentaParticular").prop("disabled", true);
+    
+        $.ajax({
+            type: 'POST',
+            url: 'EditVentaParticular',
+            data: dataExp,
+            cache: false,
+            contentType: false,
+            processData: false,
+            type: "POST",
+            success: function (data) {
+                response = JSON.parse(data);
+                if (response.message == "OK") {
+                    $("#btnVentaParticular").prop("disabled", false);
+                    $('#addVentaParticularModal').modal('hide');
+                    $('#tablaClausulasLotesParticulares').DataTable().ajax.reload();
+                    alerts.showNotification(
+                      "top",
+                      "right",
+                      "Representante Legal Actualizado",
+                      "success"
+                    );
+                    $("#spiner-loader").addClass("hide");
+                  }
+                },
+                error: function (data) {
+                    $("#btnVentaParticular").prop("disabled", false);
+                    $('#addVentaParticularModal').modal('hide');
+                    $('#tablaClausulasLotesParticulares').DataTable().ajax.reload();
+                  alerts.showNotification(
+                    "top",
+                    "right",
+                    "Error al enviar la solicitud.",
+                    "danger"
+                  );
+                  $("#spiner-loader").addClass("hide");
+                }
+        });
 }
