@@ -194,6 +194,19 @@ class VentasAsistentes_model extends CI_Model {
         return $valida;
     }
 
+    function validaSinliquidar($idLote){
+        $this->db->where("idLote",$idLote);
+        $this->db->where("tipo_doc = 38 AND status = 1");
+        $query = $this->db->get('historial_documento');	
+        $valida = (empty($query->result())) ? 0 : 1;
+        return $valida;
+    }
+
+    function validaComplementoEnganche($idLote){
+        $query = $this->db->query("SELECT expediente FROM historial_documento WHERE idLote=$idLote AND tipo_doc=38 AND status=1;");
+        return $query->row();
+    }
+
     public function updateSt($idLote,$arreglo,$arreglo2){
 
         $this->db->trans_begin();
@@ -212,8 +225,6 @@ class VentasAsistentes_model extends CI_Model {
         }
 
     }
-
-
 
 	public function getCorreoSt ($idCliente) {
 

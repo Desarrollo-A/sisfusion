@@ -168,36 +168,36 @@ class Asistente_gerente extends CI_Controller {
 	}
 
 	public function editar_registro_lote_asistentes_proceceso8(){
-		$idLote=$this->input->post('idLote');	
-		$idCondominio=$this->input->post('idCondominio');
-		$nombreLote=$this->input->post('nombreLote');
-		$idCliente=$this->input->post('idCliente');
-		$comentario=$this->input->post('comentario');
-		$modificado=date('Y-m-d H:i:s');
-		$fechaVenc=$this->input->post('fechaVenc');
-		$arreglo=array();	
-		$arreglo["idStatusContratacion"]=8;
-		$arreglo["idMovimiento"]=38;
-		$arreglo["comentario"]=$comentario;
-		$arreglo["usuario"]=$this->session->userdata('id_usuario');
-		$arreglo["perfil"]=$this->session->userdata('id_rol');
-		$arreglo["modificado"]=date("Y-m-d H:i:s");
-		$arreglo["status8Flag"] = 1;
-	
-		$arreglo2=array();
-		$arreglo2["idStatusContratacion"]=8;
-		$arreglo2["idMovimiento"]=38;
-		$arreglo2["nombreLote"]=$nombreLote;
-		$arreglo2["comentario"]=$comentario;	
-		$arreglo2["usuario"]=$this->session->userdata('id_usuario');
-		$arreglo2["perfil"]=$this->session->userdata('id_rol');
-		$arreglo2["modificado"]=date("Y-m-d H:i:s");
-		$arreglo2["fechaVenc"]= $fechaVenc;
-		$arreglo2["idLote"]= $idLote;  
-		$arreglo2["idCondominio"]= $idCondominio;          	
-		$arreglo2["idCliente"]= $idCliente;
-
-
+        $idLote=$this->input->post('idLote');	
+        $idCondominio=$this->input->post('idCondominio');
+        $nombreLote=$this->input->post('nombreLote');
+        $idCliente=$this->input->post('idCliente');
+        $comentario=$this->input->post('comentario');
+        $modificado=date('Y-m-d H:i:s');
+        $fechaVenc=$this->input->post('fechaVenc');
+        $arreglo=array();	
+        $arreglo["idStatusContratacion"]=8;
+        $arreglo["idMovimiento"]=38;
+        $arreglo["comentario"]=$comentario;
+        $arreglo["usuario"]=$this->session->userdata('id_usuario');
+        $arreglo["perfil"]=$this->session->userdata('id_rol');
+        $arreglo["modificado"]=date("Y-m-d H:i:s");
+        $arreglo["status8Flag"] = 1;
+    
+        $arreglo2=array();
+        $arreglo2["idStatusContratacion"]=8;
+        $arreglo2["idMovimiento"]=38;
+        $arreglo2["nombreLote"]=$nombreLote;
+        $arreglo2["comentario"]=$comentario;	
+        $arreglo2["usuario"]=$this->session->userdata('id_usuario');
+        $arreglo2["perfil"]=$this->session->userdata('id_rol');
+        $arreglo2["modificado"]=date("Y-m-d H:i:s");
+        $arreglo2["fechaVenc"]= $fechaVenc;
+        $arreglo2["idLote"]= $idLote;  
+        $arreglo2["idCondominio"]= $idCondominio;          	
+        $arreglo2["idCliente"]= $idCliente;
+    
+    
         $valida_rama = $this->VentasAsistentes_model->check_carta($idCliente);
         if($valida_rama[0]['tipo_nc']==1){
             $validacionCarta = $this->VentasAsistentes_model->validaCartaCM($idCliente);
@@ -217,20 +217,20 @@ class Asistente_gerente extends CI_Controller {
                 }
             }
         }
-
-		$validate = $this->VentasAsistentes_model->validateSt8($idLote);
+    
+        $validate = $this->VentasAsistentes_model->validateSt8($idLote);
         if ($validate != 1) {
             $data['message'] = 'FALSE';
             echo json_encode($data);
             return;
         }
-
+    
         if (!$this->VentasAsistentes_model->updateSt($idLote,$arreglo,$arreglo2)){
             $data['message'] = 'ERROR';
             echo json_encode($data);
             return;
         }
-
+    
         $data['message'] = 'OK';
         echo json_encode($data);
     }
@@ -567,7 +567,6 @@ class Asistente_gerente extends CI_Controller {
         echo json_encode($data);
     }
 
-
     public function getStatCont14() {
       $data=array();
       $data = $this->VentasAsistentes_model->registroStatusContratacion14();
@@ -578,9 +577,6 @@ class Asistente_gerente extends CI_Controller {
           echo json_encode(array());
       }
     }
-
-
-
 
     public function editar_registro_lote_asistentes_proceceso14(){
 
@@ -1044,4 +1040,3 @@ class Asistente_gerente extends CI_Controller {
       }
     }
 }
-?>

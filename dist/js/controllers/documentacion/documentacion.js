@@ -43,6 +43,7 @@ const TipoDoc = {
   CONSTANCIA_SITUACION_FISCAL: 38,
   CORRIDA_ANTERIOR: 39,
   CONTRATO_ANTERIOR: 40,
+  COMPLEMENTO_ENGANCHE: 45,
   CONTRATO_ELEGIDO_FIRMA_CLIENTE: 41,
   CONTRATO_1_CANCELADO: 42,
   CONTRATO_2_CANCELADO: 43,
@@ -373,7 +374,8 @@ function cargarTabla(idLote, idCliente = "") {
           }
           if (
             data.tipo_doc == TipoDoc.CARTA_DOMICILIO ||
-            data.tipo_doc == TipoDoc.APOSTILLDO_CONTRATO
+            data.tipo_doc == TipoDoc.APOSTILLDO_CONTRATO ||
+            data.tipo_doc == TipoDoc.COMPLEMENTO_ENGANCHE
           ) {
             // CARTA DOMICILIO || APOSTILLADO CONTRATO
             if (data.expediente == null || data.expediente === "") {
@@ -435,7 +437,6 @@ function cargarTabla(idLote, idCliente = "") {
             }
             return `<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`;
           }
-
           if (
             data.tipo_doc === TipoDoc.DS_NEW &&
             data.expediente === "Depósito de seriedad"
