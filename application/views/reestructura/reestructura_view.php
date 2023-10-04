@@ -288,7 +288,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <table class="table-striped table-hover" id="tabla_clientes_liberar" name="tabla_clientes_liberar">
+                                    <table class="table-striped table-hover" id="tabla_clientes_liberar">
                                                 <thead>
                                                     <tr>
                                                         <th>PROYECTO</th>

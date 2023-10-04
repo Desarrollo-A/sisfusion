@@ -140,6 +140,23 @@ class Reestructura_model extends CI_Model
         WHERE lot.idStatusLote in (15,2,3)")->result();
     }
 
+    public function obtenerLotesLiberar($id_proyecto)
+    {
+        return $this->db->query("SELECT res.nombreResidencial,con.nombre AS condominio, lot.nombreLote,
+                lot.idLote ,lot.sup AS superficie, lot.precio, CONCAT(cli.nombre,' ',cli.apellido_paterno,' ',cli.apellido_materno) nombreCliente,
+                lot.liberadoReubicacion AS observacion, oxc.nombre AS nombreOp, 
+                lot.comentarioReubicacion, lot.liberadoReubicacion ,
+                lot.liberaBandera 
+            FROM lotes lot
+            INNER JOIN condominios con ON con.idCondominio = lot.idCondominio
+            INNER JOIN residenciales res on res.idResidencial = con.idResidencial
+            LEFT JOIN opcs_x_cats oxc on oxc.id_opcion = lot.opcionReestructura and id_catalogo = 100
+            INNER JOIN loteXReubicacion lotx ON lotx.proyectoReubicacion = con.idResidencial and lotx.idProyecto in ($id_proyecto)
+            LEFT JOIN clientes cli ON cli.id_cliente = lot.idCliente and cli.status in (1,0)
+            WHERE lot.idStatusLote in (15,2,3)")
+            ->result();
+    }
+
     public function actualizarValidacion($datos)
     {
         return $this->db->query("UPDATE lotes SET opcionReestructura = ".$datos['opcionReestructura'].", comentarioReubicacion = '".$datos['comentario']."', usuario = ".$datos['userLiberacion']." where idLote = ".$datos['idLote']." ");
@@ -504,4 +521,15 @@ class Reestructura_model extends CI_Model
     function getNuevaPropuesta($idLote, $lotesPropuestos){
         return $this->db->query("SELECT * FROM propuestas_x_lote WHERE idLote = $idLote AND id_lotep NOT IN ($lotesPropuestos)");
     }    
+    public function expedienteReubicacion($idLote)
+    {
+        $query = $this->db->query("SELECT * FROM propuestas_x_lote WHERE idLote = $idLote AND estatus = 1");
+        return $query->row();
+    }
+
+    public function obtenerDatosClienteReubicacion($idLote)
+    {
+        $query = $this->db->query("SELECT * FROM datos_x_cliente WHERE idLote = $idLote");
+        return $query->row();
+    }
 }

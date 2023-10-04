@@ -172,6 +172,13 @@ class Reestructura extends CI_Controller{
         }
     }
 
+    public function obtenerRegistrosLiberar()
+    {
+        $proyecto = $this->input->post('index_proyecto');
+        $datos = $this->Reestructura_model->obtenerLotesLiberar($proyecto);
+        echo json_encode($datos);
+    }
+
 	public function aplicarLiberacion(){
 		$dataPost = $_POST;
         $update = $this->Reestructura_model->aplicaLiberacion($dataPost);
@@ -511,6 +518,7 @@ class Reestructura extends CI_Controller{
         if (!$this->copiarDSAnteriorAlNuevo($idClienteAnterior, $idClienteInsert)) {
             $this->db->trans_rollback();
 
+
             echo json_encode([
                 'titulo' => 'ERROR',
                 'resultado' => FALSE,
@@ -521,6 +529,7 @@ class Reestructura extends CI_Controller{
         }
 
         $expediente = $this->Reestructura_model->obtenerDocumentacionPorReubicacion($clienteAnterior->personalidad_juridica);
+
         if (!$this->moverExpediente($clienteAnterior->idLote, $loteAOcupar, $idClienteAnterior, $idClienteInsert, $expediente)) {
             $this->db->trans_rollback();
 
@@ -732,20 +741,52 @@ class Reestructura extends CI_Controller{
     }
 
     function moverExpediente(
-        $idLoteAnterior, $idLoteNuevo, $idClienteAnterior, $idClienteNuevo, $expediente, $loteInfo = null, $docInfo = null): bool
+        $idLoteAnterior, $idLoteNuevo, $idClienteAnterior, $idClienteNuevo, $expedienteNuevo, $loteInfo = null, $docInfo = null): bool
     {
+        $loteAnteriorInfo = $this->Reestructura_model->obtenerLotePorId($idLoteAnterior);
         $loteNuevoInfo = (is_null($loteInfo))
             ? $this->Reestructura_model->obtenerLotePorId($idLoteNuevo)
             : $loteInfo;
         $docAnterior = (is_null($docInfo))
             ? $this->Reestructura_model->obtenerDocumentacionActiva($idLoteAnterior, $idClienteAnterior)
             : $docInfo;
+
         $documentacion = [];
         $modificado = date('Y-m-d H:i:s');
-        $documentosSinPasar = (is_null($docInfo)) ? [7,8] : [];
+        $documentosSinPasar = (is_null($docInfo)) ? [7,8,30] : [];
 
+        $ubicacionFolder = "static/documentos/contratacion-reubicacion/$loteNuevoInfo->nombreLote/";
+
+        if (!file_exists($ubicacionFolder)) {
+            $result = mkdir($ubicacionFolder, 0777, TRUE);
+            if (!$result) {
+                return false;
+            }
+        }
+
+        // Ciclo para vaciar ramas del expediente anterior
         foreach ($docAnterior as $doc) {
             $expedienteAnterior = in_array($doc['tipo_doc'], $documentosSinPasar) ? null : $doc['expediente'];
+
+            if (in_array($doc['tipo_doc'], [7,8])) {
+                $expReubicacion = $this->Reestructura_model->expedienteReubicacion($idLoteAnterior);
+                $carpeta = '';
+
+                if ($doc['tipo_doc'] === 7) {
+                    $carpeta = 'CORRIDA/';
+                    $expedienteAnterior = $expReubicacion->corrida;
+                } else if ($doc['tipo_doc'] === 8) {
+                    $carpeta = 'CONTRATO/';
+                    $expedienteAnterior = $expReubicacion->contrato;
+                }
+
+                if (!is_null($expedienteAnterior)) {
+                    copy(
+                        "static/documentos/contratacion-reubicacion-temp/$loteAnteriorInfo->nombreLote/$carpeta$expedienteAnterior",
+                        $ubicacionFolder.$expedienteAnterior
+                    );
+                }
+            }
 
             $documentacion[] = [
                 'movimiento' => $doc['movimiento'],
@@ -763,35 +804,63 @@ class Reestructura extends CI_Controller{
             ];
         }
 
-        foreach ($expediente as $doc) {
-            if (is_null($docInfo)) {
-                $indexExpedienteAnterior = null;
+        // Ciclo para las nuevas ramas a agregar
+        foreach ($expedienteNuevo as $doc) {
+            if ($doc['id_opcion'] === 33) {
+                $expRescision = $this->Reestructura_model->obtenerDatosClienteReubicacion($idLoteAnterior);
 
-                if ($doc['id_opcion'] == 39) {
-                    $indexExpedienteAnterior = array_search(7, array_column($docAnterior, 'tipo_doc'));
+                $documentacion[] = [
+                    'movimiento' => $doc['nombre'],
+                    'expediente' => $expRescision->rescision,
+                    'modificado' => $modificado,
+                    'status' => 1,
+                    'idCliente' => $idClienteNuevo,
+                    'idCondominio' => $loteNuevoInfo->idCondominio,
+                    'idLote' => $idLoteNuevo,
+                    'idUser' => NULL,
+                    'tipo_documento' => 0,
+                    'id_autorizacion' => 0,
+                    'tipo_doc' => $doc['id_opcion'],
+                    'estatus_validacion' => 0
+                ];
+
+                copy(
+                    "static/documentos/contratacion-reubicacion-temp/$loteAnteriorInfo->nombreLote/RESCISIONES/$expRescision->rescision",
+                    $ubicacionFolder.$expRescision->rescision
+                );
+
+                continue;
+            }
+
+            // Corrida, contrato y contrato firmado
+            if (in_array($doc['id_opcion'], [39, 40, 44])) {
+                $tipoDoc = 0;
+                if ($doc['id_opcion'] === 39) {
+                    $tipoDoc = 7;
+                } else if ($doc['id_opcion'] === 40) {
+                    $tipoDoc = 8;
+                } else if ($doc['id_opcion'] === 44) {
+                    $tipoDoc = 30;
                 }
 
-                if ($doc['id_opcion'] == 40) {
-                    $indexExpedienteAnterior = array_search(8, array_column($docAnterior, 'tipo_doc'));
-                }
+                $index = array_search($tipoDoc, array_column($docAnterior, 'tipo_doc'));
 
-                if (!is_null($indexExpedienteAnterior)) {
-                    $documentacion[] = [
-                        'movimiento' => $doc['nombre'],
-                        'expediente' => $docAnterior[$indexExpedienteAnterior]['expediente'],
-                        'modificado' => $modificado,
-                        'status' => 1,
-                        'idCliente' => $idClienteNuevo,
-                        'idCondominio' => $loteNuevoInfo->idCondominio,
-                        'idLote' => $idLoteNuevo,
-                        'idUser' => NULL,
-                        'tipo_documento' => 0,
-                        'id_autorizacion' => 0,
-                        'tipo_doc' => $doc['id_opcion'],
-                        'estatus_validacion' => 0
-                    ];
-                    continue;
-                }
+                $documentacion[] = [
+                    'movimiento' => $doc['nombre'],
+                    'expediente' => $docAnterior[$index]['expediente'],
+                    'modificado' => $modificado,
+                    'status' => 1,
+                    'idCliente' => $idClienteNuevo,
+                    'idCondominio' => $loteNuevoInfo->idCondominio,
+                    'idLote' => $idLoteNuevo,
+                    'idUser' => NULL,
+                    'tipo_documento' => 0,
+                    'id_autorizacion' => 0,
+                    'tipo_doc' => $doc['id_opcion'],
+                    'estatus_validacion' => 0
+                ];
+
+                continue;
             }
 
             $documentacion[] = [
@@ -808,13 +877,6 @@ class Reestructura extends CI_Controller{
                 'tipo_doc' => $doc['id_opcion'],
                 'estatus_validacion' => 0
             ];
-        }
-
-        if (!file_exists("static/documentos/contratacion-reubicacion/$loteNuevoInfo->nombreLote/")) {
-            $result = mkdir("static/documentos/contratacion-reubicacion/$loteNuevoInfo->nombreLote", 0777, TRUE);
-            if (!$result) {
-                return false;
-            }
         }
 
         return $this->General_model->insertBatch('historial_documento', $documentacion);
