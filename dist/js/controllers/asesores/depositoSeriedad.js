@@ -1687,7 +1687,7 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 });
 
 function construirBotonEstatus(data, fechaVenc, classButton, atributoButton = '', titulo = 'ENVIAR ESTATUS') {
-    return `<a href='#' ${atributoButton} data-tiComp='${data.tipo_comprobanteD}' data-nomLote='${data.nombreLote}' data-idCliente='${data.id_cliente}' data-nombreResidencial='${data.nombreResidencial}' data-nombreCondominio='${data.nombreCondominio}' data-nombreLote='${data.nombreLote}' data-idCondominio='${data.idCondominio}' data-idLote='${data.idLote}' data-fechavenc='${fechaVenc}' class="btn-data btn-green ${classButton}" data-toggle="tooltip" data-placement="top" title="${titulo}"> <i class="fas fa-check"></i></a>`;
+    return `<button href='#' ${atributoButton} data-tiComp='${data.tipo_comprobanteD}' data-nomLote='${data.nombreLote}' data-idCliente='${data.id_cliente}' data-nombreResidencial='${data.nombreResidencial}' data-nombreCondominio='${data.nombreCondominio}' data-nombreLote='${data.nombreLote}' data-idCondominio='${data.idCondominio}' data-idLote='${data.idLote}' data-fechavenc='${fechaVenc}' class="btn-data btn-green ${classButton}" data-toggle="tooltip" data-placement="top" title="${titulo}"> <i class="fas fa-check"></i></button>`;
 }
 
 function generarBotonesAutorizacion(clienteData) {

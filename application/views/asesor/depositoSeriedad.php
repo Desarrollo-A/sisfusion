@@ -87,7 +87,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header" id="integracionEx">
-                    <h4 class="modal-title"><label>Integración de Expediente - <b><span class="lote"></span></b></label></h4>
+                    <h4 class="modal-title"><label><span class="titulo_modal">Integración de Expediente - </span><b><span class="lote"></span></b></label></h4>
                 </div>
                 <div class="modal-body">
                     <textarea class="text-modal scroll-styles" id="comentario" rows="3" placeholder="Comentario"></textarea>
@@ -514,4 +514,4 @@
 <?php $this->load->view('template/footer');?>
 <link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
 <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
-<script src="<?=base_url()?>dist/js/controllers/asesores/depositoSeriedad.js"></script>
+<script src="<?=base_url()?>dist/js/controllers/asesores/depositoSeriedad_nuevo.js"></script>

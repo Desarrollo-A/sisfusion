@@ -323,7 +323,7 @@ $(document).on('click', '#save1', function (e) {
     else{
         $('#save1').prop('disabled', true);
         $.ajax({
-            url: `${general_base_url}Asistente_gerente/editar_registro_loteRevision_asistentes_proceceso8`,
+            url: `${general_base_url}Asistente_gerente/editar_registro_loteRevision_asistentes_proceso8`,
             data: dataExp1,
             cache: false,
             contentType: false,

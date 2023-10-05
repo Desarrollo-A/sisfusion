@@ -2973,9 +2973,14 @@ class Asesor extends CI_Controller {
     }
     public function intExpAsesor() {
         $idLote = $this->input->post('idLote');
+        $idCondominio = $this->input->post('idCondominio');
         $nombreLote = $this->input->post('nombreLote');
         $id_cliente = $this->input->post('idCliente');
+        $comentario = $this->input->post('comentario');
+        $fechaVenc= $this->input->post('fechaVenc');
         $tipo_comprobante = $this->input->post('tipo_comprobante');
+        $idMovimiento = $this->input->post('idMovimiento');
+        $idCliente = $this->input->post('idCliente');
 
         /*if ($this->session->userdata('id_rol') != 17) {
            $cliente = $this->Clientes_model->clienteAutorizacion($id_cliente);
@@ -2986,46 +2991,54 @@ class Asesor extends CI_Controller {
             }
         }*/
 
-        $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
-        if($valida_tventa[0]['tipo_venta'] == 1 ) {
-            if($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 104 || $valida_tventa[0]['idStatusContratacion'] == 2 && $valida_tventa[0]['idMovimiento'] == 108) {
-                $statusContratacion = 2;
-                $idMovimiento = 105;
-            } elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 109 || $valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 111 ) {
-                $statusContratacion = 2;
-                $idMovimiento = 110;
-            } elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 102) { #rechazo del status 5
-                $statusContratacion = 2;
-                $idMovimiento = 113;
-            } elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 107) { #rechazo del status 6
-                $statusContratacion = 2;
-                $idMovimiento = 114;
-            } else {
-                $statusContratacion = 3;
-                $idMovimiento = 98;
+        if(in_array($idMovimiento, [31, 85, 102, 104, 107, 108, 109, 111])){
+            if (!$this->validarDocumentosEstatus2($idLote, $tipo_comprobante, $id_cliente)) {
+                return;
             }
-        } else {
-            $statusContratacion = 2;
-            $idMovimiento = 84;
+            else{
+                $nuevoDato = $this->save1($idLote);
+            }
+
+            $data = $this->Asesor_model->revisaOU($idLote);
+
+            if(count($data) >= 1) {
+                $data['status'] = false;
+                $data['message'] = 'EN PROCESO DE LIBERACIÓN. No podrás avanzar la solicitud hasta que el proceso de liberación haya concluido';
+                echo json_encode($data);
+                return;
+            }
         }
+        if($idMovimiento == 20){
+            if (!$this->validarDocumentosEstatus2($idLote, $tipo_comprobante, $id_cliente)) {
+                return;
+            }
+            else{
+                $nuevoDato = $this->save3($idLote);
+            }
+        }
+        if($idMovimiento == 63){
+            $nuevoDato = $this->save4($idLote);
+        }
+        if($idMovimiento == 73){
+            $nuevoDato = $this->save5($idLote);
+        }
+        if($idMovimiento == 82){
+            $nuevoDato = $this->save6($idLote);
+        }
+        if($idMovimiento == 92){
+            $nuevoDato = $this->save7();
+        }
+        if($idMovimiento == 96){
+            $nuevoDato = $this->b_return1();
+        }
+
         $arreglo = array();
-        $arreglo["idStatusContratacion"] = $statusContratacion;
-        $arreglo["idMovimiento"] = $idMovimiento;
+        $arreglo["idStatusContratacion"] = $nuevoDato["statusContratacion"];
+        $arreglo["idMovimiento"] = $nuevoDato["idMovimiento"];
         $arreglo["usuario"] = $this->session->userdata('id_usuario');
         $arreglo["perfil"] = $this->session->userdata('id_rol');
         $arreglo["modificado"] = date("Y-m-d H:i:s");
-        $arreglo["comentario"] = $this->input->post('comentario');
-        $data = $this->Asesor_model->revisaOU($idLote);
-
-        if(count($data) >= 1) {
-            $data['message'] = 'OBSERVACION_CONTRATO';
-            echo json_encode($data);
-            return;
-        }
-
-        if (!$this->validarDocumentosEstatus2($idLote, $tipo_comprobante, $id_cliente)) {
-            return;
-        }
+        $arreglo["comentario"] = $comentario;
 
         date_default_timezone_set('America/Mexico_City');
         $horaActual = date('H:i:s');
@@ -3139,31 +3152,135 @@ class Asesor extends CI_Controller {
         }
 
         $arreglo2 = array();
-        $arreglo2["idStatusContratacion"] = $statusContratacion;
-        $arreglo2["idMovimiento"] = $idMovimiento;
+        $arreglo2["idStatusContratacion"] = $nuevoDato["statusContratacion"];
+        $arreglo2["idMovimiento"] = $nuevoDato["idMovimiento"];
         $arreglo2["nombreLote"] = $nombreLote;
         $arreglo2["usuario"] = $this->session->userdata('id_usuario');
         $arreglo2["perfil"] = $this->session->userdata('id_rol');
         $arreglo2["modificado"] = date("Y-m-d H:i:s");
-        $arreglo2["fechaVenc"] = $this->input->post('fechaVenc');
+        $arreglo2["fechaVenc"] = $fechaVenc;
         $arreglo2["idLote"] = $idLote;
-        $arreglo2["idCondominio"] = $this->input->post('idCondominio');
-        $arreglo2["idCliente"] = $this->input->post('idCliente');
-        $arreglo2["comentario"] = $this->input->post('comentario');
+        $arreglo2["idCondominio"] = $idCondominio;
+        $arreglo2["idCliente"] = $idCliente;
+        $arreglo2["comentario"] = $comentario;
+
         $validate = $this->Asesor_model->validateSt2($idLote);
 
         if ($validate == 1) {
             if ($this->Asesor_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) {
-                $data['message'] = 'OK';
+                $data['status'] = true;
+                $data['message'] = 'Estatus enviado.';
                 echo json_encode($data);
             } else {
-                $data['message'] = 'ERROR';
+                $data['status'] = false;
+                $data['message'] = 'Error al enviar la solicitu.d';
                 echo json_encode($data);
             }
         } else {
-            $data['message'] = 'FALSE';
+            $data['status'] = false;
+            $data['message'] = 'El estatus ya fue registrado.';
             echo json_encode($data);
         }
+    }
+
+    public function save1($idLote){
+        $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
+
+        if($valida_tventa[0]['tipo_venta'] == 1 ) {
+            if($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 104 || $valida_tventa[0]['idStatusContratacion'] == 2 && $valida_tventa[0]['idMovimiento'] == 108) {
+                $data["statusContratacion"] = 2;                
+                $data["idMovimiento"] = 105;
+            } elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 109 || $valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 111 ) {
+                $data["statusContratacion"] = 2;
+                $data["idMovimiento"] = 110;
+            } elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 102) { #rechazo del status 5
+                $data["statusContratacion"] = 2;
+                $data["idMovimiento"] = 113;
+            } elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 107) { #rechazo del status 6
+                $$data["statusContratacion"] = 2;
+                $data["idMovimiento"] = 114;
+            } else {
+                $data["statusContratacion"] = 3;
+                $data["idMovimiento"] = 98;
+            }
+        } else {
+            $data["statusContratacion"] = 2;
+            $data["idMovimiento"] = 84;
+        }
+
+        return $data;
+    }
+
+    public function save3($idLote){
+        $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
+
+        if($valida_tventa[0]['tipo_venta'] == 1) {
+            if($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 20) {
+                $data["statusContratacion"] = 3;
+                $data["idMovimiento"]  = 98;
+            }
+            else{
+                $data["statusContratacion"] = 2;
+                $data["idMovimiento"]  = 4;
+            }
+        }
+
+        return $data;
+    }
+
+    public function save4($idLote){
+        $valida_tl = $this->Contraloria_model->checkTipoVenta($idLote);
+
+        if($valida_tl[0]['tipo_venta'] == 1){
+            $data["statusContratacion"] = 3;
+            $data["idMovimiento"]  = 98;
+        }
+        else{
+            $data["statusContratacion"] = 2;
+            $data["idMovimiento"]  = 62;
+        }
+
+        return $data;
+    }
+
+    public function save5($idLote){
+        $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
+
+        if($valida_tventa[0]['tipo_venta'] == 1 ){
+            $data["statusContratacion"] = 3;
+            $data["idMovimiento"]  = 98;
+        }else{
+            $data["statusContratacion"] = 2;
+            $data["idMovimiento"] = 74;
+        }
+
+        return $data; 
+    }
+
+    public function save6($idLote){
+        $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
+
+        if($valida_tventa[0]['tipo_venta'] == 1 ){
+            $data["statusContratacion"] = 3;
+            $data["idMovimiento"]  = 98;
+        }else{
+            $data["statusContratacion"] = 7;
+            $data["idMovimiento"]  = 83;
+        }
+
+        return $data;
+    }
+
+    public function save7(){
+        $data["statusContratacion"] = 2;
+        $data["idMovimiento"]  = 93;
+
+        return $data;
+    }
+
+    public function b_return1(){
+        $data["statusContratacion"] = 6;
+        $data["idMovimiento"]  = 97;
     }
 
     public function validarDocumentosEstatus2($idLote, $tipo_comprobante, $id_cliente): bool
@@ -3207,21 +3324,24 @@ class Asesor extends CI_Controller {
         $validacionIM = $this->Asesor_model->getInicioMensualidadAut($idLote, $id_cliente); //validacion para verificar si tiene inicio de autorizacion de mensualidad pendiente
 
         if(COUNT($documentsValidation) != $documentsNumber && COUNT($documentsValidation) < $documentsNumber) {
-            $data['message'] = 'MISSING_DOCUMENTS';
+            $data['status'] = false;
+            $data['message'] = $error_message;
             $data['error_message'] = $error_message;
             echo json_encode($data);
             return false;
         }
 
         if($validacion) {
-            $data['message'] = 'MISSING_AUTORIZATION';
+            $data['status'] = false;
+            $data['message'] = 'EN PROCESO DE AUTORIZACIÓN. Hasta que la autorización no haya sido aceptada o rechazada, no podrás avanzar la solicitud.';
             echo json_encode($data);
             return false;
         }
 
         if(count($validacionIM) > 0) {
             if($validacionIM[0]['tipoPM']==3 AND $validacionIM[0]['expediente'] == ''){
-                $data['message'] = 'MISSING_AUTFI';
+                $data['status'] = false;
+                $data['message'] = 'Autorización de mensualidad pendiente.';
                 echo json_encode($data);
                 return false;
             }

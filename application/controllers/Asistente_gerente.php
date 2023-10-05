@@ -676,7 +676,7 @@ class Asistente_gerente extends CI_Controller {
         }
    }
 
-    public function editar_registro_loteRevision_asistentes_proceceso8(){
+    public function editar_registro_loteRevision_asistentes_proceso8(){
         $idLote=$this->input->post('idLote', true);
         $idCondominio=$this->input->post('idCondominio', true);
         $nombreLote=$this->input->post('nombreLote', true);
