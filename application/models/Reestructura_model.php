@@ -39,7 +39,7 @@ class Reestructura_model extends CI_Model
         CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2, lo.sup, 
         (ISNULL(lo.totalNeto2, 0.00) / lo.sup) costom2f, ISNULL(lo.totalNeto2, 0.00) total, co.tipo_lote, oxc.nombre nombreTipoLote,
-        oxc1.nombre estatusPreproceso, lo.estatus_preproceso id_estatus_preproceso, pxl1.totalCorridas, pxl2.totalContratos, dxc.totalRescision,
+        oxc1.nombre estatusPreproceso, lo.estatus_preproceso id_estatus_preproceso, pxl1.totalCorridas, pxl2.totalContratos, dxc.totalRescision, dxc.idLote AS idLoteXcliente,
         CASE WHEN u6.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u6.nombre, ' ', u6.apellido_paterno, ' ', u6.apellido_materno)) END nombreAsesorAsignado
         FROM lotes lo
         INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.proceso NOT IN (2, 3, 4)
@@ -176,7 +176,7 @@ class Reestructura_model extends CI_Model
 
     public function insertarCliente($datos)
     {
-        return $this->db->query("INSERT INTO datos_x_cliente ([idLote],[nombre],[apellido_paterno],[apellido_materno],[estado_civil],[ine],[domicilio_particular],[correo],[telefono1],[ocupacion],[rescision],[fecha_creacion],[creado_por],[fecha_modificacion],[modificado_por]) VALUES (".$datos['idLote'].", '".$datos['nombreCli']."', '".$datos['apellidopCli']."', '".$datos['apellidomCli']."', ".$datos['estadoCli'].", '".$datos['ineCLi']."', '".$datos['domicilioCli']."', '".$datos['correoCli']."', '".$datos['telefonoCli']."', '".$datos['ocupacionCli']."', 'dontNOW', GETDATE(), 1, GETDATE(), 1) ");
+        return $this->db->query("INSERT INTO datos_x_cliente ([idLote],[nombre],[apellido_paterno],[apellido_materno],[estado_civil],[ine],[domicilio_particular],[correo],[telefono1],[ocupacion],[rescision],[fecha_creacion],[creado_por],[fecha_modificacion],[modificado_por]) VALUES (".$datos['idLote'].", '".$datos['nombreCli']."', '".$datos['apellidopCli']."', '".$datos['apellidomCli']."', ".$datos['estadoCli'].", '".$datos['ineCLi']."', '".$datos['domicilioCli']."', '".$datos['correoCli']."', '".$datos['telefonoCli']."', '".$datos['ocupacionCli']."', null, GETDATE(), 1, GETDATE(), 1) ");
     }
 
     public function borrarOpcionModel($datos){

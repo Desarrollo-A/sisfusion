@@ -135,7 +135,8 @@ $('#reubicacionClientes').DataTable({
                             title="${d.id_estatus_preproceso == 0 ? 'ASIGNAR PROPUESTAS' : 'ACTUALIZAR PROPUESTAS'}"
                             data-idCliente="${d.idCliente}" 
                             data-tipoLote="${d.tipo_lote}"
-                            data-idProyecto="${d.idProyecto}">
+                            data-idProyecto="${d.idProyecto}"
+                            data-statusPreproceso="${d.id_estatus_preproceso}">
                             <i class="fas fa-user-edit"></i>
                     </button>`;
                 const BTN_AVANCE =  `<button class="btn-data btn-green btn-avanzar"
@@ -146,6 +147,13 @@ $('#reubicacionClientes').DataTable({
                     data-tipoTransaccion="${d.id_estatus_preproceso}">
                     <i class="fas fa-thumbs-up"></i>
                 </button>`;
+                const BTN_INFOCLIENTE =  `<button class="btn-data btn-green infoUser"
+                    data-toggle="tooltip" 
+                    data-placement="left"
+                    data-idCliente="${d.idCliente}" 
+                    data-idLote="${d.idLote}">
+                    <i class="fas fa-user-check"></i>
+                </button>`;
                 const BTN_SUBIR_ARCHIVO =  `<button class="btn-data btn-blueMaderas btn-cargar-documentos"
                     data-toggle="tooltip" 
                     data-placement="left"
@@ -154,18 +162,17 @@ $('#reubicacionClientes').DataTable({
                     data-tipoTransaccion="${d.id_estatus_preproceso}">
                     <i class="fas fa-upload"></i>
                 </button>`;
-                // const BTN_INFORMACION_CLIENTE = `<button class="btn-data btn-blueMaderas infoUser" data-toggle="tooltip"
-                //     data-placement="top" 
-                //     data-idCliente="${d.idCliente}" 
-                //     data-idLote="${d.idLote}" 
-                //     title="HISTORIAL">
-                //     <i class="fas fa-user-edit"></i>
-                // </button>`
 
                 if (d.id_estatus_preproceso == 0 && id_rol_general == 3) // Gerente: PENDIENTE CARGA DE PROPUESTAS
                     btns += BTN_PROPUESTAS;
-                else if (d.id_estatus_preproceso == 1 && id_rol_general == 3) // Gerente: REVISIÓN DE PROPUESTAS
-                    btns += BTN_PROPUESTAS + BTN_AVANCE;
+                else if (d.id_estatus_preproceso == 1 && id_rol_general == 3){ // Gerente: REVISIÓN DE PROPUESTAS
+                    btns += BTN_PROPUESTAS;
+                    if(d.idLoteXcliente == null){
+                        btns += BTN_INFOCLIENTE;
+                    }else{
+                        btns += BTN_AVANCE;
+                    }
+                }
                 else if (d.id_estatus_preproceso == 2 && id_rol_general == 17) { // Contraloría: ELABORACIÓN DE CORRIDAS
                     if (d.totalCorridas == 3)
                         btns += BTN_AVANCE;
@@ -289,7 +296,7 @@ $(document).on('click', '.btn-asignar-propuestas', function () {
                     <div class="col-12 col-sm-9 col-md-9 col-lg-9">
                     </div>
                     <div class="col-12 col-sm-3 col-md-3 col-lg-3">
-                        <button type="button" id="btnAddPropuesta" class="btn btn-gral d-none">Añadir</button>
+                        <button type="button" id="btnAddPropuesta" data-statusPreproceso="${statusPreproceso}" class="btn btn-gral d-none">Añadir</button>
                     </div>
                 </div>
                 <div class="row mt-2" id="infoLotesSeleccionados">
@@ -414,6 +421,7 @@ $(document).on('click', '#guardarCliente', function (){
             $('#correoCli').val('');
             $('#domicilioCli').val('');
             $('#ocupacionCli').val('');
+            $('#reubicacionClientes').DataTable().ajax.reload(null, false);
             }
         },
         error: function(){
@@ -751,7 +759,10 @@ $(document).on("submit", "#formReestructura", function(e){
     });
 });
 
+
+
 $(document).on('click', '.btn-avanzar', function () {
+
     const tr = $(this).closest('tr');
     const row = $('#reubicacionClientes').DataTable().row(tr);
     const nombreLote = row.data().nombreLote;
