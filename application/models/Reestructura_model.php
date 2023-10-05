@@ -43,7 +43,7 @@ class Reestructura_model extends CI_Model
         CASE WHEN u6.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u6.nombre, ' ', u6.apellido_paterno, ' ', u6.apellido_materno)) END nombreAsesorAsignado
         FROM lotes lo
         INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.proceso NOT IN (2, 3, 4)
-        INNER JOIN datos_x_cliente dxc2 ON dxc2.idLote = lo.idLote
+        LEFT JOIN datos_x_cliente dxc2 ON dxc2.idLote = lo.idLote
         INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
         INNER JOIN residenciales re ON co.idResidencial = re.idResidencial
         INNER JOIN (SELECT DISTINCT(idProyecto) idProyecto FROM loteXReubicacion WHERE estatus = 1) lr ON lr.idProyecto = re.idResidencial
