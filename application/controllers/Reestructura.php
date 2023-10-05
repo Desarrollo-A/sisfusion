@@ -337,40 +337,18 @@ class Reestructura extends CI_Controller{
         ]);
     }
 
-    public function setPropuestasLotes(){
+    public function asignarPropuestasLotes(){
         $this->db->trans_begin();
         $idLotes = $this->input->post('idLotes');
         $idLoteOriginal = $this->input->post('idLoteOriginal');
+        $statusPreproceso = $this->input->post('statusPreproceso');
+        
+        
         $arrayLotes = array();
         $arrayLotesApartado = array();
 
-        
-        $propuestas = $this->Reestructura_model->obtenerPropuestasXLote($idLoteOriginal)->result_array();
-        
-        if(count($propuestas) > 0){
-            foreach ($idLotes as $idLote){
-                $stringLotesProp .= $idLote . ', ';
-            }
-            $stringLotesProp = substr($stringLotesProp, 0, -2);
-            $nuevos = $this->Reestructura_model->getNuevaPropuesta($idLoteOriginal, $stringLotesProp)->result_array();
-            if(count($nuevos) > 0){
-                foreach ($nuevos as $idLote){
-                    $arrayLote = array(
-                        'idLote' => $idLoteOriginal,
-                        'id_lotep' => $idLote,
-                        'estatus' => 0,
-                        'creado_por' => $this->session->userdata('id_usuario'),
-                        'fecha_modificacion'   => date("Y-m-d H:i:s"),
-                        'modificado_po' => $this->session->userdata('id_usuario')
-                    );
-
-                    array_push($arrayLotes, $arrayLote);
-                }
-            }
-            
-            $insertado = $this->General_model->updateBatch('propuestas_x_lote', $arrayLotes, 'id_lotep');
-        }
-        else{
+        //AA: Se asignan propuesta por primera vez
+        if($statusPreproceso == 0){
             foreach ($idLotes as $idLote){
                 $arrayLote = array(
                     'idLote' => $idLoteOriginal,
@@ -395,11 +373,36 @@ class Reestructura extends CI_Controller{
                 return;
             }
         }
+        // AA: Update de lotes
+        else{
+            foreach ($idLotes as $idLote){
+                $stringLotesProp .= $idLote . ', ';
+            }
+            $stringLotesProp = substr($stringLotesProp, 0, -2);
+            $nuevos = $this->Reestructura_model->getNuevaPropuesta($idLoteOriginal, $stringLotesProp)->result_array();
+            if(count($nuevos) > 0){
+                foreach ($nuevos as $idLote){
+                    $arrayLote = array(
+                        'idLote' => $idLoteOriginal,
+                        'id_lotep' => $idLote,
+                        'fecha_modificacion'   => date("Y-m-d H:i:s"),
+                        'modificado_por' => $this->session->userdata('id_usuario')
+                    );
+
+                    // $arrayDesbloquearLote = array(
+
+                    // );
+                    $this->General_model->updateRecord("lotes", $updateLoteOriginal, "idLote", $idLoteOriginal);
+                    array_push($arrayLotes, $arrayLote);
+                }
+            }  
+        }
+
         foreach ($idLotes as $idLote){
             $arrayLoteApartado = array(
                 'idLote' => $idLote,
                 'idStatusLote' => 16,
-                'modificado' => $this->session->userdata('id_usuario')
+                'usuario' => $this->session->userdata('id_usuario')
             );
 
             array_push($arrayLotesApartado, $arrayLoteApartado);
@@ -414,6 +417,41 @@ class Reestructura extends CI_Controller{
             ]);
             return;
         }
+
+        $updateLoteOriginal = array(
+            'estatus_preproceso' => 1,
+            'usuario' => $this->session->userdata('id_usuario')
+        );
+        if(!$this->General_model->updateRecord("lotes", $updateLoteOriginal, "idLote", $idLoteOriginal)){
+            $this->db->trans_rollback();
+            echo json_encode([
+                'titulo' => 'ERROR',
+                'resultado' => FALSE,
+                'message' => 'Error al actualizar en apartado los lotes',
+                'color' => 'danger'
+            ]);
+            return;
+        }
+
+        if ($this->db->trans_status() === FALSE){
+            $this->db->trans_rollback();
+
+            echo json_encode([
+                'titulo' => 'ERROR',
+                'resultado' => FALSE,
+                'message' => 'Error al dar el alta de propuestas de lotes',
+                'color' => 'danger'
+            ]);
+            return;
+        }
+
+        $this->db->trans_commit();
+		echo json_encode([
+            'titulo' => 'OK',
+            'resultado' => TRUE,
+            'message' => 'Proceso realizado correctamente.',
+            'color' => 'success'
+        ]);
     }
 
     public function setReubicacion(){
@@ -439,7 +477,7 @@ class Reestructura extends CI_Controller{
             echo json_encode([
                 'titulo' => 'FALSE',
                 'resultado' => FALSE,
-                'message' => 'Error, el lote no esta disponible',
+                'message' => 'Error, el lote no está disponible',
                 'color' => 'danger'
             ]);
             return;
@@ -1069,7 +1107,7 @@ class Reestructura extends CI_Controller{
     public function cambiarBandera  ()
     {
         $bandera   =  $this->input->post('bandera');
-        $idLote    =  $this->input->post('idLoteBandera');
+        $idLote    =  $this->iFnput->post('idLoteBandera');
            $arr_update = array( 
                             "liberaBandera"   => $bandera,
                             );
@@ -1093,6 +1131,7 @@ class Reestructura extends CI_Controller{
         $idLote =  $this->input->post('idLoteOriginal');
         echo json_encode( $this->Reestructura_model->obtenerPropuestasXLote($idLote)->result_array());
     }
+
     public function setAvance() {
         $dataUpdateLote = array(
 			'estatus_preproceso' => $this->input->post('tipoTransaccion') + 1,
@@ -1100,6 +1139,17 @@ class Reestructura extends CI_Controller{
         );
         $response = $this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $this->input->post('idLote'));
         echo json_encode($response);
+    }
+
+    public function setLoteDisponible() {
+        $dataUpdateLote = array('idStatusLote' => 15, 'usuario' => $this->session->userdata('id_usuario'));
+        $dataUpdatePropuesta = array('id_lotep' => 0, 'modificado_por' => $this->session->userdata('id_usuario'), 'fecha_modificacion' => date('Y-m-d h:i:s'));
+        $responseUpdateLote = $this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $this->input->post('idLote'));
+        $responseUpdatePropuesta = $this->General_model->updateRecord("propuestas_x_lote", $dataUpdatePropuesta, "id_pxl", $this->input->post('id_pxl'));
+        if ($responseUpdateLote && $responseUpdatePropuesta)
+            echo json_encode(true);
+        else
+            echo json_encode(false);
     }
 
 }
