@@ -373,30 +373,6 @@ class Reestructura extends CI_Controller{
                 return;
             }
         }
-        // AA: Update de lotes
-        else{
-            foreach ($idLotes as $idLote){
-                $stringLotesProp .= $idLote . ', ';
-            }
-            $stringLotesProp = substr($stringLotesProp, 0, -2);
-            $nuevos = $this->Reestructura_model->getNuevaPropuesta($idLoteOriginal, $stringLotesProp)->result_array();
-            if(count($nuevos) > 0){
-                foreach ($nuevos as $idLote){
-                    $arrayLote = array(
-                        'idLote' => $idLoteOriginal,
-                        'id_lotep' => $idLote,
-                        'fecha_modificacion'   => date("Y-m-d H:i:s"),
-                        'modificado_por' => $this->session->userdata('id_usuario')
-                    );
-
-                    // $arrayDesbloquearLote = array(
-
-                    // );
-                    $this->General_model->updateRecord("lotes", $updateLoteOriginal, "idLote", $idLoteOriginal);
-                    array_push($arrayLotes, $arrayLote);
-                }
-            }  
-        }
 
         foreach ($idLotes as $idLote){
             $arrayLoteApartado = array(
@@ -1141,15 +1117,40 @@ class Reestructura extends CI_Controller{
         echo json_encode($response);
     }
 
-    public function setLoteDisponible() {
-        $dataUpdateLote = array('idStatusLote' => 15, 'usuario' => $this->session->userdata('id_usuario'));
-        $dataUpdatePropuesta = array('id_lotep' => 0, 'modificado_por' => $this->session->userdata('id_usuario'), 'fecha_modificacion' => date('Y-m-d h:i:s'));
+    public function setLoteDisponible()
+    {
+        $dataUpdateLote = [
+            'idStatusLote' => 15,
+            'usuario' => $this->session->userdata('id_usuario')
+        ];
+
         $responseUpdateLote = $this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $this->input->post('idLote'));
-        $responseUpdatePropuesta = $this->General_model->updateRecord("propuestas_x_lote", $dataUpdatePropuesta, "id_pxl", $this->input->post('id_pxl'));
-        if ($responseUpdateLote && $responseUpdatePropuesta)
-            echo json_encode(true);
-        else
-            echo json_encode(false);
+        $responseDeletePropuesta = $this->General_model->deleteRecord('propuestas_x_lote', ['id_pxl' => $this->input->post('id_pxl')]);
+
+        echo ($responseUpdateLote && $responseDeletePropuesta);
     }
 
+    public function agregarLotePropuesta()
+    {
+        $idLoteOriginal = $this->input->post('idLoteOriginal');
+        $idLotePropuesta = $this->input->post('idLotePropuesta');
+
+        $dataUpdateLote = [
+            'idStatusLote' => 16,
+            'usuario' => $this->session->userdata('id_usuario')
+        ];
+        $dataInsertPropuestaLote = [
+            'idLote' => $idLoteOriginal,
+            'id_lotep' => $idLotePropuesta,
+            'estatus' => 0,
+            'creado_por' => $this->session->userdata('id_usuario'),
+            'fecha_modificacion'   => date("Y-m-d H:i:s"),
+            'modificado_por' => $this->session->userdata('id_usuario')
+        ];
+
+        $responseUpdateLote = $this->General_model->updateRecord('lotes', $dataUpdateLote, 'idLote', $idLotePropuesta);
+        $responseInsertPropuesta = $this->General_model->addRecord('propuestas_x_lote', $dataInsertPropuestaLote);
+
+        echo ($responseUpdateLote && $responseInsertPropuesta) ? json_encode(['code' => 200]) : json_encode(['code' => 500]);
+    }
 }
