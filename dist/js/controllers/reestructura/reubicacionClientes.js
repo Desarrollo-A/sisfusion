@@ -375,25 +375,24 @@ $(document).on('click', '.infoUser', function (){
     $('#ineCLi').val('');
     $("#estadoCli").empty();
 
-    var idCliente = $("#idCliente").val();
+    const idCliente = $("#idCliente").val();
 
-    $.getJSON("getCliente/" + idCliente, function(data) {
-        $('#nombreCli').val(data.nombre);
-        $('#apellidopCli').val(data.apellido_paterno);
-        $('#apellidomCli').val(data.apellido_materno);
-        $('#telefonoCli').val(data.telefono1);
-        $('#correoCli').val(data.correo);
-        $('#domicilioCli').val(data.domicilio_particular);
-        $("#estadoCli").append($('<option selected>').val(data.idEstadoC).text(data.estado_civil));
-        $('#ocupacionCli').val(data.ocupacion);
+    $.getJSON("getCliente/" + idCliente, function(cliente) {
+        $('#nombreCli').val(cliente.nombre);
+        $('#apellidopCli').val(cliente.apellido_paterno);
+        $('#apellidomCli').val(cliente.apellido_materno);
+        $('#telefonoCli').val(cliente.telefono1);
+        $('#correoCli').val(cliente.correo);
+        $('#domicilioCli').val(cliente.domicilio_particular);
+        $('#ocupacionCli').val(cliente.ocupacion);
 
-        $.post("getEstadoCivil", function(data) {
-            var len = data.length;
-            for (var i = 0; i < len; i++) {
-                var id = data[i]['id_opcion'];
-                var name = data[i]['nombre'];
+        $.post("getEstadoCivil", function(estadoCivil) {
+            const len = estadoCivil.length;
+            for (let i = 0; i < len; i++) {
+                const id = estadoCivil[i]['id_opcion'];
+                const name = estadoCivil[i]['nombre'];
 
-                if(id == data.idEstadoC){
+                if(id == cliente.idEstadoC){
                     $("#estadoCli").append($('<option selected>').val(id).text(name.toUpperCase()));
                 }else{
                     $("#estadoCli").append($('<option>').val(id).text(name.toUpperCase()));
