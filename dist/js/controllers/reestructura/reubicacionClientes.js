@@ -305,7 +305,7 @@ $(document).on('click', '.btn-asignar-propuestas', function () {
     showModal();
 
     getProyectosAOcupar(idProyecto, superficie, tipoLote);
-    getPropuestas(idLoteOriginal);
+    getPropuestas(idLoteOriginal, statusPreproceso, idProyecto, superficie, tipoLote);
 });
 
 
@@ -324,11 +324,11 @@ function getProyectosAOcupar(idProyecto, superficie, tipoLote) {
     }, 'json');
 }
 
-function getPropuestas(idLoteOriginal){
+function getPropuestas(idLoteOriginal, statusPreproceso, idProyecto, superficie, tipoLote){
     $('#spiner-loader').removeClass('hide');
     $.post("obtenerPropuestasXLote", {"idLoteOriginal" : idLoteOriginal}, function(data) {
         for (let lote of data) {
-            let html = divLotesSeleccionados(lote.nombreLote, lote.sup, lote.id_lotep);
+            let html = divLotesSeleccionados(statusPreproceso, lote.nombreLote, lote.sup, lote.id_lotep, lote.id_pxl, idProyecto, superficie, tipoLote);
             $("#infoLotesSeleccionados").append(html);
         }
         $('#spiner-loader').addClass('hide');
@@ -382,12 +382,45 @@ $(document).on("change", "#loteAOcupar", function(e){
     $('#btnAddPropuesta').removeClass('d-none');
 })
 
-function removeLote(e){
-    let divLote = e.closest( '.lotePropuesto' );
-    divLote.remove();
+function removeLote(e, idLote, statusPreproceso, id_pxl, idProyecto, superficie, tipoLote) {
+    if (statusPreproceso == 1) { // REVISIÓN DE PROPUESTAS (YA ESTÁN EN LA BASE DE DATOS)
+        $('#spiner-loader').removeClass('hide');
+        let data = new FormData();
+        data.append("idLote", idLote);
+        data.append("id_pxl", id_pxl);
+        $.ajax({
+            url : 'setLoteDisponible',
+            data: data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            type: 'POST', 
+            success: function(data) {
+                $('#spiner-loader').addClass('hide');
+                if(data) {
+                    alerts.showNotification("top", "right", "El registro se ha eliminado y liberado con éxito.", "success");
+                    // SE VUELVE A LLENAR SELECT PARA REFRESCAR OPCIONES
+                    getProyectosAOcupar(idProyecto, superficie, tipoLote);
+                    let divLote = e.closest( '.lotePropuesto' );
+                    divLote.remove();
+                }
+                else
+                    alerts.showNotification("top", "right", "Oops, algo salió mal. Inténtalo más tarde.", "danger")
+            },
+            error: function(data){
+                alerts.showNotification("top", "right", "Oops, algo salió mal. Inténtalo más tarde.", "danger");
+                $('#spiner-loader').addClass('hide');
+            }
+        });
+    }
+    else { // SON LOTES QUE ELIMINA CUANDO ES LA PRIMERA VEZ QUE ASIGNA PROPUESTAS
+        let divLote = e.closest( '.lotePropuesto' );
+        divLote.remove();
+    }
 }
 
-$(document).on("click", "#btnAddPropuesta", function(e){
+$(document).on("click", "#btnAddPropuesta", function(e) {
+    const statusPreproceso = $(this).attr("data-statusPreproceso");
     const $itself = $("#loteAOcupar").find(':selected');
     const numberLotes = $('#infoLotesSeleccionados .lotePropuesto').length;
     const idLotes = document.getElementsByClassName('idLotes');
@@ -406,7 +439,7 @@ $(document).on("click", "#btnAddPropuesta", function(e){
         const nombreLote = $itself.attr("data-nombre");
         const superficie = $itself.attr("data-superficie");
         const idLote = $itself.val();
-        const html = divLotesSeleccionados(nombreLote, superficie, idLote);
+        const html = divLotesSeleccionados(statusPreproceso, nombreLote, superficie, idLote);
         
         $("#infoLotesSeleccionados").append(html);
     }
@@ -415,13 +448,13 @@ $(document).on("click", "#btnAddPropuesta", function(e){
     }
 });
 
-function divLotesSeleccionados(nombreLote, superficie, idLote){
+function divLotesSeleccionados(statusPreproceso, nombreLote, superficie, idLote, id_pxl = null, idProyecto = null, tipoLote = null){
     html = `
         <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2 lotePropuesto">
             <div class="p-2 pt-1" style="background-color: #eaeaea; border-radius:15px">
                 <div class="d-flex justify-between">
                     <h5 class="mb-0 mt-2 text-center">LOTE SELECCIONADO</h5>
-                    <button type="button" class="fl-r" onclick="removeLote(this)" style="color: gray; background-color:transparent; border:none;" title="Eliminar selección"><i class="fas fa-times"></i></button>
+                    <button type="button" class="fl-r" onclick="removeLote(this, ${idLote}, ${statusPreproceso}, ${id_pxl}, ${idProyecto}, ${superficie}, ${tipoLote})" style="color: gray; background-color:transparent; border:none;" title="Eliminar selección"><i class="fas fa-times"></i></button>
                 </div>
                 <span class="w-100 d-flex justify-between">
                     <p class="m-0">Lote</p>
@@ -525,7 +558,7 @@ $(document).on('click', '.btn-avanzar', function () {
     showModal();
 });
 
-$(document).on("submit", "#formAvanzarEstatus", function(e){
+$(document).on("submit", "#formAvanzarEstatus", function(e) {
     $('#spiner-loader').removeClass('hide');
     e.preventDefault();
     let data = new FormData();
