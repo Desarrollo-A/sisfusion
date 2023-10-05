@@ -305,9 +305,56 @@ $(document).on('click', '.btn-asignar-propuestas', function () {
     showModal();
 
     getProyectosAOcupar(idProyecto, superficie, tipoLote);
-    getPropuestas(idLoteOriginal);
+    getPropuestas(idLoteOriginal, statusPreproceso);
 });
 
+$(document).on('click', '.btn-reubicar', function () {
+    const tr = $(this).closest('tr');
+    const row = $('#reubicacionClientes').DataTable().row(tr);
+    const nombreCliente = row.data().cliente;
+    const nombreLote = row.data().nombreLote;
+    const superficie = row.data().sup;
+    const idProyecto = $(this).attr("data-idProyecto");
+    const tipoLote = $(this).attr("data-tipoLote");
+    const idLoteOriginal = row.data().idLote;
+    const statusPreproceso = $(this).attr("data-statusPreproceso"); 
+    const idCliente = $(this).attr("data-idCliente");
+
+
+    changeSizeModal('modal-md');
+    appendBodyModal(`
+        <form method="post" id="formAsignarPropuestas">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h3 class="m-0">Reubicación</h3>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                        <p class="m-0 text-center">Cliente. ${nombreCliente}</p>
+                        <p class="m-0 text-center">Lote. ${nombreLote}</p>
+                        <p class="m-0 text-center">Superficie. ${superficie}</p>
+                    </div>
+                </div>
+                <div class="row mt-2" id="infoLotesSeleccionados">
+                </div>
+                <input type="hidden" id="superficie" value="${superficie}">
+                <input type="hidden" id="tipoLote" value="${tipoLote}">
+                <input type="hidden" id="idLoteOriginal" name="idLoteOriginal" value="${idLoteOriginal}">
+                <input type="hidden" id="idCliente" name="idCliente" value="${idCliente}">
+                <input type="hidden" id="statusPreproceso" name="statusPreproceso" value="${statusPreproceso}">
+                <div class="row mt-2">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
+                        <button type="button" class="btn btn-simple btn-danger" onclick="hideModal()">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Aceptar</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    `);
+    showModal();
+
+    getPropuestas(idLoteOriginal, statusPreproceso);
+});
 
 function getProyectosAOcupar(idProyecto, superficie, tipoLote) {
     $('#spiner-loader').removeClass('hide');
@@ -324,11 +371,11 @@ function getProyectosAOcupar(idProyecto, superficie, tipoLote) {
     }, 'json');
 }
 
-function getPropuestas(idLoteOriginal){
+function getPropuestas(idLoteOriginal, statusPreproceso){
     $('#spiner-loader').removeClass('hide');
     $.post("obtenerPropuestasXLote", {"idLoteOriginal" : idLoteOriginal}, function(data) {
         for (let lote of data) {
-            let html = divLotesSeleccionados(lote.nombreLote, lote.sup, lote.id_lotep);
+            let html = divLotesSeleccionados(lote.nombreLote, lote.sup, lote.id_lotep, statusPreproceso);
             $("#infoLotesSeleccionados").append(html);
         }
         $('#spiner-loader').addClass('hide');
@@ -415,30 +462,88 @@ $(document).on("click", "#btnAddPropuesta", function(e){
     }
 });
 
-function divLotesSeleccionados(nombreLote, superficie, idLote){
-    html = `
-        <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2 lotePropuesto">
-            <div class="p-2 pt-1" style="background-color: #eaeaea; border-radius:15px">
-                <div class="d-flex justify-between">
-                    <h5 class="mb-0 mt-2 text-center">LOTE SELECCIONADO</h5>
-                    <button type="button" class="fl-r" onclick="removeLote(this)" style="color: gray; background-color:transparent; border:none;" title="Eliminar selección"><i class="fas fa-times"></i></button>
+function divLotesSeleccionados(nombreLote, superficie, idLote, statusPreproceso){
+    if (statusPreproceso == 0){
+        html = `
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2 lotePropuesto">
+                <div class="p-2 pt-1" style="background-color: #eaeaea; border-radius:15px">
+                    <div class="d-flex justify-between">
+                        <h5 class="mb-0 mt-2 text-center">LOTE SELECCIONADO</h5>
+                        <button type="button" class="fl-r" onclick="removeLote(this)" style="color: gray; background-color:transparent; border:none;" title="Eliminar selección"><i class="fas fa-times"></i></button>
+                    </div>
+                    <span class="w-100 d-flex justify-between">
+                        <p class="m-0">Lote</p>
+                        <p class="m-0"><b>${nombreLote}</b></p>
+                    </span>
+                    <span class="w-100 d-flex justify-between">
+                        <p class="m-0">Superficie</p>
+                        <p class="m-0"><b>${superficie}</b></p>
+                    </span>
+                    <input type="hidden" class="idLotes" name="idLotes[]" value="${idLote}">
                 </div>
-                <span class="w-100 d-flex justify-between">
-                    <p class="m-0">Lote</p>
-                    <p class="m-0"><b>${nombreLote}</b></p>
-                </span>
-                <span class="w-100 d-flex justify-between">
-                    <p class="m-0">Superficie</p>
-                    <p class="m-0"><b>${superficie}</b></p>
-                </span>
-                <input type="hidden" class="idLotes" name="idLotes[]" value="${idLote}">
-            <div>
-        <div>
-    `;
+            </div>
+        `;
+    }
+    else{
+        html = `
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2 lotePropuesto">
+                <div class="" id="checkDS">
+                    
+                        
+                        <div class="container boxChecks p-0">
+                            <div class="col-12 col-sm-12 col-md-4 col-lg-4 p-0">
+                                <label class="m-0 checkstyleDS">
+                                    <input type="checkbox" name="idOficial_pf" id="idOficial_pf" value="1" >
+                                    <span>IDENTIFICACIÓN OFICIAL</span>
+                                </label>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-4 col-lg-4 p-0">
+                                <label class="m-0 checkstyleDS">
+                                    <input type="checkbox" name="idOficial_pf" id="idOficial_pf" value="1" >
+                                    <span>IDENTIFICACIÓN OFICIAL</span>
+                                </label>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-4 col-lg-4 p-0">
+                                <label class="m-0 checkstyleDS">
+                                    <input type="checkbox" name="idOficial_pf" id="idOficial_pf" value="1" >
+                                    <span>IDENTIFICACIÓN OFICIAL</span>
+                                </label>
+                            </div>
+                        </div>
+                    
+                </div>
+            </div>
+        `;
+    }
+    
 
     return html;
 }
 
+$(document).on("submit", "#formReubicacion", function(e){
+    e.preventDefault();
+    $('#spiner-loader').removeClass('hide');
+    let data = new FormData($(this)[0]);
+    $.ajax({
+        url : 'asignarPropuestasLotes',
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST', 
+        success: function(data){
+            data = JSON.parse(data);
+            alerts.showNotification("top", "right", ""+data.message+"", ""+data.color+"");
+            $('#spiner-loader').addClass('hide');
+            $('#reubicacionClientes').DataTable().ajax.reload();
+            hideModal();
+        },
+        error: function( data ){
+            alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+            hideModal();
+        }
+    });
+});
 
 $(document).on("submit", "#formAsignarPropuestas", function(e){
     e.preventDefault();
@@ -461,6 +566,7 @@ $(document).on("submit", "#formAsignarPropuestas", function(e){
                 data = JSON.parse(data);
                 alerts.showNotification("top", "right", ""+data.message+"", ""+data.color+"");
                 $('#spiner-loader').addClass('hide');
+				$('#reubicacionClientes').DataTable().ajax.reload();
                 hideModal();
             },
             error: function( data ){

@@ -347,7 +347,7 @@ class Reestructura extends CI_Controller{
         $arrayLotes = array();
         $arrayLotesApartado = array();
 
-        //Se asignan propuesta por primera vez
+        //AA: Se asignan propuesta por primera vez
         if($statusPreproceso == 0){
             foreach ($idLotes as $idLote){
                 $arrayLote = array(
@@ -373,6 +373,7 @@ class Reestructura extends CI_Controller{
                 return;
             }
         }
+        // AA: Update de lotes
         else{
             foreach ($idLotes as $idLote){
                 $stringLotesProp .= $idLote . ', ';
@@ -394,9 +395,7 @@ class Reestructura extends CI_Controller{
                     $this->General_model->updateRecord("lotes", $updateLoteOriginal, "idLote", $idLoteOriginal);
                     array_push($arrayLotes, $arrayLote);
                 }
-
-            }
-            
+            }  
         }
 
         foreach ($idLotes as $idLote){
@@ -478,7 +477,7 @@ class Reestructura extends CI_Controller{
             echo json_encode([
                 'titulo' => 'FALSE',
                 'resultado' => FALSE,
-                'message' => 'Error, el lote no esta disponible',
+                'message' => 'Error, el lote no está disponible',
                 'color' => 'danger'
             ]);
             return;
