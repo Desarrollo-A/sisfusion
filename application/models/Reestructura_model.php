@@ -528,7 +528,7 @@ class Reestructura_model extends CI_Model
         return $query->result_array();
     }
     function obtenerPropuestasXLote($idLote){
-        return $this->db->query("SELECT pl.idLote, pl.id_lotep, lo.nombreLote, lo.sup
+        return $this->db->query("SELECT pl.id_pxl, pl.idLote, pl.id_lotep, lo.nombreLote, lo.sup
         FROM propuestas_x_lote pl
         INNER JOIN lotes lo ON pl.id_lotep = lo.idLote
         WHERE pl.idLote = $idLote;");
