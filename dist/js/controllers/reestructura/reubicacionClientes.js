@@ -133,7 +133,9 @@ $('#reubicacionClientes').DataTable({
                             data-toggle="tooltip" 
                             data-placement="left"
                             title="${d.id_estatus_preproceso == 0 ? 'ASIGNAR PROPUESTAS' : 'ACTUALIZAR PROPUESTAS'}"
-                            data-idCliente="${d.idCliente}">
+                            data-idCliente="${d.idCliente}" 
+                            data-tipoLote="${d.tipo_lote}"
+                            data-idProyecto="${d.idProyecto}">
                             <i class="fas fa-user-edit"></i>
                     </button>`;
                 const BTN_AVANCE =  `<button class="btn-data btn-green btn-avanzar"
@@ -152,6 +154,13 @@ $('#reubicacionClientes').DataTable({
                     data-tipoTransaccion="${d.id_estatus_preproceso}">
                     <i class="fas fa-upload"></i>
                 </button>`;
+                // const BTN_INFORMACION_CLIENTE = `<button class="btn-data btn-blueMaderas infoUser" data-toggle="tooltip"
+                //     data-placement="top" 
+                //     data-idCliente="${d.idCliente}" 
+                //     data-idLote="${d.idLote}" 
+                //     title="HISTORIAL">
+                //     <i class="fas fa-user-edit"></i>
+                // </button>`
 
                 if (d.id_estatus_preproceso == 0 && id_rol_general == 3) // Gerente: PENDIENTE CARGA DE PROPUESTAS
                     btns += BTN_PROPUESTAS;
@@ -189,7 +198,6 @@ $('#reubicacionClientes').DataTable({
                         <i class="fas fa-route"></i>
                     </button>`;
                 }
-                btns += `<button class="btn-data btn-blueMaderas infoUser" data-toggle="tooltip" data-placement="top" data-idCliente="${d.idCliente}" data-idLote="${d.idLote}" title="HISTORIAL"><i class="fas fa-user-edit"></i></button>`
                 return `<div class="d-flex justify-center">${btns}</div>`;
             }
         }
@@ -239,7 +247,7 @@ $(document).on('click', '.btn-reestructurar', function () {
     showModal();
 });
 
-$(document).on('click', '.btn-propuestas', function () {
+$(document).on('click', '.btn-asignar-propuestas', function () {
     const tr = $(this).closest('tr');
     const row = $('#reubicacionClientes').DataTable().row(tr);
     const nombreCliente = row.data().cliente;
