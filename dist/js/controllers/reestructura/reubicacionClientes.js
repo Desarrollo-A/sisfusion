@@ -397,12 +397,12 @@ $(document).on('click', '#guardarCliente', function (){
     var ocupacionCli = $('#ocupacionCli').val();
 
     if(ineCLi == ''){
-        alerts.showNotification("top", "right", "Captura el numero INE", "warning");
+        alerts.showNotification("top", "right", "Captura el número INE", "warning");
         return;
     }
 
     if (telefonoCli == '' || telefonoCli == null){
-        alerts.showNotification("top", "right", "Captura el numero de telefono", "warning");
+        alerts.showNotification("top", "right", "Captura el número de teléfono", "warning");
         return;
     }
 
@@ -442,7 +442,7 @@ $(document).on('click', '#guardarCliente', function (){
         success: function(data) {
             if (data == 1) {
             $('#clienteConsulta').modal('hide');
-            alerts.showNotification("top", "right", "Información capturada con exito.", "success");
+            alerts.showNotification("top", "right", "Información capturada con éxito.", "success");
             $('#ineCLi').val('');
             $('#telefonoCli').val('');
             $('#correoCli').val('');
