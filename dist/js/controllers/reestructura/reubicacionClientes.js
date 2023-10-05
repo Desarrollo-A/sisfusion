@@ -129,13 +129,17 @@ $('#reubicacionClientes').DataTable({
         {
             data: function (d) {
                 let btns = '';
-                const BTN_PROPUESTAS =  `<button class="btn-data btn-blueMaderas btn-asignar-propuestas"
-                            data-toggle="tooltip" 
-                            data-placement="left"
-                            title="${d.id_estatus_preproceso == 0 ? 'ASIGNAR PROPUESTAS' : 'ACTUALIZAR PROPUESTAS'}"
-                            data-idCliente="${d.idCliente}">
-                            <i class="fas fa-user-edit"></i>
-                    </button>`;
+                const BTN_PROPUESTAS =  `
+                <button class="btn-data btn-blueMaderas btn-asignar-propuestas"
+                    data-toggle="tooltip" 
+                    data-placement="left"
+                    title="${d.id_estatus_preproceso == 0 ? 'ASIGNAR PROPUESTAS' : 'ACTUALIZAR PROPUESTAS'}"
+                    data-idCliente="${d.idCliente}"
+                    data-idProyecto="${d.idProyecto}"
+                    data-tipoLote="${d.tipo_lote}"
+                    data-statusPreproceso="${d.id_estatus_preproceso}">
+                    <i class="fas fa-user-edit"></i>
+                </button>`;
                 const BTN_AVANCE =  `<button class="btn-data btn-green btn-avanzar"
                     data-toggle="tooltip" 
                     data-placement="left"
@@ -238,7 +242,7 @@ $(document).on('click', '.btn-reestructurar', function () {
     showModal();
 });
 
-$(document).on('click', '.btn-propuestas', function () {
+$(document).on('click', '.btn-asignar-propuestas', function () {
     const tr = $(this).closest('tr');
     const row = $('#reubicacionClientes').DataTable().row(tr);
     const nombreCliente = row.data().cliente;
@@ -246,12 +250,12 @@ $(document).on('click', '.btn-propuestas', function () {
     const superficie = row.data().sup;
     const idProyecto = $(this).attr("data-idProyecto");
     const tipoLote = $(this).attr("data-tipoLote");
-    const idCliente = $(this).attr("data-idCliente");
     const idLoteOriginal = row.data().idLote;
+    const statusPreproceso = $(this).attr("data-statusPreproceso"); 
 
     changeSizeModal('modal-md');
     appendBodyModal(`
-        <form method="post" id="formReubicarProp">
+        <form method="post" id="formAsignarPropuestas">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12 text-center">
@@ -287,8 +291,8 @@ $(document).on('click', '.btn-propuestas', function () {
                 </div>
                 <input type="hidden" id="superficie" value="${superficie}">
                 <input type="hidden" id="tipoLote" value="${tipoLote}">
-                <input type="hidden" id="idCliente" name="idCliente" value="${idCliente}">
                 <input type="hidden" id="idLoteOriginal" name="idLoteOriginal" value="${idLoteOriginal}">
+                <input type="hidden" id="statusPreproceso" name="statusPreproceso" value="${statusPreproceso}">
                 <div class="row mt-2">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
                         <button type="button" class="btn btn-simple btn-danger" onclick="hideModal()">Cancelar</button>
@@ -436,7 +440,7 @@ function divLotesSeleccionados(nombreLote, superficie, idLote){
 }
 
 
-$(document).on("submit", "#formReubicarProp", function(e){
+$(document).on("submit", "#formAsignarPropuestas", function(e){
     e.preventDefault();
     const numberLotes = $('#infoLotesSeleccionados .lotePropuesto').length;
     if(numberLotes < 3){
@@ -447,7 +451,7 @@ $(document).on("submit", "#formReubicarProp", function(e){
         $('#spiner-loader').removeClass('hide');
         let data = new FormData($(this)[0]);
         $.ajax({
-            url : 'setPropuestasLotes',
+            url : 'asignarPropuestasLotes',
             data: data,
             cache: false,
             contentType: false,
