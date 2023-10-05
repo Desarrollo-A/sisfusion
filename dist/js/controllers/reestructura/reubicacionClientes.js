@@ -255,12 +255,12 @@ $(document).on('click', '.btn-asignar-propuestas', function () {
     const superficie = row.data().sup;
     const idProyecto = $(this).attr("data-idProyecto");
     const tipoLote = $(this).attr("data-tipoLote");
-    const idCliente = $(this).attr("data-idCliente");
     const idLoteOriginal = row.data().idLote;
+    const statusPreproceso = $(this).attr("data-statusPreproceso"); 
 
     changeSizeModal('modal-md');
     appendBodyModal(`
-        <form method="post" id="formReubicarProp">
+        <form method="post" id="formAsignarPropuestas">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12 text-center">
@@ -296,8 +296,8 @@ $(document).on('click', '.btn-asignar-propuestas', function () {
                 </div>
                 <input type="hidden" id="superficie" value="${superficie}">
                 <input type="hidden" id="tipoLote" value="${tipoLote}">
-                <input type="hidden" id="idCliente" name="idCliente" value="${idCliente}">
                 <input type="hidden" id="idLoteOriginal" name="idLoteOriginal" value="${idLoteOriginal}">
+                <input type="hidden" id="statusPreproceso" name="statusPreproceso" value="${statusPreproceso}">
                 <div class="row mt-2">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
                         <button type="button" class="btn btn-simple btn-danger" onclick="hideModal()">Cancelar</button>
@@ -310,7 +310,7 @@ $(document).on('click', '.btn-asignar-propuestas', function () {
     showModal();
 
     getProyectosAOcupar(idProyecto, superficie, tipoLote);
-    getPropuestas(idLoteOriginal);
+    getPropuestas(idLoteOriginal, statusPreproceso, idProyecto, superficie, tipoLote);
 });
 
 $(document).on('click', '.infoUser', function (){
@@ -423,6 +423,54 @@ $(document).on('click', '#guardarCliente', function (){
     });
 });
 
+$(document).on('click', '.btn-reubicar', function () {
+    const tr = $(this).closest('tr');
+    const row = $('#reubicacionClientes').DataTable().row(tr);
+    const nombreCliente = row.data().cliente;
+    const nombreLote = row.data().nombreLote;
+    const superficie = row.data().sup;
+    const idProyecto = $(this).attr("data-idProyecto");
+    const tipoLote = $(this).attr("data-tipoLote");
+    const idLoteOriginal = row.data().idLote;
+    const statusPreproceso = $(this).attr("data-statusPreproceso"); 
+    const idCliente = $(this).attr("data-idCliente");
+
+
+    changeSizeModal('modal-md');
+    appendBodyModal(`
+        <form method="post" id="formAsignarPropuestas">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h3 class="m-0">Reubicación</h3>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                        <p class="m-0 text-center">Cliente. ${nombreCliente}</p>
+                        <p class="m-0 text-center">Lote. ${nombreLote}</p>
+                        <p class="m-0 text-center">Superficie. ${superficie}</p>
+                    </div>
+                </div>
+                <div class="row mt-2" id="infoLotesSeleccionados">
+                </div>
+                <input type="hidden" id="superficie" value="${superficie}">
+                <input type="hidden" id="tipoLote" value="${tipoLote}">
+                <input type="hidden" id="idLoteOriginal" name="idLoteOriginal" value="${idLoteOriginal}">
+                <input type="hidden" id="idCliente" name="idCliente" value="${idCliente}">
+                <input type="hidden" id="statusPreproceso" name="statusPreproceso" value="${statusPreproceso}">
+                <div class="row mt-2">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
+                        <button type="button" class="btn btn-simple btn-danger" onclick="hideModal()">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Aceptar</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    `);
+    showModal();
+
+    getPropuestas(idLoteOriginal, statusPreproceso);
+});
+
 function getProyectosAOcupar(idProyecto, superficie, tipoLote) {
     $('#spiner-loader').removeClass('hide');
     $.post("getProyectosDisponibles", {"idProyecto" : idProyecto, "superficie" : superficie, "tipoLote": tipoLote}, function(data) {
@@ -438,11 +486,11 @@ function getProyectosAOcupar(idProyecto, superficie, tipoLote) {
     }, 'json');
 }
 
-function getPropuestas(idLoteOriginal){
+function getPropuestas(idLoteOriginal, statusPreproceso, idProyecto, superficie, tipoLote){
     $('#spiner-loader').removeClass('hide');
     $.post("obtenerPropuestasXLote", {"idLoteOriginal" : idLoteOriginal}, function(data) {
         for (let lote of data) {
-            let html = divLotesSeleccionados(lote.nombreLote, lote.sup, lote.id_lotep);
+            let html = divLotesSeleccionados(statusPreproceso, lote.nombreLote, lote.sup, lote.id_lotep, lote.id_pxl, idProyecto, superficie, tipoLote);
             $("#infoLotesSeleccionados").append(html);
         }
         $('#spiner-loader').addClass('hide');
@@ -496,12 +544,45 @@ $(document).on("change", "#loteAOcupar", function(e){
     $('#btnAddPropuesta').removeClass('d-none');
 })
 
-function removeLote(e){
-    let divLote = e.closest( '.lotePropuesto' );
-    divLote.remove();
+function removeLote(e, idLote, statusPreproceso, id_pxl, idProyecto, superficie, tipoLote) {
+    if (statusPreproceso == 1) { // REVISIÓN DE PROPUESTAS (YA ESTÁN EN LA BASE DE DATOS)
+        $('#spiner-loader').removeClass('hide');
+        let data = new FormData();
+        data.append("idLote", idLote);
+        data.append("id_pxl", id_pxl);
+        $.ajax({
+            url : 'setLoteDisponible',
+            data: data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            type: 'POST', 
+            success: function(data) {
+                $('#spiner-loader').addClass('hide');
+                if(data) {
+                    alerts.showNotification("top", "right", "El registro se ha eliminado y liberado con éxito.", "success");
+                    // SE VUELVE A LLENAR SELECT PARA REFRESCAR OPCIONES
+                    getProyectosAOcupar(idProyecto, superficie, tipoLote);
+                    let divLote = e.closest( '.lotePropuesto' );
+                    divLote.remove();
+                }
+                else
+                    alerts.showNotification("top", "right", "Oops, algo salió mal. Inténtalo más tarde.", "danger")
+            },
+            error: function(data){
+                alerts.showNotification("top", "right", "Oops, algo salió mal. Inténtalo más tarde.", "danger");
+                $('#spiner-loader').addClass('hide');
+            }
+        });
+    }
+    else { // SON LOTES QUE ELIMINA CUANDO ES LA PRIMERA VEZ QUE ASIGNA PROPUESTAS
+        let divLote = e.closest( '.lotePropuesto' );
+        divLote.remove();
+    }
 }
 
-$(document).on("click", "#btnAddPropuesta", function(e){
+$(document).on("click", "#btnAddPropuesta", function(e) {
+    const statusPreproceso = $(this).attr("data-statusPreproceso");
     const $itself = $("#loteAOcupar").find(':selected');
     const numberLotes = $('#infoLotesSeleccionados .lotePropuesto').length;
     const idLotes = document.getElementsByClassName('idLotes');
@@ -520,7 +601,7 @@ $(document).on("click", "#btnAddPropuesta", function(e){
         const nombreLote = $itself.attr("data-nombre");
         const superficie = $itself.attr("data-superficie");
         const idLote = $itself.val();
-        const html = divLotesSeleccionados(nombreLote, superficie, idLote);
+        const html = divLotesSeleccionados(statusPreproceso, nombreLote, superficie, idLote);
         
         $("#infoLotesSeleccionados").append(html);
     }
@@ -529,32 +610,90 @@ $(document).on("click", "#btnAddPropuesta", function(e){
     }
 });
 
-function divLotesSeleccionados(nombreLote, superficie, idLote){
-    html = `
-        <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2 lotePropuesto">
-            <div class="p-2 pt-1" style="background-color: #eaeaea; border-radius:15px">
-                <div class="d-flex justify-between">
-                    <h5 class="mb-0 mt-2 text-center">LOTE SELECCIONADO</h5>
-                    <button type="button" class="fl-r" onclick="removeLote(this)" style="color: gray; background-color:transparent; border:none;" title="Eliminar selección"><i class="fas fa-times"></i></button>
+function divLotesSeleccionados(statusPreproceso, nombreLote, superficie, idLote, id_pxl = null, idProyecto = null, tipoLote = null){
+    if (statusPreproceso == 0){
+        html = `
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2 lotePropuesto">
+                <div class="p-2 pt-1" style="background-color: #eaeaea; border-radius:15px">
+                    <div class="d-flex justify-between">
+                        <h5 class="mb-0 mt-2 text-center">LOTE SELECCIONADO</h5>
+                        <button type="button" class="fl-r" onclick="removeLote(this, ${idLote}, ${statusPreproceso}, ${id_pxl}, ${idProyecto}, ${superficie}, ${tipoLote})" style="color: gray; background-color:transparent; border:none;" title="Eliminar selección"><i class="fas fa-times"></i></button>
+                    </div>
+                    <span class="w-100 d-flex justify-between">
+                        <p class="m-0">Lote</p>
+                        <p class="m-0"><b>${nombreLote}</b></p>
+                    </span>
+                    <span class="w-100 d-flex justify-between">
+                        <p class="m-0">Superficie</p>
+                        <p class="m-0"><b>${superficie}</b></p>
+                    </span>
+                    <input type="hidden" class="idLotes" name="idLotes[]" value="${idLote}">
                 </div>
-                <span class="w-100 d-flex justify-between">
-                    <p class="m-0">Lote</p>
-                    <p class="m-0"><b>${nombreLote}</b></p>
-                </span>
-                <span class="w-100 d-flex justify-between">
-                    <p class="m-0">Superficie</p>
-                    <p class="m-0"><b>${superficie}</b></p>
-                </span>
-                <input type="hidden" class="idLotes" name="idLotes[]" value="${idLote}">
-            <div>
-        <div>
-    `;
+            </div>
+        `;
+    }
+    else{
+        html = `
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2 lotePropuesto">
+                <div class="" id="checkDS">
+                    
+                        
+                        <div class="container boxChecks p-0">
+                            <div class="col-12 col-sm-12 col-md-4 col-lg-4 p-0">
+                                <label class="m-0 checkstyleDS">
+                                    <input type="checkbox" name="idOficial_pf" id="idOficial_pf" value="1" >
+                                    <span>IDENTIFICACIÓN OFICIAL</span>
+                                </label>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-4 col-lg-4 p-0">
+                                <label class="m-0 checkstyleDS">
+                                    <input type="checkbox" name="idOficial_pf" id="idOficial_pf" value="1" >
+                                    <span>IDENTIFICACIÓN OFICIAL</span>
+                                </label>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-4 col-lg-4 p-0">
+                                <label class="m-0 checkstyleDS">
+                                    <input type="checkbox" name="idOficial_pf" id="idOficial_pf" value="1" >
+                                    <span>IDENTIFICACIÓN OFICIAL</span>
+                                </label>
+                            </div>
+                        </div>
+                    
+                </div>
+            </div>
+        `;
+    }
+    
 
     return html;
 }
 
+$(document).on("submit", "#formReubicacion", function(e){
+    e.preventDefault();
+    $('#spiner-loader').removeClass('hide');
+    let data = new FormData($(this)[0]);
+    $.ajax({
+        url : 'asignarPropuestasLotes',
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST', 
+        success: function(data){
+            data = JSON.parse(data);
+            alerts.showNotification("top", "right", ""+data.message+"", ""+data.color+"");
+            $('#spiner-loader').addClass('hide');
+            $('#reubicacionClientes').DataTable().ajax.reload();
+            hideModal();
+        },
+        error: function( data ){
+            alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+            hideModal();
+        }
+    });
+});
 
-$(document).on("submit", "#formReubicarProp", function(e){
+$(document).on("submit", "#formAsignarPropuestas", function(e){
     e.preventDefault();
     const numberLotes = $('#infoLotesSeleccionados .lotePropuesto').length;
     if(numberLotes < 3){
@@ -565,7 +704,7 @@ $(document).on("submit", "#formReubicarProp", function(e){
         $('#spiner-loader').removeClass('hide');
         let data = new FormData($(this)[0]);
         $.ajax({
-            url : 'setPropuestasLotes',
+            url : 'asignarPropuestasLotes',
             data: data,
             cache: false,
             contentType: false,
@@ -575,6 +714,7 @@ $(document).on("submit", "#formReubicarProp", function(e){
                 data = JSON.parse(data);
                 alerts.showNotification("top", "right", ""+data.message+"", ""+data.color+"");
                 $('#spiner-loader').addClass('hide');
+				$('#reubicacionClientes').DataTable().ajax.reload();
                 hideModal();
             },
             error: function( data ){
@@ -639,7 +779,7 @@ $(document).on('click', '.btn-avanzar', function () {
     showModal();
 });
 
-$(document).on("submit", "#formAvanzarEstatus", function(e){
+$(document).on("submit", "#formAvanzarEstatus", function(e) {
     $('#spiner-loader').removeClass('hide');
     e.preventDefault();
     let data = new FormData();
