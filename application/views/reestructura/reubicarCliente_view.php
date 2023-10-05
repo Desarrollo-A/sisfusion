@@ -56,6 +56,7 @@
                     <div class="modal-header"></div>
                     <div class="modal-body text-center">
                         <h5>Selecciona los archivos para asociarlos al lote </h5>
+                        <div class="row" id="info-cliente"></div>
                         <b><h5 id="mainLabelText" class="bold"></h5></b><hr>
                         <div id="formularioArchivos"></div>
                     </div>

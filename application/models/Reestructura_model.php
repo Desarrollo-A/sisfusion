@@ -39,7 +39,7 @@ class Reestructura_model extends CI_Model
         CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2, lo.sup, 
         (ISNULL(lo.totalNeto2, 0.00) / lo.sup) costom2f, ISNULL(lo.totalNeto2, 0.00) total, co.tipo_lote, oxc.nombre nombreTipoLote,
-        oxc1.nombre estatusPreproceso, lo.estatus_preproceso id_estatus_preproceso, pxl1.totalCorridas, pxl2.totalContratos, dxc.totalRescision, dxc.idLote AS idLoteXcliente,
+        oxc1.nombre estatusPreproceso, lo.estatus_preproceso id_estatus_preproceso, pxl1.totalCorridas, pxl2.totalContratos, dxc.totalRescision, dxc2.idLote AS idLoteXcliente,
         CASE WHEN u6.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u6.nombre, ' ', u6.apellido_paterno, ' ', u6.apellido_materno)) END nombreAsesorAsignado
         FROM lotes lo
         INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.proceso NOT IN (2, 3, 4)
@@ -534,10 +534,14 @@ class Reestructura_model extends CI_Model
         return $query->result_array();
     }
     function getOpcionesLote($idLote){
-        $query = $this->db->query("SELECT l.nombreLote, pxl.*, dxc.rescision
+        $query = $this->db->query("SELECT l.nombreLote, pxl.*, dxc.rescision,
+        CONCAT(dxc.nombre,' ', dxc.apellido_paterno,' ', dxc.apellido_materno) AS nombreCliente,
+        oxc.nombre AS estadoCivil, dxc.ine, dxc.domicilio_particular,
+        dxc.correo, dxc.telefono1, dxc.ocupacion
         FROM propuestas_x_lote pxl 
         INNER JOIN lotes l ON pxl.id_lotep=l.idLote
         INNER JOIN datos_x_cliente dxc ON pxl.idLote=dxc.idLote
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = dxc.estado_civil AND oxc.id_catalogo=18
         WHERE pxl.idLote=".$idLote);
         //         AND pxl.estatus=1
         return $query->result_array();
