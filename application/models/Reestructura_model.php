@@ -30,7 +30,7 @@ class Reestructura_model extends CI_Model
         else if ($id_rol == 7 && $tipo == 2) // ASESOR && ES EEC
             $validacionAsignacion = "AND lo.id_usuario_asignado = $id_usuario";
 
-        return $this->db->query("SELECT cl.proceso, lr.idProyecto, lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, 
+        return $this->db->query("SELECT dxc2.id_dxc, dxc2.rescision ,cl.proceso, lr.idProyecto, lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, 
         CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, co.nombre AS nombreCondominio, re.nombreResidencial,
         CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
         CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
@@ -43,6 +43,7 @@ class Reestructura_model extends CI_Model
         CASE WHEN u6.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u6.nombre, ' ', u6.apellido_paterno, ' ', u6.apellido_materno)) END nombreAsesorAsignado
         FROM lotes lo
         INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.proceso NOT IN (2, 3, 4)
+        INNER JOIN datos_x_cliente dxc2 ON dxc2.idLote = lo.idLote
         INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
         INNER JOIN residenciales re ON co.idResidencial = re.idResidencial
         INNER JOIN (SELECT DISTINCT(idProyecto) idProyecto FROM loteXReubicacion WHERE estatus = 1) lr ON lr.idProyecto = re.idResidencial
@@ -520,7 +521,8 @@ class Reestructura_model extends CI_Model
         FROM propuestas_x_lote pxl 
         INNER JOIN lotes l ON pxl.id_lotep=l.idLote
         INNER JOIN datos_x_cliente dxc ON pxl.idLote=dxc.idLote
-        WHERE pxl.idLote=".$idLote." AND pxl.estatus=1");
+        WHERE pxl.idLote=".$idLote);
+        //         AND pxl.estatus=1
         return $query->result_array();
     }
     function checkDocumentacion($idLote){

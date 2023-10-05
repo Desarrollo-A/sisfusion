@@ -1,5 +1,5 @@
 var arrayKeysArchivos = [];
-let titulosTabla = [];
+let titulosTablaArchivos = [];
 let flagProceso = 0;
 var rescisionArchivo = '';
 var id_dxc = 0;
@@ -26,7 +26,7 @@ $(document).ready(function () {
 
 $('#tablaLotesArchivosReestructura thead tr:eq(0) th').each(function (i) {
     const title = $(this).text();
-    titulosTabla.push(title);
+    titulosTablaArchivos.push(title);
     $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
     $('input', this).on('keyup change', function () {
         if ($('#tablaLotesArchivosReestructura').DataTable().column(i).search() !== this.value) {
@@ -137,7 +137,7 @@ $(document).on('click', '.btn-abrir-modal',function(){
     let idLote = $(this).attr("data-idLote");
     let nombreLote = $(this).attr("data-nombreLote");
     let contenedorTitulo = $('#tituloLote');
-    let estatusLoteArchivo = $(this).attr("data-estatusLoteArchivo");
+    let tipotransaccion = $(this).attr("data-tipotransaccion");
     rescisionArchivo = $(this).attr("data-rescision");
     id_dxc = $(this).attr("data-id_dxc");
     contenedorTitulo.text(nombreLote);
@@ -157,7 +157,7 @@ $(document).on('click', '.btn-abrir-modal',function(){
             },
             success: function(data) {
                 data = JSON.parse(data);
-                formArchivos(2, data, flagEditar)
+                formArchivos(tipotransaccion, data, flagEditar)
             },
             error: function(){
                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
@@ -180,11 +180,11 @@ function formArchivos(estatusProceso, datos, flagEditar){
     let nombreLote = $('.btn-abrir-modal').attr("data-nombreLote");
     let nombreArchivo = '';
     switch (estatusProceso) {
-        case 2:
+        case '2':
             label = 'Subir corrida del lote';
             flagProceso = 2;
             break;
-        case 3:
+        case '3':
             label = 'Subir contrato del lote';
             flagProceso = 3;
             break;
@@ -283,10 +283,8 @@ function formArchivos(estatusProceso, datos, flagEditar){
     //nombre de archivo en front
     $("input:file").on("change", function () {
         const target = $(this);
-        console.log(target);
         const relatedTarget = target.siblings(".file-name");
         const fileName = target[0].files[0].name;
-        console.log(fileName);
         relatedTarget.val(fileName);
     });
     $(document).on("change", ".btn-file :file", function () {
@@ -304,18 +302,6 @@ $(document).on("click", "#sendRequestButton", function (e) {
     const archivo0 = $("#fileElm0")[0].files[0];
     const archivo1 = $("#fileElm1")[0].files[0];
     const archivo2 = $("#fileElm2")[0].files[0];
-    // const idArchivo0 = $('#idLotep'+arrayKeysArchivos[0]['id_pxl']).val();
-    // const idArchivo1 = $('#idLotep'+arrayKeysArchivos[1]['id_pxl']).val();
-    // const idArchivo2 = $('#idLotep'+arrayKeysArchivos[2]['id_pxl']).val();
-    //
-    console.log(archivo0);
-    console.log(archivo1);
-    console.log(archivo2);
-    // console.log(idArchivo0);
-    // console.log(idArchivo1);
-    // console.log(idArchivo2);
-    // console.log(arrayKeysArchivos);
-    // console.log(arrayKeysArchivos[0]['id_pxl']);
 
     if(editarFile==1){
         let data = new FormData();
@@ -356,13 +342,13 @@ $(document).on("click", "#sendRequestButton", function (e) {
             success: function(data) {
                 const res = JSON.parse(data);
                 if (res.code === 200) {
+                    reubicacionClientes.ajax.reload();
                     alerts.showNotification(
                         "top",
                         "right",
                         `Los documentos se han cargado con éxito.`,
                         "success"
                     );
-                    tablaLotesArchivosReestructura.ajax.reload();
                     $("#archivosReestructura").modal("hide");
                 }
                 if (res.code === 400) {
@@ -427,7 +413,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
                             `Los documentos se han cargado con éxito.`,
                             "success"
                         );
-                        tablaLotesArchivosReestructura.ajax.reload();
+                        reubicacionClientes.ajax.reload();
                         $("#archivosReestructura").modal("hide");
                     }
                     if (res.code === 400) {

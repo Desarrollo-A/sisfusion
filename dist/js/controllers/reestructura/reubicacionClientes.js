@@ -1,3 +1,4 @@
+var reubicacionClientes;
 const TIPO_LOTE = Object.freeze({
     HABITACIONAL: 0,
     COMERCIAL: 1
@@ -40,7 +41,7 @@ $('#reubicacionClientes thead tr:eq(0) th').each(function (i) {
     $('[data-toggle="tooltip"]').tooltip();
 });
 
-$('#reubicacionClientes').DataTable({
+reubicacionClientes = $('#reubicacionClientes').DataTable({
     dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
     width: '100%',
     scrollX: true,
@@ -129,6 +130,23 @@ $('#reubicacionClientes').DataTable({
         {
             data: function (d) {
                 let btns = '';
+                let editar = 0;
+                let btnShow = 'fa-upload';
+                if(d.id_estatus_preproceso == 2){
+                    //subiendo corridas
+                    if(d.totalCorridas==3){
+                        editar = 1;
+                        btnShow = 'fa-edit';
+                    }
+                }else if(d.id_estatus_preproceso == 3){
+                    //subiendo contratos
+                    if(d.totalContratos==3){
+                        editar = 1;
+                        btnShow = 'fa-edit';
+
+                    }
+                }
+
                 const BTN_PROPUESTAS =  `
                 <button class="btn-data btn-blueMaderas btn-asignar-propuestas"
                     data-toggle="tooltip" 
@@ -148,13 +166,19 @@ $('#reubicacionClientes').DataTable({
                     data-tipoTransaccion="${d.id_estatus_preproceso}">
                     <i class="fas fa-thumbs-up"></i>
                 </button>`;
-                const BTN_SUBIR_ARCHIVO =  `<button class="btn-data btn-blueMaderas btn-cargar-documentos"
+                const BTN_SUBIR_ARCHIVO =  `<button class="btn-data btn-blueMaderas btn-abrir-modal"
                     data-toggle="tooltip" 
                     data-placement="left"
                     title="CARGAR DOCUMENTACIÓN"
                     data-idCliente="${d.idCliente}"
+                    data-idLote="${d.idLote}"
+                    data-nombreLote="${d.nombreLote}"
+                    data-estatusLoteArchivo="${d.status}"
+                    data-editar="${editar}"   
+                    data-rescision="${d.rescision}"
+                    data-id_dxc="${d.id_dxc}"   
                     data-tipoTransaccion="${d.id_estatus_preproceso}">
-                    <i class="fas fa-upload"></i>
+                    <i class="fas ${btnShow}"></i>
                 </button>`;
 
                 if (d.id_estatus_preproceso == 0 && id_rol_general == 3) // Gerente: PENDIENTE CARGA DE PROPUESTAS
@@ -167,9 +191,11 @@ $('#reubicacionClientes').DataTable({
                     btns += BTN_SUBIR_ARCHIVO
                 }
                 else if (d.id_estatus_preproceso == 3 && id_rol_general == 15) { // Jurídico: ELABORACIÓN DE CONTRATO Y RESICISIÓN
+
                     if (d.totalContratos == 3 && d.totalRescision == 1)
                         btns += BTN_AVANCE;
                     btns += BTN_SUBIR_ARCHIVO
+
                 }
                 else if (d.id_estatus_preproceso == 4 && id_rol_general == 6) // Asistente gerente: DOCUMENTACIÓN ENTREGADA
                     btns += BTN_AVANCE;
@@ -284,7 +310,7 @@ $(document).on('click', '.btn-asignar-propuestas', function () {
                     <div class="col-12 col-sm-9 col-md-9 col-lg-9">
                     </div>
                     <div class="col-12 col-sm-3 col-md-3 col-lg-3">
-                        <button type="button" id="btnAddPropuesta" class="btn btn-gral d-none">Añadir</button>
+                        <button type="button" id="btnAddPropuesta" data-statusPreproceso="${statusPreproceso}" class="btn btn-gral d-none">Añadir</button>
                     </div>
                 </div>
                 <div class="row mt-2" id="infoLotesSeleccionados">

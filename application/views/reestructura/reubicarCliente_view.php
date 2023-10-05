@@ -50,6 +50,24 @@
     </style>
     <div class="wrapper">
         <?php  $this->load->view('template/sidebar'); ?>
+        <div class="modal fade" id="archivosReestructura" data-keyboard="false" data-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header"></div>
+                    <div class="modal-body text-center">
+                        <h5>Selecciona los archivos para asociarlos al lote </h5>
+                        <b><h5 id="mainLabelText" class="bold"></h5></b><hr>
+                        <div id="formularioArchivos"></div>
+                    </div>
+                    <div class="modal-footer mt-2">
+                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                            <button type="button" id="sendRequestButton" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -96,5 +114,9 @@
     </div>
 </body>
 <?php $this->load->view('template/footer');?>
+<!--<script src="--><?//=base_url()?><!--dist/js/core/modal-general.js"></script>-->
+<link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
+<script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
 <script src="<?=base_url()?>dist/js/core/modal-general.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/reestructura/reubicacionClientes.js"></script>
+<script src="<?=base_url()?>dist/js/controllers/reestructura/subirArchivosReestructura.js"></script>
