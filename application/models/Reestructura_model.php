@@ -567,4 +567,10 @@ class Reestructura_model extends CI_Model
         $query = $this->db->query("SELECT * FROM datos_x_cliente WHERE idLote = $idLote");
         return $query->row();
     }
+
+    public function obtenerTotalPropuestas($idLoteAnterior)
+    {
+        $query = $this->db->query("SELECT COUNT(*) AS total_propuestas FROM propuestas_x_lote WHERE idLote = $idLoteAnterior");
+        return $query->row();
+    }
 }

@@ -1424,4 +1424,10 @@ class Reestructura extends CI_Controller{
 
         echo ($responseUpdateLote && $responseInsertPropuesta) ? json_encode(['code' => 200]) : json_encode(['code' => 500]);
     }
+
+    public function totalPropuestas($idLoteOriginal)
+    {
+        $totalPropuestas = $this->Reestructura_model->obtenerTotalPropuestas($idLoteOriginal);
+        echo json_encode($totalPropuestas->total_propuestas);
+    }
 }

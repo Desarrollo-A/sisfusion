@@ -837,7 +837,7 @@ $(document).on("submit", "#formReestructura", function(e){
 
 
 
-$(document).on('click', '.btn-avanzar', function () {
+$(document).on('click', '.btn-avanzar', async function () {
 
     const tr = $(this).closest('tr');
     const row = $('#reubicacionClientes').DataTable().row(tr);
@@ -846,7 +846,10 @@ $(document).on('click', '.btn-avanzar', function () {
     const tipoTransaccion = $(this).attr("data-tipoTransaccion");
 
     if (tipoTransaccion == 1) {
-        if (!validarPropuestas()) {
+        const totalP = await totalPropuestas(idLote);
+
+        if (totalP < 3) {
+            alerts.showNotification("top", "right", "Debes seleccionar 3 lotes", "danger");
             return;
         }
     }
@@ -872,6 +875,16 @@ $(document).on('click', '.btn-avanzar', function () {
     `);
     showModal();
 });
+
+const totalPropuestas = async (idLoteOriginal) => {
+    return new Promise((resolve) => {
+        $('#spiner-loader').removeClass('hide');
+        $.getJSON(`${general_base_url}Reestructura/totalPropuestas/${idLoteOriginal}`, (data) => {
+            $('#spiner-loader').addClass('hide');
+            resolve(data);
+        });
+    });
+}
 
 $(document).on("submit", "#formAvanzarEstatus", function(e) {
     $('#spiner-loader').removeClass('hide');
