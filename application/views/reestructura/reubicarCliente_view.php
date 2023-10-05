@@ -73,52 +73,52 @@
 			<div class="modal-dialog">
 				<div class="modal-content" > 
 					<div class="modal-header">
-						<h4 class="modal-title text-center">Corrobora la informacion del cliente</h4>
+						<h4 class="modal-title text-center">Corrobora la información del cliente</h4>
 					</div>	
 					<div class="modal-body">
                         <div class="row">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                                <label class="control-label">NOMBRE</label>
+                                <label class="control-label">NOMBRE (<small style="color: red;">*</small>)</label>
                                 <input class="form-control input-gral" name="nombreCli" id="nombreCli" type="text" required/>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                                <label class="control-label">APELLIDO PATERNO</label>
+                                <label class="control-label">APELLIDO PATERNO (<small style="color: red;">*</small>)</label>
                                 <input class="form-control input-gral" name="apellidopCli" id="apellidopCli" type="text" required/>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                                <label class="control-label">APELLIDO MATERNO</label>
+                                <label class="control-label">APELLIDO MATERNO (<small style="color: red;">*</small>)</label>
                                 <input class="form-control input-gral" name="apellidomCli" id="apellidomCli" type="text" required/>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
-                                <label class="control-label">TELEFONO</label>
-                                <input class="form-control input-gral" name="telefonoCli" id="telefonoCli" type="text" required/>
+                                <label class="control-label">TELEFONO (<small style="color: red;">*</small>)</label>
+                                <input class="form-control input-gral" name="telefonoCli" id="telefonoCli" type="number" required/>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
-                                <label class="control-label">CORREO</label>
+                                <label class="control-label">CORREO (<small style="color: red;">*</small>)</label>
                                 <input class="form-control input-gral" name="correoCli" id="correoCli" type="text" required/>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                                <label class="control-label">DOMICILIO</label>
+                                <label class="control-label">DOMICILIO (<small style="color: red;">*</small>)</label>
                                 <input class="form-control input-gral" name="domicilioCli" id="domicilioCli" type="text" required/>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                                <label class="control-label">ESTADO CIVIL</label>
+                                <label class="control-label">ESTADO CIVIL (<small style="color: red;">*</small>)</label>
                                 <select name="estadoCli" title="SELECCIONA UNA OPCIÓN" id="estadoCli" class="selectpicker m-0 select-gral" data-container="body" data-width="100%" required></select>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
-                                <label class="control-label">INE</label>
+                                <label class="control-label">INE (<small style="color: red;">*</small>)</label>
                                 <input class="form-control input-gral" name="ineCLi" id="ineCLi" type="text" required/>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m.0">
-                                <label class="control-label">OCUPACIÓN</label>
+                                <label class="control-label">OCUPACIÓN (<small style="color: red;">*</small>)</label>
                                 <input class="form-control input-gral" name="ocupacionCli" id="ocupacionCli" type="text" required/>
                             </div>
                         </div>        
