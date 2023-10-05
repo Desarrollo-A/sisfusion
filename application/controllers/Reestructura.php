@@ -384,17 +384,19 @@ class Reestructura extends CI_Controller{
                     $arrayLote = array(
                         'idLote' => $idLoteOriginal,
                         'id_lotep' => $idLote,
-                        'estatus' => 0,
-                        'creado_por' => $this->session->userdata('id_usuario'),
                         'fecha_modificacion'   => date("Y-m-d H:i:s"),
-                        'modificado_po' => $this->session->userdata('id_usuario')
+                        'modificado_por' => $this->session->userdata('id_usuario')
                     );
 
+                    // $arrayDesbloquearLote = array(
+
+                    // );
+                    $this->General_model->updateRecord("lotes", $updateLoteOriginal, "idLote", $idLoteOriginal);
                     array_push($arrayLotes, $arrayLote);
                 }
+
             }
             
-            $insertado = $this->General_model->updateBatch('propuestas_x_lote', $arrayLotes, 'id_lotep');
         }
 
         foreach ($idLotes as $idLote){
