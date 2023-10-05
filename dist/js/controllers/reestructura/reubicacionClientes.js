@@ -1,3 +1,4 @@
+let reubicacionClientes;
 const TIPO_LOTE = Object.freeze({
     HABITACIONAL: 0,
     COMERCIAL: 1
@@ -40,7 +41,7 @@ $('#reubicacionClientes thead tr:eq(0) th').each(function (i) {
     $('[data-toggle="tooltip"]').tooltip();
 });
 
-$('#reubicacionClientes').DataTable({
+reubicacionClientes = $('#reubicacionClientes').DataTable({
     dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
     width: '100%',
     scrollX: true,
@@ -129,17 +130,33 @@ $('#reubicacionClientes').DataTable({
         {
             data: function (d) {
                 let btns = '';
-                const BTN_PROPUESTAS =  `
-                <button class="btn-data btn-blueMaderas btn-asignar-propuestas"
-                    data-toggle="tooltip" 
-                    data-placement="left"
-                    title="${d.id_estatus_preproceso == 0 ? 'ASIGNAR PROPUESTAS' : 'ACTUALIZAR PROPUESTAS'}"
-                    data-idCliente="${d.idCliente}"
-                    data-idProyecto="${d.idProyecto}"
-                    data-tipoLote="${d.tipo_lote}"
-                    data-statusPreproceso="${d.id_estatus_preproceso}">
-                    <i class="fas fa-user-edit"></i>
-                </button>`;
+                let editar = 0;
+                let btnShow = 'fa-upload';
+                if(d.id_estatus_preproceso == 2){
+                    //subiendo corridas
+                    if(d.totalCorridas==3){
+                        editar = 1;
+                        btnShow = 'fa-edit';
+                    }
+                }else if(d.id_estatus_preproceso == 3){
+                    //subiendo contratos
+                    if(d.totalContratos==3){
+                        editar = 1;
+                        btnShow = 'fa-edit';
+
+                    }
+                }
+
+                const BTN_PROPUESTAS =  `<button class="btn-data btn-blueMaderas btn-asignar-propuestas"
+                            data-toggle="tooltip" 
+                            data-placement="left"
+                            title="${d.id_estatus_preproceso == 0 ? 'ASIGNAR PROPUESTAS' : 'ACTUALIZAR PROPUESTAS'}"
+                            data-idCliente="${d.idCliente}" 
+                            data-tipoLote="${d.tipo_lote}"
+                            data-idProyecto="${d.idProyecto}"
+                            data-statusPreproceso="${d.id_estatus_preproceso}">
+                            <i class="fas fa-user-edit"></i>
+                    </button>`;
                 const BTN_AVANCE =  `<button class="btn-data btn-green btn-avanzar"
                     data-toggle="tooltip" 
                     data-placement="left"
@@ -148,28 +165,50 @@ $('#reubicacionClientes').DataTable({
                     data-tipoTransaccion="${d.id_estatus_preproceso}">
                     <i class="fas fa-thumbs-up"></i>
                 </button>`;
-                const BTN_SUBIR_ARCHIVO =  `<button class="btn-data btn-blueMaderas btn-cargar-documentos"
+
+                const BTN_INFOCLIENTE =  `<button class="btn-data btn-green infoUser"
+                    data-toggle="tooltip" 
+                    data-placement="left"
+                    data-idCliente="${d.idCliente}" 
+                    data-idLote="${d.idLote}">
+                    <i class="fas fa-user-check"></i>
+                </button>`;
+                const BTN_SUBIR_ARCHIVO =  `<button class="btn-data btn-blueMaderas btn-abrir-modal"
                     data-toggle="tooltip" 
                     data-placement="left"
                     title="CARGAR DOCUMENTACIÓN"
                     data-idCliente="${d.idCliente}"
+                    data-idLote="${d.idLote}"
+                    data-nombreLote="${d.nombreLote}"
+                    data-estatusLoteArchivo="${d.status}"
+                    data-editar="${editar}"   
+                    data-rescision="${d.rescision}"
+                    data-id_dxc="${d.id_dxc}"   
                     data-tipoTransaccion="${d.id_estatus_preproceso}">
-                    <i class="fas fa-upload"></i>
+                    <i class="fas ${btnShow}"></i>
                 </button>`;
 
                 if (d.id_estatus_preproceso == 0 && id_rol_general == 3) // Gerente: PENDIENTE CARGA DE PROPUESTAS
                     btns += BTN_PROPUESTAS;
-                else if (d.id_estatus_preproceso == 1 && id_rol_general == 3) // Gerente: REVISIÓN DE PROPUESTAS
-                    btns += BTN_PROPUESTAS + BTN_AVANCE;
+                else if (d.id_estatus_preproceso == 1 && id_rol_general == 3){ // Gerente: REVISIÓN DE PROPUESTAS
+                    btns += BTN_PROPUESTAS;
+                    if(d.idLoteXcliente == null){
+                        btns += BTN_INFOCLIENTE;
+                    }else{
+                        btns += BTN_AVANCE;
+                    }
+                }
                 else if (d.id_estatus_preproceso == 2 && id_rol_general == 17) { // Contraloría: ELABORACIÓN DE CORRIDAS
                     if (d.totalCorridas == 3)
                         btns += BTN_AVANCE;
                     btns += BTN_SUBIR_ARCHIVO
                 }
                 else if (d.id_estatus_preproceso == 3 && id_rol_general == 15) { // Jurídico: ELABORACIÓN DE CONTRATO Y RESICISIÓN
+
                     if (d.totalContratos == 3 && d.totalRescision == 1)
                         btns += BTN_AVANCE;
                     btns += BTN_SUBIR_ARCHIVO
+
                 }
                 else if (d.id_estatus_preproceso == 4 && id_rol_general == 6) // Asistente gerente: DOCUMENTACIÓN ENTREGADA
                     btns += BTN_AVANCE;
@@ -329,6 +368,117 @@ const validarPropuestas = () => {
 
     return true;
 }
+
+$(document).on('click', '.infoUser', function (){
+    $('#idCliente').val($(this).attr('data-idCliente'));
+    $('#idLote').val($(this).attr('data-idLote'));
+    $('#ineCLi').val('');
+    $("#estadoCli").empty();
+
+    var idCliente = $("#idCliente").val();
+
+    $.getJSON("getCliente/" + idCliente, function(data) {
+        $('#nombreCli').val(data.nombre);
+        $('#apellidopCli').val(data.apellido_paterno);
+        $('#apellidomCli').val(data.apellido_materno);
+        $('#telefonoCli').val(data.telefono1);
+        $('#correoCli').val(data.correo);
+        $('#domicilioCli').val(data.domicilio_particular);
+        $("#estadoCli").append($('<option selected>').val(data.idEstadoC).text(data.estado_civil));
+        $('#ocupacionCli').val(data.ocupacion);
+
+        $.post("getEstadoCivil", function(data) {
+            var len = data.length;
+            for (var i = 0; i < len; i++) {
+                var id = data[i]['id_opcion'];
+                var name = data[i]['nombre'];
+
+                if(id == data.idEstadoC){
+                    $("#estadoCli").append($('<option selected>').val(id).text(name.toUpperCase()));
+                }else{
+                    $("#estadoCli").append($('<option>').val(id).text(name.toUpperCase()));
+                }
+            }
+            $("#estadoCli").selectpicker('refresh');
+        }, 'json');
+
+        $('#clienteConsulta').modal();
+    }, 'json');
+});
+
+$(document).on('click', '#guardarCliente', function (){
+    var idLote = $('#idLote').val();
+    var nombreCli = $('#nombreCli').val();
+    var apellidopCli = $('#apellidopCli').val();
+    var apellidomCli = $('#apellidomCli').val();
+    var telefonoCli = $('#telefonoCli').val();
+    var correoCli = $('#correoCli').val();
+    var domicilioCli = $('#domicilioCli').val();
+    var estadoCli = $('#estadoCli').val();
+    var ineCLi = $('#ineCLi').val();
+    var ocupacionCli = $('#ocupacionCli').val();
+
+    if(ineCLi == ''){
+        alerts.showNotification("top", "right", "Captura el número INE", "warning");
+        return;
+    }
+
+    if (telefonoCli == '' || telefonoCli == null){
+        alerts.showNotification("top", "right", "Captura el número de teléfono", "warning");
+        return;
+    }
+
+    if (correoCli == '' || correoCli == null){
+        alerts.showNotification("top", "right", "Captura el correo", "warning");
+        return;
+    }
+
+    if (domicilioCli == '' || domicilioCli == null){
+        alerts.showNotification("top", "right", "Captura el domicilio", "warning");
+        return;
+    }
+
+    if(ocupacionCli == '' || ocupacionCli == null){
+        alerts.showNotification("top", "right", "Captura la ocupación", "warning");
+        return;
+    }
+
+    var datos = new FormData();
+    datos.append("idLote", idLote);
+    datos.append("nombreCli", nombreCli);
+    datos.append("apellidopCli", apellidopCli);
+    datos.append("apellidomCli", apellidomCli);
+    datos.append("telefonoCli", telefonoCli);
+    datos.append("correoCli", correoCli);
+    datos.append("domicilioCli", domicilioCli);
+    datos.append("estadoCli", estadoCli);
+    datos.append("ineCLi", ineCLi);
+    datos.append("ocupacionCli", ocupacionCli);
+
+    $.ajax({
+        method: 'POST',
+        url: general_base_url + 'Reestructura/insetarCliente',
+        data: datos,
+        processData: false,
+        contentType: false,
+        success: function(data) {
+            if (data == 1) {
+            $('#clienteConsulta').modal('hide');
+            alerts.showNotification("top", "right", "Información capturada con éxito.", "success");
+            $('#ineCLi').val('');
+            $('#telefonoCli').val('');
+            $('#correoCli').val('');
+            $('#domicilioCli').val('');
+            $('#ocupacionCli').val('');
+            $('#reubicacionClientes').DataTable().ajax.reload(null, false);
+            }
+        },
+        error: function(){
+            $('#aceptarReestructura').modal('hide');
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+});
 
 $(document).on('click', '.btn-reubicar', function () {
     const tr = $(this).closest('tr');
@@ -686,7 +836,10 @@ $(document).on("submit", "#formReestructura", function(e){
     });
 });
 
+
+
 $(document).on('click', '.btn-avanzar', function () {
+
     const tr = $(this).closest('tr');
     const row = $('#reubicacionClientes').DataTable().row(tr);
     const nombreLote = row.data().nombreLote;

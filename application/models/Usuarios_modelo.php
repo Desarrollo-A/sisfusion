@@ -247,15 +247,16 @@ class Usuarios_modelo extends CI_Model
                     $id_rol = "";
                     
                 return $this->db->query("SELECT u.estatus, u.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, u.correo,
-                u.telefono, 
-                CASE WHEN u.id_usuario IN (3, 5, 607, 4) THEN 'Director regional' WHEN u.nueva_estructura = 1 THEN oxcNE.nombre ELSE oxc.nombre END puesto, 
+                u.telefono,
+                CASE WHEN u.id_usuario IN (3, 5, 607, 4) THEN 'Director regional' WHEN u.nueva_estructura = 1 THEN oxcNE.nombre WHEN u.tipo = 2 THEN oxcTC.nombre ELSE oxc.nombre END puesto, 
                 CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) jefe_directo, u.correo, CASE WHEN DAY(u.fecha_creacion) >= 6 AND MONTH(u.fecha_creacion) = MONTH(GETDATE()) AND YEAR(u.fecha_creacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END as nuevo, u.fecha_creacion, s.nombre sede, u.nueva_estructura, u.simbolico
                 FROM usuarios u 
                 LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
                 INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
                 LEFT JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(u.id_sede AS VARCHAR(45))
                 LEFT JOIN opcs_x_cats oxcNE ON oxcNE.id_opcion = u.id_rol AND oxcNE.id_catalogo = 83
-                WHERE (u.rfc NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '' ) NOT LIKE '%test_%') $id_rol OR u.id_usuario IN (9359, 9827) ORDER BY nombre");
+                LEFT JOIN opcs_x_cats oxcTC ON oxcTC.id_opcion = u.tipo AND oxcTC.id_catalogo = 106
+                WHERE (u.rfc NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '' ) NOT LIKE '%test_%')  OR u.id_usuario IN (9359, 9827) ORDER BY nombre");
                 break;
 
             default: // VE TODOS LOS REGISTROS
@@ -1163,5 +1164,11 @@ class Usuarios_modelo extends CI_Model
         }
         $response = $this->db->query($consulta);
         return $response;
+    }
+
+
+    public function getOptionByIdRol($id_rol){
+        $query = $this->db->query("SELECT * FROM menu2 WHERE rol=".$id_rol." AND estatus=1");
+        return $query->result_array();
     }
 }
