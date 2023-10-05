@@ -1172,6 +1172,7 @@ class Reestructura extends CI_Controller{
             }
             $carpetaUbicacion = 'CORRIDA/';
             $nameField = 'corrida';
+            $acceptFiles = 'xlsx|csv|xls';
         }elseif($flagAction==3){
             $micarpeta = './static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/CONTRATO';
             if (!file_exists($micarpeta)) {
@@ -1179,12 +1180,14 @@ class Reestructura extends CI_Controller{
             }
             $carpetaUbicacion = 'CONTRATO/';
             $nameField = 'contrato';
+            $acceptFiles = 'pdf';
+
         }
 
 
         $arrayData = array();
         $config['upload_path'] = './static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/'.$carpetaUbicacion;
-        $config['allowed_types'] = 'pdf';
+        $config['allowed_types'] = $acceptFiles;
         $this->load->library('upload', $config);
         $flagInterno = 0;
         for($i=0; $i<$arrayLength; $i++){
@@ -1286,6 +1289,7 @@ class Reestructura extends CI_Controller{
             }
             $carpetaUbicacion = 'CORRIDA/';
             $nameField = 'corrida';
+            $acceptFiles = 'xlsx|csv|xls';
         }elseif($flagAction==3){
             $micarpeta = './static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/CONTRATO';
             if (!file_exists($micarpeta)) {
@@ -1293,12 +1297,13 @@ class Reestructura extends CI_Controller{
             }
             $carpetaUbicacion = 'CONTRATO/';
             $nameField = 'contrato';
+            $acceptFiles = 'pdf';
         }
 
 
         $arrayData = array();
         $config['upload_path'] = './static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/'.$carpetaUbicacion;
-        $config['allowed_types'] = 'pdf';
+        $config['allowed_types'] = $acceptFiles;
         $this->load->library('upload', $config);
         $flagInterno = 0;
         for($i=0; $i<$arrayLength; $i++){

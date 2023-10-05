@@ -534,10 +534,14 @@ class Reestructura_model extends CI_Model
         return $query->result_array();
     }
     function getOpcionesLote($idLote){
-        $query = $this->db->query("SELECT l.nombreLote, pxl.*, dxc.rescision
+        $query = $this->db->query("SELECT l.nombreLote, pxl.*, dxc.rescision,
+        CONCAT(dxc.nombre,' ', dxc.apellido_paterno,' ', dxc.apellido_materno) AS nombreCliente,
+        oxc.nombre AS estadoCivil, dxc.ine, dxc.domicilio_particular,
+        dxc.correo, dxc.telefono1, dxc.ocupacion
         FROM propuestas_x_lote pxl 
         INNER JOIN lotes l ON pxl.id_lotep=l.idLote
         INNER JOIN datos_x_cliente dxc ON pxl.idLote=dxc.idLote
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = dxc.estado_civil AND oxc.id_catalogo=18
         WHERE pxl.idLote=".$idLote);
         //         AND pxl.estatus=1
         return $query->result_array();
