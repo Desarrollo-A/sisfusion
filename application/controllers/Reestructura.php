@@ -38,6 +38,16 @@ class Reestructura extends CI_Controller{
         echo json_encode($data);
     }
 
+    public function getCliente($idCliente){
+        $data = $this->Reestructura_model->getCliente($idCliente);
+        echo json_encode($data);
+    }
+    
+    public function getEstadoCivil(){
+        $data = $this->Reestructura_model->getEstadoCivil();
+        echo json_encode($data);
+    }
+
 	public function getProyectosDisponibles(){
 		$idProyecto = $this->input->post('idProyecto');
 		$superficie = $this->input->post('superficie');
@@ -161,6 +171,30 @@ class Reestructura extends CI_Controller{
 			echo json_encode(0);
 		} 
 	}
+
+    public function insetarCliente (){
+
+        $dataPost = $_POST;
+        $datos["idLote"] = $dataPost['idLote'];
+		$datos["nombreCli"] = $dataPost['nombreCli'];
+		$datos["apellidopCli"] = $dataPost['apellidopCli'];
+		$datos["apellidomCli"] = $dataPost['apellidomCli'];
+        $datos["telefonoCli"] = $dataPost['telefonoCli'];
+        $datos["correoCli"] = $dataPost['correoCli'];
+        $datos["domicilioCli"] = $dataPost['domicilioCli'];
+        $datos["estadoCli"] = $dataPost['estadoCli'];
+        $datos["ineCLi"] = $dataPost['ineCLi'];
+        $datos["ocupacionCli"] = $dataPost['ocupacionCli'];
+		$update = $this->Reestructura_model->insertarCliente($datos);
+
+		if ($update == TRUE) {
+			$response['message'] = 'SUCCESS';
+			echo json_encode(1);
+		} else {
+			$response['message'] = 'ERROR';
+			echo json_encode(0);
+		} 
+    }
 
 	public function getRegistros(){
         $index_proyecto = $this->input->post('index_proyecto');
@@ -468,7 +502,7 @@ class Reestructura extends CI_Controller{
         $lineaVenta = $this->General_model->getLider($idLider)->row();
 		$nuevaSup = floatval($loteSelected->sup);
 		$anteriorSup = floatval($clienteAnterior->sup);
-		$proceso = ( $anteriorSup == $nuevaSup || (($nuevaSup - $anteriorSup) <= 2)) ? 2 : 4;
+		$proceso = ( $anteriorSup == $nuevaSup || (($nuevaSup - $anteriorSup) <= ($anteriorSup * 0.05))) ? 2 : 4;
         $tipo_venta = $clienteAnterior->tipo_venta;
         $ubicacion = $clienteAnterior->ubicacion;
 
