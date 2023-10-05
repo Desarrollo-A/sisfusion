@@ -801,7 +801,7 @@ class Reestructura extends CI_Controller{
 
         $documentacion = [];
         $modificado = date('Y-m-d H:i:s');
-        $documentosSinPasar = (is_null($docInfo)) ? [7,8,30] : [];
+        $documentosSinPasar = (is_null($docInfo)) ? [7,8] : [];
 
         $ubicacionFolder = "static/documentos/contratacion-reubicacion/$loteNuevoInfo->nombreLote/";
 
@@ -816,29 +816,32 @@ class Reestructura extends CI_Controller{
         foreach ($docAnterior as $doc) {
             $expedienteAnterior = in_array($doc['tipo_doc'], $documentosSinPasar) ? null : $doc['expediente'];
 
+            $prefijo = '';
             if (in_array($doc['tipo_doc'], [7,8])) {
                 $expReubicacion = $this->Reestructura_model->expedienteReubicacion($idLoteAnterior);
                 $carpeta = '';
 
                 if ($doc['tipo_doc'] === 7) {
                     $carpeta = 'CORRIDA/';
+                    $prefijo = 'CORRIDA';
                     $expedienteAnterior = $expReubicacion->corrida;
                 } else if ($doc['tipo_doc'] === 8) {
                     $carpeta = 'CONTRATO/';
+                    $prefijo = 'CONTRATO';
                     $expedienteAnterior = $expReubicacion->contrato;
                 }
 
                 if (!is_null($expedienteAnterior)) {
                     copy(
                         "static/documentos/contratacion-reubicacion-temp/$loteAnteriorInfo->nombreLote/$carpeta$expedienteAnterior",
-                        $ubicacionFolder.$expedienteAnterior
+                        $ubicacionFolder.$prefijo.$expedienteAnterior
                     );
                 }
             }
 
             $documentacion[] = [
                 'movimiento' => $doc['movimiento'],
-                'expediente' => $expedienteAnterior,
+                'expediente' => $prefijo.$expedienteAnterior,
                 'modificado' => $modificado,
                 'status' => 1,
                 'idCliente' => $idClienteNuevo,
@@ -857,9 +860,14 @@ class Reestructura extends CI_Controller{
             if ($doc['id_opcion'] === 33) {
                 $expRescision = $this->Reestructura_model->obtenerDatosClienteReubicacion($idLoteAnterior);
 
+                copy(
+                    "static/documentos/contratacion-reubicacion-temp/$loteAnteriorInfo->nombreLote/RESCISIONES/$expRescision->rescision",
+                    $ubicacionFolder.'RESCISION-'.$expRescision->rescision
+                );
+
                 $documentacion[] = [
                     'movimiento' => $doc['nombre'],
-                    'expediente' => $expRescision->rescision,
+                    'expediente' => 'RESCISION-'.$expRescision->rescision,
                     'modificado' => $modificado,
                     'status' => 1,
                     'idCliente' => $idClienteNuevo,
@@ -872,23 +880,16 @@ class Reestructura extends CI_Controller{
                     'estatus_validacion' => 0
                 ];
 
-                copy(
-                    "static/documentos/contratacion-reubicacion-temp/$loteAnteriorInfo->nombreLote/RESCISIONES/$expRescision->rescision",
-                    $ubicacionFolder.$expRescision->rescision
-                );
-
                 continue;
             }
 
-            // Corrida, contrato y contrato firmado
-            if (in_array($doc['id_opcion'], [39, 40, 44])) {
+            // Corrida, contratO
+            if (in_array($doc['id_opcion'], [39, 40])) {
                 $tipoDoc = 0;
                 if ($doc['id_opcion'] === 39) {
                     $tipoDoc = 7;
                 } else if ($doc['id_opcion'] === 40) {
                     $tipoDoc = 8;
-                } else if ($doc['id_opcion'] === 44) {
-                    $tipoDoc = 30;
                 }
 
                 $index = array_search($tipoDoc, array_column($docAnterior, 'tipo_doc'));
