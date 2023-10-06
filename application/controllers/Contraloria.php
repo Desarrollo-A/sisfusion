@@ -1183,7 +1183,7 @@ class Contraloria extends CI_Controller {
         $historialSaltoMovimientos[1]["idCliente"] = $idCliente;
 
         $cliente = $this->Reestructura_model->obtenerClientePorId($idCliente);
-        if ($cliente->proceso === 2 || $cliente->proceso === 4) {
+        if ($cliente->proceso == 2 || $cliente->proceso == 4) {
             $arreglo["idStatusContratacion"] = 8;
             $arreglo["idMovimiento"] = 38;
         }
@@ -1612,7 +1612,7 @@ class Contraloria extends CI_Controller {
         $historialSaltoMovimientos[1]["idCliente"] = $idCliente;
 
         $cliente = $this->Reestructura_model->obtenerClientePorId($idCliente);
-        if ($cliente->proceso === 2 || $cliente->proceso === 4) {
+        if ($cliente->proceso == 2 || $cliente->proceso == 4) {
             $arreglo["idStatusContratacion"] = 8;
             $arreglo["idMovimiento"] = 38;
         }
@@ -1885,7 +1885,7 @@ class Contraloria extends CI_Controller {
         $historialSaltoMovimientos[1]["idCliente"] = $idCliente;
 
         $cliente = $this->Reestructura_model->obtenerClientePorId($idCliente);
-        if ($cliente->proceso === 2 || $cliente->proceso === 4) {
+        if ($cliente->proceso == 2 || $cliente->proceso == 4) {
             $arreglo["idStatusContratacion"] = 8;
             $arreglo["idMovimiento"] = 38;
         }
@@ -2508,7 +2508,7 @@ class Contraloria extends CI_Controller {
         $historialSaltoMovimientos[1]["idCliente"] = $idCliente;
 
         $cliente = $this->Reestructura_model->obtenerClientePorId($idCliente);
-        if ($cliente->proceso === 2 || $cliente->proceso === 4) {
+        if ($cliente->proceso == 2 || $cliente->proceso == 4) {
             $arreglo["idStatusContratacion"] = 8;
             $arreglo["idMovimiento"] = 38;
         }
