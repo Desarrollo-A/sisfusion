@@ -2979,7 +2979,7 @@ class Asesor extends CI_Controller {
         $comentario = $this->input->post('comentario');
         $fechaVenc= $this->input->post('fechaVenc');
         $tipo_comprobante = $this->input->post('tipo_comprobante');
-        $idMovimiento = $this->input->post('idMovimiento');
+        $idMovimiento = intval($this->input->post('idMovimiento'));
         $idCliente = $this->input->post('idCliente');
 
         /*if ($this->session->userdata('id_rol') != 17) {
@@ -2995,10 +2995,6 @@ class Asesor extends CI_Controller {
             if (!$this->validarDocumentosEstatus2($idLote, $tipo_comprobante, $id_cliente)) {
                 return;
             }
-            else{
-                $nuevoDato = $this->save1($idLote);
-            }
-
             $data = $this->Asesor_model->revisaOU($idLote);
 
             if(count($data) >= 1) {
@@ -3007,14 +3003,15 @@ class Asesor extends CI_Controller {
                 echo json_encode($data);
                 return;
             }
+
+            $nuevoDato = $this->save1($idLote);
         }
         if($idMovimiento == 20){
             if (!$this->validarDocumentosEstatus2($idLote, $tipo_comprobante, $id_cliente)) {
                 return;
             }
-            else{
-                $nuevoDato = $this->save3($idLote);
-            }
+            
+            $nuevoDato = $this->save3($idLote);
         }
         if($idMovimiento == 63){
             $nuevoDato = $this->save4($idLote);
@@ -3035,10 +3032,10 @@ class Asesor extends CI_Controller {
         $arreglo = array();
         $arreglo["idStatusContratacion"] = $nuevoDato["statusContratacion"];
         $arreglo["idMovimiento"] = $nuevoDato["idMovimiento"];
+        $arreglo["comentario"] = $comentario;
         $arreglo["usuario"] = $this->session->userdata('id_usuario');
         $arreglo["perfil"] = $this->session->userdata('id_rol');
         $arreglo["modificado"] = date("Y-m-d H:i:s");
-        $arreglo["comentario"] = $comentario;
 
         date_default_timezone_set('America/Mexico_City');
         $horaActual = date('H:i:s');
@@ -3155,6 +3152,7 @@ class Asesor extends CI_Controller {
         $arreglo2["idStatusContratacion"] = $nuevoDato["statusContratacion"];
         $arreglo2["idMovimiento"] = $nuevoDato["idMovimiento"];
         $arreglo2["nombreLote"] = $nombreLote;
+        $arreglo2["comentario"] = $comentario;
         $arreglo2["usuario"] = $this->session->userdata('id_usuario');
         $arreglo2["perfil"] = $this->session->userdata('id_rol');
         $arreglo2["modificado"] = date("Y-m-d H:i:s");
@@ -3162,7 +3160,6 @@ class Asesor extends CI_Controller {
         $arreglo2["idLote"] = $idLote;
         $arreglo2["idCondominio"] = $idCondominio;
         $arreglo2["idCliente"] = $idCliente;
-        $arreglo2["comentario"] = $comentario;
 
         $validate = $this->Asesor_model->validateSt2($idLote);
 
@@ -3173,7 +3170,7 @@ class Asesor extends CI_Controller {
                 echo json_encode($data);
             } else {
                 $data['status'] = false;
-                $data['message'] = 'Error al enviar la solicitu.d';
+                $data['message'] = 'Error al enviar la solicitud.';
                 echo json_encode($data);
             }
         } else {
