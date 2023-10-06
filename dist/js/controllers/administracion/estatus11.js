@@ -134,10 +134,12 @@ $("#tabla_ingresar_11").ready(function () {
 								data-idCliente="${d.id_cliente}" data-fecVen="${d.fechaVenc}" data-ubic="${d.ubicacion}" data-tot="${d.totalNeto}" data-totv="${d.totalValidado}"
 								class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="Registrar estatus">
 								<i class="far fa-thumbs-up"></i></button>`;
-							cntActions += `<button href="#" data-idLote="${d.idLote}" data-nomLote="${d.nombreLote}" data-idCond="${d.idCondominio}"
+							if (d.proceso != 2 && d.proceso != 4) {
+								cntActions += `<button href="#" data-idLote="${d.idLote}" data-nomLote="${d.nombreLote}" data-idCond="${d.idCondominio}"
 								data-idCliente="${d.id_cliente}" data-fecVen="${d.fechaVenc}" data-ubic="${d.ubicacion}"
-								class="btn-data btn-warning cancelReg" data-toggle="tooltip" data-placement="top" title="Rechazo/regreso estatus (Jurídico)">
+								class="btn-data btn-warning cancelReg" data-toggle="tooltip" data-placement="top" title="Rechazo/regreso estatus">
 								<i class="far fa-thumbs-down"></i></button>`;
+							}
 						}
 						else
 							cntActions = 'N/A';

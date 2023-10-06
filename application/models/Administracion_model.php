@@ -18,7 +18,7 @@ class Administracion_model extends CI_Model {
         concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
         cond.idCondominio, cl.expediente, mo.descripcion, se.nombre nombreSede, hl.modificado ultimaFechaEstatus7,
-        ISNULL(oxc0.nombre, 'Normal') tipo_proceso
+        ISNULL(oxc0.nombre, 'Normal') tipo_proceso, cl.proceso
         FROM lotes l
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote AND cl.status = 1
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
@@ -40,7 +40,7 @@ class Administracion_model extends CI_Model {
         concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
         concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-        cond.idCondominio, cl.expediente, mo.descripcion, se.nombre, hl.modificado, ISNULL(oxc0.nombre, 'Normal')
+        cond.idCondominio, cl.expediente, mo.descripcion, se.nombre, hl.modificado, ISNULL(oxc0.nombre, 'Normal'), cl.proceso
         ORDER BY l.nombreLote");
         return $query->result();
     }

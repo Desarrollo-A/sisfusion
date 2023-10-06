@@ -66,7 +66,7 @@
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 overflow-hidden mb-1">
                                                 <label class="control-label">Tipo de miembro (<span class="isRequired">*</span>)</label>
-                                                <select id="member_type" name="member_type" class="form-control member_type input-gral pl-0" required onchange="getLeadersList()" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body"></select>
+                                                <select id="member_type" name="member_type" class="form-control member_type input-gral pl-0" required onchange="getLeadersList(); menuOptions(this.value);" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body"></select>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 mb-1">
                                                 <label class="control-label">Lider (<span class="isRequired">*</span>)</label>
@@ -83,6 +83,12 @@
                                                     <i class="fa fa-eye-slash" aria-hidden="true"></i>
                                                     <i class="fa fa-eye" aria-hidden="true" style="display:none;"></i>
                                                 </span>
+                                            </div>
+                                            <div id="containerMenu" class="mb-1 hide">
+                                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5 mb-1">
+                                                    <label class="control-label">Selecciona el menú del usuario (<span class="isRequired">*</span>)</label>
+                                                    <div id="listadoHTML"></div>
+                                                </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-12 mb-1 d-flex justify-end">
                                                 <div class="w-20">

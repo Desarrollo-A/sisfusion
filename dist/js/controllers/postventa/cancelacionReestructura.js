@@ -48,7 +48,7 @@ function fillTable(index_proyecto) {
         titleAttr: 'CANCELACIÓN POR REESTRUCTURACIÓN',
         title: 'CANCELACIÓN POR REESTRUCTURACIÓN',
             exportOptions: {
-                columns: [0,1,2,3,4],
+                columns: [0,1,2,3,4,5,6],
                 format: {
                     header: function (d, columnIdx) {
                         return ' '+titulos_intxt[columnIdx] +' ';
