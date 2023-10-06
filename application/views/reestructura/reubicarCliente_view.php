@@ -127,7 +127,7 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" id="cancelarValidacion" class="btn btn-danger btn-simple cancelarValidacion" data-dismiss="modal">Cancelar</button>
-						<button type="button" id="guardarCliente" name="guardarCliente" class="btn btn-primary guardarValidacion">Registrar</button>
+						<button type="button" id="guardarCliente" name="guardarCliente" class="btn btn-primary guardarValidacion">GUARDAR</button>
 					</div>
 				</div>
 			</div>
