@@ -238,7 +238,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote){
         if(flagProceso == 3){
             //se esta subiendo contrato se debe pedir uno adicional
             contenidoHTML += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2"><hr>\n' +
-                '                            <h6 class="text-left">Subir la resición del contrato:'+nombreLote+'<span class="text-red">*</span></h6>\n' +
+                '                            <h6 class="text-left"><b>Subir la resición del contrato: </b>'+nombreLote+'<span class="text-red">*</span></h6>\n' +
                 '                            <div class="" id="selectFileSectionResicion">\n' +
                 '                                <div class="file-gph">\n' +
                 '                                    <input class="d-none" type="file" required accept="application/pdf" id="Resicion">\n' +
@@ -406,6 +406,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
         }
         else{
             if(flagProceso==3 && $("#Resicion")[0].files[0]==undefined){
+                $("#spiner-loader").addClass('hide');
                 alerts.showNotification('top', 'right', 'Selecciona archivo de rescisión', 'warning');
             }else{
                 let data = new FormData();
@@ -450,6 +451,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
                             );
                             reubicacionClientes.ajax.reload();
                             $("#archivosReestructura").modal("hide");
+                            $("#spiner-loader").addClass('hide');
                         }
                         if (res.code === 400) {
                             alerts.showNotification("top", "right", "ocurrió un error", "warning");
