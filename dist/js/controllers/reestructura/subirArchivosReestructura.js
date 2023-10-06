@@ -205,12 +205,12 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote){
     let nombreArchivo = '';
     switch (estatusProceso) {
         case '2':
-            label = 'Subir corrida del lote';
+            label = '<b>Subir corrida del lote</b>';
             flagProceso = 2;
             acceptFiles = '.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel';
             break;
         case '3':
-            label = 'Subir contrato del lote';
+            label = '<b>Subir contrato del lote</b>';
             flagProceso = 3;
             acceptFiles = 'application/pdf';
             break;
@@ -223,7 +223,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote){
             contenidoHTML += '<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2">\n' +
                 '                            <input type="hidden" name="idLotep'+elemento.id_pxl+'" id="idLotep'+elemento.id_pxl+'" value="'+elemento.id_pxl+'">\n' +
                 '                            <input type="hidden" id="nombreLote'+elemento.id_pxl+'" value="'+elemento.nombreLote+'">\n' +
-                '                            <h6 class="text-left">'+label+':'+elemento.nombreLote+'<span class="text-red">*</span></h6>\n' +
+                '                            <h6 class="text-left">'+label+'<b>: </b>'+elemento.nombreLote+'<span class="text-red">*</span></h6>\n' +
                 '                            <div class="" id="selectFileSection'+index+'">\n' +
                 '                                <div class="file-gph">\n' +
                 '                                    <input class="d-none" type="file" required accept="'+acceptFiles+'" id="fileElm'+index+'">\n' +
@@ -330,6 +330,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
     const archivo0 = $("#fileElm0")[0].files[0];
     const archivo1 = $("#fileElm1")[0].files[0];
     const archivo2 = $("#fileElm2")[0].files[0];
+    $("#spiner-loader").removeClass('hide');
 
     if(editarFile==1){
         let data = new FormData();
@@ -377,6 +378,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
                         `Los documentos se han cargado con éxito.`,
                         "success"
                     );
+                    $("#spiner-loader").addClass('hide');
                     $("#archivosReestructura").modal("hide");
                 }
                 if (res.code === 400) {
@@ -399,6 +401,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
     }
     else if(editarFile==0){
         if(archivo0==undefined || archivo1==undefined || archivo2 == undefined){
+            $("#spiner-loader").addClass('hide');
             alerts.showNotification('top', 'right', 'Debes seleccionar los archivos requeridos', 'warning');
         }
         else{
@@ -446,6 +449,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
                                 "success"
                             );
                             reubicacionClientes.ajax.reload();
+                            $("#spiner-loader").addClass('hide');
                             $("#archivosReestructura").modal("hide");
                         }
                         if (res.code === 400) {
