@@ -284,7 +284,7 @@ $(document).on('click', '.btn-asignar-propuestas', function () {
                     <div class="col-12 col-sm-9 col-md-9 col-lg-9">
                     </div>
                     <div class="col-12 col-sm-3 col-md-3 col-lg-3">
-                        <button type="button" id="btnAddPropuesta" class="btn btn-gral d-none">Añadir</button>
+                        <button type="button" id="btnAddPropuesta" data-statusPreproceso="${statusPreproceso}" class="btn btn-gral d-none">Añadir</button>
                     </div>
                 </div>
                 <div class="row mt-2" id="infoLotesSeleccionados">
@@ -320,10 +320,9 @@ $(document).on('click', '.btn-reubicar', function () {
     const statusPreproceso = $(this).attr("data-statusPreproceso"); 
     const idCliente = $(this).attr("data-idCliente");
 
-
     changeSizeModal('modal-md');
     appendBodyModal(`
-        <form method="post" id="formAsignarPropuestas">
+        <form method="post" id="formReubicacion">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12 text-center">
@@ -342,6 +341,7 @@ $(document).on('click', '.btn-reubicar', function () {
                 <input type="hidden" id="idLoteOriginal" name="idLoteOriginal" value="${idLoteOriginal}">
                 <input type="hidden" id="idCliente" name="idCliente" value="${idCliente}">
                 <input type="hidden" id="statusPreproceso" name="statusPreproceso" value="${statusPreproceso}">
+                <input type="hidden" id="idProyecto" name="idProyecto" value="${idProyecto}">
                 <div class="row mt-2">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
                         <button type="button" class="btn btn-simple btn-danger" onclick="hideModal()">Cancelar</button>
@@ -496,7 +496,7 @@ $(document).on("click", "#btnAddPropuesta", function(e) {
 });
 
 function divLotesSeleccionados(statusPreproceso, nombreLote, superficie, idLote, id_pxl = null, idProyecto = null, tipoLote = null){
-    if (statusPreproceso == 0){
+    if (statusPreproceso == 0 || statusPreproceso == 1 ){
         html = `
             <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2 lotePropuesto">
                 <div class="p-2 pt-1" style="background-color: #eaeaea; border-radius:15px">
@@ -521,34 +521,23 @@ function divLotesSeleccionados(statusPreproceso, nombreLote, superficie, idLote,
         html = `
             <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2 lotePropuesto">
                 <div class="" id="checkDS">
-                    
-                        
-                        <div class="container boxChecks p-0">
-                            <div class="col-12 col-sm-12 col-md-4 col-lg-4 p-0">
-                                <label class="m-0 checkstyleDS">
-                                    <input type="checkbox" name="idOficial_pf" id="idOficial_pf" value="1" >
-                                    <span>IDENTIFICACIÓN OFICIAL</span>
-                                </label>
-                            </div>
-                            <div class="col-12 col-sm-12 col-md-4 col-lg-4 p-0">
-                                <label class="m-0 checkstyleDS">
-                                    <input type="checkbox" name="idOficial_pf" id="idOficial_pf" value="1" >
-                                    <span>IDENTIFICACIÓN OFICIAL</span>
-                                </label>
-                            </div>
-                            <div class="col-12 col-sm-12 col-md-4 col-lg-4 p-0">
-                                <label class="m-0 checkstyleDS">
-                                    <input type="checkbox" name="idOficial_pf" id="idOficial_pf" value="1" >
-                                    <span>IDENTIFICACIÓN OFICIAL</span>
-                                </label>
-                            </div>
-                        </div>
-                    
+                    <div class="container boxChecks p-0">
+                        <label class="m-0 checkstyleDS">
+                            <input type="radio" name="idLote[]" id="idLote"  value="${idLote}">
+                            <span class="w-100 d-flex justify-between">
+                                <p class="m-0">Lote</p>
+                                <p class="m-0"><b>${nombreLote}</b></p>
+                            </span>
+                            <span class="w-100 d-flex justify-between">
+                                <p class="m-0">Superficie</p>
+                                <p class="m-0"><b>${superficie}</b></p>
+                            </span>
+                        </label>
+                    </div>
                 </div>
             </div>
         `;
     }
-    
 
     return html;
 }
@@ -558,7 +547,7 @@ $(document).on("submit", "#formReubicacion", function(e){
     $('#spiner-loader').removeClass('hide');
     let data = new FormData($(this)[0]);
     $.ajax({
-        url : 'asignarPropuestasLotes',
+        url : 'setReubicacion',
         data: data,
         cache: false,
         contentType: false,
