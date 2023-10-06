@@ -355,7 +355,7 @@ function fillTable(index_proyecto) {
         titleAttr: 'Reestructuración',
         title: 'Reestructuración',
             exportOptions: {
-                columns: [0,1,2,3,4,5,6,7],
+                columns: [0,1,2,3,4,5,6,7,8],
                 format: {
                     header: function (d, columnIdx) {
                         return ' '+titulos_intxt[columnIdx] +' ';
@@ -647,14 +647,6 @@ $('#proyectoLiberado').change(function () {
 
     fillTable1(index_proyecto);
 });
-$('#proyectoLiberado').change(function () {
-    let index_proyecto = $(this).val();
-
-    $("#spiner-loader").removeClass('hide');
-    $("#tabla_clientes_liberar").removeClass('hide');
-
-    fillTable1(index_proyecto);
-});
 
 function fillTable1(index_proyecto) {
     tabla_valores_cliente = $("#tabla_clientes_liberar").DataTable({
@@ -773,7 +765,7 @@ function fillTable1(index_proyecto) {
             orderable: false
         }],
         ajax: {
-            url: general_base_url + "Reestructura/getRegistros",
+            url: general_base_url + "Reestructura/obtenerRegistrosLiberar",
             dataSrc: "",
             type: "POST",
             cache: false,
