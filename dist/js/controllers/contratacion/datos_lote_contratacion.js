@@ -332,7 +332,10 @@ $(document).on("click", ".ver_historial", function () {
     let rolesContraloria = [17, 70, 71, 73];
     if ($itself.attr('data-tipo-venta') == 'Venta de particulares') {
         $.getJSON(`${general_base_url}Contratacion/getClauses/${idLote}`).done(function (data) {
-            $('#clauses_content').html(data[0]['nombre']);
+            if (data.length == 1)
+                $('#clauses_content').html(data[0]['nombre']);
+            else
+                $('#clauses_content').html('SIN DATOS QUE MOSTRAR');
         });
         element.classList.remove("hide");
     } else {

@@ -29,7 +29,7 @@
 }
 
 .mb-1 {
-  margin-bottom: 10px !important;
+  margin-bottom: 10px;
 }
 
 .mb-2 {
@@ -227,7 +227,7 @@
 }
 
 .w-50 {
-  width: 50%;
+  width: 50% !important;
 }
 
 .w-40 {
@@ -2178,4 +2178,8 @@ table .boxSBtns {
 
 .radio-with-icon-autorizacones i:hover {
   color: #929292;
+}
+
+.text-red {
+  color: #FF0000;
 }
