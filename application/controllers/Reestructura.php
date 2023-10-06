@@ -233,7 +233,6 @@ class Reestructura extends CI_Controller{
         $idClienteAnterior = $clienteAnterior->id_cliente;
         $loteAOcupar = $clienteAnterior->idLote;
 		$lineaVenta = $this->General_model->getLider($idLider)->row();
-        $proceso = 3;
         $tipo_venta = $clienteAnterior->tipo_venta;
         $ubicacion = $clienteAnterior->ubicacion;
 
@@ -296,7 +295,7 @@ class Reestructura extends CI_Controller{
         }
 
         $dataUpdateCliente = array(
-            'proceso' => $proceso
+            'proceso' => 3
         );
 
         if (!$this->General_model->updateRecord("clientes", $dataUpdateCliente, "id_cliente", $idClienteAnterior)){
@@ -510,7 +509,7 @@ class Reestructura extends CI_Controller{
         }
 
         $dataUpdateCliente = array(
-            'proceso' => $proceso,
+            'proceso' => 2,
         );
 
         if (!$this->General_model->updateRecord("clientes", $dataUpdateCliente, "id_cliente", $idClienteAnterior)){
@@ -1490,34 +1489,20 @@ class Reestructura extends CI_Controller{
         echo json_encode($totalPropuestas->total_propuestas);
     }
 
-    public function desactivarOtrosLotes(){
-        $notSelectedLotes = $this->Reestructura_model->getNotSelectedLotes($idLoteOriginal, $loteAOcupar);
+    public function desactivarOtrosLotes($idLoteOriginal, $loteSelected){
+        $notSelectedLotes = $this->Reestructura_model->getNotSelectedLotes($idLoteOriginal, $loteSelected);
         $arrayLotes = array();
 
-        foreach ($notSelectedLotes as $clave => $valor){
-            $a = $clave;
-
+        foreach ($notSelectedLotes as $lote){
             $arrayLote = array(
-                'idLote' => $idLoteOriginal,
-                'id_lotep' => $idLote,
-                'estatus' => 0,
-                'creado_por' => $this->session->userdata('id_usuario'),
-                'fecha_modificacion'   => date("Y-m-d H:i:s"),
-                'modificado_por' => $this->session->userdata('id_usuario')
+                'idLote' => $lote['id_lotep'],
+                'idStatusContratacion' => 15,
+                'usuario' => $this->session->userdata('id_usuario')
             );
 
             array_push($arrayLotes, $arrayLote);
         }
-        if (!$this->General_model->insertBatch('propuestas_x_lote', $arrayLotes)) {
-            $this->db->trans_rollback();
-
-            echo json_encode([
-                'titulo' => 'ERROR',
-                'resultado' => FALSE,
-                'message' => 'Error al dar el alta de las propuestas',
-                'color' => 'danger'
-            ]);
-            return;
-        }
+        
+        return $this->General_model->updateBatch('lotes', $arrayLotes, 'idLote');
     }
 }

@@ -584,11 +584,11 @@ class Reestructura_model extends CI_Model
     public function setSeleccionPropuesta($idLote, $idLoteSelected){
         $id_usuario = $this->session->userdata('id_usuario');
 
-        $query = $this->db->query("UPDATE propuestas_x_lote SET estatus = 1, modificado_por = $id_usuario where idLote = $idLote and id_lotep = $idLoteSelected");
-        return $query->row();
+        return $this->db->query("UPDATE propuestas_x_lote SET estatus = 1, modificado_por = $id_usuario where idLote = $idLote and id_lotep = $idLoteSelected");
     }
 
     public function getNotSelectedLotes($idLote, $idLoteSelected){
-        return $this->db->query("SELECT * FROM propuestas_x_lote WHERE idLote = $idLote and id_lotep not in ($idLoteSelected)");
+        $query = $this->db->query("SELECT * FROM propuestas_x_lote WHERE idLote = $idLote and id_lotep not in ($idLoteSelected)");
+        return $query->result_array();
     }
 }
