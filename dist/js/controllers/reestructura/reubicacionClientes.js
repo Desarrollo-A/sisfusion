@@ -319,22 +319,19 @@ $(document).on('click', '.btn-asignar-propuestas', function () {
                     </div>
                     <div class="col-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
                         <label class="lbl-gral">Lote</label>
-                        <select name="loteAOcupar" title="SELECCIONA UNA OPCIÓN" id="loteAOcupar" class="selectpicker m-0 select-gral" data-live-search="true" data-container="body" data-width="100%">
-                        </select>
-                    </div>
-                    <div class="col-12 col-sm-9 col-md-9 col-lg-9">
-                    </div>
-                    <div class="col-12 col-sm-3 col-md-3 col-lg-3">
-                        <button type="button" 
-                            id="btnAddPropuesta" 
+                        <select name="loteAOcupar" 
+                            title="SELECCIONA UNA OPCIÓN" 
+                            id="loteAOcupar" 
+                            class="selectpicker m-0 select-gral" 
+                            data-live-search="true" 
+                            data-container="body" 
+                            data-width="100%"
                             data-statusPreproceso="${statusPreproceso}"
                             data-idProyecto="${idProyecto}" 
                             data-superficie="${superficie}"
                             data-tipoLote="${tipoLote}"
-                            data-idLoteOriginal="${idLoteOriginal}"
-                            class="btn btn-gral d-none">
-                            Añadir
-                        </button>
+                            data-idLoteOriginal="${idLoteOriginal}">
+                        </select>
                     </div>
                 </div>
                 <div class="row mt-2" id="infoLotesSeleccionados">
@@ -345,7 +342,7 @@ $(document).on('click', '.btn-asignar-propuestas', function () {
                 <input type="hidden" id="statusPreproceso" name="statusPreproceso" value="${statusPreproceso}">
                 <div class="row mt-2">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
-                        <button type="button" class="btn btn-simple btn-danger" onclick="if (validarPropuestas()) hideModal();">Cancelar</button>
+                        <button type="button" class="btn btn-simple btn-danger" onclick="hideModal();">Cancelar</button>
                         ${botonAceptar}
                     </div>
                 </div>
@@ -357,17 +354,6 @@ $(document).on('click', '.btn-asignar-propuestas', function () {
     getProyectosAOcupar(idProyecto, superficie, tipoLote);
     getPropuestas(idLoteOriginal, statusPreproceso, idProyecto, superficie, tipoLote);
 });
-
-const validarPropuestas = () => {
-    const numberLotes = $('#infoLotesSeleccionados .lotePropuesto').length;
-
-    if(numberLotes < 3){
-        alerts.showNotification("top", "right", "Debes seleccionar 3 lotes", "danger");
-        return false;
-    }
-
-    return true;
-}
 
 $(document).on('click', '.infoUser', function (){
     $('#idCliente').val($(this).attr('data-idCliente'));
@@ -563,17 +549,18 @@ function getPropuestas(idLoteOriginal, statusPreproceso, idProyecto, superficie,
 $(document).on("change", "#proyectoAOcupar", function(e){
     $('#spiner-loader').removeClass('hide');
     $("#condominioAOcupar").html("");
-    $("#loteAOcupar").html("");
-    $("#loteAOcupar").selectpicker('refresh');
-    idProyecto = $(this).val();
-    superficie = $("#superficie").val();
-    tipoLote = $("#tipoLote").val();
+    $("#loteAOcupar").html("").selectpicker('refresh');
+
+    const idProyecto = $(this).val();
+    const superficie = $("#superficie").val();
+    const tipoLote = $("#tipoLote").val();
+
     $.post("getCondominiosDisponibles", {"idProyecto": idProyecto, "superficie": superficie, "tipoLote": tipoLote}, function(data) {
-        var len = data.length;
-        for (var i = 0; i < len; i++) {
-            var id = data[i]['idCondominio'];
-            var name = data[i]['nombre'];
-            var disponible = data[i]['disponibles'];
+        const len = data.length;
+        for (let i = 0; i < len; i++) {
+            const id = data[i]['idCondominio'];
+            const name = data[i]['nombre'];
+            const disponible = data[i]['disponibles'];
             $("#condominioAOcupar").append($('<option>').val(id).text(name +' ('+ disponible + ')'));
         }
         $('#spiner-loader').addClass('hide');
@@ -584,19 +571,27 @@ $(document).on("change", "#proyectoAOcupar", function(e){
 $(document).on("change", "#condominioAOcupar", function(e){
     $('#spiner-loader').removeClass('hide');
     $("#loteAOcupar").html("");
-    idCondominio = $(this).val();
-    superficie = $("#superficie").val();
+    const idCondominio = $(this).val();
+    const superficie = $("#superficie").val();
 
     $.post("getLotesDisponibles", {"idCondominio": idCondominio, "superficie": superficie}, function(data) {
-        var len = data.length;
-        for (var i = 0; i < len; i++) {
-            var id = data[i]['idLote'];
-            var name = data[i]['nombreLote'];
-            var precioMetro = data[i]['precio'];
-            var superficie = data[i]['sup'];
-            var total = data[i]['total'];
-            var a_favor = data[i]['a_favor'];
-            $("#loteAOcupar").append($('<option>').val(id).attr('data-nombre', name).attr('data-precioMetro', precioMetro).attr('data-superficie', superficie).attr('data-total', total).addClass('green').text(name +' ('+ a_favor + ')'));
+        const len = data.length;
+        for (let i = 0; i < len; i++) {
+            const id = data[i]['idLote'];
+            const name = data[i]['nombreLote'];
+            const precioMetro = data[i]['precio'];
+            const superficie = data[i]['sup'];
+            const total = data[i]['total'];
+            const a_favor = data[i]['a_favor'];
+            $("#loteAOcupar")
+                .append($('<option>')
+                .val(id)
+                .attr('data-nombre', name)
+                .attr('data-precioMetro', precioMetro)
+                .attr('data-superficie', superficie)
+                .attr('data-total', total)
+                .addClass('green')
+                .text(name +' ('+ a_favor + ')'));
         }
         $('#spiner-loader').addClass('hide');
         $("#loteAOcupar").selectpicker('refresh');
@@ -604,7 +599,61 @@ $(document).on("change", "#condominioAOcupar", function(e){
 });
 
 $(document).on("change", "#loteAOcupar", function(e){
-    $('#btnAddPropuesta').removeClass('d-none');
+    const $itself = $("#loteAOcupar").find(':selected');
+    const statusPreproceso = $(this).attr("data-statusPreproceso");
+
+    if ($itself.val() === '') {
+        alerts.showNotification("top", "right", "Debe seleccionar un lote", "danger");
+        return;
+    }
+
+    const numberLotes = $('#infoLotesSeleccionados .lotePropuesto').length;
+    const idLotes = document.getElementsByClassName('idLotes');
+    let existe = false;
+    for (let idLote of idLotes) {
+        if(idLote.value == $itself.val()){
+            existe = true;
+        }
+    }
+
+    if(existe){
+        alerts.showNotification("top", "right", "El lote ya ha sido agregado", "danger");
+        return;
+    }
+
+    if (numberLotes > 2) {
+        alerts.showNotification("top", "right", "No puedes seleccionar más de tres lotes", "danger");
+        return;
+    }
+
+    const idLoteSeleccionado = $itself.val();
+    const idLoteOriginal = $(this).attr('data-idLoteOriginal');
+    const idProyecto = $(this).attr("data-idProyecto");
+    const superficieLoteOriginal = $(this).attr('data-superficie');
+    const tipoLote = $(this).attr("data-tipoLote");
+
+    if (statusPreproceso != 1) {
+        const nombreLote = $itself.attr("data-nombre");
+        const superficie = $itself.attr("data-superficie");
+        const html = divLotesSeleccionados(statusPreproceso, nombreLote, superficie, idLoteSeleccionado);
+        $("#infoLotesSeleccionados").append(html);
+
+        getProyectosAOcupar(idProyecto, superficieLoteOriginal, tipoLote);
+        return;
+    }
+
+    $.post(`${general_base_url}Reestructura/agregarLotePropuesta`, {idLoteOriginal, idLotePropuesta: idLoteSeleccionado}, (data) => {
+        const response = JSON.parse(data);
+        if (response.code === 200) {
+            getPropuestas(idLoteOriginal, statusPreproceso, idProyecto, superficieLoteOriginal, tipoLote);
+            getProyectosAOcupar(idProyecto, superficieLoteOriginal, tipoLote);
+
+            alerts.showNotification("top", "right", 'Lote agregado con éxito', 'success');
+        }
+        if (response.code === 500) {
+            alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+        }
+    });
 })
 
 function removeLote(e, idLote, statusPreproceso, id_pxl, idProyecto, superficie, tipoLote) {
@@ -644,63 +693,6 @@ function removeLote(e, idLote, statusPreproceso, id_pxl, idProyecto, superficie,
         }
     });
 }
-
-$(document).on("click", "#btnAddPropuesta", function(e) {
-    const statusPreproceso = $(this).attr("data-statusPreproceso");
-    const $itself = $("#loteAOcupar").find(':selected');
-
-    if ($itself.val() === '') {
-        alerts.showNotification("top", "right", "Debe seleccionar un lote", "danger");
-        return;
-    }
-
-    const numberLotes = $('#infoLotesSeleccionados .lotePropuesto').length;
-    const idLotes = document.getElementsByClassName('idLotes');
-    let existe = false;
-    for (let idLote of idLotes) {
-        if(idLote.value == $itself.val()){
-            existe = true;
-        }
-    }
-
-    if(existe){
-        alerts.showNotification("top", "right", "El lote ya ha sido agregado", "danger");
-        return;
-    }
-
-    if (numberLotes > 2) {
-        alerts.showNotification("top", "right", "No puedes seleccionar más de tres lotes", "danger");
-        return;
-    }
-
-    const idLoteSeleccionado = $itself.val();
-
-    if (statusPreproceso != 1) {
-        const nombreLote = $itself.attr("data-nombre");
-        const superficie = $itself.attr("data-superficie");
-        const html = divLotesSeleccionados(statusPreproceso, nombreLote, superficie, idLoteSeleccionado);
-        $("#infoLotesSeleccionados").append(html);
-        return;
-    }
-
-    const idLoteOriginal = $(this).attr('data-idLoteOriginal');
-    const idProyecto = $(this).attr("data-idProyecto");
-    const superficieLoteOriginal = $(this).attr('data-superficie');
-    const tipoLote = $(this).attr("data-tipoLote");
-
-    $.post(`${general_base_url}Reestructura/agregarLotePropuesta`, {idLoteOriginal, idLotePropuesta: idLoteSeleccionado}, (data) => {
-        const response = JSON.parse(data);
-        if (response.code === 200) {
-            getPropuestas(idLoteOriginal, statusPreproceso, idProyecto, superficieLoteOriginal, tipoLote);
-            getProyectosAOcupar(idProyecto, superficieLoteOriginal, tipoLote);
-
-            alerts.showNotification("top", "right", 'Lote agregado con éxito', 'success');
-        }
-        if (response.code === 500) {
-            alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
-        }
-    });
-});
 
 function divLotesSeleccionados(statusPreproceso, nombreLote, superficie, idLote, id_pxl = null, idProyecto = null, superficieAnterior = null, tipoLote = null){
     if (statusPreproceso == 0 || statusPreproceso == 1 ){
@@ -776,33 +768,33 @@ $(document).on("submit", "#formReubicacion", function(e){
 $(document).on("submit", "#formAsignarPropuestas", function(e){
     e.preventDefault();
     const numberLotes = $('#infoLotesSeleccionados .lotePropuesto').length;
+
     if(numberLotes < 3){
         alerts.showNotification("top", "right", "Debes seleccionar 3 lotes", "danger");
         return;
     }
-    else{
-        $('#spiner-loader').removeClass('hide');
-        let data = new FormData($(this)[0]);
-        $.ajax({
-            url : 'asignarPropuestasLotes',
-            data: data,
-            cache: false,
-            contentType: false,
-            processData: false,
-            type: 'POST', 
-            success: function(data){
-                data = JSON.parse(data);
-                alerts.showNotification("top", "right", ""+data.message+"", ""+data.color+"");
-                $('#spiner-loader').addClass('hide');
-				$('#reubicacionClientes').DataTable().ajax.reload();
-                hideModal();
-            },
-            error: function( data ){
-                alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
-                hideModal();
-            }
-        });
-    }
+
+    $('#spiner-loader').removeClass('hide');
+    let data = new FormData($(this)[0]);
+    $.ajax({
+        url : 'asignarPropuestasLotes',
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        success: function(data){
+            data = JSON.parse(data);
+            alerts.showNotification("top", "right", ""+data.message+"", ""+data.color+"");
+            $('#spiner-loader').addClass('hide');
+            $('#reubicacionClientes').DataTable().ajax.reload();
+            hideModal();
+        },
+        error: function( data ){
+            alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+            hideModal();
+        }
+    });
 });
 
 $(document).on("submit", "#formReestructura", function(e){
