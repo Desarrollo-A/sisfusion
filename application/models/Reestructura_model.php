@@ -212,7 +212,6 @@ class Reestructura_model extends CI_Model
         $datos["userLiberacion"] = $this->session->userdata('id_usuario');
         $datos["tipo"] = $datos['tipoLiberacion'];
 
-
         $row = $this->db->query("SELECT idLote, nombreLote, status, sup,precio,ubicacion,
         (CASE WHEN totalNeto2 IS NULL THEN 0.00 ELSE totalNeto2 END) totalNeto2,
         (CASE WHEN idCliente = 0  OR idCliente IS NULL THEN 0 ELSE idCliente END) idCliente,registro_comision,
@@ -221,7 +220,6 @@ class Reestructura_model extends CI_Model
         $idStatusLote = $datos['tipo'] == 9 ? 15 :($datos['tipo'] == 8  ? 3 : 1);
         $sqlIdCliente = $datos['tipo'] == 8 ? ' AND id_cliente='.$row[0]['idCliente'] : '';
         $this->db->trans_begin();
-        //($datos['tipo'] == 7 || $datos['tipo'] == 8) ? $this->db->query("UPDATE lotes SET tipo_venta=".$row[0]['tipo_venta'].",usuario='".$datos['userLiberacion']."' WHERE idLote=".$datos['idLoteNuevo']." ") : '';
             $banderaComisionCl = (in_array($datos['tipo'],array(7,8,9))) ? ' ,banderaComisionCl ='.$row[0]['registro_comision'] : '';
             $id_cliente = $this->db->query("SELECT id_cliente FROM clientes WHERE status = 1 AND idLote IN (" . $row[0]['idLote'] . ") ")->result_array();
             $this->db->query("UPDATE historial_documento SET status = 0 WHERE status = 1 AND idLote IN (".$row[0]['idLote'].") ");
@@ -400,7 +398,7 @@ class Reestructura_model extends CI_Model
     }
 
     public function getSelectedSup($idLote){
-        $query = $this->db->query("SELECT idLote, sup, nombreLote FROM lotes WHERE idLote = $idLote");
+        $query = $this->db->query("SELECT idLote, sup, nombreLote, idCondominio FROM lotes WHERE idLote = $idLote");
         return $query;
     }
 
@@ -543,7 +541,6 @@ class Reestructura_model extends CI_Model
         INNER JOIN datos_x_cliente dxc ON pxl.idLote=dxc.idLote
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = dxc.estado_civil AND oxc.id_catalogo=18
         WHERE pxl.idLote=".$idLote);
-        //         AND pxl.estatus=1
         return $query->result_array();
     }
     function checkDocumentacion($idLote){
@@ -551,9 +548,10 @@ class Reestructura_model extends CI_Model
         return $query->result_array();
     }
     function obtenerPropuestasXLote($idLote){
-        return $this->db->query("SELECT pl.id_pxl, pl.idLote, pl.id_lotep, lo.nombreLote, lo.sup
+        return $this->db->query("SELECT pl.id_pxl, pl.idLote, pl.id_lotep, lo.nombreLote, lo.sup, lo.idCondominio
         FROM propuestas_x_lote pl
         INNER JOIN lotes lo ON pl.id_lotep = lo.idLote
+		INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         WHERE pl.idLote = $idLote;");
     }
 
@@ -576,5 +574,21 @@ class Reestructura_model extends CI_Model
     {
         $query = $this->db->query("SELECT COUNT(*) AS total_propuestas FROM propuestas_x_lote WHERE idLote = $idLoteAnterior");
         return $query->row();
+    }
+
+    public function copiarDatosXCliente($idLote){
+        $query = $this->db->query("SELECT * FROM datos_x_cliente WHERE idLote = $idLote");
+        return $query->row();
+    }
+
+    public function setSeleccionPropuesta($idLote, $idLoteSelected){
+        $id_usuario = $this->session->userdata('id_usuario');
+
+        $query = $this->db->query("UPDATE propuestas_x_lote SET estatus = 1, modificado_por = $id_usuario where idLote = $idLote and id_lotep = $idLoteSelected");
+        return $query->row();
+    }
+
+    public function getNotSelectedLotes($idLote, $idLoteSelected){
+        return $this->db->query("SELECT * FROM propuestas_x_lote WHERE idLote = $idLote and id_lotep not in ($idLoteSelected)");
     }
 }

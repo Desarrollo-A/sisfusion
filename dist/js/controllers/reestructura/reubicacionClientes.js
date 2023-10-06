@@ -552,7 +552,7 @@ function getPropuestas(idLoteOriginal, statusPreproceso, idProyecto, superficie,
         $('#infoLotesSeleccionados').html('');
 
         for (let lote of data) {
-            let html = divLotesSeleccionados(statusPreproceso, lote.nombreLote, lote.sup, lote.id_lotep, lote.id_pxl, idProyecto, superficie, tipoLote);
+            let html = divLotesSeleccionados(statusPreproceso, lote.nombreLote, lote.sup, lote.id_lotep, lote.id_pxl, idProyecto, superficie, tipoLote, lote.idCondominio);
 
             $("#infoLotesSeleccionados").append(html);
         }
@@ -730,7 +730,8 @@ function divLotesSeleccionados(statusPreproceso, nombreLote, superficie, idLote,
                 <div class="" id="checkDS">
                     <div class="container boxChecks p-0">
                         <label class="m-0 checkstyleDS">
-                            <input type="radio" name="idLote[]" id="idLote"  value="${idLote}">
+                            <input type="radio" name="idLote" id="idLote" value="${idLote}">
+                            
                             <span class="w-100 d-flex justify-between">
                                 <p class="m-0">Lote</p>
                                 <p class="m-0"><b>${nombreLote}</b></p>
