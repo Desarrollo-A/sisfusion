@@ -5,6 +5,7 @@ var rescisionArchivo = '';
 var id_dxc = 0;
 var editarFile = 0;
 var archivosAborrar = [];
+var acceptFiles = '';
 
 $(document).ready(function () {
     $("#archivosReestructura").on("hidden.bs.modal", function () {
@@ -141,7 +142,6 @@ $(document).on('click', '.btn-abrir-modal',function(){
     rescisionArchivo = $(this).attr("data-rescision");
     id_dxc = $(this).attr("data-id_dxc");
     contenedorTitulo.text(nombreLote);
-    $('#mainLabelText').text(nombreLote);
     let flagEditar = $(this).attr("data-editar");
 
         var formData = new FormData();
@@ -157,7 +157,7 @@ $(document).on('click', '.btn-abrir-modal',function(){
             },
             success: function(data) {
                 data = JSON.parse(data);
-                formArchivos(tipotransaccion, data, flagEditar)
+                formArchivos(tipotransaccion, data, flagEditar, nombreLote)
             },
             error: function(){
                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
@@ -170,23 +170,49 @@ $(document).on('click', '.btn-abrir-modal',function(){
     $("#archivosReestructura").modal();
 });
 
-function formArchivos(estatusProceso, datos, flagEditar){
+function formArchivos(estatusProceso, datos, flagEditar, nombreLote){
     let label = '';
     let contenedorArchivos = document.getElementById('formularioArchivos');
     let contenidoHTML = '';
     flagProceso = estatusProceso;
+    let nombreCliente = datos[0]['nombreCliente'];
+    let estadoCivil = datos[0]['estadoCivil'];
+    let ine = datos[0]['ine'];
+    let domicilio_particular = datos[0]['domicilio_particular'];
+    let correo = datos[0]['correo'];
+    let telefono1 = datos[0]['telefono1'];
+    let ocupacion = datos[0]['ocupacion'];
+    let infoClienteContenedor = document.getElementById('info-cliente');
+    let contenidoHTMLinfoCL = `<div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-left">
+                                        <p class="m-0 ">Cliente. ${nombreCliente}</p>
+                                        <p class="m-0">Lote. ${nombreLote}</p>
+                                        <p class="m-0 text-left">Domicilio particular. ${domicilio_particular}</p>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-left">
+                                        <p class="m-0">Correo. ${correo}</p>
+                                        <p class="m-0">Teléfono. ${telefono1}</p>
+                                        <p class="m-0">Ocupación. ${ocupacion}</p>
+                                        <p class="m-0">INE. ${ine}</p>
+                                        <p class="m-0">Estado civil. ${estadoCivil}</p>
+                                    </div>
+                                </div>`;
+
+
+
 
     arrayKeysArchivos = [];
-    let nombreLote = $('.btn-abrir-modal').attr("data-nombreLote");
     let nombreArchivo = '';
     switch (estatusProceso) {
         case '2':
             label = 'Subir corrida del lote';
             flagProceso = 2;
+            acceptFiles = '.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel';
             break;
         case '3':
             label = 'Subir contrato del lote';
             flagProceso = 3;
+            acceptFiles = 'application/pdf';
             break;
     }
 
@@ -200,7 +226,7 @@ function formArchivos(estatusProceso, datos, flagEditar){
                 '                            <h6 class="text-left">'+label+':'+elemento.nombreLote+'<span class="text-red">*</span></h6>\n' +
                 '                            <div class="" id="selectFileSection'+index+'">\n' +
                 '                                <div class="file-gph">\n' +
-                '                                    <input class="d-none" type="file" required accept="application/pdf" id="fileElm'+index+'">\n' +
+                '                                    <input class="d-none" type="file" required accept="'+acceptFiles+'" id="fileElm'+index+'">\n' +
                 '                                    <input class="file-name" id="file-name'+index+'" type="text" placeholder="No has seleccionada nada aún" readonly="">\n' +
                 '                                    <label class="upload-btn m-0" for="fileElm'+index+'"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>\n' +
                 '                                </div>\n' +
@@ -224,7 +250,8 @@ function formArchivos(estatusProceso, datos, flagEditar){
         }
         // contenedorArchivos.innerHTML = contenidoHTML;
 
-    }else if(flagEditar==1){
+    }
+    else if(flagEditar==1){
         editarFile = 1;
         datos.map((elemento, index)=>{
             arrayKeysArchivos.push(elemento);
@@ -241,7 +268,7 @@ function formArchivos(estatusProceso, datos, flagEditar){
                 '                            <h6 class="text-left">'+label+':'+elemento.nombreLote+'</h6>\n' +
                 '                            <div class="" id="selectFileSection'+index+'">\n' +
                 '                                <div class="file-gph">\n' +
-                '                                    <input class="d-none" type="file" required accept="application/pdf" id="fileElm'+index+'">\n' +
+                '                                    <input class="d-none" type="file" required accept="'+acceptFiles+'" id="fileElm'+index+'">\n' +
                 '                                    <input class="file-name" id="file-name'+index+'" type="text" placeholder="No has seleccionada nada aún" readonly="">\n' +
                 '                                    <label class="upload-btn w-50 m-0" for="fileElm'+index+'"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>\n' +
                 '                                </div>\n' +
@@ -279,6 +306,7 @@ function formArchivos(estatusProceso, datos, flagEditar){
 
 
 
+    infoClienteContenedor.innerHTML = contenidoHTMLinfoCL;
     contenedorArchivos.innerHTML = contenidoHTML;
     //nombre de archivo en front
     $("input:file").on("change", function () {
@@ -368,70 +396,75 @@ $(document).on("click", "#sendRequestButton", function (e) {
             }
         });
 
-    }else if(editarFile==0){
+    }
+    else if(editarFile==0){
         if(archivo0==undefined || archivo1==undefined || archivo2 == undefined){
             alerts.showNotification('top', 'right', 'Debes seleccionar los archivos requeridos', 'warning');
         }
         else{
-            let data = new FormData();
-            let nombreLote = $('.btn-abrir-modal').attr("data-nombreLote");
-            let idRegDXC = $('.btn-abrir-modal').attr("data-id_dxc");
+            if(flagProceso==3 && $("#Resicion")[0].files[0]==undefined){
+                alerts.showNotification('top', 'right', 'Selecciona archivo de rescisión', 'warning');
+            }else{
+                let data = new FormData();
+                let nombreLote = $('.btn-abrir-modal').attr("data-nombreLote");
+                let idRegDXC = $('.btn-abrir-modal').attr("data-id_dxc");
 
-            data.append("tipoProceso", flagProceso);
-            data.append("longArray", arrayKeysArchivos.length);
-            data.append("nombreLoteOriginal", nombreLote);
-            data.append("id_dxc", idRegDXC);
-            data.append("editarFile", editarFile);
-            arrayKeysArchivos.map((elemento, index)=>{
-                data.append("archivo"+index, $("#fileElm"+index)[0].files[0]);
-                data.append("idLoteArchivo"+index, $("#idLotep"+elemento.id_pxl).val());
-                data.append("nombreLote"+index, $("#nombreLote"+elemento.id_pxl).val());
-                data.append('archivoEliminar'+index, archivosAborrar[index]);
-            });
-            if(flagProceso==3){
-                data.append("archivoResicion", $("#Resicion")[0].files[0]);
-                if(editarFile==1){
-                    data.append('rescisionArchivo', rescisionArchivo);
+                data.append("tipoProceso", flagProceso);
+                data.append("longArray", arrayKeysArchivos.length);
+                data.append("nombreLoteOriginal", nombreLote);
+                data.append("id_dxc", idRegDXC);
+                data.append("editarFile", editarFile);
+                arrayKeysArchivos.map((elemento, index)=>{
+                    data.append("archivo"+index, $("#fileElm"+index)[0].files[0]);
+                    data.append("idLoteArchivo"+index, $("#idLotep"+elemento.id_pxl).val());
+                    data.append("nombreLote"+index, $("#nombreLote"+elemento.id_pxl).val());
+                    data.append('archivoEliminar'+index, archivosAborrar[index]);
+                });
+                if(flagProceso==3){
+                    data.append("archivoResicion", $("#Resicion")[0].files[0]);
+                    if(editarFile==1){
+                        data.append('rescisionArchivo', rescisionArchivo);
+                    }
                 }
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'updateArchivos',
+                    data: data,
+                    contentType: false,
+                    cache: false,
+                    processData:false,
+                    beforeSend: function(){
+                    },
+                    success: function(data) {
+                        const res = JSON.parse(data);
+                        if (res.code === 200) {
+                            alerts.showNotification(
+                                "top",
+                                "right",
+                                `Los documentos se han cargado con éxito.`,
+                                "success"
+                            );
+                            reubicacionClientes.ajax.reload();
+                            $("#archivosReestructura").modal("hide");
+                        }
+                        if (res.code === 400) {
+                            alerts.showNotification("top", "right", "ocurrió un error", "warning");
+                        }
+                        if (res.code === 500) {
+                            alerts.showNotification(
+                                "top",
+                                "right",
+                                "Oops, algo salió mal.",
+                                "warning"
+                            );
+                        }
+                    },
+                    error: function(){
+                        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                    }
+                });
             }
-
-            $.ajax({
-                type: 'POST',
-                url: 'updateArchivos',
-                data: data,
-                contentType: false,
-                cache: false,
-                processData:false,
-                beforeSend: function(){
-                },
-                success: function(data) {
-                    const res = JSON.parse(data);
-                    if (res.code === 200) {
-                        alerts.showNotification(
-                            "top",
-                            "right",
-                            `Los documentos se han cargado con éxito.`,
-                            "success"
-                        );
-                        reubicacionClientes.ajax.reload();
-                        $("#archivosReestructura").modal("hide");
-                    }
-                    if (res.code === 400) {
-                        alerts.showNotification("top", "right", "ocurrió un error", "warning");
-                    }
-                    if (res.code === 500) {
-                        alerts.showNotification(
-                            "top",
-                            "right",
-                            "Oops, algo salió mal.",
-                            "warning"
-                        );
-                    }
-                },
-                error: function(){
-                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-                }
-            });
         }
     }
 
@@ -458,5 +491,11 @@ $(document).on('click', '.ver-archivo', function(){
     }
 
     url = url_base+carpetaVisor+nombreArchivo;
-    visorArchivo(url, nombreArchivo);
+
+    if(flagProceso==3 || rescision==1){
+        visorArchivo(url, nombreArchivo);
+    }else if(flagProceso==2){
+        window.open(url, "_blank");
+    }
+
 });
