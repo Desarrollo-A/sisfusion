@@ -60,7 +60,7 @@ $("#tabla_ingresar_6").ready(function () {
             $("<option>").val(data[i]["id_opcion"]).text(data[i]["nombre"])
           );
         }
-        if (data[i]["id_catalogo"] == 105)
+        if (data[i]["id_catalogo"] == 103)
           $("#estatus_enganche").append(
             $("<option>").val(data[i]["id_opcion"]).text(data[i]["nombre"])
           );

@@ -26,7 +26,15 @@ const STATUSLOTE = Object.freeze({
     APARTADO_REUBICACION : 16,
 });
 
-const ESTATUS_PREPROCESO = ['PENDIENTE CARGA DE PROPUESTAS', 'REVISIÓN DE PROPUESTAS', 'ELABORACIÓN DE CORRIDAS', 'ELABORACIÓN DE CONTRATO Y RESICISIÓN', 'DOCUMENTACIÓN ENTREGADA', 'RECEPCIÓN DE DOCUMENTOS CONFIRMADA'];
+const ESTATUS_PREPROCESO = [
+    'PENDIENTE CARGA DE PROPUESTAS',
+    'REVISIÓN DE PROPUESTAS',
+    'ELABORACIÓN DE CORRIDAS',
+    'ELABORACIÓN DE CONTRATO Y RESICISIÓN',
+    'DOCUMENTACIÓN ENTREGADA',
+    'RECEPCIÓN DE DOCUMENTOS CONFIRMADA',
+    'PROCESO DE CONTRATACIÓN'
+];
 
 let titulosTabla = [];
 $('#reubicacionClientes thead tr:eq(0) th').each(function (i) {
@@ -160,7 +168,7 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
                 const BTN_AVANCE =  `<button class="btn-data btn-green btn-avanzar"
                     data-toggle="tooltip" 
                     data-placement="left"
-                    title="ENVIAR A ${ESTATUS_PREPROCESO[d.id_estatus_preproceso + 1]}"
+                    title="ENVIAR A ${ESTATUS_PREPROCESO[parseInt(d.id_estatus_preproceso) + 1]}"
                     data-idCliente="${d.idCliente}"
                     data-tipoTransaccion="${d.id_estatus_preproceso}">
                     <i class="fas fa-thumbs-up"></i>
@@ -725,12 +733,10 @@ function divLotesSeleccionados(statusPreproceso, nombreLote, superficie, idLote,
                             <input type="radio" name="idLote" id="idLote" value="${idLote}">
                             
                             <span class="w-100 d-flex justify-between">
-                                <p class="m-0">Lote</p>
-                                <p class="m-0"><b>${nombreLote}</b></p>
+                                <p class="m-0">Lote <b>${nombreLote}</b></p>
                             </span>
                             <span class="w-100 d-flex justify-between">
-                                <p class="m-0">Superficie</p>
-                                <p class="m-0"><b>${superficie}</b></p>
+                                <p class="m-0">Superficie <b>${superficie}</b></p>
                             </span>
                         </label>
                     </div>
