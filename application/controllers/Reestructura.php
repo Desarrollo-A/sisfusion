@@ -619,7 +619,6 @@ class Reestructura extends CI_Controller{
         if (!$this->copiarDSAnteriorAlNuevo($idClienteAnterior, $idClienteInsert)) {
             $this->db->trans_rollback();
 
-
             echo json_encode([
                 'titulo' => 'ERROR',
                 'resultado' => FALSE,
@@ -630,7 +629,6 @@ class Reestructura extends CI_Controller{
         }
 
         $expediente = $this->Reestructura_model->obtenerDocumentacionPorReubicacion($clienteAnterior->personalidad_juridica);
-
         if (!$this->moverExpediente($clienteAnterior->idLote, $loteAOcupar, $idClienteAnterior, $idClienteInsert, $expediente)) {
             $this->db->trans_rollback();
 
@@ -1190,29 +1188,24 @@ class Reestructura extends CI_Controller{
       echo json_encode ($respuesta);             
   
     }
-    function provisional(){
-        $this->load->view('template/header');
-        $this->load->view("reestructura/vistaArchivosP");
-    }
+
     function getListaLotesArchivosReestrucura(){
         $data = $this->Reestructura_model->getListaLotesArchivosReestrucura();
         echo json_encode($data);
     }
+
     function getOpcionesLote(){
 	    $idLote = $this->input->post('idLote');
 	    $data = $this->Reestructura_model->getOpcionesLote($idLote);
         echo json_encode ($data);
     }
+
     function updateArchivos(){
         $flagAction = $_POST['tipoProceso'];
         $arrayLength = $_POST['longArray'];
         $nombreLoteOriginal = $_POST['nombreLoteOriginal'];
         $id_dxc = $_POST['id_dxc'];
         $editar = $_POST['editarFile'];
-
-
-
-
         $micarpeta = './static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal;
         if (!file_exists($micarpeta)) {
             mkdir($micarpeta, 0777, true);
@@ -1236,7 +1229,6 @@ class Reestructura extends CI_Controller{
             $acceptFiles = 'pdf';
 
         }
-
 
         $arrayData = array();
         $config['upload_path'] = './static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/'.$carpetaUbicacion;
@@ -1318,17 +1310,17 @@ class Reestructura extends CI_Controller{
             echo json_encode(array());
         }
     }
+
     function eliminaArchivoServer($urlBorrado){
         unlink($urlBorrado);
     }
+
     function actualizaExpecifico(){
         $flagAction = $_POST['tipoProceso'];
         $arrayLength = $_POST['longArray'];
         $nombreLoteOriginal = $_POST['nombreLoteOriginal'];
         $id_dxc = $_POST['id_dxc'];
         $editar = $_POST['editarFile'];
-
-
 
         $micarpeta = './static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal;
         if (!file_exists($micarpeta)) {
@@ -1387,7 +1379,6 @@ class Reestructura extends CI_Controller{
                         }
                     }
                 }
-
             }
 
         }
