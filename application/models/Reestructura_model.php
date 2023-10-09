@@ -63,6 +63,13 @@ class Reestructura_model extends CI_Model
         WHERE lo.liberaBandera = 1 AND lo.status = 1 $validacionAsignacion $validacionEstatus")->result_array();
     }
 
+    public function getDatosCliente($idLote){
+        $query = $this->db->query("SELECT dxc.nombre, dxc.apellido_paterno, dxc.apellido_materno, dxc.telefono1, dxc.correo, dxc.domicilio_particular, dxc.estado_civil AS idEstadoC, oxc.nombre AS estado_civil, ocupacion, dxc.ine from datos_x_cliente dxc
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = dxc.estado_civil AND oxc.id_catalogo = 18
+        WHERE idLote = $idLote");
+        return $query->row();
+    }
+
     public function getCliente($idCliente){
         $query = $this->db->query("SELECT cl.nombre, cl.apellido_paterno, cl.apellido_materno, cl.telefono1, cl.correo, cl.domicilio_particular, cl.estado_civil AS idEstadoC, oxc.nombre as estado_civil, ocupacion FROM clientes cl
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.estado_civil AND oxc.id_catalogo = 18
@@ -177,7 +184,7 @@ class Reestructura_model extends CI_Model
 
     public function insertarCliente($datos)
     {
-        return $this->db->query("INSERT INTO datos_x_cliente ([idLote],[nombre],[apellido_paterno],[apellido_materno],[estado_civil],[ine],[domicilio_particular],[correo],[telefono1],[ocupacion],[rescision],[fecha_creacion],[creado_por],[fecha_modificacion],[modificado_por]) VALUES (".$datos['idLote'].", '".$datos['nombreCli']."', '".$datos['apellidopCli']."', '".$datos['apellidomCli']."', ".$datos['estadoCli'].", '".$datos['ineCLi']."', '".$datos['domicilioCli']."', '".$datos['correoCli']."', '".$datos['telefonoCli']."', '".$datos['ocupacionCli']."', null, GETDATE(), 1, GETDATE(), 1) ");
+        return $this->db->query("INSERT INTO datos_x_cliente ([idLote],[nombre],[apellido_paterno],[apellido_materno],[estado_civil],[ine],[domicilio_particular],[correo],[telefono1],[ocupacion],[rescision],[fecha_creacion],[creado_por],[fecha_modificacion],[modificado_por]) VALUES (".$datos['idLote'].", '".$datos['nombre']."', '".$datos['apellido_paterno']."', '".$datos['apellido_materno']."', ".$datos['estado_civil'].", '".$datos['ine']."', '".$datos['domicilio_particular']."', '".$datos['correo']."', '".$datos['telefono1']."', '".$datos['ocupacion']."', null, GETDATE(), 1, GETDATE(), 1) ");
     }
 
     public function borrarOpcionModel($datos){
@@ -499,7 +506,7 @@ class Reestructura_model extends CI_Model
         LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = co.tipo_lote AND oxc.id_catalogo = 27
         LEFT JOIN usuarios u6 ON u6.id_usuario = id_usuario_asignado
-        WHERE lo.liberaBandera = 1 AND lo.status = 1 AND lo.idLote IN (48374, 48478, 48524, 48570)")->result_array();
+        WHERE lo.liberaBandera = 1 AND lo.status = 1")->result_array();
     }
 
     public function getListaUsuariosParaAsignacion() {

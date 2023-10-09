@@ -38,9 +38,9 @@ class Reestructura extends CI_Controller{
         echo json_encode($data);
     }
 
-    public function getCliente($idCliente){
-        $data = $this->Reestructura_model->getCliente($idCliente);
-        echo json_encode($data);
+    public function getCliente($idCliente, $idLote){
+        $datCliente = $this->Reestructura_model->getDatosCliente($idLote);
+        echo ($datCliente == '') ? json_encode($this->Reestructura_model->getCliente($idCliente)) : json_encode($datCliente);
     }
     
     public function getEstadoCivil(){
@@ -172,28 +172,40 @@ class Reestructura extends CI_Controller{
 		} 
 	}
 
-    public function insetarCliente (){
+    public function insetarCliente ($idLote){
 
         $dataPost = $_POST;
         $datos["idLote"] = $dataPost['idLote'];
-		$datos["nombreCli"] = $dataPost['nombreCli'];
-		$datos["apellidopCli"] = $dataPost['apellidopCli'];
-		$datos["apellidomCli"] = $dataPost['apellidomCli'];
-        $datos["telefonoCli"] = $dataPost['telefonoCli'];
-        $datos["correoCli"] = $dataPost['correoCli'];
-        $datos["domicilioCli"] = $dataPost['domicilioCli'];
-        $datos["estadoCli"] = $dataPost['estadoCli'];
-        $datos["ineCLi"] = $dataPost['ineCLi'];
-        $datos["ocupacionCli"] = $dataPost['ocupacionCli'];
-		$update = $this->Reestructura_model->insertarCliente($datos);
+		$datos["nombre"] = $dataPost['nombreCli'];
+		$datos["apellido_paterno"] = $dataPost['apellidopCli'];
+		$datos["apellido_materno"] = $dataPost['apellidomCli'];
+        $datos["telefono1"] = $dataPost['telefonoCli'];
+        $datos["correo"] = $dataPost['correoCli'];
+        $datos["domicilio_particular"] = $dataPost['domicilioCli'];
+        $datos["estado_civil"] = $dataPost['estadoCli'];
+        $datos["ine"] = $dataPost['ineCLi'];
+        $datos["ocupacion"] = $dataPost['ocupacionCli'];
+        $datCliente = $this->Reestructura_model->getDatosCliente($idLote);
 
-		if ($update == TRUE) {
-			$response['message'] = 'SUCCESS';
-			echo json_encode(1);
-		} else {
-			$response['message'] = 'ERROR';
-			echo json_encode(0);
-		} 
+        if($datCliente == ''){
+            $insert = $this->Reestructura_model->insertarCliente($datos);
+            if ($insert == TRUE) {
+                $response['message'] = 'SUCCESS';
+                echo json_encode(1);
+            } else {
+                $response['message'] = 'ERROR';
+                echo json_encode(0);
+            }
+        }else{
+            $update = $this->General_model->updateRecord('datos_x_cliente', $datos, 'idLote', $idLote);
+            if ($update == TRUE) {
+                $response['message'] = 'SUCCESS';
+                echo json_encode(1);
+            } else {
+                $response['message'] = 'ERROR';
+                echo json_encode(0);
+            }
+        } 
     }
 
 	public function getRegistros(){
@@ -1141,7 +1153,7 @@ class Reestructura extends CI_Controller{
     public function cambiarBandera  ()
     {
         $bandera   =  $this->input->post('bandera');
-        $idLote    =  $this->iFnput->post('idLoteBandera');
+        $idLote    =  $this->input->post('idLoteBandera');
            $arr_update = array( 
                             "liberaBandera"   => $bandera,
                             );

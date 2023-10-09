@@ -196,6 +196,7 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
                         btns += BTN_INFOCLIENTE;
                     }else{
                         btns += BTN_AVANCE;
+                        btns += BTN_INFOCLIENTE;
                     }
                 }
                 else if (d.id_estatus_preproceso == 2 && id_rol_general == 17) { // Contraloría: ELABORACIÓN DE CORRIDAS
@@ -354,8 +355,10 @@ $(document).on('click', '.infoUser', function (){
     $("#estadoCli").empty();
 
     var idCliente = $("#idCliente").val();
+    var idLote = $("#idLote").val();
 
-    $.getJSON("getCliente/" + idCliente, function(data) {
+    $.getJSON("getCliente/" + idCliente + "/" + idLote  , function(data) {
+        
         $('#nombreCli').val(data.nombre);
         $('#apellidopCli').val(data.apellido_paterno);
         $('#apellidomCli').val(data.apellido_materno);
@@ -364,6 +367,7 @@ $(document).on('click', '.infoUser', function (){
         $('#domicilioCli').val(data.domicilio_particular);
         $("#estadoCli").append($('<option selected>').val(data.idEstadoC).text(data.estado_civil));
         $('#ocupacionCli').val(data.ocupacion);
+        $('#ineCLi').val(data.ine);
 
         $.post("getEstadoCivil", function(data) {
             var len = data.length;
@@ -435,7 +439,7 @@ $(document).on('click', '#guardarCliente', function (){
 
     $.ajax({
         method: 'POST',
-        url: general_base_url + 'Reestructura/insetarCliente',
+        url: general_base_url + 'Reestructura/insetarCliente/'+ idLote,
         data: datos,
         processData: false,
         contentType: false,
