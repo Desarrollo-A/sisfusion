@@ -4,20 +4,30 @@
 <div class="wrapper">
     <?php $this->load->view('template/sidebar'); ?>
 
-    <div class="modal fade" id="modalBorrar" data-backdrop="static" data-keyboard="false">
+    <div class="modal fade" id="editCatalogoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
-                <div class="modal-body">
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
-                        <h4>¿Está seguro de borrar la opción?</h4>
-                    </div>
-                    <br>
-                    <input type="hidden" name="id_direccion" id="id_direccion">
+                <div class="modal-header pb-0 ">
+                    <h4 class="text-center" class="modal-title">¿ESTAS SEGURO DE CAMBIAR DE ESTATUS?</h4>
                 </div>
-                <div class="modal-footer d-flex justify-center">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                    <button type="button" id="borrarOp" name="borrarOp" class="btn btn-primary">Aceptar</button>
-                </div>
+                <div class="modal-body pt-0">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" >
+                                    <label class="d-flex justify-center pt-2" for="estatus_n"></label>
+                                    <input type="text" class="hide" id="id_direccion">
+                                    <input type="text" class="hide" id="estatus_n">
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 d-flex justify-center mt-0">
+                                        <button type="button" class="btn btn-danger btn-simple mt-1" data-dismiss="modal">Cancelar</button>
+                                        <button type="button" id="btn_aceptar"class="btn btn-primary mt-1">Aceptar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                  </div>
             </div>
         </div>
     </div>
@@ -132,7 +142,8 @@
                                             <th>ESTADO</th>
                                             <th>TIPO OFICINA</th>
                                             <th>HORA INICIO</th>
-                                            <th>HORA FINAL </th>
+                                            <th>HORA FINAL</th>
+                                            <th>ESTATUS</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>

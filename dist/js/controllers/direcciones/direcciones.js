@@ -11,50 +11,61 @@ $(document).ready(function () {
                 const id_sede = data[i].id_sede;
                 const estado = data[i].estado;
                 $('#id_sede').append($('<option>').val(id_sede).text(estado));
-                
             }
 
             $('#id_sede').selectpicker('refresh');
             $('#spiner-loader').addClass('hide');
         }
       });
-
 });
 
-
-$(document).on('click', '#borrarOpcion', function () {
-    $('#id_direccion').val($(this).attr('data-id_direccion'));
-    $("#modalBorrar").modal();
+$(document).on("click", ".editarCatalogos", function () {
+  $("#id_direccion").val($(this).attr("data-id_direccion"));
+  $("#estatus_n").val($(this).attr("data-id_estatus"));
+  $("#editCatalogoModal").modal();
 });
 
-$(document).on('click', '#borrarOp', function(){
-    var id_direccion = $("#id_direccion").val();
-    var datos = new FormData();
+$(document).on("click", "#btn_aceptar", function () {
 
-    $("#spiner-loader").removeClass('hide');
+  var id_direccion = $("#id_direccion").val();
+  var estatus_n = $("#estatus_n").val();
 
-    datos.append("id_direccion", id_direccion);
+  var datos = new FormData();
+  $("#spiner-loader").removeClass("hide");
 
-    $.ajax({
-        method: 'POST',
-        url: general_base_url + 'Direcciones/borrarOpcion',
-        data: datos,
-        processData: false,
-        contentType: false,
-        success: function(data){
-            if (data == 1) {
-            $('#direcciones_datatable').DataTable().ajax.reload(null, false);
-            $("#spiner-loader").addClass('hide');
-            $('#modalBorrar').modal('hide');
-            alerts.showNotification("top", "right", "Opción dada de baja correctamente.", "success");
-            }
-        },
-        error: function(){
-            $("#spiner-loader").addClass('hide');
-            $('#modalBorrar').modal('hide');
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    });
+  if (estatus_n == 1) {
+    estatus_n = 0;
+  } else{
+    estatus_n = 1;
+  }
+
+  console.log("id"+id_direccion, "estatus_n"+ estatus_n);
+  
+  datos.append("id_direccion", id_direccion);
+  datos.append("estatus_n", estatus_n);
+
+  $.ajax({
+    method: "POST",
+    url: general_base_url + "Direcciones/borrarOpcion",
+    data: datos,
+    processData: false,
+    contentType: false,
+    success: function (data) {
+      if (data == 1) {
+        $("#catalogo_datatable").DataTable().ajax.reload(null, false);
+        $("#spiner-loader").addClass("hide"); 
+        alerts.showNotification("top", "right", "Opcion editada correctamente.", "success");
+        $("#id_direccion").val("");
+        $("#estatus_n").val("");
+        $("#editCatalogoModal").modal("hide");
+      }
+    },
+    error: function () {
+      $("#editarModel").modal("hide");
+      $("#spiner-loader").addClass("hide");
+      alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+    },
+  });
 });
 
 let titulos_intxtLiberado = [];
@@ -220,7 +231,7 @@ function fillCatalogosTable() {
             titleAttr: "Direcciones",
             title: "Direcciones",
             exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6],
+              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
               format: {
                 header: function (d, columnIdx) {
                   return " " + titulos_intxt[columnIdx] + " ";
@@ -294,12 +305,17 @@ function fillCatalogosTable() {
             },
         },
         {
+          data: function (d) {
+              return '<p class="m-0">' + d.estatus + "</p>";
+          },
+        },
+        {
             data: function (d) {
               if (d.estatus == 1) {
-                return ('<div class="d-flex justify-center"><button class="btn-data btn-orangeYellow change-user-status editar-direccion-information" id="editar-direccion-information" name="editar-direccion-information" data-id_direccion="' + d.id_direccion +'" data-id_sede="' + d.id_sede +'" data-direccion="' + d.direccion + '" data-hora_inicio="' + d.hora_inicio + '" data-hora_fin="' + d.hora_fin + '" style="margin-right: 3px" data-toggle="tooltip" data-placement="top" title="EDITAR"><i class="fas fa-edit"></i></button><button class="btn-data btn-warning borrarOpcion" id="borrarOpcion" name="borrarOpcion" style="margin-right: 3px" data-toggle="tooltip" data-placement="top" title="DAR DE BAJA" data-id_direccion="' +d.id_direccion + '"><i class="fas fa-lock"></i></button></div>');
+                return ('<div class="d-flex justify-center"><button class="btn-data btn-orangeYellow change-user-status editar-direccion-information" id="editar-direccion-information" name="editar-direccion-information" data-id_direccion="' + d.id_direccion +'" data-id_sede="' + d.id_sede +'" data-direccion="' + d.direccion + '" data-hora_inicio="' + d.hora_inicio + '" data-hora_fin="' + d.hora_fin + '" style="margin-right: 3px" data-toggle="tooltip" data-placement="top" title="EDITAR"><i class="fas fa-edit"></i></button><button class="btn-data btn-warning editarCatalogos" id="editarCatalogos" name="editarCatalogos" style="margin-right: 3px" data-toggle="tooltip" data-placement="top" title="CAMBIAR ESTATUS" data-id_estatus="' + d.estatus +'" data-id_direccion="' +d.id_direccion + '"><i class="fas fa-lock"></i></button></div>');
 
               } else {
-                return ('<div class="d-flex justify-center"><button class="btn-data btn-orangeYellow change-user-status editar-direccion-information" id="editar-direccion-information" name="editar-direccion-information" data-id_direccion="' + d.id_direccion +'" data-id_sede="' + d.id_sede +'" data-direccion="' + d.direccion + '" data-hora_inicio="' + d.hora_inicio + '" data-hora_fin="' + d.hora_fin + '" style="margin-right: 3px" data-toggle="tooltip" data-placement="top" title="EDITAR"><i class="fas fa-edit"></i></button><button class="btn-data btn-warning borrarOpcion" id="borrarOpcion" name="borrarOpcion" style="margin-right: 3px" data-toggle="tooltip" data-placement="top" title="DAR DE BAJA" data-id_direccion="' +d.id_direccion + '"><i class="fas fa-lock"></i></button></div>');
+                return ('<div class="d-flex justify-center"><button class="btn-data btn-orangeYellow change-user-status editar-direccion-information" id="editar-direccion-information" name="editar-direccion-information" data-id_direccion="' + d.id_direccion +'" data-id_sede="' + d.id_sede +'" data-direccion="' + d.direccion + '" data-hora_inicio="' + d.hora_inicio + '" data-hora_fin="' + d.hora_fin + '" style="margin-right: 3px" data-toggle="tooltip" data-placement="top" title="EDITAR"><i class="fas fa-edit"></i></button><button class="btn-data btn-warning editarCatalogos" id="editarCatalogos" name="editarCatalogos" style="margin-right: 3px" data-toggle="tooltip" data-placement="top" title="CAMBIAR ESTATUS" data-id_direccion="' +d.id_direccion + '"><i class="fas fa-lock"></i></button></div>');
               }
             },
         },

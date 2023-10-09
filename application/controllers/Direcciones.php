@@ -94,7 +94,8 @@ class Direcciones extends CI_Controller{
     public function borrarOpcion(){
 
 		$dataPost = $_POST;
-		$datos["id_direccion"] = $dataPost['id_direccion'];
+		$datos["id_direccion"] = $dataPost['id_direccion']; 
+        $datos["estatus_n"] = $dataPost['estatus_n'];
 		$update = $this->Direcciones_model->borrarDirecciones($datos);
 
 		if ($update == TRUE) {
