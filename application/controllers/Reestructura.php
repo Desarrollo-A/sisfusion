@@ -265,7 +265,7 @@ class Reestructura extends CI_Controller{
 			'idCondominio' => $clienteAnterior->idCondominio,
 			'idCliente' => $idClienteInsert,
 			'usuario' => $idAsesor,
-			'perfil' => 'ooam',
+			'perfil' => 'EEC',
 			'comentario' => 'OK',
 			'status' => 1
         );
@@ -599,7 +599,7 @@ class Reestructura extends CI_Controller{
 			'idCondominio' => $idCondominio,
 			'idCliente' => $idClienteInsert,
 			'usuario' => $idAsesor,
-			'perfil' => 'ooam',
+			'perfil' => 'EEC',
 			'comentario' => 'OK',
 			'status' => 1
         );
@@ -827,7 +827,7 @@ class Reestructura extends CI_Controller{
             'idMovimiento' => 31,
             'comentario' => 'OK',
             'usuario' => $nombreAsesor,
-            'perfil' => 'ooam',
+            'perfil' => 'EEC',
             'modificado' => date('Y-m-d h:i:s'),
             'fechaVenc' => $fechaFull,
             'IdStatusLote' => 3,

@@ -2,51 +2,55 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <body>
     <style>
+        #clienteConsulta .form-group{
+            margin: 0px!important;
+        }
+
         #checkDS .boxChecks {
-  background-color: #eeeeee;
-  width: 100%;
-  border-radius: 27px;
-  box-shadow: none;
-  padding: 5px !important;
-}
-#checkDS .boxChecks .checkstyleDS {
-  cursor: pointer;
-  user-select: none;
-  display: block;
-}
-#checkDS .boxChecks .checkstyleDS span {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 31px;
-  border-radius: 9999px;
-  overflow: hidden;
-  transition: linear 0.3s;
-  margin: 0;
-  font-weight: 100;
-}
-#checkDS .boxChecks .checkstyleDS span:nth-child(2) {
-  margin: 0 3px;
-}
-#checkDS .boxChecks .checkstyleDS span:hover {
-  box-shadow: none;
-}
-#checkDS .boxChecks .checkstyleDS input {
-  pointer-events: none;
-  display: none;
-}
-#checkDS .boxChecks .checkstyleDS input:checked + span {
-  transition: 0.3s;
-  font-weight: 400;
-  color: #0a548b;
-}
-#checkDS .boxChecks .checkstyleDS input:checked + span:before {
-  font-family: FontAwesome !important;
-  content: "\f00c";
-  color: #0a548b;
-  font-size: 18px;
-  margin-right: 5px;
-}
+            background-color: #eeeeee;
+            width: 100%;
+            border-radius: 27px;
+            box-shadow: none;
+            padding: 5px !important;
+        }
+        #checkDS .boxChecks .checkstyleDS {
+            cursor: pointer;
+            user-select: none;
+            display: block;
+        }
+        #checkDS .boxChecks .checkstyleDS span {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 31px;
+            border-radius: 9999px;
+            overflow: hidden;
+            transition: linear 0.3s;
+            margin: 0;
+            font-weight: 100;
+        }
+        #checkDS .boxChecks .checkstyleDS span:nth-child(2) {
+            margin: 0 3px;
+        }
+        #checkDS .boxChecks .checkstyleDS span:hover {
+            box-shadow: none;
+        }
+        #checkDS .boxChecks .checkstyleDS input {
+            pointer-events: none;
+            display: none;
+        }
+        #checkDS .boxChecks .checkstyleDS input:checked + span {
+            transition: 0.3s;
+            font-weight: 400;
+            color: #0a548b;
+        }
+        #checkDS .boxChecks .checkstyleDS input:checked + span:before {
+            font-family: FontAwesome !important;
+            content: "\f00c";
+            color: #0a548b;
+            font-size: 18px;
+            margin-right: 5px;
+        }
     </style>
     <div class="wrapper">
         <?php  $this->load->view('template/sidebar'); ?>
@@ -55,7 +59,7 @@
                 <div class="modal-content">
                     <div class="modal-header"></div>
                     <div class="modal-body text-center">
-                        <h5>Selecciona los archivos para asociarlos al lote </h5>
+                        <h5>sSELECCIONA LOS ARCHIVOS PARA ASOCIARLOS AL LOTE</h5>
                         <div class="row" id="info-cliente"></div>
                         <b><h5 id="mainLabelText" class="bold"></h5></b><hr>
                         <div id="formularioArchivos"></div>
@@ -76,7 +80,7 @@
 					<div class="modal-header">
 						<h4 class="modal-title text-center">Corrobora la información del cliente</h4>
 					</div>	
-					<div class="modal-body">
+					<div class="modal-body pt-0">
                         <div class="row">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
                                 <label class="control-label">NOMBRE (<small style="color: red;">*</small>)</label>

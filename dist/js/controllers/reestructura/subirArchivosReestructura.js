@@ -183,24 +183,21 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote){
     let telefono1 = datos[0]['telefono1'];
     let ocupacion = datos[0]['ocupacion'];
     let infoClienteContenedor = document.getElementById('info-cliente');
-    let contenidoHTMLinfoCL = `<div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-left">
-                                        <p class="m-0 ">Cliente. ${nombreCliente}</p>
-                                        <p class="m-0">Lote. ${nombreLote}</p>
-                                        <p class="m-0 text-left">Domicilio particular. ${domicilio_particular}</p>
-                                    </div>
-                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-left">
-                                        <p class="m-0">Correo. ${correo}</p>
-                                        <p class="m-0">Teléfono. ${telefono1}</p>
-                                        <p class="m-0">Ocupación. ${ocupacion}</p>
-                                        <p class="m-0">INE. ${ine}</p>
-                                        <p class="m-0">Estado civil. ${estadoCivil}</p>
-                                    </div>
-                                </div>`;
-
-
-
-
+    let contenidoHTMLinfoCL = `
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-center">
+                <p class="m-0 ">Cliente. ${nombreCliente}</p>
+                <p class="m-0">Lote. ${nombreLote}</p>
+                <p class="m-0 text-left">Domicilio particular. ${domicilio_particular}</p>
+            </div>
+            <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-center">
+                <p class="m-0">Correo. ${correo}</p>
+                <p class="m-0">Teléfono. ${telefono1}</p>
+                <p class="m-0">Ocupación. ${ocupacion}</p>
+                <p class="m-0">INE. ${ine}</p>
+                <p class="m-0">Estado civil. ${estadoCivil}</p>
+            </div>
+        </div>`;
     arrayKeysArchivos = [];
     let nombreArchivo = '';
     switch (estatusProceso) {
