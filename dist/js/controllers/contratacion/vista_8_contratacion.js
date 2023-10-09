@@ -4,106 +4,123 @@ var getInfo3 = new Array(7);
 
 let titulos = [];
 $(document).ready(function () {
-    $('#Jtabla thead tr:eq(0) th').each(function (i) {
-        if (i != 0) {
-            var title = $(this).text();
-            titulos.push(title);
-            $(this).html('<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
-            $('input', this).on('keyup change', function () {
-                if (tabla_6.column(i).search() !== this.value) {
-                    tabla_6.column(i).search(this.value).draw();
-                }
-            });
+  $("#Jtabla thead tr:eq(0) th").each(function (i) {
+    if (i != 0) {
+      var title = $(this).text();
+      titulos.push(title);
+      $(this).html(
+        '<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="' +
+          title +
+          '" placeholder="' +
+          title +
+          '"/>'
+      );
+      $("input", this).on("keyup change", function () {
+        if (tabla_6.column(i).search() !== this.value) {
+          tabla_6.column(i).search(this.value).draw();
         }
-    });
+      });
+    }
+  });
 
-    tabla_6 = $("#Jtabla").DataTable({
-        dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        width: '100%',
-        scrollX:true,
-        buttons: [{
-            extend: 'excelHtml5',
-            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-            className: 'btn buttons-excel',
-            filename:'Registro de Estatus 8',
-            titleAttr: 'Descargar archivo de Excel',
-            exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
-                format: {
-                    header: function (d, columnIdx) {
-                        return ' ' + titulos[columnIdx - 1] + ' ';
-                    }
-                }
-            }
-        }],
-        pagingType: "full_numbers",
-        fixedHeader: true,
-        language: {
-            url: `${general_base_url}static/spanishLoader_v2.json`,
-            paginate: {
-                previous: "<i class='fa fa-angle-left'>",
-                next: "<i class='fa fa-angle-right'>"
-            }
+  tabla_6 = $("#Jtabla").DataTable({
+    dom:
+      "Brt" +
+      "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+    width: "100%",
+    scrollX: true,
+    buttons: [
+      {
+        extend: "excelHtml5",
+        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+        className: "btn buttons-excel",
+        filename: "Registro de Estatus 8",
+        titleAttr: "Descargar archivo de Excel",
+        exportOptions: {
+          columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+          format: {
+            header: function (d, columnIdx) {
+              return " " + titulos[columnIdx - 1] + " ";
+            },
+          },
         },
-        destroy: true,
-        ordering: false,
-        columns: [{
-            className: 'details-control',
-            orderable: false,
-            data: null,
-            defaultContent: '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i>'
+      },
+    ],
+    pagingType: "full_numbers",
+    fixedHeader: true,
+    language: {
+      url: `${general_base_url}static/spanishLoader_v2.json`,
+      paginate: {
+        previous: "<i class='fa fa-angle-left'>",
+        next: "<i class='fa fa-angle-right'>",
+      },
+    },
+    destroy: true,
+    ordering: false,
+    columns: [
+      {
+        className: "details-control",
+        orderable: false,
+        data: null,
+        defaultContent:
+          '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i>',
+      },
+      {
+        data: function (d) {
+          return `<span class="label lbl-green">${d.tipo_venta}</span>`;
         },
-        {
-            data: function (d) {
-                return `<span class="label lbl-green">${d.tipo_venta}</span>`;
-            }
+      },
+      {
+        data: function (d) {
+          return `<span class='label lbl-violetBoots'>${d.tipo_proceso}</span>`;
         },
-        {
-            data: function (d) {
-                return `<span class='label lbl-violetBoots'>${d.tipo_proceso}</span>`;
-            }
+      },
+      {
+        data: function (d) {
+          return '<p class="m-0">' + d.nombreResidencial + "</p>";
         },
-        {
-            data: function (d) {
-                return '<p class="m-0">' + d.nombreResidencial + '</p>';
-            }
+      },
+      {
+        data: function (d) {
+          return '<p class="m-0">' + d.nombreCondominio.toUpperCase();
+          +"</p>";
         },
-        {
-            data: function (d) {
-                return '<p class="m-0">' + (d.nombreCondominio).toUpperCase(); +'</p>';
-            }
+      },
+      {
+        data: function (d) {
+          return '<p class="m-0">' + d.nombreLote + "</p>";
         },
-        {
-            data: function (d) {
-                return '<p class="m-0">' + d.nombreLote + '</p>';
+      },
+      {
+        data: function (d) {
+          return '<p class="m-0">' + d.gerente + "</p>";
+        },
+      },
+      {
+        data: function (d) {
+          return '<p class="m-0">' + d.nombreCliente + "</p>";
+        },
+      },
+      {
+        data: function (d) {
+          return '<p class="m-0">' + d.descripcion + "</p>";
+        },
+      },
 
-            }
+      {
+        data: function (d) {
+          return `<span class="label lbl-azure">${d.nombreSede}</span>`;
         },
-        {
-            data: function (d) {
-                return '<p class="m-0">' + d.gerente + '</p>';
-            }
-        },
-        {
-            data: function (d) {
-                return '<p class="m-0">' + d.nombreCliente + '</p>';
-            }
-        },
-        {
-            data: function (d) {
-                return '<p class="m-0">' + d.descripcion + '</p>';
-            }
-        },
-
-        {
-            data: function (d) {
-                return `<span class="label lbl-azure">${d.nombreSede}</span>`;
-            }
-        },
-        {
-            orderable: false,
-            data: function (data) {
-                if (id_rol_general != 53 && id_rol_general != 54 && id_rol_general != 63) { // ANALISTA DE COMISIONES Y SUBDIRECTOR CONSULTA (POPEA)
+      },
+      {
+        orderable: false,
+        data: function (data) {
+          if (
+            id_rol_general != 53 &&
+            id_rol_general != 54 &&
+            id_rol_general != 63
+          ) {
+            // ANALISTA DE COMISIONES Y SUBDIRECTOR CONSULTA (POPEA)
 
                     var cntActions;
                     if (data.vl == '1') {
@@ -170,87 +187,127 @@ $(document).ready(function () {
         },
     });
 
-    $('#Jtabla').on('draw.dt', function() {
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
+  $("#Jtabla").on("draw.dt", function () {
+    $('[data-toggle="tooltip"]').tooltip({
+      trigger: "hover",
     });
+  });
 
-    const idStatusContratacion = [7,11];
-    const idMovimiento = [7, 37, 64, 66, 77, 41];
+  const idStatusContratacion = [7, 11];
+  const idMovimiento = [7, 37, 64, 66, 77, 41];
 
-    $('#Jtabla tbody').on('click', 'td.details-control', function () {
-        var tr = $(this).closest('tr');
-        var row = tabla_6.row(tr);
+  $("#Jtabla tbody").on("click", "td.details-control", function () {
+    var tr = $(this).closest("tr");
+    var row = tabla_6.row(tr);
 
-        if (row.child.isShown()) {
-            row.child.hide();
-            tr.removeClass('shown');
-            $(this).parent().find('.animacion').removeClass("fas fa-chevron-up").addClass("fas fa-chevron-down");
-        }
-        else {
-            var status;
-            var fechaVenc;
+    if (row.child.isShown()) {
+      row.child.hide();
+      tr.removeClass("shown");
+      $(this)
+        .parent()
+        .find(".animacion")
+        .removeClass("fas fa-chevron-up")
+        .addClass("fas fa-chevron-down");
+    } else {
+      var status;
+      var fechaVenc;
 
-            if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 37) {
-                status = "ESTATUS 7 LISTO (JURÍDICO)";
-            }
-            else if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 7) {
-                status = "ESTATUS 7 LISTO CON MODIFICACIONES (JURÍDICO)";
-            }
-            else if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 64) {
-                status = "ESTATUS 8 RECHAZADO (CONTRALORIA)";
-            }
-            else if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 66) {
-                status = "ESTATUS 8 RECHAZADO (ADMINISTRACIÓN)";
-            }
-            else if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 77) {
-                status = "ESTATUS 2 ENVIADO REVISIÓN (VENTAS)";
-            }
-            else if (row.data().idStatusContratacion == 11 && row.data().idMovimiento == 41) {
-                status = "ESTATUS 11 VALIDACIÓN DE ENGANCHE (ADMINISTRACIÓN)";
-            }
-    
-            if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 37 ||
-                row.data().idStatusContratacion == 7 && row.data().idMovimiento == 7 ||
-                row.data().idStatusContratacion == 7 && row.data().idMovimiento == 64 ||
-                row.data().idStatusContratacion == 7 && row.data().idMovimiento == 77) {
-                fechaVenc = row.data().fechaVenc;
-            } else if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 66) {
-                fechaVenc = 'VENCIDO';
-            }
+      if (
+        row.data().idStatusContratacion == 7 &&
+        row.data().idMovimiento == 37
+      ) {
+        status = "ESTATUS 7 LISTO (JURÍDICO)";
+      } else if (
+        row.data().idStatusContratacion == 7 &&
+        row.data().idMovimiento == 7
+      ) {
+        status = "ESTATUS 7 LISTO CON MODIFICACIONES (JURÍDICO)";
+      } else if (
+        row.data().idStatusContratacion == 7 &&
+        row.data().idMovimiento == 64
+      ) {
+        status = "ESTATUS 8 RECHAZADO (CONTRALORIA)";
+      } else if (
+        row.data().idStatusContratacion == 7 &&
+        row.data().idMovimiento == 66
+      ) {
+        status = "ESTATUS 8 RECHAZADO (ADMINISTRACIÓN)";
+      } else if (
+        row.data().idStatusContratacion == 7 &&
+        row.data().idMovimiento == 77
+      ) {
+        status = "ESTATUS 2 ENVIADO REVISIÓN (VENTAS)";
+      } else if (
+        row.data().idStatusContratacion == 11 &&
+        row.data().idMovimiento == 41
+      ) {
+        status = "ESTATUS 11 VALIDACIÓN DE ENGANCHE (ADMINISTRACIÓN)";
+      }
 
-            var informacion_adicional = 
-            '<div class="container subBoxDetail bottom"><div class="row">'+
-                '<div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px">'+
-                    '<label><b>INFORMACIÓN ADICIONAL</b></label>'+
-                '</div>'+
-                '<div class="col-12 col-sm-12 col-md-12 col-lg-12">'+
-                    '<label><b>Estatus: </b>' + status + '</label>'+
-                '</div>'+
-                '<div class="col-12 col-sm-12 col-md-12 col-lg-12">'+
-                    '<label><b>Comentario: </b>' + row.data().comentario + '</label>'+
-                '</div>'+
-                '<div class="col-12 col-sm-12 col-md-12 col-lg-12">'+
-                    '<label><b>Fecha de vencimiento: </b>' + fechaVenc + '</label>'+
-                '</div>'+
-                '<div class="col-12 col-sm-12 col-md-12 col-lg-12">'+
-                    '<label><b>Fecha de realizado: </b>' + row.data().modificado + '</label> '+
-                '</div>'+
-                '<div class="col-12 col-sm-12 col-md-12 col-lg-12">'+
-                    '<label><b>Coordinador: </b>' + row.data().coordinador + '</label> '+
-                '</div>'+
-                '<div class="col-12 col-sm-12 col-md-12 col-lg-12">'+
-                    '<label><b>Asesor: </b>' + row.data().asesor + '</label>'+
-                '</div>'+
-            '</div>'+
-            '</div>';
+      if (
+        (row.data().idStatusContratacion == 7 &&
+          row.data().idMovimiento == 37) ||
+        (row.data().idStatusContratacion == 7 &&
+          row.data().idMovimiento == 7) ||
+        (row.data().idStatusContratacion == 7 &&
+          row.data().idMovimiento == 64) ||
+        (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 77)
+      ) {
+        fechaVenc = row.data().fechaVenc;
+      } else if (
+        row.data().idStatusContratacion == 7 &&
+        row.data().idMovimiento == 66
+      ) {
+        fechaVenc = "VENCIDO";
+      }
 
-            row.child(informacion_adicional).show();
-            tr.addClass('shown');
-            $(this).parent().find('.animacion').removeClass("fas fa-chevron-down").addClass("fas fa-chevron-up");
-        }
-    });
+      var informacion_adicional =
+        '<div class="container subBoxDetail bottom"><div class="row">' +
+        '<div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px">' +
+        "<label><b>INFORMACIÓN ADICIONAL</b></label>" +
+        "</div>" +
+        '<div class="col-12 col-sm-12 col-md-12 col-lg-12">' +
+        "<label><b>Estatus: </b>" +
+        status +
+        "</label>" +
+        "</div>" +
+        '<div class="col-12 col-sm-12 col-md-12 col-lg-12">' +
+        "<label><b>Comentario: </b>" +
+        row.data().comentario +
+        "</label>" +
+        "</div>" +
+        '<div class="col-12 col-sm-12 col-md-12 col-lg-12">' +
+        "<label><b>Fecha de vencimiento: </b>" +
+        fechaVenc +
+        "</label>" +
+        "</div>" +
+        '<div class="col-12 col-sm-12 col-md-12 col-lg-12">' +
+        "<label><b>Fecha de realizado: </b>" +
+        row.data().modificado +
+        "</label> " +
+        "</div>" +
+        '<div class="col-12 col-sm-12 col-md-12 col-lg-12">' +
+        "<label><b>Coordinador: </b>" +
+        row.data().coordinador +
+        "</label> " +
+        "</div>" +
+        '<div class="col-12 col-sm-12 col-md-12 col-lg-12">' +
+        "<label><b>Asesor: </b>" +
+        row.data().asesor +
+        "</label>" +
+        "</div>" +
+        "</div>" +
+        "</div>";
+
+      row.child(informacion_adicional).show();
+      tr.addClass("shown");
+      $(this)
+        .parent()
+        .find(".animacion")
+        .removeClass("fas fa-chevron-down")
+        .addClass("fas fa-chevron-up");
+    }
+  });
 
     $("#Jtabla tbody").on("click", ".editReg", function (e) {
         e.preventDefault();

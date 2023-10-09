@@ -108,5 +108,5 @@
     </div>
     </div>
     <?php $this->load->view('template/footer');?>
-    <script src="<?= base_url() ?>dist/js/controllers/contratacion/vista_8_contratacion.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/contratacion/vista_8_contratacion.js?v=1.1.1"></script>
 </body>

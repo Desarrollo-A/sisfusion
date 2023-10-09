@@ -4,7 +4,7 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Asistente_gerente extends CI_Controller {
     public function __construct() {
         parent::__construct();
-        $this->load->model(['VentasAsistentes_model', 'registrolote_modelo', 'asesor/Asesor_model', 'Reestructura_model']);
+        $this->load->model(['VentasAsistentes_model', 'registrolote_modelo', 'asesor/Asesor_model']);
         $this->load->library(array('session','form_validation'));
        //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
         $this->load->library(array('session','form_validation', 'get_menu','permisos_sidebar'));
@@ -846,4 +846,3 @@ class Asistente_gerente extends CI_Controller {
       }
     }
 }
-?>

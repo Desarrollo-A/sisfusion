@@ -5,11 +5,14 @@ $(document).ready( function() {
     code = '';
     $.getJSON("fillSelectsForUsers").done(function(data) {
         for (let i = 0; i < data.length; i++) {
+
             if (data[i]['id_catalogo'] == 16){
                 $("#payment_method").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
-            }
+                }
+
             if (data[i]['id_catalogo'] == 1)
                 $("#member_type").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+
             if (data[i]['id_catalogo'] == 0){
                 $("#headquarter").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
                 sedes.push({
@@ -31,18 +34,21 @@ $(document).on('change', '#leader', function() {
     let puesto = $('#member_type').val();
     let lider = $('#leader').val();
     document.getElementById('lineaVenta').innerHTML = '';
+
     let puestosVentas = [3,7,9];
     let sedeSelected = document.getElementById("headquarter");
     let selectedSede = sedeSelected.options[sedeSelected.selectedIndex].text;
     let puestoSelected = document.getElementById("member_type");
     let selectedPuesto = puestoSelected.options[puestoSelected.selectedIndex].text;
     let nombreSelected = $('#name').val() + ' ' + $('#last_name').val() + ' ' + $('#mothers_last_name').val();
+
     if(puestosVentas.includes(parseInt(puesto))){
         $.post("consultarLinea",{
             sede: sede,
             puesto: puesto,
             lider : lider
         },
+
         function (data) {
         let sedesSinRegional = [5,2,3,6];
         let arraySedes = puesto == 7 ? ( data[0].banderaGer == 0 ? [data[0].idSedeCoor,data[0].idSedeGer,data[0].idSedeSub,data[0].idSedeReg] : [data[0].idSedeGer,data[0].idSedeSub,data[0].idSedeReg]) : ( puesto == 9 ? sedesSinRegional.includes(parseInt(sede)) ? [data[0].idSedeGer,data[0].idSedeSub] : [data[0].idSedeGer,data[0].idSedeSub,data[0].idSedeReg] : sedesSinRegional.includes(parseInt(sede)) ? [data[0].idSedeSub] : [data[0].idSedeSub,data[0].idSedeReg]);
@@ -75,11 +81,12 @@ $(document).on('change', '#member_type', function() {
         <button class="btn-data btn-green" type="button" id="btnMultiRol" data-toggle="tooltip" data-placement="top" title="Agregar rol"><i class="fas fa-user-plus"></i></button>
         `);
     }else{
-        document.getElementById('btnmultirol').innerHTML = '';
-        document.getElementById('multirol').innerHTML = '';
+        // document.getElementById('btnmultirol').innerHTML = '';
+        // document.getElementById('multirol').innerHTML = '';
         $('#index').val(0);
     }
 });
+
 function validarSede(indexActual){
     let index = parseInt($('#index').val());
     let c = 0;
@@ -108,23 +115,12 @@ $(document).on("click","#btnMultiRol",function(){
                 <div class="col-md-6 pr-0 pr-0">
                     <div class="form-group text-left m-0">
                         <label class="control-label">Tipo de miembro (<small class="isRequired">*</small>)</label>
-                        <select class="selectpicker select-gral m-0" name="multi_${index}" id="multi_${index}" data-style="btn"
-                        data-show-subtext="true"
-                        title="Selecciona una opción"
-                        data-size="7"
-                        data-live-search="true" data-container="body"
-                        ></select>
+                        <select class="selectpicker select-gral m-0" name="multi_${index}" id="multi_${index}" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-size="7" data-live-search="true" data-container="body"></select></div>
                     </div>
-                </div>
                 <div class="col-md-4 pr-0 pr-0">
                     <div class="form-group text-left m-0">
                         <label class="control-label">Sede (<small class="isRequired">*</small>)</label>
-                        <select class="selectpicker select-gral m-0" onchange="validarSede(${index},'sedes_');" name="sedes_${index}" id="sedes_${index}" data-style="btn"
-                        data-show-subtext="true"
-                        title="Selecciona una opción"
-                        data-size="7"
-                        data-live-search="true" data-container="body"
-                        ></select>
+                        <select class="selectpicker select-gral m-0" onchange="validarSede(${index},'sedes_');" name="sedes_${index}" id="sedes_${index}" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-size="7" data-live-search="true" data-container="body"></select>
                     </div>
                 </div>
                 <div class="col-md-2 justify-center d-flex align-end">
@@ -132,8 +128,7 @@ $(document).on("click","#btnMultiRol",function(){
                         <button class="btn-data btn-warning mb-1" type="button" onclick="borrarMulti(${index})" data-toggle="tooltip" data-placement="top" title="Eliminar rol"><i class="fa fa-trash"></i></button>
                     </div>
                 </div>
-            </div>
-        `);
+            </div>`);
         $('[data-toggle="tooltip"]').tooltip();
         for (var i = 0; i < puestos.length; i++) {
             var id = puestos[i].id;
@@ -153,6 +148,7 @@ $(document).on("click","#btnMultiRol",function(){
 
 $("#deleteRol").on('submit', function(e){
     let indice = $('#indice').val();
+
     e.preventDefault();
     $.ajax({
         type: 'POST',
@@ -177,7 +173,9 @@ $("#deleteRol").on('submit', function(e){
         }
     });
 });
+
 function borrarMulti(index,id = ''){
+
     if( id != ''){
         $('#idRU').val(id);
         $('#indice').val(index);
@@ -185,8 +183,8 @@ function borrarMulti(index,id = ''){
     }else{
         document.getElementById(`mult_${index}`).innerHTML = '';
     }
-    
-  }
+}
+
 let titulos = [];
 $('#all_users_datatable thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
@@ -490,6 +488,7 @@ function cleadFieldsHeadquarterChange(){
     $('#member_type').selectpicker('refresh');
     $('#leader').selectpicker('refresh');
 }
+
 function CloseModalBaja(){
     document.getElementById('nameUs').innerHTML = '';
     $('#id_user').val(0);
@@ -498,6 +497,7 @@ function CloseModalBaja(){
     $('#BajaUserForm')[0].reset();
     $('#BajaUser').modal("hide");
 }
+
 function BajaConfirmM(){
     document.getElementById('msj').innerHTML = '';
     document.getElementById('nameUs2').innerHTML = '';
@@ -507,6 +507,7 @@ function BajaConfirmM(){
     $('#BajaConfirmForm')[0].reset();
     $('#BajaConfirm').modal("hide");
 }
+
 $("#BajaUserForm").on('submit', function(e){
     e.preventDefault();
     document.getElementById('btnS').disabled = true;
@@ -530,7 +531,6 @@ $("#BajaUserForm").on('submit', function(e){
                 alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
             }
             document.getElementById('btnS').disabled = false;
-
         },
         error: function(){
             document.getElementById('btnS').disabled = false;
@@ -662,8 +662,6 @@ $(document).on('click', '.edit-user-information', function(e){
                 `);
             }
 
-            //se valida que tipo de usuario está editando el usuario para poder agregarle la propiedad
-            //de si es simbólico o no
             if(id_rol_general == 4 || id_rol_general == 5 || id_rol_general==6){
                 if (v.id_rol == '7' ){
                     $('#tipoMiembro_column').removeClass('col-sm-6');
@@ -673,8 +671,7 @@ $(document).on('click', '.edit-user-information', function(e){
                     <div class="col-sm-3 mt-3">
                         <div class="form-group label-floating select-is-empty div_membertype">
                             <label class="control-label"><small class="isRequired">*</small>¿Asesor simbólico?</label>
-                            <select class="selectpicker select-gral m-0" id="simbolicoType" name="simbolicoType" data-style="btn" data-show-subtext="true" 
-                            data-live-search="true" title="Seleccione sí es simbolíco" data-size="7" data-container="body" required>
+                            <select class="selectpicker select-gral m-0" id="simbolicoType" name="simbolicoType" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione sí es simbolíco" data-size="7" data-container="body" required>
                                 <option value="1" ${ (v.simbolico == 1 || v.simbolico == '1' ) ? 'selected' : ''}>SÍ</option>
                                 <option value="0" ${ (v.simbolico == 0 || v.simbolico == '0' || v.simbolico == null ) ? 'selected' : ''}>NO</option>
                             </select>
@@ -707,10 +704,10 @@ $(document).on('change', '#sedech', function() {
             document.getElementById("sucursal").removeAttribute("required");
         }
         $.each( data.data, function(i, v){
-                var option = document.createElement("option");
-                option.text = v.nom_oficina;
-                option.value = v.idsucursal;
-                select.add(option);
+            var option = document.createElement("option");
+            option.text = v.nom_oficina;
+            option.value = v.idsucursal;
+            select.add(option);
         });
         $('#sucursal').selectpicker('refresh');
     });
@@ -966,3 +963,56 @@ $(document).on('change', '#nueva_estructura', function() {
     $("#member_type").val('').selectpicker("refresh");
     $("#leader").val('').selectpicker("refresh");
 });
+
+function menuOptions(member_type){
+    let valueMemberType = member_type;
+    $.ajax({
+        url: general_base_url+'Usuarios/getMenuOptionsByRol/'+valueMemberType,
+        type: 'post',
+        dataType: 'json',
+        success:function(response){
+            printMenuCheck(response);
+        }
+    });
+}
+
+function printMenuCheck(data){
+    let contenedorHTML = document.getElementById('listadoHTML');
+    let containerMenu = document.getElementById('containerMenu');
+    contenedorHTML.innerHTML = '';
+    let contenidoInternoHTML = '';
+    let selectorTodo = '';
+    let arrayInterno = [];
+    let arrayJSON = '';
+    data.map((elemento, index)=>{
+        if(elemento.hijos == 1 || Number.isInteger(elemento.orden)){
+            contenidoInternoHTML += '<ul><li>'+elemento.nombre+'</li><ul>';
+            data.map((element2, index2)=>{
+                arrayInterno = [];
+                if(element2.hijos == 0 && ((element2.orden>=data[index].orden ) && (element2.orden<=(data[index].orden+1)))){
+                    arrayInterno.push(element2.padre);
+                    arrayInterno.push(element2.idmenu);
+                    arrayInterno.push(element2.orden);
+                    arrayJSON = JSON.stringify(arrayInterno);
+                    contenidoInternoHTML += '<li><input value="'+arrayJSON+'" type="checkbox" name="menu[]" id="'+element2.nombre+index2+'"> <label for="'+element2.nombre+index2+'"> '+element2.nombre+'</label></li>';
+                }
+            });
+            contenidoInternoHTML += '</ul></ul>';
+        }
+    });
+    selectorTodo = '<input type="checkbox" name="seleccionaTodo" class="seleccionaTodo" id="seleccionaTodo"/> <label for="seleccionaTodo"> Seleccionar todas las opciones</label>';
+    contenedorHTML.innerHTML += selectorTodo;
+    contenedorHTML.innerHTML += contenidoInternoHTML;
+    contenedorHTML.style.height = '300px';
+    contenedorHTML.style.overflowY = 'auto';
+    containerMenu.classList.remove('hide');
+}
+
+
+$(document).on('click', '#seleccionaTodo', function(){
+    if ($(this).is(':checked')) {
+        $('input:checkbox').attr('checked', true);
+    } else {
+        $('input:checkbox').attr('checked', false);
+    }
+})

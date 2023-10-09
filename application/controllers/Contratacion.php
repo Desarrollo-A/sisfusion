@@ -37,7 +37,7 @@ class Contratacion extends CI_Controller
     }
 
     public function lista_proyecto() {
-        if(in_array($this->session->userdata('id_rol'), [17, 70, 71, 73]))
+        if(in_array(array($this->session->userdata('id_rol'), array(17, 70, 71, 73, 33, 78))))
             $where = '';
         else
             $where = ' AND idResidencial NOT IN (14) ';
