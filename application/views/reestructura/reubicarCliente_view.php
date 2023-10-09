@@ -59,7 +59,7 @@
                 <div class="modal-content">
                     <div class="modal-header"></div>
                     <div class="modal-body text-center">
-                        <h5>sSELECCIONA LOS ARCHIVOS PARA ASOCIARLOS AL LOTE</h5>
+                        <h5>SELECCIONA LOS ARCHIVOS PARA ASOCIARLOS AL LOTE</h5>
                         <div class="row" id="info-cliente"></div>
                         <b><h5 id="mainLabelText" class="bold"></h5></b><hr>
                         <div id="formularioArchivos"></div>

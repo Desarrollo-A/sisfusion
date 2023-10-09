@@ -200,16 +200,22 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote){
         </div>`;
     arrayKeysArchivos = [];
     let nombreArchivo = '';
+    let columnWith = '';
+    let hideButton = '';
     switch (estatusProceso) {
         case '2':
             label = '<b>Subir corrida del lote</b>';
             flagProceso = 2;
             acceptFiles = '.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel';
+            columnWith = 'col-md-12 col-lg-12';
+            hideButton = 'hide';
             break;
         case '3':
             label = '<b>Subir contrato del lote</b>';
             flagProceso = 3;
             acceptFiles = 'application/pdf';
+            columnWith = 'col-md-11 col-lg-11';
+            hideButton = '';
             break;
     }
 
@@ -217,7 +223,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote){
         editarFile = 0;
         datos.map((elemento, index)=>{
 
-            contenidoHTML += '<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2">\n' +
+            contenidoHTML += '<div class="col col-xs-12 col-sm-12 '+columnWith+' mb-2">\n' +
                 '                            <input type="hidden" name="idLotep'+elemento.id_pxl+'" id="idLotep'+elemento.id_pxl+'" value="'+elemento.id_pxl+'">\n' +
                 '                            <input type="hidden" id="nombreLote'+elemento.id_pxl+'" value="'+elemento.nombreLote+'">\n' +
                 '                            <h6 class="text-left">'+label+'<b>: </b>'+elemento.nombreLote+'<span class="text-red">*</span></h6>\n' +
@@ -230,6 +236,15 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote){
                 '                            </div>\n' +
                 '                        </div>';
 
+            if(flagProceso==3){
+                contenidoHTML += '          <div class="col col-xs-12 col-sm-12 col-md-1     col-lg-1 mt-4">\n' +
+                    '                           <div class="d-flex justify-center">' +
+                    '                               <button class="btn-data btn-green-excel ver-archivo" data-idPxl="'+elemento.id_pxl+'" ' +
+                    '                               data-nomArchivo="'+elemento.corrida+'" data-nombreOriginalLote="'+nombreLote+'"' +
+                    '                               data-rescision="0" data-excel="1"><i class="fas fa-file-excel-o"></i></button>'+
+                    '                           </div>'+
+                    '                        </div>';
+            }
             arrayKeysArchivos.push(elemento);
         });
         if(flagProceso == 3){
@@ -251,6 +266,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote){
     else if(flagEditar==1){
         editarFile = 1;
         datos.map((elemento, index)=>{
+            console.log(elemento);
             arrayKeysArchivos.push(elemento);
 
             if(flagProceso==3){
@@ -276,6 +292,9 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote){
                 '                               <button class="btn-data btn-sky ver-archivo" data-idPxl="'+elemento.id_pxl+'" ' +
                 '                               data-nomArchivo="'+nombreArchivo+'" data-nombreOriginalLote="'+nombreLote+'"' +
                 '                               data-rescision="0"><i class="fas fa-eye"></i></button>'+
+                '                               <button class="btn-data btn-green-excel ver-archivo '+hideButton+'" data-idPxl="'+elemento.id_pxl+'" ' +
+                '                               data-nomArchivo="'+elemento.corrida+'" data-nombreOriginalLote="'+nombreLote+'"' +
+                '                               data-rescision="0" data-excel="1"><i class="fas fa-file-excel-o"></i></button>'+
                 '                           </div>'+
                 '                        </div>';
         });
@@ -481,11 +500,15 @@ $(document).on('click', '.ver-archivo', function(){
     let nombreArchivo = $(this).attr("data-nomArchivo");
     let nombreArchivoOriginal = $(this).attr("data-nombreOriginalLote");
     let rescision = $(this).attr("data-rescision");
+    let excel = $(this).attr("data-excel");
     let url_base = general_base_url+'static/documentos/contratacion-reubicacion-temp/'+nombreArchivoOriginal+'/';
     let carpetaVisor = '';
     let url = '';
     if(flagProceso==3){
         carpetaVisor = 'CONTRATO/';
+        if(excel==1){
+            carpetaVisor = 'CORRIDA/';
+        }
     }else if(flagProceso==2){
         carpetaVisor = 'CORRIDA/';
     }
@@ -496,7 +519,11 @@ $(document).on('click', '.ver-archivo', function(){
     url = url_base+carpetaVisor+nombreArchivo;
 
     if(flagProceso==3 || rescision==1){
-        visorArchivo(url, nombreArchivo);
+        if(excel==1){
+            window.open(url, "_blank");
+        }else{
+            visorArchivo(url, nombreArchivo);
+        }
     }else if(flagProceso==2){
         window.open(url, "_blank");
     }
