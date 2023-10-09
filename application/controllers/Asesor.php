@@ -2972,15 +2972,15 @@ class Asesor extends CI_Controller {
 
     }
     public function intExpAsesor() {
-        $idLote = $this->input->post('idLote');
-        $idCondominio = $this->input->post('idCondominio');
-        $nombreLote = $this->input->post('nombreLote');
-        $id_cliente = $this->input->post('idCliente');
-        $comentario = $this->input->post('comentario');
-        $fechaVenc= $this->input->post('fechaVenc');
-        $tipo_comprobante = $this->input->post('tipo_comprobante');
+        $idLote = $this->input->post('idLote', true);
+        $idCondominio = $this->input->post('idCondominio', true);
+        $nombreLote = $this->input->post('nombreLote', true);
+        $id_cliente = $this->input->post('idCliente', true);
+        $comentario = $this->input->post('comentario', true);
+        $fechaVenc= $this->input->post('fechaVenc', true);
+        $tipo_comprobante = $this->input->post('tipo_comprobante', true);
         $idMovimiento = intval($this->input->post('idMovimiento'));
-        $idCliente = $this->input->post('idCliente');
+        $idCliente = $this->input->post('idCliente', true);
 
         /*if ($this->session->userdata('id_rol') != 17) {
            $cliente = $this->Clientes_model->clienteAutorizacion($id_cliente);
@@ -3167,17 +3167,16 @@ class Asesor extends CI_Controller {
             if ($this->Asesor_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) {
                 $data['status'] = true;
                 $data['message'] = 'Estatus enviado.';
-                echo json_encode($data);
             } else {
                 $data['status'] = false;
                 $data['message'] = 'Error al enviar la solicitud.';
-                echo json_encode($data);
             }
         } else {
             $data['status'] = false;
             $data['message'] = 'El estatus ya fue registrado.';
-            echo json_encode($data);
         }
+
+        echo json_encode($data);
     }
 
     public function save1($idLote){

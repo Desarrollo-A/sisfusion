@@ -227,28 +227,48 @@ function fillDataTable(idCondominio) {
                     if (idMovimiento === MOVIMIENTOS.NUEVO_APARTADO) {
                         return `${d.comentario}<br><span class='label lbl-sky'>Nuevo apartado</span>`;
                     }
-                    if (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_2 || idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_2_II) {
+                    if (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_2) {
                         return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloría estatus 2</span>`;
                     }
-                    if (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_5 || idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_5_II) {
+                    if (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_5) {
                         return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloría estatus 5</span>`;
                     }
-                    if (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_6 || idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_6_II || idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_6_III) {
+                    if (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_6) {
                         return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloría estatus 6</span>`;
                     }
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_VENTAS_ESTATUS_8) {
                         return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Ventas estatus 8</span>`;
                     }
-                    if (idMovimiento === MOVIMIENTOS.RECHAZO_JURIDICO_ESTATUS_7 || idMovimiento === MOVIMIENTOS.RECHAZO_JURIDICO_ESTATUS_7_II || idMovimiento === MOVIMIENTOS.RECHAZO_JURIDICO_ESTATUS_7_III) {
+                    if (idMovimiento === MOVIMIENTOS.RECHAZO_JURIDICO_ESTATUS_7) {
                         return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Jurídico estatus 7</span>`;
                     }
-                    if (idMovimiento === MOVIMIENTOS.RECHAZO_POSTVENTA_ESTATUS_3 || idMovimiento === MOVIMIENTOS.RECHAZO_POSTVENTA_ESTATUS_3_II) {
+                    if (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_5_II) {
+                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloría estatus 5</span>`;
+                    }
+                    if (idMovimiento === MOVIMIENTOS.RECHAZO_JURIDICO_ESTATUS_7_II) {
+                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Jurídico estatus 7</span>`;
+                    }
+                    if (idMovimiento === MOVIMIENTOS.RECHAZO_POSTVENTA_ESTATUS_3) {
                         return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Postventa estatus 3</span>`;
+                    }
+                    if (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_2_II) {
+                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloría estatus 2</span>`;
+                    }
+                    if (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_6_II) {
+                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Contraloría estatus 6</span>`;
+                    }
+                    if (idMovimiento === MOVIMIENTOS.RECHAZO_POSTVENTA_ESTATUS_3_II) {
+                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Postventa estatus 3</span>`;
+                    }
+                    if (idMovimiento === MOVIMIENTOS.RECHAZO_JURIDICO_ESTATUS_7_III) {
+                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Jurídico estatus 7</span>`;
                     }
                     if (idMovimiento === MOVIMIENTOS.RECHAZO_POSTVENTA_3) {
                         return `${d.comentario}<br><span class='label lbl-warning'>Rechazo Postventa 3</span>`;
                     }
-
+                    if (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_6_III) {
+                        return `${d.comentario}<br><span class='label lbl-warning'>Rechazo de Contraloría estatus 6</span>`;
+                    }
                     return d.comentario;
                 }
             },
