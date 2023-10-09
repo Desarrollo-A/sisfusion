@@ -1,53 +1,32 @@
-var url = "<?=base_url()?>";
-var url2 = "<?=base_url()?>index.php/";
-var tr;
-let tablaGeneral;
-let titulosTablaGeneral = [];
 
-$(document).ready(function() {  
+$(document).ready(function () {
 
-    $('#tabla-general thead tr:eq(0) th').each(function (i) {
-        if (i !== 15) {
-            const title = $(this).text();
-            titulosTablaGeneral.push(title);
- 
-            $(this).html(`<input type="text" class="textoshead" placeholder="${title}"/>`);
-            $('input', this).on('keyup change', function () {
-                if (tablaGeneral.column(i).search() !== this.value) {
-                    tablaGeneral.column(i).search(this.value).draw();
+    let titulos_intxt = [];
 
-                    let totalDescuento = 0;
-                    let totalAbonado = 0;
-                    let totalPendiente = 0;
-                    const index = tablaGeneral.rows({selected: true, search: 'applied'}).indexes();
-                    const data = tablaGeneral.rows(index).data();
+    
+    $('.datepicker').datetimepicker({locale: 'es'});
 
-                    $.each(data, function (i, v) {
-                        totalDescuento += parseFloat(v.monto);
-
-                        if (v.aply == null || v.aply <= 1) {
-                            totalAbonado += parseFloat(v.pagado_caja);
-                        } else {
-                            totalAbonado += parseFloat(v.aply);
-                        }
-                        totalPendiente += parseFloat(v.monto - v.aply);
-
-
-                    });
-
-                    const tipoDescuento = $('#tipo_descuento').val();
-                    document.getElementById(getInputTotalId(tipoDescuento)).value = formatMoney(totalDescuento);
-
-                    document.getElementById(getInputAbonadoId(tipoDescuento)).value = formatMoney(totalAbonado);
-
-                    document.getElementById(getInputPendienteId(tipoDescuento)).value = formatMoney(totalPendiente);
+    $('#tabla_general thead tr:eq(0) th').each(function (i) {
+        $(this).css('text-align', 'center');
+        var title = $(this).text();
+        titulos_intxt.push(title);
+        if (i != 0 ) {
+            $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
+            $( 'input', this ).on('keyup change', function () {
+                if ($('#tabla_general').DataTable().column(i).search() !== this.value ) {
+                    $('#tabla_general').DataTable().column(i).search(this.value).draw();
                 }
+                var index = $('#tabla_general').DataTable().rows({
+                selected: true,
+                search: 'applied'
+                }).indexes();
+                var data = $('#tabla_general').DataTable().rows(index).data();
             });
         }
-    })
+    });
 
     checkTypeOfDesc();
-    general();
+    // general();
 });
 
 function checkTypeOfDesc() {
@@ -58,21 +37,31 @@ function checkTypeOfDesc() {
         $('#title-baja').css('display', 'none');
         $('#title-liquidado').css('display', 'none');
         $('#title-conglomerado').css('display', 'none');
+        $('#title-detenidos').css('display', 'none');
     } else if (tipoDescuento === '2') {
         $('#title-activo').css('display', 'none');
         $('#title-baja').css('display', 'block');
         $('#title-liquidado').css('display', 'none');
         $('#title-conglomerado').css('display', 'none');
+        $('#title-detenidos').css('display', 'none');
     } else if (tipoDescuento === '3') {
         $('#title-activo').css('display', 'none');
         $('#title-baja').css('display', 'none');
         $('#title-liquidado').css('display', 'block');
         $('#title-conglomerado').css('display', 'none');
+        $('#title-detenidos').css('display', 'none');
     } else if(tipoDescuento === '4') {
         $('#title-activo').css('display', 'none');
         $('#title-baja').css('display', 'none');
         $('#title-liquidado').css('display', 'none');
         $('#title-conglomerado').css('display', 'block');
+        $('#title-detenidos').css('display', 'none');
+    } else if(tipoDescuento === '5') {
+        $('#title-activo').css('display', 'none');
+        $('#title-baja').css('display', 'none');
+        $('#title-liquidado').css('display', 'none');
+        $('#title-conglomerado').css('display', 'none');
+        $('#title-detenidos').css('display', 'block');
     }
 
     loadTable(tipoDescuento);
@@ -104,51 +93,86 @@ function loadTable(tipoDescuento) {
         });
 
         tablaGeneral = $('#tabla-general').DataTable({
-            dom: 'Brt' + "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
-            "buttons": [
-                {
-                    text: '<i class="fa fa-edit" id="btn-nuevo-descuento"></i> NUEVO DESCUENTO',
-                    action: function () {
-                        if (tipoDescuento === '1') {
-                            open_Mb();
-                        }
-                    },
-                    attr: {
-                        class: ' btn-azure'
-                    }
-                },
-                {
-                    extend: 'excelHtml5',
-                    text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                    className: 'buttons-excel',
-                    titleAttr: 'DESCUENTOS UNIVERSIDAD',
-                    title: 'DESCUENTOS UNIVERSIDAD',
-                    exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,13,14],
-                        format: {
-                            header: function (d, columnIndex) {
-                                return ' ' + titulosTablaGeneral[columnIndex] + ' ';
-                            }
-                        }
+            // dom: 'Brt' + "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
+            // "buttons": [
+            //     {
+            //         text: '<i class="fa fa-edit" id="btn-nuevo-descuento"></i> NUEVO DESCUENTO',
+            //         action: function () {
+            //             if (tipoDescuento === '1') {
+            //                 open_Mb();
+            //             }
+            //         },
+            //         attr: {
+            //             class: ' btn-azure'
+            //         }
+            //     },
+            //     {
+            //         extend: 'excelHtml5',
+            //         text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+            //         className: 'buttons-excel',
+            //         titleAttr: 'DESCUENTOS UNIVERSIDAD',
+            //         title: 'DESCUENTOS UNIVERSIDAD',
+            //         exportOptions: {
+            //             columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,13,14],
+            //             format: {
+            //                 header: function (d, columnIndex) {
+            //                     return ' ' + titulosTablaGeneral[columnIndex] + ' ';
+            //                 }
+            //             }
+            //         }
+            //     }
+            // ],
+            // "width": 'auto',
+            // "ordering": false,
+            // "destroy": true,
+            // "pageLength": 10,
+            // "bAutoWidth": false,
+            // "fixedColumns": true,
+            // language: {
+            //     url: "./..//static/spanishLoader_v2.json",
+            //     paginate: {
+            //         previous: "<i class='fa fa-angle-left'>",
+            //         next: "<i class='fa fa-angle-right'>"
+            //     }
+            // },
+            // scrollX: true,
+            // pagingType: "full_numbers",
+            // "columns": [
+                dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: "100%",
+        scrollX: true,
+        bAutoWidth:true,
+        buttons:[{
+            extend: 'excelHtml5',
+            text: '<i class="fa fa-file-excel-o" aria-hidden="true" title="DESCARGAR ARCHIVO DE EXCEL"></i>',
+            className: 'btn buttons-excel',
+            titleAttr: 'DESCARGAR ARCHIVO DE EXCEL',
+            title: 'Reporte Descuentos Universidad',
+            exportOptions: {
+                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+                format: {
+                    header: function (d, columnIdx) {
+                        return ' ' + titulos_intxt[columnIdx] + ' ';
                     }
                 }
-            ],
-            "width": 'auto',
-            "ordering": false,
-            "destroy": true,
-            "pageLength": 10,
-            "bAutoWidth": false,
-            "fixedColumns": true,
-            language: {
-                url: "./..//static/spanishLoader_v2.json",
-                paginate: {
-                    previous: "<i class='fa fa-angle-left'>",
-                    next: "<i class='fa fa-angle-right'>"
-                }
-            },
-            scrollX: true,
-            pagingType: "full_numbers",
-            "columns": [
+            }
+        }],
+        pagingType: "full_numbers",
+        fixedHeader: true,
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, "Todos"]
+        ],
+        language: {
+            url: `${general_base_url}static/spanishLoader_v2.json`,
+            paginate: {
+                previous: "<i class='fa fa-angle-left'>",
+                next: "<i class='fa fa-angle-right'>"
+            }
+        },
+        destroy: true,
+        ordering: false,
+        columns:[
                 {
                     // ID
                     "data": function (d) {
@@ -230,18 +254,18 @@ function loadTable(tipoDescuento) {
                         valor = '';
 
                         if(d.estatus == 5){
-                            reactivado = '<span class="label lbl-vividOrange">REACTIVADO</span>';
+                            reactivado = `<span class="label lbl-vividOrange">REACTIVADO ${(d.fecha_modificacion)}</span>`;
                         }
 
-                        if (((d.id_sede == 6 && d.saldo_comisiones < 15000) || (d.id_sede != 6 && d.saldo_comisiones < 12500)) && d.estatus != 5 && d.estatus != 2) {
+                        if (((d.id_sede == 6 && d.saldo_comisiones < 15000) || (d.id_sede != 6 && d.saldo_comisiones < 12500)) && d.estatus != 5 && d.estatus != 2 && d.estatus != 3) {
                             valor = '<span class="label lbl-gray">SIN SALDO</span>';
-                        } else if (d.estatus == 1) {
+                        } else if (d.estatus == 1 || d.banderaReactivado == 1 ) {
                             valor = '<span class="label lbl-violetChin">DISPONIBLE</span>';
-                        } else  if (d.estatus == 2) {
+                        } else if (d.estatus == 2) {
                             valor = '<span class="label lbl-blueMaderas">DESCUENTO APLICADO</span>';
-                        } else  if (d.estatus == 3) {
-                            valor = '<span class="label lbl-green">LIQUIDADO CAJA</span>';
-                        } else  if (d.estatus == 4) {
+                        } else if (d.estatus == 3) {
+                            valor = '<span class="label lbl-warning">Detenido</span>';
+                        } else if (d.estatus == 4) {
                             valor = '<span class="label lbl-green">LIQUIDADO</span>';
                         } else{
                             valor = '';
@@ -320,7 +344,7 @@ function loadTable(tipoDescuento) {
                         valor = 0;
                         pendiente = 0;
 
-                        if (((d.id_sede != 6 && d.saldo_comisiones >= 12500) || (d.id_sede == 6 && d.saldo_comisiones >= 15000)) && d.estatus == 1 && d.pendiente > 1) {//TODAS SEDES
+                        if (((d.id_sede != 6 && d.saldo_comisiones >= 12500) || (d.id_sede == 6 && d.saldo_comisiones >= 15000)) && (d.estatus == 1 || d.banderaReactivado == 1) && d.pendiente > 1) {//TODAS SEDES
                             color = 'color:purple';
                             valor = d.id_sede != 6 ? Math.round(d.saldo_comisiones/12500) : Math.round(d.saldo_comisiones/15000);
                             pendiente = Math.round(d.pendiente/d.pago_individual);
@@ -334,24 +358,27 @@ function loadTable(tipoDescuento) {
                 {
                     // Fecha primer descuento
                     "data": function (d) {
-                        return `<p style="font-size: 1em">${(d.fecha_mov_1) ? d.fecha_mov_1 : ''}</p>`;
+                        return `<p style="font-size: 1em">${(d.primer_descuento) ? d.primer_descuento : 'SIN APLICAR'}</p>`;
                     }
                 },
                 {
                     // Fecha creación
                     "data": function (d) {
+
                         return '<p style="font-size: 1em">' + d.fecha_creacion + '</p>';
                     }
                 },
                 {
                     "data": function (d) {
-                        if(d.certificacion ==  null || d.certificacion == ''){
-                            return '<p style="font-size: 1em; color:gray"><b> SIN DEFINIR</b></p>';
+
+                        if(d.certificacion == 0){
+                            return '<p style="font-size: 1em;">SIN ESTATUS</p>';
 
                         }else{
+                            return `<span class='label lbl-${(d.colorCertificacion)}'>${(d.certificacion)}</span>`;
+
                             
-                            return '<span class="label label-warning" style="background:' + d.colorCertificacion + ';"> '+ d.certificacion +' </span>';
-                        }
+                          }
                     }
                 },
                 {
@@ -359,10 +386,19 @@ function loadTable(tipoDescuento) {
                         "data": function (d) {
 
                             adicionales = '';
-                            base = '<button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-blueMaderas consultar_logs_asimilados" title="Detalles">' + '<i class="fas fa-info-circle"></i></button>'+
-                            '<button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-darkMaderas consultar_historial_pagos" title="Historial pagos">' + '<i class="fas fa-chart-bar"></i></button>';
+                            // base = '<button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-blueMaderas consultar_logs_asimilados" title="Detalles">' + '<i class="fas fa-info-circle"></i></button>'+
+                            // '<button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-darkMaderas consultar_historial_pagos" title="Historial pagos">' + '<i class="fas fa-chart-bar"></i></button>';
 
-                            if (((d.id_sede != 6 && d.saldo_comisiones >= 12500) || (d.id_sede == 6 && d.saldo_comisiones >= 15000)) && d.estatus == 1 && d.pendiente > 1) {//TODAS SEDES
+                            if(d.pendiente<1){
+                                base = '<button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-blueMaderas consultar_logs_asimilados" title="Detalles">' + '<i class="fas fa-info-circle"></i></button>'+
+                                '<button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-darkMaderas consultar_historial_pagos" title="Historial pagos">' + '<i class="fas fa-chart-bar"></i></button>';
+                            }else{
+                                base = '<button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-darkMaderas consultar_historial_pagos" title="Historial pagos">' + '<i class="fas fa-chart-bar"></i></button>';
+                            }
+
+                            
+
+                            if (((d.id_sede != 6 && d.saldo_comisiones >= 12500) || (d.id_sede == 6 && d.saldo_comisiones >= 15000)) && (d.estatus == 1 || d.banderaReactivado == 1) && d.pendiente > 1) {//TODAS SEDES
                                 valor = d.id_sede != 6 ? Math.round(d.saldo_comisiones/12500) : Math.round(d.saldo_comisiones/15000);
                                 pendiente = Math.round(d.pendiente/d.pago_individual);
                                 pagosDescontar = valor>pendiente ? d.pendiente : valor*d.pago_individual;
@@ -374,10 +410,6 @@ function loadTable(tipoDescuento) {
                                 data-sede="${d.id_sede}" 
                                 7data-code="${d.cbbtton}"
                                 class="btn-data btn-violetDeep agregar_nuevo_descuento" title="Aplicar descuento"><i class="fas fa-plus"></i>
-                                </button>
-                                
-                                <button value="${d.id_usuario}" 
-                                class="btn-data btn-violetDeep activar-prestamo" title="Activar"> <i class="fa fa-rotate-left"></i> 
                                 </button>
                                 
                                 <button href="#" 
@@ -397,12 +429,16 @@ function loadTable(tipoDescuento) {
                                 data-pendiente="${d.pendiente}"
                                 data-total="${d.monto}"
                                 data-idCertificacion="${valor}"
-                                class="btn-data btn-acidGreen uniAdd"
-                                title="Editar suficiente">
-                                <i class="fas fa-money-check-alt"></i>
+                                class="btn-data btn-acidGreen uniAdd" title="Editar suficiente"><i class="fas fa-money-check-alt"></i>
                                 </button>
                             `;
 
+                            } else if(d.estatus == 3 && d.pendiente > 1){
+                                adicionales = `<button value="${d.id_usuario}" 
+                                data-value="${d.id_descuento}"
+                                data-pendiente="${d.pendiente}"
+                                class="btn-data btn-violetDeep activar-prestamo" title="Activar"> <i class="fa fa-rotate-left"></i> 
+                                </button>`;
                             }
                             
                             return '<div class="d-flex justify-center">'+base+adicionales+'</div>';
@@ -605,23 +641,24 @@ function loadTable(tipoDescuento) {
         });
 
         $('#tabla-general tbody').on('click', '.activar-prestamo', function () {
-            const usuarioId = $(this).val();
+
+            id_usuario = $(this).val();
+            id_descuento = $(this).attr("data-value");
+            pendiente = $(this).attr("data-pendiente");
+
+            $('#id-descuento-pago').val(id_descuento);
 
             $('#activar-pago-form').trigger('reset');
 
-            $.get(`getDataConglomerado/${usuarioId}`, function (data) {
-                const pago = JSON.parse(data);
 
-                $('#id-descuento-pago').val(pago.id_descuento);
-
-                if (pago.faltante !== null) {
-                    $('#faltante-pago').text('').text(formatMoney(pago.faltante));
+                if (pendiente !== null) {
+                    $('#faltante-pago').text('').text(formatMoney(pendiente));
                 } else {
-                    $('#faltante-pago').text('').text(formatMoney(pago.monto_total));
+                    $('#faltante-pago').text('').text(formatMoney(0));
                 }
 
                 $('#activar-pago-modal').modal();
-            });
+            
         });
 
         $("#tabla-general tbody").on("click", ".agregar_nuevo_descuento", function (e) {
@@ -871,6 +908,8 @@ function getInputTotalId(tipoDescuento) {
         return 'total-liquidado'
     } else if (tipoDescuento === '4') {
         return 'total-conglomerado';
+    }else if (tipoDescuento === '5') {
+        return 'total-detenido';
     }
     return '';
 }
@@ -884,6 +923,8 @@ function getInputAbonadoId(tipoDescuento) {
         return 'abonado-liquidado'
     } else if (tipoDescuento === '4') {
         return 'abonado-conglomerado';
+    }else if (tipoDescuento === '5') {
+        return 'total-detenido';
     }
     return '';
 }
@@ -897,6 +938,8 @@ function getInputPendienteId(tipoDescuento) {
         return 'pendiente-liquidado'
     } else if (tipoDescuento === '4') {
         return 'pendiente-conglomerado';
+    }else if (tipoDescuento === '5') {
+        return 'total-detenido';
     }
     return '';
 }
@@ -1957,3 +2000,5 @@ function setInitialValues() {
  
  
 }
+
+ 

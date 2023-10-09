@@ -4950,32 +4950,8 @@ for ($d=0; $d <count($dos) ; $d++) {
     {
         $idDescuento = $_POST['id_descuento'];
         $fechaActivacion = strtotime($_POST['fecha']);
-        $diaActivacion = date('d', $fechaActivacion);
-        $mesActivacion = date('m', $fechaActivacion);
-        $anioActivacion = date('Y', $fechaActivacion);
-        $mesActual = date('m');
-        $anioActual = date('Y');
-
-        if ($diaActivacion >= 1 && $diaActivacion <= 5) {
-            if ($mesActivacion === $mesActual) {
-                if ($anioActivacion === $anioActual) {
-                    $result = $this->Comisiones_model->updatePagoReactivadoMismoDiaMes($idDescuento,
-                        date('Y-m-d H:i:s', $fechaActivacion));
-                } else {
-                    $result = $this->Comisiones_model->updatePagoReactivadoFechaDiferente($idDescuento,
-                        date('Y-m-d H:i:s', $fechaActivacion));
-                }
-            } else {
-                $result = $this->Comisiones_model->updatePagoReactivadoFechaDiferente($idDescuento,
-                    date('Y-m-d H:i:s', $fechaActivacion));
-            }
-        } else if ($mesActivacion === $mesActual) {
-            $result = $this->Comisiones_model->updatePagoReactivadoMismoMes($idDescuento,
-                date('Y-m-d H:i:s', $fechaActivacion));
-        } else {
-            $result = $this->Comisiones_model->updatePagoReactivadoFechaDiferente($idDescuento,
-                date('Y-m-d H:i:s', $fechaActivacion));
-        }
+             
+        $result = $this->Comisiones_model->reactivarPago($idDescuento, date('Y-m-d H:i:s', $fechaActivacion));
 
         echo json_encode($result);
     }
@@ -5168,6 +5144,12 @@ for ($d=0; $d <count($dos) ; $d++) {
         $data = $this->Comisiones_model->fusionAcLi($tipoDescuento);
         echo json_encode(array('data' => $data));
     }
+
+    // public function reactivarDescuento($idUsuario)
+    // {
+    //     $data = $this->Comisiones_model->reactivarDescuento($idUsuario);
+    //     echo json_encode($data);
+    // }
 
     public function eliminarDescuentoUniversidad($idDescuento)
     {
