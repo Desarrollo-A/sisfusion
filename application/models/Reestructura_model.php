@@ -361,6 +361,13 @@ class Reestructura_model extends CI_Model
         return $query->result_array();
     }
 
+    public function obtenerDocumentacionOriginal($personalidadJuridica)
+    {
+        $idCatalogo = ($personalidadJuridica == 1) ? 32 : 31;
+        $query = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo = $idCatalogo AND estatus = 1 AND id_opcion NOT IN (29, 30)");
+        return $query->result_array();
+    }
+
     public function obtenerDocumentacionPorReestructura()
     {
         $query = $this->db->query('SELECT * FROM opcs_x_cats WHERE id_catalogo = 102 AND estatus = 1');
@@ -497,7 +504,7 @@ class Reestructura_model extends CI_Model
         LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = co.tipo_lote AND oxc.id_catalogo = 27
         LEFT JOIN usuarios u6 ON u6.id_usuario = id_usuario_asignado
-        WHERE lo.liberaBandera = 1 AND lo.status = 1 AND lo.idLote IN (48374, 48478, 48524, 48570)")->result_array();
+        WHERE lo.liberaBandera = 1 AND lo.status = 1")->result_array();
     }
 
     public function getListaUsuariosParaAsignacion() {

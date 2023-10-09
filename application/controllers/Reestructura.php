@@ -322,8 +322,10 @@ class Reestructura extends CI_Controller{
             return;
         }
 
+        $documentacionOriginal = $this->Reestructura_model->obtenerDocumentacionOriginal($clienteAnterior->personalidad_juridica);
         if (!$this->moverExpediente(
-            $clienteAnterior->idLote, $loteAOcupar, $idClienteAnterior, $idClienteInsert, $expediente, $loteNuevoInfo, $documentacionActiva
+            $documentacionOriginal, $clienteAnterior->idLote, $loteAOcupar, $idClienteAnterior, $idClienteInsert,
+            $expediente, $loteNuevoInfo, $documentacionActiva
         )) {
             $this->db->trans_rollback();
 
@@ -630,8 +632,9 @@ class Reestructura extends CI_Controller{
         }
 
         $expediente = $this->Reestructura_model->obtenerDocumentacionPorReubicacion($clienteAnterior->personalidad_juridica);
+        $documentacionOriginal = $this->Reestructura_model->obtenerDocumentacionOriginal($clienteAnterior->personalidad_juridica);
 
-        if (!$this->moverExpediente($clienteAnterior->idLote, $loteAOcupar, $idClienteAnterior, $idClienteInsert, $expediente)) {
+        if (!$this->moverExpediente($documentacionOriginal, $clienteAnterior->idLote, $loteAOcupar, $idClienteAnterior, $idClienteInsert, $expediente)) {
             $this->db->trans_rollback();
 
             echo json_encode([
@@ -842,7 +845,9 @@ class Reestructura extends CI_Controller{
     }
 
     function moverExpediente(
-        $idLoteAnterior, $idLoteNuevo, $idClienteAnterior, $idClienteNuevo, $expedienteNuevo, $loteInfo = null, $docInfo = null): bool
+        $documentacionOriginal, $idLoteAnterior, $idLoteNuevo, $idClienteAnterior, $idClienteNuevo, $expedienteNuevo,
+        $loteInfo = null, $docInfo = null
+    ): bool
     {
         $loteAnteriorInfo = $this->Reestructura_model->obtenerLotePorId($idLoteAnterior);
         $loteNuevoInfo = (is_null($loteInfo))
@@ -854,7 +859,7 @@ class Reestructura extends CI_Controller{
 
         $documentacion = [];
         $modificado = date('Y-m-d H:i:s');
-        $documentosSinPasar = (is_null($docInfo)) ? [7,8,'7','8'] : [];
+        $documentosSinPasar = (is_null($docInfo)) ? [7, 8, '7', '8'] : [];
 
         $ubicacionFolder = "static/documentos/contratacion-reubicacion/$loteNuevoInfo->nombreLote/";
 
@@ -905,6 +910,30 @@ class Reestructura extends CI_Controller{
             ];
         }
 
+        // Crear las ramas extras que no se tengan en el expediente anterior
+        foreach ($documentacionOriginal as $doc) {
+            $index = in_array($doc['id_opcion'], array_column($documentacion, 'tipo_doc'));
+
+            if ($index !== false) {
+                continue;
+            }
+
+            $documentacion[] = [
+                'movimiento' => $doc['nombre'],
+                'expediente' => null,
+                'modificado' => $modificado,
+                'status' => 1,
+                'idCliente' => $idClienteNuevo,
+                'idCondominio' => $loteNuevoInfo->idCondominio,
+                'idLote' => $idLoteNuevo,
+                'idUser' => NULL,
+                'tipo_documento' => 0,
+                'id_autorizacion' => 0,
+                'tipo_doc' => $doc['id_opcion'],
+                'estatus_validacion' => 0
+            ];
+        }
+
         // Ciclo para las nuevas ramas a agregar
         foreach ($expedienteNuevo as $doc) {
             if ($doc['id_opcion'] == 33) {
@@ -912,12 +941,12 @@ class Reestructura extends CI_Controller{
 
                 copy(
                     "static/documentos/contratacion-reubicacion-temp/$loteAnteriorInfo->nombreLote/RESCISIONES/$expRescision->rescision",
-                    $ubicacionFolder.'RESCISION-'.$expRescision->rescision
+                    $ubicacionFolder.$expRescision->rescision
                 );
 
                 $documentacion[] = [
                     'movimiento' => $doc['nombre'],
-                    'expediente' => 'RESCISION-'.$expRescision->rescision,
+                    'expediente' => $expRescision->rescision,
                     'modificado' => $modificado,
                     'status' => 1,
                     'idCliente' => $idClienteNuevo,
