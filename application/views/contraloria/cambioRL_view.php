@@ -10,7 +10,8 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title text-center"><label>Edición de Representante legal - <b><span class="lote"></span></b></label></h4>
+                        <h4 class="modal-title text-center"><label>Edición de Representante legal - <b><span
+                                        class="lote"></span></b></label></h4>
                     </div>
                     <div class="modal-body">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -18,32 +19,66 @@
                             <div class="form-group m-0 overflow-hidden">
                                 <div class="radio_container w-100">
                                     <input class="d-none" type="radio" name="opcion" id="one">
-                                    <label for="one" class="w-50">Representante Legal</label>
+                                    <label for="one" class="w-60">Representante Legal</label>
                                     <input class="d-none" type="radio" name="opcion" id="two">
-                                    <label for="two" class="w-50">Sede</label>
+                                    <label for="two" class="w-40">Sede</label>
                                     <input class="d-none hide" type="radio" name="opcion" id="three">
-                                    <label for="three" class="w-50 hide" id="titEL">Estatus Lote</label>
+                                    <label for="three" class="w-40 hide" id="titEL">Estatus Lote</label>
+                                    <input class="d-none hide" type="radio" name="opcion" id="four">
+                                    <label for="four" class="w-60 hide" id="titCM">Agregar pago comision</label>
                                 </div>
                             </div>
                             <div class="form-group m-0 overflow-hidden hide" name="Rl_form" id="Rl_form">
                                 <label class="control-label " for="proyecto">Representante legal</label>
-                                <select name="rl" id="rl" class="selectpicker select-gral m-0 rl" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                <select name="rl" id="rl" class="selectpicker select-gral m-0 rl" data-style="btn"
+                                    data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN"
+                                    data-size="7" data-container="body" required></select>
                             </div>
                             <div class="form-group m-0 overflow-hidden hide" name="Sede_form" id="Sede_form">
                                 <label class="control-label " for="proyecto">Sede</label>
-                                <select name="sede" id="sede" class="selectpicker select-gral m-0 rl" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                <select name="sede" id="sede" class="selectpicker select-gral m-0 rl" data-style="btn"
+                                    data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN"
+                                    data-size="7" data-container="body" required></select>
                             </div>
                             <div class="form-group m-0 overflow-hidden hide" name="Lote_form" id="Lote_form">
                                 <label class="control-label " for="proyecto">Estatus Lote</label>
-                                <select name="lote" id="lote" class="selectpicker select-gral m-0 lott" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                <select name="lote" id="lote" class="selectpicker select-gral m-0 lott" data-style="btn"
+                                    data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN"
+                                    data-size="7" data-container="body" required></select>
+                            </div>
+                            <div class="form-group m-0 overflow-hidden hide" name="Comision_form" id="Comision_form">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                    <label class="control-label" id="tvLbl">Abono</label>
+                                    <input class="form-control input-gral m-0" name="abono" id="abono"
+                                        oncopy="return false" onpaste="return false" type="tel"
+                                        pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" autocomplete="off">
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                    <label class="control-label">Comentario</label>
+                                    <textarea class="text-modal" name="comentario" id="comentario"
+                                        rows="3"></textarea>
+                                    <br>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 overflow-hidden">
+                                    <label class="control-label" id="tvLbl">Estatus</label>
+                                    <select required="required" name="estatus_comision" id="estatus_comision"
+                                        class="selectpicker select-gral" data-style="btn" data-live-search="true"
+                                        title="SELECCIONA UNA OPCIÓN" data-container="body" data-size="2">
+                                        <option value="1">Nuevo</option>
+                                        <option value="11">Pagado</option>
+                                    </select>
+                                </div>
+                                <input hidden name="idCom" id="idCom">
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-danger btn-simple btn-simple"
+                            data-dismiss="modal">Cancelar</button>
                         <button type="button" id="save" class="btn btn-primary hide">Guardar</button>
                         <button type="button" id="save2" class="btn btn-primary hide">Guardar</button>
                         <button type="button" id="save3" class="btn btn-primary hide">Guardar</button>
+                        <button type="button" id="save4" class="btn btn-primary hide">Guardar</button>
                     </div>
                 </div>
             </div>
@@ -67,7 +102,8 @@
                                         <div class="col-6 col-sm-6 col-md-4 col-lg-4">
                                             <div class="form-group">
                                                 <label class="control-label label-gral">Lote</label>
-                                                <input id="inp_lote" name="inp_lote" class="form-control input-gral" type="number">
+                                                <input id="inp_lote" name="inp_lote" class="form-control input-gral"
+                                                    type="number">
                                             </div>
                                         </div>
                                         <div class="col-6 col-sm-6 col-md-4 col-lg-4 mt-3">
@@ -108,4 +144,4 @@
     </div>
 </body>
 <?php $this->load->view('template/footer'); ?>
-<script src="<?= base_url() ?>dist/js/controllers/contraloria/cambioRL.js?v=1.1.9"></script>
+<script src="<?= base_url() ?>dist/js/controllers/contraloria/cambioRL.js?v=1.1.1"></script>

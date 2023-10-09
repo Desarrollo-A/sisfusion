@@ -880,7 +880,6 @@ class Contraloria extends CI_Controller {
         echo json_encode($this->Contraloria_model->get_enganches()->result_array());
     }
 
-
     public function editar_registro_loteRechazo_contraloria_proceceso5() {
         $idLote=$this->input->post('idLote');
         $idCondominio=$this->input->post('idCondominio');
@@ -3184,5 +3183,38 @@ class Contraloria extends CI_Controller {
 
             $data['message'] = 'OK';
             echo json_encode($data);
+    }
+
+    public function get_comisiones($idLote){
+        $id_usuario = $this->session->userdata('id_usuario');
+        
+        $data = array();
+        $data = $this->Contraloria_model->get_comisiones($idLote, 7869);
+        
+        if($data!=null){
+            $data['message'] = 'OK';
+            echo json_encode($data);
+            
+        }
+    }
+
+    public function InsertAbono(){
+
+        $idCom=$this->input->post('idComIns');
+        $id_usuario = $this->session->userdata('id_usuario');
+        $abono=$this->input->post('abonoIns');
+        $estatus_comision=$this->input->post('estatus_comisionIns');
+        $comentario=$this->input->post('comentarioIns');
+        $fecha = date("d-m-Y h:i:s"); 
+
+        $dataInsert = array("id_comision"=> $idCom, "id_usuario" => $id_usuario, "abono_neodata" => $abono, "fecha_abono" => $fecha, 
+        "pago_neodata" => $abono, "estatus" => $estatus_comision, "creado_por" =>  $id_usuario, "comentario" => $comentario, 
+        "modificado_por" => $this->session->userdata('id_usuario'));
+        $responseInsert = $this->General_model->addRecord("pago_comision_ind", $dataInsert );
+        
+
+            $data['message'] = 'OK';
+            echo json_encode($data);
+
     }
 }

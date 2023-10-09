@@ -74,7 +74,7 @@
     <?php $this->load->view('template/footer');?>
     <script src="<?=base_url()?>dist/js/modal-steps.min.js"></script>
     <script src="<?=base_url()?>dist/js/moment.min.js"></script>
-    <script src="<?=base_url()?>dist/js/controllers/consultaProspectos.js"></script>
+    <script src="<?=base_url()?>dist/js/controllers/consultaProspectos.js?v=1.1.7"></script>
     <script src="<?=base_url()?>dist/js/controllers/global_functions.js"></script>
     <!--DATATABLE BUTTONS DATA EXPORT-->
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>

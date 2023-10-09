@@ -55,12 +55,12 @@ $("#tabla_ingresar_6").ready(function () {
     code = "";
     $.getJSON("get_enganches").done(function (data) {
       for (let i = 0; i < data.length; i++) {
-        if (data[i]["id_catalogo"] == 104) {
+        if (data[i]["id_catalogo"] == 103) {
           $("#tipo_enganche").append(
             $("<option>").val(data[i]["id_opcion"]).text(data[i]["nombre"])
           );
         }
-        if (data[i]["id_catalogo"] == 105)
+        if (data[i]["id_catalogo"] == 104)
           $("#estatus_enganche").append(
             $("<option>").val(data[i]["id_opcion"]).text(data[i]["nombre"])
           );

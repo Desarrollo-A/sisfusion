@@ -3,26 +3,26 @@ let titulos_intxt = [];
 
 $(document).ready(function () {
 
-	$.post(`${general_base_url}Contraloria/selectRL`, function (data) {
-		for (var i = 0; i < data.length; i++) {
-			$("#rl").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
-		}
-		$("#rl").selectpicker('refresh');
-	}, 'json');
+  $.post(`${general_base_url}Contraloria/selectRL`, function (data) {
+    for (var i = 0; i < data.length; i++) {
+      $("#rl").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+    }
+    $("#rl").selectpicker('refresh');
+  }, 'json');
 
   $.post(`${general_base_url}Contraloria/selectSede`, function (data) {
-		for (var i = 0; i < data.length; i++) {
-			$("#sede").append($('<option>').val(data[i]['id_sede']).text(data[i]['nombre']));
-		}
-		$("#sede").selectpicker('refresh');
-	}, 'json');
+    for (var i = 0; i < data.length; i++) {
+      $("#sede").append($('<option>').val(data[i]['id_sede']).text(data[i]['nombre']));
+    }
+    $("#sede").selectpicker('refresh');
+  }, 'json');
 
   $.post(`${general_base_url}Contraloria/selectStatusLote`, function (data) {
-		for (var i = 0; i < data.length; i++) {
-			$("#lote").append($('<option>').val(data[i]['idStatusLote']).text(data[i]['nombre']));
-		}
-		$("#lote").selectpicker('refresh');
-	}, 'json');
+    for (var i = 0; i < data.length; i++) {
+      $("#lote").append($('<option>').val(data[i]['idStatusLote']).text(data[i]['nombre']));
+    }
+    $("#lote").selectpicker('refresh');
+  }, 'json');
 
 });
 
@@ -31,10 +31,10 @@ $("#tabla_RL thead tr:eq(0) th").each(function (i) {
   titulos_intxt.push(title);
   $(this).html(
     '<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' +
-      title +
-      '" placeholder="' +
-      title +
-      '"/>'
+    title +
+    '" placeholder="' +
+    title +
+    '"/>'
   );
   $("input", this).on("keyup change", function () {
     if ($("#tabla_RL").DataTable().column(i).search() !== this.value) {
@@ -50,6 +50,8 @@ $("#one").click(function () {
   $("#save2").addClass("hide");
   $("#Lote_form").addClass("hide");
   $("#save3").addClass("hide");
+  $("#Comision_form").addClass("hide");
+  $("#save4").addClass("hide");
 });
 
 $("#two").click(function () {
@@ -59,6 +61,8 @@ $("#two").click(function () {
   $("#save2").removeClass("hide");
   $("#Lote_form").addClass("hide");
   $("#save3").addClass("hide");
+  $("#Comision_form").addClass("hide");
+  $("#save4").addClass("hide");
 });
 
 $("#three").click(function () {
@@ -68,6 +72,31 @@ $("#three").click(function () {
   $("#save2").addClass("hide");
   $("#Lote_form").removeClass("hide");
   $("#save3").removeClass("hide");
+  $("#Comision_form").addClass("hide");
+  $("#save4").addClass("hide");
+});
+
+$("#four").click(function () {
+  $("#Rl_form").addClass("hide");
+  $("#save").addClass("hide");
+  $("#Sede_form").addClass("hide");
+  $("#save2").addClass("hide");
+  $("#Lote_form").addClass("hide");
+  $("#save3").addClass("hide");
+  $("#Comision_form").removeClass("hide");
+  $("#save4").removeClass("hide");
+});
+
+let titulosInventario = [];
+$('#tableLotificacionNeodata thead tr:eq(0) th').each(function (i) {
+    var title = $(this).text();
+    titulosInventario.push(title);
+    $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
+    $('input', this).on('keyup change', function () {
+        if ($('#tableLotificacionNeodata').DataTable().column(i).search() !== this.value) {
+            $('#tableLotificacionNeodata').DataTable().column(i).search(this.value).draw();
+        }
+    });
 });
 
 var getInfo1 = new Array(8);
@@ -129,8 +158,10 @@ $(".find_doc").click(function () {
         next: "<i class='fa fa-angle-right'>",
       },
     },
-    destroy: true,
+    pageLength: 10,
+    fixedColumns: true,
     ordering: false,
+    scrollX: true,
     columns: [
       {
         data: function (d) {
@@ -217,11 +248,11 @@ $(".find_doc").click(function () {
             '" data-sede="' +
             d.nombreSede +
             '" data-idUbicacion="' +
-            d.ubicacion  +
+            d.ubicacion +
             '" data-estatusLote="' +
-            d.estatusLote  +
+            d.estatusLote +
             '" data-idEstatusLote="' +
-            d.idEstatusLote  +
+            d.idEstatusLote +
             '" class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="left" title="EDITAR INFORMACIÓN">' +
             '<i class="fas fa-pencil-alt"></i></button>';
           return '<div class="d-flex justify-center">' + bt + "</div>";
@@ -242,6 +273,24 @@ $(".find_doc").click(function () {
       $("#spiner-loader").addClass("hide");
     },
   });
+
+  $.ajax({
+    url: `${general_base_url}/Contraloria/get_comisiones/` + idLote,
+    type: "post",
+    dataType: "json",
+    success: function (data) {
+        if (data.message == "OK") {
+          $("#four").removeClass("hide");
+          $("#titCM").removeClass("hide");
+
+          $("#idCom").val(data[0].id_comision);
+          
+        }
+    },
+    error: function (data) {
+      console.log('error');
+    }
+  })
 
   $("#tabla_RL").on("draw.dt", function () {
     $('[data-toggle="tooltip"]').tooltip({
@@ -269,7 +318,7 @@ $(".find_doc").click(function () {
     $("#sede").val(getInfo1[6]).selectpicker("refresh");
     $("#lote").val(getInfo1[8]).selectpicker("refresh");
 
-    if(getInfo1[8] == 6 || getInfo1[8] == 9){
+    if (getInfo1[8] == 6 || getInfo1[8] == 9) {
       $("#three").removeClass("hide");
       $("#titEL").removeClass("hide");
     }
@@ -404,6 +453,64 @@ $(document).on("click", "#save3", function (e) {
     },
     error: function (data) {
       $("#save3").prop("disabled", false);
+      $("#editReg").modal("hide");
+      $("#tabla_RL").DataTable().ajax.reload();
+      alerts.showNotification(
+        "top",
+        "right",
+        "Error al enviar la solicitud.",
+        "danger"
+      );
+      $("#spiner-loader").addClass("hide");
+    },
+  });
+});
+
+$(document).on("click", "#save4", function (e) {
+  e.preventDefault();
+  
+  let abono  = $("#abono").val();
+  var abonoIns = abono.slice(1, -1).replace(/,/g, "");
+  var comentarioIns = $("#comentario").val();
+  var estatus_comisionIns = $("#estatus_comision").val();
+  var idComIns = $("#idCom").val();
+  var dataExp4 = new FormData();
+
+  dataExp4.append("abonoIns", abonoIns);
+  dataExp4.append("comentarioIns", comentarioIns);
+  dataExp4.append("estatus_comisionIns", estatus_comisionIns);
+  dataExp4.append("idComIns", idComIns);
+ 
+  $("#spiner-loader").removeClass("hide");
+  $("#save4").prop("disabled", true);
+  $.ajax({
+    url: `${general_base_url}Contraloria/InsertAbono`,
+    data: dataExp4,
+    cache: false,
+    contentType: false,
+    processData: false,
+    type: "POST",
+    success: function (data) {
+      response = JSON.parse(data);
+      if (response.message == "OK") {
+        $("#save4").prop("disabled", false);
+        $("#editReg").modal("hide");
+        $("#tabla_RL").DataTable().ajax.reload();
+        alerts.showNotification(
+          "top",
+          "right",
+          "Abono Registrado",
+          "success"
+        );
+        $("#abono").val("");
+        $("#comentario").val("");
+        $("#estatus_comision").val("");
+        $("#idCom").val("");
+        $("#spiner-loader").addClass("hide");
+      }
+    },
+    error: function (data) {
+      $("#save4").prop("disabled", false);
       $("#editReg").modal("hide");
       $("#tabla_RL").DataTable().ajax.reload();
       alerts.showNotification(

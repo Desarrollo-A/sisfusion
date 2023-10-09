@@ -120,7 +120,7 @@ class Contraloria_model extends CI_Model {
     }
 
     function get_enganches(){
-        return $this->db->query("SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo IN (104, 105) AND estatus = 1 ORDER BY id_catalogo");
+        return $this->db->query("SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo IN (103, 104) AND estatus = 1 ORDER BY id_catalogo");
     }
 
     public function registroStatusContratacion6 () {
@@ -1406,6 +1406,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 
 
     public function getCambioRL ($idLote) {
+        ini_set('memory_limit', 0);
 		$query = $this->db-> query("SELECT l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
 		l.nombreLote, l.idStatusContratacion, l.idMovimiento, convert(varchar,l.modificado,120) as modificado, cl.rfc, sd.nombre as nombreSede,
 		CAST(l.comentario AS varchar(MAX)) as comentario, convert(varchar,l.fechaVenc,120) as fechaVenc, l.perfil, res.nombreResidencial, cond.nombre as nombreCondominio,
@@ -1450,6 +1451,11 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 
     function getStatusLoteRl(){
         return $this->db->query("SELECT idStatusLote, nombre FROM statuslote WHERE idStatusLote IN (6,9)");
+    }
+
+    public function get_comisiones($idLote, $id_usuario){
+        $query = $this->db->query("SELECT id_comision FROM comisiones WHERE id_usuario = $id_usuario AND id_lote = $idLote");
+        return $query->result();
     }
 
 

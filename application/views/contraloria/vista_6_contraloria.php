@@ -294,4 +294,4 @@
 	</div><!--main-panel close-->
 </body>
 <?php $this->load->view('template/footer');?>
-<script src="<?= base_url() ?>dist/js/controllers/contraloria/vista_6_contraloria.js?v=1.1.1"></script>
+<script src="<?= base_url() ?>dist/js/controllers/contraloria/vista_6_contraloria.js?v=1.1.2"></script>
