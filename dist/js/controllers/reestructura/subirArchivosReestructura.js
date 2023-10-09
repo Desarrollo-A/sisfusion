@@ -266,7 +266,6 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote){
     else if(flagEditar==1){
         editarFile = 1;
         datos.map((elemento, index)=>{
-            console.log(elemento);
             arrayKeysArchivos.push(elemento);
 
             if(flagProceso==3){
