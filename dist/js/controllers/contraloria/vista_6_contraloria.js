@@ -376,7 +376,8 @@ function preguntaRegCorr() {
 
     if (comentario.length <= 0 || $("#totalNeto").val().length == 0)
         alerts.showNotification('top', 'right', 'Los campos Comentario y Enganche son requeridos.', 'danger');
-    else if (comentario.length > 0) {
+
+    else if (comentario.length > 0 && $("#totalNeto").val().length > 0) {
         $('#enviarAContraloriaGuardar').prop('disabled', true);
         $.ajax({
             data: parametros,
