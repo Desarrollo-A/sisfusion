@@ -76,7 +76,6 @@ $(document).on("click", "#editar-direccion-information", function () {
     $("#id_sedeEdit").val($(this).attr("data-id_sede"));
     $("#direccionM").val($(this).attr("data-direccion"));
     $("#id_direccion").val($(this).attr("data-id_direccion"));
-
     $("#hora_inicioM").val($(this).attr("data-hora_inicio"));
     $("#hora_finM").val($(this).attr("data-hora_fin"));
 
@@ -88,7 +87,7 @@ $(document).on("click", "#editar-direccion-information", function () {
             for (let i = 0; i < data.length; i++) {
                 const id_sede = data[i].id_sede;
                 const estado = data[i].estado;
-                $('#id_sedeEdit').append($('<option>').val(id_sede).text(estado));
+                $('#id_sedeEdit').append($('<option selected>').val(id_sede).text(estado));
             }
 
             $('#id_sedeEdit').selectpicker('refresh');
@@ -105,17 +104,19 @@ $(document).on("click", "#editDirecciones", function () {
     var id_direccion = $("#id_direccion").val();
     var hora_inicio = $("#hora_inicioM").val();
     var hora_fin = $("#hora_finM").val();
-
-    console.log("horaI:"+hora_inicio,"horaF:"+hora_fin);
     
     var datos = new FormData();
     $("#spiner-loader").removeClass("hide");
 
-    if(id_sedeEdit == ''){
-        $("#spiner-loader").addClass('hide');
-        alerts.showNotification("top", "right", "Selecciona una opción", "warning");
-        return;
+    if(id_sedeEdit != '' && direccion != '' && hora_inicio != '' && hora_fin !=''){
+      
+    }else{
+      $("#spiner-loader").addClass('hide');
+      alerts.showNotification("top", "right", "No puedes dejar ningún campo vacío", "warning");
+      return;
     }
+
+    
   
     datos.append("id_sedeEdit", id_sedeEdit);
     datos.append("direccion", direccion);
@@ -170,10 +171,12 @@ $(document).on('click', '#guardarDireccion', function(){
     datos.append("hora_inicio", hora_inicio)
     datos.append("hora_fin", hora_fin)
 
-    if(id_sede == ''){
-        $("#spiner-loader").addClass('hide');
-        alerts.showNotification("top", "right", "Selecciona una opción", "warning");
-        return;
+    if(id_sede != '' && direccionInfo != '' && hora_inicio != '' && hora_fin !=''){
+      
+    }else{
+      $("#spiner-loader").addClass('hide');
+      alerts.showNotification("top", "right", "Completa todos los campos", "warning");
+      return;
     }
   
     $.ajax({
