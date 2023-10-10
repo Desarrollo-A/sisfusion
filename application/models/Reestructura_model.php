@@ -349,7 +349,8 @@ class Reestructura_model extends CI_Model
 
     public function obtenerDocumentacionActiva($idLote, $idCliente)
     {
-        $query = $this->db->query("SELECT * FROM historial_documento WHERE idLote = $idLote AND idCliente = $idCliente AND status = 1");
+        $query = $this->db->query("SELECT * FROM historial_documento
+            WHERE idLote = $idLote AND idCliente = $idCliente AND status = 1 AND expediente != ''");
         return $query->result_array();
     }
 
@@ -512,6 +513,7 @@ class Reestructura_model extends CI_Model
         LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
         LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = co.tipo_lote AND oxc.id_catalogo = 27
+        INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = lo.estatus_preproceso AND oxc1.id_catalogo = 106
         LEFT JOIN usuarios u6 ON u6.id_usuario = id_usuario_asignado
         WHERE lo.liberaBandera = 1 AND lo.status = 1")->result_array();
     }
