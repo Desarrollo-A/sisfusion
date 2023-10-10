@@ -411,8 +411,11 @@ class Usuarios_modelo extends CI_Model
     function saveUser($data)
     {
         if ($data != '' && $data != null) {
-            $response = $this->db->insert("usuarios", $data);
+            $this->db->insert("usuarios", $data);
+            $query = $this->db->query("SELECT IDENT_CURRENT('clientes') as lastId")->result_array();
+            return $query;
             if (!$response) {
+
                 return $finalAnswer = 0;
             } else {
                 return $finalAnswer = 1;

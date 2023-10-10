@@ -5,7 +5,7 @@ var id_dxc = 0;
 var editarFile = 0;
 var archivosAborrar = [];
 var acceptFiles = '';
-
+var nombreLote = '';
 $(document).ready(function () {
     $("#archivosReestructura").on("hidden.bs.modal", function () {
         $("#fileElm1").val(null);
@@ -22,7 +22,7 @@ $(document).ready(function () {
 });
 $(document).on('click', '.btn-abrir-modal', function () {
     let idLote = $(this).attr("data-idLote");
-    let nombreLote = $(this).attr("data-nombreLote");
+    nombreLote = $(this).attr("data-nombreLote");
     let contenedorTitulo = $('#tituloLote');
     let tipotransaccion = $(this).attr("data-tipotransaccion");
     rescisionArchivo = $(this).attr("data-rescision");
@@ -233,12 +233,10 @@ $(document).on("click", "#sendRequestButton", function (e) {
             }
         }
         let data = new FormData();
-        let nombreLote = $('.btn-abrir-modal').attr("data-nombreLote");
-        let idRegDXC = $('.btn-abrir-modal').attr("data-id_dxc");
         data.append("tipoProceso", flagProceso);
         data.append("longArray", arrayKeysArchivos.length);
         data.append("nombreLoteOriginal", nombreLote);
-        data.append("id_dxc", idRegDXC);
+        data.append("id_dxc", id_dxc);
         data.append("editarFile", editarFile);
         arrayKeysArchivos.map((elemento, index) => {
             let flagEditar = ($("#fileElm" + index)[0].files[0] == undefined) ? 0 : 1;
@@ -307,13 +305,10 @@ $(document).on("click", "#sendRequestButton", function (e) {
                 alerts.showNotification('top', 'right', 'Selecciona archivo de rescisión', 'warning');
             } else {
                 let data = new FormData();
-                let nombreLote = $('.btn-abrir-modal').attr("data-nombreLote");
-                let idRegDXC = $('.btn-abrir-modal').attr("data-id_dxc");
-
                 data.append("tipoProceso", flagProceso);
                 data.append("longArray", arrayKeysArchivos.length);
                 data.append("nombreLoteOriginal", nombreLote);
-                data.append("id_dxc", idRegDXC);
+                data.append("id_dxc", id_dxc);
                 data.append("editarFile", editarFile);
                 arrayKeysArchivos.map((elemento, index) => {
                     data.append("archivo" + index, $("#fileElm" + index)[0].files[0]);
