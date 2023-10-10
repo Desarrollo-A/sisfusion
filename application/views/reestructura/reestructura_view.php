@@ -217,7 +217,7 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
-                            <li class="active"><a href="#nuevas-1" role="tab" data-toggle="tab">Reestructura</a></li>
+                            <li class="active"><a href="#nuevas-1" role="tab" data-toggle="tab">Liberar para reestructura</a></li>
                             <li><a href="#proceso-1" role="tab" data-toggle="tab">Liberar</a></li>
                         </ul>
                        <div class="card no-shadow m-0 border-conntent__tabs">
@@ -227,7 +227,7 @@
                                             <div class="tab-pane active" id="nuevas-1">
                                             <div class="card-content">
                                         <div class="encabezadoBox">
-                                         <h3 class="card-title center-align">Reestructuración</h3>
+                                         <h3 class="card-title center-align">Liberar para reestructura</h3>
                                         </div>
                                         <!-- tap -->
                                         
@@ -271,9 +271,7 @@
                             <!-- nueva tabla libera  -->
                             <div class="tab-pane" id="proceso-1">
                                 <div class="text-center">
-                                    
                                     <h3 class="card-title center-align">Liberar lotes</h3>
-
                                 </div>
                                 <div class="toolbar">
                                     <div class="container-fluid p-0">
@@ -289,27 +287,24 @@
                                         </div>
                                     </div>
                                     <table class="table-striped table-hover" id="tabla_clientes_liberar">
-                                                <thead>
-                                                    <tr>
-                                                        <th>PROYECTO</th>
-                                                        <th>CONDOMINIO</th>
-                                                        <th>LOTE</th>
-                                                        <th>ID LOTE </th>
-                                                        <th>SUPERFICIE</th>
-                                                        <th>PRECIO M2</th>
-                                                        <th>NOMBRE</th>
-                                                        <th>ESTATUS</th>
-                                                        <th>ACCIONES</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
+                                        <thead>
+                                            <tr>
+                                                <th>PROYECTO</th>
+                                                <th>CONDOMINIO</th>
+                                                <th>LOTE</th>
+                                                <th>ID LOTE </th>
+                                                <th>SUPERFICIE</th>
+                                                <th>PRECIO M2</th>
+                                                <th>NOMBRE</th>
+                                                <th>ESTATUS</th>
+                                                <th>ACCIONES</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
                                 </div>
                             </div>
-
                             <!-- fin de nueva tabla libera -->
                        </div>
-
-
                     </div>
                 </div>
             </div>
