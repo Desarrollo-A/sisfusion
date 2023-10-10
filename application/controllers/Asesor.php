@@ -3003,6 +3003,17 @@ class Asesor extends CI_Controller {
         switch($idMovimiento){
             case in_array($idMovimiento, [31, 85, 102, 104, 107, 108, 109, 111]):
                 
+                if (!$this->validarDocumentosEstatus2($idLote, $tipo_comprobante, $id_cliente)) {
+                    return;
+                }
+                $data = $this->Asesor_model->revisaOU($idLote);
+    
+                if(count($data) >= 1) {
+                    $data['status'] = false;
+                    $data['message'] = 'EN PROCESO DE LIBERACIÓN. No podrás avanzar la solicitud hasta que el proceso de liberación haya concluido';
+                    echo json_encode($data);
+                    return;
+                }
 
                 if($valida_tventa[0]['tipo_venta'] == 1) {
                     if($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 104 || $valida_tventa[0]['idStatusContratacion'] == 2 && $valida_tventa[0]['idMovimiento'] == 108) {

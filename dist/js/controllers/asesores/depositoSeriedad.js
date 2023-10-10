@@ -101,7 +101,7 @@ $(document).on("click", ".getInfo", function (e) {
       (getInfoData[7] == MOVIMIENTOS.NUEVO_APARTADO) ? titulo_modal = "Integración de Expediente - "
     : (getInfoData[7] == MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_2) ? titulo_modal = "Integración de expediente (Rechazo estatus 5 Contraloría) -"
     : (getInfoData[7] == MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_5) ? titulo_modal = "Integración de expediente (Rechazo estatus 5 Contraloría) -"
-    : (getInfoData[7] == MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_6) ? tiulo_modal = "Integración de Expediente (Rechazo estatus 6 Contraloría) -"
+    : (getInfoData[7] == MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_6) ? titulo_modal = "Integración de Expediente (Rechazo estatus 6 Contraloría) -"
     : (getInfoData[7] == MOVIMIENTOS.RECHAZO_VENTAS_ESTATUS_8) ? titulo_modal = "Integración de Expediente (Rechazo estatus 8 Ventas) -"
     : (getInfoData[7] == MOVIMIENTOS.RECHAZO_JURIDICO_ESTATUS_7) ? titulo_modal = "Integración de Expediente (Rechazo estatus 7 Jurídico) -"
     : (getInfoData[7] == MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_5_II) ? titulo_modal = "Integración de expediente (Rechazo estatus 5 Contraloría) -"
