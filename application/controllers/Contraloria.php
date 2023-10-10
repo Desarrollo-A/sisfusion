@@ -1183,7 +1183,7 @@ class Contraloria extends CI_Controller {
         $historialSaltoMovimientos[1]["idCliente"] = $idCliente;
 
         $cliente = $this->Reestructura_model->obtenerClientePorId($idCliente);
-        if ($cliente->proceso === 2 || $cliente->proceso === 4) {
+        if ($cliente->proceso == 2 || $cliente->proceso == 4) {
             $arreglo["idStatusContratacion"] = 8;
             $arreglo["idMovimiento"] = 38;
         }
@@ -1303,7 +1303,9 @@ class Contraloria extends CI_Controller {
             return;
         }
 
-        if (!$this->General_model->updateRecord('lotes', ['status8Flag' => 1], 'idLote', $idLote)) {
+        $numContrato = $this->generarNumContrato($idLote);
+
+        if (!$this->General_model->updateRecord('lotes', ['status8Flag' => 1, 'numContrato' => $numContrato], 'idLote', $idLote)) {
             $data['message'] = 'ERROR';
             echo json_encode($data);
             return;
@@ -1612,7 +1614,7 @@ class Contraloria extends CI_Controller {
         $historialSaltoMovimientos[1]["idCliente"] = $idCliente;
 
         $cliente = $this->Reestructura_model->obtenerClientePorId($idCliente);
-        if ($cliente->proceso === 2 || $cliente->proceso === 4) {
+        if ($cliente->proceso == 2 || $cliente->proceso == 4) {
             $arreglo["idStatusContratacion"] = 8;
             $arreglo["idMovimiento"] = 38;
         }
@@ -1657,7 +1659,9 @@ class Contraloria extends CI_Controller {
             return;
         }
 
-        if (!$this->General_model->updateRecord('lotes', ['status8Flag' => 1], 'idLote', $idLote)) {
+        $numContrato = $this->generarNumContrato($idLote);
+
+        if (!$this->General_model->updateRecord('lotes', ['status8Flag' => 1, 'numContrato' => $numContrato], 'idLote', $idLote)) {
             $data['message'] = 'ERROR';
             echo json_encode($data);
             return;
@@ -1885,7 +1889,7 @@ class Contraloria extends CI_Controller {
         $historialSaltoMovimientos[1]["idCliente"] = $idCliente;
 
         $cliente = $this->Reestructura_model->obtenerClientePorId($idCliente);
-        if ($cliente->proceso === 2 || $cliente->proceso === 4) {
+        if ($cliente->proceso == 2 || $cliente->proceso == 4) {
             $arreglo["idStatusContratacion"] = 8;
             $arreglo["idMovimiento"] = 38;
         }
@@ -1929,7 +1933,9 @@ class Contraloria extends CI_Controller {
             return;
         }
 
-        if (!$this->General_model->updateRecord('lotes', ['status8Flag' => 1], 'idLote', $idLote)) {
+        $numContrato = $this->generarNumContrato($idLote);
+
+        if (!$this->General_model->updateRecord('lotes', ['status8Flag' => 1, 'numContrato' => $numContrato], 'idLote', $idLote)) {
             $data['message'] = 'ERROR';
             echo json_encode($data);
             return;
@@ -2508,7 +2514,7 @@ class Contraloria extends CI_Controller {
         $historialSaltoMovimientos[1]["idCliente"] = $idCliente;
 
         $cliente = $this->Reestructura_model->obtenerClientePorId($idCliente);
-        if ($cliente->proceso === 2 || $cliente->proceso === 4) {
+        if ($cliente->proceso == 2 || $cliente->proceso == 4) {
             $arreglo["idStatusContratacion"] = 8;
             $arreglo["idMovimiento"] = 38;
         }
@@ -2552,7 +2558,9 @@ class Contraloria extends CI_Controller {
             return;
         }
 
-        if (!$this->General_model->updateRecord('lotes', ['status8Flag' => 1], 'idLote', $idLote)) {
+        $numContrato = $this->generarNumContrato($idLote);
+
+        if (!$this->General_model->updateRecord('lotes', ['status8Flag' => 1, 'numContrato' => $numContrato], 'idLote', $idLote)) {
             $data['message'] = 'ERROR';
             echo json_encode($data);
             return;
@@ -3444,5 +3452,18 @@ class Contraloria extends CI_Controller {
 
             $data['message'] = 'OK';
             echo json_encode($data);
+    }
+
+    public function generarNumContrato($idLote): string
+    {
+        $infoLote = $this->Contraloria_model->getNameLote($idLote);
+
+        $proyecto = str_replace(' ', '', $infoLote->nombreResidencial);
+        $arr = explode("_", str_replace("ñ", "N", strtoupper($infoLote->nombreCondominio)));
+        $clusterClean = implode("",$arr);
+        $lote = str_replace(' ', '', $clusterClean);
+        $numeroLote = preg_replace('/[^0-9]/','',$infoLote->nombreLote);
+
+        return $proyecto.$lote.$numeroLote;
     }
 }

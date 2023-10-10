@@ -93,8 +93,8 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
-                                <label class="control-label">TELEFONO (<small style="color: red;">*</small>)</label>
-                                <input class="form-control input-gral" name="telefonoCli" id="telefonoCli" type="number" required/>
+                                <label class="control-label">TELÉFONO (<small style="color: red;">*</small>)</label>
+                                <input class="form-control input-gral" name="telefonoCli" id="telefonoCli" type="number" maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" required/>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
                                 <label class="control-label">CORREO (<small style="color: red;">*</small>)</label>
@@ -116,7 +116,7 @@
                         <div class="row">
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
                                 <label class="control-label">INE (<small style="color: red;">*</small>)</label>
-                                <input class="form-control input-gral" name="ineCLi" id="ineCLi" type="text" required/>
+                                <input class="form-control input-gral" name="ineCLi" id="ineCLi" type="number" maxlength="13" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" required/>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m.0">
                                 <label class="control-label">OCUPACIÓN (<small style="color: red;">*</small>)</label>

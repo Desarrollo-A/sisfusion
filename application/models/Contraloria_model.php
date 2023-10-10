@@ -120,7 +120,7 @@ class Contraloria_model extends CI_Model {
     }
 
     function get_enganches(){
-        return $this->db->query("SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo IN (104, 105) AND estatus = 1 ORDER BY id_catalogo");
+        return $this->db->query("SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo IN (104, 103) AND estatus = 1 ORDER BY id_catalogo");
     }
 
     public function registroStatusContratacion6 () {
