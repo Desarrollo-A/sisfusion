@@ -1505,4 +1505,23 @@ class Reestructura extends CI_Controller{
         
         return $this->General_model->updateBatch('lotes', $arrayLotes, 'idLote');
     }
+
+    public function inventario(){
+		$this->load->view('template/header');
+        $this->load->view("reestructura/inventario_view");
+	}
+
+    public function getInventario() {
+        echo json_encode($this->Reestructura_model->getInventario());
+    }
+
+    public function reporteVentas(){
+		$this->load->view('template/header');
+        $this->load->view("reestructura/reporteVentas_view");
+	}
+
+    public function getReporteVentas() {
+        echo json_encode($this->Reestructura_model->getReporteVentas());
+    }
+    
 }

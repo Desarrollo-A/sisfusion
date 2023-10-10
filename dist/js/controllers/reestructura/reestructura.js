@@ -338,31 +338,33 @@ function fillTable(index_proyecto) {
     tabla_valores_cliente = $("#tabla_clientes").DataTable({
         width: '100%',
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        buttons: [{
-        text: '<i class="fas fa-tags"></i> CATÁLOGO',
-            action: function() {
-                open_Mb();
+        buttons: [
+            {
+                text: '<i class="fas fa-tags"></i> CATÁLOGO',
+                    action: function() {
+                        open_Mb();
+                    },
+                    attr: {
+                        class: 'btn btn-azure',
+                        style: 'position: relative; float: right',
+                    },
             },
-            attr: {
-                class: 'btn btn-azure',
-                style: 'position: relative; float: right',
-            },
-        },
-        {
-        extend: 'excelHtml5',
-        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-        className: 'btn buttons-excel',
-        titleAttr: 'Reestructuración',
-        title: 'Reestructuración',
-            exportOptions: {
-                columns: [0,1,2,3,4,5,6,7,8],
-                format: {
-                    header: function (d, columnIdx) {
-                        return ' '+titulos_intxt[columnIdx] +' ';
+            {
+                extend: 'excelHtml5',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                className: 'btn buttons-excel',
+                titleAttr: 'Reestructuración',
+                title: 'Reestructuración',
+                exportOptions: {
+                    columns: [0,1,2,3,4,5,6,7],
+                    format: {
+                        header: function (d, columnIdx) {
+                            return ' '+titulos_intxt[columnIdx] +' ';
+                        }
                     }
-                }
-            },
-        }],
+                },
+            }
+        ],
         pagingType: "full_numbers",
         language: {
             url: general_base_url + "static/spanishLoader_v2.json",
@@ -381,83 +383,34 @@ function fillTable(index_proyecto) {
         ordering: false,
         fixedColumns: true,
         destroy: true,
-        columns: [{
-            data: function (d) {
-                return '<p class="m-0">' + d.nombreResidencial + '</p>';
-            }
-        },
-        {
-            data: function (d) {
-                return '<p class="m-0">' + d.condominio + '</p>';
-            }
-        },
-        {
-            data: function (d) {
-                return '<p class="m-0">' + d.nombreLote + '</p>';
-            }
-        },
-        {
-            data: function (d) {
-                return '<p class="m-0">' + d.idLote + '</p>';
-            }
-        },
-        {
-            data: function (d) {
-                return '<p class="m-0">' + d.superficie + '</p>';
-            }
-        },
-        {
-            data: function (d){
-                return '<p class="m-0">' + formatMoney(d.precio) + '</p>';
-            }
-        },
-        {
-            data: function (d){
-                if (d.nombreCliente === null || d.nombreCliente.trim() === '') {
-                    return '<p class="m-0">SIN ESPECIFICAR</p>';
+        columns: [
+            { data: "nombreResidencial" },
+            { data: "nombreCondominio" },
+            { data: "nombreLote" },
+            { data: "idLote" },
+            { data: "superficie" },
+            { data: "precio" },
+            { data: "nombreCliente" },
+            { data: "estatus" },
+            {
+                data: function (d) {
+                    return `<span class="label" style="background:#${d.background_sl}18; color:#${d.color};">${d.estatusContratacion}</span>`;
                 }
-                return '<p class="m-0">' + d.nombreCliente + '</p>'
-            }
-        },
-        {
-            data: function (d){
-                if(d.nombreOp !=  null){
-                    return '<p class="m-0">' + d.nombreOp + '</p>'
-                }else{
-                    return '<p class="m-0">N/A</p>'
+            },
+            { data: "comentarioReubicacion" },
+            {
+                data: function (d) {
+                    if(d.idStatusLote ==  15) { // MJ: ESTÁ LIBERADO
+                        return `<div class="d-flex justify-center"><button class="btn-data btn-deepGray stat5Rev" data-toggle="tooltip" data-placement="top" title= "VALIDAR REESTRUCTURACIÓN" data-idLote="${d.idLote}"><i class="fas fa-edit"></i></button>
+                        <button class="btn-data btn-blueMaderas reesInfo" data-toggle="tooltip" data-placement="top" data-idLote="${d.idLote}" title="HISTORIAL"><i class="fas fa-info"></i></button></div>`;
+                    } else {
+                        return `<div class="d-flex justify-center"><button class="btn-data btn-green reesVal" data-toggle="tooltip" data-placement="top" title= "LIBERAR LOTE" data-idLote="${d.idLote}" data-nombreLote="${d.nombreLote}" data-precio="${d.precio}"><i class="fas fa-thumbs-up"></i></button>
+                        <button class="btn-data btn-deepGray stat5Rev" data-toggle="tooltip" data-placement="top" title= "VALIDAR REESTRUCTURACIÓN" data-idLote="${d.idLote}"><i class="fas fa-edit"></i></button>
+                        <button class="btn-data btn-blueMaderas reesInfo" data-toggle="tooltip" data-placement="top" data-idLote="${d.idLote}" title="HISTORIAL"><i class="fas fa-info"></i></button></div>`;
+                    }
                 }
             }
-        },
-        {
-            data: function (d){
-                if(d.comentarioReubicacion != null && d.comentarioReubicacion != 'NULL'){
-                    return '<p class="m-0">' + d.comentarioReubicacion + '</p>'
-                }else{
-                    return '<p class="m-0"> - </p>'
-                }
-            }
-        },
-        {
-            data: function (d) {
-                if(d.liberadoReubicacion == "LIBERACIÓN JURÍDICA"){
-                    return '<span class="label lbl-green">LIBERACIÓN JURÍDICA</span>';
-                }else{
-                    return '<span class="label lbl-azure">SIN OBSERVACIONES</span>';
-                }
-            }
-        },
-        {
-            data: function (d) {
-                if(d.liberadoReubicacion ==  "LIBERACIÓN JURÍDICA"){
-                    return '<div class="d-flex justify-center"><button class="btn-data btn-deepGray stat5Rev" data-toggle="tooltip" data-placement="top" title= "VALIDAR REESTRUCTURACIÓN" data-idLote="' +d.idLote+ '"><i class="fas fa-edit"></i></button>'
-                    +'<button class="btn-data btn-blueMaderas reesInfo" data-toggle="tooltip" data-placement="top" data-idLote="' +d.idLote+ '" title="HISTORIAL"><i class="fas fa-info"></i></button></div>';
-                }else{
-                    return '<div class="d-flex justify-center"><button class="btn-data btn-green reesVal" data-toggle="tooltip" data-placement="top" title= "LIBERAR LOTE" data-idLote="' +d.idLote+ '" data-nombreLote="' +d.nombreLote+ '" data-precio="' +d.precio+ '"><i class="fas fa-thumbs-up"></i></button>'
-                    +'<button class="btn-data btn-deepGray stat5Rev" data-toggle="tooltip" data-placement="top" title= "VALIDAR REESTRUCTURACIÓN" data-idLote="' +d.idLote+ '"><i class="fas fa-edit"></i></button>'
-                    +'<button class="btn-data btn-blueMaderas reesInfo" data-toggle="tooltip" data-placement="top" data-idLote="' +d.idLote+ '" title="HISTORIAL"><i class="fas fa-info"></i></button></div>';
-                }
-            }
-        }],
+        ],
         columnDefs: [{
             defaultContent: "",
             targets: "_all",
@@ -647,6 +600,14 @@ $('#proyectoLiberado').change(function () {
 
     fillTable1(index_proyecto);
 });
+$('#proyectoLiberado').change(function () {
+    let index_proyecto = $(this).val();
+
+    $("#spiner-loader").removeClass('hide');
+    $("#tabla_clientes_liberar").removeClass('hide');
+
+    fillTable1(index_proyecto);
+});
 
 function fillTable1(index_proyecto) {
     tabla_valores_cliente = $("#tabla_clientes_liberar").DataTable({
@@ -765,7 +726,7 @@ function fillTable1(index_proyecto) {
             orderable: false
         }],
         ajax: {
-            url: general_base_url + "Reestructura/obtenerRegistrosLiberar",
+            url: general_base_url + "Reestructura/getRegistros",
             dataSrc: "",
             type: "POST",
             cache: false,
