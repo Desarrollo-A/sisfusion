@@ -716,7 +716,22 @@ class Reestructura extends CI_Controller{
                 $dataCliente = array_merge([$clave =>  0], $dataCliente);
                 continue;
             } else if ($clave == 'id_cliente_reubicacion_2') {
-                $dataCliente = array_merge([$clave =>  $clienteAnterior->id_cliente], $dataCliente);
+                $dataCliente = array_merge([$clave => $clienteAnterior->id_cliente], $dataCliente);
+                continue;
+            } else if ($clave == 'fechaApartado'){
+                $dataCliente = array_merge([$clave => date('Y-m-d H:i:s')], $dataCliente);
+                continue;
+            } else if ($clave == 'fechaVencimiento'){
+                $dataCliente = array_merge([$clave => $this->validateVencimiento() ], $dataCliente);
+                continue;
+            } else if ($clave == 'fecha_creacion'){
+                $dataCliente = array_merge([$clave => date('Y-m-d H:i:s')], $dataCliente);
+                continue;
+            } else if ($clave == 'fecha_modificacion'){
+                $dataCliente = array_merge([$clave => date('Y-m-d H:i:s')], $dataCliente);
+                continue;
+            } else if ($clave == 'creado_por'){
+                $dataCliente = array_merge([$clave => $this->session->userdata('id_usuario')], $dataCliente);
                 continue;
             }
 
@@ -853,6 +868,33 @@ class Reestructura extends CI_Controller{
 
         $resultLote = $this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $loteAOcupar);
         return $resultLote;
+    }
+
+    function validateVencimiento(){
+        //SE OBTIENEN LAS FECHAS PARA EL TIEMPO QUE TIENE PARA CUMPLIR LOS ESTATUS EN CADA FASE EN EL SISTEMA
+        $fechaAccion = date("Y-m-d H:i:s");
+        $hoy_strtotime2 = strtotime($fechaAccion);
+        $sig_fecha_dia2 = date('D', $hoy_strtotime2);
+        $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+        //CALCULAMOS LA FECHA DE VENCIMIENTO
+        $fecha = $fechaAccion;
+
+        $i = 0;
+        $vueltas = in_array($sig_fecha_dia2, array("Sat", "Sun")) || in_array($sig_fecha_feriado2, array("01-01", "06-02", "20-03", "01-05", "16-09", "20-11", "19-11", "25-12")) ? 46 : 45;
+        while ($i <= $vueltas) {
+            $hoy_strtotime = strtotime($fecha);
+            $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+            $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+            $sig_fecha_dia = date('D', $sig_strtotime);
+            $sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+            if (!in_array($sig_fecha_dia, array("Sat", "Sun")) || !in_array($sig_fecha_feriado, array("01-01", "06-02", "20-03", "01-05", "16-09", "20-11", "19-11", "25-12"))) {
+                $fecha = $sig_fecha;
+                $i++;
+            }
+            $fecha = $sig_fecha;
+        }
+        return $fecha;
     }
 
     function moverExpediente(
