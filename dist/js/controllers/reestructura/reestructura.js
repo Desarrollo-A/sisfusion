@@ -1,21 +1,19 @@
 $(document).ready(function () {
     $("#tabla_clientes").addClass('hide');
     $('#spiner-loader').removeClass('hide');
+
     $.post(general_base_url + "Reestructura/lista_proyecto",   function (data) {
-        
         var len = data.length;
         const ids = data.map((row) => {
             return row.idResidencial;
         }).join(',');
-
         $("#proyecto").append($('<option>').val(ids).text('SELECCIONAR TODOS'));
-     
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
             var name = data[i]['descripcion'];            
             $("#proyecto").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        
+
         $("#proyecto").selectpicker('refresh');
         $('#spiner-loader').addClass('hide');
     }, 'json');
@@ -31,11 +29,10 @@ $(document).ready(function () {
             var name = data[i]['descripcion'];            
             $("#proyectoLiberado").append($('<option>').val(id).text(name.toUpperCase()));
         }
+
         $("#proyectoLiberado").selectpicker('refresh');
         $('#spiner-loader').addClass('hide');
     }, 'json');
-
-
 
     $.post(general_base_url + "Reestructura/lista_catalogo_opciones", function (data) {
         var len = data.length;
@@ -49,10 +46,8 @@ $(document).ready(function () {
 
 $('#proyecto').change(function () {
     let index_proyecto = $(this).val();
-
     $("#spiner-loader").removeClass('hide');
     $("#tabla_clientes").removeClass('hide');
-
     fillTable(index_proyecto);
 });
 
@@ -570,19 +565,11 @@ function fillTableC(index_proyecto) {
     });
 }
 
-
-
-
-// tabla para liberar segunda tabla inicio 
-
-
 $(document).on('click', '.liberarBandera', function (){
     document.getElementById('liberarBandera').disabled = true;
     var bandera = document.getElementById('bandera').value;
-
     var idLoteBandera = document.getElementById('idLoteBandera').value;
-    console.log(bandera)
-    console.log(idLoteBandera)
+
     $.ajax({
         url : 'cambiarBandera',
         type : 'POST',
@@ -595,8 +582,6 @@ $(document).on('click', '.liberarBandera', function (){
             alerts.showNotification("top", "right", ""+data.message+"", ""+data.response_type+"");
             document.getElementById('liberarBandera').disabled = false;
             $('#tabla_clientes_liberar').DataTable().ajax.reload(null, false );
-
-            // toastr[response.response_type](response.message);
             $('#banderaLiberar').modal('toggle');
         },
         error : (a, b, c) => {
@@ -608,17 +593,14 @@ $(document).on('click', '.liberarBandera', function (){
 
 $(document).on('click', '.cambiarBandera', function (){
     let bandera  = '¿Estás seguro de LIBERAR el lote para reestructura?';
-  
     lote   = $(this).attr("data-idLote");
     activoDetenido  = $(this).attr("data-bandera");
+
     if(activoDetenido == 0){ 
         bandera = '¿Estás seguro de REGRESAR el lote del proceso de reestructura?';
-     
     }
- 
-    
+
     document.getElementById("tituloAD").innerHTML =   bandera;
- 
     document.getElementById("bandera").value = activoDetenido;
     document.getElementById("idLoteBandera").value = lote;
 
@@ -689,47 +671,39 @@ function fillTable1(index_proyecto) {
         columns: [{
             data: function (d) {
                 return '<p class="m-0">' + d.nombreResidencial + '</p>';
-                // proyecto
             }
         },
         {
             data: function (d) {
                 return '<p class="m-0">' + d.condominio + '</p>';
-            // condominio
             }
         },
         {
             data: function (d) {
                 return '<p class="m-0">' + d.nombreLote + '</p>';
-            /// lote
             }
         },
         {
             data: function (d) {
                 return '<p class="m-0">' + d.idLote + '</p>';
-            // IDlote
             }
         },
         {
             data: function (d) {
                 return '<p class="m-0">' + d.superficie + '</p>';
-            // superficie
             }
         },
         {
             data: function (d){
                 return '<p class="m-0">' + formatMoney(d.precio) + '</p>';
-        //    precio
             }
         },
         {
             data: function (d){
                 if (d.nombreCliente == null || d.nombreCliente == '' || d.nombreCliente == ' ') {
                     return '<p class="m-0">SIN ESPECIFICAR</p>';
-        
                 }
                 return '<p class="m-0"> ' + d.nombreCliente + '</p>'
-            // NOMBRE
             }
         },
         {
@@ -740,7 +714,6 @@ function fillTable1(index_proyecto) {
                 }else if(d.liberaBandera == 0){
                     return '<p class="m-0">SIN LIBERAR</p>';
                 }      
-            // NOMBRE
             }
         },
         {
@@ -787,6 +760,3 @@ function fillTable1(index_proyecto) {
         });
     });
 }
-
-
-// fin de la segunda tabla 

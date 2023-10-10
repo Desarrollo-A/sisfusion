@@ -204,7 +204,7 @@ class Reestructura_model extends CI_Model
         UNION ALL
         (SELECT aud.id_auditoria, aud.anterior, aud.nuevo, aud.fecha_creacion, CONCAT(usu.nombre,' ', usu.apellido_paterno,' ', usu.apellido_materno) AS creado_por from auditoria aud
         INNER JOIN usuarios usu on usu.id_usuario = aud.creado_por
-        where aud.anterior != 'NULL' AND tabla = 'lotes'  and col_afect = 'comentario' and id_parametro = $id_prospecto)");
+        where aud.anterior != 'NULL' AND tabla = 'lotes'  and col_afect = 'comentarioReubicacion' and id_parametro = $id_prospecto)");
     }
 
     public function aplicaLiberacion($datos){

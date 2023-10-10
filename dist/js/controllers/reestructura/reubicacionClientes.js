@@ -359,15 +359,15 @@ $(document).on('click', '.infoUser', function (){
 
     $.getJSON("getCliente/" + idCliente + "/" + idLote  , function(data) {
         
-        $('#nombreCli').val(data.nombre);
-        $('#apellidopCli').val(data.apellido_paterno);
-        $('#apellidomCli').val(data.apellido_materno);
-        $('#telefonoCli').val(data.telefono1);
-        $('#correoCli').val(data.correo);
-        $('#domicilioCli').val(data.domicilio_particular);
+        const nombreLote = data.nombre;
+        const apePaterno = data.apellido_paterno;
+        const apeMaterno = data.apellido_materno;
+        const telefono = data.telefono1;
+        const correo = data.correo;
+        const domicilio = data.domicilio_particular;
         $("#estadoCli").append($('<option selected>').val(data.idEstadoC).text(data.estado_civil));
-        $('#ocupacionCli').val(data.ocupacion);
-        $('#ineCLi').val(data.ine);
+        const ocupacion= data.ocupacion;
+        const ine = data.ine;
 
         $.post("getEstadoCivil", function(data) {
             var len = data.length;
@@ -384,7 +384,67 @@ $(document).on('click', '.infoUser', function (){
             $("#estadoCli").selectpicker('refresh');
         }, 'json');
 
-        $('#clienteConsulta').modal();
+        // $('#clienteConsulta').modal();
+
+        changeSizeModal('modal-md');
+        appendBodyModal(`<div class="modal-header">
+                    <h4 class="modal-title text-center">Corrobora la información del cliente</h4>
+                </div>	
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                            <label class="control-label">NOMBRE (<small style="color: red;">*</small>)</label>
+                            <input class="form-control input-gral" name="nombreCli" id="nombreCli" type="text" value="${nombreLote}" required/>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                            <label class="control-label">APELLIDO PATERNO (<small style="color: red;">*</small>)</label>
+                            <input class="form-control input-gral" name="apellidopCli" id="apellidopCli" value="${apePaterno}" type="text" required/>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                            <label class="control-label">APELLIDO MATERNO (<small style="color: red;">*</small>)</label>
+                            <input class="form-control input-gral" name="apellidomCli" id="apellidomCli" type="text" value="${apeMaterno}" required/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
+                            <label class="control-label">TELÉFONO (<small style="color: red;">*</small>)</label>
+                            <input class="form-control input-gral" name="telefonoCli" id="telefonoCli" type="number" maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" value="${telefono}" required/>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
+                            <label class="control-label">CORREO (<small style="color: red;">*</small>)</label>
+                            <input class="form-control input-gral" name="correoCli" id="correoCli" type="text" value="${correo}" required/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                            <label class="control-label">DOMICILIO (<small style="color: red;">*</small>)</label>
+                            <input class="form-control input-gral" name="domicilioCli" id="domicilioCli" type="text" value="${domicilio}" required/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                            <label class="control-label">ESTADO CIVIL (<small style="color: red;">*</small>)</label>
+                            <select name="estadoCli" title="SELECCIONA UNA OPCIÓN" id="estadoCli" class="selectpicker m-0 select-gral" data-container="body" data-width="100%" required></select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
+                            <label class="control-label">INE (<small style="color: red;">*</small>)</label>
+                            <input class="form-control input-gral" name="ineCLi" id="ineCLi" type="number" maxlength="13" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" value="${ine}" required/>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m.0">
+                            <label class="control-label">OCUPACIÓN (<small style="color: red;">*</small>)</label>
+                            <input class="form-control input-gral" name="ocupacionCli" id="ocupacionCli" type="text" value="${ocupacion}" required/>
+                        </div>
+                    </div>        
+                    <input type="hidden" name="idCliente" id="idCliente">
+                    <input type="hidden" name="idLote" id="idLote">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="cancelarValidacion" class="btn btn-danger btn-simple cancelarValidacion" data-dismiss="modal">Cancelar</button>
+                    <button type="button" id="guardarCliente" name="guardarCliente" class="btn btn-primary guardarValidacion">GUARDAR</button>
+                </div>`);
+        showModal();
     }, 'json');
 });
 
@@ -401,12 +461,12 @@ $(document).on('click', '#guardarCliente', function (){
     var ocupacionCli = $('#ocupacionCli').val();
 
     if(ineCLi == ''){
-        alerts.showNotification("top", "right", "Captura el número INE", "warning");
+        alerts.showNotification("top", "right", "", "warning");
         return;
     }
 
     if (telefonoCli == '' || telefonoCli == null){
-        alerts.showNotification("top", "right", "Captura el número de teléfono", "warning");
+        alerts.showNotification("top", "right", "El número de el INE debe tener 13 caracteres", "warning");
         return;
     }
 
