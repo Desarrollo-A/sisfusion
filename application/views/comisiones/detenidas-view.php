@@ -23,18 +23,19 @@
                                     <div class="form-group">
                                         <table class="table-striped table-hover"id="comisiones-detenidas-table">
                                             <thead>
-                                                <tr>
+                                            <tr>
                                                     <th></th>
                                                     <th>PROYECTO</th>
                                                     <th>CONDOMINIO</th>
                                                     <th>LOTE</th>
                                                     <th>ID LOTE</th>
+                                                    <th>CLIENTE</th>
                                                     <th>TIPO DE VENTA</th>
                                                     <th>MODALIDAD</th>
                                                     <th>CONTRATACIÓN</th>
                                                     <th>PLAN DE VENTA</th>
-                                                    <th>FECHA DE MOVIMIENTO</th> 
-                                                    <th>MOTIVO</th>
+                                                    <th>DETALLES</th>
+                                                    <th>FECHA ACTUALIZACIÓN</th>
                                                     <th>ACCIONES</th>
                                                 </tr>
                                             </thead>
