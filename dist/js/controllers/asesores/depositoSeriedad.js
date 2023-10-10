@@ -472,9 +472,12 @@ $(document).on('click', '#save1', function(e) {
                 
                 if(response.status)
                     alerts.showNotification("top", "right", response.message, "success");
-                else{
+                else
                     alerts.showNotification("top", "right", response.message, "danger");
-                }
+                
+                $('#save1').prop('disabled', false);
+                $('#modal1').modal('hide');
+                $('#tabla_deposito_seriedad').DataTable().ajax.reload();
             },
             error: function(){
                 $('#save1').prop('disabled', false);

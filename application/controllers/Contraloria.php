@@ -719,7 +719,6 @@ class Contraloria extends CI_Controller {
         else if(in_array($idMovimiento, [74, 93])){
             $idMovRegistro = 75;
         }
-
         
         $arreglo["idStatusContratacion"]= 5;
         $arreglo["idMovimiento"]=$idMovRegistro;
@@ -863,17 +862,16 @@ class Contraloria extends CI_Controller {
             if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){
                 $data['status'] = true;
                 $data['message'] = "Estatus enviado";
-                echo json_encode($data);
             }else{
                 $data['status'] = false;
                 $data['message'] = "Error al enviar la solicitud";
-                echo json_encode($data);
             }
         }else {
             $data['status'] = false;
             $data['message'] = "El estatus ya fue registrado";
-            echo json_encode($data);
         }
+
+        echo json_encode($data);
     }
 
     public function editar_registro_lote_contraloria_proceceso6() {
