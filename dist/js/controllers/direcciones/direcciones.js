@@ -52,7 +52,7 @@ $(document).on("click", "#btn_aceptar", function () {
     contentType: false,
     success: function (data) {
       if (data == 1) {
-        $("#catalogo_datatable").DataTable().ajax.reload(null, false);
+        $("#direcciones_datatable").DataTable().ajax.reload(null, false);
         $("#spiner-loader").addClass("hide"); 
         alerts.showNotification("top", "right", "Opcion editada correctamente.", "success");
         $("#id_direccion").val("");
@@ -231,10 +231,10 @@ function fillCatalogosTable() {
             titleAttr: "Direcciones",
             title: "Direcciones",
             exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+              columns: [0, 1, 2, 3, 4, 5, 6, 7],
               format: {
                 header: function (d, columnIdx) {
-                  return " " + titulos_intxt[columnIdx] + " ";
+                  return " " + titulos_intxtLiberado[columnIdx] + " ";
                 },
               },
             },
@@ -306,7 +306,11 @@ function fillCatalogosTable() {
         },
         {
           data: function (d) {
-              return '<p class="m-0">' + d.estatus + "</p>";
+            if (d.estatus == 1) {
+              return '<center><span class="label lbl-green">ACTIVO</span><center>';
+            } else {
+              return '<center><span class="label lbl-warning">INACTIVO</span><center>';
+            }
           },
         },
         {

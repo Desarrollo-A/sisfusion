@@ -40,10 +40,9 @@
                 </div>
                 <div class="modal-body d-flex justify-center">
                     <div class="row">
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                             <label class="d-flex justify-center">DIRECCION(<span class="text-danger">*</span>)</label>
-                            <input type="text" class="form-control input-gral mt-3" id="direccion" name="direccion"
-                                required>
+                            <input type="text" class="form-control input-gral mt-3" id="direccion" name="direccion" required>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                             <label class="d-flex justify-center pb-2" for="id_sede">ESTADO(<span
