@@ -38,9 +38,9 @@ class Reestructura extends CI_Controller{
         echo json_encode($data);
     }
 
-    public function getCliente($idCliente){
-        $data = $this->Reestructura_model->getCliente($idCliente);
-        echo json_encode($data);
+    public function getCliente($idCliente, $idLote){
+        $datCliente = $this->Reestructura_model->getDatosCliente($idLote);
+        echo ($datCliente == '') ? json_encode($this->Reestructura_model->getCliente($idCliente)) : json_encode($datCliente);
     }
     
     public function getEstadoCivil(){
@@ -172,28 +172,40 @@ class Reestructura extends CI_Controller{
 		} 
 	}
 
-    public function insetarCliente (){
+    public function insetarCliente ($idLote){
 
         $dataPost = $_POST;
         $datos["idLote"] = $dataPost['idLote'];
-		$datos["nombreCli"] = $dataPost['nombreCli'];
-		$datos["apellidopCli"] = $dataPost['apellidopCli'];
-		$datos["apellidomCli"] = $dataPost['apellidomCli'];
-        $datos["telefonoCli"] = $dataPost['telefonoCli'];
-        $datos["correoCli"] = $dataPost['correoCli'];
-        $datos["domicilioCli"] = $dataPost['domicilioCli'];
-        $datos["estadoCli"] = $dataPost['estadoCli'];
-        $datos["ineCLi"] = $dataPost['ineCLi'];
-        $datos["ocupacionCli"] = $dataPost['ocupacionCli'];
-		$update = $this->Reestructura_model->insertarCliente($datos);
+		$datos["nombre"] = $dataPost['nombreCli'];
+		$datos["apellido_paterno"] = $dataPost['apellidopCli'];
+		$datos["apellido_materno"] = $dataPost['apellidomCli'];
+        $datos["telefono1"] = $dataPost['telefonoCli'];
+        $datos["correo"] = $dataPost['correoCli'];
+        $datos["domicilio_particular"] = $dataPost['domicilioCli'];
+        $datos["estado_civil"] = $dataPost['estadoCli'];
+        $datos["ine"] = $dataPost['ineCLi'];
+        $datos["ocupacion"] = $dataPost['ocupacionCli'];
+        $datCliente = $this->Reestructura_model->getDatosCliente($idLote);
 
-		if ($update == TRUE) {
-			$response['message'] = 'SUCCESS';
-			echo json_encode(1);
-		} else {
-			$response['message'] = 'ERROR';
-			echo json_encode(0);
-		} 
+        if($datCliente == ''){
+            $insert = $this->Reestructura_model->insertarCliente($datos);
+            if ($insert == TRUE) {
+                $response['message'] = 'SUCCESS';
+                echo json_encode(1);
+            } else {
+                $response['message'] = 'ERROR';
+                echo json_encode(0);
+            }
+        }else{
+            $update = $this->General_model->updateRecord('datos_x_cliente', $datos, 'idLote', $idLote);
+            if ($update == TRUE) {
+                $response['message'] = 'SUCCESS';
+                echo json_encode(1);
+            } else {
+                $response['message'] = 'ERROR';
+                echo json_encode(0);
+            }
+        } 
     }
 
 	public function getRegistros(){
@@ -322,8 +334,10 @@ class Reestructura extends CI_Controller{
             return;
         }
 
+        $documentacionOriginal = $this->Reestructura_model->obtenerDocumentacionOriginal($clienteAnterior->personalidad_juridica);
         if (!$this->moverExpediente(
-            $clienteAnterior->idLote, $loteAOcupar, $idClienteAnterior, $idClienteInsert, $expediente, $loteNuevoInfo, $documentacionActiva
+            $documentacionOriginal, $clienteAnterior->idLote, $loteAOcupar, $idClienteAnterior, $idClienteInsert,
+            $expediente, $loteNuevoInfo, $documentacionActiva
         )) {
             $this->db->trans_rollback();
 
@@ -629,7 +643,9 @@ class Reestructura extends CI_Controller{
         }
 
         $expediente = $this->Reestructura_model->obtenerDocumentacionPorReubicacion($clienteAnterior->personalidad_juridica);
-        if (!$this->moverExpediente($clienteAnterior->idLote, $loteAOcupar, $idClienteAnterior, $idClienteInsert, $expediente)) {
+        $documentacionOriginal = $this->Reestructura_model->obtenerDocumentacionOriginal($clienteAnterior->personalidad_juridica);
+
+        if (!$this->moverExpediente($documentacionOriginal, $clienteAnterior->idLote, $loteAOcupar, $idClienteAnterior, $idClienteInsert, $expediente)) {
             $this->db->trans_rollback();
 
             echo json_encode([
@@ -840,7 +856,9 @@ class Reestructura extends CI_Controller{
     }
 
     function moverExpediente(
-        $idLoteAnterior, $idLoteNuevo, $idClienteAnterior, $idClienteNuevo, $expedienteNuevo, $loteInfo = null, $docInfo = null): bool
+        $documentacionOriginal, $idLoteAnterior, $idLoteNuevo, $idClienteAnterior, $idClienteNuevo, $expedienteNuevo,
+        $loteInfo = null, $docInfo = null
+    ): bool
     {
         $loteAnteriorInfo = $this->Reestructura_model->obtenerLotePorId($idLoteAnterior);
         $loteNuevoInfo = (is_null($loteInfo))
@@ -852,7 +870,7 @@ class Reestructura extends CI_Controller{
 
         $documentacion = [];
         $modificado = date('Y-m-d H:i:s');
-        $documentosSinPasar = (is_null($docInfo)) ? [7,8,'7','8'] : [];
+        $documentosSinPasar = (is_null($docInfo)) ? [7, 8, '7', '8'] : [];
 
         $ubicacionFolder = "static/documentos/contratacion-reubicacion/$loteNuevoInfo->nombreLote/";
 
@@ -903,6 +921,30 @@ class Reestructura extends CI_Controller{
             ];
         }
 
+        // Crear las ramas extras que no se tengan en el expediente anterior
+        foreach ($documentacionOriginal as $doc) {
+            $index = in_array($doc['id_opcion'], array_column($documentacion, 'tipo_doc'));
+
+            if ($index !== false) {
+                continue;
+            }
+
+            $documentacion[] = [
+                'movimiento' => $doc['nombre'],
+                'expediente' => null,
+                'modificado' => $modificado,
+                'status' => 1,
+                'idCliente' => $idClienteNuevo,
+                'idCondominio' => $loteNuevoInfo->idCondominio,
+                'idLote' => $idLoteNuevo,
+                'idUser' => NULL,
+                'tipo_documento' => 0,
+                'id_autorizacion' => 0,
+                'tipo_doc' => $doc['id_opcion'],
+                'estatus_validacion' => 0
+            ];
+        }
+
         // Ciclo para las nuevas ramas a agregar
         foreach ($expedienteNuevo as $doc) {
             if ($doc['id_opcion'] == 33) {
@@ -910,12 +952,12 @@ class Reestructura extends CI_Controller{
 
                 copy(
                     "static/documentos/contratacion-reubicacion-temp/$loteAnteriorInfo->nombreLote/RESCISIONES/$expRescision->rescision",
-                    $ubicacionFolder.'RESCISION-'.$expRescision->rescision
+                    $ubicacionFolder.$expRescision->rescision
                 );
 
                 $documentacion[] = [
                     'movimiento' => $doc['nombre'],
-                    'expediente' => 'RESCISION-'.$expRescision->rescision,
+                    'expediente' => $expRescision->rescision,
                     'modificado' => $modificado,
                     'status' => 1,
                     'idCliente' => $idClienteNuevo,
@@ -1499,4 +1541,23 @@ class Reestructura extends CI_Controller{
         
         return $this->General_model->updateBatch('lotes', $arrayLotes, 'idLote');
     }
+
+    public function inventario(){
+		$this->load->view('template/header');
+        $this->load->view("reestructura/inventario_view");
+	}
+
+    public function getInventario() {
+        echo json_encode($this->Reestructura_model->getInventario());
+    }
+
+    public function reporteVentas(){
+		$this->load->view('template/header');
+        $this->load->view("reestructura/reporteVentas_view");
+	}
+
+    public function getReporteVentas() {
+        echo json_encode($this->Reestructura_model->getReporteVentas());
+    }
+    
 }

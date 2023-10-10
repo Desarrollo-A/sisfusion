@@ -89,16 +89,34 @@ class Usuarios extends CI_Controller
         "modificado_por" => $this->session->userdata('id_usuario')
         );
 //        print_r($_POST['menu'][0]);
-        foreach ($_POST['menu'] as $index => $elemento){
-            $_POST['menu'][$index] = (array)$elemento;
-            var_dump(json_decode($_POST['menu'][$index][0]));
-            echo'<br><br>';
-        }
-        echo '<br><br>';
+        /*$nuevoArray = array_unique($_POST['menu']);
 
-//        echo'<br><br>';
-//        print_r(json_decode($_POST['menu'][0], true));
-        exit;
+
+
+        if(isset($_POST['seleccionaTodo'])){
+            echo 'Se va a meter el menu completo del perfil<br>';
+        }else{
+            echo 'Selecciones especificas del menú<br>';
+            foreach ($nuevoArray as $index => $elemento) {
+                $nuevoArray[$index] = (array)$elemento;
+                if (json_decode($nuevoArray[$index][0])[0] == 0) {
+                    //es padre
+                    echo 'Es padre:<br>';
+                    print_r(json_decode($nuevoArray[$index][0])[0]);
+                    echo '<br><br>';
+                } else {
+                    //es hijo
+                    echo 'Es hijo:<br>';
+                    print_r(json_decode($nuevoArray[$index][0])[0]);
+                    echo '<br><br>';
+                }
+
+
+                echo '<br><br>';
+            }
+        }
+        echo '<br>';
+        exit;*/
         if (isset($_POST) && !empty($_POST)) {
             $response = $this->Usuarios_modelo->saveUser($data);
             echo json_encode($response);

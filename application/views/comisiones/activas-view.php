@@ -19,24 +19,26 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> <i class="material-icons">clear</i></button>
                     </div>
                     <form method="post" class="row" id="detenidos-form" autocomplete="off">
-                        <div class="modal-body pt-0">
-                            <input type="hidden" name="id_pagoc" id="id-lote-detenido"></input>
-                            <input type="hidden" name="statusLote" id="statusLote"></input>
-                            <input type="hidden"  id="idLote" name="idLote"></input>
+                        <div class="modal-body">
+                            <input type="hidden" name="id_pagoc" id="id-lote-detenido">
+                            <input type="hidden" name="anterior" id="anterior">
+                            <input type="hidden" name="saldoNeodata" id="saldoNeodata">
+                            
                             <div class="col-lg-12" >
-                                <div class="form-group pt-0">
-                                <label for="motivo" class="control-label">Motivo (<span class="isRequired">*</span>)</label>
-                                    <select class="selectpicker select-gral m-0" id="motivo" name="motivo" data-style="btn" title="SELECCIONA UNA OPCIÓN" required>
+                                <div class="form-group">
+                                <label for="motivo" class="control-label mt-0">Motivo (<span class="isRequired">*</span>)</label>
+                                    <select class="selectpicker select-gral" id="motivo" name="motivo" data-style="btn" required title="SELECCIONA UNA OPCIÓN">
                                             <?php foreach($controversias as $controversia){ ?>
                                                 <?php if($controversia['id_opcion'] != 8 ){  ?>
                                                 <option value="<?= $controversia['id_opcion']; ?>"><?= $controversia['nombre'] ?> </option>
-                                            <?php } }?>
+                                            
+                                            <?php }} ?>
                                     </select>
                                 </div>
-                            </div> 
+                            </div>
                             <div class="col-lg-12">
                                 <div class="form-group mt-0">
-                                    <label for="motivo" class="control-label">Detalles de la controversia (<span class="isRequired">*</span>)</label>
+                                    <label class="control-label">Detalles de la controversia (<span class="isRequired">*</span>)</label>
                                     <textarea class="text-modal" id="descripcion" name="descripcion" rows="3" placeholder="Escriba detalles de la controversia." required></textarea>
                                 </div>
                             </div>
@@ -44,7 +46,7 @@
                         <div class="modal-footer">
                             <div class="col-lg-12">
                                 <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                                <button type="submit" id="detenerLote" class="btn btn-primary">Registrar</button>
+                                <button type="submit" id="detenerLote" class="btn btn-primary">Aceptar</button>
                             </div>
                         </div>
                     </form>
@@ -136,7 +138,8 @@
                                                     <th>MODALIDAD</th>
                                                     <th>CONTRATACIÓN</th>
                                                     <th>PLAN DE VENTA</th>
-                                                    <th>ÚLTIMA DISPERSIÓN</th>
+                                                    <th>DETALLES</th>
+                                                    <th>FECHA ACTUALIZACIÓN</th>
                                                     <th>ACCIONES</th>
                                                 </tr>
                                             </thead>

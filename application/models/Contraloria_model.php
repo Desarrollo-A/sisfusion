@@ -237,7 +237,7 @@ class Contraloria_model extends CI_Model {
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
 		else if ($id_sede == 5) // CONTRALORÍA LEÓN TAMBIÉN VE EXPEDIENTES DE GUADALAJARA
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '12','16')";
-        else if ($id_sede == 4) // CONTRALORÍA CIUDAD DE MÉXICO TAMBIÉN VE EXPEDIENTES DE PUEBLA
+       else if ($id_sede == 2) // CONTRALORÍA QUERÉTARO TAMBIÉN VE EXPEDIENTES DE PUEBLA
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '15')";
 		else
 			$filtroSede = "AND l.ubicacion IN ('$id_sede')";
@@ -383,7 +383,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
             $filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
         else if ($id_sede == 5) // CONTRALORÍA LEÓN TAMBIÉN VE EXPEDIENTES DE GUADALAJARA
             $filtroSede = "AND l.ubicacion IN ('$id_sede', '12','16')";
-        else if ($id_sede == 4) // CONTRALORÍA CIUDAD DE MÉXICO TAMBIÉN VE EXPEDIENTES DE PUEBLA
+        else if ($id_sede == 2) // CONTRALORÍA QUERÉTARO TAMBIÉN VE EXPEDIENTES DE PUEBLA
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '15')";
         else
             $filtroSede = "AND l.ubicacion IN ('$id_sede')";
@@ -420,7 +420,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
 		else if ($id_sede == 5) // CONTRALORÍA LEÓN TAMBIÉN VE EXPEDIENTES DE GUADALAJARA
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '12','16')";
-        else if ($id_sede == 4) // CONTRALORÍA CIUDAD DE MÉXICO TAMBIÉN VE EXPEDIENTES DE PUEBLA
+        else if ($id_sede == 2) // CONTRALORÍA QUERÉTARO TAMBIÉN VE EXPEDIENTES DE PUEBLA
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '15')";
 		else
 			$filtroSede = "AND l.ubicacion IN ('$id_sede')";
@@ -482,7 +482,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
             $filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
         else if ($id_sede == 5) // CONTRALORÍA LEÓN TAMBIÉN VE EXPEDIENTES DE GUADALAJARA
             $filtroSede = "AND l.ubicacion IN ('$id_sede', '12','16')";
-        else if ($id_sede == 4) // CONTRALORÍA CIUDAD DE MÉXICO TAMBIÉN VE EXPEDIENTES DE PUEBLA
+        else if ($id_sede == 2) // CONTRALORÍA QUERÉTARO TAMBIÉN VE EXPEDIENTES DE PUEBLA
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '15')";
         else
             $filtroSede = "AND l.ubicacion IN ('$id_sede')";

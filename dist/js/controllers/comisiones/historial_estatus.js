@@ -314,8 +314,14 @@ function getAssimilatedCommissions(proyecto, condominio, usuario){
                 else{
                     p2 = '';
                 }
-                
-                return p1 + p2 + lblPenalizacion;
+
+                if(d.id_cliente_reubicacion_2 != 0 ) {
+                    p3 = `<p class="${d.colorProcesoCl}">${d.procesoCl}</p>`;
+                }else{
+                    p3 = '';
+                }
+
+                return p1 + p2 + lblPenalizacion + p3;                
             }
         },
         {

@@ -9,41 +9,41 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 class Incidencias extends CI_Controller
 {
   private $gph;
-    public function __construct()
-    {
-        parent::__construct();
-        $this->load->model('Comisiones_model');
-        $this->load->model('Incidencias_model');
-        $this->load->model('asesor/Asesor_model');
-        $this->load->model('Usuarios_modelo');
-        $this->load->model('Incidencias_model');
-        $this->load->model('PagoInvoice_model');
-        $this->load->model('General_model');
-        $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions','phpmailer_lib','permisos_sidebar'));
-        $this->load->helper(array('url', 'form'));
-        $this->load->database('default');
+  public function __construct()
+  {
+    parent::__construct();
+    $this->load->model('Comisiones_model');
+    $this->load->model('Incidencias_model');
+    $this->load->model('asesor/Asesor_model');
+    $this->load->model('Usuarios_modelo');
+    $this->load->model('Incidencias_model');    
+    $this->load->model('PagoInvoice_model');
+    $this->load->model('General_model');
+    $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions','phpmailer_lib','permisos_sidebar'));
+    $this->load->helper(array('url', 'form'));
+    $this->load->database('default');
 
 
-        $this->jwt_actions->authorize('566', $_SERVER['HTTP_HOST']);
-        $this->validateSession();
-
-        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
-        $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
-        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
-    }
+    $this->jwt_actions->authorize('566', $_SERVER['HTTP_HOST']);
+    $this->validateSession(); 
+    $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+    $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+    $rutaUrl = substr($_SERVER["REQUEST_URI"],1); //explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
+    $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl,$this->session->userdata('opcionesMenu'));
+   }
    public function validateSession() {
     if ($this->session->userdata('id_usuario') == "" || $this->session->userdata('id_rol') == "")
       redirect(base_url() . "index.php/login");
   }
 // antes se llamada incidencias se encontraba en comisiones
-    public function index()
-    {
-        $datos["sedes"] = $this->Incidencias_model->sedesCambios();
-
-        $this->load->view('template/header');
-        $this->load->view("incidencias/IncidenciasByLote", $datos);
-    }
+   public function index()
+  {
+    $datos = array();
+    $datos["sedes"] = $this->Incidencias_model->sedesCambios();
+    
+    $this->load->view('template/header');
+    $this->load->view("incidencias/IncidenciasByLote", $datos);
+  }
 
   // se encuentra en comisiones ! 
   
