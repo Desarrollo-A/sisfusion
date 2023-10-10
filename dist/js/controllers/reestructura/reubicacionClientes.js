@@ -163,7 +163,7 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
                             data-tipoLote="${d.tipo_lote}"
                             data-idProyecto="${d.idProyecto}"
                             data-statusPreproceso="${d.id_estatus_preproceso}">
-                            <i class="fas fa-user-edit"></i>
+                            <i class="fas fa-clipboard-list"></i>
                     </button>`;
                 const BTN_AVANCE =  `<button class="btn-data btn-green btn-avanzar"
                     data-toggle="tooltip" 
