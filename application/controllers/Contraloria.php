@@ -2443,7 +2443,7 @@ class Contraloria extends CI_Controller {
         $this->load->view("contraloria/vista_liberacion_contraloria", $datos);
     }
 
-    public function app_lib() {
+    public function app_lib(){
         $res =  $this->Contraloria_model->aplicaLiberaciones($this->input->post('idResidencial'));
         if($res == true){
             $data['message'] = 'OK';
@@ -2454,7 +2454,7 @@ class Contraloria extends CI_Controller {
         }
     }
 
-    public function return1() {
+    public function return1(){
         $idLote=$this->input->post('idLote');
         $idCondominio=$this->input->post('idCondominio');
         $nombreLote=$this->input->post('nombreLote');
@@ -3367,9 +3367,9 @@ class Contraloria extends CI_Controller {
         $idCliente = $this->input->post("idCliente");
         $banderaVC = $this->input->post("vanderaVC");
         $data = $this->Contraloria_model->getLineaVenta($idCliente,$banderaVC);
-       
         echo json_encode($data,JSON_NUMERIC_CHECK);
     }
+    
     public function allUserVentas()
     {
         $datos = $this->Contraloria_model->allUserVentas();

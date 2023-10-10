@@ -277,7 +277,7 @@ class Reestructura extends CI_Controller{
 			'idCondominio' => $clienteAnterior->idCondominio,
 			'idCliente' => $idClienteInsert,
 			'usuario' => $idAsesor,
-			'perfil' => 'ooam',
+			'perfil' => 'EEC',
 			'comentario' => 'OK',
 			'status' => 1
         );
@@ -613,7 +613,7 @@ class Reestructura extends CI_Controller{
 			'idCondominio' => $idCondominio,
 			'idCliente' => $idClienteInsert,
 			'usuario' => $idAsesor,
-			'perfil' => 'ooam',
+			'perfil' => 'EEC',
 			'comentario' => 'OK',
 			'status' => 1
         );
@@ -632,7 +632,6 @@ class Reestructura extends CI_Controller{
 
         if (!$this->copiarDSAnteriorAlNuevo($idClienteAnterior, $idClienteInsert)) {
             $this->db->trans_rollback();
-
 
             echo json_encode([
                 'titulo' => 'ERROR',
@@ -844,7 +843,7 @@ class Reestructura extends CI_Controller{
             'idMovimiento' => 31,
             'comentario' => 'OK',
             'usuario' => $nombreAsesor,
-            'perfil' => 'ooam',
+            'perfil' => 'EEC',
             'modificado' => date('Y-m-d h:i:s'),
             'fechaVenc' => $fechaFull,
             'IdStatusLote' => 3,
@@ -1228,19 +1227,18 @@ class Reestructura extends CI_Controller{
       echo json_encode ($respuesta);             
   
     }
-    function provisional(){
-        $this->load->view('template/header');
-        $this->load->view("reestructura/vistaArchivosP");
-    }
+
     function getListaLotesArchivosReestrucura(){
         $data = $this->Reestructura_model->getListaLotesArchivosReestrucura();
         echo json_encode($data);
     }
+
     function getOpcionesLote(){
 	    $idLote = $this->input->post('idLote');
 	    $data = $this->Reestructura_model->getOpcionesLote($idLote);
         echo json_encode ($data);
     }
+
     function updateArchivos(){
         $flagAction = $_POST['tipoProceso'];
         $arrayLength = $_POST['longArray'];
@@ -1274,7 +1272,6 @@ class Reestructura extends CI_Controller{
             $acceptFiles = 'pdf';
 
         }
-
 
         $arrayData = array();
         $config['upload_path'] = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/'.$carpetaUbicacion;
@@ -1356,9 +1353,11 @@ class Reestructura extends CI_Controller{
             echo json_encode(array());
         }
     }
+
     function eliminaArchivoServer($urlBorrado){
         unlink($urlBorrado);
     }
+
     function actualizaExpecifico(){
         $flagAction = $_POST['tipoProceso'];
         $arrayLength = $_POST['longArray'];
@@ -1425,7 +1424,6 @@ class Reestructura extends CI_Controller{
                         }
                     }
                 }
-
             }
 
         }
