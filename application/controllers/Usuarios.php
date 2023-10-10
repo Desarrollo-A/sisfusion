@@ -67,27 +67,56 @@ class Usuarios extends CI_Controller
     public function saveUser()
     {
         $data = array(
-            "nombre" => $_POST['name'],
-            "apellido_paterno" => $_POST['last_name'],
-            "apellido_materno" => $_POST['mothers_last_name'],
-            "forma_pago" => $_POST['payment_method'],
-            "rfc" => '',
-            "tiene_hijos" => 2,
-            "estatus" => 1,
-            "sesion_activa" => 1,
-            "imagen_perfil" => '',
-            "correo" => $_POST['email'],
-            "telefono" => $_POST['phone_number'],
-            "id_sede" => $_POST['headquarter'],
-            "id_rol" => $_POST['member_type'],
-            "id_lider" => $_POST['leader'],
-            "usuario" => $_POST['username'],
-            "contrasena" => encriptar($_POST['contrasena']),
-            "fecha_creacion" => date("Y-m-d H:i:s"),
-            "creado_por" => $this->session->userdata('id_usuario'),
-            "fecha_modificacion" => date("Y-m-d H:i:s"),
-            "modificado_por" => $this->session->userdata('id_usuario')
+        "nombre" => $_POST['name'],
+        "apellido_paterno" => $_POST['last_name'],
+        "apellido_materno" => $_POST['mothers_last_name'],
+        "forma_pago" => $_POST['payment_method'],
+        "rfc" => '',
+        "tiene_hijos" => 2,
+        "estatus" => 1,
+        "sesion_activa" => 1,
+        "imagen_perfil" => '',
+        "correo" => $_POST['email'],
+        "telefono" => $_POST['phone_number'],
+        "id_sede" => $_POST['headquarter'],
+        "id_rol" => $_POST['member_type'],
+        "id_lider" => $_POST['leader'],
+        "usuario" => $_POST['username'],
+        "contrasena" => encriptar($_POST['contrasena']),
+        "fecha_creacion" => date("Y-m-d H:i:s"),
+        "creado_por" => $this->session->userdata('id_usuario'),
+        "fecha_modificacion" => date("Y-m-d H:i:s"),
+        "modificado_por" => $this->session->userdata('id_usuario')
         );
+//        print_r($_POST['menu'][0]);
+        /*$nuevoArray = array_unique($_POST['menu']);
+
+
+
+        if(isset($_POST['seleccionaTodo'])){
+            echo 'Se va a meter el menu completo del perfil<br>';
+        }else{
+            echo 'Selecciones especificas del menú<br>';
+            foreach ($nuevoArray as $index => $elemento) {
+                $nuevoArray[$index] = (array)$elemento;
+                if (json_decode($nuevoArray[$index][0])[0] == 0) {
+                    //es padre
+                    echo 'Es padre:<br>';
+                    print_r(json_decode($nuevoArray[$index][0])[0]);
+                    echo '<br><br>';
+                } else {
+                    //es hijo
+                    echo 'Es hijo:<br>';
+                    print_r(json_decode($nuevoArray[$index][0])[0]);
+                    echo '<br><br>';
+                }
+
+
+                echo '<br><br>';
+            }
+        }
+        echo '<br>';
+        exit;*/
         if (isset($_POST) && !empty($_POST)) {
             $response = $this->Usuarios_modelo->saveUser($data);
             echo json_encode($response);
@@ -689,5 +718,9 @@ class Usuarios extends CI_Controller
         $lider = $this->input->post("lider");
         $result = $this->Usuarios_modelo->consultarLinea($sede,$puesto,$lider)->result_array();
         echo json_encode($result,JSON_NUMERIC_CHECK);
+    }
+    public function getMenuOptionsByRol($id_rol){
+        $opciones = $this->Usuarios_modelo->getOptionByIdRol($id_rol);
+        print_r(json_encode($opciones));
     }
 }

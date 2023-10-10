@@ -2868,8 +2868,9 @@ class Comisiones_model extends CI_Model {
             $estatus =16;
         }else if($valor == 3){
             $estatus =17;
-            $respuesta = $this->db->query("UPDATE descuentos_universidad SET saldo_comisiones=".$saldo_comisiones.", pagos_activos = (pagos_activos - ".$pagos_aplicados."), estatus = 2 WHERE id_usuario = ".$user." AND estatus IN (1, 0)");
+            $respuesta = $this->db->query("UPDATE descuentos_universidad SET saldo_comisiones=".$saldo_comisiones.", estatus = 2, primer_descuento = (CASE WHEN primer_descuento IS NULL THEN GETDATE() ELSE primer_descuento END) WHERE id_usuario = ".$user." AND estatus IN (1, 0)");
             $uni='SALDO COMISIONES: $'.number_format($saldo_comisiones,2, '.', ',');
+		
         }
 
         if ($monto == 0) {
@@ -5310,22 +5311,9 @@ public function CancelarDescuento($id_pago,$motivo)
         return $this->db->query(" SELECT * FROM opcs_x_cats where id_catalogo=23 and id_opcion in(18,19,20,21,22,23,24,25,26,29)");
     }
 
-    public function updatePagoReactivadoMismoDiaMes($idDescuento, $fecha)
+    public function reactivarPago($idDescuento, $fecha)
     {
-        return $this->db->query("UPDATE descuentos_universidad SET estatus = 1, fecha_modificacion = '$fecha', 
-            pagos_activos = 1 WHERE id_descuento = $idDescuento");
-    }
-
-    public function updatePagoReactivadoMismoMes($idDescuento, $fecha)
-    {
-        return $this->db->query("UPDATE descuentos_universidad SET estatus = 1, fecha_modificacion = '$fecha',
-            pagos_activos = 0 WHERE id_descuento = $idDescuento");
-    }
-
-    public function updatePagoReactivadoFechaDiferente($idDescuento, $fecha)
-    {
-        return $this->db->query("UPDATE descuentos_universidad SET estatus = 5, fecha_modificacion = '$fecha',
-            pagos_activos = 0 WHERE id_descuento = $idDescuento");
+        return $this->db->query("UPDATE descuentos_universidad SET estatus = 5, fecha_modificacion = '$fecha' WHERE id_descuento = $idDescuento");
     }
 
     public function getUsuariosByComisionesAsistentes($idUsuarioSelect, $proyecto, $estatus)
@@ -5720,7 +5708,7 @@ public function CancelarDescuento($id_pago,$motivo)
         
         switch($estatus) {
             case '1':
-                $filtro = ' WHERE du.estatus in (0,1,2,5) AND us.estatus in (1) AND (du.monto-(pci2.total_descontado + du.pagado_caja))>1';
+                $filtro = ' WHERE du.estatus in (0,1,2,5) AND us.estatus in (1) AND (ISNULL(du.monto-(ISNULL(pci2.total_descontado,0) + ISNULL(du.pagado_caja, 0)), 0)) > 1';
             break;
             case '2':
                 $filtro = ' WHERE du.estatus not in (4,3) AND us.estatus in (0,3) ';
@@ -5730,6 +5718,9 @@ public function CancelarDescuento($id_pago,$motivo)
             break;
             case '4':
                 $filtro = ' ';
+            break;
+            case '5':
+                $filtro = 'WHERE du.estatus in (3)';
             break;
             default:
                 $filtro = '';
@@ -5771,16 +5762,19 @@ public function CancelarDescuento($id_pago,$motivo)
         UPPER(CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno)) AS nombre,
         UPPER(opc.nombre) AS puesto, 
         se.id_sede, UPPER(se.nombre) AS sede,
-        pci3.saldo_comisiones,
+        ISNULL(pci3.saldo_comisiones, 0) saldo_comisiones,
         du.monto,
-        pci2.total_descontado, 
-        du.pagado_caja,  
-        du.monto-(pci2.total_descontado + du.pagado_caja) pendiente, 
+        ISNULL(pci2.total_descontado, 0) total_descontado, 
+        ISNULL(du.pagado_caja, 0) pagado_caja,  
+        ISNULL(du.monto-(ISNULL(pci2.total_descontado,0) + ISNULL(du.pagado_caja, 0)), 0) pendiente,
         du.pago_individual, 
         du.estatus, 
-        du.fecha_modificacion, 
+        convert(nvarchar, du.fecha_modificacion , 6) fecha_modificacion,
+        (CASE WHEN DAY(du.fecha_modificacion) BETWEEN 1 AND 10 AND du.estatus = 5 AND MONTH(du.fecha_modificacion) = MONTH(GETDATE()) AND YEAR(du.fecha_modificacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END ) banderaReactivado,
+
         du.fecha_creacion,
-        opc1.nombre as certificacion, 
+        du.primer_descuento,
+        ISNULL((CASE WHEN du.estatus_certificacion = '0' OR du.estatus_certificacion = NULL THEN NULL ELSE opc1.nombre END),0) as certificacion,
         opc1.color as colorCertificacion
         FROM descuentos_universidad du
         INNER JOIN usuarios us ON us.id_usuario = du.id_usuario
@@ -5791,16 +5785,16 @@ public function CancelarDescuento($id_pago,$motivo)
         LEFT JOIN (SELECT SUM(pccom.abono_neodata) saldo_comisiones, pccom.id_usuario FROM pago_comision_ind pccom INNER JOIN comisiones com ON com.id_comision = pccom.id_comision WHERE pccom.estatus in (1) GROUP BY pccom.id_usuario) pci3 ON du.id_usuario = pci3.id_usuario 
 		LEFT JOIN sedes se ON se.id_sede = Try_Cast(us.id_sede  As int)
         LEFT JOIN (SELECT COUNT(DISTINCT(CAST(fecha_abono AS DATE))) no_descuentos, id_usuario FROM pago_comision_ind WHERE estatus = 17 GROUP BY id_usuario) des ON des.id_usuario = du.id_usuario
-        $filtro --AND us.id_usuario in (362, 818, 4828, 5017, 5679, 6196, 6604)
-        GROUP BY du.id_descuento, du.id_usuario, us.nombre, us.apellido_paterno, us.apellido_materno, opc.nombre, se.id_sede, se.nombre, pci3.saldo_comisiones, du.monto, pci2.total_descontado, du.pagado_caja, du.pago_individual, du.estatus, du.fecha_modificacion, du.fecha_creacion, opc1.nombre, opc1.color");
+        $filtro 
+        GROUP BY du.id_descuento, du.id_usuario, us.nombre, us.apellido_paterno, us.apellido_materno, opc.nombre, se.id_sede, se.nombre, pci3.saldo_comisiones, du.monto, pci2.total_descontado, du.pagado_caja, du.pago_individual, du.estatus, du.fecha_modificacion, du.fecha_creacion, opc1.nombre, opc1.color, du.primer_descuento,  du.estatus_certificacion");
 
         return $query->result_array();
     }
 
     function insertar_descuentoch($usuario, $descuento, $comentario, $monto, $userdata){
 
-        $respuesta = $this->db->query("INSERT INTO descuentos_universidad VALUES (".$usuario.", ".$descuento.", 1, 'DESCUENTO UNIVERSIDAD MADERAS', '".$comentario."', ".$userdata.", GETDATE() , 0, ".$monto.", 1, 0, null)");
-           $insert_id = $this->db->insert_id();
+        $respuesta = $this->db->query("INSERT INTO descuentos_universidad VALUES (".$usuario.", ".$descuento.", 1, 'DESCUENTO UNIVERSIDAD MADERAS', '".$comentario."', ".$userdata.", GETDATE() , 0, ".$monto.", 1, 0, NULL, NULL, GETDATE())");
+        $insert_id = $this->db->insert_id();
         $respuesta = $this->db->query("INSERT INTO historial_log VALUES (".$insert_id.", ".$userdata.", GETDATE(), 1, 'MOTIVO DESCUENTO: ".$comentario."', 'descuentos_universidad', null)");
        
        
@@ -5826,6 +5820,18 @@ public function CancelarDescuento($id_pago,$motivo)
             WHERE id_descuento = $idDescuento");
         return $query->row();
     }
+
+    // public function reactivarDescuento($idUsuario)
+    // {
+    //     $query = $this->db->query(" SELECT du.id_descuento, ISNULL(du.monto-(ISNULL(pci2.total_descontado,0) + ISNULL(du.pagado_caja, 0)), 0) pendiente, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) AS usuario
+    //     FROM descuentos_universidad du
+    //     INNER JOIN usuarios u ON du.id_usuario = u.id_usuario
+    //     LEFT JOIN (SELECT SUM(abono_neodata) total_descontado, id_usuario FROM pago_comision_ind WHERE estatus in (17) GROUP BY id_usuario) pci2 ON du.id_usuario = pci2.id_usuario
+    //     WHERE du.id_usuario = $idUsuario");
+    //     return $query;
+    // }
+
+    
 
     public function actualizarDescuentoUniversidad($idDescuento, $data)
     {

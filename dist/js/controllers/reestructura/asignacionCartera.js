@@ -103,14 +103,22 @@ $('#tablaAsignacionCartera').DataTable({
         { data: "nombreAsesorAsignado"},
         {
             data: function (d) {
-                btns = `<button class="btn-data btn-sky btn-asignar-venta"
-                            data-toggle="tooltip" 
-                            data-placement="left"
-                            title="ASIGNAR VENTA"
-                            data-idCliente="${d.idCliente}"
-                            data-idAsesorAsignado="${d.idAsesorAsignado}">
-                            <i class="fas fa-exchange-alt"></i>
-                    </button>`;
+                return `<span class='label lbl-violetBoots'>${d.estatusPreproceso}</span>`;
+            }
+        },
+        {
+            data: function (d) {
+                let btns = '';
+                if (d.id_estatus_preproceso == 0) {
+                    btns = `<button class="btn-data btn-blueMaderas btn-asignar-venta"
+                                data-toggle="tooltip" 
+                                data-placement="left"
+                                title="ASIGNAR VENTA"
+                                data-idCliente="${d.idCliente}"
+                                data-idAsesorAsignado="${d.idAsesorAsignado}">
+                                <i class="fas fa-exchange-alt"></i>
+                            </button>`;
+                }
                 return `<div class="d-flex justify-center">${btns}</div>`;
             }
         }
