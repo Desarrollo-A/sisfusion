@@ -107,7 +107,7 @@ class ScheduleTasks_cl extends CI_Controller {
             ->initialize()
             ->from('Ciudad Maderas')
             ->to('tester.ti2@ciudadmaderas.com')
-            /*->to('mariela.sanchez@ciudadmaderas.com',
+            /*->to(['mariela.sanchez@ciudadmaderas.com',
                 'rigel.silva@prohabitacion.com',
                 'rafael.bautista@ciudadmaderas.com',
                 'vicky.paulin@ciudadmaderas.com',
@@ -128,7 +128,9 @@ class ScheduleTasks_cl extends CI_Controller {
                 'dirce.pardenilla@ciudadmaderas.com',
                 'nohemi.castillo@ciudadmaderas.com',
                 'esmeralda.vega@ciudadmaderas.com',
-                'yaretzi.rosales@ciudadmaderas.com')*/
+                'yaretzi.rosales@ciudadmaderas.com',
+                'jorge.mugica@ciudadmaderas.com',
+                'leonardo.aguilar@ciudadmaderas.com'])*/
             ->subject('Acumulado de lotes sin integrar Expediente al: '.date("Y-m-d H:i:s"))
             ->view($this->load->view('mail/schedule-tasks-cl/send-rv-5', [
                 'encabezados' => $encabezados,

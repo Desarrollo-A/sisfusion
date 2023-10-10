@@ -12,9 +12,7 @@ class Asistente_gerente extends CI_Controller {
         $this->load->database('default');
         $this->load->library('email');
         $this->validateSession();
-
         date_default_timezone_set('America/Mexico_City');
-
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
         $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
@@ -39,7 +37,6 @@ class Asistente_gerente extends CI_Controller {
 	public function registroEstatus8VentasAsistentes()
 	{
 		$this->validateSession();
-
 	 	$this->load->view('template/header');
 		$this->load->view("contratacion/datos_status8Contratacion_asistentes_view");
 	}
@@ -55,7 +52,6 @@ class Asistente_gerente extends CI_Controller {
 	}
 
 	public function registroEstatus9VentasAsistentes(){
-		/*menu function*/                    
    		$this->load->view('template/header');
 		$this->load->view('contratacion/report_historial_view');
 	}
@@ -438,7 +434,6 @@ class Asistente_gerente extends CI_Controller {
                         $fecha= $sig_fecha;
                         $i++;
                     }
-
                     $fecha = $sig_fecha;
                }
 
@@ -465,7 +460,6 @@ class Asistente_gerente extends CI_Controller {
                         $fecha= $sig_fecha;
                         $i++;
                     }
-
                     $fecha = $sig_fecha;
                 }
                $arreglo["fechaVenc"]= $fecha;
@@ -503,7 +497,6 @@ class Asistente_gerente extends CI_Controller {
                         $fecha= $sig_fecha;
                         $i++;
                     }
-
                     $fecha = $sig_fecha;
                 }
 
@@ -928,12 +921,10 @@ class Asistente_gerente extends CI_Controller {
         if ($this->VentasAsistentes_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){
             $data['message'] = 'OK';
             echo json_encode($data);
-
             }else{
                 $data['message'] = 'ERROR';
                 echo json_encode($data);
             }
-
         }else {
             $data['message'] = 'FALSE';
             echo json_encode($data);
