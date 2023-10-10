@@ -12,9 +12,7 @@ class Asistente_gerente extends CI_Controller {
         $this->load->database('default');
         $this->load->library('email');
         $this->validateSession();
-
         date_default_timezone_set('America/Mexico_City');
-
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
         $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
@@ -39,7 +37,6 @@ class Asistente_gerente extends CI_Controller {
 	public function registroEstatus8VentasAsistentes()
 	{
 		$this->validateSession();
-
 	 	$this->load->view('template/header');
 		$this->load->view("contratacion/datos_status8Contratacion_asistentes_view");
 	}
@@ -55,7 +52,6 @@ class Asistente_gerente extends CI_Controller {
 	}
 
 	public function registroEstatus9VentasAsistentes(){
-		/*menu function*/                    
    		$this->load->view('template/header');
 		$this->load->view('contratacion/report_historial_view');
 	}
@@ -166,6 +162,74 @@ class Asistente_gerente extends CI_Controller {
 			}
 
 	}
+
+	public function editar_registro_lote_asistentes_proceceso8(){
+        $idLote=$this->input->post('idLote');	
+        $idCondominio=$this->input->post('idCondominio');
+        $nombreLote=$this->input->post('nombreLote');
+        $idCliente=$this->input->post('idCliente');
+        $comentario=$this->input->post('comentario');
+        $modificado=date('Y-m-d H:i:s');
+        $fechaVenc=$this->input->post('fechaVenc');
+        $arreglo=array();	
+        $arreglo["idStatusContratacion"]=8;
+        $arreglo["idMovimiento"]=38;
+        $arreglo["comentario"]=$comentario;
+        $arreglo["usuario"]=$this->session->userdata('id_usuario');
+        $arreglo["perfil"]=$this->session->userdata('id_rol');
+        $arreglo["modificado"]=date("Y-m-d H:i:s");
+        $arreglo["status8Flag"] = 1;
+    
+        $arreglo2=array();
+        $arreglo2["idStatusContratacion"]=8;
+        $arreglo2["idMovimiento"]=38;
+        $arreglo2["nombreLote"]=$nombreLote;
+        $arreglo2["comentario"]=$comentario;	
+        $arreglo2["usuario"]=$this->session->userdata('id_usuario');
+        $arreglo2["perfil"]=$this->session->userdata('id_rol');
+        $arreglo2["modificado"]=date("Y-m-d H:i:s");
+        $arreglo2["fechaVenc"]= $fechaVenc;
+        $arreglo2["idLote"]= $idLote;  
+        $arreglo2["idCondominio"]= $idCondominio;          	
+        $arreglo2["idCliente"]= $idCliente;
+    
+    
+        $valida_rama = $this->VentasAsistentes_model->check_carta($idCliente);
+        if($valida_rama[0]['tipo_nc']==1){
+            $validacionCarta = $this->VentasAsistentes_model->validaCartaCM($idCliente);
+            if($validacionCarta[0]['tipo_comprobanteD']==1) {
+                if(count($validacionCarta)<=0){
+                    $data['message'] = 'MISSING_CARTA_RAMA';
+                    echo json_encode($data);
+                    exit;
+                }else{
+                    if($validacionCarta[0]['tipo_comprobanteD']==1) {
+                        if ($validacionCarta[0]['expediente'] == '' || $validacionCarta[0]['expediente'] == NULL) {
+                            $data['message'] = 'MISSING_CARTA_UPLOAD';
+                            echo json_encode($data);
+                            exit;
+                        }
+                    }
+                }
+            }
+        }
+    
+        $validate = $this->VentasAsistentes_model->validateSt8($idLote);
+        if ($validate != 1) {
+            $data['message'] = 'FALSE';
+            echo json_encode($data);
+            return;
+        }
+    
+        if (!$this->VentasAsistentes_model->updateSt($idLote,$arreglo,$arreglo2)){
+            $data['message'] = 'ERROR';
+            echo json_encode($data);
+            return;
+        }
+    
+        $data['message'] = 'OK';
+        echo json_encode($data);
+    }
 	
     public function editar_registro_loteRechazo_asistentes_proceceso8(){
         $idLote=$this->input->post('idLote');
@@ -664,12 +728,10 @@ class Asistente_gerente extends CI_Controller {
         if ($this->VentasAsistentes_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){
             $data['message'] = 'OK';
             echo json_encode($data);
-
             }else{
                 $data['message'] = 'ERROR';
                 echo json_encode($data);
             }
-
         }else {
             $data['message'] = 'FALSE';
             echo json_encode($data);

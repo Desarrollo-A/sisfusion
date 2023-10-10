@@ -251,41 +251,72 @@ class Pagos_model extends CI_Model {
             return $this->db->query("UPDATE pago_comision_ind SET estatus = 11, aply_pago_intmex = GETDATE(),modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$idsol.")");
         }
 
+        // function getPagosByProyect($proyect = '',$formap = ''){
+
+        //     if(!empty($proyect)){
+        
+        //         $id = $proyect;
+        //         $forma = $formap;
+        
+        //     }else{
+        //         $id = 0;
+        
+        //     }
+        //     $datos =array();
+        //     $suma =  $this->db->query("(SELECT sum(pci.abono_neodata) as suma
+        //   FROM residenciales re
+        //   INNER JOIN condominios co ON re.idResidencial = co.idResidencial
+        //   INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio
+        //   INNER JOIN comisiones com ON com.id_lote = lo.idLote AND com.estatus in (1,8)
+        //   INNER JOIN pago_comision_ind pci ON pci.id_comision = com.id_comision
+        //   INNER JOIN usuarios u ON u.id_usuario = com.id_usuario 
+        //   WHERE pci.estatus IN (8) and u.forma_pago=$formap and re.idResidencial=$id)")->result_array();
+        //   $ids = $this->db->query("( SELECT pci.id_pago_i
+        //   FROM residenciales re
+        //   INNER JOIN condominios co ON re.idResidencial = co.idResidencial
+        //   INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio
+        //   INNER JOIN comisiones com ON com.id_lote = lo.idLote AND com.estatus in (1,8)
+        //   INNER JOIN pago_comision_ind pci ON pci.id_comision = com.id_comision
+        //   INNER JOIN usuarios u ON u.id_usuario = com.id_usuario 
+        //   WHERE pci.estatus IN (8) and u.forma_pago=$forma and re.idResidencial=$id)")->result_array();
+           
+        //    $datos[0]=$suma;
+        //    $datos[1]=$ids;
+        //    return $datos;
+        //     // return $this->db->query("SELECT res.idResidencial id_usuario, res.nombreResidencial  as name_user, descripcion FROM residenciales res");
+        // }
+
         function getPagosByProyect($proyect = '',$formap = ''){
 
             if(!empty($proyect)){
-        
                 $id = $proyect;
                 $forma = $formap;
-        
             }else{
                 $id = 0;
-        
             }
             $datos =array();
             $suma =  $this->db->query("(SELECT sum(pci.abono_neodata) as suma
-          FROM residenciales re
-          INNER JOIN condominios co ON re.idResidencial = co.idResidencial
-          INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio
-          INNER JOIN comisiones com ON com.id_lote = lo.idLote AND com.estatus in (1,8)
-          INNER JOIN pago_comision_ind pci ON pci.id_comision = com.id_comision
-          INNER JOIN usuarios u ON u.id_usuario = com.id_usuario 
-          WHERE pci.estatus IN (8) and u.forma_pago=$formap and re.idResidencial=$id)")->result_array();
-          $ids = $this->db->query("( SELECT pci.id_pago_i
-          FROM residenciales re
-          INNER JOIN condominios co ON re.idResidencial = co.idResidencial
-          INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio
-          INNER JOIN comisiones com ON com.id_lote = lo.idLote AND com.estatus in (1,8)
-          INNER JOIN pago_comision_ind pci ON pci.id_comision = com.id_comision
-          INNER JOIN usuarios u ON u.id_usuario = com.id_usuario 
-          WHERE pci.estatus IN (8) and u.forma_pago=$forma and re.idResidencial=$id)")->result_array();
-           
-           $datos[0]=$suma;
-           $datos[1]=$ids;
-           return $datos;
-            // return $this->db->query("SELECT res.idResidencial id_usuario, res.nombreResidencial  as name_user, descripcion FROM residenciales res");
+            FROM residenciales re
+            INNER JOIN condominios co ON re.idResidencial = co.idResidencial
+            INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio
+            INNER JOIN comisiones com ON com.id_lote = lo.idLote AND com.estatus in (1,8)
+            INNER JOIN pago_comision_ind pci ON pci.id_comision = com.id_comision
+            INNER JOIN usuarios u ON u.id_usuario = com.id_usuario 
+            WHERE pci.estatus IN (8) and u.forma_pago=$formap and re.idResidencial=$id)")->result_array();
+            $ids = $this->db->query("( SELECT pci.id_pago_i
+            FROM residenciales re
+            INNER JOIN condominios co ON re.idResidencial = co.idResidencial
+            INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio
+            INNER JOIN comisiones com ON com.id_lote = lo.idLote AND com.estatus in (1,8)
+            INNER JOIN pago_comision_ind pci ON pci.id_comision = com.id_comision
+            INNER JOIN usuarios u ON u.id_usuario = com.id_usuario 
+            WHERE pci.estatus IN (8) and u.forma_pago=$forma and re.idResidencial=$id)")->result_array();
+            
+            $datos[0]=$suma;
+            $datos[1]=$ids;
+            return $datos;
         }
-
+        
         function update_estatus_refresh($idcom) {
             $id_user_Vl = $this->session->userdata('id_usuario');
             $this->db->query("INSERT INTO  historial_comisiones VALUES ($idcom, $id_user_Vl, GETDATE(), 1, 'SE ACTIVÓ NUEVAMENTE COMISIÓN')");

@@ -129,10 +129,12 @@
                                                     <th>MODALIDAD</th>
                                                     <th>CONTRATACIÓN</th>
                                                     <th>PLAN DE VENTA</th>
-                                                    <th>ÚLTIMA DISPERSIÓN</th> 
                                                     <th>TOTAL</th>
+                                                    <!-- <th>TOTAL</th> -->
                                                     <th>PORCENTAJE</th>
                                                     <th>PENDIENTE</th>
+                                                    <th>DETALLES</th>
+                                                    <th>FECHA ACTUALIZACIÓN</th>
                                                     <th>ACCIONES</th>
                                                 </tr>
                                             </thead>

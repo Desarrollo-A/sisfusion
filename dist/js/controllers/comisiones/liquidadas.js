@@ -37,7 +37,7 @@ $(document).ready(function () {
                 titleAttr: 'Descargar archivo de Excel',
                 title: 'Reporte Comisiones Liquidadas',
                 exportOptions: {
-                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,14],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + titulos_intxt[columnIdx] + ' ';
@@ -70,25 +70,32 @@ $(document).ready(function () {
             },
             {data: 'nombreResidencial'},
             {data: 'nombreCondominio'},
-            {data: 'nombreLote'},
+            { data: function (d) {
+                if(d.id_cliente_reubicacion_2 >1 ) {
+                    nombreLote =  d.nombreLoteReub;
+                } else{
+                    nombreLote = d.nombreLote;
+                }
+                return nombreLote;
+            }},
             {data: 'idLote'},
             {data: 'nombreCliente'},
             { data: function (d) {
-                return `<span class="label ${d.claseTipo_venta}">${d.tipo_venta}</span><br><span class="${d.colorProcesoCl}">${d.procesoCl}</span>`;
-            }}, 
+                    return `<span class="label ${d.claseTipo_venta}">${d.tipo_venta}</span><br><span class="${d.colorProcesoCl}">${d.procesoCl}</span>`;
+            }},
             { data: function (d) {
                 var labelCompartida;
                 if(d.compartida == null) {
-                    labelCompartida ='<span class="label lbl-yellow">INDIVIDUAL</span>';
+                    labelCompartida ='<span class="label lbl-yellow">Individual</span>';
                 } else{
-                    labelCompartida ='<span class="label lbl-orangeYellow">COMPARTIDA</span>';
+                    labelCompartida ='<span class="label lbl-orangeYellow">Compartida</span>';
                 }
                 return labelCompartida;
-            }}, 
+            }},
             { data: function (d) {
                 var labelStatus;
                 if(d.idStatusContratacion == 15) {
-                    labelStatus ='<span class="label lbl-purple">Contratado</span>';
+                    labelStatus ='<span class="label lbl-violetBoots">Contratado</span>';
                 }else {
                     labelStatus ='<p class="m-0"><b>'+d.idStatusContratacion+'</b></p>';
                 }
@@ -96,28 +103,24 @@ $(document).ready(function () {
             }},
             { data: function (d) {
                 var labelEstatus;
-                if(d.totalNeto2 == null) {
-                    labelEstatus ='<b>SIN PRECIO DEL LOTE</b>';
-                }else if(d.registro_comision == 2){
-                    labelEstatus ='<span class="label lbl-aqua">SOLICITADO MKT</span>'+' '+d.plan_descripcion;
-                }else {
-                    if(d.plan_descripcion=="-")
-                        return '<p>SIN PLAN</p>'
-                    else
-                        labelEstatus =`<label class="label lbl-azure btn-dataTable" data-toggle="tooltip"  data-placement="top"  title="VER MÁS DETALLES"><b><span  onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span></label>`;
+                if(d.penalizacion == 1 && (d.bandera_penalizacion == 0 || d.bandera_penalizacion == 1) ){
+                    labelEstatus =`<p class="m-0"><b>Penalización ${d.dias_atraso} días</b></p><span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span>`;
+                }
+                else{
+                    if(d.totalNeto2 == null) {
+                        labelEstatus ='<p class="m-0"><b>Sin Precio Lote</b></p>';
+                    }else if(d.registro_comision == 2){
+                        labelEstatus ='<span class="label lbl-cerulean">SOLICITADO MKT</span>'+' '+d.plan_descripcion;
+                    }else {
+                        if(d.plan_descripcion=="-")
+                            return '<p>SIN PLAN</p>';
+                        else
+                            labelEstatus =`<label class="label lbl-azure btn-dataTable" data-toggle="tooltip"  data-placement="top"  title="VER MÁS DETALLES"><b><span  onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span></label>`;
+                    }
                 }
                 return labelEstatus;
             }},
-            { data: function (d) {
-                // última dispersion
-                var fechaSistema;
-                if(d.ultima_dispersion == null ) {
-                    fechaSistema ='<span class="label lbl-gray">SIN DEFINIR</span>';
-                }else {
-                    fechaSistema = '<br><span class="label lbl-cerulean">'+d.ultima_dispersion+'</span>';
-                }
-                return fechaSistema;
-            }},
+           
             { data: function (d) {
                 return formatMoney(d.abono_comisiones);;
             }},
@@ -127,12 +130,83 @@ $(document).ready(function () {
             { data: function (d) {
                 return formatMoney(d.pendiente);;
             }},
+
+            { data: function (d) {
+                var rescisionLote;
+                var reactivo;
+                rescisionLote = '';
+                reactivo = '';
+                if (d.registro_comision == 8){
+                    rescisionLote = '<br><span class="label lbl-warning">Recisión Nueva Venta</span>';
+                }
+                if(d.id_cliente_reubicacion_2 != 0 ) {
+                    if((d.bandera_dispersion == 1 && d.registro_comision == 9) ||
+                    (d.bandera_dispersion == 2 && d.registro_comision == 9) ||
+                    (d.bandera_dispersion == 2  && d.registro_comision != 9) ||
+                    (d.bandera_dispersion == 1  && d.registro_comision != 9 && validarLiquidadas == 0 || (d.registro_comision == 1 && d.validaLiquidadas == 0 && d.banderaOOAM == 0))){
+                        reactivo = '<br><span class="label lbl-gray">DISPERSIÓN VENTAS</span>';
+                    } else if((d.bandera_dispersion == 3  && d.registro_comision == 9) ||
+                    (d.bandera_dispersion == 3 && d.registro_comision != 9) ||
+                    ((d.registro_comision == 1 && d.validaLiquidadas == 1 && (d.banderaOOAM == 0 || d.banderaOOAM > 0 )) || (d.registro_comision == 1 && d.validaLiquidadas == 0 && d.banderaOOAM > 0))){//LIQUIDADA 1°
+                        reactivo = '<br><span class="label lbl-lightBlue">DISPERSIÓN EEC</span>';
+                    } 
+                }
+                return rescisionLote+reactivo;
+            }},
+            { data: function (d) {
+                var fechaActualizacion;
+
+                if(d.fecha_sistema == null) {
+                    fechaActualizacion ='<span class="label lbl-gray">Sin Definir</span>';
+                }else {
+                    fechaActualizacion = '<span class="label lbl-azure">'+d.fecha_sistema+'</span>';
+                }
+                
+                return fechaActualizacion;
+            }},
+       
             { data: function (d) {
                 var BtnStats = '';
-                varColor  = 'btn-deepGray';
-                BtnStats += '<button href="#" value="'+d.idLote+'" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata" data-toggle="tooltip"  data-placement="top"  title="Verificar en NEODATA">'+'<span class="material-icons">verified_user</span></button>';
-                return '<div class="d-flex justify-center">'+BtnStats+'</div>';
-            }}  
+                var RegresaActiva = '';
+                    if(d.totalNeto2==null || d.totalNeto2==''|| d.totalNeto2==0) {
+                        BtnStats = 'Asignar Precio';
+                    }else if(d.tipo_venta==null || d.tipo_venta==0) {
+                        BtnStats = 'Asignar Tipo Venta';
+                    }else if((d.id_prospecto==null || d.id_prospecto==''|| d.id_prospecto==0) && d.lugar_prospeccion == 6) {
+                        BtnStats = 'Asignar Prospecto';
+                    }else if(d.id_subdirector==null || d.id_subdirector==''|| d.id_subdirector==0) {
+                        BtnStats = 'Asignar Subdirector';
+                    }else if(d.id_sede==null || d.id_sede==''|| d.id_sede==0) {
+                        BtnStats = 'Asignar Sede';
+                    }else if(d.plan_comision==null || d.plan_comision==''|| d.plan_comision==0) {
+                        BtnStats = 'Asignar Plan <br> Sede: '+d.sede;
+                    } else{
+                        varColor  = 'btn-deepGray';
+                        // if(d.fecha_sistema != null && d.registro_comision != 8 && d.registro_comision != 0) {
+                        //     RegresaActiva = '<button href="#" data-idpagoc="' + d.idLote + '" data-nombreLote="' + d.nombreLote + '"  ' +'class="btn-data btn-violetChin update_bandera" data-toggle="tooltip" data-placement="top" title="Enviar a activas">' +'<i class="fas fa-undo-alt"></i></button>';
+                        // }
+                        //     BtnStats += `<button href="#" value="${d.idLote}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas btn-detener btn-warning" data-toggle="tooltip"  data-placement="top" title="Detener"> <i class="material-icons">block</i> </button>`;
+
+                            if(d.ooam == 0 && d.ventas == 1){
+
+                                BtnStats += '<button href="#" value="'+d.idLote+'" data-ooam="2" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data btn-yellow verify_neodata" title="VERIFICAR EN NEODATA VENTAS">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
+
+                            } else if(d.ooam == 1 && d.ventas == 0){
+                                BtnStats += '<button href="#" value="'+d.idLote+'" data-ooam="1" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data btn-azure verify_neodata" title="VERIFICAR EN NEODATA OOAM">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
+
+                            } else if(d.ooam == 1 && d.ventas == 1){
+
+                                BtnStats += '<button href="#" value="'+d.idLote+'" data-ooam="2" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data btn-yellow verify_neodata" title="VERIFICAR EN NEODATA VENTAS">'+'<span class="material-icons">verified_user</span></button>';
+
+                                BtnStats += '<button href="#" value="'+d.idLote+'" data-ooam="1" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data btn-azure verify_neodata" title="VERIFICAR EN NEODATA OOAM">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
+
+                            } else{
+                            
+                            BtnStats += '<button href="#" value="'+d.idLote+'" data-ooam="0" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata" title="VERIFICAR EN NEODATA">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
+                        }
+                        }
+                        return '<div class="d-flex justify-center">'+BtnStats+'</div>';
+            }} 
         ],
         columnDefs: [{
             visible: false,
@@ -168,6 +242,7 @@ $(document).ready(function () {
         }
     });
 
+
     $("#tabla_comisiones_liquidadas tbody").on("click", ".verify_neodata", async function(){ 
         $("#modal_NEODATA .modal-header").html("");
         $("#modal_NEODATA .modal-body").html("");
@@ -184,6 +259,10 @@ $(document).ready(function () {
         plan_comision = $(this).attr("data-plan");
         descripcion_plan = $(this).attr("data-descplan");
         tipo_venta = $(this).attr("data-tipov");
+
+        ooamDispersion = $(this).attr("data-ooam");
+
+
         bandera_penalizacion = $(this).attr("data-banderaPenalizacion");
         if(parseFloat(totalNeto2) > 0){
             $("#modal_NEODATA .modal-body").html("");
@@ -191,7 +270,7 @@ $(document).ready(function () {
                 if(data.length > 0){
                     switch (data[0].Marca) {
                         case 0:
-                            $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>En espera de próximo abono en NEODATA de '+row.data().nombreLote+'.</b></h4><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></center></div></div>');
+                            $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>En espera de próximo abono en NEODATA de '+row.data().nombreLote+'.</b></h4><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12 d-flex justify-center"><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></div></div>');
                         break;
                         case 1:
                             let total0 = parseFloat(data[0].Aplicado);
@@ -202,7 +281,7 @@ $(document).ready(function () {
                                 total = 0; 
                             }
                             var_sum = 0;
-                            $.getJSON( general_base_url + "Comisiones/getDatosAbonadoSuma11/"+idLote).done( function( data1 ){
+                            $.getJSON( general_base_url + "Comisiones/getDatosAbonadoSuma11/"+idLote+"/"+ooamDispersion).done( function( data1 ){
                                 let total0 = parseFloat((data[0].Aplicado));
                                 let total = 0;
                                 if(total0 > 0){
@@ -221,11 +300,11 @@ $(document).ready(function () {
                                 }else{
                                     cadena = `<h4>Bonificación: <b>${formatMoney(0)}</b></h4>`;
                                 }
-                                $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-4"><h4><b>Precio lote: ${formatMoney(data1[0].totalNeto2)}</b></h4></div>
+                                $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-4"><h4><b>Precio del lote: ${formatMoney(data1[0].totalNeto2)}</b></h4></div>
                                 <div class="col-md-4"><h4>Aplicado neodata: <b>${formatMoney(data[0].Aplicado)}</b></h4></div><div class="col-md-4">${cadena}</div>
-                                </div><br>`);
-                                $.getJSON( general_base_url + "Comisiones/getDatosAbonadoDispersion/"+idLote).done( function( data ){
-                                    $("#modal_NEODATA .modal-body").append('<div class="row rowTitulos"><div class="col-md-3"><p style="font-zise:10px;"><b>USUARIOS</b></p></div><div class="col-md-1"><b>%</b></div><div class="col-md-2"><b>TOT. COMISIÓN</b></div><div class="col-md-2"><b><b>ABONADO</b></div><div class="col-md-2"><b>PENDIENTE</b></div><div class="col-md-2"><b>DISPONIBLE</b></div></div>');
+                                </div>`);
+                                $.getJSON( general_base_url + "Comisiones/getDatosAbonadoDispersion/"+idLote+"/"+ooamDispersion).done( function( data ){
+                                    $("#modal_NEODATA .modal-body").append('<div class="row rowTitulos"><div class="col-md-3"><p style="font-size:10px;"><b>USUARIOS</b></p></div><div class="col-md-1"><b>%</b></div><div class="col-md-2"><b>TOTAL DE LA COMISIÓN</b></div><div class="col-md-2"><b><b>ABONADO</b></div><div class="col-md-2"><b>PENDIENTE</b></div><div class="col-md-2"><b>DISPONIBLE</b></div></div>');
                                     let contador=0;
                                     let coor = data.length;
                                     for (let index = 0; index < data.length; index++) {
@@ -257,6 +336,7 @@ $(document).ready(function () {
                                                 pending = evaluar;
                                             }
                                             resta_1 = saldo-v.abono_pagado;
+                                            
                                             if(parseFloat(resta_1) <= 0){
                                                 saldo = 0;
                                             }
@@ -284,17 +364,17 @@ $(document).ready(function () {
                                         }
                                         $("#modal_NEODATA .modal-body").append(`
                                         <div class="row">
-                                            <div class="col-md-3">
-                                                <label id="" class="control-label labelNombre hide">Usuarios</label>
-                                                <input class="form-control input-gral" required readonly="true" value="${v.colaborador}" style="font-size:12px;${v.descuento == 1 ? 'color:red;' : ''}">
+                                            <div class="col-md-3 ">
+                                                <label class="control-label labelNombre hide">USUARIO</label>
+                                                <input class="form-control input-gral" required readonly="true" value="${v.colaborador}" style=" font-size:12px;${v.descuento == 1 ? 'color:red;' : ''}">
                                                 <b><p style="font-size:12px;${v.descuento == 1 ? 'color:red;' : ''}">${v.descuento != "1" ?  v.rol : v.rol +' Incorrecto' }</p></b>
                                             </div>
                                             <div class="col-md-1">
-                                                <label id="" class="control-label labelPorcentaje hide">%</label>
-                                                <input class="form-control input-gral" required readonly="true" style=" padding:8px; ${v.descuento == 1 ? 'color:red;' : ''}" value="${parseFloat(v.porcentaje_decimal)}%">
+                                                <label class="control-label labelPorcentaje hide">%</label>
+                                                <input class="form-control input-gral" required readonly="true" style="padding:10px ${v.descuento == 1 ? 'color:red;' : ''}" value="${parseFloat(v.porcentaje_decimal)}">
                                             </div>
                                             <div class="col-md-2">
-                                                <label id="" class="control-label labelTC hide">Total de la comisión</label>
+                                                <label class="control-label labelTC hide">Total de la comisión</label>
                                                 <input class="form-control input-gral" required readonly="true" style="${v.descuento == 1 ? 'color:red;' : ''}" value="${formatMoney(v.comision_total)}">
                                             </div>
                                             <div class="col-md-2">
@@ -312,35 +392,35 @@ $(document).ready(function () {
                                         </div>`);
                                         counts++
                                     });
-                                responsive(maxWidth);
+                                    responsive(maxWidth);
                                 });
                             });
                         break;
                         case 2:
-                            $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>No se encontró esta referencia de '+row.data().nombreLote+'.</b></h4><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
+                            $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>No se encontró esta referencia de '+row.data().nombreLote+'.</b></h4><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12 d-flex justify-center"><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></div> </div>');
                         break;
                         case 3:
-                            $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>No tiene vivienda, si hay referencia de '+row.data().nombreLote+'.</b></h4><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
+                            $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>No tiene vivienda, si hay referencia de '+row.data().nombreLote+'.</b></h4><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12 d-flex justify-center"><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></div> </div>');
                         break;
                         case 4:
-                            $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>No hay pagos aplicados a esta referencia de '+row.data().nombreLote+'.</b></h4><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
+                            $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>No hay pagos aplicados a esta referencia de '+row.data().nombreLote+'.</b></h4><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12 d-flex justify-center"><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></div> </div>');
                         break;
                         case 5:
-                            $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>Referencia duplicada de '+row.data().nombreLote+'.</b></h4><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
+                            $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>Referencia duplicada de '+row.data().nombreLote+'.</b></h4><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12 d-flex justify-center"><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></div> </div>');
                         break;
                         default:
-                            $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>Aviso.</b></h4><br><h5>Sistema en mantenimiento: .</h5></div> <div class="col-md-12"><center><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
+                            $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>Aviso.</b></h4><br><h5>Sistema en mantenimiento.</h5></div> <div class="col-md-12 d-flex justify-center"><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></div> </div>');
                         break;
                         }
-                    }
-                    else{
-                        //QUERY SIN RESULTADOS
-                        $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><b>No se encontró esta referencia en NEODATA de '+row.data().nombreLote+'.</b></h3><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
-                    }
-                }); //FIN getStatusNeodata
-                
-                $("#modal_NEODATA").modal();
-            }
+                }  
+                else{
+                    //QUERY SIN RESULTADOS
+                    $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><b>No se encontró esta referencia en NEODATA de '+row.data().nombreLote+'.</b></h3><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12 d-flex justify-center"><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></div> </div>');
+                }
+            }); //FIN getStatusNeodata
+            
+            $("#modal_NEODATA").modal();
+        }
     }); //FIN VERIFY_NEODATA
 });
 
