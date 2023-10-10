@@ -180,7 +180,7 @@
 					</div>
 				</div>
 			</div>
-		</div>        
+		</div>
 
         <div class="modal fade" id="modal_historial" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
@@ -217,7 +217,7 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
-                            <li class="active"><a href="#nuevas-1" role="tab" data-toggle="tab">Estructura</a></li>
+                            <li class="active"><a href="#nuevas-1" role="tab" data-toggle="tab">Liberar para reestructura</a></li>
                             <li><a href="#proceso-1" role="tab" data-toggle="tab">Liberar</a></li>
                         </ul>
                        <div class="card no-shadow m-0 border-conntent__tabs">
@@ -227,7 +227,7 @@
                                             <div class="tab-pane active" id="nuevas-1">
                                             <div class="card-content">
                                         <div class="encabezadoBox">
-                                         <h3 class="card-title center-align">Reestructuración</h3>
+                                         <h3 class="card-title center-align">Liberar para reestructura</h3>
                                         </div>
                                         <!-- tap -->
                                         
@@ -255,10 +255,10 @@
                                                         <th>ID LOTE </th>
                                                         <th>SUPERFICIE</th>
                                                         <th>PRECIO M2</th>
-                                                        <th>NOMBRE</th>
+                                                        <th>NOMBRE CLIENTE</th>
                                                         <th>ESTATUS</th>
+                                                        <th>ESTATUS LOTE</th>
                                                         <th>COMENTARIO</th>
-                                                        <th>OBSERVACIÓN EN LIBERACIÓN</th>
                                                         <th>ACCIONES</th>
                                                     </tr>
                                                 </thead>
@@ -271,9 +271,7 @@
                             <!-- nueva tabla libera  -->
                             <div class="tab-pane" id="proceso-1">
                                 <div class="text-center">
-                                    
                                     <h3 class="card-title center-align">Liberar lotes</h3>
-
                                 </div>
                                 <div class="toolbar">
                                     <div class="container-fluid p-0">
@@ -288,7 +286,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <table class="table-striped table-hover" id="tabla_clientes_liberar">
+                                    <table class="table-striped table-hover" id="tabla_clientes_liberar" name="tabla_clientes_liberar">
                                                 <thead>
                                                     <tr>
                                                         <th>PROYECTO</th>
@@ -305,11 +303,8 @@
                                             </table>
                                 </div>
                             </div>
-
                             <!-- fin de nueva tabla libera -->
                        </div>
-
-
                     </div>
                 </div>
             </div>
@@ -320,6 +315,13 @@
 <?php $this->load->view('template/footer'); ?>
 <script src="<?= base_url() ?>dist/js/controllers/reestructura/reestructura.js"></script>
 <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script>
-        Shadowbox.init();
-    </script>
+    Shadowbox.init();
+</script>

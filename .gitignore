@@ -61,3 +61,7 @@ dist/css/MARIA DEL CARMEN2022-04-07940b801cbed1ce3d35c85f21921daeb0.pdf
 client_secret.json
 dist/js/ComparateKelyn/conglomerado.js
 dist/js/ComparateKelyn/conglomerado1.js
+application/controllers/ComisionesPRODUCTIVO.php
+application/views/comisiones/ELIMINARMODELOCOMISIONES.php
+application/views/comisiones/INSTALARMODELOCOMISIONES.php
+application/models/Kelhistoriales.php

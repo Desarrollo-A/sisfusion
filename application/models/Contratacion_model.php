@@ -94,7 +94,8 @@ class Contratacion_model extends CI_Model {
       lot.fecha_creacion, lot.totalValidado as cantidad_enganche, ISNULL(CONVERT(varchar, fechaSolicitudValidacion, 20), '') as fecha_validacion,
       lot.idStatusContratacion, ISNULL(co.nombreCopropietario, 'SIN ESPECIFICAR') nombreCopropietario,
       sl.background_sl, ISNULL(cl.tipo_casa, 0) tipo_casa, ISNULL(oxc2.nombre, 'SIN ESPECIFICAR') nombre_tipo_casa, lot.casa,
-      sed.nombre as ubicacion, ISNULL(ca.comAdmon, 'SIN ESPECIFICAR') comentario_administracion, ISNULL(vc.total, 0) venta_compartida, ISNULL(sc.nombreStatus, 'SIN ESPECIFICAR') statusContratacion
+      sed.nombre as ubicacion, ISNULL(ca.comAdmon, 'SIN ESPECIFICAR') comentario_administracion, ISNULL(vc.total, 0) venta_compartida, ISNULL(sc.nombreStatus, 'SIN ESPECIFICAR') statusContratacion,
+      ISNULL(oxc0.nombre, 'Normal') tipo_proceso
       FROM lotes lot
       INNER JOIN condominios con ON con.idCondominio = lot.idCondominio $filtroCondominio
       INNER JOIN residenciales res ON res.idResidencial = con.idResidencial $filtroProyecto $filtroSederesidencial
@@ -121,6 +122,7 @@ class Contratacion_model extends CI_Model {
       LEFT JOIN comentarios_administracion ca ON ca.nombreLote = lot.nombreLote
       LEFT JOIN (SELECT id_cliente, COUNT(*) total FROM ventas_compartidas WHERE estatus = 1 GROUP BY id_cliente) vc ON vc.id_cliente = cl.id_cliente
       LEFT JOIN statuscontratacion sc ON sc.idStatusContratacion = lot.idStatusContratacion
+      LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
       WHERE lot.status = 1 $filtroEstatus
       ORDER BY lot.nombreLote");
       return $query->result_array();

@@ -26,7 +26,15 @@ const STATUSLOTE = Object.freeze({
     APARTADO_REUBICACION : 16,
 });
 
-const ESTATUS_PREPROCESO = ['PENDIENTE CARGA DE PROPUESTAS', 'REVISIÓN DE PROPUESTAS', 'ELABORACIÓN DE CORRIDAS', 'ELABORACIÓN DE CONTRATO Y RESICISIÓN', 'DOCUMENTACIÓN ENTREGADA', 'RECEPCIÓN DE DOCUMENTOS CONFIRMADA'];
+const ESTATUS_PREPROCESO = [
+    'PENDIENTE CARGA DE PROPUESTAS',
+    'REVISIÓN DE PROPUESTAS',
+    'ELABORACIÓN DE CORRIDAS',
+    'ELABORACIÓN DE CONTRATO Y RESICISIÓN',
+    'DOCUMENTACIÓN ENTREGADA',
+    'RECEPCIÓN DE DOCUMENTOS CONFIRMADA',
+    'PROCESO DE CONTRATACIÓN'
+];
 
 let titulosTabla = [];
 $('#reubicacionClientes thead tr:eq(0) th').each(function (i) {
@@ -155,12 +163,12 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
                             data-tipoLote="${d.tipo_lote}"
                             data-idProyecto="${d.idProyecto}"
                             data-statusPreproceso="${d.id_estatus_preproceso}">
-                            <i class="fas fa-user-edit"></i>
+                            <i class="fas fa-clipboard-list"></i>
                     </button>`;
                 const BTN_AVANCE =  `<button class="btn-data btn-green btn-avanzar"
                     data-toggle="tooltip" 
                     data-placement="left"
-                    title="ENVIAR A ${ESTATUS_PREPROCESO[d.id_estatus_preproceso + 1]}"
+                    title="ENVIAR A ${ESTATUS_PREPROCESO[parseInt(d.id_estatus_preproceso) + 1]}"
                     data-idCliente="${d.idCliente}"
                     data-tipoTransaccion="${d.id_estatus_preproceso}">
                     <i class="fas fa-thumbs-up"></i>
@@ -196,6 +204,7 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
                         btns += BTN_INFOCLIENTE;
                     }else{
                         btns += BTN_AVANCE;
+                        btns += BTN_INFOCLIENTE;
                     }
                 }
                 else if (d.id_estatus_preproceso == 2 && id_rol_general == 17) { // Contraloría: ELABORACIÓN DE CORRIDAS
@@ -362,8 +371,9 @@ $(document).on('click', '.infoUser', function (){
     $("#estadoCli").empty();
 
     const idCliente = $("#idCliente").val();
+    const idLote = $("#idLote").val();
 
-    $.getJSON("getCliente/" + idCliente, function(cliente) {
+    $.getJSON("getCliente/" + idCliente + "/" + idLote, function(cliente) {
         $('#nombreCli').val(cliente.nombre);
         $('#apellidopCli').val(cliente.apellido_paterno);
         $('#apellidomCli').val(cliente.apellido_materno);
@@ -371,6 +381,7 @@ $(document).on('click', '.infoUser', function (){
         $('#correoCli').val(cliente.correo);
         $('#domicilioCli').val(cliente.domicilio_particular);
         $('#ocupacionCli').val(cliente.ocupacion);
+        $('#ineCLi').val(cliente.ine);
 
         $.post("getEstadoCivil", function(estadoCivil) {
             const len = estadoCivil.length;
@@ -442,7 +453,7 @@ $(document).on('click', '#guardarCliente', function (){
 
     $.ajax({
         method: 'POST',
-        url: general_base_url + 'Reestructura/insetarCliente',
+        url: general_base_url + 'Reestructura/insetarCliente/'+ idLote,
         data: datos,
         processData: false,
         contentType: false,
@@ -725,12 +736,10 @@ function divLotesSeleccionados(statusPreproceso, nombreLote, superficie, idLote,
                             <input type="radio" name="idLote" id="idLote" value="${idLote}">
                             
                             <span class="w-100 d-flex justify-between">
-                                <p class="m-0">Lote</p>
-                                <p class="m-0"><b>${nombreLote}</b></p>
+                                <p class="m-0">Lote <b>${nombreLote}</b></p>
                             </span>
                             <span class="w-100 d-flex justify-between">
-                                <p class="m-0">Superficie</p>
-                                <p class="m-0"><b>${superficie}</b></p>
+                                <p class="m-0">Superficie <b>${superficie}</b></p>
                             </span>
                         </label>
                     </div>

@@ -986,7 +986,12 @@ function printMenuCheck(data){
     let arrayJSON = '';
     data.map((elemento, index)=>{
         if(elemento.hijos == 1 || Number.isInteger(elemento.orden)){
-            contenidoInternoHTML += '<ul><li>'+elemento.nombre+'</li><ul>';
+            arrayInterno = [];
+            arrayInterno.push(elemento.padre);
+            arrayInterno.push(elemento.idmenu);
+            arrayInterno.push(elemento.orden);
+            arrayJSON = JSON.stringify(arrayInterno);
+            contenidoInternoHTML += '<ul><li><input value="'+arrayJSON+'" type="checkbox" name="menu[]" id="padre'+elemento.nombre+index+'"> <label for="padre'+elemento.nombre+index+'"> '+elemento.nombre+'</label></li><ul>';
             data.map((element2, index2)=>{
                 arrayInterno = [];
                 if(element2.hijos == 0 && ((element2.orden>=data[index].orden ) && (element2.orden<=(data[index].orden+1)))){
