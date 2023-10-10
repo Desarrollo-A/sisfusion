@@ -9,7 +9,7 @@
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header pb-0 ">
-                    <h4 class="text-center" class="modal-title">¿ESTAS SEGURO DE CAMBIAR DE ESTATUS?</h4>
+                    <h4 class="text-center" class="modal-title">¿Estás seguro de cambiar de estatus?</h4>
                 </div>
                 <div class="modal-body pt-0">
                         <div class="container-fluid">
@@ -32,95 +32,100 @@
         </div>
     </div>
 
-    <div class="modal fade" id=OpenModalAdd data-backdrop="static" data-keyboard="false">
+    <div class="modal fade" id="OpenModalAdd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-md">
             <div class="modal-content">
-                <div class="d-flex justify-center">
-                    <label class="pt-3">INGRESAR NUEVA DIRECCION</label>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <i class="material-icons">clear</i>
+                    </button>
+                    <h4 class="modal-title">Ingresa nueva dirección</h4>
                 </div>
-                <div class="modal-body d-flex justify-center">
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <label class="d-flex justify-center">DIRECCION(<span class="text-danger">*</span>)</label>
-                            <input type="text" class="form-control input-gral mt-3" id="direccion" name="direccion" required>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">DIRECCIÓN(<span class="text-danger">*</span>)</label>
+                                    <input id="direccion" name="direccion" type="text" class="form-control input-gral" required>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group ">
+                                    <label class="control-label">ESTADO(<span class="text-danger">*</span>)</label>
+                                    <select class="selectpicker select-gral" name="id_sede" id="id_sede" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" required></select>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                            <label class="d-flex justify-center pb-2" for="id_sede">ESTADO(<span
-                                    class="text-danger">*</span>)</label>
-                            <select class="selectpicker select-gral" name="id_sede" id="id_sede" data-style="btn"
-                                data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7"
-                                data-container="body" required></select>
+                        <div class="row d-flex justify-center"> 
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">HORA INICIAL(<span class="text-danger">*</span>)</label>
+                                    <input id="hora_inicio" name="hora_inicio" type="number" class="form-control input-gral" required>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">HORA FINAL(<span class="text-danger">*</span>)</label>
+                                <input id="hora_fin" name="hora_fin" type="number" class="form-control input-gral" required>
+                            </div>
                         </div>
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                            <label class="d-flex justify-center pt-2">HORA INICIAL(<span
-                                    class="text-danger">*</span>)</label>
-                            <input type="number" class="form-control input-gral mt-3" id="hora_inicio"
-                                name="hora_inicio" required>
-                        </div>
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                            <label class="d-flex justify-center pt-2">HORA FINAL(<span
-                                    class="text-danger">*</span>)</label>
-                            <input type="number" class="form-control input-gral mt-3" id="hora_fin" name="hora_fin"
-                                required>
-                        </div>
-                        <div class="modal-footer d-flex justify-end">
-                            <button type="button" class="btn btn-danger btn-simple"
-                                data-dismiss="modal">Cancelar</button>
-                            <button type="button" id="guardarDireccion" name="guardarDireccion"
-                                class="btn btn-primary">Aceptar</button>
                         </div>
                     </div>
-                </div>
+                    <div class="modal-footer d-flex justify-end">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="guardarDireccion" name="guardarDireccion" class="btn btn-primary">Aceptar</button>
+                    </div>
             </div>
         </div>
     </div>
 
-    <div class="modal fade" id=openModalDirecciones data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog modal-md">
-            <div class="modal-content">
-                <div class="d-flex justify-center">
-                    <label class="pt-3">EDITAR </label>
-                </div>
-                <div class="modal-body d-flex justify-center">
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                            <label class="d-flex justify-center">DIRECCION(<span class="text-danger">*</span>)</label>
-                            <input type="text" class="form-control input-gral mt-3" id="direccionM" name="direccionM"
-                                required>
+    <div class="modal fade" id="openModalDirecciones" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">clear</i>
+                </button>
+                <h4 class="modal-title">Editar</h4>
+            </div>
+                <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">DIRECCIÓN(<span class="text-danger">*</span>)</label>
+                            <input id="direccionM" name="direccionM" type="text" class="form-control input-gral" required>
                         </div>
-                        <input type="hidden" name="id_direccion" id="id_direccion">
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                            <label class="d-flex justify-center pb-2" for="id_sedeEdit">ESTADO(<span
-                                    class="text-danger">*</span>)</label>
-                            <select class="selectpicker select-gral" name="id_sedeEdit" id="id_sedeEdit"
-                                data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7"
-                                data-container="body" required></select>
-                        </div>
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                            <label class="d-flex justify-center pt-2">HORA INICIAL(<span
-                                    class="text-danger">*</span>)</label>
-                            <input type="number" class="form-control input-gral mt-3" id="hora_inicioM"
-                                name="hora_inicio" required>
-                        </div>
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                            <label class="d-flex justify-center pt-2">HORA FINAL(<span
-                                    class="text-danger">*</span>)</label>
-                            <input type="number" class="form-control input-gral mt-3" id="hora_finM" name="hora_fin"
-                                required>
-                        </div>
-                        <div class="modal-footer d-flex d-flex justify-end">
-                            <button type="button" class="btn btn-danger btn-simple"
-                                data-dismiss="modal">Cancelar</button>
-                            <button type="button" id="editDirecciones" name="editDirecciones"
-                                class="btn btn-primary">Aceptar</button>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group ">
+                            <label class="control-label" for="id_sedeEdit">ESTADO(<span class="text-danger">*</span>)</label>
+                            <select class="selectpicker select-gral" name="id_sedeEdit" id="id_sedeEdit" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" required></select>
                         </div>
                     </div>
                 </div>
-            </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">HORA INICIAL(<span class="text-danger">*</span>)</label>
+                            <input id="hora_inicioM" name="hora_inicioM" type="number" class="form-control input-gral" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">HORA FINAL(<span class="text-danger">*</span>)</label>
+                            <input id="hora_finM" name="hora_finM" type="number" class="form-control input-gral" required>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                <div class="modal-footer d-flex justify-end">
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="button" id="editDirecciones" name="editDirecciones" class="btn btn-primary">Aceptar</button>
+                </div>
         </div>
     </div>
-
-
+    </div>
+    
     <div class="content">
         <div class="container-fluid">
             <div class="row">
@@ -135,11 +140,9 @@
                                 <table id="direcciones_datatable" class="table-striped table-hover">
                                     <thead>
                                         <tr>
-                                            <th>ID DIRECCION</th>
-                                            <th>ID SEDE</th>
-                                            <th>DIRECCION</th>
+                                            <th>ID DIRECCIÓN</th>
+                                            <th>DIRECCIÓN</th>
                                             <th>ESTADO</th>
-                                            <th>TIPO OFICINA</th>
                                             <th>HORA INICIO</th>
                                             <th>HORA FINAL</th>
                                             <th>ESTATUS</th>

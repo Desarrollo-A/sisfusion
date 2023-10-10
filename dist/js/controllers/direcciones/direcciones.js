@@ -231,7 +231,7 @@ function fillCatalogosTable() {
             titleAttr: "Direcciones",
             title: "Direcciones",
             exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6, 7],
+              columns: [0, 1, 2, 3, 4, 5, 6],
               format: {
                 header: function (d, columnIdx) {
                   return " " + titulos_intxtLiberado[columnIdx] + " ";
@@ -274,11 +274,7 @@ function fillCatalogosTable() {
                 return '<p class="m-0">' + d.id_direccion + "</p>";
             },
         },
-        {
-            data: function (d) {
-                return '<p class="m-0">' + d.id_sede + "</p>";
-            },
-        },
+        
         {
             data: function (d) {
                 return '<p class="m-0">' + d.direccion + "</p>";
@@ -287,11 +283,6 @@ function fillCatalogosTable() {
         {
             data: function (d) {
                 return '<p class="m-0">' + d.estado + "</p>";
-            },
-        },
-        {
-            data: function (d) {
-                return '<p class="m-0">' + d.tipo_oficina + "</p>";
             },
         },
         {

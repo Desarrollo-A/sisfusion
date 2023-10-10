@@ -6,7 +6,7 @@
     }
 
     function getDirecciones(){
-        return $this->db->query("SELECT dir.id_direccion,dir.estatus,dir.hora_inicio,dir.hora_fin,dir.id_sede, dir.nombre as direccion, se.nombre as estado, tipo_oficina FROM direcciones dir INNER JOIN sedes se ON se.id_sede = dir.id_sede WHERE tipo_oficina = 1");
+        return $this->db->query("SELECT dir.id_direccion,dir.estatus,dir.hora_inicio,dir.hora_fin, dir.nombre as direccion, se.nombre as estado FROM direcciones dir INNER JOIN sedes se ON se.id_sede = dir.id_sede WHERE tipo_oficina = 1");
     }
 
     public function getEstadoInfo(){
