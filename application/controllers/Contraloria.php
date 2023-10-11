@@ -1124,7 +1124,8 @@ class Contraloria extends CI_Controller {
         $validate = $this->Contraloria_model->validateSt6($idLote);
 
         if ($validate != 1) {
-            $data['message'] = 'FALSE';
+            $data['status'] = false;
+            $data['message'] = 'El estatus ya fue registrado';
             echo json_encode($data);
             return;
         }
@@ -1132,13 +1133,15 @@ class Contraloria extends CI_Controller {
         //se valida si existe una corrida en el árbol de documentos
         $corrida = $this->Contraloria_model->validaCorrida($idLote);
         if(empty($corrida->expediente)){
-            $data['message'] = 'MISSING_CORRIDA';
+            $data['status'] = false;
+            $data['message'] = 'Primero debes cargar la CORRIDA FINANCIERA para poder avanzar el lote';
             echo json_encode($data);
             return;
         }
 
         if (!$this->Contraloria_model->updateSt($idLote, $arreglo, $arreglo2)) {
-            $data['message'] = 'ERROR';
+            $data['status'] = false;
+            $data['message'] = 'Error al enviar la solicitud';
             echo json_encode($data);
             return;
         }
@@ -1148,7 +1151,8 @@ class Contraloria extends CI_Controller {
         }
 
         if (!in_array($cliente->proceso, [2,4])) {
-            $data['message'] = 'OK';
+            $data['status'] = true;
+            $data['message'] = 'Estatus enviado';
             echo json_encode($data);
             return;
         }
@@ -1162,14 +1166,16 @@ class Contraloria extends CI_Controller {
             ];
 
             if (!$this->Reestructura_model->aplicaLiberacion($data)) {
-                $data['message'] = 'ERROR';
+                $data['status'] = false;
+                $data['message'] = 'Error al enviar la solicitud';
                 echo json_encode($data);
                 return;
             }
         }
 
         if (!$this->General_model->insertBatch('historial_lotes', $historialSaltoMovimientos)) {
-            $data['message'] = 'ERROR';
+            $data['status'] = false;
+            $data['message'] = 'Error al enviar la solicitud';
             echo json_encode($data);
             return;
         }
@@ -1177,12 +1183,14 @@ class Contraloria extends CI_Controller {
         $numContrato = $this->generarNumContrato($idLote);
 
         if (!$this->General_model->updateRecord('lotes', ['status8Flag' => 1, 'numContrato' => $numContrato], 'idLote', $idLote)) {
-            $data['message'] = 'ERROR';
+            $data['status'] = false;
+            $data['message'] = 'Error al enviar la solicitud';
             echo json_encode($data);
             return;
         }
-
-        $data['message'] = 'OK';
+        
+        $data['status'] = true;
+        $data['message'] = 'Estatus enviado';
         echo json_encode($data);
     }
 

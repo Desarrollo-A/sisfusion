@@ -457,31 +457,17 @@ function preguntaRegCorr() {
             type: 'POST',
             success: function (data) {
                 response = JSON.parse(data);
-                if (response.message == 'OK') {
-                    $('#enviarAContraloriaGuardar').prop('disabled', false);
-                    $('#regCorrElab').modal('hide');
-                    $('#tabla_ingresar_6').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Estatus enviado.", "success");
-                } else if (response.message == 'MISSING_CORRIDA') {
-                    $('#enviarAContraloriaGuardar').prop('disabled', false);
-                    $('#regCorrElab').modal('hide');
-                    $('#tabla_ingresar_6').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Primero debes cargar la CORRIDA FINANCIERA para" +
-                        " poder avanzar el lote", "danger");
-                } else if (response.message == 'FALSE') {
-                    $('#enviarAContraloriaGuardar').prop('disabled', false);
-                    $('#regCorrElab').modal('hide');
-                    $('#tabla_ingresar_6').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
-                } else if (response.message == 'ERROR') {
-                    $('#enviarAContraloriaGuardar').prop('disabled', false);
-                    $('#regCorrElab').modal('hide');
-                    $('#tabla_ingresar_6').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
-                }
+                if (response.status)
+                    alerts.showNotification("top", "right", response.message, "success");
+                else
+                  alerts.showNotification("top", "right", response.message, "danger");
+
                 $("#totalNeto").val('');
+                $('#enviarAContraloriaGuardar').prop('disabled', false);
+                $('#regCorrElab').modal('hide');
+                $('#tabla_ingresar_6').DataTable().ajax.reload();
             },
-            error: function (data) {
+            error: function () {
                 $('#enviarAContraloriaGuardar').prop('disabled', false);
                 $('#rechazregCorrElabarStatus').modal('hide');
                 $('#tabla_ingresar_6').DataTable().ajax.reload();
