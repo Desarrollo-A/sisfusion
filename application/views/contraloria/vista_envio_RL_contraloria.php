@@ -3,6 +3,26 @@
 <body class="">
     <div class="wrapper ">
         <?php $this->load->view('template/sidebar'); ?>
+         
+        <!-- modal para rechazar estatus-->
+        <div class="modal fade" id="enviarContratos" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content" >
+                    <div class="modal-body">
+                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 p-0">
+                            <label>Ingresa los códigos de los contratos a enviar</label>
+                            <textarea name="txt" id="contratos" onkeydown="saltoLinea(value); return true;" class="text-modal" style="text-transform:uppercase; min-height: 400px;width: 100%"></textarea><br><br>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> Cancelar</button>
+                        <button type="button" id="btn_show" class="btn btn-primary">Aceptar</button>
+                        <br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
         <div class="content boxContent ">
             <div class="container-fluid">
                 <div class="row">
@@ -16,11 +36,22 @@
                                     <h3 class="card-title center-align">Envío contrato a RL </h3>
                                     <p class="card-title pl-1">(estatus 10)</p>
                                 </div>
+                                
+                                <?php if ($this->session->userdata('id_rol') != "63"){?>
+                                <div  class="toolbar">
+                                    <div class="row">
+                                        <div class="col col-xs-12 col-sm-3 col-md-3 col-lg-3 pb-5 d-flex justify-end">
+                                            <button class="btn-gral-data sendCont mb-1">Enviar contratos <i class="fas fa-paper-plane pl-1"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php }?>
                                 <div class="material-datatables">
                                     <table id="tabla_envio_RL" name="tabla_envio_RL" class="table-striped table-hover">
                                         <thead>
                                             <tr>
                                                 <th>TIPO DE VENTA</th>
+                                                <th>TIPO DE PROCESO</th>
                                                 <th>PROYECTO</th>
                                                 <th>CONDOMINIO</th>
                                                 <th>LOTE</th>
@@ -39,16 +70,8 @@
             </div>
         </div>
         <?php $this->load->view('template/footer_legend');?>                             
-    </div><!--main-panel close-->
+    </div>
 </body>
 <?php $this->load->view('template/footer');?>
-<!--DATATABLE BUTTONS DATA EXPORT-->
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/contraloria/vista_envio_RL_contraloria.js"></script>
 

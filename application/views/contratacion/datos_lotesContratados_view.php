@@ -2,13 +2,11 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet" />
 <body class="">
     <div class="wrapper ">
-
         <?php $this->load->view('template/sidebar'); ?>
-
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
                                 <i class="fas fa-bookmark fa-2x"></i>
@@ -16,7 +14,8 @@
                             <div class="card-content">
                                 <h3 class="card-title center-align " id="showDate"> </h3>
                                 <div class="toolbar">
-                                    <div class="row"></div>
+                                    <div class="row">
+                                    </div>
                                 </div>
                                 <div class="material-datatables">
                                     <div class="form-group">
@@ -39,6 +38,7 @@
                                                     <th>PRECIO DE FIANZA</th>
                                                     <th>REUBICACIÓN</th>
                                                     <th>FECHA DE REUBICACIÓN</th>
+                                                    <th>CONTRATO FIRMADO</th>
                                                 </tr>
                                             </thead>
                                         </table>
@@ -52,15 +52,6 @@
         </div>
         <?php $this->load->view('template/footer_legend');?>
     </div>
-    <!--main-panel close-->
 </body>
 <?php $this->load->view('template/footer');?>
-<!--DATATABLE BUTTONS DATA EXPORT-->
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-<script src="<?=base_url()?>dist/js/controllers/contratacion/datos_lotesContratados.js"></script>
+<script src="<?=base_url()?>dist/js/controllers/contratacion/datos_lotesContratados.js?v=1.1.1"></script>

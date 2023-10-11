@@ -2,6 +2,7 @@ $(document).ready(function () { //AL CARGAR LA PAGINA LLAMAR FUNCIÓN PARA LLENA
     getProyectos();
     $('.collapse').collapse()
 })
+
 //JQuery events
 $(document).on('change', '#proyecto', function () { //AL CARGAR DE UN PROYECTO LLAMAR FUNCIÓN PARA MOSTRAR LOS CONDOMINIOS DE ESE PROYECTO
     getCondominios($(this).val());
@@ -43,6 +44,7 @@ $(document).on('submit', '#formEscrituracion', function (e) {//EJECUCIÓN DEL SU
         guardarSolicitud(formData);
     }
 })
+
 //Functions
 function complete() {  
     $(".fa-spinner").hide();
@@ -149,6 +151,7 @@ function getInputData() { // FUNCIÓN PARA OBTENER LOS VALORES DE LOS INPUT CON 
     }
     return data;    
 };
+
 function NombreCompleto(e){ //FUNCIÓN PARA CONCATENAR LOS INPUT NOMBRE, APELLIDO P. APELLIDO M. CUANDO NO SE TIENE UN CLIENTE ASIGNADO AL LOTE - PENDIENTE SI BORRAR O NO
     var nom_com_cli = $('#nombre2').val() + " " + $('#ape1').val() + " " + $('#ape2').val();
     $('#nombre').val(nom_com_cli.toUpperCase());
@@ -251,10 +254,7 @@ function getClient(idLote) { //FUNCIÓN PARA OBTENER LOS DATOS DEL CLIENTE DEPEN
             document.getElementById('EdoCiv').children[1].children[0].title = '';
             document.getElementById('EdoCiv').children[1].children[0].children[0].innerText = '';
             //Se manda llamar funcion para el llenado del select correspondiente al estado civil de la persona
-
             getOpcCat('18, 19', ['ecivil', 'rconyugal']);
-            
-            
             //Modificacion al campo de regimen conyugal
             document.getElementById('rconyugal').title = '';
             document.getElementById('rconyugal').setAttribute('required',true);
@@ -266,7 +266,6 @@ function getClient(idLote) { //FUNCIÓN PARA OBTENER LOS DATOS DEL CLIENTE DEPEN
             document.getElementById('perj').title = '';
             document.getElementById('PerJur').children[1].children[0].title = '';
             document.getElementById('PerJur').children[1].children[0].children[0].innerText = '';
-
             $('#ocupacion').val(data.ocupacion);
             $('#origen').val(data.estado);
             $('#correo').val(data.correo.split(',')[0]);
@@ -283,12 +282,9 @@ function getClient(idLote) { //FUNCIÓN PARA OBTENER LOS DATOS DEL CLIENTE DEPEN
             $('#personalidada').val(data.personalidad);
             $("#rconyugal").selectpicker('refresh');
             $("#perj").selectpicker('refresh');
-
             $('#check').removeClass("d-none");
         }
-       
         $('#spiner-loader').addClass('hide');
-
     }, 'json');
 }
 
@@ -296,7 +292,6 @@ function getProyectos() {
     $("#condominio").val('');
     $("#condominio").selectpicker('refresh');
     $("#proyecto").find("option").remove();
-    $("#proyecto").append($('<option disabled selected>').val(null).text("Seleccione una opción"));
     $.post('getProyectos', function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
@@ -317,7 +312,6 @@ function getCondominios(idResidencial) {
     $('#spiner-loader').removeClass('hide');
     $('#check').addClass("d-none");
     $("#condominio").find("option").remove();
-    $("#condominio").append($('<option disabled selected>').val(null).text("Seleccione una opción"));
     $.post('getCondominios', {
         idResidencial: idResidencial
     }, function (data) {
@@ -339,7 +333,6 @@ function getLotes(idCondominio) {
     $('#spiner-loader').removeClass('hide');
     $('#check').addClass("d-none");
     $("#lotes").find("option").remove();
-    $("#lotes").append($('<option disabled selected>').val(null).text("Seleccione una opción"));
     $.post('getLotes', {
         idCondominio: idCondominio
     }, function (data) {
@@ -385,11 +378,11 @@ function clearInputs(){
     $('#calleF').val('');
     $('#valorC').val('');
 }
+
 function habilitarInputs(resul){
     if(resul){
         $('#ape1_cli').hide();
         $('#ape2_cli').hide();
-
         document.getElementById('nom2_cli').className = "col-md-12 pl-0";
         /*Cambio de id, nombre y etiuqueta del boton del formulario a su estado original */
         const button_apli = document.querySelector('.cont-button_apl');
@@ -418,13 +411,11 @@ function habilitarInputs(resul){
     document.getElementById('correo').disabled = resul;
     // document.getElementById('perj').disabled = resul;
     document.getElementById('direccion').disabled = resul;
-
 }
 
 function getOpcCat(id_cat, element) {
     for (let index = 0; index < element.length; index++) {
         $("#"+element[index]).find("option").remove();
-        $("#"+element[index]).append($('<option disabled selected>').val('').text("Seleccione una opción"));
     }
     $.post('getOpcCat', {id_cat: id_cat}, function (data) {
         var len = data.length;

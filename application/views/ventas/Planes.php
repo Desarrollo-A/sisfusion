@@ -9,12 +9,7 @@
 		}
 	</style>
 	<div class="wrapper">
-		<?php
-			if (in_array($this->session->userdata('id_rol'), array(17,5)))
-				$this->load->view('template/sidebar');
-			else
-				echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-		?>
+		<?php $this->load->view('template/sidebar'); ?>
 
 		<div class="modal fade" id="modalView" role="dialog">
 			<div class="modal-dialog" style="width: 500px">
@@ -35,12 +30,10 @@
 					<div class="container-fluid">
 						<div class="row mb-1 mt-1">
 							<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">	
-								<button type="button" class="btn btn-danger btn-simple m-0" data-dismiss="modal">CANCELAR
-								</button>
+								<button type="button" class="btn btn-danger btn-simple m-0" data-dismiss="modal">CANCELAR</button>
 							</div>
 							<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-								<button type="button" class="btn btn-primary" onclick="SavePaquete();">GUARDAR
-								</button>
+								<button type="button" class="btn btn-primary" onclick="SavePaquete();">GUARDAR</button>
 							</div>
 						</div>
 					</div>
@@ -115,7 +108,6 @@
 							</ul>
 							<div class="tab-content">
 								<div class="tab-pane active" id="tab_default_1">
-									<!-- Precio total -->
 									<div class="material-datatables p-2">
 										<div class="table-responsive">
 											<table class="table-striped table-hover" id="tableTotal" name="tableTotal">
@@ -130,7 +122,6 @@
 									</div>
 								</div>
 								<div class="tab-pane" id="tab_default_2">
-									<!-- Enganche -->
 									<div class="material-datatables p-2">
 										<div class="table-responsive">
 											<table class="table-striped table-hover" id="tableEnganche" name="tableEnganche">
@@ -145,7 +136,6 @@
 									</div>
 								</div>
 								<div class="tab-pane" id="tab_default_3">
-									<!-- Precio por M2 -->
 									<div class="material-datatables p-2">
 										<div class="table-responsive">
 											<table class="table-striped table-hover" id="tableEfectivoporm" name="tableEfectivoporm">
@@ -160,7 +150,6 @@
 									</div>
 								</div>
 								<div class="tab-pane" id="tab_default_4">
-									<!-- Precio por bono -->
 									<div class="material-datatables p-2">
 										<div class="table-responsive">
 											<table class="table-striped table-hover" id="tableBono" name="tableBono">
@@ -175,7 +164,6 @@
 									</div>
 								</div>
 								<div class="tab-pane" id="tab_default_5">
-									<!-- MSI -->
 									<div class="material-datatables p-2">
 										<div class="table-responsive">
 											<table class="table-striped table-hover" id="tableMSI" name="tableMSI">
@@ -237,25 +225,26 @@
                             <li id="li-plan" class="">
 								<a href="#nuevas-2" role="tab" data-toggle="tab">CARGAR PLAN</a>
 							</li>
+                            <li id="autorizacionesMsiPanel" class="">
+                                <a href="#autorizacionesTab" role="tab" data-toggle="tab">AUTORIZACIONES MSI</a>
+							</li>
                         </ul>
 
 						<div class="card no-shadow m-0">
                             <div class="card-content p-0">
 								<div class="tab-content">
-									<!------->
 									<div class="tab-pane active" id="nuevas-1">
 										<div class="toolbar">
 											<div class="container-fluid">
 												<div class="row aligned-row">
 													<div class="col-12 col-sm-3 col-md-3 col-lg-3 overflow-hidden">
 														<div class="d-flex justify-between">
-															<label class="label-gral">
-																<span class="isRequired">*</span>Estatus autorización
-															</label>                                                </div>
+															<label class="label-gral">Estatus autorización (<span class="isRequired">*</span>)</label>                                               
+														</div>
 														<select class="selectpicker select-gral m-0" id="estatusAut" name="estatusAut" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body"></select>
 													</div>
 													<div class="col-12 col-sm-3 col-md-3 col-lg-3 overflow-hidden">
-														<label class="label-gral"><span class="isRequired">*</span>Año</label>
+														<label class="label-gral">Año (<span class="isRequired">*</span>)</label>
 														<select class="selectpicker select-gral m-0" id="anio" name="anio" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body">
 															<?php
 															setlocale(LC_ALL, 'es_ES');
@@ -264,12 +253,10 @@
 																echo '<option value="'.$i.'">'.$yearName.'</option>';
 															} 
 															?>
-															</select>
+														</select>
 													</div>
 													<div class="col-12 col-sm-1 col-md-1 col-lg-1 d-flex align-end p-0">
-														<button class="btn-data btn-gray m-0 d-flex align-center justify-center" id="searchByEstatus">
-															<i class="fas fa-search fa-xs"></i>
-														</button>
+														<button class="btn-data btn-gray m-0 d-flex align-center justify-center" id="searchByEstatus"><i class="fas fa-search fa-xs"></i></button>
 													</div>
 												</div>
 											</div>
@@ -277,8 +264,7 @@
                                 		<br> 
 										<div class="material-datatables" id="box-autorizacionesPVentas">
 											<div class="form-group">
-												<table class="table-striped table-hover"
-													id="autorizacionesPVentas" name="autorizacionesPVentas">
+												<table class="table-striped table-hover" id="autorizacionesPVentas" name="autorizacionesPVentas">
 													<thead>
 														<tr>
 															<th>ID</th>
@@ -286,10 +272,10 @@
 															<th>PROYECTO</th>
 															<th>FECHA INICIO</th>
 															<th>FECHA FIN</th>
-															<th>TIPO LOTE</th>
+															<th>TIPO DE LOTE</th>
 															<th>TIPO DE SUPERFICIE</th>
-															<th>ESTATUS AUTORIZACIÓN</th>
-															<th>FECHA CREACIÓN</th>
+															<th>ESTATUS DE AUTORIZACIÓN</th>
+															<th>FECHA DE CREACIÓN</th>
 															<th>CREADO POR</th>
 															<th>ACCIONES</th>
 														</tr>
@@ -321,15 +307,13 @@
 																<div class="col-xs-12 col-sm-6 col-md-12 col-lg-12">
 																	<div class="form-group">
 																		<label class="mb-0" for="sede">Sede (<b class="text-danger">*</b>)</label>
-																		<select name="sede" id="sede" class="select-gral mt-0" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" required onchange="validateAllInForm()">
-																		</select>
+																		<select name="sede" id="sede" class="select-gral mt-0" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" required onchange="validateAllInForm()"></select>
 																	</div>
 																</div> 
 																<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 																	<div class="form-group">
 																		<label class="mb-0" for="residencial">Proyecto (<b class="text-danger">*</b>)</label> 
-																		<select id="residencial" name="residencial[]" multiple="multiple" class="form-control multiSelect"  data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required onchange="validateAllInForm()">
-																		</select>
+																		<select id="residencial" name="residencial[]" multiple="multiple" class="form-control multiSelect"  data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" required onchange="validateAllInForm()"></select>
 																	</div>
 																</div>
 																<div class="col-xs-12 col-sm-6 col-md-12 col-lg-12">
@@ -382,6 +366,108 @@
 											</div>
 										</form>
 									</div>
+                                    <div class="tab-pane" id="autorizacionesTab">
+                                        <div class="content boxContent">
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                        <h3 class="card-title center-align" >Meses sin intereses</h3>
+                                                        <div class="toolbar">
+                                                            <div class="container-fluid p-0"></div>
+                                                        </div>
+                                                        <div class="material-datatables">
+                                                            <div class="form-group">
+                                                                <table class="table-striped table-hover" id="tabla_aut" name="tabla_aut_name">
+                                                                    <thead>
+																		<tr>
+																			<th>ID</th>
+																			<th>COMENTARIO</th>
+																			<th>ESTATUS AUTORIZACIÓN</th>
+																			<th>ÚLTIMA MODIFICACIÓN</th>
+																			<th>ACCIONES</th>
+																		</tr>
+                                                                    </thead>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal fade " id="subirMeses" data-backdrop="static" data-keyboard="false">
+                                                        <div class="modal-dialog modal-lg">
+                                                            <div class="modal-content" >
+                                                                <div class="modal-body">
+                                                                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                                        <div class="card">
+                                                                            <div class="card-content">
+                                                                                <h3 class="card-title center-align" >Meses sin intereses</h3>
+                                                                                <div class="toolbar">
+                                                                                    <div class="container-fluid p-0">
+                                                                                        <div class="row aligned-row d-flex align-end">
+                                                                                            <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                                                                <label style="font-size: small">Elige el modo para subir los meses sin interés:</label>
+                                                                                            </div>
+                                                                                            <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4 pb-3">
+                                                                                                <div class="radio_container w-100">
+                                                                                                    <input class="d-none generate" type="radio" name="modoSubida" id="condominioM" checked value="1">
+                                                                                                    <label for="condominioM" class="w-50">Por Condominio</label>
+                                                                                                    <input class="d-none find-results" type="radio" name="modoSubida" id="loteM" value="0">
+                                                                                                    <label for="loteM" class="w-50">Por lote</label>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="row aligned-row d-flex align-end">
+                                                                                            <div class="col col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                                                                                                <label class="m-0" for="filtro3">Proyecto</label>
+                                                                                                <select name="filtro3" id="filtro3" class="selectpicker select-gral mb-0" data-show-subtext="true" data-live-search="true"  data-style="btn" onchange="changeCondominio()" title="Selecciona Proyecto" data-size="4" required>
+                                                                                                    <?php
+                                                                                                    if($residencial != NULL) :
+                                                                                                        foreach($residencial as $fila) : ?>
+                                                                                                            <option value= <?=$fila['idResidencial']?> data-nombre='<?=$fila['nombreResidencial']?>' style="text-transform: uppercase"> <?=$fila['descripcion']?> </option>
+                                                                                                        <?php endforeach;
+                                                                                                    endif;
+                                                                                                    ?>
+                                                                                                </select>
+                                                                                            </div>
+                                                                                            <div class="col col-xs-12 col-sm-4 col-md-4 col-lg-4 hide" id="contenedor-condominio">
+                                                                                                <label class="m-0" for="filtro4">Condominio</label>
+                                                                                                <select name="filtro4" id="filtro4" class="selectpicker select-gral mb-0" data-show-subtext="true" data-live-search="true"  data-style="btn" title="Selecciona Condominio" data-size="4" required onChange="loadLotes()"></select>
+                                                                                            </div>
+                                                                                            <input id="typeTransaction" type="hidden" value="1">
+                                                                                            <div class="col col-xs-12 col-sm-4 col-md-4 col-lg-4 mt-2">
+                                                                                                <button type="button" id="loadFile" class="btn-data-gral btn-success d-flex justify-center align-center">Cargar información<i class="fas fa-paper-plane pl-1"></i>
+                                                                                                </button>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="material-datatables">
+                                                                                    <div class="form-group">
+                                                                                        <div class="table-responsive">
+                                                                                            <table class="table-striped table-hover" id="tabla_msni" name="tabla_msni_name">
+                                                                                                <thead>
+                                                                                                <tr>
+                                                                                                    <th>ID CONDOMINIO</th>
+                                                                                                    <th>NOMBRE</th>
+                                                                                                    <th>MSI</th>
+                                                                                                </tr>
+                                                                                                </thead>
+                                                                                            </table>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 									<?php include 'modalsPventas.php' ?>
 								</div>
 							</div>
@@ -393,15 +479,8 @@
 	</div>
 	</div>
 	<?php $this->load->view('template/footer');?>
-
-	<!--DATATABLE BUTTONS DATA EXPORT-->
-	<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-	<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 	<script src="<?= base_url() ?>dist/js/funciones-generales.js"></script>
 	<script src="<?=base_url()?>dist/js/controllers/ventas/autorizacionesPlanes.js"></script>
+    <script type="text/javascript" src="//unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/contraloria/meses_sin_intereses.js"></script>
 </body>

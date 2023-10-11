@@ -274,6 +274,7 @@ table{
     text-align: center;
     width: 100%!important;
     font-size: 13px;
+    text-transform: uppercase;
     tbody > tr.selected, tbody > tr > .selected {
         background-color: $goldMaderas!important;
         opacity: 0.6;
@@ -288,7 +289,7 @@ table{
         display: none;
     }
     thead tr {
-        background-color: $blueIndigoDeep!important;
+        background-color: $blueIndigoDeep;
         th{
             padding: 0px!important;
             input{
@@ -299,7 +300,7 @@ table{
                 text-align: center;
                 font-weight: 300;
                 font-size: 10px!important;
-                background-color: $blueIndigoDeep!important;
+                background-color: $blueIndigoDeep;
                 text-transform: uppercase;
                 &:active{
                     border: 1px solid $white;
@@ -357,14 +358,20 @@ table{
         width: fit-content;
     }
 }
-.dataTables_scroll{
-    .dataTables_scrollHeadInner{
-        width: 100% !important; 
+.subBoxDetail{
+    background-color: $platinum;
+    border-radius: 10px;
+    padding: 15px 0;
+    width: 100%;
+    margin: auto;
+    label{
+        color: $gray;
+        font-weight: 100;
     }
-    .container-fluid{
+}
+.dataTables_scroll .container-fluid{
     padding-top: 5px;
     padding-bottom: 5px;
-    }
 }
 .dataTables_scrollBody::-webkit-scrollbar-track{
     border-radius: 10px;
@@ -384,6 +391,8 @@ table{
 /* Color del HOVER de barra de desplazamiento */
 .dataTables_scrollBody::-webkit-scrollbar-thumb:hover{
     background-color: $deepGray;
+    height: 12px;
+
 }
 .dataTables_wrapper{
     .container-fluid .row{
@@ -494,4 +503,8 @@ table{
 
 .radio-with-icon-autorizacones i:hover {
     color: #929292;
+}
+
+.text-red{
+    color: #FF0000;
 }

@@ -3,8 +3,7 @@ var tr;
 let estatus = '';
 let texto = '';
 let mensaje = '';
-let rol = "<?=$this->session->userdata('id_rol')?>";
-if(rol == 18){
+if(id_rol_general == 18){
     texto = 'ENVIAR A CONTRALORÍA';
     mensaje = 'BONOS ENVIADOS A CONTRALORÍA CORRECTAMENTE.';
     estatus = '1';
@@ -14,23 +13,20 @@ else{
     texto ='ENVIAR A INTERNOMEX';
     mensaje ='BONOS ENVIADOS A INTERNOMEX CORRECTAMENTE.';
 }
+let titulos = [];
 
-
-
-/**--------------------------TABLA REVISONES-------------------------------- */
 $("#tabla_bono_revision").ready(function() {
     $('#tabla_bono_revision thead tr:eq(0) th').each( function (i) {
-        if(  i !=14 && i != 0){
+        if( i != 0){
             var title = $(this).text();
-            $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
+            titulos.push(title);
+            $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
             $( 'input', this ).on('keyup change', function () {
                 if (tabla_nuevas.column(i).search() !== this.value ) {
                     tabla_nuevas.column(i).search(this.value).draw();
-
                     var total = 0;
                     var index = tabla_nuevas.rows({ selected: true, search: 'applied' }).indexes();
                     var data = tabla_nuevas.rows( index ).data();
-
                     $.each(data, function(i, v){
                         total += parseFloat(v.pago);
                     });
@@ -51,13 +47,30 @@ $("#tabla_bono_revision").ready(function() {
             total += parseFloat(v.pago);
         });
         var to = formatMoney(total);
-        document.getElementById("totalp").textContent = '$' + to;
+        document.getElementById("totalp").textContent =to;
     });
 
     tabla_nuevas = $("#tabla_bono_revision").DataTable({
-        dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
-        width: 'auto',
-        buttons: [{
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: "100%",
+        scrollX: true,
+        bAutoWidth:true,
+        buttons: [ {
+            extend: 'excelHtml5',
+            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+            className: 'btn buttons-excel',
+            titleAttr: 'Descargar archivo de Excel',
+            title:'Bonos activos',
+            exportOptions: {
+                columns: [1,2,3,4,5,6,7,8,9,10,11,12,13],
+                format: {
+                    header: function (d, columnIdx) {
+                        return ' ' + titulos[columnIdx-1] + ' ';
+                    }
+                }
+            },
+        },
+        {
             text: '<i class="fa fa-check"></i>'+texto+' ',
             action: function(){
                 if ($('input[name="idTQ[]"]:checked').length > 0 ) {
@@ -83,54 +96,7 @@ $("#tabla_bono_revision").ready(function() {
             },
             attr: {
                 class: 'btn btn-azure',
-                style: 'position: relative; float: right;',
             }
-        },
-        {
-            extend: 'excelHtml5',
-            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-            className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
-            exportOptions: {
-                columns: [1,2,3,4,5,6,7,8,9,10,11,12,13],
-                format: {
-                    header:  function (d, columnIdx) {
-                        if(columnIdx == 1){
-                            return 'ID ';
-                        }
-                        else if(columnIdx == 2){
-                            return 'USUARIO ';
-                        }else if(columnIdx == 3){
-                            return 'ROL ';
-                        }else if(columnIdx == 4){
-                            return 'MONTO BONO';
-                        }else if(columnIdx == 5){
-                            return 'ABONDADO';
-                        }else if(columnIdx == 6){
-                            return 'PENDIENTE';
-                        }
-                        else if(columnIdx == 7){
-                            return 'NÚMERO PAGO';
-                        }else if(columnIdx == 8){
-                            return 'PAGO INDIVIDUAL';
-                        }else if(columnIdx == 9){
-                            return 'ESTATUS';
-                        }
-                        else if(columnIdx == 10){
-                            return 'IMPUESTO';
-                        }
-                        else if(columnIdx == 11){
-                            return 'TOTAL APAGAR';
-                        }
-                        else if(columnIdx == 12){
-                            return 'COMENTARIO';
-                        }
-                        else if(columnIdx == 13){
-                            return 'FECHA';
-                        }
-                    }
-                }
-            },
         }],
         pagingType: "full_numbers",
         fixedHeader: true,
@@ -144,71 +110,61 @@ $("#tabla_bono_revision").ready(function() {
         destroy: true,
         ordering: false,
         columns: [{
-            "width": "3%",
         },
         {
-            "width": "3%",
-            "data": function(d) {
+            data: function(d) {
                 return '<p class="m-0"><center>' + d.id_pago_bono + '</center></p>';
             }
         },
         {
-            "width": "7%",
-            "data": function(d) {
+            data: function(d) {
                 return '<p class="m-0"><center>' + d.nombre + '</center></p>';
             }
         },
         {
-            "width": "7%",
-            "data": function(d) {
+            data: function(d) {
                 return '<p class="m-0"><center>'+d.id_rol+'</center></p>';
             }
         },
         {
-            "width": "7%",
-            "data": function(d) {
-                return '<p class="m-0"><center>$' + formatMoney(d.monto) + '</center></p>';
+            data: function(d) {
+                return '<p class="m-0"><center>' + formatMoney(d.monto) + '</center></p>';
             }
         },
         {
-            "width": "7%",
-            "data": function(d) {
+            data: function(d) {
                 let abonado = d.n_p*d.pago;
                 if(abonado >= d.monto -.30 && abonado <= d.monto +.30){
                     abonado = d.monto;
                 }else{
                     abonado =d.n_p*d.pago;
                 }
-                return '<p class="m-0"><center><b>$' + formatMoney(abonado) + '</b></center></p>';
+                return '<p class="m-0"><center><b>' + formatMoney(abonado) + '</b></center></p>';
             }
         },
         {
-            "width": "7%",
-            "data": function(d) {
+            data: function(d) {
                 let pendiente = d.monto - (d.n_p*d.pago);
                 if(pendiente < 1){
                     pendiente = 0;
                 }else{
                     pendiente = d.monto - (d.n_p*d.pago);
                 }
-                return '<p class="m-0"><center><b>$' + formatMoney(pendiente) + '</b></center></p>';
+                return '<p class="m-0"><center><b>' + formatMoney(pendiente) + '</b></center></p>';
             }
         },
         {
-            "width": "3%",
-            "data": function(d) {
+            data: function(d) {
                 return '<p class="m-0"><center><b>' +d.n_p+'</b>/'+d.num_pagos+ '</center></p>';
             }
         },
         {
-            "width": "7%",
-            "data": function(d) {
-                return '<p class="m-0"><center>$' + formatMoney(d.pago) + '</center></p>';
+            data: function(d) {
+                return '<p class="m-0"><center>' + formatMoney(d.pago) + '</center></p>';
             }
         },
         {
-            "width": "5%",
-            "data": function(d) {
+            data: function(d) {
                 if(parseFloat(d.pago) == parseFloat(d.impuesto1)){
                     return '<p class=m-0"><center><b>0%</b></center></p>';
                 }
@@ -218,51 +174,46 @@ $("#tabla_bono_revision").ready(function() {
             }
         },
         {
-            "width": "7%",
-            "data": function(d) {
+            data: function(d) {
                 if(parseFloat(d.pago) == parseFloat(d.impuesto1)){
-                    return '<p class="m-0"><center><b>$' + formatMoney(d.pago) + '</b></center></p>';
+                    return '<p class="m-0"><center><b>' + formatMoney(d.pago) + '</b></center></p>';
                 }
                 else{
                     let iva = ((parseFloat(d.impuesto)/100)*d.pago);
                     let pagar = parseFloat(d.pago) - iva;
-                    return '<p class="m-0"><center><b>$' + formatMoney(pagar) + '</b></center></p>';
+                    return '<p class="m-0"><center><b>' + formatMoney(pagar) + '</b></center></p>';
                 }
             }
         },
         {
-            "width": "7%",
-            "data": function(d) {
+            data: function(d) {
                 if (d.estado == 1) {
-                    return '<center><span class="label label-danger" style="background:#29A2CC">NUEVO</span><center>';
+                    return '<center><span class="label lbl-cerulean">NUEVO</span><center>';
                 } else if (d.estado == 2) {
-                    return '<center><span class="label label-danger" style="background:#9129CC">EN REVISIÓN</span><center>';
+                    return '<center><span class="label lbl-violetDeep">EN REVISIÓN</span><center>';
                 } else if (d.estado == 3) {
-                    return '<center><span class="label label-danger" style="background:#05A134">PAGADO</span><center>';
+                    return '<center><span class="label lbl-green">PAGADO</span><center>';
                 }
                 else if (d.estado == 6) {
-                    return '<center><span class="label label-danger" style="background:#4D7FA1">EVIADO A INTERNOMEX</span><center>';
+                    return '<center><span class="label lbl-azure">EVIADO A INTERNOMEX</span><center>';
                 }
             }
         },
         {
-            "width": "15%",
-            "data": function(d) {
+            data: function(d) {
                 return '<p class="m-0"><center>' + d.comentario + '</center></p>';
             }
         },
         {
-            "width": "8%",
-            "data": function(d) {
+            data: function(d) {
                 let fecha = d.fecha_abono.split('.')
                 return '<p class="m-0"><center>' + fecha[0] + '</center></p>';
             }
         },
         {
-            "width": "6%",
             "orderable": false,
-            "data": function(d) {
-                return '<div class="d-flex justify-center"><button class="btn-data btn-btn-blueMaderas consulta_abonos" value="' + d.id_pago_bono + '" title="HISTORIAL"><i class="fas fa-info"></i></button></div>';
+            data: function(d) {
+                return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas consulta_abonos" value="' + d.id_pago_bono + '" title="HISTORIAL"><i class="fas fa-info"></i></button></div>';
             } 
         }],
         columnDefs: [{
@@ -273,10 +224,10 @@ $("#tabla_bono_revision").ready(function() {
             className: 'dt-body-center',
             render: function (d, type, full, meta){
                 if(full.estado == 2 || full.estado== 1){
-                    return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_bono + '">';
+                    return '<input type="checkbox" name="idTQ[]" class="individualCheck" style="width:20px;height:20px;"  value="' + full.id_pago_bono + '">';
                 }
                 else{
-                    return '  <i class="material-icons">check</i>';
+                    return '';
                 }
             },
             select: {
@@ -327,20 +278,34 @@ $("#tabla_bono_revision").ready(function() {
     $("#tabla_bono_revision tbody").on("click", ".consulta_abonos", function(e){
         e.preventDefault();
         e.stopImmediatePropagation();
-
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
-
         $("#modal_bonos").modal();
-        $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE BONO</b></h5></p>');
+        $("#nameLote").append('<p><h4 class="text-center"><b>HISTORIAL DE BONO</b></h4></p>');
         $.getJSON(general_base_url +"Comisiones/getHistorialAbono2/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
-                $("#comments-list-asimilados").append('<div class="col-lg-12"><p style="color:gray;font-size:1.1em;">'+v.comentario+'<br><b style="color:#3982C0;font-size:0.9em;">'+v.date_final+'</b><b style="color:gray;font-size:0.9em;"> - '+v.nombre_usuario+'</b></p></div>');
+                $("#comments-list-asimilados").append(
+                    '<li>'+
+                        '<div class="container-fluid">'+
+                            '<div class="row">'+
+                                '<div class="col-md-6">'+
+                                    '<a><b>' + v.comentario + '</b></a><br>'+
+                                '</div>'+
+                                '<div class="float-end text-right"><a>'+v.date_final.split('.')[0]+'</a></div>'+
+                                '<div class="col-md-12">'+
+                                    '<p class="m-0">'+
+                                        '<small>Modificado por: </small>'+
+                                        '<b> ' +v.nombre_usuario+ '</b>'+
+                                    '</p>'+
+                                '</div>'+
+                            '</div>'+
+                        '</div>'+
+                    '</li>'
+                );
             });
         });
     });
 });
-
 
 function closeModalEng(){
     document.getElementById("form_abono").reset();
@@ -389,72 +354,6 @@ $("#form_abono").on('submit', function(e){
     }) 
 });
 
-/*function mandar_espera(idLote, nombre) {
-    idLoteespera = idLote;
-    link_espera1 = "Comisiones/generar comisiones/";
-    $("#myModalEspera .modal-footer").html("");
-    $("#myModalEspera .modal-body").html("");
-    $("#myModalEspera ").modal();
-    $("#myModalEspera .modal-footer").append("<div class='btn-group'><button type='submit' class='btn btn-success'>GENERAR COMISIÓN</button></div>");
-}*/
-
-// FUNCTION MORE
-$(window).resize(function(){
-    tabla_nuevas.columns.adjust();
-});
-
-function formatMoney( n ) {
-    var c = isNaN(c = Math.abs(c)) ? 2 : c,
-        d = d == undefined ? "." : d,
-        t = t == undefined ? "," : t,
-        s = n < 0 ? "-" : "",
-        i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
-        j = (j = i.length) > 3 ? j % 3 : 0;
-    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
-};
-
-
-/*$("#roles").change(function() {
-    var parent = $(this).val();
-    document.getElementById("users").innerHTML ='';
-
-    $('#users').append(` 
-    <label class="label">Usuario</label>   
-    <select id="usuarioid" name="usuarioid" class="form-control directorSelect ng-invalid ng-invalid-required" required data-live-search="true">
-    </select>
-    `);
-    $.post('getUsuariosRol/'+parent, function(data) {
-        $("#usuarioid").append($('<option disabled>').val("default").text("Seleccione una opción"))
-        var len = data.length;
-        for( var i = 0; i<len; i++){
-            var id = data[i]['id_usuario'];
-            var name = data[i]['name_user'];
-            $("#usuarioid").append($('<option>').val(id).attr('data-value', id).text(name));
-        }
-
-        if(len<=0){
-            $("#usuarioid").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
-        }
-        
-        $("#usuarioid").selectpicker('refresh');
-    }, 'json'); 
-});*/
-
-/*$("#numeroP").change(function(){
-    let monto = parseFloat($('#monto').val());
-    let cantidad = parseFloat($('#numeroP').val());
-    let resultado=0;
-
-    if (isNaN(monto)) {
-        alert('Debe ingresar un monto valido');
-        $('#pago').val(resultado);
-    }
-    else{
-        resultado = monto /cantidad;
-        $('#pago').val(formatMoney(resultado));
-    }
-});*/
-
 function cleanCommentsAsimilados() {
     var myCommentsList = document.getElementById('comments-list-asimilados');
     var myCommentsLote = document.getElementById('nameLote');
@@ -462,38 +361,54 @@ function cleanCommentsAsimilados() {
     myCommentsLote.innerHTML = '';
 }
 
+// Selección de CheckBox
+$(document).on("click", ".individualCheck", function() {
+    totaPen = 0;
+    tabla_nuevas.$('input[type="checkbox"]').each(function () {
+        let totalChecados = tabla_nuevas.$('input[type="checkbox"]:checked') ;
+        let totalCheckbox = tabla_nuevas.$('input[type="checkbox"]');
+        if(this.checked){
+            tr = this.closest('tr');
+            row = tabla_nuevas.row(tr).data();
+            totaPen += parseFloat(row.pago); 
+
+        }
+        // Al marcar todos los CheckBox Marca CB total
+        if( totalChecados.length == totalCheckbox.length )
+            $("#all").prop("checked", true);
+        else 
+            $("#all").prop("checked", false); // si se desmarca un CB se desmarca CB total
+    });
+    $("#totpagarPen").html(formatMoney(numberTwoDecimal(totaPen)));
+});
+    // Función de selección total
 function selectAll(e) {
     tota2 = 0;
-    $(tabla_nuevas.$('input[type="checkbox"]')).each(function (i, v) {
-        tr = $(this).closest('tr');
-        var row = tabla_nuevas.row(tr).data();
-        if (!$(this).prop("checked")) {
-            let iva=0,pagar=0;
-            if(row.pago == row.impuesto1){
-                pagar = row.pago;
-                row.pa = pagar;
-            }else{
-                iva = ((parseFloat(row.impuesto)/100)*row.pago);
-                pagar = parseFloat(row.pago) - iva;
-                row.pa = pagar;
-            
+    if(e.checked == true){
+        $(tabla_nuevas.$('input[type="checkbox"]')).each(function (i, v) {
+            tr = this.closest('tr');
+            row = tabla_nuevas.row(tr).data();
+            tota2 += parseFloat(row.pago);
+            if(v.checked == false){
+                $(v).prop("checked", true);
             }
-            $(this).prop("checked", true);
-            totaPen += parseFloat(pagar);
-            tr.children().eq(1).children('input[type="checkbox"]').prop("checked", true);
-        } 
-        else {
-            $(this).prop("checked", false);
-            let iva=0,pagar=0;
-            if(row.pago == row.impuesto1){
-                pagar = row.pago;
-            }else{
-                iva = ((parseFloat(row.impuesto)/100)*row.pago);
-                pagar = parseFloat(row.pago) - iva;
+        }); 
+        $("#totpagarPen").html(formatMoney(numberTwoDecimal(tota2)));
+    }
+    if(e.checked == false){
+        $(tabla_nuevas.$('input[type="checkbox"]')).each(function (i, v) {
+            if(v.checked == true){
+                $(v).prop("checked", false);
             }
-            totaPen -= parseFloat(pagar);
-            row.pa = 0;
-        }
-        $("#totpagarPen").html(formatMoney(totaPen));
-    });
+        }); 
+        $("#totpagarPen").html(formatMoney(0));
+    }
 }
+
+$('body').tooltip({
+    selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
+    trigger: 'hover',
+    container: 'body'
+}).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
+    $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
+});

@@ -22,7 +22,7 @@ $("#tabla_envio_RL").ready(function () {
                 titleAttr: 'Envío contrato a RL',
                 title: "Envío contrato a RL",
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + titulosInventario[columnIdx]  + ' ';
@@ -39,7 +39,7 @@ $("#tabla_envio_RL").ready(function () {
                 orientation: 'landscape',
                 pageSize: 'LEGAL',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + titulosInventario[columnIdx]  + ' ';
@@ -60,7 +60,6 @@ $("#tabla_envio_RL").ready(function () {
             [10, 25, 50, -1],
             [10, 25, 50, "Todos"]
         ],
-        bAutoWidth: false,
         fixedColumns: true,
         ordering: false,
         scrollX: true,
@@ -68,6 +67,11 @@ $("#tabla_envio_RL").ready(function () {
             {
                 data: function (d) {
                     return `<span class="label lbl-green">${d.tipo_venta}</span>`;
+                }
+            },
+            {
+                data: function (d) {
+                    return `<span class='label lbl-violetBoots'>${d.tipo_proceso}</span>`;
                 }
             },
             {
@@ -141,6 +145,18 @@ $('#tabla_envio_RL').on('draw.dt', function() {
     });
 });    
 
+var num = 1;
+function saltoLinea(value) {
+    if (value.length >= 13 * num) {
+        document.getElementById('contratos').value = value;
+        ++num;
+    }
+}
+
+$(document).on('click', '.sendCont', function () {
+    $('#enviarContratos').modal();
+});
+
 $(document).ready(function () {
     $("#btn_show").click(function () {
         var validaCont = $('#contratos').val();
@@ -211,24 +227,29 @@ $(document).ready(function () {
                     response = JSON.parse(data);
                     if (response.message == 'OK') {
                         $('#btn_show').prop('disabled', false);
+                        $('#enviarContratos').modal('hide');
                         $('#tabla_envio_RL').DataTable().ajax.reload();
                         alerts.showNotification("top", "right", "Contratos enviado.", "success");
                     } else if (response.message == 'VOID') {
                         $('#btn_show').prop('disabled', false);
+                        $('#enviarContratos').modal('hide');
                         $('#tabla_envio_RL').DataTable().ajax.reload();
                         alerts.showNotification("top", "right", "No hay contratos por registrar.", "danger");
                     } else if (response.message == 'ERROR') {
                         $('#btn_show').prop('disabled', false);
+                        $('#enviarContratos').modal('hide');
                         $('#tabla_envio_RL').DataTable().ajax.reload();
                         alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
                     } else if (response.message == 'NODETECTED') {
                         $('#btn_show').prop('disabled', false);
+                        $('#enviarContratos').modal('hide');
                         $('#tabla_envio_RL').DataTable().ajax.reload();
                         alerts.showNotification("top", "right", "No se encontro el número de contrato.", "danger");
                     }
                 },
                 error: function (data) {
                     $('#btn_show').prop('disabled', false);
+                    $('#enviarContratos').modal('hide');
                     $('#tabla_envio_RL').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
                 }

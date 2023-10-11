@@ -4,7 +4,6 @@
 	<div class="wrapper ">
 		<?php $this->load->view('template/sidebar'); ?>
 		
-		<!--Contenido de la página-->
 		<div class="content boxContent">
 			<div class="container-fluid">
 				<div class="row">
@@ -26,9 +25,7 @@
 														<div class="form-group d-flex">
 															<input type="text" class="form-control datepicker" id="beginDate"/>
                                                             <input type="text" class="form-control datepicker" id="endDate"/>
-															<button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
-																<span class="material-icons update-dataTable">search</span>
-															</button>
+															<button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange"><span class="material-icons update-dataTable">search</span></button>
 														</div>
 													</div>
 												</div>
@@ -62,7 +59,6 @@
 		</div>
 	</div>
 	<?php $this->load->view('template/footer');?>
-	<!--DATATABLE BUTTONS DATA EXPORT-->
 	<script src="<?= base_url() ?>dist/js/modal-steps.min.js"></script>
 	<script src="<?= base_url() ?>dist/js/moment.min.js"></script>
 	<script src="<?= base_url() ?>dist/js/es.js"></script>

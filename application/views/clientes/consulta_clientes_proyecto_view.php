@@ -2,12 +2,7 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body class="">
     <div class="wrapper ">
-        <?php
-            if(in_array($this->session->userdata('id_usuario'), array(1980, 7097, 7092)))
-                $this->load->view('template/sidebar');
-            else
-                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-        ?>
+        <?php $this->load->view('template/sidebar'); ?>
         <!--Contenido de la página-->
         <div class="content boxContent">
             <div class="container-fluid">
@@ -42,6 +37,7 @@
                                                     <th>FECHA DE NACIMIENTO</th>
                                                     <th>EDAD</th>
                                                     <th>OCUPACIÓN</th>
+                                                    <th>ORIGINARIO DE</th>
                                                 </tr>
                                                 </thead>
                                             </table>

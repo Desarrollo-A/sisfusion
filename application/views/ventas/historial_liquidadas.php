@@ -2,30 +2,7 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body class="">
     <div class="wrapper ">
-        <?php
-        if ($this->session->userdata('id_rol') == "13" || $this->session->userdata('id_rol') == "17" || $this->session->userdata('id_rol') == "32"
-            || $this->session->userdata('id_rol') == "8" || $this->session->userdata('id_usuario') == "7310"
-            || $this->session->userdata('id_usuario') == "11237" || $this->session->userdata('id_rol')=="70"){
-            $this->load->view('template/sidebar');
-        } else {
-            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-        }
-        ?>
-
-        <!-- Modals -->
-        <!-- modal  AGREGAR PLAN DE ENGANCHE-->
-        <!--<div class="modal fade modal-alertas" id="modal_enganche" role="dialog">
-            <div class="modal-dialog modal-md">
-                <div class="modal-content">
-                    <div class="modal-header bg-red">
-                    </div>
-                    <form method="post" id="form_enganche">
-                        <div class="modal-body"></div>
-                    </form>
-                </div>
-            </div>
-        </div>-->
-        <!-- modal -->
+        <?php $this->load->view('template/sidebar'); ?>
 
         <!-- modal verifyNEODATA -->
         <div class="modal fade modal-alertas" id="modal_NEODATA" role="dialog">

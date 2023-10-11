@@ -4,10 +4,8 @@
     <div class="wrapper">
     <?php $this->load->view('template/sidebar'); ?>
 
-
-        <!-- Modals -->
         <div class="modal fade" id="seeInformationModalfactura" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
@@ -24,8 +22,8 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="card card-plain">
-                                                <div class="card-content">
-                                                    <ul class="timeline timeline-simple" id="comments-list-factura"></ul>
+                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                                    <ul class="timeline-3" id="comments-list-factura"></ul>
                                                 </div>
                                             </div>
                                         </div>
@@ -57,7 +55,6 @@
                 </div>
             </div>
         </div>
-        <!--END MODALS-->
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -118,17 +115,7 @@
             </div>
         </div>
         <?php $this->load->view('template/footer_legend');?>
-    </div><!--main-panel close-->
-    
-
+    </div>
     <?php $this->load->view('template/footer');?>
-    <!--DATATABLE BUTTONS DATA EXPORT-->
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <script src="<?=base_url()?>dist/js/controllers/suma/revisionFactura.js"></script>
 </body>

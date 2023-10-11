@@ -3,12 +3,7 @@
 
 <body class="">
     <div class="wrapper ">
-        <?php
-            if (in_array($this->session->userdata('id_rol'), array(17, 70, 71, 73)))
-                $this->load->view('template/sidebar');
-            else
-                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-        ?>
+        <?php $this->load->view('template/sidebar'); ?>
         <div class="modal fade modal-alertas" id="modal_NEODATA" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -27,7 +22,7 @@
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
                                 <i class="fas fa-expand fa-2x"></i>
@@ -56,21 +51,23 @@
                                     </div>
                                 </div>
                                 <div class="material-datatables">
-                                    <table id="estatusNueveTable" name="estatusNueveTable" class="table-striped table-hover hide">
+                                    <table id="estatusNueveTable" name="estatusNueveTable" class="table-striped table-hover">
                                         <thead>
                                             <tr>
                                                 <th>PROYECTO</th>
                                                 <th>CONDOMINIO</th>
                                                 <th>LOTE</th>
                                                 <th>REFERENCIA</th>
+                                                <th>CLIENTE</th>
                                                 <th>GERENTE</th>
                                                 <th>ENGANCHE</th>
                                                 <th>TOTAL</th>
-                                                <th>FECHA ESTATUS 9</th>
+                                                <th>FECHA DE ESTATUS 9</th>
                                                 <th>USUARIO</th>
-                                                <th>FECHA APARTADO</th>
+                                                <th>COMENTARIO</th>
+                                                <th>FECHA DE APARTADO</th>
                                                 <th>REUBICACIÓN</th>
-                                                <th>FECHA REUBICACIÓN</th>
+                                                <th>FECHA DE REUBICACIÓN</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -83,30 +80,9 @@
         </div>
         <?php $this->load->view('template/footer_legend'); ?>
     </div>
-    </div>
-
-    </div>
-    <!--main-panel close-->
 </body>
 <?php $this->load->view('template/footer');?>
-
-<!--DATATABLE BUTTONS DATA EXPORT-->
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-<script src="<?=base_url()?>dist/js/controllers/contraloria/status9Report.js"></script>
-<script src="<?= base_url() ?>dist/js/dataTables.select.js"></script>
-<script src="<?= base_url() ?>dist/js/dataTables.select.min.js"></script>
-<!--  Plugin for Date Time Picker and Full Calendar Plugin-->
-<script src="<?= base_url() ?>dist/js/moment.min.js"></script>
+<script src="<?=base_url()?>dist/js/controllers/contraloria/status9Report.js?v=1.1.1"></script>
 <script src="<?= base_url() ?>dist/js/es.js"></script>
-<!-- DateTimePicker Plugin -->
 <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
-<!-- Sliders Plugin -->
-<script src="<?= base_url() ?>dist/js/nouislider.min.js"></script>
-<!--  Full Calendar Plugin    -->
 <script src="<?= base_url() ?>dist/js/fullcalendar.min.js"></script>

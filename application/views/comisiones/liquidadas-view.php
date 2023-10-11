@@ -2,27 +2,16 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body class="">
     <div class="wrapper">
-        <?php
-        if ($this->session->userdata('id_rol') == "17" || $this->session->userdata('id_rol') == "8" || $this->session->userdata('id_rol')=="70") {
-            $this->load->view('template/sidebar');
-        }
-        else {
-            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-        }
-        ?>
-
+        <?php $this->load->view('template/sidebar'); ?>
         <style type="text/css">        
             #modal_nuevas{
                 z-index: 1041!important;
             }
-
             #modal_vc{
                 z-index: 1041!important;
             }
         </style>
-
         <!-- Modals -->
-
         <div class="modal fade modal-alertas" id="detenciones-modal" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -33,25 +22,22 @@
                         <div class="modal-body">
                             <input type="hidden" name="id_pagoc" id="id-lote-detenido">
                             <input type="hidden" name="statusLote" id="statusLote">
-                            
                             <div class="col-lg-12">
                                 <div class="form-group is-empty">
                                     <input id="motivo" name="motivo" type="text" class="form-control input-gral" placeholder="Escriba un motivo corto." minlength="3" maxlength="50" required />
                                 </div>
                             </div>
-
                             <div class="col-lg-12">
                                 <div class="form-group label-floating">
                                     <textarea class="form-control" id="descripcion" name="descripcion" rows="3" placeholder="Escriba detalles de la controversia." required></textarea>
                                 </div>
                             </div>
                         </div>
-
                         <div class="modal-footer">
-                        <div class="col-lg-12">
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                            <button type="submit" id="detenerLote" class="btn btn-primary">Registrar</button>
-                        </div>
+                            <div class="col-lg-12">
+                                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" id="detenerLote" class="btn btn-primary">Registrar</button>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -62,15 +48,15 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form id="my_updatebandera_form" name="my_updatebandera_form" method="post">
-                    <div class="modal-header bg-red">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> <i class="material-icons">clear</i></button>
-                    </div>
+                        <div class="modal-header bg-red">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> <i class="material-icons">clear</i></button>
+                        </div>
                         <div class="modal-body" style="text-align: center;"></div>
                         <div class="modal-footer">
-                        <div class="col-lg-12">
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                            <button type="submit" id="updateBandera" class="btn btn-primary">Registrar</button>
-                        </div>
+                            <div class="col-lg-12">
+                                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" id="updateBandera" class="btn btn-primary">Registrar</button>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -83,8 +69,26 @@
                 <div class="modal-content">
                     <form method="post" id="form_NEODATA">
                         <div class="modal-body"></div>
-                        <div class="modal-footer"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
+                        </div>
                     </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="detalle-plan-modal" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body pb-0">
+                        <div class="row">
+                            <div id="detalle-tabla-div"class="container-fluid">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" >Cerrar</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -93,7 +97,7 @@
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
                                 <i class="fas fa-chart-pie fa-2x"></i>
@@ -112,30 +116,29 @@
                                 </div>
                                 <div class="material-datatables">
                                     <div class="form-group">
-                                        <div class="table-responsive">
-                                            <table class="table-striped table-hover" id="tabla_comisiones_liquidadas" name="tabla_comisiones_liquidadas">
-                                                <thead>
-                                                    <tr>
-                                                        <th></th>
-                                                        <th>PROYECTO</th>
-                                                        <th>CONDOMINIO</th>
-                                                        <th>LOTE</th>
-                                                        <th>ID LOTE</th>
-                                                        <th>CLIENTE</th>
-                                                        <th>TIPO VENTA</th>
-                                                        <th>MODALIDAD</th>
-                                                        <th>CONTRATACIÓN</th>
-                                                        <th>PLAN VENTA</th>
-                                                        <th>ÚLTIMA DISPERSIÓN</th> 
-                                                
-                                                        <th>TOTAL</th>
-                                                        <th>PORCENTAJE</th>
-                                                        <th>PENDIENTE</th>
-                                                        <th>ACCIONES</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
-                                        </div>
+                                        <table class="table-striped table-hover" id="tabla_comisiones_liquidadas" name="tabla_comisiones_liquidadas">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>PROYECTO</th>
+                                                    <th>CONDOMINIO</th>
+                                                    <th>LOTE</th>
+                                                    <th>ID LOTE</th>
+                                                    <th>CLIENTE</th>
+                                                    <th>TIPO DE VENTA</th>
+                                                    <th>MODALIDAD</th>
+                                                    <th>CONTRATACIÓN</th>
+                                                    <th>PLAN DE VENTA</th>
+                                                    <th>TOTAL</th>
+                                                    <!-- <th>TOTAL</th> -->
+                                                    <th>PORCENTAJE</th>
+                                                    <th>PENDIENTE</th>
+                                                    <th>DETALLES</th>
+                                                    <th>FECHA ACTUALIZACIÓN</th>
+                                                    <th>ACCIONES</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -144,23 +147,9 @@
                 </div>
             </div>
         </div>
-    <?php $this->load->view('template/footer_legend');?>
+        <?php $this->load->view('template/footer_legend');?>
     </div>
-    </div><!--main-panel close-->
     <?php $this->load->view('template/footer');?>
-    <!--DATATABLE BUTTONS DATA EXPORT-->
-    <script > 
-    var url = "<?=base_url()?>";
-    var url2 = "<?=base_url()?>index.php/";
-
-    </script>
+    <script src="<?= base_url() ?>dist/js/funciones-generales.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/liquidadas.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-
 </body>

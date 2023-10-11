@@ -38,7 +38,7 @@ class Restore_model extends CI_Model {
             $this->db->trans_commit();
             return true;
         }
-    }
+    } 
 
     public function return_status_uno($datos){
         $replace = ["$", ","];
@@ -57,6 +57,7 @@ class Restore_model extends CI_Model {
         $row = $query4->result();
         $totalNeto2=0;
         $registroComision=0;
+        $tipoVenta = 0;
         $modificado_por=$this->session->userdata('id_usuario');
         $idstatus = $row[0]->idStatusContratacion;
         $idmovimiento = $row[0]->idMovimiento;
@@ -78,7 +79,7 @@ class Restore_model extends CI_Model {
                 col_afect
                 ,MAX(fecha_creacion) as fecha_creacion, id_parametro
             FROM auditoria WHERE id_parametro = $idlote AND tabla = 'lotes'
-            AND col_afect IN ('tipo_venta', 'registro_comision', 'ubicacion', 'ubicacion_dos', 'totalNeto2','totalNeto','totalValidado') 
+            AND col_afect IN ('tipo_venta', 'registro_comision', 'ubicacion', 'ubicacion_dos', 'totalNeto2','totalNeto','totalValidado','precio') 
             GROUP BY col_afect, id_parametro
         )
         SELECT
@@ -95,6 +96,7 @@ class Restore_model extends CI_Model {
             foreach($rowAuditoria as $row){
                 if($row['col_afect'] == 'tipo_venta'){
                     $param = $tipo_venta == 'N/A' ?  $row['anterior'] : $tipo_venta;
+                    $tipoVenta = $tipo_venta == 'N/A' ?  $row['anterior'] : $tipo_venta;
                     $AND .= ", tipo_venta =  $param";
                 }elseif($row['col_afect'] == 'registro_comision'){
                     $param = $row['anterior'];
@@ -119,12 +121,16 @@ class Restore_model extends CI_Model {
                 elseif($row['col_afect'] == 'totalValidado'){
                     $param = $totalValidado == 'N/A' ? $row['anterior'] : str_replace($replace,"",$totalValidado);
                     $AND .= ", totalValidado =  $param";
+                }elseif($row['col_afect'] == 'precio'){
+                    $param =  $row['anterior'];
+                    $AND .= ", precio =  $param";
                 }
             }
         }
 
         if($idstatus < 5){
-            $AND = ",totalValidado=NULL,totalNeto2=NULL,totalNeto=NULL,ubicacion=0,status8Flag=0,validacionEnganche=NULL,tipo_venta=0 ";
+            $cadenaTipoVenta = $tipoVenta == 1 ? 1 : 0;
+            $AND = ",totalValidado=NULL,totalNeto2=NULL,totalNeto=NULL,ubicacion=0,status8Flag=0,validacionEnganche=NULL,tipo_venta=".$cadenaTipoVenta;
         }/*else if(in_array($idstatus, array(5,6,7))){
             $AND = ",totalValidado=NULL,totalNeto2=NULL,totalNeto=NULL,status8Flag=0,validacionEnganche=NULL ";
         }*/

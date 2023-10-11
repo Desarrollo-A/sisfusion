@@ -42,6 +42,7 @@
         vertical-align: middle;
     }
 </style>
+
 <div class="modal fade" id="avisoNovedades" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
      data-backdrop="static" >
     <div class="modal-dialog modal-lg"  id="body_modal">
@@ -51,13 +52,15 @@
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
                         <img src="<?=base_url()?>static/images/bell-cdm.gif" style="width: 10%"><br>
                     </div>
-                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0 50px">
+                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0 50px; ">
                         <h4><b>Aviso</b></h4>
                         <p>
-                        Estimado colaborador el día de hoy, 14 de junio, estaremos aplicando una mejora en nuestro sistema. Esta actualización tiene como objetivo optimizar el rendimiento y la eficiencia de algunas operaciones.
-<br>
-Será necesario realizar una breve interrupción del servicio. Dicha interrupción está programada para comenzar a las <b>8:00 p.m.</b> y se espera que tenga una duración de aproximadamente una hora.<br><br> Durante este período, será posible que se vean intermitencias en el sistema, agradeceremos tu apoyo y comprensión en el transcurso de la implementación. 
+                        Estimado colaborador el día de hoy 24 de Agosto, así como el día 26 de Agosto, estaremos aplicando una serie de mejoras en nuestro sistema. Estas actualizaciones tienen como objetivo optimizar el rendimiento, eficiencia y seguridad de algunas operaciones dentro de nuestro CRM.
+                        <br>
+                        <br>
+                        Será necesario realizar una breve interrupción del servicio. La actualización está programada para comenzar a las <b>7:00 p.m. el día 24</b> y por otro lado <b>8:00 a.m. el día 26</b> se espera que tenga una duración de aproximadamente dos o tres horas respectivamente.<br><br> Durante estos períodos, será posible que se vean intermitencias en el sistema, agradeceremos tu apoyo y comprensión en el transcurso de la implementación. 
                         </p>
+                        <p style="font-size: small">Recuerda actualizar caché con el comando <b>CTRL + SHIFT + R</b></p>
                         <div class="d-flex justify-center align-center mt-1">
                             <input type="checkbox" name="no_mostrar_session" id="no_mostrar_session" style="margin: -1px 0 0;line-height: normal;">
                             <label for="no_mostrar_session" style="color: #5a5a5a;font-size: 1.2rem " class="m-0"><b>No volver a mostrar aviso durante la sesión</b></label>

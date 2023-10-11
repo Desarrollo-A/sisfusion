@@ -340,7 +340,7 @@ class Statistics_model extends CI_Model {
         INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = p.id_sede 
         LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (p.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON p.territorio_venta = ot.id_opcion AND ot.id_sede
         LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         LEFT JOIN observaciones o ON (p.id_cliente = o.id_cliente)
         WHERE (p.id_asesor = '$asesor' AND p.id_sede = '$sede' AND p.otro_lugar = '$lugar')
@@ -374,7 +374,7 @@ class Statistics_model extends CI_Model {
         INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = p.id_sede 
         LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (p.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON p.territorio_venta = ot.id_opcion AND ot.id_sede
         LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         LEFT JOIN observaciones o ON (p.id_cliente = o.id_cliente)
         WHERE (p.id_asesor = '$asesor' AND p.id_sede = '$sede' AND p.lugar_prospeccion = 6)
@@ -407,7 +407,7 @@ class Statistics_model extends CI_Model {
         INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = p.id_sede 
         LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (p.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON p.territorio_venta = ot.id_opcion AND ot.id_sede
         LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         LEFT JOIN observaciones o ON (p.id_cliente = o.id_cliente)
         WHERE (lugar_prospeccion = 6)
@@ -434,7 +434,7 @@ class Statistics_model extends CI_Model {
         INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = p.id_sede 
         LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (p.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON p.territorio_venta = ot.id_opcion AND ot.id_sede
         LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         LEFT JOIN observaciones o ON (p.id_cliente = o.id_cliente)
         WHERE (p.id_sede = '$sede' AND otro_lugar = '$lugar')
@@ -480,7 +480,7 @@ class Statistics_model extends CI_Model {
         INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = p.id_sede 
         LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (p.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON p.territorio_venta = ot.id_opcion AND ot.id_sede
         LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         LEFT JOIN observaciones o ON (p.id_cliente = o.id_cliente)
         WHERE (p.id_sede = '$sede' AND lugar_prospeccion = 6)
@@ -507,7 +507,7 @@ class Statistics_model extends CI_Model {
         INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = p.id_sede 
         LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (p.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON p.territorio_venta = ot.id_opcion AND ot.id_sede
         LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         LEFT JOIN observaciones o ON (p.id_cliente = o.id_cliente)
         WHERE (p.otro_lugar = '$lugar')
@@ -841,7 +841,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE (p.id_asesor = '$user' AND p.tipo = '$tipo') AND p.fecha_creacion 
                                 BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59'  ORDER BY MONTH(p.fecha_creacion)");
@@ -867,7 +867,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE (p.id_asesor = '$user' AND p.tipo = '$tipo')
                                 AND p.fecha_creacion BETWEEN '$current_year/01/01 00:00:00' AND '$current_year/12/31 23:59:59'  ORDER BY MONTH(p.fecha_creacion)");
@@ -892,7 +892,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE (p.id_asesor = '$user') AND p.fecha_creacion 
                                 BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59'  ORDER BY MONTH(p.fecha_creacion)");
@@ -918,7 +918,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE (p.id_gerente = '$user' ) AND (p.fecha_creacion BETWEEN '$current_year/01/01 00:00:00' AND '$current_year/12/31 23:59:59')
                                 ORDER BY p.fecha_creacion");
@@ -944,7 +944,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE (p.id_gerente = '$user' and p.tipo = '$tipo') AND (p.fecha_creacion BETWEEN '$current_year/01/01 00:00:00' AND '$current_year/12/31 23:59:59')
                                 ORDER BY p.fecha_creacion");
@@ -970,7 +970,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE (p.id_coordinador = '$user' ) AND (p.fecha_creacion BETWEEN '$current_year/01/01 00:00:00' AND '$current_year/12/31 23:59:59')
                                 ORDER BY p.fecha_creacion");
@@ -995,7 +995,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE (p.id_gerente = '$gerente') AND
                                 (p.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59') ORDER BY p.fecha_creacion");
@@ -1020,7 +1020,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE (p.id_gerente = '$gerente' AND p.tipo = '$tipo' AND p.id_coordinador = '$coordinador') AND
                                 (p.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59') ORDER BY p.fecha_creacion");
@@ -1045,7 +1045,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE (p.id_gerente = '$gerente' AND p.id_coordinador = '$coordinador') AND
                                 (p.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59') ORDER BY p.fecha_creacion");
@@ -1070,7 +1070,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE (p.id_gerente = '$gerente' AND p.tipo = $tipo) AND
                                 (p.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59') ORDER BY p.fecha_creacion");
@@ -1095,7 +1095,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE (p.id_gerente = '$user' AND p.tipo = '$tipo' AND p.id_asesor = '$asesor') AND
                                 (p.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59') ORDER BY p.fecha_creacion");
@@ -1120,7 +1120,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                  WHERE (p.id_coordinador = '$user' AND p.tipo = '$tipo' AND p.id_asesor = '$asesor') AND
                                  (p.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59') ORDER BY p.fecha_creacion");
@@ -1146,7 +1146,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE (p.id_coordinador = '$user' AND p.tipo = '$tipo') AND
                                 (p.fecha_creacion BETWEEN '$current_year/01/01 00:00:00' AND '$current_year/12/31 23:59:59') ORDER BY p.fecha_creacion");
@@ -1170,7 +1170,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE (p.id_coordinador = '$user' AND p.id_asesor = '$asesor') AND
                                 (p.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59') ORDER BY p.fecha_creacion");
@@ -1196,7 +1196,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE p.id_gerente IN (SELECT id_lider FROM usuarios WHERE id_usuario = '$user') 
                                 AND (p.fecha_creacion BETWEEN '$current_year/01/01 00:00:00' AND '$current_year/12/31 23:59:59')
@@ -1223,7 +1223,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE p.id_gerente IN (SELECT id_lider FROM usuarios WHERE id_usuario = '$user') 
                                 AND (p.fecha_creacion BETWEEN '$current_year/01/01 00:00:00' AND '$current_year/12/31 23:59:59')
@@ -1249,7 +1249,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE p.id_gerente IN (SELECT id_lider FROM usuarios WHERE id_usuario = '$user') AND (p.tipo = '$tipo' AND p.id_asesor = '$asesor')
                                 AND (p.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59')
@@ -1275,7 +1275,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE p.id_gerente IN (SELECT id_lider FROM usuarios WHERE id_usuario = '$user') AND (p.id_asesor = '$asesor')
                                 AND (p.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59')
@@ -1301,7 +1301,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE p.id_gerente = '$user' AND (p.id_asesor = '$asesor')
                                 AND (p.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59')
@@ -1327,7 +1327,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE p.id_gerente = '$user' AND (p.id_coordinador = '$coordinador')
                                 AND (p.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59')
@@ -1353,7 +1353,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE p.id_gerente IN(SELECT id_lider FROM usuarios WHERE id_usuario = '$user' AND id_rol = 6) AND (p.id_coordinador = '$coordinador')
                                 AND (p.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59')
@@ -1379,7 +1379,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE p.id_gerente = '$user' AND p.tipo = '$tipo' AND (p.id_coordinador = '$coordinador')
                                 AND (p.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59')
@@ -1405,7 +1405,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE p.id_gerente IN(SELECT id_lider FROM usuarios WHERE id_usuario = '$user' AND id_rol = 6) AND p.tipo = '$tipo' AND (p.id_coordinador = '$coordinador')
                                 AND (p.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59')
@@ -1446,7 +1446,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE (p.fecha_creacion BETWEEN '$current_year/01/01 00:00:00' AND '$current_year/12/31 23:59:59')
                                 ORDER BY p.fecha_creacion");
@@ -1472,7 +1472,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE (p.fecha_creacion BETWEEN '$current_year/01/01 00:00:00' AND '$current_year/12/31 23:59:59') AND p.tipo = '$tipo'");
     }
@@ -1496,7 +1496,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE t1.id_rol = 7 AND (p.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59') AND (p.tipo = '$tipo' AND p.id_asesor = '$asesor')
                                 ORDER BY p.fecha_creacion");
@@ -1521,7 +1521,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE t1.id_rol = 7 AND (p.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59') AND (p.id_asesor = '$asesor')
                                 ORDER BY p.fecha_creacion");
@@ -1603,7 +1603,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE p.id_sede IN (SELECT value FROM usuarios CROSS APPLY STRING_SPLIT(id_sede, ',') WHERE id_usuario = $user) 
                                 AND (p.fecha_creacion BETWEEN '$current_year/01/01 00:00:00' AND '$current_year/12/31 23:59:59')
@@ -1631,7 +1631,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE p.id_sede IN ($sedes) AND p.tipo = $tipo AND (p.fecha_creacion BETWEEN '$current_year/01/01 00:00:00' AND '$current_year/12/31 23:59:59')
                                 ORDER BY p.fecha_creacion");
@@ -1656,7 +1656,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE (p.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59') AND (p.tipo = '$tipo' AND p.id_asesor = '$asesor')
                                 AND p.id_sede IN (SELECT value FROM usuarios CROSS APPLY STRING_SPLIT(id_sede, ',') WHERE id_usuario = $user)
@@ -1682,7 +1682,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE p.id_sede IN (SELECT value FROM usuarios CROSS APPLY STRING_SPLIT(id_sede, ',') WHERE id_usuario = '$user')
                                 AND (p.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59') AND (p.id_asesor = '$asesor') ORDER BY p.fecha_creacion");
@@ -1708,7 +1708,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE p.id_sede IN (SELECT value FROM usuarios CROSS APPLY STRING_SPLIT(id_sede, ',') WHERE id_usuario = $user) 
                                 AND (p.fecha_creacion BETWEEN '$current_year/01/01 00:00:00' AND '$current_year/12/31 23:59:59')
@@ -1736,7 +1736,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE p.id_sede IN ($sedes) AND p.tipo = '$tipo' AND (p.fecha_creacion BETWEEN '$current_year/01/01 00:00:00' AND '$current_year/12/31 23:59:59')
                                 ORDER BY p.fecha_creacion");
@@ -1762,7 +1762,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE p.id_sede IN (SELECT id_sede FROM usuarios WHERE id_usuario = '$subdir')
                                 AND (p.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59')
@@ -1789,7 +1789,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE p.id_sede IN (SELECT id_sede FROM usuarios WHERE id_usuario = '$subdir')
                                 AND (p.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59')
@@ -1815,7 +1815,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE p.tipo = '$tipo' AND (p.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59')
                                 ORDER BY p.fecha_creacion");
@@ -1841,7 +1841,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE (p.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59')
                                 ORDER BY p.fecha_creacion");
@@ -1866,7 +1866,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE (p.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59') AND (p.tipo = '$tipo' AND p.id_asesor = '$asesor')
                                 AND p.id_sede IN (SELECT value FROM usuarios CROSS APPLY STRING_SPLIT(id_sede, ',') WHERE id_usuario = $user)
@@ -1892,7 +1892,7 @@ class Statistics_model extends CI_Model {
                                 INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
                                 INNER JOIN sedes se ON se.id_sede = p.id_sede 
                                 LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-                                LEFT JOIN opcs_x_cats ot ON (p.plaza_venta = ot.id_opcion AND ot.id_catalogo = 5)
+                                LEFT JOIN sedes ot ON p.plaza_venta = ot.id_sede
                                 LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
                                 WHERE (p.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59') AND (p.id_asesor = '$asesor') 
                                 AND p.id_sede IN (SELECT id_sede FROM usuarios WHERE id_usuario = $user)
@@ -1970,7 +1970,7 @@ class Statistics_model extends CI_Model {
         INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = p.id_sede 
         LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (p.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON p.territorio_venta = ot.id_opcion AND ot.id_sede
         LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         LEFT JOIN observaciones o ON (p.id_cliente = o.id_cliente)
         WHERE (p.id_sede = '$sede' AND p.lugar_prospeccion = '$lugar')
@@ -1997,7 +1997,7 @@ class Statistics_model extends CI_Model {
         INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = p.id_sede 
         LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (p.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON p.territorio_venta = ot.id_opcion AND ot.id_sede
         LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         LEFT JOIN observaciones o ON (p.id_cliente = o.id_cliente)
         WHERE (p.id_sede = '$sede' AND lugar_prospeccion = '$lugar')
@@ -2023,7 +2023,7 @@ class Statistics_model extends CI_Model {
         INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = p.id_sede 
         LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (p.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON p.territorio_venta = ot.id_opcion AND ot.id_sede
         LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         LEFT JOIN observaciones o ON (p.id_cliente = o.id_cliente)
         WHERE (p.id_sede = '$sede')
@@ -2049,7 +2049,7 @@ class Statistics_model extends CI_Model {
         INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = p.id_sede 
         LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (p.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON p.territorio_venta = ot.id_opcion AND ot.id_sede
         LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         LEFT JOIN observaciones o ON (p.id_cliente = o.id_cliente)
         WHERE (p.lugar_prospeccion = '$lugar')
@@ -2075,7 +2075,7 @@ class Statistics_model extends CI_Model {
         INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = p.id_sede 
         LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (p.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON p.territorio_venta = ot.id_opcion AND ot.id_sede
         LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         LEFT JOIN observaciones o ON (p.id_cliente = o.id_cliente)
         WHERE (p.fecha_creacion BETWEEN '$fecha_ini 00:00:00' AND '$fecha_fin 23:59:59')
@@ -2100,7 +2100,7 @@ class Statistics_model extends CI_Model {
         INNER JOIN usuarios t2 ON p.id_gerente = t2.id_usuario
         INNER JOIN sedes se ON se.id_sede = p.id_sede 
         LEFT JOIN opcs_x_cats oc ON (p.lugar_prospeccion = oc.id_opcion AND oc.id_catalogo = 9)
-        LEFT JOIN opcs_x_cats ot ON (p.territorio_venta = ot.id_opcion AND ot.id_catalogo = 5)
+        LEFT JOIN sedes ot ON p.territorio_venta = ot.id_opcion AND ot.id_sede
         LEFT JOIN opcs_x_cats om ON (p.medio_publicitario = om.id_opcion AND om.id_catalogo = 7)
         LEFT JOIN observaciones o ON (p.id_cliente = o.id_cliente)
         WHERE (p.id_sede = '$sede')

@@ -26,7 +26,7 @@ $("#tabla_ingresar_15").ready(function () {
                 titleAttr: 'Registro estatus 15',
                 title: "Registro estatus 15",
                 exportOptions: {
-                    columns: [1, 2, 3, 4, 5, 6, 7],
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + titulosInventario[columnIdx -1]  + ' ';
@@ -43,7 +43,7 @@ $("#tabla_ingresar_15").ready(function () {
                 orientation: 'landscape',
                 pageSize: 'LEGAL',
                 exportOptions: {
-                    columns: [1, 2, 3, 4, 5, 6, 7],
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + titulosInventario[columnIdx -1]  + ' ';
@@ -79,6 +79,11 @@ $("#tabla_ingresar_15").ready(function () {
             {
                 data: function (d) {
                     return `<span class="label lbl-green">${d.tipo_venta}</span>`;
+                }
+            },
+            {
+                data: function (d) {
+                    return `<span class='label lbl-violetBoots'>${d.tipo_proceso}</span>`;
                 }
             },
             {
@@ -124,24 +129,7 @@ $("#tabla_ingresar_15").ready(function () {
                             data.idStatusContratacion == 14 && data.idMovimiento == 80) {
 
                             cntActions =
-                                `<button    href="#"
-                                            data-idLote="${data.idLote}" 
-                                            data-nomLote="${data.nombreLote}"
-                                            data-idCond="${data.idCondominio}"
-                                            data-idCliente="${data.id_cliente}"
-                                            data-fecVen="${data.fechaVenc}"
-                                            data-ubic="${data.ubicacion}"
-                                            data-code="${data.cbbtton}" 
-                                            data-fechaArcus="${data.fecha_arcus}"
-                                            data-idProspecto="${data.id_prospecto}"
-                                            data-idArcus="${data.id_arcus}"
-                                            data-totalNeto2="${data.totalNeto2}"
-                                            class="btn-data btn-green editReg" 
-                                            data-toggle="tooltip"
-                                            data-placement="top"
-                                            title="REGISTRAR ESTATUS">
-                                    <i class="fas fa-thumbs-up"></i>
-                                </button>`;
+                                `<button href="#" data-idLote="${data.idLote}" data-nomLote="${data.nombreLote}" data-idCond="${data.idCondominio}" data-idCliente="${data.id_cliente}" data-fecVen="${data.fechaVenc}" data-ubic="${data.ubicacion}" data-code="${data.cbbtton}" data-fechaArcus="${data.fecha_arcus}" data-idProspecto="${data.id_prospecto}" data-idArcus="${data.id_arcus}" data-totalNeto2="${data.totalNeto2}" class="btn-data btn-green editReg"  data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS"><i class="fas fa-thumbs-up"></i></button>`;
                         }
                         else
                             cntActions = 'N/A';
@@ -277,8 +265,9 @@ $(document).on('click', '#save1', function (e) {
         };
         (async function () {
             try {
-                const res = await sendInfoArcus(dataArcus)
-                if (res.status === 'Accepted' || res.response === 'Accepted'){
+                // const res = await sendInfoArcus(dataArcus)
+                //if (res.status === 'Accepted' || res.response === 'Accepted'){
+                if (true) {
                     if (validaComent == 0)
                         alerts.showNotification('top', 'right', 'Ingresa un comentario.', 'danger')
 

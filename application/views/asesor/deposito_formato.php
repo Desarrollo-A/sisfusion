@@ -4,9 +4,6 @@
 <body>
 <div class="wrapper">
     <?php
-
-    ?>
-    <?php
         if(in_array($this->session->userdata('id_rol'), array(7, 9, 3, 6, 2)) || in_array($this->session->userdata('id_usuario'), array(2752, 2826, 2810, 2855, 2815, 5957, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012, 12931)) AND $onlyView==0){
             $readOnly = '';
             $statsInput = '';
@@ -646,20 +643,20 @@
                                                             <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9"> 
                                                             <label class="label-on-left m-0">VIVE EN CASA</label>
                                                                 <div class="radio_container">
-                                                                    <input type="radio" id="tipo_vivienda_cop'.$i.'[]" name="tipo_vivienda_cop'.$i.'"'; if ($copropiedad[$i]->tipo_vivienda == 1) { echo "checked=true"; } echo '  value="1" '.$statsInput.'/> 
-                                                                    <label>PROPIA</label>
-                                                                        
-                                                                    <input type="radio" id="tipo_vivienda_cop'.$i.'[]" name="tipo_vivienda_cop'.$i.'"';if ($copropiedad[$i]->tipo_vivienda == 2) { echo "checked=true"; } echo '  value="2" '.$statsInput.'/>
-                                                                    <label>RENTADA</label>
-                                                        
-                                                                    <input type="radio" id="tipo_vivienda_cop'.$i.'[]" name="tipo_vivienda_cop'.$i.'"';if ($copropiedad[$i]->tipo_vivienda == 3) { echo "checked=true"; } echo '  value="3" '.$statsInput.'/>
-                                                                    <label>PAGÁNDOSE</label>
-                                                        
-                                                                    <input type="radio" id="tipo_vivienda_cop'.$i.'[]" name="tipo_vivienda_cop'.$i.'"';if ($copropiedad[$i]->tipo_vivienda == 4) { echo "checked=true"; } echo '  value="4" '.$statsInput.'/>
-                                                                    <label>FAMILIAR</label>
-                                                        
-                                                                    <input type="radio" id="tipo_vivienda_cop'.$i.'[]" name="tipo_vivienda_cop'.$i.'"';if ($copropiedad[$i]->tipo_vivienda == 5) { echo "checked=true"; } echo '  value="5" '.$statsInput.'/>
-                                                                    <label>OTRO</label>
+                                                                    <input type="radio" id="tipo_vivienda_1_cop'.$i.'" name="tipo_vivienda_cop'.$i.'[]"'; if ($copropiedad[$i]->tipo_vivienda == 1) { echo "checked=true"; } echo ' value="1" '.$statsInput.'/>
+                                                                    <label for="tipo_vivienda_1_cop'.$i.'">PROPIA</label>
+
+                                                                    <input type="radio" id="tipo_vivienda_2_cop'.$i.'" name="tipo_vivienda_cop'.$i.'[]"';if ($copropiedad[$i]->tipo_vivienda == 2) { echo "checked=true"; } echo ' value="2" '.$statsInput.'/>
+                                                                    <label for="tipo_vivienda_2_cop'.$i.'">RENTADA</label>
+
+                                                                    <input type="radio" id="tipo_vivienda_3_cop'.$i.'" name="tipo_vivienda_cop'.$i.'[]"';if ($copropiedad[$i]->tipo_vivienda == 3) { echo "checked=true"; } echo ' value="3" '.$statsInput.'/>
+                                                                    <label for="tipo_vivienda_3_cop'.$i.'">PAGÁNDOSE</label>
+                                                                    
+                                                                    <input type="radio" id="tipo_vivienda_4_cop'.$i.'" name="tipo_vivienda_cop'.$i.'[]"';if ($copropiedad[$i]->tipo_vivienda == 4) { echo "checked=true"; } echo ' value="4" '.$statsInput.'/>
+                                                                    <label for="tipo_vivienda_4_cop'.$i.'">FAMILIAR</label>
+                                                                    
+                                                                    <input type="radio" id="tipo_vivienda_5_cop'.$i.'" name="tipo_vivienda_cop'.$i.'[]"';if ($copropiedad[$i]->tipo_vivienda == 5) { echo "checked=true"; } echo ' value="5" '.$statsInput.'/>
+                                                                    <label for="tipo_vivienda_5_cop'.$i.'">OTRO</label>
                                                                 </div>
                                                             </div>  
                                                             <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
@@ -1024,7 +1021,7 @@
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">OBSERVACIONES (<small style="color: red;">*</small>)</label>
-                            <textarea class="form-control pr-2 pl-2 espaciosOff scroll-styles" <?php echo $readOnly; ?> id="observacion" name="observacion" required><?php echo $cliente[0]->observacion; ?></textarea>
+                            <textarea class="form-control pr-2 pl-2 espaciosOff scroll-styles" <?php echo $readOnly; ?> id="observacion" name="observacion" rows="10" required><?php echo $cliente[0]->observacion; ?></textarea>
                         </div>
                     </div>
                 </div>

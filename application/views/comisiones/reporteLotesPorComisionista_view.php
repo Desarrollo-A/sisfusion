@@ -89,12 +89,7 @@
     </style>
 
     <div class="wrapper ">
-        <?php
-            if (in_array($this->session->userdata('id_rol'), array(18, 63, 8, 7, 9, 3, 2, 1, 4)))
-                $this->load->view('template/sidebar');
-            else
-                echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-        ?>
+        <?php $this->load->view('template/sidebar'); ?>
 
         <div class="modal fade" id="detailComisionistaModal" tabindex="-1" role="dialog" aria-labelledby="detailComisionistaLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm" role="document">
@@ -119,7 +114,7 @@
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                <a href="https://youtu.be/6W5B97MTOCghttps://youtu.be/6W5B97MTOCg" class="align-center justify-center u2be" target="_blank">
+                                <a href="https://youtu.be/S7HO2QTLaL0" class="align-center justify-center u2be" target="_blank">
                                     <i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
                                 </a>
                             </div>

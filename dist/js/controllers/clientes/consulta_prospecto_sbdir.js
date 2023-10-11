@@ -202,8 +202,6 @@ $(document).on('change', '#subdirector',function () {
 
     /**/ //carga tabla
     var url =general_base_url + 'index.php/Clientes/getProspectsListBySubdirector/' + subdirector;
-    /*console.log("TypeTRans: " + typeTransaction);
-    updateTable(url, typeTransaction);*/
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
     updateTable(url, 1, finalBeginDate, finalEndDate, 0)
@@ -211,6 +209,7 @@ $(document).on('change', '#subdirector',function () {
 
 
 $(document).on('change','#gerente', function () {
+    $('#prospects-datatable_dir').removeClass('hide');
 
     /**/var gerente = $("#gerente").val();
 
@@ -245,6 +244,7 @@ $(document).on('change','#gerente', function () {
 
 $(document).on('change', '#coordinador', function () {
     var coordinador = $("#coordinador").val();
+    $('#prospects-datatable_dir').removeClass('hide');
 
     //gerente
     $("#asesores").empty().selectpicker('refresh');
@@ -268,20 +268,19 @@ $(document).on('change', '#coordinador', function () {
     var url = general_base_url + 'index.php/Clientes/getProspectsListByCoord/'+coordinador;
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
-    updateTable(url, 1, finalBeginDate, finalEndDate, 0)
-    // updateTable(url, typeTransaction);
+    updateTable(url, 1, finalBeginDate, finalEndDate, 0);
 });
 
 //asesor
 $(document).on('change', '#asesores',function () {
     var asesor = $("#asesores").val();
+    $('#prospects-datatable_dir').removeClass('hide');
 
     /**///carga tabla
     var url = general_base_url + 'index.php/Clientes/getProspectsListByAsesor/' +asesor;
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
-    updateTable(url, 1, finalBeginDate, finalEndDate, 0)
-    // updateTable(url, typeTransaction);
+    updateTable(url, 1, finalBeginDate, finalEndDate, 0);
 });
 
 
@@ -290,11 +289,15 @@ $(document).on("click", "#searchByDateRange", function () {
     var url_interno;
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
+    var subdirector = $("#subdirector").val();
     var gerente = $("#gerente").val();
     var coordinador = $("#coordinador").val();
     var asesor = $("#asesores").val();
 
-    if(gerente != '' && coordinador == '' && asesor==''){
+    if(subdirector != '' && gerente == '' && coordinador == '' && asesor==''){
+        url_interno =general_base_url + 'index.php/Clientes/getProspectsListBySubdirector/';
+    }
+    else if(gerente != '' && coordinador == '' && asesor==''){
         url_interno = general_base_url + 'index.php/Clientes/getProspectsListByGerente/' + gerente;
     }else if(gerente != '' && coordinador != '' && asesor == ''){
         url_interno = general_base_url + 'index.php/Clientes/getProspectsListByCoord/' + coordinador;
@@ -391,6 +394,21 @@ function updateTable(url, typeTransaction, beginDate, endDate, where)
             },
             { data: function (d) {
                     return d.gerente;
+                }
+            },
+            {
+                data: function (d) {
+                    return (d.subdirector === '  ') ? 'SIN ESPECIFICAR' : d.subdirector;
+                }
+            },
+            {
+                data: function (d) {
+                    return (d.regional === '  ') ? 'SIN ESPECIFICAR' : d.regional;
+                }
+            },
+            {
+                data: function (d) {
+                    return (d.regional_2 === '  ') ? 'SIN ESPECIFICAR' : d.regional_2;
                 }
             },
             { data: function (d) {

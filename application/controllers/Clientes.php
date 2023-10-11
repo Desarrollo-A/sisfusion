@@ -2,10 +2,9 @@
 class Clientes extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
-        $this->load->model(array('Clientes_model', 'Statistics_model', 'asesor/Asesor_model', 'Caja_model_outside',
-            'General_model'));
+        $this->load->model(array('Clientes_model', 'Statistics_model', 'asesor/Asesor_model', 'Caja_model_outside', 'General_model'));
         $this->load->library(array('session','form_validation'));
-        $this->load->library(array('session','form_validation', 'get_menu'));
+        $this->load->library(array('session','form_validation', 'get_menu','permisos_sidebar'));
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
         date_default_timezone_set('America/Mexico_City');
@@ -13,6 +12,8 @@ class Clientes extends CI_Controller {
 
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+        $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
+        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
     }
 
 	public function index()
@@ -1502,131 +1503,127 @@ public function getStatusMktdPreventa(){
             </style>
         </head>
         <body>
-              <section class="content">
-                    <div class="row">
-                        <div class="col-xs-10 col-md-offset-1">
+            <section class="content">
+                <div class="row">
+                    <div class="col-xs-10 col-md-offset-1">
                         <div class="box">
                             <div class="box-body">
-                                  <table width="100%" style="height: 100px; border: 1px solid #ddd;" width="690">
+                                <table width="100%" style="height: 100px; border: 1px solid #ddd;" width="690">
                                     <tr>
                                         <td colspan="2" align="left"><img src="https://www.ciudadmaderas.com/assets/img/logo.png" style=" max-width: 70%; height: auto;"></td>
-                                        <td colspan="2" align="right"><b style="font-size: 2em; "> Información<BR></b><small style="font-size: 2em; color: #777;"> Prospecto</small> 
-                                        </td>
+                                        <td colspan="2" align="right"><b style="font-size: 2em; "> Información<BR></b><small style="font-size: 2em; color: #777;"> Prospecto</small></td>
                                     </tr>
                                 </table>
-                                
                                 <br><br>
-                                  <table width="100%" style="padding:10px 0px; text-align: center;height: 45px; border: 1px solid #ddd;" width="690">
+                                <table width="100%" style="padding:10px 0px; text-align: center;height: 45px; border: 1px solid #ddd;" width="690">
                                     <tr>
-                                        <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Datos generales</b>
-                                        </td>
+                                        <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Datos generales</b></td>
                                     </tr>
                                 </table>							
                                 <br>                       
-                                    <div class="row">                
-                                  <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-align: center;" width="690">
+                                <div class="row">                
+                                    <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-align: center;" width="690">
                                         <tr>
                                             <td style="font-size: 1em;">
-                                             <b>Nombre:</b><br>
-                                             '.$informacion->cliente.'
+                                                <b>Nombre:</b><br>
+                                                '.$informacion->cliente.'
                                             </td>
                                             <td style="font-size: 1em;">
-                                            <b>CURP:</b><br>
-                                            '.$informacion->curp.'
+                                                <b>CURP:</b><br>
+                                                '.$informacion->curp.'
                                             </td>
                                             <td style="font-size: 1em;">
-                                            <b>RFC:</b><br>
-                                            '.$informacion->rfc.'
+                                                <b>RFC:</b><br>
+                                                '.$informacion->rfc.'
                                             </td>
                                         </tr>                                        
                                         <tr>
                                             <td style="font-size: 1em;">
-                                             <b>Correo electrónico:</b><br>
-                                             '.$informacion->correo.'
+                                                <b>Correo electrónico:</b><br>
+                                                '.$informacion->correo.'
                                             </td>
                                             <td style="font-size: 1em;">
-                                            <b>Teléfono:</b><br>
-                                            '.$informacion->telefono.'
+                                                <b>Teléfono:</b><br>
+                                                '.$informacion->telefono.'
                                             </td>
                                             <td style="font-size: 1em;">
-                                            <b>Teléfono 2 (opcional):</b><br>
-                                            '.$informacion->telefono_2.'
+                                                <b>Teléfono 2 (opcional):</b><br>
+                                                '.$informacion->telefono_2.'
                                             </td>
                                         </tr>
                                         <tr>
                                             <td style="font-size: 1em;">
-                                             <b>Personalidad jurídica:</b><br>
-                                             '.$informacion->personalidad.'
+                                                <b>Personalidad jurídica:</b><br>
+                                                '.$informacion->personalidad.'
                                             </td>
                                             <td style="font-size: 1em;">
-                                            <b>Nacionalidad:</b><br>
-                                            '.$informacion->nacionalidad.'
+                                                <b>Nacionalidad:</b><br>
+                                                '.$informacion->nacionalidad.'
                                             </td>
                                         </tr>
                                     </table>
                                     <br>
                                     <br>
                                     <br>                       
-                                  <table width="100%" style="text-align: center;padding:10px;height: 45px; border-top: 1px solid #ddd;border-left: 1px solid #ddd;border-right: 1px solid #ddd;" width="690">
-                                    <tr>
-                                        <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Datos de prospección</b>
-                                        </td>
-                                    </tr>
-                                </table>							
-                                <br><br>                                  
-                                <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-align: center;" width="690">
-                                <tr>
-                                    <td style="font-size: 1em;">
-                                     <b>Asesor:</b><br>
-                                     '.$informacion->asesor.'
-                                    </td>
-                                    <td style="font-size: 1em;">
-                                    <b>Coordinador:</b><br>
-                                    '.$informacion->coordinador.'
-                                    </td> 
-                                    <td style="font-size: 1em;">
-                                    <b>Gerente:</b><br>
-                                    '.$informacion->gerente.'
-                                    </td>
-                                </tr>
-                                <tr>
-                                <td style="font-size: 1em;">
-                                 <b>Teléfono asesor:</b><br>
-                                 '.$informacion->telefono_asesor.'
-                                </td>
-                                <td style="font-size: 1em;">
-                                <b>Teléfono coordinador:</b><br>
-                                '.$informacion->telefono_coordinador.'
-                                </td> 
-                                <td style="font-size: 1em;">
-                                <b>Teléfono gerente:</b><br>
-                                '.$informacion->telefono_gerente.'
-                                </td>
-                            </tr>
-                            </table>
-                            <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-align: center;" width="690">
-                            <tr>
-                                <td style="font-size: 1em;">
-                                 <b>Medio de contacto:</b><br>
-                                 '.$informacion->lugar.'<br>
-                                 '.$informacion_lugar->especificar.'
-                                </td>
-                                <td style="font-size: 1em;">
-                                <b>Plaza de venta:</b><br>
-                                '.$informacion->plaza.'
-                                </td>
-                                <td style="font-size: 1em;">
-                                <b>Creado por:</b><br>
-                                '.$informacion->creacion.'
-                                </td>
-                            </tr>
-                        </table>
-                            <br>
-                            <br>
-                            <br>
-                                  <body>
-            </html>
-                                  ';
+                                    <table width="100%" style="text-align: center;padding:10px;height: 45px; border-top: 1px solid #ddd;border-left: 1px solid #ddd;border-right: 1px solid #ddd;" width="690">
+                                        <tr>
+                                            <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Datos de prospección</b>
+                                            </td>
+                                        </tr>
+                                    </table>							
+                                    <br><br>                                  
+                                    <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-align: center;" width="690">
+                                        <tr>
+                                            <td style="font-size: 1em;">
+                                                <b>Asesor:</b><br>
+                                                '.$informacion->asesor.'
+                                            </td>
+                                            <td style="font-size: 1em;">
+                                                <b>Coordinador:</b><br>
+                                                '.$informacion->coordinador.'
+                                            </td> 
+                                            <td style="font-size: 1em;">
+                                                <b>Gerente:</b><br>
+                                                '.$informacion->gerente.'
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-size: 1em;">
+                                                <b>Teléfono asesor:</b><br>
+                                                '.$informacion->telefono_asesor.'
+                                            </td>
+                                                <td style="font-size: 1em;">
+                                                <b>Teléfono coordinador:</b><br>
+                                            '.$informacion->telefono_coordinador.'
+                                            </td> 
+                                                <td style="font-size: 1em;">
+                                                <b>Teléfono gerente:</b><br>
+                                            '.$informacion->telefono_gerente.'
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-align: center;" width="690">
+                                        <tr>
+                                            <td style="font-size: 1em;">
+                                                <b>Medio de contacto:</b><br>
+                                                '.$informacion->lugar.'<br>
+                                                '.$informacion_lugar->especificar.'
+                                            </td>
+                                            <td style="font-size: 1em;">
+                                                <b>Plaza de venta:</b><br>
+                                                '.$informacion->plaza.'
+                                            </td>
+                                            <td style="font-size: 1em;">
+                                                <b>Creado por:</b><br>
+                                                '.$informacion->creacion.'
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <br>
+                                    <br>
+                                    <br>
+            <body>
+            </html>';
 
             $pdf->writeHTMLCell(0, 0, $x = '', $y = '10', $html, $border = 0, $ln = 1, $fill = 0, $reseth = true, $align = '', $autopadding = true);ob_end_clean();
             $pdf->Output(utf8_decode("Informacion_".$informacion->cliente.".pdf"), 'I');
@@ -1803,6 +1800,9 @@ public function getStatusMktdPreventa(){
 
     public function getProspectsListByGerente($id_gerente)
     {
+    ini_set('max_execution_time', 900);
+    set_time_limit(900);
+    ini_set('memory_limit','2048M');
         if ($this->session->userdata('id_rol') == 19) { // IS SUBDIRECTOR MKTD
             $typeTransaction = $this->input->post("typeTransaction");
             $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
@@ -1820,7 +1820,6 @@ public function getStatusMktdPreventa(){
             $where = $this->input->post("where");
             $data = $this->Clientes_model->getProspectsListByGerente($id_gerente, $typeTransaction, $beginDate, $endDate, $where);
         }
-
         if($data != null) {
             echo json_encode($data);
         } else {
@@ -1861,14 +1860,17 @@ public function getStatusMktdPreventa(){
     public function getProspectsListByAsesor($id_asesor)
     {
         $typeTransaction = $this->input->post("typeTransaction");
-        $fechaInicio = explode('/', $this->input->post("beginDate"));
-        $fechaFin = explode('/', $this->input->post("endDate"));
-        $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
-        $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
-        $where = $this->input->post("where");
-
-
-        $data = $this->Clientes_model->getProspectsListByAsesor($id_asesor, $typeTransaction, $beginDate, $endDate, $where);
+        if($this->input->post("beginDate") != 0 && $this->input->post("endDate") != 0){
+            $fechaInicio = explode('/', $this->input->post("beginDate"));
+            $fechaFin = explode('/', $this->input->post("endDate"));
+            $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+            $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
+            $where = $this->input->post("where");
+            $data = $this->Clientes_model->getProspectsListByAsesor($id_asesor, $typeTransaction, $beginDate, $endDate, $where);
+        }
+        else{
+            $data = $this->Clientes_model->getProspectsListByAsesor($id_asesor, $typeTransaction, 0, 0, 0);
+        }
         if($data != null) {
             echo json_encode($data);
         } else {
@@ -1879,6 +1881,11 @@ public function getStatusMktdPreventa(){
     /********************/
     function getResultsProspectsSerch()
     {
+
+    ini_set('max_execution_time', 900);
+    set_time_limit(900);
+    ini_set('memory_limit','2048M');
+
         $name_prospect = $this->input->post('nombre');
         $correo_prospect = $this->input->post('correo');
         $telefono_prospect = $this->input->post('telefono');
@@ -1911,12 +1918,6 @@ public function getStatusMktdPreventa(){
         {
             $data['data'] = $this->Clientes_model->getProspByAp_Materno($ap_materno_prospect);
         }
-
-
-
-
-
-
         /**Telefono, ap_paterno, ap_materno vacío,  ----correo y nombre**/
         if(!empty($name_prospect) && !empty($correo_prospect) && empty($telefono_prospect) && empty($ap_paterno_prospect)
             && empty($ap_materno_prospect))
@@ -1977,15 +1978,12 @@ public function getStatusMktdPreventa(){
         {
             $data['data'] = $this->Clientes_model->getProspByApMaternoTel($ap_materno_prospect, $telefono_prospect);
         }
-        /*****************/
-
         // buscar todos
         if(!empty($name_prospect) && !empty($correo_prospect) && !empty($telefono_prospect) && !empty($ap_paterno_prospect)
             && !empty($ap_materno_prospect))
         {
             $data['data'] = $this->Clientes_model->getProspByAllFiels($name_prospect, $correo_prospect, $telefono_prospect, $ap_paterno_prospect, $ap_materno_prospect);
         }
-        /*********************************************/
         /**correo, telefono  vacío, ---- nombre, ap_paterno y ap_materno**/
         if(!empty($name_prospect) && empty($correo_prospect) && empty($telefono_prospect) && !empty($ap_paterno_prospect)
             && !empty($ap_materno_prospect))
@@ -1998,7 +1996,6 @@ public function getStatusMktdPreventa(){
         {
             $data['data'] = $this->Clientes_model->getProspByNameApPaternoApMaternoCorreo($name_prospect, $ap_paterno_prospect, $ap_materno_prospect, $correo_prospect);
         }
-
         /*********combs telefono********/
         /** telefono  vacío, ---- nombre, ap_paterno y ap_materno, correo**/
         if(empty($name_prospect) && !empty($correo_prospect) && !empty($telefono_prospect) && empty($ap_paterno_prospect)
@@ -2077,7 +2074,6 @@ public function getStatusMktdPreventa(){
         {
             $data['data'] = $this->Clientes_model->getProspByApMaternoTelApPaterno($ap_materno_prospect, $ap_paterno_prospect, $telefono_prospect);
         }
-
         if($data != null) {
             echo json_encode($data);
         } else {
@@ -2215,8 +2211,10 @@ public function getStatusMktdPreventa(){
     public function getProspectsListByGteAll($id_gte){
         if (isset($_POST) && !empty($_POST)) {
             $typeTransaction = $this->input->post("typeTransaction");
-            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+            $fechaInicio = explode('/', $this->input->post("beginDate"));
+            $fechaFin = explode('/', $this->input->post("endDate"));
+            $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+            $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
             $where = $this->input->post("where");
             $data['data'] = $this->Clientes_model->getProspectsListByGteAll($id_gte, $typeTransaction, $beginDate, $endDate, $where);
             echo json_encode($data);
@@ -2345,8 +2343,10 @@ public function getStatusMktdPreventa(){
     public function getClientsReportMktd(){
         if (isset($_POST) && !empty($_POST)) {
             $typeTransaction = $this->input->post("typeTransaction");
-            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+            $fechaInicio = explode('/', $this->input->post("beginDate"));
+            $fechaFin = explode('/', $this->input->post("endDate"));
+            $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+            $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
             $where = $this->input->post("where");
             $data['data'] = $this->Clientes_model->getClientsReportMktd($typeTransaction, $beginDate, $endDate, $where)->result_array();
             echo json_encode($data);
@@ -2625,14 +2625,18 @@ public function getStatusMktdPreventa(){
         if ($this->session->userdata('id_rol') == 19) {
             $dato = $this->Clientes_model->getSedeByUser($idSubdir);
             $typeTransaction = $this->input->post("typeTransaction");
-            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+            $fechaInicio = explode('/', $this->input->post("beginDate"));
+            $fechaFin = explode('/', $this->input->post("endDate"));
+            $beginDate = date("Y-m-d", strtotime("$fechaInicio[2]-$fechaInicio[1]-$fechaInicio[0]"));
+            $endDate = date("Y-m-d", strtotime("$fechaFin[2]-$fechaFin[1]-$fechaFin[0]"));
             $where = $this->input->post("where");
             $data = $this->Clientes_model->getProspectsListBySubdirector($dato[0]['id_sede'], $typeTransaction, $beginDate, $endDate, $where);
         } else {
             $typeTransaction = $this->input->post("typeTransaction");
-            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+            $fechaInicio = explode('/', $this->input->post("beginDate"));
+            $fechaFin = explode('/', $this->input->post("endDate"));
+            $beginDate = date("Y-m-d", strtotime("$fechaInicio[2]-$fechaInicio[1]-$fechaInicio[0]"));
+            $endDate = date("Y-m-d", strtotime("$fechaFin[2]-$fechaFin[1]-$fechaFin[0]"));
             $where = $this->input->post("where");
             $data = $this->Clientes_model->getProspectsListBySubdirector($idSubdir, $typeTransaction, $beginDate, $endDate, $where);
         }
@@ -2736,19 +2740,16 @@ public function getStatusMktdPreventa(){
         $this->load->view('clientes/cancelaciones_proceso');
     }
 
-    public function infoCancelacionesProceso()
-    {
+    public function infoCancelacionesProceso() {
         if (!isset($_POST) || empty($_POST)) {
             echo json_encode([]);
             return;
         }
-
         $idRol = $this->session->userdata('id_rol');
-        $idUsuario = $this->session->userdata('id_lider');
+        $idLider = $this->session->userdata('id_lider');
         $fechaInicio = date("Y-m-d", strtotime($this->input->post("beginDate")));
         $fechaFin = date("Y-m-d", strtotime($this->input->post("endDate")));
-
-        $data = $this->Clientes_model->getCancelacionesProceso($idUsuario, $idRol, $fechaInicio, $fechaFin);
+        $data = $this->Clientes_model->getCancelacionesProceso($idLider, $idRol, $fechaInicio, $fechaFin);
         echo json_encode($data);
     }
 

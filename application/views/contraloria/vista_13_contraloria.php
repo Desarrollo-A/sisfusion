@@ -12,7 +12,7 @@
                         <h4 class="modal-title text-center"><label>Registro estatus 13 - <b><span class="lote"></span></b></label></h4>
                     </div>
                     <div class="modal-body">
-                        <label>Comentario</label>
+                        <label class="control-label">Comentario</label>
                         <textarea class="text-modal" id="comentario" rows="3"></textarea>
                         <br>
                     </div>
@@ -65,6 +65,7 @@
                                             <tr>
                                                 <th></th>
                                                 <th>TIPO DE VENTA</th>
+                                                <th>TIPO DE PROCESO</th>
                                                 <th>PROYECTO</th>
                                                 <th>CONDOMINIO</th>
                                                 <th>LOTE</th>
@@ -84,15 +85,7 @@
             </div>
         </div>
         <?php $this->load->view('template/footer_legend'); ?>
-    </div><!--main-panel close-->
+    </div>
 </body>
 <?php $this->load->view('template/footer'); ?>
-<!--DATATABLE BUTTONS DATA EXPORT-->
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/contraloria/vista_13_contraloria.js"></script>

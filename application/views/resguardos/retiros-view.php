@@ -2,16 +2,8 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body class="">
     <div class="wrapper">
-        <?php
-        if (in_array($this->session->userdata('id_rol'), array(1, 2, 4))){
-            $this->load->view('template/sidebar');
-        }
-        else {
-            echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-        }
-        ?>
-
-        <style type="text/css">        
+        <?php $this->load->view('template/sidebar'); ?>
+        <style>        
             #modal_nuevas{
                 z-index: 1041!important;
             }
@@ -20,7 +12,7 @@
                 z-index: 1041!important;
             }
         </style>
-        <!-- MODALS -->
+
         <div class="modal fade modal-alertas" id="autorizar-modal" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -71,7 +63,6 @@
                 </div>
             </div>
         </div>
-        <!-- END Modals -->
 
         <div class="content boxContent">
             <div class="container-fluid">

@@ -3,7 +3,7 @@ class Reporte extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
         $this->load->model(array('Reporte_model', 'General_model'));
-        $this->load->library(array('session','form_validation', 'get_menu', 'Email', 'Jwt_actions', 'Formatter'));
+        $this->load->library(array('session','form_validation', 'get_menu', 'Email', 'Jwt_actions', 'Formatter','permisos_sidebar'));
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
         date_default_timezone_set('America/Mexico_City');
@@ -12,6 +12,8 @@ class Reporte extends CI_Controller {
 
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+        $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
+        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
     }
 
     public function validateSession(){
@@ -281,4 +283,21 @@ class Reporte extends CI_Controller {
 		$this->load->view('template/header');
 		$this->load->view("reportes/lotesXStatus_view");
     }
+
+    public function lotesContrato(){
+        $this->load->view('template/header');
+        $this->load->view("reportes/reporteLotesContrato");
+    }
+    public function getLotesContrato(){
+        $beginDate = $this->input->post("beginDate");
+        $endDate = $this->input->post("endDate");
+        $data = $this->Reporte_model->getLotesContrato($beginDate, $endDate);
+        foreach ($data as $index=>$elemento){$data[$index]['nombreSede'] = ($elemento['nombreSede']=='')?'NA':$elemento['nombreSede'];}
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
 }

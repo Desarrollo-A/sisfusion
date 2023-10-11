@@ -87,6 +87,7 @@ class Asesor_model extends CI_Model {
         CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END subdirector,
         CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END regional,
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END regional2,
+        ISNULL(oxc0.nombre, 'Normal') tipo_proceso, cl.proceso,
         cl.tipo_comprobanteD, cl.autorizacion_correo, cl.autorizacion_sms,
         ISNULL(tipo_correo_aut.total, 0) AS total_sol_correo_aut, ISNULL(tipo_correo_pend.total, 0) AS total_sol_correo_pend, 
         ISNULL(tipo_correo_rech.total, 0) AS total_sol_correo_rech,
@@ -102,6 +103,7 @@ class Asesor_model extends CI_Model {
         LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
         LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
         LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
+        LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
         LEFT JOIN autorizaciones AS aut ON cl.id_cliente = aut.idCliente AND lotes.idLote = aut.idLote
         LEFT JOIN codigo_autorizaciones acc ON cl.id_cliente = acc.id_cliente AND acc.tipo = 2
         LEFT JOIN codigo_autorizaciones acs ON cl.id_cliente = acs.id_cliente AND acs.tipo = 3
@@ -142,11 +144,13 @@ class Asesor_model extends CI_Model {
     { // DATA FROM DEPOSITO_SERIEDAD_CONSULTA
         ini_set('max_execution_time', 300);
         set_time_limit(300);
-        $query = $this->db->query("SELECT '2' qry, '2' dsType, cl.idCliente as id_cliente, cl.idAsesor id_asesor, '0' id_coordinador,cl.idGerente id_gerente, '0' id_sede, CONCAT(cl.primerNombre, ' ', cl.segundoNombre) nombre, cl.apellidoPaterno apellido_paterno, cl.correo, cl.telefono2, 
+        $query = $this->db->query("SELECT '2' qry, '2' dsType, cl.idCliente as id_cliente, cl.idAsesor id_asesor, '0' id_coordinador,cl.idGerente id_gerente, '0' id_sede, CONCAT(cl.primerNombre, ' ', cl.segundoNombre) nombre, cl.apellidoPaterno apellido_paterno, cl.correo, cl.telefono2,
+        UPPER(CONCAT(CONCAT(cl.primerNombre, ' ', cl.segundoNombre), ' ', cl.apellidoPaterno, ' ', cl.apellidoMaterno)) nombreCliente,
         cl.apellidoMaterno apellido_materno, cl.status ,cl.idLote, convert(varchar,cl.fechaApartado,20) as fechaApartado, convert(varchar,cl.fechaVencimiento,20) as fechaVencimiento, cl.usuario, cond.idCondominio, cl.fechaApartado fecha_creacion, 
         cl.creado_por, cl.fechaApartado fecha_modificacion, cl.usuario modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial,
         cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, convert(varchar,lotes.fechaVenc,20) as fechaVenc, lotes.modificado, lotes.observacionContratoUrgente as vl, lotes.idStatusContratacion, cl.concepto, '666' as id_prospecto,
         cl.flag_compartida, 'SIN ESPECIFICAR' asesor, 'SIN ESPECIFICAR' coordinador, 'SIN ESPECIFICAR' gerente, 'SIN ESPECIFICAR' subdirector, 'SIN ESPECIFICAR' regional, 'SIN ESPECIFICAR' regional2, 
+        'Normal' tipo_proceso, 1 proceso,
         aut.estatus as estatus, 'NULL' as tipo_comprobanteD, c.autorizacion_correo, c.autorizacion_sms,
         ISNULL(tipo_correo_aut.total, 0) AS total_sol_correo_aut, ISNULL(tipo_correo_pend.total, 0) AS total_sol_correo_pend, 
         ISNULL(tipo_correo_rech.total, 0) AS total_sol_correo_rech,
@@ -208,6 +212,7 @@ class Asesor_model extends CI_Model {
         CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END subdirector,
         CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END regional,
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END regional2,
+        ISNULL(oxc0.nombre, 'Normal') tipo_proceso, cl.proceso,
         cl.tipo_comprobanteD, cl.autorizacion_correo, cl.autorizacion_sms, 
 	    ISNULL(tipo_correo_aut.total, 0) AS total_sol_correo_aut, ISNULL(tipo_correo_pend.total, 0) AS total_sol_correo_pend, 
         ISNULL(tipo_correo_rech.total, 0) AS total_sol_correo_rech,
@@ -224,6 +229,7 @@ class Asesor_model extends CI_Model {
         LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
         LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
         LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
+        LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
         LEFT JOIN autorizaciones AS aut ON cl.id_cliente = aut.idCliente AND lotes.idLote = aut.idLote
 		LEFT JOIN codigo_autorizaciones acc ON cl.id_cliente = acc.id_cliente AND acc.tipo = 2
         LEFT JOIN codigo_autorizaciones acs ON cl.id_cliente = acs.id_cliente AND acs.tipo = 3
@@ -264,7 +270,7 @@ class Asesor_model extends CI_Model {
         UPPER(nac.nombre) as nacionalidad
         FROM prospectos p
         LEFT JOIN opcs_x_cats lp ON lp.id_opcion=p.lugar_prospeccion AND lp.id_catalogo = 9
-        LEFT JOIN opcs_x_cats pv ON pv.id_opcion=p.plaza_venta AND pv.id_catalogo = 5
+        LEFT JOIN sedes pv ON pv.id_sede=p.plaza_venta
         LEFT JOIN opcs_x_cats nac ON nac.id_opcion=p.nacionalidad AND nac.id_catalogo = 11
         WHERE p.estatus = 1 AND id_asesor = $id_asesor AND p.lugar_prospeccion != 6");
         return $query->result();
@@ -303,7 +309,7 @@ class Asesor_model extends CI_Model {
     }
     function getSalesPlaza()
     {
-        return $this->db->query("SELECT id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo = 5 AND estatus = 1 ORDER BY nombre");
+        return $this->db->query("SELECT id_sede AS id_opcion, nombre FROM sedes WHERE id_catalogo = 5 ORDER BY nombre");
     }
     function getCivilStatus()
     {
@@ -461,8 +467,8 @@ class Asesor_model extends CI_Model {
     {
         $query = $this->db->query("
             SELECT asesor.id_usuario, CONCAT(asesor.nombre,' ',asesor.apellido_paterno,' ',asesor.apellido_materno) AS nombreAsesor, 
-            CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno) AS nombreCoordinador,
-            CONCAT(gerente.nombre,' ',gerente.apellido_paterno) AS nombreGerente,
+            CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno,' ',coordinador.apellido_materno) AS nombreCoordinador,
+            CONCAT(gerente.nombre,' ',gerente.apellido_paterno,' ',gerente.apellido_materno) AS nombreGerente,
             asesor.id_lider, gerente.id_usuario, asesor.correo
             FROM clientes cl 
             LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
@@ -471,18 +477,22 @@ class Asesor_model extends CI_Model {
         return $query->result();
     }
     public function selectDSAsesor1($cliente){
-        return $query = $this->db->query("SELECT asesor.id_usuario, CONCAT(asesor.nombre,' ',asesor.apellido_paterno, ' ',asesor.apellido_materno) AS nombreAsesor, CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno) AS nombreCoordinador, CONCAT(gerente.nombre,' ',gerente.apellido_paterno) AS nombreGerente, asesor.id_lider, gerente.id_usuario, asesor.correo
+        return $query = $this->db->query("
+        SELECT asesor.id_usuario, CONCAT(asesor.nombre,' ',asesor.apellido_paterno,' ',asesor.apellido_materno) AS nombreAsesor, 
+        CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno,' ',coordinador.apellido_materno) AS nombreCoordinador,
+        CONCAT(gerente.nombre,' ',gerente.apellido_paterno,' ',gerente.apellido_materno) AS nombreGerente,
+        asesor.id_lider, gerente.id_usuario, asesor.correo
         FROM clientes cl 
         LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
         LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
-        LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario WHERE cl.id_cliente= " . $cliente . "");
+        LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario WHERE cl.id_cliente= ".$cliente."");
     }
     public function selectDSAsesorCompartido($cliente)
     {
         $query = $this->db->query("SELECT vc.id_asesor, 
             CONCAT(asesor.nombre,' ',asesor.apellido_paterno,' ',asesor.apellido_materno) AS nombreAsesor, asesor.id_lider, gerente.id_usuario, 
-            CONCAT(gerente.nombre,' ',gerente.apellido_paterno) AS  nombreGerente ,
-            CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno) AS  nombreCoordinador 
+            CONCAT(gerente.nombre,' ',gerente.apellido_paterno,' ',gerente.apellido_materno) AS  nombreGerente ,
+            CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno,' ',coordinador.apellido_materno) AS  nombreCoordinador 
             FROM clientes cl 
             LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente  
             LEFT JOIN usuarios asesor ON asesor.id_usuario = vc.id_asesor 
@@ -495,8 +505,8 @@ class Asesor_model extends CI_Model {
     {
         return $query = $this->db->query("SELECT vc.id_asesor, 
             CONCAT(asesor.nombre,' ',asesor.apellido_paterno,' ',asesor.apellido_materno) AS nombreAsesor, asesor.id_lider, gerente.id_usuario, 
-            CONCAT(gerente.nombre,' ',gerente.apellido_paterno) AS  nombreGerente ,
-            CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno) AS  nombreCoordinador 
+            CONCAT(gerente.nombre,' ',gerente.apellido_paterno,' ',gerente.apellido_materno) AS  nombreGerente ,
+            CONCAT(coordinador.nombre,' ',coordinador.apellido_paterno,' ',coordinador.apellido_materno) AS  nombreCoordinador 
             FROM clientes cl 
             LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente  
             LEFT JOIN usuarios asesor ON asesor.id_usuario = vc.id_asesor 
@@ -529,8 +539,7 @@ class Asesor_model extends CI_Model {
         ORDER BY res.idResidencial");
         return $query->result();
     }
-    public function editaRegistroClienteDS($id_cliente, $arreglo_cliente, $arreglo_ds, $id_referencia1, $arreglo_referencia1, $id_referencia2, $arreglo_referencia2)
-    {
+    public function editaRegistroClienteDS($id_cliente, $arreglo_cliente, $arreglo_ds, $id_referencia1, $arreglo_referencia1, $id_referencia2, $arreglo_referencia2){
         $this->db->where("id_cliente",$id_cliente);
         $this->db->update('clientes',$arreglo_cliente);
         $this->db->where("id_cliente",$id_cliente);
@@ -832,22 +841,34 @@ class Asesor_model extends CI_Model {
     public function registroClienteDS($id_condominio) {
         ini_set('max_execution_time', 300);
         set_time_limit(300);
-        $id_asesor = $this->session->userdata('id_usuario');
-        if ($id_condominio != 0 && $id_asesor == 9651)
-            $where = "AND cond.idCondominio = $id_condominio";
-        else
-            $where = "";
-		$query = $this->db-> query("SELECT cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.nombre, cl.apellido_paterno, 
+
+        $whereAsistente = '';
+        $whereAsesor = '';
+        $whereCondominio = '';
+
+        if ($this->session->userdata('id_rol') == 6) {
+            $idLider = $this->session->userdata('id_lider');
+            $whereAsistente = "AND cl.id_gerente = $idLider AND us.estatus != 1";
+        } else {
+            $idAsesor = $this->session->userdata('id_usuario');
+            $whereAsesor = "AND cl.id_asesor = $idAsesor";
+
+            if ($id_condominio != 0 && $idAsesor == 9651) {
+                $whereCondominio .= "AND cond.idCondominio = $id_condominio";
+            }
+        }
+
+		$query = $this->db->query("SELECT cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.nombre, cl.apellido_paterno, 
         cl.apellido_materno, cl.status ,cl.idLote, fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, 
         cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial,
         cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, convert(varchar,lotes.fechaVenc,20) as fechaVenc, lotes.modificado, 1 estatus
         FROM clientes AS cl			
         INNER JOIN usuarios AS us ON cl.id_asesor = us.id_usuario
         INNER JOIN lotes AS lotes ON lotes.idLote = cl.idLote AND lotes.idCliente = cl.id_cliente AND lotes.idStatusLote = 3
-        INNER JOIN condominios AS cond ON lotes.idCondominio = cond.idCondominio $where
+        INNER JOIN condominios AS cond ON lotes.idCondominio = cond.idCondominio $whereCondominio
         INNER JOIN residenciales AS residencial ON cond.idResidencial=residencial.idResidencial
         LEFT JOIN deposito_seriedad AS ds ON ds.id_cliente = cl.id_cliente	
-        WHERE cl.id_coordinador NOT IN (2562, 2541) AND cl.id_asesor = $id_asesor
+        WHERE cl.id_coordinador NOT IN (2562, 2541) $whereAsesor $whereAsistente 
         AND idStatusContratacion IN (1, 2, 3) AND idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96, 99, 102, 104, 107, 108, 109, 111) AND 
         cl.status = 1 ORDER BY cl.id_cliente ASC");
 		return $query->result_array();
@@ -926,7 +947,7 @@ class Asesor_model extends CI_Model {
     }
     public function getCarpetas()
     {
-        return $this->db->query("SELECT * from archivos_carpetas");
+        return $this->db->query("SELECT id_archivo, nombre, UPPER(descripcion) AS descripcion, UPPER(archivo) AS archivo, estatus, usuario, CONVERT(VARCHAR,fecha_creacion,120) AS fecha_creacion, CONVERT(VARCHAR,fecha_modificacion,120) AS fecha_modificacion FROM archivos_carpetas");
     }
     function getInfoCarpeta($id_carpeta)
     {
@@ -1018,7 +1039,7 @@ class Asesor_model extends CI_Model {
         } elseif ($current_id == 1988 || $current_id == 5363) { /*Fernanda y Paulina*/
             $condicion = "AND asesor.id_sede IN ('1', '5', '8', '9')";
         }
-        $query = $this->db->query("SELECT CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente, l.nombreLote, cl.fechaApartado,
+        $query = $this->db->query("SELECT CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente, l.nombreLote, CONVERT(VARCHAR,cl.fechaApartado,20) AS fechaApartado,
                 CONCAT(asesor.nombre,' ',asesor.apellido_paterno,' ', asesor.apellido_materno) as nombreAsesor, cl.id_cliente, l.idLote, cl.telefono1,
                 ec.id_evidencia, '1' rowType, s.nombre sedeAsesor, ISNULL(oxc.nombre, 'Sin especificar') lugarProspeccion FROM lotes l
                 INNER JOIN clientes cl ON l.idLote = cl.idLote
@@ -1032,7 +1053,7 @@ class Asesor_model extends CI_Model {
                 AND ec.id_evidencia IS NULL AND cm.id_coment IS NULL 
                 AND l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 63526)
                 UNION ALL
-                SELECT CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente, l.nombreLote, cl.fechaApartado,
+                SELECT CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente, l.nombreLote, CONVERT(VARCHAR,cl.fechaApartado,20) AS fechaApartado,
                 CONCAT(asesor.nombre,' ',asesor.apellido_paterno,' ', asesor.apellido_materno) as nombreAsesor, cl.id_cliente, l.idLote, cl.telefono1,
                 ec.id_evidencia, (CASE cn.tipo WHEN 1 THEN 11 WHEN 2 THEN 22 WHEN 3 THEN 33 WHEN 4 THEN 44 WHEN 5 THEN 55 END) rowType, s.nombre sedeAsesor, 
                 ISNULL(oxc.nombre, 'Sin especificar') lugarProspeccion FROM lotes l
@@ -1056,9 +1077,9 @@ class Asesor_model extends CI_Model {
             $where = "AND asesor.id_sede IN ('5', '1', '8', '9')";
         $query = $this->db->query("SELECT CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as cliente,
                 l.idLote, l.nombreLote, CONCAT(solicitante.nombre,' ', solicitante.apellido_paterno,' ', solicitante.apellido_materno) as solicitante, ec.estatus,
-                ec.id_evidencia, cl.id_cliente, ec.evidencia, ec.fecha_modificado, cl.fechaApartado, s.nombre plaza,
-                he1.fecha_creacion fechaValidacionGerente, he2.fecha_creacion fechaValidacionCobranza, he3.fecha_creacion fechaValidacionContraloria,
-                he10.fecha_creacion fechaRechazoCobranza, he20.fecha_creacion fechaRechazoContraloria, he200.comentario_autorizacion, 
+                ec.id_evidencia, cl.id_cliente, ec.evidencia, ec.fecha_modificado,  cl.fechaApartado, s.nombre plaza,
+                CONVERT(VARCHAR,he1.fecha_creacion,20) AS fechaValidacionGerente, CONVERT(VARCHAR,he2.fecha_creacion,20) AS fechaValidacionCobranza, CONVERT(VARCHAR,he3.fecha_creacion,20) AS fechaValidacionContraloria,
+                CONVERT(VARCHAR,he10.fecha_creacion,20) AS fechaRechazoCobranza, CONVERT(VARCHAR,he20.fecha_creacion,20) AS fechaRechazoContraloria, he200.comentario_autorizacion, 
                 (CASE cn.tipo WHEN 1 THEN 11 WHEN 2 THEN 22 WHEN 3 THEN 33 WHEN 4 THEN 44 WHEN 5 THEN 55 ELSE 1 END) rowType, cn.tipo,
                 cm.id_coment, CASE WHEN (ec.comentario_autorizacion LIKE '%null%' OR CAST(ec.comentario_autorizacion AS VARCHAR(500)) = '' OR ec.comentario_autorizacion IS NULL) 
                 THEN 'Comentario no especificado' ELSE ec.comentario_autorizacion END lastComment, ISNULL(oxc.nombre, 'Sin especificar') lugarProspeccion
@@ -1085,8 +1106,8 @@ class Asesor_model extends CI_Model {
                 SELECT CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) as cliente,
                 l.idLote, l.nombreLote, CONCAT(solicitante.nombre,' ', solicitante.apellido_paterno,' ', solicitante.apellido_materno) as solicitante, ec.estatus,
                 ec.id_evidencia, cl.id_cliente, ec.evidencia, ec.fecha_modificado, cl.fechaApartado, s.nombre plaza,
-                he1.fecha_creacion fechaValidacionGerente, he2.fecha_creacion fechaValidacionCobranza, he3.fecha_creacion fechaValidacionContraloria,
-                he10.fecha_creacion fechaRechazoCobranza, he20.fecha_creacion fechaRechazoContraloria, he200.comentario_autorizacion, 
+                CONVERT(VARCHAR,he1.fecha_creacion,20) AS fechaValidacionGerente, CONVERT(VARCHAR,he2.fecha_creacion,20) AS fechaValidacionCobranza, CONVERT(VARCHAR,he3.fecha_creacion,20) AS fechaValidacionContraloria,
+                CONVERT(VARCHAR,he10.fecha_creacion,20) AS fechaRechazoCobranza, CONVERT(VARCHAR,he20.fecha_creacion,20) AS fechaRechazoContraloria, he200.comentario_autorizacion, 
                 (CASE cn.tipo WHEN 1 THEN 11 WHEN 2 THEN 22 WHEN 3 THEN 33 WHEN 4 THEN 44 WHEN 5 THEN 55 ELSE 1 END) rowType, cn.tipo,
                 cm.id_coment, CASE WHEN (ec.comentario_autorizacion LIKE '%null%' OR CAST(ec.comentario_autorizacion AS VARCHAR(500)) = '' OR ec.comentario_autorizacion IS NULL) 
                 THEN 'Comentario no especificado' ELSE ec.comentario_autorizacion END lastComment, ISNULL(oxc.nombre, 'Sin especificar') lugarProspeccion
@@ -1157,7 +1178,7 @@ class Asesor_model extends CI_Model {
     }
     public function getAutsEvidencia($id_evidencia)
     {
-        $query = $this->db->query("SELECT he.*, e.estatus as estatus_evidencia, 
+        $query = $this->db->query("SELECT he.id_histevi, he.id_evidencia, CONVERT(VARCHAR,he.fecha_creacion,20) AS fecha_creacion, he.estatus, he.creado_por, he.evidencia, he.comentario_autorizacion, e.estatus as estatus_evidencia, 
         CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) as creado_por
         FROM historial_evidencias he 
         INNER JOIN evidencia_cliente e ON he.id_evidencia = e.id_evidencia 
@@ -1354,7 +1375,7 @@ class Asesor_model extends CI_Model {
     function getDeletedLotesEV()
     {
         $query = $this->db->query("SELECT 
-        id_coment, cm.idLote, cm.observacion, cm.fecha_creacion,
+        id_coment, cm.idLote, cm.observacion, CONVERT(VARCHAR,cm.fecha_creacion,20) AS fecha_creacion,
         l.nombreLote, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente,
         CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) as nombreSolicitante
         FROM comentariosMktd cm
@@ -1376,24 +1397,11 @@ class Asesor_model extends CI_Model {
     }
     public function getLegalPersonalityByLote($idLote)
     {
-        $query = $this->db->query("SELECT id_cliente, idLote, personalidad_juridica FROM clientes WHERE idLote IN ($idLote) AND status = 1");
+        $query = $this->db->query("SELECT id_cliente, idLote, personalidad_juridica, proceso FROM clientes WHERE idLote IN ($idLote) AND status = 1");
         return $query->result_array();
     }
-    public function validateDocumentation($idLote, $legalPersonality, $tipo_comprobante)
-    {
-        /*
-        LEGAL PERSONALITY VALUES
-            1 PM
-            2   PF
-        */
-        $cd=', 3';//comprobante domicilio
-        if($tipo_comprobante==1){
-            $cd = '';
-        }
-        if ($this->session->userdata('id_rol') == 17)
-            $documentOptions = $legalPersonality == 2 ? '2'.$cd : '2 '.$cd.', 4, 10, 11';
-        else
-            $documentOptions = $legalPersonality == 2 ? '2'.$cd.', 4' : '2'.$cd.', 4, 10, 11, 12';
+
+    public function validateDocumentation($idLote, $documentOptions) {
         $query = $this->db->query("SELECT expediente, idCliente, tipo_doc FROM historial_documento WHERE idLote IN ($idLote) AND 
         status = 1 AND expediente IS NOT NULL AND tipo_doc IN ($documentOptions)
         UNION ALL
@@ -1401,6 +1409,7 @@ class Asesor_model extends CI_Model {
         (SELECT id_cliente FROM clientes WHERE idLote = $idLote AND status = 1) AND desarrollo IS NOT NULL");
         return $query->result_array();
     }
+
     //Se verifica si el lote fue prospectado por marketing digital
     public function verificarMarketing($idLote)
     {
@@ -1430,16 +1439,16 @@ class Asesor_model extends CI_Model {
             $region = "'2', '3', '4', '6'";
         else if ($this->session->userdata('id_usuario') == 5363 || $this->session->userdata('id_usuario') == 1988)
             $region = "'1', '5', '8', '9'";
-        return $this->db->query("SELECT l.idLote, l.nombreLote, c.fechaApartado, s.nombre plaza,
+        return $this->db->query("SELECT l.idLote, l.nombreLote, CONVERT(VARCHAR,c.fechaApartado,20) AS fechaApartado, s.nombre plaza,
             CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombreCliente,
-            cn.tipo, cn.comentario, cn.fecha_creacion,
+            cn.tipo, cn.comentario, CONVERT(VARCHAR,cn.fecha_creacion,20) AS fecha_creacion,
             CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) creado_por
             FROM controversias cn 
             INNER JOIN lotes l ON l.idLote = cn.id_lote AND l.status = 1
             INNER JOIN clientes c ON c.idLote = l.idLote AND c.status = 1
-            INNER JOIN usuarios u ON u.id_usuario = c.id_asesor AND u.id_sede IN ($region)
-            INNER JOIN usuarios us ON us.id_usuario = cn.creado_por
-            INNER JOIN sedes s ON s.id_sede = u.id_sede
+            LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor AND u.id_sede IN ($region)
+            LEFT JOIN usuarios us ON us.id_usuario = cn.creado_por
+            LEFT JOIN sedes s ON s.id_sede = u.id_sede
             /*LEFT JOIN comentariosMktd cm ON cm.idLote = l.idLote AND cm.id_cliente=c.id_cliente
             WHERE cm.id_coment IS NULL*/
             WHERE l.idLote NOT IN (48729, 12735, 49644, 26655, 49957, 50079, 51495, 50891, 52093, 51289, 53164, 53165, 53980, 26120, 55593, 55621, 56495, 56893, 57072, 52398, 59767, 59349, 59866, 60002, 60015, 55241, 56209, 57122, 44767, 44768, 11290, 63250, 27235, 66821, 59650, 63526)

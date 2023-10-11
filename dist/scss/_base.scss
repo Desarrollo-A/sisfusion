@@ -5,6 +5,7 @@
 .m-3  { margin: 30px; }
 .m-4  { margin: 40px; }
 .mb-0 { margin-bottom: 0px!important; }
+.mb-a { margin-bottom: auto !important; }
 .mb-1 { margin-bottom: 10px; }
 .mb-2 { margin-bottom: 20px!important; }
 .mb-3 { margin-bottom: 30px; }
@@ -16,6 +17,7 @@
 .mt-4 { margin-top: 40px; }
 .mr-1{ margin-right: 10px; }
 .mr-2{ margin-right: 20px!important; }
+.ml-0{ margin-left: 0px!important; }
 .ml-1{ margin-left: 10px!important; }
 .ml-2{ margin-left: 20px!important; }
 .ml-3{ margin-left: 30px!important; }
@@ -32,6 +34,7 @@
 .pr-1 { padding-right: 10px; }
 .pr-2 { padding-right: 20px; }
 .pr-3 { padding-right: 30px; }
+.pr-4 { padding-right: 40px;  }
 .pl-0 { padding-left: 0!important; }
 .pl-1 { padding-left: 10px; }
 .pl-2 { padding-left: 20px; }
@@ -46,6 +49,7 @@
 .pb-1 { padding-bottom:10px; }
 .pb-2 { padding-bottom:20px; }
 .pb-3 { padding-bottom:30px; }
+.pb-0 { padding-bottom: 0px !important; }
 /* END Margin and padding generales */
 
 /* Utilities */
@@ -55,7 +59,7 @@
 .w-80{ width: 80% };
 .w-70{ width: 70% };
 .w-60{ width: 60% };
-.w-50{ width: 50% };
+.w-50{ width: 50%!important; };
 .w-40{ width: 40% };
 .w-30{ width: 30%!important};
 .w-20{ width: 20% };
@@ -103,6 +107,7 @@
 /* Flexbox */
 .d-none          { display: none!important; }
 .d-block         { display: block; }
+.d-wrap          {flex-wrap: wrap;}   
 .d-flex          { display: flex!important; }
 .align-start     { align-items: flex-start; }
 .align-end       { align-items: flex-end; }
@@ -144,6 +149,7 @@
 /* Text */
 
 /* Vrbls colores */
+$olivo              :#86895D;
 $white              : #ffffff;
 $cultured           : #f8f8f8;
 $platinumLight      : #eeeeee;
@@ -202,7 +208,7 @@ $tiffanyBlue        : #00ACB8;
 $oceanGreen         : #4BBC8E;
 $caribbeanGreen     : #00CDA3;
 $lightGreen         : #92E784;
-$sunny              : #F9F871;
+$sunny              : #a98800;
 $darkCyan           : #008c76;
 $brightBlue         : #4a30dd;
 $verySoftBlue       : #AED6F1;
@@ -212,6 +218,7 @@ $vividOrange        : #F57F17;
 $darkPink           : #880E4F;
 $melon              : #CD6155;
 $pink               : #cd5587;
+$orange             : #DF7314;
 /* END vrbls coloress */
 
 /* size devices */
@@ -266,6 +273,13 @@ $tv                 : "(min-width: 1280px)";
     padding: 5px 6px !important;
 }
 
+.btn-dataTable{
+    font-size: 12px !important;
+    color: #333 !important; 
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 
+                0 1px 2px rgba(0,0,0,0.24);
+}
+
 /* END Estilos generales datatable */
 
 /* Btns fuera de datatable */
@@ -293,6 +307,7 @@ $tv                 : "(min-width: 1280px)";
     background-color: #f4433618 !important;
     border-radius: 27px;
     margin: 0;
+    color: $redLight !important;
 }
 .color-letter{
     color: $greenExcel;
@@ -301,6 +316,7 @@ $tv                 : "(min-width: 1280px)";
     color: $redLight;
 }
 .buttons-pdf:hover {
+    color: $white !important;
     background-color: $redLight !important;
 }
 .buttons-pdf:hover i {
@@ -363,7 +379,6 @@ $tv                 : "(min-width: 1280px)";
     padding: 10px 0;
     background-color: $blueIndigo;
     color: $white;
-    box-shadow: 0px 8px 15px RGB(0, 0, 0, 0.3);
 }
 
 .btn-gral-data:hover{
@@ -437,7 +452,7 @@ $tv                 : "(min-width: 1280px)";
 .datepicker:disabled {
     opacity: 0.6;
     cursor: not-allowed;
-  }
+}
 .btn-green{
     color: $green;
     border: none;
@@ -621,6 +636,11 @@ $tv                 : "(min-width: 1280px)";
     border: none;
     background-color: #92929218;
 }
+.lbl-goldMaderas{
+    color: $goldMaderas;
+    border:none;
+    background-color: #96843D18;
+}
 .lbl-gral{
     border-radius: 25px;
     padding: 7px 10px;
@@ -633,7 +653,7 @@ $tv                 : "(min-width: 1280px)";
 .lbl-grayDark{
     color: $grayDark;
     border: none;
-    background-color: #28374718;
+    background-color: #191B1C18;
 }
 .lbl-green{
     color: $green;
@@ -644,7 +664,6 @@ $tv                 : "(min-width: 1280px)";
     color: $melon;
     border:none;
     background-color: #CD615518;
-
 }
 .lbl-oceanGreen{
     color:$oceanGreen;
@@ -655,6 +674,11 @@ $tv                 : "(min-width: 1280px)";
     color: $orangeYellow;
     border: none;
     background-color: #B9770E18;
+}
+.lbl-orange{
+    color:$orange;
+    border:none;
+    background-color: #DF731418;
 }
 .lbl-pink{
     color: $pink;
@@ -700,26 +724,32 @@ $tv                 : "(min-width: 1280px)";
 .lbl-lightBlue{
     color:#1B4F72;
     border:none;
-    background:#AED6F1;
+    background-color:#1B4F7218;
 }
 
 .lbl-peach{
     color:#78281F;
     border: none;
-    background:#F5B7B1;
+    background-color:#78281F18;
 }
 
 .lbl-purple{
     color:#512E5F;
     border: none;
-    background:#D7BDE2;
+    background-color:#512E5F18;
 }
 
 .lbl-aqua{
-    color: $white;
+    color: $aqua;
     border: none;
-    background:#11DFC6;
+    background:#54d2d218;
 }
+.lbl-olivo{
+    color:  $olivo;
+    border: none;
+    background-color: #86895D18;
+}
+
 /* END Etiquetas */
 
 /* Estilo del scroll en DIVS */
@@ -741,14 +771,16 @@ $tv                 : "(min-width: 1280px)";
 /* Color del HOVER de barra de desplazamiento */
 .scroll-styles::-webkit-scrollbar-thumb:hover{
     background-color: $deepGray;
+    height: 10px!important;
 }
 /* END de estilos del scroll en DIVS */
 
 .file-gph{
     background-color: $platinum;
     border-radius: 30px;
-    padding: 7px 3px 7px 15px;
+    padding: 7px 7px 7px 15px;
     display: flex;
+    align-items: center;
     .upload-btn{
         width: 22%;
         padding: 5px 0;
@@ -766,11 +798,17 @@ $tv                 : "(min-width: 1280px)";
         span{
             margin: 5px;
         }
+        @media #{$smartphone}{
+            width: 100%;
+        }
     }
     .file-name{
         width: 77%;
         background-color: transparent;
         border: none;
+        &::placeholder{
+            color: $deepGray !important;
+        }
     }
 }
 
@@ -935,6 +973,7 @@ $tv                 : "(min-width: 1280px)";
         color: $white;
         background-color: $gray;
         width: fit-content;
+        text-transform: uppercase !important;
     }
 }
 .tooltip.top .tooltip-arrow {
@@ -1132,23 +1171,3 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
     border: 1px solid #aaa;
     padding: 6px 28px;
 }
-
-// .calendarioDay-container {
-//     position: relative;
-//     float: left;
-//     .calendarioDay-text {
-//         position: absolute;
-//         top: 6px;
-//         left: 12px;
-//         color: #000000;
-//     }
-
-//     .calendarioDay-icon {
-//         position: absolute;
-//         top: 10px;
-//         right: 10px;
-//         /* pointer-events: none; */
-//         cursor: pointer;
-//         color: #000000;
-//     }
-// }

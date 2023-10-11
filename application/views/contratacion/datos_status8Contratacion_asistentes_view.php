@@ -146,6 +146,7 @@
                                                 <tr>
                                                     <th></th>
                                                     <th>TIPO DE VENTA</th>
+                                                    <th>TIPO DE PROCESO</th>
                                                     <th>PROYECTO</th>
                                                     <th>CONDOMINIO</th>
                                                     <th>LOTE</th>
@@ -167,8 +168,7 @@
         </div>
         <?php $this->load->view('template/footer_legend');?>
     </div>
-    </div><!--main-panel close-->
+    </div>
     <?php $this->load->view('template/footer');?>
-    <!--DATATABLE BUTTONS DATA EXPORT-->
-    <script src="<?= base_url() ?>dist/js/controllers/contratacion/vista_8_contratacion.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/contratacion/vista_8_contratacion.js?v=1.1.1"></script>
 </body>

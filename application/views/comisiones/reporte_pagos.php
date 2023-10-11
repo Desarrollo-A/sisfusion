@@ -2,14 +2,7 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
 <div class="wrapper">
-    <?php
-    if($this->session->userdata('id_rol')=="49" )
-    {
-        $this->load->view('template/sidebar');
-    }else{
-        echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
-    }
-    ?>
+    <?php $this->load->view('template/sidebar'); ?>
     <!--MODALS-->
     <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
@@ -21,7 +14,7 @@
                 </div>
                 <div class="modal-body">
                     <div role="tabpanel">
-                        <ul class="nav nav-tabs" role="tablist" style="background: #949494;">
+                        <ul>
                             <div id="nameLote"></div>
                         </ul>
                         <div class="tab-content">
@@ -30,7 +23,7 @@
                                     <div class="col-md-12">
                                         <div class="card card-plain">
                                             <div class="card-content">
-                                                <ul class="timeline timeline-simple" id="comments-list-asimilados"></ul>
+                                                <ul class="timeline-3" id="comments-list-asimilados"></ul>
                                             </div>
                                         </div>
                                     </div>
@@ -57,7 +50,7 @@
                         </div>
                         <div class="card-content">
                             <div class="encabezadoBox">
-                                <h3 class="card-title center-align">Reporte pagos</h3>
+                                <h3 class="card-title center-align">Reporte de pagos</h3>
                             </div>
                             <div class="toolbar">
                                 <div class="row">
@@ -100,7 +93,7 @@
                                                 <th>PUESTO</th>
                                                 <th>DETALLE</th>
                                                 <th>ESTATUS</th>
-                                                <th>MÁS</th>
+                                                <th>ACCIONES</th>
                                             </tr>
                                         </thead>
                                     </table>

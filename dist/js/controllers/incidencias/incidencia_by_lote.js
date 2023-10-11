@@ -1022,7 +1022,7 @@ $(".find_doc").click( function() {
                     break;
                     
                     case '1':
-                        lblStats ='<span class="label lbl-sky" style="background:blue;">COMISIÓN ACTIVA</span>';
+                        lblStats ='<span class="label lbl-sky">COMISIÓN ACTIVA</span>';
                     break;
                     case '8':
                         lblStats ='<span class="label lbl-blueMaderas" style="color:#0860BA;">NUEVA, rescisión</span>';
@@ -1053,14 +1053,14 @@ $(".find_doc").click( function() {
                 }
                 else {
                     if(data.registro_comision == 0 || data.registro_comision == 8) {
-                        BtnStats += '<button class="btn-data btn-sky cambiar_precio" title="Cambiar precio" value="' + data.idLote +'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-pencil-alt"></i></button>';
+                        BtnStats += '<button class="btn-data btn-sky cambiar_precio" title="Cambiar precio" value="' + data.idLote +'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-pencil-alt"></i></button><button href="#" value="'+data.idLote+'" data-idLote="'+data.idLote+'"  data-cliente="'+data.id_cliente+'" data-sedesName="'+data.nombre+'"  data-sedes="'+data.id_sede+'" data-nombre="'+data.nombreLote+'" data-tipo="'+data.tipo+'" data-tipo="1" class="btn-data btn-violetDeep cambioSede"  title="Cambio de sede"> <i class="fas fa-map-signs"></i> </button>';
                         if(data.tipo_venta == 'null' || data.tipo_venta == 0 || data.tipo_venta == null){
                             BtnStats += '<button href="#" value="'+data.idLote+'" data-nombre="'+data.nombreLote+'" data-tipo="'+data.tipo+'" data-tipo="I" class="btn-data btn-orangeYellow tipo_venta" title="Cambiar tipo de venta"><i class="fas fa-map-marker-alt"></i></button>';
                         }         
-                        if(data.registro_comision == 0){
-                            BtnStats += '<button href="#" value="'+data.idLote+'" data-idLote="'+data.idLote+'"  data-cliente="'+data.id_cliente+'" data-sedesName="'+data.nombre+'"  data-sedes="'+data.id_sede+'" data-nombre="'+data.nombreLote+'" data-tipo="'+data.tipo+'" data-tipo="1" class="btn-data btn-violetDeep cambioSede"  title="Cambio de sede"> <i class="fas fa-map-signs"></i> </button> '
+                        // if(data.registro_comision == 0){
+                        //     BtnStats += '<button href="#" value="'+data.idLote+'" data-idLote="'+data.idLote+'"  data-cliente="'+data.id_cliente+'" data-sedesName="'+data.nombre+'"  data-sedes="'+data.id_sede+'" data-nombre="'+data.nombreLote+'" data-tipo="'+data.tipo+'" data-tipo="1" class="btn-data btn-violetDeep cambioSede"  title="Cambio de sede"> <i class="fas fa-map-signs"></i> </button> '
 
-                        }     
+                        // }     
                     }
                     else if(data.registro_comision == 7 ) {
                         BtnStats = '<button class="btn-data btn-sky cambiar_precio" title="Cambiar precio" value="' + data.idLote +'"  data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow update_bandera" title="Cambiar estatus" value="' + data.idLote +'" data-nombre="'+data.nombreLote+'"><i class="fas fa-sync-alt"></i></button>';
@@ -1382,7 +1382,7 @@ $(".find_doc").click( function() {
                                         <button type="button" id="btn_${i}" 
                                         ${(id_user != 1 && id_user != 2767 && id_user != 2826 && id_user != 4878 && id_user != 5957 && id_user != 2749) ? 'style="display:none" ' : 'style="display:show" '} 
                                         onclick="SaveAjuste(${i})" ${v.descuento == 1 || v.descuento > 1  ? 'style="display:none" ' : 'style="display:show" ' }  
-                                         data-toggle="tooltip" 
+                                         data-toggle="tooltip" disabled
                                         data-placement="top" title="GUARDAR PORCENTAJE" class="btn btn-dark btn-round btn-fab btn-fab-mini"><span class="material-icons">check</span>
                                         </button>`;
                                         // boton topar
@@ -1944,6 +1944,7 @@ function QuitarPago(i){
 
 function Editar(i,precio,id_usuario){
     $('#modal_avisos .modal-body').html('');
+    document.getElementById('btn_'+i).disabled=false;
     let precioLote = parseFloat(precio);
     let nuevoPorce1 = replaceAll($('#porcentaje_'+i).val(), ',',''); 
     let nuevoPorce = replaceAll(nuevoPorce1, '%',''); 

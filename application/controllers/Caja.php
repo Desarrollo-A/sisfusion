@@ -2,96 +2,94 @@
 class Caja extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
-		$this->load->model('Caja_model');
-		$this->load->model('registrolote_modelo');
-		$this->load->library(array('session','form_validation'));
+		$this->load->model(array('Caja_model', 'General_model'));
+		$this->load->library(array('session','form_validation', 'Jwt_actions', 'permisos_sidebar'));
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
-
+		$this->jwt_actions->authorize('0739', $_SERVER['HTTP_HOST']);
+		$this->validateSession();
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+		$rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
+        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
     }
 
-	public function index()
-	{
+	public function index() {
 		if($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '12')
-		{
 			redirect(base_url().'login');
-		}
 		$this->load->view('template/header');
-		$this->load->view('caja/inicio_caja_view');
+		$this->load->view('template/home');
 		$this->load->view('template/footer');
 	}
- 
-	public function cambiar_asesor(){
+
+	public function validateSession() {
+		if($this->session->userdata('id_usuario') == "" || $this->session->userdata('id_rol') == "")
+			redirect(base_url() . "index.php/login");
+	}
+
+	public function reporteLotesBloqueado(){
 		$this->load->view('template/header');
-		$this->load->view("caja/vista_cambiar_asesor_caja");
+		$this->load->view("caja/reporteLotesBloqueados_view");
 	}
 
-	public function historial_pagos(){
+	public function getReporteLotesBloqueados() {
+        $data = $this->Caja_model->getReporteLotesBloqueados();
+        if($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
+
+	public function clausulasLotesParticulares(){
 		$this->load->view('template/header');
-		$this->load->view("caja/vista_historial_pagos_caja");
+		$this->load->view("caja/clausulasLotesParticulares_view");
 	}
 
-	public function pagos_cancelados(){
-		$this->load->view('template/header');
-		$this->load->view("caja/vista_cancelados_pagos_caja");
-	}
+	public function getLotesParticulares() {
+        $data = $this->Caja_model->getLotesParticulares();
+        if($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
 
-	public function alta_cluster(){
-		$this->load->view('template/header');
-		$this->load->view("caja/vista_alta_cluster_caja");
-	}
+	public function addEditClausulas() {
+        $id_clausula = $this->input->post('id_clausula');
+        $idLote = $this->input->post('idLote');
+        $clausulas = $this->input->post('clausulas');
+		if ($id_clausula != 0) {
+			$dataToUpdate = array('estatus'=> 0, "fecha_modificacion" => date("Y-m-d H:i:s"), "modificado_por" => $this->session->userdata('id_usuario'));
+			$responseUpdate = $this->General_model->updateRecord("clausulas", $dataToUpdate, "id_clausula", $id_clausula); // MJ: LLEVA 4 PARÁMETROS $table, $data, $key, $value
+		}
+		$dataToInsert = array(
+			'id_lote'=> $idLote,
+			'nombre'=> $clausulas,
+			'estatus'=> 1,
+			"fecha_creacion" => date("Y-m-d H:i:s"),
+			"creado_por" => $this->session->userdata('id_usuario'),
+			"fecha_modificacion" => date("Y-m-d H:i:s"), 
+			"modificado_por" => $this->session->userdata('id_usuario')
+		);        
+		$responseInsert = $this->General_model->addRecord("clausulas", $dataToInsert); // MJ: LLEVA 2 PARÁMETROS $table, $data
+        if ($responseInsert == TRUE)
+			echo json_encode(array("status" => 1, "message" => "Registro guardado con éxito."), JSON_UNESCAPED_UNICODE);
+		else
+			echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+    }
 
-	public function alta_lote(){
-		$this->load->view('template/header');
-		$this->load->view("caja/vista_alta_lote_caja");
-	}
+	public function EditVentaParticular(){
 
-	public function actualiza_precio(){
-		$this->load->view('template/header');
-		$this->load->view("caja/vista_actualiza_precios_caja");
-	}
+		$tipo_venta = $this->input->post('tipo_venta');
+        $id_usuario = $this->session->userdata('id_usuario');
+        $idLote=$this->input->post('idLote');
 
-	public function actualiza_referencia(){
-		$this->load->view('template/header');
-		$this->load->view("caja/vista_actualiza_referencias_caja");
-	}
+		$dataToUpdate = array("tipo_venta"=> $tipo_venta, "usuario" => $this->session->userdata('id_usuario'));
+        $responseUpdate = $this->General_model->updateRecord("lotes", $dataToUpdate, "idLote", $idLote);
 
-	public function liberacion(){
-		$this->load->view('template/header');
-		$this->load->view("caja/vista_liberacion_caja");
-	}
+		$dataToUpdate2 = array('estatus'=> 0);
+        $responseUpdate2 = $this->General_model->updateRecord("clausulas", $dataToUpdate2, "id_lote", $idLote);
 
-	public function lista_proyecto(){
-      echo json_encode($this->Caja_model->get_proyecto_lista()->result_array());
+            $data['message'] = 'OK';
+            echo json_encode($data);
 	}
-	public function lista_condominio($proyecto){
-      echo json_encode($this->Caja_model->get_condominio_lista($proyecto)->result_array());
-	}
-	public function lista_lote($condominio){
-      echo json_encode($this->Caja_model->get_lote_lista($condominio)->result_array());
-	}
-	public function get_lista_condominio($condominio){
-      echo json_encode($this->Caja_model->get_datos_condominio($condominio)->result_array());
-	}
-	// public function get_lote_historial_pagos($lote){
- //      echo json_encode($this->Caja_model->get_datos_lote_pagos($lote)->result_array());
-	// }
-	public function lista_clientes(){
-		$this->load->view('template/header');
-		$this->load->view("contratacion/datos_cliente_contratacion_view");
-	}
-
-	public function inventario()/*this is the function*/
-	{
-		$datos = array();
-		$datos["registrosLoteContratacion"] = $this->registrolote_modelo->registroLote();
-		$datos["residencial"] = $this->registrolote_modelo->getResidencialQro();
-		$this->load->view('template/header');
-		$this->load->view("contratacion/datos_lote_contratacion_view", $datos);
-	}
- 
-
-
 }

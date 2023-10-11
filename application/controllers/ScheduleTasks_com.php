@@ -27,7 +27,7 @@ class ScheduleTasks_com extends CI_Controller
     $this->db->query("UPDATE descuentos_universidad SET estatus = 1, pagos_activos = 1 WHERE estatus = 5 AND YEAR(GETDATE()) = YEAR(fecha_modificacion) AND MONTH(GETDATE()) = MONTH(fecha_modificacion)");
     // $this->db->query("UPDATE descuentos_universidad SET pagos_activos = 0 WHERE estatus IN (3)");
     $this->db->query("UPDATE opinion_cumplimiento SET estatus = 0  WHERE estatus IN (1,2)");
-    $this->db->query("UPDATE cp_usuarios  SET estatus = 0  WHERE estatus IN (1)");
+    $this->db->query("UPDATE cp_usuarios SET estatus = 0 WHERE estatus IN (1)");
     $this->db->query("UPDATE pago_comision_ind SET abono_neodata = 0 WHERE id_comision in (SELECT id_comision FROM comisiones WHERE estatus = 0 and rol_generado not in (38))");
     $this->db->query("UPDATE facturas set id_comision = 0 where total = 0 and id_comision not in (0)");
     
@@ -180,7 +180,7 @@ public function activar_bandera_neo(){
         }
     }
     $this->ComisionesNeo_model->UpdateBanderaPagoComisionAnticipo();
-    $this->ComisionesNeo_model->UpdateBanderaPagoComisionNewNeo();
+    //$this->ComisionesNeo_model->UpdateBanderaPagoComisionNewNeo();
 }
 
 }

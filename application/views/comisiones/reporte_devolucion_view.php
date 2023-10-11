@@ -2,13 +2,7 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
 <div class="wrapper">
-    <?php
-    if($this->session->userdata('id_rol')=="49" ){
-        $this->load->view('template/sidebar');
-    }else{
-        echo '<script>alert("ACCESSO DENEGADO"); window.location.href="'.base_url().'";</script>';
-    }
-    ?>
+    <?php $this->load->view('template/sidebar'); ?>
     <div class="content boxContent">
         <div class="container-fluid">
             <div class="row">
@@ -19,13 +13,13 @@
                         </div>
                         <div class="card-content">
                             <div class="encabezadoBox">
-                                <h3 class="card-title">Reporte devoluciones</h3>
+                                <h3 class="card-title">Reporte de devoluciones</h3>
                             </div>
                             <div class="toolbar">
                                 <div class="row">
                                     <div class="col-sm-12 col-md-3 col-lg-3">
                                         <div class="form-group">
-                                            <label for="proyecto">PUESTO</label>
+                                            <label class="control-label" for="proyecto">PUESTO</label>
                                             <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" required>
                                                 <option value="3">GERENTE</option>
                                                 <option value="9">COORDINADOR DE VENTAS</option> 

@@ -24,7 +24,7 @@ $("#tabla_ingresar_9").ready(function () {
             titleAttr: 'Registro estatus 9',
             title: "Registro estatus 9",
             exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8],
+                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulosInventario[columnIdx -1]  + ' ';
@@ -41,7 +41,7 @@ $("#tabla_ingresar_9").ready(function () {
             orientation: 'landscape',
             pageSize: 'LEGAL',
             exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8],
+                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulosInventario[columnIdx -1]  + ' ';
@@ -61,7 +61,6 @@ $("#tabla_ingresar_9").ready(function () {
             [10, 25, 50, -1],
             [10, 25, 50, "Todos"]
         ],
-        bAutoWidth: false,
         fixedColumns: true,
         ordering: false,
         scrollX: true,
@@ -74,6 +73,11 @@ $("#tabla_ingresar_9").ready(function () {
         {
             data: function (d) {
                 return `<span class="label lbl-green">${d.tipo_venta}</span>`;
+            }
+        },
+        {
+            data: function (d) {
+                return `<span class='label lbl-violetBoots'>${d.tipo_proceso}</span>`;
             }
         },
         {
@@ -128,10 +132,12 @@ $("#tabla_ingresar_9").ready(function () {
                             'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' +
                             'class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
                             '<i class="fas fa-thumbs-up"></i></button>';
-                        cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
-                            'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '"  ' +
-                            'class="btn-data btn-warning cancelReg" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (JURIDICO)">' +
-                            '<i class="fas fa-thumbs-down"></i></button>';
+                        if (data.tipo_proceso == 'Normal') {
+                            cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
+                                'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '"  ' +
+                                'class="btn-data btn-warning cancelReg" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO DE ESTATUS">' +
+                                '<i class="fas fa-thumbs-down"></i></button>';
+                        }
                     } else
                         cntActions = 'N/A';
                 }

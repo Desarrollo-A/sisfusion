@@ -128,25 +128,21 @@ function fillDataTable(typeTransaction, beginDate, endDate, where)
             {
                 data: function (data) {
                     return myFunctions.validateEmptyField(data.nombreUsuario);
-
                 }
             },
             {
                 data: function (data) {
                     return myFunctions.validateEmptyField(data.asesor);
-
                 }
             },
             {
                 data: function (data) {
                     return myFunctions.validateEmptyField(data.coordinador);
-
                 }
             },
             {
                 data: function (data) {
                     return myFunctions.validateEmptyField(data.gerente);
-
                 }
             },
             {

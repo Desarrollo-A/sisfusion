@@ -1,39 +1,200 @@
-$(document).ready( function() {
+
+var puestos = [{id : 59, nombre : 'Director regional'}], sedes = []; 
+$(document).ready( function() { 
     $('[data-toggle="tooltip"]').tooltip(); 
     code = '';
     $.getJSON("fillSelectsForUsers").done(function(data) {
         for (let i = 0; i < data.length; i++) {
-            if (data[i]['id_catalogo'] == 16){ // PAYMENT METHOD SELECT
-                $("#payment_method").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
-            }
-            if (data[i]['id_catalogo'] == 1) // MEMBER TYPE SELECT
-                $("#member_type").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
-            if (data[i]['id_catalogo'] == 0) // HEADQUARTER SELECT
-                $("#headquarter").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
-        }
 
+            if (data[i]['id_catalogo'] == 16){
+                $("#payment_method").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+                }
+
+            if (data[i]['id_catalogo'] == 1)
+                $("#member_type").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+
+            if (data[i]['id_catalogo'] == 0){
+                $("#headquarter").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+                sedes.push({
+                    id : data[i]['id_opcion'],
+                    nombre : data[i]['nombre']
+                });
+            }
+        }
         $('#payment_method').selectpicker('refresh');
         $('#headquarter').selectpicker('refresh');
         $('#member_type').selectpicker('refresh');
     });
-
     $(".select-is-empty").removeClass("is-empty");
-    // MJ: EJECUTAR FUNCIÓN PARA EL LLENADO DE LA DT
     fillUsersTable();
 });
 
+$(document).on('change', '#leader', function() {
+    let sede = $('#headquarter').val();
+    let puesto = $('#member_type').val();
+    let lider = $('#leader').val();
+    document.getElementById('lineaVenta').innerHTML = '';
+
+    let puestosVentas = [3,7,9];
+    let sedeSelected = document.getElementById("headquarter");
+    let selectedSede = sedeSelected.options[sedeSelected.selectedIndex].text;
+    let puestoSelected = document.getElementById("member_type");
+    let selectedPuesto = puestoSelected.options[puestoSelected.selectedIndex].text;
+    let nombreSelected = $('#name').val() + ' ' + $('#last_name').val() + ' ' + $('#mothers_last_name').val();
+
+    if(puestosVentas.includes(parseInt(puesto))){
+        $.post("consultarLinea",{
+            sede: sede,
+            puesto: puesto,
+            lider : lider
+        },
+
+        function (data) {
+        let sedesSinRegional = [5,2,3,6];
+        let arraySedes = puesto == 7 ? ( data[0].banderaGer == 0 ? [data[0].idSedeCoor,data[0].idSedeGer,data[0].idSedeSub,data[0].idSedeReg] : [data[0].idSedeGer,data[0].idSedeSub,data[0].idSedeReg]) : ( puesto == 9 ? sedesSinRegional.includes(parseInt(sede)) ? [data[0].idSedeGer,data[0].idSedeSub] : [data[0].idSedeGer,data[0].idSedeSub,data[0].idSedeReg] : sedesSinRegional.includes(parseInt(sede)) ? [data[0].idSedeSub] : [data[0].idSedeSub,data[0].idSedeReg]);
+    let buscarDiff = arraySedes.filter(element => element != sede);
+    if(buscarDiff.length > 0){
+        $('#btn_acept').prop('disabled', true);
+    }else{
+        $('#btn_acept').prop('disabled', false);
+    }
+
+    let tabla = `
+    <div class="row subBoxDetail">
+        <div class=" col-sm-12 col-sm-12 col-lg-12 text-center" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>NUEVA LÍNEA DE VENTAS</b></label></div>
+        <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label><b>Nombre </b></label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label><b>Puesto</b></label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label><b>Sede</b></label></div>
+        <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${nombreSelected}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${selectedPuesto}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${selectedSede}</label></div>`;
+        tabla += puesto == 7  ? `<div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].coordinador}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoCoor}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeCoor}</label></div>` : '';
+        tabla += puesto == 3 ? '' : `<div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].gerente}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoGer}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeGerente}</label></div>`;
+        tabla += `<div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].sub}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoSub}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeSubdirector}</label></div>`;
+        tabla += sedesSinRegional.includes(parseInt(sede)) ? '' : `<div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].regional_1}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoReg}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeReg}</label></div>`;
+        tabla += `</div>`;
+        $('#lineaVenta').append(tabla);
+        },"json");
+    }
+});
+$(document).on('change', '#member_type', function() {
+    document.getElementById('lineaVenta').innerHTML = '';
+    //MOC: SI SE DETECTA UN SUBDIRECTOR Ó DIR. REGIONAL AGREGAR OPCIÓN DE MULTIROL
+    if($(this).val() == 2 || $(this).val() == 59){
+        $('#btnmultirol').append(`
+        <button class="btn-data btn-green" type="button" id="btnMultiRol" data-toggle="tooltip" data-placement="top" title="Agregar rol"><i class="fas fa-user-plus"></i></button>
+        `);
+    }else{
+        // document.getElementById('btnmultirol').innerHTML = '';
+        // document.getElementById('multirol').innerHTML = '';
+        $('#index').val(0);
+    }
+});
+
+function validarSede(indexActual){
+    let index = parseInt($('#index').val());
+    let c = 0;
+    for (let j = 0; j < index; j++) {
+        if(document.getElementById(`sedes_${j}`)){
+            if(j != indexActual){
+                let sedeActual = $(`#sedes_${indexActual}`).val();
+                let sedes = $(`#sedes_${j}`).val();
+                if(sedeActual == sedes){
+                    c++;
+                    alerts.showNotification("top", "right", "LA SEDE SELECCIONADA YA FUE SELECCIONADA", "warning");
+                    $('#btn_acept').prop('disabled', true);
+                }
+            }
+        }
+    }
+    if(c == 0){
+        $('#btn_acept').prop('disabled', false);
+    }
+}
+
+$(document).on("click","#btnMultiRol",function(){
+    let index = parseInt($('#index').val());
+    $('#multirol').append(`
+            <div class="col-md-12 aligned-row" id="mult_${index}">
+                <div class="col-md-6 pr-0 pr-0">
+                    <div class="form-group text-left m-0">
+                        <label class="control-label">Tipo de miembro (<small class="isRequired">*</small>)</label>
+                        <select class="selectpicker select-gral m-0" name="multi_${index}" id="multi_${index}" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-size="7" data-live-search="true" data-container="body"></select></div>
+                    </div>
+                <div class="col-md-4 pr-0 pr-0">
+                    <div class="form-group text-left m-0">
+                        <label class="control-label">Sede (<small class="isRequired">*</small>)</label>
+                        <select class="selectpicker select-gral m-0" onchange="validarSede(${index},'sedes_');" name="sedes_${index}" id="sedes_${index}" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-size="7" data-live-search="true" data-container="body"></select>
+                    </div>
+                </div>
+                <div class="col-md-2 justify-center d-flex align-end">
+                    <div class="form-group m-0 p-0">
+                        <button class="btn-data btn-warning mb-1" type="button" onclick="borrarMulti(${index})" data-toggle="tooltip" data-placement="top" title="Eliminar rol"><i class="fa fa-trash"></i></button>
+                    </div>
+                </div>
+            </div>`);
+        $('[data-toggle="tooltip"]').tooltip();
+        for (var i = 0; i < puestos.length; i++) {
+            var id = puestos[i].id;
+            var name = puestos[i].nombre;
+            $(`#multi_${index}`).append($('<option>').val(id).text(name.toUpperCase()));
+        }
+        for (var i = 0; i < sedes.length; i++) {
+            var id = sedes[i].id;
+            var name = sedes[i].nombre;
+            $(`#sedes_${index}`).append($('<option>').val(id).text(name.toUpperCase()));
+        }
+        $(`#multi_${index}`).selectpicker('refresh');
+        $(`#sedes_${index}`).selectpicker('refresh');
+        index = parseInt(index + 1);
+        $('#index').val(index);
+});
+
+$("#deleteRol").on('submit', function(e){
+    let indice = $('#indice').val();
+
+    e.preventDefault();
+    $.ajax({
+        type: 'POST',
+        url: 'borrarMulti',
+        data: new FormData(this),
+        contentType: false,
+        cache: false,
+        processData:false,
+        beforeSend: function(){},
+        success: function(data) {
+            if (data == true) {
+                alerts.showNotification("top", "right", "El rol se ha eliminado correctamente", "success");
+                $('#modalDelRol').modal('toggle');
+                document.getElementById(`mult_${indice}`).innerHTML = '';
+                document.getElementById("deleteRol").reset();
+            } else {
+                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            }
+        },
+        error: function(){
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+});
+
+function borrarMulti(index,id = ''){
+
+    if( id != ''){
+        $('#idRU').val(id);
+        $('#indice').val(index);
+        $('#modalDelRol').modal('show');
+    }else{
+        document.getElementById(`mult_${index}`).innerHTML = '';
+    }
+}
+
 let titulos = [];
 $('#all_users_datatable thead tr:eq(0) th').each(function (i) {
-    if (i != 16) {
-        var title = $(this).text();
-        titulos.push(title);
-        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
-        $('input', this).on('keyup change', function () {
-            if ($('#all_users_datatable').DataTable().column(i).search() !== this.value) {
-                $('#all_users_datatable').DataTable().column(i).search(this.value).draw();
-            }
-        });
-    }
+    var title = $(this).text();
+    titulos.push(title);
+    $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
+    $('input', this).on('keyup change', function () {
+        if ($('#all_users_datatable').DataTable().column(i).search() !== this.value) {
+            $('#all_users_datatable').DataTable().column(i).search(this.value).draw();
+        }
+    });
 });
 
 function fillUsersTable() {
@@ -41,23 +202,21 @@ function fillUsersTable() {
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                className: 'btn buttons-excel',
-                titleAttr: 'Listado de usuarios',
-                title: 'Listado de usuarios',
-                exportOptions: {
-                    columns:  (id_rol_general==54) ? [0, 1, 2, 3, 4, 5, 6, 7] : [0, 1, 2, 3, 4, 5, 6, 7],
-                    format: {
-                        header: function (d, columnIdx) {
-                            return ' ' + titulos[columnIdx] + ' ';
-                        }
+        buttons: [{
+            extend: 'excelHtml5',
+            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+            className: 'btn buttons-excel',
+            titleAttr: 'Listado de usuarios',
+            title: 'Listado de usuarios',
+            exportOptions: {
+                columns:  (id_rol_general==54) ? [0, 1, 2, 3, 4, 5, 6, 7] : [0, 1, 2, 3, 4, 5, 6, 7],
+                format: {
+                    header: function (d, columnIdx) {
+                        return ' ' + titulos[columnIdx] + ' ';
                     }
                 }
             }
-        ],
+        }],
         ordering: false,
         paging: true,
         pagingType: "full_numbers",
@@ -73,147 +232,146 @@ function fillUsersTable() {
             }
         },
         destroy: true,
-        columns: [
-            {
-                data: function (d) {
-                    if (d.estatus == 1) {
-                        return '<center><span class="label lbl-green">ACTIVO</span><center>';
-                    } else if (d.estatus == 3) {
-                        return '<center><span class="label lbl-orangeYellow">INACTIVO COMISIONADO</span><center>';
-                    } else {
-                        return '<center><span class="label lbl-warning">INACTIVO</span><center>';
-                    }
+        columns: [{
+            data: function (d) {
+                if (d.estatus == 1) {
+                    return '<center><span class="label lbl-green">ACTIVO</span><center>';
+                } else if (d.estatus == 3) {
+                    return '<center><span class="label lbl-orangeYellow">INACTIVO COMISIONADO</span><center>';
+                } else {
+                    return '<center><span class="label lbl-warning">INACTIVO</span><center>';
                 }
-            },
-            {
-                data: function (d) {
-                    return d.id_usuario;
+            }
+        },
+        {
+            data: function (d) {
+                return d.id_usuario;
+            }
+        },
+        {
+            data: function (d) {
+                return d.nombre;
+            }
+        },
+        {
+            data: function (d) {
+                return d.correo;
+            }
+        },
+        {
+            data: function (d) {
+                return d.telefono;
+            }
+        },
+        {
+            data: function (d) {
+                var propiedadExtra = '';
+                if(d.puesto == 'Asesor' && d.simbolico==1){
+                    propiedadExtra = '<br><label class="label lbl-sky">SIMBÓLICO</label>';
                 }
-            },
-            {
-                data: function (d) {
-                    return d.nombre;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.correo;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.telefono;
-                }
-            },
-            {
-                data: function (d) {
-                    var propiedadExtra = '';
-                    if(d.puesto == 'Asesor' && d.simbolico==1){
-                        propiedadExtra = '<br><label class="label lbl-sky">SIMBÓLICO</label>';
-                    }
-                    return d.puesto + propiedadExtra;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.sede;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.jefe_directo == '  ' ? 'NO APLICA' : d.jefe_directo;
-                }
-            },
-            {
-                data: function (d) {
-                    var id_rol = id_rol_global;
-                    if(id_rol == 8 && d.estatus == 1){
-                        if (id_usuario_general == 1297 || id_usuario_general == 1) { // filtro para soporte excluyendo ambos perfiles
-                            return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-toggle="tooltip"  data-placement="top" title="EDITAR INFORMACIÓN" data-id-usuario="' + d.id_usuario +'"> '+
-                            '<i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow  see-changes-log"  data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip"  data-placement="top" title="CONSULTA LA INFORMACIÓN" ><i class="fas fa-eye"></i> </button>' +
-                                '<button class="btn-data btn-warning change-user-status"  id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'" data-toggle="tooltip"  data-placement="top" title="DAR DE BAJA"><i class="fas fa-lock"></i></button>'+
-                                '</div>';
-                            } else  {
-                                //TODO SOPORTE  
-                                return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="EDITAR INFORMACIÓN" class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button><button data-toggle="tooltip"  data-placement="top" title="BITÁCORA DE CAMBIOS"class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
-                            '<button data-toggle="tooltip"  data-placement="top" title="DAR DE BAJA" class="btn-data btn-warning change-user-status"  id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock"></i></button></div>';
-                        }
-                    }
-                    else {
-                        if (id_usuario_general == 1297 || id_usuario_general == 1) {
-                            return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="EDITAR INFORMACIÓN" class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button><button data-toggle="tooltip"  data-placement="top" title="BITACORA DE CAMBIOS" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' ;
-                            } else {
-                                if (id_usuario_general != 1297 || id_usuario_general != 1  ) { 
-                                    let bt = ``;
-                                    bt =  '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="EDITAR INFORMACIÓN" class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button>' +
-                                    '<button  class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip"  data-placement="top" title="BITACORA DE CAMBIOS" ><i class="fas fa-eye"></i> </button>' ;
-                                    if ((d.puesto == 'Asesor' || d.puesto == 'Coordinador de ventas' || d.puesto == 'Gerente') && (id_rol != 6 && id_rol != 5 && id_rol != 4)) { 
-                                    }else {
-                                        if(d.estatus == 1){
-                                                bt += '<button class="btn-data btn-warning change-user-status" id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'" data-toggle="tooltip"  data-placement="top" title="DAR DE BAJA"><i class="fas fa-lock-open"></i></button>';
-                                        }else{
-                                            bt += '';
-                                        }
-                                    }
-                                    bt += '</div>';
-                                    return bt;
-                                }
-                            if(id_rol == 8 && id_usuario_general != 1297 && d.puesto == 'Contraloría' && d.estatus == 0){
-                                return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="BITÁCORA DE CAMBIOS" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
-                                '<button data-toggle="tooltip"  data-placement="top" title="DAR DE ALTA" class="btn-data btn-green change-user-status" id="' + d.id_usuario +'" data-estatus="1" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'"><i class="fas fa-lock-open"></i></button>'+
-                                '</div>';
-                            }
-                        }
-                    }
-                    if (id_rol == 53) {
-                        return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="BITÁCORA DE CAMBIOS" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' ;
-                    } else if (id_rol == 41) {
-                        return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="EDITAR INFORMACIÓN" class="btn-data btn-blueMaderas edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
-                                '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="BITÁCORA DE CAMBIOS" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
+                return d.puesto + propiedadExtra;
+            }
+        },
+        {
+            data: function (d) {
+                return d.sede;
+            }
+        },
+        {
+            data: function (d) {
+                return d.jefe_directo == '  ' ? 'NO APLICA' : d.jefe_directo;
+            }
+        },
+        {
+            data: function (d) {
+                var id_rol = id_rol_global;
+                if(id_rol == 8 && d.estatus == 1){
+                    if (id_usuario_general == 1297 || id_usuario_general == 1) { 
+                        // filtro para soporte excluyendo ambos perfiles
+                        return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-toggle="tooltip"  data-placement="top" title="EDITAR INFORMACIÓN" data-id-usuario="' + d.id_usuario +'"> '+
+                        '<i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow  see-changes-log"  data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip"  data-placement="top" title="CONSULTA LA INFORMACIÓN" ><i class="fas fa-eye"></i> </button>' +
+                            '<button class="btn-data btn-warning change-user-status"  id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'" data-idrol="'+d.id_rol+'" data-toggle="tooltip"  data-placement="top" title="DAR DE BAJA"><i class="fas fa-lock"></i></button>'+
                             '</div>';
-                    } else if(id_rol_general==25){
-                        return '';
+                        } 
+                        else {
+                            //TODO SOPORTE
+                            return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="EDITAR INFORMACIÓN" class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button><button data-toggle="tooltip"  data-placement="top" title="BITÁCORA DE CAMBIOS"class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
+                            '<button data-toggle="tooltip"  data-placement="top" title="DAR DE BAJA" class="btn-data btn-warning change-user-status"  id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'" data-idrol="'+d.id_rol+'"><i class="fas fa-lock"></i></button></div>';
+                        }
                     }
-                    else{
-                        if (d.estatus == 1) {
-                            return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="EDITAR INFORMACIÓN" class="btn-data btn-blueMaderas edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
-                                '<button data-toggle="tooltip"  data-placement="top" title="BITÁCORA DE CAMBIOS" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario + '" ><i class="fas fa-eye"></i> </button>' +
-                                '<button data-toggle="tooltip"  data-placement="top" title="DAR DE BAJA" class="btn-data btn-warning change-user-status"  id="' + d.id_usuario + '" data-estatus="0" data-id-usuario="' + d.id_usuario + '" data-name="' + d.nombre + '" data-rol="' + d.puesto + '"><i class="fas fa-lock"></i></button>'+
-                                '</div>';
-                            } else {
-                            if (d.puesto == 'Asesor' || d.puesto == 'Coordinador de ventas' || d.puesto == 'Gerente') {
-                                return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="EDITAR INFORMACIÓN" class="btn-data btn-blueMaderas  edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
-                                    '<button data-toggle="tooltip"  data-placement="top" title="BITÁCORA DE CAMBIOS" class="btn-data btn-orangeYellow see-changes-log" data-id-usuario="' + d.id_usuario + '" ><i class="fas fa-eye"></i></button>' +
-                                    '</div>';
-                                } else {
-                                return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas  edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '" data-toggle="tooltip"  data-placement="top" title="EDITAR INFORMACIÓN"><i class="fas fa-pencil-alt"></i></button>' +
-                                    '<button class="btn-data btn-orangeYellow see-changes-log" data-id-usuario="' + d.id_usuario + '" data-toggle="tooltip"  data-placement="top" title="BITÁCORA DE CAMBIOS" ><i class="fas fa-eye"></i></button>' +
-                                    '<button class="btn-data btn-warning change-user-status" id="' + d.id_usuario + '" data-estatus="1" data-id-usuario="' + d.id_usuario + '" data-name="' + d.nombre + '" data-rol="' + d.puesto + '" data-toggle="tooltip"  data-placement="top" title="DAR DE BAJA"><i class="fas fa-lock"></i></button>' +
-                                    '</div>';
+                else {
+                    if (id_usuario_general == 1297 || id_usuario_general == 1) {
+                        return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="EDITAR INFORMACIÓN" class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button><button data-toggle="tooltip"  data-placement="top" title="BITACORA DE CAMBIOS" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' ;
+                        }
+                        else {
+                            if (id_usuario_general != 1297 || id_usuario_general != 1  ) {
+                                let bt = ``;
+                                bt =  '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="EDITAR INFORMACIÓN" class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button>' +
+                                '<button  class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip"  data-placement="top" title="BITACORA DE CAMBIOS" ><i class="fas fa-eye"></i> </button>' ;
+                                if ((d.puesto == 'Asesor' || d.puesto == 'Coordinador de ventas' || d.puesto == 'Gerente') && (id_rol != 6 && id_rol != 5 && id_rol != 4)) {
+                                }
+                                else {
+                                    if(d.estatus == 1){
+                                        bt += '<button class="btn-data btn-warning change-user-status" id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'" data-idrol="'+d.id_rol+'" data-toggle="tooltip"  data-placement="top" title="DAR DE BAJA"><i class="fas fa-lock-open"></i></button>';
+                                    }
+                                    else{
+                                        bt += '';
+                                    }
+                                }
+                                bt += '</div>';
+                                return bt;
                             }
+                        if(id_rol == 8 && id_usuario_general != 1297 && d.puesto == 'Contraloría' && d.estatus == 0){
+                            return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="BITÁCORA DE CAMBIOS" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' + '<button data-toggle="tooltip"  data-placement="top" title="DAR DE ALTA" class="btn-data btn-green change-user-status" id="' + d.id_usuario +'" data-estatus="1" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'" data-idrol="'+d.id_rol+'"><i class="fas fa-lock-open"></i></button>'+ '</div>';
+                        }
+                    }
+                }
+                if (id_rol == 53) {
+                    return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="BITÁCORA DE CAMBIOS" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' ;
+                } else if (id_rol == 41) {
+                    return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="EDITAR INFORMACIÓN" class="btn-data btn-blueMaderas edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
+                            '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="BITÁCORA DE CAMBIOS" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
+                        '</div>';
+                } else if(id_rol_general==25){
+                    return '';
+                }
+                else{
+                    if (d.estatus == 1) {
+                        return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="EDITAR INFORMACIÓN" class="btn-data btn-blueMaderas edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
+                            '<button data-toggle="tooltip"  data-placement="top" title="BITÁCORA DE CAMBIOS" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario + '" ><i class="fas fa-eye"></i> </button>' +
+                            '<button data-toggle="tooltip"  data-placement="top" title="DAR DE BAJA" class="btn-data btn-warning change-user-status"  id="' + d.id_usuario + '" data-estatus="0" data-id-usuario="' + d.id_usuario + '" data-name="' + d.nombre + '" data-rol="' + d.puesto + '" data-idrol="'+d.id_rol+'"><i class="fas fa-lock"></i></button>'+ '</div>';
+                        } 
+                        else {
+                        if (d.puesto == 'Asesor' || d.puesto == 'Coordinador de ventas' || d.puesto == 'Gerente') {
+                            return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="EDITAR INFORMACIÓN" class="btn-data btn-blueMaderas  edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
+                                '<button data-toggle="tooltip"  data-placement="top" title="BITÁCORA DE CAMBIOS" class="btn-data btn-orangeYellow see-changes-log" data-id-usuario="' + d.id_usuario + '" ><i class="fas fa-eye"></i></button>' +
+                                '</div>';
+                            }
+                            else {
+                            return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas  edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '" data-toggle="tooltip"  data-placement="top" title="EDITAR INFORMACIÓN"><i class="fas fa-pencil-alt"></i></button>' +
+                                '<button class="btn-data btn-orangeYellow see-changes-log" data-id-usuario="' + d.id_usuario + '" data-toggle="tooltip"  data-placement="top" title="BITÁCORA DE CAMBIOS" ><i class="fas fa-eye"></i></button>' +
+                                '<button class="btn-data btn-warning change-user-status" id="' + d.id_usuario + '" data-estatus="1" data-id-usuario="' + d.id_usuario + '" data-name="' + d.nombre + '" data-rol="' + d.puesto + '" data-idrol="'+d.id_rol+'" data-toggle="tooltip"  data-placement="top" title="DAR DE BAJA"><i class="fas fa-lock"></i></button>' +
+                                '</div>';
                         }
                     }
                 }
             }
-        ],
+        }],
         ajax: {
             url: "getUsersList",
             type: "POST",
             cache: false,
-            data: function (d) {
-            }
+            data: function (d) {}
         }
     });
-    if(id_rol_general == 54){//validacion para no mostrarle acciones a usuario POPEA
+    if(id_rol_general == 54){
         let arrayNOView = [8];
         $allUsersTable.columns(arrayNOView).visible(false);
     }
 }
 
 $('#all_users_datatable').on('draw.dt', function() {
-    $('[data-toggle="tooltip"]').tooltip({
-        trigger: "hover"
-    });
+    $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
 });
 
 function showPassword() {
@@ -231,9 +389,6 @@ $("#my_personal_info_form").on('submit', function(e){
         contentType: false,
         cache: false,
         processData:false,
-        beforeSend: function(){
-            // Actions before send post
-        },
         success: function(data) {
             if (data == 1) {
                 alerts.showNotification("top", "right", "La información se ha actualizado correctamente.", "success");
@@ -259,9 +414,6 @@ $("#my_add_user_form").on('submit', function(e){
         contentType: false,
         cache: false,
         processData:false,
-        beforeSend: function(){
-            // Actions before send post
-        },
         success: function(data) {
             if (data == 1) {
                 alerts.showNotification("top", "right", "El usuario se ha registrado correctamente.", "success");
@@ -296,15 +448,12 @@ function getLeadersList(){
     $("#leader").find("option").remove();
     $.post('getLeadersList/'+headquarter+'/'+type, function(data) {
         var len = data.length;
-        for( var i = 0; i<len; i++)
-        {
+        for( var i = 0; i<len; i++){
             var id = data[i]['id_usuario'];
             var name = data[i]['nombre'];
-            var sede = data[i]['id_sede'];
             $("#leader").append($('<option>').val(id).text(name));
         }
-        if(len<=0)
-        {
+        if(len<=0){
             $("#leader").append('<option selected="selected" value="0">NA</option>');
         }
         $('#leader').selectpicker('refresh');
@@ -315,11 +464,9 @@ function getLeadersListForEdit(headquarter, type, leader){
     $("#leader").find("option").remove();
     $.post('getLeadersList/'+headquarter+'/'+type, function(data) {
         var len = data.length;
-        for( var i = 0; i<len; i++)
-        {
+        for( var i = 0; i<len; i++){
             var id = data[i]['id_usuario'];
             var name = data[i]['nombre'];
-            var sede = data[i]['id_sede'];
             if(id == leader){
                 $("#leader").append($('<option selected>').val(id).text(name));
                 $("#lastLI").val(id);
@@ -341,6 +488,7 @@ function cleadFieldsHeadquarterChange(){
     $('#member_type').selectpicker('refresh');
     $('#leader').selectpicker('refresh');
 }
+
 function CloseModalBaja(){
     document.getElementById('nameUs').innerHTML = '';
     $('#id_user').val(0);
@@ -349,6 +497,7 @@ function CloseModalBaja(){
     $('#BajaUserForm')[0].reset();
     $('#BajaUser').modal("hide");
 }
+
 function BajaConfirmM(){
     document.getElementById('msj').innerHTML = '';
     document.getElementById('nameUs2').innerHTML = '';
@@ -358,6 +507,7 @@ function BajaConfirmM(){
     $('#BajaConfirmForm')[0].reset();
     $('#BajaConfirm').modal("hide");
 }
+
 $("#BajaUserForm").on('submit', function(e){
     e.preventDefault();
     document.getElementById('btnS').disabled = true;
@@ -368,9 +518,6 @@ $("#BajaUserForm").on('submit', function(e){
         contentType: false,
         cache: false,
         processData:false,
-        beforeSend: function(){
-            // Actions before send post
-        },
         success: function(data) {
             if( data == 1 ){
                 if (estatus == 1) {
@@ -384,7 +531,6 @@ $("#BajaUserForm").on('submit', function(e){
                 alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
             }
             document.getElementById('btnS').disabled = false;
-
         },
         error: function(){
             document.getElementById('btnS').disabled = false;
@@ -397,7 +543,6 @@ $(document).on('click', '.buscar-pass-user', function(e){
     id_usuario = $(this).attr("data-id-usuario");
     $.getJSON("getUserInformation/"+id_usuario).done( function( data ){
         $.each( data, function(i, v){
-            console.log(v);
             let leader;
             var inputNombre = document.getElementById("usuarioPC");
             inputNombre.value =  v.usuario;
@@ -423,7 +568,6 @@ $("#BajaConfirmForm").on('submit', function(e){
         data: {'id_user': $('#iduser').val(), 'estatus': $('#status').val()},
         dataType: 'json',
         success: function(data){
-
             BajaConfirmM();
             if( data == 1 ){
                 if (estatus == 1) {
@@ -450,8 +594,10 @@ $(document).on('click', '.change-user-status', function(e) {
     $('#'+id_user+'').prop('disabled', true);
     estatus = $(this).attr("data-estatus");
     id_rol = $(this).attr("data-rol");
+    idRol = $(this).attr("data-idrol");
     nameUser = $(this).attr("data-name");
-    if(estatus == 0 && (id_rol == 'Asesor' || id_rol == 'Gerente' || id_rol == 'Coordinador de ventas')){
+    let roles = [3,7,9,'3','9','7'];
+    if(estatus == 0 && roles.includes(idRol)){
         document.getElementById('nameUs').innerHTML = '';
         $('#id_user').val(0);
         $('#idrol').val(0);
@@ -486,6 +632,8 @@ $(document).on('click', '.change-user-status', function(e) {
 
 $(document).on('click', '.edit-user-information', function(e){
     id_usuario = $(this).attr("data-id-usuario");
+    document.getElementById('lineaVenta').innerHTML = '';
+    $('#btn_acept').prop('disabled', false);
     $('.simbolico_column').html('');
     $('.col-estructura').html('');
     $.getJSON("getUserInformation/"+id_usuario).done( function( data ){
@@ -497,13 +645,8 @@ $(document).on('click', '.edit-user-information', function(e){
             }else{
                 $('#btn_acept').removeClass('hide');
             }
-            let leader;
-            if (v.id_rol == 9)
-                leader = v.gerente_id
-            else if (v.id_rol == 3)
-                leader = v.subdirector_id
-            else
-                leader = v.id_lider;
+            let leader = v.id_lider;
+
             if (v.id_rol == '7' || v.id_rol == '9' || v.id_rol == '3') { // ASESOR || COORDINADOR || GERENTE
                 var row = $('.col-estructura');
                 row.append(`
@@ -518,32 +661,29 @@ $(document).on('click', '.edit-user-information', function(e){
                     </div>
                 `);
             }
-            //se valida que tipo de usuario está editando el usuario para poder agregarle la propiedad
-            //de si es simbólico o no
+
             if(id_rol_general == 4 || id_rol_general == 5 || id_rol_general==6){
                 if (v.id_rol == '7' ){
                     $('#tipoMiembro_column').removeClass('col-sm-6');
                     $('#tipoMiembro_column').addClass('col-sm-3');
                     var row_add = $('.simbolico_column');
                     row_add.append(`
-                    <div class="col-sm-3">
+                    <div class="col-sm-3 mt-3">
                         <div class="form-group label-floating select-is-empty div_membertype">
                             <label class="control-label"><small class="isRequired">*</small>¿Asesor simbólico?</label>
-                            <select class="selectpicker select-gral m-0" id="simbolicoType" name="simbolicoType" data-style="btn" data-show-subtext="true" 
-                            data-live-search="true" title="Seleccione sí es simbolíco" data-size="7" data-container="body" required>
+                            <select class="selectpicker select-gral m-0" id="simbolicoType" name="simbolicoType" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione sí es simbolíco" data-size="7" data-container="body" required>
                                 <option value="1" ${ (v.simbolico == 1 || v.simbolico == '1' ) ? 'selected' : ''}>SÍ</option>
                                 <option value="0" ${ (v.simbolico == 0 || v.simbolico == '0' || v.simbolico == null ) ? 'selected' : ''}>NO</option>
                             </select>
                         </div>
-                    </div>
-                `);
+                    </div>`);
                 }else{
                     $('#tipoMiembro_column').removeClass('col-sm-3');
                     $('#tipoMiembro_column').addClass('col-sm-6');
                 }
+                $('#simbolicoType').selectpicker('refresh');
             }
             $('#nueva_estructura').selectpicker('refresh');
-            $('#simbolicoType').selectpicker('refresh');
             getLeadersListForEdit(v.id_sede, v.id_rol, leader);
             $("#editUserModal").modal();
             fillFields(v);
@@ -564,10 +704,10 @@ $(document).on('change', '#sedech', function() {
             document.getElementById("sucursal").removeAttribute("required");
         }
         $.each( data.data, function(i, v){
-                var option = document.createElement("option");
-                option.text = v.nom_oficina;
-                option.value = v.idsucursal;
-                select.add(option);
+            var option = document.createElement("option");
+            option.text = v.nom_oficina;
+            option.value = v.idsucursal;
+            select.add(option);
         });
         $('#sucursal').selectpicker('refresh');
     });
@@ -621,7 +761,6 @@ function fillFields (v) {
     $("#phone_number").val(v.telefono);
     $("#headquarter").val(v.id_sede);
     $("#member_type").val(v.id_rol);
-    $("#member_type").val(v.id_rol);
     let rol_asignado = v.id_rol;
     if (v.id_rol == 2 && (v.id_usuario == 3 || v.id_usuario == 5 || v.id_usuario == 607 || v.id_usuario == 4 ))
         $("#member_type option[value=2]").text("DIRECTOR REGIONAL");
@@ -666,7 +805,7 @@ function fillFields (v) {
         document.getElementById("sucursal").removeAttribute("required");
         $("#sucursal").empty();
     }
-    $("#rol_actual").val(v.id_rol);
+    $("#rol_actual").val(rol_asignado);
     $("#username").val(v.usuario);
     $("#contrasena").val(v.contrasena);
 }
@@ -710,10 +849,13 @@ $("#editUserForm").on('submit', function(e){
         beforeSend: function(){
         },
         success: function(data) {
-            if (data == 1) {
+            data = JSON.parse(data);
+            if (data.respuesta == 1) {
                 $allUsersTable.ajax.reload();
                 $('#editUserModal').modal("hide");
                 alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
+            } else if (data.respuesta == 0) {
+                alerts.showNotification("top", "right", data.message, "warning");
             } else {
                 alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
             }
@@ -737,7 +879,7 @@ $(document).on('click', '.see-changes-log', function(){
 function fillChangelogUsers(v) {
     var nombreMovimiento;
     var dataMovimiento;
-    
+    document.getElementById('changelogUsers').innerHTML = '';
     switch (v.col_afect) {
         case 'nombre':
             nombreMovimiento = 'Nombre';
@@ -794,7 +936,7 @@ function fillChangelogUsers(v) {
     '               <a><small>Campo: </small><b> ' +v.col_afect.toUpperCase()+ '</b></a><br>\n' +
     '           </div>\n' +
     '<div class="float-end text-right">\n' +
-    '               <a>' + v.fec_creacion + '</a>\n' +
+    '               <a>' + v.fecha_creacion + '</a>\n' +
     '           </div>\n' +
     '           <div class="col-md-12">\n' +
     '                <p class="m-0"><small>USUARIO: </small><b> ' + v.creador + '</b></p>\n'+
@@ -821,3 +963,61 @@ $(document).on('change', '#nueva_estructura', function() {
     $("#member_type").val('').selectpicker("refresh");
     $("#leader").val('').selectpicker("refresh");
 });
+
+function menuOptions(member_type){
+    let valueMemberType = member_type;
+    $.ajax({
+        url: general_base_url+'Usuarios/getMenuOptionsByRol/'+valueMemberType,
+        type: 'post',
+        dataType: 'json',
+        success:function(response){
+            printMenuCheck(response);
+        }
+    });
+}
+
+function printMenuCheck(data){
+    let contenedorHTML = document.getElementById('listadoHTML');
+    let containerMenu = document.getElementById('containerMenu');
+    contenedorHTML.innerHTML = '';
+    let contenidoInternoHTML = '';
+    let selectorTodo = '';
+    let arrayInterno = [];
+    let arrayJSON = '';
+    data.map((elemento, index)=>{
+        if(elemento.hijos == 1 || Number.isInteger(elemento.orden)){
+            arrayInterno = [];
+            arrayInterno.push(elemento.padre);
+            arrayInterno.push(elemento.idmenu);
+            arrayInterno.push(elemento.orden);
+            arrayJSON = JSON.stringify(arrayInterno);
+            contenidoInternoHTML += '<ul><li><input value="'+arrayJSON+'" type="checkbox" name="menu[]" id="padre'+elemento.nombre+index+'"> <label for="padre'+elemento.nombre+index+'"> '+elemento.nombre+'</label></li><ul>';
+            data.map((element2, index2)=>{
+                arrayInterno = [];
+                if(element2.hijos == 0 && ((element2.orden>=data[index].orden ) && (element2.orden<=(data[index].orden+1)))){
+                    arrayInterno.push(element2.padre);
+                    arrayInterno.push(element2.idmenu);
+                    arrayInterno.push(element2.orden);
+                    arrayJSON = JSON.stringify(arrayInterno);
+                    contenidoInternoHTML += '<li><input value="'+arrayJSON+'" type="checkbox" name="menu[]" id="'+element2.nombre+index2+'"> <label for="'+element2.nombre+index2+'"> '+element2.nombre+'</label></li>';
+                }
+            });
+            contenidoInternoHTML += '</ul></ul>';
+        }
+    });
+    selectorTodo = '<input type="checkbox" name="seleccionaTodo" class="seleccionaTodo" id="seleccionaTodo"/> <label for="seleccionaTodo"> Seleccionar todas las opciones</label>';
+    contenedorHTML.innerHTML += selectorTodo;
+    contenedorHTML.innerHTML += contenidoInternoHTML;
+    contenedorHTML.style.height = '300px';
+    contenedorHTML.style.overflowY = 'auto';
+    containerMenu.classList.remove('hide');
+}
+
+
+$(document).on('click', '#seleccionaTodo', function(){
+    if ($(this).is(':checked')) {
+        $('input:checkbox').attr('checked', true);
+    } else {
+        $('input:checkbox').attr('checked', false);
+    }
+})

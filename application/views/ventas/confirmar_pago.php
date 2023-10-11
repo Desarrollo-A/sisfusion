@@ -1,41 +1,30 @@
 
 <body class="">
 <div class="wrapper ">
-<?php
-if (in_array($this->session->userdata('id_rol'), array(13,17,32))){
-    $this->load->view('template/sidebar');
-}
-else{
-    echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-}
-?>
+<?php $this->load->view('template/sidebar'); ?>
     <!--Contenido de la página-->
 
     <style type="text/css">
         ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-  color: white;
- opacity: 0.4;
-
-  ::-moz-placeholder { /* Firefox 19+ */
-  color: white;
-  opacity: 0.4;
-}
-:-ms-input-placeholder { /* IE 10+ */
-  color: white;
-  opacity: 0.4;
-}
-:-moz-placeholder { /* Firefox 18- */
-  color: white;
-  opacity: 0.4;
-}
-
-.addNewRecord {    
-    background-image: linear-gradient(to bottom, #ffffff,#e0ffff 100%) !important;   
-}
-
-
-}
-</style>
+            color: white;
+            opacity: 0.4;
+            ::-moz-placeholder { /* Firefox 19+ */
+                color: white;
+                opacity: 0.4;
+            }   
+            :-ms-input-placeholder { /* IE 10+ */
+                color: white;
+                opacity: 0.4;
+            }
+            :-moz-placeholder { /* Firefox 18- */
+                color: white;
+                opacity: 0.4;
+            }
+            .addNewRecord {    
+                background-image: linear-gradient(to bottom, #ffffff,#e0ffff 100%) !important;   
+            }
+        }
+    </style>
 
 	<div class="content">
         <div class="container-fluid">

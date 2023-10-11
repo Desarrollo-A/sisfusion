@@ -14,7 +14,7 @@ $(document).ready(function () {
                 var value = this.value;
                 //codigo embebido del PDF
                 var url_file = `${general_base_url}/static/documentos/carpetas/${value}`
-                var embebed_code = '<embed src="'+url_file+'#toolbar=0" frameborder="0" width="100%" height="770em">';
+                var embebed_code = `<embed src="${url_file}" frameborder="0" width="100%" height="770em">`;
                 //construye los contenedores de las tabs
                 var html_contenedor_tabs = '';
                 html_contenedor_tabs += '	<div class="content">';

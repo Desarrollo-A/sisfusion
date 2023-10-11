@@ -14,7 +14,6 @@ $(document).ready(function () {
     $('.datepicker').datetimepicker({locale: 'es'});
 });
 
-
 sp = { // MJ: SELECT PICKER
     initFormExtendedDatetimepickers: function () {
         $('.datepicker').datetimepicker({
@@ -92,7 +91,7 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
                 className: `btn btn-dt-youtube buttons-youtube`,
                 titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Consulta pago final podrás visualizarlo en el siguiente tutorial',
                 action: function (e, dt, button, config) {
-                    window.open('https://youtu.be/6W5B97MTOCghttps://youtu.be/6W5B97MTOCg', '_blank');
+                    window.open('https://youtu.be/S7HO2QTLaL0', '_blank');
                 }
             }
         ],
@@ -187,6 +186,9 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
                 beginDate: fechaInicio,
                 endDate: fechaFin
             }
+        },
+        initComplete: function(){
+            $("#spiner-loader").addClass('hide');
         }
     });
 }
@@ -216,7 +218,7 @@ function fillChangelogUsers(v) {
     dataMovimiento = '<b>Valor anterior:</b> ' + v.anterior + '\n' +
         '            <br>\n' +
         '            <b>Valor nuevo:</b> ' + v.nuevo + '\n';
-   $("#changelogUsers").append('<li class="timeline-inverted">\n' +
+            $("#changelogUsers").append('<li class="timeline-inverted">\n' +
         '    <div class="timeline-badge success"><span class="material-icons">done</span></div>\n' +
         '    <div class="timeline-panel">\n' +
         '            <label><h6 style="text-transform:uppercase">' + nombreMovimiento + '</h6></label><br>\n' +
@@ -267,6 +269,7 @@ $(document).on('click', '.searchByDateRange', function(){
 });
 
 $(document).on('click', '.find-results', function () {
+    $("#spiner-loader").removeClass('hide');
     $(".row-load").addClass("hide");
     $(".box-table").removeClass("hide");
     let fechaInicio = formatDate( $(".beginDate").val());

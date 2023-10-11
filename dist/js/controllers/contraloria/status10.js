@@ -17,7 +17,6 @@ $(document).ready(function() {
     }).done(function(data) {
         $('#showDate').append('(Envio de contrato a RL (Contraloría) al día de hoy: ' + data + ')');
     }).fail(function(){});
-
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
     setIniDatesXMonth("#beginDate", "#endDate");
@@ -49,7 +48,7 @@ sp = { //  SELECT PICKER
 function fillDataTable(typeTransaction, beginDate, endDate, where) {
     $('#Jtabla').dataTable( {
         "ajax": {
-            "url": `${general_base_url}index.php/contraloria/getRevision10`,
+            "url": `${general_base_url}Contraloria/getRevision10`,
             "dataSrc": "",
             "type": "POST",
             cache: false,
@@ -61,7 +60,6 @@ function fillDataTable(typeTransaction, beginDate, endDate, where) {
             }
         },
         "pageLength": 10,
-        "bAutoWidth": false,
         "fixedColumns": true,
         language: {
             url: `${general_base_url}/static/spanishLoader_v2.json`,
@@ -84,40 +82,38 @@ function fillDataTable(typeTransaction, beginDate, endDate, where) {
         ],
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                className: 'btn buttons-excel',
-                titleAttr: 'Estatus 10 solicitud enganche',
-                title:'Estatus 10 solicitud enganche',
-                exportOptions: {
-                    columns: [0,1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-                    format: {
-                        header: function (d, columnIdx) {
-                            return ' ' + titulosInventario[columnIdx]  + ' ';
-                        }
+        buttons: [{
+            extend: 'excelHtml5',
+            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+            className: 'btn buttons-excel',
+            titleAttr: 'Estatus 10 solicitud enganche',
+            title:'Estatus 10 solicitud enganche',
+            exportOptions: {
+                columns: [0,1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                format: {
+                    header: function (d, columnIdx) {
+                        return ' ' + titulosInventario[columnIdx]  + ' ';
                     }
-                },
+                }
             },
-            {
-                extend: 'pdfHtml5',
-                text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
-                className: 'btn buttons-pdf',
-                titleAttr: 'Estatus 10 solicitud enganche',
-                title: "Estatus 10 solicitud enganche",
-                orientation: 'landscape',
-                pageSize: 'LEGAL',
-                exportOptions: {
-                    columns: [0,1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-                    format: {
-                        header: function (d, columnIdx) {
-                            return ' ' + titulosInventario[columnIdx]  + ' ';
-                        }
+        },
+        {
+            extend: 'pdfHtml5',
+            text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
+            className: 'btn buttons-pdf',
+            titleAttr: 'Estatus 10 solicitud enganche',
+            title: "Estatus 10 solicitud enganche",
+            orientation: 'landscape',
+            pageSize: 'LEGAL',
+            exportOptions: {
+                columns: [0,1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                format: {
+                    header: function (d, columnIdx) {
+                        return ' ' + titulosInventario[columnIdx]  + ' ';
                     }
-                },
-            }
-        ],
+                }
+            },
+        }],
         "columns": [
             {data: 'nombreResidencial'},
             {data: 'nombreCondominio'},
@@ -127,35 +123,30 @@ function fillDataTable(typeTransaction, beginDate, endDate, where) {
                 data: function (data)
                 {
                     return myFunctions.validateEmptyField(data.nombreCliente);
-
                 }
             },
             {
                 data: function (data)
                 {
                     return myFunctions.validateEmptyField(data.nombreUsuario);
-
                 }
             },
             {
                 data: function (data)
                 {
                     return myFunctions.validateEmptyField(data.asesor);
-
                 }
             },
             {
                 data: function (data)
                 {
                     return myFunctions.validateEmptyField(data.coordinador);
-
                 }
             },
             {
                 data: function (data)
                 {
                     return myFunctions.validateEmptyField(data.gerente);
-
                 }
             },
             {
@@ -176,6 +167,12 @@ function fillDataTable(typeTransaction, beginDate, endDate, where) {
                     return data.fechaVenc;
                 }
             },
+            {
+                data: function (data)
+                {
+                    return data.representanteLegal;
+                }
+            }
         ]
     })
 }

@@ -4,7 +4,6 @@
 <div class="wrapper ">
     <?php $this->load->view('template/sidebar'); ?>
     <!--MODALS-->
-    <!-- modal  ENVIA A CONTRALORIA 7-->
     <div class="modal fade" id="editReg" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content" >
@@ -14,26 +13,26 @@
                 <div class="modal-body">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <label>Comentario</label>
+                            <label class="control-label">Comentario</label>
                             <textarea class="text-modal" id="comentario" rows="3"></textarea>
                             <br>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <div class="form-group m-0">
-                                <label id="tvLbl">Total neto</label>
+                                <label class="control-label" id="tvLbl">Total neto</label>
                                 <input class="form-control m-0 input-gral" name="totalNeto2" id="totalNeto2" oncopy="return false" onpaste="return false" type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency">
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <div class="form-group m-0">
-                                <label class="m-0" for="proyecto">Representante legal</label>
-                                <select name="rl" id="rl"  class="selectpicker select-gral m-0 rl" data-default-value="opciones" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                            <div class="form-group m-0 overflow-hidden">
+                                <label class="control-label " for="proyecto">Representante legal</label>
+                                <select name="rl" id="rl"  class="selectpicker select-gral m-0 rl" data-default-value="opciones" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <div class="form-group m-0">
-                                <label class="m-0" for="proyecto">Residencia cliente</label>
-                                <select name="residencia" id="residencia"  class="selectpicker select-gral m-0 rl" data-default-value="opciones" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                            <div class="form-group m-0 overflow-hidden">
+                                <label class="control-label" for="proyecto">Residencia cliente</label>
+                                <select name="residencia" id="residencia"  class="selectpicker select-gral m-0 rl" data-default-value="opciones" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                             </div>
                         </div>
                     </div>
@@ -45,9 +44,7 @@
             </div>
         </div>
     </div>
-    <!-- modal -->
 
-    <!-- modal  rechazar A CONTRALORIA 7-->
     <div class="modal fade" id="rechReg" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content" >
@@ -55,7 +52,7 @@
                     <h4 class="modal-title text-center"><label>Rechazo estatus 9 - <b><span class="lote"></span></b></label></h4>
                 </div>
                 <div class="modal-body">
-                    <label>Comentario</label>
+                    <label class="control-label">Comentario</label>
                     <textarea class="text-modal" id="comentario3" rows="3"></textarea>
                     <br>              
                 </div>
@@ -66,7 +63,6 @@
             </div>
         </div>
     </div>
-    <!-- modal -->
     <!--END MODALS-->
 
     <!--Contenido de la página-->
@@ -93,6 +89,7 @@
                                         <tr>
                                             <th></th>
                                             <th>TIPO DE VENTA</th>
+                                            <th>TIPO DE PROCESO</th>
                                             <th>PROYECTO</th>
                                             <th>CONDOMINIO</th>
                                             <th>LOTE</th>
@@ -113,17 +110,6 @@
     </div>
     <?php $this->load->view('template/footer_legend');?>
 </div>
-</div>
-
-</div><!--main-panel close-->
 </body>
 <?php $this->load->view('template/footer');?>
-<!--DATATABLE BUTTONS DATA EXPORT-->
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/contraloria/vista_9_contraloria.js"></script>

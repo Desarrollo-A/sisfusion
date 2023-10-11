@@ -37,7 +37,7 @@
 		</div>
 		<br><br>
 		<ul class="nav">
-			<li class="nav-item hidden-xs  <?php if ($home == 1) {echo 'active';} ?>">
+			<li class="nav-item <?php if ($home == 1) {echo 'active';} ?>">
 				<a class="nav-link" href="<?= base_url() ?>">
 					<i class="material-icons">home</i>
 					<p>Inicio</p>

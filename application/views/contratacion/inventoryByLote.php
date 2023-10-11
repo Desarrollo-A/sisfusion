@@ -2,16 +2,8 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
 	<div class="wrapper">
-		<?php
-		if (in_array($this->session->userdata('id_rol'), array(19,20,28,50,58,18))){
-			$this->load->view('template/sidebar');
-		}
-		else{
-			echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-		}
-		?>
+		<?php $this->load->view('template/sidebar'); ?>
 
-		<!-- Modals -->
 		<div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
@@ -49,8 +41,6 @@
 																<th>USUARIO</th>
 															</tr>
 														</thead>
-														<tbody>
-														</tbody>
 													</table>
 												</div>
 											</div>
@@ -72,8 +62,6 @@
 																<th>USUARIO</th>
 															</tr>
 														</thead>
-														<tbody>
-														</tbody>
 													</table>
 												</div>
 											</div>
@@ -95,8 +83,6 @@
 																<th>USUARIO</th>
 															</tr>
 														</thead>
-														<tbody>
-														</tbody>
 													</table>
 												</div>
 											</div>
@@ -147,6 +133,7 @@
 				</div>
 			</div>
 		</div>
+
 		<div class="content boxContent">
 			<div class="container-fluid">
 				<div class="row">
@@ -192,7 +179,7 @@
 													<th>APARTADO</th>
 													<th>COMENTARIO</th>
 													<th>LUGAR DE PROSPECCIÓN</th>
-													<th></th>
+													<th>ACCIONES</th>
 												</tr>
 											</thead>
 										</table>

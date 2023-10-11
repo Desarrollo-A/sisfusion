@@ -8,12 +8,13 @@ class Evidencias extends CI_Controller
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Headers: Content-Type');
         $this->load->model(array('Evidencias_model', 'General_model'));
-        $this->load->library(array('session', 'form_validation', 'get_menu', 'jwt_actions'));
+        $this->load->library(array('session', 'form_validation', 'get_menu', 'jwt_actions','permisos_sidebar'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
-
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+        $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
+        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
     }
 
     public function index()
@@ -176,7 +177,7 @@ class Evidencias extends CI_Controller
             if ($type == 1) // MJ: EVIDENCIA BBVA
                 $response = $this->General_model->updateRecord('tokens',  array ("estatus" => $action), 'id_token', $this->input->post("id"));
             else if ($type == 2) // MJ: EVIDENCIA VIDEO
-                $response = $this->General_model->updateRecord('video_evidencia',  array ("estatus_validacion" => $action), 'id_video', $this->input->post("id"));
+                $response = $this->General_model->updateRecord('video_evidencia',  $action == 2 ? array ("estatus" => 0, "estatus_validacion" => $action) : array ("estatus_validacion" => $action), 'id_video', $this->input->post("id"));
             echo json_encode($response);
         }
     }

@@ -152,7 +152,7 @@ class Incidencias_model extends CI_Model {
                 }  
             }
         }
-        $respuesta = $this->db->query("INSERT INTO  historial_log VALUES ($id_comision,".$this->session->userdata('id_usuario').",'".$hoy."',1,'SE CAMBIO PORCENTAJE','comisiones',NULL)");
+        $respuesta = $this->db->query("INSERT INTO  historial_log VALUES ($id_comision,".$this->session->userdata('id_usuario').",'".$hoy."',1,'SE CAMBIO PORCENTAJE','comisiones',NULL, null, null, null)");
         //$this->Comisiones_model->RecalcularMontos($id_lote);
          return $respuesta;
         }
@@ -366,7 +366,7 @@ class Incidencias_model extends CI_Model {
         if($rolSelect == 7){
             $cmdRol = 'SET id_asesor = '.$newColab ;   
         }else if($rolSelect == 9){
-            $cmdRol = 'SET id_cordinador = '.$newColab;
+            $cmdRol = 'SET id_coordinador = '.$newColab;
         }else if($rolSelect == 3){
             $cmdRol = 'SET id_gerente = '.$newColab ;
         }else if($rolSelect == 2){
@@ -378,7 +378,7 @@ class Incidencias_model extends CI_Model {
         }
         $cmd = "UPDATE clientes  $cmdRol WHERE id_cliente=$idCliente;";
         $this->db->query($cmd);
-        $respuesta = $this->db->query("INSERT INTO historial_log VALUES (".$idCliente.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'MOTIVO ACTUALIZACIÓN: ".$comentario."', 'ventas_compartidas',NULL)");
+        $respuesta = $this->db->query("INSERT INTO historial_log VALUES (".$idCliente.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'MOTIVO ACTUALIZACIÓN: ".$comentario."', 'ventas_compartidas',NULL, null, null, null)");
         
         $cmdComision =  "SELECT id_comision,comision_total,rol_generado from comisiones where id_usuario=$usuarioOld and id_lote=$idLote;";   
   
@@ -521,7 +521,7 @@ class Incidencias_model extends CI_Model {
                 }else if($rolSelect == 3){
                     $this->db->query("UPDATE ventas_compartidas set id_gerente=$newColab where id_cliente=$idCliente and estatus=1;");
                 }
-                $respuesta = $this->db->query("INSERT INTO historial_log VALUES (".$idCliente.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'MOTIVO ACTUALIZACIÓN: ".$comentario."', 'ventas_compartidas',NULL)");
+                $respuesta = $this->db->query("INSERT INTO historial_log VALUES (".$idCliente.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'MOTIVO ACTUALIZACIÓN: ".$comentario."', 'ventas_compartidas',NULL, null, null, null)");
         
             }
           
@@ -795,15 +795,26 @@ class Incidencias_model extends CI_Model {
         }
 
    public function getDatosAbonadoSuma11($idlote){
+        // return $this->db->query("SELECT SUM(pci.abono_neodata) abonado, pac.total_comision, c2.abono_pagado, lo.totalNeto2, cl.lugar_prospeccion
+        // FROM lotes lo
+        // INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
+        // INNER JOIN comisiones c1 ON lo.idLote = c1.id_lote AND c1.estatus = 1
+        // LEFT JOIN (SELECT SUM(comision_total) abono_pagado, id_comision FROM comisiones WHERE descuento in (1) AND estatus = 1 GROUP BY id_comision) c2 ON c1.id_comision = c2.id_comision
+        // INNER JOIN pago_comision_ind pci on pci.id_comision = c1.id_comision
+        // INNER JOIN pago_comision pac ON pac.id_lote = lo.idLote
+        // WHERE lo.status = 1 AND cl.status = 1 AND c1.estatus = 1 AND lo.idLote in ($idlote)
+        // GROUP BY lo.idLote, lo.referencia, pac.total_comision, lo.totalNeto2, cl.lugar_prospeccion, c2.abono_pagado");
+
         return $this->db->query("SELECT SUM(pci.abono_neodata) abonado, pac.total_comision, c2.abono_pagado, lo.totalNeto2, cl.lugar_prospeccion
         FROM lotes lo
         INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
         INNER JOIN comisiones c1 ON lo.idLote = c1.id_lote AND c1.estatus = 1
         LEFT JOIN (SELECT SUM(comision_total) abono_pagado, id_comision FROM comisiones WHERE descuento in (1) AND estatus = 1 GROUP BY id_comision) c2 ON c1.id_comision = c2.id_comision
-        INNER JOIN pago_comision_ind pci on pci.id_comision = c1.id_comision
         INNER JOIN pago_comision pac ON pac.id_lote = lo.idLote
+        LEFT JOIN pago_comision_ind pci on pci.id_comision = c1.id_comision
         WHERE lo.status = 1 AND cl.status = 1 AND c1.estatus = 1 AND lo.idLote in ($idlote)
         GROUP BY lo.idLote, lo.referencia, pac.total_comision, lo.totalNeto2, cl.lugar_prospeccion, c2.abono_pagado");
+
         }
 
         public function CambiarPrecioLote($idLote,$precio,$comentario){
@@ -811,16 +822,16 @@ class Incidencias_model extends CI_Model {
             $comisiones = $this->db-> query("SELECT * FROM comisiones WHERE id_lote=$idLote and id_usuario !=0 and estatus not in(8,2)")->result_array();
             if(count($comisiones) == 0){
                $respuesta =  $this->db->query("UPDATE lotes set totalNeto2=".$precio." WHERE idLote=".$idLote.";");
-               $respuesta = $this->db->query("INSERT INTO historial_log VALUES($idLote,".$this->session->userdata('id_usuario').",GETDATE(),1,'$comentario','lotes',NULL)");
+               $respuesta = $this->db->query("INSERT INTO historial_log VALUES($idLote,".$this->session->userdata('id_usuario').",GETDATE(),1,'$comentario','lotes',NULL, null, null, null)");
              
             }else{
                 $respuesta =  $this->db->query("UPDATE lotes set totalNeto2=".$precio." WHERE idLote=".$idLote.";");
-               $respuesta = $this->db->query("INSERT INTO historial_log VALUES($idLote,".$this->session->userdata('id_usuario').",GETDATE(),1,'$comentario','lotes',NULL)");
+               $respuesta = $this->db->query("INSERT INTO historial_log VALUES($idLote,".$this->session->userdata('id_usuario').",GETDATE(),1,'$comentario','lotes', null, null, null, null)");
                 for ($i=0; $i <count($comisiones) ; $i++) { 
                     $comisionTotal =$precio *($comisiones[$i]['porcentaje_decimal']/100);
                     $comentario2='Se actualizó la comision total por cambio de precio del lote de'.$comisiones[$i]['comision_total'].' a '.$comisionTotal;
                     $respuesta =  $this->db->query("UPDATE comisiones SET comision_total=$comisionTotal,modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_comision=".$comisiones[$i]['id_comision']." AND id_lote=".$idLote.";");
-                    $respuesta = $this->db->query("INSERT INTO historial_log VALUES(".$comisiones[$i]['id_comision'].",".$this->session->userdata('id_usuario').",GETDATE(),1,'$comentario2','comisiones',NULL)");   
+                    $respuesta = $this->db->query("INSERT INTO historial_log VALUES(".$comisiones[$i]['id_comision'].",".$this->session->userdata('id_usuario').",GETDATE(),1,'$comentario2','comisiones',NULL, null, null, null)");   
                 }
             }
                     if($respuesta){
@@ -851,7 +862,7 @@ class Incidencias_model extends CI_Model {
                 $respuesta = $this->db->query("INSERT INTO  historial_comisiones VALUES (".$pagos[$j]['id_pago_i'].", ".$this->session->userdata('id_usuario').", GETDATE(), 1, '".$comentario."')");
             
             }
-            $respuesta = $this->db->query("INSERT INTO  historial_log VALUES ($id_comision,".$this->session->userdata('id_usuario').",'".$hoy."',1,'SE TOPO COMISIÓN','comisiones',NULL)");
+            $respuesta = $this->db->query("INSERT INTO  historial_log VALUES ($id_comision,".$this->session->userdata('id_usuario').",'".$hoy."',1,'SE TOPO COMISIÓN','comisiones',NULL, null, null, null)");
 
             if($sumaxcomision == 0  || $sumaxcomision == null || $sumaxcomision == 'null' ){
                 $this->db->query("UPDATE comisiones set comision_total=0,descuento=1,modificado_por='".$this->session->userdata('id_usuario')."' $complemento where id_comision=".$id_comision." ");

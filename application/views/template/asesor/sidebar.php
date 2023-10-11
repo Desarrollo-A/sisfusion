@@ -38,7 +38,7 @@
 		<br><br>
         <?php $prospectos = 0; $prospectosAlta = 0; $prospectosMktd = 0; $bulkload = 0; $usuarios = 0;?>
 		<ul class="nav">
-			<li class="nav-item hidden-xs  <?php if ($home == 1) {echo 'active';} ?>">
+			<li class="nav-item <?php if ($home == 1) {echo 'active';} ?>">
 				<a class="nav-link" href="<?= base_url() ?>">
 					<i class="material-icons">home</i>
 					<p>Inicio</p>

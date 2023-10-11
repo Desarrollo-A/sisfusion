@@ -1,3 +1,5 @@
+
+
 <div class="sidebar" data-active-color="blue" data-background-color="white" data-image="<?=base_url()?>/dist/img/sidebar-1.jpg">
 	<div class="logo"> 
 		<a href="<?=base_url()?>#" class="simple-text">
@@ -15,14 +17,14 @@
                 $menu = $this->session->userdata('datos');
                 $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
                 $menu2 = $this->session->userdata('datos');
-                     $menu2 = $menu2['datos3'];
-                     $existe = -1;
-                     foreach ($menu2 as $key => $objeto) {
-                         if ($objeto->pagina == str_replace('' . base_url() . '', '', $val)) {
-                             $_SESSION['datos4'] = (object)array($objeto);
-                             $existe = $key;
-                         }
-                     }  
+                $menu2 = $menu2['datos3'];
+                $existe = -1;
+                foreach ($menu2 as $key => $objeto) {
+                    if ($objeto->pagina == str_replace('' . base_url() . '', '', $val)) {
+                        $_SESSION['datos4'] = (object)array($objeto);
+                        $existe = $key;
+                    }
+                }  
                 $_SESSION['datos4'] = $existe == -1 ? [] :  $_SESSION['datos4'];
                 $certificado = $this->session->userdata('certificado');
                 $url = $certificado.$_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];		
@@ -45,8 +47,8 @@
                         if($datos->hijos == 0)
                         {                    
             ?>
-                            <li class="nav-item hidden-xs  <?php if ($url == $url2 && $datos->nombre == "Inicio" ) { echo 'active'; }elseif($url == base_url().$datos->pagina  && $datos->nombre == "Asesores / Coordinadores"){echo 'active';}elseif($url == base_url().$datos->pagina && ($datos->nombre == "Revisión evidencia" || $datos->nombre == "Evidencias clientes" || $datos->nombre == "Eliminados de la lista")){echo 'active';}elseif($url == base_url().$datos->pagina  && $datos->nombre == "Dashboard"){echo 'active';}?>">
-                                <a class="nav-link" href="<?php if($datos->nombre == "Aparta en línea"){ echo $datos->pagina; } elseif($datos->nombre == "Asesores / Coordinadores"){echo base_url().$datos->pagina;}else {echo base_url().$datos->pagina;}?>" <?php if($datos->nombre == "Aparta en línea"){ echo ' target="_blank"';   } ?>>
+                            <li class="nav-item <?php if ($url == $url2 && $datos->nombre == "Inicio" ) { echo 'active'; }elseif($url == base_url().$datos->pagina  && $datos->nombre == "Asesores / Coordinadores"){echo 'active';}elseif($url == base_url().$datos->pagina && ($datos->nombre == "Revisión evidencia" || $datos->nombre == "Evidencias clientes" || $datos->nombre == "Eliminados de la lista")){echo 'active';}elseif($url == base_url().$datos->pagina  && $datos->nombre == "Dashboard"){echo 'active';}?>">
+                                <a class="nav-link" href="<?php if(in_array($datos->nombre, array('Aparta en línea', 'Pago de enganche'))){ echo $datos->pagina; } elseif($datos->nombre == "Asesores / Coordinadores"){echo base_url().$datos->pagina;}else {echo base_url().$datos->pagina;}?>" <?php if(in_array($datos->nombre, array('Aparta en línea', 'Pago de enganche'))){ echo ' target="_blank"';   } ?>>
                                     <i class="material-icons"><?=$datos->icono?></i>
                                     <p><?=$datos->nombre?></p>
                                 </a>
@@ -98,7 +100,7 @@
                                                     if($hijos->orden >= $datos->orden && $hijos->orden <= $datos->orden +1)	{		
                                             ?>
                                                         <li class="<?php if ($url == base_url().$hijos->pagina) {echo 'active';} ?>">
-                                                            <a href="<?= base_url().$hijos->pagina?>  "><?=$hijos->nombre?></a>
+                                                            <a href="<?= base_url().$hijos->pagina?>"><?=$hijos->nombre?></a>
                                                         </li>
                                             <?php
                                                     }
@@ -124,7 +126,7 @@
                                                         if($hijos->orden >= $datos->orden && $hijos->orden <= $datos->orden +1)	{		
                                                 ?>
                                                             <li class="<?php if ($url == base_url().$hijos->pagina) {echo 'active';} ?>">
-                                                                <a href="<?= base_url().$hijos->pagina?>  "><?=$hijos->nombre?></a>
+                                                                <a href="<?= base_url().$hijos->pagina?>"><?=$hijos->nombre?></a>
                                                             </li>
                                                 <?php
                                                         }
@@ -257,6 +259,8 @@
 			</div>
 		</div>
     </nav>
+
+
 <script>
     function AddTicket(){
         $.post("<?=base_url()?>index.php/Api/ServicePostTicket", function (data) {
@@ -264,4 +268,12 @@
             newtab.document.write(data);
         }, 'json');
     }
+    var general_base_url_sidebar = "<?=base_url()?>";
+
+    function borrarFlashdata(){
+        $.post(general_base_url_sidebar+'General/borrarFlashdata', function (data) {
+        }, 'json');
+    }
+
+
 </script>

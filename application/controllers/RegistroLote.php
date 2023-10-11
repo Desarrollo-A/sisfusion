@@ -10,7 +10,7 @@ class RegistroLote extends CI_Controller
 		$this->load->model('model_queryinventario');
 		$this->load->library(array('session', 'form_validation'));
 		//LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
-		$this->load->library(array('session', 'form_validation', 'get_menu'));
+		$this->load->library(array('session', 'form_validation', 'get_menu','permisos_sidebar'));
 		$this->load->helper(array('url', 'form'));
 		$this->load->database('default');
 		$this->validateSession();
@@ -18,6 +18,8 @@ class RegistroLote extends CI_Controller
 
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+		$rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
+        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
     }
 	function getClusterGrupo($residencial, $condominio, $grupo)
 	{
@@ -1711,45 +1713,7 @@ class RegistroLote extends CI_Controller
 		$datos["asistentesStatus8"] = $this->registrolote_modelo->getAsistentesStatus8();
 		$this->load->view('editar_lote_asistentes_proceso8_view', $datos);
 	}
-	public function editar_registro_lote_asistentes_proceceso8()
-	{
-		$idLote = $this->input->post('idLote');
-		$idCondominio = $this->input->post('idCondominio');
-		$nombreLote = $this->input->post('nombreLote');
-		$idStatusContratacion = $this->input->post('idStatusContratacion');
-		$idMovimiento = $this->input->post('idMovimiento');
-		$idCliente = $this->input->post('idCliente');
-		$comentario = $this->input->post('comentario');
-		$user = $this->input->post('user');
-		$perfil = $this->input->post('perfil');
-		$modificado = date('Y-m-d H:i:s');
-		$fechaVenc = $this->input->post('fechaVenc');
-		$arreglo = array();
-		$arreglo["idStatusContratacion"] = $idStatusContratacion;
-		$arreglo["idMovimiento"] = 38;
-		$arreglo["comentario"] = $comentario;
-		$arreglo["user"] = $this->session->userdata('username');
-		$arreglo["perfil"] = $this->session->userdata('perfil');
-		$arreglo["modificado"] = date("Y-m-d H:i:s");
-		$arreglo2 = array();
-		$arreglo2["idStatusContratacion"] = $idStatusContratacion;
-		$arreglo2["idMovimiento"] = 38;
-		$arreglo2["nombreLote"] = $nombreLote;
-		$arreglo2["comentario"] = $comentario;
-		$arreglo2["user"] = $this->session->userdata('username');
-		$arreglo2["perfil"] = $this->session->userdata('perfil');
-		$arreglo2["modificado"] = date("Y-m-d H:i:s");
-		$arreglo2["fechaVenc"] = $fechaVenc;
-		$arreglo2["idLote"] = $idLote;
-		$arreglo2["idCondominio"] = $idCondominio;
-		$arreglo2["idCliente"] = $idCliente;
-		if ($this->registrolote_modelo->editaRegistroLoteCaja($idLote, $arreglo)) {
-			$this->registrolote_modelo->insertHistorialLotes($arreglo2);
-			redirect(base_url() . "index.php/registroLote/registroStatus8ContratacionAsistentes");
-		} else {
-			die("ERROR");
-		}
-	}
+
 	public function editarLoteContraloriaStatusContratacion9($idLote)
 	{
 		$datos = array();
@@ -4452,45 +4416,7 @@ class RegistroLote extends CI_Controller
 		$datos["asistentesStatus8"] = $this->registrolote_modelo->getAsistentesStatus8();
 		$this->load->view('editar_loteRevision_asistentes_proceso8_view', $datos);
 	}
-	public function editar_registro_loteRevision_asistentes_proceceso8()
-	{
-		$idLote = $this->input->post('idLote');
-		$idCondominio = $this->input->post('idCondominio');
-		$nombreLote = $this->input->post('nombreLote');
-		$idStatusContratacion = $this->input->post('idStatusContratacion');
-		$idMovimiento = $this->input->post('idMovimiento');
-		$idCliente = $this->input->post('idCliente');
-		$comentario = $this->input->post('comentario');
-		$user = $this->input->post('user');
-		$perfil = $this->input->post('perfil');
-		$modificado = date("Y-m-d H:i:s");
-		$fechaVenc = $this->input->post('fechaVenc');
-		$arreglo = array();
-		$arreglo["idStatusContratacion"] = $idStatusContratacion;
-		$arreglo["idMovimiento"] = 65;
-		$arreglo["comentario"] = $comentario;
-		$arreglo["user"] = $this->session->userdata('username');
-		$arreglo["perfil"] = $this->session->userdata('perfil');
-		$arreglo["modificado"] = date("Y-m-d H:i:s");
-		$arreglo2 = array();
-		$arreglo2["idStatusContratacion"] = $idStatusContratacion;
-		$arreglo2["idMovimiento"] = 65;
-		$arreglo2["nombreLote"] = $nombreLote;
-		$arreglo2["comentario"] = $comentario;
-		$arreglo2["user"] = $this->session->userdata('username');
-		$arreglo2["perfil"] = $this->session->userdata('perfil');
-		$arreglo2["modificado"] = date("Y-m-d H:i:s");
-		$arreglo2["fechaVenc"] = $fechaVenc;
-		$arreglo2["idLote"] = $idLote;
-		$arreglo2["idCondominio"] = $idCondominio;
-		$arreglo2["idCliente"] = $idCliente;
-		if ($this->registrolote_modelo->editaRegistroLoteCaja($idLote, $arreglo)) {
-			$this->registrolote_modelo->insertHistorialLotes($arreglo2);
-			redirect(base_url() . "index.php/registroLote/registroStatus8ContratacionAsistentes");
-		} else {
-			die("ERROR");
-		}
-	}
+
 	public function editarLoteRevisionAsistentesAAdministracion11StatuContratacion8($idLote)
 	{
 		$datos = array();
@@ -4498,175 +4424,7 @@ class RegistroLote extends CI_Controller
 		$datos["asistentesStatus8"] = $this->registrolote_modelo->getAsistentesStatus8();
 		$this->load->view('editar_loteRevision_asistentesAadministracion11_proceso8_view', $datos);
 	}
-	public function editar_registro_loteRevision_asistentesAadministracion11_proceceso8()
-	{
-		$idLote = $this->input->post('idLote');
-		$idCondominio = $this->input->post('idCondominio');
-		$nombreLote = $this->input->post('nombreLote');
-		$idStatusContratacion = $this->input->post('idStatusContratacion');
-		$idMovimiento = $this->input->post('idMovimiento');
-		$idCliente = $this->input->post('idCliente');
-		$comentario = $this->input->post('comentario');
-		$user = $this->input->post('user');
-		$perfil = $this->input->post('perfil');
-		$modificado = date("Y-m-d H:i:s");
-		$fechaVenc = $this->input->post('fechaVenc');
-		$arreglo = array();
-		$arreglo["idStatusContratacion"] = $idStatusContratacion;
-		$arreglo["idMovimiento"] = 67;
-		$arreglo["comentario"] = $comentario;
-		$arreglo["user"] = $this->session->userdata('username');
-		$arreglo["perfil"] = $this->session->userdata('perfil');
-		$arreglo["modificado"] = date("Y-m-d H:i:s");
-		$arreglo["fechaSolicitudValidacion"] = $modificado;
-		date_default_timezone_set('America/Mexico_City');
-		$horaActual = date('H:i:s');
-		$horaInicio = date("08:00:00");
-		$horaFin = date("16:00:00");
-		if ($horaActual > $horaInicio and $horaActual < $horaFin) {
-			$fechaAccion = date("Y-m-d H:i:s");
-			$hoy_strtotime2 = strtotime($fechaAccion);
-			$sig_fecha_dia2 = date('D', $hoy_strtotime2);
-			$sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
-			if (
-				$sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
-				$sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
-				$sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
-				$sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
-				$sig_fecha_feriado2 == "25-12"
-			) {
-				$fecha = $fechaAccion;
-				$i = 0;
-				while ($i <= 1) {
-					$hoy_strtotime = strtotime($fecha);
-					$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-					$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-					$sig_fecha_dia = date('D', $sig_strtotime);
-					$sig_fecha_feriado = date('d-m', $sig_strtotime);
-					if (
-						$sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
-						$sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-						$sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-						$sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-						$sig_fecha_feriado == "25-12"
-					) {
-					} else {
-						$fecha = $sig_fecha;
-						$i++;
-					}
-					$fecha = $sig_fecha;
-				}
-				for ($i = 0; $i < count($fecha); $i++) {
-					$arreglo["fechaVenc"] = $fecha;
-				}
-			} else {
-				$fecha = $fechaAccion;
-				$i = 0;
-				while ($i <= 0) {
-					$hoy_strtotime = strtotime($fecha);
-					$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-					$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-					$sig_fecha_dia = date('D', $sig_strtotime);
-					$sig_fecha_feriado = date('d-m', $sig_strtotime);
-					if (
-						$sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
-						$sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-						$sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-						$sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-						$sig_fecha_feriado == "25-12"
-					) {
-					} else {
-						$fecha = $sig_fecha;
-						$i++;
-					}
-					$fecha = $sig_fecha;
-				}
-				for ($i = 0; $i < count($fecha); $i++) {
-					$arreglo["fechaVenc"] = $fecha;
-				}
-			}
-		} elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
-			$fechaAccion = date("Y-m-d H:i:s");
-			$hoy_strtotime2 = strtotime($fechaAccion);
-			$sig_fecha_dia2 = date('D', $hoy_strtotime2);
-			$sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
-			if (
-				$sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
-				$sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
-				$sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
-				$sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
-				$sig_fecha_feriado2 == "25-12"
-			) {
-				$fecha = $fechaAccion;
-				$i = 0;
-				while ($i <= 1) {
-					$hoy_strtotime = strtotime($fecha);
-					$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-					$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-					$sig_fecha_dia = date('D', $sig_strtotime);
-					$sig_fecha_feriado = date('d-m', $sig_strtotime);
-					if (
-						$sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
-						$sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-						$sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-						$sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-						$sig_fecha_feriado == "25-12"
-					) {
-					} else {
-						$fecha = $sig_fecha;
-						$i++;
-					}
-					$fecha = $sig_fecha;
-				}
-				for ($i = 0; $i < count($fecha); $i++) {
-					$arreglo["fechaVenc"] = $fecha;
-				}
-			} else {
-				$fecha = $fechaAccion;
-				$i = 0;
-				while ($i <= 1) {
-					$hoy_strtotime = strtotime($fecha);
-					$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-					$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-					$sig_fecha_dia = date('D', $sig_strtotime);
-					$sig_fecha_feriado = date('d-m', $sig_strtotime);
-					if (
-						$sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
-						$sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-						$sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-						$sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-						$sig_fecha_feriado == "25-12"
-					) {
-					} else {
-						$fecha = $sig_fecha;
-						$i++;
-					}
-					$fecha = $sig_fecha;
-				}
-				for ($i = 0; $i < count($fecha); $i++) {
-					$arreglo["fechaVenc"] = $fecha;
-				}
-			}
-		}
-		$arreglo2 = array();
-		$arreglo2["idStatusContratacion"] = $idStatusContratacion;
-		$arreglo2["idMovimiento"] = 67;
-		$arreglo2["nombreLote"] = $nombreLote;
-		$arreglo2["comentario"] = $comentario;
-		$arreglo2["user"] = $this->session->userdata('username');
-		$arreglo2["perfil"] = $this->session->userdata('perfil');
-		$arreglo2["modificado"] = date("Y-m-d H:i:s");
-		$arreglo2["fechaVenc"] = $fechaVenc;
-		$arreglo2["idLote"] = $idLote;
-		$arreglo2["idCondominio"] = $idCondominio;
-		$arreglo2["idCliente"] = $idCliente;
-		if ($this->registrolote_modelo->editaRegistroLoteCaja($idLote, $arreglo)) {
-			$this->registrolote_modelo->insertHistorialLotes($arreglo2);
-			redirect(base_url() . "index.php/registroLote/registroStatus8ContratacionAsistentes");
-		} else {
-			die("ERROR");
-		}
-	}
+
 	public function editarLoteRevisionContraloriaStatusContratacion10($idLote)
 	{
 		$datos = array();
@@ -7028,12 +6786,14 @@ class RegistroLote extends CI_Controller
 		$this->load->view('template/header');
 		$this->load->view('juridico/historialContratadorReporte_view');
 	}
-	public function getReportData()
-	{
+	public function getReportData(){
+
 		if (isset($_POST) && !empty($_POST)) {
 			$typeTransaction = $this->input->post("typeTransaction");
-			$beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-			$endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+			$fechaInicio = explode('/', $this->input->post("beginDate"));
+            $fechaFin = explode('/', $this->input->post("endDate"));
+            $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+            $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
 			$where = $this->input->post("where");
 			$data['data'] = $this->registrolote_modelo->reportContratados($typeTransaction, $beginDate, $endDate, $where)->result_array();
 			echo json_encode($data);
@@ -7276,143 +7036,143 @@ class RegistroLote extends CI_Controller
 				$datos[$i]['fechaAlta'] = $data[$i]->fechaAlta;
 				/**procesoContratacion**/
 				if ($data[$i]->idStatusContratacion == 1 and $data[$i]->idMovimiento == 18 or $data[$i]->idStatusContratacion == 1 and $data[$i]->idMovimiento == 31 or $data[$i]->idStatusContratacion == 1 and $data[$i]->idMovimiento == 19 or $data[$i]->idStatusContratacion == 1 and $data[$i]->idMovimiento == 20 or $data[$i]->idStatusContratacion == 1 and $data[$i]->idMovimiento == 63) {
-					$datos[$i]['procesoContratacion'] = "2. Integración de Expediente (Asistentes Elite)";
+					$datos[$i]['procesoContratacion'] = "2. INTEGRACIÓN DE EXPEDIENTE (ASISTENTES ELITE)";
 				}
 				if ($data[$i]->idStatusContratacion == 2 and $data[$i]->idMovimiento == 2 or $data[$i]->idStatusContratacion == 2 and $data[$i]->idMovimiento == 32) {
-					$datos[$i]['procesoContratacion'] = "3. Revisión Jurídico (Jurídico)";
+					$datos[$i]['procesoContratacion'] = "3. REVISIÓN JURÍDICO (JURÍDICO)";
 				}
 				if ($data[$i]->idStatusContratacion == 3 and $data[$i]->idMovimiento == 33 or $data[$i]->idStatusContratacion == 2 and $data[$i]->idMovimiento == 3) {
-					$datos[$i]['procesoContratacion'] = "4. Datos Verificados (Postventa)";
+					$datos[$i]['procesoContratacion'] = "4. DATOS VERIFICADOS (POSTVENTA)";
 				}
 				if ($data[$i]->idStatusContratacion == 4 and $data[$i]->idMovimiento == 34 or $data[$i]->idStatusContratacion == 2 and $data[$i]->idMovimiento == 4) {
-					$datos[$i]['procesoContratacion'] = "5. Revisión 100% (Contraloria)";
+					$datos[$i]['procesoContratacion'] = "5. REVISIÓN 100% (CONTRALORÍA)";
 				}
 				if ($data[$i]->idStatusContratacion == 5 and $data[$i]->idMovimiento == 35 or $data[$i]->idStatusContratacion == 5 and $data[$i]->idMovimiento == 22 or $data[$i]->idStatusContratacion == 2 and $data[$i]->idMovimiento == 62) {
-					$datos[$i]['procesoContratacion'] = "6. Corrida elaborada (Contraloría)";
+					$datos[$i]['procesoContratacion'] = "6. CORRIDA ELABORADA (CONTRALORÍA)";
 				}
 				if ($data[$i]->idStatusContratacion == 6 and $data[$i]->idMovimiento == 36 or $data[$i]->idStatusContratacion == 6 and $data[$i]->idMovimiento == 6) {
-					$datos[$i]['procesoContratacion'] = "7. Contrato elaborado (Jurídico)";
+					$datos[$i]['procesoContratacion'] = "7. CONTRATO ELABORADO (JURÍDICO)";
 				}
 				if ($data[$i]->idStatusContratacion == 6 and $data[$i]->idMovimiento == 23) {
-					$datos[$i]['procesoContratacion'] = "7. Elaboración de Contrato (Jurídico)";
+					$datos[$i]['procesoContratacion'] = "7. ELABORACIÓN DE CONTRATO (JURÍDICO)";
 				}
 				if ($data[$i]->idStatusContratacion == 7 and $data[$i]->idMovimiento == 37 or $data[$i]->idStatusContratacion == 7 and $data[$i]->idMovimiento == 7 or $data[$i]->idStatusContratacion == 7 and $data[$i]->idMovimiento == 77) {
-					$datos[$i]['procesoContratacion'] = "8. Contrato entregado al asesor para firma del cliente (Asistentes de Gerentes)";
+					$datos[$i]['procesoContratacion'] = "8. CONTRATO ENTREGADO AL ASESOR PARA FIRMA DEL CLIENTE (ASISTENTES DE GERENTES)";
 				}
 				if ($data[$i]->idStatusContratacion == 8 and $data[$i]->idMovimiento == 38) {
-					$datos[$i]['procesoContratacion'] = "9. Contrato recibido con firma de cliente (Contraloría)";
+					$datos[$i]['procesoContratacion'] = "9. CONTRATO RECIBIDO CON FIRMA DE CLIENTE (CONTRALORÍA)";
 				}
 				if ($data[$i]->idStatusContratacion == 9 and $data[$i]->idMovimiento == 39 or $data[$i]->idStatusContratacion == 9 and $data[$i]->idMovimiento = 26) {
-					$datos[$i]['procesoContratacion'] = "10. Solicitud de validación de enganche y envio de contrato a RL (Contraloría)";
+					$datos[$i]['procesoContratacion'] = "10. SOLICITUD DE VALIDACIÓN DE ENGANCHE Y ENVIO DE CONTRATO A RL (CONTRALORÍA)";
 				}
 				if ($data[$i]->idStatusContratacion == 10 and $data[$i]->idMovimiento == 40 or $data[$i]->idStatusContratacion == 10 and $data[$i]->idMovimiento = 10) {
-					$datos[$i]['procesoContratacion'] = "11. Validación de enganche (Administración)";
+					$datos[$i]['procesoContratacion'] = "11. VALIDACIÓN DE ENGANCHE (ADMINISTRACIÓN)";
 				}
 				if ($data[$i]->idStatusContratacion == 11 and $data[$i]->idMovimiento == 41) {
-					$datos[$i]['procesoContratacion'] = "12. Contrato firmado (Representante Legal)";
+					$datos[$i]['procesoContratacion'] = "12. CONTRATO FIRMADO (REPRESENTANTE LEGAL)";
 				}
 				if ($data[$i]->idStatusContratacion == 12 and $data[$i]->idMovimiento == 42) {
-					$datos[$i]['procesoContratacion'] = "13. Contrato listo y entregado asesores (Contraloría)";
+					$datos[$i]['procesoContratacion'] = "13. CONTRATO LISTO Y ENTREGADO ASESORES (CONTRALORÍA)";
 				}
 				if ($data[$i]->idStatusContratacion == 13 and $data[$i]->idMovimiento == 43) {
-					$datos[$i]['procesoContratacion'] = "14. Firma Acuse cliente (Asistentes Gerentes)";
+					$datos[$i]['procesoContratacion'] = "14. FIRMA ACUSE CLIENTE (ASISTENTES GERENTES)";
 				}
 				if ($data[$i]->idStatusContratacion == 14 and $data[$i]->idMovimiento == 44) {
-					$datos[$i]['procesoContratacion'] = "15. Acuse entregado (Contraloría)";
+					$datos[$i]['procesoContratacion'] = "15. ACUSE ENTREGADO (CONTRALORÍA)";
 				}
 				if ($data[$i]->idStatusContratacion == 15) {
 					$datos[$i]['procesoContratacion'] = "LOTE CONTRATADO";
 				}
 				if ($data[$i]->idStatusContratacion == 7 and $data[$i]->idMovimiento == 64) {
-					$datos[$i]['procesoContratacion'] = "8. Contrato entregado al asesor para firma del cliente (Asistentes de Gerentes)";
+					$datos[$i]['procesoContratacion'] = "8. CONTRATO ENTREGADO AL ASESOR PARA FIRMA DEL CLIENTE (ASISTENTES DE GERENTES)";
 				}
 				/**procesoContratacion**/
 				if ($data[$i]->idStatusContratacion == 1 and $data[$i]->idMovimiento == 31) {
-					$datos[$i]['status'] = "8. Contrato entregado al asesor para firma del cliente (Asistentes de Gerentes)";
+					$datos[$i]['status'] = "8. CONTRATO ENTREGADO AL ASESOR PARA FIRMA DEL CLIENTE (ASISTENTES DE GERENTES)";
 				}
 				if ($data[$i]->idStatusContratacion == 1 and $data[$i]->idMovimiento == 18) {
-					$datos[$i]['status'] = "Status 2 Rechazado (Jurídico)";
+					$datos[$i]['status'] = "STATUS 2 RECHAZADO (JURÍDICO)";
 				}
 				if ($data[$i]->idStatusContratacion == 1 and $data[$i]->idMovimiento == 19) {
-					$datos[$i]['status'] = "Status 2 Rechazado (Postventa)";
+					$datos[$i]['status'] = "STATUS 2 RECHAZADO (POSTVENTA)";
 				}
 				if ($data[$i]->idStatusContratacion == 1 and $data[$i]->idMovimiento == 20) {
-					$datos[$i]['status'] = "Status 2 Rechazado (Contraloría)";
+					$datos[$i]['status'] = "STATUS 2 RECHAZADO (CONTRALORÍRA)";
 				}
 				if ($data[$i]->idStatusContratacion == 2 and $data[$i]->idMovimiento == 32) {
-					$datos[$i]['status'] = "Status 2 listo (Asistentes Gerentes)";
+					$datos[$i]['status'] = "STATUS 2 LISTO (ASISTENTES GERENTES)";
 				}
 				if ($data[$i]->idStatusContratacion == 2 and $data[$i]->idMovimiento == 2) {
-					$datos[$i]['status'] = "Status 2 enviado a Revisión (Asistentes Gerentes)";
+					$datos[$i]['status'] = "STATUS 2 ENVIDADO A REVISIÓN (ASISTENTES GERENTES)";
 				}
 				if ($data[$i]->idStatusContratacion == 3 and $data[$i]->idMovimiento == 33) {
-					$datos[$i]['status'] = "Status 3 listo (Jurídico)";
+					$datos[$i]['status'] = "STATUS 3 LISTO (JURÍDICO)";
 				}
 				if ($data[$i]->idStatusContratacion == 2 and $data[$i]->idMovimiento == 3) {
-					$datos[$i]['status'] = "Status 2 enviado a Revisión (Asistentes Gerentes) a Postventa";
+					$datos[$i]['status'] = "STATUS 2 ENVIADO A REVISIÓN (ASISTENTES GERENTES) A POSTVENTA";
 				}
 				if ($data[$i]->idStatusContratacion == 4 and $data[$i]->idMovimiento == 34) {
-					$datos[$i]['status'] = "Status 4 listo (Postventa) ";
+					$datos[$i]['status'] = "STATUS 4 LISTO (POSTVENTA)";
 				}
 				if ($data[$i]->idStatusContratacion == 2 and $data[$i]->idMovimiento == 4 or $data[$i]->idStatusContratacion == 2 and $data[$i]->idMovimiento == 62) {
-					$datos[$i]['status'] = "Status 2 enviado a Revisión (Elite)";
+					$datos[$i]['status'] = "STATUS 2 ENVIADO A REVISIÓN (ELITE)";
 				}
 				if ($data[$i]->idStatusContratacion == 5 and $data[$i]->idMovimiento == 35) {
-					$datos[$i]['status'] = "Status 5 listo (Contraloría) ";
+					$datos[$i]['status'] = "STATUS 5 LISTO (CONTRALORÍA) ";
 				}
 				if ($data[$i]->idStatusContratacion == 5 and $data[$i]->idMovimiento == 22) {
-					$datos[$i]['status'] = "Status 6 Rechazado (Juridico)";
+					$datos[$i]['status'] = "STATUS 6 RECHAZADO (JURIDICO)";
 				}
 				if ($data[$i]->idStatusContratacion == 6 and $data[$i]->idMovimiento == 36) {
-					$datos[$i]['status'] = "Status 6 listo (Contraloría) ";
+					$datos[$i]['status'] = "STATUS 6 LISTO (CONTRALORÍA) ";
 				}
 				if ($data[$i]->idStatusContratacion == 6 and $data[$i]->idMovimiento == 6) {
-					$datos[$i]['status'] = "Status 6 enviado a Revisión (Contraloría)";
+					$datos[$i]['status'] = "STATUS 6 ENVIADO A REVISIÓN (CONTRALORÍA)";
 				}
 				if ($data[$i]->idStatusContratacion == 6 and $data[$i]->idMovimiento == 23) {
-					$datos[$i]['status'] = "Status 7 Enviado a Modificación (Asistentes Gerentes)";
+					$datos[$i]['status'] = "STATUS 7 ENVIADO A MODIFICACIÓN (ASISTENTES GERENTES)";
 				}
 				if ($data[$i]->idStatusContratacion == 7 and $data[$i]->idMovimiento == 37) {
-					$datos[$i]['status'] = "Status 7 listo (Jurídico) ";
+					$datos[$i]['status'] = "STATUS 7 LISTO (JURÍDICO) ";
 				}
 				if ($data[$i]->idStatusContratacion == 7 and $data[$i]->idMovimiento == 7 or $data[$i]->idStatusContratacion == 7 and $data[$i]->idMovimiento == 77) {
-					$datos[$i]['status'] = "Contrato con modificaciones entregado";
+					$datos[$i]['status'] = "CONTRATO CON MODIFIACIONES ENTREGADO";
 				}
 				if ($data[$i]->idStatusContratacion == 8 and $data[$i]->idMovimiento == 38) {
-					$datos[$i]['status'] = "Status 8 listo (Asistentes de Gerentes)";
+					$datos[$i]['status'] = "STATUS 8 LISTO (ASISTENTES DE GERENTES)";
 				}
 				if ($data[$i]->idStatusContratacion == 9 and $data[$i]->idMovimiento == 39) {
-					$datos[$i]['status'] = "Status 9 listo (Asistentes de Gerentes)";
+					$datos[$i]['status'] = "STATUS 9 LISTO (ASISTENTES DE GERENTES)";
 				}
 				if ($data[$i]->idStatusContratacion == 9 and $data[$i]->idMovimiento == 26) {
-					$datos[$i]['status'] = "Rechazo Status 10 (Administración)";
+					$datos[$i]['status'] = "RECHAZO STATUS 10 (ADMINISTRACIÓN)";
 				}
 				if ($data[$i]->idStatusContratacion == 10 and $data[$i]->idMovimiento == 40) {
-					$datos[$i]['status'] = "Status 10 listo (Contraloría)";
+					$datos[$i]['status'] = "STATUS 10 LISTO (CONTRALORÍA)";
 				}
 				if ($data[$i]->idStatusContratacion == 10 and $data[$i]->idMovimiento == 10) {
-					$datos[$i]['status'] = "Status 10 enviado a Revisión (Contraloría)";
+					$datos[$i]['status'] = "STATUS 10 ENVIADO A REVISIÓN (CONTRALORÍA)";
 				}
 				if ($data[$i]->idStatusContratacion == 11 and $data[$i]->idMovimiento == 41) {
-					$datos[$i]['status'] = "Status 11 listo (Administración)";
+					$datos[$i]['status'] = "STATUS 11 LISTO (ADMINISTRACIÓN)";
 				}
 				if ($data[$i]->idStatusContratacion == 12 and $data[$i]->idMovimiento == 42) {
-					$datos[$i]['status'] = "Status 12 listo (Representante Legal) ";
+					$datos[$i]['status'] = "STATUS 12 LISTO (REPRESENTANTE LEGAL) ";
 				}
 				if ($data[$i]->idStatusContratacion == 13 and $data[$i]->idMovimiento == 43) {
-					$datos[$i]['status'] = "Status 13 listo (Contraloría)";
+					$datos[$i]['status'] = "STATUS 13 LISTO (CONTRALORÍA)";
 				}
 				if ($data[$i]->idStatusContratacion == 14 and $data[$i]->idMovimiento == 44) {
-					$datos[$i]['status'] = "Status 14 listo (Asistentes Gerentes)";
+					$datos[$i]['status'] = "STATUS 14 LISTO (ASISTENTES GERENTES)";
 				}
 				if ($data[$i]->idStatusContratacion == 15 and $data[$i]->idMovimiento == 45) {
-					$datos[$i]['status'] = "Lote Contratado ";
+					$datos[$i]['status'] = "LOTE CONTRATADO ";
 				}
 				if ($data[$i]->idStatusContratacion == 7 and $data[$i]->idMovimiento == 64) {
-					$datos[$i]['status'] = "Status 8 Rechazado (Por Contraloría)";
+					$datos[$i]['status'] = "STATUS 8 RECHAZADO (POR CONTRALORÍA)";
 				}
 				if ($data[$i]->idStatusContratacion == 1 and $data[$i]->idMovimiento == 63) {
-					$datos[$i]['status'] = "Status 2 Rechazado (Por Contraloría)";
+					$datos[$i]['status'] = "STATUS 2 RECHAZADO (POR CONTRALORÍA)";
 				}
 			}
 		}

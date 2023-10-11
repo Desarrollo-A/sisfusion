@@ -4,16 +4,14 @@ class RegistroCliente extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('registrolote_modelo');
-        $this->load->model('asesor/Asesor_model');
-        $this->load->model('General_model');
+        $this->load->model(['registrolote_modelo', 'asesor/Asesor_model', 'General_model', 'Documentacion_model']);
         $this->load->model([
             'opcs_catalogo/valores/EstatusAutorizacionesOpcs',
             'opcs_catalogo/valores/TipoAutorizacionClienteOpcs'
         ]);
 		$this->load->library(array('session','form_validation'));
         //LIBRERIA PARA LLAMAR OBTENER LrAS CONSULTAS DE LAS  DEL MENÚ
-        $this->load->library(array('session','form_validation', 'get_menu'));
+        $this->load->library(array('session','form_validation', 'get_menu','permisos_sidebar'));
 		$this->load->library('Pdf');
 		$this->load->library('email');
 		$this->load->helper(array('url','form'));
@@ -23,6 +21,8 @@ class RegistroCliente extends CI_Controller {
 
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+        $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
+        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
     }
 	// EN ESTA PARTE SE REALIZA EL REGISTRO DE CLIENTES TODOS LOS CLIENTES EXCEPTO DE SAN LUIS Y DE CIUDAD MADERAS SUR
 	public function index (){
@@ -1928,24 +1928,26 @@ class RegistroCliente extends CI_Controller {
         }
 
     }
-    public function replaceDocumentView()
-    {
-      $this->validateSession();
-      $datos=array();
-      $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
-      $this->load->view('template/header');
-      $this->load->view("juridico/vista_documentacion_juridico",$datos);
+    public function replaceDocumentView(){
+        $datos = [
+            'residencial' => $this->registrolote_modelo->getResidencialQro(),
+            'tieneAcciones' => 1,
+            'tipoFiltro' => null,
+            'funcionVista' => 'replaceDocumentView'
+        ];
+        
+        $this->load->view('template/header');
+        $this->load->view("documentacion/documentacion_view", $datos);
     }
 
 
- 	public function expedientesWS_DS($lotes) {
+    public function expedientesWS_DS($lotes) {
         $data = array_merge($this->registrolote_modelo->getdp_DS($lotes));
         if($data != null) {
             echo json_encode($data);
         } else {
             echo json_encode(array());
-        }
-       
+        }       
     }
 
     public function query_ds(){
@@ -4595,7 +4597,7 @@ class RegistroCliente extends CI_Controller {
 					initComplete: function () {
 						this.api().columns().every( function () {
 							var column = this;
-							var select = $('<select><option value=""></option></select>')
+							var select = $('><option value=""></option></select>')
 								.appendTo( $(column.footer()).empty() )
 								.on( 'change', function () {
 									var val = $.fn.dataTable.util.escapeRegex(
@@ -4608,7 +4610,7 @@ class RegistroCliente extends CI_Controller {
 							column.data().unique().sort().each( function ( d, j ) {
 								select.append( '<option value="'+d+'">'+d+'</option>' )
 							} );
-						} );
+						});
 					},
 					"scrollX": true,
 					"pageLength": 10,
@@ -6158,6 +6160,31 @@ class RegistroCliente extends CI_Controller {
 		echo json_encode($datos);
 	}
 
+    function obtenerArchivoConPath($row)
+    {
+        if (!isset($row['expediente'])) {
+            return $row;
+        }
+
+        if (trim($row['expediente']) === '') {
+            return $row;
+        }
+
+        if (
+                $row['tipo_doc'] === 'ds_new' ||
+                $row['tipo_doc'] === 'ds_old' ||
+                $row['tipo_doc'] === 'autorizacion' ||
+                $row['tipo_doc'] === 'prospecto'
+        ) {
+            return $row;
+        }
+
+        $path = $this->Documentacion_model->getCarpetaArchivo($row['tipo_doc'], $row['proceso'], $row['nombreLote'], $row['expediente']);
+
+        $row['expediente'] = $path.$row['expediente'];
+
+        return $row;
+    }
 
     public function expedientesWS($lotes, $cliente = '') {
         $query = $this->registrolote_modelo->getdp($lotes, $cliente);
@@ -6174,6 +6201,8 @@ class RegistroCliente extends CI_Controller {
         );
 
         if ($data != null) {
+            $data = array_map(array( $this, 'obtenerArchivoConPath'), $data);
+
             echo json_encode($data);
         } else {
             echo json_encode(array());
@@ -6188,6 +6217,9 @@ class RegistroCliente extends CI_Controller {
 	
     function getResultsClientsSerch()
     {
+    ini_set('max_execution_time', 900);
+    set_time_limit(900);
+    ini_set('memory_limit','2048M');
       $info_client = [];
       $this->input->post('nombre') !== ''
       ? $info_client["cl.nombre"] = $this->input->post('nombre')

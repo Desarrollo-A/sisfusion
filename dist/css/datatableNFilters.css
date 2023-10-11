@@ -24,6 +24,10 @@
   margin-bottom: 0px !important;
 }
 
+.mb-a {
+  margin-bottom: auto !important;
+}
+
 .mb-1 {
   margin-bottom: 10px;
 }
@@ -66,6 +70,10 @@
 
 .mr-2 {
   margin-right: 20px !important;
+}
+
+.ml-0 {
+  margin-left: 0px !important;
 }
 
 .ml-1 {
@@ -128,6 +136,10 @@
   padding-right: 30px;
 }
 
+.pr-4 {
+  padding-right: 40px;
+}
+
 .pl-0 {
   padding-left: 0 !important;
 }
@@ -184,6 +196,10 @@
   padding-bottom: 30px;
 }
 
+.pb-0 {
+  padding-bottom: 0px !important;
+}
+
 /* END Margin and padding generales */
 /* Utilities */
 .min-w100 {
@@ -211,7 +227,7 @@
 }
 
 .w-50 {
-  width: 50%;
+  width: 50% !important;
 }
 
 .w-40 {
@@ -374,6 +390,10 @@
 
 .d-block {
   display: block;
+}
+
+.d-wrap {
+  flex-wrap: wrap;
 }
 
 .d-flex {
@@ -556,7 +576,7 @@
 }
 
 .txt-sunny {
-  color: #F9F871 !important;
+  color: #a98800 !important;
 }
 
 .btn-a {
@@ -564,6 +584,12 @@
   height: 37px !important;
   width: 37px !important;
   padding: 5px 6px !important;
+}
+
+.btn-dataTable {
+  font-size: 12px !important;
+  color: #333 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 
 /* END Estilos generales datatable */
@@ -595,6 +621,7 @@
   background-color: #f4433618 !important;
   border-radius: 27px;
   margin: 0;
+  color: #f44336 !important;
 }
 
 .color-letter {
@@ -606,6 +633,7 @@
 }
 
 .buttons-pdf:hover {
+  color: #ffffff !important;
   background-color: #f44336 !important;
 }
 
@@ -681,7 +709,6 @@
   padding: 10px 0;
   background-color: #103f75;
   color: #ffffff;
-  box-shadow: 0px 8px 15px RGB(0, 0, 0, 0.3);
 }
 
 .btn-gral-data:hover {
@@ -985,6 +1012,12 @@
   background-color: #92929218;
 }
 
+.lbl-goldMaderas {
+  color: #96843D;
+  border: none;
+  background-color: #96843D18;
+}
+
 .lbl-gral {
   border-radius: 25px;
   padding: 7px 10px;
@@ -999,7 +1032,7 @@
 .lbl-grayDark {
   color: #191B1C;
   border: none;
-  background-color: #28374718;
+  background-color: #191B1C18;
 }
 
 .lbl-green {
@@ -1024,6 +1057,12 @@
   color: #B9770E;
   border: none;
   background-color: #B9770E18;
+}
+
+.lbl-orange {
+  color: #DF7314;
+  border: none;
+  background-color: #DF731418;
 }
 
 .lbl-pink {
@@ -1077,25 +1116,31 @@
 .lbl-lightBlue {
   color: #1B4F72;
   border: none;
-  background: #AED6F1;
+  background-color: #1B4F7218;
 }
 
 .lbl-peach {
   color: #78281F;
   border: none;
-  background: #F5B7B1;
+  background-color: #78281F18;
 }
 
 .lbl-purple {
   color: #512E5F;
   border: none;
-  background: #D7BDE2;
+  background-color: #512E5F18;
 }
 
 .lbl-aqua {
-  color: #ffffff;
+  color: #54d2d2;
   border: none;
-  background: #11DFC6;
+  background: #54d2d218;
+}
+
+.lbl-olivo {
+  color: #86895D;
+  border: none;
+  background-color: #86895D18;
 }
 
 /* END Etiquetas */
@@ -1120,14 +1165,16 @@
 /* Color del HOVER de barra de desplazamiento */
 .scroll-styles::-webkit-scrollbar-thumb:hover {
   background-color: #929292;
+  height: 10px !important;
 }
 
 /* END de estilos del scroll en DIVS */
 .file-gph {
   background-color: #eaeaea;
   border-radius: 30px;
-  padding: 7px 3px 7px 15px;
+  padding: 7px 7px 7px 15px;
   display: flex;
+  align-items: center;
 }
 
 .file-gph .upload-btn {
@@ -1151,10 +1198,20 @@
   margin: 5px;
 }
 
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  .file-gph .upload-btn {
+    width: 100%;
+  }
+}
+
 .file-gph .file-name {
   width: 77%;
   background-color: transparent;
   border: none;
+}
+
+.file-gph .file-name::placeholder {
+  color: #929292 !important;
 }
 
 .file-gph input[type="file"] {
@@ -1334,6 +1391,7 @@
   color: #ffffff;
   background-color: #333333;
   width: fit-content;
+  text-transform: uppercase !important;
 }
 
 .tooltip.top .tooltip-arrow {
@@ -1852,6 +1910,7 @@ table {
   text-align: center;
   width: 100% !important;
   font-size: 13px;
+  text-transform: uppercase;
 }
 
 table tbody > tr.selected, table tbody > tr > .selected {
@@ -1869,7 +1928,7 @@ table tr.selected td.select-checkbox:after, table tr.selected th.select-checkbox
 }
 
 table thead tr {
-  background-color: #143860 !important;
+  background-color: #143860;
 }
 
 table thead tr th {
@@ -1884,7 +1943,7 @@ table thead tr th input {
   text-align: center;
   font-weight: 300;
   font-size: 10px !important;
-  background-color: #143860 !important;
+  background-color: #143860;
   text-transform: uppercase;
 }
 
@@ -1949,8 +2008,17 @@ table .boxSBtns {
   width: fit-content;
 }
 
-.dataTables_scroll .dataTables_scrollHeadInner {
-  width: 100% !important;
+.subBoxDetail {
+  background-color: #eaeaea;
+  border-radius: 10px;
+  padding: 15px 0;
+  width: 100%;
+  margin: auto;
+}
+
+.subBoxDetail label {
+  color: #333333;
+  font-weight: 100;
 }
 
 .dataTables_scroll .container-fluid {
@@ -1979,6 +2047,7 @@ table .boxSBtns {
 /* Color del HOVER de barra de desplazamiento */
 .dataTables_scrollBody::-webkit-scrollbar-thumb:hover {
   background-color: #929292;
+  height: 12px;
 }
 
 .dataTables_wrapper .container-fluid .row .dataTables_info {
@@ -2109,4 +2178,8 @@ table .boxSBtns {
 
 .radio-with-icon-autorizacones i:hover {
   color: #929292;
+}
+
+.text-red {
+  color: #FF0000;
 }

@@ -12,26 +12,26 @@ $(document).ready(function () {
     var dateTime = date + ' ' + time;
     
     $('#Jtabla').DataTable({
-         ajax: {
-             url: `${general_base_url}/registroLote/getLotesContratados`,
+        ajax: {
+            url: `${general_base_url}/registroLote/getLotesContratados`,
             dataSrc: ""
-         },
-         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-         width: "100%",
-         scrollX: true,
+        },
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: "100%",
+        scrollX: true,
         buttons: [{
-            extend: 'excelHtml5',
+            extend: "excelHtml5",
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-            className: 'btn buttons-excel',
-            titleAttr: 'Lotes contratados al ' + dateTime,
-            title: 'Lotes contratados al ' + dateTime,
+            className: "btn buttons-excel",
+            titleAttr: "Lotes contratados al " + dateTime,
+            title: "Lotes contratados al " + dateTime,
             exportOptions: {
-                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,15],
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
                 format: {
-					header: function (d, columnIdx) {
-						return ' ' + titulos[columnIdx] + ' ';
-					}
-				}
+                header: function (d, columnIdx) {
+                    return " " + titulos[columnIdx] + " ";
+                }
+                }
             }
         }],
         pagingType: "full_numbers",
@@ -99,7 +99,7 @@ $(document).ready(function () {
                     if (d.id_cliente_reubicacion != 0 && d.id_cliente_reubicacion != null)
                         return `<span class="label lbl-green">REUBICADO</span>`;
                     else
-                        return `<span class="label lbl-deepGray ">NO APLICA</span>`;
+                        return `<span class="label lbl-gray">NO APLICA</span>`;
                 }
             },
             {
@@ -107,7 +107,15 @@ $(document).ready(function () {
                     if (d.id_cliente_reubicacion != 0 && d.id_cliente_reubicacion != null)
                         return d.fechaAlta;
                     else
-                        return 'NO APLICA';
+                        return '<span class="label lbl-gray">NO APLICA</span>';
+                }
+            },
+            {
+                data: function (d) {
+                    if (d.documentoCargado != 0)
+                        return '<span class="label lbl-green">CARGADO</span>';
+                    else
+                        return '<span class="label lbl-orangeYellow">SIN REGISTRO</span>';
                 }
             }
         ]
@@ -123,11 +131,6 @@ $('#Jtabla thead tr:eq(0) th').each(function (i) {
         if ($('#Jtabla').DataTable().column(i).search() !== this.value){
             $('#Jtabla').DataTable().column(i).search(this.value).draw();
         }
-        $('#Upper').toUpperCase();
     });
-            $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
+        $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
 });
-
-// $('#Upper').toUpperCase(function(){
-
-// });

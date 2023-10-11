@@ -1,8 +1,12 @@
 
 $(document).ready(function () {
     sp.initFormExtendedDatetimepickers();
-    $('.datepicker').datetimepicker({ locale: 'es' });
-    setInitialValues();
+    $('.datepicker').datetimepicker({locale: 'es'});
+    setIniDatesXMonth("#beginDate", "#endDate");
+    let finalBeginDate = $("#beginDate").val();
+    let finalEndDate = $("#endDate").val();
+    fillDataTable(1, finalBeginDate, finalEndDate, 0);
+
 });
 
 sp = { //  SELECT PICKER
@@ -25,30 +29,30 @@ sp = { //  SELECT PICKER
     }
 }
 
-function setInitialValues() {
-    // BEGIN DATE
-    const fechaInicio = new Date();
-    // Iniciar en este año, este mes, en el día 1
-    const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
-    // END DATE
-    const fechaFin = new Date();
-    // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
-    const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
-    finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
-    finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
-    var finalBeginDate2 = [('0' + beginDate.getDate()).slice(-2), ('0' + (beginDate.getMonth() + 1)).slice(-2), beginDate.getFullYear()].join('/');
-    var finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
-    $("#beginDate").val(finalBeginDate2);
-    $("#endDate").val(finalEndDate2);
-    fillDataTable(1, finalBeginDate, finalEndDate, 0);
-}
+// function setInitialValues() {
+//     // BEGIN DATE
+//     const fechaInicio = new Date();
+//     // Iniciar en este año, este mes, en el día 1
+//     const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
+//     // END DATE
+//     const fechaFin = new Date();
+//     // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
+//     const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
+//     finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
+//     finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
+//     var finalBeginDate2 = [('0' + beginDate.getDate()).slice(-2), ('0' + (beginDate.getMonth() + 1)).slice(-2), beginDate.getFullYear()].join('/');
+//     var finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');
+//     $("#beginDate").val(finalBeginDate2);
+//     $("#endDate").val(finalEndDate2);
+//     fillDataTable(1, finalBeginDate, finalEndDate, 0);
+// }
 
 
 let titulos = [];
 $('#tablaReporteEscaneos thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
     titulos.push(title);
-    $(this).html(`<input type="text" class="textoshead" placeholder="${title}"/>`);
+    $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
     $('input', this).on('keyup change', function () {
         if ($('#tablaReporteEscaneos').DataTable().column(i).search() !== this.value) {
             $('#tablaReporteEscaneos').DataTable().column(i).search(this.value).draw();
@@ -90,10 +94,10 @@ function fillDataTable(typeTransaction, beginDate, endDate, where) {
             }
         },
         pageLength: 10,
-        bAutoWidth: false,
+        bAutoWidth: true,
         fixedColumns: true,
         language: {
-            url: `${general_base_url}static/spanishLoader_v2.json`,
+            url: `../static/spanishLoader_v2.json`,
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -102,7 +106,7 @@ function fillDataTable(typeTransaction, beginDate, endDate, where) {
         destroy: true,
         ordering: false,
         columnDefs: [{
-            defaultContent: "-",
+            defaultContent: "SIN ESPECIFICAR",
             targets: "_all"
         }],
         columns:
@@ -118,9 +122,9 @@ function fillDataTable(typeTransaction, beginDate, endDate, where) {
                 {
                     data: function (d) {
                         if (d.estatusDocumento == 'CONTRATO CARGADO')
-                            return `<span class="label" style="background: #A3E4D7; color: #0E6251">${d.estatusDocumento}</span>`;
+                            return `<span class="label lbl-oceanGreen">${d.estatusDocumento}</span>`;
                         else
-                            return `<span class="label" style="background: #E6B0AA; color: #641E16">${d.estatusDocumento}</span>`;
+                            return `<span class="label lbl-warning">${d.estatusDocumento}</span>`;
                     }
                 }
             ]
@@ -133,3 +137,9 @@ $(document).on("click", "#searchByDateRange", function () {
     let finalEndDate = $("#endDate").val();
     fillDataTable(3, finalBeginDate, finalEndDate, 0);
 });
+
+$('#tablaReporteEscaneos').on('draw.dt', function() {
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
+    });
+    });

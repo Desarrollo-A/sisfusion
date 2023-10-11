@@ -300,3 +300,51 @@ function convertDateDDMMYYYYToYYYYMMDD(date)
 function numberTwoDecimal(x) {
   return parseFloat(x).toFixed(2);
 } 
+
+/**
+ * Función que muestra tres decimales
+ * Comisiones 
+ */
+
+function convertirPorcentajes(value) {
+  const fixed = Number(value).toFixed(3);
+  const partes = fixed.split(".");
+  const numeroEntero = partes[0];
+  const numeroDecimal = checkDecimal(partes[1]);
+  if (numeroDecimal === '') {
+      return `${numeroEntero}`;
+  }
+  return `${numeroEntero}.${numeroDecimal}`;
+}
+
+function checkDecimal(decimal) {
+  let str = '';
+  for (let i = 0; i < decimal.length; i++) {
+      if (decimal.charAt(i) !== '0') {
+          str += decimal.charAt(i);
+      }
+  }
+  return str;
+}
+
+function cleanElement(e) { 
+  var myElement = document.getElementById(e);
+  myElement.innerHTML = '';
+}
+
+
+function visorArchivo(rutaArchivo, nombreArchivo){
+  //ruta: completa
+  // nombreArchivo: para mostrar su nombre
+  //esta funcion abre un shadowbox
+  //en la vista se debe llamar el JS así como los CSS para quefuncione
+  Shadowbox.open({
+    content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute  " src="${rutaArchivo}"></iframe></div>`,
+    player: "html",
+    title: `Visualizando archivo: ${nombreArchivo}`,
+    width: 985,
+    height: 660,
+
+  });
+  $('#sb-container').css('z-index', 9999);
+}

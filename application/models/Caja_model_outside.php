@@ -19,19 +19,15 @@
     }
 
 
-    public function getResidencialDis2($rol)
-    {
-
-        $val_idStatusLote = ($rol == 8 || $rol == 4 || $rol == 11) ? ('1,101,102') : ('1');
-
-
-        return $this->db->query("SELECT residenciales.idResidencial, residenciales.nombreResidencial, CAST(residenciales.descripcion AS varchar(MAX)) as descripcion FROM residenciales
-            INNER JOIN condominios ON residenciales.idResidencial = condominios.idResidencial
-            INNER JOIN lotes ON condominios.idCondominio = lotes.idCondominio WHERE lotes.idStatusLote in (" . $val_idStatusLote . ") AND lotes.status IN ( 1 ) AND
-            (lotes.idMovimiento = 0 OR lotes.idMovimiento IS NULL )
-            group by residenciales.idResidencial, residenciales.nombreResidencial, CAST(residenciales.descripcion AS varchar(MAX))
-            ORDER BY CAST(residenciales.descripcion AS varchar(MAX))")->result_array();
-
+    public function getResidencialDis2($rol) {
+        $val_idStatusLote = in_array($rol, array(8, 4, 11)) ? "1, 101, 102" : "1";
+        return $this->db->query("SELECT re.idResidencial, re.nombreResidencial, CAST(re.descripcion AS varchar(MAX)) as descripcion 
+        FROM residenciales re
+        INNER JOIN condominios co ON co.idResidencial = re.idResidencial
+        INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND lo.idStatusLote in ($val_idStatusLote) AND lo.status IN ( 1 ) AND (lo.idMovimiento = 0 OR lo.idMovimiento IS NULL )
+        WHERE re.idResidencial NOT IN (21, 22, 25, 14)
+        group by re.idResidencial, re.nombreResidencial, CAST(re.descripcion AS varchar(MAX))
+        ORDER BY CAST(re.descripcion AS varchar(MAX))")->result_array();
     }
 
 
@@ -98,15 +94,11 @@
         WHERE lotes.status = 1 AND lotes.idStatusLote in ($val_idStatusLote) AND lotes.idCondominio = $condominio")->result_array();
     }
 
-    public function getResidencial()
-    {
-        $this->db->select('idResidencial as id_proy, nombreResidencial as siglas, descripcion as nproyecto');
-        $this->db->from('residenciales');
-        $this->db->where('status', '1');
-        $this->db->order_by('nombreResidencial', 'asc');
-        $query = $this->db->get();
-
-        return $query->result_array();
+    public function getResidencial() {
+        return $this->db->query("SELECT idResidencial as id_proy, nombreResidencial as siglas, descripcion as nproyecto
+        FROM residenciales
+        WHERE status = 1 AND idResidencial NOT IN (21, 22, 25, 14)
+        ORDER BY nombreResidencial ")->result_array();
     }
 
 
@@ -282,19 +274,19 @@
 		(CASE u1.id_rol WHEN 3 THEN u1.id_lider ELSE u3.id_usuario END) id_subdirector, 
 		(CASE u1.id_rol WHEN 3 THEN CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) ELSE CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) END) subdirector,
 		(CASE u1.id_rol WHEN 3 THEN (CASE WHEN u2.id_lider = 2 THEN 0 ELSE u2.id_lider END) ELSE CASE 
-		WHEN u3.id_usuario = 7092 THEN 3 
+		WHEN u2.id_usuario = 7092 THEN 3 
 		WHEN u2.id_usuario IN (9471,681,609,690) THEN 607 
 		WHEN u2.id_lider = 692 THEN u0.id_lider
-        WHEN u2.id_lider = 703 THEN 4
-        WHEN u2.id_lider = 7886 THEN 5
+        WHEN u2.id_lider = 703 THEN 4
+        WHEN u2.id_lider = 7886 THEN 5
 		ELSE 0 END END) id_regional,
 			(CASE u1.id_rol WHEN 3 THEN (CASE WHEN u2.id_lider = 2 THEN 'NO APLICA' ELSE CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) END) ELSE CASE 
-		WHEN u3.id_usuario = 7092 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
-		WHEN u3.id_usuario = 9471 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
-		WHEN u3.id_usuario = 681 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
-		WHEN u3.id_usuario = 609 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
-		WHEN u3.id_usuario = 690 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
-		WHEN (u3.id_usuario = 5 AND u0.id_sede = '11') THEN 'NO APLICA' ELSE 'NO APLICA' END END) regional,
+		WHEN u2.id_usuario = 7092 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
+		WHEN u2.id_usuario = 9471 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
+		WHEN u2.id_usuario = 681 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
+		WHEN u2.id_usuario = 609 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
+		WHEN u2.id_usuario = 690 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
+		WHEN (u2.id_usuario = 5 AND u0.id_sede = '11') THEN 'NO APLICA' ELSE 'NO APLICA' END END) regional,
 				CASE 
 		WHEN (u0.id_sede = '13' AND u2.id_lider = 7092) THEN 3
 		WHEN (u0.id_sede = '13' AND u2.id_lider = 3) THEN 7092
@@ -309,7 +301,7 @@
 		LEFT JOIN usuarios u3 ON u3.id_usuario = u2.id_lider -- SUBDIRECTOR
 		LEFT JOIN usuarios u4 ON u4.id_usuario = u3.id_lider -- REGIONAL
         WHERE u0.id_rol = 7 AND u0.estatus = 1 AND ISNULL(u0.correo, '') NOT LIKE '%SINCO%' AND ISNULL(u0.correo, '') NOT LIKE '%test_%'
-		AND u0.id_usuario NOT IN (4415,11160,11161,11179,11750,12187,11332,2595,10828,9942,10549,12874)
+		AND u0.id_usuario NOT IN (4415, 11160, 11161, 11179, 11750, 12187, 11332, 2595, 10828, 9942, 10549, 12874, 13151)
 		UNION ALL
 		(SELECT id_usuario as id_asesor,0 id_sede,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as asesor,0 id_coordinador ,'NO APLICA' coordinador, 0 id_gerente, 'NO APLICA' gerente,
 		0 id_subdirector, 'NO APLICA' subdirector,0 id_regional, 'NO APLICA' regional, 0 id_regional_2, 'NO APLICA' regional_2 FROM usuarios WHERE id_usuario = 12874)")->result();
@@ -317,11 +309,16 @@
 
 
     public function prospectoXAsesor($idAsesor) {
+        if($idAsesor == 12874) {
+            $where = " p.id_asesor=p.id_coordinador ";
+        }else{
+            $where = " p.id_asesor = $idAsesor ";
+        }
         $query = $this->db->query("SELECT p.id_prospecto, CONCAT(UPPER(p.nombre), ' ', UPPER(p.apellido_paterno), ' ', UPPER(p.apellido_materno), ' (', REPLACE(oxc.nombre, ' (especificar)', ''), ')') nombre,
         UPPER(p.nombre) nombre_cliente, UPPER(p.apellido_paterno) apellido_paterno, UPPER(p.apellido_materno) apellido_materno, p.source
         FROM prospectos p 
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = p.lugar_prospeccion AND oxc.id_catalogo = 9
-		WHERE p.id_asesor = $idAsesor AND p.estatus = 1 AND p.lugar_prospeccion != 6
+		WHERE $where AND p.estatus = 1 AND p.lugar_prospeccion != 6
 		ORDER BY nombre, apellido_paterno, apellido_materno");
         return $query->result();
     }
@@ -459,7 +456,6 @@
         $this->db->insert('clientes', $data);
         $query = $this->db->query("SELECT IDENT_CURRENT('clientes') as lastId")->result_array();
         return $query;
-
     }
 
     public function addClientToLote($idLote, $data)
@@ -473,13 +469,11 @@
     public function validate($idLote)
     {
         $this->db->where("idLote", $idLote);
-        $this->db->where_in('idStatusLote', array('1', '101', '102'));
+        $this->db->where_in('idStatusLote', array('1', '101', '102', '15', '16'));
         $this->db->where("(idStatusContratacion = 0 OR idStatusContratacion IS NULL)");
         $query = $this->db->get('lotes');
         $valida = (empty($query->result())) ? 0 : 1;
         return $valida;
-        //var_dump( $valida);
-
     }
 
     //VERIFICAMOS PARA EL APARTADO EN LINEA QUE SE ENCUENTRE EN ESTATUS 99
@@ -1175,75 +1169,7 @@
                     $update_pcasas["enganche"] = ($update_pcasas["total"] * 0.1);
                     $update_pcasas["saldo"] = ($update_pcasas["total"] - $update_pcasas["enganche"]);
 
-                } /*if($array_casas[$c][1] == 'STELLA'){
-             
-             if(
-                 $array_casas[$c][2] == 'CCMP-LAMAY-011' || $array_casas[$c][2] == 'CCMP-LAMAY-021' || $array_casas[$c][2] == 'CCMP-LAMAY-030' ||
-                 $array_casas[$c][2] == 'CCMP-LAMAY-031' || $array_casas[$c][2] == 'CCMP-LAMAY-032' || $array_casas[$c][2] == 'CCMP-LAMAY-045' ||
-                 $array_casas[$c][2] == 'CCMP-LAMAY-046' || $array_casas[$c][2] == 'CCMP-LAMAY-047' || $array_casas[$c][2] == 'CCMP-LAMAY-054' || 
-                 $array_casas[$c][2] == 'CCMP-LAMAY-064' || $array_casas[$c][2] == 'CCMP-LAMAY-079' || $array_casas[$c][2] == 'CCMP-LAMAY-080' ||
-                 $array_casas[$c][2] == 'CCMP-LAMAY-090' || $array_casas[$c][2] == 'CCMP-LIRIO-010' ||
-                 
-                 $array_casas[$c][2] == 'CCMP-LIRIO-10' ||
-                 $array_casas[$c][2] == 'CCMP-LIRIO-033' || $array_casas[$c][2] == 'CCMP-LIRIO-048' || $array_casas[$c][2] == 'CCMP-LIRIO-049' ||
-                 $array_casas[$c][2] == 'CCMP-LIRIO-067' || $array_casas[$c][2] == 'CCMP-LIRIO-089' || $array_casas[$c][2] == 'CCMP-LIRIO-091' ||
-                 $array_casas[$c][2] == 'CCMP-LIRIO-098' || $array_casas[$c][2] == 'CCMP-LIRIO-100'
-             
-             ){
-                 $total = $info->total;
-                 $update_pcasas["total"]= ($total + 2029185.00);
-                 $update_pcasas["enganche"]= ($update_pcasas["total"] * 0.1);
-                 $update_pcasas["saldo"]= ($update_pcasas["total"] - $update_pcasas["enganche"]);
- 
-             
-             } else {
-                 
-                 $total = $info->total;
-                 $update_pcasas["total"]= ($total + 2104340.00);
-                 $update_pcasas["enganche"]= ($update_pcasas["total"] * 0.1);
-                 $update_pcasas["saldo"]= ($update_pcasas["total"] - $update_pcasas["enganche"]);
-                 
-             
-             }
-             
-             $update_pcasas["nombreLote"]=$array_casas[$c][3];
- 
- 
-             } else if($array_casas[$c][1] == 'AURA'){
-                     
-             if(
- 
-                 $array_casas[$c][2] == 'CCMP-LAMAY-011' || $array_casas[$c][2] == 'CCMP-LAMAY-021' || $array_casas[$c][2] == 'CCMP-LAMAY-030' ||
-                 $array_casas[$c][2] == 'CCMP-LAMAY-031' || $array_casas[$c][2] == 'CCMP-LAMAY-032' || $array_casas[$c][2] == 'CCMP-LAMAY-045' ||
-                 $array_casas[$c][2] == 'CCMP-LAMAY-046' || $array_casas[$c][2] == 'CCMP-LAMAY-047' || $array_casas[$c][2] == 'CCMP-LAMAY-054' || 
-                 $array_casas[$c][2] == 'CCMP-LAMAY-064' || $array_casas[$c][2] == 'CCMP-LAMAY-079' || $array_casas[$c][2] == 'CCMP-LAMAY-080' ||
-                 $array_casas[$c][2] == 'CCMP-LAMAY-090' || $array_casas[$c][2] == 'CCMP-LIRIO-010' ||
-                 
-                 $array_casas[$c][2] == 'CCMP-LIRIO-10' ||
-                 $array_casas[$c][2] == 'CCMP-LIRIO-033' || $array_casas[$c][2] == 'CCMP-LIRIO-048' || $array_casas[$c][2] == 'CCMP-LIRIO-049' ||
-                 $array_casas[$c][2] == 'CCMP-LIRIO-067' || $array_casas[$c][2] == 'CCMP-LIRIO-089' || $array_casas[$c][2] == 'CCMP-LIRIO-091' ||
-                 $array_casas[$c][2] == 'CCMP-LIRIO-098' || $array_casas[$c][2] == 'CCMP-LIRIO-100'
-             
-             ){
-                 $total = $info->total;
-                 $update_pcasas["total"]= ($total + 1037340.00);
-                 $update_pcasas["enganche"]= ($update_pcasas["total"] * 0.1);
-                 $update_pcasas["saldo"]= ($update_pcasas["total"] - $update_pcasas["enganche"]);
-             
-             } else {
-                     
-                 $total = $info->total;
-                 $update_pcasas["total"]= ($total + 1075760.00);
-                 $update_pcasas["enganche"]= ($update_pcasas["total"] * 0.1);
-                 $update_pcasas["saldo"]= ($update_pcasas["total"] - $update_pcasas["enganche"]);
-             
-             }
-             
-             
-             $update_pcasas["nombreLote"]=$array_casas[$c][3];
- 
- 
-             }*/ else if ($array_casas[$c][1] == 'TERRENO') {
+                }  else if ($array_casas[$c][1] == 'TERRENO') {
 
                     $tipo_casa = 0;//TIPO DE CASA PARA GUARDARLO EN CLIENTES
                     $t = (($info->precio + 500) * $info->sup);
@@ -1343,7 +1269,7 @@
         return $this->db->query("SELECT us.id_lider as id_subdirector, 
 		(CASE 
         WHEN us.id_lider = 7092 THEN 3 
-        WHEN us.id_lider IN (9471, 681, 609, 690) THEN 607 
+        WHEN us.id_lider IN (9471, 681, 609, 690, 2411) THEN 607 
 		WHEN us.id_lider = 692 THEN u0.id_lider
         WHEN us.id_lider = 703 THEN 4
         WHEN us.id_lider = 7886 THEN 5
@@ -1353,7 +1279,7 @@
 		WHEN (us.id_sede = '13' AND u0.id_lider = 3) THEN 7092
 		ELSE 0 END id_regional_2
         FROM usuarios us
-        INNER JOIN usuarios u0 ON u0.id_usuario = us.id_lider
+        LEFT JOIN usuarios u0 ON u0.id_usuario = us.id_lider
         WHERE us.id_usuario IN ($id_gerente)")->result_array();
     }
 
@@ -1424,8 +1350,8 @@
 		WHEN u3.id_usuario = 7092 THEN 3 
 		WHEN u2.id_usuario IN (9471,681,609,690) THEN 607 
 		WHEN u2.id_lider = 692 THEN u0.id_lider
-        WHEN u2.id_lider = 703 THEN 4
-        WHEN u2.id_lider = 7886 THEN 5
+        WHEN u2.id_lider = 703 THEN 4
+        WHEN u2.id_lider = 7886 THEN 5
 		ELSE 0 END END) id_regional,
 			(CASE u1.id_rol WHEN 3 THEN (CASE WHEN u2.id_lider = 2 THEN 'NO APLICA' ELSE CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) END) ELSE CASE 
 		WHEN u3.id_usuario = 7092 THEN CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) 
@@ -1448,10 +1374,47 @@
 		LEFT JOIN usuarios u3 ON u3.id_usuario = u2.id_lider -- SUBDIRECTOR
 		LEFT JOIN usuarios u4 ON u4.id_usuario = u3.id_lider -- REGIONAL
         WHERE u0.id_rol = 7 AND u0.estatus = 1 AND ISNULL(u0.correo, '') NOT LIKE '%SINCO%' AND ISNULL(u0.correo, '') NOT LIKE '%test_%'
-		AND u0.id_usuario NOT IN (4415,11160,11161,11179,11750,12187,11332,2595,10828,9942,10549,12874)
+		AND u0.id_usuario NOT IN (4415, 11160, 11161, 11179, 11750, 12187, 11332, 2595, 10828, 9942, 10549, 12874, 13151)
 		UNION ALL
 		(SELECT id_usuario as id_asesor,0 id_sede,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as asesor,0 id_coordinador ,'NO APLICA' coordinador, 0 id_gerente, 'NO APLICA' gerente,
 		0 id_subdirector, 'NO APLICA' subdirector,0 id_regional, 'NO APLICA' regional, 0 id_regional_2, 'NO APLICA' regional_2 FROM usuarios WHERE id_usuario = 12874)")->result();
+    }
+
+    function checkTipoJuridico($id_cliente){
+        //función para revisar el tipo de personalidad juridica
+        $data = $this->db->query("SELECT * FROM clientes WHERE id_cliente=".$id_cliente);
+        return $data->row();
+    }
+    function documentacionActual($id_cliente){
+        $query = $this->db->query("SELECT hd.*, cl.personalidad_juridica 
+        FROM clientes cl 
+        INNER JOIN historial_documento hd ON cl.id_cliente=hd.idCliente WHERE hd.idCliente=".$id_cliente);
+        return $query->result_array();
+    }
+    function nuevaDocByTP($personaJuridica){
+        $tipoPersonalidad = 0;
+        switch ($personaJuridica){
+            case 1:
+                $tipoPersonalidad = 32;
+                break;
+            case 2:
+                $tipoPersonalidad = 31;
+                break;
+        }
+        //obtiene la documentacion por tipo de persona
+        $data = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo=".$tipoPersonalidad." AND estatus=1");
+        return $data->result_array();
+    }
+    function deshabDocsByLoteCliente($idLote, $idCliente){
+        //deshabilita los registros por idLote y idCliente
+        $dataActualiza = array(
+            'status' => 0
+        );
+        $this->db->where("idLote", $idLote);
+        $this->db->where("idCliente", $idCliente);
+        $this->db->update('historial_documento', $dataActualiza);
+        return $this->db->affected_rows();
+//        return 5;//prueba
     }
 
 }

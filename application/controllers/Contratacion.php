@@ -13,7 +13,7 @@ class Contratacion extends CI_Controller
         $this->load->model('registrolote_modelo');
          $this->load->model('asesor/Asesor_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
         //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
-        $this->load->library(array('session','form_validation', 'get_menu'));
+        $this->load->library(array('session','form_validation', 'get_menu','permisos_sidebar'));
         $this->load->library(array('session', 'form_validation'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
@@ -21,6 +21,8 @@ class Contratacion extends CI_Controller
 
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
+        $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
+        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
     }
 
 
@@ -35,8 +37,12 @@ class Contratacion extends CI_Controller
     }
 
     public function lista_proyecto() {
+        if(in_array(array($this->session->userdata('id_rol'), array(17, 70, 71, 73, 33, 78))))
+            $where = '';
+        else
+            $where = ' AND idResidencial NOT IN (14) ';
     	$this->validateSession();
-        echo json_encode($this->Contratacion_model->get_proyecto_lista()->result_array());
+        echo json_encode($this->Contratacion_model->get_proyecto_lista( $where)->result_array());
     }
 
     public function lista_condominio($proyecto) {
@@ -53,12 +59,12 @@ class Contratacion extends CI_Controller
         echo json_encode($this->Contratacion_model->get_estatus_lote()->result_array());
     }
 
-    public function get_inventario($estatus, $condominio, $proyecto) {
+    public function get_inventario($estatus, $condominio, $proyecto, $sedes) {
         ini_set('max_execution_time', 900);
         set_time_limit(900);
         ini_set('memory_limit','2048M');
 		$this->validateSession();
-		$data = $this->Contratacion_model->getInventarioData($estatus, $condominio, $proyecto);
+		$data = $this->Contratacion_model->getInventarioData($estatus, $condominio, $proyecto, $sedes );
 		if($data!=null)
             print_r(json_encode($data));
         else
@@ -185,18 +191,14 @@ class Contratacion extends CI_Controller
     	$this->validateSession();
         echo json_encode($this->Contratacion_model->getCatalogosParaUltimoEstatus()->result_array());
     }
-
-    public function downloadCompleteInventory () {
-        if (isset($_POST) && !empty($_POST)) {
-            $data['data'] = $this->Contratacion_model->getCompleteInventory($this->input->post("id_sede"))->result_array();
-            echo json_encode($data);
-        } else
-            echo json_encode(array());
-    }
     
     public function sedesPorDesarrollos() {
         $this->validateSession();
         echo json_encode($this->Contratacion_model->getSedesPorDesarrollos()->result_array());
+    }
+
+    public function getInformationHistorialEstatus($id_parametro){
+        echo json_encode($this->Contratacion_model->getInformationHistorialEstatus($id_parametro)->result_array());
     }
     
 }

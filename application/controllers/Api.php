@@ -14,36 +14,43 @@ class Api extends CI_Controller
         date_default_timezone_set('America/Mexico_City');
         $this->load->helper(array('form'));
         $this->load->library(array('jwt_key', 'get_menu', 'jwt_actions'));
-        $this->load->model(array('Api_model', 'General_model', 'Internomex_model', 'Clientes_model'));
+        $this->load->model(array('Api_model', 'General_model', 'Internomex_model', 'Clientes_model', 'Usuarios_modelo'));
         $this->load->model([
             'opcs_catalogo/valores/AutorizacionClienteOpcs',
             'opcs_catalogo/valores/TipoAutorizacionClienteOpcs'
         ]);
     }
 
-    function authenticate()
+    function getToken()
     {
         $data = json_decode(file_get_contents("php://input"));
-        if (!isset($data->username) || !isset($data->password))// contraseña antes de ser encriptada: I2503^831NQqHWxr, usuario : ojqd58DY3@
-            echo json_encode(array("status" => 400, "message" => "Algún parámetro no viene informado."), JSON_UNESCAPED_UNICODE);
+        if (!isset($data->id))
+            echo json_encode(array("status" => -1, "message" => "Algún parámetro no viene informado."), JSON_UNESCAPED_UNICODE);
         else {
-            if ($data->username == "" || $data->password == "")
-                echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado."), JSON_UNESCAPED_UNICODE);
+            if ($data->id == "")
+                echo json_encode(array("status" => -1, "message" => "Algún parámetro no tiene un valor especificado."), JSON_UNESCAPED_UNICODE);
             else {
-                //$JwtSecretKey = $this->jwt_actions->getSecretKey('9860');
-                //$result = $this->Api_model->verifyUser($data->username, encriptar($data->password));
-                $time = time();
-                $result = true;
-                if ($result != false) { // MJ: SE ENCONTRÓ REGISTRO DE USUARIO ACTIVO
+                if (!in_array($data->id, array(9860, 8134, 5918, 6489)))
+                    echo json_encode(array("status" => -1, "message" => "Sistema no reconocido."), JSON_UNESCAPED_UNICODE);
+                else {
+                    if ($data->id == 9860) // DRAGON
+                        $arrayData = array("username" => "ojqd58DY3@", "password" => "I2503^831NQqHWxr");
+                    else if ($data->id == 8134) // INTERNOMEX
+                        $arrayData = array("username" => "1NT43506MX", "password" => "BWII239.9DEJDINT3N@");
+                    else if ($data->id == 5918) // ARCUS
+                        $arrayData = array("username" => "9m1%6n7DfR", "password" => "7%5bea3K&B^fMhfOw8Rj");
+                    else if ($data->id == 6489) // CAJA
+                        $arrayData = array("username" => "caja");
+                    $time = time();
+                    $JwtSecretKey = $this->jwt_actions->getSecretKey($data->id);
                     $data = array(
                         "iat" => $time, // Tiempo en que inició el token
                         "exp" => $time + (24 * 60 * 60), // Tiempo en el que expirará el token (24 horas)
-                        "data" => array("username" => 'caja'),
+                        "data" => $arrayData,
                     );
-                    $token = JWT::encode($data, '977929_5117+8773_');
+                    $token = JWT::encode($data, $JwtSecretKey);
                     echo json_encode(array("id_token" => $token));
-                } else
-                    echo json_encode(array("status" => 403, "message" => "Usuario o contraseña inválido."), JSON_UNESCAPED_UNICODE);
+                }
             }
         }
     }
@@ -362,27 +369,25 @@ class Api extends CI_Controller
     }
 
    
-    function external_dashboard(){
+    public function external_dashboard(){
         $response = $this->validateToken_dashboard($_GET['tkn']);
-        
         $res = json_decode($response);
         if($res->status == 200){
             $this->session->set_userdata(array(
                 'id_rol'  => 1,
                 'id_usuario' => 2,
-                'id_lider' => 0,
-                'estatus' => 1
+                'id_lider' => 0
             ));
             $datos['sub_menu'] = $this->get_menu->get_submenu_data($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'));
             $datos['external'] = true;
-            $this->load->view('template/header', $datos);
-            $this->load->view("dashboard/base/base");
+            $this->load->view('template/header');
+            $this->load->view("dashboard/base/base", $datos);
         }else{
             die("Inicio de sesion caducado.");
         }
     }
 
-    function consultaInformacionContratos() {
+    function consultaInformacionContratos($rows_number = '') {
         if (!isset(apache_request_headers()["Authorization"]))
             echo json_encode(array("status" => -1, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
         else {
@@ -409,8 +414,11 @@ class Api extends CI_Controller
                         $checkSingup = null;
                         echo json_encode(array("status" => -1, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
                     }
-                    if(!empty($checkSingup) && json_decode($checkSingup)->status == 200){
-                        $dbTransaction = $this->Internomex_model->getInformacionContratos();
+                    if(!empty($checkSingup) && json_decode($checkSingup)->status == 200) {
+                        $year = date('Y');
+                        $month = date('n');
+                        $year = $month == 1 ? $year -1 : $year;
+                        $dbTransaction = $this->Internomex_model->getInformacionContratos($rows_number, $year, $month - 1);
                         $data2 = array();
                         for ($i = 0; $i < COUNT($dbTransaction); $i++) {
                             $data2[$i]['cliente']['tipo_persona'] = $dbTransaction[$i]['tipo_persona'];
@@ -430,11 +438,10 @@ class Api extends CI_Controller
                             $data2[$i]['propiedad']['empresa'] = $dbTransaction[$i]['empresa'];
                             $data2[$i]['propiedad']['fechaEstatus9'] = $dbTransaction[$i]['fechaEstatus9'];
                             $data2[$i]['propiedad']['fechaEstatus7'] = $dbTransaction[$i]['fechaEstatus7'];
-                            $data2[$i]['pagos']['forma_pago'] = $dbTransaction[$i]['forma_pago'];
+                            $data2[$i]['pagos']['forma_pago'] = implode(', ', array_unique(explode(',', $dbTransaction[$i]['forma_pago'])));
                             $data2[$i]['pagos']['monto_enganche'] = $dbTransaction[$i]['monto_enganche'];
                             $data2[$i]['pagos']['fecha_pago_comision'] = $dbTransaction[$i]['fecha_pago_comision'];
                             $data2[$i]['pagos']['monto_comision'] = $dbTransaction[$i]['monto_comision'];
-                            $data2[$i]['pagos']['fecha_ultima_dispersion'] = $dbTransaction[$i]['fecha_ultima_dispersion'];
                         }
                         if ($dbTransaction) // SUCCESS TRANSACTION
                             echo json_encode(array("status" => 1, "message" => "Consulta realizada con éxito.", "data" => $data2), JSON_UNESCAPED_UNICODE);
@@ -550,9 +557,9 @@ class Api extends CI_Controller
         ]);
     }
 
-    public function autSms(int $idCliente)
+    public function autorizacionSms(int $idCliente)
     {
-        $codigo = $this->input->get('cod');
+        $codigo = $this->input->get('codigo');
 
         if (!isset($codigo)) {
             $this->load->view('template/header');
@@ -808,6 +815,95 @@ class Api extends CI_Controller
                         $data = file_get_contents("php://input");
                         echo json_encode(array("status" => 200, "message" => "Consulta realizada con éxito.", "datos"   =>  $data), JSON_UNESCAPED_UNICODE);
                     }
+                }
+            }
+        }
+
+    }
+
+    function getAsesoresArcus($fecha = '') {
+        if (!isset(apache_request_headers()["Authorization"]))
+            echo json_encode(array("status" => -1, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+        else {
+            if (apache_request_headers()["Authorization"] == "")
+                echo json_encode(array("status" => -1, "message" => "Token no especificado dentro del encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+            else {
+                $token = apache_request_headers()["Authorization"];
+                $JwtSecretKey = $this->jwt_actions->getSecretKey(5918);
+                $valida_token = json_decode($this->validateToken($token, 5918));
+                if ($valida_token->status !== 200)
+                    echo json_encode($valida_token);
+                else {
+                    $result = JWT::decode($token, $JwtSecretKey, array('HS256'));
+                    $valida_token = Null;
+                    foreach ($result->data as $key => $value) {
+                        if(($key == "username" || $key == "password") && (is_null($value) || str_replace(" ","",$value) == '' || empty($value)))
+                            $valida_token = false;
+                    }
+                    if(is_null($valida_token))
+                        $valida_token = true;
+                    if(!empty($result->data) && $valida_token)
+                        $checkSingup = $this->jwt_actions->validateUserPass($result->data->username, $result->data->password);
+                    else {
+                        $checkSingup = null;
+                        echo json_encode(array("status" => -1, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
+                    }
+                    if(!empty($checkSingup) && json_decode($checkSingup)->status == 200) {
+                        $dbQueryResult = $this->Api_model->getAsesoresList($fecha);
+                        if ($dbQueryResult) // SUCCESS TRANSACTION
+                            echo json_encode(array("status" => 1, "message" => "Consulta realizada con éxito.", "data" => $dbQueryResult), JSON_UNESCAPED_UNICODE);
+                        else // ERROR TRANSACTION
+                            echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+                    } 
+                    else
+                        echo ($checkSingup);
+                }
+            }
+        }
+    }
+
+    function consultaInfoProspecto(){
+
+        if (!isset(apache_request_headers()["Authorization"]))
+            echo json_encode(array("status" => -1, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+        else {
+            if (apache_request_headers()["Authorization"] == "")
+                echo json_encode(array("status" => -1, "message" => "Token no especificado dentro del encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+            else {
+                $token = apache_request_headers()["Authorization"];
+                $JwtSecretKey = $this->jwt_actions->getSecretKey(5918);
+                $valida_token = json_decode($this->validateToken($token, 5918));
+                if ($valida_token->status !== 200)
+                    echo json_encode($valida_token);
+                else {
+                    $result = JWT::decode($token, $JwtSecretKey, array('HS256'));
+                    $valida_token = Null;
+                    foreach ($result->data as $key => $value) {
+                        if(($key == "username" || $key == "password") && (is_null($value) || str_replace(" ","",$value) == '' || empty($value)))
+                            $valida_token = false;
+                    }
+                    if(is_null($valida_token))
+                        $valida_token = true;
+                    if(!empty($result->data) && $valida_token)
+                        $checkSingup = $this->jwt_actions->validateUserPass($result->data->username, $result->data->password);
+                    else {
+                        $checkSingup = null;
+                        echo json_encode(array("status" => -1, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
+                    }
+                    if(!empty($checkSingup) && json_decode($checkSingup)->status == 200) {
+                        $year = $this->input->post("year", true);
+                        $month = $this->input->post("month", true);
+
+
+                        $consulta = $this->Api_model->getInformacionProspectos($year, $month);
+                        echo json_encode($consulta);
+                        exit;
+                        $this->output->set_content_type('application/json');
+                        $this->output->set_output(json_encode($consulta));
+                    } 
+                    else
+                        echo ($checkSingup);
+                        header('Content-Type: application/json');
                 }
             }
         }

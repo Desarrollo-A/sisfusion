@@ -3,20 +3,12 @@
 
 <body>
     <div class="wrapper">
-        <?php
-			if (in_array($this->session->userdata('id_rol'), array(16, 6, 5, 13, 17, 32, 2, 3, 4, 9, 7, 33, 23, 35, 2, 11, 12, 15, 28, 19, 20, 50, 40, 53, 55, 47, 58, 61, 54, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 55, 63, 18)))
-            	$this->load->view('template/sidebar');
-			else
-				echo '<script>alert("ACCESSO DENEGADO"); window.location.href="' . base_url() . '";</script>';
-		?>
+        <?php $this->load->view('template/sidebar'); ?>
 
-        <!-- Modals -->
-        <div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-            aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title">Consulta de historial <b id="nomLoteHistorial"></b></h4>
                     </div>
                     <div class="modal-body">
@@ -30,6 +22,9 @@
                                 </li>
                                 <li role="presentation">
                                     <a href="#tabVentasCompartidas" aria-controls="tabVentasCompartidas" role="tab" data-toggle="tab">Ventas compartidas</a>
+                                </li>
+                                <li role="presentation">
+                                    <a href="#tabHistorialEstatus" aria-controls="tabHistorialEstatus" role="tab" data-toggle="tab">Historial Estatus</a>
                                 </li>
                                 <li role="presentation" id="divTabClausulas">
                                     <a href="#tabClausulas" aria-controls="tabClausulas" role="tab" data-toggle="tab">Cláusulas</a>
@@ -103,6 +98,17 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div role="tabpanel" class="tab-pane" id="tabHistorialEstatus">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="card card-plain">
+                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                                    <ul class="timeline-3" id="HistorialEstatus"></ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div role="tabpanel" class="tab-pane" id="tabClausulas">
                                     <div class="row">
                                         <div class="col-md-12">
@@ -123,52 +129,177 @@
                 </div>
             </div>
         </div>
-        <!-- END Modals -->
-
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col xol-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon fa-2x" data-background-color="goldMaderas">
                                 <?php
-                                    if(in_array($this->session->userdata('id_rol'), array(7, 9, 3, 2, 1, 6, 5, 4))) {
+                                if (in_array($this->session->userdata('id_rol'), array(7, 9, 3, 2, 1, 6, 5, 4))) {
                                 ?>
                                     <a href="https://youtu.be/cfRUmAdELkU" class="align-center justify-center u2be" target="_blank">
                                         <i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
                                     </a>
                                 <?php
-                                    } else {
+                                } else {
                                 ?>
                                     <i class="fas fa-box"></i>
                                 <?php
-                                    }
+                                }
                                 ?>
                             </div>
                             <div class="card-content">
                                 <h3 class="card-title center-align">Inventario lotes</h3>
                                 <div class="toolbar">
                                     <div class="row">
-                                        <div class="col-md-4 form-group overflow-hidden">
-                                            <div class="form-group">
-                                                <label class="m-0" for="idResidencial">Proyecto</label>
-                                                <select id="idResidencial" name="idResidencial" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" size="5" data-container="body" required></select>
+                                        <div class=" col col-xs-12 col-sm-12 col-md-12 col-lg-12" id="selectorModo">
+                                            <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6 pb-3">
+                                                <div class="radio_container w-100">
+                                                    <input class="d-none generate" type="radio" name="modoSubida"
+                                                           id="condominioM" checked value="1">
+                                                    <label for="condominioM" class="w-50">Inventario Lotes</label>
+                                                    <input class="d-none find-results" type="radio" name="modoSubida"
+                                                           id="loteM" value="0">
+                                                    <label for="loteM" class="w-50">Descargar inventario sede</label>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-4 form-group overflow-hidden">
-                                            <div class="form-group">
-                                                <label class="m-0" for="idCondominioInventario">Condominio</label>
-                                                <select name="idCondominioInventario" id="idCondominioInventario" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
+                                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12" id="selectoresInv">
+                                            <div class="col-md-4 form-group">
+                                                <div class="form-group overflow-hidden">
+                                                    <label class="control-label" for="idResidencial">Proyecto</label>
+                                                    <select id="idResidencial" name="idResidencial" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" size="5" data-container="body" required></select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 form-group">
+                                                <div class="form-group overflow-hidden">
+                                                    <label class="control-label" for="idCondominioInventario">Condominio</label>
+                                                    <select name="idCondominioInventario" id="idCondominioInventario" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 form-group">
+                                                <div class="form-group overflow-hidden">
+                                                    <label class="control-label" for="idEstatus">Estatus</label>
+                                                    <select name="idEstatus" id="idEstatus" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-4 form-group overflow-hidden">
-                                            <div class="form-group">
-                                                <label class="m-0" for="idEstatus">Estatus</label>
-                                                <select name="idEstatus" id="idEstatus" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 hide" id="selectoresDescInv">
+                                            <div class="col-md-4 form-group">
+                                                <div class="form-group select-is-empty">
+                                                    <label class="control-label">Sedes por proyecto</label>
+                                                    <select name="sedes" id="sedes" class="selectpicker select-gral m-0"
+                                                            data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN"
+                                                            data-size="7" data-live-search="true" required>
+                                                    </select>
+
+                                <?php
+                                if (in_array($this->session->userdata('id_rol'), array(70, 71, 73, 17))) {
+                                ?>
+                                    <form method="POST">
+                                        <div class="toolbar">
+                                            <div class="row">
+                                                <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                                    <div class="radio_container w-100">
+                                                        <input class="d-none" type="radio" name="opcion" value="opcion1" id="one" onchange="this.form.submit()">
+                                                        <label for="one" class="w-50">Inventario lotes</label>
+                                                        <input class="d-none" type="radio" name="opcion" value="opcion2" id="two" onchange="this.form.submit()">
+                                                        <label for="two" class="w-50">Descargar</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                    <?php
+                                    if (isset($_POST['opcion'])) {
+                                        $opcion = $_POST['opcion'];
+
+                                        if ($opcion === "opcion1") {
+                                    ?>
+                                            <script>
+                                                document.getElementById("one").checked = true;
+                                            </script>
+                                            <div class="toolbar">
+                                                <div class="row">
+                                                    <div class="col-md-4 form-group">
+                                                        <div class="form-group overflow-hidden">
+                                                            <label class="control-label" for="idResidencial">Proyecto</label>
+                                                            <select id="idResidencial" name="idResidencial" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" size="5" data-container="body" required></select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 form-group">
+                                                        <div class="form-group overflow-hidden">
+                                                            <label class="control-label" for="idCondominioInventario">Condominio</label>
+                                                            <select name="idCondominioInventario" id="idCondominioInventario" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 form-group">
+                                                        <div class="form-group overflow-hidden">
+                                                            <label class="control-label" for="idEstatus">Estatus</label>
+                                                            <select name="idEstatus" id="idEstatus" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        <?php
+                                        } else if ($opcion === "opcion2") {
+                                        ?>
+                                            <script>
+                                                document.getElementById("two").checked = true;
+                                            </script>
+                                            <div class="toolbar" id="contenido">
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                        <div class="col-md-4 form-group">
+                                                            <div class="form-group select-is-empty">
+                                                                <label class="control-label">Sedes por proyecto</label>
+                                                                <select name="sedes" id="sedes" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" required>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                    <?php
+                                        }
+                                    }
+                                    ?>
+
+                                <?php
+                                } else {
+                                ?>
+
+                                    <div class="toolbar">
+                                        <div class="row">
+                                            <div class="col-md-4 form-group">
+                                                <div class="form-group overflow-hidden">
+                                                    <label class="control-label" for="idResidencial">Proyecto</label>
+                                                    <select id="idResidencial" name="idResidencial" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" size="5" data-container="body" required></select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 form-group">
+                                                <div class="form-group overflow-hidden">
+                                                    <label class="control-label" for="idCondominioInventario">Condominio</label>
+                                                    <select name="idCondominioInventario" id="idCondominioInventario" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 form-group">
+                                                <div class="form-group overflow-hidden">
+                                                    <label class="control-label" for="idEstatus">Estatus</label>
+                                                    <select name="idEstatus" id="idEstatus" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                <?php
+                                }
+                                ?>
+
+
                                 <div class="material-datatables">
                                     <table class="table-striped table-hover hide" id="tablaInventario" name="tablaInventario">
                                         <thead>
@@ -216,10 +347,9 @@
                 </div>
             </div>
         </div>
-        <?php $this->load->view('template/footer_legend');?>
+        <?php $this->load->view('template/footer_legend'); ?>
     </div>
-    <!--main-panel close-->
-    <?php $this->load->view('template/footer');?>
-    <script src="<?= base_url() ?>dist/js/controllers/contratacion/datos_lote_contratacion.js"></script>
+    <?php $this->load->view('template/footer'); ?>
+    <script src="<?= base_url() ?>dist/js/controllers/contratacion/datos_lote_contratacion.js?=v.4.4.4"></script>
     <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
 </body>
