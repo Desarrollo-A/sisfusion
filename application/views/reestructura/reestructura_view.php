@@ -25,26 +25,6 @@
 			</div>
 		</div>
 
-        <div class="modal fade" id="liberarReestructura" data-backdrop="static" data-keyboard="false">
-			<div class="modal-dialog">
-				<div class="modal-content" > 
-					<div class="modal-body">
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
-                            <h4>¿Estás seguro de liberar el lote?</h4>
-                        </div>
-                        <br>
-                        <input type="hidden" name="idLote" id="idLoteenvARevCE" >
-                        <input type="hidden" name="nombreLote" id="nombreLoteAv" >
-                        <input type="hidden" name="precio" id="precioAv" >        
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-						<button type="button" id="saveLi" name="saveLi" class="btn btn-primary">Aceptar</button>
-					</div>
-				</div>
-			</div>
-		</div>
-
         <div class="modal fade" id="catalogoRee" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog">
 				<div class="modal-content" > 
@@ -150,64 +130,6 @@
 			</div>
 		</div>
 
-        <div class="modal fade" id="aceptarReestructura" data-backdrop="static" data-keyboard="false">
-			<div class="modal-dialog">
-				<div class="modal-content" > 
-					<div class="modal-header">
-						<h4 class="modal-title text-center">Validar lote para reestructura</h4>
-					</div>
-					<div class="modal-body">
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                <label>ESTATUS</label>
-                                <select name="grabado" id="grabado" class="selectpicker select-gral m-0 grabado" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
-                            </div>
-                        </div>
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1">
-                            <label>COMENTARIO</label>
-                            <textarea class="text-modal" id="comentario2" rows="3"></textarea>
-                        </div>
-                        <br>
-                        <input type="hidden" name="idLoteCatalogo" id="idLoteCatalogo" >
-					</div>
-					<div class="modal-footer">
-						<button type="button" id="cancelarValidacion" class="btn btn-danger btn-simple cancelarValidacion" data-dismiss="modal">Cancelar</button>
-						<button type="button" id="guardarValidacion" name="guardarValidacion" class="btn btn-primary guardarValidacion">Registrar</button>
-					</div>
-				</div>
-			</div>
-		</div>        
-
-        <div class="modal fade" id="modal_historial" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-						<h4 class="modal-title text-center">HISTORIAL MOVIMIENTOS</h4>
-					</div>
-                    <div class="modal-body">
-                        <div role="tabpanel">
-                            <div class="tab-content">
-                                <div role="tabpanel" class="tab-pane active" id="historialTap">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="card card-plain">
-                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
-                                                    <ul class="timeline-3" id="historialLine"></ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" ><b>Cerrar</b></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -300,6 +222,7 @@
     </div>
 </body>
 <?php $this->load->view('template/footer'); ?>
+<script src="<?=base_url()?>dist/js/core/modal-general.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/reestructura/reestructura.js"></script>
 <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
 <script>

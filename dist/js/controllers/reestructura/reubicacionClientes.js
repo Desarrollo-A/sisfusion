@@ -349,42 +349,22 @@ $(document).on('click', '.btn-asignar-propuestas', function () {
 });
 
 $(document).on('click', '.infoUser', function (){
-    $('#idCliente').val($(this).attr('data-idCliente'));
-    $('#idLote').val($(this).attr('data-idLote'));
     $('#ineCLi').val('');
     $("#estadoCli").empty();
 
-    var idCliente = $("#idCliente").val();
-    var idLote = $("#idLote").val();
+    var idCliente = $(this).attr('data-idCliente');
+    var idLote = $(this).attr('data-idLote');
 
-    $.getJSON("getCliente/" + idCliente + "/" + idLote  , function(data) {
+    $.getJSON("getCliente/" + idCliente + "/" + idLote  , function(cliente) {
         
-        const nombreLote = data.nombre;
-        const apePaterno = data.apellido_paterno;
-        const apeMaterno = data.apellido_materno;
-        const telefono = data.telefono1;
-        const correo = data.correo;
-        const domicilio = data.domicilio_particular;
-        $("#estadoCli").append($('<option selected>').val(data.idEstadoC).text(data.estado_civil));
-        const ocupacion= data.ocupacion;
-        const ine = data.ine;
-
-        $.post("getEstadoCivil", function(data) {
-            var len = data.length;
-            for (var i = 0; i < len; i++) {
-                var id = data[i]['id_opcion'];
-                var name = data[i]['nombre'];
-
-                if(id == data.idEstadoC){
-                    $("#estadoCli").append($('<option selected>').val(id).text(name.toUpperCase()));    
-                }else{
-                    $("#estadoCli").append($('<option>').val(id).text(name.toUpperCase()));
-                }
-            }
-            $("#estadoCli").selectpicker('refresh');
-        }, 'json');
-
-        // $('#clienteConsulta').modal();
+        const nombreLote = cliente.nombre;
+        const apePaterno = cliente.apellido_paterno;
+        const apeMaterno = cliente.apellido_materno;
+        const telefono = cliente.telefono1;
+        const correo = cliente.correo;
+        const domicilio = cliente.domicilio_particular;
+        const ocupacion= cliente.ocupacion;
+        const ine = cliente.ine;
 
         changeSizeModal('modal-md');
         appendBodyModal(`<div class="modal-header">
@@ -437,14 +417,30 @@ $(document).on('click', '.infoUser', function (){
                             <input class="form-control input-gral" name="ocupacionCli" id="ocupacionCli" type="text" value="${ocupacion}" required/>
                         </div>
                     </div>        
-                    <input type="hidden" name="idCliente" id="idCliente">
-                    <input type="hidden" name="idLote" id="idLote">
+                    <input type="hidden" name="idCliente" id="idCliente" value="${idCliente}">
+                    <input type="hidden" name="idLote" id="idLote" value="${idLote}">
                 </div>
                 <div class="modal-footer">
                     <button type="button" id="cancelarValidacion" class="btn btn-danger btn-simple cancelarValidacion" data-dismiss="modal">Cancelar</button>
                     <button type="button" id="guardarCliente" name="guardarCliente" class="btn btn-primary guardarValidacion">GUARDAR</button>
                 </div>`);
         showModal();
+
+        $.post("getEstadoCivil", function(estadoCivil) {
+            var len = estadoCivil.length;
+            for (var i = 0; i < len; i++) {
+                var id = estadoCivil[i]['id_opcion'];
+                var name = estadoCivil[i]['nombre'];
+
+                if(id == cliente.idEstadoC){
+                    $("#estadoCli").append($('<option selected>').val(id).text(name.toUpperCase()));    
+                }else{
+                    $("#estadoCli").append($('<option>').val(id).text(name.toUpperCase()));
+                }
+            }
+            $("#estadoCli").selectpicker('refresh');
+        }, 'json');
+
     }, 'json');
 });
 
@@ -497,6 +493,7 @@ $(document).on('click', '#guardarCliente', function (){
     datos.append("ineCLi", ineCLi);
     datos.append("ocupacionCli", ocupacionCli);
 
+    $("#spiner-loader").removeClass('hide');
     $.ajax({
         method: 'POST',
         url: general_base_url + 'Reestructura/insetarCliente/'+ idLote,
@@ -505,8 +502,9 @@ $(document).on('click', '#guardarCliente', function (){
         contentType: false,
         success: function(data) {
             if (data == 1) {
-            $('#clienteConsulta').modal('hide');
+            hideModal();
             alerts.showNotification("top", "right", "Información capturada con éxito.", "success");
+            $("#spiner-loader").addClass('hide');
             $('#ineCLi').val('');
             $('#telefonoCli').val('');
             $('#correoCli').val('');
@@ -518,6 +516,7 @@ $(document).on('click', '#guardarCliente', function (){
         error: function(){
             $('#aceptarReestructura').modal('hide');
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            $("#spiner-loader").addClass('hide');
         }
     });
 });

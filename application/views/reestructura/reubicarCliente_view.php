@@ -116,7 +116,6 @@
     </div>
 </body>
 <?php $this->load->view('template/footer');?>
-<!--<script src="--><?//=base_url()?><!--dist/js/core/modal-general.js"></script>-->
 <link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
 <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
 <script src="<?=base_url()?>dist/js/core/modal-general.js"></script>

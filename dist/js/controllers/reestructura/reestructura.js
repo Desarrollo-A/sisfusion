@@ -64,16 +64,52 @@ $('#tabla_clientes thead tr:eq(0) th').each(function (i) {
 });
 
 $(document).on('click', '.reesVal', function (){
-    $('#idLoteenvARevCE').val($(this).attr('data-idLote'));
-    $('#nombreLoteAv').val($(this).attr('data-nombreLote'));
-    $('#precioAv').val($(this).attr('data-precio'));
-    $('#liberarReestructura').modal();
+    const idLoteReave = $(this).attr('data-idLote');
+    const nombreLote = $(this).attr('data-nombreLote');
+    const precioAv = $(this).attr('data-precio');
+
+    changeSizeModal('modal-md');
+        appendBodyModal(`<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
+                        <h4>¿Estás seguro de liberar el lote?</h4>
+                    </div>
+                    <br>
+                    <input type="hidden" name="idLote" id="idLoteenvARevCE" value="${idLoteReave}" >
+                    <input type="hidden" name="nombreLote" id="nombreLoteAv" value="${nombreLote}" >
+                    <input type="hidden" name="precio" id="precioAv" value="${precioAv}" >        
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="button" id="saveLi" name="saveLi" class="btn btn-primary">Aceptar</button>
+                </div>`);
+        showModal();
 });
 
 $(document).on('click', '.stat5Rev', function () {
-    document.getElementById("idLoteCatalogo").value = "";
-    document.getElementById("comentario2").value = "";
+    document.getElementById("idLoteCatalogo");
+    document.getElementById("comentario2");
     $("#grabado").empty();
+
+    changeSizeModal('modal-md');
+        appendBodyModal(`<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
+                        <h4 class="modal-title text-center">Validar lote para reestructura</h4>
+                    </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <label>ESTATUS</label>
+                                <select name="grabado" id="grabado" class="selectpicker select-gral m-0 grabado" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1">
+                            <label>COMENTARIO</label>
+                            <textarea class="text-modal" id="comentario2" rows="3"></textarea>
+                        </div>
+                        <br>
+                        <input type="hidden" name="idLoteCatalogo" id="idLoteCatalogo" >
+                    <div class="modal-footer">
+                        <button type="button" id="cancelarValidacion" class="btn btn-danger btn-simple cancelarValidacion" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="guardarValidacion" name="guardarValidacion" class="btn btn-primary guardarValidacion">Registrar</button>
+                    </div>`);
+        showModal();
 
     $.post(general_base_url + "Reestructura/lista_catalogo_opciones", function (data) {
         var len = data.length;
@@ -88,7 +124,6 @@ $(document).on('click', '.stat5Rev', function () {
 
     $('#idLoteCatalogo').val($(this).attr('data-idLote'));
     $('#grabado').val('').trigger('change');
-    $('#aceptarReestructura').modal();
 });
 
 $(document).on('click', '.guardarValidacion', function(){
@@ -121,7 +156,7 @@ $(document).on('click', '.guardarValidacion', function(){
         success: function(data) {
             if (data == 1) {
             $('#tabla_clientes').DataTable().ajax.reload(null, false);
-            $('#aceptarReestructura').modal('hide');
+            hideModal();
             alerts.showNotification("top", "right", "Información actualizada.", "success");
             $('#idLoteCatalogo').val('');
             $('#grabado').val('');
@@ -130,7 +165,7 @@ $(document).on('click', '.guardarValidacion', function(){
             }
         },
         error: function(){
-            $('#aceptarReestructura').modal('hide');
+            hideModal();
             $("#spiner-loader").addClass('hide');
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
@@ -141,6 +176,32 @@ $(document).on('click', '.reesInfo', function (){
     id_prospecto = $(this).attr("data-idLote");
     $('#historialLine').html('');
     $("#spiner-loader").removeClass('hide');
+
+    changeSizeModal('modal-md');
+        appendBodyModal(`<div class="modal-header">
+                    <h4 class="modal-title text-center">HISTORIAL MOVIMIENTOS</h4>
+                </div>
+                <div class="modal-body">
+                    <div role="tabpanel">
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="historialTap">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="card card-plain">
+                                            <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                                <ul class="timeline-3" id="historialLine"></ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" ><b>Cerrar</b></button>
+                </div>`);
+    showModal();
 
     $.getJSON("getHistorial/" + id_prospecto).done(function(data) {
 
@@ -158,7 +219,7 @@ $(document).on('click', '.reesInfo', function (){
             });
         }
     });
-    $('#modal_historial').modal();
+    // $('#modal_historial').modal();
 });
 
 $(document).on('click', '#saveLi', function(){
@@ -181,17 +242,17 @@ $(document).on('click', '#saveLi', function(){
         contentType: false,
         success: function(data) {
             if (data == 1) {
-            $('#tabla_clientes').DataTable().ajax.reload(null, false);
-            $('#liberarReestructura').modal('hide');
-            alerts.showNotification("top", "right", "Lote liberado.", "success");
-            $("#spiner-loader").addClass('hide');
-            $('#idLoteenvARevCE').val('');
-            $('#nombreLoteAv').val('');
-            $('#precioAv').val('');
+                $('#tabla_clientes').DataTable().ajax.reload(null, false);
+                hideModal();
+                alerts.showNotification("top", "right", "Lote liberado.", "success");
+                $("#spiner-loader").addClass('hide');
+                $('#idLoteenvARevCE').val('');
+                $('#nombreLoteAv').val('');
+                $('#precioAv').val('');
             }
         },
         error: function(){
-            $('#liberarReestructura').modal('hide');
+            hideModal();
             $("#spiner-loader").addClass('hide');
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
