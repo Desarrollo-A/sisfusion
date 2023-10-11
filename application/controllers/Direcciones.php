@@ -42,6 +42,26 @@ class Direcciones extends CI_Controller{
             echo json_encode(array());
         }      
     }
+
+    public function getOnlyHoraInicial()
+    {
+        $data = $this->Direcciones_model->getTimeInfo()->result_array();
+        if ($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }      
+    }
+
+    public function getOnlyHoraFinal()
+    {
+        $data = $this->Direcciones_model->getLastTimeInfo()->result_array();
+        if ($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }      
+    }
     
     public function getDireccionesAll()
     {

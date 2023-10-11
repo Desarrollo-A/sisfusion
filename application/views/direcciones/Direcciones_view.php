@@ -45,28 +45,28 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label class="control-label">DIRECCIÓN(<span class="text-danger">*</span>)</label>
+                                    <label class="control-label">Dirección(<span class="text-danger">*</span>)</label>
                                     <input id="direccion" name="direccion" type="text" class="form-control input-gral" required>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group ">
-                                    <label class="control-label">ESTADO(<span class="text-danger">*</span>)</label>
-                                    <select class="selectpicker select-gral" name="id_sede" id="id_sede" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" required></select>
+                                    <label class="control-label">Estado(<span class="text-danger">*</span>)</label>
+                                    <select class="selectpicker select-gral m-0" name="id_sede" id="id_sede" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" required></select>
                                 </div>
                             </div>
                         </div>
                         <div class="row d-flex justify-center"> 
                             <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="control-label">HORA INICIAL(<span class="text-danger">*</span>)</label>
-                                    <input id="hora_inicio" name="hora_inicio" type="number" class="form-control input-gral" required>
+                                 <div class="form-group">
+                                    <label class="control-label">Hora Inicial(<span class="text-danger">*</span>)</label>
+                                    <select class="selectpicker select-gral m-0" id="horaIni" title="SELECCIONA UNA HORA"></select>    
                                 </div>
                             </div>
                             <div class="col-sm-6">
                             <div class="form-group">
-                                <label class="control-label">HORA FINAL(<span class="text-danger">*</span>)</label>
-                                <input id="hora_fin" name="hora_fin" type="number" class="form-control input-gral" required>
+                                <label class="control-label">Hora Final(<span class="text-danger">*</span>)</label>
+                                <select class="selectpicker select-gral m-0" id="hora_final_hr" title="SELECCIONA UNA HORA"></select>                            
                             </div>
                         </div>
                         </div>
@@ -104,11 +104,11 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label class="control-label">HORA INICIAL(<span class="text-danger">*</span>)</label>
-                            <input id="hora_inicioM" name="hora_inicioM" type="number" class="form-control input-gral" required>
-                        </div>
+                <div class="col-sm-6">
+                         <div class="form-group">
+                            <label class="control-label" for="hora_inicio_hr">Hora Inicial(<span class="text-danger">*</span>)</label>
+                           <select class="selectpicker select-gral m-0" id="hora_inicio_hr" title="SELECCIONA UNA HORA"></select>    
+                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
@@ -143,7 +143,7 @@
                                             <th>ID DIRECCIÓN</th>
                                             <th>DIRECCIÓN</th>
                                             <th>ESTADO</th>
-                                            <th>HORA INICIO</th>
+                                            <th>HORA INICIAL </th>
                                             <th>HORA FINAL</th>
                                             <th>ESTATUS</th>
                                             <th>ACCIONES</th>

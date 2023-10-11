@@ -87,7 +87,7 @@ $(document).on("click", "#editar-direccion-information", function () {
     $("#id_sedeEdit").val($(this).attr("data-id_sede"));
     $("#direccionM").val($(this).attr("data-direccion"));
     $("#id_direccion").val($(this).attr("data-id_direccion"));
-    $("#hora_inicioM").val($(this).attr("data-hora_inicio"));
+    $("#hora_inicio_hr").val($(this).attr("data-hora_inicio"));
     $("#hora_finM").val($(this).attr("data-hora_fin"));
 
     $.ajax({
@@ -102,19 +102,44 @@ $(document).on("click", "#editar-direccion-information", function () {
             }
 
             $('#id_sedeEdit').selectpicker('refresh');
-            $('#spiner-loader').addClass('hide');
             $("#openModalDirecciones").modal();
+            $('#spiner-loader').addClass('hide');
+        }
+      });
+
+      $.ajax({
+        url: `${general_base_url}Direcciones/getOnlyHoraInicial`,
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            for (let i = 0; i < data.length; i++) {
+                const id_direccion = data[i].id_direccion;
+                const hora_inicio = data[i].hora_inicio;
+                $('#hora_inicio_hr').append($('<option selected>').val(id_direccion).text(hora_inicio));
+            }
+
+            $('#hora_inicio_hr').selectpicker('refresh');
+            $("#openModalDirecciones").modal();
+            $('#spiner-loader').addClass('hide');
         }
       });
 });
+
+
 
 $(document).on("click", "#editDirecciones", function () {
 
     var id_sedeEdit = $("#id_sedeEdit").val();
     var direccion = $("#direccionM").val();
     var id_direccion = $("#id_direccion").val();
-    var hora_inicio = $("#hora_inicioM").val();
+    var hora_inicio = $("#hora_inicio_hr").val();
+    console.log(hora_inicio);
     var hora_fin = $("#hora_finM").val();
+    
+
+    // console.log("s",hora_inicio);
+    
+    
     
     var datos = new FormData();
     $("#spiner-loader").removeClass("hide");
@@ -127,8 +152,6 @@ $(document).on("click", "#editDirecciones", function () {
       return;
     }
 
-    
-  
     datos.append("id_sedeEdit", id_sedeEdit);
     datos.append("direccion", direccion);
     datos.append("id_direccion", id_direccion);
@@ -168,12 +191,31 @@ function openModal(){
     $("#OpenModalAdd").modal();
 }
 
+
+function generarOpciones(selectElement) {
+  for (var j = 0; j < 2; j++) {
+    var amPm = (j === 0) ? "AM" : "PM";
+    for (var i = 1; i <= 12; i++) {
+      var hora = (i < 10) ? "0" + i : i;
+      var option = new Option(hora + ":00 " + amPm, hora + " " + amPm);
+      selectElement.appendChild(option);
+    }
+  }
+}
+
+ var selectHoras = document.getElementById("horaIni");
+ var selectHoras2 = document.getElementById("hora_final_hr");
+  
+ generarOpciones(selectHoras);
+ generarOpciones(selectHoras2);
+
 $(document).on('click', '#guardarDireccion', function(){
-    var hora_inicio = $("#hora_inicio").val();
-    var hora_fin = $("#hora_fin").val();
+
+    var hora_inicio = $("#horaIni").val();
+    var hora_fin = $("#hora_final_hr").val();
     var direccionInfo = $("#direccion").val(); 
     var id_sede = $("#id_sede").val();
-   
+
     var datos = new FormData();
     $("#spiner-loader").removeClass('hide');
   

@@ -13,8 +13,16 @@
         return $this->db->query("SELECT id_sede, nombre as estado FROM sedes");
     }
 
+    public function getTimeInfo(){
+        return $this->db->query("SELECT top 1 id_direccion, hora_inicio FROM direcciones");
+    }
+
+    public function getLastTimeInfo(){
+        return $this->db->query("SELECT id_direccion, hora_inicio FROM direcciones");
+    }
+
     public function insertarCampo($datos){    
-        return $this->db->query("INSERT INTO direcciones VALUES (".$datos['id_sede'].",'".$datos['direccion']."',1,".$datos['hora_inicio'].",".$datos['hora_fin'].",1,GETDATE(),1)");
+        return $this->db->query("INSERT INTO direcciones VALUES (".$datos['id_sede'].",'".$datos['direccion']."',1,'".$datos['hora_inicio']."','".$datos['hora_fin']."',1,GETDATE(),1)");
     }
    
     public function editarDireccion($datos){
