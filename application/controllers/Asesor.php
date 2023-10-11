@@ -4964,5 +4964,85 @@ class Asesor extends CI_Controller {
         else
             echo json_encode(array());
     }
+
+    function getSedesProspectos()
+    {
+        echo json_encode($this->Clientes_model->getSedesProspectos()->result_array());
+    }
+
+    function getAsesor($sede)
+    {
+        echo json_encode($this->Clientes_model->getAsesor($sede)->result_array());
+    }
+
+    function getCoordinador($sede)
+    {
+        echo json_encode($this->Clientes_model->getCoordinador($sede)->result_array());
+    }
+
+    function getGerentes($sede)
+    {
+        echo json_encode($this->Clientes_model->getGerentes($sede)->result_array());
+    }
+
+    function getSubdirector($sede)
+    {
+        echo json_encode($this->Clientes_model->getSubdirector($sede)->result_array());
+    }
+
+    function getDirectorRegional($sede)
+    {
+        echo json_encode($this->Clientes_model->getDirectorRegional($sede)->result_array());
+    }
+
+    function updateProspecto1(){
+        $asesor=$this->input->post('asesor');
+        $coordinador=$this->input->post('coordinador');
+        $gerente=$this->input->post('gerente');
+        $subdirector=$this->input->post('subdirector');
+        $id_prospecto=$this->input->post('id_prospecto'); 
+
+        $dataToUpdate = array("id_asesor"=> $asesor, "id_coordinador"=> $coordinador, "id_gerente"=> $gerente, "id_subdirector"=> $subdirector,
+         "modificado_por" => $this->session->userdata('id_usuario'));
+        $responseUpdate = $this->General_model->updateRecord("prospectos", $dataToUpdate, "id_prospecto", $id_prospecto);
+
+            $data['message'] = 'OK';
+            echo json_encode($data);
+    }
+
+    function updateProspecto2(){
+        $asesor=$this->input->post('asesor');
+        $coordinador=$this->input->post('coordinador');
+        $gerente=$this->input->post('gerente');
+        $subdirector=$this->input->post('subdirector');
+        $DireRegional=$this->input->post('DireRegional');
+        $DireRegional2=$this->input->post('DireRegional2');
+        $id_prospecto=$this->input->post('id_prospecto'); 
+        $id_usuario = $this->session->userdata('id_usuario');
+
+        $dataToUpdate = array("id_asesor"=> $asesor, "id_coordinador"=> $coordinador, "id_gerente"=> $gerente, "id_subdirector"=> $subdirector, 
+        "id_regional"=> $DireRegional, "id_regional_2"=> $DireRegional2, "modificado_por" => $this->session->userdata('id_usuario'));
+        $responseUpdate = $this->General_model->updateRecord("prospectos", $dataToUpdate, "id_prospecto", $id_prospecto);
+
+            $data['message'] = 'OK';
+            echo json_encode($data);
+    }
+
+    function updateProspecto3(){
+        $asesor=$this->input->post('asesor');
+        $coordinador=$this->input->post('coordinador');
+        $gerente=$this->input->post('gerente');
+        $subdirector=$this->input->post('subdirector');
+        $DireRegional=$this->input->post('DireRegional');
+        $id_prospecto=$this->input->post('id_prospecto'); 
+        $id_usuario = $this->session->userdata('id_usuario');
+
+        $dataToUpdate = array("id_asesor"=> $asesor, "id_coordinador"=> $coordinador, "id_gerente"=> $gerente, "id_subdirector"=> $subdirector,
+        "id_regional"=> $DireRegional, "modificado_por" => $this->session->userdata('id_usuario'));
+        $responseUpdate = $this->General_model->updateRecord("prospectos", $dataToUpdate, "id_prospecto", $id_prospecto);
+
+            $data['message'] = 'OK';
+            echo json_encode($data);
+    }
 }
 ?>

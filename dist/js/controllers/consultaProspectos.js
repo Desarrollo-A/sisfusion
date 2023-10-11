@@ -4,7 +4,118 @@ $(document).ready(function() {
     $('.datepicker').datetimepicker({locale: 'es'});
     setInitialValues();
     getStatusRecordatorio();
+
+    $.post(`${general_base_url}Asesor/getSedesProspectos`, function (data) {
+        for (var i = 0; i < data.length; i++) {
+          $("#sede").append($('<option>').val(data[i]['id_sede']).text(data[i]['nombre']));
+        }
+        $("#sede").selectpicker('refresh');
+    }, 'json');
+
 });
+
+$("#close").click(function () {
+    $("#sedeForm").removeClass("hide");
+    $("#form-Asesor").addClass("hide");
+    $("#form-Coor").addClass("hide");
+    $("#form-Gere").addClass("hide");
+    $("#form-Sub").addClass("hide");
+    $("#form-Dr").addClass("hide");
+    $("#form-Dr2").addClass("hide");
+    $("#con1").addClass("hide");
+    $("#con2").addClass("hide");
+    $("#con3").addClass("hide");
+
+});
+
+function changeSede() {
+    var idSede = $("#sede").val();
+
+    $("#sedeForm").removeClass("hide");
+    $("#form-Asesor").addClass("hide");
+    $("#form-Coor").addClass("hide");
+    $("#form-Gere").addClass("hide");
+    $("#form-Sub").addClass("hide");
+    $("#form-Dr").addClass("hide");
+    $("#form-Dr2").addClass("hide");
+    $("#con1").addClass("hide");
+    $("#con2").addClass("hide");
+    $("#con3").addClass("hide");
+    
+    $.post(`${general_base_url}Asesor/getAsesor/` +idSede, function (data) {
+        for (var i = 0; i < data.length; i++) {
+          $("#asesor").append($('<option>').val(data[i]['id_usuario']).text(data[i]['nombre']));
+        }
+        $("#asesor").selectpicker('refresh');
+    }, 'json');
+
+    $.post(`${general_base_url}Asesor/getCoordinador/` +idSede, function (data) {
+        for (var i = 0; i < data.length; i++) {
+          $("#coordinador").append($('<option>').val(data[i]['id_usuario']).text(data[i]['nombre']));
+        }
+        $("#coordinador").selectpicker('refresh');
+    }, 'json');
+
+    $.post(`${general_base_url}Asesor/getGerentes/` +idSede, function (data) {
+        for (var i = 0; i < data.length; i++) {
+          $("#gerente").append($('<option>').val(data[i]['id_usuario']).text(data[i]['nombre']));
+        }
+        $("#gerente").selectpicker('refresh');
+    }, 'json');
+
+    $.post(`${general_base_url}Asesor/getSubdirector/` +idSede, function (data) {
+        for (var i = 0; i < data.length; i++) {
+          $("#subdirector").append($('<option>').val(data[i]['id_usuario']).text(data[i]['nombre']));
+        }
+        $("#subdirector").selectpicker('refresh');
+    }, 'json');
+
+    $.post(`${general_base_url}Asesor/getDirectorRegional/` +idSede, function (data) {
+        for (var i = 0; i < data.length; i++) {
+          $("#DireRegional").append($('<option>').val(data[i]['id_usuario']).text(data[i]['nombre']));
+        }
+        $("#DireRegional").selectpicker('refresh');
+    }, 'json');
+
+    $.post(`${general_base_url}Asesor/getDirectorRegional/` +idSede, function (data) {
+        for (var i = 0; i < data.length; i++) {
+          $("#DireRegional2").append($('<option>').val(data[i]['id_usuario']).text(data[i]['nombre']));
+        }
+        $("#DireRegional2").selectpicker('refresh');
+    }, 'json');
+
+    if(idSede == 2 || idSede == 5 || idSede == 6 || idSede == 3){
+        $("#sedeForm").addClass("hide");
+        $("#form-Asesor").removeClass("hide");
+        $("#form-Coor").removeClass("hide");
+        $("#form-Gere").removeClass("hide");
+        $("#form-Sub").removeClass("hide");
+        $("#con1").removeClass("hide");
+        $("#con2").addClass("hide");
+        $("#con3").addClass("hide");
+    }else if(idSede == 13 || idSede == 14){
+        $("#sedeForm").addClass("hide");
+        $("#form-Asesor").removeClass("hide");
+        $("#form-Coor").removeClass("hide");
+        $("#form-Gere").removeClass("hide");
+        $("#form-Sub").removeClass("hide");
+        $("#form-Dr").removeClass("hide");
+        $("#form-Dr2").removeClass("hide");
+        $("#con1").addClass("hide");
+        $("#con2").removeClass("hide");
+        $("#con3").addClass("hide");
+    }else{
+        $("#sedeForm").addClass("hide");
+        $("#form-Asesor").removeClass("hide");
+        $("#form-Coor").removeClass("hide");
+        $("#form-Gere").removeClass("hide");
+        $("#form-Sub").removeClass("hide");
+        $("#form-Dr").removeClass("hide");
+        $("#con1").addClass("hide");
+        $("#con2").addClass("hide");
+        $("#con3").removeClass("hide");
+    }
+};
 
 let titulosListadoProspectos = [];
 
@@ -1074,19 +1185,183 @@ $(document).on('click', '.see-information', function(e) {
 });
 
 $(document).on('click', '.re-asign', function(e) {
-    id_prospecto = $(this).attr("data-id-prospecto");
-    if (id_rol_general == 3 || id_rol_general == 6) {
-        $("#myReAsignModalVentas").modal();
-        getManagers();
-        $("#id_prospecto_re_asign_ve").val(id_prospecto);
-    } else if (id_rol_general == 19) {
-        $("#myReAsignModalSubMktd").modal();
-        $("#id_prospecto_re_asign_sm").val(id_prospecto);
-    } else if (id_rol_general == 20) {
-        $("#myReAsignModalGerMktd").modal();
-        $("#id_prospecto_re_asign_gm").val(id_prospecto);
-    }
+    var id_prospecto = $(this).attr("data-id-prospecto");
+    $("#id_prospecto").val(id_prospecto)
+    $("#myReAsignModal").modal();
 });
+
+$(document).on("click", "#con1", function (e) {
+    e.preventDefault();
+
+    let asesor  = $("#asesor").val();
+    let coordinador  = $("#coordinador").val();
+    let gerente  = $("#gerente").val();
+    let subdirector  = $("#subdirector").val();
+    let id_prospecto =  $("#id_prospecto").val();
+
+    var dataExp = new FormData();
+  
+    dataExp.append("asesor", asesor);
+    dataExp.append("coordinador", coordinador);
+    dataExp.append("gerente", gerente);
+    dataExp.append("subdirector", subdirector);
+    dataExp.append("id_prospecto", id_prospecto);
+   
+    $("#spiner-loader").removeClass("hide");
+    $("#con1").prop("disabled", true);
+    $.ajax({
+      url: `${general_base_url}Asesor/updateProspecto1`,
+      data: dataExp,
+      cache: false,
+      contentType: false,
+      processData: false,
+      type: "POST",
+      success: function (data) {
+        response = JSON.parse(data);
+        if (response.message == "OK") {
+          $("#con1").prop("disabled", false);
+          $("#myReAsignModal").modal("hide");
+          $("#prospects-datatable").DataTable().ajax.reload();
+          alerts.showNotification(
+            "top",
+            "right",
+            "Abono Registrado",
+            "success"
+          );
+          $("#spiner-loader").addClass("hide");
+        }
+      },
+      error: function (data) {
+        $("#con1").prop("disabled", false);
+        $("#myReAsignModal").modal("hide");
+        $("#prospects-datatable").DataTable().ajax.reload();
+        alerts.showNotification(
+          "top",
+          "right",
+          "Error al enviar la solicitud.",
+          "danger"
+        );
+        $("#spiner-loader").addClass("hide");
+      },
+    });
+  });
+
+  $(document).on("click", "#con2", function (e) {
+    
+    let asesor  = $("#asesor").val();
+    let coordinador  = $("#coordinador").val();
+    let gerente  = $("#gerente").val();
+    let subdirector  = $("#subdirector").val();
+    let DireRegional  = $("#DireRegional").val();
+    let DireRegional2  = $("#DireRegional2").val();
+    let id_prospecto =  $("#id_prospecto").val();
+    
+    var dataExp2 = new FormData();
+  
+    dataExp2.append("asesor", asesor);
+    dataExp2.append("coordinador", coordinador);
+    dataExp2.append("gerente", gerente);
+    dataExp2.append("subdirector", subdirector);
+    dataExp2.append("DireRegional", DireRegional);
+    dataExp2.append("DireRegional2", DireRegional2);
+    dataExp2.append("id_prospecto", id_prospecto);
+   
+    $("#spiner-loader").removeClass("hide");
+    $("#con2").prop("disabled", true);
+    $.ajax({
+      url: `${general_base_url}Asesor/updateProspecto2`,
+      data: dataExp2,
+      cache: false,
+      contentType: false,
+      processData: false,
+      type: "POST",
+      success: function (data) {
+        response = JSON.parse(data);
+        if (response.message == "OK") {
+          $("#con2").prop("disabled", false);
+          $("#myReAsignModal").modal("hide");
+          $("#prospects-datatable").DataTable().ajax.reload();
+          alerts.showNotification(
+            "top",
+            "right",
+            "Abono Registrado",
+            "success"
+          );
+          $("#spiner-loader").addClass("hide");
+        }
+      },
+      error: function (data) {
+        $("#con2").prop("disabled", false);
+        $("#myReAsignModal").modal("hide");
+        $("#prospects-datatable").DataTable().ajax.reload();
+        alerts.showNotification(
+          "top",
+          "right",
+          "Error al enviar la solicitud.",
+          "danger"
+        );
+        $("#spiner-loader").addClass("hide");
+      },
+    });
+  });
+
+  $(document).on("click", "#con3", function (e) {
+    e.preventDefault();
+
+    let asesor  = $("#asesor").val();
+    let coordinador  = $("#coordinador").val();
+    let gerente  = $("#gerente").val();
+    let subdirector  = $("#subdirector").val();
+    let DireRegional  = $("#DireRegional").val();
+    let id_prospecto =  $("#id_prospecto").val();
+    
+    var dataExp3 = new FormData();
+  
+    dataExp3.append("asesor", asesor);
+    dataExp3.append("coordinador", coordinador);
+    dataExp3.append("gerente", gerente);
+    dataExp3.append("subdirector", subdirector);
+    dataExp3.append("DireRegional", DireRegional);
+    dataExp3.append("id_prospecto", id_prospecto);
+   
+    $("#spiner-loader").removeClass("hide");
+    $("#con3").prop("disabled", true);
+    $.ajax({
+      url: `${general_base_url}Asesor/updateProspecto3`,
+      data: dataExp3,
+      cache: false,
+      contentType: false,
+      processData: false,
+      type: "POST",
+      success: function (data) {
+        response = JSON.parse(data);
+        if (response.message == "OK") {
+          $("#con3").prop("disabled", false);
+          $("#myReAsignModal").modal("hide");
+          $("#prospects-datatable").DataTable().ajax.reload();
+          alerts.showNotification(
+            "top",
+            "right",
+            "Abono Registrado",
+            "success"
+          );
+          $("#spiner-loader").addClass("hide");
+        }
+      },
+      error: function (data) {
+        $("#con3").prop("disabled", false);
+        $("#myReAsignModal").modal("hide");
+        $("#prospects-datatable").DataTable().ajax.reload();
+        alerts.showNotification(
+          "top",
+          "right",
+          "Error al enviar la solicitud.",
+          "danger"
+        );
+        $("#spiner-loader").addClass("hide");
+      },
+    });
+  });
 
 $(document).on('click', '.update-status', function(e) {
     id_prospecto = $(this).attr("data-id-prospecto");

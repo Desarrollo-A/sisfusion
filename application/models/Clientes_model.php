@@ -4379,4 +4379,37 @@ function getStatusMktdPreventa(){
 
         $this->db->query("UPDATE prospectos SET $set WHERE id_asesor = $idOwner AND becameClient IS NULL");
     }
+
+    function getSedesProspectos(){
+        return $this->db->query("SELECT id_sede, nombre FROM sedes ORDER BY nombre");
+    }
+
+    function getAsesor($sede){
+        return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', ISNULL(apellido_materno, '')) nombre, id_sede FROM usuarios WHERE 
+                                id_rol = 7 AND id_sede ='$sede' AND estatus = 1 ORDER BY nombre");
+    }
+
+    function getCoordinador($sede){
+        return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', ISNULL(apellido_materno, '')) nombre, id_sede FROM usuarios WHERE 
+                                id_rol = 9 AND id_sede ='$sede' AND estatus = 1 ORDER BY nombre");
+    }
+
+    function getGerentes($sede){
+        return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', ISNULL(apellido_materno, '')) nombre, id_sede FROM usuarios WHERE 
+                                id_rol = 3 AND id_sede = '$sede' AND estatus = 1 ORDER BY nombre");
+    }
+
+    function getSubdirector($sede){
+        return $this->db->query("SELECT us.id_usuario, rus.idUsuario, CONCAT(nombre, ' ', apellido_paterno, ' ', ISNULL(apellido_materno, '')) nombre, us.id_sede, id_rol 
+		FROM usuarios us INNER JOIN (SELECT DISTINCT(idUsuario) idUsuario FROM roles_x_usuario WHERE idRol = 2) rus ON rus.idUsuario = us.id_usuario
+		WHERE id_rol = 2 AND estatus = 1 ORDER BY nombre");
+    }
+
+    function getDirectorRegional($sede){
+        return $this->db->query("SELECT us.id_usuario, rus.idUsuario, CONCAT(nombre, ' ', apellido_paterno, ' ', ISNULL(apellido_materno, '')) nombre, us.id_sede, id_rol 
+		FROM usuarios us
+		INNER JOIN (SELECT DISTINCT(idUsuario) idUsuario FROM roles_x_usuario WHERE idRol = 59) rus ON rus.idUsuario = us.id_usuario
+		WHERE id_rol = 2 AND estatus = 1 ORDER BY nombre");
+    }
+
 }
