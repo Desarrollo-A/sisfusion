@@ -431,34 +431,6 @@ class Reestructura_model extends CI_Model
         return $query->row();
     }
 
-    public function informacionCartaReubicacionPdf($idClienteNuevo)
-    {
-        $query = $this->db->query("SELECT CONCAT(clN.nombre, ' ', clN.apellido_paterno, ' ', clN.apellido_materno) AS nombreCliente, 
-            loN.nombreLote AS loteNuevo, condN.nombre AS condNuevo, resN.descripcion AS desarrolloNuevo,
-            loA.nombreLote AS loteAnterior, condA.nombre AS condAnterior, resA.descripcion AS desarrolloAnterior
-        FROM clientes clN
-        INNER JOIN lotes loN ON clN.idLote = loN.idLote
-        INNER JOIN condominios condN ON loN.idCondominio = condN.idCondominio
-        INNER JOIN residenciales resN ON condN.idResidencial = resN.idResidencial
-        INNER JOIN clientes clA ON clN.id_cliente_reubicacion_2 = clA.id_cliente
-        INNER JOIN lotes loA ON clA.idLote = loA.idLote
-        INNER JOIN condominios condA ON loA.idCondominio = condA.idCondominio
-        INNER JOIN residenciales resA ON condA.idResidencial = resA.idResidencial
-        WHERE clN.id_cliente = $idClienteNuevo");
-        return $query->row();
-    }
-
-    public function informacionCartaReestructuraPdf($idCliente)
-    {
-        $query = $this->db->query("SELECT CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) AS nombreCliente, 
-            lo.nombreLote AS loteNuevo, cond.nombre AS cond, res.descripcion AS desarrollo
-        FROM clientes cl
-        INNER JOIN lotes lo ON cl.idLote = lo.idLote
-        INNER JOIN condominios cond ON lo.idCondominio = cond.idCondominio
-        INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
-        WHERE cl.id_cliente = $idCliente");
-        return $query->row();
-    }
     public function getLotes($id_proyecto){
         ini_set('memory_limit', -1);
         return $this->db->query("SELECT res.nombreResidencial,con.nombre AS condominio, lot.nombreLote, lot.idLote ,lot.sup AS superficie, lot.precio, CONCAT(cli.nombre,' ',cli.apellido_paterno,' ',cli.apellido_materno) nombreCliente,lot.observacionLiberacion AS observacion 

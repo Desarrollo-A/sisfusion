@@ -177,6 +177,7 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
                 const BTN_INFOCLIENTE =  `<button class="btn-data btn-green infoUser"
                     data-toggle="tooltip" 
                     data-placement="left"
+                    title="INFORMACIÓN CLIENTE"
                     data-idCliente="${d.idCliente}" 
                     data-idLote="${d.idLote}">
                     <i class="fas fa-user-check"></i>
@@ -351,18 +352,35 @@ $(document).on('click', '.btn-asignar-propuestas', function () {
                 <input type="hidden" id="statusPreproceso" name="statusPreproceso" value="${statusPreproceso}">
                 <div class="row mt-2">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
-                        <button type="button" class="btn btn-simple btn-danger" onclick="hideModal();">Cancelar</button>
+                        <button type="button" class="btn btn-simple btn-danger" onclick="cerrarModalPropuestas(${statusPreproceso});">Cancelar</button>
                         ${botonAceptar}
                     </div>
                 </div>
             </div>
         </form>
     `);
+
+    const config = (statusPreproceso == 1)
+        ? { backdrop: 'static', keyboard: false, show: true }
+        : { backdrop: true, keyboard: true, show: true };
+
     showModal();
+    changeOptionsModal(config);
 
     getProyectosAOcupar(idProyecto, superficie, tipoLote);
     getPropuestas(idLoteOriginal, statusPreproceso, idProyecto, superficie, tipoLote);
 });
+
+const cerrarModalPropuestas = (preproceso) => {
+    if (preproceso != 1) {
+        hideModal();
+        return;
+    }
+
+    if (validarLotesRequeridos($('#infoLotesSeleccionados .lotePropuesto').length)) {
+        hideModal();
+    }
+}
 
 $(document).on('click', '.infoUser', function (){
     $('#idCliente').val($(this).attr('data-idCliente'));
@@ -776,10 +794,8 @@ $(document).on("submit", "#formReubicacion", function(e){
 
 $(document).on("submit", "#formAsignarPropuestas", function(e){
     e.preventDefault();
-    const numberLotes = $('#infoLotesSeleccionados .lotePropuesto').length;
 
-    if(numberLotes < 3){
-        alerts.showNotification("top", "right", "Debes seleccionar 3 lotes", "danger");
+    if (!validarLotesRequeridos($('#infoLotesSeleccionados .lotePropuesto').length)) {
         return;
     }
 
@@ -844,8 +860,7 @@ $(document).on('click', '.btn-avanzar', async function () {
     if (tipoTransaccion == 1) {
         const totalP = await totalPropuestas(idLote);
 
-        if (totalP < 3) {
-            alerts.showNotification("top", "right", "Debes seleccionar 3 lotes", "danger");
+        if (!validarLotesRequeridos(totalP)) {
             return;
         }
     }
@@ -907,3 +922,20 @@ $(document).on("submit", "#formAvanzarEstatus", function(e) {
         }
     });
 });
+
+/**
+ * @return {boolean}
+ */
+const validarLotesRequeridos = (numberLotes) => {
+    if (numberLotes === 0) {
+        alerts.showNotification("top", "right", "Debes seleccionar al menos un lote", "danger");
+        return false;
+    }
+
+    if(numberLotes > 3){
+        alerts.showNotification("top", "right", "Debes seleccionar máximo 3 lotes", "danger");
+        return false;
+    }
+
+    return true;
+}
