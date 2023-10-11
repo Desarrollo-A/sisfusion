@@ -716,7 +716,22 @@ class Reestructura extends CI_Controller{
                 $dataCliente = array_merge([$clave =>  0], $dataCliente);
                 continue;
             } else if ($clave == 'id_cliente_reubicacion_2') {
-                $dataCliente = array_merge([$clave =>  $clienteAnterior->id_cliente], $dataCliente);
+                $dataCliente = array_merge([$clave => $clienteAnterior->id_cliente], $dataCliente);
+                continue;
+            } else if ($clave == 'fechaApartado'){
+                $dataCliente = array_merge([$clave => date('Y-m-d H:i:s')], $dataCliente);
+                continue;
+            } else if ($clave == 'fechaVencimiento'){
+                $dataCliente = array_merge([$clave => $this->validateVencimiento() ], $dataCliente);
+                continue;
+            } else if ($clave == 'fecha_creacion'){
+                $dataCliente = array_merge([$clave => date('Y-m-d H:i:s')], $dataCliente);
+                continue;
+            } else if ($clave == 'fecha_modificacion'){
+                $dataCliente = array_merge([$clave => date('Y-m-d H:i:s')], $dataCliente);
+                continue;
+            } else if ($clave == 'creado_por'){
+                $dataCliente = array_merge([$clave => $this->session->userdata('id_usuario')], $dataCliente);
                 continue;
             }
 
@@ -853,6 +868,33 @@ class Reestructura extends CI_Controller{
 
         $resultLote = $this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $loteAOcupar);
         return $resultLote;
+    }
+
+    function validateVencimiento(){
+        //SE OBTIENEN LAS FECHAS PARA EL TIEMPO QUE TIENE PARA CUMPLIR LOS ESTATUS EN CADA FASE EN EL SISTEMA
+        $fechaAccion = date("Y-m-d H:i:s");
+        $hoy_strtotime2 = strtotime($fechaAccion);
+        $sig_fecha_dia2 = date('D', $hoy_strtotime2);
+        $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+        //CALCULAMOS LA FECHA DE VENCIMIENTO
+        $fecha = $fechaAccion;
+
+        $i = 0;
+        $vueltas = in_array($sig_fecha_dia2, array("Sat", "Sun")) || in_array($sig_fecha_feriado2, array("01-01", "06-02", "20-03", "01-05", "16-09", "20-11", "19-11", "25-12")) ? 46 : 45;
+        while ($i <= $vueltas) {
+            $hoy_strtotime = strtotime($fecha);
+            $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+            $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+            $sig_fecha_dia = date('D', $sig_strtotime);
+            $sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+            if (!in_array($sig_fecha_dia, array("Sat", "Sun")) || !in_array($sig_fecha_feriado, array("01-01", "06-02", "20-03", "01-05", "16-09", "20-11", "19-11", "25-12"))) {
+                $fecha = $sig_fecha;
+                $i++;
+            }
+            $fecha = $sig_fecha;
+        }
+        return $fecha;
     }
 
     function moverExpediente(
@@ -1067,90 +1109,6 @@ class Reestructura extends CI_Controller{
         return $resultDs && $resultCop;
     }
 
-    public function imprimirCartaReubicacion($idCliente)
-    {
-        $this->load->library('Pdf');
-        $meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-
-        $info = $this->Reestructura_model->informacionCartaReubicacionPdf($idCliente);
-
-        $html = $this->load->view('pdf/reestructura/carta-reubicacion', [
-            'dia' => date('d'),
-            'mes' => $meses[date('n') - 1],
-            'anio' => date('Y'),
-            'nombreCliente' => $info->nombreCliente,
-            'loteAnterior' => $info->loteAnterior,
-            'condAnterior' => $info->condAnterior,
-            'desarrolloAnterior' => $info->desarrolloAnterior,
-            'loteNuevo' => $info->loteNuevo,
-            'condNuevo' => $info->condNuevo,
-            'desarrolloNuevo' => $info->desarrolloNuevo
-        ], true);
-
-        $pdf = new TCPDF('P', 'mm', 'LETTER', 'UTF-8', false);
-        $pdf->SetCreator(PDF_CREATOR);
-        $pdf->SetTitle('CARTA SOLICITUD REUBICACIÓN');
-        $pdf->SetSubject('CARTA');
-        $pdf->SetKeywords('CRM');
-        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-        $pdf->SetAutoPageBreak(TRUE);
-        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-        $pdf->setPrintHeader(false);
-        $pdf->SetFont('Helvetica', '', 9, '', true);
-        $pdf->SetMargins(30, 15, 30);
-        $pdf->AddPage('P', 'LETTER');
-        $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
-        $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
-        $pdf->getBreakMargin();
-        $pdf->Image('dist/img/ar4c.png', 120, 0, 300, 0, 'PNG', '', '', false, 150, '', false, false, 0, false, false, false);
-        $pdf->setPageMark();
-
-        $pdf->writeHTML($html);
-        ob_end_clean();
-
-        $pdf->Output(utf8_decode("Carta.pdf"));
-    }
-
-    public function imprimirCartaReestructura($idCliente)
-    {
-        $this->load->library('Pdf');
-        $meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-
-        $info = $this->Reestructura_model->informacionCartaReestructuraPdf($idCliente);
-
-        $html = $this->load->view('pdf/reestructura/carta-reestructura', [
-            'dia' => date('d'),
-            'mes' => $meses[date('n') - 1],
-            'anio' => date('Y'),
-            'nombreCliente' => $info->nombreCliente,
-            'lote' => $info->lote,
-            'cond' => $info->cond,
-            'desarrollo' => $info->desarrollo
-        ], true);
-
-        $pdf = new TCPDF('P', 'mm', 'LETTER', 'UTF-8', false);
-        $pdf->SetCreator(PDF_CREATOR);
-        $pdf->SetTitle('CARTA SOLICITUD REESTRUCTURA');
-        $pdf->SetSubject('CARTA');
-        $pdf->SetKeywords('CRM');
-        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-        $pdf->SetAutoPageBreak(TRUE);
-        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-        $pdf->setPrintHeader(false);
-        $pdf->SetFont('Helvetica', '', 9, '', true);
-        $pdf->SetMargins(30, 15, 30);
-        $pdf->AddPage('P', 'LETTER');
-        $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
-        $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
-        $pdf->getBreakMargin();
-        $pdf->Image('dist/img/ar4c.png', 120, 0, 300, 0, 'PNG', '', '', false, 150, '', false, false, 0, false, false, false);
-        $pdf->setPageMark();
-
-        $pdf->writeHTML($html);
-        ob_end_clean();
-
-        $pdf->Output(utf8_decode("Carta.pdf"));
-    }
 	public function cancelarLotes(){
 		$this->load->view('template/header');
         $this->load->view("reestructura/cancelacion_view");
@@ -1527,6 +1485,11 @@ class Reestructura extends CI_Controller{
 
     public function desactivarOtrosLotes($idLoteOriginal){
         $notSelectedLotes = $this->Reestructura_model->getNotSelectedLotes($idLoteOriginal);
+
+        if (count($notSelectedLotes) == 0) {
+            return true;
+        }
+
         $arrayLotes = array();
 
         foreach ($notSelectedLotes as $lote){
