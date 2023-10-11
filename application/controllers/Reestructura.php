@@ -1485,6 +1485,11 @@ class Reestructura extends CI_Controller{
 
     public function desactivarOtrosLotes($idLoteOriginal){
         $notSelectedLotes = $this->Reestructura_model->getNotSelectedLotes($idLoteOriginal);
+
+        if (count($notSelectedLotes) == 0) {
+            return true;
+        }
+
         $arrayLotes = array();
 
         foreach ($notSelectedLotes as $lote){

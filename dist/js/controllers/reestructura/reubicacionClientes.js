@@ -769,15 +769,23 @@ function divLotesSeleccionados(statusPreproceso, nombreLote, superficie, idLote,
 
 $(document).on("submit", "#formReubicacion", function(e){
     e.preventDefault();
-    $('#spiner-loader').removeClass('hide');
+    const existeSeleccion = $(this).serializeArray().find(obj => obj.name === 'idLote');
+
+    if (!existeSeleccion) {
+        alerts.showNotification("top", "right", "Debe seleccionar un lote para la reubicación.", "danger");
+        return;
+    }
+
     let data = new FormData($(this)[0]);
+    $('#spiner-loader').removeClass('hide');
+
     $.ajax({
         url : 'setReubicacion',
         data: data,
         cache: false,
         contentType: false,
         processData: false,
-        type: 'POST', 
+        type: 'POST',
         success: function(data){
             data = JSON.parse(data);
             alerts.showNotification("top", "right", ""+data.message+"", ""+data.color+"");
