@@ -412,13 +412,17 @@ class Usuarios_modelo extends CI_Model
     {
         if ($data != '' && $data != null) {
             $response = $this->db->insert("usuarios", $data);
-            if (!$response) {
-                return $finalAnswer = 0;
-            } else {
-                return $finalAnswer = 1;
-            }
+            $query = $this->db->query("SELECT IDENT_CURRENT('clientes') as lastId")->result_array();
+            $arrayResponse = array(
+              "response" =>   $response,
+              "data_lastInset" => $query
+            );
+            return $query;
         } else {
-            return 0;
+            $arrayResponse = array(
+                "response" =>   0,
+                "data_lastInset" => array()
+            );
         }
     }
 

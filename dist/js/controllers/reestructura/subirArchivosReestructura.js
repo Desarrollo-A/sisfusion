@@ -5,7 +5,7 @@ var id_dxc = 0;
 var editarFile = 0;
 var archivosAborrar = [];
 var acceptFiles = '';
-
+var nombreLote = '';
 $(document).ready(function () {
     $("#archivosReestructura").on("hidden.bs.modal", function () {
         $("#fileElm1").val(null);
@@ -22,7 +22,7 @@ $(document).ready(function () {
 });
 $(document).on('click', '.btn-abrir-modal', function () {
     let idLote = $(this).attr("data-idLote");
-    let nombreLote = $(this).attr("data-nombreLote");
+    nombreLote = $(this).attr("data-nombreLote");
     let contenedorTitulo = $('#tituloLote');
     let tipotransaccion = $(this).attr("data-tipotransaccion");
     rescisionArchivo = $(this).attr("data-rescision");
@@ -79,6 +79,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote) {
             </div>
         </div>`;
     arrayKeysArchivos = [];
+    archivosAborrar = [];
     let nombreArchivo = '';
     let columnWith = '';
     let hideButton = '';
@@ -139,7 +140,8 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote) {
                 '                        </div>';
         }
         // contenedorArchivos.innerHTML = contenidoHTML;
-    } else if (flagEditar == 1) {
+    }
+    else if (flagEditar == 1) {
         editarFile = 1;
         datos.map((elemento, index) => {
             arrayKeysArchivos.push(elemento);
@@ -216,12 +218,23 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote) {
 }
 $(document).on("click", "#sendRequestButton", function (e) {
     e.preventDefault();
-    const archivo0 = $("#fileElm0")[0].files[0];
-    const archivo1 = $("#fileElm1")[0].files[0];
-    const archivo2 = $("#fileElm2")[0].files[0];
     let flagEnviar = true;
+    let validacionArray = [];
+    let flagValidacion = 0;
+    arrayKeysArchivos.map((element, raiz)=>{
+        if($("#fileElm"+raiz)[0].files[0] != undefined){
+            validacionArray.push(1);
+            flagValidacion = flagValidacion + 1;
+        }
+    });
+
+
     if (editarFile == 1) {
-        if (archivo0 == undefined && archivo1 == undefined && archivo2 == undefined) {
+        if (flagValidacion>0) {
+            //hay al menos un archivo actualizado
+            flagEnviar = true;
+        }else{
+            //detecta que no hay ni un archivo subido
             if (flagProceso == 3) {
                 if ($("#Resicion")[0].files[0] == undefined) {
                     alerts.showNotification('top', 'right', 'Nada que actualizar', 'warning');
@@ -233,12 +246,10 @@ $(document).on("click", "#sendRequestButton", function (e) {
             }
         }
         let data = new FormData();
-        let nombreLote = $('.btn-abrir-modal').attr("data-nombreLote");
-        let idRegDXC = $('.btn-abrir-modal').attr("data-id_dxc");
         data.append("tipoProceso", flagProceso);
         data.append("longArray", arrayKeysArchivos.length);
         data.append("nombreLoteOriginal", nombreLote);
-        data.append("id_dxc", idRegDXC);
+        data.append("id_dxc", id_dxc);
         data.append("editarFile", editarFile);
         arrayKeysArchivos.map((elemento, index) => {
             let flagEditar = ($("#fileElm" + index)[0].files[0] == undefined) ? 0 : 1;
@@ -297,23 +308,28 @@ $(document).on("click", "#sendRequestButton", function (e) {
                 }
             });
         }
-    } else if (editarFile == 0) {
-        if (archivo0 == undefined || archivo1 == undefined || archivo2 == undefined) {
-            $("#spiner-loader").addClass('hide');
-            alerts.showNotification('top', 'right', 'Debes seleccionar los archivos requeridos', 'warning');
-        } else {
-            if (flagProceso == 3 && $("#Resicion")[0].files[0] == undefined) {
-                $("#spiner-loader").addClass('hide');
-                alerts.showNotification('top', 'right', 'Selecciona archivo de rescisión', 'warning');
-            } else {
-                let data = new FormData();
-                let nombreLote = $('.btn-abrir-modal').attr("data-nombreLote");
-                let idRegDXC = $('.btn-abrir-modal').attr("data-id_dxc");
+    }
+    else if (editarFile == 0) {
 
+        if(arrayKeysArchivos.length == flagValidacion){
+            console.log('excelente, todos los archivos llenos, pasa');
+            flagEnviar = true;
+        }else{
+            alerts.showNotification('top', 'right', 'Ingresa los archivos requeridos', 'warning');
+            flagEnviar = false;
+        }
+
+        if (flagProceso == 3 && $("#Resicion")[0].files[0] == undefined) {
+            $("#spiner-loader").addClass('hide');
+            alerts.showNotification('top', 'right', 'Selecciona archivo de rescisión', 'warning');
+        }
+        else {
+            if (flagEnviar) {
+                let data = new FormData();
                 data.append("tipoProceso", flagProceso);
                 data.append("longArray", arrayKeysArchivos.length);
                 data.append("nombreLoteOriginal", nombreLote);
-                data.append("id_dxc", idRegDXC);
+                data.append("id_dxc", id_dxc);
                 data.append("editarFile", editarFile);
                 arrayKeysArchivos.map((elemento, index) => {
                     data.append("archivo" + index, $("#fileElm" + index)[0].files[0]);
@@ -368,6 +384,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
                 });
             }
         }
+
     }
 });
 $(document).on('click', '.ver-archivo', function () {
