@@ -142,13 +142,13 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
                 let btnShow = 'fa-upload';
                 if(d.id_estatus_preproceso == 2){
                     //subiendo corridas
-                    if(d.totalCorridas==3){
+                    if(d.totalCorridas==d.totalCorridasNumero){
                         editar = 1;
                         btnShow = 'fa-edit';
                     }
                 }else if(d.id_estatus_preproceso == 3){
                     //subiendo contratos
-                    if(d.totalContratos==3){
+                    if(d.totalContratos==d.totalContratoNumero){
                         editar = 1;
                         btnShow = 'fa-edit';
 
@@ -209,13 +209,13 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
                     }
                 }
                 else if (d.id_estatus_preproceso == 2 && id_rol_general == 17) { // Contraloría: ELABORACIÓN DE CORRIDAS
-                    if (d.totalCorridas == 3)
+                    if (d.totalCorridas == d.totalCorridasNumero)
                         btns += BTN_AVANCE;
                     btns += BTN_SUBIR_ARCHIVO
                 }
                 else if (d.id_estatus_preproceso == 3 && id_rol_general == 15) { // Jurídico: ELABORACIÓN DE CONTRATO Y RESICISIÓN
 
-                    if (d.totalContratos == 3 && d.totalRescision == 1)
+                    if (d.totalContratos == d.totalContratoNumero && d.totalRescision == 1)
                         btns += BTN_AVANCE;
                     btns += BTN_SUBIR_ARCHIVO
 
