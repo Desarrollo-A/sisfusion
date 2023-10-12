@@ -28,7 +28,7 @@
                         </div>
                         <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 form-group m-0">
                             <label class="label-gral m-0">Título</label>
-                            <input id="evtTitle2" name="evtTitle" type="text" class="form-control input-gral">
+                            <input id="evtTitle2" name="evtTitle" type="text" class="form-control input-gral" autocomplete="off">
                         </div>
                         <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 form-group m-0 pr-0">
                             <i class="fas fa-user iconMod fa-lg"></i>
@@ -101,7 +101,7 @@
                     <div class="container-fluid p-0">
                         <div class="col-lg-12 form-group m-0">
                             <label class="label-gral m-0">Título</label>
-                            <input id="evtTitle" name="evtTitle" type="text" class="form-control input-gral" required>
+                            <input id="evtTitle" name="evtTitle" type="text" class="form-control input-gral" required autocomplete="off">
                         </div>
                         <div class="col-lg-12 form-group m-0 overflow-hidden">
                             <label class="label-gral m-0">Prospectos</label>
@@ -116,8 +116,8 @@
                         <div class="col-lg-12 form-group m-0">
                             <label class="label-gral m-0">Fecha de cita</label>
                             <div class="d-flex">
-                                <input id="dateStart" name="dateStart" type="datetime-local" class="form-control beginDate w-50 text-left pl-1">
-                                <input id="dateEnd" name="dateEnd" type="datetime-local" class="form-control endDate w-50 pr-1">
+                                <input id="dateStartInsert" name="dateStart" type="datetime-local" class="form-control beginDate w-50 text-left pl-1">
+                                <input id="dateEndInsert" name="dateEnd" type="datetime-local" class="form-control endDate w-50 pr-1">
                             </div>
                         </div>
                         <div class="col-lg-12 form-group m-0">
@@ -205,19 +205,19 @@
                     </div>
                     <div class="modal-body pt-0">
                         <div class="radio-with-Icon pl-1 pr-1 pb-3 pt-3 d-flex justify-between">
-                            <p class="radioOption-Item">
+                            <p class="radioOption-Item" data-toggle="tooltip" data-placement="top" title="MALO">
                                 <input type="radio" name="rate" id="rateBad" value="2" class="d-none" aria-invalid="false">
                                 <label for="rateBad" class="cursor-point">
                                     <i class="far fa-thumbs-down fa-3x"></i>
                                 </label>
                             </p>
-                            <p class="radioOption-Item">
+                            <p class="radioOption-Item" data-toggle="tooltip" data-placement="top" title="BUENO">
                                 <input type="radio" name="rate" id="rateGood" value="1" class="d-none" aria-invalid="false" checked>
                                 <label for="rateGood" class="cursor-point">
                                     <i class="far fa-thumbs-up fa-3x"></i>
                                 </label>
                             </p>
-                            <p class="radioOption-Item">
+                            <p class="radioOption-Item" data-toggle="tooltip" data-placement="top" title="REGULAR">
                                 <input type="radio" name="rate" id="rateCancel" value="3" class="d-none" aria-invalid="false">
                                 <label for="rateCancel" class="cursor-point">
                                     <i class="fas fa-ban fa-3x"></i>

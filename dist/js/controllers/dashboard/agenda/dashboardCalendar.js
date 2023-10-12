@@ -73,8 +73,9 @@ const createGoogleCalendar = () => {
       if (info.event.url) {
         window.open(info.event.url, "_blank");
         info.jsEvent.preventDefault();
+      } else {
+        modalEvent(info.event.id);
       }
-      else modalEvent(info.event.id);
     },
     select: function(info) {
       cleanModal();
@@ -247,8 +248,8 @@ $.post(`${general_base_url}Calendar/getProspectos`, function(data) {
 
 function setDatesToModalInsert(info){
   appointment = '';
-  $("#dateStart").val(info.startStr);
-  $("#dateEnd").val(info.endStr);
+  document.getElementById('dateStartInsert').value = `${convertDateDDMMYYYYToYYYYMMDD(info.end.toLocaleDateString())}T09:00`;
+  document.getElementById('dateEndInsert').value = `${convertDateDDMMYYYYToYYYYMMDD(info.end.toLocaleDateString())}T10:00`;
   $('#agendaInsert').modal();
 }
 
@@ -773,11 +774,6 @@ document.querySelector('#feedback_form').addEventListener('submit', e =>  {
   });
 });
 
-function customizeIcon(){
-  $(".fc-googleSignIn-button").append("<img src='"+general_base_url+"dist/img/googlecalendar.png'>");
-  $(".fc-googleLogout-button").append("<img src='"+general_base_url+"dist/img/unsync.png'>");
-}
-
 function createTable(){
   eventsTable = $('#appointments-datatable').dataTable({
     dom: "<'row w-100 m-0 mb-2 d-flex justify-evenly'<'col-xs-12 col-sm-12 col-md-6 col-lg-6 pl-0'<'toolbar'>><'col-xs-12 col-sm-12 col-md-6 col-lg-6 pr-0'f>>rt<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
@@ -853,10 +849,6 @@ $(document).on('submit', '#appointmentsForm', function(e) {
         $('#spiner-loader').removeClass('hide');
       },
       success: function(data) {
-        // if(localStorage.getItem('auth-google-token') !== null) {
-        //   insertEventGoogle(dataF);
-        // }
-
         removeCRMEvents();
         getUsersAndEvents(id_rol_general, id_usuario_general, false);
         $('#spiner-loader').addClass('hide');
