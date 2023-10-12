@@ -17,14 +17,13 @@ $('#reporteLotesEstatus6 thead tr:eq(0) th').each( function (i) {
 function fillTable() {
     $('#reporteLotesEstatus6').DataTable({
         destroy: true,
-        ajax:
-            {
-                url: 'getLotesEstatusSeisSinTraspaso',
-                dataSrc: "",
-                type: "POST",
-                cache: false,
-                data: {}
-            },
+        ajax: {
+            url: 'getLotesEstatusSeisSinTraspaso',
+            dataSrc: "",
+            type: "POST",
+            cache: false,
+            data: {}
+        },
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,

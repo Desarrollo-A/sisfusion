@@ -452,15 +452,13 @@ function update_estatus(){
     $id_user = $this->session->userdata('id_usuario');
     $datos = array();
     $datos["opn_cumplimiento"] = $this->Usuarios_modelo->Opn_cumplimiento($this->session->userdata('id_usuario'))->result_array();
-
+    $this->load->view('template/header');
     switch($this->session->userdata('id_rol')){
       case '1':
       case '2':
-      $this->load->view('template/header');
-      $this->load->view("ventas/comisiones_colaboradorRigel", $datos);
+        $this->session->userdata('tipo') == 1 ? $this->load->view("ventas/comisiones_colaboradorRigel", $datos) : $this->load->view("ventas/comisiones_colaborador", $datos);
       break;
       default:
-      $this->load->view('template/header');
       $this->load->view("ventas/comisiones_colaborador", $datos);
       break;
     }

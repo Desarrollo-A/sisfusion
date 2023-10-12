@@ -4,7 +4,7 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Asistente_gerente extends CI_Controller {
     public function __construct() {
         parent::__construct();
-        $this->load->model(['VentasAsistentes_model', 'registrolote_modelo', 'asesor/Asesor_model', 'Reestructura_model']);
+        $this->load->model(['VentasAsistentes_model', 'registrolote_modelo', 'asesor/Asesor_model']);
         $this->load->library(array('session','form_validation'));
        //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
         $this->load->library(array('session','form_validation', 'get_menu','permisos_sidebar'));
@@ -12,9 +12,7 @@ class Asistente_gerente extends CI_Controller {
         $this->load->database('default');
         $this->load->library('email');
         $this->validateSession();
-
         date_default_timezone_set('America/Mexico_City');
-
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
         $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
@@ -39,7 +37,6 @@ class Asistente_gerente extends CI_Controller {
 	public function registroEstatus8VentasAsistentes()
 	{
 		$this->validateSession();
-
 	 	$this->load->view('template/header');
 		$this->load->view("contratacion/datos_status8Contratacion_asistentes_view");
 	}
@@ -55,7 +52,6 @@ class Asistente_gerente extends CI_Controller {
 	}
 
 	public function registroEstatus9VentasAsistentes(){
-		/*menu function*/                    
    		$this->load->view('template/header');
 		$this->load->view('contratacion/report_historial_view');
 	}
@@ -168,36 +164,36 @@ class Asistente_gerente extends CI_Controller {
 	}
 
 	public function editar_registro_lote_asistentes_proceceso8(){
-		$idLote=$this->input->post('idLote');	
-		$idCondominio=$this->input->post('idCondominio');
-		$nombreLote=$this->input->post('nombreLote');
-		$idCliente=$this->input->post('idCliente');
-		$comentario=$this->input->post('comentario');
-		$modificado=date('Y-m-d H:i:s');
-		$fechaVenc=$this->input->post('fechaVenc');
-		$arreglo=array();	
-		$arreglo["idStatusContratacion"]=8;
-		$arreglo["idMovimiento"]=38;
-		$arreglo["comentario"]=$comentario;
-		$arreglo["usuario"]=$this->session->userdata('id_usuario');
-		$arreglo["perfil"]=$this->session->userdata('id_rol');
-		$arreglo["modificado"]=date("Y-m-d H:i:s");
-		$arreglo["status8Flag"] = 1;
-	
-		$arreglo2=array();
-		$arreglo2["idStatusContratacion"]=8;
-		$arreglo2["idMovimiento"]=38;
-		$arreglo2["nombreLote"]=$nombreLote;
-		$arreglo2["comentario"]=$comentario;	
-		$arreglo2["usuario"]=$this->session->userdata('id_usuario');
-		$arreglo2["perfil"]=$this->session->userdata('id_rol');
-		$arreglo2["modificado"]=date("Y-m-d H:i:s");
-		$arreglo2["fechaVenc"]= $fechaVenc;
-		$arreglo2["idLote"]= $idLote;  
-		$arreglo2["idCondominio"]= $idCondominio;          	
-		$arreglo2["idCliente"]= $idCliente;
-
-
+        $idLote=$this->input->post('idLote');	
+        $idCondominio=$this->input->post('idCondominio');
+        $nombreLote=$this->input->post('nombreLote');
+        $idCliente=$this->input->post('idCliente');
+        $comentario=$this->input->post('comentario');
+        $modificado=date('Y-m-d H:i:s');
+        $fechaVenc=$this->input->post('fechaVenc');
+        $arreglo=array();	
+        $arreglo["idStatusContratacion"]=8;
+        $arreglo["idMovimiento"]=38;
+        $arreglo["comentario"]=$comentario;
+        $arreglo["usuario"]=$this->session->userdata('id_usuario');
+        $arreglo["perfil"]=$this->session->userdata('id_rol');
+        $arreglo["modificado"]=date("Y-m-d H:i:s");
+        $arreglo["status8Flag"] = 1;
+    
+        $arreglo2=array();
+        $arreglo2["idStatusContratacion"]=8;
+        $arreglo2["idMovimiento"]=38;
+        $arreglo2["nombreLote"]=$nombreLote;
+        $arreglo2["comentario"]=$comentario;	
+        $arreglo2["usuario"]=$this->session->userdata('id_usuario');
+        $arreglo2["perfil"]=$this->session->userdata('id_rol');
+        $arreglo2["modificado"]=date("Y-m-d H:i:s");
+        $arreglo2["fechaVenc"]= $fechaVenc;
+        $arreglo2["idLote"]= $idLote;  
+        $arreglo2["idCondominio"]= $idCondominio;          	
+        $arreglo2["idCliente"]= $idCliente;
+    
+    
         $valida_rama = $this->VentasAsistentes_model->check_carta($idCliente);
         if($valida_rama[0]['tipo_nc']==1){
             $validacionCarta = $this->VentasAsistentes_model->validaCartaCM($idCliente);
@@ -217,43 +213,20 @@ class Asistente_gerente extends CI_Controller {
                 }
             }
         }
-
-		$validate = $this->VentasAsistentes_model->validateSt8($idLote);
+    
+        $validate = $this->VentasAsistentes_model->validateSt8($idLote);
         if ($validate != 1) {
             $data['message'] = 'FALSE';
             echo json_encode($data);
             return;
         }
-
+    
         if (!$this->VentasAsistentes_model->updateSt($idLote,$arreglo,$arreglo2)){
             $data['message'] = 'ERROR';
             echo json_encode($data);
             return;
         }
-
-        $cliente = $this->Reestructura_model->obtenerClientePorId($idCliente);
-
-        if (!in_array($cliente->proceso, [2,4])) {
-            $data['message'] = 'OK';
-            echo json_encode($data);
-            return;
-        }
-
-        $loteAnterior = $this->Reestructura_model->buscarLoteAnteriorPorIdClienteNuevo($idCliente);
-        if (!$this->Reestructura_model->loteLiberadoPorReubicacion($loteAnterior->idLote)) {
-            $data = [
-                'tipoLiberacion' => 7,
-                'idLote' => $loteAnterior->idLote,
-                'idLoteNuevo' => $idLote
-            ];
-
-            if (!$this->Reestructura_model->aplicaLiberacion($data)) {
-                $data['message'] = 'ERROR';
-                echo json_encode($data);
-                return;
-            }
-        }
-
+    
         $data['message'] = 'OK';
         echo json_encode($data);
     }
@@ -461,7 +434,6 @@ class Asistente_gerente extends CI_Controller {
                         $fecha= $sig_fecha;
                         $i++;
                     }
-
                     $fecha = $sig_fecha;
                }
 
@@ -488,7 +460,6 @@ class Asistente_gerente extends CI_Controller {
                         $fecha= $sig_fecha;
                         $i++;
                     }
-
                     $fecha = $sig_fecha;
                 }
                $arreglo["fechaVenc"]= $fecha;
@@ -526,7 +497,6 @@ class Asistente_gerente extends CI_Controller {
                         $fecha= $sig_fecha;
                         $i++;
                     }
-
                     $fecha = $sig_fecha;
                 }
 
@@ -586,33 +556,9 @@ class Asistente_gerente extends CI_Controller {
             return;
         }
 
-        $cliente = $this->Reestructura_model->obtenerClientePorId($idCliente);
-
-        if (!in_array($cliente->proceso, [2,4])) {
-            $data['message'] = 'OK';
-            echo json_encode($data);
-            return;
-        }
-
-        $loteAnterior = $this->Reestructura_model->buscarLoteAnteriorPorIdClienteNuevo($idCliente);
-        if (!$this->Reestructura_model->loteLiberadoPorReubicacion($loteAnterior->idLote)) {
-            $data = [
-                'tipoLiberacion' => 7,
-                'idLote' => $loteAnterior->idLote,
-                'idLoteNuevo' => $idLote
-            ];
-
-            if (!$this->Reestructura_model->aplicaLiberacion($data)) {
-                $data['message'] = 'ERROR';
-                echo json_encode($data);
-                return;
-            }
-        }
-
         $data['message'] = 'OK';
         echo json_encode($data);
     }
-
 
     public function getStatCont14() {
       $data=array();
@@ -624,9 +570,6 @@ class Asistente_gerente extends CI_Controller {
           echo json_encode(array());
       }
     }
-
-
-
 
     public function editar_registro_lote_asistentes_proceceso14(){
 
@@ -978,12 +921,10 @@ class Asistente_gerente extends CI_Controller {
         if ($this->VentasAsistentes_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){
             $data['message'] = 'OK';
             echo json_encode($data);
-
             }else{
                 $data['message'] = 'ERROR';
                 echo json_encode($data);
             }
-
         }else {
             $data['message'] = 'FALSE';
             echo json_encode($data);
@@ -1032,29 +973,6 @@ class Asistente_gerente extends CI_Controller {
             $data['message'] = 'ERROR';
             echo json_encode($data);
             return;
-        }
-
-        $cliente = $this->Reestructura_model->obtenerClientePorId($idCliente);
-
-        if (!in_array($cliente->proceso, [2,4])) {
-            $data['message'] = 'OK';
-            echo json_encode($data);
-            return;
-        }
-
-        $loteAnterior = $this->Reestructura_model->buscarLoteAnteriorPorIdClienteNuevo($idCliente);
-        if (!$this->Reestructura_model->loteLiberadoPorReubicacion($loteAnterior->idLote)) {
-            $data = [
-                'tipoLiberacion' => 7,
-                'idLote' => $loteAnterior->idLote,
-                'idLoteNuevo' => $idLote
-            ];
-
-            if (!$this->Reestructura_model->aplicaLiberacion($data)) {
-                $data['message'] = 'ERROR';
-                echo json_encode($data);
-                return;
-            }
         }
 
         $data['message'] = 'OK';
@@ -1113,4 +1031,3 @@ class Asistente_gerente extends CI_Controller {
       }
     }
 }
-?>

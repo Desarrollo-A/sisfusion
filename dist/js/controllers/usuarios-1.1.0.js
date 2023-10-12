@@ -5,11 +5,14 @@ $(document).ready( function() {
     code = '';
     $.getJSON("fillSelectsForUsers").done(function(data) {
         for (let i = 0; i < data.length; i++) {
+
             if (data[i]['id_catalogo'] == 16){
                 $("#payment_method").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
-            }
+                }
+
             if (data[i]['id_catalogo'] == 1)
                 $("#member_type").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+
             if (data[i]['id_catalogo'] == 0){
                 $("#headquarter").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
                 sedes.push({
@@ -30,20 +33,22 @@ $(document).on('change', '#leader', function() {
     let sede = $('#headquarter').val();
     let puesto = $('#member_type').val();
     let lider = $('#leader').val();
-    console.log(puesto);
     document.getElementById('lineaVenta').innerHTML = '';
+
     let puestosVentas = [3,7,9];
     let sedeSelected = document.getElementById("headquarter");
     let selectedSede = sedeSelected.options[sedeSelected.selectedIndex].text;
     let puestoSelected = document.getElementById("member_type");
     let selectedPuesto = puestoSelected.options[puestoSelected.selectedIndex].text;
     let nombreSelected = $('#name').val() + ' ' + $('#last_name').val() + ' ' + $('#mothers_last_name').val();
+
     if(puestosVentas.includes(parseInt(puesto))){
         $.post("consultarLinea",{
             sede: sede,
             puesto: puesto,
             lider : lider
         },
+
         function (data) {
         let sedesSinRegional = [5,2,3,6];
         let arraySedes = puesto == 7 ? ( data[0].banderaGer == 0 ? [data[0].idSedeCoor,data[0].idSedeGer,data[0].idSedeSub,data[0].idSedeReg] : [data[0].idSedeGer,data[0].idSedeSub,data[0].idSedeReg]) : ( puesto == 9 ? sedesSinRegional.includes(parseInt(sede)) ? [data[0].idSedeGer,data[0].idSedeSub] : [data[0].idSedeGer,data[0].idSedeSub,data[0].idSedeReg] : sedesSinRegional.includes(parseInt(sede)) ? [data[0].idSedeSub] : [data[0].idSedeSub,data[0].idSedeReg]);
@@ -54,12 +59,6 @@ $(document).on('change', '#leader', function() {
         $('#btn_acept').prop('disabled', false);
     }
 
-    /*if(data[0].banderaGer == 1 && puesto == 7){
-        console.log('entra aqui')
-        data[0].sub = data[0].gerente, data[0].gerente = data[0].coordinador, data[0].coordinador = 'N/A';
-        data[0].puestoSub = data[0].puestoGer, data[0].puestoGer = data[0].puestoCoor, data[0].puestoCoor = 'Coordinador de ventas';
-        data[0].sedeSubdirector = data[0].sedeGerente, data[0].sedeGerente = data[0].sedeCoor, data[0].sedeCoor = 'N/A';
-    }*/
     let tabla = `
     <div class="row subBoxDetail">
         <div class=" col-sm-12 col-sm-12 col-lg-12 text-center" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>NUEVA LÍNEA DE VENTAS</b></label></div>
@@ -70,59 +69,32 @@ $(document).on('change', '#leader', function() {
         tabla += `<div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].sub}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoSub}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeSubdirector}</label></div>`;
         tabla += sedesSinRegional.includes(parseInt(sede)) ? '' : `<div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].regional_1}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoReg}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeReg}</label></div>`;
         tabla += `</div>`;
-            /*let tabla = puesto == 7 ? `
-                <div class="row subBoxDetail">
-                    <div class=" col-sm-12 col-sm-12 col-lg-12 text-center" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>NUEVA LÍNEA DE VENTAS</b></label></div>
-                    <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label><b>Nombre </b></label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label><b>Puesto</b></label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label><b>Sede</b></label></div>
-                    <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${nombreSelected}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${selectedPuesto}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${selectedSede}</label></div>
-                    <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].coordinador}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoCoor}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeCoor}</label></div>
-                    <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].gerente}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoGer}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeGerente}</label></div>
-                    <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].sub}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoSub}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeSubdirector}</label></div>
-                    <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].regional_1}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoReg}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeReg}</label></div>
-                </div>
-                ` :( puesto == 9 ? `
-            <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label><b>${nombreSelected}</b></label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label><b>${selectedPuesto}</b></label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label><b>${selectedSede}</b></label></div>
-
-            ` : (puesto == 3 ? `
-            <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label><b>${nombreSelected}</b></label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label><b>${selectedPuesto}</b></label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label><b>${selectedSede}</b></label></div>
-            ` : ''));*/
-            /*$('#lineaVenta').append(`
-                <div class="row subBoxDetail">
-                    <div class=" col-sm-12 col-sm-12 col-lg-12 text-center" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>Nueva línea de ventas</b></label></div>
-                    <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label><b>Nombre </b></label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label><b>Puesto</b></label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label><b>Sede</b></label></div>
-                </div>
-            `);*/
-                $('#lineaVenta').append(tabla);
+        $('#lineaVenta').append(tabla);
         },"json");
     }
 });
 $(document).on('change', '#member_type', function() {
     document.getElementById('lineaVenta').innerHTML = '';
-    console.log($(this).val());
     //MOC: SI SE DETECTA UN SUBDIRECTOR Ó DIR. REGIONAL AGREGAR OPCIÓN DE MULTIROL
     if($(this).val() == 2 || $(this).val() == 59){
         $('#btnmultirol').append(`
         <button class="btn-data btn-green" type="button" id="btnMultiRol" data-toggle="tooltip" data-placement="top" title="Agregar rol"><i class="fas fa-user-plus"></i></button>
         `);
     }else{
-        document.getElementById('btnmultirol').innerHTML = '';
-        document.getElementById('multirol').innerHTML = '';
+        // document.getElementById('btnmultirol').innerHTML = '';
+        // document.getElementById('multirol').innerHTML = '';
         $('#index').val(0);
     }
 });
+
 function validarSede(indexActual){
-    console.log(indexActual);
-    console.log('entra');
     let index = parseInt($('#index').val());
-let c = 0;
+    let c = 0;
     for (let j = 0; j < index; j++) {
         if(document.getElementById(`sedes_${j}`)){
-            console.log('existe');
             if(j != indexActual){
                 let sedeActual = $(`#sedes_${indexActual}`).val();
                 let sedes = $(`#sedes_${j}`).val();
-                console.log(sedeActual);
-                console.log(sedes);
                 if(sedeActual == sedes){
                     c++;
                     alerts.showNotification("top", "right", "LA SEDE SELECCIONADA YA FUE SELECCIONADA", "warning");
@@ -134,7 +106,6 @@ let c = 0;
     if(c == 0){
         $('#btn_acept').prop('disabled', false);
     }
-
 }
 
 $(document).on("click","#btnMultiRol",function(){
@@ -144,23 +115,12 @@ $(document).on("click","#btnMultiRol",function(){
                 <div class="col-md-6 pr-0 pr-0">
                     <div class="form-group text-left m-0">
                         <label class="control-label">Tipo de miembro (<small class="isRequired">*</small>)</label>
-                        <select class="selectpicker select-gral m-0" name="multi_${index}" id="multi_${index}" data-style="btn"
-                        data-show-subtext="true"
-                        title="Selecciona una opción"
-                        data-size="7"
-                        data-live-search="true" data-container="body"
-                        ></select>
+                        <select class="selectpicker select-gral m-0" name="multi_${index}" id="multi_${index}" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-size="7" data-live-search="true" data-container="body"></select></div>
                     </div>
-                </div>
                 <div class="col-md-4 pr-0 pr-0">
                     <div class="form-group text-left m-0">
                         <label class="control-label">Sede (<small class="isRequired">*</small>)</label>
-                        <select class="selectpicker select-gral m-0" onchange="validarSede(${index},'sedes_');" name="sedes_${index}" id="sedes_${index}" data-style="btn"
-                        data-show-subtext="true"
-                        title="Selecciona una opción"
-                        data-size="7"
-                        data-live-search="true" data-container="body"
-                        ></select>
+                        <select class="selectpicker select-gral m-0" onchange="validarSede(${index},'sedes_');" name="sedes_${index}" id="sedes_${index}" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-size="7" data-live-search="true" data-container="body"></select>
                     </div>
                 </div>
                 <div class="col-md-2 justify-center d-flex align-end">
@@ -168,10 +128,8 @@ $(document).on("click","#btnMultiRol",function(){
                         <button class="btn-data btn-warning mb-1" type="button" onclick="borrarMulti(${index})" data-toggle="tooltip" data-placement="top" title="Eliminar rol"><i class="fa fa-trash"></i></button>
                     </div>
                 </div>
-            </div>
-        `);
+            </div>`);
         $('[data-toggle="tooltip"]').tooltip();
-        console.log(puestos);
         for (var i = 0; i < puestos.length; i++) {
             var id = puestos[i].id;
             var name = puestos[i].nombre;
@@ -190,6 +148,7 @@ $(document).on("click","#btnMultiRol",function(){
 
 $("#deleteRol").on('submit', function(e){
     let indice = $('#indice').val();
+
     e.preventDefault();
     $.ajax({
         type: 'POST',
@@ -214,23 +173,18 @@ $("#deleteRol").on('submit', function(e){
         }
     });
 });
+
 function borrarMulti(index,id = ''){
+
     if( id != ''){
         $('#idRU').val(id);
         $('#indice').val(index);
         $('#modalDelRol').modal('show');
-
-    /*  $.post("borrarMulti",
-        {
-          idRU: id,
-        },
-        function (data) {
-        },"json");*/
     }else{
         document.getElementById(`mult_${index}`).innerHTML = '';
     }
-    
-  }
+}
+
 let titulos = [];
 $('#all_users_datatable thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
@@ -332,7 +286,8 @@ function fillUsersTable() {
             data: function (d) {
                 var id_rol = id_rol_global;
                 if(id_rol == 8 && d.estatus == 1){
-                    if (id_usuario_general == 1297 || id_usuario_general == 1) { // filtro para soporte excluyendo ambos perfiles
+                    if (id_usuario_general == 1297 || id_usuario_general == 1) { 
+                        // filtro para soporte excluyendo ambos perfiles
                         return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-toggle="tooltip"  data-placement="top" title="EDITAR INFORMACIÓN" data-id-usuario="' + d.id_usuario +'"> '+
                         '<i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow  see-changes-log"  data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip"  data-placement="top" title="CONSULTA LA INFORMACIÓN" ><i class="fas fa-eye"></i> </button>' +
                             '<button class="btn-data btn-warning change-user-status"  id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'" data-idrol="'+d.id_rol+'" data-toggle="tooltip"  data-placement="top" title="DAR DE BAJA"><i class="fas fa-lock"></i></button>'+
@@ -533,6 +488,7 @@ function cleadFieldsHeadquarterChange(){
     $('#member_type').selectpicker('refresh');
     $('#leader').selectpicker('refresh');
 }
+
 function CloseModalBaja(){
     document.getElementById('nameUs').innerHTML = '';
     $('#id_user').val(0);
@@ -541,6 +497,7 @@ function CloseModalBaja(){
     $('#BajaUserForm')[0].reset();
     $('#BajaUser').modal("hide");
 }
+
 function BajaConfirmM(){
     document.getElementById('msj').innerHTML = '';
     document.getElementById('nameUs2').innerHTML = '';
@@ -550,6 +507,7 @@ function BajaConfirmM(){
     $('#BajaConfirmForm')[0].reset();
     $('#BajaConfirm').modal("hide");
 }
+
 $("#BajaUserForm").on('submit', function(e){
     e.preventDefault();
     document.getElementById('btnS').disabled = true;
@@ -573,7 +531,6 @@ $("#BajaUserForm").on('submit', function(e){
                 alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
             }
             document.getElementById('btnS').disabled = false;
-
         },
         error: function(){
             document.getElementById('btnS').disabled = false;
@@ -705,8 +662,6 @@ $(document).on('click', '.edit-user-information', function(e){
                 `);
             }
 
-            //se valida que tipo de usuario está editando el usuario para poder agregarle la propiedad
-            //de si es simbólico o no
             if(id_rol_general == 4 || id_rol_general == 5 || id_rol_general==6){
                 if (v.id_rol == '7' ){
                     $('#tipoMiembro_column').removeClass('col-sm-6');
@@ -716,8 +671,7 @@ $(document).on('click', '.edit-user-information', function(e){
                     <div class="col-sm-3 mt-3">
                         <div class="form-group label-floating select-is-empty div_membertype">
                             <label class="control-label"><small class="isRequired">*</small>¿Asesor simbólico?</label>
-                            <select class="selectpicker select-gral m-0" id="simbolicoType" name="simbolicoType" data-style="btn" data-show-subtext="true" 
-                            data-live-search="true" title="Seleccione sí es simbolíco" data-size="7" data-container="body" required>
+                            <select class="selectpicker select-gral m-0" id="simbolicoType" name="simbolicoType" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione sí es simbolíco" data-size="7" data-container="body" required>
                                 <option value="1" ${ (v.simbolico == 1 || v.simbolico == '1' ) ? 'selected' : ''}>SÍ</option>
                                 <option value="0" ${ (v.simbolico == 0 || v.simbolico == '0' || v.simbolico == null ) ? 'selected' : ''}>NO</option>
                             </select>
@@ -750,10 +704,10 @@ $(document).on('change', '#sedech', function() {
             document.getElementById("sucursal").removeAttribute("required");
         }
         $.each( data.data, function(i, v){
-                var option = document.createElement("option");
-                option.text = v.nom_oficina;
-                option.value = v.idsucursal;
-                select.add(option);
+            var option = document.createElement("option");
+            option.text = v.nom_oficina;
+            option.value = v.idsucursal;
+            select.add(option);
         });
         $('#sucursal').selectpicker('refresh');
     });
@@ -1009,3 +963,61 @@ $(document).on('change', '#nueva_estructura', function() {
     $("#member_type").val('').selectpicker("refresh");
     $("#leader").val('').selectpicker("refresh");
 });
+
+function menuOptions(member_type){
+    let valueMemberType = member_type;
+    $.ajax({
+        url: general_base_url+'Usuarios/getMenuOptionsByRol/'+valueMemberType,
+        type: 'post',
+        dataType: 'json',
+        success:function(response){
+            printMenuCheck(response);
+        }
+    });
+}
+
+function printMenuCheck(data){
+    let contenedorHTML = document.getElementById('listadoHTML');
+    let containerMenu = document.getElementById('containerMenu');
+    contenedorHTML.innerHTML = '';
+    let contenidoInternoHTML = '';
+    let selectorTodo = '';
+    let arrayInterno = [];
+    let arrayJSON = '';
+    data.map((elemento, index)=>{
+        if(elemento.hijos == 1 || Number.isInteger(elemento.orden)){
+            arrayInterno = [];
+            arrayInterno.push(elemento.padre);
+            arrayInterno.push(elemento.idmenu);
+            arrayInterno.push(elemento.orden);
+            arrayJSON = JSON.stringify(arrayInterno);
+            contenidoInternoHTML += '<ul><li><input value="'+arrayJSON+'" type="checkbox" name="menu[]" id="padre'+elemento.nombre+index+'"> <label for="padre'+elemento.nombre+index+'"> '+elemento.nombre+'</label></li><ul>';
+            data.map((element2, index2)=>{
+                arrayInterno = [];
+                if(element2.hijos == 0 && ((element2.orden>=data[index].orden ) && (element2.orden<=(data[index].orden+1)))){
+                    arrayInterno.push(element2.padre);
+                    arrayInterno.push(element2.idmenu);
+                    arrayInterno.push(element2.orden);
+                    arrayJSON = JSON.stringify(arrayInterno);
+                    contenidoInternoHTML += '<li><input value="'+arrayJSON+'" type="checkbox" name="menu[]" id="'+element2.nombre+index2+'"> <label for="'+element2.nombre+index2+'"> '+element2.nombre+'</label></li>';
+                }
+            });
+            contenidoInternoHTML += '</ul></ul>';
+        }
+    });
+    selectorTodo = '<input type="checkbox" name="seleccionaTodo" class="seleccionaTodo" id="seleccionaTodo"/> <label for="seleccionaTodo"> Seleccionar todas las opciones</label>';
+    contenedorHTML.innerHTML += selectorTodo;
+    contenedorHTML.innerHTML += contenidoInternoHTML;
+    contenedorHTML.style.height = '300px';
+    contenedorHTML.style.overflowY = 'auto';
+    containerMenu.classList.remove('hide');
+}
+
+
+$(document).on('click', '#seleccionaTodo', function(){
+    if ($(this).is(':checked')) {
+        $('input:checkbox').attr('checked', true);
+    } else {
+        $('input:checkbox').attr('checked', false);
+    }
+})

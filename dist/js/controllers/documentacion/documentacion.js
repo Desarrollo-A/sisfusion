@@ -35,14 +35,19 @@ const TipoDoc = {
   PROSPECTO: 'prospecto',
   APOSTILLDO_CONTRATO: 31,
   CARTA: 32,
-  DOCUMENTO_REUBICACION: 33,
+  RESCISION_CONTRATO: 33,
   CARTA_PODER: 34,
-  DOCUMENTO_REUBICACION_FIRMADO: 35,
+  RESCISION_CONTRATO_FIRMADO: 35,
   DOCUMENTO_REESTRUCTURA: 36,
   DOCUMENTO_REESTRUCTURA_FIRMADO: 37,
   CONSTANCIA_SITUACION_FISCAL: 38,
   CORRIDA_ANTERIOR: 39,
-  CONTRATO_ANTERIOR: 40
+  CONTRATO_ANTERIOR: 40,
+  COMPLEMENTO_ENGANCHE: 45,
+  CONTRATO_ELEGIDO_FIRMA_CLIENTE: 41,
+  CONTRATO_1_CANCELADO: 42,
+  CONTRATO_2_CANCELADO: 43,
+  CONTRATO_REUBICACION_FIRMADO: 44
 };
 
 const observacionContratoUrgente = 1; // Bandera para inhabilitar
@@ -315,7 +320,6 @@ function cargarTabla(idLote, idCliente = "") {
 
           if (
             data.tipo_doc == TipoDoc.CONTRATO ||
-            data.tipo_doc == TipoDoc.DOCUMENTO_REUBICACION ||
             data.tipo_doc == TipoDoc.DOCUMENTO_REESTRUCTURA
           ) {
             // CONTRATO
@@ -370,7 +374,8 @@ function cargarTabla(idLote, idCliente = "") {
           }
           if (
             data.tipo_doc == TipoDoc.CARTA_DOMICILIO ||
-            data.tipo_doc == TipoDoc.APOSTILLDO_CONTRATO
+            data.tipo_doc == TipoDoc.APOSTILLDO_CONTRATO ||
+            data.tipo_doc == TipoDoc.COMPLEMENTO_ENGANCHE
           ) {
             // CARTA DOMICILIO || APOSTILLADO CONTRATO
             if (data.expediente == null || data.expediente === "") {
@@ -402,8 +407,8 @@ function cargarTabla(idLote, idCliente = "") {
           }
           if (
             data.tipo_doc == TipoDoc.CONTRATO_FIRMADO ||
-            data.tipo_doc == TipoDoc.DOCUMENTO_REUBICACION_FIRMADO ||
-            data.tipo_doc == TipoDoc.DOCUMENTO_REESTRUCTURA_FIRMADO
+            data.tipo_doc == TipoDoc.DOCUMENTO_REESTRUCTURA_FIRMADO ||
+            data.tipo_doc == TipoDoc.CONTRATO_REUBICACION_FIRMADO
           ) {
             // CONTRATO FIRMADO
             if (data.expediente == null || data.expediente === "") {
@@ -433,7 +438,6 @@ function cargarTabla(idLote, idCliente = "") {
             }
             return `<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`;
           }
-
           if (
             data.tipo_doc === TipoDoc.DS_NEW &&
             data.expediente === "Depósito de seriedad"
@@ -465,7 +469,11 @@ function cargarTabla(idLote, idCliente = "") {
             buttonMain = crearBotonAccion(AccionDoc.DOC_CARGADO, data); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
             return `<div class="d-flex justify-center">${buttonMain}</div>`;
           }
-          if (data.tipo_doc == TipoDoc.CORRIDA_ANTERIOR || data.tipo_doc == TipoDoc.CONTRATO_ANTERIOR) {
+          if (
+              data.tipo_doc == TipoDoc.CORRIDA_ANTERIOR ||
+              data.tipo_doc == TipoDoc.CONTRATO_ANTERIOR ||
+              data.tipo_doc == TipoDoc.RESCISION_CONTRATO
+          ) {
             if (data.expediente == null || data.expediente === "") {
               buttonMain = crearBotonAccion(AccionDoc.DOC_NO_CARGADO, data);
               return `<div class="d-flex justify-center">${buttonMain}</div>`;

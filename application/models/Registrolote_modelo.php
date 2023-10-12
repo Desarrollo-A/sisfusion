@@ -418,8 +418,9 @@
 
 // filtro de condominios por residencial PARA SUR Y SAN LUIS
 	public function getResidencialQro() {
+		$where = !in_array($this->session->userdata('id_rol'), array(17, 70, 71, 73)) ? "AND idResidencial NOT IN (14)" : "";
 		$query = $this->db-> query("SELECT CONCAT(nombreResidencial, ' - ', UPPER(CONVERT(VARCHAR(50), descripcion))) nombreResidencial, idResidencial, descripcion, 
-		ciudad, empresa, clave_residencial, abreviatura, active_comission, sede_residencial, sede FROM residenciales WHERE status = 1");
+		ciudad, empresa, clave_residencial, abreviatura, active_comission, sede_residencial, sede FROM residenciales WHERE status = 1 $where");
 		return $query->result_array();
 	}
 
@@ -3423,7 +3424,7 @@
 				if ($this->session->userdata('id_usuario') == 11656) // Dulce María Facundo Torres VERÁ USUARIOS DE LA GERENCIA ACTUAL (7886 JESSIKA GUADALUPE NEAVES FLORES) Y LO DE SU ANTERIOR GERENCIA (106 ANA KARINA ARTEAGA LARA)
                         $id_lider = $this->session->userdata('id_lider') . ', 106';
 				else if ($this->session->userdata('id_usuario') == 12963) { // 	YUMICO BELEN VILLA NAVA 
-					$id_lider = $id_lider . ', 9999, 7519';
+					$id_lider = $id_lider . ', 11123';
 					$sede = "AND clientes.id_sede = 8";
 				}	
 				else if ($this->session->userdata('id_usuario') == 10270) { // ANDRES BARRERA VENEGAS

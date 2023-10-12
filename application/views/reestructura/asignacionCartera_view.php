@@ -9,11 +9,9 @@
                     <div class="modal-header"></div>
                     <div class="modal-body text-center">
                         <h5 id="mainLabelText"></h5>
-                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <div class="form-group overflow-hidden">
-                                <label class="control-label" for="idAsesor">Asesor</label>
-                                <select id="idAsesor" name="idAsesor" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" size="5" data-container="body" required></select>
-                            </div>
+                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 overflow-hidden">
+                            <label class="control-label" for="idAsesor">Asesor</label>
+                            <select id="idAsesor" name="idAsesor" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" size="5" data-container="body" required></select>
                         </div>
                         <input type="text" class="hide" id="idLote">
                         <input type="text" class="hide" id="nombreLote">
@@ -55,6 +53,7 @@
                                                 <th>COSTO M2 FINAL</th>
                                                 <th>TOTAL</th>
                                                 <th>ASIGNADO A</th>
+                                                <th>ESTATUS</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>

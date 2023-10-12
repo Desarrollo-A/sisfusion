@@ -199,12 +199,14 @@ class General_model extends CI_Model
         } else
             return false;
     }
+    
     function permisosMenu($val){
         if($val == 1){
-            $this->session->set_flashdata('error_usuario', '<div id="ele" class="col-md-11 " role="alert"><center><b>¡NO TIENES ACCESO AL PANEL SOLICITADO!</b><br><span style="font-size:12px;">Verificar los datos o ponerse en contacto con un administrador.</span></center></div>');
+            $this->session->set_flashdata('error_usuario', '<div id="ele" class="col-md-11" role="alert"><center><b>¡NO TIENES ACCESO AL PANEL SOLICITADO!</b><br><span style="font-size:12px;">Verificar los datos o ponerse en contacto con un administrador.</span></center></div>');
             redirect(base_url() .$this->session->userdata('controlador'),'location');
         }
     }
+
     public function get_menu_opciones(){
         return $this->db->query("SELECT LOWER(pagina) pagina FROM Menu2 WHERE pagina != '' AND estatus=1 AND nombre !='Aparta en línea' AND rol in(SELECT id_opcion FROM opcs_x_cats where id_catalogo=1 and estatus=1) GROUP BY pagina");
     }

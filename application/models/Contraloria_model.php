@@ -119,6 +119,10 @@ class Contraloria_model extends CI_Model {
         return $this->db->query("SELECT * FROM tipo_venta WHERE status = 1");
     }
 
+    function get_enganches(){
+        return $this->db->query("SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo IN (104, 103) AND estatus = 1 ORDER BY id_catalogo");
+    }
+
     public function registroStatusContratacion6 () {
         $query = $this->db-> query("SELECT l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, convert(varchar,l.modificado,120) as modificado, cl.rfc,
@@ -233,7 +237,7 @@ class Contraloria_model extends CI_Model {
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
 		else if ($id_sede == 5) // CONTRALORÍA LEÓN TAMBIÉN VE EXPEDIENTES DE GUADALAJARA
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '12','16')";
-        else if ($id_sede == 4) // CONTRALORÍA CIUDAD DE MÉXICO TAMBIÉN VE EXPEDIENTES DE PUEBLA
+       else if ($id_sede == 2) // CONTRALORÍA QUERÉTARO TAMBIÉN VE EXPEDIENTES DE PUEBLA
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '15')";
 		else
 			$filtroSede = "AND l.ubicacion IN ('$id_sede')";
@@ -379,7 +383,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
             $filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
         else if ($id_sede == 5) // CONTRALORÍA LEÓN TAMBIÉN VE EXPEDIENTES DE GUADALAJARA
             $filtroSede = "AND l.ubicacion IN ('$id_sede', '12','16')";
-        else if ($id_sede == 4) // CONTRALORÍA CIUDAD DE MÉXICO TAMBIÉN VE EXPEDIENTES DE PUEBLA
+        else if ($id_sede == 2) // CONTRALORÍA QUERÉTARO TAMBIÉN VE EXPEDIENTES DE PUEBLA
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '15')";
         else
             $filtroSede = "AND l.ubicacion IN ('$id_sede')";
@@ -416,7 +420,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
 		else if ($id_sede == 5) // CONTRALORÍA LEÓN TAMBIÉN VE EXPEDIENTES DE GUADALAJARA
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '12','16')";
-        else if ($id_sede == 4) // CONTRALORÍA CIUDAD DE MÉXICO TAMBIÉN VE EXPEDIENTES DE PUEBLA
+        else if ($id_sede == 2) // CONTRALORÍA QUERÉTARO TAMBIÉN VE EXPEDIENTES DE PUEBLA
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '15')";
 		else
 			$filtroSede = "AND l.ubicacion IN ('$id_sede')";
@@ -478,7 +482,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
             $filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
         else if ($id_sede == 5) // CONTRALORÍA LEÓN TAMBIÉN VE EXPEDIENTES DE GUADALAJARA
             $filtroSede = "AND l.ubicacion IN ('$id_sede', '12','16')";
-        else if ($id_sede == 4) // CONTRALORÍA CIUDAD DE MÉXICO TAMBIÉN VE EXPEDIENTES DE PUEBLA
+        else if ($id_sede == 2) // CONTRALORÍA QUERÉTARO TAMBIÉN VE EXPEDIENTES DE PUEBLA
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '15')";
         else
             $filtroSede = "AND l.ubicacion IN ('$id_sede')";
@@ -1399,4 +1403,54 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
             return true;
         }
     }
+
+
+    public function getCambioRL ($idLote) {
+		$query = $this->db-> query("SELECT l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
+		l.nombreLote, l.idStatusContratacion, l.idMovimiento, convert(varchar,l.modificado,120) as modificado, cl.rfc, sd.nombre as nombreSede,
+		CAST(l.comentario AS varchar(MAX)) as comentario, convert(varchar,l.fechaVenc,120) as fechaVenc, l.perfil, res.nombreResidencial, cond.nombre as nombreCondominio,
+		l.ubicacion, ISNULL(tv.tipo_venta, 'Sin especificar') tipo_venta, l.observacionContratoUrgente as vl, cl.tipo_nc residencia,
+		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
+		concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
+		concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
+		cond.idCondominio, ISNULL(oxc0.nombre, 'Normal') tipo_proceso, ISNULL(rl.nombre, 'Normal') representanteLegal, ISNULL(rl.id_opcion, 0) id_rl,
+        sl.nombre estatusLote, l.idStatusLote idEstatusLote
+		FROM lotes l
+		INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote
+		INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
+		INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
+		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
+		LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
+		LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
+		LEFT JOIN sedes sd ON sd.id_sede = l.ubicacion
+		LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
+        LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
+		LEFT JOIN opcs_x_cats rl ON rl.id_opcion = cl.rl 
+        LEFT JOIN statuslote sl ON sl.idStatusLote = l.idStatusLote
+		WHERE l.idLote = $idLote AND rl.id_catalogo IN (77)
+		GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
+		l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc, cl.tipo_nc,sd.nombre,
+		CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
+		tv.tipo_venta, l.observacionContratoUrgente,
+		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
+		concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
+		concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
+		cond.idCondominio, ISNULL(oxc0.nombre, 'Normal'), ISNULL(rl.nombre, 'Normal'), ISNULL(rl.id_opcion, 0), sl.nombre, l.idStatusLote
+		ORDER BY l.nombreLote");
+        return $query->result();
+    }
+
+    function getCatalogsRL() {
+        return $this->db->query("SELECT id_catalogo, id_opcion, UPPER(nombre) nombre FROM opcs_x_cats WHERE id_catalogo IN (77) AND estatus = 1 ORDER BY id_catalogo, nombre");
+    }
+
+    function getSedeRl() {
+        return $this->db->query("SELECT id_sede, UPPER(nombre) nombre FROM sedes");
+    }
+
+    function getStatusLoteRl(){
+        return $this->db->query("SELECT idStatusLote, nombre FROM statuslote WHERE idStatusLote IN (6,9)");
+    }
+
+
 }
