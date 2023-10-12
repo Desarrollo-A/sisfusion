@@ -12,26 +12,7 @@ $(document).ready(function () {
     // general();
 });
 
-// let titulos_intxt = [];
-
-    // $('#tabla_general thead tr:eq(0) th').each( function (i) {
-    //     $(this).css('text-align', 'center');
-    //     var title = $(this).text();
-    //     titulos_intxt.push(title);
-    //         $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="'+title+'"/>' );
-    //         $( 'input', this ).on('keyup change', function () {
-    //             if ($('#tabla_general').DataTable().column(i).search() !== this.value ) {
-    //                 $('#tabla_general').DataTable().column(i).search(this.value).draw();
-    //             }
-    //             var index = $('#tabla_general').DataTable().rows({
-    //             selected: true,
-    //             search: 'applied'
-    //         }).indexes();
-    //         var data = $('#tabla_general').DataTable().rows(index).data();
-    //     });
-    // });
-
-    let titulos_intxt = [];
+let titulos_intxt = [];
 $('#tabla-general thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
     titulos_intxt.push(title);
@@ -667,17 +648,15 @@ function loadTable(tipoDescuento) {
         $("#tabla-general tbody").on("click", ".agregar_nuevo_descuento", function (e) {
             e.preventDefault();
             e.stopImmediatePropagation();
-            $("#condominios1").val('');
-          
+            $("#condominios1").html('');
             $("#idloteorigen").val('');
             $("#usuarioid").val('');
             $("#pagos_aplicados").val('');
 
-
             $("#idloteorigen").selectpicker("refresh");
             $('#idloteorigen option').remove();
-            $("#condominios1").selectpicker('refresh');
-            $('#condominios1 option').remove();
+            // $("#condominios1").selectpicker('refresh');
+            // $('#condominios1 option').remove();
             id_user = $(this).val();
             monto = $(this).attr("data-value");
             sde = $(this).attr("data-sede");
@@ -706,10 +685,10 @@ function loadTable(tipoDescuento) {
                     let comtotal = parseFloat(data[i]['comision_total']) - parseFloat(data[i]['abono_pagado']);
                     sumaselected = sumaselected + parseFloat(data[i]['comision_total']);
 
+                    // $("#condominios1").append(`<option value='${comision},${comtotal.toFixed(2)},${pago_neodata},${name}' selected="selected">${name}  -   $${formatMoney(comtotal.toFixed(2))}</option>`);
 
-                    $("#condominios1").append(`<option value='${comision},${comtotal.toFixed(2)},${pago_neodata},${name}' selected="selected">${name}  -   $${formatMoney(comtotal.toFixed(2))}</option>`);
-
-                    $("#idloteorigen").append(`<option value='${comision},${comtotal.toFixed(2)},${pago_neodata},${name}' selected="selected">${name}  -   $${formatMoney(comtotal.toFixed(2))}</option>`);
+                    $("#condominios1").append('<p>'+(i+1) + ' - ' + name+ ' - <b>' + formatMoney(comtotal.toFixed(2)) + '</b></p>');
+                    // $("#condominios1").val(`${comision}${comtotal.toFixed(2)}${pago_neodata}${name}<BR>`);
                 }
 
                 $("#idmontodisponible").val('$' + formatMoney(sumaselected));
