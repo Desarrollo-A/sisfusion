@@ -4052,7 +4052,9 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
         else
              $filtro = '  AND MONTH(pci1.fecha_pago_intmex) = '.$mes.' AND YEAR(pci1.fecha_pago_intmex) = '.$anio.'';
         
-        return $this->db-> query("(SELECT pci1.id_pago_i, lo.nombreLote, re.empresa, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) user_names, CONVERT(VARCHAR,pci1.fecha_pago_intmex,20) AS fecha_pago_intmex, pci1.id_usuario, CASE WHEN cl.estructura = 1 THEN oprol2.nombre ELSE oprol.nombre END as puesto, pci1.abono_neodata, UPPER(se.nombre) AS sede, pci1.abono_neodata, CONCAT(cr.nombre, ' ',cr.apellido_paterno, ' ', cr.apellido_materno) creado
+        return $this->db-> query("(SELECT pci1.id_pago_i, lo.nombreLote, re.empresa, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) user_names, 
+        CONVERT(VARCHAR,pci1.fecha_pago_intmex,20) AS fecha_pago_intmex, pci1.id_usuario, CASE WHEN cl.estructura = 1 THEN oprol2.nombre ELSE oprol.nombre END as puesto, pci1.abono_neodata,
+         UPPER(se.nombre) AS sede, pci1.abono_neodata, CONCAT(cr.nombre, ' ',cr.apellido_paterno, ' ', cr.apellido_materno) creado
         FROM pago_comision_ind pci1
         INNER JOIN comisiones com ON pci1.id_comision = com.id_comision
         INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
@@ -4422,7 +4424,7 @@ public function CancelarDescuento($id_pago,$motivo)
         pagos_activos = CASE WHEN (estatus = 4) THEN pagos_activos + 1 else pagos_activos END
         WHERE id_usuario = (SELECT id_usuario FROM pago_comision_ind WHERE id_pago_i = $id_pago)");
     $respuesta = $this->db->query("UPDATE pago_comision_ind set descuento_aplicado=0,estatus=1,modificado_por='".$this->session->userdata('id_usuario')."' where id_pago_i=".$id_pago."");
-    $this->db->query("INSERT INTO  historial_comisiones VALUES (".$id_pago.",".$this->session->userdata('id_usuario').", GETDATE(), 1, 'CAPITAL HUMANO CANCELÓ DESCUENTO, MOTIVO: ".$motivo."')");
+    $this->db->query("INSERT INTO  historial_comisiones VALUES (".$id_pago.",".$this->session->userdata('id_usuario').", GETDATE(), 2, 'CAPITAL HUMANO CANCELÓ DESCUENTO, MOTIVO: ".$motivo."')");
 
     if ($respuesta ) {
         return 1;
@@ -5841,9 +5843,17 @@ public function CancelarDescuento($id_pago,$motivo)
 
     function getInfoReportePagos($query2){
 
-        $cmd = "SELECT pci1.id_pago_i, lo.nombreLote, re.empresa, UPPER(CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno)) AS user_names, 
-        pci1.fecha_pago_intmex, pci1.id_usuario, UPPER(oprol.nombre) AS puesto, UPPER(se.nombre) AS sede, 
-        his.comentario as creado,   FORMAT(ISNULL(pci1.abono_neodata , '0.00'), 'C') abono
+        $cmd = "SELECT pci1.id_pago_i, lo.nombreLote, re.empresa, 
+        UPPER(CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno)) AS user_names, 
+        convert(nvarchar,  pci1.fecha_pago_intmex , 6)as fecha,
+        convert(nvarchar,  his.fecha_movimiento , 6)as fecha_devolucion,
+        convert(nvarchar,  pci1.fecha_pago_intmex , 6)as fecha_pago_intmex,
+
+         pci1.id_usuario, 
+        UPPER(oprol.nombre) AS puesto, 
+        UPPER(se.nombre) AS sede, 
+        his.comentario as creado,   
+        FORMAT(ISNULL(pci1.abono_neodata , '0.00'), 'C') abono
         FROM pago_comision_ind pci1
         INNER JOIN comisiones com ON pci1.id_comision = com.id_comision
         INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
@@ -5853,7 +5863,7 @@ public function CancelarDescuento($id_pago,$motivo)
         INNER JOIN usuarios cr ON cr.id_usuario = pci1.modificado_por
         INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
         INNER JOIN historial_comisiones his ON his.id_pago_i = pci1.id_pago_i 
-        AND his.comentario like '%CAPITAL HUMANO CANCELÓ DESCUENTO%'
+        AND his.estatus = 2
         LEFT JOIN sedes se   
         ON se.id_sede = (CASE u.id_usuario 
                          WHEN 2 THEN 2 WHEN 3 THEN 2 WHEN 1980 THEN 2 
