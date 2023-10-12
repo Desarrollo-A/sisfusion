@@ -1,32 +1,46 @@
 
 $(document).ready(function () {
 
-    let titulos_intxt = [];
-
-    
-    $('.datepicker').datetimepicker({locale: 'es'});
-
-    $('#tabla_general thead tr:eq(0) th').each(function (i) {
-        $(this).css('text-align', 'center');
-        var title = $(this).text();
-        titulos_intxt.push(title);
-        if (i != 0 ) {
-            $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
-            $( 'input', this ).on('keyup change', function () {
-                if ($('#tabla_general').DataTable().column(i).search() !== this.value ) {
-                    $('#tabla_general').DataTable().column(i).search(this.value).draw();
-                }
-                var index = $('#tabla_general').DataTable().rows({
-                selected: true,
-                search: 'applied'
-                }).indexes();
-                var data = $('#tabla_general').DataTable().rows(index).data();
-            });
-        }
-    });
-
+    $('body').tooltip({
+        selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
+        trigger: 'hover',
+        container: 'body'
+    }).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
+        $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
+    }); 
     checkTypeOfDesc();
     // general();
+});
+
+// let titulos_intxt = [];
+
+    // $('#tabla_general thead tr:eq(0) th').each( function (i) {
+    //     $(this).css('text-align', 'center');
+    //     var title = $(this).text();
+    //     titulos_intxt.push(title);
+    //         $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="'+title+'"/>' );
+    //         $( 'input', this ).on('keyup change', function () {
+    //             if ($('#tabla_general').DataTable().column(i).search() !== this.value ) {
+    //                 $('#tabla_general').DataTable().column(i).search(this.value).draw();
+    //             }
+    //             var index = $('#tabla_general').DataTable().rows({
+    //             selected: true,
+    //             search: 'applied'
+    //         }).indexes();
+    //         var data = $('#tabla_general').DataTable().rows(index).data();
+    //     });
+    // });
+
+    let titulos_intxt = [];
+$('#tabla-general thead tr:eq(0) th').each(function (i) {
+    var title = $(this).text();
+    titulos_intxt.push(title);
+    $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
+    $( 'input', this ).on('keyup change', function () {
+        if ($('#tabla-general').DataTable().column(i).search() !== this.value ) {
+            $('#tabla-general').DataTable().column(i).search(this.value).draw();
+        }
+    });
 });
 
 function checkTypeOfDesc() {
@@ -50,7 +64,7 @@ function checkTypeOfDesc() {
         $('#title-liquidado').css('display', 'block');
         $('#title-conglomerado').css('display', 'none');
         $('#title-detenidos').css('display', 'none');
-    } else if(tipoDescuento === '4') {
+    } else if (tipoDescuento === '4') {
         $('#title-activo').css('display', 'none');
         $('#title-baja').css('display', 'none');
         $('#title-liquidado').css('display', 'none');
@@ -63,7 +77,6 @@ function checkTypeOfDesc() {
         $('#title-conglomerado').css('display', 'none');
         $('#title-detenidos').css('display', 'block');
     }
-
     loadTable(tipoDescuento);
 }
 
@@ -87,58 +100,13 @@ function loadTable(tipoDescuento) {
 
 
             });
-            document.getElementById(getInputTotalId(tipoDescuento)).value = formatMoney(total);
-            document.getElementById(getInputAbonadoId(tipoDescuento)).value = formatMoney(abonado);
-            document.getElementById(getInputPendienteId(tipoDescuento)).value = formatMoney(pendiente);
+            // document.getElementById(getInputTotalId(tipoDescuento)).value = formatMoney(total);
+            // document.getElementById(getInputAbonadoId(tipoDescuento)).value = formatMoney(abonado);
+            // document.getElementById(getInputPendienteId(tipoDescuento)).value = formatMoney(pendiente);
         });
 
         tablaGeneral = $('#tabla-general').DataTable({
-            // dom: 'Brt' + "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
-            // "buttons": [
-            //     {
-            //         text: '<i class="fa fa-edit" id="btn-nuevo-descuento"></i> NUEVO DESCUENTO',
-            //         action: function () {
-            //             if (tipoDescuento === '1') {
-            //                 open_Mb();
-            //             }
-            //         },
-            //         attr: {
-            //             class: ' btn-azure'
-            //         }
-            //     },
-            //     {
-            //         extend: 'excelHtml5',
-            //         text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-            //         className: 'buttons-excel',
-            //         titleAttr: 'DESCUENTOS UNIVERSIDAD',
-            //         title: 'DESCUENTOS UNIVERSIDAD',
-            //         exportOptions: {
-            //             columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,13,14],
-            //             format: {
-            //                 header: function (d, columnIndex) {
-            //                     return ' ' + titulosTablaGeneral[columnIndex] + ' ';
-            //                 }
-            //             }
-            //         }
-            //     }
-            // ],
-            // "width": 'auto',
-            // "ordering": false,
-            // "destroy": true,
-            // "pageLength": 10,
-            // "bAutoWidth": false,
-            // "fixedColumns": true,
-            // language: {
-            //     url: "./..//static/spanishLoader_v2.json",
-            //     paginate: {
-            //         previous: "<i class='fa fa-angle-left'>",
-            //         next: "<i class='fa fa-angle-right'>"
-            //     }
-            // },
-            // scrollX: true,
-            // pagingType: "full_numbers",
-            // "columns": [
-                dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+            dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
         bAutoWidth:true,
@@ -149,7 +117,7 @@ function loadTable(tipoDescuento) {
             titleAttr: 'DESCARGAR ARCHIVO DE EXCEL',
             title: 'Reporte Descuentos Universidad',
             exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulos_intxt[columnIdx] + ' ';
@@ -172,6 +140,41 @@ function loadTable(tipoDescuento) {
         },
         destroy: true,
         ordering: false,
+        
+        // dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        // width: "100%",
+        // scrollX: true,
+        // bAutoWidth:true,
+        // buttons:[{
+        //     extend: 'excelHtml5',
+        //     text: '<i class="fa fa-file-excel-o" aria-hidden="true" title="DESCARGAR ARCHIVO DE EXCEL"></i>',
+        //     className: 'btn buttons-excel',
+        //     titleAttr: 'DESCARGAR ARCHIVO DE EXCEL',
+        //     title: 'Reporte Descuentos Universidad',
+        //     exportOptions: {
+        //         columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+        //         format: {
+        //             header: function (d, columnIdx) {
+        //                 return ' ' + titulos_intxt[columnIdx] + ' ';
+        //             }
+        //         }
+        //     }
+        // }],
+        // pagingType: "full_numbers",
+        // fixedHeader: true,
+        // lengthMenu: [
+        //     [10, 25, 50, -1],
+        //     [10, 25, 50, "Todos"]
+        // ],
+        // language: {
+        //     url: `${general_base_url}static/spanishLoader_v2.json`,
+        //     paginate: {
+        //         previous: "<i class='fa fa-angle-left'>",
+        //         next: "<i class='fa fa-angle-right'>"
+        //     }
+        // },
+        // destroy: true,
+        // ordering: false,
         columns:[
                 {
                     // ID
@@ -447,7 +450,7 @@ function loadTable(tipoDescuento) {
                     }],
                     
             "ajax": {
-                "url": `getDataConglomerado/${tipoDescuento}`,
+                "url": `getDataConglomerado/1`,
                 "type": "GET",
                 cache: false,
                 "data": function (d) {}
