@@ -409,8 +409,10 @@
                         <div class="col-md-12">
 							<div class="form-group">
 								<label class="control-label">Lotes</label>
-								<select id="condominios1"
-										name="condominios1[]"
+                                <!-- <textarea id="condominios1"></textarea> -->
+                                <div id="condominios1" name="condominios1" class="form-control" required></div>
+								<!-- <select id="condominios2"
+										name="condominios2[]"
 										class="selectpicker select-gral m-0"
 										data-style="btn"
 										data-show-subtext="true"
@@ -420,7 +422,7 @@
 										data-size="7"
 										data-container="body"
 										required>
-								</select>
+								</select> -->
 							</div>	
                         </div>
 
