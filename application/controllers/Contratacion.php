@@ -37,12 +37,12 @@ class Contratacion extends CI_Controller
     }
 
     public function lista_proyecto() {
-        if(in_array(array($this->session->userdata('id_rol'), array(17, 70, 71, 73, 33, 78))))
+        /*if(in_array(array($this->session->userdata('id_rol'), array(17, 70, 71, 73, 33, 78))))
             $where = '';
         else
-            $where = ' AND idResidencial NOT IN (14) ';
+            $where = ' AND idResidencial NOT IN (14) ';*/
     	$this->validateSession();
-        echo json_encode($this->Contratacion_model->get_proyecto_lista($where)->result_array());
+        echo json_encode($this->Contratacion_model->get_proyecto_lista()->result_array());
     }
 
     public function lista_condominio($proyecto) {

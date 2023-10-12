@@ -89,36 +89,46 @@ class Usuarios extends CI_Controller
         "modificado_por" => $this->session->userdata('id_usuario')
         );
 //        print_r($_POST['menu'][0]);
-        /*$nuevoArray = array_unique($_POST['menu']);
+        /**/$nuevoArray = array_unique($_POST['menu']);
 
 
 
         if(isset($_POST['seleccionaTodo'])){
             echo 'Se va a meter el menu completo del perfil<br>';
         }else{
+            $itemsPadres = '';
+            $itemsHijos = '';
             echo 'Selecciones especificas del menú<br>';
             foreach ($nuevoArray as $index => $elemento) {
                 $nuevoArray[$index] = (array)$elemento;
                 if (json_decode($nuevoArray[$index][0])[0] == 0) {
                     //es padre
-                    echo 'Es padre:<br>';
-                    print_r(json_decode($nuevoArray[$index][0])[0]);
-                    echo '<br><br>';
+                    if($index == 0){
+                        $itemsPadres .= json_decode($nuevoArray[$index][0])[1];
+                    }else{
+                        $itemsPadres .= ' '.json_decode($nuevoArray[$index][0])[1];
+                    }
                 } else {
                     //es hijo
-                    echo 'Es hijo:<br>';
-                    print_r(json_decode($nuevoArray[$index][0])[0]);
-                    echo '<br><br>';
+                    if($itemsHijos == ''){
+                        $itemsHijos .= json_decode($nuevoArray[$index][0])[1];
+                    }else{
+                        $itemsHijos .= ' '.json_decode($nuevoArray[$index][0])[1];
+                    }
                 }
-
-
-                echo '<br><br>';
             }
+            $itemsHijos = str_replace(' ', ',', $itemsHijos);
+            $itemsPadres = str_replace(' ', ',', $itemsPadres);
+            echo $itemsPadres.'<br><br>';
+            echo $itemsHijos.'<br><br>';
         }
         echo '<br>';
-        exit;*/
+        exit;
         if (isset($_POST) && !empty($_POST)) {
-            $response = $this->Usuarios_modelo->saveUser($data);
+            $dataRespuesta = $this->Usuarios_modelo->saveUser($data);
+            if($dataRespuesta['response']==1){
+                "status "
+
             echo json_encode($response);
         }
     }

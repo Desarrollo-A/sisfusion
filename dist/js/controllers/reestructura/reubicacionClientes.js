@@ -142,13 +142,13 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
                 let btnShow = 'fa-upload';
                 if(d.id_estatus_preproceso == 2){
                     //subiendo corridas
-                    if(d.totalCorridas==3){
+                    if(d.totalCorridas==d.totalCorridasNumero){
                         editar = 1;
                         btnShow = 'fa-edit';
                     }
                 }else if(d.id_estatus_preproceso == 3){
                     //subiendo contratos
-                    if(d.totalContratos==3){
+                    if(d.totalContratos==d.totalContratoNumero){
                         editar = 1;
                         btnShow = 'fa-edit';
 
@@ -163,7 +163,7 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
                             data-tipoLote="${d.tipo_lote}"
                             data-idProyecto="${d.idProyecto}"
                             data-statusPreproceso="${d.id_estatus_preproceso}">
-                            <i class="fas fa-user-edit"></i>
+                            <i class="fas fa-clipboard-list"></i>
                     </button>`;
                 const BTN_AVANCE =  `<button class="btn-data btn-green btn-avanzar"
                     data-toggle="tooltip" 
@@ -177,6 +177,7 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
                 const BTN_INFOCLIENTE =  `<button class="btn-data btn-green infoUser"
                     data-toggle="tooltip" 
                     data-placement="left"
+                    title="INFORMACIÓN CLIENTE"
                     data-idCliente="${d.idCliente}" 
                     data-idLote="${d.idLote}">
                     <i class="fas fa-user-check"></i>
@@ -208,13 +209,13 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
                     }
                 }
                 else if (d.id_estatus_preproceso == 2 && id_rol_general == 17) { // Contraloría: ELABORACIÓN DE CORRIDAS
-                    if (d.totalCorridas == 3)
+                    if (d.totalCorridas == d.totalCorridasNumero)
                         btns += BTN_AVANCE;
                     btns += BTN_SUBIR_ARCHIVO
                 }
                 else if (d.id_estatus_preproceso == 3 && id_rol_general == 15) { // Jurídico: ELABORACIÓN DE CONTRATO Y RESICISIÓN
 
-                    if (d.totalContratos == 3 && d.totalRescision == 1)
+                    if (d.totalContratos == d.totalContratoNumero && d.totalRescision == 1)
                         btns += BTN_AVANCE;
                     btns += BTN_SUBIR_ARCHIVO
 
@@ -351,18 +352,35 @@ $(document).on('click', '.btn-asignar-propuestas', function () {
                 <input type="hidden" id="statusPreproceso" name="statusPreproceso" value="${statusPreproceso}">
                 <div class="row mt-2">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
-                        <button type="button" class="btn btn-simple btn-danger" onclick="hideModal();">Cancelar</button>
+                        <button type="button" class="btn btn-simple btn-danger" onclick="cerrarModalPropuestas(${statusPreproceso});">Cancelar</button>
                         ${botonAceptar}
                     </div>
                 </div>
             </div>
         </form>
     `);
+
+    const config = (statusPreproceso == 1)
+        ? { backdrop: 'static', keyboard: false, show: true }
+        : { backdrop: true, keyboard: true, show: true };
+
     showModal();
+    changeOptionsModal(config);
 
     getProyectosAOcupar(idProyecto, superficie, tipoLote);
     getPropuestas(idLoteOriginal, statusPreproceso, idProyecto, superficie, tipoLote);
 });
+
+const cerrarModalPropuestas = (preproceso) => {
+    if (preproceso != 1) {
+        hideModal();
+        return;
+    }
+
+    if (validarLotesRequeridos($('#infoLotesSeleccionados .lotePropuesto').length)) {
+        hideModal();
+    }
+}
 
 $(document).on('click', '.infoUser', function (){
     $('#idCliente').val($(this).attr('data-idCliente'));
@@ -751,15 +769,23 @@ function divLotesSeleccionados(statusPreproceso, nombreLote, superficie, idLote,
 
 $(document).on("submit", "#formReubicacion", function(e){
     e.preventDefault();
-    $('#spiner-loader').removeClass('hide');
+    const existeSeleccion = $(this).serializeArray().find(obj => obj.name === 'idLote');
+
+    if (!existeSeleccion) {
+        alerts.showNotification("top", "right", "Debe seleccionar un lote para la reubicación.", "danger");
+        return;
+    }
+
     let data = new FormData($(this)[0]);
+    $('#spiner-loader').removeClass('hide');
+
     $.ajax({
         url : 'setReubicacion',
         data: data,
         cache: false,
         contentType: false,
         processData: false,
-        type: 'POST', 
+        type: 'POST',
         success: function(data){
             data = JSON.parse(data);
             alerts.showNotification("top", "right", ""+data.message+"", ""+data.color+"");
@@ -776,10 +802,8 @@ $(document).on("submit", "#formReubicacion", function(e){
 
 $(document).on("submit", "#formAsignarPropuestas", function(e){
     e.preventDefault();
-    const numberLotes = $('#infoLotesSeleccionados .lotePropuesto').length;
 
-    if(numberLotes < 3){
-        alerts.showNotification("top", "right", "Debes seleccionar 3 lotes", "danger");
+    if (!validarLotesRequeridos($('#infoLotesSeleccionados .lotePropuesto').length)) {
         return;
     }
 
@@ -844,8 +868,7 @@ $(document).on('click', '.btn-avanzar', async function () {
     if (tipoTransaccion == 1) {
         const totalP = await totalPropuestas(idLote);
 
-        if (totalP < 3) {
-            alerts.showNotification("top", "right", "Debes seleccionar 3 lotes", "danger");
+        if (!validarLotesRequeridos(totalP)) {
             return;
         }
     }
@@ -907,3 +930,20 @@ $(document).on("submit", "#formAvanzarEstatus", function(e) {
         }
     });
 });
+
+/**
+ * @return {boolean}
+ */
+const validarLotesRequeridos = (numberLotes) => {
+    if (numberLotes === 0) {
+        alerts.showNotification("top", "right", "Debes seleccionar al menos un lote", "danger");
+        return false;
+    }
+
+    if(numberLotes > 3){
+        alerts.showNotification("top", "right", "Debes seleccionar máximo 3 lotes", "danger");
+        return false;
+    }
+
+    return true;
+}

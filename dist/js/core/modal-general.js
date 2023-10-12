@@ -20,5 +20,10 @@ const changeSizeModal = (className = '') => {
 }
 
 const hideModal = () => {
+    changeOptionsModal({ backdrop: true, keyboard: true, show: true });
     $('#blank-modal').modal('hide');
+}
+
+const changeOptionsModal = (options) => {
+    $('#blank-modal').data('bs.modal').options = options;
 }
