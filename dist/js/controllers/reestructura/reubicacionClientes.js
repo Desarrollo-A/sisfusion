@@ -36,6 +36,8 @@ const ESTATUS_PREPROCESO = [
     'PROCESO DE CONTRATACIÓN'
 ];
 
+const ROLES_PROPUESTAS = [2, 3, 5]; // ROLES PERMITIDOS PARA CARGA, EDICIÓN Y ENVÍO DE PROPUESTAS
+
 let titulosTabla = [];
 $('#reubicacionClientes thead tr:eq(0) th').each(function (i) {
     const title = $(this).text();
@@ -197,9 +199,9 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
                     <i class="fas ${btnShow}"></i>
                 </button>`;
 
-                if (d.id_estatus_preproceso == 0 && id_rol_general == 3) // Gerente: PENDIENTE CARGA DE PROPUESTAS
+                if (d.id_estatus_preproceso == 0 && ROLES_PROPUESTAS.includes(id_rol_general)) // Gerente/Subdirector: PENDIENTE CARGA DE PROPUESTAS
                     btns += BTN_PROPUESTAS;
-                else if (d.id_estatus_preproceso == 1 && id_rol_general == 3){ // Gerente: REVISIÓN DE PROPUESTAS
+                else if (d.id_estatus_preproceso == 1 && ROLES_PROPUESTAS.includes(id_rol_general)){ // Gerente/Subdirector: REVISIÓN DE PROPUESTAS
                     btns += BTN_PROPUESTAS;
                     if(d.idLoteXcliente == null){
                         btns += BTN_INFOCLIENTE;
