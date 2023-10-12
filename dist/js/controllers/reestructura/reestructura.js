@@ -70,19 +70,20 @@ $(document).on('click', '.reesVal', function (){
     const precioAv = $(this).attr('data-precio');
 
     changeSizeModal('modal-md');
-        appendBodyModal(`<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
-                        <h4>¿Estás seguro de liberar el lote?</h4>
-                    </div>
-                    <br>
-                    <input type="hidden" name="idLote" id="idLoteenvARevCE" value="${idLoteReave}" >
-                    <input type="hidden" name="nombreLote" id="nombreLoteAv" value="${nombreLote}" >
-                    <input type="hidden" name="precio" id="precioAv" value="${precioAv}" >        
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                    <button type="button" id="saveLi" name="saveLi" class="btn btn-primary">Aceptar</button>
-                </div>`);
-        showModal();
+    appendBodyModal(`<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
+                <h4>¿Estás seguro de liberar el lote?</h4>
+            </div>
+            <br>
+            <input type="hidden" name="idLote" id="idLoteenvARevCE" value="${idLoteReave}" >
+            <input type="hidden" name="nombreLote" id="nombreLoteAv" value="${nombreLote}" >
+            <input type="hidden" name="precio" id="precioAv" value="${precioAv}" >        
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+            <button type="button" id="saveLi" name="saveLi" class="btn btn-primary">Aceptar</button>
+        </div>
+    `);
+    showModal();
 });
 
 $(document).on('click', '.stat5Rev', function () {
@@ -91,26 +92,27 @@ $(document).on('click', '.stat5Rev', function () {
     $("#grabado").empty();
 
     changeSizeModal('modal-md');
-        appendBodyModal(`<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
-                        <h4 class="modal-title text-center">Validar lote para reestructura</h4>
-                    </div>
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                <label>ESTATUS</label>
-                                <select name="grabado" id="grabado" class="selectpicker select-gral m-0 grabado" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
-                            </div>
-                        </div>
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1">
-                            <label>COMENTARIO</label>
-                            <textarea class="text-modal" id="comentario2" rows="3"></textarea>
-                        </div>
-                        <br>
-                        <input type="hidden" name="idLoteCatalogo" id="idLoteCatalogo" >
-                    <div class="modal-footer">
-                        <button type="button" id="cancelarValidacion" class="btn btn-danger btn-simple cancelarValidacion" data-dismiss="modal">Cancelar</button>
-                        <button type="button" id="guardarValidacion" name="guardarValidacion" class="btn btn-primary guardarValidacion">Registrar</button>
-                    </div>`);
-        showModal();
+    appendBodyModal(`<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
+            <h4 class="modal-title text-center">Validar lote para reestructura</h4>
+        </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <label>ESTATUS</label>
+                    <select name="grabado" id="grabado" class="selectpicker select-gral m-0 grabado" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1">
+                <label>COMENTARIO</label>
+                <textarea class="text-modal" id="comentario2" rows="3"></textarea>
+            </div>
+            <br>
+            <input type="hidden" name="idLoteCatalogo" id="idLoteCatalogo" >
+        <div class="modal-footer">
+            <button type="button" id="cancelarValidacion" class="btn btn-danger btn-simple cancelarValidacion" data-dismiss="modal">Cancelar</button>
+            <button type="button" id="guardarValidacion" name="guardarValidacion" class="btn btn-primary guardarValidacion">Registrar</button>
+        </div>
+    `);
+    showModal();
 
     $.post(general_base_url + "Reestructura/lista_catalogo_opciones", function (data) {
         var len = data.length;
@@ -179,19 +181,18 @@ $(document).on('click', '.reesInfo', function (){
     $("#spiner-loader").removeClass('hide');
 
     changeSizeModal('modal-md');
-        appendBodyModal(`<div class="modal-header">
-                    <h4 class="modal-title text-center">HISTORIAL MOVIMIENTOS</h4>
-                </div>
-                <div class="modal-body">
-                    <div role="tabpanel">
-                        <div class="tab-content">
-                            <div role="tabpanel" class="tab-pane active" id="historialTap">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="card card-plain">
-                                            <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
-                                                <ul class="timeline-3" id="historialLine"></ul>
-                                            </div>
+    appendBodyModal(`<div class="modal-header">
+                <h4 class="modal-title text-center">HISTORIAL MOVIMIENTOS</h4>
+            </div>
+            <div class="modal-body">
+                <div role="tabpanel">
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="historialTap">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card card-plain">
+                                        <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                            <ul class="timeline-3" id="historialLine"></ul>
                                         </div>
                                     </div>
                                 </div>
@@ -199,9 +200,10 @@ $(document).on('click', '.reesInfo', function (){
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" ><b>Cerrar</b></button>
-                </div>`);
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" ><b>Cerrar</b></button>
+            </div>`);
     showModal();
 
     $.getJSON("getHistorial/" + id_prospecto).done(function(data) {
