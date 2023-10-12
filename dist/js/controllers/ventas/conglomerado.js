@@ -674,8 +674,8 @@ function loadTable(tipoDescuento) {
 
             $.post('getLotesOrigen2/' + id_user + '/' + monto, function (data) {
                 var len = data.length;
-
- 
+                let  info = ''; 
+                info += " <div class='row col-md-12'>"
                 let sumaselected = 0;
                 for (var i = 0; i < len; i++) {
 
@@ -684,12 +684,17 @@ function loadTable(tipoDescuento) {
                     var pago_neodata = data[i]['pago_neodata'];
                     let comtotal = parseFloat(data[i]['comision_total']) - parseFloat(data[i]['abono_pagado']);
                     sumaselected = sumaselected + parseFloat(data[i]['comision_total']);
-
+                    info += " <div class=' col-md-6'>"
                     // $("#condominios1").append(`<option value='${comision},${comtotal.toFixed(2)},${pago_neodata},${name}' selected="selected">${name}  -   $${formatMoney(comtotal.toFixed(2))}</option>`);
+                    info += '<p >'+(i+1) + ' - ' + name+ ' - <b>' + formatMoney(comtotal.toFixed(2)) + '</b></p>';
+                    info += " </div>	"
+                    //de kel solo comentado de rapido $("#condominios1").append('<p>'+(i+1) + ' - ' + name+ ' - <b>' + formatMoney(comtotal.toFixed(2)) + '</b></p>');
 
-                    $("#condominios1").append('<p>'+(i+1) + ' - ' + name+ ' - <b>' + formatMoney(comtotal.toFixed(2)) + '</b></p>');
+
                     // $("#condominios1").val(`${comision}${comtotal.toFixed(2)}${pago_neodata}${name}<BR>`);
                 }
+                info += " </div>	"
+                $("#condominios1").append(info);
 
                 $("#idmontodisponible").val('$' + formatMoney(sumaselected));
                 verificar();
