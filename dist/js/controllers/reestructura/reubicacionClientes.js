@@ -373,37 +373,37 @@ $(document).on('click', '.infoUser', function (){
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                            <label class="control-label">NOMBRE (<small style="color: red;">*</small>)</label>
+                            <label class="control-label">Nombre (<small style="color: red;">*</small>)</label>
                             <input class="form-control input-gral" name="nombreCli" id="nombreCli" type="text" value="${nombreLote}" required/>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                            <label class="control-label">APELLIDO PATERNO (<small style="color: red;">*</small>)</label>
+                            <label class="control-label">Apellido paterno (<small style="color: red;">*</small>)</label>
                             <input class="form-control input-gral" name="apellidopCli" id="apellidopCli" value="${apePaterno}" type="text" required/>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                            <label class="control-label">APELLIDO MATERNO (<small style="color: red;">*</small>)</label>
+                            <label class="control-label">Apellido materno (<small style="color: red;">*</small>)</label>
                             <input class="form-control input-gral" name="apellidomCli" id="apellidomCli" type="text" value="${apeMaterno}" required/>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
-                            <label class="control-label">TELÉFONO (<small style="color: red;">*</small>)</label>
+                            <label class="control-label">Teléfono (<small style="color: red;">*</small>)</label>
                             <input class="form-control input-gral" name="telefonoCli" id="telefonoCli" type="number" maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" value="${telefono}" required/>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
-                            <label class="control-label">CORREO (<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral" name="correoCli" id="correoCli" type="text" value="${correo}" required/>
+                            <label class="control-label">Correo (<small style="color: red;">*</small>)<small class="pl-1" id="result"></small></label>
+                            <input class="form-control input-gral" name="correoCli" id="correoCli" oninput= "validate()" type="email" value="${correo}" required/>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                            <label class="control-label">DOMICILIO (<small style="color: red;">*</small>)</label>
+                            <label class="control-label">Domicilio (<small style="color: red;">*</small>)</label>
                             <input class="form-control input-gral" name="domicilioCli" id="domicilioCli" type="text" value="${domicilio}" required/>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                            <label class="control-label">ESTADO CIVIL (<small style="color: red;">*</small>)</label>
+                            <label class="control-label">Estado civil (<small style="color: red;">*</small>)</label>
                             <select name="estadoCli" title="SELECCIONA UNA OPCIÓN" id="estadoCli" class="selectpicker m-0 select-gral" data-container="body" data-width="100%" required></select>
                         </div>
                     </div>
@@ -413,7 +413,7 @@ $(document).on('click', '.infoUser', function (){
                             <input class="form-control input-gral" name="ineCLi" id="ineCLi" type="number" maxlength="13" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" value="${ine}" required/>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m.0">
-                            <label class="control-label">OCUPACIÓN (<small style="color: red;">*</small>)</label>
+                            <label class="control-label">Ocupación (<small style="color: red;">*</small>)</label>
                             <input class="form-control input-gral" name="ocupacionCli" id="ocupacionCli" type="text" value="${ocupacion}" required/>
                         </div>
                     </div>        
@@ -444,6 +444,27 @@ $(document).on('click', '.infoUser', function (){
     }, 'json');
 });
 
+const validateEmail = (email) => {
+    return email.match(
+        /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+}
+
+const validate = () => {
+    const $result = $('#result');
+    const email = $('#correoCli').val();
+    $result.text('');
+
+    if(validateEmail(email)){
+        $result.text('El correo es válido');
+        $result.css('color', 'rgb(26 159 10)');
+    } else{
+        $result.text('El correo es inválido.');
+        $result.css('color', 'red');
+    }
+    return false;
+}
+
 $(document).on('click', '#guardarCliente', function (){
     var idLote = $('#idLote').val();
     var nombreCli = $('#nombreCli').val();
@@ -457,7 +478,7 @@ $(document).on('click', '#guardarCliente', function (){
     var ocupacionCli = $('#ocupacionCli').val();
 
     if(ineCLi == ''){
-        alerts.showNotification("top", "right", "", "warning");
+        alerts.showNotification("top", "right", "Captura la INE", "warning");
         return;
     }
 
@@ -468,6 +489,11 @@ $(document).on('click', '#guardarCliente', function (){
 
     if (correoCli == '' || correoCli == null){
         alerts.showNotification("top", "right", "Captura el correo", "warning");
+        return;
+    }
+
+    if(!validateEmail(correoCli)){
+        alerts.showNotification("top", "right", "Capture el correo de forma correcta", "warning");
         return;
     }
     
