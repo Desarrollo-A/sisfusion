@@ -25,111 +25,6 @@
 			</div>
 		</div>
 
-        <div class="modal fade" id="catalogoRee" data-backdrop="static" data-keyboard="false">
-			<div class="modal-dialog">
-				<div class="modal-content" > 
-					<div class="modal-header">
-                        <div class="row d-flex justify-center align-center">
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
-			                    <h4 class="modal-title text-center">CATÁLOGO</h4>
-                            </div>
-                        </div>
-					</div>
-					<div class="modal-body">
-                        <div class="material-datatables">
-                            <div class="form-group">
-                                <table class="table-striped table-hover" id="tableCatalogo" name="tableCatalogo">
-                                    <thead>
-                                        <tr>
-                                            <th>NOMBRE</th>
-                                            <th>ACCIONES</th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                            </div>
-                        </div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-					</div>
-				</div>
-			</div>
-		</div>
-
-        <div class="modal fade" id="modalBorrar" data-backdrop="static" data-keyboard="false">
-			<div class="modal-dialog modal-sm">
-				<div class="modal-content"> 
-					<div class="modal-body">
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
-                            <h4>¿Está seguro de borrar la opción?</h4>
-                        </div>
-                        <br>
-                        <input type="hidden" name="idOpcion" id="idOpcion">       
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-						<button type="button" id="borrarOp" name="borrarOp" class="btn btn-primary">Aceptar</button>
-					</div>
-				</div>
-			</div>
-		</div>
-
-        <div class="modal fade modal-alertas" id="catalogoNuevo" role="dialog">
-			<div class="modal-dialog modal-sm">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title text-center">Cargar nueva opción</h5>
-					</div>
-					<form id="addNewDesc">
-						<input type="hidden" value="0" name="id_opcion" id="id_opcion">
-						<div class="form-group d-flex justify-center">
-							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-								<input type="text" class="form-control input-gral" id="inputCatalogo" name="inputCatalogo" required>
-							</div>
-						</div>
-						<div class="container-fluid">
-							<div class="row mt-1 mb-1 d-flex align-center">
-								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-									<input type="button" class="btn btn-danger btn-simple m-0" data-dismiss="modal" value="CANCELAR">
-								</div>
-								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-									<input type="button" class="btn btn-primary" name="guardarCatalogo"  id="guardarCatalogo" value="GUARDAR">
-								</div>
-							</div>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-
-        <div class="modal fade modal-alertas" id="editarModel" role="dialog">
-			<div class="modal-dialog modal-sm">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title text-center">Editar opción</h5>
-					</div>
-					<form id="addNewDesc">
-						<input type="hidden" value="0" name="id_opcionEdit" id="id_opcionEdit">
-						<div class="form-group d-flex justify-center">
-							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-								<input type="text" class="form-control input-gral" id="editarCatalogo" name="editarCatalogo" required>
-							</div>
-						</div>
-						<div class="container-fluid">
-							<div class="row mt-1 mb-1 d-flex align-center">
-								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-									<input type="button" class="btn btn-danger btn-simple m-0 align-center" data-dismiss="modal" value="CANCELAR">
-								</div>
-								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-									<input type="button" class="btn btn-primary" name="guardarEdit"  id="guardarEdit" value="GUARDAR">
-								</div>
-							</div>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -227,4 +122,4 @@
 <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
 <script>
         Shadowbox.init();
-    </script>
+</script>

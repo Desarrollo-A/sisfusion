@@ -15,7 +15,6 @@ $(document).ready(function () {
         $("#file-name2").val("");
         $("#fileElm3").val(null);
         $("#file-name3").val("");
-
         $("#Resicion").val(null);
         $("#resicion-name").val("");
     });
@@ -164,9 +163,6 @@ $(document).on('click', '.btn-abrir-modal',function(){
             }
         });
 
-
-
-
     $("#archivosReestructura").modal();
 });
 
@@ -197,9 +193,6 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote){
                                         <p class="m-0">Estado civil. ${estadoCivil}</p>
                                     </div>
                                 </div>`;
-
-
-
 
     arrayKeysArchivos = [];
     let nombreArchivo = '';
@@ -304,8 +297,6 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote){
         }
     }
 
-
-
     infoClienteContenedor.innerHTML = contenidoHTMLinfoCL;
     contenedorArchivos.innerHTML = contenidoHTML;
     //nombre de archivo en front
@@ -322,7 +313,6 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote){
         input.trigger("fileselect", [numFiles, label]);
     });
 }
-
 
 $(document).on("click", "#sendRequestButton", function (e) {
     e.preventDefault();
@@ -472,10 +462,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
             }
         }
     }
-
-
 });
-
 
 $(document).on('click', '.ver-archivo', function(){
     // visorArchivo(rutaArchivo, nombreArchivo);

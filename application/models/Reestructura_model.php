@@ -140,10 +140,6 @@ class Reestructura_model extends CI_Model
         return $this->db->query("SELECT TOP (1) id_opcion + 1 AS lastId FROM opcs_x_cats WHERE id_catalogo = 100 ORDER BY id_opcion DESC")->row();
     }
 
-    function nuevaOpcion($datos){
-        return $this->db->query("INSERT INTO opcs_x_cats values(".$datos['id'].",100,'".$datos['nombre']."',1,'".$datos['fecha_creacion']."',1,NULL)");
-    }
-
     public function get_valor_lote($id_proyecto){
         ini_set('memory_limit', -1);
         return $this->db->query("SELECT res.nombreResidencial,con.nombre AS condominio, lot.nombreLote,
@@ -177,22 +173,9 @@ class Reestructura_model extends CI_Model
             ->result();
     }
 
-    public function actualizarValidacion($datos)
-    {
-        return $this->db->query("UPDATE lotes SET opcionReestructura = ".$datos['opcionReestructura'].", comentarioReubicacion = '".$datos['comentario']."', usuario = ".$datos['userLiberacion']." where idLote = ".$datos['idLote']." ");
-    }
-
     public function insertarCliente($datos)
     {
         return $this->db->query("INSERT INTO datos_x_cliente ([idLote],[nombre],[apellido_paterno],[apellido_materno],[estado_civil],[ine],[domicilio_particular],[correo],[telefono1],[ocupacion],[rescision],[fecha_creacion],[creado_por],[fecha_modificacion],[modificado_por]) VALUES (".$datos['idLote'].", '".$datos['nombre']."', '".$datos['apellido_paterno']."', '".$datos['apellido_materno']."', ".$datos['estado_civil'].", '".$datos['ine']."', '".$datos['domicilio_particular']."', '".$datos['correo']."', '".$datos['telefono1']."', '".$datos['ocupacion']."', null, GETDATE(), 1, GETDATE(), 1) ");
-    }
-
-    public function borrarOpcionModel($datos){
-        return $this->db->query("UPDATE opcs_x_cats SET estatus = 0 WHERE id_catalogo = 100 AND id_opcion = ".$datos['idOpcion']."");
-    }
-
-    public function editarOpcionModel($datos){
-        return $this->db->query("UPDATE opcs_x_cats set nombre = '".$datos['editarCatalogo']."' where id_opcion = ".$datos['idOpcionEdit']." and id_catalogo = 100");
     }
 
     public function historialModel($id_prospecto){
