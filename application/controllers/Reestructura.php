@@ -92,7 +92,7 @@ class Reestructura extends CI_Controller{
 		if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_usuario') == 10878)
 			echo json_encode($this->Reestructura_model->get_proyecto_listaCancelaciones()->result_array());
 		else if($this->session->userdata('id_usuario') == 5107 && $bandera == 1) // MJ: SELECT DE LA VISTA LIBERAR
-          echo json_encode($this->Reestructura_model->get_proyecto_lista_yola()->result_array());
+            echo json_encode($this->Reestructura_model->get_proyecto_lista_yola()->result_array());
         else // MJ: SELECT DE LA VISTA reestructura
             echo json_encode($this->Reestructura_model->get_proyecto_lista(1)->result_array());
     }
@@ -105,28 +105,17 @@ class Reestructura extends CI_Controller{
 		$idOpcion = $this->Reestructura_model->insertOpcion();
 		$idOpcion = $idOpcion->lastId;
 		$dataPost = $_POST;
-		$datos["id"] = $idOpcion;
+		$datos["id_opcion"] = $idOpcion;
+        $datos["id_catalogo"] = 100;
 		$datos["nombre"] = $dataPost['nombre'];
+        $datos["estatus"] = 1;
 		$datos["fecha_creacion"] = date('Y-m-d H:i:s');
-
-		$insert = $this->Reestructura_model->nuevaOpcion($datos);
+        $datos["creado_por"] = 1;
+        $datos["color"] = NULL;
+        
+		$insert = $this->General_model->addRecord('opcs_x_cats', $datos);
 
 		if ($insert == TRUE) {
-			$response['message'] = 'SUCCESS';
-			echo json_encode(1);
-		} else {
-			$response['message'] = 'ERROR';
-			echo json_encode(0);
-		}
-	}
-
-	public function borrarOpcion(){
-
-		$dataPost = $_POST;
-		$datos["idOpcion"] = $dataPost['idOpcion'];
-		$update = $this->Reestructura_model->borrarOpcionModel($datos);
-
-		if ($update == TRUE) {
 			$response['message'] = 'SUCCESS';
 			echo json_encode(1);
 		} else {
@@ -139,29 +128,14 @@ class Reestructura extends CI_Controller{
         echo json_encode($this->Reestructura_model->historialModel($id_prospecto)->result_array());
     }
 
-	public function editarOpcion(){
-		$dataPost = $_POST;
-		$datos["idOpcionEdit"] = $dataPost['idOpcionEdit'];
-		$datos["editarCatalogo"] = $dataPost['editarCatalogo'];
-		$update = $this->Reestructura_model->editarOpcionModel($datos);
-
-		if ($update == TRUE) {
-			$response['message'] = 'SUCCESS';
-			echo json_encode(1);
-		} else {
-			$response['message'] = 'ERROR';
-			echo json_encode(0);
-		}
-	}
-
 	public function validarLote(){
 
 		$dataPost = $_POST;
-		$datos["idLote"] = $dataPost['idLote'];
+		$datosId["idLote"] = $dataPost['idLote'];
 		$datos["opcionReestructura"] = $dataPost['opcionReestructura'];
-		$datos["comentario"] = $dataPost['comentario'];
-		$datos["userLiberacion"] = $this->session->userdata('id_usuario');
-		$update = $this->Reestructura_model->actualizarValidacion($datos);
+		$datos["comentarioReubicacion"] = $dataPost['comentario'];
+		$datos["usuario"] = $this->session->userdata('id_usuario');
+        $update = $this->General_model->updateRecord('lotes', $datos, 'idLote', $datosId["idLote"]);
 
 		if ($update == TRUE) {
 			$response['message'] = 'SUCCESS';

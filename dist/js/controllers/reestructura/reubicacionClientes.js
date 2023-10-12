@@ -383,32 +383,91 @@ const cerrarModalPropuestas = (preproceso) => {
 }
 
 $(document).on('click', '.infoUser', function (){
-    $('#idCliente').val($(this).attr('data-idCliente'));
-    $('#idLote').val($(this).attr('data-idLote'));
     $('#ineCLi').val('');
     $("#estadoCli").empty();
 
-    const idCliente = $("#idCliente").val();
-    const idLote = $("#idLote").val();
+    var idCliente = $(this).attr('data-idCliente');
+    var idLote = $(this).attr('data-idLote');
 
-    $.getJSON("getCliente/" + idCliente + "/" + idLote, function(cliente) {
-        $('#nombreCli').val(cliente.nombre);
-        $('#apellidopCli').val(cliente.apellido_paterno);
-        $('#apellidomCli').val(cliente.apellido_materno);
-        $('#telefonoCli').val(cliente.telefono1);
-        $('#correoCli').val(cliente.correo);
-        $('#domicilioCli').val(cliente.domicilio_particular);
-        $('#ocupacionCli').val(cliente.ocupacion);
-        $('#ineCLi').val(cliente.ine);
+    $.getJSON("getCliente/" + idCliente + "/" + idLote  , function(cliente) {
+        
+        const nombreLote = cliente.nombre;
+        const apePaterno = cliente.apellido_paterno;
+        const apeMaterno = cliente.apellido_materno;
+        const telefono = cliente.telefono1;
+        const correo = cliente.correo;
+        const domicilio = cliente.domicilio_particular;
+        const ocupacion= cliente.ocupacion;
+        const ine = cliente.ine;
+
+        changeSizeModal('modal-md');
+        appendBodyModal(`<div class="modal-header">
+                    <h4 class="modal-title text-center">Corrobora la información del cliente</h4>
+                </div>	
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                            <label class="control-label">NOMBRE (<small style="color: red;">*</small>)</label>
+                            <input class="form-control input-gral" name="nombreCli" id="nombreCli" type="text" value="${nombreLote}" required/>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                            <label class="control-label">APELLIDO PATERNO (<small style="color: red;">*</small>)</label>
+                            <input class="form-control input-gral" name="apellidopCli" id="apellidopCli" value="${apePaterno}" type="text" required/>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                            <label class="control-label">APELLIDO MATERNO (<small style="color: red;">*</small>)</label>
+                            <input class="form-control input-gral" name="apellidomCli" id="apellidomCli" type="text" value="${apeMaterno}" required/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
+                            <label class="control-label">TELÉFONO (<small style="color: red;">*</small>)</label>
+                            <input class="form-control input-gral" name="telefonoCli" id="telefonoCli" type="number" maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" value="${telefono}" required/>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
+                            <label class="control-label">CORREO (<small style="color: red;">*</small>)</label>
+                            <input class="form-control input-gral" name="correoCli" id="correoCli" type="text" value="${correo}" required/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                            <label class="control-label">DOMICILIO (<small style="color: red;">*</small>)</label>
+                            <input class="form-control input-gral" name="domicilioCli" id="domicilioCli" type="text" value="${domicilio}" required/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                            <label class="control-label">ESTADO CIVIL (<small style="color: red;">*</small>)</label>
+                            <select name="estadoCli" title="SELECCIONA UNA OPCIÓN" id="estadoCli" class="selectpicker m-0 select-gral" data-container="body" data-width="100%" required></select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
+                            <label class="control-label">INE (<small style="color: red;">*</small>)</label>
+                            <input class="form-control input-gral" name="ineCLi" id="ineCLi" type="number" maxlength="13" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" value="${ine}" required/>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m.0">
+                            <label class="control-label">OCUPACIÓN (<small style="color: red;">*</small>)</label>
+                            <input class="form-control input-gral" name="ocupacionCli" id="ocupacionCli" type="text" value="${ocupacion}" required/>
+                        </div>
+                    </div>        
+                    <input type="hidden" name="idCliente" id="idCliente" value="${idCliente}">
+                    <input type="hidden" name="idLote" id="idLote" value="${idLote}">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="cancelarValidacion" class="btn btn-danger btn-simple cancelarValidacion" data-dismiss="modal">Cancelar</button>
+                    <button type="button" id="guardarCliente" name="guardarCliente" class="btn btn-primary guardarValidacion">GUARDAR</button>
+                </div>`);
+        showModal();
 
         $.post("getEstadoCivil", function(estadoCivil) {
-            const len = estadoCivil.length;
-            for (let i = 0; i < len; i++) {
-                const id = estadoCivil[i]['id_opcion'];
-                const name = estadoCivil[i]['nombre'];
+            var len = estadoCivil.length;
+            for (var i = 0; i < len; i++) {
+                var id = estadoCivil[i]['id_opcion'];
+                var name = estadoCivil[i]['nombre'];
 
                 if(id == cliente.idEstadoC){
-                    $("#estadoCli").append($('<option selected>').val(id).text(name.toUpperCase()));
+                    $("#estadoCli").append($('<option selected>').val(id).text(name.toUpperCase()));    
                 }else{
                     $("#estadoCli").append($('<option>').val(id).text(name.toUpperCase()));
                 }
@@ -416,7 +475,6 @@ $(document).on('click', '.infoUser', function (){
             $("#estadoCli").selectpicker('refresh');
         }, 'json');
 
-        $('#clienteConsulta').modal();
     }, 'json');
 });
 
@@ -433,12 +491,12 @@ $(document).on('click', '#guardarCliente', function (){
     var ocupacionCli = $('#ocupacionCli').val();
 
     if(ineCLi == ''){
-        alerts.showNotification("top", "right", "Captura el número INE", "warning");
+        alerts.showNotification("top", "right", "", "warning");
         return;
     }
 
     if (telefonoCli == '' || telefonoCli == null){
-        alerts.showNotification("top", "right", "Captura el número de teléfono", "warning");
+        alerts.showNotification("top", "right", "El número de el INE debe tener 13 caracteres", "warning");
         return;
     }
 
@@ -469,6 +527,7 @@ $(document).on('click', '#guardarCliente', function (){
     datos.append("ineCLi", ineCLi);
     datos.append("ocupacionCli", ocupacionCli);
 
+    $("#spiner-loader").removeClass('hide');
     $.ajax({
         method: 'POST',
         url: general_base_url + 'Reestructura/insetarCliente/'+ idLote,
@@ -477,8 +536,9 @@ $(document).on('click', '#guardarCliente', function (){
         contentType: false,
         success: function(data) {
             if (data == 1) {
-            $('#clienteConsulta').modal('hide');
+            hideModal();
             alerts.showNotification("top", "right", "Información capturada con éxito.", "success");
+            $("#spiner-loader").addClass('hide');
             $('#ineCLi').val('');
             $('#telefonoCli').val('');
             $('#correoCli').val('');
@@ -490,6 +550,7 @@ $(document).on('click', '#guardarCliente', function (){
         error: function(){
             $('#aceptarReestructura').modal('hide');
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            $("#spiner-loader").addClass('hide');
         }
     });
 });
