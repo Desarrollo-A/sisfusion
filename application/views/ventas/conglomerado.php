@@ -237,8 +237,7 @@
                             <center>
                                 <button  name="updateDescuento" id="updateDescuento" class="btn btn-primary updateDescuento">GUARDAR</button>
                                 <button class="btn btn-danger" type="button" data-dismiss="modal" data-toggle="modal">
-                                    eee
-                                </button>
+                                 </button>
                             </center>
                         </div>
 
@@ -601,7 +600,7 @@
                                            id="descuento"
                                            name="descuento"
                                            autocomplete="off"
-                                           min="1"
+                                           min="1" 
                                            max="99000"
                                            step=".01"
                                            required />
@@ -743,7 +742,7 @@
                                         <div class="col-lg-12">
                                         <div class="form-group is-empty">
                                             <label for="proyecto">Tipo descuento:</label>
-                                            <select name="tipo_descuento" id="tipo_descuento" class="selectpicker select-gral" data-style="btn " data-show-subtext="true"
+                                            <select name="tipo_descuento" id="tipo_descuento" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" 
                                                     data-live-search="true"  title="Selecciona el tipo de descuento" data-size="7" required onChange="checkTypeOfDesc()">
                                                 <!--<option value="0">Seleccione all</option>-->
                                                 <option value="1" selected>Activos</option>
@@ -759,7 +758,7 @@
                                 </div>
                                 <div class="material-datatables">
                                     <div class="form-group">
-                                        <table class="table-striped table-hover" id="tabla_dispersar_comisiones" name="tabla_dispersar_comisiones">
+                                        <table class="table-striped table-hover" id="tabla-general" name="tabla-general">
                                             <thead>
                                                 <tr>
                                                     <th>ID</th>
