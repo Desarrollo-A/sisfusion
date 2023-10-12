@@ -290,7 +290,7 @@ class Juridico extends CI_Controller
 		$idStatusContratacion = $this->input->post('idStatusContratacion');
 		$idMovNuevo = 0;
 
-		if(in_array($idMovimiento, [23, 95, 97]) && in_array($perfil, [3, 5, 6, 7, 9, 13, 17, 32, 70]))
+		if(in_array($idMovimiento, [23, 95]) || $idMovimiento == 97 && in_array($perfil, [3, 5, 6, 7, 9, 13, 17, 32, 70]))
 			$idMovNuevo = 7;
 
 		if($idMovimiento == 36 && in_array($perfil, [7, 13, 17, 32, 70]) || $idMovimiento == 6 && in_array($perfil, [13, 17, 32, 70]) || $idStatusContratacion ==7 && $idMovimiento == 83)
