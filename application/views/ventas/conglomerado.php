@@ -410,7 +410,11 @@
 							<div class="form-group">
 								<label class="control-label">Lotes</label>
                                 <!-- <textarea id="condominios1"></textarea> -->
-                                <div id="condominios1" name="condominios1" class="form-control" required></div>
+                                <div id="condominios1" name="condominios1" class="" required>
+                                        <div class='col-md-4' id="montodisponible">
+                                            
+                                        </div>
+                                </div>
 								<!-- <select id="condominios2"
 										name="condominios2[]"
 										class="selectpicker select-gral m-0"

@@ -71,71 +71,63 @@ class Dispersion_automatica extends CI_Controller
                   echo('111111111111111111' );
                 
                 if($data[$i]->Marca == 1){
+                  
                   echo('lollll!!!!!!!!!!!!!!!!!!!!!!l.!!!!');
                   if($data[$i]->Aplicado > ($datos[$i]['ultimo_pago']+100)){
                       //  $d2 = $this->ComisionesNeo_model->getStatusNeodata( intval($datos[$i]['id_lote']));   
-                       $d2 = $this->ComisionesNeo_model->getStatusNeodata($datos[$i]['id_lote'] )->result_array();   
+                       $d2 = $this->ComisionesNeo_model->getStatusNeodata($datos[$i]['id_lo te'] )->result_array();   
                        echo json_encode($d2);
-                       echo('<pre>');
                        echo json_encode($datos[$i] );
+                       echo('<pre>');
                       $porcentajeLote = $this->Dispersion_automatica_model->porcentajeLotes($datos[$i]['id_lote'] );
                       echo(COUNT($porcentajeLote)); 
                       echo('<pre>');
                       echo('////////////////////////////////////////////');
                       echo('</pre>');
-                      foreach($porcentajeLote as $porcentaLote ){
+                    // esta madre es la que la buena kel me ayudo 
+                      // $respuesta1 =  $this->Dispersion_automatica_model->consulta($datos[$i]['id_lote']);
+                      // echo('<pre>');
+                      // echo('geremias geremiasgeremiasgeremiasgeremias');
+                      
+                      // echo json_encode($respuesta1);
+                      // echo('geremias geremiasgeremiasgeremiasgeremias');
+                      // echo('</pre>');
+                      // foreach($porcentajeLote as $porcentaLote ){
                         
-                        echo('<pre>');
-                        echo json_encode($porcentaLote);
-                        echo('cliente2');
-                        echo('</pre>');
-                        // for($i=0;$i<sizeof($id_comision);$i++){
-                        //   $var_n = str_replace($replace,"",$abono_nuevo[$i]);
-                          
-                        //   if($penalizacion == 1 && ($val_rol[$i] == 3 || $val_rol[$i] == 7 || $val_rol[$i] == 9)){
-                        //   // $respuesta = $this->Comisiones_model->insert_penalizacion_individual($id_comision[$i], $id_usuario[$i], $val_rol[$i], $var_n, $pago, $idCliente);
-                        //   }else{
-                        //     $respuesta = $this->Comisiones_model->insert_dispersion_individual($id_comision[$i], $id_usuario[$i], $var_n, $pago);
-                        //   }
-                        // }     
-                        //   for($i=0;$i<sizeof($id_comision);$i++){
-                        //   $var_n = str_replace($replace,"",$abono_nuevo[$i]);
-                          
-                        //   if($penalizacion == 1 && ($val_rol[$i] == 3 || $val_rol[$i] == 7 || $val_rol[$i] == 9)){
-                        //     $respuesta = $this->Comisiones_model->insert_penalizacion_individual($id_comision[$i], $id_usuario[$i], $val_rol[$i], $var_n, $pago, $idCliente);
-                        //   }else{
-                        //     $respuesta = $this->Comisiones_model->insert_dispersion_individual($id_comision[$i], $id_usuario[$i], $var_n, $pago);
-                        //   }
-                        // }
+                      //   echo('<pre>');
+                      //   echo json_encode($porcentaLote);
+                      //   echo('cliente2');
+                      //   echo('</pre>');
+           
 
 
-                      }
-                      echo('////////////////////////////////////////////');
-                        echo('</pre>');
-                       echo('<pre>');
-                       echo('cliente');
-                       echo json_encode($porcentajeLote[0]['id_cliente'] );
-                       echo('</pre>');
-                       echo('<pre>');
-                       echo('plan');
+                      // }
+                      // echo('////////////////////////////////////////////');
+                      //   echo('</pre>');
+                      //  echo('<pre>');
+                      //  echo('cliente');
+                      //  echo json_encode($porcentajeLote[0]['id_cliente'] );
+                      //  echo('</pre>');
+                      //  echo('<pre>');
+                      //  echo('plan');
 
-                       echo json_encode($porcentajeLote );
-                       echo('</pre>');
+                      //  echo json_encode($porcentajeLote );
+                      //  echo('</pre>');
                        //  ,$porcentajeLote[0]['plan_comision']
-                      // $this->Comisiones_model->porcentajes($cliente,$tipoVenta)
-                       echo('porcentaje');
-                       echo('</pre>');
-                       echo('<pre>');
+                      // // $this->Comisiones_model->porcentajes($cliente,$tipoVenta)
+                      //  echo('porcentaje');
+                      //  echo('</pre>');
+                      //  echo('<pre>');
                       //  $dtosPorcentajes = $this->Comisiones_model->porcentajes($cliente,$tipoVenta)
-                       echo json_encode($data[$i] );
-                      $PorcentajeUsuarios = $this->Comisiones_model->porcentajes($porcentajeLote[0]['id_cliente'],$porcentajeLote[0]['plan_comision']);
-                      echo('</pre>');    
-                      echo('<pre>');
-                      echo('porcentaje1');
-                      echo json_encode($PorcentajeUsuarios);
+                      //  echo json_encode($data[$i] );
+                      // $PorcentajeUsuarios = $this->Comisiones_model->porcentajes($porcentajeLote[0]['id_cliente'],$porcentajeLote[0]['plan_comision']);
+                      // echo('</pre>');    
+                      // echo('<pre>');
+                      // echo('porcentaje1');
+                      // echo json_encode($PorcentajeUsuarios);
               
-                      echo('porcentaje2');
-                      echo('</pre>');    
+                      // echo('porcentaje2');
+                      // echo('</pre>');    
                        
                 
                       
@@ -170,19 +162,7 @@ class Dispersion_automatica extends CI_Controller
               }else{
             }
         }
-        //  for($i = 0; $i < COUNT($datos); $i++){
-        //     $data[$i] = $this->ComisionesNeo_model->getGeneralStatusFromNeodata($datos[$i]['referencia'], $datos[$i]['idResidencial']);
-        //     if(!empty($data)){
-        //         if($data[$i]->Marca == 1){
-        //                  $this->ComisionesNeo_model->UpdateBanderaPagoComision2($datos[$i]['id_lote'], $data[$i]->Bonificado, $data[$i]->fpoliza, $data[$i]->Aplicado);
-        //                 $contador ++;
-        //         }else{
-        //              echo NULL;
-        //         }
-        //     }else{
-        //          echo NULL;
-        //     }
-        // }
+
     }else{
         echo NULL;
     }
