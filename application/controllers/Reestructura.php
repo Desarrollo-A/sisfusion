@@ -363,114 +363,107 @@ class Reestructura extends CI_Controller{
         $idLotes = $this->input->post('idLotes');
         $idLoteOriginal = $this->input->post('idLoteOriginal');
         $statusPreproceso = $this->input->post('statusPreproceso');
-        $idCliente = $this->input->post('idCliente');
-        $idUsuario = $this->session->userdata('id_usuario');
-        
-        
-        $arrayLotes = array();
-        $arrayLotesApartado = array();
+        $totalLotes = count($idLotes);
+        $flagConteo = 0;
+        $arrayNoDisponible = '';
+        foreach ($idLotes as $elementoLote) {
+            $dataDisponible = $this->Reestructura_model->checarDisponibleRe($elementoLote);
 
-        //AA: Se asignan propuesta por primera vez
-        if($statusPreproceso == 0){
-            foreach ($idLotes as $idLote){
-                $arrayLote = array(
-                    'idLote' => $idLoteOriginal,
-                    'id_lotep' => $idLote,
-                    'estatus' => 0,
-                    'creado_por' => $this->session->userdata('id_usuario'),
-                    'fecha_modificacion'   => date("Y-m-d H:i:s"),
-                    'modificado_por' => $this->session->userdata('id_usuario')
+            if (count($dataDisponible) > 0) {
+                if ($dataDisponible[0]['idLote'] == $elementoLote && ($dataDisponible[0]['idStatusLote'] == 15 || $dataDisponible[0]['idStatusLote'] == 1)) {//se checa que el devuelto si este en 15 y sea el que s emandó
+                    $flagConteo = $flagConteo + 1;
+                    $arrayNoDisponible .= '- ID LOTE: ' . $dataDisponible[0]['idLote'] . ' (' . $dataDisponible[0]['nombreLote'] . '),';
+                }
+            }
+        }
+        if ($flagConteo == $totalLotes) { //si todos estan disponibles se avanza
+            $arrayLotes = array();
+            $arrayLotesApartado = array();
+            //AA: Se asignan propuesta por primera vez
+            if ($statusPreproceso == 0) {
+                foreach ($idLotes as $idLote) {
+                    $arrayLote = array(
+                        'idLote' => $idLoteOriginal,
+                        'id_lotep' => $idLote,
+                        'estatus' => 0,
+                        'creado_por' => $this->session->userdata('id_usuario'),
+                        'fecha_modificacion' => date("Y-m-d H:i:s"),
+                        'modificado_por' => $this->session->userdata('id_usuario')
+                    );
+
+                    array_push($arrayLotes, $arrayLote);
+                }
+                if (!$this->General_model->insertBatch('propuestas_x_lote', $arrayLotes)) {
+                    $this->db->trans_rollback();
+
+                    echo json_encode([
+                        'titulo' => 'ERROR',
+                        'resultado' => FALSE,
+                        'message' => 'Error al dar el alta de las propuestas',
+                        'color' => 'danger'
+                    ]);
+                    return;
+                }
+            }
+            foreach ($idLotes as $idLote) {
+                $arrayLoteApartado = array(
+                    'idLote' => $idLote,
+                    'idStatusLote' => 16,
+                    'usuario' => $this->session->userdata('id_usuario')
                 );
 
-                array_push($arrayLotes, $arrayLote);
+                array_push($arrayLotesApartado, $arrayLoteApartado);
             }
-            if (!$this->General_model->insertBatch('propuestas_x_lote', $arrayLotes)) {
+            if (!$this->General_model->updateBatch('lotes', $arrayLotesApartado, 'idLote')) {
                 $this->db->trans_rollback();
-    
                 echo json_encode([
                     'titulo' => 'ERROR',
                     'resultado' => FALSE,
-                    'message' => 'Error al dar el alta de las propuestas',
+                    'message' => 'Error al actualizar en apartado los lotes',
                     'color' => 'danger'
                 ]);
                 return;
             }
-        }
-
-        foreach ($idLotes as $idLote){
-            $arrayLoteApartado = array(
-                'idLote' => $idLote,
-                'idStatusLote' => 16,
+            $updateLoteOriginal = array(
+                'estatus_preproceso' => 1,
                 'usuario' => $this->session->userdata('id_usuario')
             );
+            if (!$this->General_model->updateRecord("lotes", $updateLoteOriginal, "idLote", $idLoteOriginal)) {
+                $this->db->trans_rollback();
+                echo json_encode([
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'Error al actualizar en apartado los lotes',
+                    'color' => 'danger'
+                ]);
+                return;
+            }
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
 
-            array_push($arrayLotesApartado, $arrayLoteApartado);
-        }
-        
-        if(!$this->General_model->updateBatch('lotes', $arrayLotesApartado, 'idLote')){
-            $this->db->trans_rollback();
-            echo json_encode([
+                echo json_encode(array(
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'Error al dar el alta de propuestas de lotes',
+                    'color' => 'danger'
+                ));
+                return;
+            }
+            $this->db->trans_commit();
+            echo json_encode(array(
+                'titulo' => 'OK',
+                'resultado' => TRUE,
+                'message' => 'Proceso realizado correctamente.',
+                'color' => 'success'
+            ));
+        } else {
+            echo json_encode(array(
                 'titulo' => 'ERROR',
                 'resultado' => FALSE,
-                'message' => 'Error al actualizar en apartado los lotes',
+                'message' => 'Lotes no disponibles ' . $arrayNoDisponible.' Verifíquelos',
                 'color' => 'danger'
-            ]);
-            return;
+            ));
         }
-
-        $updateLoteOriginal = array(
-            'estatus_preproceso' => 1,
-            'usuario' => $this->session->userdata('id_usuario')
-        );
-        if(!$this->General_model->updateRecord("lotes", $updateLoteOriginal, "idLote", $idLoteOriginal)){
-            $this->db->trans_rollback();
-            echo json_encode([
-                'titulo' => 'ERROR',
-                'resultado' => FALSE,
-                'message' => 'Error al actualizar en apartado los lotes',
-                'color' => 'danger'
-            ]);
-            return;
-        }
-
-        $dataHistorial = [
-            'idLote' => $idLoteOriginal,
-            'idCliente' => $idCliente,
-            'id_preproceso' => $statusPreproceso,
-            'comentario' => 'OK',
-            'estatus' => 1, // NUEVA
-            'modificado_por' => $idUsuario
-        ];
-        if (!$this->General_model->addRecord('historial_preproceso_lote', $dataHistorial)) {
-            $this->db->trans_rollback();
-            echo json_encode([
-                'titulo' => 'ERROR',
-                'resultado' => FALSE,
-                'message' => 'Error al actualizar en apartado los lotes',
-                'color' => 'danger'
-            ]);
-            return;
-        }
-
-        if ($this->db->trans_status() === FALSE){
-            $this->db->trans_rollback();
-
-            echo json_encode([
-                'titulo' => 'ERROR',
-                'resultado' => FALSE,
-                'message' => 'Error al dar el alta de propuestas de lotes',
-                'color' => 'danger'
-            ]);
-            return;
-        }
-
-        $this->db->trans_commit();
-		echo json_encode([
-            'titulo' => 'OK',
-            'resultado' => TRUE,
-            'message' => 'Proceso realizado correctamente.',
-            'color' => 'success'
-        ]);
     }
 
     public function setReubicacion(){
@@ -1526,6 +1519,48 @@ class Reestructura extends CI_Controller{
         }
         
         return $this->General_model->updateBatch('lotes', $arrayLotes, 'idLote');
+    }
+    public function borarArchivo(){
+        // $archivoNombre = 'static/documentos/contratacion-reubicacion-temp/CMMSLP-MONH-099/CONTRATO/CDMSLP-OLMH-017-20231012081025.pdf';
+        // unlink($archivoNombre);
+        // rmdir('static/documentos/contratacion-reubicacion-temp/CMMSLP-MONH-002/RESCISIONES/');
+        // print_r($archivoNombre);
+        $carpeta = 'CMMSLP-MONH-046';
+        $subcarpeta = 'CORRIDA';//CONTRATO RESCISIONES CORRIDA
+        $rutaRaiz = 'static/documentos/contratacion-reubicacion-temp/'.$carpeta.'/'.$subcarpeta.'/';
+        /*$dataEliminar = array(
+            'CDMSLP-OLMH-110-20231011152908.xlsx',
+            'CDMSLP-OLMH-110-20231011152153.xlsx',
+        );
+        foreach($dataEliminar as $elemento ){
+            unlink($rutaRaiz.$elemento);
+        }
+        rmdir('static/documentos/contratacion-reubicacion-temp/'.$carpeta.'/'.$subcarpeta.'/');*/
+
+
+        $rutaRaiz2 = 'static/documentos/contratacion-reubicacion-temp/'.$carpeta.'/'.$subcarpeta.'/';
+
+        /**/$carpeta1 = glob($rutaRaiz2.'/*');
+        foreach($carpeta1 as $archivo){
+            // print_r($archivo);
+            // echo '<br>';
+            if(is_file($archivo))      // Comprobamos que sean ficheros normales, y de ser asi los eliminamos en la siguiente linea
+                unlink($archivo);          //Eliminamos el archivo
+        }
+        rmdir('static/documentos/contratacion-reubicacion-temp/'.$carpeta.'/'.$subcarpeta.'/');
+
+
+
+        /*$file = '/mnt/data/aplicaciones/maderascrm/application/views/reestructura/CDMSLP-CAOH-047-20231011101002.xlsx';
+        $newfile = '/mnt/data/aplicaciones/maderascrm/static/documentos/contratacion-reubicacion-temp/CMMSLP-MONH-065/CORRIDA/CDMSLP-CAOH-047-20231011101002.xlsx';
+        if(!copy($file,$newfile)){
+            echo "failed to copy $file";
+        }
+        else{
+            echo "copied $file into $newfile\n";
+        }*/
+
+
     }
 
     public function inventario(){

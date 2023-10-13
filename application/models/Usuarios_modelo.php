@@ -410,20 +410,32 @@ class Usuarios_modelo extends CI_Model
 
     function saveUser($data)
     {
-        if ($data != '' && $data != null) {
-            $response = $this->db->insert("usuarios", $data);
-            $query = $this->db->query("SELECT IDENT_CURRENT('clientes') as lastId")->result_array();
+        $nombre_usuario = $data['usuario'];
+        $query = $this->db->query("SELECT * FROM usuarios WHERE usuario='".$nombre_usuario."'")->result_array();
+
+        if(count($query)>0){
             $arrayResponse = array(
-              "response" =>   $response,
-              "data_lastInset" => $query
-            );
-            return $query;
-        } else {
-            $arrayResponse = array(
-                "response" =>   0,
+                "response" =>   -1,
                 "data_lastInset" => array()
             );
+        } else{
+            if ($data != '' && $data != null) {
+                $response = $this->db->insert("usuarios", $data);
+                $query = $this->db->query("SELECT IDENT_CURRENT('usuarios') as lastId")->result_array();
+                $arrayResponse = array(
+                    "response" =>   $response,
+                    "data_lastInset" => $query
+                );
+
+            } else {
+                $arrayResponse = array(
+                    "response" =>   0,
+                    "data_lastInset" => array()
+                );
+            }
         }
+
+        return $arrayResponse;
     }
 
     function changeUserStatus($data, $id_usuario)
@@ -438,7 +450,9 @@ class Usuarios_modelo extends CI_Model
 
     function getUserInformation($id_usuario)
     {
-        $query = $this->db->query("SELECT * FROM usuarios WHERE id_usuario = " . $id_usuario . "");
+//        $query = $this->db->query("SELECT * FROM usuarios WHERE id_usuario = " . $id_usuario . "");
+        $query = $this->db->query("SELECT (SELECT count(*) FROM menu_usuario WHERE id_usuario = ".$id_usuario.")  AS menuUsuario, * 
+            FROM usuarios WHERE id_usuario = ".$id_usuario);
         return $query->result_array();
     }
 
@@ -1173,6 +1187,11 @@ class Usuarios_modelo extends CI_Model
 
     public function getOptionByIdRol($id_rol){
         $query = $this->db->query("SELECT * FROM menu2 WHERE rol=".$id_rol." AND estatus=1");
+        return $query->result_array();
+    }
+
+    public function getMenuUsuarioByIdUsuario($id_usuario){
+        $query = $this->db->query("SELECT * FROM menu_usuario WHERE id_usuario=".$id_usuario);
         return $query->result_array();
     }
 }
