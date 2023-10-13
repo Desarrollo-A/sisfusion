@@ -25,7 +25,7 @@
         FROM residenciales re
         INNER JOIN condominios co ON co.idResidencial = re.idResidencial
         INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND lo.idStatusLote in ($val_idStatusLote) AND lo.status IN ( 1 ) AND (lo.idMovimiento = 0 OR lo.idMovimiento IS NULL )
-        WHERE re.idResidencial NOT IN (21, 22, 25, 14)
+        --WHERE re.idResidencial NOT IN (21, 22, 25, 14)
         group by re.idResidencial, re.nombreResidencial, CAST(re.descripcion AS varchar(MAX))
         ORDER BY CAST(re.descripcion AS varchar(MAX))")->result_array();
     }
@@ -97,7 +97,7 @@
     public function getResidencial() {
         return $this->db->query("SELECT idResidencial as id_proy, nombreResidencial as siglas, descripcion as nproyecto
         FROM residenciales
-        WHERE status = 1 AND idResidencial NOT IN (21, 22, 25, 14)
+        WHERE status = 1 --AND idResidencial NOT IN (21, 22, 25, 14)
         ORDER BY nombreResidencial ")->result_array();
     }
 
@@ -469,7 +469,7 @@
     public function validate($idLote)
     {
         $this->db->where("idLote", $idLote);
-        $this->db->where_in('idStatusLote', array('1', '101', '102', '15', '16'));
+        $this->db->where_in('idStatusLote', array('1', '101', '102', '16'));
         $this->db->where("(idStatusContratacion = 0 OR idStatusContratacion IS NULL)");
         $query = $this->db->get('lotes');
         $valida = (empty($query->result())) ? 0 : 1;

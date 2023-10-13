@@ -89,10 +89,10 @@ class Reestructura extends CI_Controller{
 
     public function lista_proyecto(){
         $bandera = $this->input->post('bandera');
-		if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_usuario') == 10878)
+		if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_usuario') == 10878 || $this->session->userdata('id_rol') == 4)
 			echo json_encode($this->Reestructura_model->get_proyecto_listaCancelaciones()->result_array());
 		else if($this->session->userdata('id_usuario') == 5107 && $bandera == 1) // MJ: SELECT DE LA VISTA LIBERAR
-          echo json_encode($this->Reestructura_model->get_proyecto_lista_yola()->result_array());
+            echo json_encode($this->Reestructura_model->get_proyecto_lista_yola()->result_array());
         else // MJ: SELECT DE LA VISTA reestructura
             echo json_encode($this->Reestructura_model->get_proyecto_lista(1)->result_array());
     }
@@ -105,28 +105,17 @@ class Reestructura extends CI_Controller{
 		$idOpcion = $this->Reestructura_model->insertOpcion();
 		$idOpcion = $idOpcion->lastId;
 		$dataPost = $_POST;
-		$datos["id"] = $idOpcion;
+		$datos["id_opcion"] = $idOpcion;
+        $datos["id_catalogo"] = 100;
 		$datos["nombre"] = $dataPost['nombre'];
+        $datos["estatus"] = 1;
 		$datos["fecha_creacion"] = date('Y-m-d H:i:s');
-
-		$insert = $this->Reestructura_model->nuevaOpcion($datos);
+        $datos["creado_por"] = 1;
+        $datos["color"] = NULL;
+        
+		$insert = $this->General_model->addRecord('opcs_x_cats', $datos);
 
 		if ($insert == TRUE) {
-			$response['message'] = 'SUCCESS';
-			echo json_encode(1);
-		} else {
-			$response['message'] = 'ERROR';
-			echo json_encode(0);
-		}
-	}
-
-	public function borrarOpcion(){
-
-		$dataPost = $_POST;
-		$datos["idOpcion"] = $dataPost['idOpcion'];
-		$update = $this->Reestructura_model->borrarOpcionModel($datos);
-
-		if ($update == TRUE) {
 			$response['message'] = 'SUCCESS';
 			echo json_encode(1);
 		} else {
@@ -139,29 +128,14 @@ class Reestructura extends CI_Controller{
         echo json_encode($this->Reestructura_model->historialModel($id_prospecto)->result_array());
     }
 
-	public function editarOpcion(){
-		$dataPost = $_POST;
-		$datos["idOpcionEdit"] = $dataPost['idOpcionEdit'];
-		$datos["editarCatalogo"] = $dataPost['editarCatalogo'];
-		$update = $this->Reestructura_model->editarOpcionModel($datos);
-
-		if ($update == TRUE) {
-			$response['message'] = 'SUCCESS';
-			echo json_encode(1);
-		} else {
-			$response['message'] = 'ERROR';
-			echo json_encode(0);
-		}
-	}
-
 	public function validarLote(){
 
 		$dataPost = $_POST;
-		$datos["idLote"] = $dataPost['idLote'];
+		$datosId["idLote"] = $dataPost['idLote'];
 		$datos["opcionReestructura"] = $dataPost['opcionReestructura'];
-		$datos["comentario"] = $dataPost['comentario'];
-		$datos["userLiberacion"] = $this->session->userdata('id_usuario');
-		$update = $this->Reestructura_model->actualizarValidacion($datos);
+		$datos["comentarioReubicacion"] = $dataPost['comentario'];
+		$datos["usuario"] = $this->session->userdata('id_usuario');
+        $update = $this->General_model->updateRecord('lotes', $datos, 'idLote', $datosId["idLote"]);
 
 		if ($update == TRUE) {
 			$response['message'] = 'SUCCESS';
@@ -389,6 +363,8 @@ class Reestructura extends CI_Controller{
         $idLotes = $this->input->post('idLotes');
         $idLoteOriginal = $this->input->post('idLoteOriginal');
         $statusPreproceso = $this->input->post('statusPreproceso');
+        $idCliente = $this->input->post('idCliente');
+        $idUsuario = $this->session->userdata('id_usuario');
         
         
         $arrayLotes = array();
@@ -430,6 +406,7 @@ class Reestructura extends CI_Controller{
 
             array_push($arrayLotesApartado, $arrayLoteApartado);
         }
+        
         if(!$this->General_model->updateBatch('lotes', $arrayLotesApartado, 'idLote')){
             $this->db->trans_rollback();
             echo json_encode([
@@ -446,6 +423,25 @@ class Reestructura extends CI_Controller{
             'usuario' => $this->session->userdata('id_usuario')
         );
         if(!$this->General_model->updateRecord("lotes", $updateLoteOriginal, "idLote", $idLoteOriginal)){
+            $this->db->trans_rollback();
+            echo json_encode([
+                'titulo' => 'ERROR',
+                'resultado' => FALSE,
+                'message' => 'Error al actualizar en apartado los lotes',
+                'color' => 'danger'
+            ]);
+            return;
+        }
+
+        $dataHistorial = [
+            'idLote' => $idLoteOriginal,
+            'idCliente' => $idCliente,
+            'id_preproceso' => $statusPreproceso,
+            'comentario' => 'OK',
+            'estatus' => 1, // NUEVA
+            'modificado_por' => $idUsuario
+        ];
+        if (!$this->General_model->addRecord('historial_preproceso_lote', $dataHistorial)) {
             $this->db->trans_rollback();
             echo json_encode([
                 'titulo' => 'ERROR',
@@ -1431,19 +1427,45 @@ class Reestructura extends CI_Controller{
         echo json_encode( $this->Reestructura_model->obtenerPropuestasXLote($idLote)->result_array());
     }
 
-    public function setAvance() {
-        $dataUpdateLote = array(
-			'estatus_preproceso' => $this->input->post('tipoTransaccion') + 1,
-			'usuario' => $this->session->userdata('id_usuario')
-        );
-        $response = $this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $this->input->post('idLote'));
-        echo json_encode($response);
+    public function setAvance()
+    {
+        $estatusMovimientos = [
+            1 => 1,
+            2 => 3,
+            3 => 1
+        ];
+
+        $idLote = $this->input->post('idLote');
+        $idPreproceso = $this->input->post('tipoTransaccion');
+        $idCliente = $this->input->post('idCliente');
+        $comentario = $this->input->post('comentario');
+        $idMovimiento = $this->input->post('idEstatusMovimento');
+        $idUsuario = $this->session->userdata('id_usuario');
+
+        $dataUpdateLote = [
+			'estatus_preproceso' => $idPreproceso + 1,
+			'usuario' => $idUsuario
+        ];
+
+        $dataHistorial = [
+            'idLote' => $idLote,
+            'idCliente' => $idCliente,
+            'id_preproceso' => $idPreproceso,
+            'comentario' => $comentario,
+            'estatus' => $estatusMovimientos[$idMovimiento],
+            'modificado_por' => $idUsuario
+        ];
+
+        $responseUpdateLote = $this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $idLote);
+        $responseInsertHistorial = $this->General_model->addRecord('historial_preproceso_lote', $dataHistorial);
+
+        echo json_encode($responseUpdateLote && $responseInsertHistorial);
     }
 
     public function setLoteDisponible()
     {
         $dataUpdateLote = [
-            'idStatusLote' => 15,
+            'idStatusLote' => $this->input->post('tipoEstatusRegreso') == 1 ? 15: 1,
             'usuario' => $this->session->userdata('id_usuario')
         ];
 
@@ -1495,7 +1517,7 @@ class Reestructura extends CI_Controller{
         foreach ($notSelectedLotes as $lote){
             $arrayLote = array(
                 'idLote' => $lote['id_lotep'],
-                'idStatusLote' => 15,
+                'idStatusLote' => $lote['tipo_estatus_regreso'] == 1 ? 15 : 1,
                 'usuario' => $this->session->userdata('id_usuario')
             );
 
@@ -1522,5 +1544,34 @@ class Reestructura extends CI_Controller{
     public function getReporteVentas() {
         echo json_encode($this->Reestructura_model->getReporteVentas());
     }
-    
+
+    public function rechazarRegistro()
+    {
+        $idPreproceso = $this->input->post('tipoTransaccion');
+        $idLote = $this->input->post('idLote');
+        $idCliente = $this->input->post('idCliente');
+        $comentario = $this->input->post('comentario');
+        $idUsuario = $this->session->userdata('id_usuario');
+
+        $dataUpdateLote = [
+            'estatus_preproceso' => $idPreproceso - 1,
+            'usuario' => $idUsuario
+        ];
+
+        $dataHistorial = [
+            'idLote' => $idLote,
+            'idCliente' => $idCliente,
+            'id_preproceso' => $idPreproceso,
+            'comentario' => $comentario,
+            'estatus' => 2,
+            'modificado_por' => $idUsuario
+        ];
+
+        $responseUpdateLote = $this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $idLote);
+        $responseInsertHistorial = $this->General_model->addRecord('historial_preproceso_lote', $dataHistorial);
+
+        echo ($responseUpdateLote && $responseInsertHistorial)
+            ? json_encode(['code' => 200])
+            : json_encode(['code' => 500]);
+    }
 }

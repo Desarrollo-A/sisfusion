@@ -14,7 +14,6 @@ $(document).ready(function () {
         $("#file-name2").val("");
         $("#fileElm3").val(null);
         $("#file-name3").val("");
-
         $("#Resicion").val(null);
         $("#resicion-name").val("");
     });
@@ -37,17 +36,18 @@ $(document).on('click', '.btn-abrir-modal', function () {
         data: formData,
         contentType: false,
         cache: false,
-        processData: false,
-        beforeSend: function () {
+        processData:false,
+        beforeSend: function(){
         },
-        success: function (data) {
+        success: function(data) {
             data = JSON.parse(data);
             formArchivos(tipotransaccion, data, flagEditar, nombreLote)
         },
-        error: function () {
+        error: function(){
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
+
     $("#archivosReestructura").modal();
 });
 function formArchivos(estatusProceso, datos, flagEditar, nombreLote) {
@@ -64,20 +64,21 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote) {
     let ocupacion = datos[0]['ocupacion'];
     let infoClienteContenedor = document.getElementById('info-cliente');
     let contenidoHTMLinfoCL = `
-        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-            <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-center">
-                <p class="m-0 ">Cliente. ${nombreCliente}</p>
-                <p class="m-0">Lote. ${nombreLote}</p>
-                <p class="m-0 text-left">Domicilio particular. ${domicilio_particular}</p>
-            </div>
-            <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-center">
-                <p class="m-0">Correo. ${correo}</p>
-                <p class="m-0">Teléfono. ${telefono1}</p>
-                <p class="m-0">Ocupación. ${ocupacion}</p>
-                <p class="m-0">INE. ${ine}</p>
-                <p class="m-0">Estado civil. ${estadoCivil}</p>
-            </div>
-        </div>`;
+    <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-left">
+            <p class="m-0 ">Cliente. ${nombreCliente}</p>
+            <p class="m-0">Lote. ${nombreLote}</p>
+            <p class="m-0 text-left">Domicilio particular. ${domicilio_particular}</p>
+        </div>
+        <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-left">
+            <p class="m-0">Correo. ${correo}</p>
+            <p class="m-0">Teléfono. ${telefono1}</p>
+            <p class="m-0">Ocupación. ${ocupacion}</p>
+            <p class="m-0">INE. ${ine}</p>
+            <p class="m-0">Estado civil. ${estadoCivil}</p>
+        </div>
+    </div>`;
+
     arrayKeysArchivos = [];
     archivosAborrar = [];
     let nombreArchivo = '';
@@ -216,6 +217,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote) {
     });
     $('[data-toggle="tooltip"]').tooltip();
 }
+
 $(document).on("click", "#sendRequestButton", function (e) {
     e.preventDefault();
     let flagEnviar = true;
@@ -227,7 +229,6 @@ $(document).on("click", "#sendRequestButton", function (e) {
             flagValidacion = flagValidacion + 1;
         }
     });
-
 
     if (editarFile == 1) {
         if (flagValidacion>0) {
