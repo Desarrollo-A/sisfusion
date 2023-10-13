@@ -142,6 +142,9 @@ class VentasAsistentes_model extends CI_Model {
                 else if ($id_usuario == 6831) { // YARETZI MARICRUZ ROSALES HERNANDEZ
                     $filtroGerente = "AND cl.id_subdirector IN ($id_lider)";
                     $filtroSede = "";
+                } else if ($id_usuario == 13521) { // LETY LIZBETH ROMERO RIVERA	
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider)";
+                    $filtroSede = "";
                 }
             }
             else { // SON EEC
@@ -329,6 +332,9 @@ class VentasAsistentes_model extends CI_Model {
                 }
                 else if ($id_usuario == 6831) { // YARETZI MARICRUZ ROSALES HERNANDEZ
                     $filtroGerente = "AND cl.id_subdirector IN ($id_lider)";
+                    $filtroSede = "";
+                } else if ($id_usuario == 13521) { // LETY LIZBETH ROMERO RIVERA	
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider)";
                     $filtroSede = "";
                 }
             }

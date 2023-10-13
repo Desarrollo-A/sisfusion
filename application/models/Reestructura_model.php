@@ -91,25 +91,33 @@ class Reestructura_model extends CI_Model
     }
 
     public function getProyectosDisponibles($proyecto, $superficie, $tipoLote){
-        $query = $this->db->query("SELECT lr.proyectoReubicacion, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100))) descripcion, COUNT(*) disponibles
-        FROM loteXReubicacion lr
-        INNER JOIN residenciales re ON re.idResidencial = lr.proyectoReubicacion AND re.status = 1
-		INNER JOIN condominios co ON co.idResidencial = re.idResidencial AND co.tipo_lote = $tipoLote
-		INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND (lo.sup >= $superficie - 1) AND lo.idStatusLote = 15 AND lo.status = 1
-        WHERE lr.idProyecto = $proyecto
-		GROUP BY lr.proyectoReubicacion, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100)))");
-
-        return $query->result_array();
+        return $this->db->query("SELECT t.proyectoReubicacion, descripcion, SUM(disponibles) disponibles FROM (
+            SELECT lr.proyectoReubicacion, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100))) descripcion, COUNT(*) disponibles
+                    FROM loteXReubicacion lr
+                    INNER JOIN residenciales re ON re.idResidencial = lr.proyectoReubicacion AND re.status = 1
+                    INNER JOIN condominios co ON co.idResidencial = re.idResidencial AND co.tipo_lote = $tipoLote
+                    INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND (lo.sup >= $superficie - 1) AND lo.idStatusLote = 15 AND lo.status = 1
+                    WHERE lr.idProyecto = $proyecto
+                    GROUP BY lr.proyectoReubicacion, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100)))
+            UNION ALL
+            SELECT lr.proyectoReubicacion, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100))) descripcion, COUNT(*) disponibles
+                    FROM loteXReubicacion lr
+                    INNER JOIN residenciales re ON re.idResidencial = lr.proyectoReubicacion AND re.status = 1
+                    INNER JOIN condominios co ON co.idResidencial = re.idResidencial AND co.tipo_lote = $tipoLote
+                    INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND (lo.sup >= $superficie - 1) AND lo.idStatusLote = 1 AND lo.status = 1
+                    WHERE lr.idProyecto = $proyecto
+                    GROUP BY lr.proyectoReubicacion, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100)))
+        ) t
+        GROUP BY t.proyectoReubicacion, descripcion")->result_array();
     }
 
     public function getCondominiosDisponibles($proyecto, $superficie, $tipoLote){
         $query = $this->db->query("SELECT lo.idCondominio, co.nombre, COUNT(*) disponibles
         FROM condominios co
         INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio
-        WHERE lo.idStatusLote = 15 AND lo.status = 1
+        WHERE lo.idStatusLote IN (1, 15) AND lo.status = 1
         AND co.idResidencial = $proyecto AND (lo.sup >= $superficie - 1) AND co.tipo_lote = $tipoLote
         GROUP BY lo.idCondominio, co.nombre");
-
         return $query->result();
     }
 
@@ -122,8 +130,7 @@ class Reestructura_model extends CI_Model
 		INNER JOIN opcs_x_cats op1 ON op1.id_catalogo = 105 AND op1.id_opcion = 1
 		INNER JOIN opcs_x_cats op2 ON op2.id_catalogo = 105 AND op2.id_opcion = 2
 		INNER JOIN opcs_x_cats op3 ON op3.id_catalogo = 105 AND op3.id_opcion = 3
-		WHERE lo.idCondominio = $condominio AND lo.idStatusLote = 15 AND lo.status = 1 AND (lo.sup >= $superficie - 1)");
-        
+		WHERE lo.idCondominio = $condominio AND lo.idStatusLote IN (1, 15) AND lo.status = 1 AND (lo.sup >= $superficie - 1)");
         return $query->result();
     }
 
@@ -160,7 +167,7 @@ class Reestructura_model extends CI_Model
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re on re.idResidencial = co.idResidencial
         LEFT JOIN opcs_x_cats oxc on oxc.id_opcion = lo.opcionReestructura AND oxc.id_catalogo = 100
-        INNER JOIN loteXReubicacion lotx ON lotx.proyectoReubicacion = co.idResidencial AND lotx.proyectoReubicacion IN ($id_proyecto)
+        INNER JOIN (SELECT DISTINCT(proyectoReubicacion) proyectoReubicacion FROM loteXReubicacion WHERE proyectoReubicacion IN ($id_proyecto)) lotx ON lotx.proyectoReubicacion = co.idResidencial
         LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente and cl.status IN (1)
         INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
         WHERE lo.status = 1")->result();
@@ -296,7 +303,7 @@ class Reestructura_model extends CI_Model
                     precio = ".$row[0]['precio'].", total = ((".$row[0]['sup'].") * ".$row[0]['precio']."),
                     enganche = (((".$row[0]['sup'].") * ".$row[0]['precio'].") * 0.1), 
                     saldo = (((".$row[0]['sup'].") * ".$row[0]['precio'].") - (((".$row[0]['sup'].") * ".$row[0]['precio'].") * 0.1)),
-                    asig_jur = 0
+                    asig_jur = 0, tipo_estatus_regreso = 1
                     WHERE idLote IN (".$datos['idLote'].") and status = 1");
 
                     if(!in_array($datos["tipo"],array(7,8,9))) {
