@@ -2,38 +2,7 @@ $(document).ready(function () {
     $("#tabla_clientes").addClass('hide');
     $("#tabla_clientes_liberar").addClass('hide');
     $('#spiner-loader').removeClass('hide');
-
-    $.post(general_base_url + "Reestructura/lista_proyecto",   function (data) {
-        var len = data.length;
-        const ids = data.map((row) => {
-            return row.idResidencial;
-        }).join(',');
-        $("#proyecto").append($('<option>').val(ids).text('SELECCIONAR TODOS'));
-        for (var i = 0; i < len; i++) {
-            var id = data[i]['idResidencial'];
-            var name = data[i]['descripcion'];            
-            $("#proyecto").append($('<option>').val(id).text(name.toUpperCase()));
-        }
-
-        $("#proyecto").selectpicker('refresh');
-        $('#spiner-loader').addClass('hide');
-    }, 'json');
-
-    $.post(general_base_url + "Reestructura/lista_proyecto", { bandera: 1,} ,  function (data) {
-        var len = data.length;
-        const ids = data.map((row) => {
-            return row.idResidencial;
-        }).join(',');
-        $("#proyectoLiberado").append($('<option>').val(ids).text('SELECCIONAR TODOS'));
-        for (var i = 0; i < len; i++) {
-            var id = data[i]['idResidencial'];
-            var name = data[i]['descripcion'];            
-            $("#proyectoLiberado").append($('<option>').val(id).text(name.toUpperCase()));
-        }
-
-        $("#proyectoLiberado").selectpicker('refresh');
-        $('#spiner-loader').addClass('hide');
-    }, 'json');
+    getProtectos(bandera = 0, '#proyecto');
 
     $.post(general_base_url + "Reestructura/lista_catalogo_opciones", function (data) {
         var len = data.length;
@@ -44,6 +13,26 @@ $(document).ready(function () {
         $('#spiner-loader').addClass('hide');
     }, 'json'); 
 });
+
+function getProtectos($bandera, $tipo){
+    $("#proyectoLiberado").empty();
+    $("#proyecto").empty();
+    
+    $.post(general_base_url + "Reestructura/lista_proyecto",{ bandera : $bandera},   function (data) {
+        var len = data.length;
+        const ids = data.map((row) => {
+            return row.idResidencial;
+        }).join(',');
+            $($tipo).append($('<option>').val(ids).text('SELECCIONAR TODOS'));
+        for (var i = 0; i < len; i++) {
+            var id = data[i]['idResidencial'];
+            var name = data[i]['descripcion'];            
+            $($tipo).append($('<option>').val(id).text(name.toUpperCase()));
+        }
+        $($tipo).selectpicker('refresh');
+        $('#spiner-loader').addClass('hide');
+    }, 'json');
+}
 
 $('#proyecto').change(function () {
     let index_proyecto = $(this).val();
@@ -86,8 +75,6 @@ $(document).on('click', '.reesVal', function (){
 });
 
 $(document).on('click', '.stat5Rev', function () {
-    document.getElementById("idLoteCatalogo");
-    document.getElementById("comentario2");
     $("#grabado").empty();
 
     changeSizeModal('modal-md');
