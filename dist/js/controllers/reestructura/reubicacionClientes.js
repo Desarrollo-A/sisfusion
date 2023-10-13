@@ -630,7 +630,7 @@ function getPropuestas(idLoteOriginal, statusPreproceso, idProyecto, superficie,
         $('#infoLotesSeleccionados').html('');
 
         for (let lote of data) {
-            let html = divLotesSeleccionados(statusPreproceso, lote.nombreLote, lote.sup, lote.id_lotep, lote.id_pxl, idProyecto, superficie, tipoLote, lote.idCondominio);
+            let html = divLotesSeleccionados(statusPreproceso, lote.nombreLote, lote.sup, lote.id_lotep, lote.id_pxl, idProyecto, superficie, tipoLote, lote.idCondominio, lote.tipoEstatusRegreso);
 
             $("#infoLotesSeleccionados").append(html);
         }
@@ -675,6 +675,7 @@ $(document).on("change", "#condominioAOcupar", function(e){
             const superficie = data[i]['sup'];
             const total = data[i]['total'];
             const a_favor = data[i]['a_favor'];
+            const tipoEstatusRegreso = data[i]['tipo_estatus_regreso'];
             $("#loteAOcupar")
                 .append($('<option>')
                 .val(id)
@@ -682,7 +683,7 @@ $(document).on("change", "#condominioAOcupar", function(e){
                 .attr('data-precioMetro', precioMetro)
                 .attr('data-superficie', superficie)
                 .attr('data-total', total)
-                .addClass('green')
+                .attr('data-tipo_estatus_regreso', tipoEstatusRegreso)
                 .text(name +' ('+ a_favor + ')'));
         }
         $('#spiner-loader').addClass('hide');
@@ -723,11 +724,12 @@ $(document).on("change", "#loteAOcupar", function(e){
     const idProyecto = $(this).attr("data-idProyecto");
     const superficieLoteOriginal = $(this).attr('data-superficie');
     const tipoLote = $(this).attr("data-tipoLote");
+    const tipoEstatusRegreso = $(this).attr("data-tipo_estatus_regreso");
 
     if (statusPreproceso != 1) {
         const nombreLote = $itself.attr("data-nombre");
         const superficie = $itself.attr("data-superficie");
-        const html = divLotesSeleccionados(statusPreproceso, nombreLote, superficie, idLoteSeleccionado);
+        const html = divLotesSeleccionados(statusPreproceso, nombreLote, superficie, idLoteSeleccionado, tipoEstatusRegreso);
         $("#infoLotesSeleccionados").append(html);
 
         getProyectosAOcupar(idProyecto, superficieLoteOriginal, tipoLote);
@@ -748,7 +750,7 @@ $(document).on("change", "#loteAOcupar", function(e){
     });
 })
 
-function removeLote(e, idLote, statusPreproceso, id_pxl, idProyecto, superficie, tipoLote) {
+function removeLote(e, idLote, statusPreproceso, id_pxl, idProyecto, superficie, tipoLote, tipoEstatusRegreso) {
     if (statusPreproceso != 1) { // SON LOTES QUE ELIMINA CUANDO ES LA PRIMERA VEZ QUE ASIGNA PROPUESTAS
         let divLote = e.closest( '.lotePropuesto' );
         divLote.remove();
@@ -760,6 +762,7 @@ function removeLote(e, idLote, statusPreproceso, id_pxl, idProyecto, superficie,
     let data = new FormData();
     data.append("idLote", idLote);
     data.append("id_pxl", id_pxl);
+    data.append("tipoEstatusRegreso", tipoEstatusRegreso);
     $.ajax({
         url : 'setLoteDisponible',
         data: data,
@@ -786,14 +789,14 @@ function removeLote(e, idLote, statusPreproceso, id_pxl, idProyecto, superficie,
     });
 }
 
-function divLotesSeleccionados(statusPreproceso, nombreLote, superficie, idLote, id_pxl = null, idProyecto = null, superficieAnterior = null, tipoLote = null){
+function divLotesSeleccionados(statusPreproceso, nombreLote, superficie, idLote, id_pxl = null, idProyecto = null, superficieAnterior = null, tipoLote = null, tipoEstatusRegreso = null){
     if (statusPreproceso == 0 || statusPreproceso == 1 ){
         return `
             <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2 lotePropuesto">
                 <div class="p-2 pt-1" style="background-color: #eaeaea; border-radius:15px">
                     <div class="d-flex justify-between">
                         <h5 class="mb-0 mt-2 text-center">LOTE SELECCIONADO</h5>
-                        <button type="button" class="fl-r" onclick="removeLote(this, ${idLote}, ${statusPreproceso}, ${id_pxl}, ${idProyecto}, ${superficieAnterior}, ${tipoLote})" style="color: gray; background-color:transparent; border:none;" title="Eliminar selección"><i class="fas fa-times"></i></button>
+                        <button type="button" class="fl-r" onclick="removeLote(this, ${idLote}, ${statusPreproceso}, ${id_pxl}, ${idProyecto}, ${superficieAnterior}, ${tipoLote}, ${tipoEstatusRegreso})" style="color: gray; background-color:transparent; border:none;" title="Eliminar selección"><i class="fas fa-times"></i></button>
                     </div>
                     <span class="w-100 d-flex justify-between">
                         <p class="m-0">Lote</p>

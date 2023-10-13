@@ -111,7 +111,7 @@ class Reestructura_model extends CI_Model
         $query = $this->db->query("SELECT CASE 
 		WHEN (lo.sup = $superficie) THEN op1.nombre
 		WHEN (lo.sup - $superficie) <= lo.sup * 0.05 THEN op2.nombre
-		ELSE op3.nombre END a_favor, lo.idLote, lo.nombreLote, lo.sup, lo.precio, lo.total 
+		ELSE op3.nombre END a_favor, lo.idLote, lo.nombreLote, lo.sup, lo.precio, lo.total, lo.tipo_estatus_regreso 
 		FROM lotes lo 
 		INNER JOIN opcs_x_cats op1 ON op1.id_catalogo = 105 AND op1.id_opcion = 1
 		INNER JOIN opcs_x_cats op2 ON op2.id_catalogo = 105 AND op2.id_opcion = 2
@@ -525,7 +525,7 @@ class Reestructura_model extends CI_Model
         return $query->result_array();
     }
     function obtenerPropuestasXLote($idLote){
-        return $this->db->query("SELECT pl.id_pxl, pl.idLote, pl.id_lotep, lo.nombreLote, lo.sup, lo.idCondominio
+        return $this->db->query("SELECT pl.id_pxl, pl.idLote, pl.id_lotep, lo.nombreLote, lo.sup, lo.idCondominio, lo.tipo_estatus_regreso
         FROM propuestas_x_lote pl
         INNER JOIN lotes lo ON pl.id_lotep = lo.idLote
 		INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
@@ -565,7 +565,10 @@ class Reestructura_model extends CI_Model
     }
 
     public function getNotSelectedLotes($idLote){
-        $query = $this->db->query("SELECT * FROM propuestas_x_lote WHERE idLote = $idLote AND estatus = 0");
+        $query = $this->db->query("SELECT pxl.*, lo.tipo_estatus_regreso 
+		FROM propuestas_x_lote pxl
+		INNER JOIN lotes lo ON pxl.id_lotep = lo.idLote
+		WHERE pxl.idLote = $idLote AND pxl.estatus = 0");
         return $query->result_array();
     }
 

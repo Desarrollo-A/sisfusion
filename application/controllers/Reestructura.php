@@ -404,6 +404,7 @@ class Reestructura extends CI_Controller{
 
             array_push($arrayLotesApartado, $arrayLoteApartado);
         }
+        
         if(!$this->General_model->updateBatch('lotes', $arrayLotesApartado, 'idLote')){
             $this->db->trans_rollback();
             echo json_encode([
@@ -1417,7 +1418,7 @@ class Reestructura extends CI_Controller{
     public function setLoteDisponible()
     {
         $dataUpdateLote = [
-            'idStatusLote' => 15,
+            'idStatusLote' => $this->input->post('tipoEstatusRegreso') == 1 ? 15: 1,
             'usuario' => $this->session->userdata('id_usuario')
         ];
 
@@ -1469,7 +1470,7 @@ class Reestructura extends CI_Controller{
         foreach ($notSelectedLotes as $lote){
             $arrayLote = array(
                 'idLote' => $lote['id_lotep'],
-                'idStatusLote' => 15,
+                'idStatusLote' => $lote['tipo_estatus_regreso'] == 1 ? 15 : 1,
                 'usuario' => $this->session->userdata('id_usuario')
             );
 
