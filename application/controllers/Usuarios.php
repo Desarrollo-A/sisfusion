@@ -127,9 +127,9 @@ class Usuarios extends CI_Controller
         if (isset($_POST) && !empty($_POST)) {
             $dataRespuesta = $this->Usuarios_modelo->saveUser($data);
             if($dataRespuesta['response']==1){
-                "status "
-
-            echo json_encode($response);
+                "status ";
+                echo json_encode($response);
+            }
         }
     }
 
