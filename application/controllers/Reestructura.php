@@ -1462,6 +1462,7 @@ class Reestructura extends CI_Controller{
         echo json_encode($responseUpdateLote && $responseInsertHistorial);
     }
 
+    
     public function setLoteDisponible()
     {
         $dataUpdateLote = [
