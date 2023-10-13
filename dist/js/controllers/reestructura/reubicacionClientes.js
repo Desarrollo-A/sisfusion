@@ -201,7 +201,7 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
 
                 if (d.id_estatus_preproceso == 0 && ROLES_PROPUESTAS.includes(id_rol_general)) // Gerente/Subdirector: PENDIENTE CARGA DE PROPUESTAS
                     btns += BTN_PROPUESTAS;
-                else if (d.id_estatus_preproceso == 1 && ROLES_PROPUESTAS.includes(id_rol_general)){ // Gerente/Subdirector: REVISIÓN DE PROPUESTAS
+                else if (d.id_estatus_preproceso == 1 && ROLES_PROPUESTAS.includes(id_rol_general) || id_rol_general == 7){ // Gerente/Subdirector: REVISIÓN DE PROPUESTAS
                     btns += BTN_PROPUESTAS;
                     if(d.idLoteXcliente == null){
                         btns += BTN_INFOCLIENTE;
