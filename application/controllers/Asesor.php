@@ -3188,14 +3188,18 @@ class Asesor extends CI_Controller {
                 $documentsNumber = 4;
             if (in_array($dataClient[0]['proceso'], [2, 3, 4])) {
                 if ($dataClient[0]['personalidad_juridica'] == 1) { // PARA PM TAMBIÉN PEDIMOS LA CARTA PODER
-                    $documentosExtra = in_array($dataClient[0]['proceso'], [2, 4]) ? ", 32, 34" : ", 32";
-                    $documentsNumber += in_array($dataClient[0]['proceso'], [2, 4]) ? 2 : 1;
-                    $documentosExtra_label = in_array($dataClient[0]['proceso'], [2, 4]) ? ", CARTA, CARTA PODER" : "CARTA";
+                    $documentosExtra = in_array($dataClient[0]['proceso'], [2, 4])
+                        ? ", 34, 35, 41, 42, 43"
+                        : "";
+                    $documentsNumber += in_array($dataClient[0]['proceso'], [2, 4]) ? 5 : 0;
+                    $documentosExtra_label = in_array($dataClient[0]['proceso'], [2, 4])
+                        ? ", CARTA PODER, RESCISIÓN DE CONTRATO FIRMADA, CONTRATO ELEGIDO FIRMA CLIENTE, CONTRATO 1 CANCELADO, CONTRATO 2 CANCELADO"
+                        : "";
                 }
                 else { // SI ES PF SÓLO PEDIMOS LA CARTA
-                    $documentosExtra = ", 32";
-                    $documentsNumber += 1;
-                    $documentosExtra_label = ", CARTA";
+                    $documentosExtra = ", 35, 41, 42, 43";
+                    $documentsNumber += 4;
+                    $documentosExtra_label = ", RESCISIÓN DE CONTRATO FIRMADA, CONTRATO ELEGIDO FIRMA CLIENTE, CONTRATO 1 CANCELADO, CONTRATO 2 CANCELADO";
                 }
             }
             $error_message = "Asegúrate de incluir los documentos: IDENTIFICACIÓN OFICIAL$comprobante_domicilio_label $documentosExtra_label, RECIBOS DE APARTADO Y ENGANCHE Y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.";
