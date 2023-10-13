@@ -105,6 +105,14 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
     order: [[4, "desc"]],
     destroy: true,
     columns: [
+        {
+            data: (d) => {
+                return `<span class="label" 
+                    style="color: ${d.estatus_modificacion_color}; background: ${d.estatus_modificacion_color}18;}">
+                    ${d.estatus_modificacion}
+                </span>`;
+            }
+        },
         { data: "nombreResidencial" },
         { data: "nombreCondominio" },
         { data: "nombreLote" },
@@ -138,6 +146,13 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
         },
         { data: "nombreAsesorAsignado"},
         {
+            data: (d) => {
+                return (d.comentario == null || d.comentario == '')
+                    ? '<p class="m-0">NO DEFINIDO</p>'
+                    : `<p class="m-0">${d.comentario}</p>`;
+            }
+        },
+        {
             data: function (d) {
                 let btns = '';
                 let editar = 0;
@@ -164,16 +179,28 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
                             data-idCliente="${d.idCliente}" 
                             data-tipoLote="${d.tipo_lote}"
                             data-idProyecto="${d.idProyecto}"
-                            data-statusPreproceso="${d.id_estatus_preproceso}">
+                            data-statusPreproceso="${d.id_estatus_preproceso}"
+                            data-idEstatusMovimiento="${d.id_estatus_modificacion}">
                             <i class="fas fa-clipboard-list"></i>
                     </button>`;
+
                 const BTN_AVANCE =  `<button class="btn-data btn-green btn-avanzar"
                     data-toggle="tooltip" 
                     data-placement="left"
                     title="ENVIAR A ${ESTATUS_PREPROCESO[parseInt(d.id_estatus_preproceso) + 1]}"
                     data-idCliente="${d.idCliente}"
-                    data-tipoTransaccion="${d.id_estatus_preproceso}">
+                    data-tipoTransaccion="${d.id_estatus_preproceso}"
+                    data-idEstatusMovimiento="${d.id_estatus_modificacion}">
                     <i class="fas fa-thumbs-up"></i>
+                </button>`;
+
+                const BTN_RECHAZO =  `<button class="btn-data btn-warning btn-rechazar"
+                    data-toggle="tooltip" 
+                    data-placement="left"
+                    title="ENVIAR A ${ESTATUS_PREPROCESO[parseInt(d.id_estatus_preproceso) - 1]}"
+                    data-idCliente="${d.idCliente}"
+                    data-tipoTransaccion="${d.id_estatus_preproceso}">
+                    <i class="fas fa-thumbs-down"></i>
                 </button>`;
 
                 const BTN_INFOCLIENTE =  `<button class="btn-data btn-green infoUser"
@@ -219,11 +246,11 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
 
                     if (d.totalContratos == d.totalContratoNumero && d.totalRescision == 1)
                         btns += BTN_AVANCE;
-                    btns += BTN_SUBIR_ARCHIVO
+                    btns += BTN_SUBIR_ARCHIVO + BTN_RECHAZO;
 
                 }
                 else if (d.id_estatus_preproceso == 4 && id_rol_general == 6) // Asistente gerente: DOCUMENTACIÓN ENTREGADA
-                    btns += BTN_AVANCE;
+                    btns += BTN_AVANCE + BTN_RECHAZO;
                 else if (d.id_estatus_preproceso == 5) { // EEC: CONFIRMACIÓN DE RECEPCIÓN DE DOCUMENTOS
                     if(d.idProyecto == PROYECTO.NORTE || d.idProyecto == PROYECTO.PRIVADAPENINSULA){
                         btns +=  `<button class="btn-data btn-sky btn-reestructurar"
@@ -303,6 +330,7 @@ $(document).on('click', '.btn-asignar-propuestas', function () {
     const tipoLote = $(this).attr("data-tipoLote");
     const idLoteOriginal = row.data().idLote;
     const statusPreproceso = $(this).attr("data-statusPreproceso");
+    const idCliente = $(this).attr("data-idCliente");
 
     const botonAceptar = (statusPreproceso != 1) ? '<button type="submit" class="btn btn-primary">Aceptar</button>' : '';
 
@@ -352,6 +380,7 @@ $(document).on('click', '.btn-asignar-propuestas', function () {
                 <input type="hidden" id="tipoLote" value="${tipoLote}">
                 <input type="hidden" id="idLoteOriginal" name="idLoteOriginal" value="${idLoteOriginal}">
                 <input type="hidden" id="statusPreproceso" name="statusPreproceso" value="${statusPreproceso}">
+                <input type="hidden" name="idCliente" value="${idCliente}">
                 <div class="row mt-2">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
                         <button type="button" class="btn btn-simple btn-danger" onclick="cerrarModalPropuestas(${statusPreproceso});">Cancelar</button>
@@ -921,8 +950,6 @@ $(document).on("submit", "#formReestructura", function(e){
     });
 });
 
-
-
 $(document).on('click', '.btn-avanzar', async function () {
 
     const tr = $(this).closest('tr');
@@ -930,6 +957,9 @@ $(document).on('click', '.btn-avanzar', async function () {
     const nombreLote = row.data().nombreLote;
     const idLote = row.data().idLote;
     const tipoTransaccion = $(this).attr("data-tipoTransaccion");
+    const idCliente = $(this).attr("data-idCliente");
+    const idEstatusMovimento = $(this).attr("data-idEstatusMovimiento");
+
 
     if (tipoTransaccion == 1) {
         const totalP = await totalPropuestas(idLote);
@@ -945,10 +975,53 @@ $(document).on('click', '.btn-avanzar', async function () {
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12 text-center">
-                        <h6 class="m-0">¿Estás seguro de envíar el lote <b>${nombreLote}</b> a <b><i>${ESTATUS_PREPROCESO[parseInt(tipoTransaccion) + 1]}</i></b> ?</h6>
-                    </div>                
+                        <h6 class="m-0">¿Estás seguro de envíar el lote <b>${nombreLote}</b> a <b><i>${ESTATUS_PREPROCESO[parseInt(tipoTransaccion) + 1]}</i></b></h6>
+                    </div>
+                    <div class="col-12">
+                        <label class="control-label">Comentario</label>
+                        <input class="text-modal mb-1" name="comentario" autocomplete="off">
+                    </div>
+
                     <input type="hidden" id="idLote" name="idLote" value="${idLote}">
                     <input type="hidden" id="tipoTransaccion" name="tipoTransaccion" value="${tipoTransaccion}">
+                    <input type="hidden" name="idCliente" value="${idCliente}">
+                    <input type="hidden" name="idEstatusMovimento" value="${idEstatusMovimento}">
+                    <div class="row mt-2">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
+                            <button type="button" class="btn btn-simple btn-danger" onclick="hideModal()">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Aceptar</button>
+                        </div>
+                    </div>
+            </div>
+        </form>
+    `);
+    showModal();
+});
+
+$(document).on('click', '.btn-rechazar', function () {
+    const tr = $(this).closest('tr');
+    const row = $('#reubicacionClientes').DataTable().row(tr);
+    const nombreLote = row.data().nombreLote;
+    const idLote = row.data().idLote;
+    const tipoTransaccion = $(this).attr("data-tipoTransaccion");
+    const idCliente = $(this).attr("data-idCliente");
+
+    changeSizeModal('modal-sm');
+    appendBodyModal(`
+        <form method="post" id="formRechazarEstatus">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h6 class="m-0">¿Estás seguro de rechazar el lote <b>${nombreLote}</b> a <b><i>${ESTATUS_PREPROCESO[parseInt(tipoTransaccion) -1]}</i></b></h6>
+                    </div>
+                    <div class="col-12">
+                        <label class="control-label">Comentario</label>
+                        <input class="text-modal mb-1" name="comentario" autocomplete="off">
+                    </div>
+
+                    <input type="hidden" id="idLote" name="idLote" value="${idLote}">
+                    <input type="hidden" id="tipoTransaccion" name="tipoTransaccion" value="${tipoTransaccion}">
+                    <input type="hidden" name="idCliente" value="${idCliente}">
                     <div class="row mt-2">
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
                             <button type="button" class="btn btn-simple btn-danger" onclick="hideModal()">Cancelar</button>
@@ -974,9 +1047,7 @@ const totalPropuestas = async (idLoteOriginal) => {
 $(document).on("submit", "#formAvanzarEstatus", function(e) {
     $('#spiner-loader').removeClass('hide');
     e.preventDefault();
-    let data = new FormData();
-    data.append("idLote", $("#idLote").val());
-    data.append("tipoTransaccion", $("#tipoTransaccion").val());
+    let data = new FormData($(this)[0]);
     $.ajax({
         url : 'setAvance',
         data: data,
@@ -984,6 +1055,32 @@ $(document).on("submit", "#formAvanzarEstatus", function(e) {
         contentType: false,
         processData: false,
         type: 'POST', 
+        success: function(data){
+            alerts.showNotification("top", "right", "El registro se ha avanzado con éxito.", "success");
+            $('#reubicacionClientes').DataTable().ajax.reload();
+            $('#spiner-loader').addClass('hide');
+            hideModal();
+        },
+        error: function( data ){
+            alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+            hideModal();
+        }
+    });
+});
+
+$(document).on("submit", "#formRechazarEstatus", function(e) {
+    e.preventDefault();
+
+    $('#spiner-loader').removeClass('hide');
+    let data = new FormData($(this)[0]);
+
+    $.ajax({
+        url : `${general_base_url}Reestructura/rechazarRegistro`,
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
         success: function(data){
             alerts.showNotification("top", "right", "El registro se ha avanzado con éxito.", "success");
             $('#reubicacionClientes').DataTable().ajax.reload();
