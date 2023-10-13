@@ -604,5 +604,10 @@ class Reestructura_model extends CI_Model
         WHERE lo.status = 1
         ORDER BY UPPER(CAST(re.descripcion AS varchar(100))), co.nombre,  lo.nombreLote")->result_array();
     }
+
+    public function checarDisponibleRe($idLote){
+        $query = $this->db->query("SELECT * FROM lotes WHERE idStatusLote=15 AND idLote=".$idLote);
+        return $query->result_array();
+    }
     
 }
