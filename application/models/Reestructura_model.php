@@ -606,7 +606,7 @@ class Reestructura_model extends CI_Model
     }
 
     public function checarDisponibleRe($idLote){
-        $query = $this->db->query("SELECT * FROM lotes WHERE idStatusLote=15 AND idLote=".$idLote);
+        $query = $this->db->query("SELECT * FROM lotes WHERE (idStatusLote=15 || idStatusLote=1) AND idLote=".$idLote);
         return $query->result_array();
     }
     
