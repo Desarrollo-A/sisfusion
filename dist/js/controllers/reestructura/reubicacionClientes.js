@@ -154,128 +154,7 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
         },
         {
             data: function (d) {
-                let btns = '';
-                let editar = 0;
-                let btnShow = 'fa-upload';
-                if(d.id_estatus_preproceso == 2){
-                    //subiendo corridas
-                    if(d.totalCorridas==d.totalCorridasNumero){
-                        editar = 1;
-                        btnShow = 'fa-edit';
-                    }
-                }else if(d.id_estatus_preproceso == 3){
-                    //subiendo contratos
-                    if(d.totalContratos==d.totalContratoNumero){
-                        editar = 1;
-                        btnShow = 'fa-edit';
-
-                    }
-                }
-
-                const BTN_PROPUESTAS =  `<button class="btn-data btn-blueMaderas btn-asignar-propuestas"
-                            data-toggle="tooltip" 
-                            data-placement="left"
-                            title="${d.id_estatus_preproceso == 0 ? 'ASIGNAR PROPUESTAS' : 'ACTUALIZAR PROPUESTAS'}"
-                            data-idCliente="${d.idCliente}" 
-                            data-tipoLote="${d.tipo_lote}"
-                            data-idProyecto="${d.idProyecto}"
-                            data-statusPreproceso="${d.id_estatus_preproceso}"
-                            data-idEstatusMovimiento="${d.id_estatus_modificacion}">
-                            <i class="fas fa-clipboard-list"></i>
-                    </button>`;
-
-                const BTN_AVANCE =  `<button class="btn-data btn-green btn-avanzar"
-                    data-toggle="tooltip" 
-                    data-placement="left"
-                    title="ENVIAR A ${ESTATUS_PREPROCESO[parseInt(d.id_estatus_preproceso) + 1]}"
-                    data-idCliente="${d.idCliente}"
-                    data-tipoTransaccion="${d.id_estatus_preproceso}"
-                    data-idEstatusMovimiento="${d.id_estatus_modificacion}">
-                    <i class="fas fa-thumbs-up"></i>
-                </button>`;
-
-                const BTN_RECHAZO =  `<button class="btn-data btn-warning btn-rechazar"
-                    data-toggle="tooltip" 
-                    data-placement="left"
-                    title="ENVIAR A ${ESTATUS_PREPROCESO[parseInt(d.id_estatus_preproceso) - 1]}"
-                    data-idCliente="${d.idCliente}"
-                    data-tipoTransaccion="${d.id_estatus_preproceso}">
-                    <i class="fas fa-thumbs-down"></i>
-                </button>`;
-
-                const BTN_INFOCLIENTE =  `<button class="btn-data btn-green infoUser"
-                    data-toggle="tooltip" 
-                    data-placement="left"
-                    title="INFORMACIÓN CLIENTE"
-                    data-idCliente="${d.idCliente}" 
-                    data-idLote="${d.idLote}">
-                    <i class="fas fa-user-check"></i>
-                </button>`;
-                const BTN_SUBIR_ARCHIVO =  `<button class="btn-data btn-blueMaderas btn-abrir-modal"
-                    data-toggle="tooltip" 
-                    data-placement="left"
-                    title="CARGAR DOCUMENTACIÓN"
-                    data-idCliente="${d.idCliente}"
-                    data-idLote="${d.idLote}"
-                    data-nombreLote="${d.nombreLote}"
-                    data-estatusLoteArchivo="${d.status}"
-                    data-editar="${editar}"   
-                    data-rescision="${d.rescision}"
-                    data-id_dxc="${d.id_dxc}"   
-                    data-tipoTransaccion="${d.id_estatus_preproceso}">
-                    <i class="fas ${btnShow}"></i>
-                </button>`;
-
-                if (d.id_estatus_preproceso == 0 && ROLES_PROPUESTAS.includes(id_rol_general)) // Gerente/Subdirector: PENDIENTE CARGA DE PROPUESTAS
-                    btns += BTN_PROPUESTAS;
-                else if (d.id_estatus_preproceso == 1 && ROLES_PROPUESTAS.includes(id_rol_general) || id_rol_general == 7){ // Gerente/Subdirector: REVISIÓN DE PROPUESTAS
-                    if(id_rol_general != 7){
-                        btns += BTN_PROPUESTAS;
-                    }
-                    if(d.idLoteXcliente == null){
-                        btns += BTN_INFOCLIENTE;
-                    }else{
-                        if(id_rol_general != 7){
-                            btns += BTN_AVANCE;
-                        }
-                        btns += BTN_INFOCLIENTE;
-                    }
-                }
-                else if (d.id_estatus_preproceso == 2 && id_rol_general == 17) { // Contraloría: ELABORACIÓN DE CORRIDAS
-                    if (d.totalCorridas == d.totalCorridasNumero)
-                        btns += BTN_AVANCE;
-                    btns += BTN_SUBIR_ARCHIVO
-                }
-                else if (d.id_estatus_preproceso == 3 && id_rol_general == 15) { // Jurídico: ELABORACIÓN DE CONTRATO Y RESICISIÓN
-
-                    if (d.totalContratos == d.totalContratoNumero && d.totalRescision == 1)
-                        btns += BTN_AVANCE;
-                    btns += BTN_SUBIR_ARCHIVO + BTN_RECHAZO;
-
-                }
-                else if (d.id_estatus_preproceso == 4 && id_rol_general == 6) // Asistente gerente: DOCUMENTACIÓN ENTREGADA
-                    btns += BTN_AVANCE + BTN_RECHAZO;
-                else if (d.id_estatus_preproceso == 5) { // EEC: CONFIRMACIÓN DE RECEPCIÓN DE DOCUMENTOS
-                    if(d.idProyecto == PROYECTO.NORTE || d.idProyecto == PROYECTO.PRIVADAPENINSULA){
-                        btns +=  `<button class="btn-data btn-sky btn-reestructurar"
-                                data-toggle="tooltip" 
-                                data-placement="left"
-                                title="REESTRUCTURAR"
-                                data-idCliente="${d.idCliente}">
-                                <i class="fas fa-map-marker"></i>
-                        </button>`;
-                    }
-                    btns += `<button class="btn-data btn-green btn-reubicar"
-                            data-toggle="tooltip" 
-                            data-placement="left"
-                            title="REUBICAR CLIENTE"
-                            data-idCliente="${d.idCliente}"
-                            data-idProyecto="${d.idProyecto}"
-                            data-tipoLote="${d.tipo_lote}">
-                        <i class="fas fa-route"></i>
-                    </button>`;
-                }
-                return `<div class="d-flex justify-center">${btns}</div>`;
+                return `<div class="d-flex justify-center">${botonesAccionReubicacion(d)}</div>`;
             }
         }
     ],
@@ -778,6 +657,9 @@ $(document).on("change", "#loteAOcupar", function(e){
 
             alerts.showNotification("top", "right", 'Lote agregado con éxito', 'success');
         }
+        if (response.code === 400) {
+            alerts.showNotification("top", "right", response.message, 'danger');
+        }
         if (response.code === 500) {
             alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
         }
@@ -1115,4 +997,138 @@ const validarLotesRequeridos = (numberLotes) => {
     }
 
     return true;
+}
+
+const botonesAccionReubicacion = (d) => {
+    const idEstatusPreproceso = parseInt(d.id_estatus_preproceso);
+    const totalCorridas = parseInt(d.totalCorridas);
+    const totalContrato = parseInt(d.totalContratos);
+    const totalCorridasRef = parseInt(d.totalCorridasNumero);
+    const totalContratoRef = parseInt(d.totalContratoNumero);
+
+    let editar = 0;
+    let btnShow = 'fa-upload';
+
+    if (idEstatusPreproceso === 2 && totalCorridas === totalCorridasRef) { //subiendo corridas
+        editar = 1;
+        btnShow = 'fa-edit';
+    }
+
+    if (idEstatusPreproceso === 3 && totalContrato === totalContratoRef) { //subiendo contratos
+        editar = 1;
+        btnShow = 'fa-edit';
+    }
+
+    const BTN_PROPUESTAS =  `<button class="btn-data btn-blueMaderas btn-asignar-propuestas"
+                            data-toggle="tooltip" 
+                            data-placement="left"
+                            title="${idEstatusPreproceso === 0 ? 'ASIGNAR PROPUESTAS' : 'ACTUALIZAR PROPUESTAS'}"
+                            data-idCliente="${d.idCliente}" 
+                            data-tipoLote="${d.tipo_lote}"
+                            data-idProyecto="${d.idProyecto}"
+                            data-statusPreproceso="${idEstatusPreproceso}"
+                            data-idEstatusMovimiento="${d.id_estatus_modificacion}">
+                            <i class="fas fa-clipboard-list"></i>
+                    </button>`;
+
+    const BTN_AVANCE =  `<button class="btn-data btn-green btn-avanzar"
+                    data-toggle="tooltip" 
+                    data-placement="left"
+                    title="ENVIAR A ${ESTATUS_PREPROCESO[idEstatusPreproceso + 1]}"
+                    data-idCliente="${d.idCliente}"
+                    data-tipoTransaccion="${idEstatusPreproceso}"
+                    data-idEstatusMovimiento="${d.id_estatus_modificacion}">
+                    <i class="fas fa-thumbs-up"></i>
+                </button>`;
+
+    const BTN_RECHAZO =  `<button class="btn-data btn-warning btn-rechazar"
+                    data-toggle="tooltip" 
+                    data-placement="left"
+                    title="ENVIAR A ${ESTATUS_PREPROCESO[idEstatusPreproceso - 1]}"
+                    data-idCliente="${d.idCliente}"
+                    data-tipoTransaccion="${idEstatusPreproceso}">
+                    <i class="fas fa-thumbs-down"></i>
+                </button>`;
+
+    const BTN_INFOCLIENTE =  `<button class="btn-data btn-green infoUser"
+                    data-toggle="tooltip" 
+                    data-placement="left"
+                    title="INFORMACIÓN CLIENTE"
+                    data-idCliente="${d.idCliente}" 
+                    data-idLote="${d.idLote}">
+                    <i class="fas fa-user-check"></i>
+                </button>`;
+    const BTN_SUBIR_ARCHIVO =  `<button class="btn-data btn-blueMaderas btn-abrir-modal"
+                    data-toggle="tooltip" 
+                    data-placement="left"
+                    title="CARGAR DOCUMENTACIÓN"
+                    data-idCliente="${d.idCliente}"
+                    data-idLote="${d.idLote}"
+                    data-nombreLote="${d.nombreLote}"
+                    data-estatusLoteArchivo="${d.status}"
+                    data-editar="${editar}"   
+                    data-rescision="${d.rescision}"
+                    data-id_dxc="${d.id_dxc}"   
+                    data-tipoTransaccion="${idEstatusPreproceso}">
+                    <i class="fas ${btnShow}"></i>
+                </button>`;
+    const BTN_REESTRUCTURA = `
+        <button class="btn-data btn-sky btn-reestructurar"
+                data-toggle="tooltip" 
+                data-placement="left"
+                title="REESTRUCTURAR"
+                data-idCliente="${d.idCliente}">
+                <i class="fas fa-map-marker"></i>
+        </button>`;
+    const BTN_REUBICACION = `
+        <button class="btn-data btn-green btn-reubicar"
+                data-toggle="tooltip" 
+                data-placement="left"
+                title="REUBICAR CLIENTE"
+                data-idCliente="${d.idCliente}"
+                data-idProyecto="${d.idProyecto}"
+                data-tipoLote="${d.tipo_lote}">
+            <i class="fas fa-route"></i>
+        </button>`;
+
+    if (idEstatusPreproceso === 0 && ROLES_PROPUESTAS.includes(id_rol_general)) { // Gerente/Subdirector: PENDIENTE CARGA DE PROPUESTAS
+        return BTN_PROPUESTAS;
+    }
+
+    if (idEstatusPreproceso === 1 && ROLES_PROPUESTAS.includes(id_rol_general)) { // Gerente/Subdirector: REVISIÓN DE PROPUESTAS
+        if (d.idLoteXcliente == null) {
+            return BTN_PROPUESTAS + BTN_INFOCLIENTE;
+        }
+
+        return BTN_PROPUESTAS + BTN_AVANCE + BTN_INFOCLIENTE;
+    }
+
+    if (idEstatusPreproceso === 1 && id_rol_general == 7) { // EEC: Ver/Editar la información del cliente
+        return BTN_INFOCLIENTE;
+    }
+
+    if (idEstatusPreproceso === 2 && id_rol_general == 17) { // Contraloría: ELABORACIÓN DE CORRIDAS
+        return (totalCorridas === totalCorridasRef)
+            ? BTN_AVANCE + BTN_SUBIR_ARCHIVO
+            : BTN_SUBIR_ARCHIVO;
+    }
+
+    if (idEstatusPreproceso === 3 && id_rol_general == 15) { // Jurídico: ELABORACIÓN DE CONTRATO Y RESICISIÓN
+        return (totalContrato === totalContratoRef && parseInt(d.totalRescision) === 1)
+            ? BTN_AVANCE + BTN_RECHAZO + BTN_SUBIR_ARCHIVO
+            : BTN_SUBIR_ARCHIVO + BTN_RECHAZO;
+
+    }
+
+    if (idEstatusPreproceso === 4 && id_rol_general == 6) { // Asistente gerente: DOCUMENTACIÓN ENTREGADA
+        return BTN_AVANCE + BTN_RECHAZO;
+    }
+
+    if (idEstatusPreproceso === 5) { // EEC: CONFIRMACIÓN DE RECEPCIÓN DE DOCUMENTOS
+        return (d.idProyecto == PROYECTO.NORTE || d.idProyecto == PROYECTO.PRIVADAPENINSULA)
+            ? BTN_REESTRUCTURA + BTN_REUBICACION
+            : BTN_REUBICACION;
+    }
+
+    return '';
 }
