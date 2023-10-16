@@ -347,8 +347,7 @@ class Reestructura_model extends CI_Model
 
     public function obtenerDocumentacionActiva($idLote, $idCliente)
     {
-        $query = $this->db->query("SELECT * FROM historial_documento
-            WHERE idLote = $idLote AND idCliente = $idCliente AND status = 1 AND expediente != ''");
+        $query = $this->db->query("SELECT * FROM historial_documento WHERE idLote = $idLote AND idCliente = $idCliente AND status = 1 AND expediente != ''");
         return $query->result_array();
     }
 
@@ -471,8 +470,7 @@ class Reestructura_model extends CI_Model
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2, lo.sup, 
         CASE WHEN u6.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u6.nombre, ' ', u6.apellido_paterno, ' ', u6.apellido_materno)) END nombreAsesorAsignado, 
         (ISNULL(lo.totalNeto2, 0.00) / lo.sup) costom2f, ISNULL(lo.totalNeto2, 0.00) total, 
-        co.tipo_lote, oxc.nombre nombreTipoLote, ISNULL(u6.id_usuario, 0) idAsesorAsignado,
-        oxc1.nombre estatusPreproceso, lo.estatus_preproceso id_estatus_preproceso
+        co.tipo_lote, oxc.nombre nombreTipoLote, ISNULL(u6.id_usuario, 0) idAsesorAsignado, oxc1.nombre estatusPreproceso, lo.estatus_preproceso id_estatus_preproceso
         FROM lotes lo
         INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.proceso NOT IN (2, 3, 4)
         INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
@@ -622,7 +620,7 @@ class Reestructura_model extends CI_Model
     }
 
     public function checarDisponibleRe($idLote){
-        $query = $this->db->query("SELECT * FROM lotes WHERE idStatusLote=15 AND idLote=".$idLote);
+        $query = $this->db->query("SELECTT * FROM lotes WHERE idStatusLote=15 AND idLote=".$idLote);
         return $query->result_array();
     }
     

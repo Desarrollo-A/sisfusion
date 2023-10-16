@@ -1454,7 +1454,6 @@ class Reestructura extends CI_Controller{
 
         echo json_encode($responseUpdateLote && $responseInsertHistorial);
     }
-
     
     public function setLoteDisponible()
     {
@@ -1519,48 +1518,6 @@ class Reestructura extends CI_Controller{
         }
         
         return $this->General_model->updateBatch('lotes', $arrayLotes, 'idLote');
-    }
-    public function borarArchivo(){
-        // $archivoNombre = 'static/documentos/contratacion-reubicacion-temp/CMMSLP-MONH-099/CONTRATO/CDMSLP-OLMH-017-20231012081025.pdf';
-        // unlink($archivoNombre);
-        // rmdir('static/documentos/contratacion-reubicacion-temp/CMMSLP-MONH-002/RESCISIONES/');
-        // print_r($archivoNombre);
-        $carpeta = 'CMMSLP-MONH-046';
-        $subcarpeta = 'CORRIDA';//CONTRATO RESCISIONES CORRIDA
-        $rutaRaiz = 'static/documentos/contratacion-reubicacion-temp/'.$carpeta.'/'.$subcarpeta.'/';
-        /*$dataEliminar = array(
-            'CDMSLP-OLMH-110-20231011152908.xlsx',
-            'CDMSLP-OLMH-110-20231011152153.xlsx',
-        );
-        foreach($dataEliminar as $elemento ){
-            unlink($rutaRaiz.$elemento);
-        }
-        rmdir('static/documentos/contratacion-reubicacion-temp/'.$carpeta.'/'.$subcarpeta.'/');*/
-
-
-        $rutaRaiz2 = 'static/documentos/contratacion-reubicacion-temp/'.$carpeta.'/'.$subcarpeta.'/';
-
-        /**/$carpeta1 = glob($rutaRaiz2.'/*');
-        foreach($carpeta1 as $archivo){
-            // print_r($archivo);
-            // echo '<br>';
-            if(is_file($archivo))      // Comprobamos que sean ficheros normales, y de ser asi los eliminamos en la siguiente linea
-                unlink($archivo);          //Eliminamos el archivo
-        }
-        rmdir('static/documentos/contratacion-reubicacion-temp/'.$carpeta.'/'.$subcarpeta.'/');
-
-
-
-        /*$file = '/mnt/data/aplicaciones/maderascrm/application/views/reestructura/CDMSLP-CAOH-047-20231011101002.xlsx';
-        $newfile = '/mnt/data/aplicaciones/maderascrm/static/documentos/contratacion-reubicacion-temp/CMMSLP-MONH-065/CORRIDA/CDMSLP-CAOH-047-20231011101002.xlsx';
-        if(!copy($file,$newfile)){
-            echo "failed to copy $file";
-        }
-        else{
-            echo "copied $file into $newfile\n";
-        }*/
-
-
     }
 
     public function inventario(){

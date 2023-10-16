@@ -229,11 +229,15 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
                 if (d.id_estatus_preproceso == 0 && ROLES_PROPUESTAS.includes(id_rol_general)) // Gerente/Subdirector: PENDIENTE CARGA DE PROPUESTAS
                     btns += BTN_PROPUESTAS;
                 else if (d.id_estatus_preproceso == 1 && ROLES_PROPUESTAS.includes(id_rol_general) || id_rol_general == 7){ // Gerente/Subdirector: REVISIÓN DE PROPUESTAS
-                    btns += BTN_PROPUESTAS;
+                    if(id_rol_general != 7){
+                        btns += BTN_PROPUESTAS;
+                    }
                     if(d.idLoteXcliente == null){
                         btns += BTN_INFOCLIENTE;
                     }else{
-                        btns += BTN_AVANCE;
+                        if(id_rol_general != 7){
+                            btns += BTN_AVANCE;
+                        }
                         btns += BTN_INFOCLIENTE;
                     }
                 }
@@ -705,6 +709,7 @@ $(document).on("change", "#condominioAOcupar", function(e){
             const total = data[i]['total'];
             const a_favor = data[i]['a_favor'];
             const tipoEstatusRegreso = data[i]['tipo_estatus_regreso'];
+            console.log(data[i]);
             $("#loteAOcupar")
                 .append($('<option>')
                 .val(id)
@@ -786,6 +791,7 @@ function removeLote(e, idLote, statusPreproceso, id_pxl, idProyecto, superficie,
         return;
     }
 
+    
     // REVISIÓN DE PROPUESTAS (YA ESTÁN EN LA BASE DE DATOS)
     $('#spiner-loader').removeClass('hide');
     let data = new FormData();
@@ -818,7 +824,7 @@ function removeLote(e, idLote, statusPreproceso, id_pxl, idProyecto, superficie,
     });
 }
 
-function divLotesSeleccionados(statusPreproceso, nombreLote, superficie, idLote, id_pxl = null, idProyecto = null, superficieAnterior = null, tipoLote = null, tipoEstatusRegreso = null){
+function divLotesSeleccionados(statusPreproceso, nombreLote, superficie, idLote, id_pxl = null, idProyecto = null, superficieAnterior = null, tipoLote = null, idCondominio=null, tipoEstatusRegreso = null){
     if (statusPreproceso == 0 || statusPreproceso == 1 ){
         return `
             <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2 lotePropuesto">
