@@ -234,15 +234,10 @@ class Usuarios extends CI_Controller
         $url = 'https://prueba.gphsis.com/RHCV/index.php/WS/baja_asesor';
         if (isset($_POST) && !empty($_POST)) {
             if ($this->input->post("estatus") == 0) {
-                $estatus = 0;
+                $estatus = 3;
                 if ($this->input->post("idrol") == 'Asesor' || $this->input->post("idrol") == 'Coordinador de ventas' || $this->input->post("idrol") == 'Gerente') {
 
-                    $VerificarComision = $this->Usuarios_modelo->VerificarComision($this->input->post("id_user"))->result_array();
-                    if (count($VerificarComision) == 0 || $VerificarComision[0]['abono_pendiente'] <= 0) {
-                        $estatus = 0;
-                    } else {
-                        $estatus = 3;
-                    }
+                    
                     $dataBaja = array(
                         "fecha_baja" => $hoy,
                         "cantidad_descuento" => "0",

@@ -1423,9 +1423,9 @@ class Reestructura extends CI_Controller{
     public function setAvance()
     {
         $estatusMovimientos = [
-            1 => 1,
-            2 => 3,
-            3 => 1
+            1 => 1, // Si el movimiento anterior es nuevo, el sig pasa a nuevo
+            2 => 3, // Si el movimiento ant. es rechazo, el sig pasa a corrección
+            3 => 1 // Si el movimiento ant. es corrección, el sig pasa a nuevo
         ];
 
         $idLote = $this->input->post('idLote');
@@ -1472,6 +1472,12 @@ class Reestructura extends CI_Controller{
     {
         $idLoteOriginal = $this->input->post('idLoteOriginal');
         $idLotePropuesta = $this->input->post('idLotePropuesta');
+
+        $lote = $this->Reestructura_model->checarDisponibleRe($idLotePropuesta);
+        if (count($lote) === 0) {
+            echo json_encode(['code' => 400, 'message' => 'Lote no disponible. Favor de verificarlo']);
+            return;
+        }
 
         $dataUpdateLote = [
             'idStatusLote' => 16,
