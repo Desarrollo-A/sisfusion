@@ -142,6 +142,8 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
                 let btns = '';
                 let editar = 0;
                 let btnShow = 'fa-upload';
+                let btnContratoFirmado = 'fa-file-upload';
+                let editarContratoFirmado = 0;
                 if(d.id_estatus_preproceso == 2){
                     //subiendo corridas
                     if(d.totalCorridas==d.totalCorridasNumero){
@@ -153,8 +155,12 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
                     if(d.totalContratos==d.totalContratoNumero){
                         editar = 1;
                         btnShow = 'fa-edit';
-
+                        btnContratoFirmado = 'fa-eye';
                     }
+                }
+                if(d.idContratoFirmado != null){
+                    btnContratoFirmado = 'fa-eye';
+                    editarContratoFirmado = 1;
                 }
 
                 const BTN_PROPUESTAS =  `<button class="btn-data btn-blueMaderas btn-asignar-propuestas"
@@ -199,6 +205,22 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
                     <i class="fas ${btnShow}"></i>
                 </button>`;
 
+                const BTN_SUBIR_CONTRATO_FIRMADO =  `<button class="btn-data btn-green-excel btn-abrir-contratoFirmado"
+                    data-toggle="tooltip" 
+                    data-placement="left"
+                    title="SUBIR CONTRARO FIRMADO"
+                    data-idCliente="${d.idCliente}"
+                    data-idLote="${d.idLote}"
+                    data-nombreLote="${d.nombreLote}"
+                    data-estatusLoteArchivo="${d.status}"
+                    data-editar="${editarContratoFirmado}"   
+                    data-rescision="${d.rescision}"
+                    data-idDocumento="${d.idContratoFirmado}"   
+                    data-idCondominio="${d.idCondominio}"   
+                    data-tipoTransaccion="${d.id_estatus_preproceso}">
+                    <i class="fas ${btnContratoFirmado}"></i>
+                </button>`;
+
                 if (d.id_estatus_preproceso == 0 && ROLES_PROPUESTAS.includes(id_rol_general)) // Gerente/Subdirector: PENDIENTE CARGA DE PROPUESTAS
                     btns += BTN_PROPUESTAS;
                 else if (d.id_estatus_preproceso == 1 && ROLES_PROPUESTAS.includes(id_rol_general)){ // Gerente/Subdirector: REVISIÓN DE PROPUESTAS
@@ -213,7 +235,9 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
                 else if (d.id_estatus_preproceso == 2 && id_rol_general == 17) { // Contraloría: ELABORACIÓN DE CORRIDAS
                     if (d.totalCorridas == d.totalCorridasNumero)
                         btns += BTN_AVANCE;
-                    btns += BTN_SUBIR_ARCHIVO
+                    btns += BTN_SUBIR_ARCHIVO;
+                    btns += BTN_SUBIR_CONTRATO_FIRMADO; //modal para subir el contrato firmado
+
                 }
                 else if (d.id_estatus_preproceso == 3 && id_rol_general == 15) { // Jurídico: ELABORACIÓN DE CONTRATO Y RESICISIÓN
 

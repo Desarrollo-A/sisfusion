@@ -61,13 +61,51 @@
                     <div class="modal-body text-center">
                         <h5>SELECCIONA LOS ARCHIVOS PARA ASOCIARLOS AL LOTE</h5>
                         <div class="row" id="info-cliente"></div>
-                        <b><h5 id="mainLabelText" class="bold"></h5></b><hr>
+                        <hr>
+                        <div class="row hide" id="co-propietarios">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
+                                        <h5 role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne"
+                                            aria-expanded="true" aria-controls="collapseOne">COPROPIETARIO (S) <i id="copropietario-icono" class="fa fa-angle-down"></i></h5>
+                                    </div>
+                                </div>
+
+                                <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel"
+                                     aria-labelledby="headingOne">
+                                    <div id="contenedorCoprop" role="tablist" aria-multiselectable="true">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
                         <div id="formularioArchivos"></div>
                     </div>
                     <div class="modal-footer mt-2">
                         <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                             <button type="button" id="sendRequestButton" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="contratoFirmadoModal" data-keyboard="false" data-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header"></div>
+                    <div class="modal-body text-center">
+                        <h5>ASOCIA EL CONTRATO FIRMADO</h5>
+                        <div class="row" id="info-cliente-modal-cf"></div>
+                        <b><h5 id="mainLabelTextcf" class="bold"></h5></b><hr>
+                        <div id="formularioArchivoscf"></div>
+                    </div>
+                    <div class="modal-footer mt-2">
+                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                            <button type="button" id="sendRequestButtoncf" class="btn btn-primary">Guardar</button>
                         </div>
                     </div>
                 </div>

@@ -6,6 +6,8 @@ var editarFile = 0;
 var archivosAborrar = [];
 var acceptFiles = '';
 var nombreLote = '';
+var arrayCF = [];
+var editarContrafoFirmado = 0;
 $(document).ready(function () {
     $("#archivosReestructura").on("hidden.bs.modal", function () {
         $("#fileElm1").val(null);
@@ -18,6 +20,7 @@ $(document).ready(function () {
         $("#resicion-name").val("");
     });
     Shadowbox.init();
+    $('.collapse').collapse()
 });
 $(document).on('click', '.btn-abrir-modal', function () {
     let idLote = $(this).attr("data-idLote");
@@ -41,7 +44,11 @@ $(document).on('click', '.btn-abrir-modal', function () {
         },
         success: function(data) {
             data = JSON.parse(data);
-            formArchivos(tipotransaccion, data, flagEditar, nombreLote)
+            if(tipotransaccion==3){
+                loadCopropietarios(data['copropietarios']);
+                document.getElementById('co-propietarios').classList.remove('hide');
+            }
+            formArchivos(tipotransaccion, data['opcionesLotes'], flagEditar, nombreLote)
         },
         error: function(){
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
@@ -216,6 +223,77 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote) {
         input.trigger("fileselect", [numFiles, label]);
     });
     $('[data-toggle="tooltip"]').tooltip();
+
+}
+function loadCopropietarios(datos){
+    // cnt-headers //contenedor de las cabeceras
+    let contenidoHTML = '';
+    let contenedorContenido = document.getElementById('contenedorCoprop');
+    if(datos.length>0){
+        datos.map((elemento, index)=>{
+            let nombreCopropietario = elemento.nombre + ' ' + elemento.apellido_paterno+' '+elemento.apellido_materno;
+            contenidoHTML += '<div class="card-body mb-3">';
+            contenidoHTML += '  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center" style="background-color: #0b3e6f;color: #f2f2f2;border-radius: 12px 12px 0px 0px;"><span style="font-size: 1.5rem">'+nombreCopropietario+'</span></div>';
+            contenidoHTML += '      <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding-bottom: 10px;border-top: 1px solid #ddd;margin-bottom: 25px;background-color: #F6FBFF;\n' +
+                '    border-radius: 0px 0px 12px 12px;">';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">';
+            contenidoHTML += '              <div class="form-group label-floating">';
+            contenidoHTML += '                  <label class="label-on-left m-0">NOMBRE</label>';
+            contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.nombre+'"/>';
+            contenidoHTML += '              </div>';
+            contenidoHTML += '          </div>';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">';
+            contenidoHTML += '              <div class="form-group label-floating">';
+            contenidoHTML += '                  <label class="label-on-left m-0">APELLIDO PATERNO</label>';
+            contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.apellido_paterno+'"/>';
+            contenidoHTML += '              </div>';
+            contenidoHTML += '          </div>';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">';
+            contenidoHTML += '              <div class="form-group label-floating">';
+            contenidoHTML += '                  <label class="label-on-left m-0">APELLIDO MATERNO</label>';
+            contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.apellido_materno+'"/>';
+            contenidoHTML += '              </div>';
+            contenidoHTML += '          </div>';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-5 col-lg-5">';
+            contenidoHTML += '              <div class="form-group label-floating">';
+            contenidoHTML += '                  <label class="label-on-left m-0">CORREO</label>';
+            contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.correo+'"/>';
+            contenidoHTML += '              </div>';
+            contenidoHTML += '          </div>';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">';
+            contenidoHTML += '              <div class="form-group label-floating">';
+            contenidoHTML += '                  <label class="label-on-left m-0">TELÉFONO</label>';
+            contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.telefono_2+'"/>';
+            contenidoHTML += '              </div>';
+            contenidoHTML += '          </div>';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">';
+            contenidoHTML += '              <div class="form-group label-floating">';
+            contenidoHTML += '                  <label class="label-on-left m-0">ESTADO CIVIL</label>';
+            contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.estado_civil+'"/>';
+            contenidoHTML += '              </div>';
+            contenidoHTML += '          </div>';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">';
+            contenidoHTML += '              <div class="form-group label-floating">';
+            contenidoHTML += '                  <label class="label-on-left m-0">OCUPACIÓN</label>';
+            contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.ocupacion+'"/>';
+            contenidoHTML += '              </div>';
+            contenidoHTML += '          </div>';
+
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-9 col-lg-9">';
+            contenidoHTML += '              <div class="form-group label-floating">';
+            contenidoHTML += '                  <label class="label-on-left m-0">DIRECCIÓN</label>';
+            contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.domicilio_particular+'"/>';
+            contenidoHTML += '              </div>';
+            contenidoHTML += '          </div>';
+            contenidoHTML += '     </div>';
+            contenidoHTML += '  <hr>';
+            contenidoHTML += '</div>';
+        });
+    }else{
+        contenidoHTML += '<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12"><center><h5 class="fs-2">SIN COPROPIETARIOS</h5></center></div>';
+    }
+
+    contenedorContenido.innerHTML = contenidoHTML;
 }
 
 $(document).on("click", "#sendRequestButton", function (e) {
@@ -417,5 +495,126 @@ $(document).on('click', '.ver-archivo', function () {
         }
     } else if (flagProceso == 2) {
         window.open(url, "_blank");
+    }
+});
+
+
+$(document).on('click', '.btn-abrir-contratoFirmado', function(){
+   $('#contratoFirmadoModal').modal('toggle');
+    let flagEditar = $(this).attr("data-editar");
+    let formularioArchivoscf = document.getElementById('formularioArchivoscf');
+    let contenidoHTMLCF = '';
+    let idLote = $(this).attr("data-idLote");
+    let nombreLotecf = $(this).attr("data-nombreLote");
+    nombreLote = nombreLotecf;
+    let estatusProceso = $(this).attr("data-tipotransaccion");
+    arrayCF['idCondominio'] = $(this).attr("data-idCondominio");
+    arrayCF['idDocumento'] = $(this).attr("data-iddocumento");
+    arrayCF['idClienteCF'] = $(this).attr("data-idcliente");
+    arrayCF['idLoteCF'] = idLote;
+
+    editarContrafoFirmado = flagEditar;
+   if(flagEditar == 0){//es primera ves no hay archivo
+       contenidoHTMLCF += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2">\n' +
+           '                            <h6 class="text-left"><b>Subir contrato firmado: </b><span class="text-red">*</span></h6>\n' +
+           '                            <div class="" id="selectFileSectionResicioncf">\n' +
+           '                                <div class="file-gph">\n' +
+           '                                    <input class="d-none" type="file" required accept="application/pdf" id="contratoFirmado">\n' +
+           '                                    <input class="file-name" id="contratoFirmado-name" type="text" placeholder="No has seleccionada nada aún" readonly="">\n' +
+           '                                    <label class="upload-btn m-0" for="contratoFirmado"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>\n' +
+           '                                </div>\n' +
+           '                            </div>\n' +
+           '                        </div>';
+   }else if(flagEditar == 1){//ya hay un archivo hay que actualizarlo
+
+   }
+    // formularioArchivoscf
+    formularioArchivoscf.innerHTML = contenidoHTMLCF;
+
+    $("input:file").on("change", function () {
+        const target = $(this);
+        const relatedTarget = target.siblings(".file-name");
+        const fileName = target[0].files[0].name;
+        relatedTarget.val(fileName);
+    });
+    $(document).on("change", ".btn-file :file", function () {
+        const input = $(this),
+            numFiles = input.get(0).files ? input.get(0).files.length : 1,
+            label = input.val().replace(/\\/g, "/").replace(/.*\//, "");
+        input.trigger("fileselect", [numFiles, label]);
+    });
+    $('[data-toggle="tooltip"]').tooltip();
+});
+$(document).on("click", "#sendRequestButtoncf", function (e) {
+    e.preventDefault();
+    let flagEnviar = true;
+    let validacionArray = [];
+    let flagValidacion = 0;
+
+    if (editarFile == 1) {
+
+    }
+    else if (editarFile == 0) {
+
+        if ($("#contratoFirmado")[0].files[0] == undefined) {
+            $("#spiner-loader").addClass('hide');
+            alerts.showNotification('top', 'right', 'Selecciona el contrato firmado', 'warning');
+            flagEnviar = false;
+        }
+        else {
+            if (flagEnviar) {
+                let data = new FormData();
+                // data.append("tipoProceso", flagProceso);
+                data.append("idLote", arrayCF['idLoteCF']);
+                data.append("nombreLoteOriginal", nombreLote);
+                data.append("idDocumento", arrayCF['idDocumento']);
+                data.append("idCliente", arrayCF['idClienteCF']);
+                data.append("editarFile", editarContrafoFirmado);
+                data.append('contratoFirmado', $("#contratoFirmado")[0].files[0]);
+                data.append('idCondominio', arrayCF['idCondominio'] );
+                let flagEditarCF = ($("#contratoFirmado")[0].files[0] == undefined) ? 0 : 1;
+                data.append("flagEditarCF", flagEditarCF);
+                $.ajax({
+                    type: 'POST',
+                    url: 'contratoFirmadoR',
+                    data: data,
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    beforeSend: function () {
+                    },
+                    success: function (data) {
+                        const res = JSON.parse(data);
+                        if (res.code === 200) {
+                            alerts.showNotification(
+                                "top",
+                                "right",
+                                `El contrato firmado se ha cargado con éxito.`,
+                                "success"
+                            );
+                            reubicacionClientes.ajax.reload();
+                            $("#spiner-loader").addClass('hide');
+                            $("#contratoFirmadoModal").modal("hide");
+                            $("#spiner-loader").addClass('hide');
+                        }
+                        if (res.code === 400) {
+                            alerts.showNotification("top", "right", "ocurrió un error", "warning");
+                        }
+                        if (res.code === 500) {
+                            alerts.showNotification(
+                                "top",
+                                "right",
+                                "Oops, algo salió mal.",
+                                "warning"
+                            );
+                        }
+                    },
+                    error: function () {
+                        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                    }
+                });
+            }
+        }
+
     }
 });
