@@ -6,25 +6,6 @@
     <div class="wrapper ">
         <?php $this->load->view('template/sidebar'); ?>
 
-        <div class="modal fade " id="banderaLiberar" data-backdrop="static" data-keyboard="false">
-			<div class="modal-dialog modal-small">
-				<div class="modal-content" > 
-					<div class="modal-body">
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
-                            <h4  id="tituloAD" name="tituloAD"></h4>
-                        </div>
-                        <br>
-                        <input type="hidden" name="idLoteBandera" id="idLoteBandera" >
-                        <input type="hidden" name="bandera" id="bandera" >        
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-						<button type="button" id="liberarBandera" name="liberarBandera" class="btn btn-primary liberarBandera">Aceptar</button>
-					</div>
-				</div>
-			</div>
-		</div>
-
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">

@@ -133,13 +133,11 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
                 let editar = 0;
                 let btnShow = 'fa-upload';
                 if(d.id_estatus_preproceso == 2){
-                    //subiendo corridas
                     if(d.totalCorridas==3){
                         editar = 1;
                         btnShow = 'fa-edit';
                     }
                 }else if(d.id_estatus_preproceso == 3){
-                    //subiendo contratos
                     if(d.totalContratos==3){
                         editar = 1;
                         btnShow = 'fa-edit';
@@ -147,50 +145,14 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
                     }
                 }
 
-                const BTN_PROPUESTAS =  `<button class="btn-data btn-blueMaderas btn-asignar-propuestas"
-                            data-toggle="tooltip" 
-                            data-placement="left"
-                            title="${d.id_estatus_preproceso == 0 ? 'ASIGNAR PROPUESTAS' : 'ACTUALIZAR PROPUESTAS'}"
-                            data-idCliente="${d.idCliente}" 
-                            data-tipoLote="${d.tipo_lote}"
-                            data-idProyecto="${d.idProyecto}"
-                            data-statusPreproceso="${d.id_estatus_preproceso}">
-                            <i class="fas fa-user-edit"></i>
-                    </button>`;
-                const BTN_AVANCE =  `<button class="btn-data btn-green btn-avanzar"
-                    data-toggle="tooltip" 
-                    data-placement="left"
-                    title="ENVIAR A ${ESTATUS_PREPROCESO[d.id_estatus_preproceso + 1]}"
-                    data-idCliente="${d.idCliente}"
-                    data-tipoTransaccion="${d.id_estatus_preproceso}">
-                    <i class="fas fa-thumbs-up"></i>
-                </button>`;
-                
-                const BTN_INFOCLIENTE =  `<button class="btn-data btn-green infoUser"
-                    data-toggle="tooltip" 
-                    data-placement="left"
-                    data-idCliente="${d.idCliente}" 
-                    data-idLote="${d.idLote}">
-                    <i class="fas fa-user-check"></i>
-                </button>`;
-                const BTN_SUBIR_ARCHIVO =  `<button class="btn-data btn-blueMaderas btn-abrir-modal"
-                    data-toggle="tooltip" 
-                    data-placement="left"
-                    title="CARGAR DOCUMENTACIÓN"
-                    data-idCliente="${d.idCliente}"
-                    data-idLote="${d.idLote}"
-                    data-nombreLote="${d.nombreLote}"
-                    data-estatusLoteArchivo="${d.status}"
-                    data-editar="${editar}"   
-                    data-rescision="${d.rescision}"
-                    data-id_dxc="${d.id_dxc}"   
-                    data-tipoTransaccion="${d.id_estatus_preproceso}">
-                    <i class="fas ${btnShow}"></i>
-                </button>`;
+                const BTN_PROPUESTAS =  `<button class="btn-data btn-blueMaderas btn-asignar-propuestas" data-toggle="tooltip" data-placement="left" title="${d.id_estatus_preproceso == 0 ? 'ASIGNAR PROPUESTAS' : 'ACTUALIZAR PROPUESTAS'}" data-idCliente="${d.idCliente}" data-tipoLote="${d.tipo_lote}" data-idProyecto="${d.idProyecto}" data-statusPreproceso="${d.id_estatus_preproceso}"><i class="fas fa-user-edit"></i></button>`;
+                const BTN_AVANCE =  `<button class="btn-data btn-green btn-avanzar" data-toggle="tooltip" data-placement="left" title="ENVIAR A ${ESTATUS_PREPROCESO[d.id_estatus_preproceso + 1]}" data-idCliente="${d.idCliente}" data-tipoTransaccion="${d.id_estatus_preproceso}"><i class="fas fa-thumbs-up"></i></button>`;
+                const BTN_INFOCLIENTE =  `<button class="btn-data btn-green infoUser" data-toggle="tooltip" data-placement="left" data-idCliente="${d.idCliente}" data-idLote="${d.idLote}"><i class="fas fa-user-check"></i></button>`;
+                const BTN_SUBIR_ARCHIVO =  `<button class="btn-data btn-blueMaderas btn-abrir-modal" data-toggle="tooltip" data-placement="left" title="CARGAR DOCUMENTACIÓN" data-idCliente="${d.idCliente}" data-idLote="${d.idLote}" data-nombreLote="${d.nombreLote}" data-estatusLoteArchivo="${d.status}" data-editar="${editar}" data-rescision="${d.rescision}" data-id_dxc="${d.id_dxc}" data-tipoTransaccion="${d.id_estatus_preproceso}"><i class="fas ${btnShow}"></i></button>`;
 
-                if (d.id_estatus_preproceso == 0 && id_rol_general == 3) // Gerente: PENDIENTE CARGA DE PROPUESTAS
+                if (d.id_estatus_preproceso == 0 && id_rol_general == 3)
                     btns += BTN_PROPUESTAS;
-                else if (d.id_estatus_preproceso == 1 && id_rol_general == 3){ // Gerente: REVISIÓN DE PROPUESTAS
+                else if (d.id_estatus_preproceso == 1 && id_rol_general == 3){
                     btns += BTN_PROPUESTAS;
                     if(d.idLoteXcliente == null){
                         btns += BTN_INFOCLIENTE;
@@ -199,39 +161,23 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
                         btns += BTN_INFOCLIENTE;
                     }
                 }
-                else if (d.id_estatus_preproceso == 2 && id_rol_general == 17) { // Contraloría: ELABORACIÓN DE CORRIDAS
+                else if (d.id_estatus_preproceso == 2 && id_rol_general == 17) {
                     if (d.totalCorridas == 3)
                         btns += BTN_AVANCE;
-                    btns += BTN_SUBIR_ARCHIVO
+                        btns += BTN_SUBIR_ARCHIVO
                 }
-                else if (d.id_estatus_preproceso == 3 && id_rol_general == 15) { // Jurídico: ELABORACIÓN DE CONTRATO Y RESICISIÓN
-
+                else if (d.id_estatus_preproceso == 3 && id_rol_general == 15) {
                     if (d.totalContratos == 3 && d.totalRescision == 1)
                         btns += BTN_AVANCE;
-                    btns += BTN_SUBIR_ARCHIVO
-
+                        btns += BTN_SUBIR_ARCHIVO    
                 }
-                else if (d.id_estatus_preproceso == 4 && id_rol_general == 6) // Asistente gerente: DOCUMENTACIÓN ENTREGADA
+                else if (d.id_estatus_preproceso == 4 && id_rol_general == 6)
                     btns += BTN_AVANCE;
-                else if (d.id_estatus_preproceso == 5) { // EEC: CONFIRMACIÓN DE RECEPCIÓN DE DOCUMENTOS
+                else if (d.id_estatus_preproceso == 5) {
                     if(d.idProyecto == PROYECTO.NORTE || d.idProyecto == PROYECTO.PRIVADAPENINSULA){
-                        btns +=  `<button class="btn-data btn-sky btn-reestructurar"
-                                data-toggle="tooltip" 
-                                data-placement="left"
-                                title="REESTRUCTURAR"
-                                data-idCliente="${d.idCliente}">
-                                <i class="fas fa-map-marker"></i>
-                        </button>`;
+                        btns +=  `<button class="btn-data btn-sky btn-reestructurar" data-toggle="tooltip" data-placement="left" title="REESTRUCTURAR" data-idCliente="${d.idCliente}"><i class="fas fa-map-marker"></i></button>`;
                     }
-                    btns += `<button class="btn-data btn-green btn-reubicar"
-                            data-toggle="tooltip" 
-                            data-placement="left"
-                            title="REUBICAR CLIENTE"
-                            data-idCliente="${d.idCliente}"
-                            data-idProyecto="${d.idProyecto}"
-                            data-tipoLote="${d.tipo_lote}">
-                        <i class="fas fa-route"></i>
-                    </button>`;
+                        btns += `<button class="btn-data btn-green btn-reubicar" data-toggle="tooltip" data-placement="left" title="REUBICAR CLIENTE" data-idCliente="${d.idCliente}" data-idProyecto="${d.idProyecto}" data-tipoLote="${d.tipo_lote}"><i class="fas fa-route"></i></button>`;
                 }
                 return `<div class="d-flex justify-center">${btns}</div>`;
             }
@@ -367,63 +313,65 @@ $(document).on('click', '.infoUser', function (){
         const ine = cliente.ine;
 
         changeSizeModal('modal-md');
-        appendBodyModal(`<div class="modal-header">
-                    <h4 class="modal-title text-center">Corrobora la información del cliente</h4>
-                </div>	
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                            <label class="control-label">Nombre (<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral" name="nombreCli" id="nombreCli" type="text" value="${nombreLote}" required/>
+        appendBodyModal(`<form method="post" id="formInfoCliente">
+                    <div class="modal-header">
+                        <h4 class="modal-title text-center">Corrobora la información del cliente</h4>
+                    </div>	
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                                <label class="control-label">Nombre (<small style="color: red;">*</small>)</label>
+                                <input class="form-control input-gral" name="nombreCli" id="nombreCli" type="text" value="${nombreLote}" required/>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                                <label class="control-label">Apellido paterno (<small style="color: red;">*</small>)</label>
+                                <input class="form-control input-gral" name="apellidopCli" id="apellidopCli" value="${apePaterno}" type="text" required/>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                                <label class="control-label">Apellido materno (<small style="color: red;">*</small>)</label>
+                                <input class="form-control input-gral" name="apellidomCli" id="apellidomCli" type="text" value="${apeMaterno}" required/>
+                            </div>
                         </div>
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                            <label class="control-label">Apellido paterno (<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral" name="apellidopCli" id="apellidopCli" value="${apePaterno}" type="text" required/>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
+                                <label class="control-label">Teléfono (<small style="color: red;">*</small>)</label>
+                                <input class="form-control input-gral" name="telefonoCli" id="telefonoCli" type="number" maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" value="${telefono}" required/>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
+                                <label class="control-label">Correo (<small style="color: red;">*</small>)<small class="pl-1" id="result"></small></label>
+                                <input class="form-control input-gral" name="correoCli" id="correoCli" oninput= "validate()" type="email" value="${correo}" required/>
+                            </div>
                         </div>
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                            <label class="control-label">Apellido materno (<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral" name="apellidomCli" id="apellidomCli" type="text" value="${apeMaterno}" required/>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                                <label class="control-label">Domicilio (<small style="color: red;">*</small>)</label>
+                                <input class="form-control input-gral" name="domicilioCli" id="domicilioCli" type="text" value="${domicilio}" required/>
+                            </div>
                         </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                                <label class="control-label">Estado civil (<small style="color: red;">*</small>)</label>
+                                <select name="estadoCli" title="SELECCIONA UNA OPCIÓN" id="estadoCli" class="selectpicker m-0 select-gral" data-container="body" data-width="100%" required></select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
+                                <label class="control-label">INE (<small style="color: red;">*</small>)</label>
+                                <input class="form-control input-gral" name="ineCLi" id="ineCLi" type="number" maxlength="13" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" value="${ine}" required/>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m.0">
+                                <label class="control-label">Ocupación (<small style="color: red;">*</small>)</label>
+                                <input class="form-control input-gral" name="ocupacionCli" id="ocupacionCli" type="text" value="${ocupacion}" required/>
+                            </div>
+                        </div>        
+                        <input type="hidden" name="idCliente" id="idCliente" value="${idCliente}">
+                        <input type="hidden" name="idLote" id="idLote" value="${idLote}">
                     </div>
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
-                            <label class="control-label">Teléfono (<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral" name="telefonoCli" id="telefonoCli" type="number" maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" value="${telefono}" required/>
-                        </div>
-                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
-                            <label class="control-label">Correo (<small style="color: red;">*</small>)<small class="pl-1" id="result"></small></label>
-                            <input class="form-control input-gral" name="correoCli" id="correoCli" oninput= "validate()" type="email" value="${correo}" required/>
-                        </div>
+                    <div class="modal-footer">
+                        <button type="button" id="cancelarValidacion" class="btn btn-danger btn-simple cancelarValidacion" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="guardarCliente" name="guardarCliente" class="btn btn-primary guardarValidacion">GUARDAR</button>
                     </div>
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                            <label class="control-label">Domicilio (<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral" name="domicilioCli" id="domicilioCli" type="text" value="${domicilio}" required/>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                            <label class="control-label">Estado civil (<small style="color: red;">*</small>)</label>
-                            <select name="estadoCli" title="SELECCIONA UNA OPCIÓN" id="estadoCli" class="selectpicker m-0 select-gral" data-container="body" data-width="100%" required></select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
-                            <label class="control-label">INE (<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral" name="ineCLi" id="ineCLi" type="number" maxlength="13" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" value="${ine}" required/>
-                        </div>
-                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m.0">
-                            <label class="control-label">Ocupación (<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral" name="ocupacionCli" id="ocupacionCli" type="text" value="${ocupacion}" required/>
-                        </div>
-                    </div>        
-                    <input type="hidden" name="idCliente" id="idCliente" value="${idCliente}">
-                    <input type="hidden" name="idLote" id="idLote" value="${idLote}">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="cancelarValidacion" class="btn btn-danger btn-simple cancelarValidacion" data-dismiss="modal">Cancelar</button>
-                    <button type="button" id="guardarCliente" name="guardarCliente" class="btn btn-primary guardarValidacion">GUARDAR</button>
-                </div>`);
+                </form>`);
         showModal();
 
         $.post("getEstadoCivil", function(estadoCivil) {
@@ -467,13 +415,9 @@ const validate = () => {
 
 $(document).on('click', '#guardarCliente', function (){
     var idLote = $('#idLote').val();
-    var nombreCli = $('#nombreCli').val();
-    var apellidopCli = $('#apellidopCli').val();
-    var apellidomCli = $('#apellidomCli').val();
     var telefonoCli = $('#telefonoCli').val();
     var correoCli = $('#correoCli').val();
     var domicilioCli = $('#domicilioCli').val();
-    var estadoCli = $('#estadoCli').val();
     var ineCLi = $('#ineCLi').val();
     var ocupacionCli = $('#ocupacionCli').val();
 
@@ -507,18 +451,7 @@ $(document).on('click', '#guardarCliente', function (){
         return;
     }
 
-    var datos = new FormData();
-    datos.append("idLote", idLote);
-    datos.append("nombreCli", nombreCli);
-    datos.append("apellidopCli", apellidopCli);
-    datos.append("apellidomCli", apellidomCli);
-    datos.append("telefonoCli", telefonoCli);
-    datos.append("correoCli", correoCli);
-    datos.append("domicilioCli", domicilioCli);
-    datos.append("estadoCli", estadoCli);
-    datos.append("ineCLi", ineCLi);
-    datos.append("ocupacionCli", ocupacionCli);
-
+    let datos = new FormData($("#formInfoCliente")[0]);
     $("#spiner-loader").removeClass('hide');
     $.ajax({
         method: 'POST',
@@ -669,7 +602,7 @@ $(document).on("change", "#loteAOcupar", function(e){
 })
 
 function removeLote(e, idLote, statusPreproceso, id_pxl, idProyecto, superficie, tipoLote) {
-    if (statusPreproceso == 1) { // REVISIÓN DE PROPUESTAS (YA ESTÁN EN LA BASE DE DATOS)
+    if (statusPreproceso == 1) {
         $('#spiner-loader').removeClass('hide');
         let data = new FormData();
         data.append("idLote", idLote);
@@ -685,7 +618,6 @@ function removeLote(e, idLote, statusPreproceso, id_pxl, idProyecto, superficie,
                 $('#spiner-loader').addClass('hide');
                 if(data) {
                     alerts.showNotification("top", "right", "El registro se ha eliminado y liberado con éxito.", "success");
-                    // SE VUELVE A LLENAR SELECT PARA REFRESCAR OPCIONES
                     getProyectosAOcupar(idProyecto, superficie, tipoLote);
                     let divLote = e.closest( '.lotePropuesto' );
                     divLote.remove();
@@ -699,7 +631,7 @@ function removeLote(e, idLote, statusPreproceso, id_pxl, idProyecto, superficie,
             }
         });
     }
-    else { // SON LOTES QUE ELIMINA CUANDO ES LA PRIMERA VEZ QUE ASIGNA PROPUESTAS
+    else {
         let divLote = e.closest( '.lotePropuesto' );
         divLote.remove();
     }
@@ -760,35 +692,30 @@ function divLotesSeleccionados(statusPreproceso, nombreLote, superficie, idLote,
         html = `
             <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2 lotePropuesto">
                 <div class="" id="checkDS">
-                    
-                        
-                        <div class="container boxChecks p-0">
-                            <div class="col-12 col-sm-12 col-md-4 col-lg-4 p-0">
-                                <label class="m-0 checkstyleDS">
-                                    <input type="checkbox" name="idOficial_pf" id="idOficial_pf" value="1" >
-                                    <span>IDENTIFICACIÓN OFICIAL</span>
-                                </label>
-                            </div>
-                            <div class="col-12 col-sm-12 col-md-4 col-lg-4 p-0">
-                                <label class="m-0 checkstyleDS">
-                                    <input type="checkbox" name="idOficial_pf" id="idOficial_pf" value="1" >
-                                    <span>IDENTIFICACIÓN OFICIAL</span>
-                                </label>
-                            </div>
-                            <div class="col-12 col-sm-12 col-md-4 col-lg-4 p-0">
-                                <label class="m-0 checkstyleDS">
-                                    <input type="checkbox" name="idOficial_pf" id="idOficial_pf" value="1" >
-                                    <span>IDENTIFICACIÓN OFICIAL</span>
-                                </label>
-                            </div>
+                    <div class="container boxChecks p-0">
+                        <div class="col-12 col-sm-12 col-md-4 col-lg-4 p-0">
+                            <label class="m-0 checkstyleDS">
+                                <input type="checkbox" name="idOficial_pf" id="idOficial_pf" value="1" >
+                                <span>IDENTIFICACIÓN OFICIAL</span>
+                            </label>
                         </div>
-                    
+                        <div class="col-12 col-sm-12 col-md-4 col-lg-4 p-0">
+                            <label class="m-0 checkstyleDS">
+                                <input type="checkbox" name="idOficial_pf" id="idOficial_pf" value="1" >
+                                <span>IDENTIFICACIÓN OFICIAL</span>
+                            </label>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-4 col-lg-4 p-0">
+                            <label class="m-0 checkstyleDS">
+                                <input type="checkbox" name="idOficial_pf" id="idOficial_pf" value="1" >
+                                <span>IDENTIFICACIÓN OFICIAL</span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
         `;
     }
-    
-
     return html;
 }
 
@@ -862,7 +789,6 @@ $(document).on("submit", "#formReestructura", function(e){
         type: 'POST', 
         success: function(data){
             data = JSON.parse(data);
-            console.log(data);
             alerts.showNotification("top", "right", ""+data.message+"", ""+data.color+"");
             $('#reubicacionClientes').DataTable().ajax.reload();
             $('#spiner-loader').addClass('hide');
@@ -899,7 +825,7 @@ $(document).on('click', '.btn-avanzar', function () {
                             <button type="button" class="btn btn-simple btn-danger" onclick="hideModal()">Cancelar</button>
                             <button type="submit" class="btn btn-primary">Aceptar</button>
                         </div>
-                    </div>
+                </div>
             </div>
         </form>
     `);
