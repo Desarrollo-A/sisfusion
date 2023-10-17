@@ -314,48 +314,45 @@ $(document).on('click', '.infoUser', function (){
         const ocupacion= cliente.ocupacion;
         const ine = cliente.ine;
 
-        changeSizeModal('modal-lg');
-        appendBodyModal(`
-            <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
-                <li class="active"><a href="#infoCliente" role="tab" data-toggle="tab">Información del cliente</a></li>
-                <li><a href="#coopropietarios" role="tab" data-toggle="tab">Copropietarios</a></li>
-            </ul>
-            <div class="tab-content p-2">
-                <div class="tab-pane active" id="infoCliente">
+        changeSizeModal('modal-md');
+        appendBodyModal(`<form method="post" id="formInfoCliente">
+                    <div class="modal-header">
+                        <h4 class="modal-title text-center">Corrobora la información del cliente</h4>
+                    </div>	
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                                <label class="control-label">NOMBRE (<small style="color: red;">*</small>)</label>
+                                <label class="control-label">Nombre (<small style="color: red;">*</small>)</label>
                                 <input class="form-control input-gral" name="nombreCli" id="nombreCli" type="text" value="${nombreLote}" required/>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                                <label class="control-label">APELLIDO PATERNO (<small style="color: red;">*</small>)</label>
+                                <label class="control-label">Apellido paterno (<small style="color: red;">*</small>)</label>
                                 <input class="form-control input-gral" name="apellidopCli" id="apellidopCli" value="${apePaterno}" type="text" required/>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                                <label class="control-label">APELLIDO MATERNO (<small style="color: red;">*</small>)</label>
+                                <label class="control-label">Apellido materno (<small style="color: red;">*</small>)</label>
                                 <input class="form-control input-gral" name="apellidomCli" id="apellidomCli" type="text" value="${apeMaterno}" required/>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
-                                <label class="control-label">TELÉFONO (<small style="color: red;">*</small>)</label>
+                                <label class="control-label">Teléfono (<small style="color: red;">*</small>)</label>
                                 <input class="form-control input-gral" name="telefonoCli" id="telefonoCli" type="number" maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" value="${telefono}" required/>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
-                                <label class="control-label">CORREO (<small style="color: red;">*</small>)</label>
-                                <input class="form-control input-gral" name="correoCli" id="correoCli" type="text" value="${correo}" required/>
+                                <label class="control-label">Correo (<small style="color: red;">*</small>)<small class="pl-1" id="result"></small></label>
+                                <input class="form-control input-gral" name="correoCli" id="correoCli" oninput= "validate()" type="email" value="${correo}" required/>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                                <label class="control-label">DOMICILIO (<small style="color: red;">*</small>)</label>
+                                <label class="control-label">Domicilio (<small style="color: red;">*</small>)</label>
                                 <input class="form-control input-gral" name="domicilioCli" id="domicilioCli" type="text" value="${domicilio}" required/>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                                <label class="control-label">ESTADO CIVIL (<small style="color: red;">*</small>)</label>
+                                <label class="control-label">Estado civil (<small style="color: red;">*</small>)</label>
                                 <select name="estadoCli" title="SELECCIONA UNA OPCIÓN" id="estadoCli" class="selectpicker m-0 select-gral" data-container="body" data-width="100%" required></select>
                             </div>
                         </div>
@@ -365,7 +362,7 @@ $(document).on('click', '.infoUser', function (){
                                 <input class="form-control input-gral" name="ineCLi" id="ineCLi" type="number" maxlength="13" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" value="${ine}" required/>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m.0">
-                                <label class="control-label">OCUPACIÓN (<small style="color: red;">*</small>)</label>
+                                <label class="control-label">Ocupación (<small style="color: red;">*</small>)</label>
                                 <input class="form-control input-gral" name="ocupacionCli" id="ocupacionCli" type="text" value="${ocupacion}" required/>
                             </div>
                         </div>        
@@ -376,32 +373,7 @@ $(document).on('click', '.infoUser', function (){
                         <button type="button" id="cancelarValidacion" class="btn btn-danger btn-simple cancelarValidacion" data-dismiss="modal">Cancelar</button>
                         <button type="button" id="guardarCliente" name="guardarCliente" class="btn btn-primary guardarValidacion">GUARDAR</button>
                     </div>
-                </div>
-                
-                <div class="tab-pane" id="coopropietarios">
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                            <div class="form-group label-floating">
-                                <label class="control-label">NOMBRE (<small style="color: red;">*</small>)</label>
-                                <input class="form-control input-gral" type="text" required value=""/>
-                            </div>
-                        </div>
-                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                            <div class="form-group label-floating">
-                                <label class="control-label">TELÉFONO CASA</label>
-                                <input  class="form-control input-gral" name="" id="" type="number" step="any" onKeyPress="if(this.value.length==10) return false;" value=""/>
-                            </div>
-                        </div>
-                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                            <div class="form-group label-floating">
-                                <label class="control-label">CELULAR (<small style="color: red;">*</small>)</label>
-                                <input  class="form-control input-gral" name="" type="number" step="any" onKeyPress="if(this.value.length==10) return false;" value=""/>
-                            </div>
-                        </div>
-                    </div>                
-                </div>
-            </div>
-        `);
+                </form>`);
         showModal();
 
         $.post("getEstadoCivil", function(estadoCivil) {
@@ -422,15 +394,32 @@ $(document).on('click', '.infoUser', function (){
     }, 'json');
 });
 
+const validateEmail = (email) => {
+    return email.match(
+        /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+}
+
+const validate = () => {
+    const $result = $('#result');
+    const email = $('#correoCli').val();
+    $result.text('');
+
+    if(validateEmail(email)){
+        $result.text('El correo es válido');
+        $result.css('color', 'rgb(26 159 10)');
+    } else{
+        $result.text('El correo es inválido.');
+        $result.css('color', 'red');
+    }
+    return false;
+}
+
 $(document).on('click', '#guardarCliente', function (){
     var idLote = $('#idLote').val();
-    var nombreCli = $('#nombreCli').val();
-    var apellidopCli = $('#apellidopCli').val();
-    var apellidomCli = $('#apellidomCli').val();
     var telefonoCli = $('#telefonoCli').val();
     var correoCli = $('#correoCli').val();
     var domicilioCli = $('#domicilioCli').val();
-    var estadoCli = $('#estadoCli').val();
     var ineCLi = $('#ineCLi').val();
     var ocupacionCli = $('#ocupacionCli').val();
 
@@ -449,6 +438,11 @@ $(document).on('click', '#guardarCliente', function (){
         return;
     }
 
+    if(!validateEmail(correoCli)){
+        alerts.showNotification("top", "right", "Capture el correo de forma correcta", "warning");
+        return;
+    }
+
     if (domicilioCli == '' || domicilioCli == null){
         alerts.showNotification("top", "right", "Captura el domicilio", "warning");
         return;
@@ -459,18 +453,7 @@ $(document).on('click', '#guardarCliente', function (){
         return;
     }
 
-    var datos = new FormData();
-    datos.append("idLote", idLote);
-    datos.append("nombreCli", nombreCli);
-    datos.append("apellidopCli", apellidopCli);
-    datos.append("apellidomCli", apellidomCli);
-    datos.append("telefonoCli", telefonoCli);
-    datos.append("correoCli", correoCli);
-    datos.append("domicilioCli", domicilioCli);
-    datos.append("estadoCli", estadoCli);
-    datos.append("ineCLi", ineCLi);
-    datos.append("ocupacionCli", ocupacionCli);
-
+    let datos = new FormData($("#formInfoCliente")[0]);
     $("#spiner-loader").removeClass('hide');
     $.ajax({
         method: 'POST',
@@ -697,14 +680,12 @@ $(document).on("change", "#loteAOcupar", function(e){
 })
 
 function removeLote(e, idLote, statusPreproceso, id_pxl, idProyecto, superficie, tipoLote, tipoEstatusRegreso) {
-    if (statusPreproceso != 1) { // SON LOTES QUE ELIMINA CUANDO ES LA PRIMERA VEZ QUE ASIGNA PROPUESTAS
+    if (statusPreproceso != 1) {
         let divLote = e.closest( '.lotePropuesto' );
         divLote.remove();
         return;
     }
 
-    
-    // REVISIÓN DE PROPUESTAS (YA ESTÁN EN LA BASE DE DATOS)
     $('#spiner-loader').removeClass('hide');
     let data = new FormData();
     data.append("idLote", idLote);
@@ -721,7 +702,6 @@ function removeLote(e, idLote, statusPreproceso, id_pxl, idProyecto, superficie,
             $('#spiner-loader').addClass('hide');
             if(data) {
                 alerts.showNotification("top", "right", "El registro se ha eliminado y liberado con éxito.", "success");
-                // SE VUELVE A LLENAR SELECT PARA REFRESCAR OPCIONES
                 getProyectosAOcupar(idProyecto, superficie, tipoLote);
                 let divLote = e.closest( '.lotePropuesto' );
                 divLote.remove();
@@ -945,7 +925,7 @@ $(document).on('click', '.btn-rechazar', function () {
                             <button type="button" class="btn btn-simple btn-danger" onclick="hideModal()">Cancelar</button>
                             <button type="submit" class="btn btn-primary">Aceptar</button>
                         </div>
-                    </div>
+                </div>
             </div>
         </form>
     `);
