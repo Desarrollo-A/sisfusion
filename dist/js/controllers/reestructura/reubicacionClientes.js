@@ -314,64 +314,94 @@ $(document).on('click', '.infoUser', function (){
         const ocupacion= cliente.ocupacion;
         const ine = cliente.ine;
 
-        changeSizeModal('modal-md');
-        appendBodyModal(`<div class="modal-header">
-                    <h4 class="modal-title text-center">Corrobora la información del cliente</h4>
-                </div>	
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                            <label class="control-label">NOMBRE (<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral" name="nombreCli" id="nombreCli" type="text" value="${nombreLote}" required/>
+        changeSizeModal('modal-lg');
+        appendBodyModal(`
+            <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
+                <li class="active"><a href="#infoCliente" role="tab" data-toggle="tab">Información del cliente</a></li>
+                <li><a href="#coopropietarios" role="tab" data-toggle="tab">Copropietarios</a></li>
+            </ul>
+            <div class="tab-content p-2">
+                <div class="tab-pane active" id="infoCliente">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                                <label class="control-label">NOMBRE (<small style="color: red;">*</small>)</label>
+                                <input class="form-control input-gral" name="nombreCli" id="nombreCli" type="text" value="${nombreLote}" required/>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                                <label class="control-label">APELLIDO PATERNO (<small style="color: red;">*</small>)</label>
+                                <input class="form-control input-gral" name="apellidopCli" id="apellidopCli" value="${apePaterno}" type="text" required/>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                                <label class="control-label">APELLIDO MATERNO (<small style="color: red;">*</small>)</label>
+                                <input class="form-control input-gral" name="apellidomCli" id="apellidomCli" type="text" value="${apeMaterno}" required/>
+                            </div>
                         </div>
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                            <label class="control-label">APELLIDO PATERNO (<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral" name="apellidopCli" id="apellidopCli" value="${apePaterno}" type="text" required/>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
+                                <label class="control-label">TELÉFONO (<small style="color: red;">*</small>)</label>
+                                <input class="form-control input-gral" name="telefonoCli" id="telefonoCli" type="number" maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" value="${telefono}" required/>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
+                                <label class="control-label">CORREO (<small style="color: red;">*</small>)</label>
+                                <input class="form-control input-gral" name="correoCli" id="correoCli" type="text" value="${correo}" required/>
+                            </div>
                         </div>
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                            <label class="control-label">APELLIDO MATERNO (<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral" name="apellidomCli" id="apellidomCli" type="text" value="${apeMaterno}" required/>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                                <label class="control-label">DOMICILIO (<small style="color: red;">*</small>)</label>
+                                <input class="form-control input-gral" name="domicilioCli" id="domicilioCli" type="text" value="${domicilio}" required/>
+                            </div>
                         </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                                <label class="control-label">ESTADO CIVIL (<small style="color: red;">*</small>)</label>
+                                <select name="estadoCli" title="SELECCIONA UNA OPCIÓN" id="estadoCli" class="selectpicker m-0 select-gral" data-container="body" data-width="100%" required></select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
+                                <label class="control-label">INE (<small style="color: red;">*</small>)</label>
+                                <input class="form-control input-gral" name="ineCLi" id="ineCLi" type="number" maxlength="13" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" value="${ine}" required/>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m.0">
+                                <label class="control-label">OCUPACIÓN (<small style="color: red;">*</small>)</label>
+                                <input class="form-control input-gral" name="ocupacionCli" id="ocupacionCli" type="text" value="${ocupacion}" required/>
+                            </div>
+                        </div>        
+                        <input type="hidden" name="idCliente" id="idCliente" value="${idCliente}">
+                        <input type="hidden" name="idLote" id="idLote" value="${idLote}">
                     </div>
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
-                            <label class="control-label">TELÉFONO (<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral" name="telefonoCli" id="telefonoCli" type="number" maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" value="${telefono}" required/>
-                        </div>
-                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
-                            <label class="control-label">CORREO (<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral" name="correoCli" id="correoCli" type="text" value="${correo}" required/>
-                        </div>
+                    <div class="modal-footer">
+                        <button type="button" id="cancelarValidacion" class="btn btn-danger btn-simple cancelarValidacion" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="guardarCliente" name="guardarCliente" class="btn btn-primary guardarValidacion">GUARDAR</button>
                     </div>
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                            <label class="control-label">DOMICILIO (<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral" name="domicilioCli" id="domicilioCli" type="text" value="${domicilio}" required/>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                            <label class="control-label">ESTADO CIVIL (<small style="color: red;">*</small>)</label>
-                            <select name="estadoCli" title="SELECCIONA UNA OPCIÓN" id="estadoCli" class="selectpicker m-0 select-gral" data-container="body" data-width="100%" required></select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
-                            <label class="control-label">INE (<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral" name="ineCLi" id="ineCLi" type="number" maxlength="13" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" value="${ine}" required/>
-                        </div>
-                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m.0">
-                            <label class="control-label">OCUPACIÓN (<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral" name="ocupacionCli" id="ocupacionCli" type="text" value="${ocupacion}" required/>
-                        </div>
-                    </div>        
-                    <input type="hidden" name="idCliente" id="idCliente" value="${idCliente}">
-                    <input type="hidden" name="idLote" id="idLote" value="${idLote}">
                 </div>
-                <div class="modal-footer">
-                    <button type="button" id="cancelarValidacion" class="btn btn-danger btn-simple cancelarValidacion" data-dismiss="modal">Cancelar</button>
-                    <button type="button" id="guardarCliente" name="guardarCliente" class="btn btn-primary guardarValidacion">GUARDAR</button>
-                </div>`);
+                
+                <div class="tab-pane" id="coopropietarios">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                            <div class="form-group label-floating">
+                                <label class="control-label">NOMBRE (<small style="color: red;">*</small>)</label>
+                                <input class="form-control input-gral" type="text" required value=""/>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                            <div class="form-group label-floating">
+                                <label class="control-label">TELÉFONO CASA</label>
+                                <input  class="form-control input-gral" name="" id="" type="number" step="any" onKeyPress="if(this.value.length==10) return false;" value=""/>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                            <div class="form-group label-floating">
+                                <label class="control-label">CELULAR (<small style="color: red;">*</small>)</label>
+                                <input  class="form-control input-gral" name="" type="number" step="any" onKeyPress="if(this.value.length==10) return false;" value=""/>
+                            </div>
+                        </div>
+                    </div>                
+                </div>
+            </div>
+        `);
         showModal();
 
         $.post("getEstadoCivil", function(estadoCivil) {
@@ -405,7 +435,7 @@ $(document).on('click', '#guardarCliente', function (){
     var ocupacionCli = $('#ocupacionCli').val();
 
     if(ineCLi == ''){
-        alerts.showNotification("top", "right", "", "warning");
+        alerts.showNotification("top", "right", "Captura la INE", "warning");
         return;
     }
 
@@ -970,7 +1000,7 @@ $(document).on("submit", "#formRechazarEstatus", function(e) {
         processData: false,
         type: 'POST',
         success: function(data){
-            alerts.showNotification("top", "right", "El registro se ha avanzado con éxito.", "success");
+            alerts.showNotification("top", "right", "El registro se ha rechazado con éxito.", "success");
             $('#reubicacionClientes').DataTable().ajax.reload();
             $('#spiner-loader').addClass('hide');
             hideModal();
