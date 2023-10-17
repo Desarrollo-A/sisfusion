@@ -481,6 +481,7 @@ function getStatusMktdPreventa(){
     }
 
     function getProspectsList($typeTransaction, $beginDate, $endDate, $where){
+        ini_set('memory_limit', -1);
         $id_rol = $this->session->userdata('id_rol');
         $id_usuario = $this->session->userdata('id_usuario');
         $id_lider = $this->session->userdata('id_lider');
@@ -4380,9 +4381,9 @@ function getStatusMktdPreventa(){
         $this->db->query("UPDATE prospectos SET $set WHERE id_asesor = $idOwner AND becameClient IS NULL");
     }
 
-    function getSedesProspectos(){
+    /* function getSedesProspectos(){
         return $this->db->query("SELECT id_sede, nombre FROM sedes ORDER BY nombre");
-    }
+    } */
 
     function getAsesor($sede){
         return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', ISNULL(apellido_materno, '')) nombre, id_sede FROM usuarios WHERE 

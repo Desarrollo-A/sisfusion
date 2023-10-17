@@ -4965,10 +4965,10 @@ class Asesor extends CI_Controller {
             echo json_encode(array());
     }
 
-    function getSedesProspectos()
+    /* function getSedesProspectos()
     {
         echo json_encode($this->Clientes_model->getSedesProspectos()->result_array());
-    }
+    } */
 
     function getAsesor($sede)
     {
