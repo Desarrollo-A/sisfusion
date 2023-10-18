@@ -4670,12 +4670,15 @@ public function CancelarDescuento($id_pago,$motivo)
                 }
     }
     
+
     public function porcentajes($clienteData, $totalNeto, $plan_comision){
 
         if($plan_comision == 66){
             $innerMktd = 'pl.mktd';
             $innerOtro = 'pl.otro';
             $innerOtro2 = 'pl.otro2';
+            $innerOtro3 = 'pl.id_o3';
+            $innerOtro4 = 'pl.id_o4';
             $innerCoord = 'pl.coordinador';
             $innerReg = 'pl.regional';
 
@@ -4684,23 +4687,28 @@ public function CancelarDescuento($id_pago,$motivo)
             $rol3 = 89;//ADMINISTRACIÓN
             $rol4 = 90;//CONTABILIDAD
             $rol5 = 91;//TITULACIÓN
+            $rol6 = 'pl.otro3';
+            $rol7 = 'pl.otro4';
            
-        }else{
+        } else{
             $innerMktd = 4394;
             $innerOtro = 'pl.id_o';
             $innerOtro2 = 'pl.id_o2';
+            $innerOtro3 = 'pl.id_o3';
+            $innerOtro4 = 'pl.id_o4';
             $innerCoord = 'cA.id_coordinador';
             $innerReg = 'cA.id_regional';
 
             $rol1 = 'pl.coordinador';//POSTVENTA
             $rol2 = 'pl.regional';//TI
             $rol3 = 'pl.mktd';//ADMINISTRACIÓN
-            $rol4 = 'pl.otro';//CONTABILIDAD
-            $rol5 = 'pl.otro2';//TITULACIÓN
+            $rol4 = 'pl.otro';
+            $rol5 = 'pl.otro2';
+            $rol6 = 'pl.otro3';
+            $rol7 = 'pl.otro4';
         }
 
-
-         if($plan_comision == 64 ||$plan_comision == 65 ||$plan_comision == 66 ){
+        if($plan_comision == 64 ||$plan_comision == 65 ||$plan_comision == 66 ){
             $joinLotes = 'INNER JOIN lotes lo ON lo.idLote = cA.idLote';
         }else{
             $joinLotes = 'INNER JOIN lotes lo ON lo.idCliente = cA.id_cliente';
@@ -4723,7 +4731,7 @@ public function CancelarDescuento($id_pago,$motivo)
         WHERE cA.id_cliente = @idCliente)
 
         UNION  /* OTRO PRIMERO - Contabilidad */
-        (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comOt porcentaje_decimal, (($totalNeto/100)*(pl.comOt)) comision_total, (pl.neoOt) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, $rol4 as id_rol, (CASE WHEN pl.otro = 45 THEN 'Empresa' WHEN pl.otro = 2 THEN 'Subdirector' WHEN pl.id_o = 11053 THEN 'Internomex' WHEN pl.id_o = 12841 THEN 'Arcus' WHEN pl.id_plan = 66 THEN 'Contabilidad' ELSE 'Influencer' END) detail_rol, (CASE WHEN pl.otro = 2 THEN 2 ELSE 7 END) as rolVal
+        (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comOt porcentaje_decimal, (($totalNeto/100)*(pl.comOt)) comision_total, (pl.neoOt) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, $rol4 as id_rol, (CASE WHEN pl.otro = 45 THEN 'Empresa' WHEN pl.otro = 2 THEN 'Subdirector' WHEN pl.id_o = 11053 THEN 'Internomex' WHEN pl.id_o = 12841 THEN 'Arcus' WHEN pl.id_plan = 66 THEN 'Contabilidad' WHEN pl.id_plan = 70 THEN 'Asesor convenio' ELSE 'Influencer' END) detail_rol, (CASE WHEN pl.otro = 2 THEN 1 ELSE 7 END) as rolVal
         FROM clientes cA 
         $joinLotes  
         INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.otro not in (0)
@@ -4732,13 +4740,31 @@ public function CancelarDescuento($id_pago,$motivo)
         WHERE cA.id_cliente = @idCliente)
         
         UNION  /* OTRO SEGUNDO - Titulación */
-        (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comOt2 porcentaje_decimal, (($totalNeto/100)*(pl.comOt2)) comision_total, (pl.neoOt2) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, $rol5 as id_rol, (CASE WHEN pl.otro2 = 45 THEN 'Empresa' WHEN pl.otro2 = 2 THEN 'Subdirector' WHEN pl.id_o2 = 11054 THEN 'Internomex' WHEN pl.id_o2 = 12841 THEN 'Arcus' WHEN pl.id_plan = 66 THEN 'Titulación' ELSE 'Influencer' END) detail_rol, 8 as rolVal
+        (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comOt2 porcentaje_decimal, (($totalNeto/100)*(pl.comOt2)) comision_total, (pl.neoOt2) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, $rol5 as id_rol, (CASE WHEN pl.otro2 = 45 THEN 'Empresa' WHEN pl.otro2 = 2 THEN 'Subdirector' WHEN pl.id_o2 = 11054 THEN 'Internomex' WHEN pl.id_o2 = 12841 THEN 'Arcus' WHEN pl.id_plan = 66 THEN 'Titulación' WHEN pl.id_plan = 70 THEN 'Coordinador convenio' ELSE 'Influencer' END) detail_rol, (CASE WHEN pl.otro = 2 THEN 1 ELSE 8 END) as rolVal
         FROM clientes cA 
         $joinLotes  
         INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.otro2 not in (0)
         INNER JOIN usuarios u1 ON u1.id_usuario = $innerOtro2
         INNER JOIN opcs_x_cats opc ON opc.id_opcion = u1.id_rol AND opc.id_catalogo = 1
-        WHERE cA.id_cliente = @idCliente) ";
+        WHERE cA.id_cliente = @idCliente)
+
+        UNION  /* OTRO TERCERO */
+        (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comOt3 porcentaje_decimal, (($totalNeto/100)*(pl.comOt3)) comision_total, (pl.neoOt3) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, $rol6 as id_rol, (CASE WHEN pl.otro3 = 45 THEN 'Empresa' WHEN pl.otro3 = 2 THEN 'Subdirector' WHEN pl.id_o3 = 11054 THEN 'Internomex' WHEN pl.id_o3 = 12841 THEN 'Arcus' WHEN pl.id_plan = 66 THEN 'Titulación' WHEN pl.id_plan = 70 THEN 'Gerente convenio' ELSE 'Influencer' END) detail_rol, (CASE WHEN pl.otro = 2 THEN 1 ELSE 9 END) as rolVal
+        FROM clientes cA 
+        $joinLotes  
+        INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.otro3 not in (0)
+        INNER JOIN usuarios u1 ON u1.id_usuario = $innerOtro3
+        INNER JOIN opcs_x_cats opc ON opc.id_opcion = u1.id_rol AND opc.id_catalogo = 1
+        WHERE cA.id_cliente = @idCliente) 
+
+        UNION  /* OTRO CUARTO */
+        (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comOt4 porcentaje_decimal, (($totalNeto/100)*(pl.comOt4)) comision_total, (pl.neoOt4) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, $rol7 as id_rol, (CASE WHEN pl.otro4 = 45 THEN 'Empresa' WHEN pl.otro4 = 2 THEN 'Subdirector' WHEN pl.id_o4 = 11054 THEN 'Internomex' WHEN pl.id_o4 = 12841 THEN 'Arcus' WHEN pl.id_plan = 66 THEN 'Titulación' WHEN pl.id_plan = 70 THEN 'Director regional convenio' ELSE 'influencer' END) detail_rol, (CASE WHEN pl.otro = 2 THEN 1 ELSE 10 END) as rolVal
+        FROM clientes cA 
+        $joinLotes  
+        INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.otro4 not in (0)
+        INNER JOIN usuarios u1 ON u1.id_usuario = $innerOtro4
+        INNER JOIN opcs_x_cats opc ON opc.id_opcion = u1.id_rol AND opc.id_catalogo = 1
+        WHERE cA.id_cliente = @idCliente)  ";
 
         $numAs = $this->db->query("(SELECT (COUNT(distinct(u1.id_usuario))) i FROM clientes cl INNER JOIN ventas_compartidas v1 ON v1.id_cliente = cl.id_cliente AND v1.estatus = 1 AND cl.status = 1 INNER JOIN usuarios u1 ON u1.id_usuario = cl.id_asesor or  u1.id_usuario = v1.id_asesor WHERE cl.id_cliente = $clienteData)");
         $numCo = $this->db->query("(SELECT (COUNT(distinct(u1.id_usuario))) i FROM clientes cl LEFT JOIN ventas_compartidas v1 ON v1.id_cliente = cl.id_cliente AND v1.estatus = 1 AND cl.status = 1 INNER JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador or  u1.id_usuario = v1.id_coordinador WHERE cl.id_cliente = $clienteData)");
@@ -4749,6 +4775,14 @@ public function CancelarDescuento($id_pago,$motivo)
         $numCoordinadores = $numCo->row()->i;
         $numGerente = $numGe->row()->i;
         $numSubdir = $numSu->row()->i;
+
+        if($plan_comision == 68){
+            $multiRegional = 'v1.id_regional';
+            $numeroRegionales = 1;
+        } else{
+            $multiRegional = 'cA.id_regional';
+            $numeroRegionales = $numAsesores;
+        }
         
         return $this->db->query("DECLARE @idCliente INTEGER, @numAsesores INTEGER, @numCoordinadores INTEGER, @numGerente INTEGER, @numSubdir INTEGER, @numDir INTEGER
   
@@ -4812,15 +4846,15 @@ public function CancelarDescuento($id_pago,$motivo)
 
             UNION  /* REGIONALES */
             (SELECT DISTINCT(u1.id_usuario) AS id_usuario, 
-            (pl.comRe/@numAsesores)*
+            (pl.comRe/ $numeroRegionales)*
             ((SELECT COUNT(id_gerente) FROM clientes cD WHERE cD.status = 1 AND cD.id_regional = u1.id_usuario and cD.id_cliente = @idCliente)+(SELECT COUNT(id_gerente) FROM ventas_compartidas vD WHERE vD.estatus = 1 AND vD.id_regional = u1.id_usuario AND vD.id_cliente = @idCliente)) porcentaje_decimal, 
-            (($totalNeto/100)*(pl.comRe/@numAsesores))*((SELECT COUNT(id_gerente) FROM clientes cD WHERE cD.status = 1 AND cD.id_regional = u1.id_usuario and cD.id_cliente = @idCliente)+(SELECT COUNT(id_gerente) FROM ventas_compartidas vD WHERE vD.estatus = 1 AND vD.id_regional = u1.id_usuario AND vD.id_cliente = @idCliente)) comision_total, 
-            (pl.neoRe/@numAsesores)*((SELECT COUNT(id_gerente) FROM clientes cD WHERE cD.status = 1 AND cD.id_regional = u1.id_usuario and cD.id_cliente = @idCliente)+(SELECT COUNT(id_gerente) FROM ventas_compartidas vD WHERE vD.estatus = 1 AND vD.id_regional = u1.id_usuario AND vD.id_cliente = @idCliente)) porcentaje_neodata, 
+            (($totalNeto/100)*(pl.comRe/ $numeroRegionales))*((SELECT COUNT(id_gerente) FROM clientes cD WHERE cD.status = 1 AND cD.id_regional = u1.id_usuario and cD.id_cliente = @idCliente)+(SELECT COUNT(id_gerente) FROM ventas_compartidas vD WHERE vD.estatus = 1 AND vD.id_regional = u1.id_usuario AND vD.id_cliente = @idCliente)) comision_total, 
+            (pl.neoRe/ $numeroRegionales)*((SELECT COUNT(id_gerente) FROM clientes cD WHERE cD.status = 1 AND cD.id_regional = u1.id_usuario and cD.id_cliente = @idCliente)+(SELECT COUNT(id_gerente) FROM ventas_compartidas vD WHERE vD.estatus = 1 AND vD.id_regional = u1.id_usuario AND vD.id_cliente = @idCliente)) porcentaje_neodata, 
             CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.subdirector as id_rol, 'Director Regional' detail_rol, 2 as rolVal  
             FROM clientes cA 
             $joinLotes  
             INNER JOIN ventas_compartidas v1 ON v1.id_cliente = cA.id_cliente and v1.estatus = 1 and cA.status = 1
-            INNER JOIN usuarios u1 ON u1.id_usuario = v1.id_regional OR u1.id_usuario = cA.id_regional
+            INNER JOIN usuarios u1 ON u1.id_usuario = v1.id_regional OR u1.id_usuario = $multiRegional
             INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.regional not in (0)
             WHERE cA.id_cliente = @idCliente)
         
@@ -4828,7 +4862,7 @@ public function CancelarDescuento($id_pago,$motivo)
         
             ORDER BY rolVal 
         
-        ELSE  
+            ELSE  
         
             /* ASESOR */
             (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comAs porcentaje_decimal, (($totalNeto/100)*(pl.comAs)) comision_total,
@@ -4883,6 +4917,7 @@ public function CancelarDescuento($id_pago,$motivo)
             ORDER BY rolVal");
         
     }
+
     
     public function GetUserMktd($estatus,$f1,$f2){
         $complemento = '';
@@ -5435,20 +5470,36 @@ public function CancelarDescuento($id_pago,$motivo)
 
     public function getDetallePlanesComisiones($idPlan)
     {
-        $query = $this->db->query("SELECT pc.id_plan, pc.descripcion, pc.comDi, pc.neoDi, rolDir.nombre AS director,  pc.comRe, pc.neoRe, 'Regional' AS regional, pc.comSu, pc.neoSu, 'Subdirector' AS subdirector, pc.comGe, pc.neoGe, rolGer.nombre AS gerente, pc.comCo, pc.neoCo, rolCoor.nombre AS coordinador, pc.comAs, pc.neoAs, rolAse.nombre AS asesor, pc.comMk, pc.neoMk, rolMkt.nombre AS mktd, pc.comOt, pc.neoOt, (CASE WHEN pc.id_o IS NOT NULL THEN CONCAT(usOtr.nombre, ' ', usOtr.apellido_paterno, ' ',usOtr.apellido_materno, ' ') ELSE rolOtr.nombre END) AS otro, pc.comOt2, pc.neoOt2, (CASE WHEN pc.id_o2 IS NOT NULL THEN CONCAT(usOtr2.nombre, ' ', usOtr2.apellido_paterno, ' ',usOtr2.apellido_materno, ' ') ELSE rolOtr2.nombre END) AS otro2
-            FROM plan_comision pc
-            LEFT JOIN opcs_x_cats rolDir ON rolDir.id_opcion = pc.director AND rolDir.id_catalogo = 1
-            LEFT JOIN opcs_x_cats rolReg ON rolReg.id_opcion = pc.regional AND rolReg.id_catalogo = 1
-            LEFT JOIN opcs_x_cats rolSubdir ON rolSubdir.id_opcion = pc.subdirector AND rolSubdir.id_catalogo = 1
-            LEFT JOIN opcs_x_cats rolGer ON rolGer.id_opcion = pc.gerente AND rolGer.id_catalogo = 1
-            LEFT JOIN opcs_x_cats rolCoor ON rolCoor.id_opcion = pc.coordinador AND rolCoor.id_catalogo = 1
-            LEFT JOIN opcs_x_cats rolAse ON rolAse.id_opcion = pc.asesor AND rolAse.id_catalogo = 1
-            LEFT JOIN usuarios usOtr ON usOtr.id_usuario = pc.id_o 
-            LEFT JOIN opcs_x_cats rolOtr ON rolOtr.id_opcion = usOtr.id_rol AND rolOtr.id_catalogo = 1
-            LEFT JOIN opcs_x_cats rolMkt ON rolMkt.id_opcion = pc.mktd AND rolMkt.id_catalogo = 1
-            LEFT JOIN usuarios usOtr2 ON usOtr2.id_usuario = pc.id_o2 
-            LEFT JOIN opcs_x_cats rolOtr2 ON rolOtr2.id_opcion = usOtr2.id_rol AND rolOtr2.id_catalogo = 1
-            WHERE pc.id_plan = $idPlan");
+        $query = $this->db->query("SELECT pc.id_plan, pc.descripcion, pc.comDi, pc.neoDi, rolDir.nombre AS director,  pc.comRe, pc.neoRe, 'Regional' AS regional, pc.comSu, pc.neoSu, 'Subdirector' AS subdirector,
+        pc.comGe, pc.neoGe, rolGer.nombre AS gerente, pc.comCo, pc.neoCo, rolCoor.nombre AS coordinador, 
+        pc.comAs, pc.neoAs, rolAse.nombre AS asesor, pc.comMk, pc.neoMk, rolMkt.nombre AS mktd, 
+        pc.comOt, pc.neoOt,pc.comOt3, pc.neoOt3,pc.comOt4, pc.neoOt4, 
+        (CASE WHEN pc.id_o IS NOT NULL THEN CONCAT(usOtr.nombre, ' ', usOtr.apellido_paterno, ' ',usOtr.apellido_materno, ' ') ELSE rolOtr.nombre END) AS otro, 
+        pc.comOt2, pc.neoOt2, 
+        (CASE WHEN pc.id_o2 IS NOT NULL THEN CONCAT(usOtr2.nombre, ' ', usOtr2.apellido_paterno, ' ',usOtr2.apellido_materno, ' ') ELSE rolOtr2.nombre END) AS otro2,
+        (CASE WHEN pc.id_o3 IS NOT NULL THEN CONCAT(usOtr3.nombre, ' ', usOtr3.apellido_paterno, ' ',usOtr3.apellido_materno, ' ') ELSE rolOtr3.nombre END) AS otro3,
+        (CASE WHEN pc.id_o4 IS NOT NULL THEN CONCAT(usOtr4.nombre, ' ', usOtr4.apellido_paterno, ' ',usOtr4.apellido_materno, ' ') ELSE rolOtr4.nombre END) AS otro4
+                    FROM plan_comision pc
+                    LEFT JOIN opcs_x_cats rolDir ON rolDir.id_opcion = pc.director AND rolDir.id_catalogo = 1
+                    LEFT JOIN opcs_x_cats rolReg ON rolReg.id_opcion = pc.regional AND rolReg.id_catalogo = 1
+                    LEFT JOIN opcs_x_cats rolSubdir ON rolSubdir.id_opcion = pc.subdirector AND rolSubdir.id_catalogo = 1
+                    LEFT JOIN opcs_x_cats rolGer ON rolGer.id_opcion = pc.gerente AND rolGer.id_catalogo = 1
+                    LEFT JOIN opcs_x_cats rolCoor ON rolCoor.id_opcion = pc.coordinador AND rolCoor.id_catalogo = 1
+                    LEFT JOIN opcs_x_cats rolAse ON rolAse.id_opcion = pc.asesor AND rolAse.id_catalogo = 1
+        
+                    LEFT JOIN usuarios usOtr ON usOtr.id_usuario = pc.id_o 
+                    LEFT JOIN opcs_x_cats rolOtr ON rolOtr.id_opcion = usOtr.id_rol AND rolOtr.id_catalogo = 1
+        
+                    LEFT JOIN opcs_x_cats rolMkt ON rolMkt.id_opcion = pc.mktd AND rolMkt.id_catalogo = 1
+        
+                    LEFT JOIN usuarios usOtr2 ON usOtr2.id_usuario = pc.id_o2 
+                    LEFT JOIN opcs_x_cats rolOtr2 ON rolOtr2.id_opcion = usOtr2.id_rol AND rolOtr2.id_catalogo = 1
+                    LEFT JOIN usuarios usOtr3 ON usOtr3.id_usuario = pc.id_o3 
+                    LEFT JOIN opcs_x_cats rolOtr3 ON rolOtr3.id_opcion = usOtr3.id_rol AND rolOtr3.id_catalogo = 1
+                    LEFT JOIN usuarios usOtr4 ON usOtr4.id_usuario = pc.id_o4 
+                    LEFT JOIN opcs_x_cats rolOtr4 ON rolOtr4.id_opcion = usOtr4.id_rol AND rolOtr4.id_catalogo = 1
+        
+                    WHERE pc.id_plan = $idPlan");
         return $query->row();
     }
 
