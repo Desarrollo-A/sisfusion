@@ -4731,7 +4731,7 @@ public function CancelarDescuento($id_pago,$motivo)
         WHERE cA.id_cliente = @idCliente)
 
         UNION  /* OTRO PRIMERO - Contabilidad */
-        (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comOt porcentaje_decimal, (($totalNeto/100)*(pl.comOt)) comision_total, (pl.neoOt) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, $rol4 as id_rol, (CASE WHEN pl.otro = 45 THEN 'Empresa' WHEN pl.otro = 2 THEN 'Subdirector' WHEN pl.id_o = 11053 THEN 'Internomex' WHEN pl.id_o = 12841 THEN 'Arcus' WHEN pl.id_plan = 66 THEN 'Contabilidad' WHEN pl.id_plan = 70 THEN 'Asesor convenio' ELSE 'Influencer' END) detail_rol, (CASE WHEN pl.otro = 2 THEN 1 ELSE 7 END) as rolVal
+        (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comOt porcentaje_decimal, (($totalNeto/100)*(pl.comOt)) comision_total, (pl.neoOt) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, $rol4 as id_rol, (CASE WHEN pl.otro = 45 THEN 'Empresa' WHEN pl.otro = 2 THEN 'Dr. Regional' WHEN pl.id_o = 11053 THEN 'Internomex' WHEN pl.id_o = 12841 THEN 'Arcus' WHEN pl.id_plan = 66 THEN 'Contabilidad' WHEN pl.id_plan = 70 THEN 'Asesor convenio' ELSE 'Influencer' END) detail_rol, (CASE WHEN pl.otro = 2 THEN 1 ELSE 7 END) as rolVal
         FROM clientes cA 
         $joinLotes  
         INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.otro not in (0)
@@ -4740,7 +4740,7 @@ public function CancelarDescuento($id_pago,$motivo)
         WHERE cA.id_cliente = @idCliente)
         
         UNION  /* OTRO SEGUNDO - Titulación */
-        (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comOt2 porcentaje_decimal, (($totalNeto/100)*(pl.comOt2)) comision_total, (pl.neoOt2) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, $rol5 as id_rol, (CASE WHEN pl.otro2 = 45 THEN 'Empresa' WHEN pl.otro2 = 2 THEN 'Subdirector' WHEN pl.id_o2 = 11054 THEN 'Internomex' WHEN pl.id_o2 = 12841 THEN 'Arcus' WHEN pl.id_plan = 66 THEN 'Titulación' WHEN pl.id_plan = 70 THEN 'Coordinador convenio' ELSE 'Influencer' END) detail_rol, (CASE WHEN pl.otro = 2 THEN 1 ELSE 8 END) as rolVal
+        (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comOt2 porcentaje_decimal, (($totalNeto/100)*(pl.comOt2)) comision_total, (pl.neoOt2) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, $rol5 as id_rol, (CASE WHEN pl.otro2 = 45 THEN 'Empresa' WHEN pl.otro2 = 2 THEN 'Dr. Regional' WHEN pl.id_o2 = 11054 THEN 'Internomex' WHEN pl.id_o2 = 12841 THEN 'Arcus' WHEN pl.id_plan = 66 THEN 'Titulación' WHEN pl.id_plan = 70 THEN 'Coordinador convenio' ELSE 'Influencer' END) detail_rol, (CASE WHEN pl.otro = 2 THEN 1 ELSE 8 END) as rolVal
         FROM clientes cA 
         $joinLotes  
         INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.otro2 not in (0)
