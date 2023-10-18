@@ -1107,8 +1107,8 @@ const botonesAccionReubicacion = (d) => {
 
     if (idEstatusPreproceso === 2 && id_rol_general == 17) { // Contraloría: ELABORACIÓN DE CORRIDAS
         return (totalCorridas === totalCorridasRef)
-            ? BTN_AVANCE + BTN_SUBIR_ARCHIVO
-            : BTN_SUBIR_ARCHIVO;
+            ? BTN_AVANCE + BTN_RECHAZO + BTN_SUBIR_ARCHIVO
+            : BTN_SUBIR_ARCHIVO + BTN_RECHAZO;
     }
 
     if (idEstatusPreproceso === 3 && id_rol_general == 15) { // Jurídico: ELABORACIÓN DE CONTRATO Y RESICISIÓN
