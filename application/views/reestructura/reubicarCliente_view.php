@@ -93,11 +93,11 @@
         </div>
 
         <div class="modal fade" id="contratoFirmadoModal" data-keyboard="false" data-backdrop="static">
-            <div class="modal-dialog">
+            <div class="modal-dialog" id="dialoSection">
                 <div class="modal-content">
                     <div class="modal-header"></div>
                     <div class="modal-body text-center">
-                        <h5>ASOCIA EL CONTRATO FIRMADO</h5>
+                        <h5 id="txtTituloCF">ASOCIA EL CONTRATO FIRMADO</h5>
                         <div class="row" id="info-cliente-modal-cf"></div>
                         <b><h5 id="mainLabelTextcf" class="bold"></h5></b><hr>
                         <div id="formularioArchivoscf"></div>

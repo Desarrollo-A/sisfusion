@@ -1556,7 +1556,6 @@ class Reestructura extends CI_Controller{
     }
 
     public function contratoFirmadoR(){
-	    //INCOMPLETA 171023
 	    $idLote = $this->input->post('idLote');
 	    $nombreLote = $this->input->post('nombreLoteOriginal');
 	    $idDocumento = $this->input->post('idDocumento');
@@ -1564,6 +1563,9 @@ class Reestructura extends CI_Controller{
 	    $idCliente = $this->input->post('idCliente');
 	    $idCondominio = $this->input->post('idCondominio');
         $idUsuario = $this->session->userdata('id_usuario');
+        $nombreResidencial = $this->input->post('nombreResidencial');
+        $nombreCondominio = $this->input->post('nombreCondominio');
+        $nombreDocumento = $this->input->post('nombreDocumento');
 
 	    $dataConsultaCF = $this->Reestructura_model->revisarCFDocumentos($idLote);
 	    $flagExisteRama = count($dataConsultaCF);
@@ -1575,30 +1577,76 @@ class Reestructura extends CI_Controller{
 	    if($editarFile == 0){
 
             if($flagExisteRama == 0){//no existe la rama se debe crear
-                $resultado2 = $this->upload->do_upload('archivoResicion');
+                $contratoSubido = $this->upload->do_upload('contratoFirmado');
 
-                $dataInsert = array(
-                    'movimiento' => "CONTRATO FIRMADO",
-                    'expediente' => '',
-                    'modificado' => date('Y-m-d H:i:s'),
-                    'status' => 0,
-                    'idCliente' => $idCliente,
-                    'idCondominio' => $idCondominio,
-                    'idLote' => $idLote,
-                    'idUser' => $idUsuario,
-                    'tipo_documento' => 0,
-                    'id_autoriacion' => 0,
-                    'tipo_doc' => 30,
-                    'estatus_validacion' => 0,
-                );
-                print_r($dataInsert);
+                if($contratoSubido){
+                    $archivoSubido = $this->upload->data();
+                    $nombreExpediente = $this->generarNombreFile($nombreResidencial, $nombreCondominio, $nombreLote, $idCliente,  $_FILES["contratoFirmado"]["name"]);
+                    rename( $archivoSubido['full_path'], "static/documentos/cliente/contratoFirmado/".$nombreExpediente );
 
-            }else if($flagExisteRama == 1){ //si existe la rama se debe actualizar el registro
+                    $dataInsert = array(
+                        'movimiento' => "CONTRATO FIRMADO",
+                        'expediente' => $nombreExpediente,
+                        'modificado' => date('Y-m-d H:i:s'),
+                        'status' => 0,
+                        'idCliente' => $idCliente,
+                        'idCondominio' => $idCondominio,
+                        'idLote' => $idLote,
+                        'idUser' => $idUsuario,
+                        'tipo_documento' => 0,
+                        'id_autorizacion' => 0,
+                        'tipo_doc' => 30,
+                        'estatus_validacion' => 0,
+                    );
+                    $insert = $this->General_model->addRecord('historial_documento', $dataInsert);
+                    if($insert){
+                        print_r( json_encode(array('code' => 200)));
+                    }else{
+                        print_r( json_encode(array('code' => 400)));
+                    }
+                }else{
+                    print_r( json_encode(array('code' => 500)));
+                }
 
             }
         }
+        elseif($editarFile == 1){
+            $contratoCF = $this->upload->do_upload('contratoFirmado');
+            if($contratoCF){
+                $contratoCFUP = $this->upload->data();
+                $nombreExpediente = $this->generarNombreFile($nombreResidencial, $nombreCondominio, $nombreLote, $idCliente, $_FILES["contratoFirmado"]["name"]);
+                rename( $contratoCFUP['full_path'], "static/documentos/cliente/contratoFirmado/".$nombreExpediente );
 
+                $data_actualizar = array(
+                    'modificado' => date('Y-m-d H:i:s'),
+                    'idUser'     => $this->session->userdata('id_usuario'),
+                    'expediente' => $nombreExpediente
+                );
+                $update = $this->General_model->updateRecord('historial_documento', $data_actualizar, 'idDocumento', $idDocumento);
+                if($update){
+                    print_r( json_encode(array('code' => 200)));
+                    unlink('static/documentos/cliente/contratoFirmado/'.$nombreDocumento);
+                }
+            }
+        }
 	    exit;
+    }
+
+    function generarNombreFile($nombreResidencial, $nombreCondominio, $nombreLote, $idCliente, $archivo){
+        //esta funcion genera un nombre apartir de los parametros de nombreResidencial, $nombreCondominio,
+        //nombreLote y $idCliente quedando como el sig. ejemplo: CMMSLP_MON01_22122020_38479_508.pdf
+        $aleatorio = rand(100,1000);
+        $proyecto = str_replace(' ', '', $nombreResidencial);
+        $condominio = str_replace(' ', '', $nombreCondominio);
+        $condom = substr($condominio, 0, 3);
+        $cond= strtoupper($condom);
+        $numeroLote = preg_replace('/[^0-9]/','', $nombreLote);
+        $date= date('dmY');
+        $composicion = $proyecto."_".$cond.$numeroLote."_".$date;
+        $nombArchivo=$composicion;
+        $extension = pathinfo($archivo, PATHINFO_EXTENSION);
+        $expediente=  $nombArchivo.'_'.$idCliente.'_'.$aleatorio.'.'.$extension;
+        return $expediente;
     }
     
 }
