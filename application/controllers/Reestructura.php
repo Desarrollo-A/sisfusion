@@ -4,7 +4,7 @@ class Reestructura extends CI_Controller{
 	public function __construct()
 	{
 		parent::__construct();
-        $this->load->model(array('Reestructura_model','General_model', 'caja_model_outside'));
+        $this->load->model(array('Reestructura_model','General_model', 'caja_model_outside', 'Contraloria_model'));
         $this->load->library(array('session','form_validation', 'get_menu','permisos_sidebar'));
 		$this->load->helper(array('url', 'form'));
 		$this->load->database('default');
@@ -1432,11 +1432,26 @@ class Reestructura extends CI_Controller{
     }
 
     public function setAvance() {
+        $assigned_user = 0;
+        if ($this->input->post('tipoTransaccion') + 1 == 3) { // AVANCE A JURÍDICO
+            $id_asig = $this->Contraloria_model->get_id_asig('reestrucura')->contador;
+            //$id_asig = $data_asig->contador;
+            if ($id_asig == 2747) // CARLITOS
+                $assigned_user = 2762; // SE ASIGNA A DANI
+            else if ($id_asig == 2762) // ES DANI
+                $assigned_user = 13691; // SE ASIGNA A CECILIA
+            else if ($id_asig == 13691) // ES CECILIA
+                $assigned_user = 2747; // SE LE ASIGNA A CARLITOS
+        
+            $dataUpdateVariable = array('contador' => $assigned_user);
+            $responseVariable = $this->General_model->updateRecord("variables", $dataUpdateVariable, "identificador", 'reestructura');
+        }
         $dataUpdateLote = array(
 			'estatus_preproceso' => $this->input->post('tipoTransaccion') + 1,
-			'usuario' => $this->session->userdata('id_usuario')
+			'usuario' => $this->session->userdata('id_usuario'),
+			'id_juridico_preproceso' => $assigned_user
         );
-        $response = $this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $this->input->post('idLote'));
+        $responseUpdate = $this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $this->input->post('idLote'));
         echo json_encode($response);
     }
 
