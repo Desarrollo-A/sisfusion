@@ -59,8 +59,8 @@ class Reestructura_model extends CI_Model
         INNER JOIN usuarios u6 ON u6.id_usuario = lo.id_usuario_asignado $validacionGerente 
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = co.tipo_lote AND oxc.id_catalogo = 27
         INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = lo.estatus_preproceso AND oxc1.id_catalogo = 106
-        LEFT JOIN historial_preproceso_lote hpl ON hpl.idLote = lo.idLote AND hpl.id_historial_preproceso = (
-	        SELECT MAX(hpl2.id_historial_preproceso) FROM historial_preproceso_lote hpl2 WHERE hpl2.idLote = hpl.idLote
+        LEFT JOIN historial_preproceso_lote hpl ON hpl.idLote = lo.idLote AND hpl.idHistoPreproceso = (
+	        SELECT MAX(hpl2.idHistoPreproceso) FROM historial_preproceso_lote hpl2 WHERE hpl2.idLote = hpl.idLote
         ) 
         LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = hpl.estatus AND oxc2.id_catalogo = 108
         LEFT JOIN (SELECT idLote, COUNT(*) AS totalCorridasNumero FROM propuestas_x_lote GROUP BY idLote) pxl3 ON pxl3.idLote = lo.idLote
