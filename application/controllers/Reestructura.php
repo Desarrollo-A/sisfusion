@@ -1421,19 +1421,45 @@ class Reestructura extends CI_Controller{
         echo json_encode( $this->Reestructura_model->obtenerPropuestasXLote($idLote)->result_array());
     }
 
-    public function setAvance() {
-        $dataUpdateLote = array(
-			'estatus_preproceso' => $this->input->post('tipoTransaccion') + 1,
-			'usuario' => $this->session->userdata('id_usuario')
-        );
-        $response = $this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $this->input->post('idLote'));
-        echo json_encode($response);
-    }
+    public function setAvance()
+    {
+        $estatusMovimientos = [
+            1 => 1, // Si el movimiento anterior es nuevo, el sig pasa a nuevo
+            2 => 3, // Si el movimiento ant. es rechazo, el sig pasa a corrección
+            3 => 1 // Si el movimiento ant. es corrección, el sig pasa a nuevo
+        ];
 
+        $idLote = $this->input->post('idLote');
+        $idPreproceso = $this->input->post('tipoTransaccion');
+        $idCliente = $this->input->post('idCliente');
+        $comentario = $this->input->post('comentario');
+        $idMovimiento = $this->input->post('idEstatusMovimento');
+        $idUsuario = $this->session->userdata('id_usuario');
+
+        $dataUpdateLote = [
+			'estatus_preproceso' => $idPreproceso + 1,
+			'usuario' => $idUsuario
+        ];
+
+        $dataHistorial = [
+            'idLote' => $idLote,
+            'idCliente' => $idCliente,
+            'id_preproceso' => $idPreproceso,
+            'comentario' => $comentario,
+            'estatus' => $estatusMovimientos[$idMovimiento],
+            'modificado_por' => $idUsuario
+        ];
+
+        $responseUpdateLote = $this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $idLote);
+        $responseInsertHistorial = $this->General_model->addRecord('historial_preproceso_lote', $dataHistorial);
+
+        echo json_encode($responseUpdateLote && $responseInsertHistorial);
+    }
+    
     public function setLoteDisponible()
     {
         $dataUpdateLote = [
-            'idStatusLote' => 15,
+            'idStatusLote' => $this->input->post('tipoEstatusRegreso') == 1 ? 15: 1,
             'usuario' => $this->session->userdata('id_usuario')
         ];
 
@@ -1447,6 +1473,12 @@ class Reestructura extends CI_Controller{
     {
         $idLoteOriginal = $this->input->post('idLoteOriginal');
         $idLotePropuesta = $this->input->post('idLotePropuesta');
+
+        $lote = $this->Reestructura_model->checarDisponibleRe($idLotePropuesta);
+        if (count($lote) === 0) {
+            echo json_encode(['code' => 400, 'message' => 'Lote no disponible. Favor de verificarlo']);
+            return;
+        }
 
         $dataUpdateLote = [
             'idStatusLote' => 16,
@@ -1485,7 +1517,7 @@ class Reestructura extends CI_Controller{
         foreach ($notSelectedLotes as $lote){
             $arrayLote = array(
                 'idLote' => $lote['id_lotep'],
-                'idStatusLote' => 15,
+                'idStatusLote' => $lote['tipo_estatus_regreso'] == 1 ? 15 : 1,
                 'usuario' => $this->session->userdata('id_usuario')
             );
 
@@ -1493,48 +1525,6 @@ class Reestructura extends CI_Controller{
         }
         
         return $this->General_model->updateBatch('lotes', $arrayLotes, 'idLote');
-    }
-    public function borarArchivo(){
-        // $archivoNombre = 'static/documentos/contratacion-reubicacion-temp/CMMSLP-MONH-099/CONTRATO/CDMSLP-OLMH-017-20231012081025.pdf';
-        // unlink($archivoNombre);
-        // rmdir('static/documentos/contratacion-reubicacion-temp/CMMSLP-MONH-002/RESCISIONES/');
-        // print_r($archivoNombre);
-        $carpeta = 'CMMSLP-MONH-046';
-        $subcarpeta = 'CORRIDA';//CONTRATO RESCISIONES CORRIDA
-        $rutaRaiz = 'static/documentos/contratacion-reubicacion-temp/'.$carpeta.'/'.$subcarpeta.'/';
-        /*$dataEliminar = array(
-            'CDMSLP-OLMH-110-20231011152908.xlsx',
-            'CDMSLP-OLMH-110-20231011152153.xlsx',
-        );
-        foreach($dataEliminar as $elemento ){
-            unlink($rutaRaiz.$elemento);
-        }
-        rmdir('static/documentos/contratacion-reubicacion-temp/'.$carpeta.'/'.$subcarpeta.'/');*/
-
-
-        $rutaRaiz2 = 'static/documentos/contratacion-reubicacion-temp/'.$carpeta.'/'.$subcarpeta.'/';
-
-        /**/$carpeta1 = glob($rutaRaiz2.'/*');
-        foreach($carpeta1 as $archivo){
-            // print_r($archivo);
-            // echo '<br>';
-            if(is_file($archivo))      // Comprobamos que sean ficheros normales, y de ser asi los eliminamos en la siguiente linea
-                unlink($archivo);          //Eliminamos el archivo
-        }
-        rmdir('static/documentos/contratacion-reubicacion-temp/'.$carpeta.'/'.$subcarpeta.'/');
-
-
-
-        /*$file = '/mnt/data/aplicaciones/maderascrm/application/views/reestructura/CDMSLP-CAOH-047-20231011101002.xlsx';
-        $newfile = '/mnt/data/aplicaciones/maderascrm/static/documentos/contratacion-reubicacion-temp/CMMSLP-MONH-065/CORRIDA/CDMSLP-CAOH-047-20231011101002.xlsx';
-        if(!copy($file,$newfile)){
-            echo "failed to copy $file";
-        }
-        else{
-            echo "copied $file into $newfile\n";
-        }*/
-
-
     }
 
     public function inventario(){
@@ -1649,4 +1639,33 @@ class Reestructura extends CI_Controller{
         return $expediente;
     }
     
+    public function rechazarRegistro()
+    {
+        $idPreproceso = $this->input->post('tipoTransaccion');
+        $idLote = $this->input->post('idLote');
+        $idCliente = $this->input->post('idCliente');
+        $comentario = $this->input->post('comentario');
+        $idUsuario = $this->session->userdata('id_usuario');
+
+        $dataUpdateLote = [
+            'estatus_preproceso' => $idPreproceso - 1,
+            'usuario' => $idUsuario
+        ];
+
+        $dataHistorial = [
+            'idLote' => $idLote,
+            'idCliente' => $idCliente,
+            'id_preproceso' => $idPreproceso,
+            'comentario' => $comentario,
+            'estatus' => 2,
+            'modificado_por' => $idUsuario
+        ];
+
+        $responseUpdateLote = $this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $idLote);
+        $responseInsertHistorial = $this->General_model->addRecord('historial_preproceso_lote', $dataHistorial);
+
+        echo ($responseUpdateLote && $responseInsertHistorial)
+            ? json_encode(['code' => 200])
+            : json_encode(['code' => 500]);
+    }
 }

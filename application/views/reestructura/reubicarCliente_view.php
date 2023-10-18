@@ -126,6 +126,7 @@
                                     <table id="reubicacionClientes" class="table-striped table-hover">
                                         <thead>
                                             <tr>
+                                                <th>MOVIMIENTO</th>
                                                 <th>PROYECTO</th>
                                                 <th>CONDOMINIO</th>
                                                 <th>LOTE</th>
@@ -143,6 +144,7 @@
                                                 <th>TOTAL</th>
                                                 <th>ESTATUS</th>
                                                 <th>ASIGNADO A</th>
+                                                <th>COMENTARIO</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>
