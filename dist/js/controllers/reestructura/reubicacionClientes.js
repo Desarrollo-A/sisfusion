@@ -36,7 +36,7 @@ const ESTATUS_PREPROCESO = [
     'PROCESO DE CONTRATACIÓN'
 ];
 
-const ROLES_PROPUESTAS = [2, 3, 5]; // ROLES PERMITIDOS PARA CARGA, EDICIÓN Y ENVÍO DE PROPUESTAS
+const ROLES_PROPUESTAS = [2, 3, 5, 6]; // ROLES PERMITIDOS PARA CARGA, EDICIÓN Y ENVÍO DE PROPUESTAS
 
 let titulosTabla = [];
 $('#reubicacionClientes thead tr:eq(0) th').each(function (i) {
@@ -542,7 +542,7 @@ function getPropuestas(idLoteOriginal, statusPreproceso, idProyecto, superficie,
         $('#infoLotesSeleccionados').html('');
 
         for (let lote of data) {
-            let html = divLotesSeleccionados(statusPreproceso, lote.nombreLote, lote.sup, lote.id_lotep, lote.id_pxl, idProyecto, superficie, tipoLote, lote.idCondominio, lote.tipoEstatusRegreso);
+            let html = divLotesSeleccionados(statusPreproceso, lote.nombreLote, lote.sup, lote.id_lotep, lote.id_pxl, idProyecto, superficie, tipoLote, lote.idCondominio, lote.tipo_estatus_regreso);
 
             $("#infoLotesSeleccionados").append(html);
         }
@@ -588,7 +588,6 @@ $(document).on("change", "#condominioAOcupar", function(e){
             const total = data[i]['total'];
             const a_favor = data[i]['a_favor'];
             const tipoEstatusRegreso = data[i]['tipo_estatus_regreso'];
-            console.log(data[i]);
             $("#loteAOcupar")
                 .append($('<option>')
                 .val(id)
@@ -672,7 +671,6 @@ function removeLote(e, idLote, statusPreproceso, id_pxl, idProyecto, superficie,
         divLote.remove();
         return;
     }
-
     
     // REVISIÓN DE PROPUESTAS (YA ESTÁN EN LA BASE DE DATOS)
     $('#spiner-loader').removeClass('hide');
@@ -1109,8 +1107,8 @@ const botonesAccionReubicacion = (d) => {
 
     if (idEstatusPreproceso === 2 && id_rol_general == 17) { // Contraloría: ELABORACIÓN DE CORRIDAS
         return (totalCorridas === totalCorridasRef)
-            ? BTN_AVANCE + BTN_SUBIR_ARCHIVO
-            : BTN_SUBIR_ARCHIVO;
+            ? BTN_AVANCE + BTN_RECHAZO + BTN_SUBIR_ARCHIVO
+            : BTN_SUBIR_ARCHIVO + BTN_RECHAZO;
     }
 
     if (idEstatusPreproceso === 3 && id_rol_general == 15) { // Jurídico: ELABORACIÓN DE CONTRATO Y RESICISIÓN
