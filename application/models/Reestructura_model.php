@@ -585,15 +585,16 @@ class Reestructura_model extends CI_Model
 
     public function getInventario() {
         return $this->db->query("SELECT UPPER(CAST(re.descripcion AS varchar(100))) nombreResidencial, co.nombre nombreCondominio,  lo.nombreLote, lo.idLote, 
-		lo.sup, oxc1.nombre tipoLote, FORMAT(lo.precio, 'C') preciom2, FORMAT(lo.total, 'C') total,
-        ISNULL(oxc2.nombre, 'Sin especificar') estatus, sl.nombre estatusContratacion, sl.background_sl, sl.color
+        lo.sup, oxc1.nombre tipoLote, FORMAT(lo.precio, 'C') preciom2, FORMAT(lo.total, 'C') total,
+        ISNULL(oxc2.nombre, 'Sin especificar') estatus, sl.nombre estatusContratacion, sl.background_sl, sl.color,
+        lo.tipo_estatus_regreso
         FROM lotes lo
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
-        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-		INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = co.tipo_lote AND oxc1.id_catalogo = 27
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial AND re.idResidencial in (1, 2, 3, 4, 5, 6, 13, 27, 30, 31)
+        INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = co.tipo_lote AND oxc1.id_catalogo = 27
         LEFT JOIN opcs_x_cats oxc2 on oxc2.id_opcion = lo.opcionReestructura AND oxc2.id_catalogo = 100
         INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
-        WHERE lo.idStatusLote IN (15, 16) AND lo.status = 1
+        WHERE lo.idStatusLote IN (1, 15, 16) AND lo.status = 1
         ORDER BY UPPER(CAST(re.descripcion AS varchar(100))), co.nombre,  lo.nombreLote")->result_array();
     }
 
@@ -619,9 +620,8 @@ class Reestructura_model extends CI_Model
         ORDER BY UPPER(CAST(re.descripcion AS varchar(100))), co.nombre,  lo.nombreLote")->result_array();
     }
 
-    public function checarDisponibleRe($idLote)
-    {
-        $query = $this->db->query("SELECT * FROM lotes WHERE idStatusLote IN (15, 1) AND idLote=".$idLote);
+    public function checarDisponibleRe($idLote){
+        $query = $this->db->query("SELECT * FROM lotes WHERE ( idStatusLote = 15 OR idStatusLote = 1 ) AND idLote=".$idLote);
         return $query->result_array();
     }
     
