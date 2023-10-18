@@ -36,6 +36,8 @@ const ESTATUS_PREPROCESO = [
     'PROCESO DE CONTRATACIÓN'
 ];
 
+const ROLES_PROPUESTAS = [2, 3, 5, 6]; // ROLES PERMITIDOS PARA CARGA, EDICIÓN Y ENVÍO DE PROPUESTAS
+
 let titulosTabla = [];
 $('#reubicacionClientes thead tr:eq(0) th').each(function (i) {
     const title = $(this).text();
@@ -103,6 +105,14 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
     order: [[4, "desc"]],
     destroy: true,
     columns: [
+        {
+            data: (d) => {
+                return `<span class="label" 
+                    style="color: ${d.estatus_modificacion_color}; background: ${d.estatus_modificacion_color}18;}">
+                    ${d.estatus_modificacion}
+                </span>`;
+            }
+        },
         { data: "nombreResidencial" },
         { data: "nombreCondominio" },
         { data: "nombreLote" },
@@ -136,112 +146,15 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
         },
         { data: "nombreAsesorAsignado"},
         {
+            data: (d) => {
+                return (d.comentario == null || d.comentario == '')
+                    ? '<p class="m-0">NO DEFINIDO</p>'
+                    : `<p class="m-0">${d.comentario}</p>`;
+            }
+        },
+        {
             data: function (d) {
-                let btns = '';
-                let editar = 0;
-                let btnShow = 'fa-upload';
-                if(d.id_estatus_preproceso == 2){
-                    //subiendo corridas
-                    if(d.totalCorridas==3){
-                        editar = 1;
-                        btnShow = 'fa-edit';
-                    }
-                }else if(d.id_estatus_preproceso == 3){
-                    //subiendo contratos
-                    if(d.totalContratos==3){
-                        editar = 1;
-                        btnShow = 'fa-edit';
-
-                    }
-                }
-
-                const BTN_PROPUESTAS =  `<button class="btn-data btn-blueMaderas btn-asignar-propuestas"
-                            data-toggle="tooltip" 
-                            data-placement="left"
-                            title="${d.id_estatus_preproceso == 0 ? 'ASIGNAR PROPUESTAS' : 'ACTUALIZAR PROPUESTAS'}"
-                            data-idCliente="${d.idCliente}" 
-                            data-tipoLote="${d.tipo_lote}"
-                            data-idProyecto="${d.idProyecto}"
-                            data-statusPreproceso="${d.id_estatus_preproceso}">
-                            <i class="fas fa-clipboard-list"></i>
-                    </button>`;
-                const BTN_AVANCE =  `<button class="btn-data btn-green btn-avanzar"
-                    data-toggle="tooltip" 
-                    data-placement="left"
-                    title="ENVIAR A ${ESTATUS_PREPROCESO[parseInt(d.id_estatus_preproceso) + 1]}"
-                    data-idCliente="${d.idCliente}"
-                    data-tipoTransaccion="${d.id_estatus_preproceso}">
-                    <i class="fas fa-thumbs-up"></i>
-                </button>`;
-
-                const BTN_INFOCLIENTE =  `<button class="btn-data btn-green infoUser"
-                    data-toggle="tooltip" 
-                    data-placement="left"
-                    data-idCliente="${d.idCliente}" 
-                    data-idLote="${d.idLote}">
-                    <i class="fas fa-user-check"></i>
-                </button>`;
-                const BTN_SUBIR_ARCHIVO =  `<button class="btn-data btn-blueMaderas btn-abrir-modal"
-                    data-toggle="tooltip" 
-                    data-placement="left"
-                    title="CARGAR DOCUMENTACIÓN"
-                    data-idCliente="${d.idCliente}"
-                    data-idLote="${d.idLote}"
-                    data-nombreLote="${d.nombreLote}"
-                    data-estatusLoteArchivo="${d.status}"
-                    data-editar="${editar}"   
-                    data-rescision="${d.rescision}"
-                    data-id_dxc="${d.id_dxc}"   
-                    data-tipoTransaccion="${d.id_estatus_preproceso}">
-                    <i class="fas ${btnShow}"></i>
-                </button>`;
-
-                if (d.id_estatus_preproceso == 0 && id_rol_general == 3) // Gerente: PENDIENTE CARGA DE PROPUESTAS
-                    btns += BTN_PROPUESTAS;
-                else if (d.id_estatus_preproceso == 1 && id_rol_general == 3){ // Gerente: REVISIÓN DE PROPUESTAS
-                    btns += BTN_PROPUESTAS;
-                    if(d.idLoteXcliente == null){
-                        btns += BTN_INFOCLIENTE;
-                    }else{
-                        btns += BTN_AVANCE;
-                        btns += BTN_INFOCLIENTE;
-                    }
-                }
-                else if (d.id_estatus_preproceso == 2 && id_rol_general == 17) { // Contraloría: ELABORACIÓN DE CORRIDAS
-                    if (d.totalCorridas == 3)
-                        btns += BTN_AVANCE;
-                    btns += BTN_SUBIR_ARCHIVO
-                }
-                else if (d.id_estatus_preproceso == 3 && id_rol_general == 15) { // Jurídico: ELABORACIÓN DE CONTRATO Y RESICISIÓN
-
-                    if (d.totalContratos == 3 && d.totalRescision == 1)
-                        btns += BTN_AVANCE;
-                    btns += BTN_SUBIR_ARCHIVO
-
-                }
-                else if (d.id_estatus_preproceso == 4 && id_rol_general == 6) // Asistente gerente: DOCUMENTACIÓN ENTREGADA
-                    btns += BTN_AVANCE;
-                else if (d.id_estatus_preproceso == 5) { // EEC: CONFIRMACIÓN DE RECEPCIÓN DE DOCUMENTOS
-                    if(d.idProyecto == PROYECTO.NORTE || d.idProyecto == PROYECTO.PRIVADAPENINSULA){
-                        btns +=  `<button class="btn-data btn-sky btn-reestructurar"
-                                data-toggle="tooltip" 
-                                data-placement="left"
-                                title="REESTRUCTURAR"
-                                data-idCliente="${d.idCliente}">
-                                <i class="fas fa-map-marker"></i>
-                        </button>`;
-                    }
-                    btns += `<button class="btn-data btn-green btn-reubicar"
-                            data-toggle="tooltip" 
-                            data-placement="left"
-                            title="REUBICAR CLIENTE"
-                            data-idCliente="${d.idCliente}"
-                            data-idProyecto="${d.idProyecto}"
-                            data-tipoLote="${d.tipo_lote}">
-                        <i class="fas fa-route"></i>
-                    </button>`;
-                }
-                return `<div class="d-flex justify-center">${btns}</div>`;
+                return `<div class="d-flex justify-center">${botonesAccionReubicacion(d)}</div>`;
             }
         }
     ],
@@ -300,6 +213,7 @@ $(document).on('click', '.btn-asignar-propuestas', function () {
     const tipoLote = $(this).attr("data-tipoLote");
     const idLoteOriginal = row.data().idLote;
     const statusPreproceso = $(this).attr("data-statusPreproceso");
+    const idCliente = $(this).attr("data-idCliente");
 
     const botonAceptar = (statusPreproceso != 1) ? '<button type="submit" class="btn btn-primary">Aceptar</button>' : '';
 
@@ -349,48 +263,125 @@ $(document).on('click', '.btn-asignar-propuestas', function () {
                 <input type="hidden" id="tipoLote" value="${tipoLote}">
                 <input type="hidden" id="idLoteOriginal" name="idLoteOriginal" value="${idLoteOriginal}">
                 <input type="hidden" id="statusPreproceso" name="statusPreproceso" value="${statusPreproceso}">
+                <input type="hidden" name="idCliente" value="${idCliente}">
                 <div class="row mt-2">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
-                        <button type="button" class="btn btn-simple btn-danger" onclick="hideModal();">Cancelar</button>
+                        <button type="button" class="btn btn-simple btn-danger" onclick="cerrarModalPropuestas(${statusPreproceso});">Cancelar</button>
                         ${botonAceptar}
                     </div>
                 </div>
             </div>
         </form>
     `);
+
+    const config = (statusPreproceso == 1)
+        ? { backdrop: 'static', keyboard: false, show: true }
+        : { backdrop: true, keyboard: true, show: true };
+
     showModal();
+    changeOptionsModal(config);
 
     getProyectosAOcupar(idProyecto, superficie, tipoLote);
     getPropuestas(idLoteOriginal, statusPreproceso, idProyecto, superficie, tipoLote);
 });
 
+const cerrarModalPropuestas = (preproceso) => {
+    if (preproceso != 1) {
+        hideModal();
+        return;
+    }
+
+    if (validarLotesRequeridos($('#infoLotesSeleccionados .lotePropuesto').length)) {
+        hideModal();
+    }
+}
+
 $(document).on('click', '.infoUser', function (){
-    $('#idCliente').val($(this).attr('data-idCliente'));
-    $('#idLote').val($(this).attr('data-idLote'));
     $('#ineCLi').val('');
     $("#estadoCli").empty();
 
-    const idCliente = $("#idCliente").val();
-    const idLote = $("#idLote").val();
+    var idCliente = $(this).attr('data-idCliente');
+    var idLote = $(this).attr('data-idLote');
 
-    $.getJSON("getCliente/" + idCliente + "/" + idLote, function(cliente) {
-        $('#nombreCli').val(cliente.nombre);
-        $('#apellidopCli').val(cliente.apellido_paterno);
-        $('#apellidomCli').val(cliente.apellido_materno);
-        $('#telefonoCli').val(cliente.telefono1);
-        $('#correoCli').val(cliente.correo);
-        $('#domicilioCli').val(cliente.domicilio_particular);
-        $('#ocupacionCli').val(cliente.ocupacion);
-        $('#ineCLi').val(cliente.ine);
+    $.getJSON("getCliente/" + idCliente + "/" + idLote  , function(cliente) {
+        
+        const nombreLote = cliente.nombre;
+        const apePaterno = cliente.apellido_paterno;
+        const apeMaterno = cliente.apellido_materno;
+        const telefono = cliente.telefono1;
+        const correo = cliente.correo;
+        const domicilio = cliente.domicilio_particular;
+        const ocupacion= cliente.ocupacion;
+        const ine = cliente.ine;
+
+        changeSizeModal('modal-md');
+        appendBodyModal(`<div class="modal-header">
+                    <h4 class="modal-title text-center">Corrobora la información del cliente</h4>
+                </div>	
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                            <label class="control-label">NOMBRE (<small style="color: red;">*</small>)</label>
+                            <input class="form-control input-gral" name="nombreCli" id="nombreCli" type="text" value="${nombreLote}" required/>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                            <label class="control-label">APELLIDO PATERNO (<small style="color: red;">*</small>)</label>
+                            <input class="form-control input-gral" name="apellidopCli" id="apellidopCli" value="${apePaterno}" type="text" required/>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                            <label class="control-label">APELLIDO MATERNO (<small style="color: red;">*</small>)</label>
+                            <input class="form-control input-gral" name="apellidomCli" id="apellidomCli" type="text" value="${apeMaterno}" required/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
+                            <label class="control-label">TELÉFONO (<small style="color: red;">*</small>)</label>
+                            <input class="form-control input-gral" name="telefonoCli" id="telefonoCli" type="number" maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" value="${telefono}" required/>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
+                            <label class="control-label">CORREO (<small style="color: red;">*</small>)</label>
+                            <input class="form-control input-gral" name="correoCli" id="correoCli" type="text" value="${correo}" required/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                            <label class="control-label">DOMICILIO (<small style="color: red;">*</small>)</label>
+                            <input class="form-control input-gral" name="domicilioCli" id="domicilioCli" type="text" value="${domicilio}" required/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                            <label class="control-label">ESTADO CIVIL (<small style="color: red;">*</small>)</label>
+                            <select name="estadoCli" title="SELECCIONA UNA OPCIÓN" id="estadoCli" class="selectpicker m-0 select-gral" data-container="body" data-width="100%" required></select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
+                            <label class="control-label">INE (<small style="color: red;">*</small>)</label>
+                            <input class="form-control input-gral" name="ineCLi" id="ineCLi" type="number" maxlength="13" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" value="${ine}" required/>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m.0">
+                            <label class="control-label">OCUPACIÓN (<small style="color: red;">*</small>)</label>
+                            <input class="form-control input-gral" name="ocupacionCli" id="ocupacionCli" type="text" value="${ocupacion}" required/>
+                        </div>
+                    </div>        
+                    <input type="hidden" name="idCliente" id="idCliente" value="${idCliente}">
+                    <input type="hidden" name="idLote" id="idLote" value="${idLote}">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="cancelarValidacion" class="btn btn-danger btn-simple cancelarValidacion" data-dismiss="modal">Cancelar</button>
+                    <button type="button" id="guardarCliente" name="guardarCliente" class="btn btn-primary guardarValidacion">GUARDAR</button>
+                </div>`);
+        showModal();
 
         $.post("getEstadoCivil", function(estadoCivil) {
-            const len = estadoCivil.length;
-            for (let i = 0; i < len; i++) {
-                const id = estadoCivil[i]['id_opcion'];
-                const name = estadoCivil[i]['nombre'];
+            var len = estadoCivil.length;
+            for (var i = 0; i < len; i++) {
+                var id = estadoCivil[i]['id_opcion'];
+                var name = estadoCivil[i]['nombre'];
 
                 if(id == cliente.idEstadoC){
-                    $("#estadoCli").append($('<option selected>').val(id).text(name.toUpperCase()));
+                    $("#estadoCli").append($('<option selected>').val(id).text(name.toUpperCase()));    
                 }else{
                     $("#estadoCli").append($('<option>').val(id).text(name.toUpperCase()));
                 }
@@ -398,7 +389,6 @@ $(document).on('click', '.infoUser', function (){
             $("#estadoCli").selectpicker('refresh');
         }, 'json');
 
-        $('#clienteConsulta').modal();
     }, 'json');
 });
 
@@ -415,12 +405,12 @@ $(document).on('click', '#guardarCliente', function (){
     var ocupacionCli = $('#ocupacionCli').val();
 
     if(ineCLi == ''){
-        alerts.showNotification("top", "right", "Captura el número INE", "warning");
+        alerts.showNotification("top", "right", "", "warning");
         return;
     }
 
     if (telefonoCli == '' || telefonoCli == null){
-        alerts.showNotification("top", "right", "Captura el número de teléfono", "warning");
+        alerts.showNotification("top", "right", "El número de el INE debe tener 13 caracteres", "warning");
         return;
     }
 
@@ -451,6 +441,7 @@ $(document).on('click', '#guardarCliente', function (){
     datos.append("ineCLi", ineCLi);
     datos.append("ocupacionCli", ocupacionCli);
 
+    $("#spiner-loader").removeClass('hide');
     $.ajax({
         method: 'POST',
         url: general_base_url + 'Reestructura/insetarCliente/'+ idLote,
@@ -459,8 +450,9 @@ $(document).on('click', '#guardarCliente', function (){
         contentType: false,
         success: function(data) {
             if (data == 1) {
-            $('#clienteConsulta').modal('hide');
+            hideModal();
             alerts.showNotification("top", "right", "Información capturada con éxito.", "success");
+            $("#spiner-loader").addClass('hide');
             $('#ineCLi').val('');
             $('#telefonoCli').val('');
             $('#correoCli').val('');
@@ -472,6 +464,7 @@ $(document).on('click', '#guardarCliente', function (){
         error: function(){
             $('#aceptarReestructura').modal('hide');
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            $("#spiner-loader").addClass('hide');
         }
     });
 });
@@ -549,7 +542,7 @@ function getPropuestas(idLoteOriginal, statusPreproceso, idProyecto, superficie,
         $('#infoLotesSeleccionados').html('');
 
         for (let lote of data) {
-            let html = divLotesSeleccionados(statusPreproceso, lote.nombreLote, lote.sup, lote.id_lotep, lote.id_pxl, idProyecto, superficie, tipoLote, lote.idCondominio);
+            let html = divLotesSeleccionados(statusPreproceso, lote.nombreLote, lote.sup, lote.id_lotep, lote.id_pxl, idProyecto, superficie, tipoLote, lote.idCondominio, lote.tipo_estatus_regreso);
 
             $("#infoLotesSeleccionados").append(html);
         }
@@ -594,6 +587,7 @@ $(document).on("change", "#condominioAOcupar", function(e){
             const superficie = data[i]['sup'];
             const total = data[i]['total'];
             const a_favor = data[i]['a_favor'];
+            const tipoEstatusRegreso = data[i]['tipo_estatus_regreso'];
             $("#loteAOcupar")
                 .append($('<option>')
                 .val(id)
@@ -601,7 +595,7 @@ $(document).on("change", "#condominioAOcupar", function(e){
                 .attr('data-precioMetro', precioMetro)
                 .attr('data-superficie', superficie)
                 .attr('data-total', total)
-                .addClass('green')
+                .attr('data-tipo_estatus_regreso', tipoEstatusRegreso)
                 .text(name +' ('+ a_favor + ')'));
         }
         $('#spiner-loader').addClass('hide');
@@ -642,11 +636,12 @@ $(document).on("change", "#loteAOcupar", function(e){
     const idProyecto = $(this).attr("data-idProyecto");
     const superficieLoteOriginal = $(this).attr('data-superficie');
     const tipoLote = $(this).attr("data-tipoLote");
+    const tipoEstatusRegreso = $(this).attr("data-tipo_estatus_regreso");
 
     if (statusPreproceso != 1) {
         const nombreLote = $itself.attr("data-nombre");
         const superficie = $itself.attr("data-superficie");
-        const html = divLotesSeleccionados(statusPreproceso, nombreLote, superficie, idLoteSeleccionado);
+        const html = divLotesSeleccionados(statusPreproceso, nombreLote, superficie, idLoteSeleccionado, tipoEstatusRegreso);
         $("#infoLotesSeleccionados").append(html);
 
         getProyectosAOcupar(idProyecto, superficieLoteOriginal, tipoLote);
@@ -661,24 +656,28 @@ $(document).on("change", "#loteAOcupar", function(e){
 
             alerts.showNotification("top", "right", 'Lote agregado con éxito', 'success');
         }
+        if (response.code === 400) {
+            alerts.showNotification("top", "right", response.message, 'danger');
+        }
         if (response.code === 500) {
             alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
         }
     });
 })
 
-function removeLote(e, idLote, statusPreproceso, id_pxl, idProyecto, superficie, tipoLote) {
+function removeLote(e, idLote, statusPreproceso, id_pxl, idProyecto, superficie, tipoLote, tipoEstatusRegreso) {
     if (statusPreproceso != 1) { // SON LOTES QUE ELIMINA CUANDO ES LA PRIMERA VEZ QUE ASIGNA PROPUESTAS
         let divLote = e.closest( '.lotePropuesto' );
         divLote.remove();
         return;
     }
-
+    
     // REVISIÓN DE PROPUESTAS (YA ESTÁN EN LA BASE DE DATOS)
     $('#spiner-loader').removeClass('hide');
     let data = new FormData();
     data.append("idLote", idLote);
     data.append("id_pxl", id_pxl);
+    data.append("tipoEstatusRegreso", tipoEstatusRegreso);
     $.ajax({
         url : 'setLoteDisponible',
         data: data,
@@ -705,14 +704,14 @@ function removeLote(e, idLote, statusPreproceso, id_pxl, idProyecto, superficie,
     });
 }
 
-function divLotesSeleccionados(statusPreproceso, nombreLote, superficie, idLote, id_pxl = null, idProyecto = null, superficieAnterior = null, tipoLote = null){
+function divLotesSeleccionados(statusPreproceso, nombreLote, superficie, idLote, id_pxl = null, idProyecto = null, superficieAnterior = null, tipoLote = null, idCondominio=null, tipoEstatusRegreso = null){
     if (statusPreproceso == 0 || statusPreproceso == 1 ){
         return `
             <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2 lotePropuesto">
                 <div class="p-2 pt-1" style="background-color: #eaeaea; border-radius:15px">
                     <div class="d-flex justify-between">
                         <h5 class="mb-0 mt-2 text-center">LOTE SELECCIONADO</h5>
-                        <button type="button" class="fl-r" onclick="removeLote(this, ${idLote}, ${statusPreproceso}, ${id_pxl}, ${idProyecto}, ${superficieAnterior}, ${tipoLote})" style="color: gray; background-color:transparent; border:none;" title="Eliminar selección"><i class="fas fa-times"></i></button>
+                        <button type="button" class="fl-r" onclick="removeLote(this, ${idLote}, ${statusPreproceso}, ${id_pxl}, ${idProyecto}, ${superficieAnterior}, ${tipoLote}, ${tipoEstatusRegreso})" style="color: gray; background-color:transparent; border:none;" title="Eliminar selección"><i class="fas fa-times"></i></button>
                     </div>
                     <span class="w-100 d-flex justify-between">
                         <p class="m-0">Lote</p>
@@ -751,15 +750,23 @@ function divLotesSeleccionados(statusPreproceso, nombreLote, superficie, idLote,
 
 $(document).on("submit", "#formReubicacion", function(e){
     e.preventDefault();
-    $('#spiner-loader').removeClass('hide');
+    const existeSeleccion = $(this).serializeArray().find(obj => obj.name === 'idLote');
+
+    if (!existeSeleccion) {
+        alerts.showNotification("top", "right", "Debe seleccionar un lote para la reubicación.", "danger");
+        return;
+    }
+
     let data = new FormData($(this)[0]);
+    $('#spiner-loader').removeClass('hide');
+
     $.ajax({
         url : 'setReubicacion',
         data: data,
         cache: false,
         contentType: false,
         processData: false,
-        type: 'POST', 
+        type: 'POST',
         success: function(data){
             data = JSON.parse(data);
             alerts.showNotification("top", "right", ""+data.message+"", ""+data.color+"");
@@ -776,10 +783,8 @@ $(document).on("submit", "#formReubicacion", function(e){
 
 $(document).on("submit", "#formAsignarPropuestas", function(e){
     e.preventDefault();
-    const numberLotes = $('#infoLotesSeleccionados .lotePropuesto').length;
 
-    if(numberLotes < 3){
-        alerts.showNotification("top", "right", "Debes seleccionar 3 lotes", "danger");
+    if (!validarLotesRequeridos($('#infoLotesSeleccionados .lotePropuesto').length)) {
         return;
     }
 
@@ -831,8 +836,6 @@ $(document).on("submit", "#formReestructura", function(e){
     });
 });
 
-
-
 $(document).on('click', '.btn-avanzar', async function () {
 
     const tr = $(this).closest('tr');
@@ -840,12 +843,14 @@ $(document).on('click', '.btn-avanzar', async function () {
     const nombreLote = row.data().nombreLote;
     const idLote = row.data().idLote;
     const tipoTransaccion = $(this).attr("data-tipoTransaccion");
+    const idCliente = $(this).attr("data-idCliente");
+    const idEstatusMovimento = $(this).attr("data-idEstatusMovimiento");
+
 
     if (tipoTransaccion == 1) {
         const totalP = await totalPropuestas(idLote);
 
-        if (totalP < 3) {
-            alerts.showNotification("top", "right", "Debes seleccionar 3 lotes", "danger");
+        if (!validarLotesRequeridos(totalP)) {
             return;
         }
     }
@@ -857,9 +862,52 @@ $(document).on('click', '.btn-avanzar', async function () {
                 <div class="row">
                     <div class="col-12 text-center">
                         <h6 class="m-0">¿Estás seguro de envíar el lote <b>${nombreLote}</b> a <b><i>${ESTATUS_PREPROCESO[parseInt(tipoTransaccion) + 1]}</i></b></h6>
-                    </div>                
+                    </div>
+                    <div class="col-12">
+                        <label class="control-label">Comentario</label>
+                        <input class="text-modal mb-1" name="comentario" autocomplete="off">
+                    </div>
+
                     <input type="hidden" id="idLote" name="idLote" value="${idLote}">
                     <input type="hidden" id="tipoTransaccion" name="tipoTransaccion" value="${tipoTransaccion}">
+                    <input type="hidden" name="idCliente" value="${idCliente}">
+                    <input type="hidden" name="idEstatusMovimento" value="${idEstatusMovimento}">
+                    <div class="row mt-2">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
+                            <button type="button" class="btn btn-simple btn-danger" onclick="hideModal()">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Aceptar</button>
+                        </div>
+                    </div>
+            </div>
+        </form>
+    `);
+    showModal();
+});
+
+$(document).on('click', '.btn-rechazar', function () {
+    const tr = $(this).closest('tr');
+    const row = $('#reubicacionClientes').DataTable().row(tr);
+    const nombreLote = row.data().nombreLote;
+    const idLote = row.data().idLote;
+    const tipoTransaccion = $(this).attr("data-tipoTransaccion");
+    const idCliente = $(this).attr("data-idCliente");
+
+    changeSizeModal('modal-sm');
+    appendBodyModal(`
+        <form method="post" id="formRechazarEstatus">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h6 class="m-0">¿Estás seguro de rechazar el lote <b>${nombreLote}</b> a <b><i>${ESTATUS_PREPROCESO[parseInt(tipoTransaccion) -1]}</i></b></h6>
+                    </div>
+                    <div class="col-12">
+                        <label class="control-label">Comentario</label>
+                        <input class="text-modal mb-1" name="comentario" autocomplete="off">
+                    </div>
+
+                    <input type="hidden" id="idLote" name="idLote" value="${idLote}">
+                    <input type="hidden" id="tipoTransaccion" name="tipoTransaccion" value="${tipoTransaccion}">
+                    <input type="hidden" name="idCliente" value="${idCliente}">
                     <div class="row mt-2">
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
                             <button type="button" class="btn btn-simple btn-danger" onclick="hideModal()">Cancelar</button>
@@ -885,9 +933,7 @@ const totalPropuestas = async (idLoteOriginal) => {
 $(document).on("submit", "#formAvanzarEstatus", function(e) {
     $('#spiner-loader').removeClass('hide');
     e.preventDefault();
-    let data = new FormData();
-    data.append("idLote", $("#idLote").val());
-    data.append("tipoTransaccion", $("#tipoTransaccion").val());
+    let data = new FormData($(this)[0]);
     $.ajax({
         url : 'setAvance',
         data: data,
@@ -907,3 +953,180 @@ $(document).on("submit", "#formAvanzarEstatus", function(e) {
         }
     });
 });
+
+$(document).on("submit", "#formRechazarEstatus", function(e) {
+    e.preventDefault();
+
+    $('#spiner-loader').removeClass('hide');
+    let data = new FormData($(this)[0]);
+
+    $.ajax({
+        url : `${general_base_url}Reestructura/rechazarRegistro`,
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        success: function(data){
+            alerts.showNotification("top", "right", "El registro se ha avanzado con éxito.", "success");
+            $('#reubicacionClientes').DataTable().ajax.reload();
+            $('#spiner-loader').addClass('hide');
+            hideModal();
+        },
+        error: function( data ){
+            alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+            hideModal();
+        }
+    });
+});
+
+/**
+ * @return {boolean}
+ */
+const validarLotesRequeridos = (numberLotes) => {
+    if (numberLotes === 0) {
+        alerts.showNotification("top", "right", "Debes seleccionar al menos un lote", "danger");
+        return false;
+    }
+
+    if(numberLotes > 3){
+        alerts.showNotification("top", "right", "Debes seleccionar máximo 3 lotes", "danger");
+        return false;
+    }
+
+    return true;
+}
+
+const botonesAccionReubicacion = (d) => {
+    const idEstatusPreproceso = parseInt(d.id_estatus_preproceso);
+    const totalCorridas = parseInt(d.totalCorridas);
+    const totalContrato = parseInt(d.totalContratos);
+    const totalCorridasRef = parseInt(d.totalCorridasNumero);
+    const totalContratoRef = parseInt(d.totalContratoNumero);
+
+    let editar = 0;
+    let btnShow = 'fa-upload';
+
+    if (idEstatusPreproceso === 2 && totalCorridas === totalCorridasRef) { //subiendo corridas
+        editar = 1;
+        btnShow = 'fa-edit';
+    }
+
+    if (idEstatusPreproceso === 3 && totalContrato === totalContratoRef) { //subiendo contratos
+        editar = 1;
+        btnShow = 'fa-edit';
+    }
+
+    const BTN_PROPUESTAS =  `<button class="btn-data btn-blueMaderas btn-asignar-propuestas"
+                            data-toggle="tooltip" 
+                            data-placement="left"
+                            title="${idEstatusPreproceso === 0 ? 'ASIGNAR PROPUESTAS' : 'ACTUALIZAR PROPUESTAS'}"
+                            data-idCliente="${d.idCliente}" 
+                            data-tipoLote="${d.tipo_lote}"
+                            data-idProyecto="${d.idProyecto}"
+                            data-statusPreproceso="${idEstatusPreproceso}"
+                            data-idEstatusMovimiento="${d.id_estatus_modificacion}">
+                            <i class="fas fa-clipboard-list"></i>
+                    </button>`;
+
+    const BTN_AVANCE =  `<button class="btn-data btn-green btn-avanzar"
+                    data-toggle="tooltip" 
+                    data-placement="left"
+                    title="ENVIAR A ${ESTATUS_PREPROCESO[idEstatusPreproceso + 1]}"
+                    data-idCliente="${d.idCliente}"
+                    data-tipoTransaccion="${idEstatusPreproceso}"
+                    data-idEstatusMovimiento="${d.id_estatus_modificacion}">
+                    <i class="fas fa-thumbs-up"></i>
+                </button>`;
+
+    const BTN_RECHAZO =  `<button class="btn-data btn-warning btn-rechazar"
+                    data-toggle="tooltip" 
+                    data-placement="left"
+                    title="ENVIAR A ${ESTATUS_PREPROCESO[idEstatusPreproceso - 1]}"
+                    data-idCliente="${d.idCliente}"
+                    data-tipoTransaccion="${idEstatusPreproceso}">
+                    <i class="fas fa-thumbs-down"></i>
+                </button>`;
+
+    const BTN_INFOCLIENTE =  `<button class="btn-data btn-green infoUser"
+                    data-toggle="tooltip" 
+                    data-placement="left"
+                    title="INFORMACIÓN CLIENTE"
+                    data-idCliente="${d.idCliente}" 
+                    data-idLote="${d.idLote}">
+                    <i class="fas fa-user-check"></i>
+                </button>`;
+    const BTN_SUBIR_ARCHIVO =  `<button class="btn-data btn-blueMaderas btn-abrir-modal"
+                    data-toggle="tooltip" 
+                    data-placement="left"
+                    title="CARGAR DOCUMENTACIÓN"
+                    data-idCliente="${d.idCliente}"
+                    data-idLote="${d.idLote}"
+                    data-nombreLote="${d.nombreLote}"
+                    data-estatusLoteArchivo="${d.status}"
+                    data-editar="${editar}"   
+                    data-rescision="${d.rescision}"
+                    data-id_dxc="${d.id_dxc}"   
+                    data-tipoTransaccion="${idEstatusPreproceso}">
+                    <i class="fas ${btnShow}"></i>
+                </button>`;
+    const BTN_REESTRUCTURA = `
+        <button class="btn-data btn-sky btn-reestructurar"
+                data-toggle="tooltip" 
+                data-placement="left"
+                title="REESTRUCTURAR"
+                data-idCliente="${d.idCliente}">
+                <i class="fas fa-map-marker"></i>
+        </button>`;
+    const BTN_REUBICACION = `
+        <button class="btn-data btn-green btn-reubicar"
+                data-toggle="tooltip" 
+                data-placement="left"
+                title="REUBICAR CLIENTE"
+                data-idCliente="${d.idCliente}"
+                data-idProyecto="${d.idProyecto}"
+                data-tipoLote="${d.tipo_lote}">
+            <i class="fas fa-route"></i>
+        </button>`;
+
+    if (idEstatusPreproceso === 0 && ROLES_PROPUESTAS.includes(id_rol_general)) { // Gerente/Subdirector: PENDIENTE CARGA DE PROPUESTAS
+        return BTN_PROPUESTAS;
+    }
+
+    if (idEstatusPreproceso === 1 && ROLES_PROPUESTAS.includes(id_rol_general)) { // Gerente/Subdirector: REVISIÓN DE PROPUESTAS
+        if (d.idLoteXcliente == null) {
+            return BTN_PROPUESTAS + BTN_INFOCLIENTE;
+        }
+
+        return BTN_PROPUESTAS + BTN_AVANCE + BTN_INFOCLIENTE;
+    }
+
+    if (idEstatusPreproceso === 1 && id_rol_general == 7) { // EEC: Ver/Editar la información del cliente
+        return BTN_INFOCLIENTE;
+    }
+
+    if (idEstatusPreproceso === 2 && id_rol_general == 17) { // Contraloría: ELABORACIÓN DE CORRIDAS
+        return (totalCorridas === totalCorridasRef)
+            ? BTN_AVANCE + BTN_RECHAZO + BTN_SUBIR_ARCHIVO
+            : BTN_SUBIR_ARCHIVO + BTN_RECHAZO;
+    }
+
+    if (idEstatusPreproceso === 3 && id_rol_general == 15) { // Jurídico: ELABORACIÓN DE CONTRATO Y RESICISIÓN
+        return (totalContrato === totalContratoRef && parseInt(d.totalRescision) === 1)
+            ? BTN_AVANCE + BTN_RECHAZO + BTN_SUBIR_ARCHIVO
+            : BTN_SUBIR_ARCHIVO + BTN_RECHAZO;
+
+    }
+
+    if (idEstatusPreproceso === 4 && id_rol_general == 6) { // Asistente gerente: DOCUMENTACIÓN ENTREGADA
+        return BTN_AVANCE + BTN_RECHAZO;
+    }
+
+    if (idEstatusPreproceso === 5) { // EEC: CONFIRMACIÓN DE RECEPCIÓN DE DOCUMENTOS
+        return (d.idProyecto == PROYECTO.NORTE || d.idProyecto == PROYECTO.PRIVADAPENINSULA)
+            ? BTN_REESTRUCTURA + BTN_REUBICACION
+            : BTN_REUBICACION;
+    }
+
+    return '';
+}
