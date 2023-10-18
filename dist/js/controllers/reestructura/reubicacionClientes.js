@@ -1012,6 +1012,7 @@ const botonesAccionReubicacion = (d) => {
     let btnContratoFirmado = 'fa-file-upload';
     let editarContratoFirmado = 0;
     let tooltipCF = 'SUBIR CONTRATO FIRMADO';
+    let botonJuridico = '';
 
     if (idEstatusPreproceso === 2 && totalCorridas === totalCorridasRef) { //subiendo corridas
         editar = 1;
@@ -1145,9 +1146,14 @@ const botonesAccionReubicacion = (d) => {
     }
 
     if (idEstatusPreproceso === 3 && id_rol_general == 15) { // Jurídico: ELABORACIÓN DE CONTRATO Y RESICISIÓN
+        if(totalContratoFirmado==1)
+            botonJuridico = BTN_SUBIR_CONTRATO_FIRMADO;
+        else
+            botonJuridico = '';
+
         return (totalContrato === totalContratoRef && parseInt(d.totalRescision) === 1)
-            ? BTN_AVANCE + BTN_RECHAZO + BTN_SUBIR_ARCHIVO + (contratoFirmado == 1) ? BTN_SUBIR_CONTRATO_FIRMADO : ''
-            : BTN_SUBIR_ARCHIVO + BTN_RECHAZO + (contratoFirmado == 1) ? BTN_SUBIR_CONTRATO_FIRMADO : '' ;
+            ? BTN_AVANCE + BTN_RECHAZO + BTN_SUBIR_ARCHIVO + botonJuridico
+            : BTN_SUBIR_ARCHIVO + BTN_RECHAZO  + botonJuridico ;
 
     }
 

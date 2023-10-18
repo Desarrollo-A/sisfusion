@@ -527,6 +527,7 @@ $(document).on('click', '.btn-abrir-contratoFirmado', function(){
     editarContrafoFirmado = flagEditar;
     editarFile = flagEditar;
     console.log('editarFile', editarFile);
+    let heightIframe = '400px';
    if(flagEditar == 0){//es primera ves no hay archivo
        document.getElementById('txtTituloCF').innerText = 'ASOCIA EL CONTRATO FIRMADO';
        document.getElementById('dialoSection').classList.remove('modal-lg');
@@ -543,15 +544,19 @@ $(document).on('click', '.btn-abrir-contratoFirmado', function(){
    }else if(flagEditar == 1){//ya hay un archivo hay que actualizarlo
        if(estatusProceso==2){
            document.getElementById('txtTituloCF').innerText = 'VER/EDITAR EL CONTRATO FIRMADO';
+           document.getElementById('sendRequestButtoncf').classList.remove('hide');
+           heightIframe = '400px'
        }else if(estatusProceso==3){
            document.getElementById('txtTituloCF').innerText = 'VER EL CONTRATO FIRMADO';
+           document.getElementById('sendRequestButtoncf').classList.add('hide');
+           heightIframe = '650px';
        }
        document.getElementById('dialoSection').classList.add('modal-lg');
        let contratoFirmado = $(this).attr("data-contratoFirmado");
        let ruta = general_base_url+'static/documentos/cliente/contratoFirmado/'+contratoFirmado;
        contenidoHTMLCF += '<iframe id="inlineFrameExample" title="Inline Frame Example"\n' +
            '  width="100%"\n' +
-           '  height="400px"\n' +
+           '  height="'+heightIframe+'"\n' +
            '  src="'+ruta+'">\n' +
            '</iframe>';
 

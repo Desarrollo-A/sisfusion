@@ -102,7 +102,7 @@
                         <b><h5 id="mainLabelTextcf" class="bold"></h5></b><hr>
                         <div id="formularioArchivoscf"></div>
                     </div>
-                    <div class="modal-footer mt-2">
+                    <div class="modal-footer mt-2" >
                         <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                             <button type="button" id="sendRequestButtoncf" class="btn btn-primary">Guardar</button>
