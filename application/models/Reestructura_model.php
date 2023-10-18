@@ -42,6 +42,7 @@ class Reestructura_model extends CI_Model
         (ISNULL(lo.totalNeto2, 0.00) / lo.sup) costom2f, ISNULL(lo.totalNeto2, 0.00) total, co.tipo_lote, oxc.nombre nombreTipoLote,
         oxc1.nombre estatusPreproceso, lo.estatus_preproceso id_estatus_preproceso, pxl3.totalCorridasNumero, pxl4.totalContratoNumero, pxl1.totalCorridas, pxl2.totalContratos, dxc.totalRescision, dxc2.idLote AS idLoteXcliente,
         CASE WHEN u6.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u6.nombre, ' ', u6.apellido_paterno, ' ', u6.apellido_materno)) END nombreAsesorAsignado,
+        HD.expediente as contratoFirmado, HD.idDocumento as idContratoFirmado, co.idCondominio, hdcount.totalContratoFirmado,
         hpl.comentario, ISNULL(hpl.estatus, 1) AS id_estatus_modificacion, ISNULL(oxc2.nombre, 'NUEVO') AS estatus_modificacion, 
         ISNULL(oxc2.color, '#1B4F72') AS estatus_modificacion_color
         FROM lotes lo
@@ -68,6 +69,8 @@ class Reestructura_model extends CI_Model
         LEFT JOIN (SELECT idLote, COUNT(*) totalCorridas FROM propuestas_x_lote WHERE corrida IS NOT NULL GROUP BY idLote) pxl1 ON pxl1.idLote = lo.idLote
 		LEFT JOIN (SELECT idLote, COUNT(*) totalContratos FROM propuestas_x_lote WHERE contrato IS NOT NULL GROUP BY idLote) pxl2 ON pxl2.idLote = lo.idLote
 		LEFT JOIN (SELECT idLote, COUNT(*) totalRescision FROM datos_x_cliente WHERE rescision IS NOT NULL GROUP BY idLote) dxc ON dxc.idLote = lo.idLote
+		LEFT JOIN (SELECT idLote, COUNT(*) totalContratoFirmado FROM historial_documento WHERE tipo_doc=30 GROUP BY idLote) hdcount ON hdcount.idLote = lo.idLote
+		LEFT JOIN historial_documento HD ON HD.idLote = lo.idLote AND HD.tipo_doc=30
         WHERE lo.liberaBandera = 1 AND lo.status = 1 $validacionAsignacion $validacionEstatus")->result_array();
     }
 
@@ -621,8 +624,20 @@ class Reestructura_model extends CI_Model
     }
 
     public function checarDisponibleRe($idLote){
-        $query = $this->db->query("SELECT * FROM lotes WHERE ( idStatusLote = 15 OR idStatusLote = 1 ) AND idLote=".$idLote);
+        $query = $this->db->query("SELECT * FROM lotes WHERE (idStatusLote=15 OR idStatusLote=1) AND idLote=".$idLote);
         return $query->result_array();
     }
-    
+
+    public function revisarCFDocumentos($idLote){
+        $query = $this->db->query("SELECT * FROM historial_documento WHERE tipo_doc=30  AND idLote=".$idLote);
+        return $query->result_array();
+    }
+    public function getCopropietariosReestructura($idLote){
+        $query = $this->db->query("SELECT dxc.*, opc.nombre as estado_civil 
+        FROM datos_x_copropietario dxc
+        LEFT JOIN opcs_x_cats opc ON opc.id_opcion = dxc.estado_civil
+        AND opc.id_catalogo=18
+        WHERE idLote=".$idLote);
+        return $query->result_array();
+    }
 }

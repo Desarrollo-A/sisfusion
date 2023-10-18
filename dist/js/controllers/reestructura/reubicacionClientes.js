@@ -1003,9 +1003,14 @@ const botonesAccionReubicacion = (d) => {
     const totalContrato = parseInt(d.totalContratos);
     const totalCorridasRef = parseInt(d.totalCorridasNumero);
     const totalContratoRef = parseInt(d.totalContratoNumero);
+    const totalContratoFirmado = parseInt(d.totalContratoFirmado);
 
     let editar = 0;
     let btnShow = 'fa-upload';
+    let btnContratoFirmado = 'fa-file-upload';
+    let editarContratoFirmado = 0;
+    let tooltipCF = 'SUBIR CONTRATO FIRMADO';
+    let botonJuridico = '';
 
     if (idEstatusPreproceso === 2 && totalCorridas === totalCorridasRef) { //subiendo corridas
         editar = 1;
@@ -1015,6 +1020,13 @@ const botonesAccionReubicacion = (d) => {
     if (idEstatusPreproceso === 3 && totalContrato === totalContratoRef) { //subiendo contratos
         editar = 1;
         btnShow = 'fa-edit';
+        btnContratoFirmado = 'fa-eye';
+        tooltipCF = 'VER CONTRATO FIRMADO';
+    }
+    if(d.idContratoFirmado != null){
+        btnContratoFirmado = 'fa-eye';
+        editarContratoFirmado = 1;
+        tooltipCF = 'VER CONTRATO FIRMADO';
     }
 
     const BTN_PROPUESTAS =  `<button class="btn-data btn-blueMaderas btn-asignar-propuestas"
@@ -1088,6 +1100,26 @@ const botonesAccionReubicacion = (d) => {
                 data-tipoLote="${d.tipo_lote}">
             <i class="fas fa-route"></i>
         </button>`;
+    const BTN_SUBIR_CONTRATO_FIRMADO =  `
+        <button class="btn-data btn-green-excel btn-abrir-contratoFirmado"
+            data-toggle="tooltip" 
+            data-placement="left"
+            title="${tooltipCF}"
+            data-idCliente="${d.idCliente}"
+            data-idLote="${d.idLote}"
+            data-nombreLote="${d.nombreLote}"
+            data-estatusLoteArchivo="${d.status}"
+            data-editar="${editarContratoFirmado}"   
+            data-rescision="${d.rescision}"
+            data-idDocumento="${d.idContratoFirmado}"   
+            data-idCondominio="${d.idCondominio}"   
+            data-tipoTransaccion="${d.id_estatus_preproceso}"
+            data-nombreResidencial = "${d.nombreResidencial}"
+            data-nombreCondominio = "${d.nombreCondominio}"
+            data-contratoFirmado = "${d.contratoFirmado}">
+            <i class="fas ${btnContratoFirmado}"></i>
+        </button>`;
+
 
     if (idEstatusPreproceso === 0 && ROLES_PROPUESTAS.includes(id_rol_general)) { // Gerente/Subdirector: PENDIENTE CARGA DE PROPUESTAS
         return BTN_PROPUESTAS;
@@ -1106,15 +1138,20 @@ const botonesAccionReubicacion = (d) => {
     }
 
     if (idEstatusPreproceso === 2 && id_rol_general == 17) { // Contraloría: ELABORACIÓN DE CORRIDAS
-        return (totalCorridas === totalCorridasRef)
-            ? BTN_AVANCE + BTN_RECHAZO + BTN_SUBIR_ARCHIVO
-            : BTN_SUBIR_ARCHIVO + BTN_RECHAZO;
+        return (totalCorridas === totalCorridasRef && totalContratoFirmado==1)
+            ? BTN_AVANCE + BTN_SUBIR_ARCHIVO + BTN_SUBIR_CONTRATO_FIRMADO
+            : BTN_SUBIR_ARCHIVO + BTN_SUBIR_CONTRATO_FIRMADO;
     }
 
     if (idEstatusPreproceso === 3 && id_rol_general == 15) { // Jurídico: ELABORACIÓN DE CONTRATO Y RESICISIÓN
+        if(totalContratoFirmado==1)
+            botonJuridico = BTN_SUBIR_CONTRATO_FIRMADO;
+        else
+            botonJuridico = '';
+
         return (totalContrato === totalContratoRef && parseInt(d.totalRescision) === 1)
-            ? BTN_AVANCE + BTN_RECHAZO + BTN_SUBIR_ARCHIVO
-            : BTN_SUBIR_ARCHIVO + BTN_RECHAZO;
+            ? BTN_AVANCE + BTN_RECHAZO + BTN_SUBIR_ARCHIVO + botonJuridico
+            : BTN_SUBIR_ARCHIVO + BTN_RECHAZO  + botonJuridico ;
 
     }
 
