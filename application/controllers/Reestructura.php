@@ -1484,6 +1484,7 @@ class Reestructura extends CI_Controller{
             'idStatusLote' => 16,
             'usuario' => $this->session->userdata('id_usuario')
         ];
+        
         $dataInsertPropuestaLote = [
             'idLote' => $idLoteOriginal,
             'id_lotep' => $idLotePropuesta,
