@@ -720,7 +720,7 @@ class Incidencias_model extends CI_Model {
                 date_default_timezone_set('America/Mexico_City');       
             $fecha_actual = strtotime(date("d-m-Y H:i:00"));
         
-                $response = $this->db->query("insert into ventas_compartidas values($id_cliente,$id_asesor,$coor,$ger,1,GETDATE(),".$this->session->userdata('id_usuario').",$sub, GETDATE(),1,0,0);");
+                $response = $this->db->query("insert into ventas_compartidas values($id_cliente,$id_asesor,$coor,$ger,1,GETDATE(),".$this->session->userdata('id_usuario').",$sub, GETDATE(),".$this->session->userdata('id_usuario').",0,0,0);");
                 //$response = $this->db->query("UPDATE pago_comision_ind SET abono_neodata = 0, estatus = 0,modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_comision IN (select id_comision from comisiones where id_lote = $id_lote) AND estatus  = 1");
         
             $usuario = 0;
