@@ -6,7 +6,7 @@
     }
 
     function getDirecciones(){
-        return $this->db->query("SELECT dir.id_direccion,dir.estatus,dir.hora_inicio,dir.hora_fin, dir.nombre as direccion, se.nombre as estado FROM direcciones dir INNER JOIN sedes se ON se.id_sede = dir.id_sede WHERE tipo_oficina = 1");
+        return $this->db->query("SELECT dir.id_direccion,dir.estatus,dir.hora_inicio,dir.hora_fin, dir.nombre as direccion, se.id_sede, se.nombre as estado FROM direcciones dir INNER JOIN sedes se ON se.id_sede = dir.id_sede WHERE tipo_oficina = 1");
     }
 
     public function getEstadoInfo(){
@@ -14,11 +14,16 @@
     }
 
     public function getTimeInfo(){
-        return $this->db->query("SELECT top 1 id_direccion, hora_inicio FROM direcciones");
+        return $this->db->query("SELECT id_direccion, hora_inicio FROM direcciones");
     }
 
     public function getLastTimeInfo(){
         return $this->db->query("SELECT id_direccion, hora_inicio FROM direcciones");
+    }
+
+    public function getDatosNuevo($id_direccion){
+        $query = $this->db->query("SELECT dir.id_direccion,dir.estatus,dir.hora_inicio,dir.hora_fin, dir.nombre as direccion, se.nombre as estado FROM direcciones dir INNER JOIN sedes se ON se.id_sede = dir.id_sede WHERE tipo_oficina = 1 AND dir.id_direccion = $id_direccion");
+        return $query->row();
     }
 
     public function insertarCampo($datos){    
@@ -26,7 +31,7 @@
     }
    
     public function editarDireccion($datos){
-        return $this->db->query("UPDATE direcciones SET id_sede = ".$datos['id_sedeEdit'].", hora_inicio = ".$datos['hora_inicio'].", hora_fin = ".$datos['hora_fin'].", nombre = '".$datos['direccion']."' WHERE id_direccion = ".$datos['id_direccion']."");
+        return $this->db->query("UPDATE direcciones SET id_sede = ".$datos['id_sede'].", hora_inicio = '".$datos['hora_inicio']."', hora_fin = '".$datos['hora_fin']."', nombre = '".$datos['direccion']."' WHERE id_direccion = ".$datos['id_direccionM']."");
     }
 
     public function borrarDirecciones($datos){

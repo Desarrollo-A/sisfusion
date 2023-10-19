@@ -1,3 +1,5 @@
+var arregloEstado = [];
+
 $(document).ready(function () {
 
     fillCatalogosTable();
@@ -7,16 +9,15 @@ $(document).ready(function () {
         type: 'GET',
         dataType: 'json',
         success: function (data) {
-            for (let i = 0; i < data.length; i++) {
-                const id_sede = data[i].id_sede;
-                const estado = data[i].estado;
-                $('#id_sede').append($('<option>').val(id_sede).text(estado));
-            }
-
-            $('#id_sede').selectpicker('refresh');
-            $('#spiner-loader').addClass('hide');
+                 arregloEstado= data;
+                 for (let i = 0; i < arregloEstado.length; i++) {
+                  const id_sede = arregloEstado[i].id_sede;
+                  const estado = arregloEstado[i].estado;
+                  $('#id_sede').append($('<option>').val(id_sede).text(estado));
+              }
+              $('#id_sede').selectpicker('refresh');
         }
-      });
+      }); 
 });
 
 $(document).on("click", ".editarCatalogos", function () {
@@ -38,8 +39,6 @@ $(document).on("click", "#btn_aceptar", function () {
   } else{
     estatus_n = 1;
   }
-
-  console.log("id"+id_direccion, "estatus_n"+ estatus_n);
   
   datos.append("id_direccion", id_direccion);
   datos.append("estatus_n", estatus_n);
@@ -80,174 +79,85 @@ $('#direcciones_datatable thead tr:eq(0) th').each(function (i) {
     });
 });
 
-//edit
-
-$(document).on("click", "#editar-direccion-information", function () {
-
-    $("#id_sedeEdit").val($(this).attr("data-id_sede"));
-    $("#direccionM").val($(this).attr("data-direccion"));
-    $("#id_direccion").val($(this).attr("data-id_direccion"));
-    $("#hora_inicio_hr").val($(this).attr("data-hora_inicio"));
-    $("#hora_finM").val($(this).attr("data-hora_fin"));
-
-    $.ajax({
-        url: `${general_base_url}Direcciones/getOnlyEstados`,
-        type: 'GET',
-        dataType: 'json',
-        success: function (data) {
-            for (let i = 0; i < data.length; i++) {
-                const id_sede = data[i].id_sede;
-                const estado = data[i].estado;
-                $('#id_sedeEdit').append($('<option selected>').val(id_sede).text(estado));
-            }
-
-            $('#id_sedeEdit').selectpicker('refresh');
-            $("#openModalDirecciones").modal();
-            $('#spiner-loader').addClass('hide');
-        }
-      });
-
-      $.ajax({
-        url: `${general_base_url}Direcciones/getOnlyHoraInicial`,
-        type: 'GET',
-        dataType: 'json',
-        success: function (data) {
-            for (let i = 0; i < data.length; i++) {
-                const id_direccion = data[i].id_direccion;
-                const hora_inicio = data[i].hora_inicio;
-                $('#hora_inicio_hr').append($('<option selected>').val(id_direccion).text(hora_inicio));
-            }
-
-            $('#hora_inicio_hr').selectpicker('refresh');
-            $("#openModalDirecciones").modal();
-            $('#spiner-loader').addClass('hide');
-        }
-      });
-});
-
-
-
-$(document).on("click", "#editDirecciones", function () {
-
-    var id_sedeEdit = $("#id_sedeEdit").val();
-    var direccion = $("#direccionM").val();
-    var id_direccion = $("#id_direccion").val();
-    var hora_inicio = $("#hora_inicio_hr").val();
-    console.log(hora_inicio);
-    var hora_fin = $("#hora_finM").val();
-    
-
-    // console.log("s",hora_inicio);
-    
-    
-    
-    var datos = new FormData();
-    $("#spiner-loader").removeClass("hide");
-
-    if(id_sedeEdit != '' && direccion != '' && hora_inicio != '' && hora_fin !=''){
-      
-    }else{
-      $("#spiner-loader").addClass('hide');
-      alerts.showNotification("top", "right", "No puedes dejar ningún campo vacío", "warning");
-      return;
-    }
-
-    datos.append("id_sedeEdit", id_sedeEdit);
-    datos.append("direccion", direccion);
-    datos.append("id_direccion", id_direccion);
-    datos.append("hora_inicio", hora_inicio);
-    datos.append("hora_fin", hora_fin);
-  
-    $.ajax({
-      method: "POST",
-      url: general_base_url + "Direcciones/editarDireccionInfo",
-      data: datos,
-      processData: false,
-      contentType: false,
-      success: function (data) {
-        if (data == 1) {
-          $("#direcciones_datatable").DataTable().ajax.reload(null, false);
-          $("#spiner-loader").addClass("hide"); 
-          $("#openModalDirecciones").modal("hide");
-          alerts.showNotification("top", "right", "Opcion editada correctamente.", "success");
-          $("#direccion").val("");
-          $("#id_direccion").val("");
-          $("#hora_inicio").val("");
-          $("#hora_fin").val("");
-         
-        }
-      },
-      error: function () {
-        $("#editarModel").modal("hide");
-        $("#spiner-loader").addClass("hide");
-        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-      },
-    });
-  });
-
-  //agregar
-
-function openModal(){
-    $("#OpenModalAdd").modal();
-}
-
-
-function generarOpciones(selectElement) {
-  for (var j = 0; j < 2; j++) {
-    var amPm = (j === 0) ? "AM" : "PM";
-    for (var i = 1; i <= 12; i++) {
-      var hora = (i < 10) ? "0" + i : i;
-      var option = new Option(hora + ":00 " + amPm, hora + " " + amPm);
-      selectElement.appendChild(option);
+  function generarOpciones(opcion) {
+    for (var j = 0; j < 2; j++) {
+      var amPm = (j === 0) ? "AM" : "PM";
+      for (var i = 1; i <= 12; i++) {
+        var hora = (i < 10) ? "0" + i : i;
+        var option = new Option(hora + ":00 " + amPm, hora + " " + amPm);
+        opcion.appendChild(option);
+      }
     }
   }
+
+  $('#spiner-loader').addClass('hide');
+  var selectHoras = document.getElementById("horaIni");
+  var selectHoras2 = document.getElementById("hora_final_hr");
+
+  generarOpciones(selectHoras);
+  generarOpciones(selectHoras2);
+
+  $("#horaIni").selectpicker('refresh');
+  $("#hora_final_hr").selectpicker('refresh');
+
+  $(document).on("click", ".editar-direccion-information", function () {
+    var data = CatalogoTable.row($(this).parents("tr")).data();
+
+    $("#id_direccionM").val(data.id_direccion);
+    $("#direccion").val(data.direccion);
+   
+    $("#id_sede").val(data.id_sede).trigger("change");
+    $("#id_sede").selectpicker("refresh");  
+
+    $("#horaIni").val(data.hora_inicio).trigger("change");
+    $("#horaIni").selectpicker('refresh');
+
+    $("#hora_final_hr").val(data.hora_fin).trigger("change");
+    $("#hora_final_hr").selectpicker('refresh');
+    
+    $('#OpenModalAdd').modal('show');
+  });
+  
+function limpiarCampos() {
+  $("#formDireccion")[0].reset();
+  $("#id_direccionM").val('');
+  $('#id_sede').selectpicker('refresh');
+  $('#horaIni').selectpicker('refresh');
+  $('#hora_final_hr').selectpicker('refresh');
 }
 
- var selectHoras = document.getElementById("horaIni");
- var selectHoras2 = document.getElementById("hora_final_hr");
-  
- generarOpciones(selectHoras);
- generarOpciones(selectHoras2);
+$("#formDireccion").on('submit', function(e){
 
-$(document).on('click', '#guardarDireccion', function(){
+  e.preventDefault();
 
-    var hora_inicio = $("#horaIni").val();
-    var hora_fin = $("#hora_final_hr").val();
-    var direccionInfo = $("#direccion").val(); 
-    var id_sede = $("#id_sede").val();
+  let datos = new FormData($(this)[0]);
 
-    var datos = new FormData();
-    $("#spiner-loader").removeClass('hide');
-  
-    datos.append("direccion", direccionInfo)
-    datos.append("id_sede", id_sede)
-    datos.append("hora_inicio", hora_inicio)
-    datos.append("hora_fin", hora_fin)
+  if ($('#id_direccionM').val() === '' ){
 
-    if(id_sede != '' && direccionInfo != '' && hora_inicio != '' && hora_fin !=''){
-      
-    }else{
-      $("#spiner-loader").addClass('hide');
-      alerts.showNotification("top", "right", "Completa todos los campos", "warning");
-      return;
-    }
-  
-    $.ajax({
+      let id_sede = $('#id_sede').val();
+      let direccion = $('#direccion').val().trim();
+      let horaInicial = $('#horaIni').val();
+      let horaFinal = $('#hora_final_hr').val();
+
+      if(id_sede === '' || direccion === '' || horaInicial === '' || horaFinal === ''){
+        alerts.showNotification("top", "right", "Falta llenar un campo", "warning");
+        $("#spiner-loader").addClass('hide');
+        return;
+      }
+      $.ajax({
         method: 'POST',
-        url: general_base_url + 'Direcciones/insertDireccion',
+        url: general_base_url + 'Direcciones/AddEditDireccion',
         data: datos,
         processData: false,
         contentType: false,
-        success: function(data) {
+        success: function(data){
             if (data == 1) {
                 $('#direcciones_datatable').DataTable().ajax.reload(null, false);
                 $('#OpenModalAdd').modal('hide');
                 $("#spiner-loader").addClass('hide');
                 alerts.showNotification("top", "right", "Opción insertada correctamente.", "success");
-                $('#direccion').val('');
-                $('#hora_inicio').val('');
-                $('#hora_fin').val('');
-                $('#id_sede').val('');
+                limpiarCampos();
+                
             }
         },
         error: function(){
@@ -256,8 +166,43 @@ $(document).on('click', '#guardarDireccion', function(){
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
-    return;
-  });
+  } else {
+      let id_sede = $('#id_sede').val();
+      let direccion = $('#direccion').val().trim();
+      let horaInicial = $('#horaIni').val();
+      let horaFinal = $('#hora_final_hr').val();
+
+      if(id_sede === '' || direccion === '' || horaInicial === '' || horaFinal === ''){
+        alerts.showNotification("top", "right", "Captura todos los datos", "warning");
+        $("#spiner-loader").addClass('hide');
+        return;
+      }
+      $.ajax({
+            method: "POST",
+            url: general_base_url + "Direcciones/AddEditDireccion",
+            data: datos,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+              if (data == 1) {
+                $("#direcciones_datatable").DataTable().ajax.reload(null, false);
+                $('#OpenModalAdd').modal('hide');
+                alerts.showNotification("top", "right", "Opcion editada correctamente.", "success");
+                limpiarCampos();
+                $('#id_sede').selectpicker('refresh');
+                $('#horaIni').selectpicker('refresh');
+                $('#hora_final_hr').selectpicker('refresh');
+                $("#spiner-loader").addClass("hide"); 
+              }
+            },
+            error: function () {
+              $("#OpenModalAdd").modal("hide");
+              $("#spiner-loader").addClass("hide");
+              alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            },
+      });
+  }
+});
 
 function fillCatalogosTable() {
     CatalogoTable = $("#direcciones_datatable").DataTable({
@@ -269,6 +214,7 @@ function fillCatalogosTable() {
           {
             extend: "excelHtml5",
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                    
             className: "btn buttons-excel",
             titleAttr: "Direcciones",
             title: "Direcciones",
@@ -281,17 +227,17 @@ function fillCatalogosTable() {
               },
             },
           }, {
-            text: '<i class="fas fa-plus"></i>    ',
-            action: function() {
-              openModal();
-            }, 
-            attr: {
-                class: 'btn btn-azure',
-                style: 'position: relative;',
+            text: '<i class="fas fa-plus"></i>    ', 
+            action:function(){
+              $('#OpenModalAdd').modal('show');
             },
+            attr: {
+              class: 'btn btn-azure agregarDireccionBtn',
+              'data-action': 'agregar',
+              name: 'AgregarID'
+          }
           }
         ],
-        
       pagingType: "full_numbers",
       language: {
         url: general_base_url + "static/spanishLoader_v2.json",
@@ -348,16 +294,14 @@ function fillCatalogosTable() {
         },
         {
             data: function (d) {
-              if (d.estatus == 1) {
-                return ('<div class="d-flex justify-center"><button class="btn-data btn-orangeYellow change-user-status editar-direccion-information" id="editar-direccion-information" name="editar-direccion-information" data-id_direccion="' + d.id_direccion +'" data-id_sede="' + d.id_sede +'" data-direccion="' + d.direccion + '" data-hora_inicio="' + d.hora_inicio + '" data-hora_fin="' + d.hora_fin + '" style="margin-right: 3px" data-toggle="tooltip" data-placement="top" title="EDITAR"><i class="fas fa-edit"></i></button><button class="btn-data btn-warning editarCatalogos" id="editarCatalogos" name="editarCatalogos" style="margin-right: 3px" data-toggle="tooltip" data-placement="top" title="CAMBIAR ESTATUS" data-id_estatus="' + d.estatus +'" data-id_direccion="' +d.id_direccion + '"><i class="fas fa-lock"></i></button></div>');
-
+              if (d.estatus == 1) { 
+                return ('<div class="d-flex justify-center"><button class="btn-data btn-orangeYellow editar-direccion-information" data-action="editar" id="editar-direccion-information" name="editar-direccion-information" data-id_direccion="' + d.id_direccion +'" data-id_sede="' + d.id_sede +'" data-direccion="' + d.direccion + '" data-hora_inicio="' + d.hora_inicio + '" data-hora_fin="' + d.hora_fin + '" style="margin-right: 3px" data-toggle="tooltip" data-placement="top" title="EDITAR"><i class="fas fa-edit"></i></button><button class="btn-data btn-warning editarCatalogos" id="editarCatalogos" name="editarCatalogos" style="margin-right: 3px" data-toggle="tooltip" data-placement="top" title="CAMBIAR ESTATUS" data-id_estatus="' + d.estatus +'" data-id_direccion="' +d.id_direccion + '"><i class="fas fa-lock"></i></button></div>');
               } else {
-                return ('<div class="d-flex justify-center"><button class="btn-data btn-orangeYellow change-user-status editar-direccion-information" id="editar-direccion-information" name="editar-direccion-information" data-id_direccion="' + d.id_direccion +'" data-id_sede="' + d.id_sede +'" data-direccion="' + d.direccion + '" data-hora_inicio="' + d.hora_inicio + '" data-hora_fin="' + d.hora_fin + '" style="margin-right: 3px" data-toggle="tooltip" data-placement="top" title="EDITAR"><i class="fas fa-edit"></i></button><button class="btn-data btn-warning editarCatalogos" id="editarCatalogos" name="editarCatalogos" style="margin-right: 3px" data-toggle="tooltip" data-placement="top" title="CAMBIAR ESTATUS" data-id_direccion="' +d.id_direccion + '"><i class="fas fa-lock"></i></button></div>');
+                return ('<div class="d-flex justify-center"><button class="btn-data btn-orangeYellow editar-direccion-information" data-action="editar" id="editar-direccion-information" name="editar-direccion-information" data-id_direccion="' + d.id_direccion +'" data-id_sede="' + d.id_sede +'" data-direccion="' + d.direccion + '" data-hora_inicio="' + d.hora_inicio + '" data-hora_fin="' + d.hora_fin + '" style="margin-right: 3px" data-toggle="tooltip" data-placement="top" title="EDITAR"><i class="fas fa-edit"></i></button><button class="btn-data btn-warning editarCatalogos" id="editarCatalogos" name="editarCatalogos" style="margin-right: 3px" data-toggle="tooltip" data-placement="top" title="CAMBIAR ESTATUS" data-id_estatus="' + d.estatus +'" data-id_direccion="' +d.id_direccion + '"><i class="fas fa-lock"></i></button></div>');
               }
             },
         },
         ],
-    
       columnDefs: [
         {
           defaultContent: "",

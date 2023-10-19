@@ -36,18 +36,20 @@
         <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <button type="button" class="close" onclick="limpiarCampos()" data-dismiss="modal" aria-hidden="true">
                         <i class="material-icons">clear</i>
                     </button>
                     <h4 class="modal-title">Ingresa nueva dirección</h4>
                 </div>
+                <form id="formDireccion">
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-sm-6">
+                                <input type="hidden" name="id_direccionM" id="id_direccionM" >
                                 <div class="form-group">
                                     <label class="control-label">Dirección(<span class="text-danger">*</span>)</label>
                                     <input id="direccion" name="direccion" type="text" class="form-control input-gral" required>
-                                </div>
+                                </div> 
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group ">
@@ -60,72 +62,26 @@
                             <div class="col-sm-6">
                                  <div class="form-group">
                                     <label class="control-label">Hora Inicial(<span class="text-danger">*</span>)</label>
-                                    <select class="selectpicker select-gral m-0" id="horaIni" title="SELECCIONA UNA HORA"></select>    
+                                    <select class="selectpicker select-gral m-0" id="horaIni" name="hora_inicio" title="SELECCIONA UNA HORA" required></select>    
                                 </div>
                             </div>
                             <div class="col-sm-6">
                             <div class="form-group">
                                 <label class="control-label">Hora Final(<span class="text-danger">*</span>)</label>
-                                <select class="selectpicker select-gral m-0" id="hora_final_hr" title="SELECCIONA UNA HORA"></select>                            
+                                <select class="selectpicker select-gral m-0" id="hora_final_hr" name="hora_fin" title="SELECCIONA UNA HORA" required></select>                            
                             </div>
                         </div>
                         </div>
                     </div>
                     <div class="modal-footer d-flex justify-end">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="button" id="guardarDireccion" name="guardarDireccion" class="btn btn-primary">Aceptar</button>
+                        <button type="button" onclick="limpiarCampos()" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" >Aceptar</button>
                     </div>
+                </form>
             </div>
         </div>
     </div>
 
-    <div class="modal fade" id="openModalDirecciones" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-md">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                    <i class="material-icons">clear</i>
-                </button>
-                <h4 class="modal-title">Editar</h4>
-            </div>
-                <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label class="control-label">DIRECCIÓN(<span class="text-danger">*</span>)</label>
-                            <input id="direccionM" name="direccionM" type="text" class="form-control input-gral" required>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group ">
-                            <label class="control-label" for="id_sedeEdit">ESTADO(<span class="text-danger">*</span>)</label>
-                            <select class="selectpicker select-gral" name="id_sedeEdit" id="id_sedeEdit" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" required></select>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                <div class="col-sm-6">
-                         <div class="form-group">
-                            <label class="control-label" for="hora_inicio_hr">Hora Inicial(<span class="text-danger">*</span>)</label>
-                           <select class="selectpicker select-gral m-0" id="hora_inicio_hr" title="SELECCIONA UNA HORA"></select>    
-                         </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label class="control-label">HORA FINAL(<span class="text-danger">*</span>)</label>
-                            <input id="hora_finM" name="hora_finM" type="number" class="form-control input-gral" required>
-                        </div>
-                    </div>
-                </div>
-                </div>
-                <div class="modal-footer d-flex justify-end">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                    <button type="button" id="editDirecciones" name="editDirecciones" class="btn btn-primary">Aceptar</button>
-                </div>
-        </div>
-    </div>
-    </div>
-    
     <div class="content">
         <div class="container-fluid">
             <div class="row">

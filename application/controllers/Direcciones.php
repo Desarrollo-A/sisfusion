@@ -62,6 +62,33 @@ class Direcciones extends CI_Controller{
             echo json_encode(array());
         }      
     }
+
+    public function AddEditDireccion(){
+		
+        $dataPost = $_POST;
+
+		if(!empty($dataPost["id_direccionM"])){
+
+            $update = $this->Direcciones_model->editarDireccion($dataPost);
+            if ($update == TRUE) {
+                $response['message'] = 'SUCCESS';
+                echo json_encode(1);
+            } else {
+                $response['message'] = 'ERROR';
+                echo json_encode(0);
+            }
+    
+        }else{
+            $insert = $this->Direcciones_model->insertarCampo($dataPost);
+            if ($insert == TRUE) {
+                $response['message'] = 'SUCCESS';
+                echo json_encode(1);
+            } else {
+                $response['message'] = 'ERROR';
+                echo json_encode(0);
+            }
+        } 
+	}
     
     public function getDireccionesAll()
     {
@@ -72,44 +99,6 @@ class Direcciones extends CI_Controller{
             echo json_encode(array());
         }      
     }
-
-    public function insertDireccion(){
-		
-        $dataPost = $_POST;
-        $datos["id_sede"] = $dataPost["id_sede"];
-		$datos["direccion"] = $dataPost['direccion'];
-        $datos["hora_inicio"] = $dataPost['hora_inicio'];
-        $datos["hora_fin"] = $dataPost['hora_fin'];
-
-		$insert = $this->Direcciones_model->insertarCampo($datos);
-
-		if ($insert == TRUE) {
-			$response['message'] = 'SUCCESS';
-			echo json_encode(1);
-		} else {
-			$response['message'] = 'ERROR';
-			echo json_encode(0);
-		}
-	}
-
-    public function editarDireccionInfo(){
-
-		$dataPost = $_POST;
-		$datos["id_sedeEdit"] = $dataPost['id_sedeEdit'];
-        $datos["direccion"] = $dataPost['direccion'];
-        $datos["id_direccion"] = $dataPost["id_direccion"];
-        $datos["hora_inicio"] = $dataPost['hora_inicio'];
-        $datos["hora_fin"] = $dataPost['hora_fin'];
-		$update = $this->Direcciones_model->editarDireccion($datos);
-
-		if ($update == TRUE) {
-			$response['message'] = 'SUCCESS';
-			echo json_encode(1);
-		} else {
-			$response['message'] = 'ERROR';
-			echo json_encode(0);
-		}
-	}
 
     public function borrarOpcion(){
 
