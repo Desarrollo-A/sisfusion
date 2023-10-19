@@ -1,3 +1,14 @@
+$(document).ready(function () {
+    if (id_usuario_general === 13733) { // ES EL USUARIO DE CONTROL JURÍDICO PARA REASIGNACIÓN DE EXPEDIENTES
+        $.post(`${general_base_url}Reestructura/getListaUsuariosReasignacionJuridico`, function (data) {
+            for (var i = 0; i < data.length; i++) {
+                $("#id_usuario").append($('<option>').val(data[i]['id_usuario']).text(data[i]['nombreUsuario']));
+            }
+            $("#id_usuario").selectpicker('refresh');
+        }, 'json');
+    }
+});
+
 let reubicacionClientes;
 const TIPO_LOTE = Object.freeze({
     HABITACIONAL: 0,
@@ -1120,6 +1131,15 @@ const botonesAccionReubicacion = (d) => {
             <i class="fas ${btnContratoFirmado}"></i>
         </button>`;
 
+    const BTN_REASIGNAR_EXPEDIENTE_JURIDICO =  `<button class="btn-data btn-green btn-reasignar"
+            data-toggle="tooltip" 
+            data-placement="left"
+            title="REASIGNAR EXPEDIENTE"
+            data-idLote="${d.idLote}"
+            data-idEjecutivoAsignado="${d.id_juridico_preproceso}">
+            <i class="fas fa-thumbs-up"></i>
+        </button>`;
+
 
     if (idEstatusPreproceso === 0 && ROLES_PROPUESTAS.includes(id_rol_general)) { // Gerente/Subdirector: PENDIENTE CARGA DE PROPUESTAS
         return BTN_PROPUESTAS;
@@ -1143,7 +1163,7 @@ const botonesAccionReubicacion = (d) => {
             : BTN_SUBIR_ARCHIVO + BTN_SUBIR_CONTRATO_FIRMADO;
     }
 
-    if (idEstatusPreproceso === 3 && id_rol_general == 15) { // Jurídico: ELABORACIÓN DE CONTRATO Y RESICISIÓN
+    if (idEstatusPreproceso === 3 && id_rol_general == 15 && id_usuario_general != 13733) { // Jurídico: ELABORACIÓN DE CONTRATO Y RESICISIÓN
         if(totalContratoFirmado==1)
             botonJuridico = BTN_SUBIR_CONTRATO_FIRMADO;
         else
@@ -1165,5 +1185,59 @@ const botonesAccionReubicacion = (d) => {
             : BTN_REUBICACION;
     }
 
+    if(id_usuario_general === 13733) // ES EL USUARIO DE CONTROL JURÍDICO PARA REASIGNACIÓN DE EXPEDIENTES
+        return BTN_REASIGNAR_EXPEDIENTE_JURIDICO ;
+
     return '';
 }
+
+$(document).on('click', '.btn-reasignar', function () {
+    const tr = $(this).closest('tr');
+    const row = $('#reubicacionClientes').DataTable().row(tr);
+    const idEjecutivoAsignado = $(this).attr("data-idEjecutivoAsignado");
+    const idLote = row.data().idLote;
+    const nombreLote = row.data().nombreLote;
+    $("#id_usuario").val(idEjecutivoAsignado == 0 ? '' : idEjecutivoAsignado).selectpicker('refresh');
+    $("#idLote").val(idLote);
+    $("#nombreLote").val(nombreLote);
+    document.getElementById("mainLabelText").innerHTML = `Asigna un ejecutivo de jurídico para el seguimiento de la venta <b>${nombreLote}</b>`;
+    $("#asignacionModal").modal("show");
+});
+
+$(document).on("click", "#sendRequestButtonAsignacion", function (e) {
+    e.preventDefault();
+    const idLote = $("#idLote").val();
+    const id_usuario = $("#id_usuario").val();
+    const select = document.getElementById("id_usuario");
+    const textNombreAsesor = select.options[select.selectedIndex].innerText;
+    const nombreLote = $("#nombreLote").val();
+    let data = new FormData();
+    data.append("idLote", idLote);
+    data.append("id_usuario", id_usuario);
+    if (id_usuario == '')
+        alerts.showNotification("top", "right", `Asegúrate de asignar un ejecutivo de jurídico para continuar con este proceso.`, "warning");
+    else {
+        $.ajax({
+            url: `${general_base_url}Reestructura/setEjecutivoJuridico`,
+            data: data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            type: "POST",
+            success: function (response) {
+                $("#sendRequestButton").prop("disabled", false);
+                if (response) {
+                    alerts.showNotification("top", "right", `El asignación del lote <b>${nombreLote}</b> a <b>${textNombreAsesor}</b> ha sido exitosa.`, "success");
+                    $('#tablaAsignacionCartera').DataTable().ajax.reload(null, false);
+                    $("#asignacionModal").modal("hide");
+                }
+                else
+                alerts.showNotification("top", "right", "Oops, algo salió mal. Inténtalo más tarde.", "warning");
+            },
+            error: function () {
+                $("#sendRequestButton").prop("disabled", false);
+                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            }
+        });
+    }
+});

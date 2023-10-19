@@ -763,7 +763,7 @@ $(document).on('click', '#save1', function(e) {
                     $('#modal1').modal('hide');
                     $('#tabla_deposito_seriedad').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
-                } else if(response.message == 'MISSING_AUTORIZACION'){
+                } else if(response.message == 'MISSING_AUTORIZATION'){
                     $('#save1').prop('disabled', false);
                     $('#modal1').modal('hide');
                     $('#tabla_deposito_seriedad').DataTable().ajax.reload();
@@ -976,7 +976,7 @@ $(document).on('click', '#save3', function(e) {
                     $('#modal3').modal('hide');
                     $('#tabla_deposito_seriedad').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
-                } else if(response.message == 'MISSING_AUTORIZACION'){
+                } else if(response.message == 'MISSING_AUTORIZATION'){
                     $('#save3').prop('disabled', false);
                     $('#modal3').modal('hide');
                     $('#tabla_deposito_seriedad').DataTable().ajax.reload();

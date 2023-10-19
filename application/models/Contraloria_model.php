@@ -750,7 +750,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
     }
 
     public function get_id_asig($id){
-        $query = $this->db->query("SELECT contador FROM variables where identificador = $id");
+        $query = $this->db->query("SELECT contador FROM variables where identificador = '$id'");
         return $query->row();
     }
 
