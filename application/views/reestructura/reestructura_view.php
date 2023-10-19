@@ -6,32 +6,13 @@
     <div class="wrapper ">
         <?php $this->load->view('template/sidebar'); ?>
 
-        <div class="modal fade " id="banderaLiberar" data-backdrop="static" data-keyboard="false">
-			<div class="modal-dialog modal-small">
-				<div class="modal-content" > 
-					<div class="modal-body">
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
-                            <h4  id="tituloAD" name="tituloAD"></h4>
-                        </div>
-                        <br>
-                        <input type="hidden" name="idLoteBandera" id="idLoteBandera" >
-                        <input type="hidden" name="bandera" id="bandera" >        
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-						<button type="button" id="liberarBandera" name="liberarBandera" class="btn btn-primary liberarBandera">Aceptar</button>
-					</div>
-				</div>
-			</div>
-		</div>
-
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
+                        <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
                             <li class="active"><a href="#nuevas-1" role="tab" data-toggle="tab">Liberar para reestructura</a></li>
-                            <li><a href="#proceso-1" role="tab" data-toggle="tab">Liberar</a></li>
+                            <li><a href="#proceso-1" role="tab" onclick="getProtectos(bandera = 1, '#proyectoLiberado');" data-toggle="tab">Liberar</a></li>
                         </ul>
                         <div class="card no-shadow m-0 border-conntent__tabs">
                             <div class="card-content p-0"> 
@@ -47,7 +28,7 @@
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                 <div class="form-group">
                                                     <label class="control-label overflow-hidden" for="proyecto">Proyecto</label>
-                                                    <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                    <select name="proyecto" id="proyecto"  class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" onclick="getProtectos(bandera = 0, '#proyecto');" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6"></div>
