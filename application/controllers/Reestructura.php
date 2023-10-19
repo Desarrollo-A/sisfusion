@@ -40,7 +40,17 @@ class Reestructura extends CI_Controller{
 
     public function getCliente($idCliente, $idLote){
         $datCliente = $this->Reestructura_model->getDatosCliente($idLote);
-        echo ($datCliente == '') ? json_encode($this->Reestructura_model->getCliente($idCliente)) : json_encode($datCliente);
+        $copropietarios = $this->Reestructura_model->obtenerCopropietariosReubicacion($idLote);
+
+        if ($datCliente != '') {
+            $datCliente->copropietarios = $copropietarios;
+            echo json_encode($datCliente);
+            return;
+        }
+
+        $datCliente = $this->Reestructura_model->getCliente($idCliente);
+        $datCliente->copropietarios = $copropietarios;
+        echo json_encode($datCliente);
     }
     
     public function getEstadoCivil(){
@@ -146,9 +156,10 @@ class Reestructura extends CI_Controller{
 		} 
 	}
 
-    public function insetarCliente ($idLote){
-
+    public function insetarCliente($idLote)
+    {
         $dataPost = $_POST;
+
         $datos["idLote"] = $dataPost['idLote'];
 		$datos["nombre"] = $dataPost['nombreCli'];
 		$datos["apellido_paterno"] = $dataPost['apellidopCli'];
@@ -161,25 +172,16 @@ class Reestructura extends CI_Controller{
         $datos["ocupacion"] = $dataPost['ocupacionCli'];
         $datCliente = $this->Reestructura_model->getDatosCliente($idLote);
 
-        if($datCliente == ''){
+        $this->movimientosCopropietarios($dataPost['idLote'], $dataPost);
+
+        if (empty($datCliente)) {
             $insert = $this->Reestructura_model->insertarCliente($datos);
-            if ($insert == TRUE) {
-                $response['message'] = 'SUCCESS';
-                echo json_encode(1);
-            } else {
-                $response['message'] = 'ERROR';
-                echo json_encode(0);
-            }
-        }else{
-            $update = $this->General_model->updateRecord('datos_x_cliente', $datos, 'idLote', $idLote);
-            if ($update == TRUE) {
-                $response['message'] = 'SUCCESS';
-                echo json_encode(1);
-            } else {
-                $response['message'] = 'ERROR';
-                echo json_encode(0);
-            }
-        } 
+            echo ($insert) ? json_encode(1) : json_encode(0);
+            return;
+        }
+
+        $update = $this->General_model->updateRecord('datos_x_cliente', $datos, 'idLote', $idLote);
+        echo ($update) ? json_encode(1) : json_encode(0);
     }
 
 	public function getRegistros(){
@@ -363,6 +365,7 @@ class Reestructura extends CI_Controller{
         $idLotes = $this->input->post('idLotes');
         $idLoteOriginal = $this->input->post('idLoteOriginal');
         $statusPreproceso = $this->input->post('statusPreproceso');
+        $idCliente = $this->input->post('idCliente');
         $totalLotes = count($idLotes);
         $flagConteo = 0;
         $arrayNoDisponible = '';
@@ -438,6 +441,18 @@ class Reestructura extends CI_Controller{
                 ]);
                 return;
             }
+
+            if (!$this->copiarCopropietariosAnteriores($idCliente, $idLoteOriginal)) {
+                $this->db->trans_rollback();
+                echo json_encode([
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'Error al actualizar en apartado los lotes',
+                    'color' => 'danger'
+                ]);
+                return;
+            }
+
             if ($this->db->trans_status() === FALSE) {
                 $this->db->trans_rollback();
 
@@ -619,7 +634,7 @@ class Reestructura extends CI_Controller{
             return;
         }
 
-        if (!$this->copiarDSAnteriorAlNuevo($idClienteAnterior, $idClienteInsert)) {
+        if (!$this->copiarDSAnteriorAlNuevo($idClienteAnterior, $idClienteInsert, $idLoteOriginal)) {
             $this->db->trans_rollback();
 
             echo json_encode([
@@ -1052,13 +1067,13 @@ class Reestructura extends CI_Controller{
         return $this->General_model->insertBatch('historial_documento', $documentacion);
     }
 
-    public function copiarDSAnteriorAlNuevo($idClienteAnterior, $idClienteNuevo): bool
+    public function copiarDSAnteriorAlNuevo($idClienteAnterior, $idClienteNuevo, $idLote): bool
     {
         $dsAnterior = $this->Reestructura_model->obtenerDSPorIdCliente($idClienteAnterior);
         $residencial = $this->Reestructura_model->obtenerResidencialPorIdCliente($idClienteNuevo);
-        $coopropietarios = $this->Reestructura_model->obtenerCopropietariosPorIdCliente($idClienteAnterior);
+        $copropietarios = $this->Reestructura_model->obtenerCopropietariosReubicacion($idLote);
         $dsData = [];
-        $coopropietariosData = [];
+        $copropietariosData = [];
 
         foreach ($dsAnterior as $clave => $valor) {
             if(in_array($clave, ['id', 'id_cliente', 'clave'])) {
@@ -1073,27 +1088,26 @@ class Reestructura extends CI_Controller{
             $dsData = array_merge([$clave => $valor], $dsData);
         }
 
-        foreach ($coopropietarios as $coopropietario) {
+        foreach ($copropietarios as $coopropietario) {
             $dataTmp = [];
 
             foreach ($coopropietario as $clave => $valor) {
-                if (in_array($clave, ['id_copropietario'])) {
-                    continue;
-                }
-
-                if ($clave == 'id_cliente') {
-                    $dataTmp = array_merge([$clave => $idClienteNuevo], $dataTmp);
+                if (in_array($clave, ['id_dxcop', 'idLote'])) {
                     continue;
                 }
 
                 $dataTmp = array_merge([$clave => $valor], $dataTmp);
             }
 
-            $coopropietariosData[] = $dataTmp;
+            $copropietariosData[] = array_merge($dataTmp, [
+                'id_cliente' => $idClienteNuevo,
+                'creado_por' => $dataTmp['modificado_por'],
+                'fecha_creacion' => date('Y-m-d H:i:s')
+            ]);
         }
 
         $resultDs = $this->General_model->updateRecord('deposito_seriedad', $dsData, 'id_cliente', $idClienteNuevo);
-        $resultCop = (empty($coopropietariosData)) ? true : $this->General_model->insertBatch('copropietarios', $coopropietariosData);
+        $resultCop = empty($copropietariosData) || $this->General_model->insertBatch('copropietarios', $copropietariosData);
 
         return $resultDs && $resultCop;
     }
@@ -1573,5 +1587,87 @@ class Reestructura extends CI_Controller{
         echo ($responseUpdateLote && $responseInsertHistorial)
             ? json_encode(['code' => 200])
             : json_encode(['code' => 500]);
+    }
+
+    public function copiarCopropietariosAnteriores($idCliente, $idLote): bool
+    {
+        $copropietarios = $this->Reestructura_model->obtenerCopropietariosPorIdCliente($idCliente);
+
+        if (count($copropietarios) === 0) {
+            return true;
+        }
+
+        $copropietariosInsertar = [];
+        foreach ($copropietarios as $coopropietario) {
+            $copropietariosInsertar[] = [
+                'idLote' => $idLote,
+                'nombre' => $coopropietario['nombre'] ?? '',
+                'apellido_paterno' => $coopropietario['apellido_paterno'] ?? '',
+                'apellido_materno' => $coopropietario['apellido_materno'] ?? '',
+                'correo' => $coopropietario['correo'] ?? '',
+                'telefono_2' => $coopropietario['telefono_2'] ?? '',
+                'domicilio_particular' => $coopropietario['domicilio_particular'] ?? '',
+                'estado_civil' => $coopropietario['estado_civil'] ?? '',
+                'ocupacion' => $coopropietario['ocupacion'] ?? '',
+                'fecha_nacimiento' => $coopropietario['fecha_nacimiento'],
+                'modificado_por' => $this->session->userdata('id_usuario')
+            ];
+        }
+
+        return $this->General_model->insertBatch('datos_x_copropietario', $copropietariosInsertar);
+    }
+
+    public function movimientosCopropietarios($idLote, $data): bool
+    {
+        if (count($data['id_cop']) === 0) {
+            return true;
+        }
+
+        $copropietariosInsertar = [];
+        $copropietariosActualizar = [];
+
+        foreach ($data['id_cop'] as $index => $idCopropietario) {
+            if ($idCopropietario !== 'Nuevo') {
+                $copropietariosActualizar[] = [
+                    'id_dxcop' => $data['id_cop'][$index],
+                    'idLote' => $idLote,
+                    'nombre' => $data['nombre'][$index],
+                    'apellido_paterno' => $data['apellido_p'][$index],
+                    'apellido_materno' => $data['apellido_m'][$index],
+                    'correo' => $data['correo'][$index],
+                    'telefono_2' => $data['telefono2'][$index],
+                    'domicilio_particular' => $data['domicilio'][$index],
+                    'estado_civil' => $data['estado_civil'][$index],
+                    'ocupacion' => $data['ocupacion'][$index],
+                    'fecha_nacimiento' => $data['fecha_nacimiento'][$index],
+                    'modificado_por' => $this->session->userdata('id_usuario')
+                ];
+                continue;
+            }
+
+            $copropietariosInsertar[] = [
+                'idLote' => $idLote,
+                'nombre' => $data['nombre'][$index],
+                'apellido_paterno' => $data['apellido_p'][$index],
+                'apellido_materno' => $data['apellido_m'][$index],
+                'correo' => $data['correo'][$index],
+                'telefono_2' => $data['telefono2'][$index],
+                'domicilio_particular' => $data['domicilio'][$index],
+                'estado_civil' => $data['estado_civil'][$index],
+                'ocupacion' => $data['ocupacion'][$index],
+                'fecha_nacimiento' => $data['fecha_nacimiento'][$index],
+                'modificado_por' => $this->session->userdata('id_usuario')
+            ];
+        }
+
+        if (empty($copropietariosInsertar) && empty($copropietariosActualizar) && empty($data['id_cop_eliminar'])) {
+            return true;
+        }
+
+        $resultInsert = empty($copropietariosInsertar) || $this->General_model->insertBatch('datos_x_copropietario', $copropietariosInsertar);
+        $resultUpdate = empty($copropietariosActualizar) || $this->General_model->updateBatch('datos_x_copropietario', $copropietariosActualizar, 'id_dxcop');
+        $resultDelete = empty($data['id_cop_eliminar']) || $this->Reestructura_model->eliminarCopropietarios($data['id_cop_eliminar']);
+
+        return $resultInsert && $resultUpdate && $resultDelete;
     }
 }
