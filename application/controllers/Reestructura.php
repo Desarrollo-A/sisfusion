@@ -1423,20 +1423,6 @@ class Reestructura extends CI_Controller{
 
     public function setAvance()
     {
-        $assigned_user = 0;
-        if ($this->input->post('tipoTransaccion') + 1 == 3) { // AVANCE A JURÍDICO
-            $id_asig = $this->Contraloria_model->get_id_asig('reestrucura')->contador;
-            //$id_asig = $data_asig->contador;
-            if ($id_asig == 2747) // CARLITOS
-                $assigned_user = 2762; // SE ASIGNA A DANI
-            else if ($id_asig == 2762) // ES DANI
-                $assigned_user = 13691; // SE ASIGNA A CECILIA
-            else if ($id_asig == 13691) // ES CECILIA
-                $assigned_user = 2747; // SE LE ASIGNA A CARLITOS
-        
-            $dataUpdateVariable = array('contador' => $assigned_user);
-            $responseVariable = $this->General_model->updateRecord("variables", $dataUpdateVariable, "identificador", 'reestructura');
-        }
         $estatusMovimientos = [
             1 => 1, // Si el movimiento anterior es nuevo, el sig pasa a nuevo
             2 => 3, // Si el movimiento ant. es rechazo, el sig pasa a corrección
@@ -1449,6 +1435,21 @@ class Reestructura extends CI_Controller{
         $comentario = $this->input->post('comentario');
         $idMovimiento = $this->input->post('idEstatusMovimento');
         $idUsuario = $this->session->userdata('id_usuario');
+
+        $assigned_user = 0;
+        if (idPreproceso + 1 == 3) { // AVANCE A JURÍDICO: SE CORRE PROCESO PARA ASIGNAR EXPEDIENTE
+            $id_asig = $this->Contraloria_model->get_id_asig('reestrucura')->contador;
+            //$id_asig = $data_asig->contador;
+            if ($id_asig == 2747) // CARLITOS
+                $assigned_user = 2762; // SE ASIGNA A DANI
+            else if ($id_asig == 2762) // ES DANI
+                $assigned_user = 13691; // SE ASIGNA A CECILIA
+            else if ($id_asig == 13691) // ES CECILIA
+                $assigned_user = 2747; // SE LE ASIGNA A CARLITOS
+        
+            $dataUpdateVariable = array('contador' => $assigned_user);
+            $responseVariable = $this->General_model->updateRecord("variables", $dataUpdateVariable, "identificador", 'reestructura');
+        }
 
         $dataUpdateLote = [
 			'estatus_preproceso' => $idPreproceso + 1,
@@ -1684,4 +1685,14 @@ class Reestructura extends CI_Controller{
             ? json_encode(['code' => 200])
             : json_encode(['code' => 500]);
     }
+
+    public function getListaUsuariosReasignacionJuridico() {
+        echo json_encode($this->Reestructura_model->getListaUsuariosReasignacionJuridico());
+    }
+
+    public function setEjecutivoJuridico() {
+        $updateData = array("id_juridico_preproceso" => $this->input->post('id_usuario'), "usuario" => $this->session->userdata('id_usuario'));
+        echo json_encode($this->General_model->updateRecord("lotes", $updateData, "idLote", $this->input->post('idLote')));
+    }
+
 }
