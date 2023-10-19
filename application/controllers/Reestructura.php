@@ -1619,17 +1619,34 @@ class Reestructura extends CI_Controller{
 
     public function movimientosCopropietarios($idLote, $data): bool
     {
-        if (count($data['id_cop']) === 0) {
+        if (!isset($data['id_cop']) && !isset($data['id_cop_eliminar'])) {
             return true;
         }
 
         $copropietariosInsertar = [];
         $copropietariosActualizar = [];
 
-        foreach ($data['id_cop'] as $index => $idCopropietario) {
-            if ($idCopropietario !== 'Nuevo') {
-                $copropietariosActualizar[] = [
-                    'id_dxcop' => $data['id_cop'][$index],
+        if (isset($data['id_cop'])) {
+            foreach ($data['id_cop'] as $index => $idCopropietario) {
+                if ($idCopropietario !== 'Nuevo') {
+                    $copropietariosActualizar[] = [
+                        'id_dxcop' => $data['id_cop'][$index],
+                        'idLote' => $idLote,
+                        'nombre' => $data['nombre'][$index],
+                        'apellido_paterno' => $data['apellido_p'][$index],
+                        'apellido_materno' => $data['apellido_m'][$index],
+                        'correo' => $data['correo'][$index],
+                        'telefono_2' => $data['telefono2'][$index],
+                        'domicilio_particular' => $data['domicilio'][$index],
+                        'estado_civil' => $data['estado_civil'][$index],
+                        'ocupacion' => $data['ocupacion'][$index],
+                        'fecha_nacimiento' => $data['fecha_nacimiento'][$index],
+                        'modificado_por' => $this->session->userdata('id_usuario')
+                    ];
+                    continue;
+                }
+
+                $copropietariosInsertar[] = [
                     'idLote' => $idLote,
                     'nombre' => $data['nombre'][$index],
                     'apellido_paterno' => $data['apellido_p'][$index],
@@ -1642,26 +1659,7 @@ class Reestructura extends CI_Controller{
                     'fecha_nacimiento' => $data['fecha_nacimiento'][$index],
                     'modificado_por' => $this->session->userdata('id_usuario')
                 ];
-                continue;
             }
-
-            $copropietariosInsertar[] = [
-                'idLote' => $idLote,
-                'nombre' => $data['nombre'][$index],
-                'apellido_paterno' => $data['apellido_p'][$index],
-                'apellido_materno' => $data['apellido_m'][$index],
-                'correo' => $data['correo'][$index],
-                'telefono_2' => $data['telefono2'][$index],
-                'domicilio_particular' => $data['domicilio'][$index],
-                'estado_civil' => $data['estado_civil'][$index],
-                'ocupacion' => $data['ocupacion'][$index],
-                'fecha_nacimiento' => $data['fecha_nacimiento'][$index],
-                'modificado_por' => $this->session->userdata('id_usuario')
-            ];
-        }
-
-        if (empty($copropietariosInsertar) && empty($copropietariosActualizar) && empty($data['id_cop_eliminar'])) {
-            return true;
         }
 
         $resultInsert = empty($copropietariosInsertar) || $this->General_model->insertBatch('datos_x_copropietario', $copropietariosInsertar);
