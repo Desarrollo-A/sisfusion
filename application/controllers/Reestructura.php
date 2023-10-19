@@ -1437,9 +1437,8 @@ class Reestructura extends CI_Controller{
         $idUsuario = $this->session->userdata('id_usuario');
 
         $assigned_user = 0;
-        if (idPreproceso + 1 == 3) { // AVANCE A JURÍDICO: SE CORRE PROCESO PARA ASIGNAR EXPEDIENTE
-            $id_asig = $this->Contraloria_model->get_id_asig('reestrucura')->contador;
-            //$id_asig = $data_asig->contador;
+        if ($idPreproceso + 1 == 3) { // AVANCE A JURÍDICO: SE CORRE PROCESO PARA ASIGNAR EXPEDIENTE
+            $id_asig = $this->Contraloria_model->get_id_asig('reestructura')->contador;
             if ($id_asig == 2747) // CARLITOS
                 $assigned_user = 2762; // SE ASIGNA A DANI
             else if ($id_asig == 2762) // ES DANI
