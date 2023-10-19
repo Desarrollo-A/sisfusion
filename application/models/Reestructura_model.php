@@ -655,4 +655,14 @@ class Reestructura_model extends CI_Model
         ORDER BY UPPER(CONCAT(nombre , ' ', apellido_paterno, ' ', apellido_materno, ' '))")->result_array();
     }
 
+    public function obtenerCopropietariosReubicacion($idLote)
+    {
+        $query = $this->db->query("SELECT * FROM datos_x_copropietario WHERE idLote = $idLote");
+        return $query->result_array();
+    }
+
+    public function eliminarCopropietarios($ids)
+    {
+        $this->db->query("DELETE FROM datos_x_copropietario WHERE id_dxcop IN ($ids)");
+    }
 }
