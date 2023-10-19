@@ -117,7 +117,7 @@
                 <div class="modal-content">
                     <div class="modal-header"></div>
                     <div class="modal-body text-center">
-                        <h5 id="mainLabelText"></h5>
+                        <h5 id="mainLabelTextAsignacion"></h5>
                         <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 overflow-hidden">
                             <label class="control-label" for="id_usuario">Ejecutivo jurídico</label>
                             <select id="id_usuario" name="id_usuario" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" size="5" data-container="body" required></select>
@@ -166,6 +166,8 @@
                                                 <th>ESTATUS</th>
                                                 <th>ASIGNADO A</th>
                                                 <th>COMENTARIO</th>
+                                                <th>EJECUTIVO JURÍDICO</th>
+                                                <th>SEDE</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>

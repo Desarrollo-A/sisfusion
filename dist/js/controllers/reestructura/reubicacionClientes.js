@@ -73,7 +73,7 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
         titleAttr: 'Lotes para reubicar',
         title:"Lotes para reubicar",
         exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+            columns: id_rol_general === 15 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
             format: {
                 header: function (d, columnIdx) {
                     return ' ' + titulosTabla[columnIdx] + ' ';
@@ -90,7 +90,7 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
         orientation: 'landscape',
         pageSize: 'LEGAL',
         exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+            columns: id_rol_general === 15 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
             format: {
                 header: function (d, columnIdx) {
                     return ' ' + titulosTabla[columnIdx] + ' ';
@@ -162,6 +162,14 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
                     ? '<p class="m-0">NO DEFINIDO</p>'
                     : `<p class="m-0">${d.comentario}</p>`;
             }
+        },
+        {
+            visible: (id_rol_general == 15) ? true : false,
+            data: "nombreEjecutivoJuridico"
+        },
+        {
+            visible: (id_rol_general == 15) ? true : false,
+            data: "sedeAsesorAsignado"
         },
         {
             data: function (d) {
@@ -1137,7 +1145,7 @@ const botonesAccionReubicacion = (d) => {
             title="REASIGNAR EXPEDIENTE"
             data-idLote="${d.idLote}"
             data-idEjecutivoAsignado="${d.id_juridico_preproceso}">
-            <i class="fas fa-thumbs-up"></i>
+            <i class="fas fa-user-alt"></i>
         </button>`;
 
 
@@ -1200,7 +1208,7 @@ $(document).on('click', '.btn-reasignar', function () {
     $("#id_usuario").val(idEjecutivoAsignado == 0 ? '' : idEjecutivoAsignado).selectpicker('refresh');
     $("#idLote").val(idLote);
     $("#nombreLote").val(nombreLote);
-    document.getElementById("mainLabelText").innerHTML = `Asigna un ejecutivo de jurídico para el seguimiento de la venta <b>${nombreLote}</b>`;
+    document.getElementById("mainLabelTextAsignacion").innerHTML = `Asigna un ejecutivo de jurídico para el seguimiento de la venta <b>${nombreLote}</b>`;
     $("#asignacionModal").modal("show");
 });
 
