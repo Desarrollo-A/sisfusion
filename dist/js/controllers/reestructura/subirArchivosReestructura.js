@@ -526,13 +526,13 @@ $(document).on('click', '.btn-abrir-contratoFirmado', function(){
 
     editarContrafoFirmado = flagEditar;
     editarFile = flagEditar;
-    console.log('editarFile', editarFile);
     let heightIframe = '400px';
    if(flagEditar == 0){//es primera ves no hay archivo
-       document.getElementById('txtTituloCF').innerText = 'ASOCIA EL CONTRATO FIRMADO';
+       document.getElementById('txtTituloCF').innerHTML = 'Selecciona el archivo que desees asociar a <b>CONTRATO FIRMADO</b>';
+       document.getElementById('secondaryLabelDetail').innerHTML = 'El documento que hayas elegido se almacenará de manera automática una vez que des clic en <i>Guardar</i>.';
+
        document.getElementById('dialoSection').classList.remove('modal-lg');
        contenidoHTMLCF += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2">\n' +
-           '                            <h6 class="text-left"><b>Subir contrato firmado: </b><span class="text-red">*</span></h6>\n' +
            '                            <div class="" id="selectFileSectionResicioncf">\n' +
            '                                <div class="file-gph">\n' +
            '                                    <input class="d-none" type="file" required accept="application/pdf" id="contratoFirmado">\n' +
@@ -543,11 +543,16 @@ $(document).on('click', '.btn-abrir-contratoFirmado', function(){
            '                        </div>';
    }else if(flagEditar == 1){//ya hay un archivo hay que actualizarlo
        if(estatusProceso==2){
-           document.getElementById('txtTituloCF').innerText = 'VER/EDITAR EL CONTRATO FIRMADO';
+           // document.getElementById('txtTituloCF').innerText = 'VER/EDITAR EL CONTRATO FIRMADO';
+           document.getElementById('txtTituloCF').innerHTML = 'Selecciona el archivo que desees asociar a <b>CONTRATO FIRMADO</b>';
+           document.getElementById('secondaryLabelDetail').innerHTML = 'El documento que hayas elegido se almacenará de manera automática una vez que des clic en <i>Guardar</i>.';
+
            document.getElementById('sendRequestButtoncf').classList.remove('hide');
            heightIframe = '400px'
        }else if(estatusProceso==3){
-           document.getElementById('txtTituloCF').innerText = 'VER EL CONTRATO FIRMADO';
+           // document.getElementById('txtTituloCF').innerText = 'VER EL CONTRATO FIRMADO';
+           document.getElementById('txtTituloCF').innerHTML = 'Visualizando el contrato firmado <b>'+ nombreLote + '</b>';
+           document.getElementById('secondaryLabelDetail').innerHTML = '';
            document.getElementById('sendRequestButtoncf').classList.add('hide');
            heightIframe = '650px';
        }
@@ -561,8 +566,7 @@ $(document).on('click', '.btn-abrir-contratoFirmado', function(){
            '</iframe>';
 
        if(estatusProceso==2){
-           contenidoHTMLCF += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2">\n' +
-               '                            <h6 class="text-left"><b>Actualizar contrato firmado: </b><span class="text-red">*</span></h6>\n' +
+           contenidoHTMLCF += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2 mt-4">\n' +
                '                            <div class="" id="selectFileSectionResicioncf">\n' +
                '                                <div class="file-gph">\n' +
                '                                    <input class="d-none" type="file" required accept="application/pdf" id="contratoFirmado">\n' +
