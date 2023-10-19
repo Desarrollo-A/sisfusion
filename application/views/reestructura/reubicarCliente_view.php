@@ -97,16 +97,15 @@
                 <div class="modal-content">
                     <div class="modal-header"></div>
                     <div class="modal-body text-center">
-                        <h5 id="txtTituloCF">ASOCIA EL CONTRATO FIRMADO</h5>
+                        <h5 id="txtTituloCF"></h5>
+                        <p id="secondaryLabelDetail"></p>
                         <div class="row" id="info-cliente-modal-cf"></div>
-                        <b><h5 id="mainLabelTextcf" class="bold"></h5></b><hr>
+                        <b><h5 id="mainLabelTextcf" class="bold"></h5></b>
                         <div id="formularioArchivoscf"></div>
                     </div>
                     <div class="modal-footer mt-2" >
-                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                             <button type="button" id="sendRequestButtoncf" class="btn btn-primary">Guardar</button>
-                        </div>
                     </div>
                 </div>
             </div>
