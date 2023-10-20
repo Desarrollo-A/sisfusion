@@ -5,7 +5,7 @@
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
 
-    <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
+    <!-- <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header"></div>
@@ -14,10 +14,34 @@
                 </form>
             </div>
         </div>
-    </div>  
+    </div> 
+    
+     -->
+
+
+
+
+    <!-- <div class="modal fade scroll-styles" id="modal_nuevas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title text-center">Detener descuentos</h3>
+                </div>
+                <form method="post" id="form_interes">
+                    <div class="modal-body">
+                        <div class="container-fluid p-0">     
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div> -->
    <!-- inicia modal para editar descuento  -->
         <!--Modal para add costo universidad -->
-        <div class="modal fade" id="modalUni" nombre="modalUni" tabindex="-1" role="dialog"
+        <!-- <div class="modal fade" id="modalUni" nombre="modalUni" tabindex="-1" role="dialog"
             aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
                 <div class="modal-content">
@@ -121,9 +145,9 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <!-- Fin modal add costo Universidad -->
-   <div class="modal fade" id="editDescuento" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+   <!-- <div class="modal fade" id="editDescuento" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
             <div class="modal-content">
@@ -249,9 +273,223 @@
              
             </div>
         </div>
-    </div>
+    </div> -->
     <!-- finalizar modal para editar descuento -->
-    <div class="modal fade"
+
+
+    <!-- <div class="modal fade" id="seeInformationModalDU11" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                </div>
+                <div class="modal-body">
+                    <div role="tabpanel">
+                        <ul class="nav nav-tabs" role="tablist" style="background: #3982C0;">
+                            <div id="nameLote"></div>
+                        </ul>
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="card card-plain">
+                                            <div class="card-content">
+                                                <ul class="timeline timeline-simple" id="comments-list-asimilados"></ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"
+                            onclick="limpiarHistorialLogs()"><b>Cerrar</b></button>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+
+    <div class="modal fade scroll-styles" id="historialLogsPagos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-center">Historial descuentos</h3>
+                <p class="category input-tot pl-1 text-center" id="nombreUsuario" name="nombreUsuario"></p>
+            </div>
+            <div class="modal-body">
+                    <div class="container-fluid p-0">
+                            <div role="tabpanel">
+                                <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                                    <div class="col-md-12">
+                                        <div class="card card-plain m-0">
+                                            <div class="card-content pt-0">
+                                                <ul class="timeline timeline-simple" id="lista-comentarios-descuentos"></ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<div class="modal fade scroll-styles" id="seeInformationModalP" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-center">Consulta de saldos</h3>
+                <div class="col-lg-12 form-group m-1" id="nameUser" name="nameUser"></div>
+                <input type="hidden" name="userid" id="userid">
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                    <div class="container-fluid p-0">
+                    <div>
+                        <div class="col-lg-4 form-group m-0" id="select">
+                            <label class="label-gral">Mes</label>
+                            <select class="selectpicker select-gral m-0" name="mes" id="mes" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                        </div> 
+                        <div class="col-lg-4 form-group m-0" id="select">
+                            <label class="label-gral">Año</label>
+                            <select class="selectpicker select-gral m-0" name="anio" id="anio" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                        </div> 
+                        <div class="col-lg-4 form-group m-0" id="select">
+                            <label class="label-gral">Monto</label>
+                            <p class="category input-tot pl-1" ><B id="sumaMensualComisiones">$0.00</B></p>
+                        </div> 
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+ 
+
+    <!-- <div class="modal fade" id="seeInformationModalP" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="" name="" method="post">
+                    <div class="modal-header">
+                    <h4 class="card-title aling-center"><b id="nameUser"></b></h4>
+                </div>
+                        <div class="modal-body" style="text-align: center;">
+                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                        <input type="hidden" name="userid" id="userid">
+                            <div class="form-group">
+                                <label class="m-0" for="mes">Mes</label>
+                                <select name="mes" id="mes" class="selectpicker select-gral m-0 " data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un mes" data-size="7" required>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                            <div class="form-group">
+                                <label class="m-0" for="mes">Año</label>
+                                <select name="anio" id="anio" class="selectpicker select-gral m-0 "  data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona año" data-size="7" required>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group text-center" ><label class="m-0" for="mes">MONTO:<p class="category input-tot pl-1" ><B id="montito">$0</B></p>
+                    </div>
+
+                    </div>
+                        <div class="modal-footer">
+                            <div class="col-lg-12">
+                                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div> -->
+
+<div class="modal fade scroll-styles" id="modalAplicarDescuento" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-center">Aplicar descuento</h3>
+                <div class="col-lg-12 form-group m-1" id="informacionGeneral" name="informacionGeneral"></div>
+            </div>
+            <div class="modal-body">
+                <form id="formularioAplicarDescuento" name="formularioAplicarDescuento" method="post">
+                    <div class="container-fluid p-0">
+                        <div class="col-lg-12 form-group m-1" id="listaLotesDisponibles" name="listaLotesDisponibles">
+                        </div>
+                         <div class="col-lg-6 form-group m-0 overflow-hidden">
+                            <label class="control-label">Total lote(s) disponible(s)</label>
+                            <input class="form-control input-gral" type="text" id="totalDisponible" name="totalDisponible" value="" readonly required >
+                         </div>
+                         <div class="col-lg-6 form-group m-0 overflow-hidden">
+                            <label class="control-label">Total a descontar</label>
+                            <input class="form-control input-gral" type="text" id="montoaDescontar" name="montoaDescontar" value="" readonly required >
+                         </div>
+                        <div class="col-lg-12 form-group m-0">
+                            <label class="label-gral m-0">Descripción</label>
+                            <textarea class="text-modal" type="text" name="comentario" id="comentario" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
+                        </div>
+                        <input class="form-control" type="hidden" id="usuarioId" name="usuarioId" value="">
+                        <input class="form-control" type="hidden" id="saldoComisiones" name="saldoComisiones">
+                        <input class="form-control" type="hidden" id="arrayLotes" name="arrayLotes[]">
+                        
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" id="btn_abonar" class="btn btn-primary"> Registrar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade scroll-styles" id="modal_nuevas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-center">Detener descuentos</h3>
+                <div class="col-lg-12 form-group m-1" id="mensajeConfirmacion" name="mensajeConfirmacion"></div>
+                <div class="col-lg-12 form-group m-1" id="montosDescuento" name="montosDescuento"></div>
+            </div>
+            <div class="modal-body">
+                <form id="form_interes" name="form_interes" method="post">
+                    <div class="container-fluid p-0">
+                        <div class="col-lg-12 form-group m-0">
+                            <label class="label-gral m-0">Mótivo</label>
+                            <textarea class="text-modal" type="text" name="comentarioTopar" id="comentarioTopar" required onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
+                        </div>
+                        <input class="form-control" type="hidden" id="usuarioTopar" name="usuarioTopar" value="">
+                        
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" id="btn_topar" class="btn btn-primary"> Registrar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<div class="modal fade"
          id="activar-pago-modal"
          tabindex="-1"
          role="dialog"
@@ -314,86 +552,160 @@
         </div>
     </div>
 
-    <div class="modal fade" id="seeInformationModalDU" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-         aria-hidden="true" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                </div>
-                <div class="modal-body">
-                    <div role="tabpanel">
-                        <ul class="nav nav-tabs" role="tablist" style="background: #3982C0;">
-                            <div id="nameLote"></div>
-                        </ul>
-                        <div class="tab-content">
-                            <div role="tabpanel" class="tab-pane active" id="changelogTab">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="card card-plain">
-                                            <div class="card-content">
-                                                <ul class="timeline timeline-simple" id="comments-list-asimilados"></ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
+
+
+    <div class="modal fade" id="ModalBonos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header mb-1">
+                <h4 class="modal-title text-center">Registrar nuevo descuento</h4>
+            </div>
+            <div class="container-fluid">
+                <form id="form_nuevo" name="form_nuevo" method="post">
+                    
+                    <div class="col-lg-12 form-group m-0" id="select">
+                        <label class="label-gral">Puesto</label>
+                        <select class="selectpicker select-gral m-0" name="roles" id="roles" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
+                            <option value="7">Asesor</option>
+                            <option value="9">Coordinador</option>
+                            <option value="3">Gerente</option></select>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"
-                            onclick="cleanCommentsAsimilados()"><b>Cerrar</b></button>
-                </div>
+                    <div class="col-lg-12 form-group m-0" id="users2"></div>
+
+                    <div class="col-lg-4 form-group m-0">
+                        <label class="label-gral">Monto descuento</label>
+                        <input id="evtTitle" name="evtTitle" type="text" class="form-control input-gral">
+                    </div>
+
+                    <div class="col-lg-4 form-group m-0">
+                        <label class="label-gral">Número meses</label>
+                        <input id="evtTitle" name="evtTitle" type="text" class="form-control input-gral">
+                    </div>
+
+                    <div class="col-lg-4 form-group m-0">
+                        <label class="label-gral">Mensualidad</label>
+                        <input id="evtTitle" name="evtTitle" type="text" class="form-control input-gral">
+                    </div>
+                   
+                    
+
+                    <div class="col-lg-12 form-group m-0">
+                        <label class="label-gral">Descripción</label>
+                        <textarea class="text-modal" type="text" name="comentario2" id="comentario2" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanSelects()">Cancelar</button>
+                        <button type="submit" class="btn btn-primary btn_descontar">Aceptar</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+</div>
 
-
-    <div class="modal fade" id="seeInformationModalP" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form id="" name="" method="post">
-                    <div class="modal-header">
-                    <h4 class="card-title aling-center"><b id="nameUser"></b></h4>
+    <!-- <div class="modal fade modal-alertas" id="ModalBonosnosdsdss" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-red center-align">
+                    <button type="button" class="close" data-dismiss="modal" data-toggle="modal"> &times;</button>
+                    <h4 class="modal-title">Descuentos</h4>
                 </div>
-                        <div class="modal-body" style="text-align: center;">
-                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                        <input type="hidden" name="userid" id="userid">
-                            <div class="form-group">
-                                <label class="m-0" for="mes">Mes</label>
-                                <select name="mes" id="mes" class="selectpicker select-gral m-0 " data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un mes" data-size="7" required>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                            <div class="form-group">
-                                <label class="m-0" for="mes">Año</label>
-                                <select name="anio" id="anio" class="selectpicker select-gral m-0 "  data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona año" data-size="7" required>
-                                </select>
-                            </div>
+                <form method="post" id="form_nuevo">
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            <label class="label">Puesto del usuario *</label>
+                            <select class="selectpicker select-gral roles" name="roles" id="roles"
+                            title="SELECCIONA UNA OPCIÓN" required data-live-search="true" required>
+                        
+                                <option value="7">Asesor</option>
+                                <option value="9">Coordinador</option>
+                                <option value="3">Gerente</option>
+                            </select>
                         </div>
 
-                        <div class="form-group text-center" ><label class="m-0" for="mes">MONTO:<p class="category input-tot pl-1" ><B id="montito">$0</B></p>
-                    </div>
 
-                    </div>
-                        <div class="modal-footer">
-                            <div class="col-lg-12">
-                                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
-                            </div>
+                        <div class="form-group" id="users2">
                         </div>
-                    </form>
-                </div>
+
+
+                        <div class="form-group row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="label">Monto Descuento *</label>
+                                    <input class="form-control input-gral"
+                                           type="number"
+                                           id="descuento"
+                                           name="descuento"
+                                           autocomplete="off"
+                                           min="1" 
+                                           max="99000"
+                                           step=".01"
+                                           required />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="label">Número de Pagos *</label>
+                                    <select class="selectpicker select-gral " name="numeroPagos" id="numeroPagos" 
+                                    title="SELECCIONA UNA OPCIÓN" required data-live-search="true" required>
+                                        
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                    </select>
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="label">Monto a descontar</label>
+                                    <input class="form-control input-gral" type="text" id="pago_ind01" name="pago_ind01" value="">
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="label">Mótivo de descuento *</label>
+                            <textarea id="comentario2" name="comentario2" class="form-control input-gral" rows="3"
+                                      required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-danger btn-simple" type="button" data-dismiss="modal" data-toggle="modal">
+                                    CANCELAR
+                        </button>
+                        <button type="submit" id="btn_descontar" class="btn btn-gral-data">GUARDAR</button>
+                    </div>
+                </form>
             </div>
         </div>
+    </div> -->
 
-    <div class="modal fade modal-alertas" id="miModal" role="dialog">
+
+    
+
+    <!-- <div class="modal fade modal-alertas" id="miModal333" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header bg-red">
                     <h4 class="card-title aling-center"><b>Aplicar descuento</b></h4>
                 </div>
-                <form method="post" id="form_basta">
+                <form method="post" id="formularioAplicarDescuento">
                     <div class="modal-body">              
                     
                     
@@ -409,13 +721,13 @@
                         <div class="col-md-12">
 							<div class="form-group">
 								<label class="control-label">Lotes</label>
-                                <!-- <textarea id="condominios1"></textarea> -->
+                                <textarea id="condominios1"></textarea> 
                                 <div id="condominios1" name="condominios1" class="" required>
                                         <div class='col-md-4' id="montodisponible">
                                             
                                         </div>
                                 </div>
-								<!-- <select id="condominios2"
+							 <select id="condominios2"
 										name="condominios2[]"
 										class="selectpicker select-gral m-0"
 										data-style="btn"
@@ -426,7 +738,7 @@
 										data-size="7"
 										data-container="body"
 										required>
-								</select> -->
+								</select> 
 							</div>	
                         </div>
 
@@ -458,20 +770,20 @@
                         </div>
 
                         <input class="form-control" type="hidden" id="usuarioid" name="usuarioid" value="">
-                        <input class="form-control" type="hidden" id="pagos_aplicados" name="pagos_aplicados" value="">
                         <input class="form-control" type="hidden" id="saldo_comisiones" name="saldo_comisiones">
                     </div>
+                  
                     <div class="modal-footer">
-                            <button class="btn btn-danger btn-simple" type="button" data-dismiss="modal">CANCELAR</button>
-                            <button type="submit" id="btn_abonar" class="btn btn-primary">GUARDAR</button>
-                                
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="btn_abonar" class="btn btn-primary"> Registrar</button>
                     </div>
+
                 </form>
             </div>
         </div>
-    </div>
+    </div> -->
 
-    <div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
+    <!-- <div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
 
@@ -490,9 +802,9 @@
                 <div class="modal-footer"></div>
             </div>
         </div>
-    </div>
+    </div> -->
 
-    <div class="modal fade" id="actualizar-descuento-modal" role="dialog">
+    <!-- <div class="modal fade" id="actualizar-descuento-modal" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form id="actualizar-descuento-form">
@@ -681,7 +993,7 @@
             </div>
         </div>
     </div>
-
+ -->
 
 
     <div class="content boxContent">
@@ -701,24 +1013,31 @@
                                     <div class="container-fluid">
                                         <div class="row aligned-row">
 
-                                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                             <h4 class="title-tot center-align m-0">
-                                                    Total $
-                                                    <p class="category input-tot pl-1" id="total-baja"></p>
+                                                    Total
+                                                    <p class="category input-tot pl-1" id="totalGeneral"></p>
                                                 </h4>
                                             </div>
 
-                                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                                 <h4 class="title-tot center-align m-0">
-                                                Total recaudado $
-                                                    <p class="category input-tot pl-1" id="abonado-baja"></p>
+                                                Total recaudado
+                                                    <p class="category input-tot pl-1 text-center" id="totalRecaudado"></p>
                                                 </h4>
                                             </div>
 
-                                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                                 <h4 class="title-tot center-align m-0">
-                                                    Pendiente $
-                                                    <p class="category input-tot pl-1" id="pendiente-baja"></p>
+                                                Total pagado caja
+                                                    <p class="category input-tot pl-1" id="totalPagadoCaja"></p>
+                                                </h4>
+                                            </div>
+
+                                            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                                <h4 class="title-tot center-align m-0">
+                                                    Pendiente
+                                                    <p class="category input-tot pl-1" id="totalPendiente"></p>
                                                 </h4>
                                             </div> 
 
