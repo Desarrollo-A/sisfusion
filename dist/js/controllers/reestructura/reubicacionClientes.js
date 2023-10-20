@@ -524,7 +524,6 @@ $(document).on('click', '#guardarCliente', function (){
             }
         },
         error: function(){
-            $('#aceptarReestructura').modal('hide');
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
             $("#spiner-loader").addClass('hide');
         }
