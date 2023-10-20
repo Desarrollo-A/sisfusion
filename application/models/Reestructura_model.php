@@ -611,7 +611,7 @@ class Reestructura_model extends CI_Model
     public function getReporteVentas() {
         $id_rol = $this->session->userdata('id_rol');
         $id_usuario = $id_rol == 6 ? $this->session->userdata('id_lider') : $this->session->userdata('id_usuario');
-        $validacionExtra = in_array($id_rol, array(3, 6)) ? "AND cl.id_gerente = $id_usuario" : ($this->session->userdata('id_rol') == 7 ? "AND cl.id_asesor = $id_usuario" : "");
+        $validacionExtra = in_array($id_rol, array(3, 6)) ? "AND cl.id_gerente = $id_usuario" : $this->session->userdata('id_rol') == 7 ? "AND cl.id_asesor = $id_usuario" : "";
         return $this->db->query("SELECT oxc1.nombre tipo_proceso, UPPER(CAST(re.descripcion AS varchar(100))) nombreResidencial, co.nombre nombreCondominio,  lo.nombreLote, lo.idLote, lo.idCliente, 
 		UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, sl.nombre estatusContratacion, sl.background_sl, sl.color, cl.fechaApartado,
         CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
@@ -619,6 +619,7 @@ class Reestructura_model extends CI_Model
         CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector
         FROM lotes lo
         INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.proceso IN (2, 3, 4) $validacionExtra
+        INNER JOIN propuestas_x_lote pxl ON pxl.id_lotep = lo.idLote AND pxl.estatus = 1
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
         INNER JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
@@ -653,6 +654,26 @@ class Reestructura_model extends CI_Model
         FROM usuarios 
         WHERE estatus = 1 AND id_usuario IN (2762, 2747, 13691)
         ORDER BY UPPER(CONCAT(nombre , ' ', apellido_paterno, ' ', apellido_materno, ' '))")->result_array();
+    }
+
+    public function getReporteReubicaciones() {
+        return $this->db->query("SELECT UPPER(CAST(re.descripcion AS varchar(75))) nombreResidencial, co.nombre nombreCondominio, lo.nombreLote, lo.idLote,
+        CASE WHEN cl.id_cliente IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) END nombreCliente,
+        CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
+        CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
+        CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
+        oxc.nombre estatusPreproceso, CASE WHEN pxl.idLote IS NULL THEN 'NO SE HA SELECCIONADO NUNGUNA PRPUESTA' ELSE 'PROPUESTA FINAL SELECCIONADA' END procesoVenta
+        FROM lotes lo
+        LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+        INNER JOIN usuarios u0 ON u0.id_usuario = lo.id_usuario_asignado
+        LEFT JOIN usuarios u2 ON u2.id_usuario = u0.id_lider
+        LEFT JOIN usuarios u3 ON u3.id_usuario = u2.id_lider
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = lo.estatus_preproceso AND oxc.id_catalogo = 106
+        LEFT JOIN (SELECT idLote FROM propuestas_x_lote WHERE estatus = 1 GROUP BY idLote ) pxl ON pxl.idLote = lo.idLote
+        WHERE lo.estatus_preproceso != 0
+        ORDER BY lo.estatus_preproceso")->result_array();
     }
 
     public function obtenerCopropietariosReubicacion($idLote)
