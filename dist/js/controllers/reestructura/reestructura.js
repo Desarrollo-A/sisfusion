@@ -2,48 +2,28 @@ $(document).ready(function () {
     $("#tabla_clientes").addClass('hide');
     $("#tabla_clientes_liberar").addClass('hide');
     $('#spiner-loader').removeClass('hide');
-
-    $.post(general_base_url + "Reestructura/lista_proyecto",   function (data) {
-        var len = data.length;
-        const ids = data.map((row) => {
-            return row.idResidencial;
-        }).join(',');
-        $("#proyecto").append($('<option>').val(ids).text('SELECCIONAR TODOS'));
-        for (var i = 0; i < len; i++) {
-            var id = data[i]['idResidencial'];
-            var name = data[i]['descripcion'];            
-            $("#proyecto").append($('<option>').val(id).text(name.toUpperCase()));
-        }
-
-        $("#proyecto").selectpicker('refresh');
-        $('#spiner-loader').addClass('hide');
-    }, 'json');
-
-    $.post(general_base_url + "Reestructura/lista_proyecto", { bandera: 1,} ,  function (data) {
-        var len = data.length;
-        const ids = data.map((row) => {
-            return row.idResidencial;
-        }).join(',');
-        $("#proyectoLiberado").append($('<option>').val(ids).text('SELECCIONAR TODOS'));
-        for (var i = 0; i < len; i++) {
-            var id = data[i]['idResidencial'];
-            var name = data[i]['descripcion'];            
-            $("#proyectoLiberado").append($('<option>').val(id).text(name.toUpperCase()));
-        }
-
-        $("#proyectoLiberado").selectpicker('refresh');
-        $('#spiner-loader').addClass('hide');
-    }, 'json');
-
-    $.post(general_base_url + "Reestructura/lista_catalogo_opciones", function (data) {
-        var len = data.length;
-        for (var i = 0; i < len; i++) {
-            var id = data[i]['id_opcion'];
-        }
-        $('.indexCo').val($(this).attr(id));
-        $('#spiner-loader').addClass('hide');
-    }, 'json'); 
+    getProtectos(bandera = 0, '#proyecto');
 });
+
+function getProtectos($bandera, $tipo){
+    $("#proyectoLiberado").empty();
+    $("#proyecto").empty();
+
+    $.post(general_base_url + "Reestructura/lista_proyecto",{ bandera : $bandera},   function (data) {
+        var len = data.length;
+        const ids = data.map((row) => {
+            return row.idResidencial;
+        }).join(',');
+            $($tipo).append($('<option>').val(ids).text('SELECCIONAR TODOS'));
+        for (var i = 0; i < len; i++) {
+            var id = data[i]['idResidencial'];
+            var name = data[i]['descripcion'];            
+            $($tipo).append($('<option>').val(id).text(name.toUpperCase()));
+        }
+        $($tipo).selectpicker('refresh');
+        $('#spiner-loader').addClass('hide');
+    }, 'json');
+}
 
 $('#proyecto').change(function () {
     let index_proyecto = $(this).val();
@@ -70,25 +50,24 @@ $(document).on('click', '.reesVal', function (){
     const precioAv = $(this).attr('data-precio');
 
     changeSizeModal('modal-md');
-    appendBodyModal(`<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
-                <h4>¿Estás seguro de liberar el lote?</h4>
-            </div>
-            <br>
-            <input type="hidden" name="idLote" id="idLoteenvARevCE" value="${idLoteReave}" >
-            <input type="hidden" name="nombreLote" id="nombreLoteAv" value="${nombreLote}" >
-            <input type="hidden" name="precio" id="precioAv" value="${precioAv}" >        
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-            <button type="button" id="saveLi" name="saveLi" class="btn btn-primary">Aceptar</button>
-        </div>
-    `);
-    showModal();
+        appendBodyModal(`<form method="post" id="formLiberarLote">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
+                            <h4>¿Estás seguro de liberar el lote?</h4>
+                        </div>
+                        <br>
+                        <input type="hidden" name="idLote" id="idLoteenvARevCE" value="${idLoteReave}" >
+                        <input type="hidden" name="nombreLote" id="nombreLoteAv" value="${nombreLote}" >
+                        <input type="hidden" name="precio" id="precioAv" value="${precioAv}" >        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="saveLi" name="saveLi" class="btn btn-primary">Aceptar</button>
+                    </div>
+                </form>`);
+        showModal();
 });
 
 $(document).on('click', '.stat5Rev', function () {
-    document.getElementById("idLoteCatalogo");
-    document.getElementById("comentario2");
     $("#grabado").empty();
 
     changeSizeModal('modal-md');
@@ -226,14 +205,7 @@ $(document).on('click', '.reesInfo', function (){
 
 $(document).on('click', '#saveLi', function(){
     $("#spiner-loader").removeClass('hide');
-    var idLote = $("#idLoteenvARevCE").val();
-    var nombreLot = $("#nombreLoteAv").val();
-    var precio = $("#precioAv").val();
-    var datos = new FormData();
-
-    datos.append("idLote", idLote);
-    datos.append("nombreLote", nombreLot);
-    datos.append("precio", precio);
+    let datos = new FormData($("#formLiberarLote")[0]);
     datos.append("tipoLiberacion", 9); 
     
     $.ajax({
@@ -288,7 +260,6 @@ function open_Mb(){
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                 </div>`);
         showModal();
-
     fillTableC(); 
 }
 
@@ -627,21 +598,35 @@ $(document).on('click', '.liberarBandera', function (){
             alerts.showNotification("top", "right", ""+data.message+"", ""+data.response_type+"");
             document.getElementById('liberarBandera').disabled = false;
             $('#tabla_clientes_liberar').DataTable().ajax.reload(null, false );
-            $('#banderaLiberar').modal('toggle');
+            hideModal();
         },
         error : (a, b, c) => {
             alerts.showNotification("top", "right", "Lote No actualizado .", "warning");
         }
     });
-
 });
 
 $(document).on('click', '.cambiarBandera', function (){
     let bandera  = '¿Estás seguro de LIBERAR el lote para reestructura?';
-    lote   = $(this).attr("data-idLote");
+    lote = $(this).attr("data-idLote");
     activoDetenido  = $(this).attr("data-bandera");
 
-    if(activoDetenido == 0){ 
+    changeSizeModal('modal-sm');
+    appendBodyModal(`<div class="modal-body">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
+                <h4  id="tituloAD" name="tituloAD"></h4>
+            </div>
+                <br>
+                <input type="hidden" name="idLoteBandera" id="idLoteBandera" >
+                <input type="hidden" name="bandera" id="bandera" >        
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                <button type="button" id="liberarBandera" name="liberarBandera" class="btn btn-primary liberarBandera">Aceptar</button>
+            </div>`);
+    showModal();
+
+    if(activoDetenido == 0){
         bandera = '¿Estás seguro de REGRESAR el lote del proceso de reestructura?';
     }
 
@@ -650,9 +635,7 @@ $(document).on('click', '.cambiarBandera', function (){
     document.getElementById("idLoteBandera").value = lote;
 
     $('#banderaLiberar').modal();
-
 });
-
 
 let titulos_intxtLiberado = [];
 $('#tabla_clientes_liberar thead tr:eq(0) th').each(function (i) {
@@ -679,8 +662,7 @@ function fillTable1(index_proyecto) {
     tabla_valores_cliente = $("#tabla_clientes_liberar").DataTable({
         width: '100%',
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        buttons: [
-        {
+        buttons: [{
         extend: 'excelHtml5',
         text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
         className: 'btn buttons-excel',
@@ -753,9 +735,8 @@ function fillTable1(index_proyecto) {
         },
         {
             data: function (d){
-                if (d.liberaBandera == 1   ) {
+                if (d.liberaBandera == 1) {
                     return '<p class="m-0">LIBERADO</p>';
-        
                 }else if(d.liberaBandera == 0){
                     return '<p class="m-0">SIN LIBERAR</p>';
                 }      
@@ -763,17 +744,13 @@ function fillTable1(index_proyecto) {
         },
         {
             data: function (d) {
-                let btns = '';
 
-                const BTN_CAMBANDERA = `<button class="btn-data btn-azure cambiarBandera" data-toggle="tooltip" data-placement="top" title= "Liberar Lote" data-idLote="${d.idLote}" data-bandera="1"><i class="fas fa-unlock"></i></button>`;
-                const BTN_ELMINIAR = `<button class="btn-data btn-warning cambiarBandera" data-toggle="tooltip" data-placement="top" title= "Quitar liberación de Lote" data-idLote="${d.idLote}" data-bandera="0"><i class="fas fa-lock"></i></button>`;
+                const colorBtn = (d.liberaBandera == 0) ? "btn-blueMaderas" : "btn-warning";
+                const tituloBtn = (d.liberaBandera == 0) ? "Liberar Lote" : "Quitar liberación de Lote";
+                const banderaBtn = (d.liberaBandera == 0) ? "1" : "0";
+                const iconoBtn = (d.liberaBandera == 0) ? "fa-unlock" : "fa-lock";
 
-                if(d.liberaBandera == 0){
-                    btns += BTN_CAMBANDERA;
-                }else{
-                    btns += BTN_ELMINIAR;
-                }
-                return `<div class="d-flex justify-center">${btns}</div>`;
+                return `<div class="d-flex justify-center"><button class="btn-data ${colorBtn} cambiarBandera" data-toggle="tooltip" data-placement="top" title="${tituloBtn}" data-idLote="${d.idLote}" data-bandera= ${banderaBtn}><i class="fas ${iconoBtn}"></i></button></div>`;
             }
         }],
         columnDefs: [{
