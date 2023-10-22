@@ -427,7 +427,7 @@ $(document).on('click', '#guardarCliente', function (){
     }
 
     if (telefonoCli == '' || telefonoCli == null){
-        alerts.showNotification("top", "right", "El número de el INE debe tener 13 caracteres", "warning");
+        alerts.showNotification("top", "right", "Captura el telefono", "warning");
         return;
     }
 

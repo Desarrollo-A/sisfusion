@@ -1,51 +1,41 @@
 $(document).ready(function () {
     $("#tabla_clientes").addClass('hide');
     $("#tabla_clientes_liberar").addClass('hide');
-    $('#spiner-loader').removeClass('hide');
-    getProtectos(bandera = 0, '#proyecto');
-});
 
-function getProtectos($bandera, $tipo){
-    $("#proyectoLiberado").empty();
-    $("#proyecto").empty();
-    
-    $.post(general_base_url + "Reestructura/lista_proyecto",{ bandera : $bandera},   function (data) {
+    $.post(general_base_url + "Reestructura/listaLiberacionRes", function (data) {
         var len = data.length;
-        const ids = data.map((row) => {
-            return row.idResidencial;
-        }).join(',');
-            $($tipo).append($('<option>').val(ids).text('SELECCIONAR TODOS'));
+        $("#proyecto").append($('<option>').val(0).text('SELECCIONAR TODOS'));
+        $("#proyectoLiberado").append($('<option>').val(0).text('SELECCIONAR TODOS'));
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
-            var name = data[i]['descripcion'];            
-            $($tipo).append($('<option>').val(id).text(name.toUpperCase()));
+            var name = data[i]['descripcion'];
+            var lotes = data[i]['tipoLote'];
+            $("#"+lotes+"").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $($tipo).selectpicker('refresh');
+        $("#proyecto").selectpicker('refresh');
+        $("#proyectoLiberado").selectpicker('refresh');
         $('#spiner-loader').addClass('hide');
-    }, 'json');
-}
+    }, 'json');  
+});
 
 $('#proyecto').change(function () {
     let index_proyecto = $(this).val();
+    let bandera = 0;
     $("#spiner-loader").removeClass('hide');
     $("#tabla_clientes").removeClass('hide');
-    fillTable(index_proyecto);
+    fillTable(index_proyecto, bandera);
 });
 
-let titulos_intxt = [];
-$('#tabla_clientes thead tr:eq(0) th').each(function (i) {
-    var title = $(this).text();
-    titulos_intxt.push(title);
-    $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
-    $( 'input', this ).on('keyup change', function () {
-        if ($('#tabla_clientes').DataTable().column(i).search() !== this.value ) {
-            $('#tabla_clientes').DataTable().column(i).search(this.value).draw();
-        }
-    });
+$('#proyectoLiberado').change(function () {
+    let index_proyecto = $(this).val();
+    let bandera = 1;
+    $("#spiner-loader").removeClass('hide');
+    $("#tabla_clientes_liberar").removeClass('hide');
+    fillTable1(index_proyecto, bandera);
 });
 
 $(document).on('click', '.reesVal', function (){
-    const idLoteReave = $(this).attr('data-idLote');
+    const idLote = $(this).attr('data-idLote');
     const nombreLote = $(this).attr('data-nombreLote');
     const precioAv = $(this).attr('data-precio');
 
@@ -55,7 +45,7 @@ $(document).on('click', '.reesVal', function (){
                             <h4>¿Estás seguro de liberar el lote?</h4>
                         </div>
                         <br>
-                        <input type="hidden" name="idLote" id="idLoteenvARevCE" value="${idLoteReave}" >
+                        <input type="hidden" name="idLote" id="idLoteenvARevCE" value="${idLote}" >
                         <input type="hidden" name="nombreLote" id="nombreLoteAv" value="${nombreLote}" >
                         <input type="hidden" name="precio" id="precioAv" value="${precioAv}" >        
                     </div>
@@ -74,18 +64,20 @@ $(document).on('click', '.stat5Rev', function () {
         appendBodyModal(`<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
                         <h4 class="modal-title text-center">Validar lote para reestructura</h4>
                     </div>
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                <label>ESTATUS</label>
-                                <select name="grabado" id="grabado" class="selectpicker select-gral m-0 grabado" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                        <form method="post" id="formCatalogo">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                    <label>ESTATUS</label>
+                                    <select name="grabado" id="grabado" class="selectpicker select-gral m-0 grabado" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1">
-                            <label>COMENTARIO</label>
-                            <textarea class="text-modal" id="comentario2" rows="3"></textarea>
-                        </div>
-                        <br>
-                        <input type="hidden" name="idLoteCatalogo" id="idLoteCatalogo" >
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1">
+                                <label>COMENTARIO</label>
+                                <textarea class="text-modal" id="comentario2" name="comentario2" rows="3"></textarea>
+                            </div>
+                            <br>
+                            <input type="hidden" name="idLoteCatalogo" id="idLoteCatalogo" >
+                        </form>
                     <div class="modal-footer">
                         <button type="button" id="cancelarValidacion" class="btn btn-danger btn-simple cancelarValidacion" data-dismiss="modal">Cancelar</button>
                         <button type="button" id="guardarValidacion" name="guardarValidacion" class="btn btn-primary guardarValidacion">Registrar</button>
@@ -105,52 +97,6 @@ $(document).on('click', '.stat5Rev', function () {
 
     $('#idLoteCatalogo').val($(this).attr('data-idLote'));
     $('#grabado').val('').trigger('change');
-});
-
-$(document).on('click', '.guardarValidacion', function(){
-    var idLoteCa = $('#idLoteCatalogo').val();
-    var opcionValidacion = $('#grabado').val();
-    var comentarioValidacion = $('#comentario2').val();
-    $("#spiner-loader").removeClass('hide');
-
-    if(comentarioValidacion == ''){
-        comentarioValidacion = "SIN COMENTARIO";
-    } 
-
-    if(opcionValidacion == ''){
-        $("#spiner-loader").addClass('hide');
-        alerts.showNotification("top", "right", "Selecciona una opción", "warning");
-        return;
-    }
-
-    var datos = new FormData();
-    datos.append("idLote", idLoteCa);
-    datos.append("opcionReestructura", opcionValidacion);
-    datos.append("comentario", comentarioValidacion);
-    
-    $.ajax({
-        method: 'POST',
-        url: general_base_url + 'Reestructura/validarLote',
-        data: datos,
-        processData: false,
-        contentType: false,
-        success: function(data) {
-            if (data == 1) {
-            $('#tabla_clientes').DataTable().ajax.reload(null, false);
-            hideModal();
-            alerts.showNotification("top", "right", "Información actualizada.", "success");
-            $('#idLoteCatalogo').val('');
-            $('#grabado').val('');
-            $('#comentario2').val('');
-            $("#spiner-loader").addClass('hide');
-            }
-        },
-        error: function(){
-            hideModal();
-            $("#spiner-loader").addClass('hide');
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    });
 });
 
 $(document).on('click', '.reesInfo', function (){
@@ -232,6 +178,129 @@ $(document).on('click', '#saveLi', function(){
     });
 });
 
+$(document).on('click', '.guardarValidacion', function(){
+    var opcionValidacion = $('#grabado').val();
+    $("#spiner-loader").removeClass('hide');
+
+    if(opcionValidacion == ''){
+        $("#spiner-loader").addClass('hide');
+        alerts.showNotification("top", "right", "Selecciona una opción", "warning");
+        return;
+    }
+
+    var datos = new FormData($("#formCatalogo")[0]);
+
+    $.ajax({
+        method: 'POST',
+        url: general_base_url + 'Reestructura/validarLote',
+        data: datos,
+        processData: false,
+        contentType: false,
+        success: function(data) {
+            if (data == 1) {
+            $('#tabla_clientes').DataTable().ajax.reload(null, false);
+            hideModal();
+            alerts.showNotification("top", "right", "Información actualizada.", "success");
+            $('#idLoteCatalogo').val('');
+            $('#grabado').val('');
+            $('#comentario2').val('');
+            $("#spiner-loader").addClass('hide');
+            }
+        },
+        error: function(){
+            hideModal();
+            $("#spiner-loader").addClass('hide');
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+});
+
+$(document).on('click', '#guardarCatalogo', function(){
+    var ipuntCat = $("#inputCatalogo").val();
+    var datos = new FormData();
+    $("#spiner-loader").removeClass('hide');
+
+    datos.append("nombre", ipuntCat);
+
+    $.ajax({
+        method: 'POST',
+        url: general_base_url + 'Reestructura/insertarOpcionN',
+        data: datos,
+        processData: false,
+        contentType: false,
+        success: function(data) {
+            if (data == 1) {
+                $('#tableCatalogo').DataTable().ajax.reload(null, false);
+                alerts.showNotification("top", "right", "Opción insertada correctamente.", "success");
+                $('#inputCatalogo').val('');
+                open_Mb();
+                $("#spiner-loader").addClass('hide');
+            }
+        },
+        error: function(){
+            hideModal();
+            $("#spiner-loader").addClass('hide');
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+});
+
+$(document).on('click', '.liberarBandera', function (){
+    document.getElementById('liberarBandera').disabled = true;
+    var bandera = document.getElementById('bandera').value;
+    var idLoteBandera = document.getElementById('idLoteBandera').value;
+
+    $.ajax({
+        url : 'cambiarBandera',
+        type : 'POST',
+        dataType: "json",
+        data: {
+        "bandera"    : bandera,
+        "idLoteBandera"     : idLoteBandera,
+            },
+            success: function(data) {
+            alerts.showNotification("top", "right", ""+data.message+"", ""+data.response_type+"");
+            document.getElementById('liberarBandera').disabled = false;
+            $('#tabla_clientes_liberar').DataTable().ajax.reload(null, false );
+            hideModal();
+        },
+        error : (a, b, c) => {
+            alerts.showNotification("top", "right", "Lote No actualizado .", "warning");
+        }
+    });
+});
+
+$(document).on('click', '.cambiarBandera', function (){
+    let bandera  = '¿Estás seguro de LIBERAR el lote para reestructura?';
+    lote = $(this).attr("data-idLote");
+    activoDetenido  = $(this).attr("data-bandera");
+
+    changeSizeModal('modal-sm');
+    appendBodyModal(`<div class="modal-body">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
+                <h4  id="tituloAD" name="tituloAD"></h4>
+            </div>
+                <br>
+                <input type="hidden" name="idLoteBandera" id="idLoteBandera" >
+                <input type="hidden" name="bandera" id="bandera" >        
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                <button type="button" id="liberarBandera" name="liberarBandera" class="btn btn-primary liberarBandera">Aceptar</button>
+            </div>`);
+    showModal();
+
+    if(activoDetenido == 0){ 
+        bandera = '¿Estás seguro de REGRESAR el lote del proceso de reestructura?';
+    }
+
+    document.getElementById("tituloAD").innerHTML =   bandera;
+    document.getElementById("bandera").value = activoDetenido;
+    document.getElementById("idLoteBandera").value = lote;
+
+    $('#banderaLiberar').modal();
+});
+
 function open_Mb(){
     changeSizeModal('modal-md');
         appendBodyModal(`<div class="modal-header">
@@ -248,7 +317,7 @@ function open_Mb(){
                                 <thead>
                                     <tr>
                                         <th>NOMBRE</th>
-                                        <th>ACCIONES</th>
+                                        <th>FECHA CREACIÓN</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -288,36 +357,6 @@ function open_Mdc(){
     showModal();
 }
 
-$(document).on('click', '#guardarCatalogo', function(){
-    var ipuntCat = $("#inputCatalogo").val();
-    var datos = new FormData();
-    $("#spiner-loader").removeClass('hide');
-
-    datos.append("nombre", ipuntCat);
-
-    $.ajax({
-        method: 'POST',
-        url: general_base_url + 'Reestructura/insertarOpcionN',
-        data: datos,
-        processData: false,
-        contentType: false,
-        success: function(data) {
-            if (data == 1) {
-                $('#tableCatalogo').DataTable().ajax.reload(null, false);
-                alerts.showNotification("top", "right", "Opción insertada correctamente.", "success");
-                $('#inputCatalogo').val('');
-                open_Mb();
-                $("#spiner-loader").addClass('hide');
-            }
-        },
-        error: function(){
-            hideModal();
-            $("#spiner-loader").addClass('hide');
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    });
-});
-
 function fillChangelog(v) {
     $("#historialLine").append(`<li>
         <div class="container-fluid">
@@ -337,7 +376,20 @@ function fillChangelog(v) {
     </li>`);
 }
 
-function fillTable(index_proyecto) {
+let titulos_intxt = [];
+$('#tabla_clientes thead tr:eq(0) th').each(function (i) {
+    var title = $(this).text();
+    titulos_intxt.push(title);
+    $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
+    $( 'input', this ).on('keyup change', function () {
+        if ($('#tabla_clientes').DataTable().column(i).search() !== this.value ) {
+            $('#tabla_clientes').DataTable().column(i).search(this.value).draw();
+        }
+    });
+    $('[data-toggle="tooltip"]').tooltip();
+});
+
+function fillTable(index_proyecto, bandera) {
     tabla_valores_cliente = $("#tabla_clientes").DataTable({
         width: '100%',
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -481,6 +533,7 @@ function fillTable(index_proyecto) {
             cache: false,
             data: {
                 "index_proyecto": index_proyecto,
+                "bandera": bandera,
             }
         },
         initComplete: function(){
@@ -497,16 +550,6 @@ function fillTable(index_proyecto) {
         });
     });
 }
-
-$('#tableCatalogo thead tr:eq(0) th').each(function (i) {
-    var title = $(this).text();
-    $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
-    $( 'input', this ).on('keyup change', function () {
-        if ($('#tableCatalogo').DataTable().column(i).search() !== this.value ) {
-            $('#tableCatalogo').DataTable().column(i).search(this.value).draw();
-        }
-    });
-});
 
 function fillTableC(index_proyecto) {
     tabla_valores_catalogos = $("#tableCatalogo").DataTable({
@@ -547,7 +590,7 @@ function fillTableC(index_proyecto) {
         },
         {
             data: function (d) {
-                return '<p class="m-0">N/A</p>';
+                return '<p class="m-0">' + d.fecha_creacion.split('.')[0] + '</p>';
             }
         }],
         columnDefs: [{
@@ -572,69 +615,7 @@ function fillTableC(index_proyecto) {
             [1, 'asc']
         ],
     });
-    
-    $('#tabla_clientes').on('draw.dt', function() {
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
-    });
 }
-
-$(document).on('click', '.liberarBandera', function (){
-    document.getElementById('liberarBandera').disabled = true;
-    var bandera = document.getElementById('bandera').value;
-    var idLoteBandera = document.getElementById('idLoteBandera').value;
-
-    $.ajax({
-        url : 'cambiarBandera',
-        type : 'POST',
-        dataType: "json",
-        data: {
-        "bandera"    : bandera,
-        "idLoteBandera"     : idLoteBandera,
-            },
-            success: function(data) {
-            alerts.showNotification("top", "right", ""+data.message+"", ""+data.response_type+"");
-            document.getElementById('liberarBandera').disabled = false;
-            $('#tabla_clientes_liberar').DataTable().ajax.reload(null, false );
-            hideModal();
-        },
-        error : (a, b, c) => {
-            alerts.showNotification("top", "right", "Lote No actualizado .", "warning");
-        }
-    });
-});
-
-$(document).on('click', '.cambiarBandera', function (){
-    let bandera  = '¿Estás seguro de LIBERAR el lote para reestructura?';
-    lote = $(this).attr("data-idLote");
-    activoDetenido  = $(this).attr("data-bandera");
-
-    changeSizeModal('modal-sm');
-    appendBodyModal(`<div class="modal-body">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
-                <h4  id="tituloAD" name="tituloAD"></h4>
-            </div>
-                <br>
-                <input type="hidden" name="idLoteBandera" id="idLoteBandera" >
-                <input type="hidden" name="bandera" id="bandera" >        
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                <button type="button" id="liberarBandera" name="liberarBandera" class="btn btn-primary liberarBandera">Aceptar</button>
-            </div>`);
-    showModal();
-
-    if(activoDetenido == 0){ 
-        bandera = '¿Estás seguro de REGRESAR el lote del proceso de reestructura?';
-    }
-
-    document.getElementById("tituloAD").innerHTML =   bandera;
-    document.getElementById("bandera").value = activoDetenido;
-    document.getElementById("idLoteBandera").value = lote;
-
-    $('#banderaLiberar').modal();
-});
 
 let titulos_intxtLiberado = [];
 $('#tabla_clientes_liberar thead tr:eq(0) th').each(function (i) {
@@ -648,16 +629,7 @@ $('#tabla_clientes_liberar thead tr:eq(0) th').each(function (i) {
     });
 });
 
-$('#proyectoLiberado').change(function () {
-    let index_proyecto = $(this).val();
-
-    $("#spiner-loader").removeClass('hide');
-    $("#tabla_clientes_liberar").removeClass('hide');
-
-    fillTable1(index_proyecto);
-});
-
-function fillTable1(index_proyecto) {
+function fillTable1(index_proyecto, bandera) {
     tabla_valores_cliente = $("#tabla_clientes_liberar").DataTable({
         width: '100%',
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -668,7 +640,7 @@ function fillTable1(index_proyecto) {
         titleAttr: 'Reestructuración',
         title: 'Reestructuración',
             exportOptions: {
-                columns: [0,1,2,3,4,5,6],
+                columns: [0,1,2,3,4,5,6,7],
                 format: {
                     header: function (d, columnIdx) {
                         return ' '+titulos_intxtLiberado[columnIdx] +' ';
@@ -759,12 +731,13 @@ function fillTable1(index_proyecto) {
             orderable: false
         }],
         ajax: {
-            url: general_base_url + "Reestructura/obtenerRegistrosLiberar",
+            url: general_base_url + "Reestructura/getRegistros",
             dataSrc: "",
             type: "POST",
             cache: false,
             data: {
                 "index_proyecto": index_proyecto,
+                "bandera": bandera,
             }
         },
         initComplete: function(){
@@ -775,7 +748,7 @@ function fillTable1(index_proyecto) {
         ],
     });
     
-    $('#tabla_clientes').on('draw.dt', function() {
+    $('#tabla_clientes_liberar').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
         });

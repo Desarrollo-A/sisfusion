@@ -1,26 +1,24 @@
 $(document).ready(function () {
     $("#tabla_cancelacion").addClass('hide');
     
-    $.post(general_base_url + "Reestructura/lista_proyecto", function (data) {
+    $.post(general_base_url + "Reestructura/listaLiberacionRes", function (data) {
         var len = data.length;
-        const ids = data.map((row) => {
-            return row.idResidencial;
-        }).join(',');
 
-        $("#proyecto").append($('<option>').val(ids).text('SELECCIONAR TODOS'));
+        $("#proyectoLiberado").append($('<option>').val(0).text('SELECCIONAR TODOS'));
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
-            var name = data[i]['descripcion'];            
-            $("#proyecto").append($('<option>').val(id).text(name.toUpperCase()));
+            var name = data[i]['descripcion'];
+            var lotes = data[i]['tipoLote'];            
+            $("#"+lotes+"").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $("#proyecto").selectpicker('refresh');
+        $("#proyectoLiberado").selectpicker('refresh');
         $('#spiner-loader').addClass('hide');
     }, 'json');
 });
 
-$('#proyecto').change(function () {
-    $("#spiner-loader").removeClass('hide');
+$('#proyectoLiberado').change(function () {
     let index_proyecto = $(this).val();
+    $("#spiner-loader").removeClass('hide');
     $("#tabla_cancelacion").removeClass('hide');
     fillTable(index_proyecto);
 });
