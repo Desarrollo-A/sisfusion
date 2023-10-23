@@ -81,7 +81,7 @@ class PaquetesCorrida_model extends CI_Model
         else
             $condiciones = $this->db->query("SELECT * FROM condiciones WHERE estatus = 1 AND id_condicion = $tipoCondicion")->result_array();
 
-        foreach ($condiciones as $index => $valor) { //sera?
+        foreach ($condiciones as $index => $valor) {
             $id_condicion = $valor['id_condicion'];
             $queryFinal .= "SELECT c.descripcion, d.inicio, d.fin, d.id_condicion, d.id_descuento AS id_descuento, d.porcentaje FROM descuentos d
             INNER JOIN condiciones c ON c.id_condicion = d.id_condicion
