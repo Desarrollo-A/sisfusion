@@ -65,6 +65,14 @@ class PaquetesCorrida_model extends CI_Model
         }
     }
 
+    public function descuentosAll(){
+        return $this->db->query("SELECT c.descripcion, d.inicio, d.fin, d.id_condicion, d.id_descuento AS id_descuento, d.porcentaje FROM descuentos d
+                INNER JOIN condiciones c ON c.id_condicion = d.id_condicion
+                WHERE d.id_condicion = 1 
+                    AND d.inicio IS NULL
+                 GROUP BY c.descripcion, d.inicio, d.fin, d.id_condicion, d.porcentaje, d.id_descuento");
+    }
+
     public function getDescuentosYCondiciones($tipoCondicion = 0){
         $queryFinal = ''; $condiciones = '';
 
@@ -73,15 +81,13 @@ class PaquetesCorrida_model extends CI_Model
         else
             $condiciones = $this->db->query("SELECT * FROM condiciones WHERE estatus = 1 AND id_condicion = $tipoCondicion")->result_array();
 
-        foreach ($condiciones as $index => $valor) {
+        foreach ($condiciones as $index => $valor) { //sera?
             $id_condicion = $valor['id_condicion'];
-            $queryFinal .= "SELECT c.descripcion, d.inicio, d.fin, d.id_condicion,
-        MAX(d.id_descuento) AS id_descuento, d.porcentaje 
-        FROM descuentos d
-        INNER JOIN condiciones c ON c.id_condicion = d.id_condicion
+            $queryFinal .= "SELECT c.descripcion, d.inicio, d.fin, d.id_condicion, d.id_descuento AS id_descuento, d.porcentaje FROM descuentos d
+            INNER JOIN condiciones c ON c.id_condicion = d.id_condicion
             WHERE d.id_condicion = $id_condicion 
-        AND d.inicio IS NULL
-            GROUP BY c.descripcion, d.inicio, d.fin, d.id_condicion, d.porcentaje";
+                AND d.inicio IS NULL
+            GROUP BY c.descripcion, d.inicio, d.fin, d.id_condicion, d.porcentaje, d.id_descuento";
             if( ($index+1) != count($condiciones)) {
                 $queryFinal .= " UNION ALL ";
             }
@@ -115,14 +121,14 @@ class PaquetesCorrida_model extends CI_Model
 
     public function ValidarDescuento($id_condicion,$descuento)
     {
-        return $this->db->query("SELECT c.descripcion,d.inicio,d.fin,d.id_condicion,max(d.id_descuento) AS id_descuento,d.porcentaje 
+        return $this->db->query("SELECT c.descripcion, d.inicio, d.fin, d.id_condicion, d.id_descuento, d.porcentaje 
         FROM descuentos d
-		INNER JOIN condiciones c on c.id_condicion=d.id_condicion
-		AND d.id_condicion = $id_condicion 
-        AND d.porcentaje=$descuento
-		and d.inicio is null 
-        group by c.descripcion,d.inicio,d.fin,d.id_condicion,d.porcentaje 
-        order by d.porcentaje");
+        INNER JOIN condiciones c ON c.id_condicion = d.id_condicion
+        WHERE d.id_condicion = $id_condicion 
+          AND d.porcentaje = $descuento
+          AND d.inicio IS NULL 
+        GROUP BY c.descripcion, d.inicio, d.fin, d.id_condicion, d.id_descuento, d.porcentaje 
+        ORDER BY d.porcentaje;");
     }
  
 

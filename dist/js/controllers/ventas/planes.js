@@ -406,7 +406,7 @@ async function ConsultarPlanes(){
                     templateCard(indexNext, element);
 
                     $("#checks_"+indexNext).html('');
-                    $("#tipo_descuento_"+indexNext).append($('<option>').val("default").text("SELECCIONA UNA OPCIÓN"));
+                    $("#tipo_descuento_"+indexNext).append($('<option>').val("default").text(" UNA OPCIÓN"));
                     let lenDesCon = descuentosYCondiciones.length;
 
                     descuentosYCondiciones.forEach(function (subelement, indexCondicion) {                        
@@ -570,6 +570,7 @@ function PrintSelectDesc(e, nombreCondicion, idCondicion, indexCondiciones, inde
             
             $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).append(`<option value='${id_descuento}' label="${porcentaje}">${idCondicion == 4 || idCondicion == 12 ? '$'+formatMoney(porcentaje) : (idCondicion == 13 ? porcentaje : porcentaje + '%'  ) }</option>`);
         });
+
         if( descuentosArray.length <= 0){
             $(`#ListaDescuentos${nombreCondicion}_${indexGral}_${indexCondiciones}`).append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
         }
