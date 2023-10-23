@@ -147,7 +147,7 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
 
                 const BTN_PROPUESTAS =  `<button class="btn-data btn-blueMaderas btn-asignar-propuestas" data-toggle="tooltip" data-placement="left" title="${d.id_estatus_preproceso == 0 ? 'ASIGNAR PROPUESTAS' : 'ACTUALIZAR PROPUESTAS'}" data-idCliente="${d.idCliente}" data-tipoLote="${d.tipo_lote}" data-idProyecto="${d.idProyecto}" data-statusPreproceso="${d.id_estatus_preproceso}"><i class="fas fa-user-edit"></i></button>`;
                 const BTN_AVANCE =  `<button class="btn-data btn-green btn-avanzar" data-toggle="tooltip" data-placement="left" title="ENVIAR A ${ESTATUS_PREPROCESO[d.id_estatus_preproceso + 1]}" data-idCliente="${d.idCliente}" data-tipoTransaccion="${d.id_estatus_preproceso}"><i class="fas fa-thumbs-up"></i></button>`;
-                const BTN_INFOCLIENTE =  `<button class="btn-data btn-green infoUser" data-toggle="tooltip" data-placement="left" data-idCliente="${d.idCliente}" data-idLote="${d.idLote}"><i class="fas fa-user-check"></i></button>`;
+                const BTN_INFOCLIENTE =  `<button class="btn-data btn-green btn-informacion-cliente" data-toggle="tooltip" data-placement="left" data-idCliente="${d.idCliente}" data-idLote="${d.idLote}"><i class="fas fa-user-check"></i></button>`;
                 const BTN_SUBIR_ARCHIVO =  `<button class="btn-data btn-blueMaderas btn-abrir-modal" data-toggle="tooltip" data-placement="left" title="CARGAR DOCUMENTACIÓN" data-idCliente="${d.idCliente}" data-idLote="${d.idLote}" data-nombreLote="${d.nombreLote}" data-estatusLoteArchivo="${d.status}" data-editar="${editar}" data-rescision="${d.rescision}" data-id_dxc="${d.id_dxc}" data-tipoTransaccion="${d.id_estatus_preproceso}"><i class="fas ${btnShow}"></i></button>`;
 
                 if (d.id_estatus_preproceso == 0 && id_rol_general == 3)
@@ -294,7 +294,7 @@ $(document).on('click', '.btn-asignar-propuestas', function () {
     getPropuestas(idLoteOriginal, statusPreproceso, idProyecto, superficie, tipoLote);
 });
 
-$(document).on('click', '.infoUser', function (){
+$(document).on('click', '.btn-informacion-cliente', function (){
     $('#ineCLi').val('');
     $("#estadoCli").empty();
 
@@ -392,6 +392,54 @@ $(document).on('click', '.infoUser', function (){
     }, 'json');
 });
 
+$(document).on('click', '.btn-reubicar', function () {
+    const tr = $(this).closest('tr');
+    const row = $('#reubicacionClientes').DataTable().row(tr);
+    const nombreCliente = row.data().cliente;
+    const nombreLote = row.data().nombreLote;
+    const superficie = row.data().sup;
+    const idProyecto = $(this).attr("data-idProyecto");
+    const tipoLote = $(this).attr("data-tipoLote");
+    const idLoteOriginal = row.data().idLote;
+    const statusPreproceso = $(this).attr("data-statusPreproceso"); 
+    const idCliente = $(this).attr("data-idCliente");
+
+
+    changeSizeModal('modal-md');
+    appendBodyModal(`
+        <form method="post" id="formAsignarPropuestas">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h3 class="m-0">Reubicación</h3>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                        <p class="m-0 text-center">Cliente. ${nombreCliente}</p>
+                        <p class="m-0 text-center">Lote. ${nombreLote}</p>
+                        <p class="m-0 text-center">Superficie. ${superficie}</p>
+                    </div>
+                </div>
+                <div class="row mt-2" id="infoLotesSeleccionados">
+                </div>
+                <input type="hidden" id="superficie" value="${superficie}">
+                <input type="hidden" id="tipoLote" value="${tipoLote}">
+                <input type="hidden" id="idLoteOriginal" name="idLoteOriginal" value="${idLoteOriginal}">
+                <input type="hidden" id="idCliente" name="idCliente" value="${idCliente}">
+                <input type="hidden" id="statusPreproceso" name="statusPreproceso" value="${statusPreproceso}">
+                <div class="row mt-2">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
+                        <button type="button" class="btn btn-simple btn-danger" onclick="hideModal()">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Aceptar</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    `);
+    showModal();
+
+    getPropuestas(idLoteOriginal, statusPreproceso);
+});
+
 const validateEmail = (email) => {
     return email.match(
         /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -455,7 +503,7 @@ $(document).on('click', '#guardarCliente', function (){
     $("#spiner-loader").removeClass('hide');
     $.ajax({
         method: 'POST',
-        url: general_base_url + 'Reestructura/insetarCliente/'+ idLote,
+        url: general_base_url + 'Reestructura/insertarInformacionCli/'+ idLote,
         data: datos,
         processData: false,
         contentType: false,
@@ -473,59 +521,11 @@ $(document).on('click', '#guardarCliente', function (){
             }
         },
         error: function(){
-            $('#aceptarReestructura').modal('hide');
+            hideModal();
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
             $("#spiner-loader").addClass('hide');
         }
     });
-});
-
-$(document).on('click', '.btn-reubicar', function () {
-    const tr = $(this).closest('tr');
-    const row = $('#reubicacionClientes').DataTable().row(tr);
-    const nombreCliente = row.data().cliente;
-    const nombreLote = row.data().nombreLote;
-    const superficie = row.data().sup;
-    const idProyecto = $(this).attr("data-idProyecto");
-    const tipoLote = $(this).attr("data-tipoLote");
-    const idLoteOriginal = row.data().idLote;
-    const statusPreproceso = $(this).attr("data-statusPreproceso"); 
-    const idCliente = $(this).attr("data-idCliente");
-
-
-    changeSizeModal('modal-md');
-    appendBodyModal(`
-        <form method="post" id="formAsignarPropuestas">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-12 text-center">
-                        <h3 class="m-0">Reubicación</h3>
-                    </div>
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                        <p class="m-0 text-center">Cliente. ${nombreCliente}</p>
-                        <p class="m-0 text-center">Lote. ${nombreLote}</p>
-                        <p class="m-0 text-center">Superficie. ${superficie}</p>
-                    </div>
-                </div>
-                <div class="row mt-2" id="infoLotesSeleccionados">
-                </div>
-                <input type="hidden" id="superficie" value="${superficie}">
-                <input type="hidden" id="tipoLote" value="${tipoLote}">
-                <input type="hidden" id="idLoteOriginal" name="idLoteOriginal" value="${idLoteOriginal}">
-                <input type="hidden" id="idCliente" name="idCliente" value="${idCliente}">
-                <input type="hidden" id="statusPreproceso" name="statusPreproceso" value="${statusPreproceso}">
-                <div class="row mt-2">
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
-                        <button type="button" class="btn btn-simple btn-danger" onclick="hideModal()">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Aceptar</button>
-                    </div>
-                </div>
-            </div>
-        </form>
-    `);
-    showModal();
-
-    getPropuestas(idLoteOriginal, statusPreproceso);
 });
 
 function getProyectosAOcupar(idProyecto, superficie, tipoLote) {
@@ -800,8 +800,6 @@ $(document).on("submit", "#formReestructura", function(e){
         }
     });
 });
-
-
 
 $(document).on('click', '.btn-avanzar', function () {
 

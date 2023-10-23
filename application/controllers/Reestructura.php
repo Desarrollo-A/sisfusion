@@ -1,8 +1,7 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 class Reestructura extends CI_Controller{
-	public function __construct()
-	{
+	public function __construct() {
 		parent::__construct();
         $this->load->model(array('Reestructura_model','General_model', 'caja_model_outside'));
         $this->load->library(array('session','form_validation', 'get_menu','permisos_sidebar'));
@@ -145,7 +144,7 @@ class Reestructura extends CI_Controller{
 		} 
 	}
 
-    public function insetarCliente ($idLote){
+    public function insertarInformacionCli ($idLote){
 
         $dataPost = $_POST;
         $datos["idLote"] = $dataPost['idLote'];
