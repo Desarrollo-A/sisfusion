@@ -1,43 +1,43 @@
 $(document).ready(function () {
-    $("#tabla_clientes").addClass('hide');
-    $("#tabla_clientes_liberar").addClass('hide');
+    $("#tabla_reestructura").addClass('hide');
+    $("#tabla_liberar").addClass('hide');
 
     $.post(general_base_url + "Reestructura/listaLiberacionRes", function (data) {
         var len = data.length;
-        $("#proyecto").append($('<option>').val(0).text('SELECCIONAR TODOS'));
-        $("#proyectoLiberado").append($('<option>').val(0).text('SELECCIONAR TODOS'));
+        $("#catalogoReestructura").append($('<option>').val(0).text('SELECCIONAR TODOS'));
+        $("#catalogoLiberar").append($('<option>').val(0).text('SELECCIONAR TODOS'));
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
             var name = data[i]['descripcion'];
             var lotes = data[i]['tipoLote'];
             $("#"+lotes+"").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $("#proyecto").selectpicker('refresh');
-        $("#proyectoLiberado").selectpicker('refresh');
+        $("#catalogoReestructura").selectpicker('refresh');
+        $("#catalogoLiberar").selectpicker('refresh');
         $('#spiner-loader').addClass('hide');
     }, 'json');  
 });
 
-$('#proyecto').change(function () {
+$('#catalogoReestructura').change(function () {
     let index_proyecto = $(this).val();
     let bandera = 0;
     $("#spiner-loader").removeClass('hide');
-    $("#tabla_clientes").removeClass('hide');
-    fillTable(index_proyecto, bandera);
+    $("#tabla_reestructura").removeClass('hide');
+    reestructuraTable(index_proyecto, bandera);
 });
 
-$('#proyectoLiberado').change(function () {
+$('#catalogoLiberar').change(function () {
     let index_proyecto = $(this).val();
     let bandera = 1;
     $("#spiner-loader").removeClass('hide');
-    $("#tabla_clientes_liberar").removeClass('hide');
-    fillTable1(index_proyecto, bandera);
+    $("#tabla_liberar").removeClass('hide');
+    liberarTable(index_proyecto, bandera);
 });
 
-$(document).on('click', '.reesVal', function (){
+$(document).on('click', '.btn_liberacion', function (){
     const idLote = $(this).attr('data-idLote');
     const nombreLote = $(this).attr('data-nombreLote');
-    const precioAv = $(this).attr('data-precio');
+    const precioM2 = $(this).attr('data-precio');
 
     changeSizeModal('modal-md');
         appendBodyModal(`<form method="post" id="formLiberarLote">
@@ -45,20 +45,20 @@ $(document).on('click', '.reesVal', function (){
                             <h4>¿Estás seguro de liberar el lote?</h4>
                         </div>
                         <br>
-                        <input type="hidden" name="idLote" id="idLoteenvARevCE" value="${idLote}" >
+                        <input type="hidden" name="idLote" id="idLote" value="${idLote}" >
                         <input type="hidden" name="nombreLote" id="nombreLoteAv" value="${nombreLote}" >
-                        <input type="hidden" name="precio" id="precioAv" value="${precioAv}" >        
+                        <input type="hidden" name="precioM2" id="precioM2" value="${precioM2}" >        
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="button" id="saveLi" name="saveLi" class="btn btn-primary">Aceptar</button>
+                        <button type="button" id="guardarLiberacion" name="guardarLiberacion" class="btn btn-primary">Aceptar</button>
                     </div>
                 </form>`);
         showModal();
 });
 
-$(document).on('click', '.stat5Rev', function () {
-    $("#grabado").empty();
+$(document).on('click', '.btn_catalogo', function () {
+    $("#opcionCatalogo").empty();
 
     changeSizeModal('modal-md');
         appendBodyModal(`<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
@@ -68,18 +68,18 @@ $(document).on('click', '.stat5Rev', function () {
                             <div class="row">
                                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                     <label>ESTATUS</label>
-                                    <select name="grabado" id="grabado" class="selectpicker select-gral m-0 grabado" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                    <select name="opcionCatalogo" id="opcionCatalogo" class="selectpicker select-gral m-0 opcionCatalogo" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1">
                                 <label>COMENTARIO</label>
-                                <textarea class="text-modal" id="comentario2" name="comentario2" rows="3"></textarea>
+                                <textarea class="text-modal" id="comentarioCatalogo" name="comentarioCatalogo" rows="3"></textarea>
                             </div>
                             <br>
                             <input type="hidden" name="idLoteCatalogo" id="idLoteCatalogo" >
                         </form>
                     <div class="modal-footer">
-                        <button type="button" id="cancelarValidacion" class="btn btn-danger btn-simple cancelarValidacion" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                         <button type="button" id="guardarValidacion" name="guardarValidacion" class="btn btn-primary guardarValidacion">Registrar</button>
                     </div>`);
         showModal();
@@ -89,19 +89,19 @@ $(document).on('click', '.stat5Rev', function () {
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_opcion'];
             var name = data[i]['nombre'];            
-            $("#grabado").append($('<option>').val(id).text(name.toUpperCase()));
+            $("#opcionCatalogo").append($('<option>').val(id).text(name.toUpperCase()));
         }
         $('.indexCo').val($(this).attr(id));
-        $("#grabado").selectpicker('refresh');
+        $("#opcionCatalogo").selectpicker('refresh');
     }, 'json');
 
     $('#idLoteCatalogo').val($(this).attr('data-idLote'));
-    $('#grabado').val('').trigger('change');
+    $('#opcionCatalogo').val('').trigger('change');
 });
 
-$(document).on('click', '.reesInfo', function (){
+$(document).on('click', '.btn_historial', function (){
     id_prospecto = $(this).attr("data-idLote");
-    $('#historialLine').html('');
+    $('#historialLote').html('');
     $("#spiner-loader").removeClass('hide');
 
     changeSizeModal('modal-md');
@@ -116,7 +116,7 @@ $(document).on('click', '.reesInfo', function (){
                                     <div class="col-md-12">
                                         <div class="card card-plain">
                                             <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
-                                                <ul class="timeline-3" id="historialLine"></ul>
+                                                <ul class="timeline-3" id="historialLote"></ul>
                                             </div>
                                         </div>
                                     </div>
@@ -138,139 +138,17 @@ $(document).on('click', '.reesInfo', function (){
 
         if(array.length == 0){
             $("#spiner-loader").addClass('hide');
-            $('#historialLine').append("SIN DATOS POR MOSTRAR");
+            $('#historialLote').append("SIN DATOS POR MOSTRAR");
         }else{
             $.each(array, function(i, v) {
                 $("#spiner-loader").addClass('hide');
-                fillChangelog(v);
+                contendioHistorial(v);
             });
         }
     });
 });
 
-$(document).on('click', '#saveLi', function(){
-    $("#spiner-loader").removeClass('hide');
-    let datos = new FormData($("#formLiberarLote")[0]);
-    datos.append("tipoLiberacion", 9); 
-    
-    $.ajax({
-        method: 'POST',
-        url: general_base_url + 'Reestructura/aplicarLiberacion',
-        data: datos,
-        processData: false,
-        contentType: false,
-        success: function(data) {
-            if (data == 1) {
-                $('#tabla_clientes').DataTable().ajax.reload(null, false);
-                hideModal();
-                alerts.showNotification("top", "right", "Lote liberado.", "success");
-                $("#spiner-loader").addClass('hide');
-                $('#idLoteenvARevCE').val('');
-                $('#nombreLoteAv').val('');
-                $('#precioAv').val('');
-            }
-        },
-        error: function(){
-            hideModal();
-            $("#spiner-loader").addClass('hide');
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    });
-});
-
-$(document).on('click', '.guardarValidacion', function(){
-    var opcionValidacion = $('#grabado').val();
-    $("#spiner-loader").removeClass('hide');
-
-    if(opcionValidacion == ''){
-        $("#spiner-loader").addClass('hide');
-        alerts.showNotification("top", "right", "Selecciona una opción", "warning");
-        return;
-    }
-
-    var datos = new FormData($("#formCatalogo")[0]);
-
-    $.ajax({
-        method: 'POST',
-        url: general_base_url + 'Reestructura/validarLote',
-        data: datos,
-        processData: false,
-        contentType: false,
-        success: function(data) {
-            if (data == 1) {
-            $('#tabla_clientes').DataTable().ajax.reload(null, false);
-            hideModal();
-            alerts.showNotification("top", "right", "Información actualizada.", "success");
-            $('#idLoteCatalogo').val('');
-            $('#grabado').val('');
-            $('#comentario2').val('');
-            $("#spiner-loader").addClass('hide');
-            }
-        },
-        error: function(){
-            hideModal();
-            $("#spiner-loader").addClass('hide');
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    });
-});
-
-$(document).on('click', '#guardarCatalogo', function(){
-    var ipuntCat = $("#inputCatalogo").val();
-    var datos = new FormData();
-    $("#spiner-loader").removeClass('hide');
-
-    datos.append("nombre", ipuntCat);
-
-    $.ajax({
-        method: 'POST',
-        url: general_base_url + 'Reestructura/insertarOpcionN',
-        data: datos,
-        processData: false,
-        contentType: false,
-        success: function(data) {
-            if (data == 1) {
-                $('#tableCatalogo').DataTable().ajax.reload(null, false);
-                alerts.showNotification("top", "right", "Opción insertada correctamente.", "success");
-                $('#inputCatalogo').val('');
-                open_Mb();
-                $("#spiner-loader").addClass('hide');
-            }
-        },
-        error: function(){
-            hideModal();
-            $("#spiner-loader").addClass('hide');
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    });
-});
-
-$(document).on('click', '.liberarBandera', function (){
-    document.getElementById('liberarBandera').disabled = true;
-    var bandera = document.getElementById('bandera').value;
-    var idLoteBandera = document.getElementById('idLoteBandera').value;
-
-    $.ajax({
-        url : 'cambiarBandera',
-        type : 'POST',
-        dataType: "json",
-        data: {
-        "bandera"    : bandera,
-        "idLoteBandera"     : idLoteBandera,
-            },
-            success: function(data) {
-            alerts.showNotification("top", "right", ""+data.message+"", ""+data.response_type+"");
-            document.getElementById('liberarBandera').disabled = false;
-            $('#tabla_clientes_liberar').DataTable().ajax.reload(null, false );
-            hideModal();
-        },
-        error : (a, b, c) => {
-            alerts.showNotification("top", "right", "Lote No actualizado .", "warning");
-        }
-    });
-});
-
-$(document).on('click', '.cambiarBandera', function (){
+$(document).on('click', '.btn_bandera', function (){
     let bandera  = '¿Estás seguro de LIBERAR el lote para reestructura?';
     lote = $(this).attr("data-idLote");
     activoDetenido  = $(this).attr("data-bandera");
@@ -301,7 +179,129 @@ $(document).on('click', '.cambiarBandera', function (){
     $('#banderaLiberar').modal();
 });
 
-function open_Mb(){
+$(document).on('click', '#guardarLiberacion', function(){
+    $("#spiner-loader").removeClass('hide');
+    let datos = new FormData($("#formLiberarLote")[0]);
+    datos.append("tipoLiberacion", 9); 
+    
+    $.ajax({
+        method: 'POST',
+        url: general_base_url + 'Reestructura/aplicarLiberacion',
+        data: datos,
+        processData: false,
+        contentType: false,
+        success: function(data) {
+            if (data == 1) {
+                $('#tabla_reestructura').DataTable().ajax.reload(null, false);
+                hideModal();
+                alerts.showNotification("top", "right", "Lote liberado.", "success");
+                $("#spiner-loader").addClass('hide');
+                $('#idLote').val('');
+                $('#nombreLoteAv').val('');
+                $('#precioM2').val('');
+            }
+        },
+        error: function(){
+            hideModal();
+            $("#spiner-loader").addClass('hide');
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+});
+
+$(document).on('click', '#guardarValidacion', function(){
+    var opcionValidacion = $('#opcionCatalogo').val();
+    $("#spiner-loader").removeClass('hide');
+
+    if(opcionValidacion == ''){
+        $("#spiner-loader").addClass('hide');
+        alerts.showNotification("top", "right", "Selecciona una opción", "warning");
+        return;
+    }
+
+    var datos = new FormData($("#formCatalogo")[0]);
+
+    $.ajax({
+        method: 'POST',
+        url: general_base_url + 'Reestructura/validarLote',
+        data: datos,
+        processData: false,
+        contentType: false,
+        success: function(data) {
+            if (data == 1) {
+            $('#tabla_reestructura').DataTable().ajax.reload(null, false);
+            hideModal();
+            alerts.showNotification("top", "right", "Información actualizada.", "success");
+            $('#idLoteCatalogo').val('');
+            $('#opcionCatalogo').val('');
+            $('#comentarioCatalogo').val('');
+            $("#spiner-loader").addClass('hide');
+            }
+        },
+        error: function(){
+            hideModal();
+            $("#spiner-loader").addClass('hide');
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+});
+
+$(document).on('click', '#guardarCatalogo', function(){
+    var ipuntCat = $("#inputCatalogo").val();
+    var datos = new FormData();
+    $("#spiner-loader").removeClass('hide');
+
+    datos.append("nombre", ipuntCat);
+
+    $.ajax({
+        method: 'POST',
+        url: general_base_url + 'Reestructura/insertarCatalogo',
+        data: datos,
+        processData: false,
+        contentType: false,
+        success: function(data) {
+            if (data == 1) {
+                $('#tableCatalogo').DataTable().ajax.reload(null, false);
+                alerts.showNotification("top", "right", "Opción insertada correctamente.", "success");
+                $('#inputCatalogo').val('');
+                abrir_Catalogo();
+                $("#spiner-loader").addClass('hide');
+            }
+        },
+        error: function(){
+            hideModal();
+            $("#spiner-loader").addClass('hide');
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+});
+
+$(document).on('click', '#liberarBandera', function (){
+    document.getElementById('liberarBandera').disabled = true;
+    var bandera = document.getElementById('bandera').value;
+    var idLoteBandera = document.getElementById('idLoteBandera').value;
+
+    $.ajax({
+        url : 'cambiarBandera',
+        type : 'POST',
+        dataType: "json",
+        data: {
+        "bandera"    : bandera,
+        "idLoteBandera"     : idLoteBandera,
+            },
+            success: function(data) {
+            alerts.showNotification("top", "right", ""+data.message+"", ""+data.response_type+"");
+            document.getElementById('liberarBandera').disabled = false;
+            $('#tabla_liberar').DataTable().ajax.reload(null, false );
+            hideModal();
+        },
+        error : () => {
+            alerts.showNotification("top", "right", "Lote No actualizado .", "warning");
+        }
+    });
+});
+
+function abrir_Catalogo(){
     changeSizeModal('modal-md');
         appendBodyModal(`<div class="modal-header">
                     <div class="row d-flex justify-center align-center">
@@ -328,10 +328,10 @@ function open_Mb(){
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                 </div>`);
         showModal();
-    fillTableC(); 
+    catalogoTable(); 
 }
 
-function open_Mdc(){
+function agregar_Opcion(){
     changeSizeModal('modal-sm');
     appendBodyModal(`<div class="modal-header">
             <h5 class="modal-title text-center">Cargar nueva opción</h5>
@@ -357,8 +357,8 @@ function open_Mdc(){
     showModal();
 }
 
-function fillChangelog(v) {
-    $("#historialLine").append(`<li>
+function contendioHistorial(v) {
+    $("#historialLote").append(`<li>
         <div class="container-fluid">
             <div class="row">
                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
@@ -377,26 +377,26 @@ function fillChangelog(v) {
 }
 
 let titulos_intxt = [];
-$('#tabla_clientes thead tr:eq(0) th').each(function (i) {
+$('#tabla_reestructura thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
     titulos_intxt.push(title);
     $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
     $( 'input', this ).on('keyup change', function () {
-        if ($('#tabla_clientes').DataTable().column(i).search() !== this.value ) {
-            $('#tabla_clientes').DataTable().column(i).search(this.value).draw();
+        if ($('#tabla_reestructura').DataTable().column(i).search() !== this.value ) {
+            $('#tabla_reestructura').DataTable().column(i).search(this.value).draw();
         }
     });
     $('[data-toggle="tooltip"]').tooltip();
 });
 
-function fillTable(index_proyecto, bandera) {
-    tabla_valores_cliente = $("#tabla_clientes").DataTable({
+function reestructuraTable(index_proyecto, bandera) {
+    tabla_valores_cliente = $("#tabla_reestructura").DataTable({
         width: '100%',
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         buttons: [{
         text: '<i class="fas fa-tags"></i> CATÁLOGO',
             action: function() {
-                open_Mb();
+                abrir_Catalogo();
             },
             attr: {
                 class: 'btn btn-azure',
@@ -505,9 +505,9 @@ function fillTable(index_proyecto, bandera) {
             data: function (d) {
                 let btns = '';
 
-                const BTN_LIBRESS = `<button class="btn-data btn-green reesVal" data-toggle="tooltip" data-placement="top" title= "LIBERAR LOTE" data-idLote="${d.idLote}" data-nombreLote="${d.nombreLote}" data-precio="${d.precio}"><i class="fas fa-thumbs-up"></i></button>`;
-                const BTN_VALREES = `<button class="btn-data btn-deepGray stat5Rev" data-toggle="tooltip" data-placement="top" title= "VALIDAR REESTRUCTURACIÓN" data-idLote="${d.idLote}"><i class="fas fa-edit"></i></button>`;
-                const BTN_INFREES = `<button class="btn-data btn-blueMaderas reesInfo" data-toggle="tooltip" data-placement="top" data-idLote="${d.idLote}" title="HISTORIAL"><i class="fas fa-info"></i></button></div>`;
+                const BTN_LIBRESS = `<button class="btn-data btn-green btn_liberacion" data-toggle="tooltip" data-placement="top" title= "LIBERAR LOTE" data-idLote="${d.idLote}" data-nombreLote="${d.nombreLote}" data-precio="${d.precio}"><i class="fas fa-thumbs-up"></i></button>`;
+                const BTN_VALREES = `<button class="btn-data btn-deepGray btn_catalogo" data-toggle="tooltip" data-placement="top" title= "VALIDAR REESTRUCTURACIÓN" data-idLote="${d.idLote}"><i class="fas fa-edit"></i></button>`;
+                const BTN_INFREES = `<button class="btn-data btn-blueMaderas btn_historial" data-toggle="tooltip" data-placement="top" data-idLote="${d.idLote}" title="HISTORIAL"><i class="fas fa-info"></i></button></div>`;
 
                 if(d.liberadoReubicacion ==  "LIBERACIÓN JURÍDICA"){
                     btns += BTN_VALREES;
@@ -544,21 +544,21 @@ function fillTable(index_proyecto, bandera) {
         ],
     });
     
-    $('#tabla_clientes').on('draw.dt', function() {
+    $('#tabla_reestructura').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
         });
     });
 }
 
-function fillTableC(index_proyecto) {
+function catalogoTable(index_proyecto) {
     tabla_valores_catalogos = $("#tableCatalogo").DataTable({
         width: '100%',
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         buttons: [{
         text: '<i class="fas fa-check"></i> Agregar',
             action: function() {
-                open_Mdc();
+                agregar_Opcion();
             },
             attr: {
                 class: 'btn btn-azure',
@@ -618,19 +618,19 @@ function fillTableC(index_proyecto) {
 }
 
 let titulos_intxtLiberado = [];
-$('#tabla_clientes_liberar thead tr:eq(0) th').each(function (i) {
+$('#tabla_liberar thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
     titulos_intxtLiberado.push(title);
     $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
     $( 'input', this ).on('keyup change', function () {
-        if ($('#tabla_clientes_liberar').DataTable().column(i).search() !== this.value ) {
-            $('#tabla_clientes_liberar').DataTable().column(i).search(this.value).draw();
+        if ($('#tabla_liberar').DataTable().column(i).search() !== this.value ) {
+            $('#tabla_liberar').DataTable().column(i).search(this.value).draw();
         }
     });
 });
 
-function fillTable1(index_proyecto, bandera) {
-    tabla_valores_cliente = $("#tabla_clientes_liberar").DataTable({
+function liberarTable(index_proyecto, bandera) {
+    tabla_valores_cliente = $("#tabla_liberar").DataTable({
         width: '100%',
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         buttons: [{
@@ -721,7 +721,7 @@ function fillTable1(index_proyecto, bandera) {
                 const banderaBtn = (d.liberaBandera == 0) ? "1" : "0";
                 const iconoBtn = (d.liberaBandera == 0) ? "fa-unlock" : "fa-lock";
 
-                return `<div class="d-flex justify-center"><button class="btn-data ${colorBtn} cambiarBandera" data-toggle="tooltip" data-placement="top" title="${tituloBtn}" data-idLote="${d.idLote}" data-bandera= ${banderaBtn}><i class="fas ${iconoBtn}"></i></button></div>`;
+                return `<div class="d-flex justify-center"><button class="btn-data ${colorBtn} btn_bandera" data-toggle="tooltip" data-placement="top" title="${tituloBtn}" data-idLote="${d.idLote}" data-bandera= ${banderaBtn}><i class="fas ${iconoBtn}"></i></button></div>`;
             }
         }],
         columnDefs: [{
@@ -748,7 +748,7 @@ function fillTable1(index_proyecto, bandera) {
         ],
     });
     
-    $('#tabla_clientes_liberar').on('draw.dt', function() {
+    $('#tabla_liberar').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
         });

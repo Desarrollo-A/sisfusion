@@ -120,13 +120,13 @@ class Reestructura_model extends CI_Model
     }
 
     function get_liberacion_reestructura(){
-        return $this->db->query("SELECT lotx.proyectoReubicacion AS idResidencial, CONCAT(res.nombreResidencial, ' - ' , res.descripcion) AS descripcion, 'proyecto' as tipoLote
+        return $this->db->query("SELECT lotx.proyectoReubicacion AS idResidencial, CONCAT(res.nombreResidencial, ' - ' , res.descripcion) AS descripcion, 'catalogoReestructura' as tipoLote
         FROM loteXReubicacion lotx
 		INNER JOIN residenciales res ON res.idResidencial = lotx.proyectoReubicacion
 		GROUP BY lotx.proyectoReubicacion, CONCAT(res.nombreResidencial, ' - ' , res.descripcion)
         UNION
         SELECT lotx.idProyecto AS idResidencial,
-        CONCAT(re.nombreResidencial, ' - ' , re.descripcion) AS descripcion, 'proyectoLiberado' as tipoLote 
+        CONCAT(re.nombreResidencial, ' - ' , re.descripcion) AS descripcion, 'catalogoLiberar' as tipoLote 
         FROM loteXReubicacion lotx
         INNER JOIN residenciales re ON re.idResidencial = lotx.idProyecto
         GROUP BY lotx.idProyecto, CONCAT(re.nombreResidencial, ' - ' , re.descripcion)");

@@ -95,7 +95,7 @@ class Reestructura extends CI_Controller{
 		echo json_encode($this->Reestructura_model->get_catalogo_resstructura()->result_array());
 	}
 
-	public function insertarOpcionN (){
+	public function insertarCatalogo (){
 		$idOpcion = $this->Reestructura_model->insertOpcion();
 		$idOpcion = $idOpcion->lastId;
 		$dataPost = $_POST;
@@ -126,8 +126,8 @@ class Reestructura extends CI_Controller{
 
 		$dataPost = $_POST;
 		$datosId["idLote"] = $dataPost['idLoteCatalogo'];
-		$datos["opcionReestructura"] = $dataPost['grabado'];
-		$datos["comentarioReubicacion"] = $dataPost['comentario2'];
+		$datos["opcionReestructura"] = $dataPost['opcionCatalogo'];
+		$datos["comentarioReubicacion"] = $dataPost['comentarioCatalogo'];
 		$datos["usuario"] = $this->session->userdata('id_usuario');
 
         if($datos["comentarioReubicacion"] == ''){
