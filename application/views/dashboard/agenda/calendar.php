@@ -45,12 +45,20 @@
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12 p-0">
                     <div class="boxCodigos d-flex">
                         <div class="boxStatus d-flex">
-                            <i class="fas fa-circle codeFinish"></i>
-                            <p class="m-0">Cita finalizada</p>
+                            <i class="fas fa-circle codeCancelada"></i>
+                            <p class="m-0">Cita cancelada</p>
                         </div>
                         <div class="boxStatus d-flex">
-                            <i class="fas fa-circle codeOpen"></i>
+                            <i class="fas fa-circle codeAbierta"></i>
                             <p class="m-0">Cita abierta</p>
+                        </div>
+                        <div class="boxStatus d-flex">
+                            <i class="fas fa-circle codeSatisfactoria"></i>
+                            <p class="m-0">Cita satisfactoria</p>
+                        </div>
+                        <div class="boxStatus d-flex">
+                            <i class="fas fa-circle codePocoSatisfactoria"></i>
+                            <p class="m-0">Cita poco satisfactoria</p>
                         </div>
                         <?php if( $this->session->userdata('id_rol') != 7 ) { ?>
                             <div class="boxStatus d-flex">
