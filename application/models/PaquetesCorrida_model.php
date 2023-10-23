@@ -25,7 +25,6 @@ class PaquetesCorrida_model extends CI_Model
     }
     public function getDescuentosPorTotal($id_condicion)
     {
-        //Modificar
         return $this->db->query("SELECT de.inicio, de.fin, de.id_condicion,max(de.id_descuento) AS de.id_descuento, de.porcentaje 
         FROM descuentos de
         INNER JOIN condiciones co ON co.id_condicion = de.id_condicion
@@ -109,7 +108,11 @@ class PaquetesCorrida_model extends CI_Model
     }
 
     public function SaveNewDescuento($id_condicion,$descuento){
-      $response =  $this->db->query("INSERT INTO descuentos VALUES(NULL,NULL,$id_condicion,$descuento,NULL)"); 
+      
+      
+       $id_tdescuento= $id_condicion == 2 ? 2 : 1;
+
+      $response =  $this->db->query("INSERT INTO descuentos VALUES($id_tdescuento,NULL,NULL,$id_condicion,$descuento,NULL)"); 
 
         if (! $response ) {
             return $finalAnswer = 0;
