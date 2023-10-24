@@ -9,6 +9,9 @@ $(document).ready(function () {
         $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
     }); 
     checkTypeOfDesc();
+    setIniDatesXMonth("#fechaIncial", "#endDate");
+    sp.initFormExtendedDatetimepickers();
+    $('.datepicker').datetimepicker({locale: 'es'});
     // general();
 });
 
@@ -90,8 +93,19 @@ function loadTable(tipoDescuento) {
             dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
-        bAutoWidth:true,
-        buttons:[{
+        buttons:[
+            {
+                text: '<i class="fa fa-edit" id="btn-nuevo-descuento"></i> NUEVO DESCUENTO',
+                action: function () {
+                   
+                        open_Mb();
+             
+                },
+                attr: {
+                    class: ' btn-azure'
+                }
+            },
+            {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true" title="DESCARGAR ARCHIVO DE EXCEL"></i>',
             className: 'btn buttons-excel',
@@ -105,9 +119,15 @@ function loadTable(tipoDescuento) {
                     }
                 }
             }
-        }],
-        pagingType: "full_numbers",
-        fixedHeader: true,
+        },
+        
+        ],
+       
+        ordering: false,
+        destroy: true,
+        pageLength: 10,
+        bAutoWidth: false,
+        fixedColumns: true,
         lengthMenu: [
             [10, 25, 50, -1],
             [10, 25, 50, "Todos"]
@@ -119,43 +139,7 @@ function loadTable(tipoDescuento) {
                 next: "<i class='fa fa-angle-right'>"
             }
         },
-        destroy: true,
-        ordering: false,
-        
-        // dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        // width: "100%",
-        // scrollX: true,
-        // bAutoWidth:true,
-        // buttons:[{
-        //     extend: 'excelHtml5',
-        //     text: '<i class="fa fa-file-excel-o" aria-hidden="true" title="DESCARGAR ARCHIVO DE EXCEL"></i>',
-        //     className: 'btn buttons-excel',
-        //     titleAttr: 'DESCARGAR ARCHIVO DE EXCEL',
-        //     title: 'Reporte Descuentos Universidad',
-        //     exportOptions: {
-        //         columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
-        //         format: {
-        //             header: function (d, columnIdx) {
-        //                 return ' ' + titulos_intxt[columnIdx] + ' ';
-        //             }
-        //         }
-        //     }
-        // }],
-        // pagingType: "full_numbers",
-        // fixedHeader: true,
-        // lengthMenu: [
-        //     [10, 25, 50, -1],
-        //     [10, 25, 50, "Todos"]
-        // ],
-        // language: {
-        //     url: `${general_base_url}static/spanishLoader_v2.json`,
-        //     paginate: {
-        //         previous: "<i class='fa fa-angle-left'>",
-        //         next: "<i class='fa fa-angle-right'>"
-        //     }
-        // },
-        // destroy: true,
-        // ordering: false,
+        pagingType: "full_numbers",
         columns:[
                 {
                     // ID
@@ -317,7 +301,7 @@ function loadTable(tipoDescuento) {
                 //         if (OP2 < 1) {
                 //             return `<p style="font-size: 1em; color:gray">$${formatMoney(0)}</p>`;
                 //         }
-                //         return `<p style="font-size: 1em; color:red"><b>$${formatMoney(OP2)}</b></p>`;
+                //         return `<p   tyle="font-size: 1em; color:red"><b>$${formatMoney(OP2)}</b></p>`;
                 //     }
                 // },
                 {
@@ -329,8 +313,8 @@ function loadTable(tipoDescuento) {
                         pendiente = 0;
 
                         if (((d.id_sede != 6 && d.saldo_comisiones >= 12500) || (d.id_sede == 6 && d.saldo_comisiones >= 15000)) && (d.estatus == 1 || d.banderaReactivado == 1) && d.pendiente > 1) {//TODAS SEDES
-                            color = 'color:purple';
-                            valor = d.id_sede != 6 ? Math.round(d.saldo_comisiones/12500) : Math.round(d.saldo_comisiones/15000);
+                                color = 'color:purple';
+                                valor = d.id_sede != 6 ? Math.round(d.saldo_comisiones/12500) : Math.round(d.saldo_comisiones/15000);
                             pendiente = Math.round(d.pendiente/d.pago_individual);
                             pagosDescontar = valor>pendiente ? d.pendiente : valor*d.pago_individual;
                         }
@@ -349,7 +333,7 @@ function loadTable(tipoDescuento) {
                     // Fecha creación
                     "data": function (d) {
 
-                        return '<p style="font-size: 1em">' + d.fecha_creacion + '</p>';
+                        return '<p style="font-size: 1em">' + d.fecha_modificacion + '</p>';
                     }
                 },
                 {
@@ -412,6 +396,7 @@ function loadTable(tipoDescuento) {
                                 data-mensual="${d.pago_individual}"
                                 data-pendiente="${d.pendiente}"
                                 data-total="${d.monto}"
+                                data-fecha="${d.modificacion}"
                                 data-idCertificacion="${valor}"
                                 class="btn-data btn-acidGreen uniAdd" title="Editar suficiente"><i class="fas fa-money-check-alt"></i>
                                 </button>
@@ -431,7 +416,7 @@ function loadTable(tipoDescuento) {
                     }],
                     
             "ajax": {
-                "url": `getDataConglomerado/1`,
+                "url": `getDataConglomerado/`+tipoDescuento,
                 "type": "GET",
                 cache: false,
                 "data": function (d) {}
@@ -1151,21 +1136,84 @@ function filter(__val__) {
     var preg = /^([0-9]+\.?[0-9]{0,2})$/;
     return (preg.test(__val__) === true);
 }
+$("#usuarioid2").change(function () {
 
+    $("#FaltaUsuarios").hide(1250);
+    $("#ListoUsuarios").show("slow");
+});
+function onKeyUp(event) {
+    var keycode = event.keyCode;
+    var id = 0 ;
+    if(keycode != '13'){ 
+
+        let monto = replaceAll(monto1, '$', '');
+    //
+        
+            var re = /^[0-9]*$/i;
+            let msg = monto.value;
+            // Si el caracter introducido no es un número
+            if(!(msg.match(re) !== null)){
+                // Elimina el último caracter introducido
+                id = msg.slice(0, msg.length - 1);
+            }
+            console.log(id)
+    // 
+        if(monto <= 0 ){
+            $("#FaltaDescuento").show("slow");
+            $("#ListoDescuento").hide(1250);
+       
+    
+        } else{
+       
+            $("#FaltaDescuento").hide(1250);
+            $("#ListoDescuento").show("slow");
+            
+            let cantidad = parseFloat($('#numeroPagos').val());
+            if(isNaN(monto)) {
+               
+            }
+            
+            let resultado = 0;
+            resultado = monto / cantidad;
+    
+                if (resultado > 0) {
+                    monto = monto.replace(/[$.]/g,'');
+                    $('#descuento').val(formatMoney(monto));
+                    $('#pago_ind01').val(formatMoney(resultado));
+                    $("#FaltaMonto").hide(1250);
+                    $("#ListoMonto").show("slow");
+                } else {
+                    $('#pago_ind01').val(formatMoney(0));
+                    $("#FaltaMonto").hide(1250);
+                    $("#ListoMonto").show("slow");
+    
+                }
+        }
+
+       
+    }
+}
 
     $("#roles").change(function () {
+        // diseño incio
+        $("#FaltaPuesto").hide(1250);
+        $("#ListoPuesto").show("slow");
+        $('#usuarioid2').empty();
+        $("#ListoUsuarios").hide(1250);
+        $("#FaltaUsuarios").show("slow");
+        // diseño fin
+      
+       
         var parent = $(this).val();
-
         $("#users2").val('');
-
         $("#usuarioid2").val('');
         $("#usuarioid2").selectpicker("refresh");
+       
+        // document.getElementById("users2").innerHTML = '';
+     
 
-
-        document.getElementById("users2").innerHTML = '';
-        $('#users2').append(`<label class="label">Usuario</label><select id="usuarioid2" name="usuarioid2" class="form-control directorSelect ng-invalid ng-invalid-required" required data-live-search="true"></select>`);
         $.post('getUsuariosRolDU/' + parent, function (data) {
-            $("#usuarioid2").append($('<option disabled>').val("default").text("Seleccione una opción"))
+            
             var len = data.length;
             for (var i = 0; i < len; i++) {
                 var id = data[i]['id_usuario'];
@@ -1352,20 +1400,38 @@ $("#numeroPagos").change(function () {
         let monto = replaceAll(monto1, '$', '');
         let cantidad = parseFloat($('#numeroPagos').val());
         let resultado = 0;
-
+        $("textarea").val('DESCUENTO UNIVERSIDAD MADERAS');
+       
 
         if (isNaN(monto)) {
             alerts.showNotification("top", "right", "Debe ingresar un monto valido.", "warning");
             $('#pago_ind01').val(resultado);
             $('#btn_abonar').prop('disabled', true);
             document.getElementById('btn_abonar').disabled = true;
-        } else {
+        } else if(monto <= 0 ){
+            $("#FaltaDescuento").show("slow");
+            $("#ListoDescuento").hide(1250);
+
+            $("#ListoMensualidad").hide(1250);
+            $("#FaltaMensualidad").show("slow");
+        }else{
+            $("#FaltaDescuento").hide(1250);
+            $("#ListoDescuento").show("slow");
+
+            $("#FaltaMensualidad").hide(1250);
+            $("#ListoMensualidad").show("slow");
+   
             resultado = monto / cantidad;
 
             if (resultado > 0) {
                 $('#pago_ind01').val(formatMoney(resultado));
+                $("#FaltaMonto").hide(1250);
+                $("#ListoMonto").show("slow");
             } else {
                 $('#pago_ind01').val(formatMoney(0));
+                $("#FaltaMonto").hide(1250);
+                $("#ListoMonto").show("slow");
+
             }
         }
     });
@@ -1555,11 +1621,23 @@ function replaceAll(text, busca, reemplaza) {
 }
 
 function open_Mb() {
+
+   
+ 
+    $('#open_Mb').empty();
+    $("#FaltaUsuarios").show("slow");
+    $("#ListoUsuarios").hide();
+    $("#FaltaPuesto").show("slow");
+    $("#FaltaMonto").show("slow");
+    $("#FaltaDescuento").show("slow");
+    $("#FaltaMensualidad").show("slow");
+    $("#FaltaMotivo").show("slow");
+    
     $("#roles").val('');
     $("#roles").selectpicker("refresh");
 
-    document.getElementById("users2").innerHTML = '';
-
+    // document.getElementById("users2").innerHTML = '';
+   
     $("#usuarioid2").val('');
     $("#usuarioid2").selectpicker("refresh");
 
@@ -1570,6 +1648,25 @@ function open_Mb() {
 
 $('#ModalBonos').on('hidden.bs.modal', function() {
     $('#form_nuevo').trigger('reset');
+  
+
+    $("#FaltaPuesto").hide();
+    $("#FaltaMonto").hide();
+    $("#FaltaDescuento").hide();
+    $("#FaltaMensualidad").hide();
+    $("#FaltaMotivo").hide();
+    $("#FaltaUsuarios").hide();
+
+    $("#ListoPuesto").hide();
+    $("#ListoDescuento").hide();
+    $("#ListoMensualidad").hide();
+    $("#ListoMonto").hide();
+    $("#ListoMotivo").hide();
+    $("#ListoUsuarios").hide();
+
+
+
+    $("#numeroPagos").selectpicker("refresh");
 });
 
 
@@ -1589,12 +1686,13 @@ $(document).on("click", ".uniAdd", function () {
     pago_mensual = $(this).attr("data-mensual");
     nombre = $(this).attr("data-nombre")
     descuento = $(this).attr("data-descuento");
-  
+    fechaIncial = $(this).attr("data-fecha");
     pendiente = $(this).attr("data-pendiente");//cantidad de dinero que falta
     total = $(this).attr("data-total"); //dinero que ha pagado al momento
     MontoDescontarCerti = $(this).attr("data-value");
     valorCertificacion = $(this).attr("data-idCertificacion");
-    document.getElementById("certificaciones").value = valorCertificacion;
+    // {document.getElementById("certificaciones").value = valorCertificacion;}
+
     if (descuento == total){
         banderaLiquidados = true;
 
@@ -1607,7 +1705,7 @@ $(document).on("click", ".uniAdd", function () {
 
     cantidad_de_pagos = descuento / pago_mensual;//para saber en cuanto se dividieron los pagos
 
-    
+    document.getElementById("fechaIncial").value = fechaIncial;
  
     document.getElementById("banderaLiquidado").value = banderaLiquidados;
     document.getElementById("dineroPagado").value = total;
@@ -1615,6 +1713,7 @@ $(document).on("click", ".uniAdd", function () {
     document.getElementById("idDescuento").value = id_descuento;
     document.getElementById("totalPagos").value = cantidad_de_pagos;
     document.getElementById("pagoDado").value = pagoDado;
+
     id_user = $(this).attr("data-code");
     pago_mensual = $(this).attr("data-mensual");
     descuento = $(this).attr("data-descuento");
@@ -1622,127 +1721,83 @@ $(document).on("click", ".uniAdd", function () {
     total = $(this).attr("data-total"); //dinero que ha pagado al momento
 
     valorPendiente = pendiente;
-
+    // users2
     var titulo  = ' ';
     titulo += '  <h3 id="tituloModalUni" name="tituloModalUni">Editando descuento actual para '+ nombre  +'</h3>';
-
-
-
-    var informacion_adicional = ' '; //inicio de div que contiene todo el modal
-    informacion_adicional += '      <div class="col-xs-4 col-sm-4 col-md-4">';
- 
-    informacion_adicional += '        <div class="form-group text-left">';
-    informacion_adicional += '            <label class="label ">Monto Descuento *</label>';
-    informacion_adicional += '            <input class="form-control  MontoDescontarCerti" type="number" id="MontoDescontarCerti"';
-    informacion_adicional += '                name="MontoDescontarCerti" autocomplete="off" min="1" max="99000" step=".01"';
-    informacion_adicional += '               required />';
-    informacion_adicional += '         </div>';
-    informacion_adicional += '       </div>';
-
-    informacion_adicional += '      <div class="col-xs-4 col-sm-4 col-md-4">';
-    informacion_adicional += '        <div class="form-group text-left">';
-    informacion_adicional += '          <label class="label">Pagos repartidos*</label> ';
-    informacion_adicional += '         <select class="form-control mensualidadesC" name="mensualidadesC" id="mensualidadesC" required>';
-    informacion_adicional += '          <option value="" disabled="true" selected="selected">- Selecciona opción';
-    informacion_adicional += '          </option>';
-    informacion_adicional += '          <option value="1">1</option>';
-    informacion_adicional += '          <option value="2">2</option>';
-    informacion_adicional += '          <option value="3">3</option>';
-    informacion_adicional += '          <option value="4">4</option>';
-    informacion_adicional += '          <option value="5">5</option>';
-    informacion_adicional += '          <option value="6">6</option>';
-    informacion_adicional += '          <option value="7">7</option>';
-    informacion_adicional += '          <option value="8">8</option>';
-    informacion_adicional += '          <option value="9">9</option>';
-    informacion_adicional += '          <option value="10">10</option>';
-    informacion_adicional += '          <option value="11">11</option>';
-    informacion_adicional += '         </select>';
-    informacion_adicional += '        </div>';
-    informacion_adicional += '      </div>';
-
-    informacion_adicional += '      <div class="col-xs-4 col-sm-4 col-md-4">';
-    informacion_adicional += '        <div class="form-group text-left">';
-    informacion_adicional += '            <label class="label">Nuevas mensualidades*</label>';
-    informacion_adicional += '            <input class="form-control newMensualidades" type="number" id="newMensualidades"';
-    informacion_adicional += '                name="newMensualidades" autocomplete="off" min="1" max="99000" step=".01"';
-    informacion_adicional += '               required />';
-    informacion_adicional += '         </div>';
-    informacion_adicional += '      </div>';
     // eee
+    // var cuerpoModalUni = document.getElementById('cuerpoModalUni');
+    // cuerpoModalUni.innerHTML = informacion_adicional;
 
-    var cuerpoModalUni = document.getElementById('cuerpoModalUni');
-    cuerpoModalUni.innerHTML = informacion_adicional;
-
-    document.getElementById("MontoDescontarCerti").value = descuento;
+    document.getElementById("MontoDescontarCerti").value = pendiente;
     var myCommentsLote = document.getElementById('tituloModalUni');
     myCommentsLote.innerHTML = '';
 
     var Header_modal = document.getElementById('header_modal');
     Header_modal.innerHTML = titulo;
  
-       mensualidadesFaltantes = total / pago_mensual ;
-            mensualidadesFaltantesMostrar = valorPendiente  / pago_mensual ;         
-            if ((mensualidadesFaltantesMostrar % 1)  == 0 ){
+    //    mensualidadesFaltantes = total / pago_mensual ;
+    //         mensualidadesFaltantesMostrar = valorPendiente  / pago_mensual ;         
+            // if ((mensualidadesFaltantesMostrar % 1)  == 0 ){
 
-            }else{
-                if( 0 == Math.trunc(mensualidadesFaltantesMostrar))
-                {
-                    if((mensualidadesFaltantesMostrar/mensualidadesFaltantesMostrar ) == 1)
-                    {
-                        mensualidadesFaltantesMostrar = 1;
-                    }else{
+            // }else{
+            //     if( 0 == Math.trunc(mensualidadesFaltantesMostrar))
+            //     {
+            //         if((mensualidadesFaltantesMostrar/mensualidadesFaltantesMostrar ) == 1)
+            //         {
+            //             mensualidadesFaltantesMostrar = 1;
+            //         }else{
 
-                    }           
-                }else{
+            //         }           
+            //     }else{
 
-                    mensualidadesFaltantesMostrar =  Math.trunc(mensualidadesFaltantesMostrar);
-                }
-            }
-            if ((mensualidadesFaltantes % 1)  == 0 ){
+            //         mensualidadesFaltantesMostrar =  Math.trunc(mensualidadesFaltantesMostrar);
+            //     }
+            // }
+            // if ((mensualidadesFaltantes % 1)  == 0 ){
 
-            }else{
-                if( 0 == Math.trunc(mensualidadesFaltantes))
-                {
-                    if((mensualidadesFaltantes/mensualidadesFaltantes ) == 1)
-                    {
+            // }else{
+            //     if( 0 == Math.trunc(mensualidadesFaltantes))
+            //     {
+            //         if((mensualidadesFaltantes/mensualidadesFaltantes ) == 1)
+            //         {
 
-                        mensualidadesFaltantes = 1;
-                    }else{
+            //             mensualidadesFaltantes = 1;
+            //         }else{
                     
-                    }
-                }else{
-                        mensualidadesFaltantes =  Math.trunc(mensualidadesFaltantes);
-                }
-            }
-            if(banderaLiquidados){
-                document.getElementById("mensualidadesC").value = 1;
-                mensualidadesFaltantesMostrar = 1;
-                mensualidadesFaltantes = 1;
-            }else{
-                mensualidadesFaltantesMostrar = valorPendiente  / pago_mensual ;
-                document.getElementById("mensualidadesC").value = Math.trunc( mensualidadesFaltantesMostrar);
-            }
+            //         }
+            //     }else{
+            //             mensualidadesFaltantes =  Math.trunc(mensualidadesFaltantes);
+            //     }
+            // }
+            // if(banderaLiquidados){
+            //     document.getElementById("mensualidadesC").value = 1;
+            //     mensualidadesFaltantesMostrar = 1;
+            //     mensualidadesFaltantes = 1;
+            // }else{
+            //     mensualidadesFaltantesMostrar = valorPendiente  / pago_mensual ;
+            //     document.getElementById("mensualidadesC").value = Math.trunc( mensualidadesFaltantesMostrar);
+            // }
 
 
-            ultimaMensualidad = document.getElementById("mensualidadesC").value
-            Total_a_pagar = ultimaMensualidad * pago_mensual;
+            // ultimaMensualidad = document.getElementById("mensualidadesC").value
+            // Total_a_pagar = ultimaMensualidad * pago_mensual;
 
-            sobrante = Total_a_pagar - total;
+            // sobrante = Total_a_pagar - total;
 
-            //para agregar llo que ya se pago
-            descuentoEscrito = document.getElementById("MontoDescontarCerti").value;
+            // //para agregar llo que ya se pago
+            // descuentoEscrito = document.getElementById("MontoDescontarCerti").value;
          
-            NuevasMensualidades= (pendiente)  / ultimaMensualidad ;
+            // NuevasMensualidades= (pendiente)  / ultimaMensualidad ;
 
-            if(banderaLiquidados){
+            // if(banderaLiquidados){
 
-                sobrante = document.getElementById("MontoDescontarCerti").value;
-                sobrante =  total - sobrante ;
-                NuevasMensualidades = sobrante  / mensualidadesFaltantes;
-            }
-            document.getElementById("newMensualidades").value =  NuevasMensualidades.toFixed(2);
-            //faltantes = mensualidadesFaltantes/mensual;
-            document.getElementById("precioOrginal").value =   NuevasMensualidades.toFixed(2);
+            //     sobrante = document.getElementById("MontoDescontarCerti").value;
+            //     sobrante =  total - sobrante ;
+            //     NuevasMensualidades = sobrante  / mensualidadesFaltantes;
+            // }
+            // document.getElementById("newMensualidades").value =  NuevasMensualidades.toFixed(2);
+            // //faltantes = mensualidadesFaltantes/mensual;
+            // document.getElementById("precioOrginal").value =   NuevasMensualidades.toFixed(2);
 
 });  
 
@@ -1819,9 +1874,6 @@ function subirInfo(){
     valor1 = 0;
  }
  
-
-
-
 $(document).on('input', '.MontoDescontarCerti', function(){
 
     mensualidadesC = document.getElementById("mensualidadesC").value;
@@ -1830,11 +1882,10 @@ $(document).on('input', '.MontoDescontarCerti', function(){
     pagos  = document.getElementById("mensualidadesC").value ;
     banderaLiquidado  = document.getElementById("banderaLiquidado").value ;
     if(banderaLiquidado){
-        loQueSedebe = loQueSedebe - pagado;
+     
 
         NuevasMensualidades = loQueSedebe / pagos;
     }else{
-        loQueSedebe = loQueSedebe - pagado;
 
         NuevasMensualidades = loQueSedebe / pagos;   
     }
@@ -1850,32 +1901,45 @@ $(document).on('input', '.MontoDescontarCerti', function(){
         loQueSedebe = document.getElementById("MontoDescontarCerti").value ;
         pagado = document.getElementById("dineroPagado").value ;  // lo que se ya se ha pagado
         pagos  = document.getElementById("mensualidadesC").value ;
+        console.log('mensualidadesC')
+        console.log(mensualidadesC)
+        console.log('loQueSedebe')
+        console.log(loQueSedebe)
+        console.log('pagado')
+        console.log(pagado)
+        console.log('pagos')
+        console.log(pagos)
 
         banderaLiquidado  = document.getElementById("banderaLiquidado").value ;
         if(banderaLiquidado){
-            loQueSedebe = loQueSedebe - pagado;
-            NuevasMensualidades = loQueSedebe / pagos;
+          
+            NuevasMensualidades = loQueSedebe / mensualidadesC;
   
         }else{
-            loQueSedebe = loQueSedebe - pagado;
-            NuevasMensualidades = loQueSedebe / pagos;
+         
+            NuevasMensualidades = loQueSedebe / mensualidadesC;
         } 
         document.getElementById("newMensualidades").value =  NuevasMensualidades.toFixed(2);
     
     });
                                                           
+    $("#updateDescuentoCertificado").submit(function (e) {
 
-$(document).on("click", ".updateDescuentoCertificado", function () {
+
+        e.preventDefault();
+    }).validate({
+        submitHandler: function (form) {
+
     let tipoDescuento = $('#tipo_descuento').val();
     // let fechaSeleccionada = $('#fechaIncial').val();
-    const fecha = new Date()
+    const fecha = new Date()    
     let pagos_activos ;
     let banderaSoloEstatus = false ; 
     let banderaPagosActivos = 0 ;
     // bandera pagos activos
     let fechanoEscrita = false; 
     // 1 fecha usuario < día 5  mismo mes  2: fecha usuario > día 5 y > mes actual  3: no se mueve los movimientos actuales,
-    let validacion = true;
+    let validacion = false;
     let banderaEditarEstatus = document.getElementById("precioOrginal").value; 
     let escritoPorUsuario = document.getElementById("newMensualidades").value;
     let fechaSeleccionada = '';
@@ -1897,27 +1961,38 @@ $(document).on("click", ".updateDescuentoCertificado", function () {
     month = (fecha.getMonth())
     day = fecha.getDate()
     // const msg = new day;
-    const FechaEnArreglo = fechaSeleccionada.split("-");
+    const FechaEnArreglo = fechaSeleccionada.split("/");
     // fecha en arreglo es para poder entrar al mes posicion 0 es dia, 1  mes , año
     fechaComparar = (year + '-' + month + '-' + day);
     var f1 = new Date(year,month, day);
-    var f2 = new Date(fechaSeleccionada);
+    var f2 = new Date(FechaEnArreglo[2],FechaEnArreglo[1],FechaEnArreglo[0] );
 
     MesSelecionado = parseInt(FechaEnArreglo[1]);
-    DiaSeleccionado = parseInt(FechaEnArreglo[2]);
+    DiaSeleccionado = parseInt(FechaEnArreglo[0]);
     MesSistemas = parseInt(month+1);
+    console.log(FechaEnArreglo)
+    console.log('  // fecha FechaEnArreglo ')
     // fecha f2 es para la fecha seleccionada 
     // fecha f1 es para la fecha del sistema 
     // Se compara las fechas son para 
+    console.log(f1)
+    console.log('  // fecha f1 es para la fecha del sistema ')
+    console.log(f2)
+    console.log('fecha f2 es para la fecha seleccionada ')
     if(  (f2 > f1 || f2 == f1)){
         // validamos que sea mayor la fecha seleccionada o que sean iguales
-        validacion =true;
-        if(DiaSeleccionado <= 5 && MesSelecionado == MesSistemas ){
+      
+        if(DiaSeleccionado <= 10 ){
             banderaPagosActivos = 1;
+            console.log(1)
+            validacion =true;
                         // && MesSelecionado == MesSistemas  
-        }else if(DiaSeleccionado > 5 ||  MesSelecionado >= MesSistemas  ){
+        }else if(DiaSeleccionado  <= 10  ){
             banderaPagosActivos = 2 ;
+            console.log(1)
+            validacion =true;
         }else {
+            alerts.showNotification("top", "right", "Se recomienda una fecha entre el primero al 10 de cada mes ", "info");
             banderaPagosActivos = 0;
         }
     }else if(f2 < f1){
@@ -1932,7 +2007,7 @@ $(document).on("click", ".updateDescuentoCertificado", function () {
         id_descuento     = document.getElementById("idDescuento").value;
         monto           = document.getElementById("MontoDescontarCerti").value;
         pago_individual = document.getElementById("newMensualidades").value;
-        estatus_certificacion  = document.getElementById("certificaciones").value;
+        // estatus_certificacion  = document.getElementById("certificaciones").value;
     
             $.ajax({
             url : 'descuentoUpdateCertificaciones',
@@ -1944,7 +2019,6 @@ $(document).on("click", ".updateDescuentoCertificado", function () {
             "pagos_activos"         : pagos_activos,
             "estatus"               : estatus,
             "banderaPagosActivos"   : banderaPagosActivos,
-            "estatus_certificacion" : estatus_certificacion,
             "id_descuento"          : id_descuento,
             "monto"                 : monto,
             "pago_individual"       : pago_individual,
@@ -1969,10 +2043,28 @@ $(document).on("click", ".updateDescuentoCertificado", function () {
     }
 
   
-});
+}});
 
 
-
+sp = {
+    initFormExtendedDatetimepickers: function () {
+        $('.datepicker').datetimepicker({
+            format: 'DD/MM/YYYY',
+            icons: {
+                time: "fa fa-clock-o",
+                date: "fa fa-calendar",
+                up: "fa fa-chevron-up",
+                down: "fa fa-chevron-down",
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-screenshot',
+                clear: 'fa fa-trash',
+                close: 'fa fa-remove',
+                inline: true
+            }
+        });
+    }
+}
 function setInitialValues() {
     // BEGIN DATE
     const fechaInicio = new Date();

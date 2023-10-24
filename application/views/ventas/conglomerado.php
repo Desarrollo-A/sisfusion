@@ -4,7 +4,36 @@
 <body class="">
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
-
+        <style type="text/css">        
+            #modal_nuevas{
+                z-index: 1041!important;
+            }
+            #modal_vc{
+                z-index: 1041!important;
+            }
+            .fechaIncial, #fechaIncial{
+                background-color: #eaeaea !important;
+                border-radius: 27px 27px 27px  27px!important;
+                background-image: initial!important;
+                text-align: center!important;
+            }
+                
+            .endDate, #endDate{
+                background-color: #eaeaea !important;
+                border-radius: 0!important;
+                background-image: initial!important;
+                text-align: center!important;
+            }
+            .btn-fab-mini {
+                border-radius: 0 27px 27px 0 !important;
+                background-color: #eaeaea !important;
+                box-shadow: none !important;
+                height: 45px !important;
+            }
+            .btn-fab-mini span {
+                color: #929292;
+            }
+        </style>
     <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -21,105 +50,106 @@
             aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
                 <div class="modal-content">
+                <form method="post" id="updateDescuentoCertificado">
                     <div class="modal-header" id="header_modal" name="header_modal">
                         <h3 id="tituloModalUni" name="tituloModalUni"> Editando descuento actual </h3>
                     </div>
-                    <div class="modal-body" >
-                    <div class="col-4 col-sm-4 col-md-4 col-lg-4">
+                    
+                    <div class="modal-body " >
+                        <div class=" row col-md-12" >
+                            <div class="col-6 col-sm-6 col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                        <label class="label-gral">Nueva fecha:</label> 
+                                        <input type="text" class="form-control datepicker beginDate" style="display:none;" id="beginDate" />
+                                        <input type="text" class="form-control datepicker endDate"   style="display:none;" id="endDate"/>
+                                        <input type="text" class="form-control  datepicker fechaIncial" id="fechaIncial" name="fechaIncial"  />     
+                                        </div>
+                            </div>
+                      
+                            <div class="col-md-4" style="display:none;">
                                 <div class="form-group">
-                                    <label class="label">Certificaciones*</label>       
-                                    <select class="form-control select2 certificaciones" name="certificaciones" id="certificaciones">
-                                        <?php if(isset($certificaciones)){ foreach($certificaciones as $certificacion){ ?>
-                                            <option value="<?= $certificacion->id_opcion ?>"><?= $certificacion->nombre ?> </option>
-                                        <?php } } ?>
-                                    </select>
-                                </div>      
-                    </div>
-                                <div class="col-md-4" style="display:none;">
-                                    <div class="form-group">
-                                        <input class="form-control" type="text"   name="dineroPagado" id="dineroPagado" readonly>
-                                    </div>
+                                    <input class="form-control" type="text"   name="dineroPagado" id="dineroPagado" readonly>
                                 </div>
-                                <div class="col-md-4" style="display:none;">
-                                    <div class="form-group">
-                                        <input class="form-control" type="text"   name="pagoIndiv" id="pagoIndiv" readonly>
-                                    </div>
-                                </div>
-                                <div class="col-md-4" style="display:none;">
-                                    <div class="form-group">
-                                        <input class="form-control" type="text"   name="idDescuento" id="idDescuento" readonly>
-                                    </div>
-                                </div>
-                                <div class="col-md-4" style="display:none;">
-                                    <div class="form-group">
-                                        <input class="form-control" type="text"   name="totalPagos" id="totalPagos" readonly>
-                                    </div>
-                                </div>
-                                <div class="col-md-4" style="display:none;">
-                                    <div class="form-group">
-                                        <input class="form-control" type="text"   name="pagoDado" id="pagoDado" readonly>
-                                    </div>
-                                </div>
-                                <div class="col-md-4" style="display:none;">
-                                    <div class="form-group">
-                                        <input class="form-control" type="text"   name="banderaLiquidado" id="banderaLiquidado" readonly>
-                                    </div>
-                                </div>   
-                                  <div class="col-md-4" style="display:none;">
-                                    <div class="form-group">
-                                        <input class="form-control" type="text"   name="precioOrginal" id="precioOrginal" readonly>
-                                    </div>
-                                </div>
-                        <div class="col-4 col-sm-4 col-md-4 col-lg-4">
+                            </div>
+                            <div class="col-md-4" style="display:none;">
                                 <div class="form-group">
-                                    <label class="label">Descripcion:</label> 
-                                    <span class="small text-gray textDescripcion"  id="textDescripcion"  name="textDescripcion">
-                                    Persona que obtuvo una calificación favorable y con ello la certificación
-                                    </span>        
+                                    <input class="form-control" type="text"   name="pagoIndiv" id="pagoIndiv" readonly>
                                 </div>
-                        </div>
-                        <div class="col-4 col-sm-4 col-md-4 col-lg-4 ">
-                            <div class="form-group">
-                                    <label class="label">Fecha nueva*</label>  
-                                            <div class="row">
-                                                <div class="col-md-12 p-r">
-                                                    <div > 
-                                                        <input type="date" class="form-control datepicker" id="fechaIncial" name="fechaIncial"  />
-                                                    </div>
-                                                </div>
-                                            </div>
+                            </div>
+                            <div class="col-md-4" style="display:none;">
+                                <div class="form-group">
+                                    <input class="form-control" type="text"   name="idDescuento" id="idDescuento" readonly>
+                                </div>
+                            </div> 
+                            <div class="col-md-4" style="display:none;">
+                                <div class="form-group">
+                                    <input class="form-control" type="text"   name="totalPagos" id="totalPagos" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-4" style="display:none;">
+                                <div class="form-group">
+                                    <input class="form-control" type="text"   name="pagoDado" id="pagoDado" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-4" style="display:none;">
+                                <div class="form-group">
+                                    <input class="form-control" type="text"   name="banderaLiquidado" id="banderaLiquidado" readonly>
+                                </div>
+                            </div>   
+                            <div class="col-md-4" style="display:none;">
+                                <div class="form-group">
+                                    <input class="form-control" type="text"   name="precioOrginal" id="precioOrginal" readonly>
+                                </div>
+                            </div>
+                            <div class="col-6 col-sm-6 col-md-6 col-lg-6">
+                                <div class="form-group text-left">
+                                <label class="label-gral ">Monto Descuento *</label>
+                                <input class="form-control input-gral  MontoDescontarCerti" type="number" id="MontoDescontarCerti"
+                                    name="MontoDescontarCerti" autocomplete="off" min="1"  maxlength="6" max="99000" step=".01"
+                                    required />
+                                </div>
+                            </div>
+
+                            <div class="col-6 col-sm-6 col-md-6 col-lg-6">
+                                <div class="form-group text-left">
+                                <label class="label-gral">Pagos repartidos (<span class="isRequired">*</span>)</label> 
+                                <select class="selectpicker select-gral m-0 mensualidadesC" name="mensualidadesC" id="mensualidadesC" title="SELECCIONA UNA OPCIÓN" required>
+                                    <option value="1">1 Mensualidad</option>
+                                    <option value="2">2 Mensualidades</option>
+                                    <option value="3">3 Mensualidades</option>
+                                    <option value="4">4 Mensualidades</option>
+                                    <option value="5">5 Mensualidades</option>
+                                    <option value="6">6 Mensualidades</option>
+                                    <option value="7">7 Mensualidades</option>
+                                    <option value="8">8 Mensualidades</option>
+                                    <option value="9">9 Mensualidades</option>
+                                    <option value="10">10 Mensualidades</option>
+                                    <option value="11">11 Mensualidades</option>
+                                </select>
+                                </div>
+                            </div>
+
+                            <div class="col-6 col-sm-6 col-md-6 col-lg-6">
+                                <div class="form-group text-left">
+                                <label class="label-gral">Nuevas mensualidades*</label>
+                                <input class="form-control input-gral newMensualidades" type="number" id="newMensualidades"
+                                    name="newMensualidades" autocomplete="off" min="1" max="99000" step=".01"
+                                    required />
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                            <div class="row">
+                    
                                 
-                                <div class="col-xs-12 col-sm-12 col-md-12" id="cuerpoModalUni" name="cuerpoModalUni">
-                                                
-                                </div>
-                                <div class="col-xs-12 col-sm-12 col-md-12" >
-                                </div>
-                                    <div class="form-group col-xs-6 col-sm-6 col-md-6">
-                                        <div class="form-group">
-                                            <center>
-                                                <button name="updateDescuentoCertificado" style="display:block;" id="updateDescuentoCertificado"
-                                                    class="btn btn-primary updateDescuentoCertificado">GUARDAR</button>
-                                            </center>
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-xs-6 col-sm-6 col-md-6">
-                                        <div class="form-group">
-                                            <center>
-                                                <button class="btn btn-danger" type="button" data-dismiss="modal"
-                                                    data-toggle="modal">
-                                                    CANCELAR
-                                                </button>
-                                            </center>
-                                        </div>
-                                    </div>
-                            </div>  
+                    <button class="btn btn-danger btn-simple" type="button" data-dismiss="modal" data-toggle="modal"> CANCELAR </button>
+
+                    <button  name="updateDescuentoCertificado1"  id="updateDescuentoCertificado1"
+                            class="btn btn-primary updateDescuentoCertificado1">GUARDAR</button>
                     </div>
+                    </form>
                 </div>
+        
             </div>
         </div>
         <!-- Fin modal add costo Universidad -->
@@ -526,8 +556,9 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="label">Número de Pagos *</label>
-                                    <select class="form-control" name="numero-pagos" id="numero-pagos-update" required>
-                                        <option value="" disabled="true" selected="selected">- Selecciona opción -</option>
+                                    <select class="form-control" name="numero-pagos" id="numero-pagos-update" 
+                                    title="SELECCIONA UNA OPCIÓN" required data-live-search="true" >
+                                       
                                         <option value="1">1</option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>
@@ -575,17 +606,23 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header bg-red center-align">
-                    <button type="button" class="close" data-dismiss="modal" data-toggle="modal"> &times;</button>
+                  
                     <h4 class="modal-title">Descuentos</h4>
                 </div>
                 <form method="post" id="form_nuevo">
                     <div class="modal-body">
 
                         <div class="form-group">
-                            <label class="label">Puesto del usuario *</label>
-                            <select class="selectpicker select-gral roles" name="roles" id="roles"
+                            <label class="label-gral">Puesto</label><br>
+                            <i class="fa fa-check lbl-azure" 
+                                id="ListoPuesto" name="ListoPuesto"
+                                 style="display: none; background-color: transparent!important"></i>
+                            <i class="fa fa-exclamation-triangle lbl-yellow"
+                                id="FaltaPuesto" name="FaltaPuesto"
+                                 style="display: none; background-color: transparent!important"></i>
+
+                            <select class="selectpicker select-gral m-0 roles" name="roles" id="roles"
                             title="SELECCIONA UNA OPCIÓN" required data-live-search="true" required>
-                        
                                 <option value="7">Asesor</option>
                                 <option value="9">Coordinador</option>
                                 <option value="3">Gerente</option>
@@ -594,62 +631,107 @@
 
 
                         <div class="form-group" id="users2">
+                                <label class="label-gral">Usuario</label><br>
+                                <i class="fa fa-check lbl-azure" 
+                                id="ListoUsuarios" name="ListoUsuarios"
+                                style="display: none; background-color: transparent!important"></i>
+                            
+                                <i class="fa fa-exclamation-triangle lbl-yellow"
+                                id="FaltaUsuarios" name="FaltaUsuarios"
+                                style="display: none; background-color: transparent!important"></i>
+                                <select id="usuarioid2" name="usuarioid2" 
+                                class="selectpicker select-gral m-0 usuarioid2"
+                                title="SELECCIONA UNA OPCIÓN"  
+                                required data-live-search="true">
+                                </select>
                         </div>
 
 
-                        <div class="form-group row">
+                        <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="label">Monto Descuento *</label>
-                                    <input class="form-control input-gral"
+                                    <label class="label-gral">Total descuento</label><br>
+                                    <i class="fa fa-check lbl-azure" 
+                                id="ListoDescuento" name="ListoDescuento"
+                                 style="display: none; background-color: transparent!important"></i>
+                                <i class="fa fa-exclamation-triangle lbl-yellow"
+                                id="FaltaDescuento" name="FaltaDescuento"
+                                 style="display: none; background-color: transparent!important"></i>
+                                    <input class="form-control input-gral "
                                            type="number"
                                            id="descuento"
                                            name="descuento"
                                            autocomplete="off"
                                            min="1" 
+                                           pattern="^[0-9]{0,12}[-]([,][0-9]{2,2})?$"
                                            max="99000"
+                                           onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;"
+                                           maxlength="5"
+                                           oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" 
                                            step=".01"
+                                           onkeyup="onKeyUp(event)"
                                            required />
+
                                 </div>
                             </div>
+                         
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="label">Número de Pagos *</label>
-                                    <select class="selectpicker select-gral " name="numeroPagos" id="numeroPagos" 
-                                    title="SELECCIONA UNA OPCIÓN" required data-live-search="true" required>
+                                
+                                <label class="label-gral">Selecciona mensualidad</label><br>
+                                <i class="fa fa-check lbl-azure" 
+                                id="ListoMensualidad" name="ListoMensualidad"
+                                 style="display: none; background-color: transparent!important"></i>
+                                <i class="fa fa-exclamation-triangle lbl-yellow"
+                                id="FaltaMensualidad" name="FaltaMensualidad"
+                                 style="display: none; background-color: transparent!important"></i>
+                               
+                                    <select class="selectpicker select-gral m-0" name="numeroPagos" id="numeroPagos" 
+                                    title="SELECCIONA LA MENSUALIDAD" required data-live-search="true" required>
                                         
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                        <option value="6">6</option>
-                                        <option value="7">7</option>
-                                        <option value="8">8</option>
-                                        <option value="9">9</option>
-                                        <option value="10">10</option>
-                                        <option value="11">11</option>
+                                        <option value="1">1 Mensualidad</option>
+                                        <option value="2">2 Mensualidades</option>
+                                        <option value="3">3 Mensualidades</option>
+                                        <option value="4">4 Mensualidades</option>
+                                        <option value="5">5 Mensualidades</option>
+                                        <option value="6">6 Mensualidades</option>
+                                        <option value="7">7 Mensualidades</option>
+                                        <option value="8">8 Mensualidades</option>
+                                        <option value="9">9 Mensualidades</option>
+                                        <option value="10">10 Mensualidades</option>
+                                        <option value="11">11 Mensualidades</option>
                                     </select>
                                 </div>
 
                             </div>
-
-
+                      
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="label">Monto a descontar</label>
+                                    <label class="label-gral">Monto por mensualidad</label><br>
+                                    <i class="fa fa-check lbl-azure" 
+                                    id="ListoMonto" name="ListoMonto"
+                                    style="display: none; background-color: transparent!important"></i>
+                                    <i class="fa fa-exclamation-triangle lbl-yellow"
+                                    id="FaltaMonto" name="FaltaMonto"
+                                    style="display: none; background-color: transparent!important"></i>
                                     <input class="form-control input-gral" type="text" id="pago_ind01" name="pago_ind01" value="">
                                 </div>
                             </div>
-
+                      
 
                         </div>
-
-                        <div class="form-group">
-
-                            <label class="label">Mótivo de descuento *</label>
-                            <textarea id="comentario2" name="comentario2" class="form-control input-gral" rows="3"
-                                      required></textarea>
+                        <div class="col-lg-12 form-group m-0">                            
+                            <div class="form-group">
+                                <label class="label">Mótivo de descuento *</label><br>
+                                <i class="fa fa-check lbl-azure" 
+                                    id="ListoMotivo" name="ListoMotivo"
+                                    style="display: none; background-color: transparent!important"></i>
+                                    <i class="fa fa-exclamation-triangle lbl-yellow"
+                                    id="FaltaMotivo" name="FaltaMotivo"
+                                    style="display: none; background-color: transparent!important"></i>
+                                <textarea id="comentario2" name="comentario2"  class="text-modal"  type="text" 
+                                onkeyup="javascript:this.value=this.value.toUpperCase();"  required></textarea>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -798,6 +880,7 @@
     </div>
     <?php $this->load->view('template/footer');?>
     <script src="http://momentjs.com/downloads/moment.min.js"></script>
+    
     <script src="<?= base_url() ?>dist/js/funciones-generales.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/ventas/conglomerado.js"></script>
 </body>

@@ -1312,7 +1312,7 @@ class Comisiones_model extends CI_Model {
         INNER JOIN porcentajes_club pcm ON pcm.numero_plan = pk.id_plancl
         INNER JOIN usuarios u ON u.id_usuario = pcm.id_usuario
         INNER JOIN opcs_x_cats op1 ON op1.id_opcion = pcm.rol
-        WHERE op1.id_catalogo = 1 AND u.id_rol IN (44) AND pcm.id_sede IN (2) AND pk.fecha_plan <= '".$consulta_FINAL."' /*AND pk.fin_plan >= '".$consulta_FINAL."'*/)
+        WHERE op1.id_catalogo = 1 AND u.id_rol IN (44) AND pcm.id_sede IN (2) AND pk.fecha_plan <= '".$consulta_FINAL." /*AND pk.fin_plan >= '".$consulta_FINAL."'*/)
         UNION
         (SELECT pk.id_plancl, pk.fecha_plan, pk.fin_plan, u.id_usuario, CONCAT(u.nombre,' ' ,u.apellido_paterno,' ',u.apellido_materno) AS colaborador, op1.nombre AS rol, pcm.porcentaje, u.id_sede
         FROM planes_club pk
@@ -5779,6 +5779,7 @@ public function CancelarDescuento($id_pago,$motivo)
         du.pago_individual, 
         du.estatus, 
         convert(nvarchar, du.fecha_modificacion , 6) fecha_modificacion,
+        CONVERT(varchar,du.fecha_modificacion,101) as modificacion,
         (CASE WHEN DAY(du.fecha_modificacion) BETWEEN 1 AND 10 AND du.estatus = 5 AND MONTH(du.fecha_modificacion) = MONTH(GETDATE()) AND YEAR(du.fecha_modificacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END ) banderaReactivado,
 
         du.fecha_creacion,
@@ -5804,7 +5805,7 @@ public function CancelarDescuento($id_pago,$motivo)
 
         $respuesta = $this->db->query("INSERT INTO descuentos_universidad VALUES (".$usuario.", ".$descuento.", 1, 'DESCUENTO UNIVERSIDAD MADERAS', '".$comentario."', ".$userdata.", GETDATE() , 0, ".$monto.", 1, 0, NULL, NULL, GETDATE())");
         $insert_id = $this->db->insert_id();
-        $respuesta = $this->db->query("INSERT INTO historial_log VALUES (".$insert_id.", ".$userdata.", GETDATE(), 1, 'MOTIVO DESCUENTO: ".$comentario."', 'descuentos_universidad', null)");
+        $respuesta = $this->db->query("INSERT INTO historial_log VALUES (".$insert_id.", ".$userdata.", GETDATE(), 3, 'MOTIVO DESCUENTO: ".$comentario."', 'descuentos_universidad', null, NULL,NULL, NULL)");
        
        
         if (! $respuesta ) {
@@ -5852,10 +5853,8 @@ public function CancelarDescuento($id_pago,$motivo)
 
         $cmd = "SELECT pci1.id_pago_i, lo.nombreLote, re.empresa, 
         UPPER(CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno)) AS user_names, 
-        convert(nvarchar,  pci1.fecha_pago_intmex , 6)as fecha,
-        convert(nvarchar,  his.fecha_movimiento , 6)as fecha_devolucion,
-        convert(nvarchar,  pci1.fecha_pago_intmex , 6)as fecha_pago_intmex,
-
+        convert(nvarchar,  his.fecha_movimiento , 6)as fecha_pago_intmex,
+			convert(nvarchar,  his.fecha_movimiento , 6)as fecha_devolucion,
          pci1.id_usuario, 
         UPPER(oprol.nombre) AS puesto, 
         UPPER(se.nombre) AS sede, 
@@ -5869,6 +5868,7 @@ public function CancelarDescuento($id_pago,$motivo)
         INNER JOIN usuarios u ON u.id_usuario = com.id_usuario $query2
         INNER JOIN usuarios cr ON cr.id_usuario = pci1.modificado_por
         INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
+    
         INNER JOIN historial_comisiones his ON his.id_pago_i = pci1.id_pago_i 
         AND his.estatus = 2
         LEFT JOIN sedes se   
