@@ -3071,7 +3071,7 @@ public function descuentos_historial()
    
    
   public function saveDescuento($valor) {
-      $saldo_comisiones = $this->input->post('saldo_comisiones');
+      $saldo_comisiones = $this->input->post('saldoComisiones');
 
     
       $LotesInvolucrados = "";
@@ -3081,7 +3081,6 @@ public function descuentos_historial()
     $descuento = $this->input->post("monto");
     $usuario = $this->input->post("usuarioid");
     $comentario = $this->input->post("comentario");
-    $pagos_apli = 0;
     $descuent0 = str_replace(",",'',$descuento);
     $descuento = str_replace("$",'',$descuent0);
     
@@ -3091,16 +3090,15 @@ public function descuentos_historial()
     $descuento = $this->input->post("monto2");
     $usuario = $this->input->post("usuarioid2");
     $comentario = $this->input->post("comentario2");
-    $pagos_apli = 0;
     $descuent0 = str_replace(",",'',$descuento);
   $descuento = str_replace("$",'',$descuent0);
   
   }
   else if(floatval($valor) == 3){
     /**DESCUENTOS UNIVERSIDAD*/
-    $datos =  $this->input->post("idloteorigen[]");
-    $desc =  $this->input->post("monto");
-    $usuario = $this->input->post("usuarioid");
+    $datos =  $this->input->post("arrayLotes[]");
+    $desc =  $this->input->post("montoaDescontar");
+    $usuario = $this->input->post("usuarioId");
     $comentario = $this->input->post("comentario");
     if($comentario == 'DESCUENTO UNIVERSIDAD MADERAS'){
       $cuantosLotes = count($datos);
@@ -3115,8 +3113,7 @@ public function descuentos_historial()
           $LotesInvolucrados =  $LotesInvolucrados." ".$nameLoteComent.",\n"; // Disponible: $".number_format($montoComent, 2, '.', ',')."\n"; 
       }
     }
-    $pagos_apli = intval($this->input->post("pagos_aplicados"));
-        $descuent0 = str_replace(",",'',$desc);
+      $descuent0 = str_replace(",",'',$desc);
       $descuento = str_replace("$",'',$descuent0);
   }
 
@@ -3145,7 +3142,7 @@ public function descuentos_historial()
             }else{
               $comentario = $this->input->post("comentario");
             }
-            $dat =  $this->Comisiones_model->update_descuento($id,$montoAinsertar,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$valor,$usuario,$pagos_apli);
+            $dat =  $this->Comisiones_model->update_descuento($id,$montoAinsertar,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$valor,$usuario);
           $dat =  $this->Comisiones_model->insertar_descuento($usuario,$Restante,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata,$valor);
           }
           }else{
@@ -3161,7 +3158,7 @@ public function descuentos_historial()
             }else{
               $comentario = $this->input->post("comentario");
             }
-          $dat = $this->Comisiones_model->update_descuento($id,0,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$valor,$usuario, $pagos_apli);
+          $dat = $this->Comisiones_model->update_descuento($id,0,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$valor,$usuario);
           $sumaMontos = $sumaMontos + $monto;
           }
 
@@ -3184,7 +3181,7 @@ public function descuentos_historial()
           $dat =  $this->Comisiones_model->update_descuentoEsp($id,$montoAinsertar,$comentario, $this->session->userdata('id_usuario'),$valor,$usuario);
             $dat =  $this->Comisiones_model->insertar_descuentoEsp($usuario,$Restante,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata,$valor);
           }else{
-            $dat =  $this->Comisiones_model->update_descuento($id,$descuento,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$valor,$usuario,$pagos_apli);
+            $dat =  $this->Comisiones_model->update_descuento($id,$descuento,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$valor,$usuario);
             $dat =  $this->Comisiones_model->insertar_descuento($usuario,$montoAinsertar,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata,$valor);
   
           }
@@ -4111,12 +4108,9 @@ public function SaveAjuste($opc = '')
 
 
 
-function topar_descuentos(){
-  // $respuesta = array( FALSE );
-
-  // if($this->input->post("id_pago_i")){
-    $respuesta = array($this->Comisiones_model->update_DU_topar($this->input->post("id_pago"), $this->input->post("observaciones"), $this->input->post("monto") ));
-  // }
+function toparDescuentoUniversidad(){
+ 
+    $respuesta = array($this->Comisiones_model->toparDescuentoUniversidad($this->input->post("usuarioTopar"), $this->input->post("comentarioTopar") ));
   echo json_encode( $respuesta );
 }
 
