@@ -2983,9 +2983,9 @@ public function getUsuariosRolBonos($rol)
     echo json_encode($this->Comisiones_model->getUsuariosRolBonos($rol)->result_array());
   }
 
-public function getUsuariosRolDU($rol)
+public function getUsuariosUM($rol)
   {
-    echo json_encode($this->Comisiones_model->getUsuariosRolDU($rol)->result_array());
+    echo json_encode($this->Comisiones_model->getUsuariosUM($rol)->result_array());
   }
 
 
@@ -3195,15 +3195,25 @@ public function getDescuentos2()
   echo json_encode($res);
 }
 
-public function saveDescuentoch()
-{
-    $usuario = $this->input->post("usuarioid2");
-    $descuento = $this->input->post("descuento");
-    $comentario = $this->input->post("comentario2"); 
-    $monto0 = str_replace(",",'',$this->input->post('pago_ind01'));
-    $monto = str_replace("$",'',$monto0);
-    $dat =  $this->Comisiones_model->insertar_descuentoch($usuario, $descuento, $comentario,  $monto, $this->session->userdata('id_usuario')); 
-    echo json_encode($dat);
+public function altaNuevoDescuentoUM(){
+
+  $usuario = $this->input->post("usuarios");
+  $montoDescuento = str_replace(",",'',$this->input->post('montoDescuento'));
+  $montoFinalDescuento = str_replace("$",'',$montoDescuento);
+  $numeroMeses = $this->input->post("numeroMeses"); 
+  $montoMensualidad = str_replace(",",'',$this->input->post('montoMensualidad'));
+  $montoFinalMensualidad = str_replace("$",'',$montoMensualidad);
+  $descripcionAltaDescuento = $this->input->post("descripcionAltaDescuento"); 
+
+  $voBoUsuario = $this->Comisiones_model->validarNuevoDescuentoUM($usuario);
+
+  if($voBoUsuario > 0){
+    $data = 0;
+  }else{
+    $data = $this->Comisiones_model->altaNuevoDescuentoUM($usuario, $montoFinalDescuento, $numeroMeses, $montoFinalMensualidad, $descripcionAltaDescuento, $this->session->userdata('id_usuario')); 
+  }
+  
+  echo json_encode($data);
 }
     public function getDescuentos()
     {

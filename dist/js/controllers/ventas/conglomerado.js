@@ -1,6 +1,89 @@
 
 $(document).ready(function () {
 
+
+    $.post(general_base_url + "/Comisiones/lista_roles", function (data) {
+        var len = data.length;
+        for (var i = 0; i < len; i++) {
+            var id = data[i]['id_opcion'];
+            var name = data[i]['nombre'];
+            $("#puesto").append($('<option>').val(id).text(name.toUpperCase()));     
+        }
+        $("#puesto").selectpicker('refresh');
+
+    }, 'json');
+
+
+    $('#puesto').change(function(ruta){
+        rol = $('#puesto').val();
+        $("#usuarios").empty().selectpicker('refresh');
+        $.ajax({
+            url: general_base_url + 'Comisiones/getUsuariosUM/'+rol,
+            type: 'post',
+            dataType: 'json',
+            success:function(response){
+                var len = response.length;
+                for( var i = 0; i<len; i++){
+                    var id = response[i]['id_usuario'];
+                    var name = response[i]['nombre'];
+                    $("#usuarios").append($('<option>').val(id).text(name));
+                }
+                $("#usuarios").selectpicker('refresh');
+            }
+        });
+    });
+
+
+
+
+    // document.getElementById("montoDescuento").addEventListener("input", (e) => {
+    //     let value = e.target.value;
+    //     e.target.value = value.replace(/[^A-Z\d-]/g, "");
+    //     if(e.which < 6 || e.which <= 0 ){
+    //         return false;
+    //     }
+    //   });
+
+
+
+    //   var input=  document.getElementById('montoDescuento');
+    //   input.addEventListener('input',function(e){
+    //     e.target.value = value.replace(/[^A-Z\d-]/g, "");
+    //     if (e.which > 6) 
+    //        e.which = e.which.slice(0,6); 
+    //   });
+
+
+ 
+
+    // document.getElementById("numeroMeses").addEventListener("input", (e) => {
+    //     let value = e.target.value;
+    //     e.target.value = value.replace(/[^A-Z\d-]/g, "");
+    //     if(e.which < 2 || e.which <= 0 ){
+    //         return false;
+    //     }
+    //   });
+      
+
+    // $.post(general_base_url + "Comisiones/getDirectivos", function (data) {
+    //     var len = data.length;
+    //     for (var i = 0; i < len; i++) {
+    //         var id = data[i]['id_usuario'];
+    //         var name = data[i]['nombre'];
+    //         if(id_usuario_general == 1875 ){
+    //             if(id == 2){
+    //                 $("#filtro33").append($('<option>').val(id).text(name.toUpperCase()));
+    //             }
+    //         }
+    //         else{
+    //             $("#filtro33").append($('<option>').val(id).text(name.toUpperCase()));
+    //         }
+    //     }
+    //     $("#filtro33").selectpicker('refresh');
+    // }, 'json');
+
+
+
     $('body').tooltip({
         selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
         trigger: 'hover',
@@ -618,18 +701,18 @@ function loadTable(tipoDescuento) {
     });
 
     let meses = [
-        {id:01, mes:'Enero'},
-        {id:02,mes:'Febrero'},
-        {id:03,mes:'Marzo'},
-        {id:04,mes:'Abril'},
-        {id:05,mes:'Mayo'},
-        {id:06,mes:'Junio'},
-        {id:07,mes:'Julio'},
-        {id:08,mes:'Agosto'},
-        {id:09,mes:'Septiembre'},
-        {id:10,mes:'Octubre'},
-        {id:11,mes:'Noviembre'},
-        {id:12,mes:'Diciembre'}
+        {id:'01', mes:'Enero'},
+        {id:'02',mes:'Febrero'},
+        {id:'03',mes:'Marzo'},
+        {id:'04',mes:'Abril'},
+        {id:'05',mes:'Mayo'},
+        {id:'06',mes:'Junio'},
+        {id:'07',mes:'Julio'},
+        {id:'08',mes:'Agosto'},
+        {id:'09',mes:'Septiembre'},
+        {id:'10',mes:'Octubre'},
+        {id:'11',mes:'Noviembre'},
+        {id:'12',mes:'Diciembre'}
     ];
     let anios = [2019,2020,2021,2022,2023,2024];
 
@@ -702,36 +785,76 @@ function loadTable(tipoDescuento) {
 
 
 
+    $('#numeroMeses').change(function () {
+    const totalDescuento = replaceAll($('#montoDescuento').val(), ',', '');
+    const monto = replaceAll(totalDescuento, '$', '');
+    const meses = parseFloat($('#numeroMeses').val());
+    let resultado = 0;
+
+    if (isNaN(monto)||isNaN(meses)) {
+        alerts.showNotification("top", "right", "Revise la información ingresada.", "warning");
+        $('#montoMensualidad').val(resultado);
+    } else {
+        resultado = monto / meses;
+        if (resultado > 0) {
+            $('#montoMensualidad').val(formatMoney(resultado));
+        } else {
+            $('#montoMensualidad').val(formatMoney(0));
+        }
+    }
+});
+
+$('#montoDescuento').change(function () {
+    const totalDescuento = replaceAll($('#montoDescuento').val(), ',', '');
+    const monto = replaceAll(totalDescuento, '$', '');
+    const meses = parseFloat($('#numeroMeses').val());
+    let resultado = 0;
+
+    if (isNaN(monto)||isNaN(meses)) {
+        alerts.showNotification("top", "right", "Revise la información ingresada.", "warning");
+        $('#montoMensualidad').val(resultado);
+    } else {
+        resultado = monto / meses;
+        if (resultado > 0) {
+            $('#montoMensualidad').val(formatMoney(resultado));
+        } else {
+            $('#montoMensualidad').val(formatMoney(0));
+        }
+    }
+});
+
 
 }); //END DATATABLE
 
 
 function open_Mb() {
 
-    $("#roles").val('');
-    $("#roles").selectpicker("refresh");
-    document.getElementById("users2").innerHTML = '';
-    $("#usuarioid2").val('');
-    $("#usuarioid2").selectpicker("refresh");
-    $("#comentario2").val('');
-    $('#ModalBonos').modal('show');
+    $("#puesto").val('');
+    $("#puesto").selectpicker("refresh");
+    $("#usuarios").val('');
+    $("#usuarios").selectpicker("refresh");
+    $("#descripcionAltaDescuento").val('');
+    $('#modalAgregarNuevo').modal('show');
 }
 
-$("#roles").change(function () {
-    var parent = $(this).val();
-
-    $("#users2").val('');
-
-    $("#usuarioid2").val('');
-    $("#usuarioid2").selectpicker("refresh");
 
 
-    document.getElementById("users2").innerHTML = '';
-    // $('#users2').append(`<label class="label">Usuario</label><select id="usuarioid2" name="usuarioid2" class="form-control directorSelect ng-invalid ng-invalid-required" required data-live-search="true"></select>`);
+ 
+// $("#roles").change(function () {
+//     var parent = $(this).val();
+
+//     $("#users2").val('');
+
+//     $("#usuarioid2").val('');
+//     $("#usuarioid2").selectpicker("refresh");
 
 
-    $('#users2').append(`<div class="col-lg-12 form-group m-0" id="select">
-    <label class="label-gral">Puesto</label><select class="selectpicker select-gral m-0" name="roles" id="roles" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select></div>`);
+//     document.getElementById("users2").innerHTML = '';
+//     // $('#users2').append(`<label class="label">Usuario</label><select id="usuarioid2" name="usuarioid2" class="form-control directorSelect ng-invalid ng-invalid-required" required data-live-search="true"></select>`);
+
+
+//     $('#users2').append(`<div class="col-lg-12 form-group m-0" id="select">
+//     <label class="label-gral">Puesto</label><select class="selectpicker select-gral m-0" name="roles" id="roles" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select></div>`);
 
 
     // $.post('getUsuariosRolDU/' + parent, function (data) {
@@ -754,23 +877,23 @@ $("#roles").change(function () {
 
 
     // function getStatusRecordatorio(){
-        $.post('getUsuariosRolDU/' + parent, function (data) {
-            $("#usuarioid2").append($('<option disabled selected>').val("0").text("Seleccione una opción"));
-            var len = data.length;
-            for (var i = 0; i < len; i++) {
-                var id = data[i]['id_usuario'];
-                var name = data[i]['name_user'];
-                $("#usuarioid2").append($('<option>').val(id).text(name));
-            }
-            if (len <= 0) {
-                $("#usuarioid2").append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
-            }
-            $("#usuarioid2").selectpicker('refresh');
-        }, 'json'); 
+//         $.post('getUsuariosRolDU/' + parent, function (data) {
+//             $("#usuarioid2").append($('<option disabled selected>').val("0").text("Seleccione una opción"));
+//             var len = data.length;
+//             for (var i = 0; i < len; i++) {
+//                 var id = data[i]['id_usuario'];
+//                 var name = data[i]['name_user'];
+//                 $("#usuarioid2").append($('<option>').val(id).text(name));
+//             }
+//             if (len <= 0) {
+//                 $("#usuarioid2").append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
+//             }
+//             $("#usuarioid2").selectpicker('refresh');
+//         }, 'json'); 
     
 
     
-});
+// });
 
 
         // $('#tabla-general tbody').on('click', '.btn-eliminar-descuento', function () {
@@ -981,24 +1104,7 @@ $("#roles").change(function () {
 //         }
 //     });
 
-// $('#numero-pagos-update').change(function () {
-//     const monto1 = replaceAll($('#descuento-update').val(), ',', '');
-//     const monto = replaceAll(monto1, '$', '');
-//     const cantidad = parseFloat($('#numero-pagos-update').val());
-//     let resultado = 0;
 
-//     if (isNaN(monto)) {
-//         alerts.showNotification("top", "right", "Debe ingresar un monto valido.", "warning");
-//         $('#pago-ind-update').val(resultado);
-//     } else {
-//         resultado = monto / cantidad;
-//         if (resultado > 0) {
-//             $('#pago-ind-update').val(formatMoney(resultado));
-//         } else {
-//             $('#pago-ind-update').val(formatMoney(0));
-//         }
-//     }
-// });
 
 
 
@@ -1156,9 +1262,7 @@ $("#formularioAplicarDescuento").submit(function (e) {
 
 // Función para pausar la solicitud
 $("#form_interes").submit(function (e) {
-
     // $('#btn_topar').attr('disabled', 'true');
-
     e.preventDefault();
 }).validate({
     submitHandler: function (form) {
@@ -1191,53 +1295,86 @@ $("#form_interes").submit(function (e) {
     }
 });
 
-// $("#form_nuevo").submit(function (e) {
 
-//     // $('#btn_abonar').attr('disabled', 'true');
+
+$("#formAltaDescuento").submit(function (e) {
+    $('#btn_alta').attr('disabled', 'true');
+    e.preventDefault();
+}).validate({
+    submitHandler: function (form) {
+
+        var data = new FormData($(form)[0]);
+           $.ajax({
+            url: general_base_url+"Comisiones/altaNuevoDescuentoUM",
+            data: data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            method: 'POST',
+            type: 'POST', // For jQuery < 1.9
+            success: function (data) {
+                if (data) {
+                    $("#modalAgregarNuevo").modal('toggle');
+                    $("#montoDescuento").val('');
+                    $("#numeroMeses").val('');
+                    $("#montoMensualidad").val('');
+                    $("#descripcionAltaDescuento").val('');
+                    alerts.showNotification("top", "right", "Se agregó el descuento exitosamente", "success");
+                    setTimeout(function () {
+                        tablaGeneral.ajax.reload();
+                    }, 3000);
+                } else {
+                    alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
+
+                }
+            }, error: function () {
+                alerts.showNotification("top", "right", "ERROR EN EL SISTEMA", "danger");
+            }
+        });
+    }
+});
+
+// $("#formAltaDescuento").submit(function (e) {
+
 //     $('#btn_abonar').prop('disabled', true);
 //     document.getElementById('btn_abonar').disabled = true;
 
 //     e.preventDefault();
 // }).validate({
 //     rules: {
-//         roles: {
+//         puesto: {
 //             required: true
 //         },
-//         descuento: {
+//         usuarios: {
+//             required: true
+//         },
+//         montoDescuento: {
 //             required: true,
 //             number: true,
 //             min: 1,
 //             max: 99000
 //         },
-//         numeroPagos: {
+//         numeroMeses: {
 //             required: true
 //         },
-//         comentario2: {
+//         montoMensualidad: {
+//             required: true
+//         },
+//         descripcionAltaDescuento: {
 //             required: true
 //         }
 //     },
 //     messages: {
-//         roles: {
+    
 //             required: '* Campo requerido'
-//         },
-//         descuento: {
-//             required: '* Campo requerido',
-//             number: 'Número no válido.',
-//             min: 'El valor mínimo debe ser 1',
-//             max: 'El valor máximo debe ser 99,000'
-//         },
-//         numeroPagos: {
-//             required: '* Campo requerido'
-//         },
-//         comentario2: {
-//             required: '* Campo requerido'
-//         }
+
 //     },
 //     submitHandler: function (form) {
 
 //         const data1 = new FormData($(form)[0]);
 //         $.ajax({
-//             url: 'saveDescuentoch/',
+//             url: 'altaNuevoDescuentoUM/',
 //             data: data1,
 //             method: 'POST',
 //             contentType: false,
@@ -1247,29 +1384,27 @@ $("#form_interes").submit(function (e) {
 //                 if (data == 1) {
 //                     $('#loaderDiv').addClass('hidden');
 //                     $('#tabla-general').DataTable().ajax.reload(null, false);
-//                     $('#ModalBonos').modal('hide');
-//                     $("#roles").val('');
-//                     $("#roles").selectpicker("refresh");
-//                     document.getElementById("users2").innerHTML = '';
-//                     $("#usuarioid2").val('');
-//                     $("#usuarioid2").selectpicker("refresh");
-
-//                     $("#descuento").val('');
-//                     $("#numeroPagos").val('');
-//                     $("#pago_ind01").val('');
-//                     $("#comentario2").val('');
+//                     $('#modalAgregarNuevo').modal('hide');
+//                     $("#puesto").val('');
+//                     $("#puesto").selectpicker("refresh");
+//                     $("#usuarios").val('');
+//                     $("#usuarios").selectpicker("refresh");
+//                     $("#montoDescuento").val('');
+//                     $("#numeroMeses").val('');
+//                     $("#montoMensualidad").val('');
+//                     $("#descripcionAltaDescuento").val('');
 //                     alerts.showNotification("top", "right", "Descuento registrado con exito.", "success");
 
 //                 } else if (data == 2) {
 //                     $('#loaderDiv').addClass('hidden');
 //                     $('#tabla-general').DataTable().ajax.reload(null, false);
-//                     $('#ModalBonos').modal('hide');
+//                     $('#modalAgregarNuevo').modal('hide');
 //                     alerts.showNotification("top", "right", "Ocurrio un error.", "warning");
 //                     $(".directorSelect2").empty();
 
 //                 } else if (data == 3) {
 //                     $('#tabla-general').DataTable().ajax.reload(null, false);
-//                     $('#ModalBonos').modal('hide');
+//                     $('#modalAgregarNuevo').modal('hide');
 //                     alerts.showNotification("top", "right", "El usuario seleccionado ya tiene un pago activo.", "warning");
 //                     $(".directorSelect2").empty();
 
@@ -1278,7 +1413,7 @@ $("#form_interes").submit(function (e) {
 //             },
 //             error: function () {
 //                 $('#loaderDiv').addClass('hidden');
-//                 $('#ModalBonos').modal('hide');
+//                 $('#modalAgregarNuevo').modal('hide');
 //                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
 //                 $('#idloteorigen').attr('disabled', 'true');
 
@@ -1493,7 +1628,7 @@ $("#form_interes").submit(function (e) {
 // }
  
 
-// $('#ModalBonos').on('hidden.bs.modal', function() {
+// $('#modalAgregarNuevo').on('hidden.bs.modal', function() {
 //     $('#form_nuevo').trigger('reset');
 // });
 
