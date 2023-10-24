@@ -325,6 +325,8 @@ $(document).on('click', '.infoUser', async function (){
     const idCliente = $(this).attr('data-idCliente');
     const idLote = $(this).attr('data-idLote');
 
+    $("#spiner-loader").removeClass('hide');
+
     copropietariosEliminar = [];
     estadoCivilList = await obtenerEstadoCivilLista();
 
@@ -428,6 +430,8 @@ $(document).on('click', '.infoUser', async function (){
         showModal();
 
         $('[data-toggle="tooltip"]').tooltip();
+
+        $("#spiner-loader").addClass('hide');
 
     }, 'json');
 });
@@ -540,7 +544,6 @@ $(document).on('click', '#guardarCliente', function (){
             }
         },
         error: function(){
-            $('#aceptarReestructura').modal('hide');
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
             $("#spiner-loader").addClass('hide');
         }

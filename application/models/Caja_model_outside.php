@@ -971,13 +971,13 @@
     }
 
 
-    public function getHistLib($idLote)
-    {
-
-        $this->db->where("idLote", $idLote);
-        $query = $this->db->get("historial_liberacion");
-        return $query->result_array();
-
+    public function getHistLib($idLote) {
+        return $this->db->query("SELECT hl.idLiberacion, hl.nombreLote, hl.comentarioLiberacion, hl.observacionLiberacion, hl.precio,
+        hl.fechaLiberacion, hl.modificado, hl.status, hl.idLote, hl.id_cliente, hl.tipo,
+        CASE WHEN ISNUMERIC(TRY_CAST(hl.userLiberacion AS INT)) = 1 THEN CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END ELSE hl.userLiberacion END userLiberacion
+        FROM historial_liberacion hl
+        LEFT JOIN usuarios u0 ON u0.id_usuario = TRY_CAST(hl.userLiberacion AS INT)
+        WHERE hl.idLote = $idLote")->result_array();
     }
 
 
