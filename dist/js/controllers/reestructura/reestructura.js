@@ -125,9 +125,10 @@ $(document).on('click', '.btn_historial', function (){
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" ><b>Cerrar</b></button>
-                </div>`);
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" ><b>Cerrar</b></button>
+            </div>`);
     showModal();
 
     $.getJSON("getHistorial/" + idLote).done(function(data) {

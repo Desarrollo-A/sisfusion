@@ -407,28 +407,112 @@ $("#my_personal_info_form").on('submit', function(e){
 
 $("#my_add_user_form").on('submit', function(e){
     e.preventDefault();
-    $.ajax({
-        type: 'POST',
-        url: 'saveUser',
-        data: new FormData(this),
-        contentType: false,
-        cache: false,
-        processData:false,
-        success: function(data) {
-            if (data == 1) {
-                alerts.showNotification("top", "right", "El usuario se ha registrado correctamente.", "success");
-                setTimeout(function() {
-                    document.location.reload()
-                }, 3000);
-            } else {
-                alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
+    let flagSubmit = validarNuevoUsuario();
+    if (flagSubmit){
+        $.ajax({
+            type: 'POST',
+            url: 'saveUser',
+            data: new FormData(this),
+            contentType: false,
+            cache: false,
+            processData:false,
+            success: function(data) {
+                data = JSON.parse(data);
+                if (data.response == 1) {
+                    alerts.showNotification("top", "right", "El usuario se ha registrado correctamente.", "success");
+                    setTimeout(function() {
+                        document.location.reload();
+                    }, 3000);
+                } else if(data.response == -1){
+                    alerts.showNotification("top", "right", "El nombre de usuario ya está en uso, intentalo con otro.", "warning");
+                    $('#username').focus();
+                } else if(data.response == -2){
+                    alerts.showNotification("top", "right", "Selecciona opciones de menú", "warning");
+                    $('#seleccionaTodo').focus();
+                }else{
+                    alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
+                }
+            },
+            error: function(){
+                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
             }
-        },
-        error: function(){
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    });
+        });
+    }
 });
+function validarNuevoUsuario(){
+    let flagSubmit = false;
+    let nombre = $('#name').val();
+    let last_name = $('#last_name').val();
+    let mothers_last_name = $('#mothers_last_name').val();
+    let email = $('#email').val();
+    let payment_method = $('#payment_method').val();
+    let phone_number = $('#phone_number').val();
+    let headquarter = $('#headquarter').val();
+    let member_type = $('#member_type').val();
+    let leader = $('#leader').val();
+    let username = $('#username').val();
+    let contrasena = $('#contrasena').val();
+    let checkboxGeneral = $('#checkboxGeneral').is(":checked");
+
+    if(nombre=='' || nombre==undefined){
+        alerts.showNotification('top', 'right', 'Ingresa un nombre', 'warning');
+        $('#name').focus();
+        flagSubmit = false;
+    }
+    else if(last_name=='' || last_name==undefined){
+        alerts.showNotification('top', 'right', 'Ingresa apellido paterno', 'warning');
+        $('#last_name').focus();
+        flagSubmit = false;
+    }
+    else if(email=='' || email==undefined){
+        alerts.showNotification('top', 'right', 'Ingresa un correo', 'warning');
+        $('#email').focus();
+        flagSubmit = false;
+    }
+    else if(payment_method=='' || payment_method==undefined){
+        alerts.showNotification('top', 'right', 'Ingresa un método de pago', 'warning');
+        $('#payment_method').focus();
+        flagSubmit = false;
+    }
+    else if(phone_number=='' || phone_number==undefined){
+        alerts.showNotification('top', 'right', 'Ingresa un teléfono', 'warning');
+        $('#phone_number').focus();
+        flagSubmit = false;
+    }
+    else if(headquarter=='' || headquarter==undefined){
+        alerts.showNotification('top', 'right', 'Ingresa una sede', 'warning');
+        $('#headquarter').focus();
+        flagSubmit = false;
+    }
+    else if(member_type=='' || member_type==undefined){
+        alerts.showNotification('top', 'right', 'Selecciona tipo de miembro', 'warning');
+        $('#member_type').focus();
+        flagSubmit = false;
+    }
+    else if(leader=='' || leader==undefined){
+        alerts.showNotification('top', 'right', 'Selecciona tipo de miembro', 'warning');
+        $('#leader').focus();
+        flagSubmit = false;
+    }
+    else if(username=='' || username==undefined){
+        alerts.showNotification('top', 'right', 'Ingresa nombre de usuario', 'warning');
+        $('#username').focus();
+        flagSubmit = false;
+    }
+    else if(contrasena=='' || contrasena==undefined){
+        alerts.showNotification('top', 'right', 'Ingresa contraseña', 'warning');
+        $('#contrasena').focus();
+        flagSubmit = false;
+    }
+    // else if(checkboxGeneral=='' || checkboxGeneral==undefined){
+    //     alerts.showNotification('top', 'right', 'Selecciona alguna opción de menú', 'warning');
+    //     flagSubmit = false;
+    // }
+    else{
+        flagSubmit = true;
+    }
+    return flagSubmit;
+}
 
 function getLeadersList(){
     headquarter = $('#headquarter').val();
@@ -986,7 +1070,12 @@ function printMenuCheck(data){
     let arrayJSON = '';
     data.map((elemento, index)=>{
         if(elemento.hijos == 1 || Number.isInteger(elemento.orden)){
-            contenidoInternoHTML += '<ul><li>'+elemento.nombre+'</li><ul>';
+            arrayInterno = [];
+            arrayInterno.push(elemento.padre);
+            arrayInterno.push(elemento.idmenu);
+            arrayInterno.push(elemento.orden);
+            arrayJSON = JSON.stringify(arrayInterno);
+            contenidoInternoHTML += '<ul><li><input value="'+arrayJSON+'" type="checkbox" name="menu[]" id="padre'+elemento.nombre+index+'"> <label for="padre'+elemento.nombre+index+'"> '+elemento.nombre+'</label></li><ul>';
             data.map((element2, index2)=>{
                 arrayInterno = [];
                 if(element2.hijos == 0 && ((element2.orden>=data[index].orden ) && (element2.orden<=(data[index].orden+1)))){

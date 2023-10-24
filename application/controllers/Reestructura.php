@@ -3,7 +3,7 @@
 class Reestructura extends CI_Controller{
 	public function __construct() {
 		parent::__construct();
-        $this->load->model(array('Reestructura_model','General_model', 'caja_model_outside', 'Clientes_model'));
+        $this->load->model(array('Reestructura_model','General_model', 'caja_model_outside', 'Contraloria_model', 'Clientes_model'));
         $this->load->library(array('session','form_validation', 'get_menu','permisos_sidebar'));
 		$this->load->helper(array('url', 'form'));
 		$this->load->database('default');
@@ -147,6 +147,7 @@ class Reestructura extends CI_Controller{
     public function insertarInformacionCli ($idLote){
 
         $dataPost = $_POST;
+
         $datos["idLote"] = $dataPost['idLote'];
 		$datos["nombre"] = $dataPost['nombreCli'];
 		$datos["apellido_paterno"] = $dataPost['apellidopCli'];
@@ -217,7 +218,6 @@ class Reestructura extends CI_Controller{
         $idClienteAnterior = $clienteAnterior->id_cliente;
         $loteAOcupar = $clienteAnterior->idLote;
 		$lineaVenta = $this->General_model->getLider($idLider)->row();
-        $proceso = 3;
         $tipo_venta = $clienteAnterior->tipo_venta;
         $ubicacion = $clienteAnterior->ubicacion;
 
@@ -250,7 +250,7 @@ class Reestructura extends CI_Controller{
 			'idCondominio' => $clienteAnterior->idCondominio,
 			'idCliente' => $idClienteInsert,
 			'usuario' => $idAsesor,
-			'perfil' => 'ooam',
+			'perfil' => 'EEC',
 			'comentario' => 'OK',
 			'status' => 1
         );
@@ -280,7 +280,7 @@ class Reestructura extends CI_Controller{
         }
 
         $dataUpdateCliente = array(
-            'proceso' => $proceso
+            'proceso' => 3
         );
 
         if (!$this->General_model->updateRecord("clientes", $dataUpdateCliente, "id_cliente", $idClienteAnterior)){
@@ -307,8 +307,10 @@ class Reestructura extends CI_Controller{
             return;
         }
 
+        $documentacionOriginal = $this->Reestructura_model->obtenerDocumentacionOriginal($clienteAnterior->personalidad_juridica);
         if (!$this->moverExpediente(
-            $clienteAnterior->idLote, $loteAOcupar, $idClienteAnterior, $idClienteInsert, $expediente, $loteNuevoInfo, $documentacionActiva
+            $documentacionOriginal, $clienteAnterior->idLote, $loteAOcupar, $idClienteAnterior, $idClienteInsert,
+            $expediente, $loteNuevoInfo, $documentacionActiva
         )) {
             $this->db->trans_rollback();
 
@@ -360,129 +362,134 @@ class Reestructura extends CI_Controller{
         $idLotes = $this->input->post('idLotes');
         $idLoteOriginal = $this->input->post('idLoteOriginal');
         $statusPreproceso = $this->input->post('statusPreproceso');
-        
-        
-        $arrayLotes = array();
-        $arrayLotesApartado = array();
+        $idCliente = $this->input->post('idCliente');
+        $totalLotes = count($idLotes);
+        $flagConteo = 0;
+        $arrayNoDisponible = '';
+        foreach ($idLotes as $elementoLote) {
+            $dataDisponible = $this->Reestructura_model->checarDisponibleRe($elementoLote);
 
-        //AA: Se asignan propuesta por primera vez
-        if($statusPreproceso == 0){
-            foreach ($idLotes as $idLote){
-                $arrayLote = array(
-                    'idLote' => $idLoteOriginal,
-                    'id_lotep' => $idLote,
-                    'estatus' => 0,
-                    'creado_por' => $this->session->userdata('id_usuario'),
-                    'fecha_modificacion'   => date("Y-m-d H:i:s"),
-                    'modificado_por' => $this->session->userdata('id_usuario')
+            if (count($dataDisponible) > 0) {
+                if ($dataDisponible[0]['idLote'] == $elementoLote && ($dataDisponible[0]['idStatusLote'] == 15 || $dataDisponible[0]['idStatusLote'] == 1)) {//se checa que el devuelto si este en 15 y sea el que s emandó
+                    $flagConteo = $flagConteo + 1;
+                    $arrayNoDisponible .= '- ID LOTE: ' . $dataDisponible[0]['idLote'] . ' (' . $dataDisponible[0]['nombreLote'] . '),';
+                }
+            }
+        }
+        if ($flagConteo == $totalLotes) { //si todos estan disponibles se avanza
+            $arrayLotes = array();
+            $arrayLotesApartado = array();
+            //AA: Se asignan propuesta por primera vez
+            if ($statusPreproceso == 0) {
+                foreach ($idLotes as $idLote) {
+                    $arrayLote = array(
+                        'idLote' => $idLoteOriginal,
+                        'id_lotep' => $idLote,
+                        'estatus' => 0,
+                        'creado_por' => $this->session->userdata('id_usuario'),
+                        'fecha_modificacion' => date("Y-m-d H:i:s"),
+                        'modificado_por' => $this->session->userdata('id_usuario')
+                    );
+
+                    array_push($arrayLotes, $arrayLote);
+                }
+                if (!$this->General_model->insertBatch('propuestas_x_lote', $arrayLotes)) {
+                    $this->db->trans_rollback();
+
+                    echo json_encode([
+                        'titulo' => 'ERROR',
+                        'resultado' => FALSE,
+                        'message' => 'Error al dar el alta de las propuestas',
+                        'color' => 'danger'
+                    ]);
+                    return;
+                }
+            }
+            foreach ($idLotes as $idLote) {
+                $arrayLoteApartado = array(
+                    'idLote' => $idLote,
+                    'idStatusLote' => 16,
+                    'usuario' => $this->session->userdata('id_usuario')
                 );
 
-                array_push($arrayLotes, $arrayLote);
+                array_push($arrayLotesApartado, $arrayLoteApartado);
             }
-            if (!$this->General_model->insertBatch('propuestas_x_lote', $arrayLotes)) {
+            if (!$this->General_model->updateBatch('lotes', $arrayLotesApartado, 'idLote')) {
                 $this->db->trans_rollback();
-    
                 echo json_encode([
                     'titulo' => 'ERROR',
                     'resultado' => FALSE,
-                    'message' => 'Error al dar el alta de las propuestas',
+                    'message' => 'Error al actualizar en apartado los lotes',
                     'color' => 'danger'
                 ]);
                 return;
             }
-        }
-        // AA: Update de lotes
-        else{
-            foreach ($idLotes as $idLote){
-                $stringLotesProp .= $idLote . ', ';
-            }
-            $stringLotesProp = substr($stringLotesProp, 0, -2);
-            $nuevos = $this->Reestructura_model->getNuevaPropuesta($idLoteOriginal, $stringLotesProp)->result_array();
-            if(count($nuevos) > 0){
-                foreach ($nuevos as $idLote){
-                    $arrayLote = array(
-                        'idLote' => $idLoteOriginal,
-                        'id_lotep' => $idLote,
-                        'fecha_modificacion'   => date("Y-m-d H:i:s"),
-                        'modificado_por' => $this->session->userdata('id_usuario')
-                    );
-
-                    // $arrayDesbloquearLote = array(
-
-                    // );
-                    $this->General_model->updateRecord("lotes", $updateLoteOriginal, "idLote", $idLoteOriginal);
-                    array_push($arrayLotes, $arrayLote);
-                }
-            }  
-        }
-
-        foreach ($idLotes as $idLote){
-            $arrayLoteApartado = array(
-                'idLote' => $idLote,
-                'idStatusLote' => 16,
+            $updateLoteOriginal = array(
+                'estatus_preproceso' => 1,
                 'usuario' => $this->session->userdata('id_usuario')
             );
+            if (!$this->General_model->updateRecord("lotes", $updateLoteOriginal, "idLote", $idLoteOriginal)) {
+                $this->db->trans_rollback();
+                echo json_encode([
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'Error al actualizar en apartado los lotes',
+                    'color' => 'danger'
+                ]);
+                return;
+            }
 
-            array_push($arrayLotesApartado, $arrayLoteApartado);
-        }
-        if(!$this->General_model->updateBatch('lotes', $arrayLotesApartado, 'idLote')){
-            $this->db->trans_rollback();
-            echo json_encode([
+            if (!$this->copiarCopropietariosAnteriores($idCliente, $idLoteOriginal)) {
+                $this->db->trans_rollback();
+                echo json_encode([
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'Error al actualizar en apartado los lotes',
+                    'color' => 'danger'
+                ]);
+                return;
+            }
+
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+
+                echo json_encode(array(
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'Error al dar el alta de propuestas de lotes',
+                    'color' => 'danger'
+                ));
+                return;
+            }
+            $this->db->trans_commit();
+            echo json_encode(array(
+                'titulo' => 'OK',
+                'resultado' => TRUE,
+                'message' => 'Proceso realizado correctamente.',
+                'color' => 'success'
+            ));
+        } else {
+            echo json_encode(array(
                 'titulo' => 'ERROR',
                 'resultado' => FALSE,
-                'message' => 'Error al actualizar en apartado los lotes',
+                'message' => 'Lotes no disponibles ' . $arrayNoDisponible.' Verifíquelos',
                 'color' => 'danger'
-            ]);
-            return;
+            ));
         }
-
-        $updateLoteOriginal = array(
-            'estatus_preproceso' => 1,
-            'usuario' => $this->session->userdata('id_usuario')
-        );
-        if(!$this->General_model->updateRecord("lotes", $updateLoteOriginal, "idLote", $idLoteOriginal)){
-            $this->db->trans_rollback();
-            echo json_encode([
-                'titulo' => 'ERROR',
-                'resultado' => FALSE,
-                'message' => 'Error al actualizar en apartado los lotes',
-                'color' => 'danger'
-            ]);
-            return;
-        }
-
-        if ($this->db->trans_status() === FALSE){
-            $this->db->trans_rollback();
-
-            echo json_encode([
-                'titulo' => 'ERROR',
-                'resultado' => FALSE,
-                'message' => 'Error al dar el alta de propuestas de lotes',
-                'color' => 'danger'
-            ]);
-            return;
-        }
-
-        $this->db->trans_commit();
-		echo json_encode([
-            'titulo' => 'OK',
-            'resultado' => TRUE,
-            'message' => 'Proceso realizado correctamente.',
-            'color' => 'success'
-        ]);
     }
 
     public function setReubicacion(){
         $this->db->trans_begin();
 
         $idClienteAnterior = $this->input->post('idCliente');
-        $loteAOcupar = $this->input->post('loteAOcupar');
-        $idCondominio = $this->input->post('condominioAOcupar');
+        $loteAOcupar = $this->input->post('idLote');
+        $idLoteOriginal = $this->input->post('idLoteOriginal');
         $idAsesor = $this->session->userdata('id_usuario');
 		$nombreAsesor = $this->session->userdata('nombre') . ' ' . $this->session->userdata('apellido_paterno') . ' ' . $this->session->userdata('apellido_materno');
         $idLider = $this->session->userdata('id_lider');
 		$clienteAnterior = $this->General_model->getClienteNLote($idClienteAnterior)->row();
         $loteSelected = $this->Reestructura_model->getSelectedSup($loteAOcupar)->row();
+        $idCondominio = $loteSelected->idCondominio;
         $lineaVenta = $this->General_model->getLider($idLider)->row();
 		$nuevaSup = floatval($loteSelected->sup);
 		$anteriorSup = floatval($clienteAnterior->sup);
@@ -492,12 +499,12 @@ class Reestructura extends CI_Controller{
 
 		$validateLote = $this->caja_model_outside->validate($loteAOcupar);
         if ($validateLote == 0) {
-            echo json_encode([
+            echo json_encode(array(
                 'titulo' => 'FALSE',
                 'resultado' => FALSE,
                 'message' => 'Error, el lote no está disponible',
                 'color' => 'danger'
-            ]);
+            ));
             return;
         }
 
@@ -507,40 +514,93 @@ class Reestructura extends CI_Controller{
         if (!$idClienteInsert) {
             $this->db->trans_rollback();
 
-            echo json_encode([
+            echo json_encode(array(
                 'titulo' => 'ERROR',
                 'resultado' => FALSE,
                 'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
                 'color' => 'danger'
-            ]);
-            return;
-        }
-
-        if (!$this->updateLote($idClienteInsert, $nombreAsesor, $loteAOcupar, $tipo_venta, $ubicacion)) {
-            $this->db->trans_rollback();
-
-            echo json_encode([
-                'titulo' => 'ERROR',
-                'resultado' => FALSE,
-                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
-                'color' => 'danger'
-            ]);
+            ));
             return;
         }
 
         $dataUpdateCliente = array(
-            'proceso' => $proceso
+            'proceso' => 2,
         );
 
         if (!$this->General_model->updateRecord("clientes", $dataUpdateCliente, "id_cliente", $idClienteAnterior)){
             $this->db->trans_rollback();
 
-            echo json_encode([
+            echo json_encode(array(
                 'titulo' => 'ERROR',
                 'resultado' => FALSE,
                 'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
                 'color' => 'danger'
-            ]);
+            ));
+            return;
+        }
+
+        $datosClienteConfirm = $this->Reestructura_model->copiarDatosXCliente($idLoteOriginal);
+        $dataUpdateClienteNew = array(
+            'nombre' => $datosClienteConfirm->nombre,
+            'apellido_paterno' => $datosClienteConfirm->apellido_paterno,
+            'apellido_materno' => $datosClienteConfirm->apellido_materno,
+            'estado_civil' => $datosClienteConfirm->estado_civil,
+            'domicilio_particular' => $datosClienteConfirm->domicilio_particular,
+            'correo' => $datosClienteConfirm->correo,
+            'telefono1' => $datosClienteConfirm->telefono1,
+            'ocupacion' => $datosClienteConfirm->ocupacion,
+            'modificado_por' => $this->session->userdata('id_usuario'),
+            'fecha_modificacion' => date('Y-m-d h:i:s')
+        );
+
+        //Se modifican datos a los ingresados como confirmación por los gerentes ooam
+        if (!$this->General_model->updateRecord("clientes", $dataUpdateClienteNew, "id_cliente", $idClienteInsert)){
+            $this->db->trans_rollback();
+
+            echo json_encode(array(
+                'titulo' => 'ERROR',
+                'resultado' => FALSE,
+                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
+                'color' => 'danger'
+            ));
+            return;
+        }
+
+        if (!$this->Reestructura_model->setSeleccionPropuesta($idLoteOriginal, $loteAOcupar)){
+            $this->db->trans_rollback();
+
+            echo json_encode(array(
+                'titulo' => 'ERROR',
+                'resultado' => FALSE,
+                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
+                'color' => 'danger'
+            ));
+            return;
+        }
+
+        if (!$this->desactivarOtrosLotes($idLoteOriginal)) {
+            $this->db->trans_rollback();
+
+
+            echo json_encode(array(
+                'titulo' => 'ERROR',
+                'resultado' => FALSE,
+                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
+                'color' => 'danger'
+            ));
+            return;
+        }
+
+
+        if (!$this->updateLote($idClienteInsert, $nombreAsesor, $loteAOcupar, $tipo_venta, $ubicacion)) {
+            $this->db->trans_rollback();
+
+            echo json_encode(array(
+                'titulo' => 'ERROR',
+                'resultado' => FALSE,
+                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
+                'color' => 'danger'
+            ));
             return;
         }
 
@@ -554,7 +614,7 @@ class Reestructura extends CI_Controller{
 			'idCondominio' => $idCondominio,
 			'idCliente' => $idClienteInsert,
 			'usuario' => $idAsesor,
-			'perfil' => 'ooam',
+			'perfil' => 'EEC',
 			'comentario' => 'OK',
 			'status' => 1
         );
@@ -562,61 +622,61 @@ class Reestructura extends CI_Controller{
         if (!$this->General_model->addRecord('historial_lotes', $dataInsertHistorialLote)) {
             $this->db->trans_rollback();
 
-            echo json_encode([
+            echo json_encode(array(
                 'titulo' => 'ERROR',
                 'resultado' => FALSE,
                 'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
                 'color' => 'danger'
-            ]);
+            ));
             return;
         }
 
-        if (!$this->copiarDSAnteriorAlNuevo($idClienteAnterior, $idClienteInsert)) {
+        if (!$this->copiarDSAnteriorAlNuevo($idClienteAnterior, $idClienteInsert, $idLoteOriginal)) {
             $this->db->trans_rollback();
 
-
-            echo json_encode([
+            echo json_encode(array(
                 'titulo' => 'ERROR',
                 'resultado' => FALSE,
                 'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
                 'color' => 'danger'
-            ]);
+            ));
             return;
         }
 
         $expediente = $this->Reestructura_model->obtenerDocumentacionPorReubicacion($clienteAnterior->personalidad_juridica);
+        $documentacionOriginal = $this->Reestructura_model->obtenerDocumentacionOriginal($clienteAnterior->personalidad_juridica);
 
-        if (!$this->moverExpediente($clienteAnterior->idLote, $loteAOcupar, $idClienteAnterior, $idClienteInsert, $expediente)) {
+        if (!$this->moverExpediente($documentacionOriginal, $clienteAnterior->idLote, $loteAOcupar, $idClienteAnterior, $idClienteInsert, $expediente)) {
             $this->db->trans_rollback();
 
-            echo json_encode([
+            echo json_encode(array(
                 'titulo' => 'ERROR',
                 'resultado' => FALSE,
                 'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
                 'color' => 'danger'
-            ]);
+            ));
             return;
         }
 
         if ($this->db->trans_status() === FALSE){
             $this->db->trans_rollback();
 
-            echo json_encode([
+            echo json_encode(array(
                 'titulo' => 'ERROR',
                 'resultado' => FALSE,
                 'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
                 'color' => 'danger'
-            ]);
+            ));
             return;
         }
 
         $this->db->trans_commit();
-		echo json_encode([
+		echo json_encode(array(
             'titulo' => 'OK',
             'resultado' => TRUE,
             'message' => 'Proceso realizado correctamente.',
             'color' => 'success'
-        ]);
+        ));
 	}
 
     public function copiarClienteANuevo($clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $loteSelected = null, $idCondominio = null) {
@@ -657,7 +717,22 @@ class Reestructura extends CI_Controller{
                 $dataCliente = array_merge([$clave =>  0], $dataCliente);
                 continue;
             } else if ($clave == 'id_cliente_reubicacion_2') {
-                $dataCliente = array_merge([$clave =>  $clienteAnterior->id_cliente], $dataCliente);
+                $dataCliente = array_merge([$clave => $clienteAnterior->id_cliente], $dataCliente);
+                continue;
+            } else if ($clave == 'fechaApartado'){
+                $dataCliente = array_merge([$clave => date('Y-m-d H:i:s')], $dataCliente);
+                continue;
+            } else if ($clave == 'fechaVencimiento'){
+                $dataCliente = array_merge([$clave => $this->validateVencimiento() ], $dataCliente);
+                continue;
+            } else if ($clave == 'fecha_creacion'){
+                $dataCliente = array_merge([$clave => date('Y-m-d H:i:s')], $dataCliente);
+                continue;
+            } else if ($clave == 'fecha_modificacion'){
+                $dataCliente = array_merge([$clave => date('Y-m-d H:i:s')], $dataCliente);
+                continue;
+            } else if ($clave == 'creado_por'){
+                $dataCliente = array_merge([$clave => $this->session->userdata('id_usuario')], $dataCliente);
                 continue;
             }
 
@@ -784,7 +859,7 @@ class Reestructura extends CI_Controller{
             'idMovimiento' => 31,
             'comentario' => 'OK',
             'usuario' => $nombreAsesor,
-            'perfil' => 'ooam',
+            'perfil' => 'EEC',
             'modificado' => date('Y-m-d h:i:s'),
             'fechaVenc' => $fechaFull,
             'IdStatusLote' => 3,
@@ -796,8 +871,37 @@ class Reestructura extends CI_Controller{
         return $resultLote;
     }
 
+    function validateVencimiento(){
+        //SE OBTIENEN LAS FECHAS PARA EL TIEMPO QUE TIENE PARA CUMPLIR LOS ESTATUS EN CADA FASE EN EL SISTEMA
+        $fechaAccion = date("Y-m-d H:i:s");
+        $hoy_strtotime2 = strtotime($fechaAccion);
+        $sig_fecha_dia2 = date('D', $hoy_strtotime2);
+        $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+        //CALCULAMOS LA FECHA DE VENCIMIENTO
+        $fecha = $fechaAccion;
+
+        $i = 0;
+        $vueltas = in_array($sig_fecha_dia2, array("Sat", "Sun")) || in_array($sig_fecha_feriado2, array("01-01", "06-02", "20-03", "01-05", "16-09", "20-11", "19-11", "25-12")) ? 46 : 45;
+        while ($i <= $vueltas) {
+            $hoy_strtotime = strtotime($fecha);
+            $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+            $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+            $sig_fecha_dia = date('D', $sig_strtotime);
+            $sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+            if (!in_array($sig_fecha_dia, array("Sat", "Sun")) || !in_array($sig_fecha_feriado, array("01-01", "06-02", "20-03", "01-05", "16-09", "20-11", "19-11", "25-12"))) {
+                $fecha = $sig_fecha;
+                $i++;
+            }
+            $fecha = $sig_fecha;
+        }
+        return $fecha;
+    }
+
     function moverExpediente(
-        $idLoteAnterior, $idLoteNuevo, $idClienteAnterior, $idClienteNuevo, $expedienteNuevo, $loteInfo = null, $docInfo = null): bool
+        $documentacionOriginal, $idLoteAnterior, $idLoteNuevo, $idClienteAnterior, $idClienteNuevo, $expedienteNuevo,
+        $loteInfo = null, $docInfo = null
+    ): bool
     {
         $loteAnteriorInfo = $this->Reestructura_model->obtenerLotePorId($idLoteAnterior);
         $loteNuevoInfo = (is_null($loteInfo))
@@ -809,7 +913,7 @@ class Reestructura extends CI_Controller{
 
         $documentacion = [];
         $modificado = date('Y-m-d H:i:s');
-        $documentosSinPasar = (is_null($docInfo)) ? [7,8,30] : [];
+        $documentosSinPasar = (is_null($docInfo)) ? [7, 8, '7', '8'] : [];
 
         $ubicacionFolder = "static/documentos/contratacion-reubicacion/$loteNuevoInfo->nombreLote/";
 
@@ -824,14 +928,14 @@ class Reestructura extends CI_Controller{
         foreach ($docAnterior as $doc) {
             $expedienteAnterior = in_array($doc['tipo_doc'], $documentosSinPasar) ? null : $doc['expediente'];
 
-            if (in_array($doc['tipo_doc'], [7,8])) {
+            if ($doc['tipo_doc'] == 7 || $doc['tipo_doc'] == 8) {
                 $expReubicacion = $this->Reestructura_model->expedienteReubicacion($idLoteAnterior);
                 $carpeta = '';
 
-                if ($doc['tipo_doc'] === 7) {
+                if ($doc['tipo_doc'] == 7) {
                     $carpeta = 'CORRIDA/';
                     $expedienteAnterior = $expReubicacion->corrida;
-                } else if ($doc['tipo_doc'] === 8) {
+                } else if ($doc['tipo_doc'] == 8) {
                     $carpeta = 'CONTRATO/';
                     $expedienteAnterior = $expReubicacion->contrato;
                 }
@@ -844,7 +948,7 @@ class Reestructura extends CI_Controller{
                 }
             }
 
-            $documentacion[] = [
+            $documentacion[] = array(
                 'movimiento' => $doc['movimiento'],
                 'expediente' => $expedienteAnterior,
                 'modificado' => $modificado,
@@ -857,15 +961,44 @@ class Reestructura extends CI_Controller{
                 'id_autorizacion' => 0,
                 'tipo_doc' => $doc['tipo_doc'],
                 'estatus_validacion' => 0
-            ];
+        );
+        }
+
+        // Crear las ramas extras que no se tengan en el expediente anterior
+        foreach ($documentacionOriginal as $doc) {
+            $index = in_array($doc['id_opcion'], array_column($documentacion, 'tipo_doc'));
+
+            if ($index !== false) {
+                continue;
+            }
+
+            $documentacion[] = array(
+                'movimiento' => $doc['nombre'],
+                'expediente' => null,
+                'modificado' => $modificado,
+                'status' => 1,
+                'idCliente' => $idClienteNuevo,
+                'idCondominio' => $loteNuevoInfo->idCondominio,
+                'idLote' => $idLoteNuevo,
+                'idUser' => NULL,
+                'tipo_documento' => 0,
+                'id_autorizacion' => 0,
+                'tipo_doc' => $doc['id_opcion'],
+                'estatus_validacion' => 0
+            );
         }
 
         // Ciclo para las nuevas ramas a agregar
         foreach ($expedienteNuevo as $doc) {
-            if ($doc['id_opcion'] === 33) {
+            if ($doc['id_opcion'] == 33) {
                 $expRescision = $this->Reestructura_model->obtenerDatosClienteReubicacion($idLoteAnterior);
 
-                $documentacion[] = [
+                copy(
+                    "static/documentos/contratacion-reubicacion-temp/$loteAnteriorInfo->nombreLote/RESCISIONES/$expRescision->rescision",
+                    $ubicacionFolder.$expRescision->rescision
+                );
+
+                $documentacion[] = array(
                     'movimiento' => $doc['nombre'],
                     'expediente' => $expRescision->rescision,
                     'modificado' => $modificado,
@@ -878,30 +1011,23 @@ class Reestructura extends CI_Controller{
                     'id_autorizacion' => 0,
                     'tipo_doc' => $doc['id_opcion'],
                     'estatus_validacion' => 0
-                ];
-
-                copy(
-                    "static/documentos/contratacion-reubicacion-temp/$loteAnteriorInfo->nombreLote/RESCISIONES/$expRescision->rescision",
-                    $ubicacionFolder.$expRescision->rescision
                 );
 
                 continue;
             }
 
-            // Corrida, contrato y contrato firmado
-            if (in_array($doc['id_opcion'], [39, 40, 44])) {
+            // Corrida, contrato
+            if ($doc['id_opcion'] == 39 || $doc['id_opcion'] == 40) {
                 $tipoDoc = 0;
-                if ($doc['id_opcion'] === 39) {
+                if ($doc['id_opcion'] == 39) {
                     $tipoDoc = 7;
-                } else if ($doc['id_opcion'] === 40) {
+                } else if ($doc['id_opcion'] == 40) {
                     $tipoDoc = 8;
-                } else if ($doc['id_opcion'] === 44) {
-                    $tipoDoc = 30;
                 }
 
                 $index = array_search($tipoDoc, array_column($docAnterior, 'tipo_doc'));
 
-                $documentacion[] = [
+                $documentacion[] = array(
                     'movimiento' => $doc['nombre'],
                     'expediente' => $docAnterior[$index]['expediente'],
                     'modificado' => $modificado,
@@ -914,12 +1040,12 @@ class Reestructura extends CI_Controller{
                     'id_autorizacion' => 0,
                     'tipo_doc' => $doc['id_opcion'],
                     'estatus_validacion' => 0
-                ];
+                );
 
                 continue;
             }
 
-            $documentacion[] = [
+            $documentacion[] = array(
                 'movimiento' => $doc['nombre'],
                 'expediente' => NULL,
                 'modificado' => $modificado,
@@ -932,19 +1058,19 @@ class Reestructura extends CI_Controller{
                 'id_autorizacion' => 0,
                 'tipo_doc' => $doc['id_opcion'],
                 'estatus_validacion' => 0
-            ];
+            );
         }
 
         return $this->General_model->insertBatch('historial_documento', $documentacion);
     }
 
-    public function copiarDSAnteriorAlNuevo($idClienteAnterior, $idClienteNuevo): bool
+    public function copiarDSAnteriorAlNuevo($idClienteAnterior, $idClienteNuevo, $idLote): bool
     {
         $dsAnterior = $this->Reestructura_model->obtenerDSPorIdCliente($idClienteAnterior);
         $residencial = $this->Reestructura_model->obtenerResidencialPorIdCliente($idClienteNuevo);
-        $coopropietarios = $this->Reestructura_model->obtenerCopropietariosPorIdCliente($idClienteAnterior);
+        $copropietarios = $this->Reestructura_model->obtenerCopropietariosReubicacion($idLote);
         $dsData = [];
-        $coopropietariosData = [];
+        $copropietariosData = [];
 
         foreach ($dsAnterior as $clave => $valor) {
             if(in_array($clave, ['id', 'id_cliente', 'clave'])) {
@@ -959,115 +1085,30 @@ class Reestructura extends CI_Controller{
             $dsData = array_merge([$clave => $valor], $dsData);
         }
 
-        foreach ($coopropietarios as $coopropietario) {
+        foreach ($copropietarios as $coopropietario) {
             $dataTmp = [];
 
             foreach ($coopropietario as $clave => $valor) {
-                if (in_array($clave, ['id_copropietario'])) {
-                    continue;
-                }
-
-                if ($clave == 'id_cliente') {
-                    $dataTmp = array_merge([$clave => $idClienteNuevo], $dataTmp);
+                if (in_array($clave, ['id_dxcop', 'idLote'])) {
                     continue;
                 }
 
                 $dataTmp = array_merge([$clave => $valor], $dataTmp);
             }
 
-            $coopropietariosData[] = $dataTmp;
+            $copropietariosData[] = array_merge($dataTmp, [
+                'id_cliente' => $idClienteNuevo,
+                'creado_por' => $dataTmp['modificado_por'],
+                'fecha_creacion' => date('Y-m-d H:i:s')
+            ]);
         }
 
         $resultDs = $this->General_model->updateRecord('deposito_seriedad', $dsData, 'id_cliente', $idClienteNuevo);
-        $resultCop = (empty($coopropietariosData)) ? true : $this->General_model->insertBatch('copropietarios', $coopropietariosData);
+        $resultCop = empty($copropietariosData) || $this->General_model->insertBatch('copropietarios', $copropietariosData);
 
         return $resultDs && $resultCop;
     }
 
-    public function imprimirCartaReubicacion($idCliente)
-    {
-        $this->load->library('Pdf');
-        $meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-
-        $info = $this->Reestructura_model->informacionCartaReubicacionPdf($idCliente);
-
-        $html = $this->load->view('pdf/reestructura/carta-reubicacion', [
-            'dia' => date('d'),
-            'mes' => $meses[date('n') - 1],
-            'anio' => date('Y'),
-            'nombreCliente' => $info->nombreCliente,
-            'loteAnterior' => $info->loteAnterior,
-            'condAnterior' => $info->condAnterior,
-            'desarrolloAnterior' => $info->desarrolloAnterior,
-            'loteNuevo' => $info->loteNuevo,
-            'condNuevo' => $info->condNuevo,
-            'desarrolloNuevo' => $info->desarrolloNuevo
-        ], true);
-
-        $pdf = new TCPDF('P', 'mm', 'LETTER', 'UTF-8', false);
-        $pdf->SetCreator(PDF_CREATOR);
-        $pdf->SetTitle('CARTA SOLICITUD REUBICACIÓN');
-        $pdf->SetSubject('CARTA');
-        $pdf->SetKeywords('CRM');
-        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-        $pdf->SetAutoPageBreak(TRUE);
-        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-        $pdf->setPrintHeader(false);
-        $pdf->SetFont('Helvetica', '', 9, '', true);
-        $pdf->SetMargins(30, 15, 30);
-        $pdf->AddPage('P', 'LETTER');
-        $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
-        $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
-        $pdf->getBreakMargin();
-        $pdf->Image('dist/img/ar4c.png', 120, 0, 300, 0, 'PNG', '', '', false, 150, '', false, false, 0, false, false, false);
-        $pdf->setPageMark();
-
-        $pdf->writeHTML($html);
-        ob_end_clean();
-
-        $pdf->Output(utf8_decode("Carta.pdf"));
-    }
-
-    public function imprimirCartaReestructura($idCliente)
-    {
-        $this->load->library('Pdf');
-        $meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-
-        $info = $this->Reestructura_model->informacionCartaReestructuraPdf($idCliente);
-
-        $html = $this->load->view('pdf/reestructura/carta-reestructura', [
-            'dia' => date('d'),
-            'mes' => $meses[date('n') - 1],
-            'anio' => date('Y'),
-            'nombreCliente' => $info->nombreCliente,
-            'lote' => $info->lote,
-            'cond' => $info->cond,
-            'desarrollo' => $info->desarrollo
-        ], true);
-
-        $pdf = new TCPDF('P', 'mm', 'LETTER', 'UTF-8', false);
-        $pdf->SetCreator(PDF_CREATOR);
-        $pdf->SetTitle('CARTA SOLICITUD REESTRUCTURA');
-        $pdf->SetSubject('CARTA');
-        $pdf->SetKeywords('CRM');
-        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-        $pdf->SetAutoPageBreak(TRUE);
-        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-        $pdf->setPrintHeader(false);
-        $pdf->SetFont('Helvetica', '', 9, '', true);
-        $pdf->SetMargins(30, 15, 30);
-        $pdf->AddPage('P', 'LETTER');
-        $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
-        $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
-        $pdf->getBreakMargin();
-        $pdf->Image('dist/img/ar4c.png', 120, 0, 300, 0, 'PNG', '', '', false, 150, '', false, false, 0, false, false, false);
-        $pdf->setPageMark();
-
-        $pdf->writeHTML($html);
-        ob_end_clean();
-
-        $pdf->Output(utf8_decode("Carta.pdf"));
-    }
 	public function cancelarLotes(){
 		$this->load->view('template/header');
         $this->load->view("reestructura/cancelacion_view");
@@ -1144,19 +1185,19 @@ class Reestructura extends CI_Controller{
       echo json_encode ($respuesta);             
   
     }
-    function provisional(){
-        $this->load->view('template/header');
-        $this->load->view("reestructura/vistaArchivosP");
-    }
+
     function getListaLotesArchivosReestrucura(){
         $data = $this->Reestructura_model->getListaLotesArchivosReestrucura();
         echo json_encode($data);
     }
+
     function getOpcionesLote(){
 	    $idLote = $this->input->post('idLote');
-	    $data = $this->Reestructura_model->getOpcionesLote($idLote);
+	    $data['opcionesLotes'] = $this->Reestructura_model->getOpcionesLote($idLote);
+	    $data['copropietarios'] = $this->Reestructura_model->getCopropietariosReestructura($idLote);
         echo json_encode ($data);
     }
+
     function updateArchivos(){
         $flagAction = $_POST['tipoProceso'];
         $arrayLength = $_POST['longArray'];
@@ -1167,13 +1208,13 @@ class Reestructura extends CI_Controller{
 
 
 
-        $micarpeta = './static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal;
+        $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal;
         if (!file_exists($micarpeta)) {
             mkdir($micarpeta, 0777, true);
         }
 
         if($flagAction==2){
-            $micarpeta = './static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/CORRIDA';
+            $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/CORRIDA';
             if (!file_exists($micarpeta)) {
                 mkdir($micarpeta, 0777, true);
             }
@@ -1181,7 +1222,7 @@ class Reestructura extends CI_Controller{
             $nameField = 'corrida';
             $acceptFiles = 'xlsx|csv|xls';
         }elseif($flagAction==3){
-            $micarpeta = './static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/CONTRATO';
+            $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/CONTRATO';
             if (!file_exists($micarpeta)) {
                 mkdir($micarpeta, 0777, true);
             }
@@ -1191,9 +1232,8 @@ class Reestructura extends CI_Controller{
 
         }
 
-
         $arrayData = array();
-        $config['upload_path'] = './static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/'.$carpetaUbicacion;
+        $config['upload_path'] = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/'.$carpetaUbicacion;
         $config['allowed_types'] = $acceptFiles;
         $this->load->library('upload', $config);
         $flagInterno = 0;
@@ -1205,7 +1245,7 @@ class Reestructura extends CI_Controller{
                 $fileNameCmps = explode(".", $_FILES['archivo'.$i]['name']);
                 $fileExtension = strtolower(end($fileNameCmps));
                 $nuevoNombre = $this->input->post('nombreLote'.$i).'-'.date('YmdHis').'.'.$fileExtension;
-                rename( $archivoSubido['full_path'], "./static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal.'/'.$carpetaUbicacion.$nuevoNombre );
+                rename( $archivoSubido['full_path'], "static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal.'/'.$carpetaUbicacion.$nuevoNombre );
                 $idpxl = $this->input->post('idLoteArchivo'.$i);
 
                 $updateDocumentData = array(
@@ -1218,18 +1258,18 @@ class Reestructura extends CI_Controller{
                 if($result){
                     $flagInterno = $flagInterno + 1;
                     if($editar==1){
-                        $urlEliminar = "./static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal.'/'.$carpetaUbicacion.$_POST['archivoEliminar'.$i];
+                        $urlEliminar = "static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal.'/'.$carpetaUbicacion.$_POST['archivoEliminar'.$i];
                         $this->eliminaArchivoServer($urlEliminar);
                     }
                 }
             }
         }
         if($flagAction == 3){
-            $micarpeta = './static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/RESCISIONES';
+            $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/RESCISIONES';
             if (!file_exists($micarpeta)) {
                 mkdir($micarpeta, 0777, true);
             }
-            $config2['upload_path'] = './static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/RESCISIONES/';
+            $config2['upload_path'] = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/RESCISIONES/';
             $config2['allowed_types'] = 'pdf';
             $this->load->library('upload', $config2);
             $resultado2 = $this->upload->do_upload('archivoResicion');
@@ -1238,7 +1278,7 @@ class Reestructura extends CI_Controller{
                 $fileNameCmps2 = explode(".", $_FILES['archivoResicion']['name']);
                 $fileExtension2 = strtolower(end($fileNameCmps2));
                 $nuevoNombre2 = $nombreLoteOriginal.'-'.date('YmdHis').'.'.$fileExtension2;
-                rename( $archivoSubido2['full_path'], "./static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal."/RESCISIONES/".$nuevoNombre2 );
+                rename( $archivoSubido2['full_path'], "static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal."/RESCISIONES/".$nuevoNombre2 );
 
                 $updateDocumentData = array(
                     "rescision" => $nuevoNombre2,
@@ -1248,7 +1288,7 @@ class Reestructura extends CI_Controller{
 
                 $this->General_model->updateRecord("datos_x_cliente", $updateDocumentData, "id_dxc", $id_dxc);
                 if($editar==1){
-                    $urlEliminar = "./static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal."/RESCISIONES/".$_POST['rescisionArchivo'];
+                    $urlEliminar = "static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal."/RESCISIONES/".$_POST['rescisionArchivo'];
                     $this->eliminaArchivoServer($urlEliminar);
                 }
 
@@ -1272,9 +1312,11 @@ class Reestructura extends CI_Controller{
             echo json_encode(array());
         }
     }
+
     function eliminaArchivoServer($urlBorrado){
         unlink($urlBorrado);
     }
+
     function actualizaExpecifico(){
         $flagAction = $_POST['tipoProceso'];
         $arrayLength = $_POST['longArray'];
@@ -1284,13 +1326,13 @@ class Reestructura extends CI_Controller{
 
 
 
-        $micarpeta = './static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal;
+        $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal;
         if (!file_exists($micarpeta)) {
             mkdir($micarpeta, 0777, true);
         }
 
         if($flagAction==2){
-            $micarpeta = './static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/CORRIDA';
+            $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/CORRIDA';
             if (!file_exists($micarpeta)) {
                 mkdir($micarpeta, 0777, true);
             }
@@ -1298,7 +1340,7 @@ class Reestructura extends CI_Controller{
             $nameField = 'corrida';
             $acceptFiles = 'xlsx|csv|xls';
         }elseif($flagAction==3){
-            $micarpeta = './static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/CONTRATO';
+            $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/CONTRATO';
             if (!file_exists($micarpeta)) {
                 mkdir($micarpeta, 0777, true);
             }
@@ -1309,7 +1351,7 @@ class Reestructura extends CI_Controller{
 
 
         $arrayData = array();
-        $config['upload_path'] = './static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/'.$carpetaUbicacion;
+        $config['upload_path'] = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/'.$carpetaUbicacion;
         $config['allowed_types'] = $acceptFiles;
         $this->load->library('upload', $config);
         $flagInterno = 0;
@@ -1323,7 +1365,7 @@ class Reestructura extends CI_Controller{
                     $fileNameCmps = explode(".", $_FILES['archivo'.$i]['name']);
                     $fileExtension = strtolower(end($fileNameCmps));
                     $nuevoNombre = $this->input->post('nombreLote'.$i).'-'.date('YmdHis').'.'.$fileExtension;
-                    rename( $archivoSubido['full_path'], "./static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal.'/'.$carpetaUbicacion.$nuevoNombre );
+                    rename( $archivoSubido['full_path'], "static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal.'/'.$carpetaUbicacion.$nuevoNombre );
                     $idpxl = $this->input->post('idLoteArchivo'.$i);
 
                     $updateDocumentData = array(
@@ -1336,22 +1378,21 @@ class Reestructura extends CI_Controller{
                     if($result){
                         $flagInterno = $flagInterno + 1;
                         if($editar==1){
-                            $urlEliminar = "./static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal.'/'.$carpetaUbicacion.$_POST['archivoEliminar'.$i];
+                            $urlEliminar = "static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal.'/'.$carpetaUbicacion.$_POST['archivoEliminar'.$i];
                             $this->eliminaArchivoServer($urlEliminar);
                         }
                     }
                 }
-
             }
 
         }
         if($flagAction == 3){
             if($_POST['flagEditarRescision'] == 1){
-                $micarpeta = './static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/RESCISIONES';
+                $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/RESCISIONES';
                 if (!file_exists($micarpeta)) {
                     mkdir($micarpeta, 0777, true);
                 }
-                $config2['upload_path'] = './static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/RESCISIONES/';
+                $config2['upload_path'] = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/RESCISIONES/';
                 $config2['allowed_types'] = 'pdf';
                 $this->load->library('upload', $config2);
                 $resultado2 = $this->upload->do_upload('archivoResicion');
@@ -1360,7 +1401,7 @@ class Reestructura extends CI_Controller{
                     $fileNameCmps2 = explode(".", $_FILES['archivoResicion']['name']);
                     $fileExtension2 = strtolower(end($fileNameCmps2));
                     $nuevoNombre2 = $nombreLoteOriginal.'-'.date('YmdHis').'.'.$fileExtension2;
-                    rename( $archivoSubido2['full_path'], "./static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal."/RESCISIONES/".$nuevoNombre2 );
+                    rename( $archivoSubido2['full_path'], "static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal."/RESCISIONES/".$nuevoNombre2 );
 
                     $updateDocumentData = array(
                         "rescision" => $nuevoNombre2,
@@ -1370,7 +1411,7 @@ class Reestructura extends CI_Controller{
 
                     $this->General_model->updateRecord("datos_x_cliente", $updateDocumentData, "id_dxc", $id_dxc);
                     if($editar==1){
-                        $urlEliminar = "./static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal."/RESCISIONES/".$_POST['rescisionArchivo'];
+                        $urlEliminar = "static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal."/RESCISIONES/".$_POST['rescisionArchivo'];
                         $this->eliminaArchivoServer($urlEliminar);
                     }
 
@@ -1384,7 +1425,6 @@ class Reestructura extends CI_Controller{
         }else{
             print_r(json_encode(array('code' => 500)));
         }
-
     }
 
     public function obtenerPropuestasXLote(){
@@ -1392,24 +1432,365 @@ class Reestructura extends CI_Controller{
         echo json_encode( $this->Reestructura_model->obtenerPropuestasXLote($idLote)->result_array());
     }
 
-    public function setAvance() {
-        $dataUpdateLote = array(
-			'estatus_preproceso' => $this->input->post('tipoTransaccion') + 1,
-			'usuario' => $this->session->userdata('id_usuario')
-        );
-        $response = $this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $this->input->post('idLote'));
-        echo json_encode($response);
-    }
+    public function setAvance()
+    {
+        $estatusMovimientos = [
+            1 => 1, // Si el movimiento anterior es nuevo, el sig pasa a nuevo
+            2 => 3, // Si el movimiento ant. es rechazo, el sig pasa a corrección
+            3 => 1 // Si el movimiento ant. es corrección, el sig pasa a nuevo
+        ];
 
-    public function setLoteDisponible() {
-        $dataUpdateLote = array('idStatusLote' => 15, 'usuario' => $this->session->userdata('id_usuario'));
-        $dataUpdatePropuesta = array('id_lotep' => 0, 'modificado_por' => $this->session->userdata('id_usuario'), 'fecha_modificacion' => date('Y-m-d h:i:s'));
+        $idLote = $this->input->post('idLote');
+        $idPreproceso = $this->input->post('tipoTransaccion');
+        $idCliente = $this->input->post('idCliente');
+        $comentario = $this->input->post('comentario');
+        $idMovimiento = $this->input->post('idEstatusMovimento');
+        $idUsuario = $this->session->userdata('id_usuario');
+
+        $assigned_user = 0;
+        if ($idPreproceso + 1 == 3) { // AVANCE A JURÍDICO: SE CORRE PROCESO PARA ASIGNAR EXPEDIENTE
+            $id_asig = $this->Contraloria_model->get_id_asig('reestructura')->contador;
+            if ($id_asig == 2747) // CARLITOS
+                $assigned_user = 2762; // SE ASIGNA A DANI
+            else if ($id_asig == 2762) // ES DANI
+                $assigned_user = 13691; // SE ASIGNA A CECILIA
+            else if ($id_asig == 13691) // ES CECILIA
+                $assigned_user = 2747; // SE LE ASIGNA A CARLITOS
+        
+            $dataUpdateVariable = array('contador' => $assigned_user);
+            $responseVariable = $this->General_model->updateRecord("variables", $dataUpdateVariable, "identificador", 'reestructura');
+        }
+
+        $dataUpdateLote = [
+			'estatus_preproceso' => $idPreproceso + 1,
+			'usuario' => $idUsuario,
+            'id_juridico_preproceso' => $assigned_user
+        ];
+
+        $dataHistorial = [
+            'idLote' => $idLote,
+            'idCliente' => $idCliente,
+            'id_preproceso' => $idPreproceso,
+            'comentario' => $comentario,
+            'estatus' => $estatusMovimientos[$idMovimiento],
+            'modificado_por' => $idUsuario
+        ];
+
+        $responseUpdateLote = $this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $idLote);
+        $responseInsertHistorial = $this->General_model->addRecord('historial_preproceso_lote', $dataHistorial);
+
+        echo json_encode($responseUpdateLote && $responseInsertHistorial);
+    }
+    
+    public function setLoteDisponible()
+    {
+        $dataUpdateLote = [
+            'idStatusLote' => $this->input->post('tipoEstatusRegreso') == 1 ? 15: 1,
+            'usuario' => $this->session->userdata('id_usuario')
+        ];
+
         $responseUpdateLote = $this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $this->input->post('idLote'));
-        $responseUpdatePropuesta = $this->General_model->updateRecord("propuestas_x_lote", $dataUpdatePropuesta, "id_pxl", $this->input->post('id_pxl'));
-        if ($responseUpdateLote && $responseUpdatePropuesta)
-            echo json_encode(true);
-        else
-            echo json_encode(false);
+        $responseDeletePropuesta = $this->General_model->deleteRecord('propuestas_x_lote', ['id_pxl' => $this->input->post('id_pxl')]);
+
+        echo ($responseUpdateLote && $responseDeletePropuesta);
     }
 
+    public function agregarLotePropuesta()
+    {
+        $idLoteOriginal = $this->input->post('idLoteOriginal');
+        $idLotePropuesta = $this->input->post('idLotePropuesta');
+
+        $lote = $this->Reestructura_model->checarDisponibleRe($idLotePropuesta);
+        if (count($lote) === 0) {
+            echo json_encode(['code' => 400, 'message' => 'Lote no disponible. Favor de verificarlo']);
+            return;
+        }
+
+        $dataUpdateLote = [
+            'idStatusLote' => 16,
+            'usuario' => $this->session->userdata('id_usuario')
+        ];
+        
+        $dataInsertPropuestaLote = [
+            'idLote' => $idLoteOriginal,
+            'id_lotep' => $idLotePropuesta,
+            'estatus' => 0,
+            'creado_por' => $this->session->userdata('id_usuario'),
+            'fecha_modificacion'   => date("Y-m-d H:i:s"),
+            'modificado_por' => $this->session->userdata('id_usuario')
+        ];
+
+        $responseUpdateLote = $this->General_model->updateRecord('lotes', $dataUpdateLote, 'idLote', $idLotePropuesta);
+        $responseInsertPropuesta = $this->General_model->addRecord('propuestas_x_lote', $dataInsertPropuestaLote);
+
+        echo ($responseUpdateLote && $responseInsertPropuesta) ? json_encode(['code' => 200]) : json_encode(['code' => 500]);
+    }
+
+    public function totalPropuestas($idLoteOriginal)
+    {
+        $totalPropuestas = $this->Reestructura_model->obtenerTotalPropuestas($idLoteOriginal);
+        echo json_encode($totalPropuestas->total_propuestas);
+    }
+
+    public function desactivarOtrosLotes($idLoteOriginal){
+        $notSelectedLotes = $this->Reestructura_model->getNotSelectedLotes($idLoteOriginal);
+
+        if (count($notSelectedLotes) == 0) {
+            return true;
+        }
+
+        $arrayLotes = array();
+
+        foreach ($notSelectedLotes as $lote){
+            $arrayLote = array(
+                'idLote' => $lote['id_lotep'],
+                'idStatusLote' => $lote['tipo_estatus_regreso'] == 1 ? 15 : 1,
+                'usuario' => $this->session->userdata('id_usuario')
+            );
+
+            array_push($arrayLotes, $arrayLote);
+        }
+        
+        return $this->General_model->updateBatch('lotes', $arrayLotes, 'idLote');
+    }
+
+    public function inventario(){
+		$this->load->view('template/header');
+        $this->load->view("reestructura/inventario_view");
+	}
+
+    public function getInventario() {
+        echo json_encode($this->Reestructura_model->getInventario());
+    }
+
+    public function reporteVentas(){
+		$this->load->view('template/header');
+        $this->load->view("reestructura/reporteVentas_view");
+	}
+
+    public function getReporteVentas() {
+        echo json_encode($this->Reestructura_model->getReporteVentas());
+    }
+
+    public function contratoFirmadoR(){
+	    $idLote = $this->input->post('idLote');
+	    $nombreLote = $this->input->post('nombreLoteOriginal');
+	    $idDocumento = $this->input->post('idDocumento');
+	    $editarFile = $this->input->post('editarFile');
+	    $idCliente = $this->input->post('idCliente');
+	    $idCondominio = $this->input->post('idCondominio');
+        $idUsuario = $this->session->userdata('id_usuario');
+        $nombreResidencial = $this->input->post('nombreResidencial');
+        $nombreCondominio = $this->input->post('nombreCondominio');
+        $nombreDocumento = $this->input->post('nombreDocumento');
+
+	    $dataConsultaCF = $this->Reestructura_model->revisarCFDocumentos($idLote);
+	    $flagExisteRama = count($dataConsultaCF);
+
+        $configCF['upload_path'] = 'static/documentos/cliente/contratoFirmado/';
+        $configCF['allowed_types'] = 'pdf';
+        $this->load->library('upload', $configCF);
+
+	    if($editarFile == 0){
+
+            if($flagExisteRama == 0){//no existe la rama se debe crear
+                $contratoSubido = $this->upload->do_upload('contratoFirmado');
+
+                if($contratoSubido){
+                    $archivoSubido = $this->upload->data();
+                    $nombreExpediente = $this->generarNombreFile($nombreResidencial, $nombreCondominio, $nombreLote, $idCliente,  $_FILES["contratoFirmado"]["name"]);
+                    rename( $archivoSubido['full_path'], "static/documentos/cliente/contratoFirmado/".$nombreExpediente );
+
+                    $dataInsert = array(
+                        'movimiento' => "CONTRATO FIRMADO",
+                        'expediente' => $nombreExpediente,
+                        'modificado' => date('Y-m-d H:i:s'),
+                        'status' => 0,
+                        'idCliente' => $idCliente,
+                        'idCondominio' => $idCondominio,
+                        'idLote' => $idLote,
+                        'idUser' => $idUsuario,
+                        'tipo_documento' => 0,
+                        'id_autorizacion' => 0,
+                        'tipo_doc' => 30,
+                        'estatus_validacion' => 0,
+                    );
+                    $insert = $this->General_model->addRecord('historial_documento', $dataInsert);
+                    if($insert){
+                        print_r( json_encode(array('code' => 200)));
+                    }else{
+                        print_r( json_encode(array('code' => 400)));
+                    }
+                }else{
+                    print_r( json_encode(array('code' => 500)));
+                }
+
+            }
+        }
+        elseif($editarFile == 1){
+            $contratoCF = $this->upload->do_upload('contratoFirmado');
+            if($contratoCF){
+                $contratoCFUP = $this->upload->data();
+                $nombreExpediente = $this->generarNombreFile($nombreResidencial, $nombreCondominio, $nombreLote, $idCliente, $_FILES["contratoFirmado"]["name"]);
+                rename( $contratoCFUP['full_path'], "static/documentos/cliente/contratoFirmado/".$nombreExpediente );
+
+                $data_actualizar = array(
+                    'modificado' => date('Y-m-d H:i:s'),
+                    'idUser'     => $this->session->userdata('id_usuario'),
+                    'expediente' => $nombreExpediente
+                );
+                $update = $this->General_model->updateRecord('historial_documento', $data_actualizar, 'idDocumento', $idDocumento);
+                if($update){
+                    print_r( json_encode(array('code' => 200)));
+                    unlink('static/documentos/cliente/contratoFirmado/'.$nombreDocumento);
+                }
+            }
+        }
+	    exit;
+    }
+
+    function generarNombreFile($nombreResidencial, $nombreCondominio, $nombreLote, $idCliente, $archivo){
+        //esta funcion genera un nombre apartir de los parametros de nombreResidencial, $nombreCondominio,
+        //nombreLote y $idCliente quedando como el sig. ejemplo: CMMSLP_MON01_22122020_38479_508.pdf
+        $aleatorio = rand(100,1000);
+        $proyecto = str_replace(' ', '', $nombreResidencial);
+        $condominio = str_replace(' ', '', $nombreCondominio);
+        $condom = substr($condominio, 0, 3);
+        $cond= strtoupper($condom);
+        $numeroLote = preg_replace('/[^0-9]/','', $nombreLote);
+        $date= date('dmY');
+        $composicion = $proyecto."_".$cond.$numeroLote."_".$date;
+        $nombArchivo=$composicion;
+        $extension = pathinfo($archivo, PATHINFO_EXTENSION);
+        $expediente=  $nombArchivo.'_'.$idCliente.'_'.$aleatorio.'.'.$extension;
+        return $expediente;
+    }
+    
+    public function rechazarRegistro()
+    {
+        $idPreproceso = $this->input->post('tipoTransaccion');
+        $idLote = $this->input->post('idLote');
+        $idCliente = $this->input->post('idCliente');
+        $comentario = $this->input->post('comentario');
+        $idUsuario = $this->session->userdata('id_usuario');
+
+        $dataUpdateLote = [
+            'estatus_preproceso' => $idPreproceso - 1,
+            'usuario' => $idUsuario
+        ];
+
+        $dataHistorial = [
+            'idLote' => $idLote,
+            'idCliente' => $idCliente,
+            'id_preproceso' => $idPreproceso,
+            'comentario' => $comentario,
+            'estatus' => 2,
+            'modificado_por' => $idUsuario
+        ];
+
+        $responseUpdateLote = $this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $idLote);
+        $responseInsertHistorial = $this->General_model->addRecord('historial_preproceso_lote', $dataHistorial);
+
+        echo ($responseUpdateLote && $responseInsertHistorial)
+            ? json_encode(['code' => 200])
+            : json_encode(['code' => 500]);
+    }
+
+    public function getListaUsuariosReasignacionJuridico() {
+        echo json_encode($this->Reestructura_model->getListaUsuariosReasignacionJuridico());
+    }
+
+    public function setEjecutivoJuridico() {
+        $updateData = array("id_juridico_preproceso" => $this->input->post('id_usuario'), "usuario" => $this->session->userdata('id_usuario'));
+        echo json_encode($this->General_model->updateRecord("lotes", $updateData, "idLote", $this->input->post('idLote')));
+    }
+
+    public function reporteReubicaciones(){
+		$this->load->view('template/header');
+        $this->load->view("reestructura/reporteReubicaciones_view");
+	}
+
+    public function getReporteReubicaciones() {
+        echo json_encode($this->Reestructura_model->getReporteReubicaciones());
+    }
+
+    public function copiarCopropietariosAnteriores($idCliente, $idLote): bool
+    {
+        $copropietarios = $this->Reestructura_model->obtenerCopropietariosPorIdCliente($idCliente);
+
+        if (count($copropietarios) === 0) {
+            return true;
+        }
+
+        $copropietariosInsertar = [];
+        foreach ($copropietarios as $coopropietario) {
+            $copropietariosInsertar[] = [
+                'idLote' => $idLote,
+                'nombre' => $coopropietario['nombre'] ?? '',
+                'apellido_paterno' => $coopropietario['apellido_paterno'] ?? '',
+                'apellido_materno' => $coopropietario['apellido_materno'] ?? '',
+                'correo' => $coopropietario['correo'] ?? '',
+                'telefono_2' => $coopropietario['telefono_2'] ?? '',
+                'domicilio_particular' => $coopropietario['domicilio_particular'] ?? '',
+                'estado_civil' => $coopropietario['estado_civil'] ?? '',
+                'ocupacion' => $coopropietario['ocupacion'] ?? '',
+                'fecha_nacimiento' => $coopropietario['fecha_nacimiento'],
+                'modificado_por' => $this->session->userdata('id_usuario')
+            ];
+        }
+
+        return $this->General_model->insertBatch('datos_x_copropietario', $copropietariosInsertar);
+    }
+
+    public function movimientosCopropietarios($idLote, $data): bool
+    {
+        if (!isset($data['id_cop']) && !isset($data['id_cop_eliminar'])) {
+            return true;
+        }
+
+        $copropietariosInsertar = [];
+        $copropietariosActualizar = [];
+
+        if (isset($data['id_cop'])) {
+            foreach ($data['id_cop'] as $index => $idCopropietario) {
+                if ($idCopropietario !== 'Nuevo') {
+                    $copropietariosActualizar[] = [
+                        'id_dxcop' => $data['id_cop'][$index],
+                        'idLote' => $idLote,
+                        'nombre' => $data['nombre'][$index],
+                        'apellido_paterno' => $data['apellido_p'][$index],
+                        'apellido_materno' => $data['apellido_m'][$index],
+                        'correo' => $data['correo'][$index],
+                        'telefono_2' => $data['telefono2'][$index],
+                        'domicilio_particular' => $data['domicilio'][$index],
+                        'estado_civil' => $data['estado_civil'][$index],
+                        'ocupacion' => $data['ocupacion'][$index],
+                        'fecha_nacimiento' => $data['fecha_nacimiento'][$index],
+                        'modificado_por' => $this->session->userdata('id_usuario')
+                    ];
+                    continue;
+                }
+
+                $copropietariosInsertar[] = [
+                    'idLote' => $idLote,
+                    'nombre' => $data['nombre'][$index],
+                    'apellido_paterno' => $data['apellido_p'][$index],
+                    'apellido_materno' => $data['apellido_m'][$index],
+                    'correo' => $data['correo'][$index],
+                    'telefono_2' => $data['telefono2'][$index],
+                    'domicilio_particular' => $data['domicilio'][$index],
+                    'estado_civil' => $data['estado_civil'][$index],
+                    'ocupacion' => $data['ocupacion'][$index],
+                    'fecha_nacimiento' => $data['fecha_nacimiento'][$index],
+                    'modificado_por' => $this->session->userdata('id_usuario')
+                ];
+            }
+        }
+
+        $resultInsert = empty($copropietariosInsertar) || $this->General_model->insertBatch('datos_x_copropietario', $copropietariosInsertar);
+        $resultUpdate = empty($copropietariosActualizar) || $this->General_model->updateBatch('datos_x_copropietario', $copropietariosActualizar, 'id_dxcop');
+        $resultDelete = empty($data['id_cop_eliminar']) || $this->Reestructura_model->eliminarCopropietarios($data['id_cop_eliminar']);
+
+        return $resultInsert && $resultUpdate && $resultDelete;
+    }
 }

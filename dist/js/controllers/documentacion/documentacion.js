@@ -47,7 +47,7 @@ const TipoDoc = {
   CONTRATO_ELEGIDO_FIRMA_CLIENTE: 41,
   CONTRATO_1_CANCELADO: 42,
   CONTRATO_2_CANCELADO: 43,
-  CONTRATO_ANTERIOR_FIRMADO: 44
+  CONTRATO_REUBICACION_FIRMADO: 44
 };
 
 const observacionContratoUrgente = 1; // Bandera para inhabilitar
@@ -407,7 +407,8 @@ function cargarTabla(idLote, idCliente = "") {
           }
           if (
             data.tipo_doc == TipoDoc.CONTRATO_FIRMADO ||
-            data.tipo_doc == TipoDoc.DOCUMENTO_REESTRUCTURA_FIRMADO
+            data.tipo_doc == TipoDoc.DOCUMENTO_REESTRUCTURA_FIRMADO ||
+            data.tipo_doc == TipoDoc.CONTRATO_REUBICACION_FIRMADO
           ) {
             // CONTRATO FIRMADO
             if (data.expediente == null || data.expediente === "") {
@@ -471,7 +472,6 @@ function cargarTabla(idLote, idCliente = "") {
           if (
               data.tipo_doc == TipoDoc.CORRIDA_ANTERIOR ||
               data.tipo_doc == TipoDoc.CONTRATO_ANTERIOR ||
-              data.tipo_doc == TipoDoc.CONTRATO_ANTERIOR_FIRMADO ||
               data.tipo_doc == TipoDoc.RESCISION_CONTRATO
           ) {
             if (data.expediente == null || data.expediente === "") {

@@ -11,10 +11,29 @@ class Calendar_model extends CI_Model {
         $query = $this->db->query("SELECT a.titulo as title, a.fecha_cita as start, a.fecha_final as 'end', 'fab fa-google' as icon, a.id_cita as id, a.idOrganizador, 'transparent' as borderColor,
         CASE u.id_rol WHEN 7 THEN '#103f7533' ELSE '#dfdac4a3' END backgroundColor,
         CASE u.id_rol WHEN 7 THEN '#103f75' ELSE '#96843D' END textColor,
-        CASE u.id_rol WHEN 7 THEN (CASE a.estatus WHEN 1 THEN 'evtAbierto asesor' WHEN 2 THEN 'evtFinalizado asesor' END ) 
-		ELSE(CASE a.estatus WHEN 1 THEN 'evtAbierto coordinador' WHEN 2 THEN 'evtFinalizado coordinador' END ) END className
+        CASE u.id_rol 
+            WHEN 7 THEN (CASE a.estatus 
+                WHEN 1 THEN 'evtAbierto asesor' 
+                ELSE 
+                    (CASE a.evaluacion 
+                        WHEN 1 THEN 'evtSatisfactoria asesor'
+                        WHEN 2 THEN 'evtPocoSatisfactoria asesor'
+                        WHEN 3 THEN 'evtCancelada asesor'
+                    END) 
+            END)
+            ELSE 
+                (CASE a.estatus 
+                    WHEN 1 THEN 'evtAbierto coordinador' 
+                    ELSE 
+                        (CASE a.evaluacion 
+                            WHEN 1 THEN 'evtSatisfactoria coordinador'
+                            WHEN 2 THEN 'evtPocoSatisfactoria coordinador'
+                            WHEN 3 THEN 'evtCancelada coordinador'
+                        END)  
+                END) 
+            END className
         FROM agenda a
-        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = a.medio 
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = a.medio
         INNER JOIN usuarios u ON u.id_usuario = a.idOrganizador
         WHERE idOrganizador IN ($idSource) AND oxc.id_catalogo=65");
         return $query->result_array();
@@ -31,7 +50,28 @@ class Calendar_model extends CI_Model {
         $query = $this->db->query("SELECT a.id_cita, a.idCliente, a.idOrganizador, a.fecha_cita, a.fecha_final, a.fecha_creacion, a.titulo, a.descripcion, 
             CONCAT(p.nombre, ' ', p.apellido_paterno, ' ', p.apellido_materno) AS nombre, p.telefono, p.telefono_2 ,  a.id_direccion,
             (CASE WHEN a.id_direccion IS NOT NULL THEN dir.nombre ELSE a.direccion END) direccion, a.medio, oxc.nombre as nombre_medio, a.estatus, a.idGoogle,
-            CONCAT(org.nombre, ' ', org.apellido_paterno, ' ', org.apellido_materno) AS nombreOrganizador
+            CONCAT(org.nombre, ' ', org.apellido_paterno, ' ', org.apellido_materno) AS nombreOrganizador,
+            CASE org.id_rol 
+            WHEN 7 THEN (CASE a.estatus 
+                WHEN 1 THEN 'codeAbierta' 
+                ELSE 
+                    (CASE a.evaluacion 
+                        WHEN 1 THEN 'codeSatisfactoria'
+                        WHEN 2 THEN 'codePocoSatisfactoria'
+                        WHEN 3 THEN 'codeCancelada'
+                    END) 
+            END)
+            ELSE 
+                (CASE a.estatus 
+                    WHEN 1 THEN 'codeAbierta' 
+                    ELSE 
+                        (CASE a.evaluacion 
+                            WHEN 1 THEN 'codeSatisfactoria'
+                            WHEN 2 THEN 'codePocoSatisfactoria'
+                            WHEN 3 THEN 'codeCancelada'
+                        END)  
+                END) 
+            END className
             FROM agenda a
             INNER JOIN prospectos p ON p.id_prospecto = a.idCliente
             INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = a.medio

@@ -24,18 +24,14 @@ class Incidencias extends CI_Controller
         $this->load->database('default');
 
 
-        $this->jwt_actions->authorize('566', $_SERVER['HTTP_HOST']);
-        $this->validateSession();
+        //$this->jwt_actions->authorize('566', $_SERVER['HTTP_HOST']);
 
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
         $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
         $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
     }
-   public function validateSession() {
-    if ($this->session->userdata('id_usuario') == "" || $this->session->userdata('id_rol') == "")
-      redirect(base_url() . "index.php/login");
-  }
+
 // antes se llamada incidencias se encontraba en comisiones
     public function index()
     {
@@ -161,7 +157,7 @@ class Incidencias extends CI_Controller
       else if($rolSelect == 59){
         $usuarioOld=$regional;
         
-      }
+      } 
    
       $respuesta = array($this->Incidencias_model->UpdateInventarioClient($usuarioOld,$newColab,$rolSelect,$idLote,$idCliente,$comentario,$banderaSubRegional, $regional));
        

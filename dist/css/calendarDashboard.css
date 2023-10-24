@@ -1717,12 +1717,20 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
   padding: 3px;
 }
 
-#calendar .evtAbierto {
+#calendar .evtSatisfactoria {
   border-left: 4px solid #50d920 !important;
 }
 
-#calendar .evtFinalizado {
-  border-left: 4px solid #df5a5a !important;
+#calendar .evtCancelada {
+  border-left: 4px solid #f44336 !important;
+}
+
+#calendar .evtAbierto {
+  border-left: 4px solid #00A0FF !important;
+}
+
+#calendar .evtPocoSatisfactoria {
+  border-left: 4px solid #f8aa4b !important;
 }
 
 #calendar .fc-daygrid-event {
@@ -1753,12 +1761,20 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
   font-size: 15px;
 }
 
-.boxCodigos .boxStatus .codeFinish {
-  color: #df5a5a;
+.boxCodigos .boxStatus .codeCancelada {
+  color: #f44336;
 }
 
-.boxCodigos .boxStatus .codeOpen {
+.boxCodigos .boxStatus .codeSatisfactoria {
   color: #50d920;
+}
+
+.boxCodigos .boxStatus .codeAbierta {
+  color: #00A0FF;
+}
+
+.boxCodigos .boxStatus .codePocoSatisfactoria {
+  color: #f8aa4b;
 }
 
 .boxCodigos .boxStatus .codeAdviser {
@@ -1913,4 +1929,20 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
   background-color: transparent;
   color: #103f75;
   font-weight: 900;
+}
+
+.codeCancelada {
+  color: #f44336;
+}
+
+.codeSatisfactoria {
+  color: #50d920;
+}
+
+.codeAbierta {
+  color: #00A0FF;
+}
+
+.codePocoSatisfactoria {
+  color: #f8aa4b;
 }

@@ -67,44 +67,110 @@ class Usuarios extends CI_Controller
     public function saveUser()
     {
         $data = array(
-        "nombre" => $_POST['name'],
-        "apellido_paterno" => $_POST['last_name'],
-        "apellido_materno" => $_POST['mothers_last_name'],
-        "forma_pago" => $_POST['payment_method'],
-        "rfc" => '',
-        "tiene_hijos" => 2,
-        "estatus" => 1,
-        "sesion_activa" => 1,
-        "imagen_perfil" => '',
-        "correo" => $_POST['email'],
-        "telefono" => $_POST['phone_number'],
-        "id_sede" => $_POST['headquarter'],
-        "id_rol" => $_POST['member_type'],
-        "id_lider" => $_POST['leader'],
-        "usuario" => $_POST['username'],
-        "contrasena" => encriptar($_POST['contrasena']),
-        "fecha_creacion" => date("Y-m-d H:i:s"),
-        "creado_por" => $this->session->userdata('id_usuario'),
-        "fecha_modificacion" => date("Y-m-d H:i:s"),
-        "modificado_por" => $this->session->userdata('id_usuario')
+            "nombre" => $_POST['name'],
+            "apellido_paterno" => $_POST['last_name'],
+            "apellido_materno" => $_POST['mothers_last_name'],
+            "forma_pago" => $_POST['payment_method'],
+            "rfc" => '',
+            "tiene_hijos" => 2,
+            "estatus" => 1,
+            "sesion_activa" => 1,
+            "imagen_perfil" => '',
+            "correo" => $_POST['email'],
+            "telefono" => $_POST['phone_number'],
+            "id_sede" => $_POST['headquarter'],
+            "id_rol" => $_POST['member_type'],
+            "id_lider" => $_POST['leader'],
+            "usuario" => $_POST['username'],
+            "contrasena" => encriptar($_POST['contrasena']),
+            "fecha_creacion" => date("Y-m-d H:i:s"),
+            "creado_por" => $this->session->userdata('id_usuario'),
+            "fecha_modificacion" => date("Y-m-d H:i:s"),
+            "modificado_por" => $this->session->userdata('id_usuario')
         );
 //        print_r($_POST['menu'][0]);
-        foreach ($_POST['menu'] as $index => $elemento){
-            $_POST['menu'][$index] = (array)$elemento;
-            var_dump(json_decode($_POST['menu'][$index][0]));
-            echo'<br><br>';
-        }
-        echo '<br><br>';
+        /**/
+        if(!isset($_POST['menu'])){
+            $response = array(
+                "response" => -2,
+                "message" => 'Selecciona opción de menú'
+            );
+        }else{
+            $nuevoArray = array_unique($_POST['menu']);
+            if (isset($_POST) && !empty($_POST)) {
+                $dataRespuesta = $this->Usuarios_modelo->saveUser($data);
+                if ($dataRespuesta['response'] == 1) {
+                    $lastId = $dataRespuesta['data_lastInset'][0]['lastId'];
+                    if (isset($_POST['seleccionaTodo'])) {
+                        //seleccionó, all menu entonces solo toma el menu del rol
+                    }
+                    else {
+                        //Seleccionó opciones especificas, se va a menu_usuario
+                        $itemsPadres = '';
+                        $itemsHijos = '';
+                        foreach ($nuevoArray as $index => $elemento) {
+                            $nuevoArray[$index] = (array)$elemento;
+                            if (json_decode($nuevoArray[$index][0])[0] == 0) {
+                                //es padre
+                                if ($index == 0) {
+                                    $itemsPadres .= json_decode($nuevoArray[$index][0])[1];
+                                } else {
+                                    $itemsPadres .= ' ' . json_decode($nuevoArray[$index][0])[1];
+                                }
+                            } else {
+                                //es hijo
+                                if ($itemsHijos == '') {
+                                    $itemsHijos .= json_decode($nuevoArray[$index][0])[1];
+                                } else {
+                                    $itemsHijos .= ' ' . json_decode($nuevoArray[$index][0])[1];
+                                }
+                            }
+                        }
+                        $itemsHijos = str_replace(' ', ',', $itemsHijos);
+                        $itemsPadres = str_replace(' ', ',', $itemsPadres);
+                        $dataMenuPadreInsert = array(
+                            "id_usuario"    =>  $lastId,
+                            "menu"          =>  $itemsPadres,
+                            "es_padre"      =>  1,
+                            "fecha_creacion"    => date('Y-m-d H:i:s')
+                        );
+                        $dataMenuHijoInsert = array(
+                            "id_usuario"    =>  $lastId,
+                            "menu"          =>  $itemsHijos,
+                            "es_padre"      =>  0,
+                            "fecha_creacion"    => date('Y-m-d H:i:s')
+                        );
+                        $this->General_model->addRecord('menu_usuario', $dataMenuPadreInsert);
+                        $this->General_model->addRecord('menu_usuario', $dataMenuHijoInsert);
+                    }
 
-//        echo'<br><br>';
-//        print_r(json_decode($_POST['menu'][0], true));
-        exit;
-        if (isset($_POST) && !empty($_POST)) {
-            $response = $this->Usuarios_modelo->saveUser($data);
-            echo json_encode($response);
+
+                    $response = array(
+                        "response" => 1,
+                        "message" => 'Se ha agregado correctamente'
+                    );
+                }
+                elseif($dataRespuesta['response'] == -1){
+                    $response = array(
+                        "response" => -1,
+                        "message" => 'El usuario ya existe, inténtalo con otro nombre de usuario'
+                    );
+                }
+                else{
+                    $response = array(
+                        "response" => 0,
+                        "message" => 'Ocurrio un error, inténtalo nuevamente'
+                    );
+                }
+            }
         }
+
+
+
+
+
+        echo json_encode($response);
     }
-
     public function advisersList()
     {
         $this->load->view('template/header');
@@ -168,15 +234,10 @@ class Usuarios extends CI_Controller
         $url = 'https://prueba.gphsis.com/RHCV/index.php/WS/baja_asesor';
         if (isset($_POST) && !empty($_POST)) {
             if ($this->input->post("estatus") == 0) {
-                $estatus = 0;
+                $estatus = 3;
                 if ($this->input->post("idrol") == 'Asesor' || $this->input->post("idrol") == 'Coordinador de ventas' || $this->input->post("idrol") == 'Gerente') {
 
-                    $VerificarComision = $this->Usuarios_modelo->VerificarComision($this->input->post("id_user"))->result_array();
-                    if (count($VerificarComision) == 0 || $VerificarComision[0]['abono_pendiente'] <= 0) {
-                        $estatus = 0;
-                    } else {
-                        $estatus = 3;
-                    }
+                    
                     $dataBaja = array(
                         "fecha_baja" => $hoy,
                         "cantidad_descuento" => "0",
@@ -415,6 +476,13 @@ class Usuarios extends CI_Controller
 
     public function getUserInformation($id_usuario){
         $data = $this->Usuarios_modelo->getUserInformation($id_usuario);
+        if($data[0]['menuUsuario']>0){
+            //tiene menu especial, se debe cargar
+            $menu_especial = $this->Usuarios_modelo->getMenuUsuarioByIdUsuario($id_usuario);
+            $data[0]['menu_usuario'] = $menu_especial;
+        }else{
+            $data[0]['menu_usuario'] = array();
+        }
         $data[0]['contrasena'] = desencriptar($data[0]['contrasena']);
         $data[0]['multirol'] = $this->Usuarios_modelo->getUserMultirol($id_usuario);
 

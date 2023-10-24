@@ -1,5 +1,6 @@
 var getInfo1 = new Array(7);
 var getInfo3 = new Array(6);
+let infoRechazoReubicacion = {};
 
 var estatusPermitidosEstatus11 = [7, 8, 10, 12];
 var movimientosPermitidosEstatus11 = [40, 67, 72, 37, 7, 64, 77, 38, 65];
@@ -134,10 +135,20 @@ $("#tabla_ingresar_11").ready(function () {
 								data-idCliente="${d.id_cliente}" data-fecVen="${d.fechaVenc}" data-ubic="${d.ubicacion}" data-tot="${d.totalNeto}" data-totv="${d.totalValidado}"
 								class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="Registrar estatus">
 								<i class="far fa-thumbs-up"></i></button>`;
-							cntActions += `<button href="#" data-idLote="${d.idLote}" data-nomLote="${d.nombreLote}" data-idCond="${d.idCondominio}"
+
+							if (d.proceso != 2 && d.proceso != 4) {
+								cntActions += `<button href="#" data-idLote="${d.idLote}" data-nomLote="${d.nombreLote}" data-idCond="${d.idCondominio}"
 								data-idCliente="${d.id_cliente}" data-fecVen="${d.fechaVenc}" data-ubic="${d.ubicacion}"
-								class="btn-data btn-warning cancelReg" data-toggle="tooltip" data-placement="top" title="Rechazo/regreso estatus (Jurídico)">
+								class="btn-data btn-warning cancelReg" data-toggle="tooltip" data-placement="top" title="Rechazo/regreso estatus">
 								<i class="far fa-thumbs-down"></i></button>`;
+							}
+
+							if (d.proceso == 2 || d.proceso == 4) {
+								cntActions += `<button href="#" data-idLote="${d.idLote}" data-nomLote="${d.nombreLote}" data-idCond="${d.idCondominio}"
+									data-idCliente="${d.id_cliente}" data-fecVen="${d.fechaVenc}" data-ubic="${d.ubicacion}"
+									class="btn-data btn-warning rechazoReubicacion" data-toggle="tooltip" data-placement="top" title="Rechazo de estatus">
+									<i class="far fa-thumbs-down"></i></button>`;
+							}
 						}
 						else
 							cntActions = 'N/A';
@@ -228,6 +239,59 @@ $("#tabla_ingresar_11").ready(function () {
 		nombreLote = $(this).data("nomlote");
 		$(".lote").html(nombreLote);
 		$('#rechReg').modal('show');
+	});
+
+	$('#tabla_ingresar_11 tbody').on('click', '.rechazoReubicacion', function (e) {
+		e.preventDefault();
+
+		infoRechazoReubicacion = {
+			idCliente: $(this).attr("data-idCliente"),
+			idCondominio: $(this).attr("data-idcond"),
+			nombreLote: $(this).attr("data-nomLote"),
+			idLote: $(this).attr("data-idLote"),
+			fechaVenc: $(this).attr("data-fecven")
+		};
+
+		changeSizeModal('modal-md');
+		appendBodyModal(`
+			<div class="container-fluid">
+				<div class="row">
+					<div class="modal-header text-center">
+						<h4 class="modal-title">Rechazo estatus 11 - <b><span id="nombreLote"></span></b></h4>
+					</div>				
+				</div>
+			
+				<div class="row mt-3">
+					<div class="col col-xs-12 col-sm-12 col-md-6 col-lg-12">
+						<label>Comentario</label>
+						<select name="comentario" id="comentarioRechazoReubicacion" 
+								class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" 
+								data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" 
+								required>
+							<option value="Transferencia no reflejada en Banco">Transferencia no reflejada en Banco</option>
+							<option value="Cheque rebotado">Cheque rebotado</option>
+							<option value="Rechazo por falta de dinero">Rechazo por falta de dinero</option>
+							<option value="Pago American Express">Pago American Express</option>
+							<option value="Otro">Otro</option>
+						</select>
+					</div>
+					<div class="col col-xs-12 col-sm-12 col-md-6 col-lg-12 mt-2">
+						<label>Observaciones</label>
+						<textarea class="form-control input-gral" name="observaciones" id="observacionesRechazoReubicacion" rows="3"></textarea>
+					</div>
+				</div>
+				
+				<div class="row mt-3 d-flex justify-end">
+					<button type="button" class="btn btn-danger btn-simple" onclick="hideModal()">Cancelar</button>
+					<button type="button" class="btn btn-primary" id="rechazoReubicacionBtn">Aceptar</button>
+				</div>
+			</div>
+		`);
+
+		$("#comentarioRechazoReubicacion").selectpicker('refresh');
+		$('#nombreLote').html(infoRechazoReubicacion.nombreLote);
+
+		showModal();
 	});
 });
 
@@ -343,6 +407,52 @@ $(document).on('click', '#save3', function (e) {
 	}
 });
 
+$(document).on('click', '#rechazoReubicacionBtn', (e) => {
+	e.preventDefault();
+
+	if ($('#comentarioRechazoReubicacion').val().length === 0) {
+		alerts.showNotification("top", "right", "Debes seleccionar un motivo de rechazo para continuar con esta acción.", "danger");
+		return;
+	}
+
+	$('#spiner-loader').removeClass('hide');
+	const data = new FormData();
+	data.append('idCliente', infoRechazoReubicacion.idCliente);
+	data.append('idCondominio', infoRechazoReubicacion.idCondominio);
+	data.append('nombreLote', infoRechazoReubicacion.nombreLote);
+	data.append('idLote', infoRechazoReubicacion.idLote);
+	data.append('comentario', $('#comentarioRechazoReubicacion').val());
+	data.append('observaciones', $('#observacionesRechazoReubicacion').val());
+
+	$.ajax({
+		url: `${general_base_url}Asistente_gerente/editar_registro_loteRechazoAstatus2_asistentes_proceceso8`,
+		data,
+		cache: false,
+		contentType: false,
+		processData: false,
+		type: 'POST',
+		success: (data) => {
+			response = JSON.parse(data);
+			if (response.message == 'OK') {
+				alerts.showNotification("top", "right", "Estatus enviado.", "success");
+			} else if (response.message == 'FALSE') {
+				alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
+			} else if (response.message == 'ERROR') {
+				alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+			}
+
+			hideModal();
+			$('#tabla_ingresar_11').DataTable().ajax.reload();
+			$('#spiner-loader').addClass('hide');
+		},
+		error: () => {
+			hideModal();
+			$('#tabla_ingresar_11').DataTable().ajax.reload();
+			$('#spiner-loader').addClass('hide');
+			alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+		}
+	});
+});
 
 jQuery(document).ready(function () {
 	jQuery('#editReg').on('hidden.bs.modal', function (e) {

@@ -4,7 +4,7 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Asistente_gerente extends CI_Controller {
     public function __construct() {
         parent::__construct();
-        $this->load->model(['VentasAsistentes_model', 'registrolote_modelo', 'asesor/Asesor_model']);
+        $this->load->model(['VentasAsistentes_model', 'registrolote_modelo', 'asesor/Asesor_model', 'Administracion_model']);
         $this->load->library(array('session','form_validation'));
        //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
         $this->load->library(array('session','form_validation', 'get_menu','permisos_sidebar'));
@@ -12,9 +12,7 @@ class Asistente_gerente extends CI_Controller {
         $this->load->database('default');
         $this->load->library('email');
         $this->validateSession();
-
         date_default_timezone_set('America/Mexico_City');
-
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
         $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
@@ -39,7 +37,6 @@ class Asistente_gerente extends CI_Controller {
 	public function registroEstatus8VentasAsistentes()
 	{
 		$this->validateSession();
-
 	 	$this->load->view('template/header');
 		$this->load->view("contratacion/datos_status8Contratacion_asistentes_view");
 	}
@@ -55,7 +52,6 @@ class Asistente_gerente extends CI_Controller {
 	}
 
 	public function registroEstatus9VentasAsistentes(){
-		/*menu function*/                    
    		$this->load->view('template/header');
 		$this->load->view('contratacion/report_historial_view');
 	}
@@ -282,12 +278,13 @@ class Asistente_gerente extends CI_Controller {
     }
 
     public function editar_registro_loteRechazoAstatus2_asistentes_proceceso8() {
-        $idLote=$this->input->post('idLote');
-        $idCondominio=$this->input->post('idCondominio');
-        $nombreLote=$this->input->post('nombreLote');
-        $idCliente=$this->input->post('idCliente');
-        $comentario=$this->input->post('comentario');
-        $modificado=date("Y-m-d H:i:s");
+        $idLote = $this->input->post('idLote');
+        $idCondominio = $this->input->post('idCondominio');
+        $nombreLote = $this->input->post('nombreLote');
+        $idCliente = $this->input->post('idCliente');
+        $comentario = $this->input->post('comentario');
+        $modificado = date("Y-m-d H:i:s");
+        $clienteInfo = $this->VentasAsistentes_model->check_carta($idCliente)[0];
 
         $arreglo=array();
         $arreglo["idStatusContratacion"]= 1;
@@ -312,6 +309,51 @@ class Asistente_gerente extends CI_Controller {
         $arreglo2["idLote"]= $idLote;
         $arreglo2["idCondominio"]= $idCondominio;
         $arreglo2["idCliente"]= $idCliente;
+
+        if ($clienteInfo['proceso'] == 2 || $clienteInfo['proceso'] == 4) {
+            if (!$this->Administracion_model->validateSt11($idLote)) {
+                $data['message'] = 'FALSE';
+                echo json_encode($data);
+                return;
+            }
+
+            $observaciones = $this->input->post('observaciones');
+            $arreglo["comentario"] .= " -  $observaciones";
+            $arreglo2["comentario"] .= " - $observaciones";
+
+            if (!$this->VentasAsistentes_model->updateSt($idLote,$arreglo,$arreglo2)) {
+                $data['message'] = 'ERROR';
+                echo json_encode($data);
+                return;
+            }
+
+            $data['message'] = 'OK';
+            echo json_encode($data);
+            return;
+        }
+
+//        $datos= $this->VentasAsistentes_model->getCorreoSt($idCliente);
+//        $lp = $this->VentasAsistentes_model->get_lp($idLote);
+//        $correosEntregar = [];
+//
+//        if(empty($lp)){
+//            $correos = array_unique(explode(',', $datos[0]["correos"]));
+//        } else {
+//            $correos = array_unique(explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com'));
+//        }
+//
+//        foreach($correos as $email)
+//        {
+//            if(trim($email) != 'gustavo.mancilla@ciudadmaderas.com'){
+//                if (trim($email) != ''){
+//                    if(trim($email) == 'diego.perez@ciudadmaderas.com'){
+//                        array_push($correosEntregar, 'analista.comercial@ciudadmaderas.com');
+//                    } else {
+//                        array_push($correosEntregar, $email);
+//                    }
+//                }
+//            }
+//        }
 
         $infoLote = (array)$this->VentasAsistentes_model->getNameLote($idLote);
 
@@ -438,7 +480,6 @@ class Asistente_gerente extends CI_Controller {
                         $fecha= $sig_fecha;
                         $i++;
                     }
-
                     $fecha = $sig_fecha;
                }
 
@@ -465,7 +506,6 @@ class Asistente_gerente extends CI_Controller {
                         $fecha= $sig_fecha;
                         $i++;
                     }
-
                     $fecha = $sig_fecha;
                 }
                $arreglo["fechaVenc"]= $fecha;
@@ -503,7 +543,6 @@ class Asistente_gerente extends CI_Controller {
                         $fecha= $sig_fecha;
                         $i++;
                     }
-
                     $fecha = $sig_fecha;
                 }
 
@@ -928,12 +967,10 @@ class Asistente_gerente extends CI_Controller {
         if ($this->VentasAsistentes_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){
             $data['message'] = 'OK';
             echo json_encode($data);
-
             }else{
                 $data['message'] = 'ERROR';
                 echo json_encode($data);
             }
-
         }else {
             $data['message'] = 'FALSE';
             echo json_encode($data);

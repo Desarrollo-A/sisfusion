@@ -698,20 +698,6 @@ function fillDataTable(idCondominio) {
                         buttons += `<button class="btn-data btn-green abrir_prospectos btn-fab btn-fab-mini" data-toggle="tooltip" data-placement="left" title="ASIGNAR PROSPECTO" data-idCliente="${d.id_cliente}" data-nomCliente="${d.nombreCliente}"> <i class="fas fa-user-check"></i></button>`;
                     }
 
-                    // Botón para descargar la carta de reubicación
-                    if (idMovimiento === MOVIMIENTOS.NUEVO_APARTADO) {
-                        if ([2, 3, 4].includes(parseInt(d.proceso))) {
-                            if ([2,4].includes(parseInt(d.proceso))) {
-                                const url = `${general_base_url}Reestructura/imprimirCartaReubicacion/${d.id_cliente}`;
-                                buttons += `<a href="${url}" target="_blank" class="btn-data btn-orangeYellow btn-fab btn-fab-mini" data-toggle="tooltip" data-placement="left" title="DESCARGAR CARTA REUBICACIÓN"><i class="fas fa-download"></i></a>`;
-                            }
-
-                            if (parseInt(d.proceso) === 3) {
-                                const url = `${general_base_url}Reestructura/imprimirCartaReestructura/${d.id_cliente}`;
-                                buttons += `<a href="${url}" target="_blank" class="btn-data btn-orangeYellow btn-fab btn-fab-mini" data-toggle="tooltip" data-placement="left" title="DESCARGAR CARTA REESTRUCTURA"><i class="fas fa-download"></i></a>`;
-                            }
-                        }
-                    }
                     return '<div class="d-flex justify-center">'+buttons+'</div>';
                 }
             }
@@ -777,7 +763,7 @@ $(document).on('click', '#save1', function(e) {
                     $('#modal1').modal('hide');
                     $('#tabla_deposito_seriedad').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
-                } else if(response.message == 'MISSING_AUTORIZACION'){
+                } else if(response.message == 'MISSING_AUTORIZATION'){
                     $('#save1').prop('disabled', false);
                     $('#modal1').modal('hide');
                     $('#tabla_deposito_seriedad').DataTable().ajax.reload();
@@ -990,7 +976,7 @@ $(document).on('click', '#save3', function(e) {
                     $('#modal3').modal('hide');
                     $('#tabla_deposito_seriedad').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
-                } else if(response.message == 'MISSING_AUTORIZACION'){
+                } else if(response.message == 'MISSING_AUTORIZATION'){
                     $('#save3').prop('disabled', false);
                     $('#modal3').modal('hide');
                     $('#tabla_deposito_seriedad').DataTable().ajax.reload();

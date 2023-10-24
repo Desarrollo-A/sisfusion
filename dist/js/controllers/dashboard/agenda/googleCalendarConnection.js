@@ -31,3 +31,18 @@ const tokenCallback = (tokenResponse) => {
   localStorage.setItem('auth-google-token', tokenResponse.access_token);
   isSignInGoogle();
 }
+
+const isAuthenticated = async (token) => {
+  return new Promise((resolve) => {
+    if (token === null || token === '') {
+      resolve(true);
+      return;
+    }
+
+    $.getJSON(`https://www.googleapis.com/oauth2/v3/tokeninfo`, { access_token: token }, () => {
+      resolve(true);
+    }).fail(() => {
+      resolve(false);
+    })
+  });
+}
