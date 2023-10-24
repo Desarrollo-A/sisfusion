@@ -348,3 +348,10 @@ function visorArchivo(rutaArchivo, nombreArchivo){
   });
   $('#sb-container').css('z-index', 9999);
 }
+
+
+function replaceAll(text, busca, reemplaza) {
+  while (text.toString().indexOf(busca) != -1)
+      text = text.toString().replace(busca, reemplaza);
+  return text;
+}

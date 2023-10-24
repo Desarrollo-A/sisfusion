@@ -585,48 +585,47 @@
 
 
 
-    <div class="modal fade" id="ModalBonos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal fade" id="modalAgregarNuevo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header mb-1">
                 <h4 class="modal-title text-center">Registrar nuevo descuento</h4>
             </div>
             <div class="container-fluid">
-                <form id="form_nuevo" name="form_nuevo" method="post">
+                <form id="formAltaDescuento" name="formAltaDescuento" method="post">
                     
                     <div class="col-lg-12 form-group m-0" id="select">
                         <label class="label-gral">Puesto</label>
-                        <select class="selectpicker select-gral m-0" name="roles" id="roles" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
-                            <option value="7">Asesor</option>
-                            <option value="9">Coordinador</option>
-                            <option value="3">Gerente</option></select>
+                        <select class="selectpicker select-gral m-0" name="puesto" id="puesto" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                     </div>
-                    <div class="col-lg-12 form-group m-0" id="users2"></div>
+
+                    <div class="col-lg-12 form-group m-0" id="select">
+                        <label class="label-gral">Usuario</label>
+                        <select class="selectpicker select-gral m-0" name="usuarios" id="usuarios" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                    </div>
 
                     <div class="col-lg-4 form-group m-0">
                         <label class="label-gral">Monto descuento</label>
-                        <input id="evtTitle" name="evtTitle" type="text" class="form-control input-gral">
+                        <input type="text" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" maxlength="10" class="form-control input-gral" name="montoDescuento" id="montoDescuento" oncopy="return false" onpaste="return false" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" onkeypress="return onlyNumbers(event)" required>
                     </div>
 
                     <div class="col-lg-4 form-group m-0">
                         <label class="label-gral">Número meses</label>
-                        <input id="evtTitle" name="evtTitle" type="text" class="form-control input-gral">
+                        <input type="number" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" maxlength="2" class="form-control input-gral" name="numeroMeses" id="numeroMeses" oncopy="return false" onpaste="return false" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" onkeypress="return onlyNumbers(event)" required>
                     </div>
 
                     <div class="col-lg-4 form-group m-0">
                         <label class="label-gral">Mensualidad</label>
-                        <input id="evtTitle" name="evtTitle" type="text" class="form-control input-gral">
+                        <input class="form-control input-gral" name="montoMensualidad" id="montoMensualidad" oncopy="return false" onpaste="return false" readonly type="text" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" required>
                     </div>
-                   
-                    
-
+        
                     <div class="col-lg-12 form-group m-0">
                         <label class="label-gral">Descripción</label>
-                        <textarea class="text-modal" type="text" name="comentario2" id="comentario2" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
+                        <textarea class="text-modal" type="text" name="descripcionAltaDescuento" id="descripcionAltaDescuento" onkeyup="javascript:this.value=this.value.toUpperCase();" required></textarea>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanSelects()">Cancelar</button>
-                        <button type="submit" class="btn btn-primary btn_descontar">Aceptar</button>
+                        <button type="submit" class="btn btn-primary btn_alta">Aceptar</button>
                     </div>
                 </form>
             </div>

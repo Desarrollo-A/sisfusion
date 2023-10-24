@@ -127,8 +127,8 @@ class Comisiones_model extends CI_Model {
         return $this->db->query("SELECT id_usuario,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as name_user FROM usuarios WHERE id_usuario NOT IN (SELECT id_usuario FROM bonos) AND id_rol $cadena");
     }
 
-    function getUsuariosRolDU($rol) {
-        return $this->db->query("SELECT id_usuario,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as name_user, estatus FROM usuarios WHERE id_usuario NOT IN (SELECT id_usuario FROM descuentos_universidad) AND estatus = 1 AND id_rol = $rol ORDER BY name_user");
+    function getUsuariosUM($rol) {
+        return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as nombre FROM usuarios WHERE id_usuario NOT IN (SELECT id_usuario FROM descuentos_universidad) AND estatus = 1 AND id_rol = $rol ORDER BY nombre");
     }
 
     function getDatosComisionesHistorialRigel($proyecto,$condominio){
@@ -2739,9 +2739,9 @@ class Comisiones_model extends CI_Model {
         WHERE com.estatus = 1 AND pci.estatus IN (1) AND pci.id_usuario = $user ")->result_array();
 
         $maximo = 12500;
-        if($datos[0]['id_sede'] == 6){
-            $maximo = 15000;
-        }
+        // if($datos[0]['id_sede'] == 6){
+        //     $maximo = 15000;
+        // }
 
         if($pagos[0]['suma'] < $maximo){
             $datosnew[0] = array(
@@ -5827,13 +5827,22 @@ public function CancelarDescuento($id_pago,$motivo)
         return $query->result_array();
     }
 
-    function insertar_descuentoch($usuario, $descuento, $comentario, $monto, $userdata){
 
-        $respuesta = $this->db->query("INSERT INTO descuentos_universidad VALUES (".$usuario.", ".$descuento.", 1, 'DESCUENTO UNIVERSIDAD MADERAS', '".$comentario."', ".$userdata.", GETDATE() , 0, ".$monto.", 1, 0, NULL, NULL, GETDATE())");
-        $insert_id = $this->db->insert_id();
-        $respuesta = $this->db->query("INSERT INTO historial_log VALUES (".$insert_id.", ".$userdata.", GETDATE(), 3, 'MOTIVO DESCUENTO: ".$comentario."', 'descuentos_universidad', null, NULL,NULL, NULL)");
-       
-       
+    function validarNuevoDescuentoUM($usuario){
+
+        $validarUsuario = $this->db->query("SELECT id_usuario FROM descuentos_universidad WHERE id_usuario = $usuario");
+        if(!empty($validarUsuario)){
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+
+
+    function altaNuevoDescuentoUM($usuario, $montoFinalDescuento, $numeroMeses, $montoMensualidad, $descripcionAltaDescuento, $userdata){
+        
+        $respuesta = $this->db->query("INSERT INTO descuentos_universidad VALUES ($usuario, $montoFinalDescuento, 1, 'DESCUENTO UNIVERSIDAD MADERAS', '".$descripcionAltaDescuento."', $userdata, GETDATE(), 0, $montoMensualidad, $numeroMeses, 0, NULL, NULL, GETDATE())");       
+        
         if (! $respuesta ) {
             return 0;
         } else {
