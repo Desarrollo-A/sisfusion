@@ -3,7 +3,7 @@
 class Reestructura extends CI_Controller{
 	public function __construct() {
 		parent::__construct();
-        $this->load->model(array('Reestructura_model','General_model', 'caja_model_outside'));
+        $this->load->model(array('Reestructura_model','General_model', 'caja_model_outside', 'Clientes_model'));
         $this->load->library(array('session','form_validation', 'get_menu','permisos_sidebar'));
 		$this->load->helper(array('url', 'form'));
 		$this->load->database('default');
@@ -38,12 +38,12 @@ class Reestructura extends CI_Controller{
     }
 
     public function getCliente($idCliente, $idLote){
-        $datCliente = $this->Reestructura_model->getDatosCliente($idLote);
+        $datCliente = $this->Reestructura_model->getDatosClienteTemporal($idLote);
         echo ($datCliente == '') ? json_encode($this->Reestructura_model->getCliente($idCliente)) : json_encode($datCliente);
     }
     
     public function getEstadoCivil(){
-        $data = $this->Reestructura_model->getEstadoCivil();
+        $data = $this->Clientes_model->getCivilStatus();
         echo json_encode($data);
     }
 
@@ -91,7 +91,7 @@ class Reestructura extends CI_Controller{
     }
 
 	public function lista_catalogo_opciones(){
-		echo json_encode($this->Reestructura_model->get_catalogo_resstructura()->result_array());
+		echo json_encode($this->Reestructura_model->get_catalogo_reestructura()->result_array());
 	}
 
 	public function insertarCatalogo (){
@@ -117,14 +117,14 @@ class Reestructura extends CI_Controller{
 		}
 	}
 
-	public function getHistorial($id_prospecto){
-        echo json_encode($this->Reestructura_model->historialModel($id_prospecto)->result_array());
+	public function getHistorial($idLote){
+        echo json_encode($this->Reestructura_model->historialModel($idLote)->result_array());
     }
 
 	public function validarLote(){
 
 		$dataPost = $_POST;
-		$datosId["idLote"] = $dataPost['idLoteCatalogo'];
+		$datosId["idLote"] = $dataPost['idLote'];
 		$datos["opcionReestructura"] = $dataPost['opcionCatalogo'];
 		$datos["comentarioReubicacion"] = $dataPost['comentarioCatalogo'];
 		$datos["usuario"] = $this->session->userdata('id_usuario');
@@ -157,14 +157,14 @@ class Reestructura extends CI_Controller{
         $datos["estado_civil"] = $dataPost['estadoCli'];
         $datos["ine"] = $dataPost['ineCLi'];
         $datos["ocupacion"] = $dataPost['ocupacionCli'];
-        $datCliente = $this->Reestructura_model->getDatosCliente($idLote);
+        $datCliente = $this->Reestructura_model->getDatosClienteTemporal($idLote);
 
         if($datCliente == ''){
             $datos["rescision"] = NULL;
             $datos["fecha_creacion"] = date('Y-m-d H:i:s');
-            $datos["creado_por"] = 1;
+            $datos["creado_por"] = $this->session->userdata('id_usuario');
             $datos["fecha_modificacion"] = date('Y-m-d H:i:s');
-            $datos["modificado_por"] = 1;
+            $datos["modificado_por"] = $this->session->userdata('id_usuario');
             $insert = $this->General_model->addRecord('datos_x_cliente', $datos);
             if ($insert == TRUE) {
                 $response['message'] = 'SUCCESS';

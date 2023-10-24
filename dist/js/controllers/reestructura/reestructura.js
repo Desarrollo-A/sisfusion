@@ -76,7 +76,7 @@ $(document).on('click', '.btn_catalogo', function () {
                                 <textarea class="text-modal" id="comentarioCatalogo" name="comentarioCatalogo" rows="3"></textarea>
                             </div>
                             <br>
-                            <input type="hidden" name="idLoteCatalogo" id="idLoteCatalogo" >
+                            <input type="hidden" name="idLote" id="idLote" >
                         </form>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
@@ -95,12 +95,12 @@ $(document).on('click', '.btn_catalogo', function () {
         $("#opcionCatalogo").selectpicker('refresh');
     }, 'json');
 
-    $('#idLoteCatalogo').val($(this).attr('data-idLote'));
+    $('#idLote').val($(this).attr('data-idLote'));
     $('#opcionCatalogo').val('').trigger('change');
 });
 
 $(document).on('click', '.btn_historial', function (){
-    id_prospecto = $(this).attr("data-idLote");
+    idLote = $(this).attr("data-idLote");
     $('#historialLote').html('');
     $("#spiner-loader").removeClass('hide');
 
@@ -130,7 +130,7 @@ $(document).on('click', '.btn_historial', function (){
                 </div>`);
     showModal();
 
-    $.getJSON("getHistorial/" + id_prospecto).done(function(data) {
+    $.getJSON("getHistorial/" + idLote).done(function(data) {
 
         array=  data.sort(function(a, b) {
             return a.id_auditoria-b.id_auditoria; 
@@ -142,7 +142,7 @@ $(document).on('click', '.btn_historial', function (){
         }else{
             $.each(array, function(i, v) {
                 $("#spiner-loader").addClass('hide');
-                contendioHistorial(v);
+                contenidoHistorial(v);
             });
         }
     });
@@ -150,18 +150,17 @@ $(document).on('click', '.btn_historial', function (){
 
 $(document).on('click', '.btn_bandera', function (){
     let bandera  = '¿Estás seguro de LIBERAR el lote para reestructura?';
-    lote = $(this).attr("data-idLote");
+    idLote = $(this).attr("data-idLote");
     activoDetenido  = $(this).attr("data-bandera");
 
     changeSizeModal('modal-sm');
-    appendBodyModal(`<div class="modal-body">
+    appendBodyModal(`
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
                 <h4  id="tituloAD" name="tituloAD"></h4>
             </div>
                 <br>
                 <input type="hidden" name="idLoteBandera" id="idLoteBandera" >
                 <input type="hidden" name="bandera" id="bandera" >        
-            </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                 <button type="button" id="liberarBandera" name="liberarBandera" class="btn btn-primary liberarBandera">Aceptar</button>
@@ -174,7 +173,7 @@ $(document).on('click', '.btn_bandera', function (){
 
     document.getElementById("tituloAD").innerHTML =   bandera;
     document.getElementById("bandera").value = activoDetenido;
-    document.getElementById("idLoteBandera").value = lote;
+    document.getElementById("idLoteBandera").value = idLote;
 
     $('#banderaLiberar').modal();
 });
@@ -229,13 +228,13 @@ $(document).on('click', '#guardarValidacion', function(){
         contentType: false,
         success: function(data) {
             if (data == 1) {
-            $('#tabla_reestructura').DataTable().ajax.reload(null, false);
-            hideModal();
-            alerts.showNotification("top", "right", "Información actualizada.", "success");
-            $('#idLoteCatalogo').val('');
-            $('#opcionCatalogo').val('');
-            $('#comentarioCatalogo').val('');
-            $("#spiner-loader").addClass('hide');
+                $('#tabla_reestructura').DataTable().ajax.reload(null, false);
+                hideModal();
+                alerts.showNotification("top", "right", "Información actualizada.", "success");
+                $('#idLote').val('');
+                $('#opcionCatalogo').val('');
+                $('#comentarioCatalogo').val('');
+                $("#spiner-loader").addClass('hide');
             }
         },
         error: function(){
@@ -246,8 +245,8 @@ $(document).on('click', '#guardarValidacion', function(){
     });
 });
 
-$(document).on('click', '#guardarCatalogo', function(){
-    var ipuntCat = $("#inputCatalogo").val();
+$(document).on('click', '#guardarOpcCatalogo', function(){
+    var ipuntCat = $("#inputOpcCatalogo").val();
     var datos = new FormData();
     $("#spiner-loader").removeClass('hide');
 
@@ -263,7 +262,7 @@ $(document).on('click', '#guardarCatalogo', function(){
             if (data == 1) {
                 $('#tableCatalogo').DataTable().ajax.reload(null, false);
                 alerts.showNotification("top", "right", "Opción insertada correctamente.", "success");
-                $('#inputCatalogo').val('');
+                $('#inputOpcCatalogo').val('');
                 abrir_Catalogo();
                 $("#spiner-loader").addClass('hide');
             }
@@ -340,7 +339,7 @@ function agregar_Opcion(){
             <input type="hidden" value="0" name="id_opcion" id="id_opcion">
             <div class="form-group d-flex justify-center">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <input type="text" class="form-control input-gral" id="inputCatalogo" name="inputCatalogo" required>
+                    <input type="text" class="form-control input-gral" id="inputOpcCatalogo" name="inputOpcCatalogo" required>
                 </div>
             </div>
             <div class="container-fluid">
@@ -349,7 +348,7 @@ function agregar_Opcion(){
                         <input type="button" class="btn btn-danger btn-simple m-0" data-dismiss="modal" value="CANCELAR">
                     </div>
                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                        <input type="button" class="btn btn-primary" name="guardarCatalogo"  id="guardarCatalogo" value="GUARDAR">
+                        <input type="button" class="btn btn-primary" name="guardarOpcCatalogo"  id="guardarOpcCatalogo" value="GUARDAR">
                     </div>
                 </div>
             </div>
@@ -357,7 +356,7 @@ function agregar_Opcion(){
     showModal();
 }
 
-function contendioHistorial(v) {
+function contenidoHistorial(v) {
     $("#historialLote").append(`<li>
         <div class="container-fluid">
             <div class="row">
@@ -479,7 +478,7 @@ function reestructuraTable(index_proyecto, bandera) {
                 if(d.nombreOp !=  null){
                     return '<p class="m-0">' + d.nombreOp + '</p>'
                 }else{
-                    return '<p class="m-0">N/A</p>'
+                    return '<p class="m-0">SIN ESPECIFICAR</p>'
                 }
             }
         },
@@ -488,7 +487,7 @@ function reestructuraTable(index_proyecto, bandera) {
                 if(d.comentarioReubicacion != null && d.comentarioReubicacion != 'NULL'){
                     return '<p class="m-0">' + d.comentarioReubicacion + '</p>'
                 }else{
-                    return '<p class="m-0"> - </p>'
+                    return '<p class="m-0">SIN ESPECIFICAR</p>'
                 }
             }
         },

@@ -509,15 +509,15 @@ $(document).on('click', '#guardarCliente', function (){
         contentType: false,
         success: function(data) {
             if (data == 1) {
-            hideModal();
-            alerts.showNotification("top", "right", "Información capturada con éxito.", "success");
-            $("#spiner-loader").addClass('hide');
-            $('#ineCLi').val('');
-            $('#telefonoCli').val('');
-            $('#correoCli').val('');
-            $('#domicilioCli').val('');
-            $('#ocupacionCli').val('');
-            $('#reubicacionClientes').DataTable().ajax.reload(null, false);
+                hideModal();
+                alerts.showNotification("top", "right", "Información capturada con éxito.", "success");
+                $("#spiner-loader").addClass('hide');
+                $('#ineCLi').val('');
+                $('#telefonoCli').val('');
+                $('#correoCli').val('');
+                $('#domicilioCli').val('');
+                $('#ocupacionCli').val('');
+                $('#reubicacionClientes').DataTable().ajax.reload(null, false);
             }
         },
         error: function(){

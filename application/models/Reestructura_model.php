@@ -63,7 +63,7 @@ class Reestructura_model extends CI_Model
         WHERE lo.liberaBandera = 1 AND lo.status = 1 $validacionAsignacion $validacionEstatus")->result_array();
     }
 
-    public function getDatosCliente($idLote){
+    public function getDatosClienteTemporal($idLote){
         $query = $this->db->query("SELECT dxc.nombre, dxc.apellido_paterno, dxc.apellido_materno, dxc.telefono1, dxc.correo, dxc.domicilio_particular, dxc.estado_civil AS idEstadoC, oxc.nombre AS estado_civil, ocupacion, dxc.ine from datos_x_cliente dxc
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = dxc.estado_civil AND oxc.id_catalogo = 18
         WHERE idLote = $idLote");
@@ -75,11 +75,6 @@ class Reestructura_model extends CI_Model
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.estado_civil AND oxc.id_catalogo = 18
         WHERE id_cliente = $idCliente");
         return $query->row();
-    }
-
-    public function getEstadoCivil(){
-        $query = $this->db->query("SELECT id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo = 18");
-        return $query->result_array();
     }
 
     public function getProyectosDisponibles($proyecto, $superficie, $tipoLote){
@@ -132,7 +127,7 @@ class Reestructura_model extends CI_Model
         GROUP BY lotx.idProyecto, CONCAT(re.nombreResidencial, ' - ' , re.descripcion)");
     }
 
-    function get_catalogo_resstructura(){
+    function get_catalogo_reestructura(){
         return $this->db->query("SELECT id_opcion, nombre, fecha_creacion FROM opcs_x_cats WHERE id_catalogo = 100 and estatus = 1");
     }
 
@@ -169,16 +164,16 @@ class Reestructura_model extends CI_Model
         WHERE lot.idStatusLote in (15,2,3)")->result();
     }
 
-    public function historialModel($id_prospecto){
+    public function historialModel($idLote){
         return $this->db->query("(SELECT aud.id_auditoria, oxc.nombre, oxcs.nombre as nombreNuevo, aud.fecha_creacion, CONCAT(usu.nombre,' ', usu.apellido_paterno,' ', usu.apellido_materno) AS creado_por from auditoria aud
         INNER JOIN opcs_x_cats  oxc on oxc.id_opcion = aud.anterior and oxc.id_catalogo = 100 and aud.col_afect = 'opcionReestructura'
         INNER JOIN opcs_x_cats  oxcs on oxcs.id_opcion = aud.nuevo and oxcs.id_catalogo = 100 and aud.col_afect = 'opcionReestructura'
         INNER JOIN usuarios usu on usu.id_usuario = aud.creado_por
-        where aud.anterior != 'NULL' AND tabla = 'lotes' and col_afect = 'opcionReestructura' and id_parametro = $id_prospecto)
+        where aud.anterior != 'NULL' AND tabla = 'lotes' and col_afect = 'opcionReestructura' and id_parametro = $idLote)
         UNION ALL
         (SELECT aud.id_auditoria, aud.anterior, aud.nuevo, aud.fecha_creacion, CONCAT(usu.nombre,' ', usu.apellido_paterno,' ', usu.apellido_materno) AS creado_por from auditoria aud
         INNER JOIN usuarios usu on usu.id_usuario = aud.creado_por
-        where aud.anterior != 'NULL' AND tabla = 'lotes'  and col_afect = 'comentarioReubicacion' and id_parametro = $id_prospecto)");
+        where aud.anterior != 'NULL' AND tabla = 'lotes'  and col_afect = 'comentarioReubicacion' and id_parametro = $idLote)");
     }
 
     public function aplicaLiberacion($datos){
@@ -202,7 +197,6 @@ class Reestructura_model extends CI_Model
         $idStatusLote = $datos['tipo'] == 9 ? 15 :($datos['tipo'] == 8  ? 3 : 1);
         $sqlIdCliente = $datos['tipo'] == 8 ? ' AND id_cliente='.$row[0]['idCliente'] : '';
         $this->db->trans_begin();
-        //($datos['tipo'] == 7 || $datos['tipo'] == 8) ? $this->db->query("UPDATE lotes SET tipo_venta=".$row[0]['tipo_venta'].",usuario='".$datos['userLiberacion']."' WHERE idLote=".$datos['idLoteNuevo']." ") : '';
             $banderaComisionCl = (in_array($datos['tipo'],array(7,8,9))) ? ' ,banderaComisionCl ='.$row[0]['registro_comision'] : '';
             $id_cliente = $this->db->query("SELECT id_cliente FROM clientes WHERE status = 1 AND idLote IN (" . $row[0]['idLote'] . ") ")->result_array();
             $this->db->query("UPDATE historial_documento SET status = 0 WHERE status = 1 AND idLote IN (".$row[0]['idLote'].") ");
