@@ -150,7 +150,6 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote) {
                 '                            </div>\n' +
                 '                        </div>';
         }
-        // contenedorArchivos.innerHTML = contenidoHTML;
     }
     else if (flagEditar == 1) {
         editarFile = 1;
@@ -399,7 +398,6 @@ $(document).on("click", "#sendRequestButton", function (e) {
     else if (editarFile == 0) {
 
         if(arrayKeysArchivos.length == flagValidacion){
-            console.log('excelente, todos los archivos llenos, pasa');
             flagEnviar = true;
         }else{
             alerts.showNotification('top', 'right', 'Ingresa los archivos requeridos', 'warning');
@@ -543,14 +541,12 @@ $(document).on('click', '.btn-abrir-contratoFirmado', function(){
            '                        </div>';
    }else if(flagEditar == 1){//ya hay un archivo hay que actualizarlo
        if(estatusProceso==2){
-           // document.getElementById('txtTituloCF').innerText = 'VER/EDITAR EL CONTRATO FIRMADO';
-           document.getElementById('txtTituloCF').innerHTML = 'Selecciona el archivo que desees asociar a <b>CONTRATO FIRMADO</b>';
-           document.getElementById('secondaryLabelDetail').innerHTML = 'El documento que hayas elegido se almacenará de manera automática una vez que des clic en <i>Guardar</i>.';
+           document.getElementById('txtTituloCF').innerHTML = 'Archivo actual asociado a <b>CONTRATO FIRMADO</b>';
+           document.getElementById('secondaryLabelDetail').innerHTML = 'Si selecciona algún archivo y da clic en el botón de "<b>Guardar</b>", este reemplezara al mostrado.';
 
            document.getElementById('sendRequestButtoncf').classList.remove('hide');
            heightIframe = '400px'
        }else if(estatusProceso==3){
-           // document.getElementById('txtTituloCF').innerText = 'VER EL CONTRATO FIRMADO';
            document.getElementById('txtTituloCF').innerHTML = 'Visualizando el contrato firmado <b>'+ nombreLote + '</b>';
            document.getElementById('secondaryLabelDetail').innerHTML = '';
            document.getElementById('sendRequestButtoncf').classList.add('hide');
@@ -566,7 +562,7 @@ $(document).on('click', '.btn-abrir-contratoFirmado', function(){
            '</iframe>';
 
        if(estatusProceso==2){
-           contenidoHTMLCF += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2 mt-4">\n' +
+           contenidoHTMLCF += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2 mt-3 p-0">\n' +
                '                            <div class="" id="selectFileSectionResicioncf">\n' +
                '                                <div class="file-gph">\n' +
                '                                    <input class="d-none" type="file" required accept="application/pdf" id="contratoFirmado">\n' +
@@ -579,7 +575,6 @@ $(document).on('click', '.btn-abrir-contratoFirmado', function(){
 
 
    }
-    // formularioArchivoscf
     formularioArchivoscf.innerHTML = contenidoHTMLCF;
 
     $("input:file").on("change", function () {
@@ -626,7 +621,6 @@ $(document).on("click", "#sendRequestButtoncf", function (e) {
 
     if (flagEnviar) {
         let data = new FormData();
-        // data.append("tipoProceso", flagProceso);
         data.append("idLote", arrayCF['idLoteCF']);
         data.append("nombreLoteOriginal", nombreLote);
         data.append("idDocumento", arrayCF['idDocumento']);

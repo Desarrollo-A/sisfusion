@@ -338,13 +338,13 @@ $(document).on('click', '.infoUser', async function (){
         const ocupacion= cliente.ocupacion;
         const ine = cliente.ine;
 
-        changeSizeModal('modal-lg');
+        changeSizeModal('modal-md');
         appendBodyModal(`
-                <form method="post" id="formInfoCliente" class="scroll-styles" style="max-height:500px; padding:0 20px; overflow:auto">
+                <form method="post" id="formInfoCliente" class="scroll-styles" style="max-height:530px; padding:0 20px; overflow:auto">
                     <div class="modal-header">
-                        <h4 class="modal-title text-center">Corrobora la información del cliente</h4>
+                        <h4 class="modal-title text-center">CORROBORAR LA INFORMACIÓN DEL CLIENTE</h4>
                     </div>	
-                    <div class="modal-body">
+                    <div class="modal-body pt-0">
                         <div class="row">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
                                 <label class="control-label">Nombre (<small style="color: red;">*</small>)</label>
@@ -406,6 +406,7 @@ $(document).on('click', '.infoUser', async function (){
                     </div>
                     <div class="modal-footer">
                         <button type="button" id="cancelarValidacion" class="btn btn-danger btn-simple cancelarValidacion" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-success btn-simple" onclick="agregarCopropietario()" data-dismiss="modal">Agregar copropietario</button>
                         <button type="button" id="guardarCliente" name="guardarCliente" class="btn btn-primary guardarValidacion">GUARDAR</button>
                     </div>
                 </form>`);
@@ -1316,7 +1317,7 @@ const agregarCopropietario = (copropietario = null) => {
             id="copropietarioDiv${idDiv}">
             <div class="col-lg-12">
                 <div id="accordion${idDiv}">
-                    <div class="card mt-2 mb-0">
+                    <div class="card mt-2 mb-0" style="border-radius: 27px!important">
                         <div class="card-header collapsed cursor-point" 
                             id="copropietario-collapse${idDiv}"
                             data-toggle="collapse" 
@@ -1346,8 +1347,8 @@ const agregarCopropietario = (copropietario = null) => {
                             class="collapse" 
                             aria-labelledby="copropietario-collapse${idDiv}" 
                             data-parent="#accordion${idDiv}">
-                            <div class="card-body">
-                                <div class="p-4">
+                            <div class="card-body pb-2">
+                                <div class="container-fluid">
                                     <div class="row">
                                         <div class="col-xs-12">
                                             <label class="control-label">NOMBRE (<small style="color: red;">*</small>)</label>
