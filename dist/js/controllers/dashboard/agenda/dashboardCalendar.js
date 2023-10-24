@@ -201,7 +201,7 @@ function isSignInGoogle(){
     $(".fc-googleBtn-button").html('');
     listUpcomingEvents(googleToken);
   } else {
-    $(".fc-googleBtn-button").append('<a id="signInGoogle"><i class="fab fa-google"></i></a>');
+    $(".fc-googleBtn-button").append(`<a id="signInGoogle"><img alt="login" style="height: 35px !important;" src="${general_base_url}static/images/login-google.png" /></a>`);
   }
 }
 
@@ -946,7 +946,7 @@ function validateDates(data){
 const getGoogleTokenStorage = () => localStorage.getItem('auth-google-token');
 
 const sinGoogleAuth = () => {
-  $(".fc-googleBtn-button").append('<a id="signInGoogle"><i class="fab fa-google"></i></a>');
+  $(".fc-googleBtn-button").append(`<a id="signInGoogle"><img alt="login" style="height: 35px !important;" src="${general_base_url}static/images/login-google.png" /></a>`);
   localStorage.removeItem('auth-google-token');
 
   $('#confirmSignInGoogleModal').modal('hide');
