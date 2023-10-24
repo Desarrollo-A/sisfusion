@@ -4055,7 +4055,7 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
         return $this->db-> query("(SELECT pci1.id_pago_i, lo.nombreLote, re.empresa, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) user_names, CONVERT(VARCHAR,pci1.fecha_pago_intmex,20) AS fecha_pago_intmex, pci1.id_usuario, CASE WHEN cl.estructura = 1 THEN oprol2.nombre ELSE oprol.nombre END as puesto, pci1.abono_neodata, UPPER(se.nombre) AS sede, pci1.abono_neodata, CONCAT(cr.nombre, ' ',cr.apellido_paterno, ' ', cr.apellido_materno) creado
         FROM pago_comision_ind pci1
         INNER JOIN comisiones com ON pci1.id_comision = com.id_comision
-        INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
+        INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status IN(1,0)
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
         INNER JOIN usuarios u ON u.id_usuario = com.id_usuario
@@ -4083,7 +4083,7 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
         (SELECT pci1.id_pago_i, lo.nombreLote, re.empresa, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) user_names, CONVERT(VARCHAR,pci1.fecha_pago_intmex,20) AS fecha_pago_intmex,pci1.id_usuario, UPPER(CASE WHEN cl.estructura = 1 THEN oprol2.nombre ELSE oprol.nombre END) as puesto, pci1.abono_neodata, UPPER(se.nombre) AS sede, pci1.abono_neodata, UPPER(CONCAT(cr.nombre, ' ',cr.apellido_paterno, ' ', cr.apellido_materno)) AS creado
         FROM pago_comision_ind pci1 
         INNER JOIN comisiones com ON pci1.id_comision = com.id_comision AND com.estatus in (1)
-        INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1
+        INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status IN(1,0)
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial 
         INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1
