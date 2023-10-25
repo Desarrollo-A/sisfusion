@@ -95,6 +95,13 @@ class Reestructura_model extends CI_Model
         return $query->row();
     }
 
+    public function getDatosCliente($idLote){
+        $query = $this->db->query("SELECT dxc.nombre, dxc.apellido_paterno, dxc.apellido_materno, dxc.telefono1, dxc.correo, dxc.domicilio_particular, dxc.estado_civil AS idEstadoC, oxc.nombre AS estado_civil, ocupacion, dxc.ine from datos_x_cliente dxc
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = dxc.estado_civil AND oxc.id_catalogo = 18
+        WHERE idLote = $idLote");
+        return $query->row();
+    }
+
     public function getProyectosDisponibles($proyecto, $superficie, $tipoLote){
         return $this->db->query("SELECT t.proyectoReubicacion, descripcion, SUM(disponibles) disponibles FROM (
             SELECT lr.proyectoReubicacion, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100))) descripcion, COUNT(*) disponibles

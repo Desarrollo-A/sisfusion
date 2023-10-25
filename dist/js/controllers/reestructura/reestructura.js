@@ -462,12 +462,12 @@ function reestructuraTable(index_proyecto, bandera) {
             }
         },
         {
-            data: function (d){
+            data: function (d) {
                 return '<p class="m-0">' + formatMoney(d.precio) + '</p>';
             }
         },
         {
-            data: function (d){
+            data: function (d) {
                 if (d.nombreCliente === null || d.nombreCliente.trim() === '') {
                     return '<p class="m-0">SIN ESPECIFICAR</p>';
                 }
@@ -475,7 +475,7 @@ function reestructuraTable(index_proyecto, bandera) {
             }
         },
         {
-            data: function (d){
+            data: function (d) {
                 if(d.nombreOp !=  null){
                     return '<p class="m-0">' + d.nombreOp + '</p>'
                 }else{
@@ -484,7 +484,7 @@ function reestructuraTable(index_proyecto, bandera) {
             }
         },
         {
-            data: function (d){
+            data: function (d) {
                 if(d.comentarioReubicacion != null && d.comentarioReubicacion != 'NULL'){
                     return '<p class="m-0">' + d.comentarioReubicacion + '</p>'
                 }else{

@@ -357,7 +357,7 @@ $(document).on('click', '.btn-asignar-propuestas', function () {
     getPropuestas(idLoteOriginal, statusPreproceso, idProyecto, superficie, tipoLote);
 });
 
-$(document).on('click', '.btn-informacion-cliente', function (){
+$(document).on('click', '.btn-informacion-cliente', async function (){
     $('#ineCLi').val('');
     $("#estadoCli").empty();
 

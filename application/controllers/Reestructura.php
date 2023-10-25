@@ -38,12 +38,22 @@ class Reestructura extends CI_Controller{
     }
 
     public function getCliente($idCliente, $idLote){
-        $datCliente = $this->Reestructura_model->getDatosClienteTemporal($idLote);
-        echo ($datCliente == '') ? json_encode($this->Reestructura_model->getCliente($idCliente)) : json_encode($datCliente);
+        $datCliente = $this->Reestructura_model->getDatosCliente($idLote);
+        $copropietarios = $this->Reestructura_model->obtenerCopropietariosReubicacion($idLote);
+
+        if ($datCliente != '') {
+            $datCliente->copropietarios = $copropietarios;
+            echo json_encode($datCliente);
+            return;
+        }
+
+        $datCliente = $this->Reestructura_model->getCliente($idCliente);
+        $datCliente->copropietarios = $copropietarios;
+        echo json_encode($datCliente);
     }
     
     public function getEstadoCivil(){
-        $data = $this->Clientes_model->getCivilStatus();
+        $data = $this->Clientes_model->getCivilStatus()->result_array();
         echo json_encode($data);
     }
 
