@@ -5578,4 +5578,30 @@ public function descuentosCapitalHumano(){
     echo json_encode(array( "data" => $this->Comisiones_model->getHistorialDescuentosPorUsuario()));
   }
 
+  public function updatePrestamosUniversidad (){
+    $certificacion  = $this->input->post('certificaciones');
+    $idPrestamo     = $this->input->post('idDescuento');
+
+        $arr_update = array( 
+              "estatus_certificacion" =>  $certificacion,
+                          );
+                          
+      $update = $this->Comisiones_model->updateCertificacion($idPrestamo  , $arr_update);
+      if($update){
+        $respuesta =  array(
+          "response_code" => 200, 
+          "response_type" => 'success',
+          "message" => "Préstamo actualizado");
+      }else{
+        $respuesta =  array(
+          "response_code" => 400, 
+          "response_type" => 'error',
+          "message" => "Préstamo no actualizado, inténtalo más tarde ");
+  }
+      echo json_encode ($respuesta);
+
+}
+
+
+
 }

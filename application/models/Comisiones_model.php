@@ -6328,5 +6328,22 @@ function insert_penalizacion_individual($id_comision, $id_usuario, $rol, $abono_
         LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = pci.estatus AND oxc0.id_catalogo = 23
         WHERE pci.id_usuario = $id_usuario AND pci.descuento_aplicado = 1")->result_array();
     }
+
+
+    public function updateCertificacion($clave, $data){
+        try {
+            $this->db->where('id_descuento', $clave);
+            if($this->db->update('descuentos_universidad', $data))
+            {
+                return TRUE;
+            }else{
+                return FALSE;
+            }               
+        }
+        catch(Exception $e) {
+            return $e->getMessage();
+        }     
+}
+
     
 }

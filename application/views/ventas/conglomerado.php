@@ -45,9 +45,54 @@
         </div>
     </div> 
      -->
+
+<div class="modal fade scroll-styles" id="modalcertificado" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+        <form method="post" id="form_certificado">
+            <div class="modal-header">
+                <h3 class="modal-title text-center">Cambiar certificacion</h3>
+                <p class="category input-tot pl-1 text-center" id="nombreUsuario" name="nombreUsuario"></p>
+            </div>
+                <div class="modal-body">
+                    <div class="col-6 col-sm-6 col-md-6 col-lg-6">
+                        <div class="form-group">
+                            <label class="label">Certificaciones*</label>       
+                            <select class="selectpicker select-gral certificaciones" name="certificaciones" id="certificaciones">
+                            <?php if(isset($certificaciones)){ foreach($certificaciones as $certificacion){ ?>
+                                    <option value="<?= $certificacion->id_opcion ?>"><?= $certificacion->nombre ?> </option>
+                                <?php } } ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4" style="display:none;">
+                        <div class="form-group">
+                            <input class="form-control" type="text"   name="idDescuento" id="idDescuento" readonly>
+                        </div>
+                    </div>
+                    <div class="col-6 col-sm-6 col-md-6 col-lg-6">
+                        <div class="form-group">
+                            <label class="label">Descripcion:</label> 
+                            <span class="small text-gray textDescripcion"  id="textDescripcion"  name="textDescripcion">
+                            Persona que obtuvo una calificación favorable y con ello la certificación
+                            </span>        
+                        </div>
+                    </div>
+                </div>    
+                <div class="modal-footer">
+                    <button class="btn btn-danger btn-simple" type="button" data-dismiss="modal" 
+                    data-toggle="modal"> CANCELAR </button>
+                    <button  type="submit"   name="certificacionUpdate"  id="certificacionUpdate"
+                    class="btn btn-primary certificacionUpdate">ACTUALIZAR </button>
+                </div>
+       
+                </form>
+            </div>
+    </div>
+</div>
+
+  
    
-
-
 
 
     <!-- <div class="modal fade scroll-styles" id="modal_nuevas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">

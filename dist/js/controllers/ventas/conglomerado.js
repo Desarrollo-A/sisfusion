@@ -258,6 +258,20 @@ function loadTable(tipoDescuento) {
                         </button>
                                 
                         <button href="#" 
+                        value="${d.id_usuario}" 
+                        data-value="${pagosDescontar}"
+                        data-saldoComisiones="${d.saldo_comisiones}"
+                        data-nombre="${d.nombre}" 
+                        data-code="${d.cbbtton}"
+                        data-descuento="${d.id_descuento}"
+                        data-certificacion="${d.idCertificacion}"
+                        class="btn-data btn-gray certificado_op"
+                        id="certificado_op" name="certificado_op"
+                         title="Cambiar certifiacación"><i class="fas fa-closed-captioning"></i>
+                        </button>
+                                
+
+                        <button href="#" 
                         value="${d.id_usuario}"
                         data-nombre="${d.nombre}"
                         data-rol="${d.puesto}"
@@ -520,15 +534,49 @@ $('#montoDescuento').change(function () {
 }); //END DATATABLE
 
 
-function open_Mb() {
 
-    $("#puesto").val('');
-    $("#puesto").selectpicker("refresh");
-    $("#usuarios").val('');
-    $("#usuarios").selectpicker("refresh");
-    $("#descripcionAltaDescuento").val('');
-    $('#modalAgregarNuevo').modal('show');
-}
+$("#tabla-general").on("click", ".certificado_op", function () {
+    id_descuento = $(this).attr("data-descuento");
+    certificacion = $(this).attr("data-certificacion");
+    document.getElementById("idDescuento").value = id_descuento;
+
+    $("#modalcertificado").modal();
+
+});
+
+$("#form_certificado").submit(function (e) {
+    $('#btn_abonar').prop('disabled', true);
+    document.getElementById('btn_abonar').disabled = true;
+
+    $('#idloteorigen').removeAttr('disabled');
+
+    e.preventDefault();
+}).validate({
+    submitHandler: function (form) {
+
+        var data1 = new FormData($(form)[0]);
+        $.ajax({
+            url: 'updatePrestamosUniversidad/',
+            data: data1,
+            method: 'POST',
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function (data) {
+                console.log(data)
+                alerts.showNotification("top", "right", "Préstamo actualizado", "success");
+                $('#tabla-general').DataTable().ajax.reload(null, false);
+                $('#modalcertificado').modal('toggle');
+            },
+            error: (a, b, c) => {
+                alerts.showNotification("top", "right", "Descuento No actualizado .", "error");
+            }
+        
+        })
+    }
+
+
+});;
 
 $("#formularioAplicarDescuento").submit(function (e) {
     $('#btn_abonar').prop('disabled', true);
@@ -867,7 +915,7 @@ $(document).on("click", "#descuentoCertificaciones", function () {
 
 $("#certificaciones").change(function () {
 
-    pagos  = document.getElementById("numeroDeMensualidades").value ;
+   
     selectCertificacion = document.getElementById("certificaciones").value;
 
     var comentarioDescrip = document.getElementById('textDescripcion');
