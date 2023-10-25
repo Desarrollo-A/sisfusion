@@ -365,7 +365,7 @@ function contenidoHistorial(v) {
                     <a><b>  ${v.creado_por.toUpperCase()}  </b></a><br>
                 </div>
                 <div class="float-end text-right">
-                    <a> ${v.fecha_creacion} </a>
+                    <a> ${v.fecha_creacion.split('.')[0]} </a>
                 </div>
                 <div class="col-md-12">
                     <p class="m-0"><small>Valor anterior: </small><b>  ${(v.nombre) ? v.nombre.toUpperCase() : '-'} </b></p>
@@ -509,7 +509,7 @@ function reestructuraTable(index_proyecto, bandera) {
                 const BTN_VALREES = `<button class="btn-data btn-deepGray btn_catalogo" data-toggle="tooltip" data-placement="top" title= "VALIDAR REESTRUCTURACIÓN" data-idLote="${d.idLote}"><i class="fas fa-edit"></i></button>`;
                 const BTN_INFREES = `<button class="btn-data btn-blueMaderas btn_historial" data-toggle="tooltip" data-placement="top" data-idLote="${d.idLote}" title="HISTORIAL"><i class="fas fa-info"></i></button></div>`;
 
-                if(d.liberadoReubicacion ==  "LIBERACIÓN JURÍDICA"){
+                if(d.idStatusLote == 15){
                     btns += BTN_VALREES;
                     btns += BTN_INFREES;
                 }else{

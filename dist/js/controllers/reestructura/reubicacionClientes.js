@@ -1121,106 +1121,15 @@ const botonesAccionReubicacion = (d) => {
         tooltipCF = 'VER CONTRATO FIRMADO';
     }
 
-    const BTN_PROPUESTAS =  `<button class="btn-data btn-blueMaderas btn-asignar-propuestas"
-                            data-toggle="tooltip" 
-                            data-placement="left"
-                            title="${idEstatusPreproceso === 0 ? 'ASIGNAR PROPUESTAS' : 'ACTUALIZAR PROPUESTAS'}"
-                            data-idCliente="${d.idCliente}" 
-                            data-tipoLote="${d.tipo_lote}"
-                            data-idProyecto="${d.idProyecto}"
-                            data-statusPreproceso="${idEstatusPreproceso}"
-                            data-idEstatusMovimiento="${d.id_estatus_modificacion}">
-                            <i class="fas fa-clipboard-list"></i>
-                    </button>`;
-
-    const BTN_AVANCE =  `<button class="btn-data btn-green btn-avanzar"
-                    data-toggle="tooltip" 
-                    data-placement="left"
-                    title="ENVIAR A ${ESTATUS_PREPROCESO[idEstatusPreproceso + 1]}"
-                    data-idCliente="${d.idCliente}"
-                    data-tipoTransaccion="${idEstatusPreproceso}"
-                    data-idEstatusMovimiento="${d.id_estatus_modificacion}">
-                    <i class="fas fa-thumbs-up"></i>
-                </button>`;
-
-    const BTN_RECHAZO =  `<button class="btn-data btn-warning btn-rechazar"
-                    data-toggle="tooltip" 
-                    data-placement="left"
-                    title="ENVIAR A ${ESTATUS_PREPROCESO[idEstatusPreproceso - 1]}"
-                    data-idCliente="${d.idCliente}"
-                    data-tipoTransaccion="${idEstatusPreproceso}">
-                    <i class="fas fa-thumbs-down"></i>
-                </button>`;
-
-    const BTN_INFOCLIENTE =  `<button class="btn-data btn-green infoUser"
-                    data-toggle="tooltip" 
-                    data-placement="left"
-                    title="INFORMACIÓN CLIENTE"
-                    data-idCliente="${d.idCliente}" 
-                    data-idLote="${d.idLote}">
-                    <i class="fas fa-user-check"></i>
-                </button>`;
-    const BTN_SUBIR_ARCHIVO =  `<button class="btn-data btn-blueMaderas btn-abrir-modal"
-                    data-toggle="tooltip" 
-                    data-placement="left"
-                    title="CARGAR DOCUMENTACIÓN"
-                    data-idCliente="${d.idCliente}"
-                    data-idLote="${d.idLote}"
-                    data-nombreLote="${d.nombreLote}"
-                    data-estatusLoteArchivo="${d.status}"
-                    data-editar="${editar}"   
-                    data-rescision="${d.rescision}"
-                    data-id_dxc="${d.id_dxc}"   
-                    data-tipoTransaccion="${idEstatusPreproceso}">
-                    <i class="fas ${btnShow}"></i>
-                </button>`;
-    const BTN_REESTRUCTURA = `
-        <button class="btn-data btn-sky btn-reestructurar"
-                data-toggle="tooltip" 
-                data-placement="left"
-                title="REESTRUCTURAR"
-                data-idCliente="${d.idCliente}">
-                <i class="fas fa-map-marker"></i>
-        </button>`;
-    const BTN_REUBICACION = `
-        <button class="btn-data btn-green btn-reubicar"
-                data-toggle="tooltip" 
-                data-placement="left"
-                title="REUBICAR CLIENTE"
-                data-idCliente="${d.idCliente}"
-                data-idProyecto="${d.idProyecto}"
-                data-tipoLote="${d.tipo_lote}">
-            <i class="fas fa-route"></i>
-        </button>`;
-    const BTN_SUBIR_CONTRATO_FIRMADO =  `
-        <button class="btn-data btn-green-excel btn-abrir-contratoFirmado"
-            data-toggle="tooltip" 
-            data-placement="left"
-            title="${tooltipCF}"
-            data-idCliente="${d.idCliente}"
-            data-idLote="${d.idLote}"
-            data-nombreLote="${d.nombreLote}"
-            data-estatusLoteArchivo="${d.status}"
-            data-editar="${editarContratoFirmado}"   
-            data-rescision="${d.rescision}"
-            data-idDocumento="${d.idContratoFirmado}"   
-            data-idCondominio="${d.idCondominio}"   
-            data-tipoTransaccion="${d.id_estatus_preproceso}"
-            data-nombreResidencial = "${d.nombreResidencial}"
-            data-nombreCondominio = "${d.nombreCondominio}"
-            data-contratoFirmado = "${d.contratoFirmado}">
-            <i class="fas ${btnContratoFirmado}"></i>
-        </button>`;
-
-    const BTN_REASIGNAR_EXPEDIENTE_JURIDICO =  `<button class="btn-data btn-green btn-reasignar"
-            data-toggle="tooltip" 
-            data-placement="left"
-            title="REASIGNAR EXPEDIENTE"
-            data-idLote="${d.idLote}"
-            data-idEjecutivoAsignado="${d.id_juridico_preproceso}">
-            <i class="fas fa-user-alt"></i>
-        </button>`;
-
+    const BTN_PROPUESTAS =  `<button class="btn-data btn-blueMaderas btn-asignar-propuestas" data-toggle="tooltip" data-placement="left" title="${idEstatusPreproceso === 0 ? 'ASIGNAR PROPUESTAS' : 'ACTUALIZAR PROPUESTAS'}" data-idCliente="${d.idCliente}" data-tipoLote="${d.tipo_lote}" data-idProyecto="${d.idProyecto}" data-statusPreproceso="${idEstatusPreproceso}" data-idEstatusMovimiento="${d.id_estatus_modificacion}"><i class="fas fa-clipboard-list"></i></button>`;
+    const BTN_AVANCE =  `<button class="btn-data btn-green btn-avanzar" data-toggle="tooltip" data-placement="left" title="ENVIAR A ${ESTATUS_PREPROCESO[idEstatusPreproceso + 1]}" data-idCliente="${d.idCliente}" data-tipoTransaccion="${idEstatusPreproceso}" data-idEstatusMovimiento="${d.id_estatus_modificacion}"><i class="fas fa-thumbs-up"></i></button>`;
+    const BTN_RECHAZO =  `<button class="btn-data btn-warning btn-rechazar" data-toggle="tooltip" data-placement="left" title="ENVIAR A ${ESTATUS_PREPROCESO[idEstatusPreproceso - 1]}" data-idCliente="${d.idCliente}" data-tipoTransaccion="${idEstatusPreproceso}"><i class="fas fa-thumbs-down"></i></button>`;
+    const BTN_INFOCLIENTE =  `<button class="btn-data btn-green infoUser" data-toggle="tooltip" data-placement="left" title="INFORMACIÓN CLIENTE" data-idCliente="${d.idCliente}" data-idLote="${d.idLote}"><i class="fas fa-user-check"></i></button>`;
+    const BTN_SUBIR_ARCHIVO =  `<button class="btn-data btn-blueMaderas btn-abrir-modal" data-toggle="tooltip" data-placement="left" title="CARGAR DOCUMENTACIÓN" data-idCliente="${d.idCliente}" data-idLote="${d.idLote}" data-nombreLote="${d.nombreLote}" data-estatusLoteArchivo="${d.status}" data-editar="${editar}" data-rescision="${d.rescision}" data-id_dxc="${d.id_dxc}" data-tipoTransaccion="${idEstatusPreproceso}"><i class="fas ${btnShow}"></i></button>`;
+    const BTN_REESTRUCTURA = `<button class="btn-data btn-sky btn-reestructurar" data-toggle="tooltip" data-placement="left" title="REESTRUCTURAR" data-idCliente="${d.idCliente}"><i class="fas fa-map-marker"></i></button>`;
+    const BTN_REUBICACION = `<button class="btn-data btn-green btn-reubicar" data-toggle="tooltip" data-placement="left" title="REUBICAR CLIENTE" data-idCliente="${d.idCliente}" data-idProyecto="${d.idProyecto}" data-tipoLote="${d.tipo_lote}"><i class="fas fa-route"></i></button>`;
+    const BTN_SUBIR_CONTRATO_FIRMADO =  `<button class="btn-data btn-green-excel btn-abrir-contratoFirmado" data-toggle="tooltip" data-placement="left" title="${tooltipCF}" data-idCliente="${d.idCliente}" data-idLote="${d.idLote}" data-nombreLote="${d.nombreLote}" data-estatusLoteArchivo="${d.status}" data-editar="${editarContratoFirmado}" data-rescision="${d.rescision}" data-idDocumento="${d.idContratoFirmado}" data-idCondominio="${d.idCondominio}" data-tipoTransaccion="${d.id_estatus_preproceso}" data-nombreResidencial = "${d.nombreResidencial}" data-nombreCondominio = "${d.nombreCondominio}" data-contratoFirmado = "${d.contratoFirmado}"><i class="fas ${btnContratoFirmado}"></i></button>`;
+    const BTN_REASIGNAR_EXPEDIENTE_JURIDICO =  `<button class="btn-data btn-green btn-reasignar" data-toggle="tooltip" data-placement="left" title="REASIGNAR EXPEDIENTE" data-idLote="${d.idLote}" data-idEjecutivoAsignado="${d.id_juridico_preproceso}"><i class="fas fa-user-alt"></i></button>`;
 
     if (idEstatusPreproceso === 0 && ROLES_PROPUESTAS.includes(id_rol_general)) { // Gerente/Subdirector: PENDIENTE CARGA DE PROPUESTAS
         return BTN_PROPUESTAS;
@@ -1333,12 +1242,7 @@ const agregarCopropietario = (copropietario = null) => {
             <div class="col-lg-12">
                 <div id="accordion${idDiv}">
                     <div class="card mt-2 mb-0">
-                        <div class="card-header collapsed cursor-point" 
-                            id="copropietario-collapse${idDiv}"
-                            data-toggle="collapse" 
-                            data-target="#copropietarioCollapse${idDiv}" 
-                            aria-expanded="false" 
-                            aria-controls="collapseTwo">
+                        <div class="card-header collapsed cursor-point" id="copropietario-collapse${idDiv}" data-toggle="collapse" data-target="#copropietarioCollapse${idDiv}" aria-expanded="false" aria-controls="collapseTwo">
                             <div class="mb-1">
                                 <div class="row">
                                     <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 text-center">
@@ -1346,125 +1250,67 @@ const agregarCopropietario = (copropietario = null) => {
                                     </div>
                                     <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-right">
                                         <span class="fs-2">
-                                            <i onclick="eliminarCopropietario(${idDiv}, '${idCopropietario}')"
-                                                id="eliminarIcon${idDiv}"
-                                                class="fa fa-close"
-                                                data-toggle="tooltip" 
-                                                data-placement="left"
-                                                title="ELIMINAR COPROPIETARIO"></i>
+                                            <i onclick="eliminarCopropietario(${idDiv}, '${idCopropietario}')" id="eliminarIcon${idDiv}" class="fa fa-close" data-toggle="tooltip" data-placement="left" title="ELIMINAR COPROPIETARIO"></i>
                                         </span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         
-                        <div id="copropietarioCollapse${idDiv}" 
-                            class="collapse" 
-                            aria-labelledby="copropietario-collapse${idDiv}" 
-                            data-parent="#accordion${idDiv}">
+                        <div id="copropietarioCollapse${idDiv}" class="collapse" aria-labelledby="copropietario-collapse${idDiv}" data-parent="#accordion${idDiv}">
                             <div class="card-body">
                                 <div class="p-4">
                                     <div class="row">
                                         <div class="col-xs-12">
                                             <label class="control-label">NOMBRE (<small style="color: red;">*</small>)</label>
-                                            <input class="form-control input-gral"
-                                                name="nombre[]" 
-                                                type="text" 
-                                                value="${copropietario?.nombre ?? ''}"
-                                                minlength="1"
-                                                maxlength="50" 
-                                                autocomplete="off"/>
-                                            
-                                            <input id="id_cop[]" 
-                                                name="id_cop[]" 
-                                                type="hidden" 
-                                                value="${idCopropietario}">
+                                            <input class="form-control input-gral" name="nombre[]" type="text" value="${copropietario?.nombre ?? ''}" minlength="1" maxlength="50" autocomplete="off"/>
+                                            <input id="id_cop[]" name="id_cop[]" type="hidden" value="${idCopropietario}">
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12">
                                             <label class="control-label">APELLIDO PATERNO (<small style="color: red;">*</small>)</label>
-                                            <input class="form-control input-gral"
-                                                name="apellido_p[]" 
-                                                type="text"
-                                                value="${copropietario?.apellido_paterno ?? ''}"
-                                                minlength="1"
-                                                maxlength="50"
-                                                autocomplete="off"/>
+                                            <input class="form-control input-gral" name="apellido_p[]" type="text" value="${copropietario?.apellido_paterno ?? ''}" minlength="1" maxlength="50" autocomplete="off"/>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12">
                                             <label class="control-label">APELLIDO MATERNO (<small style="color: red;">*</small>)</label>
-                                            <input class="form-control input-gral"
-                                                name="apellido_m[]" 
-                                                type="text"
-                                                value="${copropietario?.apellido_materno ?? ''}"
-                                                minlength="1"
-                                                maxlength="50"
-                                                autocomplete="off"/>
+                                            <input class="form-control input-gral" name="apellido_m[]" type="text" value="${copropietario?.apellido_materno ?? ''}" minlength="1" maxlength="50" autocomplete="off"/>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                             <label class="control-label">CELULAR (<small style="color: red;">*</small>)</label>
-                                            <input class="form-control input-gral" 
-                                                name="telefono2[]" 
-                                                type="number" 
-                                                step="any" 
-                                                onKeyPress="if(this.value.length === 10) return false;" 
-                                                value="${copropietario?.telefono_2 ?? ''}"/>
+                                            <input class="form-control input-gral" name="telefono2[]" type="number" step="any" onKeyPress="if(this.value.length === 10) return false;" value="${copropietario?.telefono_2 ?? ''}"/>
                                         </div>
                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                             <label class="control-label">CORREO ELECTRÓNICO (<small style="color: red;">*</small>)<small class="pl-1" id="errorMsgCorreo${idDiv}"></small></label></label>
-                                            <input class="form-control input-gral" 
-                                                name="correo[]" 
-                                                id="correoCop${idDiv}"
-                                                type="email" 
-                                                value="${copropietario?.correo ?? ''}"
-                                                oninput= "validarCorreo('#correoCop${idDiv}', '#errorMsgCorreo${idDiv}')"
-                                                autocomplete="off"/>
+                                            <input class="form-control input-gral" name="correo[]" id="correoCop${idDiv}" type="email" value="${copropietario?.correo ?? ''}" oninput= "validarCorreo('#correoCop${idDiv}', '#errorMsgCorreo${idDiv}')" autocomplete="off"/>
                                         </div> 
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
                                             <label class="control-label">FECHA DE NACIMIENTO (<small style="color: red;">*</small>)</label>
-                                            <input class="form-control input-gral" 
-                                                name="fecha_nacimiento[]" 
-                                                onkeydown="return false" 
-                                                type="date"
-                                                value="${copropietario?.fecha_nacimiento ?? ''}"/>
+                                            <input class="form-control input-gral" name="fecha_nacimiento[]" onkeydown="return false" type="date" value="${copropietario?.fecha_nacimiento ?? ''}"/>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
                                             <label class="control-label">DOMICILIO (<small style="color: red;">*</small>)</label>
-                                            <input class="form-control input-gral" 
-                                                name="domicilio[]" 
-                                                type="text" 
-                                                value="${copropietario?.domicilio_particular ?? ''}"
-                                                autocomplete="off"/>
+                                            <input class="form-control input-gral" name="domicilio[]" type="text" value="${copropietario?.domicilio_particular ?? ''}" autocomplete="off"/>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
                                             <label class="control-label">ESTADO CIVIL (<small style="color: red;">*</small>)</label>
-                                            <select name="estado_civil[]" 
-                                                id="estadoCivilSelect${idDiv}"
-                                                title="SELECCIONA UNA OPCIÓN" 
-                                                class="selectpicker m-0 select-gral" 
-                                                data-container="body" 
-                                                data-width="100%"></select>
+                                            <select name="estado_civil[]" id="estadoCivilSelect${idDiv}" title="SELECCIONA UNA OPCIÓN" class="selectpicker m-0 select-gral" data-container="body" data-width="100%"></select>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12">
                                             <label class="control-label">OCUPACIÓN (<small style="color: red;">*</small>)</label>
-                                            <input class="form-control input-gral" 
-                                                name="ocupacion[]" 
-                                                type="text" 
-                                                value="${copropietario?.ocupacion ?? ''}"
-                                                autocomplete="off"/>
+                                            <input class="form-control input-gral" name="ocupacion[]" type="text" value="${copropietario?.ocupacion ?? ''}" autocomplete="off"/>
                                         </div>
                                     </div>
                                 </div>

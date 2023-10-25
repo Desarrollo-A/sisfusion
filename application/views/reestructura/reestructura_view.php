@@ -21,7 +21,7 @@
                                             <div class="tab-pane active" id="nuevas-1">
                                             <div class="card-content">
                                         <div class="encabezadoBox">
-                                         <h3 class="card-title center-align">Liberar para reestructura</h3>
+                                        <h3 class="card-title center-align">Liberar para reestructura</h3>
                                         </div>
                                     <div class="toolbar">
                                         <div class="row">

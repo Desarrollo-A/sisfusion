@@ -186,7 +186,7 @@ class Reestructura_model extends CI_Model
         lot.idLote ,lot.sup AS superficie, lot.precio, CONCAT(cli.nombre,' ',cli.apellido_paterno,' ',cli.apellido_materno) nombreCliente,
         lot.liberadoReubicacion AS observacion, oxc.nombre AS nombreOp, 
         lot.comentarioReubicacion, lot.liberadoReubicacion,
-        lot.liberaBandera 
+        lot.liberaBandera, lot.idStatusLote
         FROM lotes lot
         INNER JOIN condominios con ON con.idCondominio = lot.idCondominio
         INNER JOIN residenciales res on res.idResidencial = con.idResidencial
