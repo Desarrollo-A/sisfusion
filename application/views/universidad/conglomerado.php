@@ -484,13 +484,37 @@
     </div>
 </div>
 
-
+<div class="modal fade scroll-styles" id="activar-pago-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-center">Reactivar descuento</h3>
+                <div class="col-lg-12 form-group m-1" id="mensajeConfirmacion" name="mensajeConfirmacion"></div>
+                <div class="col-lg-12 form-group m-1" id="montosDescuento" name="montosDescuento"></div>
+            </div>
+            <div class="modal-body">
+                <form id="form_interes" name="form_interes" method="post">
+                    <div class="container-fluid p-0">
+                        <div class="col-lg-12 form-group m-0">
+                            <label class="label-gral m-0">Fecha reactivación</label>
+                            <input type="date" class="form-control" name="fechaReactivacion" id="fechaReactivacion" min="<?=date('Y-m-d')?>" required />
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" id="btn_topar" class="btn btn-primary"> Registrar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
 
 <div class="modal fade"
-         id="activar-pago-modal"
+         id="activar-pago-modal22"
          tabindex="-1"
          role="dialog"
          aria-labelledby="myModalLabel"
@@ -1117,7 +1141,7 @@
     <?php $this->load->view('template/footer');?>
     <script src="http://momentjs.com/downloads/moment.min.js"></script>
     <script src="<?= base_url() ?>dist/js/funciones-generales.js"></script>
-    <script src="<?= base_url() ?>dist/js/controllers/ventas/conglomerado.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/universidad/conglomerado.js"></script>
 </body>
 
 

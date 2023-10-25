@@ -355,3 +355,6 @@ function replaceAll(text, busca, reemplaza) {
       text = text.toString().replace(busca, reemplaza);
   return text;
 }
+
+
+
