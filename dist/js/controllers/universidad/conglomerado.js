@@ -515,7 +515,7 @@ $("#formularioAplicarDescuento").submit(function (e) {
 
         var data1 = new FormData($(form)[0]);
         $.ajax({
-            url: 'saveDescuento/',
+            url: 'aplicarDescuentoUMComisiones/',
             data: data1,
             method: 'POST',
             contentType: false,
