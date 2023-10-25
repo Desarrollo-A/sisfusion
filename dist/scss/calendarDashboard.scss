@@ -105,11 +105,17 @@
   .fc-daygrid-day-frame{
     padding: 3px;
   }
-  .evtAbierto{
+  .evtSatisfactoria{
     border-left: 4px solid $harlequin!important;
   }
-  .evtFinalizado{
-    border-left: 4px solid $jellyBean!important;;
+  .evtCancelada{
+    border-left: 4px solid $redLight!important;;
+  }
+  .evtAbierto{
+    border-left: 4px solid $cerulean!important;;
+  }
+  .evtPocoSatisfactoria{
+    border-left: 4px solid $orangeLight!important;;
   }
   .fc-daygrid-event{
     padding-left: 4px;
@@ -136,11 +142,17 @@
       margin: 0 8px;
       font-size: 15px;
     }
-    .codeFinish{
-      color: $jellyBean;
+    .codeCancelada {
+      color: $redLight;
     }
-    .codeOpen{
+    .codeSatisfactoria {
       color: $harlequin;
+    }
+    .codeAbierta {
+      color: $cerulean;
+    }
+    .codePocoSatisfactoria {
+      color: $orangeLight;
     }
     .codeAdviser{
       color: #103f7533;
@@ -281,4 +293,17 @@
     color: $blueIndigo;
     font-weight: 900;
   }
+}
+
+.codeCancelada {
+  color: $redLight;
+}
+.codeSatisfactoria {
+  color: $harlequin;
+}
+.codeAbierta {
+  color: $cerulean;
+}
+.codePocoSatisfactoria {
+  color: $orangeLight;
 }

@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-    $.post(general_base_url + "/Comisiones/lista_roles", function (data) {
+    $.post(general_base_url + "Universidad/get_lista_roles", function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_opcion'];
@@ -15,7 +15,7 @@ $(document).ready(function () {
         rol = $('#puesto').val();
         $("#usuarios").empty().selectpicker('refresh');
         $.ajax({
-            url: general_base_url + 'Comisiones/getUsuariosUM/'+rol,
+            url: general_base_url + 'Universidad/getUsuariosUM/'+rol,
             type: 'post',
             dataType: 'json',
             success:function(response){
@@ -83,10 +83,10 @@ function loadTable(tipoDescuento) {
              var cajaFinal = formatMoney(caja);
              var pendienteFinal = formatMoney(pendiente);
 
-            document.getElementById("totalGeneral").textContent = '$' + totalFinal;
-            document.getElementById("totalRecaudado").textContent = '$' + recaudadoFinal;
-            document.getElementById("totalPagadoCaja").textContent = '$' + cajaFinal;
-            document.getElementById("totalPendiente").textContent = '$' + pendienteFinal;
+            document.getElementById("totalGeneral").textContent = totalFinal;
+            document.getElementById("totalRecaudado").textContent = recaudadoFinal;
+            document.getElementById("totalPagadoCaja").textContent = cajaFinal;
+            document.getElementById("totalPendiente").textContent = pendienteFinal;
         });
 
         tablaGeneral = $('#tabla-general').DataTable({
@@ -119,15 +119,18 @@ function loadTable(tipoDescuento) {
                     }
                 }
             }
-        },
-        
-        ],
-       
-        ordering: false,
-        destroy: true,
-        pageLength: 10,
-        bAutoWidth: false,
-        fixedColumns: true,
+        }, {
+            text: '<i class="fa fa-edit" id="btn-nuevo-descuento"></i> NUEVO DESCUENTO',
+            action: function () {
+                aplicarDescuento();
+
+            },
+            attr: {
+                class: ' btn-azure'
+            }
+        }],
+        pagingType: "full_numbers",
+        fixedHeader: true,
         lengthMenu: [
             [10, 25, 50, -1],
             [10, 25, 50, "Todos"]
@@ -159,10 +162,10 @@ function loadTable(tipoDescuento) {
                     } else{
                         color = 'color:blue';
                     }
-                    return `<p style="font-size: 1em; ${color}">$${formatMoney(d.saldo_comisiones)}</p>`;
+                    return `<p style="font-size: 1em; ${color}">${formatMoney(d.saldo_comisiones)}</p>`;
                 }},
                 {"data": function (d) {
-                    return `<p style="font-size: 1em"><b>$${formatMoney(d.monto)}</b></p>`;
+                    return `<p style="font-size: 1em"><b>${formatMoney(d.monto)}</b></p>`;
                 }},
                 {"data": function (d) {
                     descontado = 0;
@@ -171,16 +174,16 @@ function loadTable(tipoDescuento) {
                     } else {
                         descontado = d.total_descontado;
                     }
-                    return `<p style="font-size: 1em">$${formatMoney(descontado)}</p>`;
+                    return `<p style="font-size: 1em">${formatMoney(descontado)}</p>`;
                 }},
                 {"data": function (d) {
-                    return `<p style="font-size: 1em; color:gray">$${formatMoney(d.pagado_caja)}</p>`;
+                    return `<p style="font-size: 1em; color:gray">${formatMoney(d.pagado_caja)}</p>`;
                 }},
                 {"data": function (d) {
-                    return `<p style="font-size: 1em; color:gray">$${formatMoney(d.pendiente)}</p>`;
+                    return `<p style="font-size: 1em; color:gray">${formatMoney(d.pendiente)}</p>`;
                 }},
                 {"data": function (d) {
-                    return `<p style="font-size: 1em">$${formatMoney(d.pago_individual)}</p>`;
+                    return `<p style="font-size: 1em">${formatMoney(d.pago_individual)}</p>`;
                 }},
                 {"data": function (d) {
                     reactivado = '';
@@ -219,7 +222,7 @@ function loadTable(tipoDescuento) {
                         pendiente = Math.round(d.pendiente/d.pago_individual);
                         pagosDescontar = valor>pendiente ? d.pendiente : valor*d.pago_individual;
                     }
-                    return `<p style="font-size: 1em; ${color}">$${formatMoney(pagosDescontar)}</p>`;
+                    return `<p style="font-size: 1em; ${color}">${formatMoney(pagosDescontar)}</p>`;
                 }},
                 {"data": function (d) {
                     return `<p style="font-size: 1em">${(d.primer_descuento) ? d.primer_descuento : 'SIN APLICAR'}</p>`;
@@ -280,7 +283,7 @@ function loadTable(tipoDescuento) {
                         class="btn-data btn-orangeYellow topar_descuentos" title="Detener descuentos"><i class="fas fa-ban"></i>
                         </button>
                         `;
-                    } else if(d.estatus == 3 && d.pendiente > 1 ){ //DESCUENTOS DETENIDOS
+                    } else if(d.estatus == 3 && d.pendiente > 1 && d.estado_usuario == 1){ //DESCUENTOS DETENIDOS
                         adicionales = `<button value="${d.id_usuario}" 
                         data-value="${d.id_descuento}"
                         data-pendiente="${d.pendiente}"
@@ -291,7 +294,7 @@ function loadTable(tipoDescuento) {
                 }}],
             
                 "ajax": {
-                "url": `getDataConglomerado/`+tipoDescuento,
+                "url": `getDescuentosUniversidad/`+tipoDescuento,
                 "type": "GET",
                 cache: false,
                 "data": function (d) {}
@@ -324,7 +327,7 @@ function loadTable(tipoDescuento) {
                     $("#lista-comentarios-descuentos").append('<div class="col-lg-12"><p style="color:gray;font-size:1.1em;">SIN </p></div>');
                 } else {
                     $.each(data, function (i, v) {
-                        $("#lista-comentarios-descuentos").append('<div class="col-lg-12"><p style="color:gray;font-size:1.1em;"><b>Comentario: </b>Se descontó la cantidad de <b>$' + formatMoney(v.comentario) +'</b><br>' + v.comentario2 +''+saldo_comisiones+'<br><b style="color:#3982C0;font-size:0.9em;">Movimiento: ' + v.date_final + '</b><b style="color:#C6C6C6;font-size:0.9em;"> - ' + v.nombre_usuario + '</b></p></div>');
+                        $("#lista-comentarios-descuentos").append('<div class="col-lg-12"><p style="color:gray;font-size:1.1em;"><b>Comentario: </b>Se descontó la cantidad de <b>' + formatMoney(v.comentario) +'</b><br>' + v.comentario2 +''+saldo_comisiones+'<br><b style="color:#3982C0;font-size:0.9em;">Movimiento: ' + v.date_final + '</b><b style="color:#C6C6C6;font-size:0.9em;"> - ' + v.nombre_usuario + '</b></p></div>');
                     });
                 }
             });
@@ -364,12 +367,12 @@ function loadTable(tipoDescuento) {
 
             var user = $(this).val();
             let datos = user.split(',');
-            $("#montoaDescontar").val('$' + formatMoney(monto));
+            $("#montoaDescontar").val( formatMoney(monto));
             $("#usuarioId").val(id_user);
             $('#saldoComisiones').val(saldoComisiones);
-            $('#informacionGeneral').append('<p>Descuento a <b>'+nombreUsuario+'</b>, saldo en comisiones: <b>$'+ formatMoney(saldoComisiones)+'</b></p>');
+            $('#informacionGeneral').append('<p>Descuento a <b>'+nombreUsuario+'</b>, saldo en comisiones: <b>'+ formatMoney(saldoComisiones)+'</b></p>');
 
-            $.post('getLotesOrigen2/' + id_user + '/' + monto, function (data) {
+            $.post('getLotesDescuentosUniversidad/' + id_user + '/' + monto, function (data) {
                 var len = data.length;
                 let  info = ''; 
                 let sumaselected = 0;
@@ -387,11 +390,11 @@ function loadTable(tipoDescuento) {
                     info += '</b></p>';
 
                     $("#arrayLotes").val(`${comision},${comtotal.toFixed(2)},${pago_neodata},${name}`);
-                    $("#comentario").val(`DESCUENTO UNIVERSIDAD MADERAS POR EL MONTO DE $${formatMoney(monto)}`);
+                    $("#comentario").val(`DESCUENTO UNIVERSIDAD MADERAS POR EL MONTO DE ${formatMoney(monto)}`);
                 }
 
                 $("#listaLotesDisponibles").append(info);
-                $("#totalDisponible").val('$' + formatMoney(sumaselected));
+                $("#totalDisponible").val(formatMoney(sumaselected));
                 $("#listaLotesDisponibles").selectpicker('refresh');
             }, 'json'); 
         });
@@ -424,22 +427,6 @@ function loadTable(tipoDescuento) {
         $('#anio').selectpicker('refresh');
     });
 
-    let meses = [
-        {id:'01', mes:'Enero'},
-        {id:'02',mes:'Febrero'},
-        {id:'03',mes:'Marzo'},
-        {id:'04',mes:'Abril'},
-        {id:'05',mes:'Mayo'},
-        {id:'06',mes:'Junio'},
-        {id:'07',mes:'Julio'},
-        {id:'08',mes:'Agosto'},
-        {id:'09',mes:'Septiembre'},
-        {id:'10',mes:'Octubre'},
-        {id:'11',mes:'Noviembre'},
-        {id:'12',mes:'Diciembre'}
-    ];
-    let anios = [2019,2020,2021,2022,2023,2024];
-
     $('#mes').change(function() {
         anio = $('#anio').val();
         mes = $('#mes').val();
@@ -455,7 +442,7 @@ function loadTable(tipoDescuento) {
     function getPagosByUser(usuario,mes, anio){
         document.getElementById('sumaMensualComisiones').innerHTML = 'Cargando...';
         $.getJSON("getPagosByUser/" + usuario+"/"+mes+"/"+anio).done(function (data) {
-            document.getElementById('sumaMensualComisiones').innerHTML ='$'+ formatMoney(data[0].suma);
+            document.getElementById('sumaMensualComisiones').innerHTML = formatMoney(data[0].suma);
         });
     }
 
@@ -486,7 +473,7 @@ function loadTable(tipoDescuento) {
         abonado = $(this).attr("data-abonado");
         
         $('#mensajeConfirmacion').append('<p>¿Está seguro de detener los pagos al '+rolUsuario+' <b>'+ nombreUsuario+'</b>?</p>');
-        $('#montosDescuento').append('<p>Total descuento: <b>$'+formatMoney(totalDescuento)+'</b></p><p>Monto descontado: <b>$'+formatMoney(abonado)+'</b></p>');
+        $('#montosDescuento').append('<p>Total descuento: <b>'+formatMoney(totalDescuento)+'</b></p><p>Monto descontado: <b>'+formatMoney(abonado)+'</b></p>');
         $('#usuarioTopar').val(id_user);
         $("#modal_nuevas").modal();
 
@@ -590,7 +577,7 @@ $("#formularioAplicarDescuento").submit(function (e) {
 
         var data1 = new FormData($(form)[0]);
         $.ajax({
-            url: 'saveDescuento/' + 3,
+            url: 'aplicarDescuentoUMComisiones/',
             data: data1,
             method: 'POST',
             contentType: false,
@@ -647,7 +634,7 @@ $("#form_interes").submit(function (e) {
 
         var data = new FormData($(form)[0]);
            $.ajax({
-            url: general_base_url+"Comisiones/toparDescuentoUniversidad",
+            url: general_base_url+"Universidad/toparDescuentoUniversidad",
             data: data,
             cache: false,
             contentType: false,
@@ -681,7 +668,7 @@ $("#formAltaDescuento").submit(function (e) {
 
         var data = new FormData($(form)[0]);
            $.ajax({
-            url: general_base_url+"Comisiones/altaNuevoDescuentoUM",
+            url: general_base_url+"Universidad/altaNuevoDescuentoUM",
             data: data,
             cache: false,
             contentType: false,
@@ -710,6 +697,25 @@ $("#formAltaDescuento").submit(function (e) {
         });
     }
 });
+
+
+
+let meses = [
+      {id:'01', mes:'Enero'},
+      {id:'02',mes:'Febrero'},
+      {id:'03',mes:'Marzo'},
+      {id:'04',mes:'Abril'},
+      {id:'05',mes:'Mayo'},
+      {id:'06',mes:'Junio'},
+      {id:'07',mes:'Julio'},
+      {id:'08',mes:'Agosto'},
+      {id:'09',mes:'Septiembre'},
+      {id:'10',mes:'Octubre'},
+      {id:'11',mes:'Noviembre'},
+      {id:'12',mes:'Diciembre'}
+    ];
+    
+    let anios = [2019,2020,2021,2022,2023,2024];
 
 }
 

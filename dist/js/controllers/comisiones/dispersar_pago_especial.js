@@ -528,6 +528,7 @@ console.log(resulq.data[0].vigencia);
                                                 <input type="hidden" name="total_comision" id="total_comision" value="">
                                                 <input type="hidden" name="bonificacion" id="bonificacion" value="${data[0].Bonificado}">
                                                 <input type="hidden" name="pendiente" id="pendiente" value="">
+                                                <input type="hidden" name="ooamValor" id="ooamValor" value="0">
                                                 <input type="hidden" name="idCliente" id="idCliente" value="${idCliente}">
                                                 <input type="hidden" name="id_disparador" id="id_disparador" value="0">
                                                 <input type="hidden" name="lugar_p" id="lugar_p" value="${lugar_prospeccionLote}">

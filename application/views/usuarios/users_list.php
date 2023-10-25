@@ -298,6 +298,12 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div id="containerMenu" class="mb-1 hide">
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5 mb-1">
+                                            <label class="control-label">Menú del usuario (<span class="isRequired">*</span>)</label>
+                                            <div id="listadoHTML"></div>
+                                        </div>
+                                    </div>
                                     <div class="row">
                                         <div class="col-md-12 d-flex justify-end">
                                             <button type="button" class="btn btn-danger btn-simple mt-1" data-dismiss="modal">Cancelar</button>
