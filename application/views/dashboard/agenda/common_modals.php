@@ -5,7 +5,7 @@
         <div class="modal-content">
             <div class="modal-header d-flex align-center mb-1">
                 <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 form-group m-0 pr-0">
-                    <i class="fas fa-circle dotStatusAppointment"></i>
+                    <i class="fas fa-circle" id="dotStatusAppointment"></i>
                 </div>
                 <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 form-group m-0 pr-0 d-flex justify-between align-center">
                     <h3 class="modal-title">Detalles de la cita</h3>
@@ -28,7 +28,7 @@
                         </div>
                         <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 form-group m-0">
                             <label class="label-gral m-0">Título</label>
-                            <input id="evtTitle2" name="evtTitle" type="text" class="form-control input-gral">
+                            <input id="evtTitle2" name="evtTitle" type="text" class="form-control input-gral" autocomplete="off">
                         </div>
                         <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 form-group m-0 pr-0">
                             <i class="fas fa-user iconMod fa-lg"></i>
@@ -101,7 +101,7 @@
                     <div class="container-fluid p-0">
                         <div class="col-lg-12 form-group m-0">
                             <label class="label-gral m-0">Título</label>
-                            <input id="evtTitle" name="evtTitle" type="text" class="form-control input-gral" required>
+                            <input id="evtTitle" name="evtTitle" type="text" class="form-control input-gral" required autocomplete="off">
                         </div>
                         <div class="col-lg-12 form-group m-0 overflow-hidden">
                             <label class="label-gral m-0">Prospectos</label>
@@ -116,8 +116,8 @@
                         <div class="col-lg-12 form-group m-0">
                             <label class="label-gral m-0">Fecha de cita</label>
                             <div class="d-flex">
-                                <input id="dateStart" name="dateStart" type="datetime-local" class="form-control beginDate w-50 text-left pl-1">
-                                <input id="dateEnd" name="dateEnd" type="datetime-local" class="form-control endDate w-50 pr-1">
+                                <input id="dateStartInsert" name="dateStart" type="datetime-local" class="form-control beginDate w-50 text-left pl-1">
+                                <input id="dateEndInsert" name="dateEnd" type="datetime-local" class="form-control endDate w-50 pr-1">
                             </div>
                         </div>
                         <div class="col-lg-12 form-group m-0">
@@ -205,19 +205,19 @@
                     </div>
                     <div class="modal-body pt-0">
                         <div class="radio-with-Icon pl-1 pr-1 pb-3 pt-3 d-flex justify-between">
-                            <p class="radioOption-Item">
+                            <p class="radioOption-Item" data-toggle="tooltip" data-placement="top" title="Poco satisfactoria">
                                 <input type="radio" name="rate" id="rateBad" value="2" class="d-none" aria-invalid="false">
                                 <label for="rateBad" class="cursor-point">
                                     <i class="far fa-thumbs-down fa-3x"></i>
                                 </label>
                             </p>
-                            <p class="radioOption-Item">
+                            <p class="radioOption-Item" data-toggle="tooltip" data-placement="top" title="Satisfactoria">
                                 <input type="radio" name="rate" id="rateGood" value="1" class="d-none" aria-invalid="false" checked>
                                 <label for="rateGood" class="cursor-point">
                                     <i class="far fa-thumbs-up fa-3x"></i>
                                 </label>
                             </p>
-                            <p class="radioOption-Item">
+                            <p class="radioOption-Item" data-toggle="tooltip" data-placement="top" title="Cancelada">
                                 <input type="radio" name="rate" id="rateCancel" value="3" class="d-none" aria-invalid="false">
                                 <label for="rateCancel" class="cursor-point">
                                     <i class="fas fa-ban fa-3x"></i>
@@ -310,6 +310,46 @@
                             <div class="d-flex justify-end">
                                 <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
                                 <button type="button" id="signInGoogleButton" class="btn btn-primary">Iniciar sesión</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="confirmSignInGoogleModal" tabindex="-1" role="dialog" aria-labelledby="confirmSignInGoogleModal"
+     aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-body pt-2">
+                <div class="material-datatables">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h3 class="m-0 text-center">Tiempo de sesión expirada</h3>
+                            <p class="text-center mt-2">
+                                ¿Desea iniciar sesión con una cuenta de Google para la sincronización del calendario?
+                            </p>
+                            <p class="text-center mt-2">
+                                <strong>Nota:</strong> En caso de responder "No", los eventos se guardarán únicamente en el CRM.
+                            </p>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="d-flex justify-end">
+                                <button type="button"
+                                        id="withoutGoogleBtn"
+                                        class="btn btn-danger btn-simple"
+                                        data-dismiss="modal"
+                                        onclick="sinGoogleAuth()">
+                                    No
+                                </button>
+                                <button type="button"
+                                        id="withGoogleBtn"
+                                        class="btn btn-primary"
+                                        onclick="conGoogleAuth()">
+                                    Sí
+                                </button>
                             </div>
                         </div>
                     </div>

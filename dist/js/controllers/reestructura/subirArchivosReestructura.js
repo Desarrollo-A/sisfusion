@@ -6,6 +6,8 @@ var editarFile = 0;
 var archivosAborrar = [];
 var acceptFiles = '';
 var nombreLote = '';
+var arrayCF = [];
+var editarContrafoFirmado = 0;
 $(document).ready(function () {
     $("#archivosReestructura").on("hidden.bs.modal", function () {
         $("#fileElm1").val(null);
@@ -14,11 +16,14 @@ $(document).ready(function () {
         $("#file-name2").val("");
         $("#fileElm3").val(null);
         $("#file-name3").val("");
-
         $("#Resicion").val(null);
         $("#resicion-name").val("");
     });
     Shadowbox.init();
+    $('.collapse').collapse();
+    $('[data-toggle="tooltip"]').tooltip();
+
+
 });
 $(document).on('click', '.btn-abrir-modal', function () {
     let idLote = $(this).attr("data-idLote");
@@ -37,17 +42,22 @@ $(document).on('click', '.btn-abrir-modal', function () {
         data: formData,
         contentType: false,
         cache: false,
-        processData: false,
-        beforeSend: function () {
+        processData:false,
+        beforeSend: function(){
         },
-        success: function (data) {
+        success: function(data) {
             data = JSON.parse(data);
-            formArchivos(tipotransaccion, data, flagEditar, nombreLote)
+            if(tipotransaccion==3){
+                loadCopropietarios(data['copropietarios']);
+                document.getElementById('co-propietarios').classList.remove('hide');
+            }
+            formArchivos(tipotransaccion, data['opcionesLotes'], flagEditar, nombreLote)
         },
-        error: function () {
+        error: function(){
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
+
     $("#archivosReestructura").modal();
 });
 function formArchivos(estatusProceso, datos, flagEditar, nombreLote) {
@@ -64,20 +74,21 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote) {
     let ocupacion = datos[0]['ocupacion'];
     let infoClienteContenedor = document.getElementById('info-cliente');
     let contenidoHTMLinfoCL = `
-        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-            <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-center">
-                <p class="m-0 ">Cliente. ${nombreCliente}</p>
-                <p class="m-0">Lote. ${nombreLote}</p>
-                <p class="m-0 text-left">Domicilio particular. ${domicilio_particular}</p>
-            </div>
-            <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-center">
-                <p class="m-0">Correo. ${correo}</p>
-                <p class="m-0">Teléfono. ${telefono1}</p>
-                <p class="m-0">Ocupación. ${ocupacion}</p>
-                <p class="m-0">INE. ${ine}</p>
-                <p class="m-0">Estado civil. ${estadoCivil}</p>
-            </div>
-        </div>`;
+    <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-left">
+            <p class="m-0 ">Cliente. ${nombreCliente}</p>
+            <p class="m-0">Lote. ${nombreLote}</p>
+            <p class="m-0 text-left">Domicilio particular. ${domicilio_particular}</p>
+        </div>
+        <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-left">
+            <p class="m-0">Correo. ${correo}</p>
+            <p class="m-0">Teléfono. ${telefono1}</p>
+            <p class="m-0">Ocupación. ${ocupacion}</p>
+            <p class="m-0">INE. ${ine}</p>
+            <p class="m-0">Estado civil. ${estadoCivil}</p>
+        </div>
+    </div>`;
+
     arrayKeysArchivos = [];
     archivosAborrar = [];
     let nombreArchivo = '';
@@ -215,7 +226,84 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote) {
         input.trigger("fileselect", [numFiles, label]);
     });
     $('[data-toggle="tooltip"]').tooltip();
+
 }
+function loadCopropietarios(datos){
+    // cnt-headers //contenedor de las cabeceras
+    let contenidoHTML = '';
+    let contenedorContenido = document.getElementById('contenedorCoprop');
+    if(datos.length>0){
+        datos.map((elemento, index)=>{
+            let nombreCopropietario = elemento.nombre + ' ' + elemento.apellido_paterno+' '+elemento.apellido_materno;
+            contenidoHTML += '<div class="card-body mb-3">';
+            contenidoHTML += '  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center" style="background-color: #0b3e6f;color: #f2f2f2;border-radius: 12px 12px 0px 0px;"><span style="font-size: 1.5rem">'+nombreCopropietario+'</span></div>';
+            contenidoHTML += '      <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding-bottom: 10px;border-top: 1px solid #ddd;margin-bottom: 25px;background-color: #F6FBFF;\n' +
+                '    border-radius: 0px 0px 12px 12px;">';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">';
+            contenidoHTML += '              <div class="form-group label-floating">';
+            contenidoHTML += '                  <label class="label-on-left m-0">NOMBRE</label>';
+            contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.nombre+'"/>';
+            contenidoHTML += '              </div>';
+            contenidoHTML += '          </div>';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">';
+            contenidoHTML += '              <div class="form-group label-floating">';
+            contenidoHTML += '                  <label class="label-on-left m-0">APELLIDO PATERNO</label>';
+            contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.apellido_paterno+'"/>';
+            contenidoHTML += '              </div>';
+            contenidoHTML += '          </div>';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">';
+            contenidoHTML += '              <div class="form-group label-floating">';
+            contenidoHTML += '                  <label class="label-on-left m-0">APELLIDO MATERNO</label>';
+            contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.apellido_materno+'"/>';
+            contenidoHTML += '              </div>';
+            contenidoHTML += '          </div>';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-6 col-lg-6">';
+            contenidoHTML += '              <div class="form-group label-floating">';
+            contenidoHTML += '                  <label class="label-on-left m-0">CORREO</label>';
+            contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.correo+'"/>';
+            contenidoHTML += '              </div>';
+            contenidoHTML += '          </div>';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-6 col-lg-6">';
+            contenidoHTML += '              <div class="form-group label-floating">';
+            contenidoHTML += '                  <label class="label-on-left m-0">TELÉFONO</label>';
+            contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.telefono_2+'"/>';
+            contenidoHTML += '              </div>';
+            contenidoHTML += '          </div>';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-12 col-lg-12">';
+            contenidoHTML += '              <div class="form-group label-floating">';
+            contenidoHTML += '                  <label class="label-on-left m-0">DIRECCIÓN</label>';
+            contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.domicilio_particular+'"/>';
+            contenidoHTML += '              </div>';
+            contenidoHTML += '          </div>';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-3 col-lg-4">';
+            contenidoHTML += '              <div class="form-group label-floating">';
+            contenidoHTML += '                  <label class="label-on-left m-0">ESTADO CIVIL</label>';
+            contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.estado_civil+'"/>';
+            contenidoHTML += '              </div>';
+            contenidoHTML += '          </div>';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-3 col-lg-4">';
+            contenidoHTML += '              <div class="form-group label-floating">';
+            contenidoHTML += '                  <label class="label-on-left m-0">OCUPACIÓN</label>';
+            contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.ocupacion+'"/>';
+            contenidoHTML += '              </div>';
+            contenidoHTML += '          </div>';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-3 col-lg-4">';
+            contenidoHTML += '              <div class="form-group label-floating">';
+            contenidoHTML += '                  <label class="label-on-left m-0">FECHA NACIMIENTO</label>';
+            contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.fecha_nacimiento+'"/>';
+            contenidoHTML += '              </div>';
+            contenidoHTML += '          </div>';
+            contenidoHTML += '     </div>';
+            contenidoHTML += '  <hr>';
+            contenidoHTML += '</div>';
+        });
+    }else{
+        contenidoHTML += '<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12"><center><h5 class="fs-2">SIN COPROPIETARIOS</h5></center></div>';
+    }
+
+    contenedorContenido.innerHTML = contenidoHTML;
+}
+
 $(document).on("click", "#sendRequestButton", function (e) {
     e.preventDefault();
     let flagEnviar = true;
@@ -227,7 +315,6 @@ $(document).on("click", "#sendRequestButton", function (e) {
             flagValidacion = flagValidacion + 1;
         }
     });
-
 
     if (editarFile == 1) {
         if (flagValidacion>0) {
@@ -416,5 +503,180 @@ $(document).on('click', '.ver-archivo', function () {
         }
     } else if (flagProceso == 2) {
         window.open(url, "_blank");
+    }
+});
+
+
+$(document).on('click', '.btn-abrir-contratoFirmado', function(){
+   $('#contratoFirmadoModal').modal('toggle');
+    let flagEditar = $(this).attr("data-editar");
+    let formularioArchivoscf = document.getElementById('formularioArchivoscf');
+    let contenidoHTMLCF = '';
+    let idLote = $(this).attr("data-idLote");
+    let nombreLotecf = $(this).attr("data-nombreLote");
+    nombreLote = nombreLotecf;
+    let estatusProceso = $(this).attr("data-tipotransaccion");
+    arrayCF['idCondominio'] = $(this).attr("data-idCondominio");
+    arrayCF['idDocumento'] = $(this).attr("data-iddocumento");
+    arrayCF['idClienteCF'] = $(this).attr("data-idcliente");
+    arrayCF['idLoteCF'] = idLote;
+    arrayCF['nombreResidencial'] = $(this).attr("data-nombreResidencial");
+    arrayCF['nombreCondominio'] = $(this).attr("data-nombreCondominio");
+    arrayCF['nombreDocumento'] = $(this).attr("data-contratofirmado");
+
+    editarContrafoFirmado = flagEditar;
+    editarFile = flagEditar;
+    let heightIframe = '400px';
+   if(flagEditar == 0){//es primera ves no hay archivo
+       document.getElementById('txtTituloCF').innerHTML = 'Selecciona el archivo que desees asociar a <b>CONTRATO FIRMADO</b>';
+       document.getElementById('secondaryLabelDetail').innerHTML = 'El documento que hayas elegido se almacenará de manera automática una vez que des clic en <i>Guardar</i>.';
+
+       document.getElementById('dialoSection').classList.remove('modal-lg');
+       contenidoHTMLCF += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2">\n' +
+           '                            <div class="" id="selectFileSectionResicioncf">\n' +
+           '                                <div class="file-gph">\n' +
+           '                                    <input class="d-none" type="file" required accept="application/pdf" id="contratoFirmado">\n' +
+           '                                    <input class="file-name" id="contratoFirmado-name" type="text" placeholder="No has seleccionada nada aún" readonly="">\n' +
+           '                                    <label class="upload-btn m-0" for="contratoFirmado"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>\n' +
+           '                                </div>\n' +
+           '                            </div>\n' +
+           '                        </div>';
+   }else if(flagEditar == 1){//ya hay un archivo hay que actualizarlo
+       if(estatusProceso==2){
+           // document.getElementById('txtTituloCF').innerText = 'VER/EDITAR EL CONTRATO FIRMADO';
+           document.getElementById('txtTituloCF').innerHTML = 'Selecciona el archivo que desees asociar a <b>CONTRATO FIRMADO</b>';
+           document.getElementById('secondaryLabelDetail').innerHTML = 'El documento que hayas elegido se almacenará de manera automática una vez que des clic en <i>Guardar</i>.';
+
+           document.getElementById('sendRequestButtoncf').classList.remove('hide');
+           heightIframe = '400px'
+       }else if(estatusProceso==3){
+           // document.getElementById('txtTituloCF').innerText = 'VER EL CONTRATO FIRMADO';
+           document.getElementById('txtTituloCF').innerHTML = 'Visualizando el contrato firmado <b>'+ nombreLote + '</b>';
+           document.getElementById('secondaryLabelDetail').innerHTML = '';
+           document.getElementById('sendRequestButtoncf').classList.add('hide');
+           heightIframe = '650px';
+       }
+       document.getElementById('dialoSection').classList.add('modal-lg');
+       let contratoFirmado = $(this).attr("data-contratoFirmado");
+       let ruta = general_base_url+'static/documentos/cliente/contratoFirmado/'+contratoFirmado;
+       contenidoHTMLCF += '<iframe id="inlineFrameExample" title="Inline Frame Example"\n' +
+           '  width="100%"\n' +
+           '  height="'+heightIframe+'"\n' +
+           '  src="'+ruta+'">\n' +
+           '</iframe>';
+
+       if(estatusProceso==2){
+           contenidoHTMLCF += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2 mt-4">\n' +
+               '                            <div class="" id="selectFileSectionResicioncf">\n' +
+               '                                <div class="file-gph">\n' +
+               '                                    <input class="d-none" type="file" required accept="application/pdf" id="contratoFirmado">\n' +
+               '                                    <input class="file-name" id="contratoFirmado-name" type="text" placeholder="No has seleccionada nada aún" readonly="">\n' +
+               '                                    <label class="upload-btn m-0" for="contratoFirmado"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>\n' +
+               '                                </div>\n' +
+               '                            </div>\n' +
+               '                        </div>';
+       }
+
+
+   }
+    // formularioArchivoscf
+    formularioArchivoscf.innerHTML = contenidoHTMLCF;
+
+    $("input:file").on("change", function () {
+        const target = $(this);
+        const relatedTarget = target.siblings(".file-name");
+        const fileName = target[0].files[0].name;
+        relatedTarget.val(fileName);
+    });
+    $(document).on("change", ".btn-file :file", function () {
+        const input = $(this),
+            numFiles = input.get(0).files ? input.get(0).files.length : 1,
+            label = input.val().replace(/\\/g, "/").replace(/.*\//, "");
+        input.trigger("fileselect", [numFiles, label]);
+    });
+    $('[data-toggle="tooltip"]').tooltip();
+});
+$(document).on("click", "#sendRequestButtoncf", function (e) {
+    e.preventDefault();
+    let flagEnviar = true;
+    let validacionArray = [];
+    let flagValidacion = 0;
+
+    if (editarFile == 1) {
+        if ($("#contratoFirmado")[0].files[0] == undefined) {
+            $("#spiner-loader").addClass('hide');
+            alerts.showNotification('top', 'right', 'Nada que actualizar', 'warning');
+            flagEnviar = false;
+        }else{
+            flagEnviar = true;
+        }
+    }
+    else if (editarFile == 0) {
+
+        if ($("#contratoFirmado")[0].files[0] == undefined) {
+            $("#spiner-loader").addClass('hide');
+            alerts.showNotification('top', 'right', 'Selecciona el contrato firmado', 'warning');
+            flagEnviar = false;
+        }
+        else {
+            flagEnviar = true;
+        }
+
+    }
+
+    if (flagEnviar) {
+        let data = new FormData();
+        // data.append("tipoProceso", flagProceso);
+        data.append("idLote", arrayCF['idLoteCF']);
+        data.append("nombreLoteOriginal", nombreLote);
+        data.append("idDocumento", arrayCF['idDocumento']);
+        data.append("idCliente", arrayCF['idClienteCF']);
+        data.append("editarFile", editarContrafoFirmado);
+        data.append('contratoFirmado', $("#contratoFirmado")[0].files[0]);
+        data.append('idCondominio', arrayCF['idCondominio'] );
+        data.append('nombreResidencial', arrayCF['nombreResidencial'] );
+        data.append('nombreCondominio', arrayCF['nombreCondominio'] );
+        data.append('nombreDocumento', arrayCF['nombreDocumento'] );
+        let flagEditarCF = ($("#contratoFirmado")[0].files[0] == undefined) ? 0 : 1;
+        data.append("flagEditarCF", flagEditarCF);
+        $.ajax({
+            type: 'POST',
+            url: 'contratoFirmadoR',
+            data: data,
+            contentType: false,
+            cache: false,
+            processData: false,
+            beforeSend: function () {
+            },
+            success: function (data) {
+                const res = JSON.parse(data);
+                if (res.code === 200) {
+                    alerts.showNotification(
+                        "top",
+                        "right",
+                        `El contrato firmado se ha cargado con éxito.`,
+                        "success"
+                    );
+                    reubicacionClientes.ajax.reload();
+                    $("#spiner-loader").addClass('hide');
+                    $("#contratoFirmadoModal").modal("hide");
+                    $("#spiner-loader").addClass('hide');
+                }
+                if (res.code === 400) {
+                    alerts.showNotification("top", "right", "ocurrió un error", "warning");
+                }
+                if (res.code === 500) {
+                    alerts.showNotification(
+                        "top",
+                        "right",
+                        "Oops, algo salió mal al subir el archivo, inténtalo de nuevo.",
+                        "warning"
+                    );
+                }
+            },
+            error: function () {
+                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            }
+        });
     }
 });

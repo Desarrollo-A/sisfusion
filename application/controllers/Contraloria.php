@@ -3459,7 +3459,7 @@ class Contraloria extends CI_Controller {
         $infoLote = $this->Contraloria_model->getNameLote($idLote);
 
         $proyecto = str_replace(' ', '', $infoLote->nombreResidencial);
-        $arr = explode("_", str_replace("ñ", "N", strtoupper($infoLote->nombreCondominio)));
+        $arr = explode("_", str_replace("ñ", "N", strtoupper($infoLote->nombre)));
         $clusterClean = implode("",$arr);
         $lote = str_replace(' ', '', $clusterClean);
         $numeroLote = preg_replace('/[^0-9]/','',$infoLote->nombreLote);
