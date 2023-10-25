@@ -1226,9 +1226,7 @@ if( isset( $_FILES ) && !empty($_FILES) ){
     }
 
 
-    public function getCommentsDU($user){
-        echo json_encode($this->Comisiones_model->getCommentsDU($user)->result_array());
-    }
+
     
     public function getDataMarketing($lote, $cliente){
         echo json_encode($this->Comisiones_model->getDataMarketing($lote, $cliente)->result_array());
@@ -2983,10 +2981,6 @@ public function getUsuariosRolBonos($rol)
     echo json_encode($this->Comisiones_model->getUsuariosRolBonos($rol)->result_array());
   }
 
-public function getUsuariosUM($rol)
-  {
-    echo json_encode($this->Comisiones_model->getUsuariosUM($rol)->result_array());
-  }
 
 
   public function TieneAbonos($id){
@@ -3045,11 +3039,7 @@ public function descuentos_historial()
   {
     echo json_encode($this->Comisiones_model->getLotesOrigen($user,$valor)->result_array());
   }
-  public function getLotesOrigen2($user,$valor)
-  {
-    
-    echo json_encode($this->Comisiones_model->getLotesOrigen2($user,$valor));
-  } 
+
 
    public function getLotesOrigenResguardo($user)
   {
@@ -3195,26 +3185,7 @@ public function getDescuentos2()
   echo json_encode($res);
 }
 
-public function altaNuevoDescuentoUM(){
 
-  $usuario = $this->input->post("usuarios");
-  $montoDescuento = str_replace(",",'',$this->input->post('montoDescuento'));
-  $montoFinalDescuento = str_replace("$",'',$montoDescuento);
-  $numeroMeses = $this->input->post("numeroMeses"); 
-  $montoMensualidad = str_replace(",",'',$this->input->post('montoMensualidad'));
-  $montoFinalMensualidad = str_replace("$",'',$montoMensualidad);
-  $descripcionAltaDescuento = $this->input->post("descripcionAltaDescuento"); 
-
-  $voBoUsuario = $this->Comisiones_model->validarNuevoDescuentoUM($usuario);
-
-  if($voBoUsuario > 0){
-    $data = 0;
-  }else{
-    $data = $this->Comisiones_model->altaNuevoDescuentoUM($usuario, $montoFinalDescuento, $numeroMeses, $montoFinalMensualidad, $descripcionAltaDescuento, $this->session->userdata('id_usuario')); 
-  }
-  
-  echo json_encode($data);
-}
     public function getDescuentos()
     {
       $res["data"] = $this->Comisiones_model->getDescuentos()->result_array();
@@ -4118,12 +4089,6 @@ public function SaveAjuste($opc = '')
 
 
 
-function toparDescuentoUniversidad(){
- 
-    $respuesta = array($this->Comisiones_model->toparDescuentoUniversidad($this->input->post("usuarioTopar"), $this->input->post("comentarioTopar") ));
-  echo json_encode( $respuesta );
-}
-
 
 
 public function getPagosFacturasBaja()
@@ -4781,11 +4746,6 @@ for ($d=0; $d <count($dos) ; $d++) {
      "sumaTotalComision" => $sumaTotalComision ));
   }
 
-  public function getPagosByUser($user,$mes,$anio){
-    $dat =  $this->Comisiones_model->getPagosByUser($user,$mes,$anio)->result_array();
-   echo json_encode( $dat);
-  }
-
 
 
   public function liquidadosDescuentos()
@@ -4831,22 +4791,7 @@ for ($d=0; $d <count($dos) ; $d++) {
         exit;
     }
 
-    function conglomerado_descuentos(){
-      $datos = array();
-      $datos["certificaciones"] = $this->Comisiones_model->getCertificaciones();
-      $this->load->view('template/header');
-      $this->load->view("ventas/conglomerado",$datos);
-  }
 
-    function fusionAcLi(){
-        $data['data']= $this->Comisiones_model->fusionAcLi();
-        if ($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }
-        exit;
-    }
 
     public function flujo_comisiones() {
       $this->load->view('template/header');
@@ -5141,11 +5086,7 @@ for ($d=0; $d <count($dos) ; $d++) {
       echo json_encode( array( "data" => $dat));
     }
 
-    public function getDataConglomerado($tipoDescuento)
-    {
-        $data = $this->Comisiones_model->fusionAcLi($tipoDescuento);
-        echo json_encode(array('data' => $data));
-    }
+
 
     // public function reactivarDescuento($idUsuario)
     // {
