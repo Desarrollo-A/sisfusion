@@ -1,9 +1,10 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
-<body>
+
+<body class="">
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
-
+ 
         <!-- Modals -->
         <div class="modal fade" id="modalDevolucionUM" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
@@ -18,50 +19,55 @@
             </div>
         </div>
         <!--END MODALS-->
-        <div class="content boxContent">
+           
+
+
+        
+    <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                <i class="material-icons">money_off</i>
+                                <i class="fas fa-building fa-2x"></i>
                             </div>
                             <div class="card-content">
                                 <div class="encabezadoBox">
                                     <h3 class="card-title center-align" >Reporte mensual de descuentos <b>Universidad Maderas</b></h3>
-                                </div>
+                                 </div>
                                 <div class="toolbar">
-                                    <div class="container-fluid p-0">
-                                        <div class="row">
-                                            <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                                                <div class="form-group d-flex justify-center align-center">
-                                                    <h4 class="title-tot center-align m-0">Total descontado:</h4>
-                                                    <p class="input-tot pl-1" name="totalDescontado" id="totalDescontado">$0.00</p>
-                                                </div>
+                                    <div class="container-fluid">
+                                        <div class="row aligned-row">
+
+                                        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                            <h4 class="title-tot center-align m-0">
+                                                    Total
+                                                    <p class="category input-tot pl-1" id="totalGeneral"></p>
+                                                </h4>
+                                            </div>
+
+                                            
+                                     
+                                        </div>
+                                        <div class="col-lg-6">
+                                        <div class="form-group is-empty">
+                                            <label class="control-label" for="anio">Año (<span class="isRequired">*</span>)</label>
+                                            <select name="anio" id="anio" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                        </div>
+                                    </div>
+
+                                        <div class="col-lg-6">
+                                            <div class="form-group is-empty">
+                                            <label class="control-label" for="mes">Mes</label>
+                                            <select name="mes" id="mes" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body"  required></select>
                                             </div>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                                <div class="form-group">
-                                                    <label class="control-label" for="mes">Año (<span class="isRequired">*</span>)</label>
-                                                    <select name="anio" id="anio" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
-                                                        
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                                <div class="form-group">
-                                                    <label class="control-label" for="mes">Mes</label>
-                                                    <select name="mes" id="mes" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body"  required>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
+
                                     </div>
                                 </div>
                                 <div class="material-datatables">
                                     <div class="form-group">
-                                        <table class="table-striped table-hover hide" id="historialUniversidadMaderas" name="historialUniversidadMaderas">
+                                        <table class="table-striped table-hover" id="tabla-historial" name="tabla-historial">
                                             <thead>
                                                 <tr>
                                                     <th>ID PAGO</th>
@@ -86,13 +92,10 @@
                 </div>
             </div>
         </div>
-        <?php $this->load->view('template/footer_legend');?>
+<?php $this->load->view('template/footer_legend');?>
     </div>
-
     <?php $this->load->view('template/footer');?>
     <script src="http://momentjs.com/downloads/moment.min.js"></script>
     <script src="<?= base_url() ?>dist/js/funciones-generales.js"></script>
-    <script src="<?= base_url() ?>dist/js/controllers/ventas/historialCapitalFechas.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/universidad/reporte_mensual.js"></script>
 </body>
-
- 

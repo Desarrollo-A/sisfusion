@@ -37,6 +37,11 @@ class Universidad extends CI_Controller
         $this->load->view("universidad/conglomerado",$datos);
     }
 
+    public function historialDescuentos(){
+      $this->load->view('template/header');
+      $this->load->view("universidad/reporte_mensual_view");
+    }
+
     function getDescuentosUniversidad($tipoDescuento){
         $data['data']= $this->Universidad_model->getDescuentosUniversidad($tipoDescuento);
         
@@ -102,12 +107,12 @@ class Universidad extends CI_Controller
     $comentario = $this->input->post("comentario");
 
     $cuantosLotes = count($datos);
-    $comentario=0;
+    $comentario = 0;
     for($i=0; $i <$cuantosLotes ; $i++) 
     { 
         $formatear = explode(",",$datos[$i]);
         $nameLoteComent = $formatear[3];
-        $LotesInvolucrados =  $LotesInvolucrados." ".$nameLoteComent.",\n"; // Disponible: $".number_format($montoComent, 2, '.', ',')."\n"; 
+        $LotesInvolucrados =  $LotesInvolucrados." ".$nameLoteComent.",\n";
     }
 
     $descuent0 = str_replace(",",'',$desc);
@@ -152,8 +157,8 @@ class Universidad extends CI_Controller
         $montoAinsertar = $monto - $descuento;
         $Restante = $monto - $montoAinsertar;
         $comision = $this->Universidad_model->obtenerID($id)->result_array();
-        $dat =  $this->Universidad_model->update_descuento($id,$descuento,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$usuario);
-        $dat =  $this->Universidad_model->insertar_descuento($usuario,$montoAinsertar,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata);
+          $dat =  $this->Universidad_model->update_descuento($id,$descuento,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$usuario);
+          $dat =  $this->Universidad_model->insertar_descuento($usuario,$montoAinsertar,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata);
     }
     echo json_encode($dat);    
   }
@@ -264,5 +269,41 @@ class Universidad extends CI_Controller
     }
     
     
+
+  public function updateCertificacion(){
+    $certificacion = $this->input->post('certificaciones');
+    $idPrestamo = $this->input->post('idDescuento');
+    $arr_update = array("estatus_certificacion" => $certificacion);
+                          
+    $update = $this->Universidad_model->updateCertificacion($idPrestamo  , $arr_update);
+    if($update){
+      $respuesta =  array(
+        "response_code" => 200,
+        "response_type" => 'success',
+        "message" => "Préstamo actualizado");
+      }else{
+        $respuesta =  array(
+          "response_code" => 400, 
+          "response_type" => 'error',
+          "message" => "Préstamo no actualizado, inténtalo más tarde.");
+        }
+        echo json_encode ($respuesta);
+  }
+
+
+  public function getDatosHistorialUM($proyecto,$condominio){
+    $dat =  $this->Universidad_model->getDatosHistorialUM($proyecto,$condominio)->result_array();
+   for( $i = 0; $i < count($dat); $i++ ){
+       $dat[$i]['pa'] = 0;
+   }
+   echo json_encode( array( "data" => $dat));
+  }
+  
+    
+
+
+
+
+
 
 }
