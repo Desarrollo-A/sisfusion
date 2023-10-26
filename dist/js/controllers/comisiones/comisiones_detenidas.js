@@ -139,7 +139,7 @@ $('#comisiones-detenidas-table').ready(function () {
                 data: function (d) {
                     let botton = '';
                     if (id_rol_general != 63 && id_rol_general != 4) {
-                        if(id_usuario_general == 2749 || id_usuario_general == 2807 || id_usuario_general == 2767	){
+                        if(id_usuario_general == 2749 || id_usuario_general == 2807 || id_usuario_general == 2767 || id_usuario_general == 4878	){
 
                             botton = `
                         <div class="d-flex justify-center">

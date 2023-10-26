@@ -600,7 +600,7 @@ class Reestructura_model extends CI_Model
     public function getReporteVentas() {
         $id_rol = $this->session->userdata('id_rol');
         $id_usuario = $id_rol == 6 ? $this->session->userdata('id_lider') : $this->session->userdata('id_usuario');
-        $validacionExtra = in_array($id_rol, array(3, 6)) ? "AND cl.id_gerente = $id_usuario" : $this->session->userdata('id_rol') == 7 ? "AND cl.id_asesor = $id_usuario" : "";
+        // $validacionExtra = in_array($id_rol, array(3, 6)) ? "AND cl.id_gerente = $id_usuario" : $this->session->userdata('id_rol') == 7 ? "AND cl.id_asesor = $id_usuario" : "";
         return $this->db->query("SELECT oxc1.nombre tipo_proceso, UPPER(CAST(re.descripcion AS varchar(100))) nombreResidencial, co.nombre nombreCondominio,  lo.nombreLote, lo.idLote, lo.idCliente, 
 		UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, sl.nombre estatusContratacion, sl.background_sl, sl.color, cl.fechaApartado,
         CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,

@@ -6,7 +6,7 @@ $('#mes').change(function() {
     }else{
         getAssimilatedCommissions(mes, anio);
     }
-    $('#tabla_historialGral').removeClass('hide');
+    $('#historialUniversidadMaderas').removeClass('hide');
 });
 
 $('#anio').change(function() {
@@ -19,49 +19,49 @@ $('#anio').change(function() {
         anio = 0;
     }
     getAssimilatedCommissions(mes, anio);
-    $('#tabla_historialGral').removeClass('hide');
+    $('#historialUniversidadMaderas').removeClass('hide');
 });
 
 var tr;
-var tabla_historialGral2 ;
+var historialUM ;
 var totaPen = 0;
 //INICIO TABLA QUERETARO***************************************
 let titulos = [];
 
-$('#tabla_historialGral thead tr:eq(0) th').each( function (i) {
+$('#historialUniversidadMaderas thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
     titulos.push(title);
     $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
     $('input', this).on('keyup change', function() {
-        if (tabla_historialGral2.column(i).search() !== this.value) {
-            tabla_historialGral2.column(i).search(this.value).draw();
+        if (historialUM.column(i).search() !== this.value) {
+            historialUM.column(i).search(this.value).draw();
             var total = 0;
-            var index = tabla_historialGral2.rows({
+            var index = historialUM.rows({
                 selected: true,
                 search: 'applied'
             }).indexes();
-            var data = tabla_historialGral2.rows(index).data();
+            var data = historialUM.rows(index).data();
             $.each(data, function(i, v) {
                 total += parseFloat(v.abono_neodata);
             });
             var to1 = formatMoney(numberTwoDecimal(total));
-            document.getElementById("myText_desU").value = to1;
+            document.getElementById("totalDescontado").value = to1;
         }
     });
 });
 
 function getAssimilatedCommissions(mes, anio) {
-    $('#tabla_historialGral').on('xhr.dt', function(e, settings, json, xhr) {
+    $('#historialUniversidadMaderas').on('xhr.dt', function(e, settings, json, xhr) {
         var total = 0;
         $.each(json.data, function(i, v) {
             total += parseFloat(v.abono_neodata);
         });
         var to = formatMoney(numberTwoDecimal(total));
-        document.getElementById("myText_desU").textContent = to;
+        document.getElementById("totalDescontado").textContent = to;
     });
 
-    $("#tabla_historialGral").prop("hidden", false);
-    tabla_historialGral2 = $("#tabla_historialGral").DataTable({
+    $("#historialUniversidadMaderas").prop("hidden", false);
+    historialUM = $("#historialUniversidadMaderas").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX : true,
@@ -178,7 +178,7 @@ function getAssimilatedCommissions(mes, anio) {
     });
 
 
-    $("#tabla_historialGral tbody").on("click", ".regresarpago", function(e){
+    $("#historialUniversidadMaderas tbody").on("click", ".regresarpago", function(e){
         e.preventDefault();
         e.stopImmediatePropagation();
 
@@ -187,17 +187,17 @@ function getAssimilatedCommissions(mes, anio) {
         nameuser = $(this).attr("data-nameuser");
         puesto = $(this).attr("data-puesto");
         monto = $(this).attr("data-monto");
-        $("#seeInformationModalAsimilados .modal-body").append(`
+        $("#modalDevolucionUM .modal-body").append(`
         <div><h4 class="card-title" text-align: center"><b>Cancelar descuento</b></h4></div>
         <p>¿Está seguro que desea cancelar el descuento del <b>${puesto} ${nameuser}</b>?</p>
         <div class="form-group">
         <input type="hidden" name="id_pago" id="id_pago" value="${id_pago}">
         <input type="hidden" name="monto" id="monto" value="${monto}">
-        <label>¿Cúal es el motivo de la cancelación? (<span class="isRequired">*</span>)</label>
+        <label>¿Cúal es el mótivo de la cancelación? (<span class="isRequired">*</span>)</label>
         <textarea class="text-modal" row="3" name="motivo" id="motivo" required></textarea>
         </div>`);
 
-        $("#seeInformationModalAsimilados .modal-body").append(`
+        $("#modalDevolucionUM .modal-body").append(`
         <div class="modal-footer">
         <button type="button" class="btn btn-danger btn-simple " data-dismiss="modal" onclick="cleanCommentsAsimilados()">Cerrar</button>
         <button type="submit" class="btn btn-primary" >Aceptar</button>
@@ -205,7 +205,7 @@ function getAssimilatedCommissions(mes, anio) {
         
         `);
 
-        $("#seeInformationModalAsimilados").modal();
+        $("#modalDevolucionUM").modal();
     });
 
 
@@ -218,7 +218,7 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
 });
 
 $(window).resize(function() {
-    tabla_historialGral2.columns.adjust();
+    historialUM.columns.adjust();
 });
 
 let meses = [
@@ -291,7 +291,7 @@ $('#anio').change(function () {
 
 
 function cleanCommentsAsimilados() {
-    $('#seeInformationModalAsimilados').modal('hide');
+    $('#modalDevolucionUM').modal('hide');
     var cancelacion = document.getElementsByClassName('cancelacion');
     $('.cancelacion').html('');
     cancelacion.innerHTML = '';
@@ -314,7 +314,7 @@ $("#form_baja").submit(function(e) {
                 if (data == 1) {
                     cleanCommentsAsimilados();
                     alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
-                    tabla_historialGral2.ajax.reload();
+                    historialUM.ajax.reload();
                 } else {
                     cleanCommentsAsimilados();
                     alerts.showNotification("top", "right", "Oops, algo salió mal. Error al intentar actualizar.", "warning");
@@ -328,7 +328,7 @@ $("#form_baja").submit(function(e) {
     }
 });
 
-$('#tabla_historialGral').on('draw.dt', function() {
+$('#historialUniversidadMaderas').on('draw.dt', function() {
     $('[data-toggle="tooltip"]').tooltip({
         trigger: "hover"
     });
