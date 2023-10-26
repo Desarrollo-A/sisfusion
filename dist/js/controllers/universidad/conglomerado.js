@@ -267,12 +267,26 @@ function loadTable(tipoDescuento) {
                         data-nombre="${d.nombre}" 
                         data-code="${d.cbbtton}"
                         data-descuento="${d.id_descuento}"
-                        data-certificacion="${d.idCertificacion}"
+                        data-certificacion="${d.id_certificacion}"
                         class="btn-data btn-gray certificado_op"
                         id="certificado_op" name="certificado_op"
                          title="Cambiar certifiacación"><i class="fas fa-closed-captioning"></i>
                         </button>
                                 
+
+                        <button value="${d.id_usuario}"
+                        data-code="${d.id_usuario}"
+                        data-nombre="${d.nombre}"
+                        data-value="${d.id_descuento}"
+                        data-code="${d.id_usuario}"
+                        data-descuento="${d.monto}"
+                        data-mensual="${d.pago_individual}"
+                        data-pendiente="${d.pendiente}"
+                        data-total="${d.monto}"
+                        data-fecha="${d.modificacion}"
+                        data-idCertificacion="${valor}"
+                        class="btn-data btn-acidGreen uniAdd" title="Editar suficiente"><i class="fas fa-money-check-alt"></i>
+                        </button>
 
                         <button href="#" 
                         value="${d.id_usuario}"
@@ -525,6 +539,9 @@ $('#montoDescuento').change(function () {
 $("#tabla-general").on("click", ".certificado_op", function () {
     id_descuento = $(this).attr("data-descuento");
     certificacion = $(this).attr("data-certificacion");
+ 
+    document.getElementById("certificaciones").value = certificacion;
+    $("#certificaciones").selectpicker('refresh');
     document.getElementById("idDescuento").value = id_descuento;
 
     $("#modalcertificado").modal();
@@ -550,7 +567,7 @@ $("#form_certificado").submit(function (e) {
             cache: false,
             processData: false,
             success: function (data) {
-                console.log(data)
+           
                 alerts.showNotification("top", "right", "Préstamo actualizado", "success");
                 $('#tabla-general').DataTable().ajax.reload(null, false);
                 $('#modalcertificado').modal('toggle');
@@ -776,7 +793,19 @@ $(document).on("click", ".uniAdd", function () {
 
     document.getElementById("fechaIncial").value = '';
 
-    document.getElementById("descuentoEscrito").value = '';
+    let date = new Date()
+
+    let day = date.getDate()
+    let month = date.getMonth() + 1
+    let year = date.getFullYear()
+
+    if(month < 10){
+        fechaIncial = day+"/0"+month+"/"+year
+    }else{
+        fechaIncial = day+"/"+month+"/"+year;
+    }
+   
+    document.getElementById("MontoDescontarCerti").value = '';
     // el que modificaremos    
     id_descuento = $(this).attr("data-value");
     //id_usuario perteneciente a ese id_user
@@ -785,11 +814,11 @@ $(document).on("click", ".uniAdd", function () {
     pago_mensual = $(this).attr("data-mensual");
     nombre = $(this).attr("data-nombre")
     descuento = $(this).attr("data-descuento");
-    fechaIncial = $(this).attr("data-fecha");
+   
     pendiente = $(this).attr("data-pendiente");//cantidad de dinero que falta
     total = $(this).attr("data-total"); //dinero que ha pagado al momento
     MontoDescontarCerti = $(this).attr("data-value");
-    valorCertificacion = $(this).attr("data-idCertificacion");
+
     // {document.getElementById("certificaciones").value = valorCertificacion;}
 
     if (descuento == total){
@@ -804,6 +833,7 @@ $(document).on("click", ".uniAdd", function () {
 
     cantidad_de_pagos = descuento / pago_mensual;//para saber en cuanto se dividieron los pagos
 
+    
     document.getElementById("fechaIncial").value = fechaIncial;
  
     document.getElementById("banderaLiquidado").value = banderaLiquidados;
@@ -834,69 +864,7 @@ $(document).on("click", ".uniAdd", function () {
     var Header_modal = document.getElementById('header_modal');
     Header_modal.innerHTML = titulo;
  
-    //    mensualidadesFaltantes = total / pago_mensual ;
-    //         mensualidadesFaltantesMostrar = valorPendiente  / pago_mensual ;         
-            // if ((mensualidadesFaltantesMostrar % 1)  == 0 ){
 
-            // }else{
-            //     if( 0 == Math.trunc(mensualidadesFaltantesMostrar))
-            //     {
-            //         if((mensualidadesFaltantesMostrar/mensualidadesFaltantesMostrar ) == 1)
-            //         {
-            //             mensualidadesFaltantesMostrar = 1;
-            //         }else{
-
-            //         }           
-            //     }else{
-
-            //         mensualidadesFaltantesMostrar =  Math.trunc(mensualidadesFaltantesMostrar);
-            //     }
-            // }
-            // if ((mensualidadesFaltantes % 1)  == 0 ){
-
-            // }else{
-            //     if( 0 == Math.trunc(mensualidadesFaltantes))
-            //     {
-            //         if((mensualidadesFaltantes/mensualidadesFaltantes ) == 1)
-            //         {
-
-            //             mensualidadesFaltantes = 1;
-            //         }else{
-                    
-            //         }
-            //     }else{
-            //             mensualidadesFaltantes =  Math.trunc(mensualidadesFaltantes);
-            //     }
-            // }
-            // if(banderaLiquidados){
-            //     document.getElementById("mensualidadesC").value = 1;
-            //     mensualidadesFaltantesMostrar = 1;
-            //     mensualidadesFaltantes = 1;
-            // }else{
-            //     mensualidadesFaltantesMostrar = valorPendiente  / pago_mensual ;
-            //     document.getElementById("mensualidadesC").value = Math.trunc( mensualidadesFaltantesMostrar);
-            // }
-
-
-            // ultimaMensualidad = document.getElementById("mensualidadesC").value
-            // Total_a_pagar = ultimaMensualidad * pago_mensual;
-
-            // sobrante = Total_a_pagar - total;
-
-            // //para agregar llo que ya se pago
-            // descuentoEscrito = document.getElementById("MontoDescontarCerti").value;
-         
-            // NuevasMensualidades= (pendiente)  / ultimaMensualidad ;
-
-            // if(banderaLiquidados){
-
-            //     sobrante = document.getElementById("MontoDescontarCerti").value;
-            //     sobrante =  total - sobrante ;
-            //     NuevasMensualidades = sobrante  / mensualidadesFaltantes;
-            // }
-            // document.getElementById("newMensualidades").value =  NuevasMensualidades.toFixed(2);
-            // //faltantes = mensualidadesFaltantes/mensual;
-            // document.getElementById("precioOrginal").value =   NuevasMensualidades.toFixed(2);
 
 });  
 
@@ -1000,14 +968,7 @@ $(document).on('input', '.MontoDescontarCerti', function(){
         loQueSedebe = document.getElementById("MontoDescontarCerti").value ;
         pagado = document.getElementById("dineroPagado").value ;  // lo que se ya se ha pagado
         pagos  = document.getElementById("mensualidadesC").value ;
-        console.log('mensualidadesC')
-        console.log(mensualidadesC)
-        console.log('loQueSedebe')
-        console.log(loQueSedebe)
-        console.log('pagado')
-        console.log(pagado)
-        console.log('pagos')
-        console.log(pagos)
+    
 
         banderaLiquidado  = document.getElementById("banderaLiquidado").value ;
         if(banderaLiquidado){
@@ -1061,6 +1022,7 @@ $(document).on('input', '.MontoDescontarCerti', function(){
     day = fecha.getDate()
     // const msg = new day;
     const FechaEnArreglo = fechaSeleccionada.split("/");
+  
     // fecha en arreglo es para poder entrar al mes posicion 0 es dia, 1  mes , año
     fechaComparar = (year + '-' + month + '-' + day);
     var f1 = new Date(year,month, day);
@@ -1069,26 +1031,18 @@ $(document).on('input', '.MontoDescontarCerti', function(){
     MesSelecionado = parseInt(FechaEnArreglo[1]);
     DiaSeleccionado = parseInt(FechaEnArreglo[0]);
     MesSistemas = parseInt(month+1);
-    console.log(FechaEnArreglo)
-    console.log('  // fecha FechaEnArreglo ')
-    // fecha f2 es para la fecha seleccionada 
-    // fecha f1 es para la fecha del sistema 
-    // Se compara las fechas son para 
-    console.log(f1)
-    console.log('  // fecha f1 es para la fecha del sistema ')
-    console.log(f2)
-    console.log('fecha f2 es para la fecha seleccionada ')
+
     if(  (f2 > f1 || f2 == f1)){
         // validamos que sea mayor la fecha seleccionada o que sean iguales
       
         if(DiaSeleccionado <= 10 ){
             banderaPagosActivos = 1;
-            console.log(1)
+    
             validacion =true;
                         // && MesSelecionado == MesSistemas  
         }else if(DiaSeleccionado  <= 10  ){
             banderaPagosActivos = 2 ;
-            console.log(1)
+  
             validacion =true;
         }else {
             alerts.showNotification("top", "right", "Se recomienda una fecha entre el primero al 10 de cada mes ", "info");
@@ -1109,7 +1063,7 @@ $(document).on('input', '.MontoDescontarCerti', function(){
         // estatus_certificacion  = document.getElementById("certificaciones").value;
     
             $.ajax({
-            url : 'descuentoUpdateCertificaciones',
+            url : 'descuentoActualizarCertificaciones',
             type : 'POST',
             dataType: "json",
             data: {
@@ -1126,7 +1080,7 @@ $(document).on('input', '.MontoDescontarCerti', function(){
               success: function(data) {
                
                 alerts.showNotification("top", "right", ""+data.message+"", ""+data.response_type+"");
-                document.getElementById('updateDescuento').disabled = false;
+                document.getElementById('updateDescuentoCertificado1').disabled = false;
                 $('#tabla-general').DataTable().ajax.reload(null, false );
                 
                 // toastr[response.response_type](response.message);

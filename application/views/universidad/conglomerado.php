@@ -115,7 +115,7 @@
     </div> -->
    <!-- inicia modal para editar descuento  -->
         <!--Modal para add costo universidad -->
-        <!-- <div class="modal fade" id="modalUni" nombre="modalUni" tabindex="-1" role="dialog"
+        <div class="modal fade" id="modalUni" nombre="modalUni" tabindex="-1" role="dialog"
             aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
                 <div class="modal-content">
@@ -220,8 +220,10 @@
                 </div>
         
             </div>
-        </div> -->
+        </div>
         <!-- Fin modal add costo Universidad -->
+
+        
    <!-- <div class="modal fade" id="editDescuento" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
