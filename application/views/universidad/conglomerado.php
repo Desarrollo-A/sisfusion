@@ -3,6 +3,37 @@
 
 <body class="">
     <div class="wrapper">
+    <style type="text/css">        
+            #modal_nuevas{
+                z-index: 1041!important;
+            }
+            #modal_vc{
+                z-index: 1041!important;
+            }
+            .fechaIncial, #fechaIncial{
+                background-color: #eaeaea !important;
+                border-radius: 27px 27px 27px  27px!important;
+                background-image: initial!important;
+                text-align: center!important;
+            }
+                
+            .endDate, #endDate{
+                background-color: #eaeaea !important;
+                border-radius: 0!important;
+                background-image: initial!important;
+                text-align: center!important;
+            }
+            .btn-fab-mini {
+                border-radius: 0 27px 27px 0 !important;
+                background-color: #eaeaea !important;
+                box-shadow: none !important;
+                height: 45px !important;
+            }
+            .btn-fab-mini span {
+                color: #929292;
+            }
+        </style>
+
         <?php $this->load->view('template/sidebar'); ?>
 
     <!-- <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
@@ -310,9 +341,100 @@
             </div>
         </div>
     </div> -->
+    <div class="modal fade" id="modalEditarDescuento" nombre="modalEditarDescuento" tabindex="-1" role="dialog"
+            aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                <form method="post" id="updateDescuentoCertificado">
+                    <div class="modal-header" id="header_modal" name="header_modal">
+                         <div class="col-lg-12 form-group m-1" id="tituloModalEditar" name="tituloModalEditar"></div>
+                    </div>
+                    
+                    <div class="modal-body " >
+                        <div class=" row col-md-12" >
+                            <div class="col-6 col-sm-6 col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                        <label class="label-gral">Fecha inicio descuento:</label> 
+                                        <input type="text" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" class="form-control datepicker endDate" style="display:none;" id="endDate"/>
+                                        <input type="text" class="form-control datepicker fechaIncial" id="fechaIncial" name="fechaIncial"  />     
+                                        </div>
+                            </div>
+                      
+                            <div class="col-md-4" style="display:none;">
+                                <div class="form-group">
+                                    <input class="form-control" type="text" name="id_descuento" id="id_descuento" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-4" style="display:none;">
+                                <div class="form-group">
+                                    <input class="form-control" type="text" name="total" id="total" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-4" style="display:none;">
+                                <div class="form-group">
+                                    <input class="form-control" type="text" name="abonado" id="abonado" readonly>
+                                </div>
+                            </div> 
+                            <div class="col-md-4" style="display:none;">
+                                <div class="form-group">
+                                    <input class="form-control" type="text" name="fecha_actual" id="fecha_actual" readonly>
+                                </div>
+                            </div>
+                            
+                            <div class="col-6 col-sm-6 col-md-6 col-lg-6">
+                                <div class="form-group text-left">
+                                <label class="label-gral ">Monto descuento actual</label>
+                                <input type="text" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" maxlength="10" class="form-control input-gral" name="nuevoMonto" id="nuevoMonto" oncopy="return false" onpaste="return false" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" onkeypress="return onlyNumbers(event)" required>
+
+                                
+                                </div>
+                            </div>
+
+                            <div class="col-6 col-sm-6 col-md-6 col-lg-6">
+                                <div class="form-group text-left">
+                                <label class="label-gral">Número mensualidades (<span class="isRequired">*</span>):</label> 
+                                <select class="selectpicker select-gral m-0 numeroMensualidades" name="numeroMensualidades" id="numeroMensualidades" title="SELECCIONA UNA OPCIÓN" required>
+                                    <option value="1">1 Mensualidad</option>
+                                    <option value="2">2 Mensualidades</option>
+                                    <option value="3">3 Mensualidades</option>
+                                    <option value="4">4 Mensualidades</option>
+                                    <option value="5">5 Mensualidades</option>
+                                    <option value="6">6 Mensualidades</option>
+                                    <option value="7">7 Mensualidades</option>
+                                    <option value="8">8 Mensualidades</option>
+                                    <option value="9">9 Mensualidades</option>
+                                    <option value="10">10 Mensualidades</option>
+                                    <option value="11">11 Mensualidades</option>
+                                </select>
+                                </div>
+                            </div>
+
+                            <div class="col-6 col-sm-6 col-md-6 col-lg-6">
+                                <div class="form-group text-left">
+                                <label class="label-gral">Monto por mensualidad:</label>
+
+                                <input type="number" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" maxlength="2" class="form-control input-gral" name="nuevoMontoMensual" id="nuevoMontoMensual" oncopy="return false" onpaste="return false" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" onkeypress="return onlyNumbers(event)" required>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                    
+                                
+                    <button class="btn btn-danger btn-simple" type="button" data-dismiss="modal" data-toggle="modal"> CANCELAR </button>
+
+                    <button  name="updateDescuentoCertificado1"  id="updateDescuentoCertificado1"
+                            class="btn btn-primary updateDescuentoCertificado1">GUARDAR</button>
+                    </div>
+                    </form>
+                </div>
+        
+            </div>
+        </div>
 
 
-    <div class="modal fade scroll-styles" id="historialLogsPagos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<div class="modal fade scroll-styles" id="historialLogsPagos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -341,6 +463,50 @@
         </div>
     </div>
 
+
+    <div class="modal fade scroll-styles" id="modalCertificacion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <form method="post" id="form_certificado">
+                    <div class="modal-header">
+                        <h3 class="modal-title text-center">Asignar certificación</h3>
+                        <p class="category input-tot pl-1 text-center" id="nombreUsuario" name="nombreUsuario"></p>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-6 col-sm-6 col-md-6 col-lg-6">
+                            <div class="form-group">
+                                <label class="label">Estatus certificación</label>
+                                <select class="selectpicker select-gral certificaciones" name="certificaciones" id="certificaciones">
+                                    <?php if(isset($certificaciones)){ foreach($certificaciones as $certificacion){ ?>
+                                        <option value="<?= $certificacion->id_opcion ?>"><?= $certificacion->nombre ?> </option>
+                                    <?php } } ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="display:none;">
+                            <div class="form-group">
+                                <input class="form-control" type="text" name="idDescuento" id="idDescuento" readonly>
+                            </div>
+                        </div>
+                        <div class="col-6 col-sm-6 col-md-6 col-lg-6 m-0 pt-0">
+                            <div class="form-group">
+                                <label class="label">Detalle de estatus</label> 
+                                <span class="small text-gray textDescripcion" id="textDescripcion" name="textDescripcion"></span>        
+                            </div>
+                        </div>
+                    </div>    
+                    <div class="modal-footer">
+                        <button class="btn btn-danger btn-simple" type="button" data-dismiss="modal" 
+                        data-toggle="modal"> CANCELAR </button>
+                        <button  type="submit" name="certificacionUpdate" id="certificacionUpdate"
+                        class="btn btn-primary certificacionUpdate">ACTUALIZAR </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+  
 <div class="modal fade scroll-styles" id="seeInformationModalP" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
@@ -442,7 +608,9 @@
                         </div>
                         <input class="form-control" type="hidden" id="usuarioId" name="usuarioId" value="">
                         <input class="form-control" type="hidden" id="saldoComisiones" name="saldoComisiones">
-                        <input class="form-control" type="hidden" id="arrayLotes" name="arrayLotes[]">
+
+                        <select id="arrayLotes" name="arrayLotes[]" class="hide" multiple></select>
+
                         
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
@@ -1062,30 +1230,7 @@
                                                     Pendiente
                                                     <p class="category input-tot pl-1" id="totalPendiente"></p>
                                                 </h4>
-                                            </div> 
-
-                                            <!-- <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                                                <div class="form-group text-center">
-                                                    <h4 class="title-tot center-align m-0">Monto hoy: </h4>
-                                                    <p class="category input-tot pl-1" id="monto_label">
-                                                    </p>
-                                                </div>
-                                            </div> -->
-                                            <!-- <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                                                <div class="form-group text-center">
-                                                    <h4 class="title-tot center-align m-0">Pagos hoy: </h4>
-                                                    <p class="category input-tot pl-1" id="pagos_label">
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-2">
-                                                <div class="form-group text-center">
-                                                    <h4 class="title-tot center-align m-0">Lotes hoy: </h4>
-                                                    <p class="category input-tot pl-1" id="lotes_label">
-                                                    </p>
-                                                </div>
-                                            </div> -->
-                                                                                       
+                                            </div>                                     
                                         </div>
                                         <div class="col-lg-12">
                                         <div class="form-group is-empty">
