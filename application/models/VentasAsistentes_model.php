@@ -134,7 +134,7 @@ class VentasAsistentes_model extends CI_Model {
                 } else if (in_array($id_usuario, array(7097, 7096, 10924, 7324, 5620, 13094))) // GRISELL MALAGON, EDGAR AGUILAR Y DALIA PONCE
                     $filtroSede = "AND l.ubicacion IN ('4', '9', '13', '14')"; // Ciudad de México, San Miguel de Allende, Estado de México Occidente y Estado de México Norte
                 else if (in_array($id_usuario, array(29, 7934))) // FERNANDA MONJARAZ Y SANDRA CAROLINA GUERRERO GARCIA
-                    $filtroSede = "AND l.ubicacion IN ('5', '12')"; // León y Guadalajara
+                    $filtroSede = "AND l.ubicacion IN ('5', '12', '16')"; // León y Guadalajara
                 else if(in_array($id_usuario, array(13050))){
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider)";
                     $filtroSede = " AND l.ubicacion IN ($id_sede, '4')";
@@ -145,7 +145,10 @@ class VentasAsistentes_model extends CI_Model {
                 } else if ($id_usuario == 13521) { // LETY LIZBETH ROMERO RIVERA	
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider)";
                     $filtroSede = "";
-                }
+                } else if ($id_usuario == 13770) { // ITAYETZI PAULINA CAMPOS GONZALEZ	
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 21, 1545)";
+                    $filtroSede = "";
+                } 
             }
             else { // SON EEC
                 $filtroGerente = "AND cl.id_gerente IN ($id_lider)";
@@ -325,7 +328,7 @@ class VentasAsistentes_model extends CI_Model {
                 } else if (in_array($id_usuario, array(7097, 7096, 10924, 7324, 5620, 13094))) // GRISELL MALAGON, EDGAR AGUILAR Y DALIA PONCE
                     $filtroSede = "AND l.ubicacion IN ('4', '9', '13', '14')"; // Ciudad de México, San Miguel de Allende, Estado de México Occidente y Estado de México Norte
                 else if (in_array($id_usuario, array(29, 7934))) // FERNANDA MONJARAZ Y SANDRA CAROLINA GUERRERO GARCIA
-                    $filtroSede = "AND l.ubicacion IN ('5', '12')"; // León y Guadalajara
+                    $filtroSede = "AND l.ubicacion IN ('5', '12', '16')"; // León y Guadalajara
                 else if(in_array($id_usuario, array(13050))){
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider)";
                     $filtroSede = " AND l.ubicacion IN ($id_sede, '4')";
@@ -336,7 +339,10 @@ class VentasAsistentes_model extends CI_Model {
                 } else if ($id_usuario == 13521) { // LETY LIZBETH ROMERO RIVERA	
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider)";
                     $filtroSede = "";
-                }
+                } else if ($id_usuario == 13770) { // ITAYETZI PAULINA CAMPOS GONZALEZ	
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 21, 1545)";
+                    $filtroSede = "";
+                } 
             }
             else { // SON EEC
                 $filtroGerente = "AND cl.id_gerente IN ($id_lider)";
