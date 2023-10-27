@@ -39,7 +39,8 @@
                                                 <th>EMPRESA</th>
                                                 <th>USUARIO</th>
                                                 <th>ID DE USUARIO</th>
-                                                <th>FECHA DE PAGO</th>
+                                                <th>FECHA DEVOLUCIÓN</th>
+                                                <th>FECHA DESCUENTO APLICADO</th>
                                                 <th>PUESTO</th>
                                                 <th>ABONO </th>
                                                 <th>SEDE</th>
