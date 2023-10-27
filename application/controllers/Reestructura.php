@@ -913,6 +913,7 @@ class Reestructura extends CI_Controller{
         $docAnterior = (is_null($docInfo))
             ? $this->Reestructura_model->obtenerDocumentacionActiva($idLoteAnterior, $idClienteAnterior)
             : $docInfo;
+        $totalPropuestas = count($this->Reestructura_model->getNotSelectedLotes($idLoteAnterior));
 
         $documentacion = [];
         $modificado = date('Y-m-d H:i:s');
@@ -1045,6 +1046,13 @@ class Reestructura extends CI_Controller{
                     'estatus_validacion' => 0
                 );
 
+                continue;
+            }
+
+            if ($doc['id_opcion'] == 42 && $totalPropuestas === 0) {
+                continue;
+            }
+            if ($doc['id_opcion'] == 43 && $totalPropuestas <= 1) {
                 continue;
             }
 
