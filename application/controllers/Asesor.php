@@ -3201,17 +3201,13 @@ class Asesor extends CI_Controller {
             $idLoteAnterior = $this->Reestructura_model->buscarLoteAnteriorPorIdClienteNuevo($id_cliente)->idLote;
             $totalPropuestas = count($this->Reestructura_model->getNotSelectedLotes($idLoteAnterior)) + 1; // +1 para tomar en cuenta el seleccionado
 
-            $ramasContratos = ($totalPropuestas === 2) ? '42' : ($totalPropuestas === 3) ? '42, 43' : '';
-            $nombreRamasContratos = ($totalPropuestas === 2) ? ', CONTRATO 1 CANCELADO' : ($totalPropuestas === 3) ? ', CONTRATO 1 CANCELADO, CONTRATO 2 CANCELADO' : '';
+            $ramasContratos = ($totalPropuestas === 2)? '42' : (($totalPropuestas === 3) ? '42, 43' : '');
+            $nombreRamasContratos = ($totalPropuestas === 2) ? ', CONTRATO 1 CANCELADO' : (($totalPropuestas === 3) ? ', CONTRATO 1 CANCELADO, CONTRATO 2 CANCELADO' : '');
 
             if ($dataClient[0]['personalidad_juridica'] == 1) { // PARA PM TAMBIÉN PEDIMOS LA CARTA PODER
-                $documentosExtra = in_array($dataClient[0]['proceso'], [2, 4])
-                    ? ", 34, 35, 41, $ramasContratos"
-                    : "";
-                $documentsNumber += in_array($dataClient[0]['proceso'], [2, 4]) ? (2 + $totalPropuestas) : 0;
-                $documentosExtra_label = in_array($dataClient[0]['proceso'], [2, 4])
-                    ? ", CARTA PODER, RESCISIÓN DE CONTRATO FIRMADA, CONTRATO ELEGIDO FIRMA CLIENTE$nombreRamasContratos"
-                    : "";
+                $documentosExtra = ", 34, 35, 41, $ramasContratos";
+                $documentsNumber += (2 + $totalPropuestas);
+                $documentosExtra_label = ", CARTA PODER, RESCISIÓN DE CONTRATO FIRMADA, CONTRATO ELEGIDO FIRMA CLIENTE$nombreRamasContratos";
 
                 $error_message = "Asegúrate de incluir los documentos: IDENTIFICACIÓN OFICIAL$comprobante_domicilio_label $documentosExtra_label, RECIBOS DE APARTADO Y ENGANCHE Y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.";
                 $documentOptions = $dataClient[0]['personalidad_juridica'] == 2 ? "2 $comprobante_domicilio , 4 $documentosExtra" : "2 $comprobante_domicilio, 4, 10, 11, 12 $documentosExtra";
@@ -3229,6 +3225,8 @@ class Asesor extends CI_Controller {
 
             return $this->validarDocumentacion($idLote, $id_cliente, $documentOptions, $documentsNumber, $error_message);
         }
+
+        // TODO: Falta la validación de reestructura
 
         return true;
     }
