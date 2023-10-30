@@ -292,8 +292,8 @@ function formatNumberG(n) {
  */
 function convertDateDDMMYYYYToYYYYMMDD(date)
 {
-  const parts = date.split('/');
-  return `${parts[2]}-${parts[1]}-${parts[0]}`;
+  const [day, month, year] = date.split('/');
+  return `${year}-${(month.length > 1) ? month : '0'+month}-${(day.length > 1) ? day : '0'+day}`;
 }
 
 /** Función para dejar solo dos decimales */
@@ -348,3 +348,13 @@ function visorArchivo(rutaArchivo, nombreArchivo){
   });
   $('#sb-container').css('z-index', 9999);
 }
+
+
+function replaceAll(text, busca, reemplaza) {
+  while (text.toString().indexOf(busca) != -1)
+      text = text.toString().replace(busca, reemplaza);
+  return text;
+}
+
+
+

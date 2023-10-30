@@ -3099,4 +3099,79 @@ class Contraloria extends CI_Controller {
         $data = $this->Contraloria_model->getAllDsByLider($this->session->userdata('id_lider'));
         echo json_encode($data);
     }
+
+    public function getCambioRLContraloria($idLote) {
+        $datos = array();
+        $datos = $this->Contraloria_model->getCambioRL($idLote);
+        if($datos != null) {
+            echo json_encode($datos);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    public function selectRL() {
+        echo json_encode($this->Contraloria_model->getCatalogsRL()->result_array());
+    }
+
+    public function selectSede() {
+        echo json_encode($this->Contraloria_model->getSedeRl()->result_array());
+    }
+
+    public function selectStatusLote() {
+        echo json_encode($this->Contraloria_model->getStatusLoteRl()->result_array());
+    }
+
+    public function updateRL()
+    {
+   
+        $idLote=$this->input->post('idLote');
+        $idCliente=$this->input->post('idCliente');
+        $rl = $this->input->post('rl');
+
+        $dataToUpdate = array("rl"=> $rl, "modificado_por" => $this->session->userdata('id_usuario'));
+        $responseUpdate = $this->General_model->updateRecord("clientes", $dataToUpdate, "idLote", $idLote);
+
+            $data['message'] = 'OK';
+            echo json_encode($data);
+    }
+
+    public function updateSede()
+    {
+        $idSede=$this->input->post('sede');
+        $id_usuario = $this->session->userdata('id_usuario');
+        $idLote=$this->input->post('idLote');
+
+        $dataToUpdate = array("ubicacion"=> $idSede, "usuario" => $this->session->userdata('id_usuario'));
+        $responseUpdate = $this->General_model->updateRecord("lotes", $dataToUpdate, "idLote", $idLote);
+
+            $data['message'] = 'OK';
+            echo json_encode($data);
+    }
+
+    public function updateStatusLote()
+    {
+        $idEstatuslote=$this->input->post('lote');
+        $id_usuario = $this->session->userdata('id_usuario');
+        $idLote=$this->input->post('idLote');
+
+        $dataToUpdate = array("idStatusLote"=> $idEstatuslote, "usuario" => $this->session->userdata('id_usuario'));
+        $responseUpdate = $this->General_model->updateRecord("lotes", $dataToUpdate, "idLote", $idLote);
+
+            $data['message'] = 'OK';
+            echo json_encode($data);
+    }
+
+    public function generarNumContrato($idLote): string
+    {
+        $infoLote = $this->Contraloria_model->getNameLote($idLote);
+
+        $proyecto = str_replace(' ', '', $infoLote->nombreResidencial);
+        $arr = explode("_", str_replace("ñ", "N", strtoupper($infoLote->nombre)));
+        $clusterClean = implode("",$arr);
+        $lote = str_replace(' ', '', $clusterClean);
+        $numeroLote = preg_replace('/[^0-9]/','',$infoLote->nombreLote);
+
+        return $proyecto.$lote.$numeroLote;
+    }
 }
