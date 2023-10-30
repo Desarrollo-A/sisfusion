@@ -1,0 +1,101 @@
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+<link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
+
+<body class="">
+    <div class="wrapper">
+        <?php $this->load->view('template/sidebar'); ?>
+ 
+        <!-- Modals -->
+        <div class="modal fade" id="modalDevolucionUM" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    </div>
+                    <form id="form_baja" name="form_baja" method="post">
+                        <div class="modal-body cancelacion"></div>
+                        <div class="modal-footer" ></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!--END MODALS-->
+           
+
+
+        
+    <div class="content boxContent">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-header card-header-icon" data-background-color="goldMaderas">
+                                <i class="fas fa-building fa-2x"></i>
+                            </div>
+                            <div class="card-content">
+                                <div class="encabezadoBox">
+                                    <h3 class="card-title center-align" >Reporte mensual de descuentos <b>Universidad Maderas</b></h3>
+                                 </div>
+                                <div class="toolbar">
+                                    <div class="container-fluid">
+                                        <div class="row aligned-row">
+
+                                        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                            <h4 class="title-tot center-align m-0">
+                                                    Total
+                                                    <p class="category input-tot pl-1" id="totalGeneral"></p>
+                                                </h4>
+                                            </div>
+
+                                            
+                                     
+                                        </div>
+                                        <div class="col-lg-6">
+                                        <div class="form-group is-empty">
+                                            <label class="control-label" for="anio">Año (<span class="isRequired">*</span>)</label>
+                                            <select name="anio" id="anio" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                        </div>
+                                    </div>
+
+                                        <div class="col-lg-6">
+                                            <div class="form-group is-empty">
+                                            <label class="control-label" for="mes">Mes</label>
+                                            <select name="mes" id="mes" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body"  required></select>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="material-datatables">
+                                    <div class="form-group">
+                                        <table class="table-striped table-hover" id="tabla-historial" name="tabla-historial">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID PAGO</th>
+                                                    <th>LOTE</th>  
+                                                    <th>EMPRESA</th>          
+                                                    <th>ID USUARIO</th>
+                                                    <th>NOMBRE</th>
+                                                    <th>PUESTO</th>
+                                                    <th>PLAZA</th>
+                                                    <th>DESCUENTO</th>
+                                                    <th>CREADO POR</th>
+                                                    <th>FECHA DE CREACIÓN</th>
+                                                    <th>ACCIONES</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+<?php $this->load->view('template/footer_legend');?>
+    </div>
+    <?php $this->load->view('template/footer');?>
+    <script src="http://momentjs.com/downloads/moment.min.js"></script>
+    <script src="<?= base_url() ?>dist/js/funciones-generales.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/universidad/reporte_mensual.js"></script>
+</body>
