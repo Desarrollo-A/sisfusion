@@ -214,9 +214,9 @@ class Reestructura extends CI_Controller{
     public function setReestructura(){
         $this->db->trans_begin();
         $idCliente = $this->input->post('idCliente');
-        $idAsesor = $this->session->userdata('id_usuario');
+        $idAsesor = $this->input->post('idAsesor');
         $nombreAsesor = $this->session->userdata('nombre') . ' ' . $this->session->userdata('apellido_paterno') . ' ' . $this->session->userdata('apellido_materno');
-        $idLider = $this->session->userdata('id_lider');
+        $idLider = $this->input->post('idLider');
 		$clienteAnterior = $this->General_model->getClienteNLote($idCliente)->row();
         $idClienteAnterior = $clienteAnterior->id_cliente;
         $loteAOcupar = $clienteAnterior->idLote;
@@ -228,7 +228,7 @@ class Reestructura extends CI_Controller{
         $loteNuevoInfo = $this->Reestructura_model->obtenerLotePorId($loteAOcupar);
         $documentacionActiva = $this->Reestructura_model->obtenerDocumentacionActiva($clienteAnterior->idLote, $idClienteAnterior);
 
-        $clienteNuevo = $this->copiarClienteANuevo($clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso);
+        $clienteNuevo = $this->copiarClienteANuevo($clienteAnterior, $idAsesor, $idLider, $lineaVenta, 3);
         $idClienteInsert = $clienteNuevo[0]['lastId'];
 
         if (!$idClienteInsert) {
@@ -270,7 +270,7 @@ class Reestructura extends CI_Controller{
             return;
         }
 
-        if (!$this->copiarDSAnteriorAlNuevo($idClienteAnterior, $idClienteInsert)) {
+        if (!$this->copiarDSAnteriorAlNuevo($idClienteAnterior, $idClienteInsert, $loteAOcupar)) {
             $this->db->trans_rollback();
 
             echo json_encode([
@@ -366,6 +366,7 @@ class Reestructura extends CI_Controller{
         $idLoteOriginal = $this->input->post('idLoteOriginal');
         $statusPreproceso = $this->input->post('statusPreproceso');
         $idCliente = $this->input->post('idCliente');
+        $proceso = $this->input->post('proceso');
         $totalLotes = count($idLotes);
         $flagConteo = 0;
         $arrayNoDisponible = '';
@@ -373,7 +374,7 @@ class Reestructura extends CI_Controller{
             $dataDisponible = $this->Reestructura_model->checarDisponibleRe($elementoLote);
 
             if (count($dataDisponible) > 0) {
-                if ($dataDisponible[0]['idLote'] == $elementoLote && ($dataDisponible[0]['idStatusLote'] == 15 || $dataDisponible[0]['idStatusLote'] == 1)) {//se checa que el devuelto si este en 15 y sea el que s emandó
+                if ($dataDisponible[0]['idLote'] == $elementoLote && ($dataDisponible[0]['idStatusLote'] == 15 || $dataDisponible[0]['idStatusLote'] == 1 || $dataDisponible[0]['idStatusLote'] == 2)) {//se checa que el devuelto si este en 15 y sea el que s emandó
                     $flagConteo = $flagConteo + 1;
                     $arrayNoDisponible .= '- ID LOTE: ' . $dataDisponible[0]['idLote'] . ' (' . $dataDisponible[0]['nombreLote'] . '),';
                 }
@@ -411,7 +412,7 @@ class Reestructura extends CI_Controller{
             foreach ($idLotes as $idLote) {
                 $arrayLoteApartado = array(
                     'idLote' => $idLote,
-                    'idStatusLote' => 16,
+                    'idStatusLote' => $proceso,
                     'usuario' => $this->session->userdata('id_usuario')
                 );
 
@@ -527,7 +528,7 @@ class Reestructura extends CI_Controller{
         }
 
         $dataUpdateCliente = array(
-            'proceso' => 2,
+            'proceso' => $proceso,
         );
 
         if (!$this->General_model->updateRecord("clientes", $dataUpdateCliente, "id_cliente", $idClienteAnterior)){
@@ -712,6 +713,9 @@ class Reestructura extends CI_Controller{
                 continue;
             } else if ($clave == 'plan_comision') {
                 $dataCliente = array_merge([$clave =>  $proceso == 3 ? 64 : ($proceso == 2 ? 65 : 66) ], $dataCliente);
+                continue;
+            } else if ($clave == 'status') {
+                $dataCliente = array_merge([$clave =>  1], $dataCliente);
                 continue;
             } else if ($clave == 'proceso') {
                 $dataCliente = array_merge([$clave =>  $proceso], $dataCliente);

@@ -76,16 +76,16 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote) {
     let contenidoHTMLinfoCL = `
     <div class="col-12 col-sm-12 col-md-12 col-lg-12">
         <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-left">
-            <p class="m-0 ">Cliente. ${nombreCliente}</p>
-            <p class="m-0">Lote. ${nombreLote}</p>
-            <p class="m-0 text-left">Domicilio particular. ${domicilio_particular}</p>
+            <p class="m-0"><b>Cliente.</b>${nombreCliente}</p>
+            <p class="m-0"><b>Lote. </b>${nombreLote}</p>
+            <p class="m-0 text-left"><b>Domicilio particular. </b>${domicilio_particular}</p>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-left">
-            <p class="m-0">Correo. ${correo}</p>
-            <p class="m-0">Teléfono. ${telefono1}</p>
-            <p class="m-0">Ocupación. ${ocupacion}</p>
-            <p class="m-0">INE. ${ine}</p>
-            <p class="m-0">Estado civil. ${estadoCivil}</p>
+        <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-right">
+            <p class="m-0"><b>Correo. </b>${correo}</p>
+            <p class="m-0"><b>Teléfono. </b>${telefono1}</p>
+            <p class="m-0"><b>Ocupación. </b>${ocupacion}</p>
+            <p class="m-0"><b>INE. </b>${ine}</p>
+            <p class="m-0"><b>Estado civil. </b>${estadoCivil}</p>
         </div>
     </div>`;
 
@@ -235,69 +235,47 @@ function loadCopropietarios(datos){
         datos.map((elemento, index)=>{
             let nombreCopropietario = elemento.nombre + ' ' + elemento.apellido_paterno+' '+elemento.apellido_materno;
             contenidoHTML += '<div class="card-body mb-3">';
-            contenidoHTML += '  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center" style="background-color: #0b3e6f;color: #f2f2f2;border-radius: 12px 12px 0px 0px;"><span style="font-size: 1.5rem">'+nombreCopropietario+'</span></div>';
-            contenidoHTML += '      <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding-bottom: 10px;border-top: 1px solid #ddd;margin-bottom: 25px;background-color: #F6FBFF;\n' +
-                '    border-radius: 0px 0px 12px 12px;">';
-            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">';
-            contenidoHTML += '              <div class="form-group label-floating">';
-            contenidoHTML += '                  <label class="label-on-left m-0">NOMBRE</label>';
+            contenidoHTML += '  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center"><span style="font-size: 1.5rem; text-transform: uppercase;">'+nombreCopropietario+'</span></div>';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 text-left">';
+            contenidoHTML += '                  <label class="control-label">Nombre</label>';
             contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.nombre+'"/>';
-            contenidoHTML += '              </div>';
             contenidoHTML += '          </div>';
-            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">';
-            contenidoHTML += '              <div class="form-group label-floating">';
-            contenidoHTML += '                  <label class="label-on-left m-0">APELLIDO PATERNO</label>';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 text-left">';
+            contenidoHTML += '                  <label class="control-label">Apellido paterno</label>';
             contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.apellido_paterno+'"/>';
-            contenidoHTML += '              </div>';
             contenidoHTML += '          </div>';
-            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">';
-            contenidoHTML += '              <div class="form-group label-floating">';
-            contenidoHTML += '                  <label class="label-on-left m-0">APELLIDO MATERNO</label>';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 text-left">';
+            contenidoHTML += '                  <label class="control-label">Apellido materno</label>';
             contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.apellido_materno+'"/>';
-            contenidoHTML += '              </div>';
             contenidoHTML += '          </div>';
-            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-6 col-lg-6">';
-            contenidoHTML += '              <div class="form-group label-floating">';
-            contenidoHTML += '                  <label class="label-on-left m-0">CORREO</label>';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-6 col-lg-6 text-left">';
+            contenidoHTML += '                  <label class="control-label">Correo</label>';
             contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.correo+'"/>';
-            contenidoHTML += '              </div>';
             contenidoHTML += '          </div>';
-            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-6 col-lg-6">';
-            contenidoHTML += '              <div class="form-group label-floating">';
-            contenidoHTML += '                  <label class="label-on-left m-0">TELÉFONO</label>';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-6 col-lg-6 text-left">';
+            contenidoHTML += '                  <label class="control-label">Teléfono</label>';
             contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.telefono_2+'"/>';
-            contenidoHTML += '              </div>';
             contenidoHTML += '          </div>';
-            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-12 col-lg-12">';
-            contenidoHTML += '              <div class="form-group label-floating">';
-            contenidoHTML += '                  <label class="label-on-left m-0">DIRECCIÓN</label>';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-12 col-lg-12 text-left">';
+            contenidoHTML += '                  <label class="control-label">Dirección</label>';
             contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.domicilio_particular+'"/>';
-            contenidoHTML += '              </div>';
             contenidoHTML += '          </div>';
-            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-3 col-lg-4">';
-            contenidoHTML += '              <div class="form-group label-floating">';
-            contenidoHTML += '                  <label class="label-on-left m-0">ESTADO CIVIL</label>';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 text-left">';
+            contenidoHTML += '                  <label class="control-label">Estado civil</label>';
             contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.estado_civil+'"/>';
-            contenidoHTML += '              </div>';
             contenidoHTML += '          </div>';
-            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-3 col-lg-4">';
-            contenidoHTML += '              <div class="form-group label-floating">';
-            contenidoHTML += '                  <label class="label-on-left m-0">OCUPACIÓN</label>';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 text-left">';
+            contenidoHTML += '                  <label class="control-label">Ocupación</label>';
             contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.ocupacion+'"/>';
-            contenidoHTML += '              </div>';
             contenidoHTML += '          </div>';
-            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-3 col-lg-4">';
-            contenidoHTML += '              <div class="form-group label-floating">';
-            contenidoHTML += '                  <label class="label-on-left m-0">FECHA NACIMIENTO</label>';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 text-left">';
+            contenidoHTML += '                  <label class="control-label">Fecha nacimiento</label>';
             contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.fecha_nacimiento+'"/>';
-            contenidoHTML += '              </div>';
             contenidoHTML += '          </div>';
-            contenidoHTML += '     </div>';
-            contenidoHTML += '  <hr>';
             contenidoHTML += '</div>';
         });
     }else{
-        contenidoHTML += '<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12"><center><h5 class="fs-2">SIN COPROPIETARIOS</h5></center></div>';
+        contenidoHTML += '<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12"><center><h5 class="fs-2">Sin copropietarios</h5></center></div>';
     }
 
     contenedorContenido.innerHTML = contenidoHTML;
@@ -528,7 +506,6 @@ $(document).on('click', '.btn-abrir-contratoFirmado', function(){
    if(flagEditar == 0){//es primera ves no hay archivo
        document.getElementById('txtTituloCF').innerHTML = 'Selecciona el archivo que desees asociar a <b>CONTRATO FIRMADO</b>';
        document.getElementById('secondaryLabelDetail').innerHTML = 'El documento que hayas elegido se almacenará de manera automática una vez que des clic en <i>Guardar</i>.';
-
        document.getElementById('dialoSection').classList.remove('modal-lg');
        contenidoHTMLCF += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2">\n' +
            '                            <div class="" id="selectFileSectionResicioncf">\n' +
@@ -543,7 +520,6 @@ $(document).on('click', '.btn-abrir-contratoFirmado', function(){
        if(estatusProceso==2){
            document.getElementById('txtTituloCF').innerHTML = 'Archivo actual asociado a <b>CONTRATO FIRMADO</b>';
            document.getElementById('secondaryLabelDetail').innerHTML = 'Si selecciona algún archivo y da clic en el botón de "<b>Guardar</b>", este reemplezara al mostrado.';
-
            document.getElementById('sendRequestButtoncf').classList.remove('hide');
            heightIframe = '400px'
        }else if(estatusProceso==3){
@@ -562,7 +538,7 @@ $(document).on('click', '.btn-abrir-contratoFirmado', function(){
            '</iframe>';
 
        if(estatusProceso==2){
-           contenidoHTMLCF += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2 mt-3 p-0">\n' +
+           contenidoHTMLCF += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2 mt-4">\n' +
                '                            <div class="" id="selectFileSectionResicioncf">\n' +
                '                                <div class="file-gph">\n' +
                '                                    <input class="d-none" type="file" required accept="application/pdf" id="contratoFirmado">\n' +
@@ -591,6 +567,7 @@ $(document).on('click', '.btn-abrir-contratoFirmado', function(){
     });
     $('[data-toggle="tooltip"]').tooltip();
 });
+
 $(document).on("click", "#sendRequestButtoncf", function (e) {
     e.preventDefault();
     let flagEnviar = true;
