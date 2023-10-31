@@ -228,7 +228,7 @@ class Reestructura extends CI_Controller{
         $loteNuevoInfo = $this->Reestructura_model->obtenerLotePorId($loteAOcupar);
         $documentacionActiva = $this->Reestructura_model->obtenerDocumentacionActiva($clienteAnterior->idLote, $idClienteAnterior);
 
-        $clienteNuevo = $this->copiarClienteANuevo($clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso);
+        $clienteNuevo = $this->copiarClienteANuevo($clienteAnterior, $idAsesor, $idLider, $lineaVenta, 3);
         $idClienteInsert = $clienteNuevo[0]['lastId'];
 
         if (!$idClienteInsert) {
@@ -270,7 +270,7 @@ class Reestructura extends CI_Controller{
             return;
         }
 
-        if (!$this->copiarDSAnteriorAlNuevo($idClienteAnterior, $idClienteInsert)) {
+        if (!$this->copiarDSAnteriorAlNuevo($idClienteAnterior, $idClienteInsert, $loteAOcupar)) {
             $this->db->trans_rollback();
 
             echo json_encode([
@@ -337,7 +337,6 @@ class Reestructura extends CI_Controller{
             ]);
             return;
         }
-        
 
         if ($this->db->trans_status() === FALSE){
             $this->db->trans_rollback();
@@ -994,7 +993,7 @@ class Reestructura extends CI_Controller{
 
         // Ciclo para las nuevas ramas a agregar
         foreach ($expedienteNuevo as $doc) {
-            if ($doc['id_opcion'] == 33) {
+            if ($doc['id_opcion'] == 33 || $doc['id_opcion'] == 36) {
                 $expRescision = $this->Reestructura_model->obtenerDatosClienteReubicacion($idLoteAnterior);
 
                 copy(

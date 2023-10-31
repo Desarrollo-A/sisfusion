@@ -533,7 +533,7 @@ class Reestructura_model extends CI_Model
         $query = $this->db->query("SELECT l.nombreLote, pxl.*, dxc.rescision,
         CONCAT(dxc.nombre,' ', dxc.apellido_paterno,' ', dxc.apellido_materno) AS nombreCliente,
         oxc.nombre AS estadoCivil, dxc.ine, dxc.domicilio_particular,
-        dxc.correo, dxc.telefono1, dxc.ocupacion
+        dxc.correo, dxc.telefono1, dxc.ocupacion, dxc.tipo
         FROM propuestas_x_lote pxl 
         INNER JOIN lotes l ON pxl.id_lotep=l.idLote
         INNER JOIN datos_x_cliente dxc ON pxl.idLote=dxc.idLote

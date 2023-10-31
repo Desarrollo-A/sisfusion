@@ -3226,7 +3226,16 @@ class Asesor extends CI_Controller {
             return $this->validarDocumentacion($idLote, $id_cliente, $documentOptions, $documentsNumber, $error_message);
         }
 
-        // TODO: Falta la validación de reestructura
+        if ($dataClient[0]['proceso'] == 3) {
+            $documentosExtra = ', 46';
+            $documentsNumber += 1;
+            $documentosExtra_label = ', DOCUMENTO REESTRUCTURA FIRMA CLIENTE';
+
+            $error_message = "Asegúrate de incluir los documentos: IDENTIFICACIÓN OFICIAL$comprobante_domicilio_label $documentosExtra_label, RECIBOS DE APARTADO Y ENGANCHE Y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.";
+            $documentOptions = $dataClient[0]['personalidad_juridica'] == 2 ? "2 $comprobante_domicilio , 4 $documentosExtra" : "2 $comprobante_domicilio, 4, 10, 11, 12 $documentosExtra";
+
+            return $this->validarDocumentacion($idLote, $id_cliente, $documentOptions, $documentsNumber, $error_message);
+        }
 
         return true;
     }
