@@ -61,18 +61,16 @@ class Reestructura extends CI_Controller{
 	public function getProyectosDisponibles(){
 		$idProyecto = $this->input->post('idProyecto');
 		$superficie = $this->input->post('superficie');
-		$tipoLote = $this->input->post('tipoLote');
 
-		$data = $this->Reestructura_model->getProyectosDisponibles($idProyecto, $superficie, $tipoLote);
+		$data = $this->Reestructura_model->getProyectosDisponibles($idProyecto, $superficie);
         echo json_encode($data);
     }
 
 	public function getCondominiosDisponibles(){
 		$idProyecto = $this->input->post('idProyecto');
 		$superficie = $this->input->post('superficie');
-		$tipoLote = $this->input->post('tipoLote');
 
-		$data = $this->Reestructura_model->getCondominiosDisponibles($idProyecto, $superficie, $tipoLote);
+		$data = $this->Reestructura_model->getCondominiosDisponibles($idProyecto, $superficie);
         if ($data != null) {
             echo json_encode($data);
         } else {
@@ -1499,8 +1497,9 @@ class Reestructura extends CI_Controller{
     public function setLoteDisponible()
     {
         $dataUpdateLote = [
-            'idStatusLote' => $this->input->post('tipoEstatusRegreso') == 1 ? 15: 1,
-            'usuario' => $this->session->userdata('id_usuario')
+            'idStatusLote' => $this->input->post('tipoProceso') == 3 ? 2 : $this->input->post('tipoEstatusRegreso') == 1 ? 15: 1,
+            'usuario' => $this->session->userdata('id_usuario'),
+            'estatus_preproceso' => $this->input->post('tipoProceso') == 3 ? 0 : 1
         ];
 
         $responseUpdateLote = $this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $this->input->post('idLote'));
