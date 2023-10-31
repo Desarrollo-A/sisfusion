@@ -70,10 +70,7 @@ $('#tabla_asimilados thead tr:eq(0) th').each( function (i) {
             if (tabla_asimilados2.column(i).search() !== this.value) {
                 tabla_asimilados2.column(i).search(this.value).draw();
                 var total = 0;
-                var index = tabla_asimilados2.rows({
-                selected: true,
-                search: 'applied'
-            }).indexes();
+                var index = tabla_asimilados2.rows({ selected: true, search: 'applied' }).indexes();
                 var data = tabla_asimilados2.rows(index).data();
                 $.each(data, function(i, v) {
                     total += parseFloat(v.impuesto);
@@ -88,7 +85,7 @@ $('#tabla_asimilados thead tr:eq(0) th').each( function (i) {
 });
 
 function getAssimilatedCommissions(proyecto, condominio){
-    $('#tabla_asimilados').on('xhr.dt', function(e, settings, json, xhr) {
+    $('#tabla_asimilados').on('xhr.dt', function(json) {
         var total = 0;
         $.each(json.data, function(i, v) {
             total += parseFloat(v.impuesto);
@@ -112,7 +109,7 @@ function getAssimilatedCommissions(proyecto, condominio){
                 exportOptions: {
                     columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
                     format: {
-                        header: function (d, columnIdx) {
+                        header: function (columnIdx) {
                             return ' ' + titulos[columnIdx-1] + ' ';
                         }
                     }
@@ -335,7 +332,7 @@ function getAssimilatedCommissions(proyecto, condominio){
             targets:   0,
             searchable:false,
             className: 'dt-body-center',
-            render: function (d, type, full, meta){
+            render: function (full){
                 if(full.estatus == 4){
                     if(full.id_comision){
                         return '<input type="checkbox" name="idTQ[]" class="individualCheck" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
@@ -436,13 +433,11 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     .columns.adjust();
 });
 
-//Función para pausar la solicitud
 $("#form_interes").submit( function(e) {
     e.preventDefault();
 }).validate({
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
-        console.log(data);
         data.append("id_pago_i", id_pago_i);
         $.ajax({
             url: general_base_url + "Pagos/despausar_solicitud/",
@@ -452,7 +447,7 @@ $("#form_interes").submit( function(e) {
             processData: false,
             dataType: 'json',
             method: 'POST',
-            type: 'POST', // For jQuery < 1.9
+            type: 'POST',
             success: function(data){
                 if( data[0] ){
                     $("#modal_nuevas").modal('toggle' );
@@ -471,8 +466,6 @@ $("#form_interes").submit( function(e) {
     }
 });
 
-
-// Selección de CheckBox
 $(document).on("click", ".individualCheck", function() {
     totaPen = 0;
     tabla_asimilados2.$('input[type="checkbox"]').each(function () {
@@ -483,15 +476,14 @@ $(document).on("click", ".individualCheck", function() {
             row = tabla_asimilados2.row(tr).data();
             totaPen += parseFloat(row.impuesto); 
         }
-        // Al marcar todos los CheckBox Marca CB total
         if( totalChecados.length == totalCheckbox.length )
             $("#all").prop("checked", true);
         else 
-            $("#all").prop("checked", false); // si se desmarca un CB se desmarca CB total
+            $("#all").prop("checked", false);
     });
     $("#totpagarPen").html(formatMoney(numberTwoDecimal(totaPen)));
 });
-    // Función de selección total
+
 function selectAll(e) {
     tota2 = 0;
     if(e.checked == true){
@@ -515,10 +507,10 @@ function selectAll(e) {
     }
 }
 
-$('body').tooltip({
-    selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
-    trigger: 'hover',
-    container: 'body'
-}).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
-    $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
-});
+// $('body').tooltip({
+//     selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
+//     trigger: 'hover',
+//     container: 'body'
+// }).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
+//     $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
+// });

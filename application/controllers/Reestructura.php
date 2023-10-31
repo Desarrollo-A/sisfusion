@@ -1,10 +1,9 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 class Reestructura extends CI_Controller{
-	public function __construct()
-	{
+	public function __construct() {
 		parent::__construct();
-        $this->load->model(array('Reestructura_model','General_model', 'caja_model_outside', 'Contraloria_model'));
+        $this->load->model(array('Reestructura_model','General_model', 'caja_model_outside', 'Contraloria_model', 'Clientes_model'));
         $this->load->library(array('session','form_validation', 'get_menu','permisos_sidebar'));
 		$this->load->helper(array('url', 'form'));
 		$this->load->database('default');
@@ -54,7 +53,7 @@ class Reestructura extends CI_Controller{
     }
     
     public function getEstadoCivil(){
-        $data = $this->Reestructura_model->getEstadoCivil();
+        $data = $this->Clientes_model->getCivilStatus()->result_array();
         echo json_encode($data);
     }
 
@@ -94,22 +93,16 @@ class Reestructura extends CI_Controller{
 		$this->load->view('template/header');
         $this->load->view("reestructura/reestructura_view");
     }
-
-    public function lista_proyecto(){
-        $bandera = $this->input->post('bandera');
-		if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_usuario') == 10878 || $this->session->userdata('id_rol') == 4)
-			echo json_encode($this->Reestructura_model->get_proyecto_listaCancelaciones()->result_array());
-		else if($this->session->userdata('id_usuario') == 5107 && $bandera == 1) // MJ: SELECT DE LA VISTA LIBERAR
-            echo json_encode($this->Reestructura_model->get_proyecto_lista_yola()->result_array());
-        else // MJ: SELECT DE LA VISTA reestructura
-            echo json_encode($this->Reestructura_model->get_proyecto_lista(1)->result_array());
+    
+    public function listaLiberacionRes(){
+        echo json_encode($this->Reestructura_model->get_liberacion_reestructura()->result_array());
     }
 
 	public function lista_catalogo_opciones(){
-		echo json_encode($this->Reestructura_model->get_catalogo_resstructura()->result_array());
+		echo json_encode($this->Reestructura_model->get_catalogo_reestructura()->result_array());
 	}
 
-	public function insertarOpcionN (){
+	public function insertarCatalogo (){
 		$idOpcion = $this->Reestructura_model->insertOpcion();
 		$idOpcion = $idOpcion->lastId;
 		$dataPost = $_POST;
@@ -132,17 +125,22 @@ class Reestructura extends CI_Controller{
 		}
 	}
 
-	public function getHistorial($id_prospecto){
-        echo json_encode($this->Reestructura_model->historialModel($id_prospecto)->result_array());
+	public function getHistorial($idLote){
+        echo json_encode($this->Reestructura_model->historialModel($idLote)->result_array());
     }
 
 	public function validarLote(){
 
 		$dataPost = $_POST;
 		$datosId["idLote"] = $dataPost['idLote'];
-		$datos["opcionReestructura"] = $dataPost['opcionReestructura'];
-		$datos["comentarioReubicacion"] = $dataPost['comentario'];
+		$datos["opcionReestructura"] = $dataPost['opcionCatalogo'];
+		$datos["comentarioReubicacion"] = $dataPost['comentarioCatalogo'];
 		$datos["usuario"] = $this->session->userdata('id_usuario');
+
+        if($datos["comentarioReubicacion"] == ''){
+            $datos["comentarioReubicacion"] = "SIN COMENTARIOS";
+        }
+
         $update = $this->General_model->updateRecord('lotes', $datos, 'idLote', $datosId["idLote"]);
 
 		if ($update == TRUE) {
@@ -154,8 +152,8 @@ class Reestructura extends CI_Controller{
 		} 
 	}
 
-    public function insetarCliente($idLote)
-    {
+    public function insertarInformacionCli ($idLote){
+
         $dataPost = $_POST;
 
         $datos["idLote"] = $dataPost['idLote'];
@@ -168,37 +166,46 @@ class Reestructura extends CI_Controller{
         $datos["estado_civil"] = $dataPost['estadoCli'];
         $datos["ine"] = $dataPost['ineCLi'];
         $datos["ocupacion"] = $dataPost['ocupacionCli'];
-        $datCliente = $this->Reestructura_model->getDatosCliente($idLote);
+        $datCliente = $this->Reestructura_model->getDatosClienteTemporal($idLote);
 
-        $this->movimientosCopropietarios($dataPost['idLote'], $dataPost);
-
-        if (empty($datCliente)) {
-            $insert = $this->Reestructura_model->insertarCliente($datos);
-            echo ($insert) ? json_encode(1) : json_encode(0);
-            return;
-        }
-
-        $update = $this->General_model->updateRecord('datos_x_cliente', $datos, 'idLote', $idLote);
-        echo ($update) ? json_encode(1) : json_encode(0);
+        if($datCliente == ''){
+            $datos["rescision"] = NULL;
+            $datos["fecha_creacion"] = date('Y-m-d H:i:s');
+            $datos["creado_por"] = $this->session->userdata('id_usuario');
+            $datos["fecha_modificacion"] = date('Y-m-d H:i:s');
+            $datos["modificado_por"] = $this->session->userdata('id_usuario');
+            $insert = $this->General_model->addRecord('datos_x_cliente', $datos);
+            if ($insert == TRUE) {
+                $response['message'] = 'SUCCESS';
+                echo json_encode(1);
+            } else {
+                $response['message'] = 'ERROR';
+                echo json_encode(0);
+            }
+        }else{
+            $datos["modificado_por"] = $this->session->userdata('id_usuario');
+            $update = $this->General_model->updateRecord('datos_x_cliente', $datos, 'idLote', $idLote);
+            if ($update == TRUE) {
+                $response['message'] = 'SUCCESS';
+                echo json_encode(1);
+            } else {
+                $response['message'] = 'ERROR';
+                echo json_encode(0);
+            }
+        } 
     }
 
 	public function getRegistros(){
         $index_proyecto = $this->input->post('index_proyecto');
-        $dato = $this->Reestructura_model->get_valor_lote($index_proyecto);
+        $bandera = $this->input->post('bandera');
+        $dato = $this->Reestructura_model->get_valor_lote($index_proyecto, $bandera);
         if ($dato != null) {
             echo json_encode($dato);
         }else{
             echo json_encode(array());
         }
     }
-
-    public function obtenerRegistrosLiberar()
-    {
-        $proyecto = $this->input->post('index_proyecto');
-        $datos = $this->Reestructura_model->obtenerLotesLiberar($proyecto);
-        echo json_encode($datos);
-    }
-
+    
 	public function aplicarLiberacion(){
 		$dataPost = $_POST;
         $update = $this->Reestructura_model->aplicaLiberacion($dataPost);

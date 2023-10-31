@@ -181,7 +181,57 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
         },
         {
             data: function (d) {
-                return `<div class="d-flex justify-center">${botonesAccionReubicacion(d)}</div>`;
+                let btns = '';
+                let editar = 0;
+                let btnShow = 'fa-upload';
+                if(d.id_estatus_preproceso == 2){
+                    if(d.totalCorridas==3){
+                        editar = 1;
+                        btnShow = 'fa-edit';
+                    }
+                }else if(d.id_estatus_preproceso == 3){
+                    if(d.totalContratos==3){
+                        editar = 1;
+                        btnShow = 'fa-edit';
+
+                    }
+                }
+
+                const BTN_PROPUESTAS =  `<button class="btn-data btn-blueMaderas btn-asignar-propuestas" data-toggle="tooltip" data-placement="left" title="${d.id_estatus_preproceso == 0 ? 'ASIGNAR PROPUESTAS' : 'ACTUALIZAR PROPUESTAS'}" data-idCliente="${d.idCliente}" data-tipoLote="${d.tipo_lote}" data-idProyecto="${d.idProyecto}" data-statusPreproceso="${d.id_estatus_preproceso}"><i class="fas fa-user-edit"></i></button>`;
+                const BTN_AVANCE =  `<button class="btn-data btn-green btn-avanzar" data-toggle="tooltip" data-placement="left" title="ENVIAR A ${ESTATUS_PREPROCESO[d.id_estatus_preproceso + 1]}" data-idCliente="${d.idCliente}" data-tipoTransaccion="${d.id_estatus_preproceso}"><i class="fas fa-thumbs-up"></i></button>`;
+                const BTN_INFOCLIENTE =  `<button class="btn-data btn-green btn-informacion-cliente" data-toggle="tooltip" data-placement="left" data-idCliente="${d.idCliente}" data-idLote="${d.idLote}"><i class="fas fa-user-check"></i></button>`;
+                const BTN_SUBIR_ARCHIVO =  `<button class="btn-data btn-blueMaderas btn-abrir-modal" data-toggle="tooltip" data-placement="left" title="CARGAR DOCUMENTACIÓN" data-idCliente="${d.idCliente}" data-idLote="${d.idLote}" data-nombreLote="${d.nombreLote}" data-estatusLoteArchivo="${d.status}" data-editar="${editar}" data-rescision="${d.rescision}" data-id_dxc="${d.id_dxc}" data-tipoTransaccion="${d.id_estatus_preproceso}"><i class="fas ${btnShow}"></i></button>`;
+
+                if (d.id_estatus_preproceso == 0 && id_rol_general == 3)
+                    btns += BTN_PROPUESTAS;
+                else if (d.id_estatus_preproceso == 1 && id_rol_general == 3){
+                    btns += BTN_PROPUESTAS;
+                    if(d.idLoteXcliente == null){
+                        btns += BTN_INFOCLIENTE;
+                    }else{
+                        btns += BTN_AVANCE;
+                        btns += BTN_INFOCLIENTE;
+                    }
+                }
+                else if (d.id_estatus_preproceso == 2 && id_rol_general == 17) {
+                    if (d.totalCorridas == 3)
+                        btns += BTN_AVANCE;
+                        btns += BTN_SUBIR_ARCHIVO
+                }
+                else if (d.id_estatus_preproceso == 3 && id_rol_general == 15) {
+                    if (d.totalContratos == 3 && d.totalRescision == 1)
+                        btns += BTN_AVANCE;
+                        btns += BTN_SUBIR_ARCHIVO    
+                }
+                else if (d.id_estatus_preproceso == 4 && id_rol_general == 6)
+                    btns += BTN_AVANCE;
+                else if (d.id_estatus_preproceso == 5) {
+                    if(d.idProyecto == PROYECTO.NORTE || d.idProyecto == PROYECTO.PRIVADAPENINSULA){
+                        btns +=  `<button class="btn-data btn-sky btn-reestructurar" data-toggle="tooltip" data-placement="left" title="REESTRUCTURAR" data-idCliente="${d.idCliente}"><i class="fas fa-map-marker"></i></button>`;
+                    }
+                        btns += `<button class="btn-data btn-green btn-reubicar" data-toggle="tooltip" data-placement="left" title="REUBICAR CLIENTE" data-idCliente="${d.idCliente}" data-idProyecto="${d.idProyecto}" data-tipoLote="${d.tipo_lote}"><i class="fas fa-route"></i></button>`;
+                }
+                return `<div class="d-flex justify-center">${btns}</div>`;
             }
         }
     ],
@@ -359,18 +409,7 @@ $(document).on('click', '.btn-asignar-propuestas', function () {
     getPropuestas(idLoteOriginal, statusPreproceso, idProyecto, superficie);
 });
 
-const cerrarModalPropuestas = (preproceso) => {
-    if (preproceso != 1) {
-        hideModal();
-        return;
-    }
-
-    if (validarLotesRequeridos($('#infoLotesSeleccionados .lotePropuesto').length)) {
-        hideModal();
-    }
-}
-
-$(document).on('click', '.infoUser', async function (){
+$(document).on('click', '.btn-informacion-cliente', async function (){
     $('#ineCLi').val('');
     $("#estadoCli").empty();
 
@@ -488,120 +527,6 @@ $(document).on('click', '.infoUser', async function (){
         $("#spiner-loader").addClass('hide');
 
     }, 'json');
-});
-
-const validateEmail = (email) => {
-    return email.match(
-        /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    );
-}
-
-const validarCorreo = (idCorreoInput, idMsgLbl) => {
-    const $result = $(idMsgLbl);
-    const email = $(idCorreoInput).val();
-    $result.text('');
-
-    if(validateEmail(email)){
-        $result.text('El correo es válido');
-        $result.css('color', 'rgb(26 159 10)');
-    } else{
-        $result.text('El correo es inválido.');
-        $result.css('color', 'red');
-    }
-    return false;
-}
-
-$(document).on('click', '#guardarCliente', function (){
-    const idLote = $('#idLote').val();
-    const telefonoCli = $('#telefonoCli').val();
-    const correoCli = $('#correoCli').val();
-    const domicilioCli = $('#domicilioCli').val();
-    const ineCLi = $('#ineCLi').val();
-    const ocupacionCli = $('#ocupacionCli').val();
-
-    if(ineCLi == ''){
-        alerts.showNotification("top", "right", "Captura la INE", "warning");
-        return;
-    }
-
-    if (telefonoCli == '' || telefonoCli == null){
-        alerts.showNotification("top", "right", "Captura el teléfono", "warning");
-        return;
-    }
-
-    if (correoCli == '' || correoCli == null){
-        alerts.showNotification("top", "right", "Captura el correo", "warning");
-        return;
-    }
-
-    if(!validateEmail(correoCli)){
-        alerts.showNotification("top", "right", "Capture el correo de forma correcta", "warning");
-        return;
-    }
-
-    if (domicilioCli == '' || domicilioCli == null){
-        alerts.showNotification("top", "right", "Captura el domicilio", "warning");
-        return;
-    }
-
-    if(ocupacionCli == '' || ocupacionCli == null){
-        alerts.showNotification("top", "right", "Captura la ocupación", "warning");
-        return;
-    }
-
-    if (
-        !validateInputArray('nombre[]') ||
-        !validateInputArray('apellido_p[]') ||
-        !validateInputArray('apellido_m[]') ||
-        !validateInputArray('telefono2[]') ||
-        !validateInputArray('correo[]') ||
-        !validateInputArray('fecha_nacimiento[]') ||
-        !validateInputArray('domicilio[]') ||
-        !validateInputArray('estado_civil[]') ||
-        !validateInputArray('ocupacion[]')
-    ) {
-        alerts.showNotification("top", "right", "Captura toda la información obligatoria de copropietarios", "warning");
-        return;
-    }
-
-    if (!validarCorreoInputArray('correo[]')) {
-        alerts.showNotification("top", "right", "Los correos de los copropietarios deben tener el formato correcto", "warning");
-        return;
-    }
-
-    let datos = new FormData($("#formInfoCliente")[0]);
-
-    $('#formCopropietarios').serializeArray().forEach(({name, value}) => {
-        datos.append(name, value);
-    });
-    datos.append('id_cop_eliminar', copropietariosEliminar.join());
-
-    $("#spiner-loader").removeClass('hide');
-
-    $.ajax({
-        method: 'POST',
-        url: general_base_url + 'Reestructura/insetarCliente/'+ idLote,
-        data: datos,
-        processData: false,
-        contentType: false,
-        success: function(data) {
-            if (data == 1) {
-                hideModal();
-                alerts.showNotification("top", "right", "Información capturada con éxito.", "success");
-                $("#spiner-loader").addClass('hide');
-                $('#ineCLi').val('');
-                $('#telefonoCli').val('');
-                $('#correoCli').val('');
-                $('#domicilioCli').val('');
-                $('#ocupacionCli').val('');
-                $('#reubicacionClientes').DataTable().ajax.reload(null, false);
-            }
-        },
-        error: function(){
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-            $("#spiner-loader").addClass('hide');
-        }
-    });
 });
 
 $(document).on('click', '.btn-reubicar', function () {
@@ -1436,12 +1361,7 @@ const agregarCopropietario = (copropietario = null) => {
                                     </div>
                                     <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-right">
                                         <span class="fs-2">
-                                            <i onclick="eliminarCopropietario(${idDiv}, '${idCopropietario}')"
-                                                id="eliminarIcon${idDiv}"
-                                                class="fa fa-close"
-                                                data-toggle="tooltip" 
-                                                data-placement="left"
-                                                title="ELIMINAR COPROPIETARIO"></i>
+                                            <i onclick="eliminarCopropietario(${idDiv}, '${idCopropietario}')" id="eliminarIcon${idDiv}" class="fa fa-close" data-toggle="tooltip" data-placement="left" title="ELIMINAR COPROPIETARIO"></i>
                                         </span>
                                     </div>
                                 </div>
