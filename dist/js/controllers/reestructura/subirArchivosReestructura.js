@@ -139,8 +139,10 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote) {
         });
         if (flagProceso == 3) {
             //se esta subiendo contrato se debe pedir uno adicional
+            const archivoLbl = (datos[0]['tipo'] == 1) ? 'la rescisión del contrato' : 'el documento de reestructura';
+
             contenidoHTML += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2"><hr>\n' +
-                '                            <h6 class="text-left"><b>Subir la rescisión del contrato: </b>' + nombreLote + '<span class="text-red">*</span></h6>\n' +
+                '                            <h6 class="text-left"><b>Subir '+archivoLbl+': </b>' + nombreLote + '<span class="text-red">*</span></h6>\n' +
                 '                            <div class="" id="selectFileSectionResicion">\n' +
                 '                                <div class="file-gph">\n' +
                 '                                    <input class="d-none" type="file" required accept="application/pdf" id="Resicion">\n' +
@@ -187,10 +189,13 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote) {
                 '                           </div>' +
                 '                        </div>';
         });
+
         if (flagProceso == 3) {
             //se esta subiendo contrato se debe pedir uno adicional
+            const archivoLbl = (datos[0]['tipo'] == 1) ? 'la rescisión del contrato' : 'el documento de reestructura';
+
             contenidoHTML += ' <div class="col col-xs-12 col-sm-12 col-md-10 col-lg-10 mb-2"><hr>\n' +
-                '                            <h6 class="text-left"><b>Subir la rescisión del contrato</b>:' + nombreLote + '</h6>\n' +
+                '                            <h6 class="text-left"><b>Subir '+archivoLbl+'</b>:' + nombreLote + '</h6>\n' +
                 '                            <div class="" id="selectFileSectionResicion">\n' +
                 '                                <div class="file-gph">\n' +
                 '                                    <input class="d-none" type="file" required accept="application/pdf" id="Resicion">\n' +
@@ -384,7 +389,8 @@ $(document).on("click", "#sendRequestButton", function (e) {
 
         if (flagProceso == 3 && $("#Resicion")[0].files[0] == undefined) {
             $("#spiner-loader").addClass('hide');
-            alerts.showNotification('top', 'right', 'Selecciona archivo de rescisión', 'warning');
+            const archivoLbl = (datos[0]['tipo'] == 1) ? 'archivo de rescisión' : 'documento de reestructura';
+            alerts.showNotification('top', 'right', `Selecciona ${archivoLbl}`, 'warning');
         }
         else {
             if (flagEnviar) {

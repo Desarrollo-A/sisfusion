@@ -337,7 +337,6 @@ class Reestructura extends CI_Controller{
             ]);
             return;
         }
-        
 
         if ($this->db->trans_status() === FALSE){
             $this->db->trans_rollback();
@@ -917,6 +916,7 @@ class Reestructura extends CI_Controller{
         $docAnterior = (is_null($docInfo))
             ? $this->Reestructura_model->obtenerDocumentacionActiva($idLoteAnterior, $idClienteAnterior)
             : $docInfo;
+        $totalPropuestas = count($this->Reestructura_model->getNotSelectedLotes($idLoteAnterior));
 
         $documentacion = [];
         $modificado = date('Y-m-d H:i:s');
@@ -997,7 +997,7 @@ class Reestructura extends CI_Controller{
 
         // Ciclo para las nuevas ramas a agregar
         foreach ($expedienteNuevo as $doc) {
-            if ($doc['id_opcion'] == 33) {
+            if ($doc['id_opcion'] == 33 || $doc['id_opcion'] == 36) {
                 $expRescision = $this->Reestructura_model->obtenerDatosClienteReubicacion($idLoteAnterior);
 
                 copy(
@@ -1049,6 +1049,13 @@ class Reestructura extends CI_Controller{
                     'estatus_validacion' => 0
                 );
 
+                continue;
+            }
+
+            if ($doc['id_opcion'] == 42 && $totalPropuestas === 0) {
+                continue;
+            }
+            if ($doc['id_opcion'] == 43 && $totalPropuestas <= 1) {
                 continue;
             }
 

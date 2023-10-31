@@ -333,20 +333,18 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 }
 
 /**---------------------------------------------------------- */
-    public function selectRegistroPorContrato($numContrato){
-        $this->db->select("cl.id_cliente, l.nombreLote, l.idLote, l.usuario, l.perfil, l.fechaVenc, l.idCondominio,
-		l.modificado, l.fechaSolicitudValidacion, cl.nombre, cl.apellido_paterno, cl.apellido_materno, 
-		cl.rfc, l.contratoUrgente, l.observacionContratoUrgente, l.observacionContratoUrgente as vl,
-		l.fechaRL, l.idStatusContratacion, l.idMovimiento");
-        $this->db->join('clientes cl', 'cl.idLote = l.idLote');
-        $this->db->where("l.numContrato",$numContrato);
-
-
-        $this->db->where("(cl.status=1 AND l.idStatusContratacion=9 AND l.idMovimiento=39)");
-        $this->db->where('l.status', 1);
-        $query = $this->db->get('lotes l');
-        return $query->row();
-
+    public function selectRegistroPorContrato($numContrato) {
+        return $this->db->query("SELECT cl.id_cliente, l.nombreLote, l.idLote, l.usuario, l.perfil, l.fechaVenc, l.idCondominio,
+        l.modificado, l.fechaSolicitudValidacion, cl.nombre, cl.apellido_paterno, cl.apellido_materno, 
+        cl.rfc, l.contratoUrgente, l.observacionContratoUrgente, l.observacionContratoUrgente as vl,
+        l.fechaRL, l.idStatusContratacion, l.idMovimiento
+        FROM lotes l
+        INNER JOIN clientes cl ON cl.idLote = l.idLote AND cl.status = 1
+        WHERE l.numContrato = $numContrato
+        AND l.idStatusContratacion = 9
+        AND l.idMovimiento = 39
+        AND l.status = 1
+        AND l.numContrato != 'NULL'")->row();
     }
 
 

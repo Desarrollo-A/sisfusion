@@ -97,9 +97,15 @@ function getAssimilatedCommissions(query ){
             },
             {
                 data: function( d ){
-                    return d.fecha_pago;    // fecha de pagoo
+                    return d.fecha_devolucion;    // fecha de pagoo
+                }
+            },  
+             {
+                data: function( d ){
+                    return d.fecha_pago_intmex;    // fecha de pagoo
                 }
             },
+            
             {
                 data: function( d ){
                     return d.puesto; //puesto actual
