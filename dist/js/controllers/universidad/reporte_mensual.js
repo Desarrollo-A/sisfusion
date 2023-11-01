@@ -237,7 +237,7 @@ $("#form_devolucion").submit(function (e) {
             method: 'POST',
             type: 'POST', // For jQuery < 1.9
             success: function (data) {
-                if (data[0]) {
+                if (data) {
                     $("#modalDevolucionUM").modal('toggle');
                     alerts.showNotification("top", "right", "Se detuvo el descuento exitosamente", "success");
                     setTimeout(function () {
