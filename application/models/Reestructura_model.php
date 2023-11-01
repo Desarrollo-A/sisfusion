@@ -180,7 +180,7 @@ class Reestructura_model extends CI_Model
         INNER JOIN (SELECT DISTINCT(proyectoReubicacion) proyectoReubicacion FROM loteXReubicacion WHERE proyectoReubicacion IN ($id_proyecto)) lotx ON lotx.proyectoReubicacion = co.idResidencial
         LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente and cl.status IN (1)
         INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
-        WHERE lo.status = 1")->result();
+        WHERE lo.status = 18")->result();
     }
 
     public function obtenerLotesLiberar($id_proyecto)
@@ -196,7 +196,7 @@ class Reestructura_model extends CI_Model
             LEFT JOIN opcs_x_cats oxc on oxc.id_opcion = lot.opcionReestructura and id_catalogo = 100
             INNER JOIN loteXReubicacion lotx ON lotx.proyectoReubicacion = con.idResidencial and lotx.idProyecto in ($id_proyecto)
             LEFT JOIN clientes cli ON cli.id_cliente = lot.idCliente and cli.status in (1,0)
-            WHERE lot.idStatusLote in (15,2,3)")
+            WHERE lot.idStatusLote in (15,2,19)")
             ->result();
     }
 
@@ -234,7 +234,7 @@ class Reestructura_model extends CI_Model
         (CASE WHEN idCliente = 0  OR idCliente IS NULL THEN 0 ELSE idCliente END) idCliente,registro_comision,
         (CASE WHEN tipo_venta IS NULL THEN 0 ELSE tipo_venta END) tipo_venta FROM lotes WHERE idLote=".$datos['idLote']." AND status = 1")->result_array();
         $registro_comision = ($datos['tipo'] == 8 || $datos['tipo'] == 9) ? 9 : 8;
-        $idStatusLote = $datos['tipo'] == 9 ? 15 :($datos['tipo'] == 8  ? 3 : 1);
+        $idStatusLote = $datos['tipo'] == 9 ? 15 :($datos['tipo'] == 8  ? 19 : 18);
         $sqlIdCliente = $datos['tipo'] == 8 ? ' AND id_cliente='.$row[0]['idCliente'] : '';
         $this->db->trans_begin();
             $banderaComisionCl = (in_array($datos['tipo'],array(7,8,9))) ? ' ,banderaComisionCl ='.$row[0]['registro_comision'] : '';

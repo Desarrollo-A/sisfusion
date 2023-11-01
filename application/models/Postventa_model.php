@@ -228,7 +228,7 @@ class Postventa_model extends CI_Model
         INNER JOIN residenciales res ON res.idResidencial = con.idResidencial and con.idResidencial in ($id_proyecto)
         INNER JOIN historial_liberacion hl ON hl.idLote = lot.idLote AND hl.modificado = (SELECT max(hl2.modificado) from historial_liberacion hl2 WHERE hl2.idLote = hl.idLote)
         INNER JOIN clientes cl ON cl.id_cliente = hl.id_cliente AND cl.idLote = hl.idLote
-        WHERE lot.idStatusLote = 1 AND lot.idMovimiento = 0 AND lot.idStatusContratacion = 0 AND 
+        WHERE lot.idStatusLote = 18 AND lot.idMovimiento = 0 AND lot.idStatusContratacion = 0 AND 
 		hl.observacionLiberacion LIKE '%CANCELACIÓN DE CONTRATO%'")->result();
     }
 
