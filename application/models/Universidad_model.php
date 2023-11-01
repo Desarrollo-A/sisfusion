@@ -298,7 +298,7 @@ public function CancelarDescuento($id_pago, $motivo)
 public function editarDescuentoUM($fechaNueva,$idDescuento,$montoNuevo,$mensualidadesNuevas,$montoMensualidadNuevo)
 {
     $respuesta = $this->db->query("UPDATE descuentos_universidad
-        SET fecha_modificaccion = CONVERT(DATETIME,'".$fechaNueva."',103),
+        SET fecha_modificacion = CONVERT(DATETIME,'".$fechaNueva."',103),
         estatus = (CASE WHEN MONTH(CONVERT(DATETIME,'".$fechaNueva."',103)) = MONTH(GETDATE()) AND YEAR(CONVERT(DATETIME,'".$fechaNueva."',103)) = YEAR(GETDATE()) AND DAY(CONVERT(DATETIME,'".$fechaNueva."',103)) BETWEEN 1 AND 10 THEN 1 WHEN (MONTH(CONVERT(DATETIME,'".$fechaNueva."',103)) > MONTH(GETDATE()) AND YEAR(CONVERT(DATETIME,'".$fechaNueva."',103)) >= YEAR(GETDATE())) OR (MONTH(CONVERT(DATETIME,'".$fechaNueva."',103)) >= MONTH(GETDATE()) AND YEAR(CONVERT(DATETIME,'".$fechaNueva."',103)) >= YEAR(GETDATE()) AND DAY(CONVERT(DATETIME,'".$fechaNueva."',103)) > 10) THEN 5 ELSE estatus END),
         monto = $montoNuevo,
         pagos_activos = $mensualidadesNuevas,
@@ -316,7 +316,7 @@ public function editarDescuentoUM($fechaNueva,$idDescuento,$montoNuevo,$mensuali
 function getReporteDevoluciones($condicion){
 
     $cmd = "SELECT pci1.id_pago_i, lo.nombreLote, re.empresa, UPPER(CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno)) AS user_names, 
-    convert(nvarchar(20),  pci1.fecha_pago_intmex, 113)as fecha_descuento,
+    convert(nvarchar(20),  au.fecha_creacion, 113)as fecha_descuento,
     convert(nvarchar(20),  his.fecha_movimiento, 113)as fecha_devolucion,
     pci1.id_usuario, UPPER(oprol.nombre) AS puesto, UPPER(se.nombre) AS sede, his.comentario as creado, FORMAT(ISNULL(pci1.abono_neodata , '0.00'), 'C') abono
     FROM pago_comision_ind pci1
@@ -328,6 +328,7 @@ function getReporteDevoluciones($condicion){
     INNER JOIN usuarios cr ON cr.id_usuario = pci1.modificado_por
     INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
     INNER JOIN historial_comisiones his ON his.id_pago_i = pci1.id_pago_i 
+    INNER JOIN auditoria au ON au.id_parametro = pci1.id_pago_i and au.anterior = 1 AND au.nuevo = 17 and au.col_afect = 'estatus' AND au.tabla = 'pago_comision_ind'
     AND his.estatus = 2
     LEFT JOIN sedes se   
     ON se.id_sede = (CASE u.id_usuario 
