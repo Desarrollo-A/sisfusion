@@ -39,17 +39,11 @@ class Reestructura extends CI_Controller{
     }
 
     public function getCliente($idCliente, $idLote){
-        $datCliente = $this->Reestructura_model->getDatosCliente($idLote);
-        $copropietarios = $this->Reestructura_model->obtenerCopropietariosReubicacion($idLote);
-
-        if ($datCliente != '') {
-            $datCliente->copropietarios = $copropietarios;
-            echo json_encode($datCliente);
-            return;
-        }
-
-        $datCliente = $this->Reestructura_model->getCliente($idCliente);
-        $datCliente->copropietarios = $copropietarios;
+        $datCliente = $this->Reestructura_model->getDatosCliente($idLote); // MJ: BUSCA LA INFORMACIÓN EN datos_x_clientes
+        $copropietarios = $this->Reestructura_model->obtenerCopropietariosReubicacion($idLote); // MJ: BUSCA COPROPIETARIOS
+        if ($datCliente == '') // MJ: SINO ENCUENTRA NADA EN datos_x_clientes SE VA A TRAER LA INFORMACIÓN DE clientes
+            $datCliente = $this->Reestructura_model->getCliente($idCliente);
+        $datCliente->copropietarios = $copropietarios; // MJ: SE AGREGA LA INFORMACIÓN DE copropietarios
         echo json_encode($datCliente);
     }
     
@@ -1768,7 +1762,7 @@ class Reestructura extends CI_Controller{
                         'domicilio_particular' => $data['domicilio'][$index],
                         'estado_civil' => $data['estado_civil'][$index],
                         'ocupacion' => $data['ocupacion'][$index],
-                        'fecha_nacimiento' => $data['fecha_nacimiento'][$index],
+                        'ine' => $data['identificacion'][$index],
                         'modificado_por' => $this->session->userdata('id_usuario')
                     ];
                     continue;
