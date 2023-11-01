@@ -3,7 +3,7 @@ $(document).ready(function() {
     getAssimilatedCommissions(query);
 });
 
-$('#tabla_historialGral').on('draw.dt', function() {
+$('#tabla_devoluciones').on('draw.dt', function() {
     $('[data-toggle="tooltip"]').tooltip({
         trigger: "hover"
     });
@@ -16,16 +16,16 @@ $('#filtro33').change(function(){
 });
 
 var tr;
-var tabla_historialGral2 ;
+var tabla_devoluciones ;
 
 let titulos = [];
-$('#tabla_historialGral thead tr:eq(0) th').each( function (i) {
+$('#tabla_devoluciones thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
     titulos.push(title);
     $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
     $( 'input', this ).on('keyup change', function () {
-        if ($('#tabla_historialGral').DataTable().column(i).search() !== this.value ) {
-            $('#tabla_historialGral').DataTable().column(i).search(this.value).draw();
+        if ($('#tabla_devoluciones').DataTable().column(i).search() !== this.value ) {
+            $('#tabla_devoluciones').DataTable().column(i).search(this.value).draw();
         }
     });
 });
@@ -34,7 +34,7 @@ function getAssimilatedCommissions(query ){
     if (query == false){
         query = '';
     }
-    tabla_historialGral2 = $("#tabla_historialGral").DataTable({
+    tabla_devoluciones = $("#tabla_devoluciones").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
@@ -45,7 +45,7 @@ function getAssimilatedCommissions(query ){
             titleAttr: 'Descargar archivo de Excel',
             title: 'Reporte devoluciones',
             exportOptions: {
-                columns: [0,1,2,3,4,5,6,7,8,9],
+                columns: [0,1,2,3,4,5,6,7,8,9,10],
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulos[columnIdx] + ' ';
@@ -87,12 +87,23 @@ function getAssimilatedCommissions(query ){
             },
             {
                 data: function( d ){
-                    return d.user_names; //nombre de usuario
+                    return d.id_usuario; //nombre de usuario
                 }
             },
             {
                 data: function( d ){
-                    return d.id_usuario; //clave del usuario
+                    return d.user_names; //clave del usuario
+                }
+            },
+            {
+                data: function( d ){
+                    return d.puesto; //puesto actual
+                }
+            },
+            
+             {
+                data: function( d ){
+                    return d.fecha_descuento;    // fecha de pagoo
                 }
             },
             {
@@ -100,17 +111,6 @@ function getAssimilatedCommissions(query ){
                     return d.fecha_devolucion;    // fecha de pagoo
                 }
             },  
-             {
-                data: function( d ){
-                    return d.fecha_pago_intmex;    // fecha de pagoo
-                }
-            },
-            
-            {
-                data: function( d ){
-                    return d.puesto; //puesto actual
-                }
-            },
             {
                 data: function( d ){
                     return d.abono; //abono_neodata      
@@ -133,7 +133,7 @@ function getAssimilatedCommissions(query ){
             searchable: false
         }],
         ajax: {
-            url: "getInfoReporteDevolucion" ,
+            url: "getReporteDevoluciones" ,
             type: "POST",
             data:{
                 query : query 
