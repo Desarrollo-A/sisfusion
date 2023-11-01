@@ -6,22 +6,48 @@
         <?php $this->load->view('template/sidebar'); ?>
  
         <!-- Modals -->
-        <div class="modal fade" id="modalDevolucionUM" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <!-- <div class="modal fade" id="modalDevolucionUM" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                     </div>
-                    <form id="form_baja" name="form_baja" method="post">
+                    <form id="form_devolucion" name="form_devolucion" method="post">
                         <div class="modal-body cancelacion"></div>
                         <div class="modal-footer" ></div>
                     </form>
                 </div>
             </div>
+        </div> -->
+
+<div class="modal fade scroll-styles" id="modalDevolucionUM" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-center">Aplicar devolución</h3>
+                <div class="col-lg-12 form-group m-1" id="mensajeConfirmacion" name="mensajeConfirmacion"></div>
+                <div class="col-lg-12 form-group m-1" id="montosDescuento" name="montosDescuento"></div>
+            </div>
+            <div class="modal-body">
+                <form id="form_devolucion" name="form_devolucion" method="post">
+                    <div class="container-fluid p-0">
+                        <div class="col-lg-12 form-group m-0">
+                            <label class="label-gral m-0">Mótivo</label>
+                            <textarea class="text-modal" type="text" name="comentarioDevolucion" id="comentarioDevolucion" onkeyup="javascript:this.value=this.value.toUpperCase();" required></textarea>
+                        </div>
+                        <input class="form-control" type="hidden" id="pagoDevolver" name="pagoDevolver" value="">
+                        
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" id="btn_devolucion" class="btn btn-primary"> Registrar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
+    </div>
+</div>
+
         <!--END MODALS-->
-           
-
-
         
     <div class="content boxContent">
             <div class="container-fluid">
@@ -76,10 +102,10 @@
                                                     <th>ID USUARIO</th>
                                                     <th>NOMBRE</th>
                                                     <th>PUESTO</th>
-                                                    <th>PLAZA</th>
-                                                    <th>DESCUENTO</th>
+                                                    <th>SEDE</th>
+                                                    <th>MONTO DESCUENTO</th>
                                                     <th>CREADO POR</th>
-                                                    <th>FECHA DE CREACIÓN</th>
+                                                    <th>FECHA DESCUENTO</th>
                                                     <th>ACCIONES</th>
                                                 </tr>
                                             </thead>

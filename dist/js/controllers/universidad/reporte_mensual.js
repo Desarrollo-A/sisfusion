@@ -36,8 +36,6 @@ $('#anio').selectpicker('refresh');
 $('#anio').change(function () {
     for (let index = 0; index < meses.length; index++) {
     datos = datos + `<option value="${meses[index]['id']}">${meses[index]['mes']}</option>`;
-    // $('#mes').html(datos);
-    // $('#mes').selectpicker('refresh');
     }
 });
 
@@ -114,7 +112,7 @@ function loadTable(mes, anio) {
             text: '<i class="fa fa-file-excel-o" aria-hidden="true" title="DESCARGAR ARCHIVO DE EXCEL"></i>',
             className: 'btn buttons-excel',
             titleAttr: 'DESCARGAR ARCHIVO DE EXCEL',
-            title: 'Historial Descuentos Universidad',
+            title: 'Reporte Descuentos Universidad',
             exportOptions: {
                 columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
                 format: {
@@ -168,7 +166,7 @@ function loadTable(mes, anio) {
                     return `<p style="font-size: 1em;">${d.creado}</p>`;
                 }},
                 {"data": function (d) {
-                    return '<p style="font-size: 1em">' + d.fecha_pago_intmex + '</p>';
+                    return '<p style="font-size: 1em">' + d.fecha_descuento + '</p>';
                 }},
                 {"data": function (d) {
                     
@@ -179,9 +177,9 @@ function loadTable(mes, anio) {
                         data-puesto=${d.puesto} 
                         data-monto=${d.abono_neodata} 
                         data-code=${d.cbbtton} 
-                        class="btn btn-round btn-fab btn-fab-mini btn-data btn-sky regresarpago"
-                        data-toggle="tooltip"  data-placement="top" title="CANCELAR DESCUENTTO">
-                        <i class="fas fa-sync-alt"></i></button>`;
+                        class="btn btn-round btn-fab btn-fab-mini btn-data btn-yellow btn_devolucion"
+                        data-toggle="tooltip" data-placement="top" title="APLICAR DEVOLUCIÓN">
+                        <i class="fas fa-rotate-left"></i></button>`;
  
                     return '<div class="d-flex justify-center">'+base+'</div>';
                 }}],
@@ -194,70 +192,67 @@ function loadTable(mes, anio) {
             }
         });
 
+        $("#tabla-historial tbody").on("click", ".btn_devolucion", function (e) {
 
+            e.preventDefault();
+            e.stopImmediatePropagation();
+         
+            $('#mensajeConfirmacion').html('');
+            $('#comentarioDevolucion').html('');
+            $('#montosDescuento').html('');
+    
+            $('#pagoDevolver').val(0);
 
-        
-    $("#tabla-historial tbody").on("click", ".regresarpago", function(e){
-        e.preventDefault();
-        e.stopImmediatePropagation();
-
-        id_pago = $(this).val();
-        lote = $(this).attr("data-value");
-        nameuser = $(this).attr("data-nameuser");
-        puesto = $(this).attr("data-puesto");
-        monto = $(this).attr("data-monto");
-        $("#modalDevolucionUM .modal-body").append(`
-        <div><h4 class="card-title" text-align: center"><b>Cancelar descuento</b></h4></div>
-        <p>¿Está seguro que desea cancelar el descuento del <b>${puesto} ${nameuser}</b>?</p>
-        <div class="form-group">
-        <input type="hidden" name="id_pago" id="id_pago" value="${id_pago}">
-        <input type="hidden" name="monto" id="monto" value="${monto}">
-        <label>¿Cúal es el mótivo de la cancelación? (<span class="isRequired">*</span>)</label>
-        <textarea class="text-modal" row="3" name="motivo" id="motivo" required></textarea>
-        </div>`);
-
-        $("#modalDevolucionUM .modal-body").append(`
-        <div class="modal-footer">
-        <button type="button" class="btn btn-danger btn-simple " data-dismiss="modal" ">Cerrar</button>
-        <button type="submit" class="btn btn-primary" >Aceptar</button>
-        </div>
-        
-        `);
-
-        $("#modalDevolucionUM").modal();
-    });
+            id_pago_i = $(this).val();
+            nombreUsuario = $(this).attr("data-nameuser");
+            rolUsuario = $(this).attr("data-puesto");
+            totalDescuento = $(this).attr("data-monto");
+            nombreLote = $(this).attr("data-value");
+            
+            $('#mensajeConfirmacion').append('<p>¿Está seguro de devolver el pago al '+rolUsuario+' <b>'+ nombreUsuario+'</b>?</p>');
+            $('#montosDescuento').append('<p>Total a devolver: <b>'+formatMoney(totalDescuento)+'</b></p><p>Lote correspondiente: <b>'+nombreLote+'</b></p>');
+            
+            $('#pagoDevolver').val(id_pago_i);
+            $("#modalDevolucionUM").modal();
+    
+        });
 
 }); //END DATATABLE
 
 
-
-$("#form_baja").submit(function(e) {
+$("#form_devolucion").submit(function (e) {
+    // $('#btn_topar').attr('disabled', 'true');
     e.preventDefault();
 }).validate({
-    submitHandler: function(form) {
-        var data = new FormData($(form)[0]);
-        $.ajax({
-            type: 'POST',
-            url: 'CancelarDescuento',
-            data: data,
-            contentType: false,
-            cache: false,
-            processData:false,
-            beforeSend: function(){},
-            success: function(data) {
-                if (data == 1) {
-                    alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
-                    $('#tabla-historial').DataTable().ajax.reload(null, false);
+    submitHandler: function (form) {
 
+        var data = new FormData($(form)[0]);
+           $.ajax({
+            url: general_base_url+"Universidad/CancelarDescuento",
+            data: data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            method: 'POST',
+            type: 'POST', // For jQuery < 1.9
+            success: function (data) {
+                if (data[0]) {
+                    $("#modalDevolucionUM").modal('toggle');
+                    alerts.showNotification("top", "right", "Se detuvo el descuento exitosamente", "success");
+                    setTimeout(function () {
+                        tablaGeneral.ajax.reload();
+                    }, 3000);
                 } else {
-                    alerts.showNotification("top", "right", "Oops, algo salió mal. Error al intentar actualizar.", "warning");
+                    alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
+
                 }
-            },
-            error: function(){
-                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            }, error: function () {
+                alerts.showNotification("top", "right", "ERROR EN EL SISTEMA", "danger");
             }
         });
     }
 });
 
+ 
 }
