@@ -236,20 +236,7 @@ function descuentos_universidad($clave , $data){
 }
 
 
-public function updateCertificacion($clave, $data){
-    try {
-        $this->db->where('id_descuento', $clave);
-        if($this->db->update('descuentos_universidad', $data))
-        {
-            return TRUE;
-        }else{
-            return FALSE;
-        }               
-    }
-    catch(Exception $e) {
-        return $e->getMessage();
-    }     
-}
+
 
 public function updateCertificacion($clave, $data){
     try {

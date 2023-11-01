@@ -6148,20 +6148,6 @@ function insert_penalizacion_individual($id_comision, $id_usuario, $rol, $abono_
     }
 
 
-    public function updateCertificacion($clave, $data){
-        try {
-            $this->db->where('id_descuento', $clave);
-            if($this->db->update('descuentos_universidad', $data))
-            {
-                return TRUE;
-            }else{
-                return FALSE;
-            }               
-        }
-        catch(Exception $e) {
-            return $e->getMessage();
-        }     
-}
 
     
 }

@@ -1,21 +1,21 @@
 $(document).ready(function () {
 
-    $.post(general_base_url + "Universidad/get_lista_roles", function (data) {
+    $.post(general_base_url + "/Comisiones/lista_roles", function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_opcion'];
             var name = data[i]['nombre'];
             $("#puesto").append($('<option>').val(id).text(name.toUpperCase()));     
-        }
+        
         $("#puesto").selectpicker('refresh');
 
-    }, 'json');
+    }} "json")ñ
 
     $('#puesto').change(function(ruta){
         rol = $('#puesto').val();
         $("#usuarios").empty().selectpicker('refresh');
         $.ajax({
-            url: general_base_url + 'Universidad/getUsuariosUM/'+rol,
+            url: general_base_url + 'Comisiones/getUsuariosUM/'+rol,
             type: 'post',
             dataType: 'json',
             success:function(response){
@@ -30,30 +30,6 @@ $(document).ready(function () {
         });
     });
 
-    sp = {
-        initFormExtendedDatetimepickers: function () {
-            $('.datepicker').datetimepicker({
-                format: 'DD/MM/YYYY',
-                icons: {
-                    time: "fa fa-clock-o",
-                    date: "fa fa-calendar",
-                    up: "fa fa-chevron-up",
-                    down: "fa fa-chevron-down",
-                    previous: 'fa fa-chevron-left',
-                    next: 'fa fa-chevron-right',
-                    today: 'fa fa-screenshot',
-                    clear: 'fa fa-trash',
-                    close: 'fa fa-remove',
-                    inline: true
-                }
-            });
-        }
-    }    
-
-    setIniDatesXMonth("#fechaIncial", "#endDate");
-    sp.initFormExtendedDatetimepickers();
-    $('.datepicker').datetimepicker({locale: 'es'});
-
     $('body').tooltip({
         selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
         trigger: 'hover',
@@ -62,6 +38,10 @@ $(document).ready(function () {
         $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
     }); 
     checkTypeOfDesc();
+    setIniDatesXMonth("#fechaIncial", "#endDate");
+    sp.initFormExtendedDatetimepickers();
+    $('.datepicker').datetimepicker({locale: 'es'});
+    // general();
 });
 
 let titulos_intxt = [];
@@ -77,7 +57,6 @@ $('#tabla-general thead tr:eq(0) th').each(function (i) {
 });
 
 function checkTypeOfDesc() {
-
     const tipoDescuento = $('#tipo_descuento').val();
     loadTable(tipoDescuento);
 }
@@ -104,18 +83,29 @@ function loadTable(tipoDescuento) {
              var cajaFinal = formatMoney(caja);
              var pendienteFinal = formatMoney(pendiente);
 
-            document.getElementById("totalGeneral").textContent = totalFinal;
-            document.getElementById("totalRecaudado").textContent = recaudadoFinal;
-            document.getElementById("totalPagadoCaja").textContent = cajaFinal;
-            document.getElementById("totalPendiente").textContent = pendienteFinal;
+            document.getElementById("totalGeneral").textContent = '$' + totalFinal;
+            document.getElementById("totalRecaudado").textContent = '$' + recaudadoFinal;
+            document.getElementById("totalPagadoCaja").textContent = '$' + cajaFinal;
+            document.getElementById("totalPendiente").textContent = '$' + pendienteFinal;
         });
 
         tablaGeneral = $('#tabla-general').DataTable({
             dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
-        bAutoWidth:true,
-        buttons:[{
+        buttons:[
+            {
+                text: '<i class="fa fa-edit" id="btn-nuevo-descuento"></i> NUEVO DESCUENTO',
+                action: function () {
+                   
+                        open_Mb();
+             
+                },
+                attr: {
+                    class: ' btn-azure'
+                }
+            },
+            {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true" title="DESCARGAR ARCHIVO DE EXCEL"></i>',
             className: 'btn buttons-excel',
@@ -129,18 +119,15 @@ function loadTable(tipoDescuento) {
                     }
                 }
             }
-        }, {
-            text: '<i class="fa fa-edit" id="btn-nuevo-descuento"></i> NUEVO DESCUENTO',
-            action: function () {
-                aplicarDescuento();
-
-            },
-            attr: {
-                class: ' btn-azure'
-            }
-        }],
-        pagingType: "full_numbers",
-        fixedHeader: true,
+        },
+        
+        ],
+       
+        ordering: false,
+        destroy: true,
+        pageLength: 10,
+        bAutoWidth: false,
+        fixedColumns: true,
         lengthMenu: [
             [10, 25, 50, -1],
             [10, 25, 50, "Todos"]
@@ -152,8 +139,7 @@ function loadTable(tipoDescuento) {
                 next: "<i class='fa fa-angle-right'>"
             }
         },
-        destroy: true,
-        ordering: false,
+        pagingType: "full_numbers",
         columns:[
                 {"data": function (d) {
                     return `<p style="font-size: 1em;">${d.id_usuario}</p>`;
@@ -173,10 +159,10 @@ function loadTable(tipoDescuento) {
                     } else{
                         color = 'color:blue';
                     }
-                    return `<p style="font-size: 1em; ${color}">${formatMoney(d.saldo_comisiones)}</p>`;
+                    return `<p style="font-size: 1em; ${color}">$${formatMoney(d.saldo_comisiones)}</p>`;
                 }},
                 {"data": function (d) {
-                    return `<p style="font-size: 1em"><b>${formatMoney(d.monto)}</b></p>`;
+                    return `<p style="font-size: 1em"><b>$${formatMoney(d.monto)}</b></p>`;
                 }},
                 {"data": function (d) {
                     descontado = 0;
@@ -185,16 +171,16 @@ function loadTable(tipoDescuento) {
                     } else {
                         descontado = d.total_descontado;
                     }
-                    return `<p style="font-size: 1em">${formatMoney(descontado)}</p>`;
+                    return `<p style="font-size: 1em">$${formatMoney(descontado)}</p>`;
                 }},
                 {"data": function (d) {
-                    return `<p style="font-size: 1em; color:gray">${formatMoney(d.pagado_caja)}</p>`;
+                    return `<p style="font-size: 1em; color:gray">$${formatMoney(d.pagado_caja)}</p>`;
                 }},
                 {"data": function (d) {
-                    return `<p style="font-size: 1em; color:gray">${formatMoney(d.pendiente)}</p>`;
+                    return `<p style="font-size: 1em; color:gray">$${formatMoney(d.pendiente)}</p>`;
                 }},
                 {"data": function (d) {
-                    return `<p style="font-size: 1em">${formatMoney(d.pago_individual)}</p>`;
+                    return `<p style="font-size: 1em">$${formatMoney(d.pago_individual)}</p>`;
                 }},
                 {"data": function (d) {
                     reactivado = '';
@@ -233,7 +219,7 @@ function loadTable(tipoDescuento) {
                         pendiente = Math.round(d.pendiente/d.pago_individual);
                         pagosDescontar = valor>pendiente ? d.pendiente : valor*d.pago_individual;
                     }
-                    return `<p style="font-size: 1em; ${color}">${formatMoney(pagosDescontar)}</p>`;
+                    return `<p style="font-size: 1em; ${color}">$${formatMoney(pagosDescontar)}</p>`;
                 }},
                 {"data": function (d) {
                     return `<p style="font-size: 1em">${(d.primer_descuento) ? d.primer_descuento : 'SIN APLICAR'}</p>`;
@@ -250,66 +236,11 @@ function loadTable(tipoDescuento) {
                 }},
                 {"data": function (d) {
                     adicionales = '';
-
-                    descontado = 0;
-                    if (d.total_descontado == null || d.total_descontado <= 1) {
-                        descontado = d.pagado_caja;
-                    } else {
-                        descontado = d.total_descontado;
-                    }
                     
                     if(d.total_descontado > 1){//MIENTRAS TENGA SALDO APLICADO PODRA CONSULTAR LA INFO
-                        base = `<button href="#" value="${d.id_usuario}" data-value="${d.nombre}" data-code="${d.id_usuario}" class="btn-data btn-blueMaderas consultar_logs_descuentos" title="Detalles"><i class="fas fa-info-circle"></i></button><button href="#" value="${d.id_usuario}" data-value="${d.nombre}" data-code="${d.id_usuario}" class="btn-data btn-green consultar_fecha_pagos" title="Historial pagos"><i class="fas fa-file"></i></button>
-                        
-                        <button href="#" 
-                        value="${d.id_usuario}" 
-                        data-value="${pagosDescontar}"
-                        data-saldoComisiones="${d.saldo_comisiones}"
-                        data-nombre="${d.nombre}" 
-                        data-code="${d.cbbtton}"
-                        data-descuento="${d.id_descuento}"
-                        data-certificacion="${d.idCertificacion}"
-                        class="btn-data btn-gray btn_certificacion"
-                        id="btn_certificacion" name="btn_certificacion"
-                        title="Asignar certificación"><i class="fas fa-closed-captioning"></i>
-                        </button>
-
-                        <button value="${d.id_usuario}"
-                        data-nombre="${d.nombre}"
-                        data-descuento="${d.id_descuento}"
-                        data-monto="${d.monto}"
-                        data-abonado="${descontado}"
-                        data-mensualidad="${d.pago_individual}"
-                        data-fecha="${d.modificacion}"
-                        class="btn-data btn-acidGreen btn_editarDescuento" title="Editar Descuento"><i class="fas fa-money-check-alt"></i>
-                        </button>
-                        `;
-
+                        base = '<button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-blueMaderas consultar_logs_descuentos" title="Detalles">' + '<i class="fas fa-info-circle"></i></button>'+ '<button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-green consultar_fecha_pagos" title="Historial pagos">' + '<i class="fas fa-file"></i></button>';
                     } else{
-                        base = `<button href="#" value="${d.id_usuario}" data-value="${d.nombre}" data-code="${d.id_usuario}" class="btn-data btn-green consultar_fecha_pagos" title="Historial pagos"><i class="fas fa-file"></i></button>
-                        <button href="#" 
-                        value="${d.id_usuario}" 
-                        data-value="${pagosDescontar}"
-                        data-saldoComisiones="${d.saldo_comisiones}"
-                        data-nombre="${d.nombre}" 
-                        data-code="${d.cbbtton}"
-                        data-descuento="${d.id_descuento}"
-                        data-certificacion="${d.idCertificacion}"
-                        class="btn-data btn-gray btn_certificacion"
-                        id="btn_certificacion" name="btn_certificacion"
-                        title="Asignar certificación"><i class="fas fa-closed-captioning"></i>
-                        </button>
-
-                        <button value="${d.id_usuario}"
-                        data-nombre="${d.nombre}"
-                        data-descuento="${d.id_descuento}"
-                        data-monto="${d.monto}"
-                        data-abonado="${descontado}"
-                        data-mensualidad="${d.pago_individual}"
-                        data-fecha="${d.modificacion}"
-                        class="btn-data btn-acidGreen btn_editarDescuento" title="Editar Descuento"><i class="fas fa-money-check-alt"></i>
-                        </button>
-                        `;
+                        base = '<button href="#" value="' + d.id_usuario + '" data-value="' + d.nombre + '" data-code="' + d.id_usuario + '" ' + 'class="btn-data btn-green consultar_fecha_pagos" title="Historial pagos">' + '<i class="fas fa-file"></i></button>';
                     }
                     
                     if (d.saldo_comisiones >= 12500 && (d.estatus == 1 || d.banderaReactivado == 1) && d.pendiente > 1 && d.estado_usuario == 1) {//TODAS SEDES
@@ -327,6 +258,20 @@ function loadTable(tipoDescuento) {
                         </button>
                                 
                         <button href="#" 
+                        value="${d.id_usuario}" 
+                        data-value="${pagosDescontar}"
+                        data-saldoComisiones="${d.saldo_comisiones}"
+                        data-nombre="${d.nombre}" 
+                        data-code="${d.cbbtton}"
+                        data-descuento="${d.id_descuento}"
+                        data-certificacion="${d.idCertificacion}"
+                        class="btn-data btn-gray certificado_op"
+                        id="certificado_op" name="certificado_op"
+                         title="Cambiar certifiacación"><i class="fas fa-closed-captioning"></i>
+                        </button>
+                                
+
+                        <button href="#" 
                         value="${d.id_usuario}"
                         data-nombre="${d.nombre}"
                         data-rol="${d.puesto}"
@@ -335,7 +280,7 @@ function loadTable(tipoDescuento) {
                         class="btn-data btn-orangeYellow topar_descuentos" title="Detener descuentos"><i class="fas fa-ban"></i>
                         </button>
                         `;
-                    } else if(d.estatus == 3 && d.pendiente > 1 && d.estado_usuario == 1){ //DESCUENTOS DETENIDOS
+                    } else if(d.estatus == 3 && d.pendiente > 1 ){ //DESCUENTOS DETENIDOS
                         adicionales = `<button value="${d.id_usuario}" 
                         data-value="${d.id_descuento}"
                         data-pendiente="${d.pendiente}"
@@ -346,7 +291,7 @@ function loadTable(tipoDescuento) {
                 }}],
             
                 "ajax": {
-                "url": `getDescuentosUniversidad/`+tipoDescuento,
+                "url": `getDataConglomerado/`+tipoDescuento,
                 "type": "GET",
                 cache: false,
                 "data": function (d) {}
@@ -379,7 +324,7 @@ function loadTable(tipoDescuento) {
                     $("#lista-comentarios-descuentos").append('<div class="col-lg-12"><p style="color:gray;font-size:1.1em;">SIN </p></div>');
                 } else {
                     $.each(data, function (i, v) {
-                        $("#lista-comentarios-descuentos").append('<div class="col-lg-12"><p style="color:gray;font-size:1.1em;"><b>Comentario: </b>Se descontó la cantidad de <b>' + formatMoney(v.comentario) +'</b><br>' + v.comentario2 +''+saldo_comisiones+'<br><b style="color:#3982C0;font-size:0.9em;">Movimiento: ' + v.date_final + '</b><b style="color:#C6C6C6;font-size:0.9em;"> - ' + v.nombre_usuario + '</b></p></div>');
+                        $("#lista-comentarios-descuentos").append('<div class="col-lg-12"><p style="color:gray;font-size:1.1em;"><b>Comentario: </b>Se descontó la cantidad de <b>$' + formatMoney(v.comentario) +'</b><br>' + v.comentario2 +''+saldo_comisiones+'<br><b style="color:#3982C0;font-size:0.9em;">Movimiento: ' + v.date_final + '</b><b style="color:#C6C6C6;font-size:0.9em;"> - ' + v.nombre_usuario + '</b></p></div>');
                     });
                 }
             });
@@ -396,59 +341,16 @@ function loadTable(tipoDescuento) {
             
         });
 
-        $("#tabla-general tbody").on("click", ".btn_certificacion", function () {
-            
-            id_descuento = $(this).attr("data-descuento");
-            certificacion = $(this).attr("data-certificacion");
-            document.getElementById("idDescuento").value = id_descuento;
-            document.getElementById("certificaciones").value = certificacion;
-
-            $("#certificaciones").selectpicker('refresh');
-        
-            $("#modalCertificacion").modal();
-        
-        });
-
-        $("#certificaciones").change(function () {
-            selectCertificacion = document.getElementById("certificaciones").value;
-        
-            var comentarioDescrip = document.getElementById('textDescripcion');
-            comentarioDescrip.innerHTML = '';
-            if(selectCertificacion == 1){
-                comentarioDescrip.innerHTML = '';
-                comentarioDescrip.innerHTML = 'Persona que obtuvo una calificación favorable y con ello la certificación.';
-            }else if(selectCertificacion == 2){
-                comentarioDescrip.innerHTML = '';
-                comentarioDescrip.innerHTML = 'Persona que obtuvo una ponderación menor a la deseada y por ende no obtiene la certificación.';
-            }else if(selectCertificacion == 3){
-                comentarioDescrip.innerHTML = '';
-                comentarioDescrip.innerHTML = 'Persona que al no seguir los lineamientos de la institución evaluadora se le suspende su proceso de certificación. ';
-            }else if(selectCertificacion == 4){
-                comentarioDescrip.innerHTML = '';
-                comentarioDescrip.innerHTML = 'Persona que se encuentra por hacer examen final con el Tecnológico de Monterrey.';
-            }else if(selectCertificacion == 5){
-                comentarioDescrip.innerHTML = 'Personas que está en valoración el que se certifiquen en este año, así que en sus casos hay que dejar activo el pago, porque dependiendo de cómo se desenvuelva cada caso puede ser que aplique incremento.';
-                comentarioDescrip.innerHTML = '';
-            }else{
-                comentarioDescrip.innerHTML = '';
-                comentarioDescrip.innerHTML = 'Sin definir.';
-            }
-            
-        });
-
         $("#tabla-general tbody").on("click", ".aplicarDescuentoMensual", function (e) {
             e.preventDefault();
             e.stopImmediatePropagation();
-            $("#arrayLotes").val('');
             $("#listaLotesDisponibles").html('');
             $("#informacionGeneral").html('');
-            // $("#arrayLotes").val('');
+            $("#arrayLotes").val('');
             $("#usuarioId").val('');
             $("#nombre").val('');
             $("#saldoComisiones").val('');
             $("#comentario").val('');
-            $("#arrayLotes").selectpicker('refresh');
-            $('#arrayLotes option').remove();
 
             id_user = $(this).val();
             monto = $(this).attr("data-value");
@@ -456,47 +358,41 @@ function loadTable(tipoDescuento) {
             validar = $(this).attr("data-validate");
             saldoComisiones = $(this).attr("data-saldoComisiones");
             nombreUsuario = $(this).attr("data-nombre");
-            $('#btn_abonar').prop('disabled', false);
 
             $("#modalAplicarDescuento modal-body").html("");
             $("#modalAplicarDescuento").modal();
 
             var user = $(this).val();
             let datos = user.split(',');
-            $("#montoaDescontar").val( formatMoney(monto));
+            $("#montoaDescontar").val('$' + formatMoney(monto));
             $("#usuarioId").val(id_user);
             $('#saldoComisiones').val(saldoComisiones);
-            $('#informacionGeneral').append('<p>Descuento a <b>'+nombreUsuario+'</b>, saldo en comisiones: <b>'+ formatMoney(saldoComisiones)+'</b></p>');
+            $('#informacionGeneral').append('<p>Descuento a <b>'+nombreUsuario+'</b>, saldo en comisiones: <b>$'+ formatMoney(saldoComisiones)+'</b></p>');
 
-            $.post('getLotesDescuentosUniversidad/' + id_user + '/' + monto, function (data) {
+            $.post('getLotesOrigen2/' + id_user + '/' + monto, function (data) {
                 var len = data.length;
                 let  info = ''; 
-                // let  datosLotes = []; 
                 let sumaselected = 0;
                 for (var i = 0; i < len; i++) {
 
                     var name = data[i]['nombreLote'];
                     var comision = data[i]['id_pago_i'];
                     var pago_neodata = data[i]['pago_neodata'];
-                    let comisionTotal = parseFloat(data[i]['comision_total']) - parseFloat(data[i]['abono_pagado']);
+                    let comtotal = parseFloat(data[i]['comision_total']) - parseFloat(data[i]['abono_pagado']);
                     sumaselected = sumaselected + parseFloat(data[i]['comision_total']);
                     info += "<p>"
                     info += (i+1) + ' - ' + name;
                     info += ' - <b>';
-                    info += formatMoney(comisionTotal.toFixed(2));
+                    info += formatMoney(comtotal.toFixed(2));
                     info += '</b></p>';
 
-                    $("#arrayLotes").append(`<option value='${comision},${comisionTotal.toFixed(2)},${pago_neodata},${name}' selected="selected">${name}  -   $${formatMoney(comisionTotal.toFixed(2))}</option>`);
+                    $("#arrayLotes").val(`${comision},${comtotal.toFixed(2)},${pago_neodata},${name}`);
+                    $("#comentario").val(`DESCUENTO UNIVERSIDAD MADERAS POR EL MONTO DE $${formatMoney(monto)}`);
                 }
-                document.getElementById('arrayLotes').style.display = "block";
-
-                $("#comentario").val(`DESCUENTO UNIVERSIDAD MADERAS POR EL MONTO DE ${formatMoney(monto)}`);
 
                 $("#listaLotesDisponibles").append(info);
-                $("#totalDisponible").val(formatMoney(sumaselected));
+                $("#totalDisponible").val('$' + formatMoney(sumaselected));
                 $("#listaLotesDisponibles").selectpicker('refresh');
-                $("#arrayLotes").selectpicker('refresh');
-
             }, 'json'); 
         });
  
@@ -528,6 +424,22 @@ function loadTable(tipoDescuento) {
         $('#anio').selectpicker('refresh');
     });
 
+    let meses = [
+        {id:'01', mes:'Enero'},
+        {id:'02',mes:'Febrero'},
+        {id:'03',mes:'Marzo'},
+        {id:'04',mes:'Abril'},
+        {id:'05',mes:'Mayo'},
+        {id:'06',mes:'Junio'},
+        {id:'07',mes:'Julio'},
+        {id:'08',mes:'Agosto'},
+        {id:'09',mes:'Septiembre'},
+        {id:'10',mes:'Octubre'},
+        {id:'11',mes:'Noviembre'},
+        {id:'12',mes:'Diciembre'}
+    ];
+    let anios = [2019,2020,2021,2022,2023,2024];
+
     $('#mes').change(function() {
         anio = $('#anio').val();
         mes = $('#mes').val();
@@ -543,7 +455,7 @@ function loadTable(tipoDescuento) {
     function getPagosByUser(usuario,mes, anio){
         document.getElementById('sumaMensualComisiones').innerHTML = 'Cargando...';
         $.getJSON("getPagosByUser/" + usuario+"/"+mes+"/"+anio).done(function (data) {
-            document.getElementById('sumaMensualComisiones').innerHTML = formatMoney(data[0].suma);
+            document.getElementById('sumaMensualComisiones').innerHTML ='$'+ formatMoney(data[0].suma);
         });
     }
 
@@ -574,7 +486,7 @@ function loadTable(tipoDescuento) {
         abonado = $(this).attr("data-abonado");
         
         $('#mensajeConfirmacion').append('<p>¿Está seguro de detener los pagos al '+rolUsuario+' <b>'+ nombreUsuario+'</b>?</p>');
-        $('#montosDescuento').append('<p>Total descuento: <b>'+formatMoney(totalDescuento)+'</b></p><p>Monto descontado: <b>'+formatMoney(abonado)+'</b></p>');
+        $('#montosDescuento').append('<p>Total descuento: <b>$'+formatMoney(totalDescuento)+'</b></p><p>Monto descontado: <b>$'+formatMoney(abonado)+'</b></p>');
         $('#usuarioTopar').val(id_user);
         $("#modal_nuevas").modal();
 
@@ -623,67 +535,14 @@ $('#montoDescuento').change(function () {
 
 
 
-$(document).on("click", ".btn_editarDescuento", function () {
-    $("#modalEditarDescuento").modal();
+$("#tabla-general").on("click", ".certificado_op", function () {
+    id_descuento = $(this).attr("data-descuento");
+    certificacion = $(this).attr("data-certificacion");
+    document.getElementById("idDescuento").value = id_descuento;
 
-    document.getElementById("fechaIncial").value = '';
-
-    let date = new Date()
-    let day = date.getDate()
-    let month = date.getMonth() + 1
-    let year = date.getFullYear()
-
-    if(month < 10){
-        fechaIncial = day+"/0"+month+"/"+year
-    }else{
-        fechaIncial = day+"/"+month+"/"+year;
-    }
-   
-    id_usuario = $(this).val();
-    id_descuento = $(this).attr("data-descuento"); 
-    total = $(this).attr("data-monto");    
-    abonado = $(this).attr("data-abonado");    
-    mensualidad = $(this).attr("data-mensualidad");    
-     
-    nombre = $(this).attr("data-nombre");    
-    fecha = $(this).attr("data-fecha");    
-
-    document.getElementById("fechaIncial").value = fechaIncial;
-    document.getElementById("id_descuento").value = id_descuento;
-    document.getElementById("total").value = total;
-    document.getElementById("abonado").value = abonado;
-
-    document.getElementById("nuevoMonto").value = formatMoney(total);
-    document.getElementById("nuevoMontoMensual").value = formatMoney(mensualidad);
- 
-    $('#tituloModalEditar').append('<h3>Editar descuento a usuario <b>'+nombre+'</b></h3>');
-
-});  
-
-$(document).on('change', '#numeroMensualidades', function() {
-
-    monto = document.getElementById("nuevoMonto").value;
-    pendiente = document.getElementById("pendiente").value ;
-    mensualidades = document.getElementById("numeroMensualidades").value;
-
-    nuevasMensualidades = parseFloat((monto-pendiente)/mensualidades);
-    alert(monto);
-    alert(pendiente);
-    alert(mensualidades);
- 
-    document.getElementById("nuevoMontoMensual").value = formatMoney(nuevasMensualidades);
+    $("#modalcertificado").modal();
 
 });
-
-
-function aplicarDescuento() {
-    $("#puesto").val('');
-    $("#puesto").selectpicker("refresh");
-    $("#usuarios").val('');
-    $("#usuarios").selectpicker("refresh");
-    $("#descripcionAltaDescuento").val('');
-    $('#modalAgregarNuevo').modal('show');
-}
 
 $("#form_certificado").submit(function (e) {
     $('#btn_abonar').prop('disabled', true);
@@ -697,17 +556,17 @@ $("#form_certificado").submit(function (e) {
 
         var data1 = new FormData($(form)[0]);
         $.ajax({
-            url: 'updateCertificacion/',
+            url: 'updatePrestamosUniversidad/',
             data: data1,
             method: 'POST',
             contentType: false,
             cache: false,
             processData: false,
             success: function (data) {
-                // console.log(data)
+                console.log(data)
                 alerts.showNotification("top", "right", "Préstamo actualizado", "success");
                 $('#tabla-general').DataTable().ajax.reload(null, false);
-                $('#modalCertificacion').modal('toggle');
+                $('#modalcertificado').modal('toggle');
             },
             error: (a, b, c) => {
                 alerts.showNotification("top", "right", "Descuento No actualizado .", "error");
@@ -715,7 +574,9 @@ $("#form_certificado").submit(function (e) {
         
         })
     }
-});
+
+
+});;
 
 $("#formularioAplicarDescuento").submit(function (e) {
     $('#btn_abonar').prop('disabled', true);
@@ -729,7 +590,7 @@ $("#formularioAplicarDescuento").submit(function (e) {
 
         var data1 = new FormData($(form)[0]);
         $.ajax({
-            url: 'aplicarDescuentoUMComisiones/',
+            url: 'saveDescuento/' + 3,
             data: data1,
             method: 'POST',
             contentType: false,
@@ -786,7 +647,7 @@ $("#form_interes").submit(function (e) {
 
         var data = new FormData($(form)[0]);
            $.ajax({
-            url: general_base_url+"Universidad/toparDescuentoUniversidad",
+            url: general_base_url+"Comisiones/toparDescuentoUniversidad",
             data: data,
             cache: false,
             contentType: false,
@@ -820,7 +681,7 @@ $("#formAltaDescuento").submit(function (e) {
 
         var data = new FormData($(form)[0]);
            $.ajax({
-            url: general_base_url+"Universidad/altaNuevoDescuentoUM",
+            url: general_base_url+"Comisiones/altaNuevoDescuentoUM",
             data: data,
             cache: false,
             contentType: false,
@@ -850,23 +711,466 @@ $("#formAltaDescuento").submit(function (e) {
     }
 });
 
-
-
-let meses = [
-      {id:'01', mes:'Enero'},
-      {id:'02',mes:'Febrero'},
-      {id:'03',mes:'Marzo'},
-      {id:'04',mes:'Abril'},
-      {id:'05',mes:'Mayo'},
-      {id:'06',mes:'Junio'},
-      {id:'07',mes:'Julio'},
-      {id:'08',mes:'Agosto'},
-      {id:'09',mes:'Septiembre'},
-      {id:'10',mes:'Octubre'},
-      {id:'11',mes:'Noviembre'},
-      {id:'12',mes:'Diciembre'}
-    ];
-    
-    let anios = [2019,2020,2021,2022,2023,2024];
-
 }
+
+function open_Mb() {
+
+   
+ 
+    $('#open_Mb').empty();
+    $("#FaltaUsuarios").show("slow");
+    $("#ListoUsuarios").hide();
+    $("#FaltaPuesto").show("slow");
+    $("#FaltaMonto").show("slow");
+    $("#FaltaDescuento").show("slow");
+    $("#FaltaMensualidad").show("slow");
+    $("#FaltaMotivo").show("slow");
+    
+    $("#roles").val('');
+    $("#roles").selectpicker("refresh");
+
+    // document.getElementById("users2").innerHTML = '';
+   
+    $("#usuarioid2").val('');
+    $("#usuarioid2").selectpicker("refresh");
+
+    $("#comentario2").val('');
+
+    $('#ModalBonos').modal('show');
+}
+
+$('#ModalBonos').on('hidden.bs.modal', function() {
+    $('#form_nuevo').trigger('reset');
+  
+
+    $("#FaltaPuesto").hide();
+    $("#FaltaMonto").hide();
+    $("#FaltaDescuento").hide();
+    $("#FaltaMensualidad").hide();
+    $("#FaltaMotivo").hide();
+    $("#FaltaUsuarios").hide();
+
+    $("#ListoPuesto").hide();
+    $("#ListoDescuento").hide();
+    $("#ListoMensualidad").hide();
+    $("#ListoMonto").hide();
+    $("#ListoMotivo").hide();
+    $("#ListoUsuarios").hide();
+
+
+
+    $("#numeroPagos").selectpicker("refresh");
+});
+
+
+
+$(document).on("click", ".uniAdd", function () {
+    let banderaLiquidados = false;
+    $("#modalUni").modal();
+
+    document.getElementById("fechaIncial").value = '';
+
+    document.getElementById("descuentoEscrito").value = '';
+    // el que modificaremos    
+    id_descuento = $(this).attr("data-value");
+    //id_usuario perteneciente a ese id_user
+    id_user = $(this).attr("data-code");    
+    // aqui mero va la bander de saber que info se guardara
+    pago_mensual = $(this).attr("data-mensual");
+    nombre = $(this).attr("data-nombre")
+    descuento = $(this).attr("data-descuento");
+    fechaIncial = $(this).attr("data-fecha");
+    pendiente = $(this).attr("data-pendiente");//cantidad de dinero que falta
+    total = $(this).attr("data-total"); //dinero que ha pagado al momento
+    MontoDescontarCerti = $(this).attr("data-value");
+    valorCertificacion = $(this).attr("data-idCertificacion");
+    // {document.getElementById("certificaciones").value = valorCertificacion;}
+
+    if (descuento == total){
+        banderaLiquidados = true;
+
+    }else{
+
+        banderaLiquidados = false;
+    }
+    descuento = Math.round(descuento);
+    pago_mensual = Math.round(pago_mensual);
+
+    cantidad_de_pagos = descuento / pago_mensual;//para saber en cuanto se dividieron los pagos
+
+    document.getElementById("fechaIncial").value = fechaIncial;
+ 
+    document.getElementById("banderaLiquidado").value = banderaLiquidados;
+    document.getElementById("dineroPagado").value = total;
+    document.getElementById("pagoIndiv").value = pago_mensual;
+    document.getElementById("idDescuento").value = id_descuento;
+    document.getElementById("totalPagos").value = cantidad_de_pagos;
+    document.getElementById("pagoDado").value = pagoDado;
+
+    id_user = $(this).attr("data-code");
+    pago_mensual = $(this).attr("data-mensual");
+    descuento = $(this).attr("data-descuento");
+    pendiente = $(this).attr("data-pendiente");//cantidad de dinero que falta
+    total = $(this).attr("data-total"); //dinero que ha pagado al momento
+
+    valorPendiente = pendiente;
+    // users2
+    var titulo  = ' ';
+    titulo += '  <h3 id="tituloModalUni" name="tituloModalUni">Editando descuento actual para '+ nombre  +'</h3>';
+    // eee
+    // var cuerpoModalUni = document.getElementById('cuerpoModalUni');
+    // cuerpoModalUni.innerHTML = informacion_adicional;
+
+    document.getElementById("MontoDescontarCerti").value = pendiente;
+    var myCommentsLote = document.getElementById('tituloModalUni');
+    myCommentsLote.innerHTML = '';
+
+    var Header_modal = document.getElementById('header_modal');
+    Header_modal.innerHTML = titulo;
+ 
+    //    mensualidadesFaltantes = total / pago_mensual ;
+    //         mensualidadesFaltantesMostrar = valorPendiente  / pago_mensual ;         
+            // if ((mensualidadesFaltantesMostrar % 1)  == 0 ){
+
+            // }else{
+            //     if( 0 == Math.trunc(mensualidadesFaltantesMostrar))
+            //     {
+            //         if((mensualidadesFaltantesMostrar/mensualidadesFaltantesMostrar ) == 1)
+            //         {
+            //             mensualidadesFaltantesMostrar = 1;
+            //         }else{
+
+            //         }           
+            //     }else{
+
+            //         mensualidadesFaltantesMostrar =  Math.trunc(mensualidadesFaltantesMostrar);
+            //     }
+            // }
+            // if ((mensualidadesFaltantes % 1)  == 0 ){
+
+            // }else{
+            //     if( 0 == Math.trunc(mensualidadesFaltantes))
+            //     {
+            //         if((mensualidadesFaltantes/mensualidadesFaltantes ) == 1)
+            //         {
+
+            //             mensualidadesFaltantes = 1;
+            //         }else{
+                    
+            //         }
+            //     }else{
+            //             mensualidadesFaltantes =  Math.trunc(mensualidadesFaltantes);
+            //     }
+            // }
+            // if(banderaLiquidados){
+            //     document.getElementById("mensualidadesC").value = 1;
+            //     mensualidadesFaltantesMostrar = 1;
+            //     mensualidadesFaltantes = 1;
+            // }else{
+            //     mensualidadesFaltantesMostrar = valorPendiente  / pago_mensual ;
+            //     document.getElementById("mensualidadesC").value = Math.trunc( mensualidadesFaltantesMostrar);
+            // }
+
+
+            // ultimaMensualidad = document.getElementById("mensualidadesC").value
+            // Total_a_pagar = ultimaMensualidad * pago_mensual;
+
+            // sobrante = Total_a_pagar - total;
+
+            // //para agregar llo que ya se pago
+            // descuentoEscrito = document.getElementById("MontoDescontarCerti").value;
+         
+            // NuevasMensualidades= (pendiente)  / ultimaMensualidad ;
+
+            // if(banderaLiquidados){
+
+            //     sobrante = document.getElementById("MontoDescontarCerti").value;
+            //     sobrante =  total - sobrante ;
+            //     NuevasMensualidades = sobrante  / mensualidadesFaltantes;
+            // }
+            // document.getElementById("newMensualidades").value =  NuevasMensualidades.toFixed(2);
+            // //faltantes = mensualidadesFaltantes/mensual;
+            // document.getElementById("precioOrginal").value =   NuevasMensualidades.toFixed(2);
+
+});  
+
+$(document).on("click", "#cancelarOperation", function () {
+$('#editDescuento').modal('hide');
+});
+
+$('#editDescuento').on("click", "#editarDescuentos", function (){
+
+});
+$(document).on("click", "#editarDescuentos", function () {
+    $('#botonesInicio').css('display', 'none');
+    $('#updateDescuento').css('display', 'block');
+    $('#fomularioEditarDescuento').css('display', 'block');
+});
+$(document).on("click", "#descuentoCertificaciones", function () {
+
+}); 
+
+// Nueva functionalidad
+ //  aqui mero 
+
+$("#certificaciones").change(function () {
+
+   
+    selectCertificacion = document.getElementById("certificaciones").value;
+
+    var comentarioDescrip = document.getElementById('textDescripcion');
+    comentarioDescrip.innerHTML = '';
+    if(selectCertificacion == 1){
+        comentarioDescrip.innerHTML = '';
+        comentarioDescrip.innerHTML = 'Persona que obtuvo una calificación favorable y con ello la certificación.';
+    }else if(selectCertificacion == 2){
+        comentarioDescrip.innerHTML = '';
+        comentarioDescrip.innerHTML = 'Persona que obtuvo una ponderación menor a la deseada y por ende no obtiene la certificación';
+    }else if(selectCertificacion == 3){
+        comentarioDescrip.innerHTML = '';
+        comentarioDescrip.innerHTML = 'Persona que al no seguir los lineamientos de la institución evaluadora se le suspende su proceso de certificación. ';
+    }else if(selectCertificacion == 4){
+        comentarioDescrip.innerHTML = '';
+        comentarioDescrip.innerHTML = 'Persona que se encuentra por hacer examen final con el Tecnológico de Monterrey.';
+    }else if(selectCertificacion == 5){
+        comentarioDescrip.innerHTML = 'Personas que está en valoración el que se certifiquen en este año, así que en sus casos hay que dejar activo el pago, porque dependiendo de cómo se desenvuelva cada caso puede ser que aplique incremento.';
+        comentarioDescrip.innerHTML = '';
+    }else{
+        comentarioDescrip.innerHTML = '';
+        comentarioDescrip.innerHTML = 'No definido';
+    }
+    
+});
+
+$(document).on("click", ".editar_descuentos", function () {
+
+
+});
+
+function subirInfo(){  
+    document.getElementById("descuentoEscrito").value = '';
+    id_descuento = $(this).attr("data-value");
+    id_user = $(this).attr("data-code");    
+    // aqui mero va la bander de saber que info se guardara
+    pago_mensual = $(this).attr("data-mensual");
+    descuento = $(this).attr("data-descuento");
+    pendiente = $(this).attr("data-pendiente");//cantidad de dinero que falta
+    total = $(this).attr("data-total"); //dinero que ha pagado al momento
+    descuento = Math.round(descuento);
+    pago_mensual = Ma/th.round(pago_mensual);
+    cantidad_de_pagos = descuento / pago_mensual;//para saber en cuanto se dividieron los pagos
+    document.getElementById("pagado").value = total;
+    document.getElementById("mensualidad").value = pago_mensual;
+    document.getElementById("descuento_id").value = id_descuento;
+    document.getElementById("pagoDado").value = dineroPagado;
+    valor = 0;
+    valor1 = 0;
+ }
+ 
+$(document).on('input', '.MontoDescontarCerti', function(){
+
+    mensualidadesC = document.getElementById("mensualidadesC").value;
+    pagado = document.getElementById("dineroPagado").value ;  // lo que se ya se ha pagado
+    loQueSedebe = document.getElementById("MontoDescontarCerti").value ;
+    pagos  = document.getElementById("mensualidadesC").value ;
+    banderaLiquidado  = document.getElementById("banderaLiquidado").value ;
+    if(banderaLiquidado){
+     
+
+        NuevasMensualidades = loQueSedebe / pagos;
+    }else{
+
+        NuevasMensualidades = loQueSedebe / pagos;   
+    }
+
+    document.getElementById("newMensualidades").value =  NuevasMensualidades.toFixed(2);
+    
+});
+
+// $("#numeroPagos").change(function () {
+    $(document).on('change', '#mensualidadesC', function() {
+
+        mensualidadesC = document.getElementById("mensualidadesC").value;
+        loQueSedebe = document.getElementById("MontoDescontarCerti").value ;
+        pagado = document.getElementById("dineroPagado").value ;  // lo que se ya se ha pagado
+        pagos  = document.getElementById("mensualidadesC").value ;
+        console.log('mensualidadesC')
+        console.log(mensualidadesC)
+        console.log('loQueSedebe')
+        console.log(loQueSedebe)
+        console.log('pagado')
+        console.log(pagado)
+        console.log('pagos')
+        console.log(pagos)
+
+        banderaLiquidado  = document.getElementById("banderaLiquidado").value ;
+        if(banderaLiquidado){
+          
+            NuevasMensualidades = loQueSedebe / mensualidadesC;
+  
+        }else{
+         
+            NuevasMensualidades = loQueSedebe / mensualidadesC;
+        } 
+        document.getElementById("newMensualidades").value =  NuevasMensualidades.toFixed(2);
+    
+    });
+                                                          
+    $("#updateDescuentoCertificado").submit(function (e) {
+
+
+        e.preventDefault();
+    }).validate({
+        submitHandler: function (form) {
+
+    let tipoDescuento = $('#tipo_descuento').val();
+    // let fechaSeleccionada = $('#fechaIncial').val();
+    const fecha = new Date()    
+    let pagos_activos ;
+    let banderaSoloEstatus = false ; 
+    let banderaPagosActivos = 0 ;
+    // bandera pagos activos
+    let fechanoEscrita = false; 
+    // 1 fecha usuario < día 5  mismo mes  2: fecha usuario > día 5 y > mes actual  3: no se mueve los movimientos actuales,
+    let validacion = false;
+    let banderaEditarEstatus = document.getElementById("precioOrginal").value; 
+    let escritoPorUsuario = document.getElementById("newMensualidades").value;
+    let fechaSeleccionada = '';
+    fechaSeleccionada = document.getElementById("fechaIncial").value;
+
+    if(tipoDescuento == 3){
+        estatus = 1;
+    }else{
+        estatus = '';
+    }
+    
+    if(fechaSeleccionada == '' && banderaEditarEstatus == escritoPorUsuario){
+        banderaSoloEstatus = true ;    
+    }else{
+        fechanoEscrita = true
+        fechaSeleccionada == ''
+    }
+    year = fecha.getFullYear()
+    month = (fecha.getMonth())
+    day = fecha.getDate()
+    // const msg = new day;
+    const FechaEnArreglo = fechaSeleccionada.split("/");
+    // fecha en arreglo es para poder entrar al mes posicion 0 es dia, 1  mes , año
+    fechaComparar = (year + '-' + month + '-' + day);
+    var f1 = new Date(year,month, day);
+    var f2 = new Date(FechaEnArreglo[2],FechaEnArreglo[1],FechaEnArreglo[0] );
+
+    MesSelecionado = parseInt(FechaEnArreglo[1]);
+    DiaSeleccionado = parseInt(FechaEnArreglo[0]);
+    MesSistemas = parseInt(month+1);
+    console.log(FechaEnArreglo)
+    console.log('  // fecha FechaEnArreglo ')
+    // fecha f2 es para la fecha seleccionada 
+    // fecha f1 es para la fecha del sistema 
+    // Se compara las fechas son para 
+    console.log(f1)
+    console.log('  // fecha f1 es para la fecha del sistema ')
+    console.log(f2)
+    console.log('fecha f2 es para la fecha seleccionada ')
+    if(  (f2 > f1 || f2 == f1)){
+        // validamos que sea mayor la fecha seleccionada o que sean iguales
+      
+        if(DiaSeleccionado <= 10 ){
+            banderaPagosActivos = 1;
+            console.log(1)
+            validacion =true;
+                        // && MesSelecionado == MesSistemas  
+        }else if(DiaSeleccionado  <= 10  ){
+            banderaPagosActivos = 2 ;
+            console.log(1)
+            validacion =true;
+        }else {
+            alerts.showNotification("top", "right", "Se recomienda una fecha entre el primero al 10 de cada mes ", "info");
+            banderaPagosActivos = 0;
+        }
+    }else if(f2 < f1){
+        alerts.showNotification("top", "right", "Upss, La fecha seleccionada es menor que la fecha actual", "warning");
+        validacion =false;
+    }
+
+    if(validacion ){
+
+
+        mensualidadesC  = document.getElementById("mensualidadesC").value;
+        id_descuento     = document.getElementById("idDescuento").value;
+        monto           = document.getElementById("MontoDescontarCerti").value;
+        pago_individual = document.getElementById("newMensualidades").value;
+        // estatus_certificacion  = document.getElementById("certificaciones").value;
+    
+            $.ajax({
+            url : 'descuentoUpdateCertificaciones',
+            type : 'POST',
+            dataType: "json",
+            data: {
+            "banderaSoloEstatus"    : banderaSoloEstatus, 
+            "fechaSeleccionada"     : fechaSeleccionada, 
+            "pagos_activos"         : pagos_activos,
+            "estatus"               : estatus,
+            "banderaPagosActivos"   : banderaPagosActivos,
+            "id_descuento"          : id_descuento,
+            "monto"                 : monto,
+            "pago_individual"       : pago_individual,
+              }, 
+    
+              success: function(data) {
+               
+                alerts.showNotification("top", "right", ""+data.message+"", ""+data.response_type+"");
+                document.getElementById('updateDescuento').disabled = false;
+                $('#tabla-general').DataTable().ajax.reload(null, false );
+                
+                // toastr[response.response_type](response.message);
+                $('#modalUni').modal('toggle');
+            },              
+            error : (a, b, c) => {
+                alerts.showNotification("top", "right", "Descuento No actualizado .", "error");
+            }
+    
+        });
+    }else{
+    
+    }
+
+  
+}});
+
+
+sp = {
+    initFormExtendedDatetimepickers: function () {
+        $('.datepicker').datetimepicker({
+            format: 'DD/MM/YYYY',
+            icons: {
+                time: "fa fa-clock-o",
+                date: "fa fa-calendar",
+                up: "fa fa-chevron-up",
+                down: "fa fa-chevron-down",
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-screenshot',
+                clear: 'fa fa-trash',
+                close: 'fa fa-remove',
+                inline: true
+            }
+        });
+    }
+}
+function setInitialValues() {
+    // BEGIN DATE
+    const fechaInicio = new Date();
+    // Iniciar en este año, este mes, en el día 1
+    const FechaIncial = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
+    // END DATE
+    const fechaFin = new Date();
+    // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
+    const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
+    FechaIncial = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
+    finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
+ 
+ 
+}
+
+ 
