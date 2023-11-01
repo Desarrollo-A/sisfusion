@@ -17,7 +17,7 @@
                             </div>
                             <div class="toolbar">
                                 <div class="row">
-                                    <div class="col-sm-12 col-md-3 col-lg-3">
+                                    <div class="col-sm-12 col-md-6 col-lg-6">
                                         <div class="form-group">
                                             <label class="control-label" for="proyecto">PUESTO</label>
                                             <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" required>
@@ -31,18 +31,18 @@
                             </div>
                             <div class="material-datatables">
                                 <div class="form-group">
-                                    <table class="table-striped table-hover " id="tabla_historialGral" name="tabla_historialGral">
+                                    <table class="table-striped table-hover " id="tabla_devoluciones" name="tabla_devoluciones">
                                         <thead>
                                             <tr>
                                                 <th>ID DE PAGO</th>
                                                 <th>LOTE</th>
                                                 <th>EMPRESA</th>
+                                                <th>ID USUARIO</th>
                                                 <th>USUARIO</th>
-                                                <th>ID DE USUARIO</th>
-                                                <th>FECHA DEVOLUCIÓN</th>
-                                                <th>FECHA DESCUENTO APLICADO</th>
                                                 <th>PUESTO</th>
-                                                <th>ABONO </th>
+                                                <th>FECHA DESCUENTO</th>
+                                                <th>FECHA DEVOLUCIÓN</th>
+                                                <th>MONTO DEVUELTO </th>
                                                 <th>SEDE</th>
                                                 <th>MOTIVO</th>
                                             </tr>
@@ -58,5 +58,5 @@
         <?php $this->load->view('template/footer_legend');?>
     </div>
 <?php $this->load->view('template/footer');?>
-<script src="<?= base_url() ?>dist/js/controllers/comisiones/reporteDevolucion.js"></script>
+<script src="<?= base_url() ?>dist/js/controllers/universidad/reporte_devolucion.js"></script>
 </body>
