@@ -139,8 +139,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote) {
         });
         if (flagProceso == 3) {
             //se esta subiendo contrato se debe pedir uno adicional
-            const archivoLbl = (datos[0]['tipo'] == 1) ? 'la rescisión del contrato' : 'el documento de reestructura';
-
+            const archivoLbl = datos[0]['tipo_proceso'] != "3" ? 'la rescisión del contrato' : 'el documento de reestructura';
             contenidoHTML += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2"><hr>\n' +
                 '                            <h6 class="text-left"><b>Subir '+archivoLbl+': </b>' + nombreLote + '<span class="text-red">*</span></h6>\n' +
                 '                            <div class="" id="selectFileSectionResicion">\n' +
@@ -189,13 +188,11 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote) {
                 '                           </div>' +
                 '                        </div>';
         });
-
         if (flagProceso == 3) {
             //se esta subiendo contrato se debe pedir uno adicional
-            const archivoLbl = (datos[0]['tipo'] == 1) ? 'la rescisión del contrato' : 'el documento de reestructura';
-
+            const archivoLbl = datos[0]['tipo_proceso'] != "3" ? 'la rescisión del contrato' : 'el documento de reestructura';
             contenidoHTML += ' <div class="col col-xs-12 col-sm-12 col-md-10 col-lg-10 mb-2"><hr>\n' +
-                '                            <h6 class="text-left"><b>Subir '+archivoLbl+'</b>:' + nombreLote + '</h6>\n' +
+                '                            <h6 class="text-left"><b>Subir '+archivoLbl+': </b>' + nombreLote + '<span class="text-red">*</span></h6>\n' +
                 '                            <div class="" id="selectFileSectionResicion">\n' +
                 '                                <div class="file-gph">\n' +
                 '                                    <input class="d-none" type="file" required accept="application/pdf" id="Resicion">\n' +
@@ -240,7 +237,7 @@ function loadCopropietarios(datos){
         datos.map((elemento, index)=>{
             let nombreCopropietario = elemento.nombre + ' ' + elemento.apellido_paterno+' '+elemento.apellido_materno;
             contenidoHTML += '<div class="card-body mb-3">';
-            contenidoHTML += '  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center"><span style="font-size: 1.5rem; text-transform: uppercase;">'+nombreCopropietario+'</span></div>';
+            contenidoHTML += '     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center"><span style="font-size: 1.5rem; text-transform: uppercase;">'+nombreCopropietario+'</span></div>';
             contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 text-left">';
             contenidoHTML += '                  <label class="control-label">Nombre</label>';
             contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.nombre+'"/>';
@@ -273,11 +270,13 @@ function loadCopropietarios(datos){
             contenidoHTML += '                  <label class="control-label">Ocupación</label>';
             contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.ocupacion+'"/>';
             contenidoHTML += '          </div>';
-            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-3 col-lg-4">';
-            contenidoHTML += '                  <label class="label-on-left m-0">INE/Pasaporte</label>';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 text-left">';
+            contenidoHTML += '                  <label class="control-label">INE/Pasaporte</label>';
             contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.ine+'"/>';
             contenidoHTML += '          </div>';
+            contenidoHTML += '     </div>';
             contenidoHTML += '</div>';
+
         });
     }else{
         contenidoHTML += '<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12"><center><h5 class="fs-2">Sin copropietarios</h5></center></div>';
@@ -389,7 +388,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
 
         if (flagProceso == 3 && $("#Resicion")[0].files[0] == undefined) {
             $("#spiner-loader").addClass('hide');
-            const archivoLbl = (datos[0]['tipo'] == 1) ? 'archivo de rescisión' : 'documento de reestructura';
+            const archivoLbl = (datos[0]['tipo'] == 2) ? 'archivo de rescisión' : 'documento de reestructura';
             alerts.showNotification('top', 'right', `Selecciona ${archivoLbl}`, 'warning');
         }
         else {
@@ -490,7 +489,7 @@ $(document).on('click', '.ver-archivo', function () {
 
 
 $(document).on('click', '.btn-abrir-contratoFirmado', function(){
-   $('#contratoFirmadoModal').modal('toggle');
+    $('#contratoFirmadoModal').modal('toggle');
     let flagEditar = $(this).attr("data-editar");
     let formularioArchivoscf = document.getElementById('formularioArchivoscf');
     let contenidoHTMLCF = '';
@@ -509,54 +508,54 @@ $(document).on('click', '.btn-abrir-contratoFirmado', function(){
     editarContrafoFirmado = flagEditar;
     editarFile = flagEditar;
     let heightIframe = '400px';
-   if(flagEditar == 0){//es primera ves no hay archivo
-       document.getElementById('txtTituloCF').innerHTML = 'Selecciona el archivo que desees asociar a <b>CONTRATO FIRMADO</b>';
-       document.getElementById('secondaryLabelDetail').innerHTML = 'El documento que hayas elegido se almacenará de manera automática una vez que des clic en <i>Guardar</i>.';
-       document.getElementById('dialoSection').classList.remove('modal-lg');
-       contenidoHTMLCF += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2">\n' +
-           '                            <div class="" id="selectFileSectionResicioncf">\n' +
-           '                                <div class="file-gph">\n' +
-           '                                    <input class="d-none" type="file" required accept="application/pdf" id="contratoFirmado">\n' +
-           '                                    <input class="file-name" id="contratoFirmado-name" type="text" placeholder="No has seleccionada nada aún" readonly="">\n' +
-           '                                    <label class="upload-btn m-0" for="contratoFirmado"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>\n' +
-           '                                </div>\n' +
-           '                            </div>\n' +
-           '                        </div>';
-   }else if(flagEditar == 1){//ya hay un archivo hay que actualizarlo
-       if(estatusProceso==2){
-           document.getElementById('txtTituloCF').innerHTML = 'Archivo actual asociado a <b>CONTRATO FIRMADO</b>';
-           document.getElementById('secondaryLabelDetail').innerHTML = 'Si selecciona algún archivo y da clic en el botón de "<b>Guardar</b>", este reemplezara al mostrado.';
-           document.getElementById('sendRequestButtoncf').classList.remove('hide');
-           heightIframe = '400px'
-       }else if(estatusProceso==3){
-           document.getElementById('txtTituloCF').innerHTML = 'Visualizando el contrato firmado <b>'+ nombreLote + '</b>';
-           document.getElementById('secondaryLabelDetail').innerHTML = '';
-           document.getElementById('sendRequestButtoncf').classList.add('hide');
-           heightIframe = '650px';
-       }
-       document.getElementById('dialoSection').classList.add('modal-lg');
-       let contratoFirmado = $(this).attr("data-contratoFirmado");
-       let ruta = general_base_url+'static/documentos/cliente/contratoFirmado/'+contratoFirmado;
-       contenidoHTMLCF += '<iframe id="inlineFrameExample" title="Inline Frame Example"\n' +
-           '  width="100%"\n' +
-           '  height="'+heightIframe+'"\n' +
-           '  src="'+ruta+'">\n' +
-           '</iframe>';
+    if(flagEditar == 0){//es primera ves no hay archivo
+        document.getElementById('txtTituloCF').innerHTML = 'Selecciona el archivo que desees asociar a <b>CONTRATO FIRMADO</b>';
+        document.getElementById('secondaryLabelDetail').innerHTML = 'El documento que hayas elegido se almacenará de manera automática una vez que des clic en <i>Guardar</i>.';
+        document.getElementById('dialoSection').classList.remove('modal-lg');
+        contenidoHTMLCF += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2">\n' +
+    '                            <div class="" id="selectFileSectionResicioncf">\n' +
+    '                                <div class="file-gph">\n' +
+    '                                    <input class="d-none" type="file" required accept="application/pdf" id="contratoFirmado">\n' +
+    '                                    <input class="file-name" id="contratoFirmado-name" type="text" placeholder="No has seleccionada nada aún" readonly="">\n' +
+    '                                    <label class="upload-btn m-0" for="contratoFirmado"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>\n' +
+    '                                </div>\n' +
+    '                            </div>\n' +
+    '                        </div>';
+    }else if(flagEditar == 1){//ya hay un archivo hay que actualizarlo
+        if(estatusProceso==2){
+            document.getElementById('txtTituloCF').innerHTML = 'Archivo actual asociado a <b>CONTRATO FIRMADO</b>';
+            document.getElementById('secondaryLabelDetail').innerHTML = 'Si selecciona algún archivo y da clic en el botón de "<b>Guardar</b>", este reemplezara al mostrado.';
+            document.getElementById('sendRequestButtoncf').classList.remove('hide');
+            heightIframe = '400px'
+        }else if(estatusProceso==3){
+            document.getElementById('txtTituloCF').innerHTML = 'Visualizando el contrato firmado <b>'+ nombreLote + '</b>';
+            document.getElementById('secondaryLabelDetail').innerHTML = '';
+            document.getElementById('sendRequestButtoncf').classList.add('hide');
+            heightIframe = '650px';
+        }
+        document.getElementById('dialoSection').classList.add('modal-lg');
+        let contratoFirmado = $(this).attr("data-contratoFirmado");
+        let ruta = general_base_url+'static/documentos/cliente/contratoFirmado/'+contratoFirmado;
+        contenidoHTMLCF += '<iframe id="inlineFrameExample" title="Inline Frame Example"\n' +
+            '  width="100%"\n' +
+            '  height="'+heightIframe+'"\n' +
+            '  src="'+ruta+'">\n' +
+            '</iframe>';
 
-       if(estatusProceso==2){
-           contenidoHTMLCF += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2 mt-4">\n' +
-               '                            <div class="" id="selectFileSectionResicioncf">\n' +
-               '                                <div class="file-gph">\n' +
-               '                                    <input class="d-none" type="file" required accept="application/pdf" id="contratoFirmado">\n' +
-               '                                    <input class="file-name" id="contratoFirmado-name" type="text" placeholder="No has seleccionada nada aún" readonly="">\n' +
-               '                                    <label class="upload-btn m-0" for="contratoFirmado"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>\n' +
-               '                                </div>\n' +
-               '                            </div>\n' +
-               '                        </div>';
-       }
+        if(estatusProceso==2){
+            contenidoHTMLCF += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2 mt-4">\n' +
+        '                            <div class="" id="selectFileSectionResicioncf">\n' +
+        '                                <div class="file-gph">\n' +
+        '                                    <input class="d-none" type="file" required accept="application/pdf" id="contratoFirmado">\n' +
+        '                                    <input class="file-name" id="contratoFirmado-name" type="text" placeholder="No has seleccionada nada aún" readonly="">\n' +
+        '                                    <label class="upload-btn m-0" for="contratoFirmado"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>\n' +
+        '                                </div>\n' +
+        '                            </div>\n' +
+        '                        </div>';
+        }
 
 
-   }
+    }
     formularioArchivoscf.innerHTML = contenidoHTMLCF;
 
     $("input:file").on("change", function () {
@@ -573,7 +572,6 @@ $(document).on('click', '.btn-abrir-contratoFirmado', function(){
     });
     $('[data-toggle="tooltip"]').tooltip();
 });
-
 $(document).on("click", "#sendRequestButtoncf", function (e) {
     e.preventDefault();
     let flagEnviar = true;
