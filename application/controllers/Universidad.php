@@ -204,7 +204,7 @@ class Universidad extends CI_Controller
     $id_pago = $this->input->post('pagoDevolver');
     $motivo = $this->input->post('comentarioDevolucion');
     $respuesta = array($this->Universidad_model->CancelarDescuento($id_pago,$motivo));
-    echo json_encode( $respuesta[0]);
+    echo json_encode( $respuesta);
   
   }
 
