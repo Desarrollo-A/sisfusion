@@ -1591,11 +1591,10 @@ class Reestructura extends CI_Controller{
         $nombreCondominio = $this->input->post('nombreCondominio');
         $nombreDocumento = $this->input->post('nombreDocumento');
 
-	    $dataConsultaCF = $this->Reestructura_model->revisarCFDocumentos($idLote);
+	    $dataConsultaCF = $this->Reestructura_model->revisarCFDocumentos($idLote, $idCliente);
 	    $flagExisteRama = count($dataConsultaCF);
 
-        $configCF['upload_path'] = 'static/documentos/cliente/contratoFirmado/';
-        $configCF['allowed_types'] = 'pdf';
+           $configCF['allowed_types'] = 'pdf';
         $this->load->library('upload', $configCF);
 
 	    if($editarFile == 0){
