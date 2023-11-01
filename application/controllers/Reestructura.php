@@ -120,7 +120,6 @@ class Reestructura extends CI_Controller{
     }
 
 	public function validarLote(){
-
 		$dataPost = $_POST;
 		$datosId["idLote"] = $dataPost['idLote'];
 		$datos["opcionReestructura"] = $dataPost['opcionCatalogo'];
@@ -143,9 +142,7 @@ class Reestructura extends CI_Controller{
 	}
 
     public function insertarInformacionCli ($idLote){
-
         $dataPost = $_POST;
-
         $datos["idLote"] = $dataPost['idLote'];
 		$datos["nombre"] = $dataPost['nombreCli'];
 		$datos["apellido_paterno"] = $dataPost['apellidopCli'];
@@ -1219,7 +1216,7 @@ class Reestructura extends CI_Controller{
 
         $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal;
         if (!file_exists($micarpeta)) {
-            mkdir($micarpeta, 0777, true);
+            mkdir($micarpeta, 0777, true) or die("Error en la generación");
         }
 
         if($flagAction==2){
@@ -1615,7 +1612,7 @@ class Reestructura extends CI_Controller{
                         'movimiento' => "CONTRATO FIRMADO",
                         'expediente' => $nombreExpediente,
                         'modificado' => date('Y-m-d H:i:s'),
-                        'status' => 0,
+                        'status' => 1,
                         'idCliente' => $idCliente,
                         'idCondominio' => $idCondominio,
                         'idLote' => $idLote,
@@ -1791,7 +1788,7 @@ class Reestructura extends CI_Controller{
                     'domicilio_particular' => $data['domicilio'][$index],
                     'estado_civil' => $data['estado_civil'][$index],
                     'ocupacion' => $data['ocupacion'][$index],
-                    'fecha_nacimiento' => $data['fecha_nacimiento'][$index],
+                    'ine' => $data['identificacion'][$index],
                     'modificado_por' => $this->session->userdata('id_usuario')
                 ];
             }

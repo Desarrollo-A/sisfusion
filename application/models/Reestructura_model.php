@@ -577,12 +577,13 @@ class Reestructura_model extends CI_Model
 
     public function getInventario() {
         return $this->db->query("SELECT UPPER(CAST(re.descripcion AS varchar(100))) nombreResidencial, co.nombre nombreCondominio,  lo.nombreLote, lo.idLote, 
-        lo.sup, FORMAT(lo.precio, 'C') preciom2, FORMAT(lo.total, 'C') total,
+        lo.sup, oxc1.nombre tipoLote, FORMAT(lo.precio, 'C') preciom2, FORMAT(lo.total, 'C') total,
         ISNULL(oxc2.nombre, 'Sin especificar') estatus, sl.nombre estatusContratacion, sl.background_sl, sl.color,
         lo.tipo_estatus_regreso
         FROM lotes lo
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
-        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial AND re.idResidencial in (1, 2, 3, 4, 5, 6, 13, 27, 30, 31)
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial AND re.idResidencial IN (1, 2, 3, 4, 5, 6, 13, 27, 30, 31)
+        INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = co.tipo_lote AND oxc1.id_catalogo = 27
         LEFT JOIN opcs_x_cats oxc2 on oxc2.id_opcion = lo.opcionReestructura AND oxc2.id_catalogo = 100
         INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
         WHERE lo.idStatusLote IN (1, 15, 16) AND lo.status = 1
@@ -592,7 +593,7 @@ class Reestructura_model extends CI_Model
     public function getReporteVentas() {
         $id_rol = $this->session->userdata('id_rol');
         $id_usuario = $id_rol == 6 ? $this->session->userdata('id_lider') : $this->session->userdata('id_usuario');
-        // $validacionExtra = in_array($id_rol, array(3, 6)) ? "AND cl.id_gerente = $id_usuario" : $this->session->userdata('id_rol') == 7 ? "AND cl.id_asesor = $id_usuario" : "";
+        $validacionExtra = in_array($id_rol, array(3, 6)) ? "AND cl.id_gerente = $id_usuario" : $this->session->userdata('id_rol') == 7 ? "AND cl.id_asesor = $id_usuario" : "";
         return $this->db->query("SELECT oxc1.nombre tipo_proceso, UPPER(CAST(re.descripcion AS varchar(100))) nombreResidencial, co.nombre nombreCondominio,  lo.nombreLote, lo.idLote, lo.idCliente, 
 		UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, sl.nombre estatusContratacion, sl.background_sl, sl.color, cl.fechaApartado,
         CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
@@ -614,19 +615,6 @@ class Reestructura_model extends CI_Model
 
     public function checarDisponibleRe($idLote){
         $query = $this->db->query("SELECT * FROM lotes WHERE (idStatusLote = 15 OR idStatusLote = 1 OR idStatusLote = 2) AND idLote=".$idLote);
-        return $query->result_array();
-    }
-
-    public function revisarCFDocumentos($idLote){
-        $query = $this->db->query("SELECT * FROM historial_documento WHERE tipo_doc=30  AND idLote=".$idLote);
-        return $query->result_array();
-    }
-    public function getCopropietariosReestructura($idLote){
-        $query = $this->db->query("SELECT dxc.*, opc.nombre as estado_civil 
-        FROM datos_x_copropietario dxc
-        LEFT JOIN opcs_x_cats opc ON opc.id_opcion = dxc.estado_civil
-        AND opc.id_catalogo=18
-        WHERE idLote=".$idLote);
         return $query->result_array();
     }
 
@@ -666,5 +654,20 @@ class Reestructura_model extends CI_Model
     public function eliminarCopropietarios($ids)
     {
         $this->db->query("DELETE FROM datos_x_copropietario WHERE id_dxcop IN ($ids)");
+    }
+
+    public function revisarCFDocumentos($idLote, $idCliente){
+        $query = $this->db->query("SELECT * FROM historial_documento WHERE tipo_doc=30  AND idLote=".$idLote." AND idCliente=".$idCliente);
+
+        return $query->result_array();
+    }
+
+    public function getCopropietariosReestructura($idLote){
+        $query = $this->db->query("SELECT dxc.*, opc.nombre as estado_civil 
+        FROM datos_x_copropietario dxc
+        LEFT JOIN opcs_x_cats opc ON opc.id_opcion = dxc.estado_civil
+        AND opc.id_catalogo=18
+        WHERE idLote=".$idLote);
+        return $query->result_array();
     }
 }
