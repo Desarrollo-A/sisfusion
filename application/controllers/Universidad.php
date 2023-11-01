@@ -42,6 +42,12 @@ class Universidad extends CI_Controller
       $this->load->view("universidad/reporte_mensual_view");
     }
 
+    public function reporteDevolucion(){
+      $this->load->view('template/header');
+      $this->load->view("universidad/reporte_devolucion_view");
+    }
+  
+
     function getDescuentosUniversidad($tipoDescuento){
         $data['data']= $this->Universidad_model->getDescuentosUniversidad($tipoDescuento);
         
@@ -70,7 +76,7 @@ class Universidad extends CI_Controller
     
         if($voBoUsuario > 0){
         $data = 0;
-        }else{
+        } else{
         $data = $this->Universidad_model->altaNuevoDescuentoUM($usuario, $montoFinalDescuento, $numeroMeses, $montoFinalMensualidad, $descripcionAltaDescuento, $this->session->userdata('id_usuario')); 
         }
         echo json_encode($data);
@@ -272,10 +278,10 @@ class Universidad extends CI_Controller
 
   public function updateCertificacion(){
     $certificacion = $this->input->post('certificaciones');
-    $idPrestamo = $this->input->post('idDescuento');
-    $arr_update = array("estatus_certificacion" => $certificacion);
+    $idDescuento = $this->input->post('idDescuento');
+    $arrayUpdate = array("estatus_certificacion" => $certificacion);
                           
-    $update = $this->Universidad_model->updateCertificacion($idPrestamo  , $arr_update);
+    $update = $this->Universidad_model->updateCertificacion($idDescuento, $arrayUpdate);
     if($update){
       $respuesta =  array(
         "response_code" => 200,
@@ -297,6 +303,38 @@ class Universidad extends CI_Controller
        $dat[$i]['pa'] = 0;
    }
    echo json_encode( array( "data" => $dat));
+  }
+
+
+  public function CancelarDescuento(){
+    $id_pago = $this->input->post('pagoDevolver');
+    $motivo = $this->input->post('comentarioDevolucion');
+    $respuesta = array($this->Universidad_model->CancelarDescuento($id_pago,$motivo));
+    echo json_encode( $respuesta[0]);
+  
+  }
+
+  public function editarDescuentoUM(){
+    $fechaNueva = $this->input->post('fechaIncial');
+    $idDescuento = $this->input->post('id_descuento');
+
+    $montoNuevo = str_replace(",",'',$this->input->post('nuevoMonto'));
+    $montoNuevoFinal = str_replace("$",'',$montoNuevo);
+
+    $mensualidadesNuevas =  $this->input->post('numeroMensualidades');
+
+    $montoMensualidadNuevo = str_replace(",",'',$this->input->post('nuevoMontoMensual'));
+    $montoMensualidadNuevoFinal = str_replace("$",'',$montoMensualidadNuevo);
+    
+    $respuesta = array($this->Universidad_model->editarDescuentoUM($fechaNueva,$idDescuento,$montoNuevoFinal,$mensualidadesNuevas,$montoMensualidadNuevoFinal));
+    echo json_encode( $respuesta[0]);
+  
+  }
+
+  public function getReporteDevoluciones(){
+    $condicion = $this->input->post("query");
+    $respuesta['data']  = $this->Universidad_model->getReporteDevoluciones($condicion);
+    echo json_encode($respuesta);
   }
   
     

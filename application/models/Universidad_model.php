@@ -29,7 +29,7 @@ function getDescuentosUniversidad($estatus){
                 $filtro = ' ';
         }
 
-        $query = $this->db->query("SELECT du.id_descuento, du.id_usuario, UPPER(CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno)) AS nombre, UPPER(opc.nombre) AS puesto, se.id_sede, UPPER(se.nombre) AS sede, ISNULL(pci3.saldo_comisiones, 0) saldo_comisiones, du.monto, ISNULL(pci2.total_descontado, 0) total_descontado, ISNULL(du.pagado_caja, 0) pagado_caja, ISNULL(du.monto-(ISNULL(pci2.total_descontado,0) + ISNULL(du.pagado_caja, 0)), 0) pendiente, du.pago_individual, du.estatus, us.estatus as estado_usuario, convert(nvarchar(20), du.fecha_modificacion, 113) fecha_modificacion, (CASE WHEN DAY(du.fecha_modificacion) BETWEEN 1 AND 10 AND du.estatus = 5 AND MONTH(du.fecha_modificacion) = MONTH(GETDATE()) AND YEAR(du.fecha_modificacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END ) banderaReactivado, convert(nvarchar(20), du.fecha_creacion, 113) fecha_creacion, du.primer_descuento, ISNULL((CASE WHEN du.estatus_certificacion = '0' OR du.estatus_certificacion = NULL THEN NULL ELSE opc1.nombre END),0) as certificacion, ISNULL((CASE WHEN du.estatus_certificacion = '0' OR du.estatus_certificacion = NULL THEN NULL ELSE opc1.id_opcion END),0) as idCertificacion, opc1.color as colorCertificacion
+        $query = $this->db->query("SELECT du.id_descuento, du.id_usuario, UPPER(CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno)) AS nombre, UPPER(opc.nombre) AS puesto, se.id_sede, UPPER(se.nombre) AS sede, ISNULL(pci3.saldo_comisiones, 0) saldo_comisiones, du.monto, ISNULL(pci2.total_descontado, 0) total_descontado, ISNULL(du.pagado_caja, 0) pagado_caja, ISNULL(du.monto-(ISNULL(pci2.total_descontado,0) + ISNULL(du.pagado_caja, 0)), 0) pendiente, du.pago_individual, du.estatus, us.estatus as estado_usuario, convert(nvarchar(20), du.fecha_modificacion, 113) fecha_modificacion, (CASE WHEN DAY(du.fecha_modificacion) BETWEEN 1 AND 10 AND du.estatus = 5 AND MONTH(du.fecha_modificacion) = MONTH(GETDATE()) AND YEAR(du.fecha_modificacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END ) banderaReactivado, convert(nvarchar(20), du.fecha_creacion, 113) fecha_creacion, convert(nvarchar(20), du.primer_descuento, 113) primer_descuento, ISNULL((CASE WHEN du.estatus_certificacion = '0' OR du.estatus_certificacion = NULL THEN NULL ELSE opc1.nombre END),0) as certificacion, ISNULL((CASE WHEN du.estatus_certificacion = '0' OR du.estatus_certificacion = NULL THEN NULL ELSE opc1.id_opcion END),0) as idCertificacion, opc1.color as colorCertificacion
         FROM descuentos_universidad du
         INNER JOIN usuarios us ON us.id_usuario = du.id_usuario
         INNER JOIN usuarios ua ON ua.id_usuario = du.creado_por
@@ -189,13 +189,11 @@ function update_descuento($id_pago_i,$monto, $comentario, $saldo_comisiones, $us
         $estatus =17;
         $respuesta = $this->db->query("UPDATE descuentos_universidad SET saldo_comisiones=".$saldo_comisiones.", estatus = 2, primer_descuento = (CASE WHEN primer_descuento IS NULL THEN GETDATE() ELSE primer_descuento END) WHERE id_usuario = ".$user." AND estatus IN (1, 0)");
         $uni='SALDO COMISIONES: $'.number_format($saldo_comisiones,2, '.', ',');
-    
-    
 
     if ($monto == 0) {
-        $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus, descuento_aplicado=1, modificado_por='$usuario', fecha_pago_intmex = GETDATE(), fecha_abono = GETDATE(), comentario='$uni' WHERE id_pago_i=$id_pago_i");
+        $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus, descuento_aplicado=1, modificado_por='$usuario', fecha_pago_intmex = GETDATE(), comentario='$uni' WHERE id_pago_i=$id_pago_i");
     } else {
-        $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus, descuento_aplicado=1, modificado_por='$usuario', fecha_pago_intmex = GETDATE(), fecha_abono = GETDATE(), abono_neodata = $monto, comentario='$uni' WHERE id_pago_i=$id_pago_i");
+        $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus, descuento_aplicado=1, modificado_por='$usuario', fecha_pago_intmex = GETDATE(), abono_neodata = $monto, comentario='$uni' WHERE id_pago_i=$id_pago_i");
     }
     $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($id_pago_i, $usuario, GETDATE(), 1, 'MOTIVO DESCUENTO: ".$comentario."')");
 
@@ -262,7 +260,7 @@ function getDatosHistorialUM($anio, $mes) {
          $filtro = '  AND MONTH(pci1.fecha_pago_intmex) = '.$mes.' AND YEAR(pci1.fecha_pago_intmex) = '.$anio.'';
     
     return $this->db-> query("SELECT pci1.id_pago_i, lo.nombreLote, re.empresa, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) user_names, 
-    CONVERT(VARCHAR(20),pci1.fecha_pago_intmex,113) AS fecha_pago_intmex, pci1.id_usuario, CASE WHEN cl.estructura = 1 THEN oprol2.nombre ELSE oprol.nombre END as puesto, pci1.abono_neodata,
+    CONVERT(VARCHAR(20),pci1.fecha_pago_intmex,113) AS fecha_descuento, pci1.id_usuario, CASE WHEN cl.estructura = 1 THEN oprol2.nombre ELSE oprol.nombre END as puesto, pci1.abono_neodata,
      UPPER(se.nombre) AS sede, pci1.abono_neodata, CONCAT(cr.nombre, ' ',cr.apellido_paterno, ' ', cr.apellido_materno) creado
     FROM pago_comision_ind pci1
     INNER JOIN comisiones com ON pci1.id_comision = com.id_comision
@@ -292,5 +290,71 @@ function getDatosHistorialUM($anio, $mes) {
     GROUP BY pci1.id_pago_i, lo.nombreLote, re.empresa, u.nombre, u.apellido_paterno, u.apellido_materno, pci1.id_usuario, oprol.nombre, pci1.abono_neodata, se.nombre, pci1.abono_neodata, cr.nombre, cr.apellido_paterno, cr.apellido_materno, pci1.fecha_pago_intmex, cl.estructura, oprol2.nombre");
 }
  
+
+
+public function CancelarDescuento($id_pago, $motivo)
+{
+    $this->db->query("UPDATE descuentos_universidad SET estatus = CASE WHEN (estatus = 4) THEN 1 ELSE estatus END,
+        pagos_activos = CASE WHEN (estatus = 4) THEN pagos_activos + 1 else pagos_activos END
+        WHERE id_usuario = (SELECT id_usuario FROM pago_comision_ind WHERE id_pago_i = $id_pago)");
+
+    $respuesta = $this->db->query("UPDATE pago_comision_ind set descuento_aplicado = 0, estatus = 1, modificado_por='".$this->session->userdata('id_usuario')."' where id_pago_i=".$id_pago."");
+    $this->db->query("INSERT INTO historial_comisiones VALUES (".$id_pago.",".$this->session->userdata('id_usuario').", GETDATE(), 2, 'CAPITAL HUMANO CANCELÓ DESCUENTO, MÓTIVO: ".$motivo."')");
+
+    if ($respuesta ) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+
+public function editarDescuentoUM($fechaNueva,$idDescuento,$montoNuevo,$mensualidadesNuevas,$montoMensualidadNuevo)
+{
+    $respuesta = $this->db->query("UPDATE descuentos_universidad
+        SET fecha_modificaccion = CONVERT(DATETIME,'".$fechaNueva."',103),
+        estatus = (CASE WHEN MONTH(CONVERT(DATETIME,'".$fechaNueva."',103)) = MONTH(GETDATE()) AND YEAR(CONVERT(DATETIME,'".$fechaNueva."',103)) = YEAR(GETDATE()) AND DAY(CONVERT(DATETIME,'".$fechaNueva."',103)) BETWEEN 1 AND 10 THEN 1 WHEN (MONTH(CONVERT(DATETIME,'".$fechaNueva."',103)) > MONTH(GETDATE()) AND YEAR(CONVERT(DATETIME,'".$fechaNueva."',103)) >= YEAR(GETDATE())) OR (MONTH(CONVERT(DATETIME,'".$fechaNueva."',103)) >= MONTH(GETDATE()) AND YEAR(CONVERT(DATETIME,'".$fechaNueva."',103)) >= YEAR(GETDATE()) AND DAY(CONVERT(DATETIME,'".$fechaNueva."',103)) > 10) THEN 5 ELSE estatus END),
+        monto = $montoNuevo,
+        pagos_activos = $mensualidadesNuevas,
+        pago_individual = $montoMensualidadNuevo
+        WHERE id_descuento = $idDescuento");
+     
+    if ($respuesta ) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+
+function getReporteDevoluciones($condicion){
+
+    $cmd = "SELECT pci1.id_pago_i, lo.nombreLote, re.empresa, UPPER(CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno)) AS user_names, 
+    convert(nvarchar(20),  pci1.fecha_pago_intmex, 113)as fecha_descuento,
+    convert(nvarchar(20),  his.fecha_movimiento, 113)as fecha_devolucion,
+    pci1.id_usuario, UPPER(oprol.nombre) AS puesto, UPPER(se.nombre) AS sede, his.comentario as creado, FORMAT(ISNULL(pci1.abono_neodata , '0.00'), 'C') abono
+    FROM pago_comision_ind pci1
+    INNER JOIN comisiones com ON pci1.id_comision = com.id_comision
+    INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
+    INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+    INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+    INNER JOIN usuarios u ON u.id_usuario = com.id_usuario $condicion
+    INNER JOIN usuarios cr ON cr.id_usuario = pci1.modificado_por
+    INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
+    INNER JOIN historial_comisiones his ON his.id_pago_i = pci1.id_pago_i 
+    AND his.estatus = 2
+    LEFT JOIN sedes se   
+    ON se.id_sede = (CASE u.id_usuario 
+                     WHEN 2 THEN 2 WHEN 3 THEN 2 WHEN 1980 THEN 2 
+                     WHEN 1981 THEN 2 WHEN 1982 THEN 2 WHEN 1988 THEN 2 
+                     WHEN 4 THEN 5 WHEN 5 THEN 3 WHEN 607 THEN 1 
+                     WHEN 7092 THEN 4 WHEN 9629 THEN 2
+                     ELSE u.id_sede END) and se.estatus = 1";
+
+      $query = $this->db->query($cmd);
+      return $query->result_array();
+
+}
+
 
 }

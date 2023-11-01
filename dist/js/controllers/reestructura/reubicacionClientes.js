@@ -385,8 +385,8 @@ $(document).on('click', '.infoUser', async function (){
                         </div>
                         <div class="row">
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
-                                <label class="control-label">INE (<small style="color: red;">*</small>)</label>
-                                <input class="form-control input-gral" name="ineCLi" id="ineCLi" type="number" maxlength="13" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" value="${ine}" required/>
+                                <label class="control-label">INE/Pasaporte (<small style="color: red;">*</small>)</label>
+                                <input class="form-control input-gral" name="ineCLi" id="ineCLi" type="text" value="${ine}" required/>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m.0">
                                 <label class="control-label">Ocupación (<small style="color: red;">*</small>)</label>
@@ -464,33 +464,8 @@ $(document).on('click', '#guardarCliente', function (){
     const ineCLi = $('#ineCLi').val();
     const ocupacionCli = $('#ocupacionCli').val();
 
-    if(ineCLi == ''){
-        alerts.showNotification("top", "right", "Captura la INE", "warning");
-        return;
-    }
-
-    if (telefonoCli == '' || telefonoCli == null){
-        alerts.showNotification("top", "right", "Captura el teléfono", "warning");
-        return;
-    }
-
-    if (correoCli == '' || correoCli == null){
-        alerts.showNotification("top", "right", "Captura el correo", "warning");
-        return;
-    }
-
-    if(!validateEmail(correoCli)){
-        alerts.showNotification("top", "right", "Capture el correo de forma correcta", "warning");
-        return;
-    }
-
-    if (domicilioCli == '' || domicilioCli == null){
-        alerts.showNotification("top", "right", "Captura el domicilio", "warning");
-        return;
-    }
-
-    if(ocupacionCli == '' || ocupacionCli == null){
-        alerts.showNotification("top", "right", "Captura la ocupación", "warning");
+    if(ineCLi == '' || telefonoCli == '' || telefonoCli == null || correoCli == '' || correoCli == null || !validateEmail(correoCli) || domicilioCli == '' || domicilioCli == null || ocupacionCli == '' || ocupacionCli == null){
+        alerts.showNotification("top", "right", "Asegúrate de llenar todos los campos requeridos (*).", "warning");
         return;
     }
 
@@ -500,12 +475,12 @@ $(document).on('click', '#guardarCliente', function (){
         !validateInputArray('apellido_m[]') ||
         !validateInputArray('telefono2[]') ||
         !validateInputArray('correo[]') ||
-        !validateInputArray('fecha_nacimiento[]') ||
+        !validateInputArray('identificacion[]') ||
         !validateInputArray('domicilio[]') ||
         !validateInputArray('estado_civil[]') ||
         !validateInputArray('ocupacion[]')
     ) {
-        alerts.showNotification("top", "right", "Captura toda la información obligatoria de copropietarios", "warning");
+        alerts.showNotification("top", "right", "Asegúrate de llenar todos los campos requeridos (*) para los copropietarios.", "warning");
         return;
     }
 
@@ -1353,7 +1328,7 @@ const agregarCopropietario = (copropietario = null) => {
                                 <div class="p-4">
                                     <div class="row">
                                         <div class="col-xs-12">
-                                            <label class="control-label">NOMBRE (<small style="color: red;">*</small>)</label>
+                                            <label class="control-label">Nombre (<small style="color: red;">*</small>)</label>
                                             <input class="form-control input-gral"
                                                 name="nombre[]" 
                                                 type="text" 
@@ -1370,7 +1345,7 @@ const agregarCopropietario = (copropietario = null) => {
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12">
-                                            <label class="control-label">APELLIDO PATERNO (<small style="color: red;">*</small>)</label>
+                                            <label class="control-label">Apellido paterno (<small style="color: red;">*</small>)</label>
                                             <input class="form-control input-gral"
                                                 name="apellido_p[]" 
                                                 type="text"
@@ -1382,7 +1357,7 @@ const agregarCopropietario = (copropietario = null) => {
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12">
-                                            <label class="control-label">APELLIDO MATERNO (<small style="color: red;">*</small>)</label>
+                                            <label class="control-label">Apellido materno (<small style="color: red;">*</small>)</label>
                                             <input class="form-control input-gral"
                                                 name="apellido_m[]" 
                                                 type="text"
@@ -1394,7 +1369,7 @@ const agregarCopropietario = (copropietario = null) => {
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                            <label class="control-label">CELULAR (<small style="color: red;">*</small>)</label>
+                                            <label class="control-label">Teléfono (<small style="color: red;">*</small>)</label>
                                             <input class="form-control input-gral" 
                                                 name="telefono2[]" 
                                                 type="number" 
@@ -1403,7 +1378,7 @@ const agregarCopropietario = (copropietario = null) => {
                                                 value="${copropietario?.telefono_2 ?? ''}"/>
                                         </div>
                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                            <label class="control-label">CORREO ELECTRÓNICO (<small style="color: red;">*</small>)<small class="pl-1" id="errorMsgCorreo${idDiv}"></small></label></label>
+                                            <label class="control-label">Correo (<small style="color: red;">*</small>)<small class="pl-1" id="errorMsgCorreo${idDiv}"></small></label></label>
                                             <input class="form-control input-gral" 
                                                 name="correo[]" 
                                                 id="correoCop${idDiv}"
@@ -1415,17 +1390,7 @@ const agregarCopropietario = (copropietario = null) => {
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                                            <label class="control-label">FECHA DE NACIMIENTO (<small style="color: red;">*</small>)</label>
-                                            <input class="form-control input-gral" 
-                                                name="fecha_nacimiento[]" 
-                                                onkeydown="return false" 
-                                                type="date"
-                                                value="${copropietario?.fecha_nacimiento ?? ''}"/>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                                            <label class="control-label">DOMICILIO (<small style="color: red;">*</small>)</label>
+                                            <label class="control-label">Domicilio (<small style="color: red;">*</small>)</label>
                                             <input class="form-control input-gral" 
                                                 name="domicilio[]" 
                                                 type="text" 
@@ -1435,7 +1400,7 @@ const agregarCopropietario = (copropietario = null) => {
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                                            <label class="control-label">ESTADO CIVIL (<small style="color: red;">*</small>)</label>
+                                            <label class="control-label">Estado civil (<small style="color: red;">*</small>)</label>
                                             <select name="estado_civil[]" 
                                                 id="estadoCivilSelect${idDiv}"
                                                 title="SELECCIONA UNA OPCIÓN" 
@@ -1445,8 +1410,15 @@ const agregarCopropietario = (copropietario = null) => {
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-xs-12">
-                                            <label class="control-label">OCUPACIÓN (<small style="color: red;">*</small>)</label>
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                            <label class="control-label">INE/Pasaporte (<small style="color: red;">*</small>)</label>
+                                            <input class="form-control input-gral" 
+                                                name="identificacion[]" 
+                                                type="text"
+                                                value="${copropietario?.ine ?? ''}"/>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                            <label class="control-label">Ocupación (<small style="color: red;">*</small>)</label>
                                             <input class="form-control input-gral" 
                                                 name="ocupacion[]" 
                                                 type="text" 
