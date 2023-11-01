@@ -1775,7 +1775,7 @@ class Reestructura extends CI_Controller{
                         'domicilio_particular' => $data['domicilio'][$index],
                         'estado_civil' => $data['estado_civil'][$index],
                         'ocupacion' => $data['ocupacion'][$index],
-                        'fecha_nacimiento' => $data['fecha_nacimiento'][$index],
+                        'ine' => $data['identificacion'][$index],
                         'modificado_por' => $this->session->userdata('id_usuario')
                     ];
                     continue;

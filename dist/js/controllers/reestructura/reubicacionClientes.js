@@ -382,80 +382,75 @@ $(document).on('click', '.btn-informacion-cliente', async function (){
 
         changeSizeModal('modal-md');
         appendBodyModal(`
-                <form method="post" id="formInfoCliente" class="scroll-styles" style="max-height:530px; overflow:auto">
+                <form method="post" id="formInfoCliente" class="scroll-styles" style="max-height:500px; padding:0 20px; overflow:auto">
                     <div class="modal-header">
-                        <h4 class="modal-title text-center">CORROBORAR LA INFORMACIÓN DEL CLIENTE</h4>
+                        <h4 class="modal-title text-center">Corrobora la información del cliente</h4>
                     </div>	
-                    <div class="modal-body p-0">
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                                    <label class="control-label">Nombre (<small style="color: red;">*</small>)</label>
-                                    <input class="form-control input-gral" name="nombreCli" id="nombreCli" type="text" value="${nombreLote}" required/>
-                                </div>
-                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                                    <label class="control-label">Apellido paterno (<small style="color: red;">*</small>)</label>
-                                    <input class="form-control input-gral" name="apellidopCli" id="apellidopCli" value="${apePaterno}" type="text" required/>
-                                </div>
-                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                                    <label class="control-label">Apellido materno (<small style="color: red;">*</small>)</label>
-                                    <input class="form-control input-gral" name="apellidomCli" id="apellidomCli" type="text" value="${apeMaterno}" required/>
-                                </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                                <label class="control-label">Nombre (<small style="color: red;">*</small>)</label>
+                                <input class="form-control input-gral" name="nombreCli" id="nombreCli" type="text" value="${nombreLote}" required/>
                             </div>
-                            <div class="row">
-                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
-                                    <label class="control-label">Teléfono (<small style="color: red;">*</small>)</label>
-                                    <input class="form-control input-gral" name="telefonoCli" id="telefonoCli" type="number" maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" value="${telefono}" required/>
-                                </div>
-                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
-                                    <label class="control-label">Correo (<small style="color: red;">*</small>)<small class="pl-1" id="result"></small></label>
-                                    <input class="form-control input-gral" name="correoCli" id="correoCli" oninput= "validarCorreo('#correoCli', '#result')" type="email" value="${correo}" required/>
-                                </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                                <label class="control-label">Apellido paterno (<small style="color: red;">*</small>)</label>
+                                <input class="form-control input-gral" name="apellidopCli" id="apellidopCli" value="${apePaterno}" type="text" required/>
                             </div>
-                            <div class="row">
-                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                                    <label class="control-label">Domicilio (<small style="color: red;">*</small>)</label>
-                                    <input class="form-control input-gral" name="domicilioCli" id="domicilioCli" type="text" value="${domicilio}" required/>
-                                </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                                <label class="control-label">Apellido materno (<small style="color: red;">*</small>)</label>
+                                <input class="form-control input-gral" name="apellidomCli" id="apellidomCli" type="text" value="${apeMaterno}" required/>
                             </div>
-                            <div class="row">
-                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                                    <label class="control-label">Estado civil (<small style="color: red;">*</small>)</label>
-                                    <select name="estadoCli" title="SELECCIONA UNA OPCIÓN" id="estadoCli" class="selectpicker m-0 select-gral" data-container="body" data-width="100%" required></select>
-                                </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
+                                <label class="control-label">Teléfono (<small style="color: red;">*</small>)</label>
+                                <input class="form-control input-gral" name="telefonoCli" id="telefonoCli" type="number" maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" value="${telefono}" required/>
                             </div>
-                            <div class="row">
-                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
-                                    <label class="control-label">INE (<small style="color: red;">*</small>)</label>
-                                    <input class="form-control input-gral" name="ineCLi" id="ineCLi" type="number" maxlength="13" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" value="${ine}" required/>
-                                </div>
-                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m.0">
-                                    <label class="control-label">Ocupación (<small style="color: red;">*</small>)</label>
-                                    <input class="form-control input-gral" name="ocupacionCli" id="ocupacionCli" type="text" value="${ocupacion}" required/>
-                                </div>
-                            </div>        
-                            <input type="hidden" name="idCliente" id="idCliente" value="${idCliente}">
-                            <input type="hidden" name="idLote" id="idLote" value="${idLote}">
-                            <input type="hidden" name="idStatusLote" id="idStatusLote" value="${idStatusLote}">
-                            
-                            <!-- COPROPIETARIOS -->
-                            <div class="row mt-3">
-                                <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7"></div>
-                                    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
-                                        <button type="button" onclick="agregarCopropietario()" class="" style="width: 100%; color: green; background-color: #00800024; border: none; border-radius: 25px; font-size: 13px; padding: 10px 5px;">AGREGAR COPROPIETARIO</button>
-                                </div>
-                                <form id="formCopropietarios">
-                                    <div class="container-fluid" id="copropietariosDiv"></div>
-                                </form>
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
+                                <label class="control-label">Correo (<small style="color: red;">*</small>)<small class="pl-1" id="result"></small></label>
+                                <input class="form-control input-gral" name="correoCli" id="correoCli" oninput= "validarCorreo('#correoCli', '#result')" type="email" value="${correo}" required/>
                             </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                                <label class="control-label">Domicilio (<small style="color: red;">*</small>)</label>
+                                <input class="form-control input-gral" name="domicilioCli" id="domicilioCli" type="text" value="${domicilio}" required/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                                <label class="control-label">Estado civil (<small style="color: red;">*</small>)</label>
+                                <select name="estadoCli" title="SELECCIONA UNA OPCIÓN" id="estadoCli" class="selectpicker m-0 select-gral" data-container="body" data-width="100%" required></select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
+                                <label class="control-label">INE/Pasaporte (<small style="color: red;">*</small>)</label>
+                                <input class="form-control input-gral" name="ineCLi" id="ineCLi" type="text" value="${ine}" required/>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m.0">
+                                <label class="control-label">Ocupación (<small style="color: red;">*</small>)</label>
+                                <input class="form-control input-gral" name="ocupacionCli" id="ocupacionCli" type="text" value="${ocupacion}" required/>
+                            </div>
+                        </div>        
+                        <input type="hidden" name="idCliente" id="idCliente" value="${idCliente}">
+                        <input type="hidden" name="idLote" id="idLote" value="${idLote}">
+                        
+                        <!-- COPROPIETARIOS -->
+                        <div class="row">
+                            <div class="d-flex justify-end mt-2">
+                                <button type="button" onclick="agregarCopropietario()" class="btn btn-sm btn-primary">AGREGAR COPROPIETARIO</button>
+                            </div>
+                            <form id="formCopropietarios">
+                                <div id="copropietariosDiv"></div>
+                            </form>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple"  onclick="hideModal()">Cancelar</button>
+                        <button type="button" id="cancelarValidacion" class="btn btn-danger btn-simple cancelarValidacion" data-dismiss="modal">Cancelar</button>
                         <button type="button" id="guardarCliente" name="guardarCliente" class="btn btn-primary guardarValidacion">GUARDAR</button>
                     </div>
                 </form>`);
-
         cliente.copropietarios.forEach(agregarCopropietario);
 
         estadoCivilList.forEach((estadoCivil) => {
@@ -1460,7 +1455,7 @@ const agregarCopropietario = (copropietario = null) => {
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                            <label class="control-label">Celular (<small style="color: red;">*</small>)</label>
+                                            <label class="control-label">Teléfono (<small style="color: red;">*</small>)</label>
                                             <input class="form-control input-gral" 
                                                 name="telefono2[]" 
                                                 type="number" 
@@ -1469,7 +1464,7 @@ const agregarCopropietario = (copropietario = null) => {
                                                 value="${copropietario?.telefono_2 ?? ''}"/>
                                         </div>
                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                            <label class="control-label">Correo electrónico (<small style="color: red;">*</small>)<small class="pl-1" id="errorMsgCorreo${idDiv}"></small></label></label>
+                                            <label class="control-label">Correo (<small style="color: red;">*</small>)<small class="pl-1" id="errorMsgCorreo${idDiv}"></small></label></label>
                                             <input class="form-control input-gral" 
                                                 name="correo[]" 
                                                 id="correoCop${idDiv}"
@@ -1478,16 +1473,6 @@ const agregarCopropietario = (copropietario = null) => {
                                                 oninput= "validarCorreo('#correoCop${idDiv}', '#errorMsgCorreo${idDiv}')"
                                                 autocomplete="off"/>
                                         </div> 
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                                            <label class="control-label">Fecha de nacimiento (<small style="color: red;">*</small>)</label>
-                                            <input class="form-control input-gral" 
-                                                name="fecha_nacimiento[]" 
-                                                onkeydown="return false" 
-                                                type="date"
-                                                value="${copropietario?.fecha_nacimiento ?? ''}"/>
-                                        </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
@@ -1511,7 +1496,14 @@ const agregarCopropietario = (copropietario = null) => {
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-xs-12">
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                            <label class="control-label">INE/Pasaporte (<small style="color: red;">*</small>)</label>
+                                            <input class="form-control input-gral" 
+                                                name="identificacion[]" 
+                                                type="text"
+                                                value="${copropietario?.ine ?? ''}"/>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                             <label class="control-label">Ocupación (<small style="color: red;">*</small>)</label>
                                             <input class="form-control input-gral" 
                                                 name="ocupacion[]" 

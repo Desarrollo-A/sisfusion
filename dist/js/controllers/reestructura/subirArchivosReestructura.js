@@ -273,9 +273,9 @@ function loadCopropietarios(datos){
             contenidoHTML += '                  <label class="control-label">Ocupación</label>';
             contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.ocupacion+'"/>';
             contenidoHTML += '          </div>';
-            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 text-left">';
-            contenidoHTML += '                  <label class="control-label">Fecha nacimiento</label>';
-            contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.fecha_nacimiento+'"/>';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-3 col-lg-4">';
+            contenidoHTML += '                  <label class="label-on-left m-0">INE/Pasaporte</label>';
+            contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.ine+'"/>';
             contenidoHTML += '          </div>';
             contenidoHTML += '</div>';
         });
