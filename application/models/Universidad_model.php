@@ -298,7 +298,7 @@ public function CancelarDescuento($id_pago, $motivo)
 public function editarDescuentoUM($fechaNueva,$idDescuento,$montoNuevo,$mensualidadesNuevas,$montoMensualidadNuevo)
 {
     $respuesta = $this->db->query("UPDATE descuentos_universidad
-        SET fecha_modificaccion = CONVERT(DATETIME,'".$fechaNueva."',103),
+        SET fecha_modificacion = CONVERT(DATETIME,'".$fechaNueva."',103),
         estatus = (CASE WHEN MONTH(CONVERT(DATETIME,'".$fechaNueva."',103)) = MONTH(GETDATE()) AND YEAR(CONVERT(DATETIME,'".$fechaNueva."',103)) = YEAR(GETDATE()) AND DAY(CONVERT(DATETIME,'".$fechaNueva."',103)) BETWEEN 1 AND 10 THEN 1 WHEN (MONTH(CONVERT(DATETIME,'".$fechaNueva."',103)) > MONTH(GETDATE()) AND YEAR(CONVERT(DATETIME,'".$fechaNueva."',103)) >= YEAR(GETDATE())) OR (MONTH(CONVERT(DATETIME,'".$fechaNueva."',103)) >= MONTH(GETDATE()) AND YEAR(CONVERT(DATETIME,'".$fechaNueva."',103)) >= YEAR(GETDATE()) AND DAY(CONVERT(DATETIME,'".$fechaNueva."',103)) > 10) THEN 5 ELSE estatus END),
         monto = $montoNuevo,
         pagos_activos = $mensualidadesNuevas,

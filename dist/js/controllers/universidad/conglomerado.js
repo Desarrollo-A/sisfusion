@@ -179,13 +179,7 @@ function loadTable(tipoDescuento) {
                     return `<p style="font-size: 1em"><b>${formatMoney(d.monto)}</b></p>`;
                 }},
                 {"data": function (d) {
-                    descontado = 0;
-                    if (d.total_descontado == null || d.total_descontado <= 1) {
-                        descontado = d.pagado_caja;
-                    } else {
-                        descontado = d.total_descontado;
-                    }
-                    return `<p style="font-size: 1em">${formatMoney(descontado)}</p>`;
+                    return `<p style="font-size: 1em">${formatMoney(d.total_descontado)}</p>`;
                 }},
                 {"data": function (d) {
                     return `<p style="font-size: 1em; color:gray">${formatMoney(d.pagado_caja)}</p>`;
