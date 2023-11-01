@@ -38,17 +38,11 @@ class Reestructura extends CI_Controller{
     }
 
     public function getCliente($idCliente, $idLote){
-        $datCliente = $this->Reestructura_model->getDatosCliente($idLote);
-        $copropietarios = $this->Reestructura_model->obtenerCopropietariosReubicacion($idLote);
-
-        if ($datCliente != '') {
-            $datCliente->copropietarios = $copropietarios;
-            echo json_encode($datCliente);
-            return;
-        }
-
-        $datCliente = $this->Reestructura_model->getCliente($idCliente);
-        $datCliente->copropietarios = $copropietarios;
+        $datCliente = $this->Reestructura_model->getDatosCliente($idLote); // MJ: BUSCA LA INFORMACIÓN EN datos_x_clientes
+        $copropietarios = $this->Reestructura_model->obtenerCopropietariosReubicacion($idLote); // MJ: BUSCA COPROPIETARIOS
+        if ($datCliente == '') // MJ: SINO ENCUENTRA NADA EN datos_x_clientes SE VA A TRAER LA INFORMACIÓN DE clientes
+            $datCliente = $this->Reestructura_model->getCliente($idCliente);
+        $datCliente->copropietarios = $copropietarios; // MJ: SE AGREGA LA INFORMACIÓN DE copropietarios
         echo json_encode($datCliente);
     }
     
@@ -92,10 +86,6 @@ class Reestructura extends CI_Controller{
 	public function reestructura(){
 		$this->load->view('template/header');
         $this->load->view("reestructura/reestructura_view");
-    }
-    
-    public function listaLiberacionRes(){
-        echo json_encode($this->Reestructura_model->get_liberacion_reestructura()->result_array());
     }
 
 	public function lista_catalogo_opciones(){
@@ -205,7 +195,7 @@ class Reestructura extends CI_Controller{
             echo json_encode(array());
         }
     }
-    
+
 	public function aplicarLiberacion(){
 		$dataPost = $_POST;
         $update = $this->Reestructura_model->aplicaLiberacion($dataPost);
@@ -219,9 +209,9 @@ class Reestructura extends CI_Controller{
     public function setReestructura(){
         $this->db->trans_begin();
         $idCliente = $this->input->post('idCliente');
-        $idAsesor = $this->input->post('idAsesor');
+        $idAsesor = $this->session->userdata('id_usuario');
         $nombreAsesor = $this->session->userdata('nombre') . ' ' . $this->session->userdata('apellido_paterno') . ' ' . $this->session->userdata('apellido_materno');
-        $idLider = $this->input->post('idLider');
+        $idLider = $this->session->userdata('id_lider');
 		$clienteAnterior = $this->General_model->getClienteNLote($idCliente)->row();
         $idClienteAnterior = $clienteAnterior->id_cliente;
         $loteAOcupar = $clienteAnterior->idLote;
@@ -232,8 +222,8 @@ class Reestructura extends CI_Controller{
         $expediente = $this->Reestructura_model->obtenerDocumentacionPorReestructura();
         $loteNuevoInfo = $this->Reestructura_model->obtenerLotePorId($loteAOcupar);
         $documentacionActiva = $this->Reestructura_model->obtenerDocumentacionActiva($clienteAnterior->idLote, $idClienteAnterior);
-
-        $clienteNuevo = $this->copiarClienteANuevo($clienteAnterior, $idAsesor, $idLider, $lineaVenta, 3);
+        $proceso = 3;
+        $clienteNuevo = $this->copiarClienteANuevo($clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso);
         $idClienteInsert = $clienteNuevo[0]['lastId'];
 
         if (!$idClienteInsert) {
@@ -288,7 +278,7 @@ class Reestructura extends CI_Controller{
         }
 
         $dataUpdateCliente = array(
-            'proceso' => 3
+            'proceso' => $proceso
         );
 
         if (!$this->General_model->updateRecord("clientes", $dataUpdateCliente, "id_cliente", $idClienteAnterior)){
@@ -416,7 +406,7 @@ class Reestructura extends CI_Controller{
             foreach ($idLotes as $idLote) {
                 $arrayLoteApartado = array(
                     'idLote' => $idLote,
-                    'idStatusLote' => $proceso,
+                    'idStatusLote' => ($proceso == 2) ? 16 : 17,
                     'usuario' => $this->session->userdata('id_usuario')
                 );
 
@@ -1504,7 +1494,7 @@ class Reestructura extends CI_Controller{
     public function setLoteDisponible()
     {
         $dataUpdateLote = [
-            'idStatusLote' => $this->input->post('tipoProceso') == 3 ? 2 : $this->input->post('tipoEstatusRegreso') == 1 ? 15: 1,
+            'idStatusLote' => $this->input->post('tipoEstatusRegreso') == 1 ? 15: 1,
             'usuario' => $this->session->userdata('id_usuario'),
             'estatus_preproceso' => $this->input->post('tipoProceso') == 3 ? 0 : 1
         ];
@@ -1812,5 +1802,10 @@ class Reestructura extends CI_Controller{
         $resultDelete = empty($data['id_cop_eliminar']) || $this->Reestructura_model->eliminarCopropietarios($data['id_cop_eliminar']);
 
         return $resultInsert && $resultUpdate && $resultDelete;
+    }
+
+        
+    public function listaLiberacionRes(){
+        echo json_encode($this->Reestructura_model->get_liberacion_reestructura()->result_array());
     }
 }

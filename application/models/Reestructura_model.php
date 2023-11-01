@@ -49,7 +49,8 @@ class Reestructura_model extends CI_Model
         HD.expediente as contratoFirmado, HD.idDocumento as idContratoFirmado, co.idCondominio, hdcount.totalContratoFirmado,
         hpl.comentario, ISNULL(hpl.estatus, 1) AS id_estatus_modificacion, ISNULL(oxc2.nombre, 'NUEVO') AS estatus_modificacion, 
         ISNULL(oxc2.color, '#1B4F72') AS estatus_modificacion_color, lo.id_juridico_preproceso, ISNULL(se.nombre, 'SIN ESPECIFICAR') sedeAsesorAsignado, u6.id_usuario idAsesorAsignado, u6.id_lider,
-        CASE WHEN u7.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u7.nombre, ' ', u7.apellido_paterno, ' ', u7.apellido_materno)) END nombreEjecutivoJuridico, lo.idStatusLote, lo.tipo_estatus_regreso
+        CASE WHEN u7.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u7.nombre, ' ', u7.apellido_paterno, ' ', u7.apellido_materno)) END nombreEjecutivoJuridico, lo.idStatusLote, lo.tipo_estatus_regreso,
+        pxl.id_pxl
         FROM lotes lo
         INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.proceso NOT IN (2, 3, 4)
         LEFT JOIN datos_x_cliente dxc2 ON dxc2.idLote = lo.idLote
@@ -75,6 +76,7 @@ class Reestructura_model extends CI_Model
 		LEFT JOIN (SELECT idLote, COUNT(*) totalRescision FROM datos_x_cliente WHERE rescision IS NOT NULL GROUP BY idLote) dxc ON dxc.idLote = lo.idLote
 		LEFT JOIN (SELECT idLote, COUNT(*) totalContratoFirmado FROM historial_documento WHERE tipo_doc=30 GROUP BY idLote) hdcount ON hdcount.idLote = lo.idLote
 		LEFT JOIN historial_documento HD ON HD.idLote = lo.idLote AND HD.tipo_doc = 30
+        LEFT JOIN propuestas_x_lote pxl ON lo.idLote = pxl.idLote 
         LEFT JOIN usuarios u7 ON u7.id_usuario = lo.id_juridico_preproceso
         LEFT JOIN sedes se ON CAST(se.id_sede AS varchar(45)) = u6.id_sede
         WHERE lo.liberaBandera = 1 AND lo.status = 1 $validacionAsignacion $validacionEstatus")->result_array();
@@ -91,13 +93,6 @@ class Reestructura_model extends CI_Model
         $query = $this->db->query("SELECT cl.nombre, cl.apellido_paterno, cl.apellido_materno, cl.telefono1, cl.correo, cl.domicilio_particular, cl.estado_civil AS idEstadoC, oxc.nombre as estado_civil, ocupacion FROM clientes cl
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.estado_civil AND oxc.id_catalogo = 18
         WHERE id_cliente = $idCliente");
-        return $query->row();
-    }
-
-    public function getDatosCliente($idLote){
-        $query = $this->db->query("SELECT dxc.nombre, dxc.apellido_paterno, dxc.apellido_materno, dxc.telefono1, dxc.correo, dxc.domicilio_particular, dxc.estado_civil AS idEstadoC, oxc.nombre AS estado_civil, ocupacion, dxc.ine from datos_x_cliente dxc
-        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = dxc.estado_civil AND oxc.id_catalogo = 18
-        WHERE idLote = $idLote");
         return $query->row();
     }
 
@@ -520,7 +515,7 @@ class Reestructura_model extends CI_Model
         $query = $this->db->query("SELECT l.nombreLote, pxl.*, dxc.rescision,
         CONCAT(dxc.nombre,' ', dxc.apellido_paterno,' ', dxc.apellido_materno) AS nombreCliente,
         oxc.nombre AS estadoCivil, dxc.ine, dxc.domicilio_particular,
-        dxc.correo, dxc.telefono1, dxc.ocupacion, dxc.tipo
+        dxc.correo, dxc.telefono1, dxc.ocupacion, dxc.tipo_proceso
         FROM propuestas_x_lote pxl 
         INNER JOIN lotes l ON pxl.id_lotep=l.idLote
         INNER JOIN datos_x_cliente dxc ON pxl.idLote=dxc.idLote
