@@ -245,9 +245,8 @@ function loadTable(tipoDescuento) {
                 {"data": function (d) {
                     adicionales = '';
                     editar = '';
-                    descontadoTotal = d.total_descontado+d.pagado_caja;
                                        
-                    if(descontadoTotal > 1){//MIENTRAS TENGA SALDO APLICADO PODRA CONSULTAR LA INFO
+                    if(d.total_descontado > 1){//MIENTRAS TENGA SALDO APLICADO PODRA CONSULTAR LA INFO
                         base = `<button href="#" value="${d.id_usuario}" data-value="${d.nombre}" data-code="${d.id_usuario}" class="btn-data btn-blueMaderas consultar_logs_descuentos" title="Detalles"><i class="fas fa-info-circle"></i></button><button href="#" value="${d.id_usuario}" data-value="${d.nombre}" data-code="${d.id_usuario}" class="btn-data btn-green consultar_fecha_pagos" title="Historial pagos"><i class="fas fa-file"></i></button>
                         
                         <button href="#" 
@@ -261,6 +260,15 @@ function loadTable(tipoDescuento) {
                         class="btn-data btn-gray btn_certificacion"
                         id="btn_certificacion" name="btn_certificacion"
                         title="Asignar certificación"><i class="fas fa-closed-captioning"></i>
+                        </button>
+
+                        <button href="#" 
+                        value="${d.id_usuario}"
+                        data-nombre="${d.nombre}"
+                        data-rol="${d.puesto}"
+                        data-totalDescuento="${d.monto}"
+                        data-abonado="${d.total_descontado}"
+                        class="btn-data btn-orangeYellow topar_descuentos" title="Detener descuentos"><i class="fas fa-ban"></i>
                         </button>
                         `;
 
@@ -278,6 +286,8 @@ function loadTable(tipoDescuento) {
                         id="btn_certificacion" name="btn_certificacion"
                         title="Asignar certificación"><i class="fas fa-closed-captioning"></i>
                         </button>
+
+                        
                         `;
                     }
                     
@@ -295,14 +305,6 @@ function loadTable(tipoDescuento) {
                         class="btn-data btn-violetDeep aplicarDescuentoMensual" title="Aplicar descuento"><i class="fas fa-plus"></i>
                         </button>
                                 
-                        <button href="#" 
-                        value="${d.id_usuario}"
-                        data-nombre="${d.nombre}"
-                        data-rol="${d.puesto}"
-                        data-totalDescuento="${d.monto}"
-                        data-abonado="${d.total_descontado+d.pagado_caja}"
-                        class="btn-data btn-orangeYellow topar_descuentos" title="Detener descuentos"><i class="fas fa-ban"></i>
-                        </button>
                         `;
                     } 
 
@@ -312,7 +314,7 @@ function loadTable(tipoDescuento) {
                         data-nombre="${d.nombre}"
                         data-descuento="${d.id_descuento}"
                         data-monto="${d.monto}"
-                        data-descontado="${descontadoTotal}"
+                        data-descontado="${d.total_descontado}"
                         data-mensualidad="${d.pago_individual}"
                         class="btn-data btn-acidGreen btn_editarDescuento" title="Editar Descuento"><i class="fas fa-money-check-alt"></i>
                         </button>
