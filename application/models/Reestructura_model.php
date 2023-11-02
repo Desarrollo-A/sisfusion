@@ -81,7 +81,7 @@ class Reestructura_model extends CI_Model
         WHERE lo.liberaBandera = 1 AND lo.status = 1 $validacionAsignacion $validacionEstatus")->result_array();
     }
 
-    public function getDatosCliente($idLote){
+    public function getDatosClienteTemporal($idLote){
         $query = $this->db->query("SELECT dxc.nombre, dxc.apellido_paterno, dxc.apellido_materno, dxc.telefono1, dxc.correo, dxc.domicilio_particular, dxc.estado_civil AS idEstadoC, oxc.nombre AS estado_civil, ocupacion, dxc.ine from datos_x_cliente dxc
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = dxc.estado_civil AND oxc.id_catalogo = 18
         WHERE idLote = $idLote");
@@ -95,9 +95,11 @@ class Reestructura_model extends CI_Model
         return $query->row();
     }
 
-    public function getEstadoCivil(){
-        $query = $this->db->query("SELECT id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo = 18");
-        return $query->result_array();
+    public function getDatosCliente($idLote){
+        $query = $this->db->query("SELECT dxc.nombre, dxc.apellido_paterno, dxc.apellido_materno, dxc.telefono1, dxc.correo, dxc.domicilio_particular, dxc.estado_civil AS idEstadoC, oxc.nombre AS estado_civil, ocupacion, dxc.ine from datos_x_cliente dxc
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = dxc.estado_civil AND oxc.id_catalogo = 18
+        WHERE idLote = $idLote");
+        return $query->row();
     }
 
     public function getProyectosDisponibles($proyecto, $superficie, $tipoLote){
@@ -144,77 +146,66 @@ class Reestructura_model extends CI_Model
         return $query->result();
     }
 
-    function get_proyecto_lista(){
-        return $this->db->query("SELECT lotx.proyectoReubicacion AS idResidencial, CONCAT(res.nombreResidencial, ' - ' , res.descripcion) AS descripcion  
+    function get_liberacion_reestructura(){
+        return $this->db->query("SELECT lotx.proyectoReubicacion AS idResidencial, CONCAT(res.nombreResidencial, ' - ' , res.descripcion) AS descripcion, 'catalogoReestructura' as tipoLote
         FROM loteXReubicacion lotx
 		INNER JOIN residenciales res ON res.idResidencial = lotx.proyectoReubicacion
-		GROUP BY lotx.proyectoReubicacion, CONCAT(res.nombreResidencial, ' - ' , res.descripcion)");
-    }
-    function get_proyecto_listaCancelaciones(){
-        return $this->db->query("SELECT lotx.idProyecto AS idResidencial, CONCAT(res.nombreResidencial, ' - ' , res.descripcion) AS descripcion  
+		GROUP BY lotx.proyectoReubicacion, CONCAT(res.nombreResidencial, ' - ' , res.descripcion)
+        UNION
+        SELECT lotx.idProyecto AS idResidencial,
+        CONCAT(re.nombreResidencial, ' - ' , re.descripcion) AS descripcion, 'catalogoLiberar' as tipoLote 
         FROM loteXReubicacion lotx
-		INNER JOIN residenciales res ON res.idResidencial = lotx.idProyecto 
-		GROUP BY lotx.idProyecto,CONCAT(res.nombreResidencial, ' - ' , res.descripcion)");
+        INNER JOIN residenciales re ON re.idResidencial = lotx.idProyecto
+        GROUP BY lotx.idProyecto, CONCAT(re.nombreResidencial, ' - ' , re.descripcion)");
     }
 
-    function get_catalogo_resstructura(){
-        return $this->db->query("SELECT id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo = 100 and estatus = 1");
+    function get_catalogo_reestructura(){
+        return $this->db->query("SELECT id_opcion, nombre, fecha_creacion FROM opcs_x_cats WHERE id_catalogo = 100 and estatus = 1");
     }
 
     function  insertOpcion(){
         return $this->db->query("SELECT TOP (1) id_opcion + 1 AS lastId FROM opcs_x_cats WHERE id_catalogo = 100 ORDER BY id_opcion DESC")->row();
     }
 
-    public function get_valor_lote($id_proyecto){
+    public function get_valor_lote($id_proyecto, $bandera){
         ini_set('memory_limit', -1);
-        return $this->db->query("SELECT re.nombreResidencial, co.nombre nombreCondominio, lo.nombreLote,
-        lo.idLote, lo.sup superficie, FORMAT(lo.precio, 'C') precio, 
-        CASE WHEN cl.id_cliente IS NULL THEN '-' ELSE UPPER(CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno)) END nombreCliente,
-        ISNULL(oxc.nombre, 'Sin especificar') estatus, lo.idStatusLote,
-        lo.comentarioReubicacion, lo.liberadoReubicacion, lo.liberaBandera,
-        sl.nombre estatusContratacion, sl.background_sl, sl.color
-        FROM lotes lo
-        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
-        INNER JOIN residenciales re on re.idResidencial = co.idResidencial
-        LEFT JOIN opcs_x_cats oxc on oxc.id_opcion = lo.opcionReestructura AND oxc.id_catalogo = 100
-        INNER JOIN (SELECT DISTINCT(proyectoReubicacion) proyectoReubicacion FROM loteXReubicacion WHERE proyectoReubicacion IN ($id_proyecto)) lotx ON lotx.proyectoReubicacion = co.idResidencial
-        LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente and cl.status IN (1)
-        INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
-        WHERE lo.status = 1")->result();
-    }
+        $filtro = '';
+        $filtroTipo = '';
 
-    public function obtenerLotesLiberar($id_proyecto)
-    {
+        if($bandera == 0){
+            $filtroTipo = 'proyectoReubicacion';
+        }else{
+            $filtroTipo = 'idProyecto';
+        }
+
+        if($id_proyecto != 0){
+            $filtro = "AND lotx.$filtroTipo = $id_proyecto";
+        }
+
         return $this->db->query("SELECT res.nombreResidencial,con.nombre AS condominio, lot.nombreLote,
-                lot.idLote ,lot.sup AS superficie, lot.precio, CONCAT(cli.nombre,' ',cli.apellido_paterno,' ',cli.apellido_materno) nombreCliente,
-                lot.liberadoReubicacion AS observacion, oxc.nombre AS nombreOp, 
-                lot.comentarioReubicacion, lot.liberadoReubicacion ,
-                lot.liberaBandera 
-            FROM lotes lot
-            INNER JOIN condominios con ON con.idCondominio = lot.idCondominio
-            INNER JOIN residenciales res on res.idResidencial = con.idResidencial
-            LEFT JOIN opcs_x_cats oxc on oxc.id_opcion = lot.opcionReestructura and id_catalogo = 100
-            INNER JOIN loteXReubicacion lotx ON lotx.proyectoReubicacion = con.idResidencial and lotx.idProyecto in ($id_proyecto)
-            LEFT JOIN clientes cli ON cli.id_cliente = lot.idCliente and cli.status in (1,0)
-            WHERE lot.idStatusLote in (15,2,3)")
-            ->result();
+        lot.idLote ,lot.sup AS superficie, lot.precio, CONCAT(cli.nombre,' ',cli.apellido_paterno,' ',cli.apellido_materno) nombreCliente,
+        lot.liberadoReubicacion AS observacion, oxc.nombre AS nombreOp, 
+        lot.comentarioReubicacion, lot.liberadoReubicacion,
+        lot.liberaBandera, lot.idStatusLote
+        FROM lotes lot
+        INNER JOIN condominios con ON con.idCondominio = lot.idCondominio
+        INNER JOIN residenciales res on res.idResidencial = con.idResidencial
+        LEFT JOIN opcs_x_cats oxc on oxc.id_opcion = lot.opcionReestructura and id_catalogo = 100
+        INNER JOIN (select distinct($filtroTipo) as $filtroTipo from loteXReubicacion) lotx ON lotx.$filtroTipo = con.idResidencial $filtro
+        LEFT JOIN clientes cli ON cli.id_cliente = lot.idCliente and cli.status in (1,0)
+        WHERE lot.idStatusLote in (15,2,3)")->result();
     }
 
-    public function insertarCliente($datos)
-    {
-        return $this->db->query("INSERT INTO datos_x_cliente ([idLote],[nombre],[apellido_paterno],[apellido_materno],[estado_civil],[ine],[domicilio_particular],[correo],[telefono1],[ocupacion],[rescision],[fecha_creacion],[creado_por],[fecha_modificacion],[modificado_por]) VALUES (".$datos['idLote'].", '".$datos['nombre']."', '".$datos['apellido_paterno']."', '".$datos['apellido_materno']."', ".$datos['estado_civil'].", '".$datos['ine']."', '".$datos['domicilio_particular']."', '".$datos['correo']."', '".$datos['telefono1']."', '".$datos['ocupacion']."', null, GETDATE(), 1, GETDATE(), 1) ");
-    }
-
-    public function historialModel($id_prospecto){
+    public function historialModel($idLote){
         return $this->db->query("(SELECT aud.id_auditoria, oxc.nombre, oxcs.nombre as nombreNuevo, aud.fecha_creacion, CONCAT(usu.nombre,' ', usu.apellido_paterno,' ', usu.apellido_materno) AS creado_por from auditoria aud
         INNER JOIN opcs_x_cats  oxc on oxc.id_opcion = aud.anterior and oxc.id_catalogo = 100 and aud.col_afect = 'opcionReestructura'
         INNER JOIN opcs_x_cats  oxcs on oxcs.id_opcion = aud.nuevo and oxcs.id_catalogo = 100 and aud.col_afect = 'opcionReestructura'
         INNER JOIN usuarios usu on usu.id_usuario = aud.creado_por
-        where aud.anterior != 'NULL' AND tabla = 'lotes' and col_afect = 'opcionReestructura' and id_parametro = $id_prospecto)
+        where aud.anterior != 'NULL' AND tabla = 'lotes' and col_afect = 'opcionReestructura' and id_parametro = $idLote)
         UNION ALL
         (SELECT aud.id_auditoria, aud.anterior, aud.nuevo, aud.fecha_creacion, CONCAT(usu.nombre,' ', usu.apellido_paterno,' ', usu.apellido_materno) AS creado_por from auditoria aud
         INNER JOIN usuarios usu on usu.id_usuario = aud.creado_por
-        where aud.anterior != 'NULL' AND tabla = 'lotes'  and col_afect = 'comentarioReubicacion' and id_parametro = $id_prospecto)");
+        where aud.anterior != 'NULL' AND tabla = 'lotes'  and col_afect = 'comentarioReubicacion' and id_parametro = $idLote)");
     }
 
     public function aplicaLiberacion($datos){
@@ -440,11 +431,17 @@ class Reestructura_model extends CI_Model
 
     public function getLotes($id_proyecto){
         ini_set('memory_limit', -1);
-        return $this->db->query("SELECT lotx.idProyecto, res.nombreResidencial,con.nombre AS condominio, lot.nombreLote, lot.idLote ,lot.sup AS superficie, lot.precio, CONCAT(cli.nombre,' ',cli.apellido_paterno,' ',cli.apellido_materno) nombreCliente,lot.observacionLiberacion AS observacion 
+        $filtro = '';
+
+        if($id_proyecto != 0){
+            $filtro = "AND lotx.idProyecto IN ($id_proyecto)";
+        }
+
+        return $this->db->query("SELECT res.nombreResidencial,con.nombre AS condominio, lot.nombreLote, lot.idLote ,lot.sup AS superficie, lot.precio, CONCAT(cli.nombre,' ',cli.apellido_paterno,' ',cli.apellido_materno) nombreCliente,lot.observacionLiberacion AS observacion 
         FROM lotes lot
         INNER JOIN condominios con ON con.idCondominio = lot.idCondominio
         INNER JOIN residenciales res ON res.idResidencial = con.idResidencial
-        INNER JOIN loteXReubicacion lotx ON lotx.idProyecto = con.idResidencial AND lotx.idProyecto IN ($id_proyecto)
+        INNER JOIN (SELECT distinct(idProyecto) from loteXReubicacion) lotx ON lotx.idProyecto = con.idResidencial $filtro
         INNER JOIN clientes cli ON cli.id_cliente = lot.idCliente AND cli.status IN (1)
         WHERE cli.proceso IN(0,1)
         GROUP BY lotx.idProyecto, res.nombreResidencial,con.nombre, lot.nombreLote, lot.idLote ,lot.sup, lot.precio, 
@@ -517,14 +514,6 @@ class Reestructura_model extends CI_Model
         }
     }
     
-    function get_proyecto_lista_yola() {
-        return $this->db->query("SELECT lotx.idProyecto AS idResidencial,
-        CONCAT(re.nombreResidencial, ' - ' , re.descripcion) AS descripcion  
-        FROM loteXReubicacion lotx
-		INNER JOIN residenciales re ON re.idResidencial = lotx.idProyecto AND re.idResidencial IN (14, 21, 22, 25)
-		GROUP BY lotx.idProyecto, CONCAT(re.nombreResidencial, ' - ' , re.descripcion)");
-    }
-
     function getListaLotesArchivosReestrucura(){
         $query = $this->db->query("SELECT l.nombreLote, dxc.* FROM datos_x_cliente dxc INNER JOIN lotes l ON l.idLote = dxc.idLote");
         return $query->result_array();

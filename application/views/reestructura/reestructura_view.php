@@ -11,8 +11,8 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
-                            <li class="active"><a href="#nuevas-1" role="tab" data-toggle="tab">Liberar para reestructura</a></li>
-                            <li><a href="#proceso-1" role="tab" onclick="getProtectos(bandera = 1, '#proyectoLiberado');" data-toggle="tab">Liberar</a></li>
+                            <li class="active"><a href="#nuevas-1" role="tab" data-toggle="tab">Reestructura</a></li>
+                            <li><a href="#proceso-1" role="tab" data-toggle="tab">Liberar</a></li>
                         </ul>
                         <div class="card no-shadow m-0 border-conntent__tabs">
                             <div class="card-content p-0"> 
@@ -21,14 +21,14 @@
                                             <div class="tab-pane active" id="nuevas-1">
                                             <div class="card-content">
                                         <div class="encabezadoBox">
-                                         <h3 class="card-title center-align">Liberar para reestructura</h3>
+                                        <h3 class="card-title center-align">Liberar para reestructura</h3>
                                         </div>
                                     <div class="toolbar">
                                         <div class="row">
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                 <div class="form-group">
                                                     <label class="control-label overflow-hidden" for="proyecto">Proyecto</label>
-                                                    <select name="proyecto" id="proyecto"  class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" onclick="getProtectos(bandera = 0, '#proyecto');" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                    <select name="catalogoReestructura" id="catalogoReestructura"  class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6"></div>
@@ -36,7 +36,7 @@
                                     </div>
                                     <div class="material-datatables">
                                         <div class="form-group">
-                                            <table class="table-striped table-hover" id="tabla_clientes" name="tabla_clientes">
+                                            <table class="table-striped table-hover" id="tabla_reestructura" name="tabla_reestructura">
                                                 <thead>
                                                     <tr>
                                                         <th>PROYECTO</th>
@@ -67,12 +67,12 @@
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                 <div class="form-group">
                                                     <label class="control-label overflow-hidden" for="proyecto">Proyecto</label>
-                                                    <select name="proyectoLiberado" id="proyectoLiberado" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                    <select name="catalogoLiberar" id="catalogoLiberar" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <table class="table-striped table-hover" id="tabla_clientes_liberar">
+                                    <table class="table-striped table-hover" id="tabla_liberar" name="tabla_liberar">
                                         <thead>
                                             <tr>
                                                 <th>PROYECTO</th>
