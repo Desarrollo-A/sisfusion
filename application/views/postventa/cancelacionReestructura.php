@@ -20,12 +20,11 @@
                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                             <div class="form-group">
                                                 <label class="control-label overflow-hidden" for="proyecto">Proyecto</label>
-                                                <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                <select name="catalogoLiberar" id="catalogoLiberar" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6"></div>
                                     </div>
-                                    <div class="material-datatables">
                                     <div class="form-group">
                                         <table class="table-striped table-hover" id="tabla_cancelacion" name="tabla_cancelacion">
                                             <thead>
@@ -40,7 +39,6 @@
                                             </thead>
                                         </table>
                                     </div>
-                                </div>
                                 </div>
                             </div>  
                         </div>

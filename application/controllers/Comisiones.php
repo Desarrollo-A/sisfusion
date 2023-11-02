@@ -2222,15 +2222,7 @@ public function getDatosHistorialPagado($proyecto,$condominio){
 }
 
 
-public function getDatosHistorialDU($proyecto,$condominio){
-  $dat =  $this->Comisiones_model->getDatosHistorialDU($proyecto,$condominio)->result_array();
- for( $i = 0; $i < count($dat); $i++ ){
-     $dat[$i]['pa'] = 0;
- }
- echo json_encode( array( "data" => $dat));
-}
 
-  
 
 public function getDatosInternomexContraloria($proyecto){
   $dat =  $this->Comisiones_model->getDatosInternomexContraloria($proyecto)->result_array();
@@ -4075,11 +4067,7 @@ public function SaveAjuste($opc = '')
 
 
 
-    public function historialDescuentos()
-{
-  $this->load->view('template/header');
-  $this->load->view("ventas/historialCapitalFechas");
-}
+
 
 
 
@@ -5070,11 +5058,7 @@ for ($d=0; $d <count($dos) ; $d++) {
     echo json_encode($insertResponse);
   }
 
-  public function getInfoReporteDevolucion(){
-    $query = $this->input->post("query");
-    $respuesta['data']  = $this->Comisiones_model->getInfoReportePagos($query);
-    echo json_encode($respuesta);
-  }
+
   public function reporteDevolucion(){
     $this->load->view('template/header');
     $this->load->view("comisiones/reporte_devolucion_view");
