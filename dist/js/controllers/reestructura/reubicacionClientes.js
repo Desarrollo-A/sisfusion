@@ -1288,13 +1288,13 @@ const botonesAccionReubicacion = (d) => {
             return BTN_PROPUESTAS + BTN_INFOCLIENTE;
         }
         else if (d.idLoteXcliente == null && d.idStatusLote == 17) {
-            return BTN_PROPUESTAS_REES + BTN_INFOCLIENTE;
+            return BTN_INFOCLIENTE;
         }
         else if (d.idLoteXcliente != null && d.idStatusLote == 16) {
             return BTN_PROPUESTAS + BTN_AVANCE + BTN_INFOCLIENTE;
         }
         else{
-            return BTN_PROPUESTAS_REES + BTN_AVANCE + BTN_INFOCLIENTE;
+            return BTN_AVANCE + BTN_INFOCLIENTE;
         }
 
     }
