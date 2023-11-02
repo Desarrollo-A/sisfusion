@@ -46,7 +46,7 @@ const TipoDoc = {
   CONTRATO_1_CANCELADO: 42,
   CONTRATO_2_CANCELADO: 43,
   CONTRATO_REUBICACION_FIRMADO: 44,
-  DOCUMENTO_REESTRUCTURA_FIRMA_CLIENTE: 46
+  DOCUMENTO_REESTRUCTURA_FIRMA_CLIENTE: 46,
 };
 
 const observacionContratoUrgente = 1; // Bandera para inhabilitar
@@ -317,10 +317,7 @@ function cargarTabla(idLote, idCliente = "") {
             return `<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`;
           }
 
-          if (
-            data.tipo_doc == TipoDoc.CONTRATO ||
-            data.tipo_doc == TipoDoc.DOCUMENTO_REESTRUCTURA
-          ) {
+          if (data.tipo_doc == TipoDoc.CONTRATO) {
             // CONTRATO
             if (data.expediente == null || data.expediente === "") {
               // NO HAY DOCUMENTO CARGADO
@@ -471,7 +468,8 @@ function cargarTabla(idLote, idCliente = "") {
           if (
               data.tipo_doc == TipoDoc.CORRIDA_ANTERIOR ||
               data.tipo_doc == TipoDoc.CONTRATO_ANTERIOR ||
-              data.tipo_doc == TipoDoc.RESCISION_CONTRATO
+              data.tipo_doc == TipoDoc.RESCISION_CONTRATO ||
+              data.tipo_doc == TipoDoc.DOCUMENTO_REESTRUCTURA_FIRMA_CLIENTE
           ) {
             if (data.expediente == null || data.expediente === "") {
               buttonMain = crearBotonAccion(AccionDoc.DOC_NO_CARGADO, data);

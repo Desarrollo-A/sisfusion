@@ -129,11 +129,10 @@ class Pagos_model extends CI_Model {
         $cmd = "(SELECT pci1.id_pago_i, pci1.id_comision, 
         lo.nombreLote as nombreLote,
         (CASE WHEN com.ooam = 2 THEN CONCAT(lo.nombreLote,'</b> <i>(',com.loteReubicado,')</i><b>') ELSE lo.nombreLote END) lote,
-         re.nombreResidencial as proyecto, lo.totalNeto2 precio_lote,
-         com.comision_total, com.porcentaje_decimal, 
+        re.nombreResidencial as proyecto, lo.totalNeto2 precio_lote,
+        com.comision_total, com.porcentaje_decimal, 
         pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci1.estatus, 
         CONVERT(VARCHAR,pci1.fecha_pago_intmex,20) AS fecha_creacion, 
-        
         CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario,cp1.codigo_postal, 
         pci1.id_usuario, 
         CASE WHEN cl.estructura = 1 THEN oprol2.nombre ELSE oprol.nombre END as puesto, 0 personalidad_juridica, u.forma_pago, 0 as factura, 
@@ -160,9 +159,9 @@ class Pagos_model extends CI_Model {
         pci1.id_usuario, u.forma_pago, pci1.id_pago_i, pac.porcentaje_abono, u.nombre, u.apellido_paterno,u.apellido_materno, oprol.nombre, oxcest.nombre, cp1.codigo_postal, oxcest.id_opcion, re.empresa, co.nombre, lo.referencia, sed.impuesto, u.rfc, oprol2.nombre, cl.estructura)
         UNION
         (SELECT pci1.id_pago_i, pci1.id_comision,
-         lo.nombreLote as nombreLote, re.nombreResidencial as proyecto ,
-         (CASE WHEN com.ooam = 2 THEN CONCAT(lo.nombreLote,'</b> <i>(',com.loteReubicado,')</i><b>') ELSE lo.nombreLote END) lote,
-         lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, 
+        lo.nombreLote as nombreLote, re.nombreResidencial as proyecto ,
+        (CASE WHEN com.ooam = 2 THEN CONCAT(lo.nombreLote,'</b> <i>(',com.loteReubicado,')</i><b>') ELSE lo.nombreLote END) lote,
+        lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, 
         pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci1.estatus,  CONVERT(VARCHAR,pci1.fecha_pago_intmex,20) AS fecha_creacion, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario, cp1.codigo_postal, pci1.id_usuario, 
         CASE WHEN cl.estructura = 1 THEN oprol2.nombre ELSE oprol.nombre END as puesto, 0 personalidad_juridica, u.forma_pago, 0 as factura, pac.porcentaje_abono, oxcest.nombre as estatus_actual, oxcest.id_opcion id_estatus_actual, re.empresa, 0 lugar_prospeccion, 
         co.nombre as condominio, lo.referencia, (CASE u.forma_pago WHEN 3 THEN (((100-sed.impuesto)/100)*pci1.abono_neodata) ELSE pci1.abono_neodata END) impuesto, 
@@ -185,12 +184,9 @@ class Pagos_model extends CI_Model {
         GROUP BY pci1.id_comision,com.ooam ,lo.nombreLote,com.loteReubicado, re.nombreResidencial, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci1.estatus, pci1.fecha_pago_intmex,
         pci1.id_usuario, u.forma_pago, pci1.id_pago_i, pac.porcentaje_abono, u.nombre, u.apellido_paterno,u.apellido_materno, oprol.nombre, cp1.codigo_postal, oxcest.nombre, oxcest.id_opcion, re.empresa, co.nombre, lo.referencia,sed.impuesto, u.rfc, oprol2.nombre, cl.estructura)";
 
-
         $query = $this->db->query($cmd); 
 
         return $query->result_array();
-
- 
     }
 
 
