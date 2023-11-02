@@ -1183,13 +1183,13 @@ class Contraloria extends CI_Controller {
         $historialSaltoMovimientos[1]["idCliente"] = $idCliente;
 
         $cliente = $this->Reestructura_model->obtenerClientePorId($idCliente);
-        if ($cliente->proceso == 2 || $cliente->proceso == 4) {
+        if (in_array($cliente->proceso, array(2, 3, 4))) { // Reubicación, Reestructura, Reubicación excedente
             $arreglo["idStatusContratacion"] = 8;
             $arreglo["idMovimiento"] = 38;
         }
 
         $assigned_location = null;
-        if ($cliente->proceso !== 2 && $cliente->proceso !== 4) {
+        if (!in_array($cliente->proceso, array(2, 3, 4))) { // ! Reubicación, Reestructura, Reubicación excedente
             $ub_jur = $this->Contraloria_model->val_ub($idLote);
             $id_sede_jur = '';
             $assigned_location = $ub_jur[0]['ubicacion'];
