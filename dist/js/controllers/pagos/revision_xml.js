@@ -1,58 +1,6 @@
-function cleanCommentsfactura() {
-    var myCommentsList = document.getElementById('comments-list-factura');
-    var myCommentsLote = document.getElementById('nameLote');
-    myCommentsList.innerHTML = '';
-    myCommentsLote.innerHTML = '';
-}
-
-$(function () {
-    $('[data-toggle="popover"]').popover()
-})
-
-function cleanCommentsPDF() {
-    $('#seeInformationModalPDF').modal('toggle');
-    var myCommentsList = document.getElementById('pdfbody');
-    var myCommentsLote = document.getElementById('pdffooter');
-    myCommentsList.innerHTML = '';
-    myCommentsLote.innerHTML = ''; 
-}
-
-$("#EditarPerfilForm").on('submit', function(e){
-    document.getElementById('sendFile').disabled =true; 
-    $("#sendFile").prop("disabled", true);
-    e.preventDefault();	
-    var formData = new FormData(document.getElementById("EditarPerfilForm"));
-    formData.append("dato", "valor");
-    console.log(formData);   
-    $.ajax({
-        type: 'POST',
-        url: general_base_url+'pagos/SubirPDF',
-        data: formData,
-        contentType: false,
-        cache: false,
-        processData:false,
-        success: function(data) {
-            if (data == 1) {
-                cleanCommentsPDF();
-                $("#sendFile").prop("disabled", false);
-                setTimeout(function() {
-                    tabla_factura2.ajax.reload();
-                }, 100);
-                alerts.showNotification("top", "right", "El registro se ha ingresado exitosamente.", "success");    
-            }
-            else {
-                cleanCommentsPDF();
-                $("#seeInformationModalPDF").modal('hide'); 
-                alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
-            }
-        },
-        error: function(){
-            $("#seeInformationModalPDF").modal('hide'); 
-            cleanCommentsPDF();
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    });
-});
+var tr;
+var tabla_factura2 ;
+let titulos = [];
 
 $(document).ready(function() {
     $("#tabla_factura").prop("hidden", true);
@@ -61,82 +9,44 @@ $(document).ready(function() {
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
             var name = data[i]['descripcion'];
-            $("#filtro33").append($('<option>').val(id).text(name.toUpperCase()));
+            $("#catalogoXML").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $("#filtro33").selectpicker('refresh');
+        $("#catalogoXML").selectpicker('refresh');
     }, 'json');
 });
 
-$('#filtro33').change(function(ruta){
-    residencial = $('#filtro33').val();
-    $("#filtro44").empty().selectpicker('refresh');
-    $.ajax({
-        url: general_base_url+'Asesor/getCondominioDesc/'+residencial,
-        type: 'post',
-        dataType: 'json',
-        success:function(response){
-            var len = response.length;
-            for( var i = 0; i<len; i++){
-                var id = response[i]['idCondominio'];
-                var name = response[i]['nombre'];
-                $("#filtro44").append($('<option>').val(id).text(name));
+$('#catalogoXML').change(function(){
+    proyecto = $('#catalogoXML').val();
+    getFacturaCommissions(proyecto);
+});
+
+$('#tabla_factura thead tr:eq(0) th').each(function (i) {
+    if(i != 0){
+        var title = $(this).text();
+        titulos.push(title);
+        $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
+        $( 'input', this ).on('keyup change', function () {
+            if ($('#tabla_factura').DataTable().column(i).search() !== this.value ) {
+                $('#tabla_factura').DataTable().column(i).search(this.value).draw();
             }
-            $("#filtro44").selectpicker('refresh');
-        }
-    });
-});
-
-$('#filtro33').change(function(ruta){
-    proyecto = $('#filtro33').val();
-    condominio = $('#filtro44').val();
-    if(condominio == '' || condominio == null || condominio == undefined){
-        condominio = 0;
+        });
     }
-    getFacturaCommissions(proyecto, condominio);
 });
 
-$('#filtro44').change(function(ruta){
-    proyecto = $('#filtro33').val();
-    condominio = $('#filtro44').val();
-    if(condominio == '' || condominio == null || condominio == undefined){
-        condominio = 0;
-    }
-    getFacturaCommissions(proyecto, condominio);
-});
+function changeName(e){
+    const fileName = e.files[0].name;
+    let relatedTarget = $( e ).closest( '.file-gph' ).find( '.file-name' );
+    relatedTarget[0].value = fileName;
+}
 
-var tr;
-var tabla_factura2 ;
-let titulos = [];
-
-$('#tabla_factura thead tr:eq(0) th').each( function (i) {
-    var title = $(this).text();
-    titulos.push(title);
-    $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
-    $('input', this).on('keyup change', function() {
-        if (tabla_factura2.column(i).search() !== this.value) {
-            tabla_factura2.column(i).search(this.value).draw();
-            var total = 0;
-            var index = tabla_factura2.rows({
-                selected: true,
-                search: 'applied'
-            }).indexes();
-            var data = tabla_factura2.rows(index).data();
-            $.each(data, function(i, v) {
-                total += parseFloat(v.total);
-            });
-            document.getElementById("totpagarfactura").textContent = formatMoney(numberTwoDecimal(total));
-        }
-    });
-});
-
-function getFacturaCommissions(proyecto, condominio){
+function getFacturaCommissions(proyecto){
     $('#tabla_factura').on('xhr.dt', function(e, settings, json, xhr) {
         var total = 0;
         $.each(json.data, function(i, v) {
             total += parseFloat(v.total);
         });
         var to = formatMoney(numberTwoDecimal(total));
-        document.getElementById("totpagarfactura").textContent = to;
+        document.getElementById("totpagarfactura").textContent = '$' + to;
     });
 
     $("#tabla_factura").prop("hidden", false);
@@ -215,7 +125,7 @@ function getFacturaCommissions(proyecto, condominio){
                 if(d.total == null || d.total == "" || d.total == undefined)
                     return '<p class="m-0"><b>$0.00</b></p>';
                 else
-                    return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.total))+'</b></p>';
+                    return '<p class="m-0"><b>'+'$'+formatMoney(numberTwoDecimal(d.total))+'</b></p>';
             }
         },{
             data: function( d ){
@@ -239,34 +149,15 @@ function getFacturaCommissions(proyecto, condominio){
             orderable: false,
             data: function( data ){
                 var BtnStats ='';
-                let btnpdf = '';
                 let btnpausar = '';
                 if(data.estatus_opinion == 1 || data.estatus_opinion == 2){
-                    if(id_rol_global == 2 || id_rol_global == 3 || id_rol_global == 7 || id_rol_global==9){
-                        let namefile2 = data.xmla.split('.');
-                        if(data.bandera != 3 ){
-                            btnpdf = '<button value="'+data.uuid+'" data-userfactura="'+data.usuario+'" data-file="'+data.xmla+'" class="btn-data btn-green subirPDF" title="Subir PDF">' +'<i class="fas fa-upload"></i></button>';
-                        }
-                        else{
-                            btnpdf = '<a class="btn-data btn-warning verPDF2" title= "Ver pdf" data-usuario="'+namefile2[0]+'" ><i class="fas fa-file-pdf"></i></a>';
-                        }
-                    }
-                    else{
-                        BtnStats = '<button href="#" value="'+data.uuid+'" data-value="'+data.idResidencial+'" data-userfactura="'+data.usuario+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_documentos" title="Detalle de factura">' +'<i class="fas fa-info"></i></button><a href="#" class="btn-data btn-warning verPDF" title= "Ver opinión de cumplimiento" data-usuario="'+data.archivo_name+'" ><i class="material-icons">description</i></a>';
-                        let namefile = data.xmla.split('.');
-                        if(data.bandera != 3 ){
-                            btnpdf = '<button value="'+data.uuid+'" data-userfactura="'+data.usuario+'" data-file="'+data.xmla+'" class="btn-data btn-green subirPDF" title="Subir PDF">' +'<i class="fas fa-upload"></i></button>';
-                        }
-                        else{
-                            btnpdf = '<a class="btn-data btn-warning verPDF2" title= "Ver pdf" data-usuario="'+namefile[0]+'" ><i class="fas fa-file-pdf"></i></a>';
-                        }
-                        btnpausar = '<button value="'+data.uuid+'" data-id_user="'+data.id_usuario+'" data-userfactura="'+data.usuario+'" data-total="'+data.total+'" class="btn-data btn-violetChin regresar" title="Refacturar">' +'<span class="material-icons">autorenew</span></button>';
-                    }
+                    BtnStats = '<button href="#" value="'+data.uuid+'" data-value="'+data.idResidencial+'" data-userfactura="'+data.usuario+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_documentos" data-toggle="tooltip" data-placement="top" title="Detalle de factura">' +'<i class="fas fa-info"></i></button><a href="#" class="btn-data btn-warning verPDF" data-toggle="tooltip" data-placement="top" title= "Ver opinión de cumplimiento" data-usuario="'+data.archivo_name+'" ><i class="material-icons">description</i></a>';
+                    btnpausar = '<button value="'+data.uuid+'" data-id_user="'+data.id_usuario+'" data-userfactura="'+data.usuario+'" data-total="'+data.total+'" class="btn-data btn-violetChin regresar" data-placement="top" data-toggle="tooltip" title="Refacturar">' +'<span class="material-icons">autorenew</span></button>';
                 }
                 else{
-                    BtnStats = '<button value="'+data.uuid+'" data-value="'+data.idResidencial+'" data-userfactura="'+data.usuario+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_documentos" title="Detalles">' +'<i class="fas fa-info"></i></button>';
+                    BtnStats = '<button value="'+data.uuid+'" data-value="'+data.idResidencial+'" data-userfactura="'+data.usuario+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_documentos" data-toggle="tooltip" data-placement="top" title="Detalles">' +'<i class="fas fa-info"></i></button>';
                 }
-                return '<div class="d-flex justify-center">'+BtnStats+btnpdf+btnpausar+'</div>';
+                return '<div class="d-flex justify-center">'+BtnStats+btnpausar+'</div>';
             }
         }],
         columnDefs: [{
@@ -280,9 +171,14 @@ function getFacturaCommissions(proyecto, condominio){
             cache: false,
             data:{
                 proyecto:proyecto,
-                condominio:condominio,
             }
         },
+    });
+
+    $('#tabla_factura').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
     });
 
     $('#tabla_factura tbody').on('click', 'td.details-control', function () {
@@ -326,45 +222,18 @@ function getFacturaCommissions(proyecto, condominio){
             solicitudes += '<td>'+'<b>'+'ID: '+'</b> '+v.id_pago_i+'</td>';
             solicitudes += '<td>'+'<b>'+'CONDOMINIO: '+'</b> '+v.condominio+'</td>';
             solicitudes += '<td>'+'<b>'+'LOTE: '+'</b> '+v.lote+'</td>';
-            solicitudes += '<td>'+'<b>'+'MONTO: '+'</b>'+formatMoney(numberTwoDecimal(v.pago_cliente))+'</td>';
+            solicitudes += '<td>'+'<b>'+'MONTO: '+'</b>'+'$'+formatMoney(numberTwoDecimal(v.pago_cliente))+'</td>';
             solicitudes += '<td>'+'<b>'+'USUARIO: '+'</b> '+v.usuario+'</td>';
             solicitudes += '</tr>';
         });          
         return solicitudes += '</table>';
     }
 
-    $("#tabla_factura tbody").on("click", ".subirPDF", function(e){
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        uuid = $(this).val();
-        user_factura = $(this).attr("data-userfactura");
-        xmlfname = $(this).attr("data-file");
-        $("#seeInformationModalPDF").modal();
-        $("#seeInformationModalPDF .modal-body").append(`
-        <div class="input-group">
-            <input type="hidden" name="opc" id="opc" value="1">
-            <input type="hidden" name="uuid" id="uuid" value="${uuid}">
-            <input type="hidden" name="user" id="user" value="${user_factura}">
-            <input type="hidden" name="xmlfile" id="xmlfile" value="${xmlfname}">
-            <label  class="input-group-btn"></label>
-            <div class="col-lg-12">
-                <div class="file-gph">
-                    <input class="d-none" type="file" id="file-uploadE" name="file-uploadE"  accept="application/pdf">
-                    <input class="file-name" id="file-uploadE" type="text" placeholder="No has seleccionada nada aún" readonly="">
-                    <label class="upload-btn m-0" for="file-uploadE"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>
-                </div>
-            </div>
-            <p id="archivoE"></p>
-        </div>`);
-        $("#seeInformationModalPDF .modal-footer").append(`
-            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsPDF()"><b>Cerrar</b></button>
-            <button type="submit" id="sendFile" class="btn btn-primary">Guardar documento</button>
-        `);
-    });
-
     $("#tabla_factura tbody").on("click", ".regresar", function(e){
         e.preventDefault();
         e.stopImmediatePropagation();
+        $("#pdfbody").html('');
+        $("#pdffooter").html('');
         uuid = $(this).val();
         usuario = $(this).attr("data-userfactura");
         total = $(this).attr("data-total");
@@ -376,23 +245,21 @@ function getFacturaCommissions(proyecto, condominio){
         <input type="hidden" name="uuid2" id="uuid2" value="${uuid}">
         <input type="hidden" name="totalxml" id="totalxml" value="${total}">
         <input type="hidden" name="id_user" id="id_user" value="${id_user}">
-        <h6>¿Estas seguro que deseas regresar esta factura de <b>${usuario}</b> por la cantidad de <b>${formatMoney(numberTwoDecimal(total))}</b> ?</h6>
-        <span>Motivo</span>
+        <h6>¿Estas seguro que deseas regresar esta factura de <b>${usuario}</b> por la cantidad de <b>${'$'+formatMoney(numberTwoDecimal(total))}</b> ?</h6>
+        <label class="control-label" for="motivo">Motivo</label>
         <textarea id="motivo" name="motivo" class="text-modal"></textarea>`);
         $("#seeInformationModalPDF .modal-body").append(`
-            <div class="row">
-                <label class="control-label pl-2">Selecciona archivo XML (<span class="isRequired">*</span>)</label>
-                <div class="col-sm-12 col-md-12 col-lg-12">
+            <label class="control-label">Selecciona archivo XML (<span class="isRequired">*</span>)</label>
+            <div class="row d-flex align-center">
+                <div class="col-sm-8 col-md-8 col-lg-8">
                     <div class="file-gph">
-                        <input class="d-none" type="file" id="xmlfile2" name="xmlfile2"  accept="application/xml">
-                        <input class="file-name" id="xmlfile2" type="text" placeholder="No has seleccionada nada aún" readonly="">
-                        <label class="upload-btn m-0" for="xmlfile2"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>
+                        <input class="d-none" type="file" id="xmlfile2" onchange="changeName(this)" name="xmlfile2"  accept="application/xml">
+                        <input class="file-name overflow-text" id="xmlfile2" type="text" placeholder="No has seleccionada nada aún" readonly="">
+                        <label class="upload-btn w-auto" for="xmlfile2"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12 col-md-12 col-lg-12">
-                    <button class="btn btn-primary " type="button" onclick="xml2(${id_user})" id="cargar_xml2"><i class="fa fa-upload"></i> VERIFICAR Y <br> CARGAR</button>
+                <div class="col-sm-4 col-md-4 col-lg-4 p-0">
+                    <button class="btn btn-azure w-90" type="button" onclick="xml2(${id_user})" id="cargar_xml2"><i class="fa fa-upload"></i> VERIFICAR Y <br> CARGAR</button>
                 </div> 
             </div>
                 `);
@@ -400,54 +267,64 @@ function getFacturaCommissions(proyecto, condominio){
         $("#seeInformationModalPDF .modal-body").append('<b id="cantidadSeleccionadaMal"></b>');
         $("#seeInformationModalPDF .modal-body").append(`
             <div class="row">
-                <div class="col-lg-3 form-group">
-                    <label for="emisor">Emisor:<span class="text-danger">*</span></label>
+                <div class="col-lg-6 form-group">
+                    <label class="control-label" for="emisor">Emisor<span class="text-danger">*</span></label>
                     <input type="text" class="form-control input-gral" id="emisor" name="emisor" placeholder="Emisor" value="" required>
                 </div>
-                <div class="col-lg-3 form-group">
-                    <label for="rfcemisor">RFC Emisor:<span class="text-danger">*</span></label>
+                <div class="col-lg-6 form-group">
+                    <label class="control-label" for="rfcemisor">RFC Emisor<span class="text-danger">*</span></label>
                     <input type="text" class="form-control input-gral" id="rfcemisor" name="rfcemisor" placeholder="RFC Emisor" value="" required>
                 </div>
-                <div class="col-lg-3 form-group">
-                    <label for="receptor">Receptor:<span class="text-danger">*</span></label>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 form-group m-0">
+                    <label class="control-label" for="receptor">Receptor<span class="text-danger">*</span></label>
                     <input type="text" class="form-control input-gral" id="receptor" name="receptor" placeholder="Receptor" value="" required>
                 </div>
-                <div class="col-lg-3 form-group">
-                    <label for="rfcreceptor">RFC Receptor:<span class="text-danger">*</span></label>
+                <div class="col-lg-6 form-group m-0">
+                    <label class="control-label" for="rfcreceptor">RFC Receptor<span class="text-danger">*</span></label>
                     <input type="text" class="form-control input-gral" id="rfcreceptor" name="rfcreceptor" placeholder="RFC Receptor" value="" required>
                 </div>
-                <div class="col-lg-3 form-group">
-                    <label for="regimenFiscal">Régimen Fiscal:<span class="text-danger">*</span></label>
-                    <input type="text" class="form-control input-gral p-0" id="regimenFiscal" name="regimenFiscal" placeholder="Régimen Fiscal" value="" required>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 form-group m-0">
+                    <label class="control-label" for="regimenFiscal">Régimen Fiscal<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control input-gral" id="regimenFiscal" name="regimenFiscal" placeholder="Régimen Fiscal" value="" required>
                 </div>
-                <div class="col-lg-3 form-group">
-                    <label for="total">Monto:<span class="text-danger">*</span></label>
+                <div class="col-lg-6 form-group m-0">
+                    <label class="control-label" for="total">Monto<span class="text-danger">*</span></label>
                     <input type="text" class="form-control input-gral" id="total" name="total" placeholder="Total" value="" required>
                 </div>
-                <div class="col-lg-3 form-group">
-                    <label for="formaPago">Forma Pago:</label>
+            </div>
+            <div class="row">    
+                <div class="col-lg-6 form-group m-0">
+                    <label class="control-label" for="formaPago">Forma Pago</label>
                     <input type="text" class="form-control input-gral" placeholder="Forma Pago" id="formaPago" name="formaPago" value="">
                 </div>
-                <div class="col-lg-3 form-group">
-                    <label for="cfdi">Uso del CFDI:</label>
+                <div class="col-lg-6 form-group m-0">
+                    <label class="control-label" for="cfdi">Uso del CFDI</label>
                     <input type="text" class="form-control input-gral" placeholder="Uso de CFDI" id="cfdi" name="cfdi" value="">
                 </div>
-                <div class="col-lg-3 form-group">
-                    <label for="metodopago">Método de Pago:</label>
-                    <input type="text" class="form-control input-gral p-0" id="metodopago" name="metodopago" placeholder="Método de Pago" value="" readonly>
+            </div>
+            <div class="row"> 
+                <div class="col-lg-6 form-group m-0">
+                    <label class="control-label" for="metodopago">Método de Pago</label>
+                    <input type="text" class="form-control input-gral" id="metodopago" name="metodopago" placeholder="Método de Pago" value="" readonly>
                 </div>
-                <div class="col-lg-3 form-group">
-                    <label for="unidad">Unidad:</label>
+                <div class="col-lg-6 form-group m-0">
+                    <label class="control-label" for="unidad">Unidad</label>
                     <input type="text" class="form-control input-gral" id="unidad" name="unidad" placeholder="Unidad" value="" readonly>
                 </div>
-                <div class="col-lg-3 form-group">
-                    <label for="clave">Clave Prod/Serv:<span class="text-danger">*</span></label>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 form-group m-0">
+                    <label class="control-label" for="clave">Clave Prod/Serv<span class="text-danger">*</span></label>
                     <input type="text" class="form-control input-gral" id="clave" name="clave" placeholder="Clave" value="" required>
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-12 form-group">
-                    <label for="obse">OBSERVACIONES FACTURA </label>
+                <div class="col-lg-12 form-group m-0">
+                    <label class="control-label" for="obse">OBSERVACIONES FACTURA </label>
                     <i class="fa fa-question-circle faq" tabindex="0" role="button" data-container="body" data-trigger="focus" data-toggle="popover" title="Observaciones de la factura" data-content="En este campo pueden ser ingresados datos opcionales como descuentos, observaciones, descripción de la operación, etc." data-placement="right"></i>
                     <textarea class="text-modal" rows="1" data-min-rows="1" id="obse" name="obse" placeholder="Observaciones"></textarea>
                 </div>
@@ -459,7 +336,7 @@ function getFacturaCommissions(proyecto, condominio){
             </div>`
             );
         $("#seeInformationModalPDF .modal-footer").append(`
-        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsPDF()"><b>Cerrar</b></button>
+        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
         <button type="submit" id="sendFile" class="btn btn-primary"> Aceptar</button>
         `);
         $(function () {
@@ -471,6 +348,8 @@ function getFacturaCommissions(proyecto, condominio){
     $("#tabla_factura tbody").on("click", ".consultar_documentos", function(e){
         $('#spiner-loader').removeClass('hide');
         $("#seeInformationModalfactura .modal-body").html("");
+        $('#comments-list-remanente').html('');
+        $('#nameLote').html('');
         e.preventDefault();
         e.stopImmediatePropagation();
         uuid = $(this).val();
@@ -586,7 +465,6 @@ function getFacturaCommissions(proyecto, condominio){
     });
 }
 
-/**-----------------------REFACTURACIÓN---------------------------------- */
 function xml2(id_user) {
     subir_xml2($("#xmlfile2"),id_user);
 }
@@ -604,7 +482,7 @@ function subir_xml2(input,id_user) {
         processData: false,
         dataType: 'json',
         method: 'POST',
-        type: 'POST', // For jQuery < 1.9
+        type: 'POST',
         success: function(data) {
             if (data.respuesta[0]) {
                 documento_xml = xml;
@@ -653,11 +531,6 @@ function cargar_info_xml2(informacion_factura) {
     $("#obse").val((informacion_factura.descripcion ? informacion_factura.descripcion[0] : '')).attr('readonly', true);
 }
 
-$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-    $($.fn.dataTable.tables(true)).DataTable()
-    .columns.adjust();
-});
-
 $(document).on('click', '.verPDF', function () {
     var $itself = $(this);
     Shadowbox.open({
@@ -670,30 +543,4 @@ $(document).on('click', '.verPDF', function () {
         width:      985,
         height:     660
     });
-});
-
-$(document).on('click', '.verPDF2', function () {
-    var $itself = $(this);
-    Shadowbox.open({
-        content:    `<div>
-                        <iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" 
-                        src="${general_base_url}UPLOADS/PDF/${$itself.attr('data-usuario')}.pdf"></iframe>
-                    </div>`,
-        player:     "html",
-        title:      "Visualizando pdf: " + $itself.attr('data-usuario'),
-        width:      985,
-        height:     660
-    });
-});
-
-$('.popover-dismiss').popover({
-    trigger: 'focus'
-})
-
-$('body').tooltip({
-    selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
-    trigger: 'hover',
-    container: 'body'
-}).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
-    $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
 });

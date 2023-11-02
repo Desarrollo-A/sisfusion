@@ -1,9 +1,7 @@
-function cleanCommentsremanente() {
-    var myCommentsList = document.getElementById('comments-list-remanente');
-    var myCommentsLote = document.getElementById('nameLote');
-    myCommentsList.innerHTML = '';
-    myCommentsLote.innerHTML = '';
-}
+var tr;
+var tabla_remanente2 ;
+var totaPen = 0;
+let titulos = [];
 
 $(document).ready(function() {
     $("#tabla_remanente").prop("hidden", true);
@@ -12,15 +10,15 @@ $(document).ready(function() {
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
             var name = data[i]['descripcion'];
-            $("#filtro33").append($('<option>').val(id).text(name.toUpperCase()));
+            $("#catalogoRem").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $("#filtro33").selectpicker('refresh');
+        $("#catalogoRem").selectpicker('refresh');
     }, 'json');
 });
 
-$('#filtro33').change(function(ruta){
-    residencial = $('#filtro33').val();
-    $("#filtro44").empty().selectpicker('refresh');
+$('#catalogoRem').change(function(ruta){
+    residencial = $('#catalogoRem').val();
+    $("#condominioRem").empty().selectpicker('refresh');
     $.ajax({
         url: general_base_url + 'Asesor/getCondominioDesc/'+residencial,
         type: 'post',
@@ -30,58 +28,42 @@ $('#filtro33').change(function(ruta){
             for( var i = 0; i<len; i++){
                 var id = response[i]['idCondominio'];
                 var name = response[i]['nombre'];
-                $("#filtro44").append($('<option>').val(id).text(name));
+                $("#condominioRem").append($('<option>').val(id).text(name));
             }
-            $("#filtro44").selectpicker('refresh');
+            $("#condominioRem").selectpicker('refresh');
         }
     });
 });
 
-$('#filtro33').change(function(ruta){
-    proyecto = $('#filtro33').val();
-    condominio = $('#filtro44').val();
+$('#catalogoRem').change(function(ruta){
+    proyecto = $('#catalogoRem').val();
+    condominio = $('#condominioRem').val();
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
     getAssimilatedCommissions(proyecto, condominio);
 });
 
-$('#filtro44').change(function(ruta){
-    proyecto = $('#filtro33').val();
-    condominio = $('#filtro44').val();
+$('#condominioRem').change(function(ruta){
+    proyecto = $('#catalogoRem').val();
+    condominio = $('#condominioRem').val();
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
     getAssimilatedCommissions(proyecto, condominio);
 });
 
-var tr;
-var tabla_remanente2 ;
-var totaPen = 0;
-let titulos = [];
-
-$('#tabla_remanente thead tr:eq(0) th').each( function (i) {
+$('#tabla_remanente thead tr:eq(0) th').each(function (i) {
     if(i != 0){
         var title = $(this).text();
         titulos.push(title);
-        $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
-        $('input', this).on('keyup change', function() {
-            if (tabla_remanente2.column(i).search() !== this.value) {
-                tabla_remanente2.column(i).search(this.value).draw();
-                var total = 0;
-                var index = tabla_remanente2.rows({
-                    selected: true,
-                    search: 'applied'
-                }).indexes();
-                var data = tabla_remanente2.rows(index).data();
-                $.each(data, function(i, v) {
-                    total += parseFloat(v.impuesto);
-                });
-                document.getElementById("totpagarremanente").textcontent = formatMoney(numberTwoDecimal(total));
+        $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
+        $( 'input', this ).on('keyup change', function () {
+            if ($('#tabla_remanente').DataTable().column(i).search() !== this.value ) {
+                $('#tabla_remanente').DataTable().column(i).search(this.value).draw();
             }
         });
-    }
-    else {
+    }else {
         $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAll(this)"/>');
     }
 });
@@ -112,7 +94,7 @@ function getAssimilatedCommissions(proyecto, condominio){
                 columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14],
                 format: {
                     header: function (d, columnIdx) {
-                        return ' ' + titulos[columnIdx-1] + ' ';
+                        return ' ' + titulos[columnIdx] + ' ';
                     }
                 }
             },
@@ -291,10 +273,15 @@ function getAssimilatedCommissions(proyecto, condominio){
         {
             "orderable": false,
             data: function( data ){
-                var BtnStats;
-                BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_remanente" data-toggle="tooltip"  data-placement="top" title="DETALLES">' +'<i class="fas fa-info"></i></button>'+
-                '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.id_pago_i+'" data-code="'+data.cbbtton+'" ' + 'class="btn-data btn-warning cambiar_estatus" data-toggle="tooltip"  data-placement="top" title="PAUSAR LA SOLICITUD">' + '<i class="fas fa-ban"></i></button>';
-                return '<div class="d-flex justify-center">'+BtnStats+'</div>';
+                let btns = '';
+
+                const BTN_HISTORIAL = `<button href="#" value="${data.id_pago_i}" data-value="${data.lote}" data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_remanente" data-toggle="tooltip"  data-placement="top" title="DETALLES"><i class="fas fa-info"></i></button>`;
+                const BTN_PAUSAR = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-warning cambiar_estatus" id="cambiar_estatus" data-toggle="tooltip"  data-placement="top" title="PAUSAR LA SOLICITUD"><i class="fas fa-ban"></i></button>`;
+                
+                btns += BTN_HISTORIAL;
+                btns += BTN_PAUSAR;
+
+                return `<div class="d-flex justify-center">${btns}</div>`;
             }
         }],
         columnDefs: [{
@@ -333,13 +320,45 @@ function getAssimilatedCommissions(proyecto, condominio){
         },
     });
 
+    $('#tabla_remanente').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
+    });
+
     $("#tabla_remanente tbody").on("click", ".consultar_logs_remanente", function(e){
         $('#spiner-loader').removeClass('hide');
+        $("#comments-list-asimilados").html('');
+        $("#nameLote").html('');
         e.preventDefault();
         e.stopImmediatePropagation();
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
-        $("#seeInformationModalremanente").modal();
+        
+        changeSizeModal('modal-md');
+        appendBodyModal(`<div class="modal-body m-0">
+                        <div role="tabpanel">
+                            <div id="nameLote" class="text-center"></div>
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="card card-plain">
+                                                <div class="card-content scroll-styles pt-0" style="height: 350px; overflow: auto">
+                                                    <ul class="timeline-3" id="comments-list-remanente"></ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
+                    </div>`);
+        showModal();
+
         $("#nameLote").append('<p><h5>HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $.getJSON(general_base_url+"Pagos/getComments/" +id_pago ).done( function( data ){
             $.each( data, function(i, v){
@@ -392,20 +411,13 @@ function getAssimilatedCommissions(proyecto, condominio){
                 <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CANCELAR</button>
                 <button type="submit" class="btn btn-primary"" value="PAUSAR">PAUSAR</button>
             `);
-        const buttonPausar = document.getElementById('btnPausar');
+        const buttonPausar = document.getElementById('cambiar_estatus');
         buttonPausar.addEventListener('click', function handleClick() {
             $("#totpagarPen").html(formatMoney(0));
         });
         $("#modal_nuevas").modal();
     });
-
 }
-//FIN TABLA  
-
-$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-    $($.fn.dataTable.tables(true)).DataTable()
-    .columns.adjust();
-});
 
 $("#form_interes").submit( function(e) {
     e.preventDefault();
@@ -421,7 +433,7 @@ $("#form_interes").submit( function(e) {
             processData: false,
             dataType: 'json',
             method: 'POST',
-            type: 'POST', // For jQuery < 1.9
+            type: 'POST',
             success: function(data){
                 $('#spiner-loader').removeClass('hide');
                 if( data[0] ){
@@ -444,7 +456,6 @@ $("#form_interes").submit( function(e) {
     }
 });
 
-// Selección de CheckBox
 $(document).on("click", ".individualCheck", function() {
     totaPen = 0;
     tabla_remanente2.$('input[type="checkbox"]').each(function () {
@@ -455,15 +466,15 @@ $(document).on("click", ".individualCheck", function() {
             row = tabla_remanente2.row(tr).data();
             totaPen += parseFloat(row.impuesto); 
         }
-        // Al marcar todos los CheckBox Marca CB total
+
         if( totalChecados.length == totalCheckbox.length )
             $("#all").prop("checked", true);
         else 
-            $("#all").prop("checked", false); // si se desmarca un CB se desmarca CB total
+            $("#all").prop("checked", false);
     });
     $("#totpagarPen").html(formatMoney(numberTwoDecimal(totaPen)));
 });
-    // Función de selección total
+
 function selectAll(e) {
     tota2 = 0;
     if(e.checked == true){
@@ -486,11 +497,3 @@ function selectAll(e) {
         $("#totpagarPen").html(formatMoney(0));
     }
 }
-
-$('body').tooltip({
-    selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
-    trigger: 'hover',
-    container: 'body'
-}).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
-    $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
-});

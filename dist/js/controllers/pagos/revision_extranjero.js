@@ -5,9 +5,9 @@ $(document).ready(function() {
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
             var name = data[i]['descripcion'];
-            $("#filtro33").append($('<option>').val(id).text(name.toUpperCase()));
+            $("#catalogoFactE").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $("#filtro33").selectpicker('refresh');
+        $("#catalogoFactE").selectpicker('refresh');
         $("#tabla_extranjero").removeClass('hide');
     }, 'json');
 });
@@ -17,7 +17,6 @@ $("#form_interes").submit( function(e) {
 }).validate({
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
-        console.log(data);
         data.append("id_pago_i", id_pago_i);
         $.ajax({
             url: general_base_url + "Pagos/despausar_solicitud/",
@@ -27,7 +26,7 @@ $("#form_interes").submit( function(e) {
             processData: false,
             dataType: 'json',
             method: 'POST',
-            type: 'POST', // For jQuery < 1.9
+            type: 'POST',
             success: function(data){
                 if( data[0] ){
                     $("#modal_nuevas").modal('toggle' );
@@ -46,9 +45,9 @@ $("#form_interes").submit( function(e) {
     }
 });
 
-$('#filtro33').change(function(ruta){
-    residencial = $('#filtro33').val();
-    $("#filtro44").empty().selectpicker('refresh');
+$('#catalogoFactE').change(function(ruta){
+    residencial = $('#catalogoFactE').val();
+    $("#condominioFactE").empty().selectpicker('refresh');
     $.ajax({
         url: general_base_url+'Asesor/getCondominioDesc/'+residencial,
         type: 'post',
@@ -58,25 +57,25 @@ $('#filtro33').change(function(ruta){
             for( var i = 0; i<len; i++){
                 var id = response[i]['idCondominio'];
                 var name = response[i]['nombre'];
-                $("#filtro44").append($('<option>').val(id).text(name));
+                $("#condominioFactE").append($('<option>').val(id).text(name));
             }
-            $("#filtro44").selectpicker('refresh');
+            $("#condominioFactE").selectpicker('refresh');
         }
     });
 });
 
-$('#filtro33').change(function(ruta){
-    proyecto = $('#filtro33').val();
-    condominio = $('#filtro44').val();
+$('#catalogoFactE').change(function(ruta){
+    proyecto = $('#catalogoFactE').val();
+    condominio = $('#condominioFactE').val();
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
     getAssimilatedCommissions(proyecto, condominio);
 });
 
-$('#filtro44').change(function(ruta){
-    proyecto = $('#filtro33').val();
-    condominio = $('#filtro44').val();
+$('#condominioFactE').change(function(ruta){
+    proyecto = $('#catalogoFactE').val();
+    condominio = $('#condominioFactE').val();
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
@@ -86,7 +85,7 @@ $('#filtro44').change(function(ruta){
 var tr;
 var totaPen = 0;
 let titulos = [];
-  //INICIO TABLA QUERETARO
+
 $('#tabla_extranjero thead tr:eq(0) th').each( function (i) {
     if(i != 0){
         var title = $(this).text();
@@ -430,7 +429,6 @@ function getAssimilatedCommissions(proyecto, condominio){
         $("#modal_nuevas").modal();
     });
 }
-//FIN TABLA  
 
 $('#tabla_factura').ready(function () {
     let titulosFactura = [];
@@ -459,23 +457,21 @@ $('#tabla_factura').ready(function () {
         width: "100%",
         scrollX: true,
         bAutoWidth:true,
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                className: 'btn buttons-excel',
-                titleAttr: 'Descargar archivo de Excel',
-                title: 'REPORTE COMPROBANTES FISCALES EXTRANJEROS',
-                exportOptions: {
-                    columns: [0,1,2,3,4,5],
-                    format: {
-                        header: function (d, columnIndex) {
-                            return ' '+titulosFactura[columnIndex] +' ';
-                        }
+        buttons: [{
+            extend: 'excelHtml5',
+            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+            className: 'btn buttons-excel',
+            titleAttr: 'Descargar archivo de Excel',
+            title: 'REPORTE COMPROBANTES FISCALES EXTRANJEROS',
+            exportOptions: {
+                columns: [0,1,2,3,4,5],
+                format: {
+                    header: function (d, columnIndex) {
+                        return ' '+titulosFactura[columnIndex] +' ';
                     }
                 }
             }
-        ],
+        }],
         pagingType: "full_numbers",
         fixedHeader: true,
         language: {
@@ -487,50 +483,48 @@ $('#tabla_factura').ready(function () {
         },
         destroy: true,
         ordering: false,
-        columns: [
-            {
-                data: function(d) {
-                    return `<p class="m-0"><b>${d.id_usuario}</b></p>`;
-                }
-            },
-            {
-                data: function(d) {
-                    return `<p class="m-0">${d.usuario}</p>`;
-                }
-            },
-            {
-                data: function (d) {
-                    return `<p class="m-0">${formatMoney(numberTwoDecimal(d.total))}</p>`;
-                }
-            },
-            {
-                data: function (d) {
-                    return `<p class="m-0">${d.forma_pago}</p>`;
-                }
-            },
-            {
-                data: function (d) {
-                    return `<p class="m-0">${d.nacionalidad}</p>`;
-                }
-            },
-            {
-                data: function (d) {
-                    return `<p class="m-0">${d.estatus_usuario}</p>`;
-                }
-            },
-            {
-                data: function (d) {
-                    return `
-                        <div class="d-flex justify-center">
-                            <button data-usuario="${d.archivo_name}"
-                                class="btn-data btn-warning consultar-archivo"
-                                title="VER ARCHIVO">
-                                    <i class="fas fa-file-pdf-o"></i>
-                            </button>
-                        </div>`;
-                }
+        columns: [{
+            data: function(d) {
+                return `<p class="m-0"><b>${d.id_usuario}</b></p>`;
             }
-        ],
+        },
+        {
+            data: function(d) {
+                return `<p class="m-0">${d.usuario}</p>`;
+            }
+        },
+        {
+            data: function (d) {
+                return `<p class="m-0">${formatMoney(numberTwoDecimal(d.total))}</p>`;
+            }
+        },
+        {
+            data: function (d) {
+                return `<p class="m-0">${d.forma_pago}</p>`;
+            }
+        },
+        {
+            data: function (d) {
+                return `<p class="m-0">${d.nacionalidad}</p>`;
+            }
+        },
+        {
+            data: function (d) {
+                return `<p class="m-0">${d.estatus_usuario}</p>`;
+            }
+        },
+        {
+            data: function (d) {
+                return `
+                    <div class="d-flex justify-center">
+                        <button data-usuario="${d.archivo_name}"
+                            class="btn-data btn-warning consultar-archivo"
+                            title="VER ARCHIVO">
+                                <i class="fas fa-file-pdf-o"></i>
+                        </button>
+                    </div>`;
+            }
+        }],
         ajax: {
             "url": general_base_url+"Pagos/getComprobantesExtranjero",
             "type": "GET",
@@ -554,8 +548,6 @@ $('#tabla_factura').ready(function () {
         });
     });
 });
-
-
 
 $("#form_colaboradores").submit( function(e) {
     e.preventDefault();
@@ -587,7 +579,7 @@ $("#form_colaboradores").submit( function(e) {
                     processData: false,
                     dataType: 'json',
                     method: 'POST',
-                    type: 'POST', // For jQuery < 1.9
+                    type: 'POST',
                     success: function(data){
                         if(true){
                             $('#loader').addClass('hidden');
@@ -634,12 +626,11 @@ $("#form_MKTD").submit( function(e) {
             processData: false,
             dataType: 'json',
             method: 'POST',
-            type: 'POST', // For jQuery < 1.9
+            type: 'POST',
             success: function(data){
                 if( data.resultado ){
                     alert("LA FACTURA SE SUBIO CORRECTAMENTE");
                         $("#modal_mktd").modal( 'toggle' );
-                    //  tabla_nuevas.ajax.reload();
                 }else{
                     alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
                 }
@@ -655,7 +646,6 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     .columns.adjust();
 });
 
-// Selección de CheckBox
 $(document).on("click", ".individualCheck", function() {
     totaPen = 0;
     tabla_extranjero2.$('input[type="checkbox"]').each(function () {
@@ -666,15 +656,14 @@ $(document).on("click", ".individualCheck", function() {
             row = tabla_extranjero2.row(tr).data();
             totaPen += parseFloat(row.impuesto); 
         }
-        // Al marcar todos los CheckBox Marca CB total
         if( totalChecados.length == totalCheckbox.length )
             $("#all").prop("checked", true);
         else 
-            $("#all").prop("checked", false); // si se desmarca un CB se desmarca CB total
+            $("#all").prop("checked", false);
     });
     $("#totpagarPen").html(formatMoney(numberTwoDecimal(totaPen)));
 });
-    // Función de selección total
+
 function selectAll(e) {
     tota2 = 0;
     if(e.checked == true){
@@ -697,11 +686,3 @@ function selectAll(e) {
         $("#totpagarPen").html(formatMoney(0));
     }
 }
-
-$('body').tooltip({
-    selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
-    trigger: 'hover',
-    container: 'body'
-}).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
-    $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
-});
