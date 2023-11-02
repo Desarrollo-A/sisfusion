@@ -76,16 +76,16 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote) {
     let contenidoHTMLinfoCL = `
     <div class="col-12 col-sm-12 col-md-12 col-lg-12">
         <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-left">
-            <p class="m-0 ">Cliente. ${nombreCliente}</p>
-            <p class="m-0">Lote. ${nombreLote}</p>
-            <p class="m-0 text-left">Domicilio particular. ${domicilio_particular}</p>
+            <p class="m-0"><b>Cliente.</b>${nombreCliente}</p>
+            <p class="m-0"><b>Lote. </b>${nombreLote}</p>
+            <p class="m-0 text-left"><b>Domicilio particular. </b>${domicilio_particular}</p>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-left">
-            <p class="m-0">Correo. ${correo}</p>
-            <p class="m-0">Teléfono. ${telefono1}</p>
-            <p class="m-0">Ocupación. ${ocupacion}</p>
-            <p class="m-0">INE. ${ine}</p>
-            <p class="m-0">Estado civil. ${estadoCivil}</p>
+        <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-right">
+            <p class="m-0"><b>Correo. </b>${correo}</p>
+            <p class="m-0"><b>Teléfono. </b>${telefono1}</p>
+            <p class="m-0"><b>Ocupación. </b>${ocupacion}</p>
+            <p class="m-0"><b>INE. </b>${ine}</p>
+            <p class="m-0"><b>Estado civil. </b>${estadoCivil}</p>
         </div>
     </div>`;
 
@@ -139,8 +139,9 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote) {
         });
         if (flagProceso == 3) {
             //se esta subiendo contrato se debe pedir uno adicional
+            const archivoLbl = datos[0]['tipo_proceso'] != "3" ? 'la rescisión del contrato' : 'el documento de reestructura';
             contenidoHTML += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2"><hr>\n' +
-                '                            <h6 class="text-left"><b>Subir la rescisión del contrato: </b>' + nombreLote + '<span class="text-red">*</span></h6>\n' +
+                '                            <h6 class="text-left"><b>Subir '+archivoLbl+': </b>' + nombreLote + '<span class="text-red">*</span></h6>\n' +
                 '                            <div class="" id="selectFileSectionResicion">\n' +
                 '                                <div class="file-gph">\n' +
                 '                                    <input class="d-none" type="file" required accept="application/pdf" id="Resicion">\n' +
@@ -150,7 +151,6 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote) {
                 '                            </div>\n' +
                 '                        </div>';
         }
-        // contenedorArchivos.innerHTML = contenidoHTML;
     }
     else if (flagEditar == 1) {
         editarFile = 1;
@@ -190,8 +190,9 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote) {
         });
         if (flagProceso == 3) {
             //se esta subiendo contrato se debe pedir uno adicional
+            const archivoLbl = datos[0]['tipo_proceso'] != "3" ? 'la rescisión del contrato' : 'el documento de reestructura';
             contenidoHTML += ' <div class="col col-xs-12 col-sm-12 col-md-10 col-lg-10 mb-2"><hr>\n' +
-                '                            <h6 class="text-left"><b>Subir la rescisión del contrato</b>:' + nombreLote + '</h6>\n' +
+                '                            <h6 class="text-left"><b>Subir '+archivoLbl+': </b>' + nombreLote + '<span class="text-red">*</span></h6>\n' +
                 '                            <div class="" id="selectFileSectionResicion">\n' +
                 '                                <div class="file-gph">\n' +
                 '                                    <input class="d-none" type="file" required accept="application/pdf" id="Resicion">\n' +
@@ -236,69 +237,49 @@ function loadCopropietarios(datos){
         datos.map((elemento, index)=>{
             let nombreCopropietario = elemento.nombre + ' ' + elemento.apellido_paterno+' '+elemento.apellido_materno;
             contenidoHTML += '<div class="card-body mb-3">';
-            contenidoHTML += '  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center" style="background-color: #0b3e6f;color: #f2f2f2;border-radius: 12px 12px 0px 0px;"><span style="font-size: 1.5rem">'+nombreCopropietario+'</span></div>';
-            contenidoHTML += '      <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding-bottom: 10px;border-top: 1px solid #ddd;margin-bottom: 25px;background-color: #F6FBFF;\n' +
-                '    border-radius: 0px 0px 12px 12px;">';
-            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">';
-            contenidoHTML += '              <div class="form-group label-floating">';
-            contenidoHTML += '                  <label class="label-on-left m-0">Nombre</label>';
+            contenidoHTML += '     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center"><span style="font-size: 1.5rem; text-transform: uppercase;">'+nombreCopropietario+'</span></div>';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 text-left">';
+            contenidoHTML += '                  <label class="control-label">Nombre</label>';
             contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.nombre+'"/>';
-            contenidoHTML += '              </div>';
             contenidoHTML += '          </div>';
-            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">';
-            contenidoHTML += '              <div class="form-group label-floating">';
-            contenidoHTML += '                  <label class="label-on-left m-0">Apellido paterno</label>';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 text-left">';
+            contenidoHTML += '                  <label class="control-label">Apellido paterno</label>';
             contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.apellido_paterno+'"/>';
-            contenidoHTML += '              </div>';
             contenidoHTML += '          </div>';
-            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">';
-            contenidoHTML += '              <div class="form-group label-floating">';
-            contenidoHTML += '                  <label class="label-on-left m-0">Apellido materno</label>';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 text-left">';
+            contenidoHTML += '                  <label class="control-label">Apellido materno</label>';
             contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.apellido_materno+'"/>';
-            contenidoHTML += '              </div>';
             contenidoHTML += '          </div>';
-            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-6 col-lg-6">';
-            contenidoHTML += '              <div class="form-group label-floating">';
-            contenidoHTML += '                  <label class="label-on-left m-0">Correo</label>';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-6 col-lg-6 text-left">';
+            contenidoHTML += '                  <label class="control-label">Correo</label>';
             contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.correo+'"/>';
-            contenidoHTML += '              </div>';
             contenidoHTML += '          </div>';
-            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-6 col-lg-6">';
-            contenidoHTML += '              <div class="form-group label-floating">';
-            contenidoHTML += '                  <label class="label-on-left m-0">Teléfono</label>';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-6 col-lg-6 text-left">';
+            contenidoHTML += '                  <label class="control-label">Teléfono</label>';
             contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.telefono_2+'"/>';
-            contenidoHTML += '              </div>';
             contenidoHTML += '          </div>';
-            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-12 col-lg-12">';
-            contenidoHTML += '              <div class="form-group label-floating">';
-            contenidoHTML += '                  <label class="label-on-left m-0">Dirección</label>';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-12 col-lg-12 text-left">';
+            contenidoHTML += '                  <label class="control-label">Dirección</label>';
             contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.domicilio_particular+'"/>';
-            contenidoHTML += '              </div>';
             contenidoHTML += '          </div>';
-            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-3 col-lg-4">';
-            contenidoHTML += '              <div class="form-group label-floating">';
-            contenidoHTML += '                  <label class="label-on-left m-0">Estado civil</label>';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 text-left">';
+            contenidoHTML += '                  <label class="control-label">Estado civil</label>';
             contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.estado_civil+'"/>';
-            contenidoHTML += '              </div>';
             contenidoHTML += '          </div>';
-            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-3 col-lg-4">';
-            contenidoHTML += '              <div class="form-group label-floating">';
-            contenidoHTML += '                  <label class="label-on-left m-0">Ocupación</label>';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 text-left">';
+            contenidoHTML += '                  <label class="control-label">Ocupación</label>';
             contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.ocupacion+'"/>';
-            contenidoHTML += '              </div>';
             contenidoHTML += '          </div>';
-            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-3 col-lg-4">';
-            contenidoHTML += '              <div class="form-group label-floating">';
-            contenidoHTML += '                  <label class="label-on-left m-0">INE/Pasaporte</label>';
+            contenidoHTML += '          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 text-left">';
+            contenidoHTML += '                  <label class="control-label">INE/Pasaporte</label>';
             contenidoHTML += '                  <input readonly class="form-control input-gral" type="text" required="true" value="'+elemento.ine+'"/>';
-            contenidoHTML += '              </div>';
             contenidoHTML += '          </div>';
             contenidoHTML += '     </div>';
-            contenidoHTML += '  <hr>';
             contenidoHTML += '</div>';
+
         });
     }else{
-        contenidoHTML += '<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12"><center><h5 class="fs-2">SIN COPROPIETARIOS</h5></center></div>';
+        contenidoHTML += '<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12"><center><h5 class="fs-2">Sin copropietarios</h5></center></div>';
     }
 
     contenedorContenido.innerHTML = contenidoHTML;
@@ -399,7 +380,6 @@ $(document).on("click", "#sendRequestButton", function (e) {
     else if (editarFile == 0) {
 
         if(arrayKeysArchivos.length == flagValidacion){
-            console.log('excelente, todos los archivos llenos, pasa');
             flagEnviar = true;
         }else{
             alerts.showNotification('top', 'right', 'Ingresa los archivos requeridos', 'warning');
@@ -408,7 +388,8 @@ $(document).on("click", "#sendRequestButton", function (e) {
 
         if (flagProceso == 3 && $("#Resicion")[0].files[0] == undefined) {
             $("#spiner-loader").addClass('hide');
-            alerts.showNotification('top', 'right', 'Selecciona archivo de rescisión', 'warning');
+            const archivoLbl = (datos[0]['tipo'] == 2) ? 'archivo de rescisión' : 'documento de reestructura';
+            alerts.showNotification('top', 'right', `Selecciona ${archivoLbl}`, 'warning');
         }
         else {
             if (flagEnviar) {
@@ -508,7 +489,7 @@ $(document).on('click', '.ver-archivo', function () {
 
 
 $(document).on('click', '.btn-abrir-contratoFirmado', function(){
-   $('#contratoFirmadoModal').modal('toggle');
+    $('#contratoFirmadoModal').modal('toggle');
     let flagEditar = $(this).attr("data-editar");
     let formularioArchivoscf = document.getElementById('formularioArchivoscf');
     let contenidoHTMLCF = '';
@@ -527,59 +508,54 @@ $(document).on('click', '.btn-abrir-contratoFirmado', function(){
     editarContrafoFirmado = flagEditar;
     editarFile = flagEditar;
     let heightIframe = '400px';
-   if(flagEditar == 0){//es primera ves no hay archivo
-       document.getElementById('txtTituloCF').innerHTML = 'Selecciona el archivo que desees asociar a <b>CONTRATO FIRMADO</b>';
-       document.getElementById('secondaryLabelDetail').innerHTML = 'El documento que hayas elegido se almacenará de manera automática una vez que des clic en <i>Guardar</i>.';
+    if(flagEditar == 0){//es primera ves no hay archivo
+        document.getElementById('txtTituloCF').innerHTML = 'Selecciona el archivo que desees asociar a <b>CONTRATO FIRMADO</b>';
+        document.getElementById('secondaryLabelDetail').innerHTML = 'El documento que hayas elegido se almacenará de manera automática una vez que des clic en <i>Guardar</i>.';
+        document.getElementById('dialoSection').classList.remove('modal-lg');
+        contenidoHTMLCF += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2">\n' +
+    '                            <div class="" id="selectFileSectionResicioncf">\n' +
+    '                                <div class="file-gph">\n' +
+    '                                    <input class="d-none" type="file" required accept="application/pdf" id="contratoFirmado">\n' +
+    '                                    <input class="file-name" id="contratoFirmado-name" type="text" placeholder="No has seleccionada nada aún" readonly="">\n' +
+    '                                    <label class="upload-btn m-0" for="contratoFirmado"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>\n' +
+    '                                </div>\n' +
+    '                            </div>\n' +
+    '                        </div>';
+    }else if(flagEditar == 1){//ya hay un archivo hay que actualizarlo
+        if(estatusProceso==2){
+            document.getElementById('txtTituloCF').innerHTML = 'Archivo actual asociado a <b>CONTRATO FIRMADO</b>';
+            document.getElementById('secondaryLabelDetail').innerHTML = 'Si selecciona algún archivo y da clic en el botón de "<b>Guardar</b>", este reemplezara al mostrado.';
+            document.getElementById('sendRequestButtoncf').classList.remove('hide');
+            heightIframe = '400px'
+        }else if(estatusProceso==3){
+            document.getElementById('txtTituloCF').innerHTML = 'Visualizando el contrato firmado <b>'+ nombreLote + '</b>';
+            document.getElementById('secondaryLabelDetail').innerHTML = '';
+            document.getElementById('sendRequestButtoncf').classList.add('hide');
+            heightIframe = '650px';
+        }
+        document.getElementById('dialoSection').classList.add('modal-lg');
+        let contratoFirmado = $(this).attr("data-contratoFirmado");
+        let ruta = general_base_url+'static/documentos/cliente/contratoFirmado/'+contratoFirmado;
+        contenidoHTMLCF += '<iframe id="inlineFrameExample" title="Inline Frame Example"\n' +
+            '  width="100%"\n' +
+            '  height="'+heightIframe+'"\n' +
+            '  src="'+ruta+'">\n' +
+            '</iframe>';
 
-       document.getElementById('dialoSection').classList.remove('modal-lg');
-       contenidoHTMLCF += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2">\n' +
-           '                            <div class="" id="selectFileSectionResicioncf">\n' +
-           '                                <div class="file-gph">\n' +
-           '                                    <input class="d-none" type="file" required accept="application/pdf" id="contratoFirmado">\n' +
-           '                                    <input class="file-name" id="contratoFirmado-name" type="text" placeholder="No has seleccionada nada aún" readonly="">\n' +
-           '                                    <label class="upload-btn m-0" for="contratoFirmado"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>\n' +
-           '                                </div>\n' +
-           '                            </div>\n' +
-           '                        </div>';
-   }else if(flagEditar == 1){//ya hay un archivo hay que actualizarlo
-       if(estatusProceso==2){
-           // document.getElementById('txtTituloCF').innerText = 'VER/EDITAR EL CONTRATO FIRMADO';
-           document.getElementById('txtTituloCF').innerHTML = 'Selecciona el archivo que desees asociar a <b>CONTRATO FIRMADO</b>';
-           document.getElementById('secondaryLabelDetail').innerHTML = 'El documento que hayas elegido se almacenará de manera automática una vez que des clic en <i>Guardar</i>.';
-
-           document.getElementById('sendRequestButtoncf').classList.remove('hide');
-           heightIframe = '400px'
-       }else if(estatusProceso==3){
-           // document.getElementById('txtTituloCF').innerText = 'VER EL CONTRATO FIRMADO';
-           document.getElementById('txtTituloCF').innerHTML = 'Visualizando el contrato firmado <b>'+ nombreLote + '</b>';
-           document.getElementById('secondaryLabelDetail').innerHTML = '';
-           document.getElementById('sendRequestButtoncf').classList.add('hide');
-           heightIframe = '650px';
-       }
-       document.getElementById('dialoSection').classList.add('modal-lg');
-       let contratoFirmado = $(this).attr("data-contratoFirmado");
-       let ruta = general_base_url+'static/documentos/cliente/contratoFirmado/'+contratoFirmado;
-       contenidoHTMLCF += '<iframe id="inlineFrameExample" title="Inline Frame Example"\n' +
-           '  width="100%"\n' +
-           '  height="'+heightIframe+'"\n' +
-           '  src="'+ruta+'">\n' +
-           '</iframe>';
-
-       if(estatusProceso==2){
-           contenidoHTMLCF += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2 mt-4">\n' +
-               '                            <div class="" id="selectFileSectionResicioncf">\n' +
-               '                                <div class="file-gph">\n' +
-               '                                    <input class="d-none" type="file" required accept="application/pdf" id="contratoFirmado">\n' +
-               '                                    <input class="file-name" id="contratoFirmado-name" type="text" placeholder="No has seleccionada nada aún" readonly="">\n' +
-               '                                    <label class="upload-btn m-0" for="contratoFirmado"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>\n' +
-               '                                </div>\n' +
-               '                            </div>\n' +
-               '                        </div>';
-       }
+        if(estatusProceso==2){
+            contenidoHTMLCF += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2 mt-4">\n' +
+        '                            <div class="" id="selectFileSectionResicioncf">\n' +
+        '                                <div class="file-gph">\n' +
+        '                                    <input class="d-none" type="file" required accept="application/pdf" id="contratoFirmado">\n' +
+        '                                    <input class="file-name" id="contratoFirmado-name" type="text" placeholder="No has seleccionada nada aún" readonly="">\n' +
+        '                                    <label class="upload-btn m-0" for="contratoFirmado"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>\n' +
+        '                                </div>\n' +
+        '                            </div>\n' +
+        '                        </div>';
+        }
 
 
-   }
-    // formularioArchivoscf
+    }
     formularioArchivoscf.innerHTML = contenidoHTMLCF;
 
     $("input:file").on("change", function () {
@@ -626,7 +602,6 @@ $(document).on("click", "#sendRequestButtoncf", function (e) {
 
     if (flagEnviar) {
         let data = new FormData();
-        // data.append("tipoProceso", flagProceso);
         data.append("idLote", arrayCF['idLoteCF']);
         data.append("nombreLoteOriginal", nombreLote);
         data.append("idDocumento", arrayCF['idDocumento']);
