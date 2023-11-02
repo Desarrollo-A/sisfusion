@@ -145,7 +145,6 @@ class Reestructura extends CI_Controller{
         $datos["ine"] = $dataPost['ineCLi'];
         $datos["ocupacion"] = $dataPost['ocupacionCli'];
         $datos["tipo_proceso"] = $this->input->post('idStatusLote') == 17 ? 3 : 2;
-
         $datCliente = $this->Reestructura_model->getDatosClienteTemporal($idLote);
 
         $this->movimientosCopropietarios($dataPost['idLote'], $dataPost);
