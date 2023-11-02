@@ -247,7 +247,7 @@ function loadTable(tipoDescuento) {
                     editar = '';
                     detener = '';      
 
-                    if(d.total_descontado > 1 && d.estado_usuario == 3){//MIENTRAS TENGA SALDO APLICADO PODRA CONSULTAR LA INFO
+                    if(d.total_descontado > 1 ){//MIENTRAS TENGA SALDO APLICADO PODRA CONSULTAR LA INFO
                         base = `<button href="#" value="${d.id_usuario}" data-value="${d.nombre}" data-code="${d.id_usuario}" class="btn-data btn-blueMaderas consultar_logs_descuentos" title="Historial pagos"><i class="fas fa-info-circle"></i></button><button href="#" value="${d.id_usuario}" data-value="${d.nombre}" data-code="${d.id_usuario}" class="btn-data btn-green consultar_fecha_pagos" title="Consulta de saldos"><i class="fas fa-file"></i></button>
                         
                         <button href="#" 
