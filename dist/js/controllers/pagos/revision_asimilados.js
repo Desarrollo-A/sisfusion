@@ -3,13 +3,6 @@ var tabla_asimilados2 ;
 var totaPen = 0;
 let titulos = [];
 
-function cleanCommentsAsimilados() {
-    var myCommentsList = document.getElementById('comments-list-asimilados');
-    var myCommentsLote = document.getElementById('nameLote');
-    myCommentsList.innerHTML = '';
-    myCommentsLote.innerHTML = '';
-}
-
 $(document).ready(function() {
     $("#tabla_asimilados").prop("hidden", true);
     $.post(general_base_url+"Contratacion/lista_proyecto", function (data) {
@@ -17,16 +10,15 @@ $(document).ready(function() {
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
             var name = data[i]['descripcion'];
-            $("#filtro33").append($('<option>').val(id).text(name.toUpperCase()));
+            $("#catalogoAsi").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $("#filtro33").selectpicker('refresh');
+        $("#catalogoAsi").selectpicker('refresh');
     }, 'json');
 });
 
-
-$('#filtro33').change(function(ruta){
-    residencial = $('#filtro33').val();
-    $("#filtro44").empty().selectpicker('refresh');
+$('#catalogoAsi').change(function(){
+    residencial = $('#catalogoAsi').val();
+    $("#condominioAsi").empty().selectpicker('refresh');
     $.ajax({
         url: general_base_url+'Asesor/getCondominioDesc/'+residencial,
         type: 'post',
@@ -36,56 +28,48 @@ $('#filtro33').change(function(ruta){
             for( var i = 0; i<len; i++){
                 var id = response[i]['idCondominio'];
                 var name = response[i]['nombre'];
-                $("#filtro44").append($('<option>').val(id).text(name));
+                $("#condominioAsi").append($('<option>').val(id).text(name));
             }
-            $("#filtro44").selectpicker('refresh');
+            $("#condominioAsi").selectpicker('refresh');
         }
     });
 });
 
-$('#filtro33').change(function(ruta){
-    proyecto = $('#filtro33').val();
-    condominio = $('#filtro44').val();
+$('#catalogoAsi').change(function(){
+    proyecto = $('#catalogoAsi').val();
+    condominio = $('#condominioAsi').val();
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
     getAssimilatedCommissions(proyecto, condominio);
 });
 
-$('#filtro44').change(function(ruta){
-    proyecto = $('#filtro33').val();
-    condominio = $('#filtro44').val();
+$('#condominioAsi').change(function(){
+    proyecto = $('#catalogoAsi').val();
+    condominio = $('#condominioAsi').val();
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
     getAssimilatedCommissions(proyecto, condominio);
 });
 
-$('#tabla_asimilados thead tr:eq(0) th').each( function (i) {
+$('#tabla_asimilados thead tr:eq(0) th').each(function (i) {
     if(i != 0){
         var title = $(this).text();
         titulos.push(title);
-        $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
-        $('input', this).on('keyup change', function() {
-            if (tabla_asimilados2.column(i).search() !== this.value) {
-                tabla_asimilados2.column(i).search(this.value).draw();
-                var total = 0;
-                var index = tabla_asimilados2.rows({ selected: true, search: 'applied' }).indexes();
-                var data = tabla_asimilados2.rows(index).data();
-                $.each(data, function(i, v) {
-                    total += parseFloat(v.impuesto);
-                });
-                document.getElementById("totpagarAsimilados").textContent = formatMoney(numberTwoDecimal(total));
-            }
+        $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
+        $( 'input', this ).on('keyup change', function () {
+            if ($('#tabla_asimilados').DataTable().column(i).search() !== this.value ) {
+                $('#tabla_asimilados').DataTable().column(i).search(this.value).draw();
+        }
         });
-    } 
-    else {
+    }else {
         $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAll(this)"/>');
     }
 });
 
 function getAssimilatedCommissions(proyecto, condominio){
-    $('#tabla_asimilados').on('xhr.dt', function(json) {
+    $('#tabla_asimilados').on('xhr.dt', function(e, settings, json, xhr) {
         var total = 0;
         $.each(json.data, function(i, v) {
             total += parseFloat(v.impuesto);
@@ -109,7 +93,7 @@ function getAssimilatedCommissions(proyecto, condominio){
                 exportOptions: {
                     columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
                     format: {
-                        header: function (columnIdx) {
+                        header: function (d, columnIdx) {
                             return ' ' + titulos[columnIdx-1] + ' ';
                         }
                     }
@@ -318,12 +302,15 @@ function getAssimilatedCommissions(proyecto, condominio){
         {
             "orderable": false,
             data: function( data ){
-                var BtnStats;
-                BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_asimilados" data-toggle="tooltip"  data-placement="top" title="DETALLES">' 
-                +'<i class="fas fa-info"></i></button>'+
-                '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.id_pago_i+'" data-code="'+data.cbbtton+'" ' + 'class="btn-data btn-warning cambiar_estatus" data-toggle="tooltip"  data-placement="top" title="PAUSAR LA SOLICITUD">' +
-                '<i class="fas fa-ban"></i></button>';
-                return '<div class="d-flex justify-center">'+BtnStats+'</div>';
+                let btns = '';
+                
+                const BTN_HISTORIAL = `<button href="#" value="${data.id_pago_i}" data-value="${data.lote}" data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_asimilados" data-toggle="tooltip"  data-placement="top" title="DETALLES"><i class="fas fa-info"></i></button>`;
+                const BTN_PAUSAR = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-warning cambiar_estatus" id="cambiar_estatus" data-toggle="tooltip"  data-placement="top" title="PAUSAR LA SOLICITUD"><i class="fas fa-ban"></i></button>`;
+
+                btns += BTN_HISTORIAL;
+                btns += BTN_PAUSAR;
+
+                return `<div class="d-flex justify-center">${btns}</div>`;
             }
         }],
         columnDefs: [{
@@ -332,7 +319,7 @@ function getAssimilatedCommissions(proyecto, condominio){
             targets:   0,
             searchable:false,
             className: 'dt-body-center',
-            render: function (full){
+            render: function (d, type, full, meta){
                 if(full.estatus == 4){
                     if(full.id_comision){
                         return '<input type="checkbox" name="idTQ[]" class="individualCheck" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
@@ -361,12 +348,48 @@ function getAssimilatedCommissions(proyecto, condominio){
         },
     });
 
+    $('#tabla_asimilados').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
+    });
+
     $("#tabla_asimilados tbody").on("click", ".consultar_logs_asimilados", function(e){
         e.preventDefault();
         e.stopImmediatePropagation();
+        $("#comments-list-asimilados").html('');
+        $("#nameLote").html('');
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
-        $("#seeInformationModalAsimilados").modal();
+        changeSizeModal('modal-md');
+        appendBodyModal(`<div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <i class="material-icons" onclick="cleanCommentsAsimilados()">clear</i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div role="tabpanel">
+                            <div id="nameLote"></div>
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="card card-plain">
+                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                                    <ul class="timeline-3" id="comments-list-asimilados"></ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsAsimilados()"><b>Cerrar</b></button>
+                    </div>`);
+        showModal();
+        
         $("#nameLote").append('<p><h5">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $.getJSON(general_base_url+"Pagos/getComments/"+id_pago).done( function( data ){
         $('#spiner-loader').addClass('hide');
@@ -392,7 +415,6 @@ function getAssimilatedCommissions(proyecto, condominio){
         });
         $('#spiner-loader').removeClass('hide');
     });
-    
 
     $("#tabla_asimilados tbody").on("click", ".cambiar_estatus", function(){
         var tr = $(this).closest('tr');
@@ -409,7 +431,7 @@ function getAssimilatedCommissions(proyecto, condominio){
                 '<div class="col-lg-12">'+
                     '<input type="hidden" name="value_pago" value="1">'+
                     '<input type="hidden" name="estatus" value="6">'+
-                    '<input type="text" class="form-control input-gral observaciones" name="observaciones" required placeholder="Describe mótivo por el cual se va pausar nuevamente la solicitud"></input>'+
+                    '<input type="text" class="form-control input-gral observaciones mb-1" name="observaciones" required placeholder="Describe mótivo por el cual se va pausar nuevamente la solicitud"></input>'+
                 '</div>'+
             '</div>'+
             '<input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'">'+
@@ -419,7 +441,7 @@ function getAssimilatedCommissions(proyecto, condominio){
                     '<button type="submit" class="btn btn-primary" value="PAUSAR">PAUSAR</button>'+
             '</div>'
             );
-        const buttonPausar = document.getElementById('btnPausar');
+        const buttonPausar = document.getElementById('cambiar_estatus');
         buttonPausar.addEventListener('click', function handleClick() {
             $("#totpagarPen").html(formatMoney(0));
         });
@@ -427,11 +449,6 @@ function getAssimilatedCommissions(proyecto, condominio){
     });
     
 }
-
-$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-    $($.fn.dataTable.tables(true)).DataTable()
-    .columns.adjust();
-});
 
 $("#form_interes").submit( function(e) {
     e.preventDefault();
@@ -506,11 +523,3 @@ function selectAll(e) {
         $("#totpagarPen").html(formatMoney(0));
     }
 }
-
-// $('body').tooltip({
-//     selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
-//     trigger: 'hover',
-//     container: 'body'
-// }).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
-//     $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
-// });

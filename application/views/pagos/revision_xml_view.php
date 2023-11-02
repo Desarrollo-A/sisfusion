@@ -13,14 +13,9 @@
         <div class="modal fade" id="seeInformationModalfactura" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            <i class="material-icons" onclick="cleanCommentsfactura()">clear</i>
-                        </button>
-                    </div>
                     <div class="modal-body"></div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsfactura()"><b>Cerrar</b></button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
                     </div>
                 </div>
             </div>
@@ -29,11 +24,6 @@
         <div class="modal fade" id="seeInformationModalPDF" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            <i class="material-icons" onclick="cleanCommentsPDF()">clear</i>
-                        </button>
-                    </div>
                     <form id="EditarPerfilForm" name="EditarPerfilForm" method="post">
                         <div class="modal-body" id="pdfbody"></div>
                         <div class="modal-footer" id="pdffooter"></div>
@@ -74,15 +64,11 @@
                                         <div class="row">
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">          
                                                 <div class="form-group overflow-hidden">
-                                                    <label class="control-label" for="filtro33">Proyecto</label>
-                                                    <select name="filtro33" id="filtro33" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true"  data-container="body" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                                    <label class="control-label" for="catalogoXML">Proyecto</label>
+                                                    <select name="catalogoXML" id="catalogoXML" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true"  data-container="body" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">          
-                                                <div class="form-group overflow-hidden">
-                                                    <label class="control-label" for="filtro44">Condominio</label>
-                                                    <select class="selectpicker select-gral m-0" id="filtro44" name="filtro44[]" data-style="btn " data-show-subtext="true" data-live-search="true" data-container="body" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -112,7 +98,6 @@
         </div>
         <?php $this->load->view('template/footer_legend');?>
     </div>
-
     <?php $this->load->view('template/footer');?>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_xml.js"></script>
     <link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
