@@ -84,95 +84,75 @@ function getAssimilatedCommissions(proyecto, condominio){
         width: "100%",
         scrollX: true,
         bAutoWidth:true,
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                className: 'btn buttons-excel',
-                title: 'Asimilados contraloría',
-                exportOptions: {
-                    columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
-                    format: {
-                        header: function (d, columnIdx) {
-                            return ' ' + titulos[columnIdx-1] + ' ';
-                        }
+        buttons: [{
+            extend: 'excelHtml5',
+            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+            className: 'btn buttons-excel',
+            title: 'Asimilados contraloría',
+            exportOptions: {
+                columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
+                format: {
+                    header: function (d, columnIdx) {
+                        return ' ' + titulos[columnIdx-1] + ' ';
                     }
-                },
+                }
             },
-            {
-            text: '<i class="fa fa-check"></i> ENVIAR A INTERNOMEX',
-            action: function() {
-                if ($('input[name="idTQ[]"]:checked').length > 0) {
-                    $('#spiner-loader').removeClass('hide');
-                    var idcomision = $(tabla_asimilados2.$('input[name="idTQ[]"]:checked')).map(function() {
-                        return this.value;
-                    }).get();
-                    var com2 = new FormData();
-                    com2.append("idcomision", idcomision); 
-                    $.ajax({
-                        url : general_base_url + 'Pagos/acepto_internomex_asimilados/',
-                        data: com2,
-                        cache: false,
-                        contentType: false,
-                        processData: false,
-                        type: 'POST', 
-                        success: function(data){
-                            response = JSON.parse(data);
-                            if(data == 1) {
-                                $('#spiner-loader').addClass('hide');
-                                $("#totpagarPen").html(formatMoney(0));
-                                $("#all").prop('checked', false);
-                                var fecha = new Date();
-                                $("#myModalEnviadas").modal('toggle');
-                                tabla_asimilados2.ajax.reload();
-                                $("#myModalEnviadas .modal-body").html("");
-                                $("#myModalEnviadas").modal();
-                                $("#myModalEnviadas .modal-body").append(`
-                                    <center><img style="width: 75%; height: 75%;" 
-                                        src="${general_base_url}dist/img/send_intmex.gif">
-                                            <p style='color:#676767;'>Comisiones de esquema 
-                                                <b>asimilados</b>, fueron enviadas a 
-                                                <b>INTERNOMEX</b> correctamente.
-                                            </p>
-                                    </center>`);
-                            }
-                            else {
-                                $('#spiner-loader').addClass('hide');
-                                $("#myModalEnviadas").modal('toggle');
-                                $("#myModalEnviadas .modal-body").html("");
-                                $("#myModalEnviadas").modal();
-                                $("#myModalEnviadas .modal-body").append(`
-                                <center>
-                                    <P>ERROR AL ENVIAR COMISIONES </P>
-                                    <BR>
-                                    <i style='font-size:12px;'>NO SE HA PODIDO EJECUTAR ESTA ACCIÓN, INTÉNTALO MÁS TARDE.</i>
-                                    </P>
-                                </center>`);
-                            }
-                        },
-                        error: function( data ){
+        },
+        {
+        text: '<i class="fa fa-check"></i> ENVIAR A INTERNOMEX',
+        action: function() {
+            if ($('input[name="idTQ[]"]:checked').length > 0) {
+                $('#spiner-loader').removeClass('hide');
+                var idcomision = $(tabla_asimilados2.$('input[name="idTQ[]"]:checked')).map(function() {
+                    return this.value;
+                }).get();
+                var com2 = new FormData();
+                com2.append("idcomision", idcomision); 
+                $.ajax({
+                    url : general_base_url + 'Pagos/acepto_internomex_asimilados/',
+                    data: com2,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    type: 'POST', 
+                    success: function(data){
+                        response = JSON.parse(data);
+                        if(data == 1) {
+                            $('#spiner-loader').addClass('hide');
+                            $("#totpagarPen").html(formatMoney(0));
+                            $("#all").prop('checked', false);
+                            var fecha = new Date();
+                            $("#myModalEnviadas").modal('toggle');
+                            tabla_asimilados2.ajax.reload();
+                            $("#myModalEnviadas .modal-body").html("");
+                            $("#myModalEnviadas").modal();
+                            $("#myModalEnviadas .modal-body").append(`<center><img style="width: 75%; height: 75%;" src="${general_base_url}dist/img/send_intmex.gif"><p style='color:#676767;'>Comisiones de esquema <b>asimilados</b>, fueron enviadas a <b>INTERNOMEX</b> correctamente.</p></center>`);
+                        }
+                        else {
                             $('#spiner-loader').addClass('hide');
                             $("#myModalEnviadas").modal('toggle');
                             $("#myModalEnviadas .modal-body").html("");
                             $("#myModalEnviadas").modal();
-                            $("#myModalEnviadas .modal-body").append(`
-                                <center>
-                                    <P>ERROR AL ENVIAR COMISIONES </P>
-                                    <BR><i style='font-size:12px;'>NO SE HA PODIDO EJECUTAR ESTA ACCIÓN, INTÉNTALO MÁS TARDE.</i>
-                                    </P>
-                                </center> `);
+                            $("#myModalEnviadas .modal-body").append(`<center><P>ERROR AL ENVIAR COMISIONES </P><BR><i style='font-size:12px;'>NO SE HA PODIDO EJECUTAR ESTA ACCIÓN, INTÉNTALO MÁS TARDE.</i></P></center>`);
                         }
-                    });
-                }else{
-                    alerts.showNotification("top", "right", "Favor de seleccionar un bono activo .", "warning");
-                }
-            },
-            attr: {
-                class: 'btn btn-azure',
-                style: 'position: relative;',
+                    },
+                    error: function( data ){
+                        $('#spiner-loader').addClass('hide');
+                        $("#myModalEnviadas").modal('toggle');
+                        $("#myModalEnviadas .modal-body").html("");
+                        $("#myModalEnviadas").modal();
+                        $("#myModalEnviadas .modal-body").append(`<center><P>ERROR AL ENVIAR COMISIONES </P><BR><i style='font-size:12px;'>NO SE HA PODIDO EJECUTAR ESTA ACCIÓN, INTÉNTALO MÁS TARDE.</i></P></center> `);
+                    }
+                });
+            }else{
+                alerts.showNotification("top", "right", "Favor de seleccionar un bono activo .", "warning");
             }
-            }
-        ],
+        },
+        attr: {
+            class: 'btn btn-azure',
+            style: 'position: relative;',
+        }
+        }],
         pagingType: "full_numbers",
         fixedHeader: true,
         language: {
@@ -303,13 +283,10 @@ function getAssimilatedCommissions(proyecto, condominio){
             "orderable": false,
             data: function( data ){
                 let btns = '';
-                
                 const BTN_HISTORIAL = `<button href="#" value="${data.id_pago_i}" data-value="${data.lote}" data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_asimilados" data-toggle="tooltip"  data-placement="top" title="DETALLES"><i class="fas fa-info"></i></button>`;
                 const BTN_PAUSAR = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-warning cambiar_estatus" id="cambiar_estatus" data-toggle="tooltip"  data-placement="top" title="PAUSAR LA SOLICITUD"><i class="fas fa-ban"></i></button>`;
-
                 btns += BTN_HISTORIAL;
                 btns += BTN_PAUSAR;
-
                 return `<div class="d-flex justify-center">${btns}</div>`;
             }
         }],
@@ -349,9 +326,7 @@ function getAssimilatedCommissions(proyecto, condominio){
     });
 
     $('#tabla_asimilados').on('draw.dt', function() {
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
 
     $("#tabla_asimilados tbody").on("click", ".consultar_logs_asimilados", function(e){

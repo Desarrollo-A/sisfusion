@@ -35,20 +35,19 @@ class Pagos extends CI_Controller
       redirect(base_url() . "index.php/login");
   }
 
-   public function revision_asimilados()
-   {
-     switch($this->session->userdata('id_rol')){
-       case '31':
-           $this->load->view('template/header');
-           $this->load->view("pagos/revision_asimilados_intmex_view");
-       break;
+   public function revision_asimilados(){
+  switch($this->session->userdata('id_rol')){
+  case '31':
+    $this->load->view('template/header');
+    $this->load->view("pagos/revision_asimilados_intmex_view");
+  break;
 
-       default:
-           $this->load->view('template/header');
-           $this->load->view("pagos/revision_asimilados_view");
-       break;
-     }
-   }
+  default:
+    $this->load->view('template/header');
+    $this->load->view("pagos/revision_asimilados_view");
+  break;
+  }
+  }
 
 
 
@@ -771,13 +770,13 @@ class Pagos extends CI_Controller
     
        // echo "si entro";
        
-       $fecha_inicio = $this->input->post("fecha_inicio");
-       $arrayuser = $this->input->post("userMKTDSelect[]");
-       $puesto = $this->input->post("puesto[]");
-       $arrayporc = $this->input->post("porcentajeUserMk[]");
-       $arrayplaza = $this->input->post("plazaMKTDSelect[]");
-       $arraysede = $this->input->post("sedeMKTDSelect[]");
-       $arrayestatus = $this->input->post("estatusMk[]");
+      $fecha_inicio = $this->input->post("fecha_inicio");
+      $arrayuser = $this->input->post("userMKTDSelect[]");
+      $puesto = $this->input->post("puesto[]");
+      $arrayporc = $this->input->post("porcentajeUserMk[]");
+      $arrayplaza = $this->input->post("plazaMKTDSelect[]");
+      $arraysede = $this->input->post("sedeMKTDSelect[]");
+      $arrayestatus = $this->input->post("estatusMk[]");
      
       $query_max = $this->db->query("SELECT MAX(numero_plan) AS nummax FROM porcentajes_mktd");
       $new_max = intval($query_max->row()->nummax)+1;

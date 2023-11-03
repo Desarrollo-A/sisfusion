@@ -327,7 +327,7 @@
                                                 </div>
                                             </div>
                                             <div class="material-datatables">
-                                                <div class="form-group">
+                                                <div class="form-group" id="formTableComision">
                                                     <table class="table-striped table-hover" id="tabla_total_comisionistas" name="tabla_total_comisionistas">
                                                         <thead>
                                                             <tr>
@@ -381,7 +381,7 @@
                                                 </div>
                                             </div>
                                             <div class="material-datatables">
-                                                <div class="form-group">
+                                                <div class="form-group" id="formTableEstatus">
                                                     <table class="table-striped table-hover" id="tabla_total_comisionistas2" name="tabla_total_comisionistas2">
                                                         <thead>
                                                             <tr>

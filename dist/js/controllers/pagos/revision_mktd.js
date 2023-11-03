@@ -61,7 +61,8 @@ $('#anio').selectpicker('refresh');
 
 
 $(document).ready(function(){
-    $("#tabla_total_comisionistas").addClass('hide')
+    $("#formTableComision").addClass('hide');
+    $("#formTableEstatus").addClass('hide');
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
     setIniDatesXMonth("#beginDate", "#endDate");
@@ -96,6 +97,7 @@ sp = {
 }
 
 $(document).on("click", "#searchByDateRange", function () {
+    $("#formTableComision").removeClass('hide');
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
     let estatus =($("#selectEstatus").val() == '') ? 0 : $("#selectEstatus").val();
@@ -870,6 +872,7 @@ $('#fecha2').change( function(){
 });
 
 $('#selectEstatus').change( function(){
+    $("#formTableComision").removeClass('hide');
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
     let estatus =($(this).val() == '') ? 0 : $(this).val();
@@ -906,6 +909,7 @@ $('#fechaR2').change( function(){
 });
 
 $('#selectEstatusR').change( function(){
+    $("#formTableEstatus").removeClass('hide');
     let finalBeginDate = $(".beginDateR").val();
     let finalEndDate = $(".endDateR").val();
     let estatus =($(this).val() == '') ? 0 : $(this).val();
@@ -1015,6 +1019,7 @@ function fillTableR(typeTransaction, beginDate, endDate, where, estatus){
 }
 
 $(document).on("click", "#searchByDateRangeR", function () {
+    $("#formTableEstatus").removeClass('hide');
     let finalBeginDate = $(".beginDateR").val();
     let finalEndDate = $(".endDateR").val();
     let estatus =($("#selectEstatusR").val() == '') ? 0 : $("#selectEstatusR").val();

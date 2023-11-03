@@ -30,20 +30,20 @@
                                         <div class="row">
                                             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 overflow-hidden">
                                                 <div class="form-group">
-                                                    <label class="control-label" for="id_proyecto_ei">Proyecto</label>
-                                                    <select name="id_proyecto_ei" id="id_proyecto_ei" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true" data-container="body" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                                    <label class="control-label" for="catalogoInter">Proyecto</label>
+                                                    <select name="catalogoInter" id="catalogoInter" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true" data-container="body" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 overflow-hidden">
                                                 <div class="form-group">
-                                                    <label class="control-label" for="id_condominio_ei">Condominio</label>
-                                                    <select class="selectpicker select-gral m-0" id="id_condominio_ei" name="id_condominio_ei[]" data-style="btn " data-show-subtext="true" data-live-search="true" data-container="body" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                                    <label class="control-label" for="condominioInter">Condominio</label>
+                                                    <select class="selectpicker select-gral m-0" id="condominioInter" name="condominioInter[]" data-style="btn " data-show-subtext="true" data-live-search="true" data-container="body" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 overflow-hidden">
                                                 <div class="form-group">
-                                                    <label class="control-label" for="forma-pago-filtro">Forma de pago</label>
-                                                    <select name="forma-pago-filtro" id="forma-pago-filtro" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" data-container="body" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                                    <label class="control-label" for="formaPagoInter">Forma de pago</label>
+                                                    <select name="formaPagoInter" id="formaPagoInter" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" data-container="body" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                                 </div>
                                             </div>
                                         </div>

@@ -95,14 +95,9 @@ $('#tabla_extranjero thead tr:eq(0) th').each( function (i) {
             if (tabla_extranjero2.column(i).search() !== this.value) {
                 tabla_extranjero2.column(i).search(this.value).draw();
                 var total = 0;
-                var index = tabla_extranjero2.rows({
-                selected: true,
-                search: 'applied'
-            }).indexes();
+                var index = tabla_extranjero2.rows({ selected: true, search: 'applied' }).indexes();
                 var data = tabla_extranjero2.rows(index).data();
-                $.each(data, function(i, v) {
-                    total += parseFloat(v.impuesto);
-                });
+                $.each(data, function(i, v) { total += parseFloat(v.impuesto); });
                 document.getElementById("totpagarextranjero").textcontent = formatMoney(numberTwoDecimal(total));
             }
         });
@@ -355,7 +350,35 @@ function getAssimilatedCommissions(proyecto, condominio){
         e.stopImmediatePropagation();
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
-        $("#seeInformationModalExtranjero").modal();
+
+        changeSizeModal('modal-md');
+        appendBodyModal(`<div class="modal-body">
+                <div role="tabpanel">
+                        <div id="nameLote"></div>
+                        <div id="nameLote"></div>
+                    </ul>
+                    <div id="nameLote"></div>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card card-plain">
+                                        <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                            <ul class="timeline-3" id="comments-list-extranjero"></ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanComments()"><b>Cerrar</b></button>
+            </div>`);
+        showModal();
+
         $("#nameLote").append('<p class="text-center"><h5">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $('#spiner-loader').removeClass('hide');
         $.getJSON(general_base_url+"Pagos/getComments/"+id_pago).done( function( data ){
