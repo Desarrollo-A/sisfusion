@@ -223,8 +223,8 @@ function loadTable(tipoDescuento) {
                     
                     if (d.saldo_comisiones >= 12500 && (d.estatus == 1 || d.banderaReactivado == 1) && d.pendiente > 1) {//TODAS SEDES
                         color = 'color:purple';
-                        valor = Math.round(d.saldo_comisiones/12500);
-                        pendiente = Math.round(d.pendiente/d.pago_individual);
+                        valor = Math.floor(d.saldo_comisiones/12500);
+                        pendiente = Math.floor(d.pendiente/d.pago_individual);
                         pagosDescontar = valor>pendiente ? d.pendiente : valor*d.pago_individual;
                     }
                     return `<p style="font-size: 1em; ${color}">${formatMoney(pagosDescontar)}</p>`;
@@ -282,8 +282,8 @@ function loadTable(tipoDescuento) {
                     }
                     
                     if (d.saldo_comisiones >= 12500 && (d.estatus == 1 || d.banderaReactivado == 1) && d.pendiente > 1 && d.estado_usuario == 1) {//TODAS SEDES
-                        valor = Math.round(d.saldo_comisiones/12500);
-                        pendiente = Math.round(d.pendiente/d.pago_individual);
+                        valor = Math.floor(d.saldo_comisiones/12500);
+                        pendiente = Math.floor(d.pendiente/d.pago_individual);
                         pagosDescontar = valor>pendiente ? d.pendiente : valor*d.pago_individual;
                                     
                         adicionales = `<button href="#" 
