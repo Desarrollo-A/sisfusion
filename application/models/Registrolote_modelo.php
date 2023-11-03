@@ -3397,7 +3397,7 @@
 					$where = "(SELECT id_usuario FROM usuarios WHERE (id_rol = 3 AND id_sede IN ('$id_sede', '4', '13', '14', '15')))";
 				}
 				else if ($id_usuario == 29 || $id_usuario == 7934) // MJ: FERNANDA MONJARAZ VE CINTHYA TANDAZO
-					$where = "(SELECT id_usuario FROM usuarios WHERE (id_rol = 3 AND id_sede IN ('$id_sede', '12')) OR id_usuario = 666)";
+					$where = "(SELECT id_usuario FROM usuarios WHERE (id_rol = 3 AND id_sede IN ('$id_sede', '12', '16')) OR id_usuario = 666)";
 				else if ($id_usuario == 4888 || $id_usuario == 546){ // MJ: ADRIANA PEREZ Y DIRCE
 					$validacionDirce = $id_usuario == 546 ? 'OR id_usuario=681' : '';
 					$where = "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('$id_sede', '11') $validacionDirce )";
@@ -3439,6 +3439,9 @@
 					$sede = "";
 				} else if ($this->session->userdata('id_usuario') == 11607) { // JOSE ENRIQUE HINOJOSA GUERRERO
 					$id_lider = $id_lider . ', 2411'; // VE LO DE SU GERENTE ACTUAL + LOS REGISTROS DE MAGDALENA ESPARZA HERNANDEZ CUANDO ERA GERENTE
+					$sede = "";
+				} else if ($this->session->userdata('id_usuario') == 13770) { // ITAYETZI PAULINA CAMPOS GONZALEZ	
+					$id_lider = $id_lider . ', 21, 1545'; // VE LO DE SU GERENTE ACTUAL + LOS REGISTROS DE LOS DEMÁS GERENTES DE PUEBLA
 					$sede = "";
 				}
                 $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor, '1' venta_compartida  FROM lotes

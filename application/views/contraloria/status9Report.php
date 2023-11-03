@@ -54,6 +54,7 @@
                                     <table id="estatusNueveTable" name="estatusNueveTable" class="table-striped table-hover">
                                         <thead>
                                             <tr>
+                                                <th>TIPO DE PROCESO</t>
                                                 <th>PROYECTO</th>
                                                 <th>CONDOMINIO</th>
                                                 <th>LOTE</th>

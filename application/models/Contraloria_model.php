@@ -333,20 +333,18 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 }
 
 /**---------------------------------------------------------- */
-    public function selectRegistroPorContrato($numContrato){
-        $this->db->select("cl.id_cliente, l.nombreLote, l.idLote, l.usuario, l.perfil, l.fechaVenc, l.idCondominio,
-		l.modificado, l.fechaSolicitudValidacion, cl.nombre, cl.apellido_paterno, cl.apellido_materno, 
-		cl.rfc, l.contratoUrgente, l.observacionContratoUrgente, l.observacionContratoUrgente as vl,
-		l.fechaRL, l.idStatusContratacion, l.idMovimiento");
-        $this->db->join('clientes cl', 'cl.idLote = l.idLote');
-        $this->db->where("l.numContrato",$numContrato);
-
-
-        $this->db->where("(cl.status=1 AND l.idStatusContratacion=9 AND l.idMovimiento=39)");
-        $this->db->where('l.status', 1);
-        $query = $this->db->get('lotes l');
-        return $query->row();
-
+    public function selectRegistroPorContrato($numContrato) {
+        return $this->db->query("SELECT cl.id_cliente, l.nombreLote, l.idLote, l.usuario, l.perfil, l.fechaVenc, l.idCondominio,
+        l.modificado, l.fechaSolicitudValidacion, cl.nombre, cl.apellido_paterno, cl.apellido_materno, 
+        cl.rfc, l.contratoUrgente, l.observacionContratoUrgente, l.observacionContratoUrgente as vl,
+        l.fechaRL, l.idStatusContratacion, l.idMovimiento
+        FROM lotes l
+        INNER JOIN clientes cl ON cl.idLote = l.idLote AND cl.status = 1
+        WHERE l.numContrato = '$numContrato'
+        AND l.idStatusContratacion = 9
+        AND l.idMovimiento = 39
+        AND l.status = 1
+        AND l.numContrato != 'NULL'")->row();
     }
 
 
@@ -821,7 +819,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		FORMAT(lotes.totalNeto, 'C') enganche, FORMAT(lotes.totalNeto2, 'C') total, CONVERT(VARCHAR,cl.fechaApartado,120) AS fechaApartado, CONVERT(VARCHAR,hd.modificado,120) AS modificado,
 		UPPER(CASE CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno) WHEN '' THEN hd.usuario ELSE 
 		CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno) END) nombreUsuario, hd.comentario, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno )) nombreCliente,
-        cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta
+        cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta, ISNULL(oxc0.nombre, 'Normal') tipo_proceso
 		FROM historial_lotes hd
 		INNER JOIN clientes cl ON hd.idCliente = cl.id_cliente $filter
 		INNER JOIN lotes lotes ON hd.idLote = lotes.idLote AND lotes.status = 1
@@ -831,6 +829,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
 		LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
 		LEFT JOIN usuarios u ON CAST(u.id_usuario AS VARCHAR(45)) = CAST(hd.usuario AS VARCHAR(45))
+        LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
 		WHERE (hd.idStatusContratacion = 9 and hd.idMovimiento = 39 and cl.status = 1)
 		AND hd.status = 1 ORDER BY res.nombreResidencial, cond.nombre, lotes.nombreLote");
     }

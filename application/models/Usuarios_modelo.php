@@ -79,7 +79,7 @@ class Usuarios_modelo extends CI_Model
                 else if(in_array($this->session->userdata('id_usuario'), array(10924, 7097, 7096, 7324, 5620, 13094))) // GRISELL / EDGAR LEONARDO VE 4 (CIUDAD DE MÉXICO) Y 9 (SAN MIGUEL DE ALLENDE)
                     $id_sede = "(usuarios.id_sede LIKE '%4%' OR usuarios.id_sede LIKE '%9%' OR usuarios.id_sede LIKE '%13%') AND usuarios.id_usuario != ".$this->session->userdata('id_lider_2')."";
                 else if($this->session->userdata('id_usuario') == 29 || $this->session->userdata('id_usuario') == 7934) // 29 FERNANDA MONJARAZ VE LO DE LEÓN Y GUADALAJARA
-                    $id_sede = "(usuarios.id_sede LIKE '%5%' OR usuarios.id_sede LIKE '%12%')";
+                    $id_sede = "(usuarios.id_sede IN ('5', '12', '16'))";
                 else if($this->session->userdata('id_usuario') == 28) // 28	ADRIANA RODRIGUEZ
                     $id_sede = "(usuarios.id_sede IN ('2', '4', '13', '14', '15'))";
                 else if($this->session->userdata('id_usuario') == 30) // 30 VALERIA PALACIOS
@@ -130,6 +130,10 @@ class Usuarios_modelo extends CI_Model
                 }
                 else if ($this->session->userdata('id_usuario') == 12318) { // EMMA CECILIA MALDONADO RAMÍREZ
                     $id_lider = $this->session->userdata('id_lider') . ', 11196, 5637, 2599, 1507';
+                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                }
+                else if ($this->session->userdata('id_usuario') == 13770) { // ITAYETZI PAULINA CAMPOS GONZALEZ
+                    $id_lider = $this->session->userdata('id_lider') . ', 21, 1545';
                     $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
                 }
                 else
