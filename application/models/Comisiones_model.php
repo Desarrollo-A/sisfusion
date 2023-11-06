@@ -5257,7 +5257,7 @@ public function CancelarDescuento($id_pago,$motivo)
     }
 
     function lista_estatus_descuentos(){
-        return $this->db->query(" SELECT * FROM opcs_x_cats where id_catalogo=23 and id_opcion in(18,19,20,21,22,23,24,25,26,29)");
+        return $this->db->query(" SELECT * FROM opcs_x_cats where id_catalogo=23 and id_opcion in(18,19,20,21,22,23,24,25,26,29,30)");
     }
 
     public function reactivarPago($idDescuento, $fecha)
