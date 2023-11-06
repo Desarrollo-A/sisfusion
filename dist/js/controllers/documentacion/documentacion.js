@@ -9,9 +9,7 @@ const movimientosPermitidosEstatus6 = [35, 22, 62, 75, 94, 106];
 const rolesPermitidosEstatus6And15 = [17, 70];
 const movimientosPermitidosEstatus8 = [37, 7, 64, 66, 77, 41];
 const rolesPermitidosEstatus8 = [5, 2, 6];
-const movimientosPermitidosEstatus2 = [
-  31, 85, 20, 63, 73, 82, 92, 96, 99, 102, 104, 107, 108, 109, 111,
-];
+const movimientosPermitidosEstatus2 = [31, 85, 20, 63, 73, 82, 92, 96, 99, 102, 104, 107, 108, 109, 111];
 const rolesPermitidosEstatus2 = [7, 9, 3, 2];
 const rolesPermitidosAsesorInactivo = [6];
 
@@ -47,7 +45,8 @@ const TipoDoc = {
   CONTRATO_ELEGIDO_FIRMA_CLIENTE: 41,
   CONTRATO_1_CANCELADO: 42,
   CONTRATO_2_CANCELADO: 43,
-  CONTRATO_REUBICACION_FIRMADO: 44
+  CONTRATO_REUBICACION_FIRMADO: 44,
+  DOCUMENTO_REESTRUCTURA_FIRMA_CLIENTE: 46,
 };
 
 const observacionContratoUrgente = 1; // Bandera para inhabilitar
@@ -318,10 +317,7 @@ function cargarTabla(idLote, idCliente = "") {
             return `<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`;
           }
 
-          if (
-            data.tipo_doc == TipoDoc.CONTRATO ||
-            data.tipo_doc == TipoDoc.DOCUMENTO_REESTRUCTURA
-          ) {
+          if (data.tipo_doc == TipoDoc.CONTRATO) {
             // CONTRATO
             if (data.expediente == null || data.expediente === "") {
               // NO HAY DOCUMENTO CARGADO
@@ -472,7 +468,8 @@ function cargarTabla(idLote, idCliente = "") {
           if (
               data.tipo_doc == TipoDoc.CORRIDA_ANTERIOR ||
               data.tipo_doc == TipoDoc.CONTRATO_ANTERIOR ||
-              data.tipo_doc == TipoDoc.RESCISION_CONTRATO
+              data.tipo_doc == TipoDoc.RESCISION_CONTRATO ||
+              data.tipo_doc == TipoDoc.DOCUMENTO_REESTRUCTURA_FIRMA_CLIENTE
           ) {
             if (data.expediente == null || data.expediente === "") {
               buttonMain = crearBotonAccion(AccionDoc.DOC_NO_CARGADO, data);

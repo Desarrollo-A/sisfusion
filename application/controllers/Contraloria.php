@@ -1163,43 +1163,73 @@ class Contraloria extends CI_Controller {
 
             $arreglo["asig_jur"] = $assigned_user;
 
-        } else if ($assigned_location == 1) { // EXPEDIENTES SAN LUIS POTOSÍ
-            $id_sede_jur = 1;
-            $data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
-            $id_asig = $data_asig->contador;
-
-            if ($id_asig == 5468)
-                $assigned_user = 2764;
-            else if ($id_asig == 2764)
-                $assigned_user = 5468;
-
-            $arreglo["asig_jur"] = $assigned_user;
-		} else if ($assigned_location == 5 || $assigned_location == 16) { // EXPEDIENTES LEÓN  Y AGUASCALIENTES
-            $id_sede_jur = 5;
-            $data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
-            $id_asig = $data_asig->contador;
-
-            if ($id_asig == 6856)
-                $assigned_user = 2800;
-            else if ($id_asig == 2800)
-                $assigned_user = 12047;
-            else if ($id_asig == 12047)
-                $assigned_user = 6856;
-
-            $arreglo["asig_jur"] = $assigned_user;
-        }  else if ($assigned_location == 3) { // EXPEDIENTES MÉRIDA
-            $id_sede_jur = 3;
-            $data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
-            $id_asig = $data_asig->contador;
-
-            if ($id_asig == 11097)
-                $assigned_user = 12842;
-            else if ($id_asig == 12842)
-                $assigned_user = 11097;
-
-            $arreglo["asig_jur"] = $assigned_user;
+        $cliente = $this->Reestructura_model->obtenerClientePorId($idCliente);
+        if (in_array($cliente->proceso, array(2, 3, 4))) { // Reubicación, Reestructura, Reubicación excedente
+            $arreglo["idStatusContratacion"] = 8;
+            $arreglo["idMovimiento"] = 38;
         }
 
+        $assigned_location = null;
+        if (!in_array($cliente->proceso, array(2, 3, 4))) { // ! Reubicación, Reestructura, Reubicación excedente
+            $ub_jur = $this->Contraloria_model->val_ub($idLote);
+            $id_sede_jur = '';
+            $assigned_location = $ub_jur[0]['ubicacion'];
+            if ($assigned_location == 2) { // EXPEDIENTES QUERÉTARO
+                $id_sede_jur = 2;
+                $data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
+                $id_asig = $data_asig->contador;
+                $arreglo["asig_jur"] = $id_asig == 2765 ? 2876 : ($id_asig == 2876 ? 10463 : 2765);
+            } else if ($assigned_location == 4 || $assigned_location == 15) { // EXPEDIENTES CIUDAD DE MÉXICO
+                $id_sede_jur = 4;
+                $data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
+                $id_asig = $data_asig->contador;
+
+                if ($id_asig == 2820)
+                    $assigned_user = 10437;
+                else if ($id_asig == 10437)
+                    $assigned_user = 11258;
+                else if ($id_asig == 11258)
+                    $assigned_user = 2820;
+
+                $arreglo["asig_jur"] = $assigned_user;
+
+            } else if ($assigned_location == 1) { // EXPEDIENTES SAN LUIS POTOSÍ
+                $id_sede_jur = 1;
+                $data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
+                $id_asig = $data_asig->contador;
+
+                if ($id_asig == 5468)
+                    $assigned_user = 2764;
+                else if ($id_asig == 2764)
+                    $assigned_user = 5468;
+
+                $arreglo["asig_jur"] = $assigned_user;
+            } else if ($assigned_location == 5) { // EXPEDIENTES LEÓN
+                $id_sede_jur = 5;
+                $data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
+                $id_asig = $data_asig->contador;
+
+                if ($id_asig == 6856)
+                    $assigned_user = 2800;
+                else if ($id_asig == 2800)
+                    $assigned_user = 12047;
+                else if ($id_asig == 12047)
+                    $assigned_user = 6856;
+
+                $arreglo["asig_jur"] = $assigned_user;
+            }  else if ($assigned_location == 3) { // EXPEDIENTES MÉRIDA
+                $id_sede_jur = 3;
+                $data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
+                $id_asig = $data_asig->contador;
+
+                if ($id_asig == 11097)
+                    $assigned_user = 12842;
+                else if ($id_asig == 12842)
+                    $assigned_user = 11097;
+
+                $arreglo["asig_jur"] = $assigned_user;
+            }
+        }
 
         $validate = $this->Contraloria_model->validateSt6($idLote);
 

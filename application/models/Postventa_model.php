@@ -220,15 +220,21 @@ class Postventa_model extends CI_Model
 
     function get_cancelacion($id_proyecto){
         ini_set('memory_limit', -1);
+        $filtro = '';
+
+        if($id_proyecto != 0){
+            $filtro = "and con.idResidencial in ($id_proyecto)";
+        }
+
         return $this->db->query("SELECT res.nombreResidencial, con.nombre AS condominio, lot.nombreLote, 
 		lot.comentarioLiberacion, lot.idLote, cl.id_cliente,
 		UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', apellido_materno)) nombreCliente, hl.observacionLiberacion
-        FROM lotes lot
-        INNER JOIN condominios con ON con.idCondominio = lot.idCondominio
-        INNER JOIN residenciales res ON res.idResidencial = con.idResidencial and con.idResidencial in ($id_proyecto)
-        INNER JOIN historial_liberacion hl ON hl.idLote = lot.idLote AND hl.modificado = (SELECT max(hl2.modificado) from historial_liberacion hl2 WHERE hl2.idLote = hl.idLote)
-        INNER JOIN clientes cl ON cl.id_cliente = hl.id_cliente AND cl.idLote = hl.idLote
-        WHERE lot.idStatusLote = 18 AND lot.idMovimiento = 0 AND lot.idStatusContratacion = 0 AND 
+    FROM lotes lot
+    INNER JOIN condominios con ON con.idCondominio = lot.idCondominio
+    INNER JOIN residenciales res ON res.idResidencial = con.idResidencial $filtro
+		INNER JOIN historial_liberacion hl ON hl.idLote = lot.idLote AND hl.modificado = (SELECT max(hl2.modificado) from historial_liberacion hl2 WHERE hl2.idLote = hl.idLote)
+		INNER JOIN clientes cl ON cl.id_cliente = hl.id_cliente AND cl.idLote = hl.idLote
+    WHERE lot.idStatusLote = 1 AND lot.idMovimiento = 0 AND lot.idStatusContratacion = 0 AND 
 		hl.observacionLiberacion LIKE '%CANCELACIÓN DE CONTRATO%'")->result();
     }
 
