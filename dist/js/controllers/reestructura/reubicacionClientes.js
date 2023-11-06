@@ -1424,64 +1424,31 @@ const agregarCopropietario = (copropietario = null) => {
                                 <div class="container-fluid">
                                     <div class="row">
                                         <div class="col-xs-12">
-                                            <label class="control-label">Nombre (<small style="color: red;">*</small>)</label>
-                                            <input class="form-control input-gral"
-                                                name="nombre[]" 
-                                                type="text" 
-                                                value="${copropietario?.nombre ?? ''}"
-                                                minlength="1"
-                                                maxlength="50" 
-                                                autocomplete="off"/>
-                                            
-                                            <input id="id_cop[]" 
-                                                name="id_cop[]" 
-                                                type="hidden" 
-                                                value="${idCopropietario}">
+                                            <label class="control-label">NOMBRE (<small style="color: red;">*</small>)</label>
+                                            <input class="form-control input-gral" name="nombre[]" type="text" value="${copropietario?.nombre ?? ''}" minlength="1" maxlength="50" autocomplete="off"/>
+                                            <input id="id_cop[]" name="id_cop[]" type="hidden" value="${idCopropietario}">
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12">
-                                            <label class="control-label">Apellido paterno (<small style="color: red;">*</small>)</label>
-                                            <input class="form-control input-gral"
-                                                name="apellido_p[]" 
-                                                type="text"
-                                                value="${copropietario?.apellido_paterno ?? ''}"
-                                                minlength="1"
-                                                maxlength="50"
-                                                autocomplete="off"/>
+                                            <label class="control-label">APELLIDO PATERNO (<small style="color: red;">*</small>)</label>
+                                            <input class="form-control input-gral" name="apellido_p[]" type="text" value="${copropietario?.apellido_paterno ?? ''}" minlength="1" maxlength="50" autocomplete="off"/>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12">
-                                            <label class="control-label">Apellido materno (<small style="color: red;">*</small>)</label>
-                                            <input class="form-control input-gral"
-                                                name="apellido_m[]" 
-                                                type="text"
-                                                value="${copropietario?.apellido_materno ?? ''}"
-                                                minlength="1"
-                                                maxlength="50"
-                                                autocomplete="off"/>
+                                            <label class="control-label">APELLIDO MATERNO (<small style="color: red;">*</small>)</label>
+                                            <input class="form-control input-gral" name="apellido_m[]" type="text" value="${copropietario?.apellido_materno ?? ''}" minlength="1" maxlength="50" autocomplete="off"/>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                            <label class="control-label">Teléfono (<small style="color: red;">*</small>)</label>
-                                            <input class="form-control input-gral" 
-                                                name="telefono2[]" 
-                                                type="number" 
-                                                step="any" 
-                                                onKeyPress="if(this.value.length === 10) return false;" 
-                                                value="${copropietario?.telefono_2 ?? ''}"/>
+                                            <label class="control-label">CELULAR (<small style="color: red;">*</small>)</label>
+                                            <input class="form-control input-gral" name="telefono2[]" type="number" step="any" onKeyPress="if(this.value.length === 10) return false;" value="${copropietario?.telefono_2 ?? ''}"/>
                                         </div>
                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                            <label class="control-label">Correo (<small style="color: red;">*</small>)<small class="pl-1" id="errorMsgCorreo${idDiv}"></small></label></label>
-                                            <input class="form-control input-gral" 
-                                                name="correo[]" 
-                                                id="correoCop${idDiv}"
-                                                type="email" 
-                                                value="${copropietario?.correo ?? ''}"
-                                                oninput= "validarCorreo('#correoCop${idDiv}', '#errorMsgCorreo${idDiv}')"
-                                                autocomplete="off"/>
+                                            <label class="control-label">CORREO ELECTRÓNICO (<small style="color: red;">*</small>)<small class="pl-1" id="errorMsgCorreo${idDiv}"></small></label></label>
+                                            <input class="form-control input-gral" name="correo[]" id="correoCop${idDiv}" type="email" value="${copropietario?.correo ?? ''}" oninput= "validarCorreo('#correoCop${idDiv}', '#errorMsgCorreo${idDiv}')" autocomplete="off"/>
                                         </div> 
                                     </div>
                                     <div class="row">

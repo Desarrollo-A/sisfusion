@@ -42,6 +42,12 @@ class Universidad extends CI_Controller
       $this->load->view("universidad/reporte_mensual_view");
     }
 
+    public function reporteDevolucion(){
+      $this->load->view('template/header');
+      $this->load->view("universidad/reporte_devolucion_view");
+    }
+  
+
     function getDescuentosUniversidad($tipoDescuento){
         $data['data']= $this->Universidad_model->getDescuentosUniversidad($tipoDescuento);
         
@@ -70,7 +76,7 @@ class Universidad extends CI_Controller
     
         if($voBoUsuario > 0){
         $data = 0;
-        }else{
+        } else{
         $data = $this->Universidad_model->altaNuevoDescuentoUM($usuario, $montoFinalDescuento, $numeroMeses, $montoFinalMensualidad, $descripcionAltaDescuento, $this->session->userdata('id_usuario')); 
         }
         echo json_encode($data);
@@ -163,13 +169,119 @@ class Universidad extends CI_Controller
     echo json_encode($dat);    
   }
 
+  public function descuentoActualizarCertificaciones(){
+
+    $banderaSoloEstatus     = $this->input->post('banderaSoloEstatus');
+    $statu                  = $this->input->post('statu'); 
+    $estatus                = $this->input->post('estatus');
+    $id_descuento           = $this->input->post('id_descuento');
+    $monto                  = $this->input->post('monto');
+    $pago_individual        = $this->input->post('pago_individual');
+    $comentario             = 'Descuento aplicado ';
+    $fechaSeleccionada      =  $this->input->post('fechaSeleccionada');
+    $banderaPagosActivos    =  $this->input->post('banderaPagosActivos');
+    $complemento            = '01:01:00.000';
+    $fecha_modificacion = $fechaSeleccionada.' '.$complemento;
+      if($estatus === '1'){
+          $arr_update = array( 
+              "estatus"   => 1,
+              "monto"           =>  $monto,
+              "pago_individual" =>  $pago_individual,
+              "detalles"      =>  $comentario,
+              );
+        if($banderaPagosActivos == 1 ){
+          $pagos_activos = 1;
+          $fecha_modificacion = $fechaSeleccionada.' '.$complemento;
+          // $estatus = 5;  
+          $arr_update["estatus"] = $estatus ;
+          $arr_update["pagos_activos"] = $pagos_activos ;
+          $arr_update["fecha_modificacion"] =  $fechaSeleccionada.' '.$complemento;
+        }
+        else if($banderaPagosActivos == 2){
+          $pagos_activos = 0;
+          $fecha_modificacion = $fechaSeleccionada.' '.$complemento;
+          $estatus = 5;  
+          $arr_update["estatus"] = $estatus ;
+          $arr_update["pagos_activos"] = $pagos_activos ;
+          $arr_update["fecha_modificacion"] =  $fechaSeleccionada.' '.$complemento;
+        }
+        else{
+        }
+      }else {
+       
+        $arr_update = array(    
+          
+          // "pagos_activos"   => $pagos_activos,
+          "monto"           =>  $monto,
+          "pago_individual" =>  $pago_individual,
+          "detalles"      =>  $comentario,              
+        );
+        if($banderaPagosActivos == 1 ){
+          $pagos_activos = 1;
+          $fecha_modificacion = $fechaSeleccionada.' '.$complemento;
+          // $estatus = 5;  
+          $arr_update["pagos_activos"] = $pagos_activos ;
+          $arr_update["fecha_modificacion"] = $fecha_modificacion;
+        }
+        else  if($banderaPagosActivos == 2){
+          $pagos_activos = 0;
+          $estatus = 5;  
+          $arr_update["estatus"] = $estatus ;
+          $arr_update["pagos_activos"] = $pagos_activos ;
+          $arr_update["fecha_modificacion"] = $fecha_modificacion  ;
+
+        }
+        else{
+
+        }
+
+    }
+        $update = $this->Universidad_model->descuentos_universidad($id_descuento,$arr_update);                           
+        if($update){
+          $respuesta =  array(
+            "response_code" => 200, 
+            "response_type" => 'success',
+            "message" => "Descuento actualizado satisfactoriamente");
+        }else{
+          $respuesta =  array(
+            "response_code" => 400, 
+            "response_type" => 'error',
+            "message" => "Descuento no actualizado, inténtalo más tarde ");
+        }
+        echo json_encode ($respuesta);
+      } 
+      public function updatePrestamosUniversidad (){
+        $certificacion  = $this->input->post('certificaciones');
+        $idPrestamo     = $this->input->post('idDescuento');
+    
+            $arr_update = array( 
+                  "estatus_certificacion" =>  $certificacion,
+                              );
+                              
+          $update = $this->Universidad_model->updateCertificacion($idPrestamo  , $arr_update);
+          if($update){
+            $respuesta =  array(
+              "response_code" => 200, 
+              "response_type" => 'success',
+              "message" => "Préstamo actualizado");
+          }else{
+            $respuesta =  array(
+              "response_code" => 400, 
+              "response_type" => 'error',
+              "message" => "Préstamo no actualizado, inténtalo más tarde ");
+      }
+          echo json_encode ($respuesta);
+    
+    }
+    
+    
 
   public function updateCertificacion(){
     $certificacion = $this->input->post('certificaciones');
-    $idPrestamo = $this->input->post('idDescuento');
-    $arr_update = array("estatus_certificacion" => $certificacion);
+    $idDescuento = $this->input->post('idDescuento');
+    $arrayUpdate = array("estatus_certificacion" => $certificacion);
                           
-    $update = $this->Universidad_model->updateCertificacion($idPrestamo  , $arr_update);
+    $update = $this->Universidad_model->updateCertificacion($idDescuento, $arrayUpdate);
     if($update){
       $respuesta =  array(
         "response_code" => 200,
@@ -191,6 +303,38 @@ class Universidad extends CI_Controller
        $dat[$i]['pa'] = 0;
    }
    echo json_encode( array( "data" => $dat));
+  }
+
+
+  public function CancelarDescuento(){
+    $id_pago = $this->input->post('pagoDevolver');
+    $motivo = $this->input->post('comentarioDevolucion');
+    $respuesta = array($this->Universidad_model->CancelarDescuento($id_pago,$motivo));
+    echo json_encode( $respuesta);
+  
+  }
+
+  public function editarDescuentoUM(){
+    $fechaNueva = $this->input->post('fechaIncial');
+    $idDescuento = $this->input->post('id_descuento');
+
+    $montoNuevo = str_replace(",",'',$this->input->post('nuevoMonto'));
+    $montoNuevoFinal = str_replace("$",'',$montoNuevo);
+
+    $mensualidadesNuevas =  $this->input->post('numeroMensualidades');
+
+    $montoMensualidadNuevo = str_replace(",",'',$this->input->post('nuevoMontoMensual'));
+    $montoMensualidadNuevoFinal = str_replace("$",'',$montoMensualidadNuevo);
+    
+    $respuesta = array($this->Universidad_model->editarDescuentoUM($fechaNueva,$idDescuento,$montoNuevoFinal,$mensualidadesNuevas,$montoMensualidadNuevoFinal));
+    echo json_encode( $respuesta[0]);
+  
+  }
+
+  public function getReporteDevoluciones(){
+    $condicion = $this->input->post("query");
+    $respuesta['data']  = $this->Universidad_model->getReporteDevoluciones($condicion);
+    echo json_encode($respuesta);
   }
   
     

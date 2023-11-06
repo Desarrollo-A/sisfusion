@@ -9,9 +9,7 @@ const movimientosPermitidosEstatus6 = [35, 22, 62, 75, 94, 106];
 const rolesPermitidosEstatus6And15 = [17, 70];
 const movimientosPermitidosEstatus8 = [37, 7, 64, 66, 77, 41];
 const rolesPermitidosEstatus8 = [5, 2, 6];
-const movimientosPermitidosEstatus2 = [
-  31, 85, 20, 63, 73, 82, 92, 96, 99, 102, 104, 107, 108, 109, 111,
-];
+const movimientosPermitidosEstatus2 = [31, 85, 20, 63, 73, 82, 92, 96, 99, 102, 104, 107, 108, 109, 111];
 const rolesPermitidosEstatus2 = [7, 9, 3, 2];
 const rolesPermitidosAsesorInactivo = [6];
 
