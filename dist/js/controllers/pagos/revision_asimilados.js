@@ -1,5 +1,5 @@
 var tr;
-var tabla_asimilados2 ;
+let tabla_asimilados2 ;
 var totaPen = 0;
 let titulos = [];
 
