@@ -568,8 +568,7 @@ class Asesor extends CI_Controller {
         }
         exit;
     }
-    public function getCondominioDesc($residenciales)
-    {
+    public function getCondominioDesc($residenciales){
         $data = $this->Asesor_model->getCondominioDesc($residenciales);
         if ($data != null) {
             echo json_encode($data);
@@ -578,6 +577,7 @@ class Asesor extends CI_Controller {
         }
         exit;
     }
+    
     public function getCondominioDescTodos()
     {
         $data = $this->Asesor_model->getCondominioDescTodos();

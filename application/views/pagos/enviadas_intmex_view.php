@@ -3,35 +3,6 @@
 <body>
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
-        <!-- Modals -->
-        <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            <i class="material-icons" onclick="cleanCommentsAsimilados()">clear</i>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div role="tabpanel">
-                            <div id="nameLote"></div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="card card-plain">
-                                        <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
-                                            <ul class="timeline-3" id="comments-list-asimilados"></ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsAsimilados()"><b>Cerrar</b></button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <div class="content boxContent">
             <div class="container-fluid">
@@ -115,4 +86,5 @@
     </div>
     <?php $this->load->view('template/footer');?>
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/enviadas_internomex.js"></script>
+    <script src="<?=base_url()?>dist/js/core/modal-general.js"></script>
 </body>

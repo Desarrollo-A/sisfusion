@@ -1,3 +1,14 @@
+var totalLeon = 0;
+var totalQro = 0;
+var totalSlp = 0;
+var totalMerida = 0;
+var totalCdmx = 0;
+var totalCancun = 0;
+var tr;
+var tabla_asimilados2 ;
+var totaPen = 0;
+let titulos = [];
+
 function cleanCommentsAsimilados() {
     var myCommentsList = document.getElementById('comments-list-asimilados');
     var myCommentsLote = document.getElementById('nameLote');
@@ -77,18 +88,6 @@ $('#forma-pago-filtro').change(function () {
     getAssimilatedCommissions(proyecto, condominio, formaPago);
 });
 
-var totalLeon = 0;
-var totalQro = 0;
-var totalSlp = 0;
-var totalMerida = 0;
-var totalCdmx = 0;
-var totalCancun = 0;
-var tr;
-var tabla_asimilados2 ;
-var totaPen = 0;
-//INICIO TABLA QUERETARO*************************************************
-let titulos = [];
-
 $('#tabla_asimilados thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
     titulos.push(title);
@@ -97,10 +96,7 @@ $('#tabla_asimilados thead tr:eq(0) th').each( function (i) {
         if (tabla_asimilados2.column(i).search() !== this.value) {
             tabla_asimilados2.column(i).search(this.value).draw();
             var total = 0;
-            var index = tabla_asimilados2.rows({
-                selected: true,
-                search: 'applied'
-            }).indexes();
+            var index = tabla_asimilados2.rows({ selected: true, search: 'applied' }).indexes();
             var data = tabla_asimilados2.rows(index).data();
             $.each(data, function(i, v) {
                 total += parseFloat(v.impuesto);
@@ -113,9 +109,7 @@ $('#tabla_asimilados thead tr:eq(0) th').each( function (i) {
 function getAssimilatedCommissions(proyecto, condominio, formaPago) {
     $('#tabla_asimilados').on('xhr.dt', function(e, settings, json, xhr) {
         var total = 0;
-        $.each(json.data, function(i, v) {
-            total += parseFloat(v.impuesto);
-        });
+        $.each(json.data, function(i, v) { total += parseFloat(v.impuesto); });
         var to = formatMoney(numberTwoDecimal(total));
         document.getElementById("totpagarAsimilados").textContent =to;
     });
@@ -152,85 +146,98 @@ function getAssimilatedCommissions(proyecto, condominio, formaPago) {
         },
         destroy: true,
         ordering: false,
-        columns: [
-            { data: "id_pago_i" },
-            { data: "proyecto" },
-            { data: "condominio" },
-            { data: "lote" },
-            { data: "referencia" },
-            {
-                data: function( d ){
-                    return  formatMoney(numberTwoDecimal(d.precio_lote));
-                }
-            },
-            { data: "empresa" },
-            {
-                data: function( d ){
-                    return formatMoney(numberTwoDecimal(d.comision_total));
-                }
-            },
-            {
-                data: function( d ){
-                    return formatMoney(numberTwoDecimal(d.pago_neodata));
-                }
-            },
-            {
-                data: function( d ){
-                    if(d.id_usuario == 4394)
-                        return '<p style="color: red;"><b>NA</b></p>';
-                    else {
-                        if(d.forma_pago == 3)
-                            return formatMoney(numberTwoDecimal(d.dcto));
-                        else
-                            return formatMoney(numberTwoDecimal(d.dcto));
-                    }
-                }
-            },
-            {
-                data: function( d ){
-                    return '<b>'+formatMoney(numberTwoDecimal(d.impuesto))+'</b>';
-                }
-            },
-            {
-                data: function( d ){
-                    if(d.lugar_prospeccion == 6){
-                        return '<p class="m-0">COMISIÓN + MKTD <br><b> ('+d.porcentaje_decimal+'% de '+d.porcentaje_abono+'%)</b></p>';
-                    }
-                    else{
-                        return '<p class="m-0">COMISIÓN <br><b> ('+d.porcentaje_decimal+'% de '+d.porcentaje_abono+'%)</b></p>';
-                    }
-                
-                }
-            },
-            { data: "usuario" },
-            { data: "puesto" },
-            {
-                data: function( d ){
-                    if(d.id_usuario == 4394){
-                        return '<p style="color: red;"><b>NO APLICA</b></p>';
-                    }
-                    else{
-                        return '<p class="m-0"><b>'+d.regimen+'</b></p>';
-                    }
-                }
-            },
-            {
-                data: function( d ){
-                    var BtnStats1;
-                    BtnStats1 =  '<p class="m-0">'+d.fecha_creacion.split('.')[0];+'</p>';
-                    return BtnStats1;
-                }
-            },
-            {
-                orderable: false,
-                data: function( data ){
-                    console.log(data);
-                    var BtnStats;
-                    BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_asimilados" data-toggle="tooltip"  data-placement="top" title="Detalles"><i class="fas fa-info"></i></button>';
-                    return '<div class="d-flex justify-center">'+ BtnStats +'</div>';
+        columns: [{
+            data: "id_pago_i" 
+        },
+        {   
+            data: "proyecto" 
+        },
+        {   
+            data: "condominio" 
+        },
+        { 
+            data: "lote" 
+        },
+        { 
+            data: "referencia" 
+        },
+        {
+            data: function( d ){
+                return  formatMoney(numberTwoDecimal(d.precio_lote));
+            }
+        },
+        { 
+            data: "empresa" 
+        },
+        {
+            data: function( d ){
+                return formatMoney(numberTwoDecimal(d.comision_total));
+            }
+        },
+        {
+            data: function( d ){
+                return formatMoney(numberTwoDecimal(d.pago_neodata));
+            }
+        },
+        {
+            data: function( d ){
+                if(d.id_usuario == 4394)
+                    return '<p style="color: red;"><b>NA</b></p>';
+                else {
+                    if(d.forma_pago == 3)
+                        return formatMoney(numberTwoDecimal(d.dcto));
+                    else
+                        return formatMoney(numberTwoDecimal(d.dcto));
                 }
             }
-        ],
+        },
+        {
+            data: function( d ){
+                return '<b>'+formatMoney(numberTwoDecimal(d.impuesto))+'</b>';
+            }
+        },
+        {
+            data: function( d ){
+                if(d.lugar_prospeccion == 6){
+                    return '<p class="m-0">COMISIÓN + MKTD <br><b> ('+d.porcentaje_decimal+'% de '+d.porcentaje_abono+'%)</b></p>';
+                }
+                else{
+                    return '<p class="m-0">COMISIÓN <br><b> ('+d.porcentaje_decimal+'% de '+d.porcentaje_abono+'%)</b></p>';
+                }
+            
+            }
+        },
+        {
+            data: "usuario" 
+        },
+        { 
+            data: "puesto" 
+        },
+        {
+            data: function( d ){
+                if(d.id_usuario == 4394){
+                    return '<p style="color: red;"><b>NO APLICA</b></p>';
+                }
+                else{
+                    return '<p class="m-0"><b>'+d.regimen+'</b></p>';
+                }
+            }
+        },
+        {
+            data: function( d ){
+                var BtnStats1;
+                BtnStats1 =  '<p class="m-0">'+d.fecha_creacion.split('.')[0];+'</p>';
+                return BtnStats1;
+            }
+        },
+        {
+            orderable: false,
+            data: function( data ){
+                var BtnStats;
+                BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_asimilados" data-toggle="tooltip"  data-placement="top" title="Detalles"><i class="fas fa-info"></i></button>';
+                return '<div class="d-flex justify-center">'+ BtnStats +'</div>';
+            }
+        }],
         columnDefs: [{
             orderable: false,
             className: 'select-checkbox',
@@ -259,7 +266,27 @@ function getAssimilatedCommissions(proyecto, condominio, formaPago) {
         e.stopImmediatePropagation();
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
-        $("#seeInformationModalAsimilados").modal();
+
+        changeSizeModal('modal-md');
+        appendBodyModal(`<div class="modal-body">
+                        <div role="tabpanel">
+                            <div id="nameLote"></div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card card-plain">
+                                        <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                            <ul class="timeline-3" id="comments-list-asimilados"></ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsAsimilados()"><b>Cerrar</b></button>
+                    </div>`);
+        showModal();
+        
         $("#nameLote").append('<p><h5 class="text-center">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $.getJSON("getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
@@ -285,11 +312,6 @@ function getAssimilatedCommissions(proyecto, condominio, formaPago) {
         });
     });
 }
-
-$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-    $($.fn.dataTable.tables(true)).DataTable()
-    .columns.adjust();
-});
 
 $('#tabla_asimilados').on('draw.dt', function() {
     $('[data-toggle="tooltip"]').tooltip({

@@ -4,7 +4,6 @@
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
 
-        <!-- Modals -->
         <div class="modal fade modal-alertas" id="modal_users" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -223,16 +222,7 @@
         </div>
         <?php $this->load->view('template/footer_legend');?>
     </div>
-    </div><!--main-panel close-->
+    </div>
     <?php $this->load->view('template/footer');?>
-    <!--DATATABLE BUTTONS DATA EXPORT-->
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-
     <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_mktd_intmex.js"></script>
 </body>

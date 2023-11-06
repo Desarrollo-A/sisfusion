@@ -29,10 +29,7 @@ $("#tabla_plaza_1").ready( function(){
         $(this).html('<input type="text" id="t-'+i+'" class="textoshead" placeholder="'+title+'"/>' );
         $( 'input', this ).on('keyup change', function () {
             if (plaza_1.column(i).search() !== this.value ) {
-                plaza_1
-                .column(i)
-                .search(this.value)
-                .draw();
+                plaza_1.column(i).search(this.value).draw();
                 
                 var total = 0;
                 var index = plaza_1.rows({ selected: true, search: 'applied' }).indexes();
@@ -42,7 +39,7 @@ $("#tabla_plaza_1").ready( function(){
                     total += parseFloat(v.sum_abono_marketing);
                 });
                 var to1 = formatMoney(total);
-                document.getElementById("myText_nuevas").textContent = formatMoney(total);
+                document.getElementById("myText_nuevas").textContent = to1;
             }
         });
     });
@@ -69,28 +66,8 @@ $("#tabla_plaza_1").ready( function(){
             exportOptions: {
                 columns: [0,1,2,3,4,5,6,7,8],
                 format: {
-                    header:  function (d, columnIdx) {
-                        if(columnIdx == 0){
-                            return 'ID PAGO';
-                        }else if(columnIdx == 1){
-                            return 'COMISIONISTA';
-                        }else if(columnIdx == 2){
-                            return 'RFC';
-                        }else if(columnIdx == 3){
-                            return 'SEDE';
-                        }else if(columnIdx == 4){
-                            return 'IMPUESTO %';
-                        }else if(columnIdx == 5){
-                            return 'SOLICITADO';
-                        }else if(columnIdx == 6){
-                            return 'DESCUENTO';
-                        }else if(columnIdx == 7){
-                            return 'A PAGAR';
-                        }else if(columnIdx == 8){
-                            return 'FORMA DE PAGO';
-                        } else if(columnIdx != 9 && columnIdx !=0) {
-                            return ' '+titulos[columnIdx-1] +' ';
-                        }
+                    header: function (d, columnIdx) {
+                        return ' '+titulos[columnIdx] +' ';
                     }
                 }
             },
@@ -107,62 +84,52 @@ $("#tabla_plaza_1").ready( function(){
         destroy: true,
         ordering: false,
         columns: [{
-            "width": "5%",
             "data": function( d ){
                 return '<p class="m-0"><b>'+d.id_usuario+'</b></p>';
             }
         },
         {  
-            "width": "10%",
             "data": function( d ){
                 return '<p class="m-0">'+d.colaborador+'</p>';
             }
         },
         {  
-            "width": "10%",
             "data": function( d ){
                 return '<p class="m-0">'+d.rfc+'</p>';
             }
         },
         {
-            "width": "10%",
             "data": function( d ){
                 return '<p class="m-0">'+d.sede+'</p>';
             }
         },
 
         {
-            "width": "10%",
             "data": function( d ){
                 return '<p class="m-0">'+d.empresa+'</p>';
             }
         },
         {
-            "width": "10%",
             "data": function( d ){
                 return '<p class="m-0"><b>'+d.valimpuesto+'%</b></p>';
             }
         },
         {
-            "width": "10%",
             "data": function( d ){
                 return '<p class="m-0">$'+formatMoney(d.sum_abono_marketing)+'</p>';
             }
         },
         {
-            "width": "10%",
             "data": function( d ){
                 return '<p class="m-0">$'+formatMoney(d.dcto)+'</p>';
             }
         },
         {
-            "width": "10%",
             "data": function( d ){
                 return '<p class="m-0"><b>$'+formatMoney(d.impuesto)+'</b></p>';
             }
         },
         {
-            "width": "15%",
             "data": function( d ){
                 return '<p class="m-0">'+d.forma_pago+'</p>';
             }
@@ -237,24 +204,18 @@ $("#tabla_plaza_1").ready( function(){
     });
 });
 
-//FIN TABLA NUEVA //
-
-// INICIO TABLA EN PROCESO
 $("#tabla_plaza_2").ready( function(){
-    let titulos = [];
+    let titulos2 = [];
     $('#tabla_plaza_2 thead tr:eq(0) th').each( function (i) {
         if( i!=0 && i!=16){
             var title = $(this).text();
-            titulos.push(title);
+            titulos2.push(title);
 
             $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
             $( 'input', this ).on('keyup change', function () {
 
                 if (plaza_2.column(i).search() !== this.value ) {
-                    plaza_2
-                    .column(i)
-                    .search(this.value)
-                    .draw();
+                    plaza_2.column(i).search(this.value).draw();
 
                     var total = 0;
                     var index = plaza_2.rows({ selected: true, search: 'applied' }).indexes();
@@ -264,7 +225,7 @@ $("#tabla_plaza_2").ready( function(){
                         total += parseFloat(v.pago_cliente);
                     });
                     var to1 = formatMoney(total);
-                    document.getElementById("myText_proceso").textContent = formatMoney(total);
+                    document.getElementById("myText_proceso").textContent = to1;
                 }
             } );
         }
@@ -283,7 +244,7 @@ $("#tabla_plaza_2").ready( function(){
 
     plaza_2 = $("#tabla_plaza_2").DataTable({
         dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
-        width: 'auto',
+        width: '100%',
         buttons:  [{
             text: '<i class="fa fa-check"></i>  MARCAR COMO PAGADO',
             action: function(){
@@ -308,44 +269,10 @@ $("#tabla_plaza_2").ready( function(){
             titleAttr: 'Descargar archivo de Excel',
             title: 'ASIMILADOS_CONTRALORÍA_SISTEMA_COMISIONES',
             exportOptions: {
-                columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
+                columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14],
                 format: {
-                    header:  function (d, columnIdx) {
-                        if(columnIdx == 0){
-                            return ' '+d +' '; 
-                        }else if(columnIdx == 1){
-                            return 'ID PAGO';
-                        }else if(columnIdx == 2){
-                            return 'PROYECTO';
-                        }else if(columnIdx == 3){
-                            return 'CONDOMINIO';
-                        }else if(columnIdx == 4){
-                            return 'NOMBRE LOTE ';
-                        }else if(columnIdx == 5){
-                            return 'REFERENCIA';
-                        }else if(columnIdx == 6){
-                            return 'PRECIO LOTE';
-                        }else if(columnIdx == 7){
-                            return 'EMPRESA';
-                        }else if(columnIdx == 8){
-                            return 'TOT. COMISIÓN';
-                        }else if(columnIdx == 9){
-                            return 'P. CLIENTE';
-                        }else if(columnIdx == 10){
-                            return 'TOT. PAGAR';
-                        }else if(columnIdx == 11){
-                            return 'TIPO VENTA';
-                        }else if(columnIdx == 12){
-                            return 'COMISIONISTA';
-                        }else if(columnIdx == 13){
-                            return 'RFC';
-                        }else if(columnIdx == 14){
-                            return 'PUESTO';
-                        }else if(columnIdx == 15){
-                            return 'FECH. ENVÍO';
-                        } else if(columnIdx != 16 && columnIdx !=0){
-                            return ' '+titulos[columnIdx-1] +' ';                
-                        }
+                    header: function (d, columnIdx) {
+                        return ' '+ titulos2[columnIdx] +' ';
                     }
                 }
             },
@@ -362,67 +289,55 @@ $("#tabla_plaza_2").ready( function(){
         destroy: true,
         ordering: false,
         columns: [{
-            "width": "5%",
             "data": function( d ){
                 return '<p class="m-0">'+d.id_pago_i+'</p>';
             }
         },
         {
-            "width": "3%",
             "data": function( d ){
                 return '<p class="m-0">'+d.proyecto+'</p>';
             }
         },{
-            "width": "5%",
             "data": function( d ){
                 return '<p class="m-0">'+d.condominio+'</p>';
             }
         },
         {
-            "width": "7%",
             "data": function( d ){
                 return '<p class="m-0"><b>'+d.lote+'</b></p>';
             }
         },
-
         {
-            "width": "5%",
             "data": function( d ){
                 return '<p class="m-0">'+d.referencia+'</p>';
             }
         },
         {
-            "width": "6%",
             "data": function( d ){
                 return '<p class="m-0">$'+formatMoney(d.precio_lote)+'</p>';
             }
         },
         {
-            "width": "3%",
             "data": function( d ){
                 return '<p class="m-0"><b>'+d.empresa+'</p>';
             }
         },
         {
-            "width": "5%",
             "data": function( d ){
                 return '<p class="m-0">$'+formatMoney(d.comision_total)+'</p>';
             }
         },
         {
-            "width": "5%",
             "data": function( d ){
                 return '<p class="m-0">$'+formatMoney(d.pago_neodata)+'</p>';
             }
         },
         {
-            "width": "5%",
             "data": function( d ){
                 return '<p class="m-0">$'+formatMoney(d.pago_cliente)+'</p>';
             }
         },
         {
-            "width": "6%",
             "data": function( d ){
                 if(d.lugar_prospeccion == 6){
                     return '<p class="m-0">COMISIÓN + MKTD <br><b> ('+d.porcentaje_decimal+'% de '+d.porcentaje_abono+'%)</b></p>';
@@ -434,25 +349,21 @@ $("#tabla_plaza_2").ready( function(){
             }
         },
         {
-            "width": "6%",
             "data": function( d ){
                 return '<p class="m-0"><b>'+d.usuario+'</b></i></p>';
             }
         },
         {
-            "width": "6%",
             "data": function( d ){
                 return '<p class="m-0"><b>'+d.rfc+'</b></i></p>';
             }
         },
         {
-            "width": "6%",
             "data": function( d ){
                 return '<p class="m-0"><i> '+d.puesto+'</i></p>';
             }
         },
         {
-            "width": "5%",
             "data": function( d ){
                 var BtnStats1;
                 BtnStats1 =  '<p class="m-0">'+d.fecha_creacion+'</p>';
@@ -460,12 +371,9 @@ $("#tabla_plaza_2").ready( function(){
             }
         },
         {
-            "width": "5%",
             "orderable": false,
             "data": function( data ){
-
                 var BtnStats;
-                
                 BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_asimilados" title="Detalles">' +'<i class="fas fa-info"></i></button>';
                 return BtnStats;
 
@@ -508,7 +416,6 @@ $("#tabla_plaza_2").ready( function(){
     });
 });
 
-// FIN TABLA PROCESO
 $('#fecha1').change( function(){
     fecha1 = $(this).val(); 
     let fecha2 = $('#fecha2').val();
@@ -545,10 +452,7 @@ $('#tabla_total_comisionistas thead tr:eq(0) th').each( function (i) {
     $(this).html('<input type="text" class="textoshead" id="t-'+i+'" placeholder="'+title+'"/>' );
     $( 'input', this ).on('keyup change', function () {
         if (tabla_total_comisionistas.column(i).search() !== this.value ) {
-            tabla_total_comisionistas
-            .column(i)
-            .search(this.value)
-            .draw();
+            tabla_total_comisionistas.column(i).search(this.value).draw();
             
             var total = 0;
             var index = tabla_total_comisionistas.rows({ selected: true, search: 'applied' }).indexes();
@@ -618,37 +522,31 @@ function totalComisones(fecha1,fecha2,estatus){
             destroy: true,
             ordering: false,
             columns: [{
-                "width": "4%",
                 "data": function( d ){
                     return '<p style="font-size: .8em"><br>'+d.id_usuario+'</p>';
                 }
             },
             {
-                "width": "6%",
                 "data": function( d ){
                     return '<p style="font-size: .8em"><br>'+d.rol+'</p>';
                 }
             },
             {
-                "width": "6%",
                 "data": function( d ){
                     return '<p style="font-size: .8em"><b>'+d.nombre_comisionista+'</p>';
                 }
             },
             {
-                "width": "7%",
                 "data": function( d ){
                     return '<p style="font-size: .8em">$'+formatMoney(d.total_dispersado)+'</p>';
                 }
             },
             {
-                "width": "7%",
                 "data": function( d ){
                     return '<p style="font-size: .8em">'+d.fecha+'<b></b></p>';
                 }
             },
             {
-                "width": "7%",
                 "data": function( d ){
                     return '<p style="font-size: .8em">'+d.nombre+'<b></b></p>';
                 }
@@ -662,7 +560,6 @@ function totalComisones(fecha1,fecha2,estatus){
         });
     });
 }
-// FIN TABLA PROCESO
 
 $('#fechaR1').change( function(){
     fecha1 = $(this).val(); 
@@ -684,18 +581,7 @@ $('#selectEstatusR').change( function(){
     else{
         totalComisonesR(fecha1,fecha2,estatus);  
     }
-});
-// INICIO TABLA EN PROCESO    
-
-function formatMoney( n ) {
-    var c = isNaN(c = Math.abs(c)) ? 2 : c,
-    d = d == undefined ? "." : d,
-    t = t == undefined ? "," : t,
-    s = n < 0 ? "-" : "",
-    i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
-    j = (j = i.length) > 3 ? j % 3 : 0;
-    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
-};
+});  
 
 $(document).on( "click", ".subir_factura", function(){
     resear_formulario();
@@ -704,7 +590,6 @@ $(document).on( "click", ".subir_factura", function(){
     $("#modal_formulario_solicitud").modal( {backdrop: 'static', keyboard: false} );
 });
 
-//FUNCION PARA LIMPIAR EL FORMULARIO CON DE PAGOS A PROVEEDOR.
 function resear_formulario(){
     $("#modal_formulario_solicitud input.form-control").prop("readonly", false).val("");
     $("#modal_formulario_solicitud textarea").html('');
@@ -736,7 +621,7 @@ function subir_xml( input ){
         processData: false,
         dataType: 'json',
         method: 'POST',
-        type: 'POST', // For jQuery < 1.9
+        type: 'POST',
         success: function(data){
             if( data.respuesta[0] ){
                 documento_xml = xml;
@@ -760,23 +645,15 @@ function subir_xml( input ){
 function cargar_info_xml( informacion_factura ){
     $("#emisor").val( ( informacion_factura.nameEmisor ? informacion_factura.nameEmisor[0] : '') ).attr('readonly',true);
     $("#rfcemisor").val( ( informacion_factura.rfcemisor ? informacion_factura.rfcemisor[0] : '') ).attr('readonly',true);
-
     $("#receptor").val( ( informacion_factura.namereceptor ? informacion_factura.namereceptor[0] : '') ).attr('readonly',true);
     $("#rfcreceptor").val( ( informacion_factura.rfcreceptor ? informacion_factura.rfcreceptor[0] : '') ).attr('readonly',true);
-
     $("#regimenFiscal").val( ( informacion_factura.regimenFiscal ? informacion_factura.regimenFiscal[0] : '') ).attr('readonly',true);
-
     $("#formaPago").val( ( informacion_factura.formaPago ? informacion_factura.formaPago[0] : '') ).attr('readonly',true);
     $("#total").val( ('$ '+informacion_factura.total ? '$ '+informacion_factura.total[0] : '') ).attr('readonly',true);
-
     $("#cfdi").val( ( informacion_factura.usocfdi ? informacion_factura.usocfdi[0] : '') ).attr('readonly',true);
-
     $("#metodopago").val( ( informacion_factura.metodoPago ? informacion_factura.metodoPago[0] : '') ).attr('readonly',true);
-
     $("#unidad").val( ( informacion_factura.claveUnidad ? informacion_factura.claveUnidad[0] : '') ).attr('readonly',true);
-
     $("#clave").val( ( informacion_factura.claveProdServ ? informacion_factura.claveProdServ[0] : '') ).attr('readonly',true);
-
     $("#obse").val( ( informacion_factura.descripcion ? informacion_factura.descripcion[0] : '') ).attr('readonly',true);
 }
 
@@ -810,7 +687,7 @@ $("#form_colaboradores").submit( function(e) {
                 processData: false,
                 dataType: 'json',
                 method: 'POST',
-                type: 'POST', // For jQuery < 1.9
+                type: 'POST',
                 success: function(data){
                     if(true){
                         $('#loader').addClass('hidden');
@@ -848,7 +725,7 @@ $("#frmnewsol").submit( function(e) {
             processData: false,
             dataType: 'json',
             method: 'POST',
-            type: 'POST', // For jQuery < 1.9
+            type: 'POST',
             success: function(data){
                 if( data.resultado ){
                     alert("LA FACTURA SE SUBIO CORRECTAMENTE");
@@ -888,7 +765,7 @@ $("#form_MKTD").submit( function(e) {
             processData: false,
             dataType: 'json',
             method: 'POST',
-            type: 'POST', // For jQuery < 1.9
+            type: 'POST',
             success: function(data){
                 if( data.resultado ){
                     alert("LA FACTURA SE SUBIO CORRECTAMENTE");
@@ -953,13 +830,6 @@ function cleanComments() {
 $(window).resize(function(){
     plaza_1.columns.adjust();
     plaza_2.columns.adjust();
-
-});
-
-
-$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-    $($.fn.dataTable.tables(true)).DataTable()
-    .columns.adjust();
 });
 
 $(document).ready( function(){

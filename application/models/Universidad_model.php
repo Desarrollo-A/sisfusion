@@ -221,6 +221,20 @@ function insertar_descuento($usuarioid,$monto,$ide_comision,$comentario,$usuario
             return 1;
             }
 }
+function descuentos_universidad($clave , $data){
+    try {
+        $this->db->where('id_descuento', $clave);
+        $this->db->update('descuentos_universidad', $data);
+        $afftectedRows = $this->db->affected_rows();
+        return $afftectedRows > 0 ? TRUE : FALSE ;
+    }
+    catch(Exception $e) {
+        return $e->getMessage();
+    }
+}
+
+
+
 
 public function updateCertificacion($clave, $data){
     try {

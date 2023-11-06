@@ -26,22 +26,6 @@
                 </div>
             </div>
         </div>
-        
-        <!-- VERIFICAR SI SE USA -->
-        <!-- <div class="modal fade modal-alertas" id="modal_mktd" role="dialog">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header bg-red">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">EDITAR INFORMACIÓN </h4>
-                    </div>
-                    <form method="post" id="form_MKTD">
-                        <div class="modal-body"></div>
-                        <div class="modal-footer"></div>
-                    </form>
-                </div>
-            </div>
-        </div> -->
 
         <div class="modal fade" id="seeInformationModalExtranjero" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
@@ -117,14 +101,14 @@
                                         <div class="row">
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 ">          
                                                 <div class="form-group overflow-hidden">
-                                                    <label class="control-label" for="filtro33">Proyecto</label>
-                                                    <select name="filtro33" id="filtro33" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-container="body" data-size="7" required></select>
+                                                    <label class="control-label" for="catalogoFactE">Proyecto</label>
+                                                    <select name="catalogoFactE" id="catalogoFactE" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-container="body" data-size="7" required></select>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">          
                                                 <div class="form-group overflow-hidden">
-                                                    <label class="control-label" for="filtro44">Condominio</label>
-                                                    <select class="selectpicker select-gral m-0" id="filtro44" name="filtro44[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-container="body" data-size="7" required></select>
+                                                    <label class="control-label" for="condominioFactE">Condominio</label>
+                                                    <select class="selectpicker select-gral m-0" id="condominioFactE" name="condominioFactE[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-container="body" data-size="7" required></select>
                                                 </div>
                                             </div>
                                         </div>
@@ -196,7 +180,7 @@
         <?php $this->load->view('template/footer_legend');?>
     </div>
     <?php $this->load->view('template/footer');?>
-    <script src="<?= base_url() ?>dist/js/controllers/pagos/pago_extranjero.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_extranjero.js"></script>
     <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
     <script>
         Shadowbox.init();
