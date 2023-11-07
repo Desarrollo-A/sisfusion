@@ -89,7 +89,7 @@ class Reestructura extends CI_Controller{
     }
 
 	public function lista_catalogo_opciones(){
-		echo json_encode($this->Reestructura_model->get_catalogo_resstructura()->result_array());
+		echo json_encode($this->Reestructura_model->get_catalogo_reestructura()->result_array());
 	}
 
 	public function insertarOpcionN (){

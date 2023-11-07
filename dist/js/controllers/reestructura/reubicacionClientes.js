@@ -1184,7 +1184,6 @@ const botonesAccionReubicacion = (d) => {
                             data-statusPreproceso="${idEstatusPreproceso}"
                             data-idEstatusMovimiento="${d.id_estatus_modificacion}"
                             data-tipoEstatusRegreso="${d.tipo_estatus_regreso}"
-                            data-idPxl="${d.id_pxl}">
                             ${idEstatusPreproceso === 0 ? '<i class="fas fa-map-marker"></i>': '<i class="fas fa-undo"></i>'}
                             
                         </button>`;
@@ -1214,7 +1213,7 @@ const botonesAccionReubicacion = (d) => {
                     title="INFORMACIÓN CLIENTE"
                     data-idCliente="${d.idCliente}" 
                     data-idLote="${d.idLote}"
-                    data-idStatusLote="${d.idStatusLote}">
+                    data-idStatusLote="${d.idStatusLote == 17 ? 17 : 16}">
                     <i class="fas fa-user-check"></i>
                 </button>`;
     const BTN_SUBIR_ARCHIVO =  `<button class="btn-data btn-blueMaderas btn-abrir-modal"
@@ -1284,13 +1283,13 @@ const botonesAccionReubicacion = (d) => {
     }
 
     if (idEstatusPreproceso === 1 && ROLES_PROPUESTAS.includes(id_rol_general)) { // Gerente/Subdirector: REVISIÓN DE PROPUESTAS
-        if (d.idLoteXcliente == null && d.idStatusLote == 16) {
+        if (d.idLoteXcliente == null && d.idStatusLote != 17) {
             return BTN_PROPUESTAS + BTN_INFOCLIENTE;
         }
         else if (d.idLoteXcliente == null && d.idStatusLote == 17) {
             return BTN_INFOCLIENTE;
         }
-        else if (d.idLoteXcliente != null && d.idStatusLote == 16) {
+        else if (d.idLoteXcliente != null && d.idStatusLote != 17) {
             return BTN_PROPUESTAS + BTN_AVANCE + BTN_INFOCLIENTE;
         }
         else{
@@ -1326,7 +1325,7 @@ const botonesAccionReubicacion = (d) => {
     }
 
     if (idEstatusPreproceso === 5) { // EEC: CONFIRMACIÓN DE RECEPCIÓN DE DOCUMENTOS
-        return ( d.idStatusLote == 16 ) ? BTN_REUBICACION : BTN_REESTRUCTURA;
+        return ( d.idStatusLote == 17 ) ? BTN_REESTRUCTURA : BTN_REUBICACION;
     }
 
     if(id_usuario_general === 13733) // ES EL USUARIO DE CONTROL JURÍDICO PARA REASIGNACIÓN DE EXPEDIENTES
@@ -1424,31 +1423,64 @@ const agregarCopropietario = (copropietario = null) => {
                                 <div class="container-fluid">
                                     <div class="row">
                                         <div class="col-xs-12">
-                                            <label class="control-label">NOMBRE (<small style="color: red;">*</small>)</label>
-                                            <input class="form-control input-gral" name="nombre[]" type="text" value="${copropietario?.nombre ?? ''}" minlength="1" maxlength="50" autocomplete="off"/>
-                                            <input id="id_cop[]" name="id_cop[]" type="hidden" value="${idCopropietario}">
+                                            <label class="control-label">Nombre (<small style="color: red;">*</small>)</label>
+                                            <input class="form-control input-gral"
+                                                name="nombre[]" 
+                                                type="text" 
+                                                value="${copropietario?.nombre ?? ''}"
+                                                minlength="1"
+                                                maxlength="50" 
+                                                autocomplete="off"/>
+                                            
+                                            <input id="id_cop[]" 
+                                                name="id_cop[]" 
+                                                type="hidden" 
+                                                value="${idCopropietario}">
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12">
-                                            <label class="control-label">APELLIDO PATERNO (<small style="color: red;">*</small>)</label>
-                                            <input class="form-control input-gral" name="apellido_p[]" type="text" value="${copropietario?.apellido_paterno ?? ''}" minlength="1" maxlength="50" autocomplete="off"/>
+                                            <label class="control-label">Apellido paterno (<small style="color: red;">*</small>)</label>
+                                            <input class="form-control input-gral"
+                                                name="apellido_p[]" 
+                                                type="text"
+                                                value="${copropietario?.apellido_paterno ?? ''}"
+                                                minlength="1"
+                                                maxlength="50"
+                                                autocomplete="off"/>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12">
-                                            <label class="control-label">APELLIDO MATERNO (<small style="color: red;">*</small>)</label>
-                                            <input class="form-control input-gral" name="apellido_m[]" type="text" value="${copropietario?.apellido_materno ?? ''}" minlength="1" maxlength="50" autocomplete="off"/>
+                                            <label class="control-label">Apellido materno (<small style="color: red;">*</small>)</label>
+                                            <input class="form-control input-gral"
+                                                name="apellido_m[]" 
+                                                type="text"
+                                                value="${copropietario?.apellido_materno ?? ''}"
+                                                minlength="1"
+                                                maxlength="50"
+                                                autocomplete="off"/>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                            <label class="control-label">CELULAR (<small style="color: red;">*</small>)</label>
-                                            <input class="form-control input-gral" name="telefono2[]" type="number" step="any" onKeyPress="if(this.value.length === 10) return false;" value="${copropietario?.telefono_2 ?? ''}"/>
+                                            <label class="control-label">Teléfono (<small style="color: red;">*</small>)</label>
+                                            <input class="form-control input-gral" 
+                                                name="telefono2[]" 
+                                                type="number" 
+                                                step="any" 
+                                                onKeyPress="if(this.value.length === 10) return false;" 
+                                                value="${copropietario?.telefono_2 ?? ''}"/>
                                         </div>
                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                            <label class="control-label">CORREO ELECTRÓNICO (<small style="color: red;">*</small>)<small class="pl-1" id="errorMsgCorreo${idDiv}"></small></label></label>
-                                            <input class="form-control input-gral" name="correo[]" id="correoCop${idDiv}" type="email" value="${copropietario?.correo ?? ''}" oninput= "validarCorreo('#correoCop${idDiv}', '#errorMsgCorreo${idDiv}')" autocomplete="off"/>
+                                            <label class="control-label">Correo (<small style="color: red;">*</small>)<small class="pl-1" id="errorMsgCorreo${idDiv}"></small></label></label>
+                                            <input class="form-control input-gral" 
+                                                name="correo[]" 
+                                                id="correoCop${idDiv}"
+                                                type="email" 
+                                                value="${copropietario?.correo ?? ''}"
+                                                oninput= "validarCorreo('#correoCop${idDiv}', '#errorMsgCorreo${idDiv}')"
+                                                autocomplete="off"/>
                                         </div> 
                                     </div>
                                     <div class="row">
