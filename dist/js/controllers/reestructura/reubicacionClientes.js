@@ -55,7 +55,7 @@ const ESTATUS_PREPROCESO = [
     'PROCESO DE CONTRATACIÓN'
 ];
 
-const ROLES_PROPUESTAS = [2, 3, 5, 6]; // ROLES PERMITIDOS PARA CARGA, EDICIÓN Y ENVÍO DE PROPUESTAS
+const ROLES_PROPUESTAS = [2, 3, 4, 5, 6]; // ROLES PERMITIDOS PARA CARGA, EDICIÓN Y ENVÍO DE PROPUESTAS
 
 let titulosTabla = [];
 $('#reubicacionClientes thead tr:eq(0) th').each(function (i) {

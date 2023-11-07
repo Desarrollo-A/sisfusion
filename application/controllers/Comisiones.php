@@ -4597,7 +4597,6 @@ $comentario='';
           }else{
             $cadena = $cadena.'0/0,0'.',';
           }
-         
         }
       } 
       for ($n=0; $n < $numeroMayorMKTD ; $n++) {
@@ -4640,9 +4639,9 @@ for ($d=0; $d <count($dos) ; $d++) {
     echo json_encode(  array( "data" => $NuevoArr,
     "numeroMayorNUS" => $numeroMayorNUS,
     "numeroMayorMKTD" => $numeroMayorMKTD,
-     "sumaBono1" => $sumaTotalBono1,
-     "sumaBono2" => $sumaTotalBono2,
-     "sumaTotalComision" => $sumaTotalComision ));
+    "sumaBono1" => $sumaTotalBono1,
+    "sumaBono2" => $sumaTotalBono2,
+    "sumaTotalComision" => $sumaTotalComision ));
   }
 
 
@@ -5308,8 +5307,8 @@ public function descuentosCapitalHumano(){
       $suma =$datos[0]['suma'];
     }else{
       $datos = $this->Comisiones_model->getDisponbleResguardo($user)->result_array();
-     // $extras = $this->Comisiones_model->getDisponbleExtras($user)->result_array();
-     $suma =($datos[0]['suma']);
+      // $extras = $this->Comisiones_model->getDisponbleExtras($user)->result_array();
+      $suma =($datos[0]['suma']);
     }
     
     

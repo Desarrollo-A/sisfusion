@@ -24,15 +24,15 @@ class Reestructura_model extends CI_Model
         }
         else if (in_array($id_rol, array(17, 70, 71, 73))) // CONTRALORÍA
             $validacionEstatus = "AND lo.estatus_preproceso IN (2)";
-        else if ($id_rol == 6 && $tipo == 2) { // ASISTENTE GERENCIA && ES EEC
-            $validacionEstatus = "AND lo.estatus_preproceso IN (4)";
+        else if ($id_rol == 6 && $tipo == 2) { // ASISTENTE GERENCIA && ES OOAM
+            $validacionEstatus = "AND lo.estatus_preproceso IN (4,0,1)";
             $validacionGerente = "AND u6.id_lider = $id_lider";
-        } else if ($id_rol == 3 && $tipo == 2) { // GERENTE && ES EEC
+        } else if ($id_rol == 3 && $tipo == 2) { // GERENTE && ES OOAM
             $validacionEstatus = "AND lo.estatus_preproceso IN (0, 1)";
             $validacionGerente = "AND u6.id_lider = $id_usuario";
-        } else if (in_array($id_rol, array(2, 5)) && $tipo == 2) // SUBDIRECTOR / ASISTENTE SUBDIRECTOR && ES EEC
+        } else if (in_array($id_rol, array(2, 5)) && $tipo == 2) // SUBDIRECTOR / ASISTENTE SUBDIRECTOR && ES OOAM
             $validacionEstatus = "AND lo.estatus_preproceso IN (0, 1)";
-        else if ($id_rol == 7 && $tipo == 2) // ASESOR && ES EEC
+        else if ($id_rol == 7 && $tipo == 2) // ASESOR && ES OOAM
             $validacionAsignacion = "AND lo.id_usuario_asignado = $id_usuario";
 
         return $this->db->query("SELECT dxc2.id_dxc, dxc2.rescision ,cl.proceso, lr.idProyecto, lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, 
