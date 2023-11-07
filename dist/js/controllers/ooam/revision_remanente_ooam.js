@@ -17,6 +17,7 @@ $(document).ready(function() {
 });
 
 $('#catalogoRemOoams').change(function(ruta){
+
     residencial = $('#catalogoRemOoams').val();
     $("#condominioRemOoams").empty().selectpicker('refresh');
     $.ajax({
@@ -36,7 +37,7 @@ $('#catalogoRemOoams').change(function(ruta){
 });
 
 $('#catalogoRemOoams').change(function(ruta){
-    $('#catalogoRemOoams').change(function(ruta){
+
         proyecto = $('#catalogoRemOoams').val();
         condominio = $('#condominioRemOoams').val();
         if(condominio == '' || condominio == null || condominio == undefined){
@@ -44,7 +45,7 @@ $('#catalogoRemOoams').change(function(ruta){
         }
      
         getAssimilatedCommissionsOoam(proyecto, condominio);
-    });
+
 });
 
 $('#condominioRemOoams').change(function(ruta){
@@ -79,7 +80,7 @@ function getAssimilatedCommissionsOoam(proyecto, condominio){
             totalooam += parseFloat(v.impuesto);
         });
         var toooam = formatMoney(numberTwoDecimal(totalooam));
-        document.getElementById("totpagarremanente").textContent = toooam;
+        document.getElementById("totpagarremanenteOoam").textContent = toooam;
     });
 
     $("#tabla_remanente_ooam").prop("hidden", false);
@@ -106,9 +107,9 @@ function getAssimilatedCommissionsOoam(proyecto, condominio){
         {
             text: '<i class="fa fa-check"></i> ENVIAR A INTERNOMEX',
             action: function() {
-                if ($('input[name="idTQ[]"]:checked').length > 0) {
+                if ($('input[name="idTQOoam[]"]:checked').length > 0) {
                     $('#spiner-loader').removeClass('hide');
-                    var idcomision = $(tabla_remanente_ooam.$('input[name="idTQ[]"]:checked')).map(function() {
+                    var idcomision = $(tabla_remanente_ooam.$('input[name="idTQOoam[]"]:checked')).map(function() {
                         return this.value;
                     }).get();
                     
@@ -299,7 +300,7 @@ function getAssimilatedCommissionsOoam(proyecto, condominio){
             render: function (d, type, full, meta){
                 if(full.estatus == 4){
                     if(full.id_comision){
-                        return '<input type="checkbox" name="idTQ[]" class="individualCheck" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
+                        return '<input type="checkbox" name="idTQOoam[]" class="individualCheck" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
                     }
                     else{
                         return '';
@@ -413,7 +414,7 @@ function getAssimilatedCommissionsOoam(proyecto, condominio){
             `);
         const buttonPausar = document.getElementById('cambiar_estatus_ooam');
         buttonPausar.addEventListener('click', function handleClick() {
-            $("#totpagarPen").html(formatMoney(0));
+            $("#totpagarPenOoam").html(formatMoney(0));
         });
         $("#modal_nuevas").modal();
     });
@@ -452,7 +453,7 @@ $("#form_interes").submit( function(e) {
                 $('#spiner-loader').addClass('hide');
             }
         });
-    $("#totpagarPen").html(formatMoney(0));
+    $("#totpagarPenOoam").html(formatMoney(0));
     }
 });
 
@@ -472,7 +473,7 @@ $(document).on("click", ".individualCheck", function() {
         else 
             $("#all").prop("checked", false);
     });
-    $("#totpagarPen").html(formatMoney(numberTwoDecimal(totaPen)));
+    $("#totpagarPenOoam").html(formatMoney(numberTwoDecimal(totaPen)));
 });
 
 function selectAll(e) {
@@ -486,7 +487,7 @@ function selectAll(e) {
                 $(v).prop("checked", true);
             }
         }); 
-        $("#totpagarPen").html(formatMoney(numberTwoDecimal(tota2)));
+        $("#totpagarPenOoam").html(formatMoney(numberTwoDecimal(tota2)));
     }
     if(e.checked == false){
         $(tabla_remanente_ooam.$('input[type="checkbox"]')).each(function (i, v) {
@@ -494,7 +495,7 @@ function selectAll(e) {
                 $(v).prop("checked", false);
             }
         }); 
-        $("#totpagarPen").html(formatMoney(0));
+        $("#totpagarPenOoam").html(formatMoney(0));
     }
 }
 

@@ -1,6 +1,6 @@
-var tr;
+var trs;
 let tabla_ooam2 ;
-var totaPen = 0;
+var totaPens = 0;
 let titulosOoam = [];
 
 $(document).ready(function() {
@@ -41,7 +41,7 @@ $('#catalogoAsiOoam').change(function(){
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
-    getAssimilatedCommissions(proyecto, condominio);
+    getAssimilatedCommissionsOoam(proyecto, condominio);
 });
 
 $('#condominioAsiOoam').change(function(){
@@ -50,7 +50,7 @@ $('#condominioAsiOoam').change(function(){
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
-    getAssimilatedCommissions(proyecto, condominio);
+    getAssimilatedCommissionsOoam(proyecto, condominio);
 });
 
 $('#tabla_ooam thead tr:eq(0) th').each(function (i) {
@@ -64,11 +64,11 @@ $('#tabla_ooam thead tr:eq(0) th').each(function (i) {
         }
         });
     }else {
-        $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAll(this)"/>');
+        $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAllOoam(this)"/>');
     }
 });
 
-function getAssimilatedCommissions(proyecto, condominio){
+function getAssimilatedCommissionsOoam(proyecto, condominio){
     $('#tabla_ooam').on('xhr.dt', function(e, settings, json, xhr) {
         var total = 0;
         $.each(json.data, function(i, v) {
@@ -417,8 +417,8 @@ function getAssimilatedCommissions(proyecto, condominio){
     });
 
     $("#tabla_ooam tbody").on("click", ".cambiar_estatus", function(){
-        var tr = $(this).closest('tr');
-        var row = tabla_ooam2.row( tr );
+        var trs = $(this).closest('trs');
+        var row = tabla_ooam2.row( trs );
         id_pago_i = $(this).val();
         $("#modal_nuevas .modal-body").html("");
         $("#modal_nuevas .modal-body").append(
@@ -484,29 +484,29 @@ $("#form_interes").submit( function(e) {
 });
 
 $(document).on("click", ".individualCheckOoam", function() {
-    totaPen = 0;
+    totaPens = 0;
     tabla_ooam2.$('input[type="checkbox"]').each(function () {
         let totalChecados = tabla_ooam2.$('input[type="checkbox"]:checked') ;
         let totalCheckbox = tabla_ooam2.$('input[type="checkbox"]');
         if(this.checked){
-            tr = this.closest('tr');
-            row = tabla_ooam2.row(tr).data();
-            totaPen += parseFloat(row.impuesto); 
+            trs = this.closest('trs');
+            row = tabla_ooam2.row(trs).data();
+            totaPens += parseFloat(row.impuesto); 
         }
         if( totalChecados.length == totalCheckbox.length )
             $("#all").prop("checked", true);
         else 
             $("#all").prop("checked", false);
     });
-    $("#totpagarPenOoam").html(formatMoney(numberTwoDecimal(totaPen)));
+    $("#totpagarPenOoam").html(formatMoney(numberTwoDecimal(totaPens)));
 });
 
-function selectAll(e) {
+function selectAllOoam(e) {
     tota2 = 0;
     if(e.checked == true){
         $(tabla_ooam2.$('input[type="checkbox"]')).each(function (i, v) {
-            tr = this.closest('tr');
-            row = tabla_ooam2.row(tr).data();
+            trs = this.closest('trs');
+            row = tabla_ooam2.row(trs).data();
             tota2 += parseFloat(row.impuesto);
             if(v.checked == false){
                 $(v).prop("checked", true);

@@ -14,6 +14,8 @@ class Ooam extends CI_Controller
         $this->load->model('asesor/Asesor_model');
         $this->load->model('Usuarios_modelo');
         $this->load->model('PagoInvoice_model');
+
+        
         $this->load->model('General_model');
         $this->load->model('Ooam_model');
         $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions','permisos_sidebar'));
@@ -34,14 +36,7 @@ class Ooam extends CI_Controller
           redirect(base_url() . "index.php/login");
       }
 
-    // public function prueba() {
-    //     if ($this->session->userdata('id_rol') == FALSE)
-    //         redirect(base_url());
-                
-    //         $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
-    //         $this->load->view('template/header');
-    //         $this->load->view("comisiones/dispersion-view", $datos);
-    //   }
+
 
     public function getDatosNuevasAContraloria(){
 
@@ -109,6 +104,386 @@ class Ooam extends CI_Controller
 
     echo json_encode($this->Ooam_model->getComments($id_pago));
 }
+
+     public function comisiones() {
+
+
+        
+        $query = $this->Ooam_model->comisiones_Ooam_forma_pago();
+ 
+        $datos["a"] = 'open';
+        $bandera = 2;
+  
+            if( $query->forma_pago  == 2 ||  $query->forma_pago == '2'){
+                $bandera = 1;
+                if(count($opn_cumplimiento) == 0){
+                    $datos["cadena"] = '<a href="'.base_url().'Usuarios/configureProfile"> <span class="label label-danger" style="background:red;">  SIN OPINIÓN DE CUMPLIMIENTO, CLIC AQUI PARA SUBIRLA ></span> </a>';
+                } 
+                else{
+                    if($opn_cumplimiento[0]['estatus'] == 1){
+                        $datos["cadena"] = '<button type="button" class="btn btn-info subir_factura_multiple" >SUBIR FACTURAS</button>';
+                    }
+                    else if($opn_cumplimiento[0]['estatus'] == 0){
+                        $datos["cadena"] ='<a href="'.base_url().'Usuarios/configureProfile"> <span class="label label-danger" style="background:orange;">  SIN OPINIÓN DE CUMPLIMIENTO, CLIC AQUI PARA SUBIRLA</span> </a>';
+                    }
+                    else if($opn_cumplimiento[0]['estatus'] == 2){
+                        $datos["cadena"] = '<button type="button" class="btn btn-info subir_factura_multiple" >SUBIR FACTURAS</button>';
+                    }
+                }
+            } else if ($query->forma_pago == 5) {
+                $bandera = 1;
+                if(count($opn_cumplimiento) == 0){
+                    $datos["cadena"] = '<button type="button" class="btn btn-info subir-archivo">SUBIR DOCUMENTO FISCAL</button>';
+                } else if($opn_cumplimiento[0]['estatus'] == 0) {
+                    $datos["cadena"]= '<button type="button" class="btn btn-info subir-archivo">SUBIR DOCUMENTO FISCAL</button>';
+                } else if ($opn_cumplimiento[0]['estatus'] == 1) {
+                    $datos["cadena"] = '<p><b>Documento fiscal cargado con éxito</b>
+                                <a href="#" class="verPDFExtranjero" title="Documento fiscal" data-usuario="'.$opn_cumplimiento[0]["archivo_name"].'" style="cursor: pointer;"><u>Ver documento</u></a>
+                            </p>';
+                } else if($opn_cumplimiento[0]['estatus'] == 2) {
+                    $datos["cadena"] = '<p style="color: #02B50C;">Documento fiscal bloqueado, hay comisiones asociadas.</p>';
+                }
+            }
+
+            if($bandera == 1){
+
+            
+             $this->load->view('template/header');
+             $this->load->view("ooam/asesor_ooam_view", $datos);
+       
+            }else {
+                $datos["cadena"] = 2;
+                $this->load->view('template/header');
+                $this->load->view("ooam/asesor_ooam_view", $datos);
+          
+            }
+       
+        }
+
+
+
+
+        public function lista_condominio($proyecto) {
+          $this->validateSession();
+            echo json_encode($this->Ooam_model->get_condominio_lista($proyecto)->result_array());
+        }
+    
+
+        public function SubirPDFExtranjero($id = '')
+        {
+            $id_usuario = $this->session->userdata('id_usuario');
+            $nombre = $this->session->userdata('nombre');
+            $opc = 0;
+    
+            if ($id != '') {
+                $opc = 1;
+                $id_usuario = $this->input->post("id_usuario");
+                $nombre = $this->input->post("nombre");
+            }
+    
+            date_default_timezone_set('America/Mexico_City');
+            $hoy = date("Y-m-d");
+    
+    
+            $fileTmpPath = $_FILES['file-upload-extranjero']['tmp_name'];
+            $fileName = $_FILES['file-upload-extranjero']['name'];
+            $fileNameCmps = explode(".", $fileName);
+            $fileExtension = strtolower(end($fileNameCmps));
+            $newFileName = $nombre . $hoy . md5(time() . $fileName) . '.' . $fileExtension;
+            $uploadFileDir = './static/documentos/extranjero/';
+    
+            $dest_path = $uploadFileDir . $newFileName;
+            move_uploaded_file($fileTmpPath, $dest_path);
+    
+    
+            $response = $this->Ooam_model->SaveCumplimiento($id_usuario, $newFileName, $opc);
+            echo json_encode($response);
+        }
+        public function consulta_codigo_postal(){
+          $resolt = $this->Ooam_model->consulta_codigo_postal($this->session->userdata('id_usuario'))->result_array();
+          echo json_encode($resolt);
+        }
+    
+   
+        public function lista_proyecto() {
+          /*if(in_array(array($this->session->userdata('id_rol'), array(17, 70, 71, 73, 33, 78))))
+              $where = '';
+          else
+              $where = ' AND idResidencial NOT IN (14) ';*/
+        $this->validateSession();
+          echo json_encode($this->Ooam_model->get_proyecto_lista()->result_array());
+      }
+
+
+
+      public function acepto_comisiones_user(){
+      
+        $id_user_Vl = $this->session->userdata('id_usuario');
+        $formaPagoUsuario = $this->session->userdata('forma_pago');
+        $sol=$this->input->post('idcomision');  
+        $consulta_comisiones = $this->db->query("SELECT id_pago_i FROM pago_ooam_ind where id_pago_i IN (".$sol.")");
+        $opinionCumplimiento = $this->Ooam_model->findOpinionActiveByIdUsuario($id_user_Vl);
+        $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
+        $consultaFechasCorte = $this->db->query("SELECT * FROM fechas_corte_ooam WHERE mes=$mesActual")->result_array();
+        $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;
+        if( $consulta_comisiones->num_rows() > 0 ){
+          $validar_sede = $this->session->userdata('id_sede');
+          $fecha_actual = strtotime($obtenerFechaSql);
+          $fechaInicio = strtotime($consultaFechasCorte[0]['fechaInicio']);
+          $fechaFin = $validar_sede == 8 ? strtotime($consultaFechasCorte[0]['fechaTijuana']) : strtotime($consultaFechasCorte[0]['fechaFinGeneral']) ;
+            if($formaPagoUsuario == 3){
+              $consultaCP = $this->Ooam_model->consulta_codigo_postal($id_user_Vl)->result_array();
+            }
+    
+            if(($fecha_actual != $fechaInicio && $fecha_actual != $fechaFin) || ($id_user_Vl == 7689)){
+              if( $formaPagoUsuario == 3 && ( $this->input->post('cp') == '' || $this->input->post('cp') == 'undefined' ) ){
+                $data_response = 3;
+                echo json_encode($data_response);
+              }
+              else if( $formaPagoUsuario == 3 && ( $this->input->post('cp') != '' || $this->input->post('cp') != 'undefined' ) &&  $consultaCP[0]['estatus'] == 0 ){
+                $data_response = 4;
+                echo json_encode($data_response);
+              }
+              else{
+                $consulta_comisiones = $consulta_comisiones->result_array();
+                $sep = ',';
+                $id_pago_i = '';
+    
+                $data=array();
+                $pagoInvoice = array();
+    
+                foreach ($consulta_comisiones as $row) {
+                  $id_pago_i .= implode($sep, $row);
+                  $id_pago_i .= $sep;
+    
+                  $row_arr=array(
+                    'id_pago_i' => $row['id_pago_i'],
+                    'id_usuario' =>  $id_user_Vl,
+                    'fecha_movimiento' => date('Y-m-d H:i:s'),
+                    'estatus' => 1,
+                    'comentario' =>  'COLABORADOR ENVÍO A CONTRALORÍA' 
+                  );
+                  array_push($data,$row_arr);
+    
+                  if ($formaPagoUsuario == 5) { // Pago extranjero
+                    $pagoInvoice[] = array(
+                      'id_pago_i' => $row['id_pago_i'],
+                      'nombre_archivo' => $opinionCumplimiento->archivo_name,
+                      'estatus' => 1,
+                      'modificado_por' => $id_user_Vl,
+                      'fecha_registro' => date('Y-m-d H:i:s')
+                    );
+                  }
+                }
+    
+                $id_pago_i = rtrim($id_pago_i, $sep);
+                $up_b = $this->Ooam_model->update_acepta_solicitante($id_pago_i);
+                $ins_b = $this->Ooam_model->insert_phc($data);
+                $this->Ooam_model->changeEstatusOpinion($id_user_Vl);
+                if ($formaPagoUsuario == 5) {
+                  $this->PagoInvoice_model->insertMany($pagoInvoice);
+                }
+                  
+                if($up_b == true && $ins_b == true){
+                  $data_response = 1;
+                  echo json_encode($data_response);
+                } else {
+                  $data_response = 9;
+                  echo json_encode($data_response);
+                } 
+              }
+            } else {
+              $data_response = 2;
+              echo json_encode($data_response);
+            }
+          }
+          else{
+            $data_response = 8;
+          echo json_encode($data_response);
+          }
+      }
+
+      
+
+      public function getDatosComisionesAsesor($a)
+      {
+        $dat =  $this->Ooam_model->getDatosComisionesAsesor($a)->result_array();
+        for ($i = 0; $i < count($dat); $i++) {
+          $dat[$i]['pa'] = 0;
+        }
+        echo json_encode(array("data" => $dat));
+      }
+    
+
+      public function guardar_solicitud($id_comision){
+        $resultado = array("resultado" => TRUE);
+        if( (isset($_POST) && !empty($_POST)) || ( isset( $_FILES ) && !empty($_FILES) ) ){
+          $this->db->trans_begin();
+          $responsable = $this->session->userdata('id_usuario');
+          $resultado = TRUE;
+          if( isset( $_FILES ) && !empty($_FILES) ){
+            $config['upload_path'] = './UPLOADS/XMLS/';
+            $config['allowed_types'] = 'xml';
+            $this->load->library('upload', $config);
+            $resultado = $this->upload->do_upload("xmlfile");
+            if( $resultado ){
+              $xml_subido = $this->upload->data();
+              $datos_xml = $this->Ooam_model->leerxml( $xml_subido['full_path'], TRUE );
+              $nuevo_nombre = date("my")."_";
+              $nuevo_nombre .= str_replace( array(",", ".", '"'), "", str_replace( array(" ", "/"), "_", limpiar_dato($datos_xml["nameEmisor"]) ))."_";
+              $nuevo_nombre .= date("Hms")."_";
+              $nuevo_nombre .= rand(4, 100)."_";
+              $nuevo_nombre .= substr($datos_xml["uuidV"], -5).".xml";
+              rename( $xml_subido['full_path'], "./UPLOADS/XMLS/".$nuevo_nombre );
+              $datos_xml['nombre_xml'] = $nuevo_nombre;
+              $id_com = $id_comision;
+              $this->Ooam_model->insertar_factura($id_com, $datos_xml);
+            }else{
+              $resultado["mensaje"] = $this->upload->display_errors();
+            }
+          }
+          if ( $resultado === FALSE || $this->db->trans_status() === FALSE){
+                $this->db->trans_rollback();
+                $resultado = array("resultado" => FALSE);
+            }else{
+                $this->db->trans_commit();
+                $resultado = array("resultado" => TRUE);
+            }
+        }
+        echo json_encode( $resultado );
+    }
+
+
+    public function EnviarDesarrollos()
+    {
+      if($this->input->post("desarrolloSelect2") == 1000){
+        $formaPago = $this->Ooam_model->GetFormaPago($this->session->userdata('id_usuario'))->result_array();
+        if($formaPago[0]['forma_pago'] == 3 || $formaPago[0]['forma_pago'] == 4){
+          $respuesta = $this->Ooam_model->ComisionesEnviar($this->session->userdata('id_usuario'),0,1);
+        }else{
+          $respuesta = $this->Ooam_model->ComisionesEnviar($this->session->userdata('id_usuario'),0,2);
+        }
+      }else{
+        $formaPago = $this->Ooam_model->GetFormaPago($this->session->userdata('id_usuario'))->result_array();
+        if($formaPago[0]['forma_pago'] == 3 || $formaPago[0]['forma_pago'] == 4){
+          $respuesta = $this->Ooam_model->ComisionesEnviar($this->session->userdata('id_usuario'),$this->input->post("desarrolloSelect2"),3);
+        }else{
+          $respuesta = $this->Ooam_model->ComisionesEnviar($this->session->userdata('id_usuario'),$this->input->post("desarrolloSelect2"),4);
+        }
+      }
+      echo json_encode($respuesta);
+    }
+
+    function getDatosProyecto($idlote,$id_usuario = ''){
+      if($id_usuario == ''){
+        echo json_encode($this->Ooam_model->getDatosProyecto($idlote)->result_array());
+  
+      }else{
+        echo json_encode($this->Ooam_model->getDatosProyecto($idlote,$id_usuario)->result_array());
+  
+      }
+    }
+
+
+
+
+    public function cargaxml2($id_user = ''){
+
+      $user =   $usuarioid =$this->session->userdata('id_usuario');
+    
+      if(empty($id_user)){
+        $RFC = $this->Usuarios_modelo->getPersonalInformation()->result_array();
+    
+      }else{
+        $RFC = $this->Usuarios_modelo->getPersonalInformation2($id_user)->result_array();
+    
+      }
+     
+    $respuesta = array( "respuesta" => array( FALSE, "HA OCURRIDO UN ERROR") );
+    if( isset( $_FILES ) && !empty($_FILES) ){
+        $config['upload_path'] = './UPLOADS/XMLS/';
+        $config['allowed_types'] = 'xml';
+        //CARGAMOS LA LIBRERIA CON LAS CONFIGURACIONES PREVIAS -----$this->upload->display_errors()
+        $this->load->library('upload', $config);
+        if( $this->upload->do_upload("xmlfile") ){
+            $xml_subido = $this->upload->data()['full_path'];
+            $datos_xml = $this->Ooam_model->leerxml( $xml_subido, TRUE );
+            if( $datos_xml['version'] >= 3.3){
+              $responsable_factura = $this->Ooam_model->verificar_uuid( $datos_xml['uuidV'] );
+              if($responsable_factura->num_rows()>=1){
+                $respuesta['respuesta'] = array( FALSE, "ESTA FACTURA YA SE SUBIÓ ANTERIORMENTE AL SISTEMA");
+              }
+              else{
+    
+                if($datos_xml['rfcreceptor'][0]=='ICE211215685'){//VALIDAR UNIDAD
+           
+                if($datos_xml['claveProdServ'][0]=='80131600' || (($user == 6578 || $user == 11180 || $user == 11759) && $datos_xml['claveProdServ'][0]=='83121703')){//VALIDAR UNIDAD
+                  $diasxmes = date('t');
+                   $fecha1 = date('Y-m-').'0'.(($diasxmes - $diasxmes) +1);
+                   $fecha2 = date('Y-m-').$diasxmes;
+                  if($datos_xml['fecha'][0] >= $fecha1 && $datos_xml['fecha'][0] <= $fecha2){
+    
+                if($datos_xml['rfcemisor'][0] == $RFC[0]['rfc']){
+                if($datos_xml['regimenFiscal'][0]=='612' || ( ($user == 6578 || $user == 11180 || $user == 11759) && $datos_xml['regimenFiscal'][0]=='601')){//VALIDAR REGIMEN FISCAL
+                if($datos_xml['formaPago'][0]=='03' || $datos_xml['formaPago'][0]=='003'){//VALIDAR FORMA DE PAGO Transferencia electrónica de fondos
+                if($datos_xml['usocfdi'][0]=='G03'){//VALIDAR USO DEL CFDI
+                if($datos_xml['metodoPago'][0]=='PUE'){//VALIDAR METODO DE PAGO
+                if($datos_xml['claveUnidad'][0]=='E48'){//VALIDAR UNIDAD
+                  $respuesta['respuesta'] = array( TRUE );
+                  $respuesta['datos_xml'] = $datos_xml;
+                }else{
+                  $respuesta['respuesta'] = array( FALSE, "LA UNIDAD NO ES 'E48 (UNIDAD DE SERVICIO)', VERIFIQUE SU FACTURA.");
+                }//FINAL DE UNIDAD
+                }else{
+                  $respuesta['respuesta'] = array( FALSE, "EL METODO DE PAGO NO ES 'PAGO EN UNA SOLA EXHIBICIÓN (PUE)', VERIFIQUE SU FACTURA.");
+                }//FINAL DE METODO DE PAGO
+                }else{
+                  $respuesta['respuesta'] = array( FALSE, "EL USO DEL CFDI NO ES 'GASTOS EN GENERAL (G03)', VERIFIQUE SU FACTURA.");
+                }//FINAL DE USO DEL CFDI
+                }else{
+                  $respuesta['respuesta'] = array( FALSE, "LA FORMA DE PAGO NO ES 'TRANSFERENCIA ELECTRÓNICA DE FONDOS (03)', VERIFIQUE SU FACTURA.");
+                }//FINAL DE FORMA DE PAGO
+                }else{
+                  $respuesta['respuesta'] = array( FALSE, "EL REGIMEN NO ES, 'PERSONAS FÍSICAS CON ACTIVIDADES EMPRESARIALES (612)");
+                }//FINAL DE REGIMEN FISCAL
+                }else{
+                $respuesta['respuesta'] = array( FALSE, "ESTA FACTURA NO CORRESPONDE A TU RFC.");
+                }//FINAL DE RFC VALIDO
+              }else{
+                $respuesta['respuesta'] = array( FALSE, "FECHA INVALIDA, SOLO SE ACEPTAN FACTURAS CON FECHA DE ESTE MES, VERIFICA TU XML");
+              }          
+                }else{
+                $respuesta['respuesta'] = array( FALSE, "LA CLAVE DE TU FACTURA NO CORRESPONDE A 'VENTA DE PROPIEDADES Y EDIFICIOS' (80131600).");
+              }
+    
+              }else{
+                $respuesta['respuesta'] = array( FALSE, "EL RFC NO CORRESPONDE A INTERNOMEX, DEBE SER ICE211215685");
+              }
+    
+            }
+            }else{
+              $respuesta['respuesta'] = array( FALSE, "LA VERSION DE LA FACTURA ES INFERIOR A LA 3.3, SOLICITE UNA REFACTURACIÓN");
+            }
+            unlink( $xml_subido );
+          }
+          else{
+            $respuesta['respuesta'] = array( FALSE, $this->upload->display_errors());
+          }
+        }
+        echo json_encode( $respuesta );
+      }
+
+
+      function borrar_factura(){
+        $respuesta = array( FALSE );
+        if($this->input->post("delete_fact")){
+           $respuesta = array( $this->Ooam_model->borrar_factura( $this->input->post("delete_fact")));
+        }
+        echo json_encode( $respuesta );
+      }
+      
+
+
 
 
 }
