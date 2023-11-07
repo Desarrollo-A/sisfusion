@@ -6,16 +6,16 @@ $(document).ready(function() {
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
             var name = data[i]['descripcion'];
-            $("#filtro33").append($('<option>').val(id).text(name.toUpperCase()));
+            $("#catalogoHistorial").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $("#filtro33").selectpicker('refresh');
+        $("#catalogoHistorial").selectpicker('refresh');
     }, 'json');       
 });
 
-$('#filtro33').change(function(ruta){
-residencial = $('#filtro33').val();
+$('#catalogoHistorial').change(function(ruta){
+residencial = $('#catalogoHistorial').val();
 param = $('#param').val();
-$("#filtro44").empty().selectpicker('refresh');
+$("#condominioHistorial").empty().selectpicker('refresh');
     $.ajax({
         url: general_base_url + 'Contratacion/lista_condominio/'+residencial,
         type: 'post',
@@ -26,42 +26,35 @@ $("#filtro44").empty().selectpicker('refresh');
             {
                 var id = response[i]['idCondominio'];
                 var name = response[i]['nombre'];
-                $("#filtro44").append($('<option>').val(id).text(name));
+                $("#condominioHistorial").append($('<option>').val(id).text(name));
             }
-            $("#filtro44").selectpicker('refresh');
+            $("#condominioHistorial").selectpicker('refresh');
         }
     });
 });
 
-$('#filtro33').change(function(ruta){
-    proyecto = $('#filtro33').val();
-    condominio = $('#filtro44').val();
+$('#catalogoHistorial').change(function(ruta){
+    proyecto = $('#catalogoHistorial').val();
+    condominio = $('#condominioHistorial').val();
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
     if(proyecto == 11 || proyecto == 12){
-        console.log(proyecto);
+        // console.log(proyecto);
     }
     else{
         getAssimilatedCommissions(proyecto, condominio);
     }
 });
 
-$('#filtro44').change(function(ruta){
-    proyecto = $('#filtro33').val();
-    condominio = $('#filtro44').val();
+$('#condominioHistorial').change(function(ruta){
+    proyecto = $('#catalogoHistorial').val();
+    condominio = $('#condominioHistorial').val();
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
     getAssimilatedCommissions(proyecto, condominio);
 });
-
-function cleanCommentsAsimilados() {
-    var myCommentsList = document.getElementById('comments-list-asimilados');
-    var myCommentsLote = document.getElementById('nameLote');
-    myCommentsList.innerHTML = '';
-    myCommentsLote.innerHTML = '';
-}
 
 let titulos_intxt = [];
 $('#tabla_historialGral thead tr:eq(0) th').each( function (i) {
@@ -84,6 +77,7 @@ var totalCancun = 0;
 var tr;
 var tabla_historialGral2 ;
 var totaPen = 0;
+
 function getAssimilatedCommissions(proyecto, condominio){
     let titulos = [];
     $("#tabla_historialGral").prop("hidden", false);
@@ -100,8 +94,7 @@ function getAssimilatedCommissions(proyecto, condominio){
             title: 'HISTORIAL_GENERAL_SISTEMA_COMISIONES',
             exportOptions: {
                 columns: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14],
-                format: 
-                {
+                format: {
                     header:  function (d, columnIdx) {
                         return ' ' + titulos_intxt[columnIdx] + ' ';
                     }
@@ -334,7 +327,35 @@ function getAssimilatedCommissions(proyecto, condominio){
         e.stopImmediatePropagation();
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
-        $("#seeInformationModalAsimilados").modal();
+        $("#nameLote").html('');
+        $("comments-list-asimilados").html('');
+
+        changeSizeModal('modal-md');
+        appendBodyModal(`<div class="modal-body">
+                        <div role="tabpanel">
+                            <ul class="nav" role="tablist">
+                                <div id="nameLote"></div>
+                            </ul>
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="card card-plain">
+                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                                    <ul class="timeline-3" id="comments-list-asimilados"></ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
+                    </div>`);
+        showModal();
+
         $("#nameLote").append('<p><h5>HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $.getJSON("getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){

@@ -5,7 +5,6 @@
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
     
-        <!-- Modals -->
         <div class="modal fade modal-alertas" id="modal_colaboradores" role="dialog">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
@@ -26,60 +25,6 @@
                 </div>
             </div>
         </div>
-        
-        <!-- VERIFICAR SI SE USA -->
-        <!-- <div class="modal fade modal-alertas" id="modal_mktd" role="dialog">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header bg-red">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">EDITAR INFORMACIÓN </h4>
-                    </div>
-                    <form method="post" id="form_MKTD">
-                        <div class="modal-body"></div>
-                        <div class="modal-footer"></div>
-                    </form>
-                </div>
-            </div>
-        </div> -->
-
-        <div class="modal fade" id="seeInformationModalExtranjero" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            <i class="material-icons" onclick="cleanComments()">clear</i>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div role="tabpanel">
-                                <div id="nameLote"></div>
-                                <div id="nameLote"></div>
-                            </ul>
-                            <div id="nameLote"></div>
-                            </ul>
-                            <div class="tab-content">
-                                <div role="tabpanel" class="tab-pane active" id="changelogTab">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="card card-plain">
-                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
-                                                    <ul class="timeline-3" id="comments-list-extranjero"></ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanComments()"><b>Cerrar</b></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- END Modals -->
 
         <div class="content boxContent">
             <div class="container-fluid">
@@ -117,14 +62,14 @@
                                         <div class="row">
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 ">          
                                                 <div class="form-group overflow-hidden">
-                                                    <label class="control-label" for="filtro33">Proyecto</label>
-                                                    <select name="filtro33" id="filtro33" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-container="body" data-size="7" required></select>
+                                                    <label class="control-label" for="catalogoFactE">Proyecto</label>
+                                                    <select name="catalogoFactE" id="catalogoFactE" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-container="body" data-size="7" required></select>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">          
                                                 <div class="form-group overflow-hidden">
-                                                    <label class="control-label" for="filtro44">Condominio</label>
-                                                    <select class="selectpicker select-gral m-0" id="filtro44" name="filtro44[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-container="body" data-size="7" required></select>
+                                                    <label class="control-label" for="condominioFactE">Condominio</label>
+                                                    <select class="selectpicker select-gral m-0" id="condominioFactE" name="condominioFactE[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-container="body" data-size="7" required></select>
                                                 </div>
                                             </div>
                                         </div>
@@ -196,7 +141,8 @@
         <?php $this->load->view('template/footer_legend');?>
     </div>
     <?php $this->load->view('template/footer');?>
-    <script src="<?= base_url() ?>dist/js/controllers/pagos/pago_extranjero.js"></script>
+    <script src="<?=base_url()?>dist/js/core/modal-general.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_extranjero.js"></script>
     <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
     <script>
         Shadowbox.init();

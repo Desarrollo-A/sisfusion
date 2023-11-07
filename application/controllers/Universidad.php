@@ -169,6 +169,112 @@ class Universidad extends CI_Controller
     echo json_encode($dat);    
   }
 
+  public function descuentoActualizarCertificaciones(){
+
+    $banderaSoloEstatus     = $this->input->post('banderaSoloEstatus');
+    $statu                  = $this->input->post('statu'); 
+    $estatus                = $this->input->post('estatus');
+    $id_descuento           = $this->input->post('id_descuento');
+    $monto                  = $this->input->post('monto');
+    $pago_individual        = $this->input->post('pago_individual');
+    $comentario             = 'Descuento aplicado ';
+    $fechaSeleccionada      =  $this->input->post('fechaSeleccionada');
+    $banderaPagosActivos    =  $this->input->post('banderaPagosActivos');
+    $complemento            = '01:01:00.000';
+    $fecha_modificacion = $fechaSeleccionada.' '.$complemento;
+      if($estatus === '1'){
+          $arr_update = array( 
+              "estatus"   => 1,
+              "monto"           =>  $monto,
+              "pago_individual" =>  $pago_individual,
+              "detalles"      =>  $comentario,
+              );
+        if($banderaPagosActivos == 1 ){
+          $pagos_activos = 1;
+          $fecha_modificacion = $fechaSeleccionada.' '.$complemento;
+          // $estatus = 5;  
+          $arr_update["estatus"] = $estatus ;
+          $arr_update["pagos_activos"] = $pagos_activos ;
+          $arr_update["fecha_modificacion"] =  $fechaSeleccionada.' '.$complemento;
+        }
+        else if($banderaPagosActivos == 2){
+          $pagos_activos = 0;
+          $fecha_modificacion = $fechaSeleccionada.' '.$complemento;
+          $estatus = 5;  
+          $arr_update["estatus"] = $estatus ;
+          $arr_update["pagos_activos"] = $pagos_activos ;
+          $arr_update["fecha_modificacion"] =  $fechaSeleccionada.' '.$complemento;
+        }
+        else{
+        }
+      }else {
+       
+        $arr_update = array(    
+          
+          // "pagos_activos"   => $pagos_activos,
+          "monto"           =>  $monto,
+          "pago_individual" =>  $pago_individual,
+          "detalles"      =>  $comentario,              
+        );
+        if($banderaPagosActivos == 1 ){
+          $pagos_activos = 1;
+          $fecha_modificacion = $fechaSeleccionada.' '.$complemento;
+          // $estatus = 5;  
+          $arr_update["pagos_activos"] = $pagos_activos ;
+          $arr_update["fecha_modificacion"] = $fecha_modificacion;
+        }
+        else  if($banderaPagosActivos == 2){
+          $pagos_activos = 0;
+          $estatus = 5;  
+          $arr_update["estatus"] = $estatus ;
+          $arr_update["pagos_activos"] = $pagos_activos ;
+          $arr_update["fecha_modificacion"] = $fecha_modificacion  ;
+
+        }
+        else{
+
+        }
+
+    }
+        $update = $this->Universidad_model->descuentos_universidad($id_descuento,$arr_update);                           
+        if($update){
+          $respuesta =  array(
+            "response_code" => 200, 
+            "response_type" => 'success',
+            "message" => "Descuento actualizado satisfactoriamente");
+        }else{
+          $respuesta =  array(
+            "response_code" => 400, 
+            "response_type" => 'error',
+            "message" => "Descuento no actualizado, inténtalo más tarde ");
+        }
+        echo json_encode ($respuesta);
+      } 
+      public function updatePrestamosUniversidad (){
+        $certificacion  = $this->input->post('certificaciones');
+        $idPrestamo     = $this->input->post('idDescuento');
+    
+            $arr_update = array( 
+                  "estatus_certificacion" =>  $certificacion,
+                              );
+                              
+          $update = $this->Universidad_model->updateCertificacion($idPrestamo  , $arr_update);
+          if($update){
+            $respuesta =  array(
+              "response_code" => 200, 
+              "response_type" => 'success',
+              "message" => "Préstamo actualizado");
+          }else{
+            $respuesta =  array(
+              "response_code" => 400, 
+              "response_type" => 'error',
+              "message" => "Préstamo no actualizado, inténtalo más tarde ");
+      }
+          echo json_encode ($respuesta);
+    
+    }
+    
+    
 
   public function updateCertificacion(){
     $certificacion = $this->input->post('certificaciones');

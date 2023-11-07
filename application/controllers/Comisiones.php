@@ -4597,7 +4597,6 @@ $comentario='';
           }else{
             $cadena = $cadena.'0/0,0'.',';
           }
-         
         }
       } 
       for ($n=0; $n < $numeroMayorMKTD ; $n++) {
@@ -4640,9 +4639,9 @@ for ($d=0; $d <count($dos) ; $d++) {
     echo json_encode(  array( "data" => $NuevoArr,
     "numeroMayorNUS" => $numeroMayorNUS,
     "numeroMayorMKTD" => $numeroMayorMKTD,
-     "sumaBono1" => $sumaTotalBono1,
-     "sumaBono2" => $sumaTotalBono2,
-     "sumaTotalComision" => $sumaTotalComision ));
+    "sumaBono1" => $sumaTotalBono1,
+    "sumaBono2" => $sumaTotalBono2,
+    "sumaTotalComision" => $sumaTotalComision ));
   }
 
 
@@ -5154,20 +5153,13 @@ for ($d=0; $d <count($dos) ; $d++) {
       $id_descuento           = $this->input->post('id_descuento');
       $monto                  = $this->input->post('monto');
       $pago_individual        = $this->input->post('pago_individual');
-      $estatus_certificacion  = $this->input->post('estatus_certificacion');
+ 
       $comentario             = 'Descuento aplicado ';
       $fechaSeleccionada      =  $this->input->post('fechaSeleccionada');
       $banderaPagosActivos    =  $this->input->post('banderaPagosActivos');
       $complemento            = '01:01:00.000';
       $fecha_modificacion = $fechaSeleccionada.' '.$complemento;
-      if($banderaSoloEstatus != 'false' ){
-        // var_dump('entrando a 1 ');
-        $arr_update = array( 
-          "estatus_certificacion" => $estatus_certificacion,          
-        );
-        
-
-      }else{
+      
         // var_dump('entrando a 2');
         if($estatus === '1'){
 
@@ -5178,7 +5170,7 @@ for ($d=0; $d <count($dos) ; $d++) {
                             "monto"           =>  $monto,
                             "pago_individual" =>  $pago_individual,
                             "detalles"      =>  $comentario,
-                            "estatus_certificacion" => $estatus_certificacion,
+
                             );
   
                             if($banderaPagosActivos == 1 ){
@@ -5209,8 +5201,7 @@ for ($d=0; $d <count($dos) ; $d++) {
             // "pagos_activos"   => $pagos_activos,
             "monto"           =>  $monto,
             "pago_individual" =>  $pago_individual,
-            "detalles"      =>  $comentario,
-            "estatus_certificacion" => $estatus_certificacion,                  
+            "detalles"      =>  $comentario,              
           );
           if($banderaPagosActivos == 1 ){
             $pagos_activos = 1;
@@ -5230,7 +5221,7 @@ for ($d=0; $d <count($dos) ; $d++) {
           else{
   
           }
-        }
+        
      
       }
      
@@ -5316,8 +5307,8 @@ public function descuentosCapitalHumano(){
       $suma =$datos[0]['suma'];
     }else{
       $datos = $this->Comisiones_model->getDisponbleResguardo($user)->result_array();
-     // $extras = $this->Comisiones_model->getDisponbleExtras($user)->result_array();
-     $suma =($datos[0]['suma']);
+      // $extras = $this->Comisiones_model->getDisponbleExtras($user)->result_array();
+      $suma =($datos[0]['suma']);
     }
     
     
@@ -5448,5 +5439,31 @@ public function descuentosCapitalHumano(){
   public function getHistorialDescuentosPorUsuario() {      
     echo json_encode(array( "data" => $this->Comisiones_model->getHistorialDescuentosPorUsuario()));
   }
+
+  public function updatePrestamosUniversidad (){
+    $certificacion  = $this->input->post('certificaciones');
+    $idPrestamo     = $this->input->post('idDescuento');
+
+        $arr_update = array( 
+              "estatus_certificacion" =>  $certificacion,
+                          );
+                          
+      $update = $this->Comisiones_model->updateCertificacion($idPrestamo  , $arr_update);
+      if($update){
+        $respuesta =  array(
+          "response_code" => 200, 
+          "response_type" => 'success',
+          "message" => "Préstamo actualizado");
+      }else{
+        $respuesta =  array(
+          "response_code" => 400, 
+          "response_type" => 'error',
+          "message" => "Préstamo no actualizado, inténtalo más tarde ");
+  }
+      echo json_encode ($respuesta);
+
+}
+
+
 
 }

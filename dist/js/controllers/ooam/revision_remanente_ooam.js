@@ -1,24 +1,24 @@
-var tr;
-var tabla_remanente2 ;
-var totaPen = 0;
-let titulos = [];
+var trs;
+var tabla_remanente_ooam ;
+var totaPenooam = 0;
+let titulosOoam = [];
 
 $(document).ready(function() {
-    $("#tabla_remanente").prop("hidden", true);
+    $("#tabla_remanente_ooam").prop("hidden", true);
     $.post(general_base_url + "Contratacion/lista_proyecto", function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
             var name = data[i]['descripcion'];
-            $("#catalogoRem").append($('<option>').val(id).text(name.toUpperCase()));
+            $("#catalogoRemOoams").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $("#catalogoRem").selectpicker('refresh');
+        $("#catalogoRemOoams").selectpicker('refresh');
     }, 'json');
 });
 
-$('#catalogoRem').change(function(ruta){
-    residencial = $('#catalogoRem').val();
-    $("#condominioRem").empty().selectpicker('refresh');
+$('#catalogoRemOoams').change(function(ruta){
+    residencial = $('#catalogoRemOoams').val();
+    $("#condominioRemOoams").empty().selectpicker('refresh');
     $.ajax({
         url: general_base_url + 'Asesor/getCondominioDesc/'+residencial,
         type: 'post',
@@ -28,39 +28,42 @@ $('#catalogoRem').change(function(ruta){
             for( var i = 0; i<len; i++){
                 var id = response[i]['idCondominio'];
                 var name = response[i]['nombre'];
-                $("#condominioRem").append($('<option>').val(id).text(name));
+                $("#condominioRemOoams").append($('<option>').val(id).text(name));
             }
-            $("#condominioRem").selectpicker('refresh');
+            $("#condominioRemOoams").selectpicker('refresh');
         }
     });
 });
 
-$('#catalogoRem').change(function(ruta){
-    proyecto = $('#catalogoRem').val();
-    condominio = $('#condominioRem').val();
+$('#catalogoRemOoams').change(function(ruta){
+    $('#catalogoRemOoams').change(function(ruta){
+        proyecto = $('#catalogoRemOoams').val();
+        condominio = $('#condominioRemOoams').val();
+        if(condominio == '' || condominio == null || condominio == undefined){
+            condominio = 0;
+        }
+        getAssimilatedCommissionsOoam(proyecto, condominio);
+    });
+});
+
+$('#condominioRemOoams').change(function(ruta){
+    proyecto = $('#catalogoRemOoams').val();
+    condominio = $('#condominioRemOoams').val();
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
-    getAssimilatedCommissions(proyecto, condominio);
+    getAssimilatedCommissionsOoam(proyecto, condominio);
+
 });
 
-$('#condominioRem').change(function(ruta){
-    proyecto = $('#catalogoRem').val();
-    condominio = $('#condominioRem').val();
-    if(condominio == '' || condominio == null || condominio == undefined){
-        condominio = 0;
-    }
-    getAssimilatedCommissions(proyecto, condominio);
-});
-
-$('#tabla_remanente thead tr:eq(0) th').each(function (i) {
+$('#tabla_remanente_ooam thead tr:eq(0) th').each(function (i) {
     if(i != 0){
         var title = $(this).text();
         titulos.push(title);
         $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
         $( 'input', this ).on('keyup change', function () {
-            if ($('#tabla_remanente').DataTable().column(i).search() !== this.value ) {
-                $('#tabla_remanente').DataTable().column(i).search(this.value).draw();
+            if ($('#tabla_remanente_ooam').DataTable().column(i).search() !== this.value ) {
+                $('#tabla_remanente_ooam').DataTable().column(i).search(this.value).draw();
             }
         });
     }else {
@@ -68,18 +71,18 @@ $('#tabla_remanente thead tr:eq(0) th').each(function (i) {
     }
 });
 
-function getAssimilatedCommissions(proyecto, condominio){
-    $('#tabla_remanente').on('xhr.dt', function(e, settings, json, xhr) {
-        var total = 0;
+function getAssimilatedCommissionsOoam(proyecto, condominio){
+    $('#tabla_remanente_ooam').on('xhr.dt', function(e, settings, json, xhr) {
+        var totalooam = 0;
         $.each(json.data, function(i, v) {
-            total += parseFloat(v.impuesto);
+            totalooam += parseFloat(v.impuesto);
         });
-        var to = formatMoney(numberTwoDecimal(total));
-        document.getElementById("totpagarremanente").textContent = to;
-});
+        var toooam = formatMoney(numberTwoDecimal(totalooam));
+        document.getElementById("totpagarremanente").textContent = toooam;
+    });
 
-    $("#tabla_remanente").prop("hidden", false);
-    tabla_remanente2 = $("#tabla_remanente").DataTable({
+    $("#tabla_remanente_ooam").prop("hidden", false);
+    tabla_remanente_ooam = $("#tabla_remanente_ooam").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
@@ -94,7 +97,7 @@ function getAssimilatedCommissions(proyecto, condominio){
                 columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14],
                 format: {
                     header: function (d, columnIdx) {
-                        return ' ' + titulos[columnIdx] + ' ';
+                        return ' ' + titulosOoam[columnIdx] + ' ';
                     }
                 }
             },
@@ -104,7 +107,7 @@ function getAssimilatedCommissions(proyecto, condominio){
             action: function() {
                 if ($('input[name="idTQ[]"]:checked').length > 0) {
                     $('#spiner-loader').removeClass('hide');
-                    var idcomision = $(tabla_remanente2.$('input[name="idTQ[]"]:checked')).map(function() {
+                    var idcomision = $(tabla_remanente_ooam.$('input[name="idTQ[]"]:checked')).map(function() {
                         return this.value;
                     }).get();
                     
@@ -121,10 +124,10 @@ function getAssimilatedCommissions(proyecto, condominio){
                             response = JSON.parse(data);
                             if(data == 1) {
                                 $('#spiner-loader').addClass('hide');
-                                $("#totpagarPen").html(formatMoney(0));
+                                $("#totpagarPenOoam").html(formatMoney(0));
                                 $("#all").prop('checked', false);
                                 var fecha = new Date();
-                                tabla_remanente2.ajax.reload();
+                                tabla_remanente_ooam.ajax.reload();
                                 modalInformation(1);
                             }
                             else {
@@ -251,8 +254,10 @@ function getAssimilatedCommissions(proyecto, condominio){
             data: function( data ){
                 let btns = '';
 
-                const BTN_HISTORIAL = `<button href="#" value="${data.id_pago_i}" data-value="${data.lote}" data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_remanente" data-toggle="tooltip"  data-placement="top" title="DETALLES"><i class="fas fa-info"></i></button>`;
-                const BTN_PAUSAR = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-warning cambiar_estatus" id="cambiar_estatus" data-toggle="tooltip"  data-placement="top" title="PAUSAR LA SOLICITUD"><i class="fas fa-ban"></i></button>`;
+                const BTN_HISTORIAL = `<button href="#" value="${data.id_pago_i}" data-value="${data.lote}" data-code="${data.cbbtton}" 
+                class="btn-data btn-blueMaderas consultar_logs_remanente_ooam" data-toggle="tooltip"  data-placement="top" title="DETALLES"><i class="fas fa-info"></i></button>`;
+                const BTN_PAUSAR = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" 
+                class="btn-data btn-warning cambiar_estatus_ooam" id="cambiar_estatus_ooam" data-toggle="tooltip"  data-placement="top" title="PAUSAR LA SOLICITUD"><i class="fas fa-ban"></i></button>`;
                 
                 btns += BTN_HISTORIAL;
                 btns += BTN_PAUSAR;
@@ -296,13 +301,7 @@ function getAssimilatedCommissions(proyecto, condominio){
         },
     });
 
-    $('#tabla_remanente').on('draw.dt', function() {
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
-    });
-
-    $("#tabla_remanente tbody").on("click", ".consultar_logs_remanente", function(e){
+    $("#tabla_remanente_ooam tbody").on("click", ".consultar_logs_remanente_ooam", function(e){
         $('#spiner-loader').removeClass('hide');
         $("#comments-list-asimilados").html('');
         $("#nameLote").html('');
@@ -360,9 +359,9 @@ function getAssimilatedCommissions(proyecto, condominio){
         });
     });
 
-    $("#tabla_remanente tbody").on("click", ".cambiar_estatus", function(){
+    $("#tabla_remanente_ooam tbody").on("click", ".cambiar_estatus_ooam", function(){
         var tr = $(this).closest('tr');
-        var row = tabla_remanente2.row( tr );
+        var row = tabla_remanente_ooam.row( tr );
         id_pago_i = $(this).val();
         $("#modal_nuevas .modal-footer").html("");
         $("#modal_nuevas .modal-body").html("");
@@ -387,7 +386,7 @@ function getAssimilatedCommissions(proyecto, condominio){
                 <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CANCELAR</button>
                 <button type="submit" class="btn btn-primary"" value="PAUSAR">PAUSAR</button>
             `);
-        const buttonPausar = document.getElementById('cambiar_estatus');
+        const buttonPausar = document.getElementById('cambiar_estatus_ooam');
         buttonPausar.addEventListener('click', function handleClick() {
             $("#totpagarPen").html(formatMoney(0));
         });
@@ -416,7 +415,7 @@ $("#form_interes").submit( function(e) {
                     $("#modal_nuevas").modal('toggle' );
                     alerts.showNotification("top", "right", "Se ha pausado la comisión exitosamente", "success");
                     setTimeout(function() {
-                        tabla_remanente2.ajax.reload();
+                        tabla_remanente_ooam.ajax.reload();
                     }, 3000);
                     $('#spiner-loader').addClass('hide');
                 }else{
@@ -434,12 +433,12 @@ $("#form_interes").submit( function(e) {
 
 $(document).on("click", ".individualCheck", function() {
     totaPen = 0;
-    tabla_remanente2.$('input[type="checkbox"]').each(function () {
-        let totalChecados = tabla_remanente2.$('input[type="checkbox"]:checked') ;
-        let totalCheckbox = tabla_remanente2.$('input[type="checkbox"]');
+    tabla_remanente_ooam.$('input[type="checkbox"]').each(function () {
+        let totalChecados = tabla_remanente_ooam.$('input[type="checkbox"]:checked') ;
+        let totalCheckbox = tabla_remanente_ooam.$('input[type="checkbox"]');
         if(this.checked){
             tr = this.closest('tr');
-            row = tabla_remanente2.row(tr).data();
+            row = tabla_remanente_ooam.row(tr).data();
             totaPen += parseFloat(row.impuesto); 
         }
 
@@ -454,9 +453,9 @@ $(document).on("click", ".individualCheck", function() {
 function selectAll(e) {
     tota2 = 0;
     if(e.checked == true){
-        $(tabla_remanente2.$('input[type="checkbox"]')).each(function (i, v) {
+        $(tabla_remanente_ooam.$('input[type="checkbox"]')).each(function (i, v) {
             tr = this.closest('tr');
-            row = tabla_remanente2.row(tr).data();
+            row = tabla_remanente_ooam.row(tr).data();
             tota2 += parseFloat(row.impuesto);
             if(v.checked == false){
                 $(v).prop("checked", true);
@@ -465,7 +464,7 @@ function selectAll(e) {
         $("#totpagarPen").html(formatMoney(numberTwoDecimal(tota2)));
     }
     if(e.checked == false){
-        $(tabla_remanente2.$('input[type="checkbox"]')).each(function (i, v) {
+        $(tabla_remanente_ooam.$('input[type="checkbox"]')).each(function (i, v) {
             if(v.checked == true){
                 $(v).prop("checked", false);
             }
@@ -473,3 +472,4 @@ function selectAll(e) {
         $("#totpagarPen").html(formatMoney(0));
     }
 }
+
