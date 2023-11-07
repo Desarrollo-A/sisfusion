@@ -33,31 +33,95 @@ class Ooam extends CI_Controller
         if ($this->session->userdata('id_usuario') == "" || $this->session->userdata('id_rol') == "")
           redirect(base_url() . "index.php/login");
       }
-
-    // public function prueba() {
-    //     if ($this->session->userdata('id_rol') == FALSE)
-    //         redirect(base_url());
-                
-    //         $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
-    //         $this->load->view('template/header');
-    //         $this->load->view("comisiones/dispersion-view", $datos);
-    //   }
-
-    public function getDatosNuevasAContraloria(){
+ 
+    public function getRevisionAsimiladosOOAM(){
 
         $proyecto = $this->input->post('proyecto');  
         $condominio = $this->input->post('condominio');  
   
-        $dat =  $this->Ooam_model->getDatosNuevasAContraloria($proyecto,$condominio);
+        $dat =  $this->Ooam_model->getRevisionAsimiladosOOAM($proyecto,$condominio);
        for( $i = 0; $i < count($dat); $i++ ){
-           $dat[$i]['pa'] = 0;
+           $dat[$i]['montoOOAM'] = 0;
        }
        echo json_encode( array( "data" => $dat));
       }
 
 
+    public function getRevisionRemanenteOOAM(){
+
+        $proyecto = $this->input->post('proyecto');  
+        $condominio = $this->input->post('condominio');  
+  
+        $dat =  $this->Ooam_model->getRevisionRemanenteOOAM($proyecto,$condominio);
+       for( $i = 0; $i < count($dat); $i++ ){
+           $dat[$i]['montoOOAM'] = 0;
+       }
+       echo json_encode( array( "data" => $dat));
+      }
+
+
+      public function getRevisionFacturasOOAM(){
+
+        $proyecto = $this->input->post('proyecto');  
+        $condominio = $this->input->post('condominio');  
+  
+        $dat =  $this->Ooam_model->getRevisionFacturasOOAM($proyecto,$condominio);
+       for( $i = 0; $i < count($dat); $i++ ){
+           $dat[$i]['montoOOAM'] = 0;
+       }
+       echo json_encode( array( "data" => $dat));
+      }
+
+
+
       
    public function acepto_internomex_asimilados(){
+    $sol = $this->input->post('idcomision');  
+
+     $consulta_comisiones = $this->Ooam_model->consulta_comisiones( $sol );
+      if( $consulta_comisiones != FALSE){
+
+        $id_user_Vl = $this->session->userdata('id_usuario');
+          $sep = ',';
+          $id_pago_i = '';
+          $data=array();
+          foreach ($consulta_comisiones as $row) {
+            $id_pago_i .= implode($sep, $row);
+            $id_pago_i .= $sep;
+            $row_arr=array(
+              'id_pago_i' => $row['id_pago_i'],
+              'id_usuario' =>  $id_user_Vl,
+              'fecha_movimiento' => date('Y-m-d H:i:s'),
+              'estatus' => 1,
+              'comentario' =>  'CONTRALORÍA ENVÍO PAGO A INTERNOMEX' 
+            );
+             array_push($data,$row_arr);
+          }
+          $id_pago_i = rtrim($id_pago_i, $sep);
+            
+            $arrayUpdateControlaria = array(
+              'estatus' => 8,
+              'modificado_por' => $id_user_Vl
+            );
+
+            $up_b = $this->Ooam_model->update_acepta_contraloria($arrayUpdateControlaria , $id_pago_i);
+            $ins_b = $this->Ooam_model->insert_phc($data);
+
+      if($up_b == true && $ins_b == true){
+        $data_response = 1;
+        echo json_encode($data_response);
+      } else {
+        $data_response = 0;
+        echo json_encode($data_response);
+      }
+      }
+      else{
+        $data_response = 0;
+      echo json_encode($data_response);
+      }
+  }
+
+  public function acepto_internomex_remanente(){
     $sol = $this->input->post('idcomision');  
 
      $consulta_comisiones = $this->Ooam_model->consulta_comisiones( $sol );
@@ -109,6 +173,15 @@ class Ooam extends CI_Controller
 
     echo json_encode($this->Ooam_model->getComments($id_pago));
 }
+
+function setPausaPagosOOAM(){
+    $respuesta = array( FALSE );
+    if($this->input->post("id_pago")){
+      $respuesta = array( $this->Ooam_model->setPausaPagosOOAM( $this->input->post("id_pago_i"), $this->input->post("observaciones")));
+    }
+    echo json_encode( $respuesta );
+  }
+
 
 
 }
