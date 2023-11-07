@@ -4,9 +4,7 @@ var totaPen = 0;
 let titulosoam = [];
 
 $(document).ready(function() {
-
     $("#tabla_ooam").prop("hidden", true);
-
     $.post(general_base_url+"Contratacion/lista_proyecto", function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
@@ -16,10 +14,8 @@ $(document).ready(function() {
         }
         $("#catalogoAsiOoam").selectpicker('refresh');
     }, 'json');
-
-
-   
 });
+
 $('#catalogoAsiOoam').change(function(){
     residencial = $('#catalogoAsiOoam').val();
     $("#condominioAsiOoam").empty().selectpicker('refresh');
@@ -41,26 +37,24 @@ $('#catalogoAsiOoam').change(function(){
 
 
 $('#catalogoAsiOoam').change(function(){
-
-  
     proyecto = $('#catalogoAsiOoam').val();
     condominio = $('#condominioAsiOoam').val();
+
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
     getAssimilatedOOAM(proyecto, condominio);
-
 });
 
 
 $('#condominioAsiOoam').change(function(){
     proyecto = $('#catalogoAsOoam').val();
     condominio = $('#condominioAsiOoam').val();
+
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
     getAssimilatedOOAM(proyecto, condominio);
-
 });
 
 $('#tabla_ooam thead tr:eq(0) th').each(function (i) {
@@ -133,44 +127,17 @@ function getAssimilatedOOAM(proyecto, condominio){
                                 $("#totpagarPen").html(formatMoney(0));
                                 $("#all").prop('checked', false);
                                 var fecha = new Date();
-                                $("#myModalEnviadas").modal('toggle');
                                 tabla_ooam2.ajax.reload();
-                                $("#myModalEnviadas .modal-body").html("");
-                                $("#myModalEnviadas").modal();
-                                $("#myModalEnviadas .modal-body").append(`
-                                    <center><img style="width: 75%; height: 75%;" 
-                                        src="${general_base_url}dist/img/send_intmex.gif">
-                                            <p style='color:#676767;'>Comisiones de esquema 
-                                                <b>asimilados</b>, fueron enviadas a 
-                                                <b>INTERNOMEX</b> correctamente.
-                                            </p>
-                                    </center>`);
+                                modalInformation(1);
                             }
                             else {
                                 $('#spiner-loader').addClass('hide');
-                                $("#myModalEnviadas").modal('toggle');
-                                $("#myModalEnviadas .modal-body").html("");
-                                $("#myModalEnviadas").modal();
-                                $("#myModalEnviadas .modal-body").append(`
-                                <center>
-                                    <P>ERROR AL ENVIAR COMISIONES </P>
-                                    <BR>
-                                    <i style='font-size:12px;'>NO SE HA PODIDO EJECUTAR ESTA ACCIÓN, INTÉNTALO MÁS TARDE.</i>
-                                    </P>
-                                </center>`);
+                                modalInformation(0);
                             }
                         },
                         error: function( data ){
                             $('#spiner-loader').addClass('hide');
-                            $("#myModalEnviadas").modal('toggle');
-                            $("#myModalEnviadas .modal-body").html("");
-                            $("#myModalEnviadas").modal();
-                            $("#myModalEnviadas .modal-body").append(`
-                                <center>
-                                    <P>ERROR AL ENVIAR COMISIONES </P>
-                                    <BR><i style='font-size:12px;'>NO SE HA PODIDO EJECUTAR ESTA ACCIÓN, INTÉNTALO MÁS TARDE.</i>
-                                    </P>
-                                </center> `);
+                            modalInformation(0);
                         }
                     });
                 }else{
@@ -425,9 +392,6 @@ function getAssimilatedOOAM(proyecto, condominio){
         });
         $('#spiner-loader').removeClass('hide');
     });
-
-
-    
 }
 
 

@@ -10,6 +10,7 @@
     </style>
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
+
         <div class="modal fade modal-alertas" id="modal_users" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -19,7 +20,8 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade modal-alertas" id="modal_colaboradores"   role="dialog">
+
+        <div class="modal fade modal-alertas" id="modal_colaboradores" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <form method="post" id="form_colaboradores">
@@ -29,6 +31,7 @@
                 </div>
             </div>
         </div>
+
         <div class="modal fade modal-alertas" id="modal_mktd" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -43,6 +46,7 @@
                 </div>
             </div>
         </div>
+
         <div class="modal fade modal-alertas" id="documento_preview" role="dialog">
             <div class="modal-dialog" style= "margin-top:20px;"></div>
         </div>
@@ -134,6 +138,7 @@
                 </div>
             </div>
         </div>
+
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
