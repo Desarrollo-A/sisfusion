@@ -1184,7 +1184,6 @@ const botonesAccionReubicacion = (d) => {
                             data-statusPreproceso="${idEstatusPreproceso}"
                             data-idEstatusMovimiento="${d.id_estatus_modificacion}"
                             data-tipoEstatusRegreso="${d.tipo_estatus_regreso}"
-                            data-idPxl="${d.id_pxl}">
                             ${idEstatusPreproceso === 0 ? '<i class="fas fa-map-marker"></i>': '<i class="fas fa-undo"></i>'}
                             
                         </button>`;
@@ -1214,7 +1213,7 @@ const botonesAccionReubicacion = (d) => {
                     title="INFORMACIÓN CLIENTE"
                     data-idCliente="${d.idCliente}" 
                     data-idLote="${d.idLote}"
-                    data-idStatusLote="${d.idStatusLote}">
+                    data-idStatusLote="${d.idStatusLote == 17 ? 17 : 16}">
                     <i class="fas fa-user-check"></i>
                 </button>`;
     const BTN_SUBIR_ARCHIVO =  `<button class="btn-data btn-blueMaderas btn-abrir-modal"
@@ -1284,13 +1283,13 @@ const botonesAccionReubicacion = (d) => {
     }
 
     if (idEstatusPreproceso === 1 && ROLES_PROPUESTAS.includes(id_rol_general)) { // Gerente/Subdirector: REVISIÓN DE PROPUESTAS
-        if (d.idLoteXcliente == null && d.idStatusLote == 16) {
+        if (d.idLoteXcliente == null && d.idStatusLote != 17) {
             return BTN_PROPUESTAS + BTN_INFOCLIENTE;
         }
         else if (d.idLoteXcliente == null && d.idStatusLote == 17) {
             return BTN_INFOCLIENTE;
         }
-        else if (d.idLoteXcliente != null && d.idStatusLote == 16) {
+        else if (d.idLoteXcliente != null && d.idStatusLote != 17) {
             return BTN_PROPUESTAS + BTN_AVANCE + BTN_INFOCLIENTE;
         }
         else{
@@ -1326,7 +1325,7 @@ const botonesAccionReubicacion = (d) => {
     }
 
     if (idEstatusPreproceso === 5) { // EEC: CONFIRMACIÓN DE RECEPCIÓN DE DOCUMENTOS
-        return ( d.idStatusLote == 16 ) ? BTN_REUBICACION : BTN_REESTRUCTURA;
+        return ( d.idStatusLote == 17 ) ? BTN_REESTRUCTURA : BTN_REUBICACION;
     }
 
     if(id_usuario_general === 13733) // ES EL USUARIO DE CONTROL JURÍDICO PARA REASIGNACIÓN DE EXPEDIENTES

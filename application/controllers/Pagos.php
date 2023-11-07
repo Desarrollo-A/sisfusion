@@ -35,20 +35,19 @@ class Pagos extends CI_Controller
       redirect(base_url() . "index.php/login");
   }
 
-   public function revision_asimilados()
-   {
-     switch($this->session->userdata('id_rol')){
-       case '31':
-           $this->load->view('template/header');
-           $this->load->view("pagos/revision_asimilados_intmex_view");
-       break;
+   public function revision_asimilados(){
+  switch($this->session->userdata('id_rol')){
+  case '31':
+    $this->load->view('template/header');
+    $this->load->view("pagos/revision_asimilados_intmex_view");
+  break;
 
-       default:
-           $this->load->view('template/header');
-           $this->load->view("pagos/revision_asimilados_view");
-       break;
-     }
-   }
+  default:
+    $this->load->view('template/header');
+    $this->load->view("pagos/revision_asimilados_view");
+  break;
+  }
+  }
 
 
 
@@ -425,18 +424,19 @@ class Pagos extends CI_Controller
 
 
     public function getDatosNuevasFContraloria(){
-     $proyecto = $this->input->post("proyecto");
-     $condominio = $this->input->post("condominio");
+    $proyecto = $this->input->post("proyecto");
+    $condominio = $this->input->post("condominio");
       $dat =  $this->Pagos_model->getDatosNuevasFContraloria($proyecto,$condominio)->result_array();
     for( $i = 0; $i < count($dat); $i++ ){
         $dat[$i]['pa'] = 0;
     }
     echo json_encode( array( "data" => $dat));
     }
+
     function pausar_solicitudM(){
       $respuesta = array( FALSE );
       if($this->input->post("id_pago")){
-         $respuesta = array( $this->Pagos_model->update_estatus_pausaM( $this->input->post("id_pago_i"), $this->input->post("observaciones")));
+        $respuesta = array( $this->Pagos_model->update_estatus_pausaM( $this->input->post("id_pago_i"), $this->input->post("observaciones")));
       }
       echo json_encode( $respuesta );
     }
@@ -554,8 +554,7 @@ class Pagos extends CI_Controller
 
     public function getDatosNuevasXContraloria(){
       $proyecto = $this->input->post('proyecto');
-      $condominio = $this->input->post('condominio');
-      $dat =  $this->Pagos_model->getDatosNuevasXContraloria($proyecto,$condominio)->result_array();
+      $dat =  $this->Pagos_model->getDatosNuevasXContraloria($proyecto)->result_array();
       for( $i = 0; $i < count($dat); $i++ ){
           $dat[$i]['pa'] = 0;
       }
@@ -697,7 +696,7 @@ class Pagos extends CI_Controller
 
         default:
             $this->load->view('template/header');
-            $this->load->view("pagos/pagos_extranjero_view");
+            $this->load->view("pagos/revision_extranjero_view");
         break;
       }
 
@@ -771,13 +770,13 @@ class Pagos extends CI_Controller
     
        // echo "si entro";
        
-       $fecha_inicio = $this->input->post("fecha_inicio");
-       $arrayuser = $this->input->post("userMKTDSelect[]");
-       $puesto = $this->input->post("puesto[]");
-       $arrayporc = $this->input->post("porcentajeUserMk[]");
-       $arrayplaza = $this->input->post("plazaMKTDSelect[]");
-       $arraysede = $this->input->post("sedeMKTDSelect[]");
-       $arrayestatus = $this->input->post("estatusMk[]");
+      $fecha_inicio = $this->input->post("fecha_inicio");
+      $arrayuser = $this->input->post("userMKTDSelect[]");
+      $puesto = $this->input->post("puesto[]");
+      $arrayporc = $this->input->post("porcentajeUserMk[]");
+      $arrayplaza = $this->input->post("plazaMKTDSelect[]");
+      $arraysede = $this->input->post("sedeMKTDSelect[]");
+      $arrayestatus = $this->input->post("estatusMk[]");
      
       $query_max = $this->db->query("SELECT MAX(numero_plan) AS nummax FROM porcentajes_mktd");
       $new_max = intval($query_max->row()->nummax)+1;
@@ -949,11 +948,8 @@ class Pagos extends CI_Controller
   
         $dat =  $this->Pagos_model->getDatosRevisionMktd2($mes,$anio,$estatus)->result_array();
       }
-  
-      //print_r($dat);
-  
-  
-     for( $i = 0; $i < count($dat); $i++ ){
+
+    for( $i = 0; $i < count($dat); $i++ ){
       $comentario='BONO NUSKAH - MKTD 5 MENSUALIDADES';
       $comentario2='BONO MARKETING - COMISIONES SIN EVIDENCIA DISPERSADO A 12 MESES ENTRE TODOS LOS INVOLUCRADOS';
   
@@ -967,10 +963,9 @@ class Pagos extends CI_Controller
         $BonoPagado3 = $this->Pagos_model->getBonoXUser2($dat[$i]['id_usuario'],$comentario2,$mes,$anio,$estatus)->result_array();
   
       }
-     if(count($BonoPagado2) == 0){
+    if(count($BonoPagado2) == 0){
       $dat[$i]['nus'] = 0;
-  
-     }else{
+    }else{
       $dat[$i]['nus'] = $BonoPagado2[0]['impuesto1'];
   
      }

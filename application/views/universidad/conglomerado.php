@@ -35,7 +35,6 @@
         </style>
 
         <?php $this->load->view('template/sidebar'); ?>
-
     <div class="modal fade" id="modalEditarDescuento" nombre="modalEditarDescuento" tabindex="-1" role="dialog"
             aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
@@ -541,6 +540,7 @@
     </div>
     <?php $this->load->view('template/footer');?>
     <script src="http://momentjs.com/downloads/moment.min.js"></script>
+    
     <script src="<?= base_url() ?>dist/js/funciones-generales.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/universidad/conglomerado.js"></script>
 </body>
