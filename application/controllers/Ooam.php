@@ -38,7 +38,7 @@ class Ooam extends CI_Controller
 
 
 
-    public function getDatosNuevasAContraloria(){
+    public function getRevisionAsimiladosOOAM(){
 
         $proyecto = $this->input->post('proyecto');  
         $condominio = $this->input->post('condominio');  
