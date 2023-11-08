@@ -223,8 +223,8 @@ function loadTable(tipoDescuento) {
                     
                     if (d.saldo_comisiones >= 12500 && (d.estatus == 1 || d.banderaReactivado == 1) && d.pendiente > 1) {//TODAS SEDES
                         color = 'color:purple';
-                        valor = Math.round(d.saldo_comisiones/12500);
-                        pendiente = Math.round(d.pendiente/d.pago_individual);
+                        valor = Math.floor(d.saldo_comisiones/12500);
+                        pendiente = Math.floor(d.pendiente/d.pago_individual);
                         pagosDescontar = valor>pendiente ? d.pendiente : valor*d.pago_individual;
                     }
                     return `<p style="font-size: 1em; ${color}">${formatMoney(pagosDescontar)}</p>`;
@@ -245,9 +245,10 @@ function loadTable(tipoDescuento) {
                 {"data": function (d) {
                     adicionales = '';
                     editar = '';
-                                       
-                    if(d.total_descontado > 1){//MIENTRAS TENGA SALDO APLICADO PODRA CONSULTAR LA INFO
-                        base = `<button href="#" value="${d.id_usuario}" data-value="${d.nombre}" data-code="${d.id_usuario}" class="btn-data btn-blueMaderas consultar_logs_descuentos" title="Detalles"><i class="fas fa-info-circle"></i></button><button href="#" value="${d.id_usuario}" data-value="${d.nombre}" data-code="${d.id_usuario}" class="btn-data btn-green consultar_fecha_pagos" title="Historial pagos"><i class="fas fa-file"></i></button>
+                    detener = '';      
+
+                    if(d.total_descontado > 1 ){//MIENTRAS TENGA SALDO APLICADO PODRA CONSULTAR LA INFO
+                        base = `<button href="#" value="${d.id_usuario}" data-value="${d.nombre}" data-code="${d.id_usuario}" class="btn-data btn-blueMaderas consultar_logs_descuentos" title="Historial pagos"><i class="fas fa-info-circle"></i></button><button href="#" value="${d.id_usuario}" data-value="${d.nombre}" data-code="${d.id_usuario}" class="btn-data btn-green consultar_fecha_pagos" title="Consulta de saldos"><i class="fas fa-file"></i></button>
                         
                         <button href="#" 
                         value="${d.id_usuario}" 
@@ -260,20 +261,11 @@ function loadTable(tipoDescuento) {
                         class="btn-data btn-gray btn_certificacion"
                         id="btn_certificacion" name="btn_certificacion"
                         title="Asignar certificación"><i class="fas fa-closed-captioning"></i>
-                        </button>
-
-                        <button href="#" 
-                        value="${d.id_usuario}"
-                        data-nombre="${d.nombre}"
-                        data-rol="${d.puesto}"
-                        data-totalDescuento="${d.monto}"
-                        data-abonado="${d.total_descontado}"
-                        class="btn-data btn-orangeYellow topar_descuentos" title="Detener descuentos"><i class="fas fa-ban"></i>
                         </button>
                         `;
 
                     } else{
-                        base = `<button href="#" value="${d.id_usuario}" data-value="${d.nombre}" data-code="${d.id_usuario}" class="btn-data btn-green consultar_fecha_pagos" title="Historial pagos"><i class="fas fa-file"></i></button>
+                        base = `<button href="#" value="${d.id_usuario}" data-value="${d.nombre}" data-code="${d.id_usuario}" class="btn-data btn-green consultar_fecha_pagos" title="Consulta de saldos"><i class="fas fa-file"></i></button>
                         <button href="#" 
                         value="${d.id_usuario}" 
                         data-value="${pagosDescontar}"
@@ -286,14 +278,12 @@ function loadTable(tipoDescuento) {
                         id="btn_certificacion" name="btn_certificacion"
                         title="Asignar certificación"><i class="fas fa-closed-captioning"></i>
                         </button>
-
-                        
                         `;
                     }
                     
                     if (d.saldo_comisiones >= 12500 && (d.estatus == 1 || d.banderaReactivado == 1) && d.pendiente > 1 && d.estado_usuario == 1) {//TODAS SEDES
-                        valor = Math.round(d.saldo_comisiones/12500);
-                        pendiente = Math.round(d.pendiente/d.pago_individual);
+                        valor = Math.floor(d.saldo_comisiones/12500);
+                        pendiente = Math.floor(d.pendiente/d.pago_individual);
                         pagosDescontar = valor>pendiente ? d.pendiente : valor*d.pago_individual;
                                     
                         adicionales = `<button href="#" 
@@ -321,7 +311,20 @@ function loadTable(tipoDescuento) {
                         `;
                     }
 
-                    return '<div class="d-flex justify-center">'+base+adicionales+editar+'</div>';
+                    if(d.estatus != 3){
+
+                        detener = `<button href="#" 
+                        value="${d.id_usuario}"
+                        data-nombre="${d.nombre}"
+                        data-rol="${d.puesto}"
+                        data-totalDescuento="${d.monto}"
+                        data-abonado="${d.total_descontado}"
+                        class="btn-data btn-orangeYellow topar_descuentos" title="Detener descuentos"><i class="fas fa-ban"></i>
+                        </button>
+                        `;
+                    }
+
+                    return '<div class="d-flex justify-center">'+base+adicionales+editar+detener+'</div>';
                 }}],
             
                 "ajax": {

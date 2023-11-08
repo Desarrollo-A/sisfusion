@@ -41,31 +41,25 @@ class ServicesCRM extends CI_Controller {
 
     function codificarTest() {
         $miJson = array(
-            "id_usuario" => 9643,
-            "id_lider" => 654,
-            "estatus" => 1,
-            "id_rol" => 7,
-            "modificado_por" => 1
-            /*,
-            "rfc" => "HGDE350247FF8",
-            "id_lider" => 655,
-            "id_gerente" => 456,
-            "id_subdirector" => 789,
-            "id_regional" => 321,
-            "nombre" => "Nombre Fulanitodods",
-            "apellido_paterno" => "Gómez",
-            "apellido_materno" => "Perez",
-            "forma_pago" => 2,
-            "correo" => "garmar@gmail.com",
-            "telefono" => 442210616,
-            "id_sede" => 1,
-            "usuario" => "otroususario6" ,
-            "contrasena" => "123456",
+//            "id_usuario" => 9643,
+
+            "nombre" => "Miguel",
+            "apellido_paterno" => "Lira",
+            "apellido_materno" => "de leon",
+            "forma_pago" => 1,
+            "rfc" => '',
+            "correo" => "eliasomardias03@gmail.com",
+            "telefono" => 8327828933,
+            "id_sede" => 13,
+            "id_rol" => 9,
+            "id_lider" => 11196,
+            "usuario" => "DIAE95" ,
+            "contrasena" => "0933278",
             "creado_por" => 5,
-            "sedech" => 1,
-            "sucursalch" => 1,
+            "sedech" => 10,
+            "sucursalch" => 100,
             "status_contratacion" => 1,
-            "nacionalidad" => 0*/
+            "nacionalidad" => 0
         ) ;
         $ok1 = json_encode($miJson);
         $ok2 = utf8_decode($ok1);
@@ -74,10 +68,17 @@ class ServicesCRM extends CI_Controller {
 
     public function saveUserCH() {
         $objDatos = json_decode(utf8_encode(base64_decode(file_get_contents("php://input"))), true);
-        $getRFC = $this->Services_model->getRFC($objDatos['rfc']);
-        if(count($getRFC) > 0 )
-            echo base64_encode(json_encode(array("result" => false, "message" => "El RFC ingresado ya se encuentra registrado.")));
+
+
+        if($objDatos['rfc'] != ''){
+            $getRFC = $this->Services_model->getRFC($objDatos['rfc']);
+            if(count($getRFC) > 0 ){
+                echo base64_encode(json_encode(array("result" => false, "message" => "El RFC ingresado ya se encuentra registrado. ".$objDatos['rfc'] )));
+                }
+        }
         else {
+            echo base64_encode(json_encode(array("result" => true, "message" => "sigue el proceso")));
+            exit;
             if($objDatos['id_rol'] != 3)
                 $getLider = $this->Services_model->getLider($objDatos['id_lider'],$objDatos['id_rol']);
             $id_gerente=0;
@@ -121,7 +122,7 @@ class ServicesCRM extends CI_Controller {
                 "nombre" => $this->formatter->eliminar_tildes(strtoupper(trim($objDatos['nombre']))),
                 "apellido_paterno" => $this->formatter->eliminar_tildes(strtoupper(trim($objDatos['apellido_paterno']))),
                 "apellido_materno" =>$this->formatter->eliminar_tildes(strtoupper(trim($objDatos['apellido_materno']))),
-                "forma_pago" => $objDatos['forma_pago'],
+                "forma_pago" => 1,
                 "rfc" => $this->formatter->eliminar_tildes(strtoupper(trim($objDatos['rfc']))),
                 "estatus" => 1,
                 "sesion_activa" => 1,
@@ -149,14 +150,14 @@ class ServicesCRM extends CI_Controller {
                 "tiene_hijos" => "NO",
                 "hijos_12" => "0",
                 "fecha_reingreso" => NULL,
-                "fecha_baja" => NULL 
+                "fecha_baja" => NULL
             );
             if (isset($objDatos) && !empty($objDatos)) {
                 $response = $this->Services_model->saveUserCH($data);
                 if($response == 1){
                     echo base64_encode(json_encode(array("result" => $response, "message" => "Ok")));
                 } else
-                    echo base64_encode(json_encode($response));  
+                    echo base64_encode(json_encode($response));
             }
         }
     }
