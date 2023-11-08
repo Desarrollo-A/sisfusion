@@ -624,14 +624,14 @@ function setPausaPagosOOAM(){
       $usuarioid =$this->session->userdata('id_usuario');
     }
    // $datos = explode(",",$pagos);
-   $datos = explode(",",$this->input->post('pagos'));
+    $datos = explode(",",$this->input->post('pagos'));
     $resultado = array("resultado" => TRUE);
     if( (isset($_POST) && !empty($_POST)) || ( isset( $_FILES ) && !empty($_FILES) ) ){
       $this->db->trans_begin();
       $responsable = $this->session->userdata('id_usuario');
       $resultado = TRUE;
       if( isset( $_FILES ) && !empty($_FILES) ){
-        $config['upload_path'] = './UPLOADS/XMLS/';
+        $config['upload_path'] = './UPLOADS/XMLSOOAM/';
         $config['allowed_types'] = 'xml';
         $this->load->library('upload', $config);
         $resultado = $this->upload->do_upload("xmlfile");
@@ -655,7 +655,7 @@ function setPausaPagosOOAM(){
               if(!empty($datos[$i])){
                 $id_com =  $datos[$i];
                 $this->Ooam_model->insertar_factura($id_com, $datos_xml,$usuarioid);
-                $this->Comisiones_model->update_acepta_solicitante($id_com);
+                $this->Ooam_model->update_acepta_solicitante($id_com);
                 $this->db->query("INSERT INTO historial_comisiones VALUES (".$id_com.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'COLABORADOR ENVÍO FACTURA A CONTRALORÍA')");
               }
             }
