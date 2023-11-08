@@ -351,7 +351,9 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-lg-12 text-left mt-1">
-                                                    <?= $cadena ?>
+                                                <?php if ($cadena != 2){   ?>
+                                                        <?= $cadena ?>
+                                                <?php } ?>
                                                 </div>
                                             </div>
                                             <div class="material-datatables">
@@ -543,12 +545,10 @@
         var userSede = <?= $this->session->userdata('id_sede') ?>;
         var fechaServer = '<?php echo date('Y-m-d H:i:s')?>';
     </script>
-    <script src="<?=base_url()?>dist/js/controllers/ventas/comisiones_colaborador.js"></script>
+     <script src="<?=base_url()?>dist/js/controllers/ooam/asesor_ooam.js"></script>
+
+    <!-- <script src="<?=base_url()?>dist/js/controllers/ventas/comisiones_colaborador.js"></script> -->
     
-    <script src="<?=base_url()?>dist/js/controllers/ventas/comisiones_colaborador.js"></script>
-    <script src="<?=base_url()?>dist/js/controllers/ventas/comisiones_colaborador.js"></script>
-    <script src="<?=base_url()?>dist/js/controllers/ventas/comisiones_colaborador.js"></script>
-    <script src="<?=base_url()?>dist/js/controllers/ventas/comisiones_colaborador.js"></script>
-    <script src="<?=base_url()?>dist/js/controllers/ventas/comisiones_colaborador.js"></script>
+
 
 </body>
