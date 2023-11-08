@@ -1171,7 +1171,7 @@ class Api extends CI_Controller
                                             $dataPago['id_lote'] = $dataReturn->idLote;                         
                                             $dataPago['total_comision'] = $generalComisiones; 
                                             $dataPago['abonado'] = 0;                    
-                                            $dataPago['porcentaje_abonado'] = $porcentajeComision; 
+                                            $dataPago['porcentaje_abono'] = $porcentajeComision; 
                                             $dataPago['pendiente'] = $generalComisiones;                                
                                             $dataPago['creado_por'] = 1;  
                                             $dataPago['fecha_modificacion'] = date("Y-m-d H:i:s");                             
