@@ -154,7 +154,7 @@ $(document).ready(function () {
     ((mes == 8 && dia == 9) || (mes == 8 && dia == 10 && hora <= fin)) ||
     ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= fin)) ||
     ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= fin)) ||
-    ((mes == 11 && dia == 7) || (mes == 11 && dia == 14 && hora <= fin)) ||
+    ((mes == 11 && dia == 8) || (mes == 11 && dia == 14 && hora <= fin)) ||
     ((mes == 12 && dia == 11) || (mes == 12 && dia == 12 && hora <= fin)))) {
         requestCodigoPostal();
     }
@@ -270,7 +270,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     ((mes == 8 && dia == 9) || (mes == 8 && dia == 10 && hora <= fin)) ||
                     ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= fin)) ||
                     ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= fin)) ||
-                    ((mes == 11 && dia == 7) || (mes == 11 && dia == 10 && hora <= fin)) ||
+                    ((mes == 11 && dia == 8) || (mes == 11 && dia == 10 && hora <= fin)) ||
                     ((mes == 12 && dia == 11) || (mes == 12 && dia == 12 && hora <= fin)) ||
                     (id_usuario_general == 7689)) {
                     if ($('input[name="idT[]"]:checked').length > 0) {
@@ -542,7 +542,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                         ((mes == 8 && dia == 9) || (mes == 8 && dia == 10 && hora <= fin)) ||
                         ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= fin)) ||
                         ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= fin)) ||
-                        ((mes == 11 && dia >7) || (mes == 11 && dia == 14 && hora <= fin)) ||
+                        ((mes == 11 && dia >8) || (mes == 11 && dia == 14 && hora <= fin)) ||
                         ((mes == 12 && dia == 11) || (mes == 12 && dia == 12 && hora <= fin)) ||
                         (id_usuario_general == 7689)){
                         switch (full.forma_pago) {
@@ -1070,7 +1070,7 @@ $("#tabla_otras_comisiones").ready(function () {
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
-            title: 'REPORTE DE COMISIONES PAUSADAS POR CONTRALORÍA',
+            title: 'REPORTE DE COMISIONES PAUSADAS POR CONTRALORÍA OOAM',
             exportOptions: {
                 columns: columnas_datatable.tabla_otras_comisiones.num_encabezados,
                 format: {
@@ -1499,7 +1499,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
     ((mes == 8 && dia == 9) || (mes == 8 && dia == 10 && hora <= 13)) ||
     ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= 13)) ||
     ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= 13)) ||
-    ((mes == 11 && dia == 7) || (mes == 11 && dia == 14 && hora <= 13)) ||
+    ((mes == 11 && dia == 8) || (mes == 11 && dia == 14 && hora <= 13)) ||
     ((mes == 12 && dia == 11) || (mes == 12 && dia == 12 && hora <= 13)) ||
     (id_usuario_general == 7689)) {
         $("#modal_multiples .modal-body").html("");

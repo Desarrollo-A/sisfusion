@@ -17,11 +17,11 @@ function cleanCommentsremanente() {
 }
 
 function CloseModalDelete2(){
-    document.getElementById("form_multiples").reset();
+    document.getElementById("form_multiplesOoam").reset();
     a = document.getElementById('borrarProyect');
     padre = a.parentNode;
     padre.removeChild(a);
-    $("#modal_multiples").modal('toggle');  
+    $("#modal_multiplesOoam").modal('toggle');  
 }
 
 $(document).ready(function() {
@@ -44,7 +44,7 @@ $('#puesto').change(function(ruta){
     rol = $('#puesto').val();
     $("#usuario").empty().selectpicker('refresh');
     $.ajax({
-        url: general_base_url+'Pagos/lista_usuarios/',
+        url: general_base_url+'Ooam/lista_usuarios/',
         data:{
             rol: rol,
             forma_pago: 2
@@ -81,17 +81,17 @@ $('#usuario').change(function(ruta){
 
 /**------------------------------------------------------------- */
 $(document).on("click", ".PagarOoam", function() {          
-    $("#modal_multiples .modal-body").html("");
-    $("#modal_multiples .modal-header").html("");
-    $("#modal_multiples .modal-header").append(`<center> <h4 class="card-title"><b>Marcar pagadas</b></h4> </center>`);
-    $("#modal_multiples .modal-footer").append(`<div id="borrarProyect">
+    $("#modal_multiplesOoam .modal-body").html("");
+    $("#modal_multiplesOoam .modal-header").html("");
+    $("#modal_multiplesOoam .modal-header").append(`<center> <h4 class="card-title"><b>Marcar pagadas</b></h4> </center>`);
+    $("#modal_multiplesOoam .modal-footer").append(`<div id="borrarProyect">
         
                 <button type="button" class="btn btn-danger btn-simple " data-dismiss="modal" onclick="CloseModalDelete2()">CANCELAR</button>
                 <button type="submit" disabled id="btn-aceptar" class="btn btn-primary" value="ACEPTAR"> ACEPTAR</button>
 
         </div>`);
 
-    $("#modal_multiples .modal-header").append(`
+    $("#modal_multiplesOoam .modal-header").append(`
     <div class="row">
         <div class="col-md-12">
             <select id="desarrolloSelect" name="desarrolloSelect" 
@@ -101,7 +101,7 @@ $(document).on("click", ".PagarOoam", function() {
         </div>
     </div>`);
     
-    $.post(general_base_url + 'Pagos/getDesarrolloSelectINTMEX/', {desarrollo: 2 } ,function(data) {
+    $.post(general_base_url + 'Ooam/getDesarrolloSelectINTMEX/', {desarrollo: 2 } ,function(data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_usuario'];
@@ -116,7 +116,7 @@ $(document).on("click", ".PagarOoam", function() {
     }, 'json');
         
     $('#desarrolloSelect').change(function() {
-        $("#modal_multiples .modal-body .bodypagos").html("");
+        $("#modal_multiplesOoam .modal-body .bodypagos").html("");
         if(document.getElementById('bodypago2')){
             let a =  document.getElementById('bodypago2');
             padre = a.parentNode;
@@ -127,15 +127,15 @@ $(document).on("click", ".PagarOoam", function() {
         var combo = document.getElementById("desarrolloSelect");
         var selected = combo.options[combo.selectedIndex].text;
 
-        $.getJSON(general_base_url + "Pagos/getPagosByProyect/"+valorSeleccionado+'/'+2).done(function(data) {
+        $.getJSON(general_base_url + "Ooam/getPagosByProyect/"+valorSeleccionado+'/'+2).done(function(data) {
             let sumaComision = 0;
             // console.log(data[0]);
             if (!data) {
-                $("#modal_multiples .modal-body").append('<div class="row"><div class="col-md-12">SIN DATOS A MOSTRAR</div></div>');
+                $("#modal_multiplesOoam .modal-body").append('<div class="row"><div class="col-md-12">SIN DATOS A MOSTRAR</div></div>');
             } 
             else {
                 if(data.length > 0){
-                    $("#modal_multiples .modal-body ").append(`
+                    $("#modal_multiplesOoam .modal-body ").append(`
                     <center>
                         <div class="row bodypagos" >
                             <p style='color:#9D9D9D;'>¿Estas seguro que deseas autorizar $
@@ -144,9 +144,9 @@ $(document).on("click", ".PagarOoam", function() {
                             `);
                 } 
                 
-                $("#modal_multiples .modal-body ").append(`<div  id="bodypago2"></div>`);
+                $("#modal_multiplesOoam .modal-body ").append(`<div  id="bodypago2"></div>`);
                 $.each(data[1], function(i, v) {
-                    $("#modal_multiples .modal-body #bodypago2").append(`
+                    $("#modal_multiplesOoam .modal-body #bodypago2").append(`
                     <input type="hidden" name="ids[]" id="ids" value="${v.id_pago_i}"></div>`);
                     
                 });
@@ -155,7 +155,7 @@ $(document).on("click", ".PagarOoam", function() {
         });
     });
 
-    $("#modal_multiples").modal({
+    $("#modal_multiplesOoam").modal({
         backdrop: 'static',
         keyboard: false
     });
@@ -407,7 +407,7 @@ function getAssimilatedCommissionsOoam(proyecto, condominio){
             },
         }],
         ajax: {
-            "url": general_base_url + "pagos/getDatosNuevasFContraloria/" ,
+            "url": general_base_url + "Ooam/getDatosNuevasFContraloria/" ,
             "type": "POST",
             data:{
                 proyecto : proyecto,
@@ -426,7 +426,7 @@ function getAssimilatedCommissionsOoam(proyecto, condominio){
         lote = $(this).attr("data-value");
         $("#seeInformationModalremanente").modal();
         $("#nameLote").append('<p><h5">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
-        $.getJSON(general_base_url+"Pagos/getComments/"+id_pago).done( function( data ){
+        $.getJSON(general_base_url+"Ooam/getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
                 $("#comments-list-remanente").append('<li>\n' +
                 '  <div class="container-fluid">\n' +
@@ -452,38 +452,38 @@ function getAssimilatedCommissionsOoam(proyecto, condominio){
 
     $('#tabla_factura_ooam').on('click', 'input', function() {
         trs = $(this).closest('trs');
-        var row = tabla_factura_ooam.row(trs).data();
-        if (row.pa == 0) {
-            row.pa = row.impuesto;
-            totaPen += parseFloat(row.pa);
+        var rows = tabla_factura_ooam.row(trs).data();
+        if (rows.pa == 0) {
+            rows.pa = rows.impuesto;
+            totaPen += parseFloat(rows.pa);
             trs.children().eq(1).children('input[type="checkbox"]').prop("checked", true);
         }
         else {
-            totaPen -= parseFloat(row.pa);
-            row.pa = 0;
+            totaPen -= parseFloat(rows.pa);
+            rows.pa = 0;
         }
         $("#totpagarPen").html(formatMoney(numberTwoDecimal(totaPen)));
     });
 
     $("#tabla_factura_ooam tbody").on("click", ".cambiar_estatus", function(){
         var trs = $(this).closest('trs');
-        var row = tabla_factura_ooam.row( trs );
+        var rows = tabla_factura_ooam.row( trs );
         id_pago_i = $(this).val();
         $("#modal_nuevas .modal-body").html("");
-        $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><p>¿Está seguro de pausar la comisión de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b> <i>'+row.data().usuario+'</i>?</p></div></div>');
+        $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><p>¿Está seguro de pausar la comisión de <b>'+rows.data().lote+'</b> para el <b>'+(rows.data().puesto).toUpperCase()+':</b> <i>'+rows.data().usuario+'</i>?</p></div></div>');
         $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><input type="text" class="form-control observaciones" name="observaciones" required placeholder="Describe mótivo por el cual se pauso la solicitud"></input></div></div>');
-        $("#modal_nuevas .modal-body").append('<input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'">');
+        $("#modal_nuevas .modal-body").append('<input type="hidden" name="id_pago" value="'+rows.data().id_pago_i+'">');
         $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-md-6"></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="PAUSAR"></div><div class="col-md-3"><button type="button" class="btn btn-danger" data-dismiss="modal">CANCELAR</button></div></div>');
         $("#modal_nuevas").modal();
     });
 
     $("#tabla_factura_ooam tbody").on("click", ".despausar_estatus", function(){
         var trs = $(this).closest('trs');
-        var row = tabla_factura_ooam.row( trs );
+        var rows = tabla_factura_ooam.row( trs );
         id_pago_i = $(this).val();
         $("#modal_refresh .modal-body").html("");
-        $("#modal_refresh .modal-body").append('<div class="row"><div class="col-lg-12"><p>¿Está seguro regresar al estatus inicial la comisión  de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b> <i>'+row.data().usuario+'</i>?</p></div></div>');
-        $("#modal_refresh .modal-body").append('<input class="idComPau" name="id_comision" type="text" value="'+row.data().id_comision+'" hidden>');
+        $("#modal_refresh .modal-body").append('<div class="row"><div class="col-lg-12"><p>¿Está seguro regresar al estatus inicial la comisión  de <b>'+rows.data().lote+'</b> para el <b>'+(rows.data().puesto).toUpperCase()+':</b> <i>'+rows.data().usuario+'</i>?</p></div></div>');
+        $("#modal_refresh .modal-body").append('<input class="idComPau" name="id_comision" type="text" value="'+rows.data().id_comision+'" hidden>');
         $("#modal_refresh .modal-body").append('<div class="row"><div class="col-md-6"></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="CONFIRMAR"></div><div class="col-md-3"><button type="button" class="btn btn-danger" data-dismiss="modal">CANCELAR</button></div></div>');
         $("#modal_refresh").modal();
     });
@@ -683,8 +683,8 @@ $(document).on("click", ".individualCheck", function() {
         let totalCheckbox = tabla_factura_ooam.$('input[type="checkbox"]');
         if(this.checked){
             trs = this.closest('trs');
-            row = tabla_factura_ooam.row(trs).data();
-            totaPen += parseFloat(row.impuesto); 
+            rows = tabla_factura_ooam.row(trs).data();
+            totaPen += parseFloat(rows.impuesto); 
         }
         // Al marcar todos los CheckBox Marca CB total
         if( totalChecados.length == totalCheckbox.length )
@@ -700,8 +700,8 @@ function selectAll(e) {
     if(e.checked == true){
         $(tabla_factura_ooam.$('input[type="checkbox"]')).each(function (i, v) {
             trs = this.closest('trs');
-            row = tabla_factura_ooam.row(trs).data();
-            tota2 += parseFloat(row.impuesto);
+            rows = tabla_factura_ooam.row(trs).data();
+            tota2 += parseFloat(rows.impuesto);
             if(v.checked == false){
                 $(v).prop("checked", true);
             }
@@ -725,7 +725,7 @@ function cleanComments(){
     myFactura.innerHTML = '';
 }
 
-$("#form_multiples").submit( function(e) {
+$("#form_multiplesOoam").submit( function(e) {
     $('#loader').removeClass('hidden');
     e.preventDefault();
 }).validate({
@@ -733,7 +733,7 @@ $("#form_multiples").submit( function(e) {
         var data = new FormData( $(form)[0] );
         console.log(data);
         $.ajax({
-            url: general_base_url + "Pagos/IntMexPagadosByProyect",
+            url: general_base_url + "Ooam/IntMexPagadosByProyect",
             data: data,
             cache: false,
             contentType: false,
@@ -760,7 +760,7 @@ $("#form_multiples").submit( function(e) {
 });
 
 $(document).ready( function(){
-    $.getJSON( general_base_url + "Pagos/getReporteEmpresa").done( function( data ){
+    $.getJSON( general_base_url + "Ooam/getReporteEmpresa").done( function( data ){
         $(".report_empresa").html();
         $.each( data, function( i, v){
             $(".report_empresa").append('<div class="col xol-xs-3 col-sm-3 col-md-3 col-lg-3"><label style="color: #00B397;">&nbsp;'+v.empresa+': $<input style="border-bottom: none; border-top: none; border-right: none;  border-left: none; background: white; color: #00B397; font-weight: bold;" value="'+formatMoney(v.porc_empresa)+'" disabled="disabled" readonly="readonly" type="text"  name="myText_FRO" id="myText_FRO"></label></div>');

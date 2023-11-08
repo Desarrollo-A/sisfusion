@@ -31,7 +31,7 @@ $('#puestoOoam').change(function(ruta){
     rol = $('#puestoOoam').val();
     $("#UsuarioOoam").empty().selectpicker('refresh');
     $.ajax({
-        url: general_base_url +'Pagos/lista_usuarios',
+        url: general_base_url +'Ooam/lista_usuarios',
         type: 'post',
         data:  { 
             "rol":    rol, 
@@ -121,7 +121,7 @@ function getAssimilatedCommissions(proyecto, condominio){
                     var com2 = new FormData();
                     com2.append("idcomision", idcomision); 
                     $.ajax({
-                        url : general_base_url + 'Pagos/pago_internomex/',
+                        url : general_base_url + 'Ooam/pago_internomex/',
                         data: com2,
                         cache: false,
                         contentType: false,
@@ -373,7 +373,7 @@ function getAssimilatedCommissions(proyecto, condominio){
             },
         }],
         ajax: {
-            url: general_base_url + "Pagos/getDatosNuevasAContraloria/",
+            url: general_base_url + "Ooam/getDatosNuevasAContraloria/",
             type: "POST",
             cache: false,
             data: {
@@ -391,7 +391,7 @@ function getAssimilatedCommissions(proyecto, condominio){
         lote = $(this).attr("data-value");
         $("#seeInformationModalAsimilados").modal();
         $("#nameLote").append('<p><h5">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
-        $.getJSON(general_base_url+"Pagos/getComments/"+id_pago  ).done( function( data ){
+        $.getJSON(general_base_url+"Ooam/getComments/"+id_pago  ).done( function( data ){
             $.each( data, function(i, v){
                 $("#comments-list-asimilados").append('<li>\n' +
                 '  <div class="container-fluid">\n' +
@@ -476,7 +476,7 @@ $("#form_interes").submit( function(e) {
         console.log(data);
         data.append("id_pago_i", id_pago_i);
         $.ajax({
-            url: general_base_url + "Pagos/despausar_solicitud",
+            url: general_base_url + "Ooam/despausar_solicitud",
             data: data,
             cache: false,
             contentType: false,
@@ -532,7 +532,7 @@ $(document).on("click", ".Pagar", function() {
         </div>
     </div>`);
     
-    $.post(general_base_url + 'Pagos/getDesarrolloSelectINTMEX/', {desarrollo: 3 } ,function(data) {
+    $.post(general_base_url + 'Ooam/getDesarrolloSelectINTMEX/', {desarrollo: 3 } ,function(data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_usuario'];
@@ -558,7 +558,7 @@ $(document).on("click", ".Pagar", function() {
         var combo = document.getElementById("desarrolloSelect");
         var selected = combo.options[combo.selectedIndex].text;
 
-        $.getJSON(general_base_url + "Pagos/getPagosByProyect/"+valorSeleccionado+'/'+3).done(function(data) {
+        $.getJSON(general_base_url + "Ooam/getPagosByProyect/"+valorSeleccionado+'/'+3).done(function(data) {
             let sumaComision = 0;
             console.log(data[0]);
             if (!data) {
@@ -603,7 +603,7 @@ $("#form_refresh").submit( function(e) {
         console.log(data);
         data.append("id_pago_i", id_pago_i);
         $.ajax({
-            url: general_base_url + "Pagos/refresh_solicitud/",
+            url: general_base_url + "Ooam/refresh_solicitud/",
             data: data,
             cache: false,
             contentType: false,
@@ -685,7 +685,7 @@ function selectAll(e) {
 
 
 $(document).ready( function(){
-    $.getJSON( general_base_url + "Pagos/getReporteEmpresa").done( function( data ){
+    $.getJSON( general_base_url + "Ooam/getReporteEmpresa").done( function( data ){
         $(".report_empresa").html();
         $.each( data, function( i, v){
             $(".report_empresa").append('<div class="col xol-xs-3 col-sm-3 col-md-3 col-lg-3"><label style="color: #00B397;">&nbsp;'+v.empresa+': $<input style="border-bottom: none; border-top: none; border-right: none;  border-left: none; background: white; color: #00B397; font-weight: bold;" value="'+formatMoney(v.porc_empresa)+'" disabled="disabled" readonly="readonly" type="text"  name="myText_FRO" id="myText_FRO"></label></div>');
@@ -702,7 +702,7 @@ $("#form_multiples").submit( function(e) {
         var data = new FormData( $(form)[0] );
         console.log(data);
         $.ajax({
-            url: general_base_url + "Pagos/IntMexPagadosByProyect",
+            url: general_base_url + "Ooam/IntMexPagadosByProyect",
             data: data,
             cache: false,
             contentType: false,
