@@ -48,6 +48,7 @@ class Pagos extends CI_Controller
     break;
     }
   }
+  
 
   public function acepto_internomex_asimilados(){
     $sol = $this->input->post('idcomision');  
