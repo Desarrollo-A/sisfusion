@@ -579,6 +579,27 @@ class Ooam_model extends CI_Model {
     }
 
 
+  function validaLoteComision($id_lote, $referencia){
+    $query = $this->db->query("SELECT po.id_lote 
+    FROM pago_ooam po 
+    INNER JOIN lotes lo ON lo.idLote = po.id_lote
+    WHERE po.id_lote = $id_lote AND lo.referencia = '".$referencia."'");
+
+    return $query->result_array();
+}
+
+    function insertComisionOOAM($tabla, $data) {
+        if ($data != '' && $data != null){
+            $response = $this->db->insert($tabla, $data);
+            if (!$response) {
+                return 0;
+            } else {
+                return 1;
+            }
+        } else {
+            return 0;
+        }
+    }
 
 
     function getDesarrolloSelect($a = ''){
@@ -611,5 +632,190 @@ class Ooam_model extends CI_Model {
         $query = $this->db->query("UPDATE pago_comision_ind SET estatus = 4, fecha_pago_intmex = GETDATE(),modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$idsol.")");
         return true;
     }
+function getPlanComision($rol, $planComision){
+    $query = $this->db->query("SELECT (CASE 
+    WHEN $rol = asesor THEN comAs 
+    WHEN $rol = coordinador THEN comCo
+    WHEN $rol = gerente THEN comGe 
+    WHEN $rol = subdirector THEN comSu 
+    WHEN $rol = director THEN comDi 
+    END) AS porcentajeComision,
+    (CASE 
+    WHEN $rol = asesor THEN neoAs 
+    WHEN $rol = coordinador THEN neoCo 
+    WHEN $rol = gerente THEN neoGe 
+    WHEN $rol = subdirector THEN neoSu 
+    WHEN $rol = director THEN neoDi 
+    END) AS porcentajeNeodata
+    
+    FROM plan_comision WHERE id_plan = $planComision");
+    return $query->row();
+}
+
+
+
+public function getDataDispersionOOAM() {
+    $this->db->query("SET LANGUAGE Español;");
+    $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre as nombreCondominio, l.nombreLote, (CASE WHEN l.tipo_venta = 1 THEN 'Particular' WHEN l.tipo_venta = 2 THEN 'NORMAL' ELSE ' SIN DEFINIR' END) tipo_venta, (CASE WHEN l.tipo_venta = 1 THEN 'lbl-warning' WHEN l.tipo_venta = 2 THEN 'lbl-green' ELSE 'lbl-gray' END) claseTipo_venta, pc.nombreCliente, pc.estatusContratacion idStatusOOAM, l.totalNeto2, (CASE WHEN year(pc.fecha_modificacion) < 2019 THEN NULL ELSE convert(nvarchar,  pc.fecha_modificacion , 6) END) fecha_sistema, l.referencia, pc.numero_dispersion, pc.bandera,
+    CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) as asesor, 
+    CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_materno) as coordinador,
+    CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno) as gerente, 
+    CONCAT(di.nombre, ' ', di.apellido_paterno, ' ', di.apellido_materno) as director, 
+    (CASE WHEN pc.plan_comision IN (0) OR pc.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, pc.plan_comision, l.registro_comision 
+    FROM lotes l
+	INNER JOIN pago_ooam pc ON pc.id_lote = l.idLote AND pc.bandera in (0,100)
+    INNER JOIN condominios cond ON l.idCondominio = cond.idCondominio
+    INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial   
+    INNER JOIN usuarios ae ON ae.id_usuario = (SELECT c.id_usuario FROM comisiones c WHERE c.rol_generado = 7 AND c.id_lote = pc.id_lote GROUP BY c.id_usuario) 
+    LEFT JOIN usuarios co ON co.id_usuario = (SELECT c.id_usuario FROM comisiones c WHERE c.rol_generado = 9 AND c.id_lote = pc.id_lote GROUP BY c.id_usuario)
+    LEFT JOIN usuarios ge ON ge.id_usuario = (SELECT c.id_usuario FROM comisiones c WHERE c.rol_generado = 3 AND c.id_lote = pc.id_lote GROUP BY c.id_usuario)
+    LEFT JOIN usuarios su ON su.id_usuario = (SELECT c.id_usuario FROM comisiones c WHERE c.rol_generado = 2 AND c.id_lote = pc.id_lote GROUP BY c.id_usuario)
+    LEFT JOIN usuarios di ON di.id_usuario = (SELECT c.id_usuario FROM comisiones c WHERE c.rol_generado = 1 AND c.id_lote = pc.id_lote GROUP BY c.id_usuario)
+    LEFT JOIN plan_comision pl ON pl.id_plan = pc.plan_comision
+    WHERE pc.bandera in (0,100) ORDER BY l.idLote");
+        
+    return $query;
+}
+
+function getMontoDispersado(){
+    return $this->db->query("SELECT SUM(abono_neodata) monto FROM pago_ooam_ind WHERE id_comision IN (select id_comision from comisiones_ooam) AND MONTH(GETDATE()) = MONTH(fecha_abono) AND Day(GetDate()) = Day(fecha_abono)");
+}
+
+function getPagosDispersado(){
+    return $this->db->query("SELECT count(id_pago_i) pagos FROM pago_ooam_ind WHERE id_comision IN (select id_comision from comisiones_ooam) AND MONTH(GETDATE()) = MONTH(fecha_abono) AND Day(GetDate()) = Day(fecha_abono) AND abono_neodata>0");
+}
+
+function getLotesDispersado(){
+    return $this->db->query("SELECT count(distinct(id_lote)) lotes FROM comisiones_ooam WHERE id_comision IN (select id_comision from pago_ooam_ind WHERE MONTH(GETDATE()) = MONTH(fecha_abono) AND Day(GetDate()) = Day(fecha_abono) AND id_comision IN (SELECT id_comision FROM comisiones_ooam))");
+}
+
+public function getDatosAbonadoSuma11($idlote){
+    // validar 
+    return $this->db->query("SELECT SUM(pci.abono_neodata) abonado, pac.total_comision, c2.abono_pagado, lo.totalNeto2, cl.lugar_prospeccion
+    FROM lotes lo
+    INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
+    INNER JOIN comisiones c1 ON lo.idLote = c1.id_lote AND c1.estatus = 1
+    LEFT JOIN (SELECT SUM(comision_total) abono_pagado, id_comision FROM comisiones_ooam WHERE descuento in (1) AND estatus = 1 GROUP BY id_comision) c2 ON c1.id_comision = c2.id_comision
+    INNER JOIN pago_ooam pac ON pac.id_lote = lo.idLote
+    LEFT JOIN pago_ooam_ind pci on pci.id_comision = c1.id_comision
+    WHERE lo.status = 1 AND cl.status = 1 AND c1.estatus = 1 AND lo.idLote in ($idlote)
+    GROUP BY lo.idLote, lo.referencia, pac.total_comision, lo.totalNeto2, cl.lugar_prospeccion, c2.abono_pagado");
+}
+
+public function getDatosAbonadoDispersion($idlote){
+       
+    return $this->db->query("SELECT com.id_comision, com.id_usuario, lo.totalNeto2, lo.idLote, res.idResidencial, lo.referencia, lo.tipo_venta, com.id_lote, lo.nombreLote, com.porcentaje_decimal, CONCAT(us.nombre,' ' ,us.apellido_paterno,' ',us.apellido_materno) colaborador, oxc.nombre as rol, com.comision_total, pci.abono_pagado, com.rol_generado, com.descuento
+    FROM comisiones_ooam com
+    LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision FROM pago_ooam_ind 
+    GROUP BY id_comision) pci ON pci.id_comision = com.id_comision
+    INNER JOIN lotes lo ON lo.idLote = com.id_lote 
+    INNER JOIN usuarios us ON us.id_usuario = com.id_usuario
+    INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = com.rol_generado AND oxc.id_catalogo = 1
+    INNER JOIN condominios con ON con.idCondominio = lo.idCondominio
+    INNER JOIN residenciales res ON res.idResidencial = con.idResidencial
+    LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = com.rol_generado AND oxc2.id_catalogo = 83
+    WHERE com.id_lote = $idlote AND com.estatus = 1  ORDER BY com.rol_generado asc");
+}
+
+
+function insert_dispersion_individual($id_comision, $id_usuario, $abono_nuevo, $pago){
+
+    $llenarTablaCliente = ("SELECT com.id_comision, com.id_usuario, lo.totalNeto2, lo.idLote, res.idResidencial, lo.referencia, lo.tipo_venta, com.id_lote, lo.nombreLote, com.porcentaje_decimal, CONCAT(us.nombre,' ' ,us.apellido_paterno,' ',us.apellido_materno) colabora");
+  
+    $respuesta = $this->db->query("INSERT INTO pago_ooam_ind (id_comision, id_usuario, abono_neodata, pago_neodata, estatus, creado_por, comentario, descuento_aplicado, modificado_por, abono_final) 
+    VALUES (".$id_comision.", ".$id_usuario.", ".$abono_nuevo.",".$pago.", 1, ".$this->session->userdata('id_usuario').", 'NUEVO PAGO', 0, ".$this->session->userdata('id_usuario').", 0)");
+
+
+    $insert_id_2 = $this->db->insert_id();
+    $respuesta = $this->db->query("INSERT INTO historial_ooam VALUES ($insert_id_2, ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'DISPERSÓ PAGO DE COMISIÓN')");
+
+    if (! $respuesta ) {
+        return 0;
+        } else {   
+        return 1;
+        }
+    }
+
+    public function UpdateLoteDisponible($lote){
+        $respuesta =  $this->db->query("UPDATE pago_ooam SET bandera = 1 WHERE id_lote = $lote");
+        $respuesta =  $this->db->query("UPDATE pago_ooam_ind SET estatus = 0,modificado_por='".$this->session->userdata('id_usuario')."' WHERE abono_neodata = 0");
+        $respuesta =  $this->db->query("UPDATE comisiones_ooam SET estatus = 0,modificado_por='".$this->session->userdata('id_usuario')."' WHERE comision_total = 0");
+        // $respuesta =  $this->db->query("UPDATE lotes SET registro_comision = 1,usuario=".$this->session->userdata('id_usuario')." WHERE idLote = $lote");
+        if (! $respuesta ) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+
+        function update_pago_dispersion($suma, $ideLote, $pago){
+        $respuesta = $this->db->query("UPDATE pago_ooam SET abonado = (abonado + ".$suma."), pendiente = (total_comision-abonado-".$suma."), bandera = 1, ultimo_pago = ".$pago." , ultima_dispersion = GETDATE() WHERE id_lote = ".$ideLote."");
+        if (! $respuesta ) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+
+    public function lotes(){
+        $cmd = "SELECT SUM(lotes)  nuevo_general 
+        FROM (SELECT  COUNT(DISTINCT(id_lote)) lotes 
+        FROM pago_ooam_ind pci 
+        INNER JOIN comisiones_ooam c on c.id_comision = pci.id_comision 
+        INNER JOIN usuarios u ON u.id_usuario = pci.creado_por 
+        AND u.id_rol IN (32,13,17) 
+        INNER JOIN lotes l ON l.idLote = c.id_lote 
+        WHERE MONTH(GETDATE()) = MONTH(pci.fecha_abono) 
+        AND year(GetDate()) = year(pci.fecha_abono) 
+        AND Day(GetDate()) = Day(pci.fecha_abono) 
+        AND pci.estatus NOT IN (0) 
+        AND l.tipo_venta NOT IN (7) 
+        GROUP BY u.id_usuario) as nuevo_general";
+         $query = $this->db->query($cmd); 
+         $query->result();
+         return $query->row();
+    }
+
+    public function pagos(){
+        $cmd = "SELECT SUM(pagos) nuevo_general 
+        FROM (SELECT  count(id_pago_i) pagos 
+        FROM pago_ooam_ind pci 
+        INNER JOIN comisiones_ooam c on c.id_comision = pci.id_comision 
+        INNER JOIN usuarios u ON u.id_usuario = pci.creado_por 
+        AND u.id_rol IN (32,13,17) 
+        INNER JOIN lotes l ON l.idLote = c.id_lote 
+        WHERE MONTH(GETDATE()) = MONTH(pci.fecha_abono) 
+        AND year(GetDate()) = year(pci.fecha_abono) 
+        AND Day(GetDate()) = Day(pci.fecha_abono) 
+        AND pci.estatus NOT IN (0)
+        AND l.tipo_venta NOT IN (7) 
+        GROUP BY u.id_usuario) as nuevo_general ";
+        $query = $this->db->query($cmd);
+        $query->result();
+        return $query->row();
+    }
+
+    public function monto(){
+        $cmd = "SELECT ROUND (SUM(monto), 3 ) nuevo_general 
+        FROM (SELECT SUM(pci.abono_neodata) monto 
+        FROM pago_ooam_ind pci 
+        INNER JOIN comisiones_ooam c on c.id_comision = pci.id_comision 
+        INNER JOIN usuarios u ON u.id_usuario = pci.creado_por 
+        AND u.id_rol IN (32,13,17) INNER JOIN lotes l ON l.idLote = c.id_lote 
+        WHERE MONTH(GETDATE()) = MONTH(pci.fecha_abono) 
+        AND year(GetDate()) = year(pci.fecha_abono)
+        AND Day(GetDate()) = Day(pci.fecha_abono) 
+        AND pci.estatus NOT IN (0) 
+        AND l.tipo_venta NOT IN (7)
+        GROUP BY u.id_usuario) as nuevo_general ";
+        $query = $this->db->query($cmd);
+        $query->result();
+        return $query->row();
+    }
+
+
+
+
+ 
 }// llave fin del modal
 

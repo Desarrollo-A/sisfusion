@@ -50,6 +50,15 @@ class Ooam extends CI_Controller
        echo json_encode( array( "data" => $dat));
       }
 
+      public function dispersion() {
+        if ($this->session->userdata('id_rol') == FALSE)
+            redirect(base_url());
+            
+            // $datos["controversias"] = $this->Ooam_model->getMotivosControversia();
+            $this->load->view('template/header');
+            $this->load->view("ooam/dispersion_ooam_view");
+      }
+
 
     public function getRevisionRemanenteOOAM(){
 
@@ -590,6 +599,10 @@ function setPausaPagosOOAM(){
           }
   }
 
+  public function getDataDispersionOOAM() {
+    $data['data'] = $this->Ooam_model->getDataDispersionOOAM()->result_array();
+    echo json_encode($data);
+  }
 
   public function guardar_solicitud2($usuario = ''){
     $validar_user = $this->session->userdata('id_usuario');
@@ -673,6 +686,92 @@ function setPausaPagosOOAM(){
       }
 
     }
+
+  public function getMontoDispersadoDates(){
+    $fechaInicio = explode('/', $this->input->post("fecha1"));
+    $fechaFin = explode('/', $this->input->post("fecha2"));
+    $fecha1 = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+    $fecha2 = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
+  
+    $datos["datos_monto"] = $this->Ooam_model->getMontoDispersadoDates($fecha1, $fecha2)->result_array();
+    $datos["datos_pagos"] = $this->Ooam_model->getPagosDispersadoDates($fecha1, $fecha2)->result_array();
+    $datos["datos_lotes"] = $this->Ooam_model->getLotesDispersadoDates($fecha1, $fecha2)->result_array();
+  
+    echo json_encode($datos);
+  
+  }
+
+  function getDatosAbonadoDispersion($idlote){
+    echo json_encode($this->Ooam_model->getDatosAbonadoDispersion($idlote)->result_array());
+  }
+  
+  function getDatosAbonadoSuma11($idlote){
+    echo json_encode($this->Ooam_model->getDatosAbonadoSuma11($idlote)->result_array());
+  }
+
+
+  
+  public function InsertNeo(){
+    $lote_1 =  $this->input->post("idLote");
+    $bonificacion =  $this->input->post("bonificacion");
+    $responses = $this->Comisiones_model->validateDispersionCommissions($lote_1);
+    
+      $this->db->trans_begin();
+      $lote_1 =  $this->input->post("idLote");
+      $pending_1 =  $this->input->post("pending");
+      $abono_nuevo = $this->input->post("abono_nuevo[]");
+      $id_usuario = $this->input->post("id_usuario[]");
+      $id_comision = $this->input->post("id_comision[]");
+      $pago = $this->input->post("pago_neo");
+
+      $suma = 0;
+      $replace = [",","$"];
+      
+      for($i=0;$i<sizeof($id_comision);$i++){
+        $var_n = str_replace($replace,"",$abono_nuevo[$i]);
+          $respuesta = $this->Ooam_model->insert_dispersion_individual($id_comision[$i], $id_usuario[$i], $var_n, $pago);
+      }
+      
+      for($i=0;$i<sizeof($abono_nuevo);$i++){
+        $var_n = str_replace($replace,"",$abono_nuevo[$i]);
+        $suma = $suma + $var_n;
+      }
+      
+      $resta = $pending_1 - $pago;
+      if($suma > 0){
+        $respuesta = $this->Ooam_model->UpdateLoteDisponible($lote_1);
+        $respuesta = $this->Ooam_model->update_pago_dispersion($suma, $lote_1, $pago);
+      }
+
+      if ($respuesta === FALSE || $this->db->trans_status() === FALSE){
+        $this->db->trans_rollback();
+        $respuesta = false;
+      }else{
+        $this->db->trans_commit();
+        $respuesta = true;
+      }
+    
+ 
+  echo json_encode( $respuesta );
+  }
+
+
+
+  
+  public function lotes(){
+    $lotes = $this->Ooam_model->lotes();
+    
+    $pagos = $this->Ooam_model->pagos();
+    
+    $monto = $this->Ooam_model->monto();
+
+    $dispersion[ "lotes"] = $lotes->nuevo_general; 
+    $dispersion["pagos"] = $pagos->nuevo_general;
+    $dispersion["monto"] = $monto->nuevo_general;
+
+    echo json_encode(  $dispersion);
+    }
+ 
 
 }
 
