@@ -125,14 +125,15 @@ function getAssimilatedCommissions(proyecto, condominio){
                                 $("#all").prop('checked', false);
                                 var fecha = new Date();
                                 tabla_remanente2.ajax.reload();
-                                modalInformation(1);
+                                mensaje = "Comisiones de esquema <b>asimilados</b>, fueron enviadas a <b>INTERNOMEX</b> correctamente."
+                                modalInformation(RESPUESTA_MODAL.SUCCESS, mensaje);
                             }
                             else {
-                                modalInformation(0);
+                                modalInformation(RESPUESTA_MODAL.FAIL);
                             }
                         },
                         error: function( data ){
-                            modalInformation(0);
+                            modalInformation(RESPUESTA_MODAL.FAIL);
                         }
                     });
                 }else{

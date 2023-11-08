@@ -123,16 +123,17 @@ function getAssimilatedCommissions(proyecto, condominio){
                             $("#all").prop('checked', false);
                             var fecha = new Date();
                             tabla_asimilados2.ajax.reload();
-                            modalInformation(1);
+                            mensaje = "Comisiones de esquema <b>asimilados</b>, fueron enviadas a <b>INTERNOMEX</b> correctamente."
+                            modalInformation(RESPUESTA_MODAL.SUCCESS, mensaje);
                         }
                         else {
                             $('#spiner-loader').addClass('hide');
-                            modalInformation(0);
+                            modalInformation(RESPUESTA_MODAL.FAIL);
                         }
                     },
                     error: function( data ){
                         $('#spiner-loader').addClass('hide');
-                        modalInformation(0);
+                        modalInformation(RESPUESTA_MODAL.FAIL);
                     }
                 });
             }else{
@@ -328,12 +329,7 @@ function getAssimilatedCommissions(proyecto, condominio){
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
         changeSizeModal('modal-md');
-        appendBodyModal(`<div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            <i class="material-icons" onclick="cleanCommentsAsimilados()">clear</i>
-                        </button>
-                    </div>
-                    <div class="modal-body">
+        appendBodyModal(`<div class="modal-body">
                         <div role="tabpanel">
                             <div id="nameLote"></div>
                             <div class="tab-content">
