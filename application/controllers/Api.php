@@ -14,7 +14,7 @@ class Api extends CI_Controller
         date_default_timezone_set('America/Mexico_City');
         $this->load->helper(array('form'));
         $this->load->library(array('jwt_key', 'get_menu', 'jwt_actions'));
-        $this->load->model(array('Api_model', 'General_model', 'Internomex_model', 'Clientes_model', 'Usuarios_modelo'));
+        $this->load->model(array('Api_model', 'General_model', 'Internomex_model', 'Clientes_model', 'Usuarios_modelo', 'Ooam_model'));
         $this->load->model([
             'opcs_catalogo/valores/AutorizacionClienteOpcs',
             'opcs_catalogo/valores/TipoAutorizacionClienteOpcs'
@@ -1089,6 +1089,129 @@ class Api extends CI_Controller
                 }
             }
         }
+    }
+
+
+    function insertComisionesOoam() {
+        if (!isset(apache_request_headers()["Authorization"]))
+            echo json_encode(array("status" => -1, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+        else {
+            if (apache_request_headers()["Authorization"] == "")
+                echo json_encode(array("status" => -1, "message" => "Token no especificado dentro del encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+            else {
+                $token = apache_request_headers()["Authorization"];
+                $JwtSecretKey = $this->jwt_actions->getSecretKey(9347);
+                $valida_token = json_decode($this->validateToken($token, 9347));
+                if ($valida_token->status !== 200)
+                    echo json_encode($valida_token);
+                else {
+                    $result = JWT::decode($token, $JwtSecretKey, array('HS256'));
+                    $valida_token = Null;
+                    foreach ($result->data as $key => $value) {
+                        if(($key == "username" || $key == "password") && (is_null($value) || str_replace(" ","",$value) == '' || empty($value)))
+                            $valida_token = false;
+                    }
+                    if(is_null($valida_token))
+                        $valida_token = true;
+                    if(!empty($result->data) && $valida_token)
+                        $checkSingup = $this->jwt_actions->validateUserPass($result->data->username, $result->data->password);
+                    else {
+                        $checkSingup = null;
+                        echo json_encode(array("status" => -1, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
+                    }
+                    if(!empty($checkSingup) && json_decode($checkSingup)->status == 200){
+                        $dataReturn = json_decode(file_get_contents("php://input"));
+                        if (!isset($dataReturn->idLote) || !isset($dataReturn->referencia) || !isset($dataReturn->estatusContratacion) || !isset($dataReturn->totalLote) || !isset($dataReturn->idCliente) || !isset($dataReturn->nombreCliente))
+                            echo json_encode(array("status" => -1, "message" => "Algún parámetro no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición."), JSON_UNESCAPED_UNICODE);
+                        else {
+                            if (($dataReturn->idLote == '') || ($dataReturn->referencia == '') || ($dataReturn->estatusContratacion == '') || ($dataReturn->totalLote == '') || ($dataReturn->idCliente == '') ||($dataReturn->nombreCliente  == ''))
+                                echo json_encode(array("status" => -1, "message" => "Algún parámetro no tiene un valor especificado. Verifique que todos los parámetros contengan un valor especificado."), JSON_UNESCAPED_UNICODE);
+                            else {
+                                $getLoteComision = $this->Ooam_model->validaLoteComision($dataReturn->idLote, $dataReturn->referencia);
+                                if(count($getLoteComision) > 0 )
+                                    echo (json_encode(array("result" => false, "message" => "El Lote ingresado ya se encuentra registrado.")));
+                                    else {
+                                        $datosComisionistas = count($dataReturn->comisionistas);
+                                        $totalLote = json_decode($dataReturn->totalLote);
+                                        $dataComisiones = array();
+                                        $generalComisiones = 0;
+                                        $porcentajesComisiones = 0;
+                                        $dataPago = array();
+                                        
+                                        for($i = 0; $i < $datosComisionistas; $i++ ){
+                                            $getPlanComision = $this->Ooam_model->getPlanComision($dataReturn->comisionistas[$i]->rolGenerado,1);
+                                            $porcentajeComision = json_decode($getPlanComision->porcentajeComision);
+                                            $comisionTotal = (($porcentajeComision/100)*$totalLote);
+                                            $generalComisiones =  $generalComisiones + $comisionTotal;
+                                            $porcentajesComisiones =  $porcentajesComisiones + $porcentajeComision;
+                                            $dataComisiones['id_lote'] = $dataReturn->idLote;                            
+                                            $dataComisiones['id_usuario'] = $dataReturn->comisionistas[$i]->idUsuario;      
+                                            $dataComisiones['comision_total'] = $comisionTotal;                                  
+                                            $dataComisiones['estatus'] = 1; 
+                                            $dataComisiones['observaciones'] = "COMISION OOAM";                                 
+                                            $dataComisiones['porcentaje_decimal'] = $porcentajeComision;                             
+                                            $dataComisiones['rol_generado'] = $dataReturn->comisionistas[$i]->rolGenerado;    
+                                            $dataComisiones['descuento'] = 0;                                              
+                                            $dataComisiones['idCliente'] = $dataReturn->idCliente;                          
+                                            $dataComisiones['modificado_por'] = 1;                                              
+                                            $dataComisiones['fecha_modificado'] = date("Y-m-d H:i:s");
+                                            $dataComisiones['fecha_creacion'] = date("Y-m-d H:i:s");
+                                            $dataComisiones['fecha_autorizacion'] = date("Y-m-d H:i:s");
+                                            $dataComisiones['creado_por'] = 1;                                                
+                                            
+                                            if (isset($dataComisiones) && !empty($dataComisiones)) {
+                                                $dbTransaction = $this->Ooam_model->insertComisionOOAM('comisiones_ooam',$dataComisiones);
+                                                if($dbTransaction == 1){
+                                                    echo (json_encode(array("result" => $dbTransaction, "message" => "Ok")));
+                                                } else
+                                                    echo (json_encode($dbTransaction));
+                                                }
+                                        }
+                                        
+                                            $dataPago['id_lote'] = $dataReturn->idLote;                         
+                                            $dataPago['total_comision'] = $generalComisiones; 
+                                            $dataPago['abonado'] = 0;                    
+                                            $dataPago['porcentaje_abonado'] = $porcentajeComision; 
+                                            $dataPago['pendiente'] = $generalComisiones;                                
+                                            $dataPago['creado_por'] = 1;  
+                                            $dataPago['fecha_modificacion'] = date("Y-m-d H:i:s");                             
+                                            $dataPago['fecha_abono'] = date("Y-m-d H:i:s");
+                                            $dataPago['bandera'] = 0;
+                                            $dataPago['ultimo_pago'] = 0;
+                                            $dataPago['bonificacion'] = 0; 
+                                            $dataPago['fecha_neodata'] = date("Y-m-d H:i:s"); 
+                                            $dataPago['new_neo'] = 0; 
+                                            $dataPago['monto_anticipo'] = 0; 
+                                            $dataPago['numero_dispersion'] = 0; 
+                                            $dataPago['ultima_dispersion'] = date("Y-m-d H:i:s"); 
+                                            $dataPago['plan_comision'] = 1; 
+                                            $dataPago['nombreCliente'] = $dataReturn->nombreCliente;
+                                            $dataPago['estatusContratacion'] = $dataReturn->estatusContratacion;
+                                            $dataPago['totalLote'] = $dataReturn->totalLote;
+                                            
+                                            if (isset($dataPago) && !empty($dataPago)) {
+                                                $dbTransactionPago = $this->Ooam_model->insertComisionOOAM('pago_ooam',$dataPago);
+                                                if($dbTransactionPago == 1){
+                                                    echo (json_encode(array("result" => $dbTransactionPago, "message" => "Ok")));
+                                                } else
+                                                    echo (json_encode($dbTransactionPago));
+                                                }
+                                                
+                                                if ($dbTransaction&&$dbTransactionPago){ // SUCCESS TRANSACTION
+                                                    echo json_encode(array("status" => 1, "message" => "Registro guardado con éxito."), JSON_UNESCAPED_UNICODE);
+                                                    header('Content-Type: application/json');
+                                                } else{ // ERROR TRANSACTION
+                                                    echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+                                                    header('Content-Type: application/json');
+                                                }
+                                            }
+                                        }
+                                    }
+                                } else
+                        echo json_encode($checkSingup);
+                    }
+                }
+            }
     }
 
 }
