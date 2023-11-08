@@ -166,7 +166,7 @@ function getDataXMLOOAM(proyecto){
             targets: 0
         }],
         ajax: {
-            "url": general_base_url + "Ooam/getDatosNuevasXContraloria/",
+            "url": general_base_url + "Ooam/getRevisionXMLOOAM/",
             "type": "POST",
             cache: false,
             data:{

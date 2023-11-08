@@ -721,5 +721,47 @@ class Ooam_model extends CI_Model {
         return $query->row();
     }
 
+    function getRevisionXMLOOAM($proyecto){
+        if( $this->session->userdata('id_rol') == 31 ){
+            $filtro = "WHERE pci1.estatus IN (8,88) ";
+        }
+        else{
+            $filtro = "WHERE pci1.estatus IN (4) ";
+        }
+        $user_data = $this->session->userdata('id_usuario');
+        switch($this->session->userdata('id_rol')){
+            case 2:
+            case 3:
+            case 7:
+            case 9:
+            $filtro02 = $filtro.' AND  fa.id_usuario = '.$user_data .' ';
+            break;
+            default:
+            $filtro02 = $filtro.' ';
+            break;
+        }
+            return $this->db->query("SELECT SUM(pci1.abono_neodata) total, re.idResidencial, re.nombreResidencial as proyecto, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario, pci1.id_usuario, u.forma_pago, 0 as factura, oxcest.id_opcion id_estatus_actual, re.empresa, opn.estatus estatus_opinion, opn.archivo_name, fa.uuid,fa.nombre_archivo as xmla,fa.bandera, u.rfc
+            FROM pago_ooam_ind pci1 
+            INNER JOIN comisiones_ooam com ON pci1.id_comision = com.id_comision AND com.estatus in (1,8)
+            INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial AND re.idResidencial = $proyecto
+            INNER JOIN usuarios u ON u.id_usuario = com.id_usuario AND u.forma_pago in (2)
+            INNER JOIN pago_ooam pac ON pac.id_lote = com.id_lote
+            INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23 
+            INNER JOIN opinion_cumplimiento opn ON opn.id_usuario = u.id_usuario and opn.estatus IN (2) 
+            INNER JOIN facturas_ooam fa ON fa.id_comision = pci1.id_pago_i
+            $filtro02 
+            GROUP BY re.idResidencial, re.nombreResidencial, u.nombre, u.apellido_paterno, u.apellido_materno, pci1.id_usuario, u.forma_pago, oxcest.id_opcion, re.empresa, re.idResidencial, opn.estatus, opn.archivo_name, fa.uuid, fa.nombre_archivo, fa.bandera, u.rfc
+            ORDER BY u.nombre");
+    }
+
+    public function validateDispersionCommissions($lote){
+        return $this->db->query("SELECT count(*) dispersion, pc.bandera 
+        FROM comisiones_ooam com
+        LEFT JOIN pago_ooam pc ON pc.id_lote = com.id_lote and pc.bandera = 0
+        WHERE com.id_lote = $lote /*AND com.id_usuario = 2*/ AND com.estatus = 1 AND com.fecha_creacion <= GETDATE() GROUP BY pc.bandera");
+    }
+
 }// llave fin del modal
 
