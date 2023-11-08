@@ -628,10 +628,7 @@ class Ooam_model extends CI_Model {
         INNER JOIN usuarios u ON u.id_usuario = com.id_usuario AND u.forma_pago in (2) 
         WHERE pci.estatus IN (1) AND u.id_usuario = ".$usuario." GROUP BY re.idResidencial)");
     }
-    function update_acepta_solicitante($idsol) {
-        $query = $this->db->query("UPDATE pago_comision_ind SET estatus = 4, fecha_pago_intmex = GETDATE(),modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$idsol.")");
-        return true;
-    }
+
 function getPlanComision($rol, $planComision){
     $query = $this->db->query("SELECT (CASE 
     WHEN $rol = asesor THEN comAs 
