@@ -542,7 +542,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                         ((mes == 8 && dia == 9) || (mes == 8 && dia == 10 && hora <= fin)) ||
                         ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= fin)) ||
                         ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= fin)) ||
-                        ((mes == 11 && dia == 7) || (mes == 11 && dia == 14 && hora <= fin)) ||
+                        ((mes == 11 && dia >7) || (mes == 11 && dia == 14 && hora <= fin)) ||
                         ((mes == 12 && dia == 11) || (mes == 12 && dia == 12 && hora <= fin)) ||
                         (id_usuario_general == 7689)){
                         switch (full.forma_pago) {
@@ -1511,6 +1511,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
         </button>
         </div>
         <div class="col-md-12"><select id="desarrolloSelect" name="desarrolloSelect" class="form-control desarrolloSelect ng-invalid ng-invalid-required" required data-live-search="true"></select></div></div>`);
+        alert(313133)
         $.post('getDesarrolloSelect', function (data) {
             if (data == 3) {
                 $("#desarrolloSelect").append('<option selected="selected" disabled>YA NO ES POSIBLE ENVIAR FACTURAS, ESPERA AL SIGUIENTE CORTE</option>');
@@ -1821,7 +1822,7 @@ function save2() {
     formData.append("pagos", pagos);
     formData.append('total', total);
     $.ajax({
-        url: general_base_url + 'Comisiones/guardar_solicitud2',
+        url: general_base_url + 'Ooam/guardar_solicitud2',
         data: formData,
         cache: false,
         contentType: false,
