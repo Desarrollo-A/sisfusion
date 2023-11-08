@@ -297,7 +297,7 @@ class Pagos extends CI_Controller
               'id_usuario' =>  $id_user_Vl,
               'fecha_movimiento' => date('Y-m-d H:i:s'),
               'estatus' => 1,
-              'comentario' =>  'CONTRALORÍA ENVÍO PAGO A    ' 
+              'comentario' =>  'CONTRALORÍA ENVÍO PAGO A INTERNOMEX' 
             );
               array_push($data,$row_arr);
           }
