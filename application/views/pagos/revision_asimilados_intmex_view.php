@@ -130,13 +130,13 @@
                                             </div>
                                         </div>
                                     </div>
-                               </div>
-                           </div>
-                           <div class="tab-pane" id="proceso-1">
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="proceso-1">
                                 <div class="text-center">
                                 <h3 class="card-title center-align" >Comisiones nuevas <b>OOAM</b></h3>
-                                       <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de remanente)</p>
-                                  </div>
+                                    <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de remanente)</p>
+                                </div>
                                   <div class="toolbar">
                                       <div class="container-fluid p-0">
                                           <div class="row">
