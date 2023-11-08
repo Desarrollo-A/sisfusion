@@ -28,8 +28,7 @@
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-body"></div>
-                    <div class="modal-footer"></div>
-                </form>
+                </div>
             </div>
         </div>
 
@@ -37,9 +36,10 @@
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-body"></div>
-                </div>
+                </form>
             </div>
         </div>
+    </div>
 
     <div class="content boxContent">
     <div class="container-fluid">
@@ -185,14 +185,11 @@
                 </div>
             </div>
         </div>
-     </div>
     </div>
         <?php $this->load->view('template/footer_legend');?>
     </div>
     <?php $this->load->view('template/footer');?>
-    <script src="<?=base_url()?>dist/js/core/modal-general.js"></script>
-    <script src="<?= base_url() ?>dist/js/funciones-generales.js"></script>
+    <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_remanente.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/ooam/revision_remanente_ooam.js"></script>
 </body>
- 

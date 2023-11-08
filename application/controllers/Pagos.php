@@ -159,7 +159,7 @@ class Pagos extends CI_Controller
 
       default:
           $this->load->view('template/header');
-          $this->load->view("pagos/revision_asimilados_view");
+          $this->load->view("pagos/revision_remanente_view");
       break;
     }
   }
