@@ -159,9 +159,46 @@ function getDataAsimilados(proyecto, condominio){
                     alerts.showNotification("top", "right", "Favor de seleccionar una comisión.", "warning");
                 }
             },
-            attr: {
-                class: 'btn btn-azure',
-                style: 'position: relative;',
+        },
+        {
+        text: '<i class="fa fa-check"></i> ENVIAR A INTERNOMEX',
+        action: function() {
+            if ($('input[name="idTQ[]"]:checked').length > 0) {
+                $('#spiner-loader').removeClass('hide');
+                var idcomision = $(tabla_asimilados2.$('input[name="idTQ[]"]:checked')).map(function() {
+                    return this.value;
+                }).get();
+                var com2 = new FormData();
+                com2.append("idcomision", idcomision); 
+                $.ajax({
+                    url : general_base_url + 'Pagos/acepto_internomex_asimilados/',
+                    data: com2,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    type: 'POST', 
+                    success: function(data){
+                        response = JSON.parse(data);
+                        if(data == 1) {
+                            $('#spiner-loader').addClass('hide');
+                            $("#totpagarPen").html(formatMoney(0));
+                            $("#all").prop('checked', false);
+                            var fecha = new Date();
+                            tabla_asimilados2.ajax.reload();
+                            modalInformation(1);
+                        }
+                        else {
+                            $('#spiner-loader').addClass('hide');
+                            modalInformation(0);
+                        }
+                    },
+                    error: function( data ){
+                        $('#spiner-loader').addClass('hide');
+                        modalInformation(0);
+                    }
+                });
+            }else{
+                alerts.showNotification("top", "right", "Favor de seleccionar un bono activo .", "warning");
             }
         }],
         pagingType: "full_numbers",
@@ -277,7 +314,6 @@ function getDataAsimilados(proyecto, condominio){
 
                 btns += BTN_HISTORIAL;
                 btns += BTN_PAUSAR;
-
                 return `<div class="d-flex justify-center">${btns}</div>`;
             }
         }],
@@ -311,9 +347,7 @@ function getDataAsimilados(proyecto, condominio){
     });
 
     $('#tabla_asimilados').on('draw.dt', function() {
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
 
     $("#tabla_asimilados tbody").on("click", ".consultar_logs_asimilados", function(e){

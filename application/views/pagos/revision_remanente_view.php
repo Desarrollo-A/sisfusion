@@ -28,7 +28,8 @@
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-body"></div>
-                </div>
+                    <div class="modal-footer"></div>
+                </form>
             </div>
         </div>
 
@@ -41,9 +42,9 @@
         </div>
 
     <div class="content boxContent">
-     <div class="container-fluid">
+    <div class="container-fluid">
         <div class="row">
-          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
                 <li class="active"><a href="#remanenteComercializacion" role="tab" data-toggle="tab">Remanente lotes</a></li>
                 <li><a href="#remanenteOOAM" role="tab" data-toggle="tab">Remanente ooam</a></li>
@@ -179,11 +180,10 @@
                                       </table>
                                   </div>
                             </div>
-                       </div>
-                   </div>
-               </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
      </div>
     </div>
@@ -191,6 +191,7 @@
     </div>
     <?php $this->load->view('template/footer');?>
     <script src="<?=base_url()?>dist/js/core/modal-general.js"></script>
+    <script src="<?= base_url() ?>dist/js/funciones-generales.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_remanente.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/ooam/revision_remanente_ooam.js"></script>
 </body>

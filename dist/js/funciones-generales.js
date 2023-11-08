@@ -356,5 +356,15 @@ function replaceAll(text, busca, reemplaza) {
   return text;
 }
 
+function modalInformation(bandera){
+  changeSizeModal('modal-sm');
+    if(bandera == 1){
+      appendBodyModal(`<div class="modal-body"><center><img style="width: 75%; height: 75%;" src="${general_base_url}dist/img/send_intmex.gif"><p style='color:#676767;'>Comisiones de esquema <b>asimilados</b>, fueron enviadas a <b>INTERNOMEX</b> correctamente.</p></center></div>`);
+    }else{
+      appendBodyModal(`<div class="modal-body"><center><P>ERROR AL ENVIAR COMISIONES </P><BR><i style='font-size:12px;'>NO SE HA PODIDO EJECUTAR ESTA ACCIÓN, INTÉNTALO MÁS TARDE.</i></P></center></div>`);
+    } 
+  showModal();
+}
+
 
 

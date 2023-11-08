@@ -9,13 +9,6 @@ var tabla_asimilados2 ;
 var totaPen = 0;
 let titulos = [];
 
-function cleanCommentsAsimilados() {
-    var myCommentsList = document.getElementById('comments-list-asimilados');
-    var myCommentsLote = document.getElementById('nameLote');
-    myCommentsList.innerHTML = '';
-    myCommentsLote.innerHTML = '';
-}
-
 $(document).ready(function() {
     $("#tabla_asimilados").prop("hidden", true);
     $.get('getFormasPago', function (data) {
@@ -23,9 +16,9 @@ $(document).ready(function() {
         formasPago.forEach(formaPago => {
             const id = formaPago.id_opcion;
             const name = formaPago.nombre;
-            $("#forma-pago-filtro").append($('<option>').val(id).text(name.toUpperCase()));
+            $("#formaPagoInter").append($('<option>').val(id).text(name.toUpperCase()));
         });
-        $('#forma-pago-filtro').selectpicker('refresh');
+        $('#formaPagoInter').selectpicker('refresh');
     });
 
     $.post(`${general_base_url}Contratacion/lista_proyecto`, function (data) {
@@ -33,15 +26,15 @@ $(document).ready(function() {
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
             var name = data[i]['descripcion'];
-            $("#id_proyecto_ei").append($('<option>').val(id).text(name.toUpperCase()));
+            $("#catalogoInter").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $("#id_proyecto_ei").selectpicker('refresh');
+        $("#catalogoInter").selectpicker('refresh');
     }, 'json');
 });
 
-$('#id_proyecto_ei').change(function(ruta){
-    residencial = $('#id_proyecto_ei').val();
-    $("#id_condominio_ei").empty().selectpicker('refresh');
+$('#catalogoInter').change(function(ruta){
+    residencial = $('#catalogoInter').val();
+    $("#condominioInter").empty().selectpicker('refresh');
     $.ajax({
         url: `${general_base_url}Asesor/getCondominioDesc/${residencial}`,
         type: 'post',
@@ -51,37 +44,37 @@ $('#id_proyecto_ei').change(function(ruta){
             for( var i = 0; i<len; i++){
                 var id = response[i]['idCondominio'];
                 var name = response[i]['nombre'];
-                $("#id_condominio_ei").append($('<option>').val(id).text(name));
+                $("#condominioInter").append($('<option>').val(id).text(name));
             }
-            $("#id_condominio_ei").selectpicker('refresh');
+            $("#condominioInter").selectpicker('refresh');
         }
     });
 });
 
-$('#id_proyecto_ei').change(function(ruta){
-    const formaPago = $('#forma-pago-filtro').val() || 0;
-    const proyecto = $('#id_proyecto_ei').val();
-    let condominio = $('#id_condominio_ei').val();
+$('#catalogoInter').change(function(ruta){
+    const formaPago = $('#formaPagoInter').val() || 0;
+    const proyecto = $('#catalogoInter').val();
+    let condominio = $('#condominioInter').val();
     if(condominio === undefined || condominio == null || condominio === '') {
         condominio = 0;
     }
     getAssimilatedCommissions(proyecto, condominio, formaPago);
 });
 
-$('#id_condominio_ei').change(function(ruta){
-    const formaPago = $('#forma-pago-filtro').val() || 0;
-    const proyecto = $('#id_proyecto_ei').val();
-    let condominio = $('#id_condominio_ei').val();
+$('#condominioInter').change(function(ruta){
+    const formaPago = $('#formaPagoInter').val() || 0;
+    const proyecto = $('#catalogoInter').val();
+    let condominio = $('#condominioInter').val();
     if(condominio === undefined || condominio == null || condominio === '') {
         condominio = 0;
     }
     getAssimilatedCommissions(proyecto, condominio, formaPago);
 });
 
-$('#forma-pago-filtro').change(function () {
+$('#formaPagoInter').change(function () {
     const formaPago = $(this).val() || 0;
-    const proyecto = $('#id_proyecto_ei').val();
-    let condominio = $('#id_condominio_ei').val();
+    const proyecto = $('#catalogoInter').val();
+    let condominio = $('#condominioInter').val();
     if(condominio === undefined || condominio == null || condominio === '') {
         condominio = 0;
     }
@@ -129,7 +122,7 @@ function getAssimilatedCommissions(proyecto, condominio, formaPago) {
             exportOptions: {
                 columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
                 format: {
-                    header: function (d, columnIdx) {
+                    header: function (columnIdx){
                         return ' ' + titulos[columnIdx] + ' ';
                     }
                 }
@@ -225,17 +218,16 @@ function getAssimilatedCommissions(proyecto, condominio, formaPago) {
         },
         {
             data: function( d ){
-                var BtnStats1;
-                BtnStats1 =  '<p class="m-0">'+d.fecha_creacion.split('.')[0];+'</p>';
-                return BtnStats1;
+                return'<p class="m-0">' +d.fecha_creacion.split('.')[0] +'</p>';
             }
         },
         {
             orderable: false,
             data: function( data ){
-                var BtnStats;
-                BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_asimilados" data-toggle="tooltip"  data-placement="top" title="Detalles"><i class="fas fa-info"></i></button>';
-                return '<div class="d-flex justify-center">'+ BtnStats +'</div>';
+                let btns = '';
+                const BTN_INFINTER = `<button href="#" value="${data.id_pago_i}" data-value="${data.lote}" data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_asimilados" data-toggle="tooltip"  data-placement="top" title="HISTORIAL"><i class="fas fa-info"></i></button>`;
+                btns += BTN_INFINTER;
+                return `<div class="d-flex justify-center">${btns}</div>`;
             }
         }],
         columnDefs: [{
@@ -262,6 +254,8 @@ function getAssimilatedCommissions(proyecto, condominio, formaPago) {
 
     $("#tabla_asimilados tbody").on("click", ".consultar_logs_asimilados", function(e){
         $('#spiner-loader').removeClass('hide');
+        $("#comments-list-asimilados").html('');
+        $("#nameLote").html('');
         e.preventDefault();
         e.stopImmediatePropagation();
         id_pago = $(this).val();
@@ -283,7 +277,7 @@ function getAssimilatedCommissions(proyecto, condominio, formaPago) {
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsAsimilados()"><b>Cerrar</b></button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
                     </div>`);
         showModal();
         
@@ -311,10 +305,9 @@ function getAssimilatedCommissions(proyecto, condominio, formaPago) {
             $('#spiner-loader').addClass('hide');
         });
     });
+
+    $('#tabla_asimilados').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
+    });
 }
 
-$('#tabla_asimilados').on('draw.dt', function() {
-    $('[data-toggle="tooltip"]').tooltip({
-        trigger: "hover"
-    });
-});

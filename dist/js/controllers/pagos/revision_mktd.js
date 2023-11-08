@@ -61,7 +61,8 @@ $('#anio').selectpicker('refresh');
 
 
 $(document).ready(function(){
-    $("#tabla_total_comisionistas").addClass('hide')
+    $("#formTableComision").addClass('hide');
+    $("#formTableEstatus").addClass('hide');
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
     setIniDatesXMonth("#beginDate", "#endDate");
@@ -96,6 +97,7 @@ sp = {
 }
 
 $(document).on("click", "#searchByDateRange", function () {
+    $("#formTableComision").removeClass('hide');
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
     let estatus =($("#selectEstatus").val() == '') ? 0 : $("#selectEstatus").val();
@@ -672,12 +674,9 @@ $("#tabla_plaza_2").ready( function(){
             text: '<i class="fa fa-check"></i> ENVIAR A INTERNOMEX',
             action: function(){
                 $.get(general_base_url + "Pagos/acepto_contraloria_MKTD/").done(function () {
-                    $("#myModalEnviadas").modal('toggle');
                     plaza_2.ajax.reload();
                     plaza_1.ajax.reload();
-                    $("#myModalEnviadas .modal-body").html("");
-                    $("#myModalEnviadas").modal();
-                    $("#myModalEnviadas .modal-body").append(`<center><img style='width: 75%; height: 75%;' src='${general_base_url}dist/img/send_intmex.gif'><p style='color:#676767;'>Comisiones del área <b>Marketing Dígital</b> fueron enviadas a <b>INTERNOMEX</b> correctamente.</p></center>`);
+                    modalInformation(1);
                 });
             },
             attr: {
@@ -870,6 +869,7 @@ $('#fecha2').change( function(){
 });
 
 $('#selectEstatus').change( function(){
+    $("#formTableComision").removeClass('hide');
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
     let estatus =($(this).val() == '') ? 0 : $(this).val();
@@ -906,6 +906,7 @@ $('#fechaR2').change( function(){
 });
 
 $('#selectEstatusR').change( function(){
+    $("#formTableEstatus").removeClass('hide');
     let finalBeginDate = $(".beginDateR").val();
     let finalEndDate = $(".endDateR").val();
     let estatus =($(this).val() == '') ? 0 : $(this).val();
@@ -1015,6 +1016,7 @@ function fillTableR(typeTransaction, beginDate, endDate, where, estatus){
 }
 
 $(document).on("click", "#searchByDateRangeR", function () {
+    $("#formTableEstatus").removeClass('hide');
     let finalBeginDate = $(".beginDateR").val();
     let finalEndDate = $(".endDateR").val();
     let estatus =($("#selectEstatusR").val() == '') ? 0 : $("#selectEstatusR").val();
