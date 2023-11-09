@@ -1,6 +1,6 @@
 const excluir_column = ['MÁS', ''];
 let columnas_datatable = {};
-console.log(userSede);
+// console.log(userSede);
 let fin = userSede == 8 ? 16 : 13;
 $("#file-upload-extranjero").on('change', function () {
     $('#archivo-extranjero').val('');
@@ -154,7 +154,7 @@ $(document).ready(function () {
     ((mes == 8 && dia == 9) || (mes == 8 && dia == 10 && hora <= fin)) ||
     ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= fin)) ||
     ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= fin)) ||
-    ((mes == 11 && dia == 7) || (mes == 11 && dia == 14 && hora <= fin)) ||
+    ((mes == 11 && dia >= 8) || (mes == 11 && dia == 14 && hora <= fin)) ||
     ((mes == 12 && dia == 11) || (mes == 12 && dia == 12 && hora <= fin)))) {
         requestCodigoPostal();
     }
@@ -270,7 +270,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     ((mes == 8 && dia == 9) || (mes == 8 && dia == 10 && hora <= fin)) ||
                     ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= fin)) ||
                     ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= fin)) ||
-                    ((mes == 11 && dia == 7) || (mes == 11 && dia == 10 && hora <= fin)) ||
+                    ((mes == 11 && dia >= 8) || (mes == 11 && dia == 10 && hora <= fin)) ||
                     ((mes == 12 && dia == 11) || (mes == 12 && dia == 12 && hora <= fin)) ||
                     (id_usuario_general == 7689)) {
                     if ($('input[name="idT[]"]:checked').length > 0) {
@@ -399,33 +399,9 @@ $("#tabla_nuevas_comisiones").ready(function () {
         },
         {
             "data": function( d ){
-                var lblPenalizacion = '';
+                p1 = 'OOAM'
 
-                if (d.penalizacion == 1){
-                    lblPenalizacion ='<p class="m-0" title="PENALIZACIÓN + 90 DÍAS"><span class="label lbl-vividOrange"> + 90 DÍAS</span></p>';
-                }
-
-                if(d.bonificacion >= 1){
-                    p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-darkPink"">BON. $ '+formatMoney(d.bonificacion)+'</span></p>';
-                }
-                else{
-                    p1 = '';
-                }
-
-                if(d.lugar_prospeccion == 0){
-                    p2 = '<p class="m-0" title="LOTE CON CANCELACIÓN DE CONTRATO"><span class="label lbl-warning">RECISIÓN</span></p>';
-                }
-                else{
-                    p2 = '';
-                }
-
-                if(d.id_cliente_reubicacion_2 != 0 ) {
-                    p3 = `<p class="${d.colorProcesoCl}">${d.procesoCl}</p>`;
-                }else{
-                    p3 = '';
-                }
-
-                return p1 + p2 + lblPenalizacion + p3;
+                return p1;
             }
         },
         {
@@ -542,7 +518,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                         ((mes == 8 && dia == 9) || (mes == 8 && dia == 10 && hora <= fin)) ||
                         ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= fin)) ||
                         ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= fin)) ||
-                        ((mes == 11 && dia >7) || (mes == 11 && dia == 14 && hora <= fin)) ||
+                        ((mes == 11 && dia >= 8)) ||
                         ((mes == 12 && dia == 11) || (mes == 12 && dia == 12 && hora <= fin)) ||
                         (id_usuario_general == 7689)){
                         switch (full.forma_pago) {
@@ -747,33 +723,9 @@ $("#tabla_revision_comisiones").ready(function () {
         },
         {
             "data": function( d ){
-                var lblPenalizacion = '';
+                p1 = 'OOAM'
 
-                if (d.penalizacion == 1){
-                    lblPenalizacion ='<p class="m-0" title="PENALIZACIÓN + 90 DÍAS"><span class="label lbl-vividOrange"> + 90 DÍAS</span></p>';
-                }
-
-                if(d.bonificacion >= 1){
-                    p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-darkPink"">BON. $ '+formatMoney(d.bonificacion)+'</span></p>';
-                }
-                else{
-                    p1 = '';
-                }
-
-                if(d.lugar_prospeccion == 0){
-                    p2 = '<p class="m-0" title="LOTE CON CANCELACIÓN DE CONTRATO"><span class="label lbl-warning">RECISIÓN</span></p>';
-                }
-                else{
-                    p2 = '';
-                }
-
-                if(d.id_cliente_reubicacion_2 != 0 ) {
-                    p3 = `<p class="${d.colorProcesoCl}">${d.procesoCl}</p>`;
-                }else{
-                    p3 = '';
-                }
-
-                return p1 + p2 + lblPenalizacion + p3;
+                return p1;
             }
         },
         {
@@ -947,33 +899,9 @@ $("#tabla_pagadas_comisiones").ready(function () {
         },
         {
             "data": function( d ){
-                var lblPenalizacion = '';
+                p1 = 'OOAM'
 
-                if (d.penalizacion == 1){
-                    lblPenalizacion ='<p class="m-0" title="PENALIZACIÓN + 90 DÍAS"><span class="label lbl-vividOrange"> + 90 DÍAS</span></p>';
-                }
-
-                if(d.bonificacion >= 1){
-                    p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-darkPink"">BON. $ '+formatMoney(d.bonificacion)+'</span></p>';
-                }
-                else{
-                    p1 = '';
-                }
-
-                if(d.lugar_prospeccion == 0){
-                    p2 = '<p class="m-0" title="LOTE CON CANCELACIÓN DE CONTRATO"><span class="label lbl-warning">RECISIÓN</span></p>';
-                }
-                else{
-                    p2 = '';
-                }
-
-                if(d.id_cliente_reubicacion_2 != 0 ) {
-                    p3 = `<p class="${d.colorProcesoCl}">${d.procesoCl}</p>`;
-                }else{
-                    p3 = '';
-                }
-
-                return p1 + p2 + lblPenalizacion + p3;
+                return p1;
             }
         },
         {
@@ -1070,7 +998,7 @@ $("#tabla_otras_comisiones").ready(function () {
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
-            title: 'REPORTE DE COMISIONES PAUSADAS POR CONTRALORÍA',
+            title: 'REPORTE DE COMISIONES PAUSADAS POR CONTRALORÍA OOAM',
             exportOptions: {
                 columns: columnas_datatable.tabla_otras_comisiones.num_encabezados,
                 format: {
@@ -1146,33 +1074,9 @@ $("#tabla_otras_comisiones").ready(function () {
         },
         {
             "data": function( d ){
-                var lblPenalizacion = '';
+                p1 = 'OOAM'
 
-                if (d.penalizacion == 1){
-                    lblPenalizacion ='<p class="m-0" title="PENALIZACIÓN + 90 DÍAS"><span class="label lbl-vividOrange"> + 90 DÍAS</span></p>';
-                }
-
-                if(d.bonificacion >= 1){
-                    p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-darkPink"">BON. $ '+formatMoney(d.bonificacion)+'</span></p>';
-                }
-                else{
-                    p1 = '';
-                }
-
-                if(d.lugar_prospeccion == 0){
-                    p2 = '<p class="m-0" title="LOTE CON CANCELACIÓN DE CONTRATO"><span class="label lbl-warning">RECISIÓN</span></p>';
-                }
-                else{
-                    p2 = '';
-                }
-
-                if(d.id_cliente_reubicacion_2 != 0 ) {
-                    p3 = `<p class="${d.colorProcesoCl}">${d.procesoCl}</p>`;
-                }else{
-                    p3 = '';
-                }
-
-                return p1 + p2 + lblPenalizacion + p3;
+                return p1;
             }
         },
         {
@@ -1499,7 +1403,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
     ((mes == 8 && dia == 9) || (mes == 8 && dia == 10 && hora <= 13)) ||
     ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= 13)) ||
     ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= 13)) ||
-    ((mes == 11 && dia == 7) || (mes == 11 && dia == 14 && hora <= 13)) ||
+    ((mes == 11 && dia >= 8) || (mes == 11 && dia == 14 && hora <= 13)) ||
     ((mes == 12 && dia == 11) || (mes == 12 && dia == 12 && hora <= 13)) ||
     (id_usuario_general == 7689)) {
         $("#modal_multiples .modal-body").html("");
@@ -1511,7 +1415,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
         </button>
         </div>
         <div class="col-md-12"><select id="desarrolloSelect" name="desarrolloSelect" class="form-control desarrolloSelect ng-invalid ng-invalid-required" required data-live-search="true"></select></div></div>`);
-        alert(313133)
+        // alert(313133)
         $.post('getDesarrolloSelect', function (data) {
             if (data == 3) {
                 $("#desarrolloSelect").append('<option selected="selected" disabled>YA NO ES POSIBLE ENVIAR FACTURAS, ESPERA AL SIGUIENTE CORTE</option>');

@@ -304,7 +304,7 @@
                                     <div class="tab-content p-2">
                                         <div class="tab-pane active" id="nuevas-1">
                                             <div class="encabezadoBox">
-                                                <p class="card-title pl-2">Comisiones nuevas disponibles para solicitar tu pago, para ver más detalles podrás consultarlo en el historial<a href="<?=base_url()?>Comisiones/historial_colaborador"><b>Da clic aquí para ir al historial</b></a></p>
+                                                <p class="card-title pl-2 text-center">Comisiones nuevas disponibles para solicitar tu pago, para ver más detalles podrás consultarlo en el historial OOAM <br> <a class=" text-center" href="<?=base_url()?>Comisiones/historial_colaborador"><b>Da clic aquí para ir al historial</b></a></p>
                                                 <?php
                                                     if($this->session->userdata('forma_pago') == 3){
                                                 ?>
@@ -545,7 +545,7 @@
         var userSede = <?= $this->session->userdata('id_sede') ?>;
         var fechaServer = '<?php echo date('Y-m-d H:i:s')?>';
     </script>
-     <script src="<?=base_url()?>dist/js/controllers/ooam/asesor_ooam.js"></script>
+    <script src="<?=base_url()?>dist/js/controllers/ooam/asesor_ooam.js"></script>
 
     <!-- <script src="<?=base_url()?>dist/js/controllers/ventas/comisiones_colaborador.js"></script> -->
     
