@@ -1,21 +1,6 @@
 var tr;
 var tabla_remanente2 ;
 
-$('body').tooltip({
-    selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
-    trigger: 'hover',
-    container: 'body'
-}).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
-    $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
-});
-
-function cleanCommentsremanente() {
-    var myCommentsList = document.getElementById('comments-list-remanente');
-    var myCommentsLote = document.getElementById('nameLote');
-    myCommentsList.innerHTML = '';
-    myCommentsLote.innerHTML = '';
-}
-
 function CloseModalDelete2(){
     document.getElementById("form_multiples").reset();
     a = document.getElementById('borrarProyect');
@@ -26,7 +11,6 @@ function CloseModalDelete2(){
 
 $(document).ready(function() {
     $("#tabla_remanente").prop("hidden", true);
-
     $.post(general_base_url+"/pagos/lista_roles", function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
@@ -36,9 +20,7 @@ $(document).ready(function() {
         }
         $("#filtro33").selectpicker('refresh');
     }, 'json');
-
 });
-
 
 $('#filtro33').change(function(ruta){
     rol = $('#filtro33').val();
@@ -76,30 +58,12 @@ $('#filtro44').change(function(ruta){
     getAssimilatedCommissions(proyecto, condominio);
 });
 
-
-
-
-/**------------------------------------------------------------- */
 $(document).on("click", ".Pagar", function() {          
     $("#modal_multiples .modal-body").html("");
     $("#modal_multiples .modal-header").html("");
     $("#modal_multiples .modal-header").append(`<center> <h4 class="card-title"><b>Marcar pagadas</b></h4> </center>`);
-    $("#modal_multiples .modal-footer").append(`<div id="borrarProyect">
-        
-                <button type="button" class="btn btn-danger btn-simple " data-dismiss="modal" onclick="CloseModalDelete2()">CANCELAR</button>
-                <button type="submit" disabled id="btn-aceptar" class="btn btn-primary" value="ACEPTAR"> ACEPTAR</button>
-
-        </div>`);
-
-    $("#modal_multiples .modal-header").append(`
-    <div class="row">
-        <div class="col-md-12">
-            <select id="desarrolloSelect" name="desarrolloSelect" 
-                class="selectpicker select-gral desarrolloSelect ng-invalid ng-invalid-required" title="SELECCIONA UNA OPCIÓN"
-                required data-live-search="true">
-            </select>
-        </div>
-    </div>`);
+    $("#modal_multiples .modal-footer").append(`<div id="borrarProyect"><button type="button" class="btn btn-danger btn-simple " data-dismiss="modal" onclick="CloseModalDelete2()">CANCELAR</button><button type="submit" disabled id="btn-aceptar" class="btn btn-primary" value="ACEPTAR"> ACEPTAR</button></div>`);
+    $("#modal_multiples .modal-header").append(`<div class="row"><div class="col-md-12"><select id="desarrolloSelect" name="desarrolloSelect" class="selectpicker select-gral desarrolloSelect ng-invalid ng-invalid-required" title="SELECCIONA UNA OPCIÓN" required data-live-search="true"></select></div></div>`);
     
     $.post(general_base_url + 'Pagos/getDesarrolloSelectINTMEX/', {desarrollo: 2 } ,function(data) {
         var len = data.length;
@@ -129,7 +93,6 @@ $(document).on("click", ".Pagar", function() {
 
         $.getJSON(general_base_url + "Pagos/getPagosByProyect/"+valorSeleccionado+'/'+2).done(function(data) {
             let sumaComision = 0;
-            // console.log(data[0]);
             if (!data) {
                 $("#modal_multiples .modal-body").append('<div class="row"><div class="col-md-12">SIN DATOS A MOSTRAR</div></div>');
             } 
@@ -161,7 +124,6 @@ $(document).on("click", ".Pagar", function() {
     });
 });
 
-//INICIO TABLA QUERETARO***************************************
 let titulos = [];
 $('#tabla_remanente thead tr:eq(0) th').each( function (i) {
     if(i != 0){
@@ -234,11 +196,7 @@ function getAssimilatedCommissions(proyecto, condominio){
                                 tabla_remanente2.ajax.reload();
                                 $("#myModalEnviadas .modal-body").html("");
                                 $("#myModalEnviadas").modal();
-                                $("#myModalEnviadas .modal-body").append(`
-                                <center>
-                                    <img style='width: 75%; height: 75%;' src="${general_base_url}dist/img/send_intmex.gif">
-                                    <p style='color:#676767;'>Comisiones de esquema <b>asimilados</b>, fueron marcadas como <b>PAGADAS</b> correctamente.</p>
-                                </center>`);
+                                $("#myModalEnviadas .modal-body").append(`<center><img style='width: 75%; height: 75%;' src="${general_base_url}dist/img/send_intmex.gif"><p style='color:#676767;'>Comisiones de esquema <b>asimilados</b>, fueron marcadas como <b>PAGADAS</b> correctamente.</p></center>`);
                             }
                             else {
                                 $('#spiner-loader').addClass('hide');

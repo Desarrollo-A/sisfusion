@@ -848,7 +848,73 @@ public function getGeneralStatusFromNeodata($proyecto, $condominio)
         $dat[$i]['montoOOAM'] = 0;
     }      
     echo json_encode( array( "data" => $dat));
-  
   }
-  
+
+  public function getDataLiquidadasPagoOOAM(){
+    $data['data'] = $this->Ooam_model->getDataLiquidadasOOAM()->result_array();
+    echo json_encode($data);
+  }
+
+  public function getDetallePlanesComisionesOOAM($idPlan){
+        $data = $this->Ooam_model->getDetallePlanesComisionesOOAM($idPlan);
+        $info = array();
+        $info['id_plan'] = $data->id_plan;
+        $info['descripcion'] = $data->descripcion;
+        $info['comisiones'][] = array(
+            'puesto' => $data->director,
+            'com' => $data->comDi,
+            'neo' => $data->neoDi
+        );
+        $info['comisiones'][] = array(
+            'puesto' => $data->regional,
+            'com' => $data->comRe,
+            'neo' => $data->neoRe
+        );
+        $info['comisiones'][] = array(
+            'puesto' => $data->subdirector,
+            'com' => $data->comSu,
+            'neo' => $data->neoSu
+        );
+        $info['comisiones'][] = array(
+            'puesto' => $data->gerente,
+            'com' => $data->comGe,
+            'neo' => $data->neoGe
+        );
+        $info['comisiones'][] = array(
+            'puesto' => $data->coordinador,
+            'com' => $data->comCo,
+            'neo' => $data->neoCo
+        );
+        $info['comisiones'][] = array(
+            'puesto' => $data->asesor,
+            'com' => $data->comAs,
+            'neo' => $data->neoAs
+        );
+        $info['comisiones'][] = array(
+            'puesto' => $data->otro,
+            'com' => $data->comOt,
+            'neo' => $data->neoOt
+        );
+        $info['comisiones'][] = array(
+            'puesto' => $data->mktd,
+            'com' => $data->comMk,
+            'neo' => $data->neoMk
+        );
+        $info['comisiones'][] = array(
+            'puesto' => $data->otro2,
+            'com' => $data->comOt2,
+            'neo' => $data->neoOt2
+        );
+        $info['comisiones'][] = array(
+          'puesto' => $data->otro3,
+          'com' => $data->comOt3,
+          'neo' => $data->neoOt3
+        );
+        $info['comisiones'][] = array(
+        'puesto' => $data->otro4,
+        'com' => $data->comOt4,
+        'neo' => $data->neoOt4
+        );
+        echo json_encode($info);
+    }
   }
