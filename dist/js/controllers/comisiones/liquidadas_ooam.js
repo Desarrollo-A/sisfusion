@@ -61,10 +61,10 @@ $(document).ready(function () {
         ordering: false,
         columns: [
             {
-            "className": 'details-control',
-            "orderable": false,
-            "data" : null,
-            "defaultContent": '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i>'
+            className: 'details-control',
+            orderable: false,
+            data : null,
+            defaultContent: '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i>'
             },
             {data: 'nombreResidencial'},
             {data: 'nombreCondominio'},
@@ -79,32 +79,15 @@ $(document).ready(function () {
             {data: 'idLote'},
             {data: 'nombreCliente'},
             { data: function (d) {
-                    return `<span class="label ${d.claseTipo_venta}">${d.tipo_venta}</span><br><span class="${d.colorProcesoCl}">${d.procesoCl}</span>`;
-            }},
-            { data: function (d) {
-                var labelCompartida;
-                if(d.compartida == null) {
-                    labelCompartida ='<span class="label lbl-yellow">Individual</span>';
-                } else{
-                    labelCompartida ='<span class="label lbl-orangeYellow">Compartida</span>';
-                }
-                return labelCompartida;
+                    return `<span class="label ${d.claseTipo_venta}">${d.tipo_venta}</span>`;
             }},
             { data: function (d) {
                 var labelStatus;
-                if(d.idStatusContratacion == 15) {
-                    labelStatus ='<span class="label lbl-violetBoots">Contratado</span>';
-                }else {
-                    labelStatus ='<p class="m-0"><b>'+d.idStatusContratacion+'</b></p>';
-                }
+                    labelStatus ='<p class="m-0"><b>'+d.idStatusOOAM+'</b></p>';
                 return labelStatus;
             }},
             { data: function (d) {
                 var labelEstatus;
-                if(d.penalizacion == 1 && (d.bandera_penalizacion == 0 || d.bandera_penalizacion == 1) ){
-                    labelEstatus =`<p class="m-0"><b>Penalización ${d.dias_atraso} días</b></p><span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span>`;
-                }
-                else{
                     if(d.totalNeto2 == null) {
                         labelEstatus ='<p class="m-0"><b>Sin Precio Lote</b></p>';
                     }else if(d.registro_comision == 2){
@@ -115,40 +98,13 @@ $(document).ready(function () {
                         else
                             labelEstatus =`<label class="label lbl-azure btn-dataTable" data-toggle="tooltip"  data-placement="top"  title="VER MÁS DETALLES"><b><span  onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span></label>`;
                     }
-                }
                 return labelEstatus;
             }},
             { data: function (d) {
-                return formatMoney(d.abono_comisiones);;
-            }},
-            { data: function (d) {
-                return d.porcentaje_comisiones ? `${parseFloat(d.porcentaje_comisiones).toFixed(2)}%`: 'SIN ESPECIFICAR';
-            }},
-            { data: function (d) {
-                return formatMoney(d.pendiente);;
-            }},
-
-            { data: function (d) {
-                var rescisionLote;
-                var reactivo;
-                rescisionLote = '';
-                reactivo = '';
-                if (d.registro_comision == 8){
-                    rescisionLote = '<br><span class="label lbl-warning">Recisión Nueva Venta</span>';
-                }
-                if(d.id_cliente_reubicacion_2 != 0 ) {
-                    if((d.bandera_dispersion == 1 && d.registro_comision == 9) ||
-                    (d.bandera_dispersion == 2 && d.registro_comision == 9) ||
-                    (d.bandera_dispersion == 2  && d.registro_comision != 9) ||
-                    (d.bandera_dispersion == 1  && d.registro_comision != 9 && validarLiquidadas == 0 || (d.registro_comision == 1 && d.validaLiquidadas == 0 && d.banderaOOAM == 0))){
-                        reactivo = '<br><span class="label lbl-gray">DISPERSIÓN VENTAS</span>';
-                    } else if((d.bandera_dispersion == 3  && d.registro_comision == 9) ||
-                    (d.bandera_dispersion == 3 && d.registro_comision != 9) ||
-                    ((d.registro_comision == 1 && d.validaLiquidadas == 1 && (d.banderaOOAM == 0 || d.banderaOOAM > 0 )) || (d.registro_comision == 1 && d.validaLiquidadas == 0 && d.banderaOOAM > 0))){//LIQUIDADA 1°
-                        reactivo = '<br><span class="label lbl-lightBlue">DISPERSIÓN EEC</span>';
-                    } 
-                }
-                return rescisionLote+reactivo;
+                var detalles;
+                    detalles = '<span class="label lbl-blueMaderas">TOMA DE AGUA</span>';
+                return detalles;
+                
             }},
             { data: function (d) {
                 var fechaActualizacion;
@@ -160,40 +116,72 @@ $(document).ready(function () {
                 }
                 
                 return fechaActualizacion;
+                
             }},
-
+            
             { data: function (d) {
                 var BtnStats = '';
+
+                var Mensaje = 'Verificar en NEODATA';
+                varColor2  = 'btn-gray';
                 var RegresaActiva = '';
                     if(d.totalNeto2==null || d.totalNeto2==''|| d.totalNeto2==0) {
                         BtnStats = 'Asignar Precio';
                     }else if(d.tipo_venta==null || d.tipo_venta==0) {
                         BtnStats = 'Asignar Tipo Venta';
-                    }else if((d.id_prospecto==null || d.id_prospecto==''|| d.id_prospecto==0) && d.lugar_prospeccion == 6) {
-                        BtnStats = 'Asignar Prospecto';
-                    }else if(d.id_subdirector==null || d.id_subdirector==''|| d.id_subdirector==0) {
-                        BtnStats = 'Asignar Subdirector';
-                    }else if(d.id_sede==null || d.id_sede==''|| d.id_sede==0) {
-                        BtnStats = 'Asignar Sede';
-                    }else if(d.plan_comision==null || d.plan_comision==''|| d.plan_comision==0) {
-                        BtnStats = 'Asignar Plan <br> Sede: '+d.sede;
                     } else{
-                        varColor  = 'btn-deepGray';
+                        if(d.compartida==null) {
+                            varColor  = 'btn-sky';
+                        } else{
+                            varColor  = 'btn-green';
+                        }
 
-                            if(d.ooam == 0 && d.ventas == 1){
-                                BtnStats += '<button href="#" value="'+d.idLote+'" data-ooam="2" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data btn-yellow verify_neodata" title="VERIFICAR EN NEODATA VENTAS">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
-                            } else if(d.ooam == 1 && d.ventas == 0){
-                                BtnStats += '<button href="#" value="'+d.idLote+'" data-ooam="1" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data btn-azure verify_neodata" title="VERIFICAR EN NEODATA OOAM">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
-                            } else if(d.ooam == 1 && d.ventas == 1){
-                                BtnStats += '<button href="#" value="'+d.idLote+'" data-ooam="2" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data btn-yellow verify_neodata" title="VERIFICAR EN NEODATA VENTAS">'+'<span class="material-icons">verified_user</span></button>';
-                                BtnStats += '<button href="#" value="'+d.idLote+'" data-ooam="1" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data btn-azure verify_neodata" title="VERIFICAR EN NEODATA OOAM">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
-                            } else{
+                        disparador = 0;
+
+                        
+                        if(d.bandera == 0 && d.numero_dispersion == 0){//VENTA NORMAL 1°
+                            disparador = 1;
+                            totalLote = d.totalNeto2;
+                            reubicadas = 0;
+                            nombreLote = d.nombreLote;
+                            id_cliente = d.id_cliente;
+                            plan_comision = d.plan_comision;
+                            descripcion_plan = d.plan_descripcion;
+                            ooamDispersion = 0;
+                        } else {// NORMAL 2°
+                            disparador = 2;
+                            totalLote = d.totalNeto2;
+                            reubicadas = 0;
+                            nombreLote = d.nombreLote;
+                            id_cliente = d.id_cliente;
+                            plan_comision = d.plan_comision;
+                            descripcion_plan = d.plan_descripcion;
+                            ooamDispersion = 0;
+                        } 
+                        if(disparador != 0){
+                            BtnStats += `<button href="#" 
+                            value = "${d.idLote}" 
+                            data-totalNeto2 = "${totalLote}" 
+                            data-reubicadas = "${reubicadas}" 
+                            data-nombreLote = "${nombreLote}" 
+                            data-banderaPenalizacion = "${d.bandera_penalizacion}" 
+                            data-cliente = "${id_cliente}" 
+                            data-plan = "${plan_comision}" 
+                            data-disparador = "${disparador}" 
+                            data-tipov = "${d.tipo_venta}"
+                            data-descplan = "${descripcion_plan}" 
+                            data-ooam = "${ooamDispersion}" 
+                            data-code = "${d.cbbtton}" 
+                            class = "btn-data ${varColor} verify_neodata" data-toggle="tooltip" data-placement="top" title="${ Mensaje }"><span class="material-icons">verified_user</span></button> ${RegresaActiva}`;
                             
-                            BtnStats += '<button href="#" value="'+d.idLote+'" data-ooam="0" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata" title="VERIFICAR EN NEODATA">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
-                        }
-                        }
-                        return '<div class="d-flex justify-center">'+BtnStats+'</div>';
-            }} 
+                        }else{
+                            BtnStats += ``;
+                        
+                    }   
+                    }
+                
+                return '<div class="d-flex justify-center">'+BtnStats+'</div>';
+            }}
         ],
         columnDefs: [{
             visible: false,
@@ -265,7 +253,7 @@ $(document).ready(function () {
                                 total = 0; 
                             }
                             var_sum = 0;
-                            $.getJSON( general_base_url + "Comisiones/getDatosAbonadoSuma11/"+idLote+"/"+ooamDispersion).done( function( data1 ){
+                            $.getJSON( general_base_url + "Ooam/getDatosAbonadoSuma11/"+idLote+"/"+ooamDispersion).done( function( data1 ){
                                 let total0 = parseFloat((data[0].Aplicado));
                                 let total = 0;
                                 if(total0 > 0){
@@ -287,7 +275,7 @@ $(document).ready(function () {
                                 $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-4"><h4><b>Precio del lote: ${formatMoney(data1[0].totalNeto2)}</b></h4></div>
                                 <div class="col-md-4"><h4>Aplicado neodata: <b>${formatMoney(data[0].Aplicado)}</b></h4></div><div class="col-md-4">${cadena}</div>
                                 </div>`);
-                                $.getJSON( general_base_url + "Comisiones/getDatosAbonadoDispersion/"+idLote+"/"+ooamDispersion).done( function( data ){
+                                $.getJSON( general_base_url + "Ooam/getDatosAbonadoDispersion/"+idLote+"/"+ooamDispersion).done( function( data ){
                                     $("#modal_NEODATA .modal-body").append('<div class="row rowTitulos"><div class="col-md-3"><p style="font-size:10px;"><b>USUARIOS</b></p></div><div class="col-md-1"><b>%</b></div><div class="col-md-2"><b>TOTAL DE LA COMISIÓN</b></div><div class="col-md-2"><b><b>ABONADO</b></div><div class="col-md-2"><b>PENDIENTE</b></div><div class="col-md-2"><b>DISPONIBLE</b></div></div>');
                                     let contador=0;
                                     let coor = data.length;

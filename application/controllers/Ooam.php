@@ -581,18 +581,6 @@ class Ooam extends CI_Controller
     }
   }
 
-  public function getMontoDispersadoDates(){
-    $fechaInicio = explode('/', $this->input->post("fecha1"));
-    $fechaFin = explode('/', $this->input->post("fecha2"));
-    $fecha1 = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
-    $fecha2 = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
-    $datos["datos_monto"] = $this->Ooam_model->getMontoDispersadoDates($fecha1, $fecha2)->result_array();
-    $datos["datos_pagos"] = $this->Ooam_model->getPagosDispersadoDates($fecha1, $fecha2)->result_array();
-    $datos["datos_lotes"] = $this->Ooam_model->getLotesDispersadoDates($fecha1, $fecha2)->result_array();
-  
-    echo json_encode($datos);
-  }
-
   function getDatosAbonadoDispersion($idlote){
     echo json_encode($this->Ooam_model->getDatosAbonadoDispersion($idlote)->result_array());
   }
@@ -917,4 +905,18 @@ public function getGeneralStatusFromNeodata($proyecto, $condominio)
         );
         echo json_encode($info);
     }
+
+    public function getMontoDispersadoDates(){
+      $fechaInicio = explode('/', $this->input->post("fecha1"));
+      $fechaFin = explode('/', $this->input->post("fecha2"));
+      $fecha1 = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+      $fecha2 = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
+      $datos["datos_monto"] = $this->Ooam_model->getMontoDispersadoDates($fecha1, $fecha2)->result_array();
+      $datos["datos_pagos"] = $this->Ooam_model->getPagosDispersadoDates($fecha1, $fecha2)->result_array();
+      $datos["datos_lotes"] = $this->Ooam_model->getLotesDispersadoDates($fecha1, $fecha2)->result_array();
+    
+      echo json_encode($datos);
+    
+    }
+
   }
